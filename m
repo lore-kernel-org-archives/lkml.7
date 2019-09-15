@@ -2,115 +2,144 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDB8C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB3CC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDAA21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568567270;
-	bh=zzyU43caDLW1gD3q/Yav2ZB+uuqqywjdczSibRhF5CY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T4oTlcI3PNh3SfrGWirX6am79Mbl1TIKT/CO09tLj656g0rUO45MV1KbCeRFu4QxV
-	 EOQSj8801UCQasbCoDb/AE0zD8dnRoHJ9FUs3kGsb/oH16VEtcwMyuzstJe0DsuYf1
-	 lLt3NFi+Eusg1lEfv+GOJYLMKfnp0aNCwoANl0cY=
+	by mail.kernel.org (Postfix) with ESMTP id 101EA21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DpfGmWb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726421AbfIORHt (ORCPT
+        id S1726665AbfIORHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sun, 15 Sep 2019 13:07:52 -0400
+Received: from mail-eopbgr790088.outbound.protection.outlook.com ([40.107.79.88]:3756
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726048AbfIORHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 15 Sep 2019 13:07:49 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40419 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfIORHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:07:48 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so31530284ljw.7
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:07:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BCN1TMuWHykhw4NqoVOVPergJ2vhgYXNwDPB5jmLCIrkf4/RviwdZCJ3aLI0sr4kAAh9VAhUVCy+sSkCicMHGAt7MvekAMsCEu7CI8gaE4MzsNDe5I8Ft0bjnwiUyPeUfi0U013vmCODvGoauAUG7SThpL5XMnVKUf4e5YylVQ3ekSGPIebzfOoouG7VPVEPy6OgAKreEOoq1lEhFuojKvWBoEOk534H3qN94T6eFiAEiDOhffVEJsJ+hApOcR1RfuZ7j8yzYqHhg1U30rIk4GnmACnq88cIIr0VKn+hKjnXC/RVFhzBrC6i6gYzmJyQ/KfrSojF0hV6NhOhcHS8BA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/DW0su9blBzZE5LiHq1P8zqfYeTGEHhK88zGeyL0e2Y=;
+ b=Q0S3MAZ8/C72ikRq+abtZcqfaQbEyn7fdLCVaEQEhb9YfnIhQVm8mPHJdxAhVvWpPwQ6Stexeutj2dBbkgoaiJhN83qQwqwux0yzPOKOyL8xm/BZVR9krzKGhfpZcG0GcBmb+u5UL4xLiNUjL1pH3T8qvC5KA25vuX10DkVusl0jS2NJF6Ioc3wOMewApFz5L3kZRNvt4UgiR14gcTrrlZ9x2BJie9zr14wsjBWRjVcN4r8YtGvv9gXZnZK2FwLUylqNbfClALLNscDpbSjDoZ4M3q9zELxCROyJ7ewLa563+Db69gR9B2PpMTGGW8k9wJS5LL4UW+ouKi3csqj5Sw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XYNQ6+oH7Nk5c/Kknc3fsafALGxCA6iGb9vLHUrg13w=;
-        b=Nhx4j06XDJpPMr71hJJe1AwkYJZOTKt6p3dUiWQllso6OHtzqUzkAGcZ1O91DzVlA/
-         +rPxzlZsQM+iF0cW83zrhk5u183LTFqjbtRdWdQw40BK9/IaT6mpO9HGrfu82LAmGaCA
-         n3y4YF33JtxpieJgydFwb/HM2AcJdcpbDVElo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XYNQ6+oH7Nk5c/Kknc3fsafALGxCA6iGb9vLHUrg13w=;
-        b=aQeNsY2rtNKuPrzAP32qjA/12prWD3JJkhfyXCmaFnzz3wXd9g94dzK75TTkdRrs6D
-         c/f6bUpgYq74UDRkj9a67SXHjn74b0xzbvV5SaXdmMyxGQjJUTPbu0GF36ssHml5MsqZ
-         IUSMnk8OSe4r03VUVJt30kf5yl0qAUQtr8R8hNx9pIkjD502UxDh4AwH8PgW4m1TcuYa
-         e/oK8lCREGt6YGdnbIbLBOlbtAbFxARRMTl7BrgT5SJaPdNPz8nAvEEESCRzxKcflDh6
-         8/cmsOr3PBK4N6EiQ5uHwkmghOS7s+U/qYFrZHoFUl5w+yyCm2nE+uZE00GG2MRJqHyk
-         Jr0w==
-X-Gm-Message-State: APjAAAV7/xS/Edo1qsdnjMhsIY9Yy6TtEI9O47xbTtJx7c7xAAPd7NRH
-        fjfEk/EsSRim6Tq6AfHvKnN7oSK8y4Q=
-X-Google-Smtp-Source: APXvYqx7FHYYjExRSJMyr51AriHSxzfLiMX8IDUByZdUGnn5II2FrFnmXIT78wWF9qOwYlZ3A6t6fg==
-X-Received: by 2002:a2e:8649:: with SMTP id i9mr12886206ljj.97.1568567265482;
-        Sun, 15 Sep 2019 10:07:45 -0700 (PDT)
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
-        by smtp.gmail.com with ESMTPSA id g13sm7743182ljj.73.2019.09.15.10.07.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2019 10:07:44 -0700 (PDT)
-Received: by mail-lf1-f51.google.com with SMTP id x80so25637082lff.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:07:44 -0700 (PDT)
-X-Received: by 2002:a19:7d55:: with SMTP id y82mr36147714lfc.106.1568567263803;
- Sun, 15 Sep 2019 10:07:43 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/DW0su9blBzZE5LiHq1P8zqfYeTGEHhK88zGeyL0e2Y=;
+ b=DpfGmWb6lfe5y+xK0mGGE7428X9uACrq5w9MQDudhGJRh7B4Fckj/SI9/nGczp2dLTQaVDNX8bGII4MXlPYhugYmxyKcbYk1i7Kx9OChRDr8gLxsxO+Z5jfeJma/2PAOZZZyWPr2bFbY7HaWZZpGyfPSiYxuRPtw0oZXBo770qI=
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
+ MN2PR12MB3309.namprd12.prod.outlook.com (20.179.83.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Sun, 15 Sep 2019 17:07:43 +0000
+Received: from MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::ec02:b95d:560a:ad36]) by MN2PR12MB3455.namprd12.prod.outlook.com
+ ([fe80::ec02:b95d:560a:ad36%7]) with mapi id 15.20.2263.023; Sun, 15 Sep 2019
+ 17:07:43 +0000
+From:   "Mehta, Sanju" <Sanju.Mehta@amd.com>
+To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
+        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
+        "jdmason@kudzu.us" <jdmason@kudzu.us>,
+        "dave.jiang@intel.com" <dave.jiang@intel.com>,
+        "allenbh@gmail.com" <allenbh@gmail.com>
+CC:     "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Mehta, Sanju" <Sanju.Mehta@amd.com>
+Subject: [PATCH 1/2] ntb_hw_amd: Add a new NTB PCI device ID
+Thread-Topic: [PATCH 1/2] ntb_hw_amd: Add a new NTB PCI device ID
+Thread-Index: AQHVa+gW9+Bl/2VHLkO+yiE6eLNTog==
+Date:   Sun, 15 Sep 2019 17:07:43 +0000
+Message-ID: <1568567222-26810-1-git-send-email-Sanju.Mehta@amd.com>
+Accept-Language: en-IN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MA1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:1::16) To MN2PR12MB3455.namprd12.prod.outlook.com
+ (2603:10b6:208:d0::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Sanju.Mehta@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [165.204.156.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b058b68-e79e-428b-787b-08d739ff38d7
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR12MB3309;
+x-ms-traffictypediagnostic: MN2PR12MB3309:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR12MB33099C72D397BD8C578C1A6FE58D0@MN2PR12MB3309.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:361;
+x-forefront-prvs: 01613DFDC8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(199004)(189003)(66476007)(66556008)(6436002)(36756003)(64756008)(66446008)(66946007)(7736002)(2616005)(186003)(2906002)(305945005)(14454004)(3846002)(6116002)(316002)(26005)(86362001)(2201001)(8676002)(50226002)(8936002)(81166006)(25786009)(81156014)(2501003)(71200400001)(476003)(71190400001)(54906003)(102836004)(110136005)(66066001)(6486002)(478600001)(5660300002)(486006)(6512007)(4326008)(6506007)(256004)(386003)(53936002)(99286004)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3309;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jxNA6bIlbq3G1LTXhtyQq2vqMT1sDlkzaFoAFkleaQmGx5Sukv4o3jbgJeaCmhyA9KM3kbweoC8uLTbf7EgZt7mOIva3+DDk2j+dt1Ls36xg+dHdXx9Ix84UtXtmJKvhC6yTCNOJqvvGTEDVevLw4eI55hs7aJ8dtJJyadYmb0l6rJO7yUyk6oOvF+65tOh7Z8JaAWZRxk4iYK1bI8LT8npYxu3hEizBypK3jvy76I6WV+sCmbctdNXKflzeDpI8hb9eBrZFdcANp0padozOr9SB03Xvcurp/3BJbnceM653h8Djc+YCNDxz7RwcXdlmcbyOnNhokT+PPuQ2Sb8EwdIA8UaedL2cZzfnmwALzq7C3dOQO7zwGC4qHH1QxFWnU/+trkGwaH0VSd1DzhUsaZ4eWwEElj8aDo/qaXWCzCQ=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
- <20190830160957.GC2634@redhat.com> <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
- <87o906wimo.fsf@x220.int.ebiederm.org> <20190902134003.GA14770@redhat.com>
- <87tv9uiq9r.fsf@x220.int.ebiederm.org> <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
- <87k1aqt23r.fsf_-_@x220.int.ebiederm.org> <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
- <87lfurdpk9.fsf_-_@x220.int.ebiederm.org> <20190915143212.GK30224@paulmck-ThinkPad-P72>
-In-Reply-To: <20190915143212.GK30224@paulmck-ThinkPad-P72>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 15 Sep 2019 10:07:24 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjT6LG6sDaZtfeT80B9RaMP-y7RNRM4F5CX2v2Z=o8e=A@mail.gmail.com>
-Message-ID: <CAHk-=wjT6LG6sDaZtfeT80B9RaMP-y7RNRM4F5CX2v2Z=o8e=A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] task: With a grace period after
- finish_task_switch, remove unnecessary code
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b058b68-e79e-428b-787b-08d739ff38d7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2019 17:07:43.4120
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5dR1j+1TYHQLFh5RVc4aKlutNwJRDD3kViHoCtl+fJv0D3ZLPqD7fow4ArZcS1rIA6W3KLvESmgPGyyDvWpvCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 7:32 AM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> First, what am I looking for?
->
-> I am looking for something that prevents the following:
->
-> o       Task A acquires a reference to Task B's task_struct while
->         protected only by RCU, and is just about to increment ->rcu_users
->         when it is delayed.  Maybe its vCPU is preempted or something.
+From: Sanjay R Mehta <sanju.mehta@amd.com>
 
-Where exactly do you see "increment ->rcu_users"
+Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
+---
+ drivers/ntb/hw/amd/ntb_hw_amd.c | 3 ++-
+ drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-There are _no_ users that can increment rcu_users. The thing is
-initialized to '2' when the process is created, and nobody ever
-increments it. EVER.
+diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_am=
+d.c
+index 2859cc9..e9286cf 100644
+--- a/drivers/ntb/hw/amd/ntb_hw_amd.c
++++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
+@@ -1124,7 +1124,8 @@ static const struct file_operations amd_ntb_debugfs_i=
+nfo =3D {
+ };
+=20
+ static const struct pci_device_id amd_ntb_pci_tbl[] =3D {
+-	{PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NTB)},
++	{PCI_VDEVICE(AMD, 0x145b)},
++	{PCI_VDEVICE(AMD, 0x148b)},
+ 	{0}
+ };
+ MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
+diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_am=
+d.h
+index 8f3617a..3aac994 100644
+--- a/drivers/ntb/hw/amd/ntb_hw_amd.h
++++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
+@@ -52,7 +52,6 @@
+ #include <linux/ntb.h>
+ #include <linux/pci.h>
+=20
+-#define PCI_DEVICE_ID_AMD_NTB	0x145B
+ #define AMD_LINK_HB_TIMEOUT	msecs_to_jiffies(1000)
+ #define AMD_LINK_STATUS_OFFSET	0x68
+ #define NTB_LIN_STA_ACTIVE_BIT	0x00000002
+--=20
+2.7.4
 
-It's only ever decremented, and when it hits zero we know that both
-users are gone, and we start the rcu-delayed free.
-
-            Linus
