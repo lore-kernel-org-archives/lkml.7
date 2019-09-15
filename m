@@ -2,140 +2,177 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2054AC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED8C2C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA70020692
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:22:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568542936;
-	bh=jQ+dE0FqCn4YmPt8H5tQ6UZBzpg1F2BEc20j8Ptglzk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=v/6eov/+nT1jlMOeLgvY2fuV+Fl7+hsFHsEKBySVlup6ORfBoznplHUkI6+DTDRXC
-	 Mhe3+YBzAlOFxNUqr4ShDb1P3p/JFmOJ1er/J8doaF4mJUdCtr+StSxN62bf4JGdos
-	 kDvCPVgK6ovIb/dq01GUN0lwxzizrosKJdPc4bTQ=
+	by mail.kernel.org (Postfix) with ESMTP id BE83F2053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:27:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7J6BIuq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfIOKWN (ORCPT
+        id S1728308AbfIOK1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 06:22:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725892AbfIOKWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 06:22:12 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FD220692;
-        Sun, 15 Sep 2019 10:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568542931;
-        bh=jQ+dE0FqCn4YmPt8H5tQ6UZBzpg1F2BEc20j8Ptglzk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y5BbD16mnzz7OhM8IfFnS1ggxaS2GA7BFcYFp/ccokTArfJNqni/tOl8YgI7yBU1a
-         02MB/74LKXFKXF/CZtGJW3ui1b5ObbJmJeNgeAeV4H9IUbuVJb7IUfH4AHojzPQ2RJ
-         MHoECe9e7kfh2HZwSU+AzNE8mmhDT2tYuMWweIsI=
-Date:   Sun, 15 Sep 2019 11:22:05 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-spi@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bcm-kernel-feedback-list@broadcom.com>, <broonie@kernel.org>,
-        <f.fainelli@gmail.com>, <linus.walleij@linaro.org>,
-        <orsonzhai@gmail.com>, <baolin.wang@linaro.org>,
-        <zhang.lyra@gmail.com>
-Subject: Re: [RFC PATCH 00/15] Unify SPI delays into an `struct spi_delay`
-Message-ID: <20190915112205.0007d62d@archlinux>
-In-Reply-To: <20190913114550.956-1-alexandru.ardelean@analog.com>
-References: <20190913114550.956-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Sep 2019 06:27:55 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37722 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbfIOK1y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 06:27:54 -0400
+Received: by mail-pg1-f196.google.com with SMTP id c17so9888471pgg.4
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 03:27:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+DlVioqK5uRpVVeZFyNBzYhv8CboJoJINHakxoF0V8I=;
+        b=W7J6BIuqiJqwOVGySU2/2sLo7n4L6vpQ8koOf7tgML2ci44KuW7+Z+QeF4EtGlNWor
+         nap+mTsX2lJxE8BN/MkQw+Sa00gHBTpMFqTV5eMQz382sLbN7m6H6TTXn6N9n1vCxOU/
+         GgVksaLYVvAwgbMcd712Y47yGFFkSXV+mMYKGeo2LWgxdca92htSSarGwomadLnRnveR
+         bD4BquVLrcThJ5BjkiUAVZ1Q/w802R4JsiiuPyIFw1xw6Ba8Y8ySR7eGkvbLC4q8glCZ
+         PHNiumU7GQtEXMWU1XFU8MAUuNJMi3BnBOd0cyx6HrrRB8g0wVxofpxUZMgoH2cBG889
+         /AGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+DlVioqK5uRpVVeZFyNBzYhv8CboJoJINHakxoF0V8I=;
+        b=rDRDANOKYuz6lPJBZKWIid6ODsCQOmVSD0Qd+R+VqWdZ3tQtk+YdCD29D/jdDgRiFZ
+         nCy/Qb4cglAXW0jTSoOBb/jHyU/WQ5Gf9E6xPE8/QxgxKBmzcuKdiPe7t38wVOyzXCec
+         QU7Anm3E/3QsVFTX8Ts25LqohGHboCRt0iFIpYYTesiUfhbI6nMXePVQ0LaST5neslLi
+         laGoY+lcykO0zpx6zjdITok+S8aL1FK5KwHHwFQkU97Aj/M48Hi5CQvXWBPhqIUPlQxH
+         RIWDvnGP02j2nacuWUaZAiL1ztqZAHdOyLND4faL4iVhhTyYkR37g/HiHTP5olqHtT7m
+         OTmA==
+X-Gm-Message-State: APjAAAUbe8Ppeyh/doUAT6TEfdVAgV3L2wlCjWX2s08gg/R5l5yRrPqm
+        XUakKNVxB6lfGwteqVQCOfQ=
+X-Google-Smtp-Source: APXvYqxYfX35UFjEHcttlbtfS4aoDMY+DF6sXK/pLY6jigba0QdQ93GLnkdogmU8eiUcO5/mHjVHdw==
+X-Received: by 2002:a63:6d0:: with SMTP id 199mr20262117pgg.299.1568543273794;
+        Sun, 15 Sep 2019 03:27:53 -0700 (PDT)
+Received: from localhost.localdomain ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id d190sm10875510pgc.25.2019.09.15.03.27.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 03:27:51 -0700 (PDT)
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Changbin Du <changbin.du@gmail.com>
+Subject: [PATCH] perf: add support for logging debug messages to file
+Date:   Sun, 15 Sep 2019 18:27:40 +0800
+Message-Id: <20190915102740.24209-1-changbin.du@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 14:45:35 +0300
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+When in TUI mode, it is impossible to show all the debug messages to
+console. This make it hard to debug perf issues using debug messages.
+This patch adds support for logging debug messages to file to resolve
+this problem.
 
-> Initially, I started this patchset thinking: "we need a new delay for
-> something-something" (in case someone is curios, we need a CS-hold-time for
-> the first transfer, because the CS wakes a chip from sleep-mode).
-> 
-> Then I added the delay, and felt a bit dirty-inside about adding a new one
-> (just like that), and decided to look at maybe cleaning things up a bit,
-> and a few days later, I got here.
-> 
-> Full disclaimer: this patchset is not complete. It's an RFC.
-> It's based on top of Jonathan's `iio/togreg` branch which also includes the
-> ADIS driver library changes and also includes `cs_change_delay`.
-> 
-> I'll send a V2 patchset, which just the first 4 patches, since I feel that
-> those are a bit more complete.
-> 
-> I thought about just sending the first 4 patches on-their-own, but I
-> figured that the whole series (even if not complete) serves as a better
-> explanation about the whole "why?".
-> 
-> Hopefully, this can sort-of-explain things.
-> I'll reference this RFC on the next series.
+The usage is:
+perf -debug verbose=2 --debug file=1 COMMAND
 
-General approach looks sensible to me. Over to SPI specialists on
-whether this is a sensible bit of unification to do.
+And the path of log file is '~/perf.log'.
 
-Jonathan
+Signed-off-by: Changbin Du <changbin.du@gmail.com>
+---
+ tools/perf/Documentation/perf.txt |  4 +++-
+ tools/perf/util/debug.c           | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-> 
-> Thanks
-> 
-> Alexandru Ardelean (15):
->   spi: move `cs_change_delay` backwards compat logic outside switch
->   spi: introduce spi_delay struct as "value + unit" &  spi_delay_exec()
->   spi: make `cs_change_delay` the first user of the `spi_delay` logic
->   iio: imu: adis: convert cs_change_delay to spi_delay struct
->   spi: sprd: convert transfer word delay to spi_delay struct
->   spi: orion: use new `word_delay` field for SPI transfers
->   spi: spidev: use new `word_delay` field for spi transfers
->   spi: core,atmel: convert `word_delay_usecs` -> `word_delay` for
->     spi_device
->   spi: introduce `delay` field for `spi_transfer` + spi_transfer_exec()
->   spi: use new `spi_transfer_delay` helper where straightforward
->   spi: tegra114: use `spi_transfer_delay` helper
->   spi: spi-loopback-test: use new `delay` field
->   spi: spidev: use new `delay` field for spi transfers
->   spi: tegra114: change format for `spi_set_cs_timing()` function
->   spi: implement SW control for CS times
-> 
->  drivers/iio/imu/adis.c           |  24 ++---
->  drivers/spi/spi-atmel.c          |  29 +++++-
->  drivers/spi/spi-bcm63xx-hsspi.c  |   3 +-
->  drivers/spi/spi-cavium.c         |   3 +-
->  drivers/spi/spi-fsl-dspi.c       |   3 +-
->  drivers/spi/spi-fsl-espi.c       |   3 +-
->  drivers/spi/spi-fsl-spi.c        |   3 +-
->  drivers/spi/spi-loopback-test.c  |  12 ++-
->  drivers/spi/spi-mpc512x-psc.c    |   3 +-
->  drivers/spi/spi-mpc52xx-psc.c    |   3 +-
->  drivers/spi/spi-omap-100k.c      |   3 +-
->  drivers/spi/spi-orion.c          |   6 +-
->  drivers/spi/spi-pl022.c          |  25 +++--
->  drivers/spi/spi-sc18is602.c      |   3 +-
->  drivers/spi/spi-sh-hspi.c        |   3 +-
->  drivers/spi/spi-sprd.c           |  11 ++-
->  drivers/spi/spi-tegra114.c       |  39 +++++---
->  drivers/spi/spi-tegra20-sflash.c |   2 +-
->  drivers/spi/spi-topcliff-pch.c   |   7 +-
->  drivers/spi/spi-txx9.c           |   3 +-
->  drivers/spi/spi-xcomm.c          |   3 +-
->  drivers/spi/spi.c                | 162 +++++++++++++++++++++++++------
->  drivers/spi/spidev.c             |   6 +-
->  include/linux/spi/spi.h          |  65 ++++++++++---
->  24 files changed, 293 insertions(+), 131 deletions(-)
-> 
+diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
+index 401f0ed67439..45db7b22d1a5 100644
+--- a/tools/perf/Documentation/perf.txt
++++ b/tools/perf/Documentation/perf.txt
+@@ -16,7 +16,8 @@ OPTIONS
+ 	Setup debug variable (see list below) in value
+ 	range (0, 10). Use like:
+ 	  --debug verbose   # sets verbose = 1
+-	  --debug verbose=2 # sets verbose = 2
++	  --debug verbose=2 --debug file=1
++	                    # sets verbose = 2 and save log to file
+ 
+ 	List of debug variables allowed to set:
+ 	  verbose          - general debug messages
+@@ -24,6 +25,7 @@ OPTIONS
+ 	  data-convert     - data convert command debug messages
+ 	  stderr           - write debug output (option -v) to stderr
+ 	                     in browser mode
++	  file             - write debug output to log file ~/perf.log
+ 
+ --buildid-dir::
+ 	Setup buildid cache directory. It has higher priority than
+diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
+index 3780fe42453b..f0b4346a0efa 100644
+--- a/tools/perf/util/debug.c
++++ b/tools/perf/util/debug.c
+@@ -8,6 +8,7 @@
+ #include <stdarg.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <errno.h>
+ #include <sys/wait.h>
+ #include <api/debug.h>
+ #include <linux/time64.h>
+@@ -28,6 +29,8 @@ int verbose;
+ bool dump_trace = false, quiet = false;
+ int debug_ordered_events;
+ static int redirect_to_stderr;
++static int log_to_file;
++static FILE *log_file;
+ int debug_data_convert;
+ 
+ int veprintf(int level, int var, const char *fmt, va_list args)
+@@ -39,6 +42,9 @@ int veprintf(int level, int var, const char *fmt, va_list args)
+ 			ui_helpline__vshow(fmt, args);
+ 		else
+ 			ret = vfprintf(stderr, fmt, args);
++
++		if (log_file)
++			vfprintf(log_file, fmt, args);
+ 	}
+ 
+ 	return ret;
+@@ -180,6 +186,7 @@ static struct debug_variable {
+ 	{ .name = "verbose",		.ptr = &verbose },
+ 	{ .name = "ordered-events",	.ptr = &debug_ordered_events},
+ 	{ .name = "stderr",		.ptr = &redirect_to_stderr},
++	{ .name = "file",		.ptr = &log_to_file},
+ 	{ .name = "data-convert",	.ptr = &debug_data_convert },
+ 	{ .name = NULL, }
+ };
+@@ -219,6 +226,19 @@ int perf_debug_option(const char *str)
+ 		v = -1;
+ 
+ 	*var->ptr = v;
++
++	if (log_to_file) {
++		char log_path[PATH_MAX];
++
++		strcat(strcpy(log_path, getenv("HOME")), "/perf.log");
++		log_file = fopen(log_path, "a");
++		if (!log_file) {
++			pr_err("Can not create log file: %s\n", strerror(errno));
++			free(s);
++			return -1;
++		}
++	}
++
+ 	free(s);
+ 	return 0;
+ }
+-- 
+2.20.1
 
