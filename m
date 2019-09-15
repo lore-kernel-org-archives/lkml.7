@@ -2,107 +2,170 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C64C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7643BC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8795A214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A20206A4
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:16:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ejAuYKri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfIOOOY (ORCPT
+        id S1731665AbfIOOP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 10:14:24 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:53701 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726024AbfIOOOY (ORCPT
+        Sun, 15 Sep 2019 10:15:59 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37894 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfIOOP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 10:14:24 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=aaron.lu@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0TcNDfjk_1568556842;
-Received: from aaronlu(mailfrom:aaron.lu@linux.alibaba.com fp:SMTPD_---0TcNDfjk_1568556842)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 15 Sep 2019 22:14:08 +0800
-Date:   Sun, 15 Sep 2019 22:14:02 +0800
-From:   Aaron Lu <aaron.lu@linux.alibaba.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190915141402.GA1349@aaronlu>
-References: <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <fab8eabb-1cfa-9bf6-02af-3afdff3f955d@linux.intel.com>
- <20190911140204.GA52872@aaronlu>
- <7b001860-05b4-4308-df0e-8b60037b8000@linux.intel.com>
- <20190912120400.GA16200@aaronlu>
- <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
+        Sun, 15 Sep 2019 10:15:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+Sr4NPjbaVlU3bIjCr/wLaVw22kxZgLPWY1ICbkVA1E=; b=ejAuYKriiw0ypu1l5nnqcttS6
+        MiWBKPSdxCxGdMVB9/al4vXj112vBRD0cuHJPaiatLYAMHUBcQLBRPSFl0+96FAppAm3O0eWKmFpC
+        zywvJPGd/r2BrPAI9ktCun9v3RJWF8lOpKAyEZjuKid7L2dXRW3PdrGmOF5CeeD/KLObbsOz12vi/
+        g370Xe5UaVlMn9NEUc0XgE/51m5xV8AQBpHlzu378KPkHcWjlWAWYPQ/GjQP4lf+Y23hbo7pf/pwI
+        mtIw5HHT4zqpPHaRDKhf/c/1s0vm7E2fY58d+0wFSMT7+blpYsipsRAQNNgDMm6e2ug4FOhvKGScx
+        MHz5+8HTQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60556)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1i9VJh-0006iN-Kd; Sun, 15 Sep 2019 15:15:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1i9VJg-0007pT-J2; Sun, 15 Sep 2019 15:15:52 +0100
+Date:   Sun, 15 Sep 2019 15:15:52 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        tinywrkb <tinywrkb@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190915141552.GD25745@shell.armlinux.org.uk>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
+ <20190910185033.GD9761@lunn.ch>
+ <87muf6oyvr.fsf@tarshish>
+ <20190915135652.GC3427@lunn.ch>
+ <20190915140639.GC25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAERHkrsrszO4hJqVy=g7P74h9d_YJzW7GY4ptPKykTX-mc9Mdg@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190915140639.GC25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 07:12:52AM +0800, Aubrey Li wrote:
-> On Thu, Sep 12, 2019 at 8:04 PM Aaron Lu <aaron.lu@linux.alibaba.com> wrote:
-> >
-> > On Wed, Sep 11, 2019 at 09:19:02AM -0700, Tim Chen wrote:
-> > > On 9/11/19 7:02 AM, Aaron Lu wrote:
-> > > I think Julien's result show that my patches did not do as well as
-> > > your patches for fairness. Aubrey did some other testing with the same
-> > > conclusion.  So I think keeping the forced idle time balanced is not
-> > > enough for maintaining fairness.
-> >
-> > Well, I have done following tests:
-> > 1 Julien's test script: https://paste.debian.net/plainh/834cf45c
-> > 2 start two tagged will-it-scale/page_fault1, see how each performs;
-> > 3 Aubrey's mysql test: https://github.com/aubreyli/coresched_bench.git
-> >
-> > They all show your patchset performs equally well...And consider what
-> > the patch does, I think they are really doing the same thing in
-> > different ways.
+On Sun, Sep 15, 2019 at 03:06:39PM +0100, Russell King - ARM Linux admin wrote:
+> On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
+> > > Tinywrkb confirmed to me in private communication that revert of
+> > > 5502b218e001 fixes Ethernet for him on effected system.
+> > > 
+> > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
+> > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
+> > > there was a plan to use a different 10/100 PHY for Solo/DualLite
+> > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
+> > > AR8035 PHY that supports 1Gb.
+> > > 
+> > > Commit 5502b218e001 might be triggering a hardware issue on the affected
+> > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
+> > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
+> > > the moment.
+> > 
+> > Could somebody with an affected device show us the output of ethtool
+> > with and without 5502b218e001. Does one show 1G has been negotiated,
+> > and the other 100Mbps? If this is true, how does it get 100Mbps
+> > without that patch? We are missing a piece of the puzzle.
 > 
-> It looks like we are not on the same page, if you don't mind, can both of
-> you rebase your patchset onto v5.3-rc8 and provide a public branch so I
-> can fetch and test it at least by my benchmark?
+> Hang on.  5502b218e001 is in 5.2 already - it was merged as part of the
+> v5.1 merge window.  That means my imx6 Solo Hummingboard is already
+> running it with the AR8035 PHY, and it works fine.
+> 
+> # dmesg
+> ...
+> OF: fdt: Machine model: SolidRun HummingBoard Solo/DualLite
+> ...
+> # ethtool eth0
+> Settings for eth0:
+>         Supported ports: [ TP MII ]
+>         Supported link modes:   10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Supported pause frame use: Symmetric
+>         Supports auto-negotiation: Yes
+>         Supported FEC modes: Not reported
+>         Advertised link modes:  10baseT/Half 10baseT/Full
+>                                 100baseT/Half 100baseT/Full
+>                                 1000baseT/Full
+>         Advertised pause frame use: Symmetric
+>         Advertised auto-negotiation: Yes
+>         Advertised FEC modes: Not reported
+>         Link partner advertised link modes:  10baseT/Half 10baseT/Full
+>                                              100baseT/Half 100baseT/Full
+>                                              1000baseT/Full
+>         Link partner advertised pause frame use: Symmetric
+>         Link partner advertised auto-negotiation: Yes
+>         Link partner advertised FEC modes: Not reported
+>         Speed: 1000Mb/s
+>         Duplex: Full
+>         Port: MII
+>         PHYAD: 0
+>         Transceiver: internal
+>         Auto-negotiation: on
+>         Supports Wake-on: d
+>         Wake-on: d
+>         Link detected: yes
 
-I'm using the following branch as base which is v5.1.5 based:
-https://github.com/digitalocean/linux-coresched coresched-v3-v5.1.5-test
+For some further testing, by changing the advertisment on the DSA
+switch (other end of this platform's link):
 
-And I have pushed Tim's branch to:
-https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-tim
+        Link partner advertised link modes:  10baseT/Half 10baseT/Full
+                                             100baseT/Half 100baseT/Full
+...
+        Speed: 100Mb/s
+        Duplex: Full
+===============
+        Link partner advertised link modes:  10baseT/Half 10baseT/Full
+                                             100baseT/Half
+...
+        Speed: 100Mb/s
+        Duplex: Half
+===============
+        Link partner advertised link modes:  10baseT/Half 10baseT/Full
+...
+        Speed: 10Mb/s
+        Duplex: Full
+===============
+        Link partner advertised link modes:  10baseT/Half
+...
+        Speed: 10Mb/s
+        Duplex: Half
 
-Mine:
-https://github.com/aaronlu/linux coresched-v3-v5.1.5-test-core_vruntime
+So it looks like the commit works as it should.  So there's something
+else going on.
 
-The two branches both have two patches I have sent previouslly:
-https://lore.kernel.org/lkml/20190810141556.GA73644@aaronlu/
-Although it has some potential performance loss as pointed out by
-Vineeth, I haven't got time to rework it yet.
+Note that the FEC does *not* support 1000baseT/Half.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
