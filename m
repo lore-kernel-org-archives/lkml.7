@@ -2,362 +2,226 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D16C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 23:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1D1C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 23:46:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B2A92077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 23:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568589498;
-	bh=65AKB2ibjS5cQEh57AwwKfeMydifzDmKLpcacdkvSSo=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0wiV2xX6FDTpnskYfy9obqyNDJCmuanAhw5jG2gySjPLckUIfFUZbhmgG7O02cbH/
-	 EMcTtllWEknPWTioQLhF/pcG2Xq9qPWWr1lYLKpfwUtQDUZpxJSyOQVA46kRjmXYpc
-	 p+xJomTS6PyD+NEuXP/UVdWi/0zq0YwN06cSzIEo=
+	by mail.kernel.org (Postfix) with ESMTP id 64FBB20692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 23:46:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbfIOXSR (ORCPT
+        id S1728853AbfIOXqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 19:18:17 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40800 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfIOXSQ (ORCPT
+        Sun, 15 Sep 2019 19:46:48 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34023 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726222AbfIOXqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 19:18:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UiKbXJa9UkmqCHky2KZcLlDGNArwZBtYoCoIWzBRuMQ=; b=KOG5tmjmCJMZe8ekgWdn4nDAz
-        tGmmeG8gYL5iz3PS5N8oihcMz1sUchdhvJBwF7Ldt0PjICCULnQ+lMszwh8TSvrrO8J69hvAytSgZ
-        lxLAaa3QXloRjD13RwVW4mDjryhJ1xoTP7JakSy6mTT+t4YvE91CJSefSXfa3DWZrIomA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9dmW-0001g3-Mt; Sun, 15 Sep 2019 23:18:12 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id D195D27419E4; Mon, 16 Sep 2019 00:18:11 +0100 (BST)
-Date:   Mon, 16 Sep 2019 00:18:11 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] SPI updates for v5.4
-Message-ID: <20190915231811.GQ4352@sirena.co.uk>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="SvyA5ywaG/v2A5dH"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 15 Sep 2019 19:46:48 -0400
+Received: by mail-io1-f67.google.com with SMTP id q1so2379092ion.1
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 16:46:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=xyRWB+l7PZydI8LLr4Hd5cj+Mp8bWhYxguWgd/GvMXs=;
+        b=jm63iY45mM6PYcGjMNO/0vSQMg5WL+eyST5hr67S+l6NM8Qprkr+Fr98rb1N/qABm6
+         vsyA5fXdz+Xn1NyUtV8GAzwC66oMQmtj/OymTVH3gjjubSpCU6RjzaG5YziblGHoKIIN
+         vJ1F/y5uZ83VumXYpkwXnNvCPUOUkp6yBhFgqQ8tyea28bDYhtZvfpVlHTuVuKYEX5Ge
+         eyX8naOexOcrvtfmA8br2/gojbLdxfJwmERMbhGHMKGUt1urKxJ1nkWZI184Jvi8PJ5b
+         Q+fk4g3KF0N4MHVccGXBmw2Yo0EyEonbDZz+gLIJ5K9kb+cvdmqqNv7GrCd16hLon7x9
+         6lZA==
+X-Gm-Message-State: APjAAAUMYibViF0XGypp/hdovkXeTqySdwyO/g83/LS9NOHz3FD3K4HT
+        FTquViA/lrhaXI6/wmYYQYqyeQ==
+X-Google-Smtp-Source: APXvYqxAFk+kS/PRpqnZYCVrW9uD4CZQEWp8b/8Q2oi1bF+TPD8/wVKMzOgDa0s86/KIcqn201w/PQ==
+X-Received: by 2002:a6b:acc5:: with SMTP id v188mr13732192ioe.268.1568591205136;
+        Sun, 15 Sep 2019 16:46:45 -0700 (PDT)
+Received: from localhost ([199.167.24.142])
+        by smtp.gmail.com with ESMTPSA id m67sm49429512iof.21.2019.09.15.16.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 16:46:44 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 16:46:44 -0700 (PDT)
+X-Google-Original-Date: Sun, 15 Sep 2019 16:36:37 PDT (-0700)
+Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <861rwhs9on.wl-maz@kernel.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        David Johnson <davidj@sifive.com>,
+        Darius Rad <darius@bluespec.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     maz@kernel.org, Alistair Francis <Alistair.Francis@wdc.com>
+Message-ID: <mhng-828163d7-e51f-4dba-89f3-316343f20dca@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 15 Sep 2019 11:20:40 PDT (-0700), maz@kernel.org wrote:
+> On Sun, 15 Sep 2019 18:31:33 +0100,
+> Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+> Hi Palmer,
+>
+>>
+>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
+>> > On Thu, 12 Sep 2019 22:40:34 +0100,
+>> > Darius Rad <darius@bluespec.com> wrote:
+>> >
+>> > Hi Darius,
+>> >
+>> >>
+>> >> As per the existing comment, irq_mask and irq_unmask do not need
+>> >> to do anything for the PLIC.  However, the functions must exist
+>> >> (the pointers cannot be NULL) as they are not optional, based on
+>> >> the documentation (Documentation/core-api/genericirq.rst) as well
+>> >> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
+>> >>
+>> >> Signed-off-by: Darius Rad <darius@bluespec.com>
+>> >> ---
+>> >>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+>> >>  1 file changed, 9 insertions(+), 4 deletions(-)
+>> >>
+>> >> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+>> >> index cf755964f2f8..52d5169f924f 100644
+>> >> --- a/drivers/irqchip/irq-sifive-plic.c
+>> >> +++ b/drivers/irqchip/irq-sifive-plic.c
+>> >> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+>> >>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>> >>  }
+>> >>  +/*
+>> >> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> >> + * by reading claim and "unmasked" when writing it back.
+>> >> + */
+>> >> +static void plic_irq_mask(struct irq_data *d) { }
+>> >> +static void plic_irq_unmask(struct irq_data *d) { }
+>> >
+>> > This outlines a bigger issue. If your irqchip doesn't require
+>> > mask/unmask, you're probably not using the right interrupt
+>> > flow. Looking at the code, I see you're using handle_simple_irq, which
+>> > is almost universally wrong.
+>> >
+>> > As per the description above, these interrupts should be using the
+>> > fasteoi flow, which is designed for this exact behaviour (the
+>> > interrupt controller knows which interrupt is in flight and doesn't
+>> > require SW to do anything bar signalling the EOI).
+>> >
+>> > Another thing is that mask/unmask tends to be a requirement, while
+>> > enable/disable tends to be optional. There is no hard line here, but
+>> > the expectations are that:
+>> >
+>> > (a) A disabled line can drop interrupts
+>> > (b) A masked line cannot drop interrupts
+>> >
+>> > Depending what the PLIC architecture mandates, you'll need to
+>> > implement one and/or the other. Having just (a) is indicative of a HW
+>> > bug, and I'm not assuming that this is the case. (b) only is pretty
+>> > common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+>> > only.
+>> >
+>> >> +
+>> >>  #ifdef CONFIG_SMP
+>> >>  static int plic_set_affinity(struct irq_data *d,
+>> >>  			     const struct cpumask *mask_val, bool force)
+>> >> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+>> >>   static struct irq_chip plic_chip = {
+>> >>  	.name		= "SiFive PLIC",
+>> >> -	/*
+>> >> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> >> -	 * by reading claim and "unmasked" when writing it back.
+>> >> -	 */
+>> >>  	.irq_enable	= plic_irq_enable,
+>> >>  	.irq_disable	= plic_irq_disable,
+>> >> +	.irq_mask	= plic_irq_mask,
+>> >> +	.irq_unmask	= plic_irq_unmask,
+>> >>  #ifdef CONFIG_SMP
+>> >>  	.irq_set_affinity = plic_set_affinity,
+>> >>  #endif
+>> >
+>> > Can you give the following patch a go? It brings the irq flow in line
+>> > with what the HW can do. It is of course fully untested (not even
+>> > compile tested...).
+>> >
+>> > Thanks,
+>> >
+>> > 	M.
+>> >
+>> > From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+>> > From: Marc Zyngier <maz@kernel.org>
+>> > Date: Sun, 15 Sep 2019 15:17:45 +0100
+>> > Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+>> >
+>> > The SiFive PLIC interrupt controller seems to have all the HW
+>> > features to support the fasteoi flow, but the driver seems to be
+>> > stuck in a distant past. Bring it into the 21st century.
+>>
+>> Thanks.  We'd gotten these comments during the review process but
+>> nobody had gotten the time to actually fix the issues.
+>
+> No worries. The IRQ subsystem is an acquired taste... ;-)
+>
+>> >
+>> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> > ---
+>> >  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+>> >  1 file changed, 15 insertions(+), 14 deletions(-)
+>> >
+>> > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+>> > index cf755964f2f8..8fea384d392b 100644
+>> > --- a/drivers/irqchip/irq-sifive-plic.c
+>> > +++ b/drivers/irqchip/irq-sifive-plic.c
+>> > @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+>> >  	}
+>> >  }
+>> >  -static void plic_irq_enable(struct irq_data *d)
+>> > +static void plic_irq_mask(struct irq_data *d)
+>
+> Of course, this is wrong. The perks of trying to do something at the
+> last minute while boarding an airplane. Don't do that.
+>
+> This should of course read "plic_irq_unmask"...
+>
+>> >  {
+>> >  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+>> >  					   cpu_online_mask);
+>> > @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+>> >  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+>> >  }
+>> >  -static void plic_irq_disable(struct irq_data *d)
+>> > +static void plic_irq_unmask(struct irq_data *d)
+>
+> ... and this should be "plic_irq_mask".
+>
+> [...]
+>
+>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
+>
+> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
+> the above bug should have kept the IRQ lines masked.
 
---SvyA5ywaG/v2A5dH
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yep, looks like the PLIC implementation in QEMU is nonsense.  That needs to be 
+rewritten, and this needs to be tested on hardware.
 
-The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
-
-  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-=
-v5.4
-
-for you to fetch changes up to b769c5ba8aedc395ed04abe6db84a556d28beec1:
-
-  Merge branch 'spi-5.4' into spi-next (2019-09-15 10:32:06 +0100)
-
-----------------------------------------------------------------
-spi: Updates for v5.4
-
-The big theme for this release has been performance, we've had a series
-of unrelated overhauls of a few drivers all with a big peformance
-component.  Otherwise it's been relatively quiet, highlights include:
-
- - A big overhaul of the spi-fsl-dspi driver improving the code quality,
-   performance and stability from Vladimir Oltean.
- - A big performance enhancement for the bc2835 (Raspberry Pi) driver
-   for unidirectional transfers from Lukas Wunner.
- - Improved performance on small transfers for the uniphier driver from
-   Keiji Hayashibara.
- - Lots of coccinelle generated cleanups from Yue Haibing.
- - New device support for Freescale ls2080a and Nuvoton NPCM FIU.
-
-----------------------------------------------------------------
-Alexander Sverdlin (1):
-      spi: ep93xx: Repair SPI CS lookup tables
-
-Andy Shevchenko (2):
-      spi: dw-mmio: Use devm_platform_ioremap_resource()
-      spi: dw-mmio: Clock should be shut when error occurs
-
-Ashish Kumar (2):
-      spi: fsl-qspi: Enhance binding to extend example for flash entry
-      spi: spi-fsl-qspi: Add ls2080a compatibility string to bindings
-
-Axel Lin (1):
-      spi: zynq-qspi: Fix missing spi_unregister_controller when unload mod=
-ule
-
-Baolin Wang (3):
-      spi: sprd: adi: Remove redundant address bits setting
-      spi: sprd: adi: Change hwlock to be optional
-      spi: sprd: Change the hwlock support to be optional
-
-Chenxu Wei (1):
-      spi: sprd: adi: Add a reset reason for TOS panic
-
-Chuhong Yuan (1):
-      spi: dw-pci: Use dev_get_drvdata
-
-Colin Ian King (1):
-      spi: npcm-fiu: fix spelling mistake "frequancy" -> "frequency"
-
-Geert Uytterhoeven (2):
-      spi: core: Use DEVICE_ATTR_RW() for SPI slave control sysfs attribute
-      spi: sh-msiof: Use devm_platform_ioremap_resource() helper
-
-Jarkko Nikula (2):
-      spi: dw-pci: Add support for Intel Elkhart Lake PSE SPI
-      spi: dw-pci: Add MODULE_DEVICE_TABLE
-
-Keiji Hayashibara (3):
-      spi: uniphier: fix wrong register overwrite
-      spi: uniphier: remove unnecessary code
-      spi: uniphier: introduce polling mode
-
-Linus Walleij (3):
-      spi: Rename of_spi_register_master() function
-      spi: fsl: Convert to use CS GPIO descriptors
-      spi: bcm2835: Convert to use CS GPIO descriptors
-
-Lukas Wunner (10):
-      spi: bcm2835: Work around DONE bit erratum
-      spi: bcm2835: Drop dma_pending flag
-      dmaengine: bcm2835: Allow cyclic transactions without interrupt
-      dmaengine: bcm2835: Allow reusable descriptors
-      spi: Guarantee cacheline alignment of driver-private data
-      dmaengine: bcm2835: Document struct bcm2835_dmadev
-      spi: bcm2835: Cache CS register value for ->prepare_message()
-      dmaengine: bcm2835: Avoid accessing memory when copying zeroes
-      spi: bcm2835: Speed up TX-only DMA transfers by clearing RX FIFO
-      spi: bcm2835: Speed up RX-only DMA transfers by zero-filling TX FIFO
-
-Manivannan Sadhasivam (1):
-      spi: Fix the number of CS lines documented as an example
-
-Mark Brown (3):
-      Merge branch 'spi-5.3' into spi-5.4
-      Merge branch 'spi-5.3' into spi-linus
-      Merge branch 'spi-5.4' into spi-next
-
-Markus Elfring (1):
-      spi-gpio: Use PTR_ERR_OR_ZERO() in spi_gpio_request()
-
-Peter Zijlstra (1):
-      spi: Reduce kthread priority
-
-Rayagonda Kokatanur (2):
-      spi: bcm-qspi: Fix BSPI QUAD and DUAL mode support when using flex mo=
-de
-      spi: bcm-qspi: Make BSPI default mode
-
-Sherry Zong (2):
-      spi: sprd: adi: Add a reset reason for factory test mode
-      spi: sprd: adi: Add a reset reason for watchdog mode
-
-Stephen Boyd (1):
-      spi: Remove dev_err() usage after platform_get_irq()
-
-Tomer Maimon (2):
-      dt-binding: spi: add NPCM FIU controller
-      spi: npcm-fiu: add NPCM FIU controller driver
-
-Uwe Kleine-K=F6nig (1):
-      spi: atmel: add tracing to custom .transfer_one_message callback
-
-Vladimir Oltean (19):
-      spi: spi-fsl-dspi: Fix code alignment
-      spi: spi-fsl-dspi: Remove unused defines and includes
-      spi: spi-fsl-dspi: Use BIT() and GENMASK() macros
-      spi: spi-fsl-dspi: Demistify magic value in SPI_SR_CLEAR
-      spi: spi-fsl-dspi: Change usage pattern of SPI_MCR_* and SPI_CTAR_* m=
-acros
-      spi: spi-fsl-dspi: Reduce indentation in dspi_release_dma()
-      spi: spi-fsl-dspi: Remove unused initialization of 'ret' in dspi_probe
-      spi: spi-fsl-dspi: Remove pointless assignment of master->transfer to=
- NULL
-      spi: spi-fsl-dspi: Replace legacy spi_master names with spi_controller
-      spi: spi-fsl-dspi: Use reverse Christmas tree declaration order
-      spi: spi-fsl-dspi: Fix typos
-      spi: spi-fsl-dspi: Move dspi_interrupt above dspi_transfer_one_message
-      spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
-      spi: spi-fsl-dspi: Reduce indentation level in dspi_interrupt
-      spi: spi-fsl-dspi: Exit the ISR with IRQ_NONE when it's not ours
-      spi: spi-fsl-dspi: Remove impossible to reach error check
-      spi: spi-fsl-dspi: Use poll mode in case the platform IRQ is missing
-      spi: spi-fsl-dspi: Fix race condition in TCFQ/EOQ interrupt
-      spi: Use an abbreviated pointer to ctlr->cur_msg in __spi_pump_messag=
-es
-
-YueHaibing (37):
-      spi: altera: use devm_platform_ioremap_resource() to simplify code
-      spi: a3700: use devm_platform_ioremap_resource() to simplify code
-      spi: ath79: use devm_platform_ioremap_resource() to simplify code
-      spi: spi-axi: use devm_platform_ioremap_resource() to simplify code
-      spi: bcm2835aux: use devm_platform_ioremap_resource() to simplify code
-      spi: bcm2835: use devm_platform_ioremap_resource() to simplify code
-      spi: bcm63xx-hsspi: use devm_platform_ioremap_resource() to simplify =
-code
-      spi: cadence: use devm_platform_ioremap_resource() to simplify code
-      spi: octeon: use devm_platform_ioremap_resource() to simplify code
-      spi: clps711x: use devm_platform_ioremap_resource() to simplify code
-      spi: coldfire-qspi: use devm_platform_ioremap_resource() to simplify =
-code
-      spi: dw-mmio: use devm_platform_ioremap_resource() to simplify code
-      spi: spi-geni-qcom: use devm_platform_ioremap_resource() to simplify =
-code
-      spi: lp-8841: use devm_platform_ioremap_resource() to simplify code
-      spi: meson-spicc: use devm_platform_ioremap_resource() to simplify co=
-de
-      spi: spi-meson-spifc: use devm_platform_ioremap_resource() to simplif=
-y code
-      spi: mt7621: use devm_platform_ioremap_resource() to simplify code
-      spi: mxs: use devm_platform_ioremap_resource() to simplify code
-      spi: npcm: use devm_platform_ioremap_resource() to simplify code
-      spi: nuc900: use devm_platform_ioremap_resource() to simplify code
-      spi: oc-tiny: use devm_platform_ioremap_resource() to simplify code
-      spi: pic32-sqi: use devm_platform_ioremap_resource() to simplify code
-      spi: spi-qcom-qspi: use devm_platform_ioremap_resource() to simplify =
-code
-      spi: rb4xx: use devm_platform_ioremap_resource() to simplify code
-      spi: s3c24xx: use devm_platform_ioremap_resource() to simplify code
-      spi: sifive: use devm_platform_ioremap_resource() to simplify code
-      spi: sirf: use devm_platform_ioremap_resource() to simplify code
-      spi: st-ssc4: use devm_platform_ioremap_resource() to simplify code
-      spi: sun4i: use devm_platform_ioremap_resource() to simplify code
-      spi: sun6i: use devm_platform_ioremap_resource() to simplify code
-      spi: tegra: use devm_platform_ioremap_resource() to simplify code
-      spi: uniphier: use devm_platform_ioremap_resource() to simplify code
-      spi: xlp: use devm_platform_ioremap_resource() to simplify code
-      spi: zynqmp: use devm_platform_ioremap_resource() to simplify code
-      spi: zynq-qspi: use devm_platform_ioremap_resource() to simplify code
-      spi: fsl-spi: use devm_platform_ioremap_resource() to simplify code
-      spi: npcm-fiu: remove set but not used variable 'retlen'
-
-luhua.xu (3):
-      dt-bindings: spi: update bindings for MT6765 SoC
-      spi: mediatek: add spi support for mt6765 IC
-      spi: mediatek: support large PA
-
- .../devicetree/bindings/spi/nuvoton,npcm-fiu.txt   |  47 ++
- .../devicetree/bindings/spi/spi-controller.yaml    |   2 +-
- .../devicetree/bindings/spi/spi-fsl-qspi.txt       |   9 +-
- .../devicetree/bindings/spi/spi-mt65xx.txt         |   1 +
- .../devicetree/bindings/spi/spi-sprd-adi.txt       |  11 +-
- arch/arm/mach-ep93xx/edb93xx.c                     |   2 +-
- arch/arm/mach-ep93xx/simone.c                      |   2 +-
- arch/arm/mach-ep93xx/ts72xx.c                      |   4 +-
- arch/arm/mach-ep93xx/vision_ep9307.c               |   2 +-
- drivers/dma/bcm2835-dma.c                          |  38 +-
- drivers/platform/chrome/cros_ec_spi.c              |   2 +-
- drivers/spi/Kconfig                                |  10 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/atmel-quadspi.c                        |   1 -
- drivers/spi/spi-altera.c                           |   4 +-
- drivers/spi/spi-armada-3700.c                      |   5 +-
- drivers/spi/spi-ath79.c                            |   4 +-
- drivers/spi/spi-atmel.c                            |   5 +
- drivers/spi/spi-axi-spi-engine.c                   |   4 +-
- drivers/spi/spi-bcm-qspi.c                         |   5 +-
- drivers/spi/spi-bcm2835.c                          | 470 ++++++++++---
- drivers/spi/spi-bcm2835aux.c                       |   5 +-
- drivers/spi/spi-bcm63xx-hsspi.c                    |   8 +-
- drivers/spi/spi-bcm63xx.c                          |   4 +-
- drivers/spi/spi-cadence.c                          |   5 +-
- drivers/spi/spi-cavium-octeon.c                    |   4 +-
- drivers/spi/spi-clps711x.c                         |   4 +-
- drivers/spi/spi-coldfire-qspi.c                    |   4 +-
- drivers/spi/spi-dw-mmio.c                          |  18 +-
- drivers/spi/spi-dw-pci.c                           |  20 +-
- drivers/spi/spi-efm32.c                            |   4 +-
- drivers/spi/spi-ep93xx.c                           |   4 +-
- drivers/spi/spi-fsl-cpm.c                          |   6 +-
- drivers/spi/spi-fsl-dspi.c                         | 718 +++++++++--------=
---
- drivers/spi/spi-fsl-lib.h                          |   3 -
- drivers/spi/spi-fsl-qspi.c                         |   4 +-
- drivers/spi/spi-fsl-spi.c                          | 193 +-----
- drivers/spi/spi-geni-qcom.c                        |   8 +-
- drivers/spi/spi-gpio.c                             |   5 +-
- drivers/spi/spi-lantiq-ssc.c                       |  12 +-
- drivers/spi/spi-lp8841-rtc.c                       |   4 +-
- drivers/spi/spi-meson-spicc.c                      |   4 +-
- drivers/spi/spi-meson-spifc.c                      |   4 +-
- drivers/spi/spi-mt65xx.c                           |  54 +-
- drivers/spi/spi-mt7621.c                           |   4 +-
- drivers/spi/spi-mxs.c                              |   4 +-
- drivers/spi/spi-npcm-fiu.c                         | 769 +++++++++++++++++=
-++++
- drivers/spi/spi-npcm-pspi.c                        |   5 +-
- drivers/spi/spi-nuc900.c                           |   5 +-
- drivers/spi/spi-nxp-fspi.c                         |   4 +-
- drivers/spi/spi-oc-tiny.c                          |   4 +-
- drivers/spi/spi-pic32-sqi.c                        |   5 +-
- drivers/spi/spi-pic32.c                            |  12 +-
- drivers/spi/spi-qcom-qspi.c                        |   8 +-
- drivers/spi/spi-rb4xx.c                            |   4 +-
- drivers/spi/spi-s3c24xx.c                          |   5 +-
- drivers/spi/spi-sh-msiof.c                         |   5 +-
- drivers/spi/spi-sh.c                               |   4 +-
- drivers/spi/spi-sifive.c                           |   5 +-
- drivers/spi/spi-sirf.c                             |   4 +-
- drivers/spi/spi-slave-mt27xx.c                     |   1 -
- drivers/spi/spi-sprd-adi.c                         |  92 ++-
- drivers/spi/spi-sprd.c                             |   4 +-
- drivers/spi/spi-st-ssc4.c                          |   4 +-
- drivers/spi/spi-stm32-qspi.c                       |   5 +-
- drivers/spi/spi-sun4i.c                            |   5 +-
- drivers/spi/spi-sun6i.c                            |   5 +-
- drivers/spi/spi-synquacer.c                        |   2 -
- drivers/spi/spi-tegra20-sflash.c                   |   4 +-
- drivers/spi/spi-ti-qspi.c                          |   1 -
- drivers/spi/spi-uniphier.c                         |  90 ++-
- drivers/spi/spi-xlp.c                              |   8 +-
- drivers/spi/spi-zynq-qspi.c                        |   7 +-
- drivers/spi/spi-zynqmp-gqspi.c                     |   5 +-
- drivers/spi/spi.c                                  |  53 +-
- 75 files changed, 1952 insertions(+), 905 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/nuvoton,npcm-fiu.=
-txt
- create mode 100644 drivers/spi/spi-npcm-fiu.c
-
---SvyA5ywaG/v2A5dH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+xrIACgkQJNaLcl1U
-h9DfFgf+KX9ERmJapngphdT7CpMsWEzio4wXBqJNVGiQdBE2qU79i4FOPTNo5i1K
-czM3Aj/GHmnArvAt+8+s/H0bhq1ruh0YbUnKs16OnoG+Cg9AsxZ67ZyVPiprgpAx
-sIlAu1X/9CUQ8Txac6SU7mm/Q10nETS1YvYRoHu0h5ga3X10BGqlQ8knEJeH8dyw
-IIrJaHvUhuFmkm8all8NYRyNwfw1UeWoE53xC7iOQ9Eo6rGUI8G/wH0ckseujonY
-6QSLWtPHFQKy0nD8iTne+PDE9YcEvCQVqCuN+iDN9d+xU/NI+s1fms7YdwRa542n
-exz2SpqaHOgWdD9fH8La70Wf/O0JTA==
-=Sgni
------END PGP SIGNATURE-----
-
---SvyA5ywaG/v2A5dH--
+>> We should test them on the hardware, but I don't have any with me
+>> right now.  David's probably in the best spot to do this, as he's got
+>> a setup that does all the weird interrupt sources (ie, PCIe).
+>>
+>> David: do you mind testing this?  I've put the patch here:
+>>
+>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
+>>    -b plic-fasteoi
+>
+> I've pushed out a branch with the fixed patch:
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
+>
+> Thanks,
+>
+> 	M.
