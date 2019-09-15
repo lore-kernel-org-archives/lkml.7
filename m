@@ -6,66 +6,65 @@ X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039FC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B5C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F30321479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:59:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C544214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfIOR7r (ORCPT
+        id S1726108AbfIOSSW convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:59:47 -0400
-Received: from out01.mta.xmission.com ([166.70.13.231]:55774 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIOR7q (ORCPT
+        Sun, 15 Sep 2019 14:18:22 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:39401 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIOSSW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:59:46 -0400
+        Sun, 15 Sep 2019 14:18:22 -0400
 Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i9Yo7-0006M9-9P; Sun, 15 Sep 2019 11:59:31 -0600
+        id 1i9Z6I-00079r-T5; Sun, 15 Sep 2019 12:18:18 -0600
 Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
         by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.87)
         (envelope-from <ebiederm@xmission.com>)
-        id 1i9Yo6-0007iN-AW; Sun, 15 Sep 2019 11:59:31 -0600
+        id 1i9Z6H-00011n-Lw; Sun, 15 Sep 2019 12:18:18 -0600
 From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
-        <20190830160957.GC2634@redhat.com>
-        <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
-        <87o906wimo.fsf@x220.int.ebiederm.org>
-        <20190902134003.GA14770@redhat.com>
-        <87tv9uiq9r.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
-        <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
-        <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
-        <87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>
-        <20190915144129.GL30224@paulmck-ThinkPad-P72>
-Date:   Sun, 15 Sep 2019 12:59:10 -0500
-In-Reply-To: <20190915144129.GL30224@paulmck-ThinkPad-P72> (Paul E. McKenney's
-        message of "Sun, 15 Sep 2019 07:41:29 -0700")
-Message-ID: <87ef0hcufl.fsf@x220.int.ebiederm.org>
+To:     "Michael Kerrisk \(man-pages\)" <mtk.manpages@gmail.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+        <20190805103630.tu4kytsbi5evfrhi@mikami>
+        <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+        <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+        <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+        <87r24piwhm.fsf@x220.int.ebiederm.org>
+        <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+        <87ftl5donm.fsf@x220.int.ebiederm.org>
+        <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
+        <20190910111551.scam5payogqqvlri@wittgenstein>
+        <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
+        <871rwnda47.fsf@x220.int.ebiederm.org>
+        <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
+Date:   Sun, 15 Sep 2019 13:17:58 -0500
+In-Reply-To: <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com> (Michael
+        Kerrisk's message of "Sun, 15 Sep 2019 10:12:09 +0200")
+Message-ID: <87ef0hbezt.fsf@x220.int.ebiederm.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1i9Yo6-0007iN-AW;;;mid=<87ef0hcufl.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+LXTj+wchIcd4h01Tp9jA+22aUPdNOM/A=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1i9Z6H-00011n-Lw;;;mid=<87ef0hbezt.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/EkPm9GGkbZrSz8OMQs54EEEIMjCGmbkA=
 X-SA-Exim-Connect-IP: 68.227.160.95
 X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 4/4] task: RCUify the assignment of rq->curr
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
 X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
 X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,46 +72,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Paul E. McKenney" <paulmck@kernel.org> writes:
+"Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
 
-> So this looks good in and of itself, but I still do not see what prevents
-> the unfortunate sequence of events called out in my previous email.
-> On the other hand, if ->rcu and ->rcu_users were not allocated on top
-> of each other by a union, I would be happy to provide a Reviewed-by.
+> Hello Eric,
 >
-> And I am fundamentally distrusting of a refcount_dec_and_test() that
-> is immediately followed by code that clobbers the now-zero value.
-> Yes, this does have valid use cases, but it has a lot more invalid
-> use cases.  The valid use cases have excluded all increments somehow
-> else, so that the refcount_dec_and_test() call's only job is to
-> synchronize between concurrent calls to put_task_struct_rcu_user().
-> But I am not seeing the "excluded all increments somehow".
+> On 9/11/19 1:06 AM, Eric W. Biederman wrote:
+>> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
+>> 
+>>> Hello Christian,
+>>>
+>>>>> All: I plan to add the following text to the manual page:
+>>>>>
+>>>>>        new_root and put_old may be the same  directory.   In  particular,
+>>>>>        the following sequence allows a pivot-root operation without need‐
+>>>>>        ing to create and remove a temporary directory:
+>>>>>
+>>>>>            chdir(new_root);
+>>>>>            pivot_root(".", ".");
+>>>>>            umount2(".", MNT_DETACH);
+>>>>
+>>>> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
+>>>> before the umount2()? Especially for the container case... I think we
+>>>> discussed this briefly yesterday in person.
+>>> Thanks for noticing. That detail (more precisely: not MS_SHARED) is
+>>> already covered in the numerous other changes that I have pending
+>>> for this page:
+>>>
+>>>        The following restrictions apply:
+>>>        ...
+>>>        -  The propagation type of new_root and its parent mount must  not
+>>>           be MS_SHARED; similarly, if put_old is an existing mount point,
+>>>           its propagation type must not be MS_SHARED.
+>> 
+>> Ugh.  That is close but not quite correct.
+>> 
+>> A better explanation:
+>> 
+>>     The pivot_root system call will never propagate any changes it makes.
+>>     The pivot_root system call ensures this is safe by verifying that
+>>     none of put_old, the parent of new_root, and parent of the root directory
+>>     have a propagation type of MS_SHARED.
 >
-> So, what am I missing here?
+> Thanks for that. However, another question. You text has two changes.
+> First, I understand why you reword the discussion to indicate the
+> _purpose_ of the rules. However, you also, AFAICS, list a different set of
+> of directories that can't be MS_SHARED:
+>
+> I said: new_root, the parent of new_root, and put_old
+> You said: the parent of new_root, and put_old, and parent of the
+> root directory.
 
-Probably only that the users of the task_struct in this sense are now
-quite mature.
 
-The two data structures that allow rcu access to the task_struct are
-the pid hash and the runqueue.    The practical problem is that they
-have two very different lifetimes.  So we need some kind of logic that
-let's us know when they are both done.  A recount does that job very
-well.
+> Was I wrong on this detail also?
 
-Placing the recount on the same storage as the unused (at that point)
-rcu_head removes the need to be clever in other ways to avoid bloating
-the task_struct.
+That is how I read the code.  The code says:
 
-If you really want a reference to the task_struct from rcu context you
-can just use get_task_struct.  Because until the grace period completes
-it is guaranteed that the task_struct has a positive count.
+	if (IS_MNT_SHARED(old_mnt) ||
+		IS_MNT_SHARED(new_mnt->mnt_parent) ||
+		IS_MNT_SHARED(root_mnt->mnt_parent))
+		goto out4;
 
-Right now I can't imagine a use case for wanting to increase rcu_users
-anywhere or to decrease rcu_users except where we do.  If there is such
-a case most likely it will increase the reference count at
-initialization time.
+We both agree on put_old and the parent of new_mnt.
 
-If anyone validly wants to increment rcu_users from an rcu critical
-section we can move it out of the union at that time.
+When I look at the code root_mnt comes from the root directory, not new_mnt.
+
+Furthermore those checks fundamentally makes sense as the root directory
+and new_root that are moving.  The directory put_old simply has
+something moving onto it.
+
+>> The concern from our conversation at the container mini-summit was that
+>> there is a pathology if in your initial mount namespace all of the
+>> mounts are marked MS_SHARED like systemd does (and is almost necessary
+>> if you are going to use mount propagation), that if new_root itself
+>> is MS_SHARED then unmounting the old_root could propagate.
+>> 
+>> So I believe the desired sequence is:
+>> 
+>>>>>            chdir(new_root);
+>> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
+>>>>>            pivot_root(".", ".");
+>>>>>            umount2(".", MNT_DETACH);
+>> 
+>> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
+>> long as it is not MS_SHARED the mount won't propagate back to the
+>> parent mount namespace.
+>
+> Thanks. I made that change.
+
+For what it is worth.  The sequence above without the change in mount
+attributes will fail if it is necessary to change the mount attributes
+as "." is both put_old as well as new_root.
+
+When I initially suggested the change I saw "." was new_root and forgot
+"." was also put_old.  So I thought there was a silent danger without
+that sequence.
 
 Eric
+
