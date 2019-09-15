@@ -2,128 +2,174 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8BC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A0C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E02E020830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F042077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:12:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD1mTQj2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726321AbfIOHmj (ORCPT
+        id S1726340AbfIOIMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 03:42:39 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725788AbfIOHmi (ORCPT
+        Sun, 15 Sep 2019 04:12:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42816 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfIOIMS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 03:42:38 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8F7fm4h086513;
-        Sun, 15 Sep 2019 03:42:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v1djsv393-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Sep 2019 03:42:23 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8F7g1Fj086898;
-        Sun, 15 Sep 2019 03:42:22 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v1djsv38v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Sep 2019 03:42:22 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8F7dopM016623;
-        Sun, 15 Sep 2019 07:42:22 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03wdc.us.ibm.com with ESMTP id 2v0t3cqm1p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Sep 2019 07:42:22 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8F7gLdc42008958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Sep 2019 07:42:21 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6678112062;
-        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F466112061;
-        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.85.81.174])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sun, 15 Sep 2019 07:42:21 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 8E54F2E2D63; Sun, 15 Sep 2019 13:12:17 +0530 (IST)
-Date:   Sun, 15 Sep 2019 13:12:17 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
- cede_offline
-Message-ID: <20190915074217.GA943@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
- <87impxr0am.fsf@linux.ibm.com>
+        Sun, 15 Sep 2019 04:12:18 -0400
+Received: by mail-wr1-f67.google.com with SMTP id q14so35780280wrm.9;
+        Sun, 15 Sep 2019 01:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Ou0hWp/Yu/1AYHb9KISsweYejlcEfF6pByXOsrs5Ido=;
+        b=bD1mTQj2vedpXvLNklhedn09136/mOtnb/ESk4JxNi5DIaKWK1kV1TrdDp27vat9G1
+         CEc6hqD5V63wlEs56mMVHMUfdq9oDUe8PplzU5gBXRYL6CnN8SHjeSG3ijX1yha4kehG
+         egzldJnSahlLZpg8Y8vwm89T/ydGgN5ML2KUGyvrp1zPyq+6JC4j6rhudRMxnTcamEBZ
+         C7qPxopQnxqDjN6sJbB25WfpXxfJygcQHUTqdScvab8oAlZzzv4CCh0085NYEMUf7OqL
+         WYJ2qC8zayzQu1JDFxz9kj35lpIYi/dDs7GDN0fpybpXfpDUs6s3UFBk/Oi7hiUpOZGH
+         /0bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Ou0hWp/Yu/1AYHb9KISsweYejlcEfF6pByXOsrs5Ido=;
+        b=PtnI1j2e7ofX2NiO8cm3aBFq5eB22ArgCoJhe2qk3F20NmDItpOPsoilD69rtuf6Jv
+         xn2rbadVjGee20Q8OydcF8ipxgC2vVQnlkyyBaAy8upDDvpnoD+e5wnDChs2sw7BsKxP
+         c+ihWoq8osDZkxr3GvdzMz4c6X8P0X64yc04+rksF39E16JY4Fyr3jkdSe9EVOjOliVa
+         G4heFwvmcveLiQRYSStZ4hLOZAjTEtGl9VswMX9sVVC7UCwrEysXz908neCtwxvCXheE
+         5DBlIDEtF7mx6maTesOqq+O2d3+jIMw9qyCZyAT7Frn4aAzb0IComZNlE7ptLNA8Jk/0
+         stjw==
+X-Gm-Message-State: APjAAAWnRkVs1DjW96ru0KexYzrVOVgFUmJXKv33sS5lYyok6qv7+cac
+        z8qRvuDOk3poL5YNvPBrUjc=
+X-Google-Smtp-Source: APXvYqzylM+gkMijy2O0b9MdS2UTOBlvoRi6hbGOEqqil7kBnXMbHnBcCDKE7UuEmQLYWBn1VKHs7g==
+X-Received: by 2002:a5d:5642:: with SMTP id j2mr14336944wrw.345.1568535136170;
+        Sun, 15 Sep 2019 01:12:16 -0700 (PDT)
+Received: from [10.105.145.132] ([88.128.80.35])
+        by smtp.gmail.com with ESMTPSA id o12sm10929299wrm.23.2019.09.15.01.12.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Sep 2019 01:12:14 -0700 (PDT)
+Cc:     mtk.manpages@gmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-man <linux-man@vger.kernel.org>,
+        Containers <containers@lists.linux-foundation.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
+        Al Viro <viro@ftp.linux.org.uk>
+Subject: Re: pivot_root(".", ".") and the fchdir() dance
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
+ <20190805103630.tu4kytsbi5evfrhi@mikami>
+ <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
+ <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
+ <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
+ <87r24piwhm.fsf@x220.int.ebiederm.org>
+ <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
+ <87ftl5donm.fsf@x220.int.ebiederm.org>
+ <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
+ <20190910111551.scam5payogqqvlri@wittgenstein>
+ <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
+ <871rwnda47.fsf@x220.int.ebiederm.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
+Date:   Sun, 15 Sep 2019 10:12:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87impxr0am.fsf@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909150084
+In-Reply-To: <871rwnda47.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan,
+Hello Eric,
 
-On Thu, Sep 12, 2019 at 10:39:45AM -0500, Nathan Lynch wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> > The patchset also defines a new sysfs attribute
-> > "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
-> > to allow userspace programs to change the state into which the
-> > offlined CPU need to be put to at runtime.
+On 9/11/19 1:06 AM, Eric W. Biederman wrote:
+> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
 > 
-> A boolean sysfs interface will become awkward if we need to add another
-> mode in the future.
+>> Hello Christian,
+>>
+>>>> All: I plan to add the following text to the manual page:
+>>>>
+>>>>        new_root and put_old may be the same  directory.   In  particular,
+>>>>        the following sequence allows a pivot-root operation without need‐
+>>>>        ing to create and remove a temporary directory:
+>>>>
+>>>>            chdir(new_root);
+>>>>            pivot_root(".", ".");
+>>>>            umount2(".", MNT_DETACH);
+>>>
+>>> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
+>>> before the umount2()? Especially for the container case... I think we
+>>> discussed this briefly yesterday in person.
+>> Thanks for noticing. That detail (more precisely: not MS_SHARED) is
+>> already covered in the numerous other changes that I have pending
+>> for this page:
+>>
+>>        The following restrictions apply:
+>>        ...
+>>        -  The propagation type of new_root and its parent mount must  not
+>>           be MS_SHARED; similarly, if put_old is an existing mount point,
+>>           its propagation type must not be MS_SHARED.
 > 
-> What do you think about naming the attribute something like
-> 'offline_mode', with the possible values 'extended-cede' and
-> 'rtas-stopped'?
+> Ugh.  That is close but not quite correct.
+> 
+> A better explanation:
+> 
+>     The pivot_root system call will never propagate any changes it makes.
+>     The pivot_root system call ensures this is safe by verifying that
+>     none of put_old, the parent of new_root, and parent of the root directory
+>     have a propagation type of MS_SHARED.
 
-We can do that. However, IMHO in the longer term, on PSeries guests,
-we should have only one offline state - rtas-stopped.  The reason for
-this being, that on Linux, SMT switch is brought into effect through
-the CPU Hotplug interface. The only state in which the SMT switch will
-recognized by the hypervisors such as PHYP is rtas-stopped.
+Thanks for that. However, another question. You text has two changes.
+First, I understand why you reword the discussion to indicate the
+_purpose_ of the rules. However, you also, AFAICS, list a different set of
+of directories that can't be MS_SHARED:
 
-All other states (such as extended-cede) should in the long-term be
-exposed via the cpuidle interface.
+I said: new_root, the parent of new_root, and put_old
+You said: the parent of new_root, and put_old, and parent of the
+root directory.
 
-With this in mind, I made the sysfs interface boolean to mirror the
-current "cede_offline" commandline parameter. Eventually when we have
-only one offline-state, we can deprecate the commandline parameter as
-well as the sysfs interface.
+Was I wrong on this detail also?
 
-Thoughts?
+> The concern from our conversation at the container mini-summit was that
+> there is a pathology if in your initial mount namespace all of the
+> mounts are marked MS_SHARED like systemd does (and is almost necessary
+> if you are going to use mount propagation), that if new_root itself
+> is MS_SHARED then unmounting the old_root could propagate.
+> 
+> So I believe the desired sequence is:
+> 
+>>>>            chdir(new_root);
+> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
+>>>>            pivot_root(".", ".");
+>>>>            umount2(".", MNT_DETACH);
+> 
+> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
+> long as it is not MS_SHARED the mount won't propagate back to the
+> parent mount namespace.
 
---
-Thanks and Regards
-gautham.
+Thanks. I made that change.
+
+Cheers,
+
+Michael
+ 
+
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
