@@ -2,134 +2,89 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B56C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FCCC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AFBF214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F6C2214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:25:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rd8EsNf9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfIOSZ0 (ORCPT
+        id S1726351AbfIOSZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 14:25:26 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:55844 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIOSZZ (ORCPT
+        Sun, 15 Sep 2019 14:25:54 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:36780 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIOSZy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 14:25:25 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i9ZD8-0006iw-SU; Sun, 15 Sep 2019 12:25:23 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1i9ZD7-0001f2-TM; Sun, 15 Sep 2019 12:25:22 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Chris Metcalf <cmetcalf@ezchip.com>,
-        Christoph Lameter <cl@linux.com>,
-        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
-        <20190830160957.GC2634@redhat.com>
-        <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
-        <87o906wimo.fsf@x220.int.ebiederm.org>
-        <20190902134003.GA14770@redhat.com>
-        <87tv9uiq9r.fsf@x220.int.ebiederm.org>
-        <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
-        <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
-        <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
-        <87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>
-        <20190915144129.GL30224@paulmck-ThinkPad-P72>
-        <87ef0hcufl.fsf@x220.int.ebiederm.org>
-Date:   Sun, 15 Sep 2019 13:25:02 -0500
-In-Reply-To: <87ef0hcufl.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Sun, 15 Sep 2019 12:59:10 -0500")
-Message-ID: <87v9tta03l.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Sun, 15 Sep 2019 14:25:54 -0400
+Received: by mail-lf1-f51.google.com with SMTP id x80so25721646lff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 11:25:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dbnIhtM2BKG6IYVDdOCp6G8vpQKdSMQTGQ4f3pGk7vs=;
+        b=rd8EsNf9yf0dbuq9g/TOSPhliI7d5mEgLIU6opvAUyXGQMgiDsdhhlM5NPYE4fx4fV
+         1oIdwGiYWhlCrYOTnrtb9KqomL1oZuScESRZ2MCh/0i4A9dsY3NTv4oKmBhcBEZf9oYn
+         l2awC19NQnKyP2X4nyreahL+qcvbxKzIwPPwfurn4sgESw4OpLCUT9SZowM4Ys9RChKO
+         FeK/6/MJ+iT9QD3ZFQ85VXaXXp5wbMSQU9sKjCI//9gHJVJwONQlxeBuTzDLAUdIjfbq
+         5Nu8HSKS1g6PT01zTy6vWgPv6BYBOI4cZnO+nLVNgPNTjeubShzLmv1gaAmvN2Rk7xWl
+         IqyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dbnIhtM2BKG6IYVDdOCp6G8vpQKdSMQTGQ4f3pGk7vs=;
+        b=rPupUmjtFb9cRSf63sCOvKobNO5aZfTMGqhA2bG1AZwxJyaLq6jjtqZ2rG81ailaSJ
+         aP16pS6zc52rH8BCbBV/MHqCRSTGlo/qdgxgDNDbz18LFcV5/MHGYFnTh3iPNSjZ7ZzJ
+         vRJ2YI82J7yDgMyylTQnQ2iFx7w8CWH/zajlxaNl6d5phAOnG4LDXyrNMLgarQ8S5Xv0
+         b/c28zJ0BYGm2bhllZXR7cZwrSv/q097MpP5IMj4TRsb4PNgOdWxV+ePhYPHEFng/EY4
+         wzHnmMn5YaFCieKze5qvO8lnPy562IwmGR21RSiRKwGaAuypxH3e+i6F1chSLDcu0u3x
+         EGdA==
+X-Gm-Message-State: APjAAAVKa38RswfuKwGVhrGjU6QR1/6B1UaTD1KRNYMsgc0NxNX7koX2
+        rAKHbIAHuIVZ+KEnB2xlqB79uGJGTxQ97uAZKZY=
+X-Google-Smtp-Source: APXvYqxt2+mQ3NuxseYtTtkITEVZZpuRJghHl2BxfXJUF7jA0peoLYvGXe4n93Y8vVqBjwX5kP69Ez9EJwBWCgqQPdI=
+X-Received: by 2002:ac2:4902:: with SMTP id n2mr37085890lfi.0.1568571952132;
+ Sun, 15 Sep 2019 11:25:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1i9ZD7-0001f2-TM;;;mid=<87v9tta03l.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+M9W4LG1A1wAmEIw0ziB7E2T1GT98bHZ8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH v2 4/4] task: RCUify the assignment of rq->curr
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+References: <cover.1568256705.git.joe@perches.com> <x498sqtvclx.fsf@segfault.boston.devel.redhat.com>
+ <CANiq72kTsf=0rEufDMo7BzMNv1dqc5=ws7fSd=H_e=cpHR24Kg@mail.gmail.com>
+ <4df0a07ec8f1391acfa987ecef184a50e7831000.camel@perches.com>
+ <CANiq72mgbepmw=G5pM7iSRf-Eob7AHFzLw=76uFivpNGtccyKw@mail.gmail.com> <fdd69f54908d90cd0c93af7b5d80a6c3ca3b5817.camel@perches.com>
+In-Reply-To: <fdd69f54908d90cd0c93af7b5d80a6c3ca3b5817.camel@perches.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Sun, 15 Sep 2019 20:25:41 +0200
+Message-ID: <CANiq72=H+1HGur2vJUxZmpZPbqbm5s8C1CTFwHgciTPeNFTFTA@mail.gmail.com>
+Subject: Re: clang-format and 'clang-format on' and 'clang-format off'
+To:     Joe Perches <joe@perches.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        llvm-dev@lists.llvm.org, Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ebiederm@xmission.com (Eric W. Biederman) writes:
+On Fri, Sep 13, 2019 at 1:26 AM Joe Perches <joe@perches.com> wrote:
+>
+> Not every project is going to use only the clang-format tool.
 
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
->
->> So this looks good in and of itself, but I still do not see what prevents
->> the unfortunate sequence of events called out in my previous email.
->> On the other hand, if ->rcu and ->rcu_users were not allocated on top
->> of each other by a union, I would be happy to provide a Reviewed-by.
->>
->> And I am fundamentally distrusting of a refcount_dec_and_test() that
->> is immediately followed by code that clobbers the now-zero value.
->> Yes, this does have valid use cases, but it has a lot more invalid
->> use cases.  The valid use cases have excluded all increments somehow
->> else, so that the refcount_dec_and_test() call's only job is to
->> synchronize between concurrent calls to put_task_struct_rcu_user().
->> But I am not seeing the "excluded all increments somehow".
->>
->> So, what am I missing here?
->
-> Probably only that the users of the task_struct in this sense are now
-> quite mature.
->
-> The two data structures that allow rcu access to the task_struct are
-> the pid hash and the runqueue.    The practical problem is that they
-> have two very different lifetimes.  So we need some kind of logic that
-> let's us know when they are both done.  A recount does that job very
-> well.
->
-> Placing the recount on the same storage as the unused (at that point)
-> rcu_head removes the need to be clever in other ways to avoid bloating
-> the task_struct.
->
-> If you really want a reference to the task_struct from rcu context you
-> can just use get_task_struct.  Because until the grace period completes
-> it is guaranteed that the task_struct has a positive count.
->
-> Right now I can't imagine a use case for wanting to increase rcu_users
-> anywhere or to decrease rcu_users except where we do.  If there is such
-> a case most likely it will increase the reference count at
-> initialization time.
->
-> If anyone validly wants to increment rcu_users from an rcu critical
-> section we can move it out of the union at that time.
+Why? The end goal would be to enforce all code to be running under the
+same formatting rules (which, in practice, means the same tool at the
+moment).
 
-Paul were you worrying about incrementing rcu_users because Frederic
-Weisbecker brought the concept up earlier in the review?
+Note that you can use clang-format with most editors (including vim,
+emacs, VS, VSCode, XCode, Sublime, Atom...).
 
-It was his confusion that the point of rcu_users was so that it could
-be incremented from an rcu critical section.  That definitely is not
-the point of rcu_users.
-
-If you were wondering about someone messing with rcu_users from an rcu
-critical region independently that does suggest the code could use
-a "comment saying don't do that!"  Multiple people getting confused
-about the purpose of a reference count independently does suggest there
-is a human factor problem in there somewhere.
-
-Eric
-
+Cheers,
+Miguel
