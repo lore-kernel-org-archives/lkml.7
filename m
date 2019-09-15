@@ -2,158 +2,156 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCE9C4CECB
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0361BC4CECB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 124D42077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD06C21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:58:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k68paORC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfIOFtY (ORCPT
+        id S1726336AbfIOF6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 01:49:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6284 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbfIOFtX (ORCPT
+        Sun, 15 Sep 2019 01:58:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42344 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726252AbfIOF6f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 01:49:23 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8F5lKfl092685
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 01:49:22 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v1dhst9jh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 01:49:22 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Sun, 15 Sep 2019 06:49:19 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 15 Sep 2019 06:49:09 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8F5n7JN51511398
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Sep 2019 05:49:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B14452051;
-        Sun, 15 Sep 2019 05:49:07 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.8.160])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id BB4A55204F;
-        Sun, 15 Sep 2019 05:49:03 +0000 (GMT)
-Date:   Sun, 15 Sep 2019 08:49:02 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
-        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
-        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
-        rafael@kernel.org, mhocko@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v3 7/8] mips: numa: make node_to_cpumask_map()
- NUMA_NO_NODE aware for mips
-References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
- <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
+        Sun, 15 Sep 2019 01:58:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q12so175789pff.9;
+        Sat, 14 Sep 2019 22:58:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n+69t91mySr1Y3RDmoaArpwNBRCShDbP0VMxxF5Hw4c=;
+        b=k68paORCiM4ipcEj+FeEqxakxlvScgiJdatDSr2gGTC4kJuQjXWFSdrVb96RoW+maB
+         W5j5vc9ByIOscrr77XDxu+A0WHEVsAgRY3e9eCHeWC5ljqJUc1guddYtPhgRsVM2lMbr
+         WabiU18IXB4MQEkPwlNkXHTWdpgd7aN+Rf7AakiIKVVTgor5/UNbhYECU10K9tWS29Jd
+         DpYJRrl40VHGIz4ybDIrrD3uf28av+nki+f56E8/sroC2rU3vV9qlo2V7ToeAwiw73IC
+         D9unR+VKWl4wcUcMgLZZq7vn/Tku7u5cw97/B2QE5Y52CZUd25y2gI528pDi0neu81Rk
+         EL7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=n+69t91mySr1Y3RDmoaArpwNBRCShDbP0VMxxF5Hw4c=;
+        b=sg7v7vc3T8G4fiUuQ92eTAc4nFneWm3JmmT6HtXhLc8ojnB9Q/KYGIN2sOppxAWXtx
+         9w57LMC2aG3BsANnyd0/K+NFhmVFmHHpkTFW3I8sRtHNVjRRnA3vXVr3lTy2igOQxioL
+         PY+gzlid9zc9BA5e4ic2lLmAL97s9Ra9gTSd3SJxskrncmSyZSIn0lpH4QvhALPz4ZzC
+         BgRYmFjmBzllZ8O2Gookaj8uXXPcRXDIIXuo/q27izMTzx+E98GX2JEdBQgdWf4qp8hb
+         Qe6Jauc5x+Qb4zvbaQk/ugAvS7fpDFuCjX3X9wvH74TVCWh8k2iWFpoqlmuw8ZA+2rQu
+         e4Jg==
+X-Gm-Message-State: APjAAAWzG9596kOP+hrS0Kwv4fGfBRcsfwKf2fkiV/9fcC6UlwYjePqq
+        uS767ykKygai7eypWY/K3s2yHcW1
+X-Google-Smtp-Source: APXvYqxxGXWuxu0z1VNYCJ0vklBa4tmFHLk1e7U70fCG4vJSFlsT4rD20Q+nUdD0tf4eOIWeTXRxfA==
+X-Received: by 2002:aa7:9688:: with SMTP id f8mr63122515pfk.77.1568527114887;
+        Sat, 14 Sep 2019 22:58:34 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c144:8b8a:e7a2:82ca:6689:77bb])
+        by smtp.gmail.com with ESMTPSA id 22sm3696658pfj.139.2019.09.14.22.58.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 22:58:33 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@jic23.retrosnub.co.uk
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [RFC 0/4] counter: Simplify count_read/count_write/signal_read
+Date:   Sun, 15 Sep 2019 14:57:55 +0900
+Message-Id: <20190915055759.408690-1-vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19091505-0012-0000-0000-0000034BBE09
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091505-0013-0000-0000-0000218630DE
-Message-Id: <20190915054901.GC11429@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909150063
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+I have a simplification for the the Counter subsystem callbacks, but I
+want to get some comments first before committing further. Since this is
+an RFC, I've included updates to the 104-QUAD-8 driver here for the
+sake of demonstration; if the comments received are positive, I'll
+submit the changes for the rest of the existing counter drivers as well.
 
-On Thu, Sep 12, 2019 at 06:15:33PM +0800, Yunsheng Lin wrote:
-> When passing the return value of dev_to_node() to cpumask_of_node()
-> without checking the node id if the node id is NUMA_NO_NODE, there is
-> global-out-of-bounds detected by KASAN.
-> 
-> From the discussion [1], NUMA_NO_NODE really means no node affinity,
-> which also means all cpus should be usable. So the cpumask_of_node()
-> should always return all cpus online when user passes the node id
-> as NUMA_NO_NODE, just like similar semantic that page allocator handles
-> NUMA_NO_NODE.
-> 
-> But we cannot really copy the page allocator logic. Simply because the
-> page allocator doesn't enforce the near node affinity. It just picks it
-> up as a preferred node but then it is free to fallback to any other numa
-> node. This is not the case here and node_to_cpumask_map will only restrict
-> to the particular node's cpus which would have really non deterministic
-> behavior depending on where the code is executed. So in fact we really
-> want to return cpu_online_mask for NUMA_NO_NODE.
-> 
-> Since this arch was already NUMA_NO_NODE aware, this patch only changes
-> it to return cpu_online_mask and use NUMA_NO_NODE instead of "-1".
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1125789/
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> ---
-> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
->     for NUMA_NO_NODE case, and change the commit log to better justify
->     the change.
-> ---
->  arch/mips/include/asm/mach-ip27/topology.h | 4 ++--
+The changes in this patchset will not affect the userspace interface.
+Rather, these changes are intended to simplify the kernelspace Counter
+callbacks for counter device driver authors.
 
-Nit: the subject says "mips:", but this patch only touches sgi-ip27 and
-loongson is updated as a separate patch. I don't see why both patches
-cannot be merged. Moreover, the whole set can be made as a single patch,
-IMHO.
+The following main changes are proposed:
 
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
-> index 965f079..04505e6 100644
-> --- a/arch/mips/include/asm/mach-ip27/topology.h
-> +++ b/arch/mips/include/asm/mach-ip27/topology.h
-> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
->  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
->  
->  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
-> -#define cpumask_of_node(node)	((node) == -1 ?				\
-> -				 cpu_all_mask :				\
-> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-> +				 cpu_online_mask :			\
->  				 &hub_data(node)->h_cpus)
->  struct pci_bus;
->  extern int pcibus_to_node(struct pci_bus *);
-> -- 
-> 2.8.1
-> 
+* Retire the opaque counter_count_read_value/counter_count_write_value
+  structures and simply represent count data as an unsigned integer.
+
+* Retire the opaque counter_signal_read_value structure and represent
+  Signal data as a counter_signal_value enum.
+
+These changes should reduce some complexity and code in the use and
+implementation of the count_read, count_write, and signal_read
+callbacks.
+
+The opaque structures for Count data and Signal data were introduced
+originally in anticipation of supporting various representations of
+counter data (e.g. arbitrary-precision tallies, floating-point spherical
+coordinate positions, etc). However, with the counter device drivers
+that have appeared, it's become apparent that utilizing opaque
+structures in kernelspace is not the best approach to take.
+
+I believe it is best to let userspace applications decide how to
+interpret the count data they receive. There are a couple of reasons why
+it would be good to do so:
+
+* Users use their devices in unexpected ways.
+
+  For example, a quadrature encoder counter device is typically used to
+  keep track of the position of a motor, but a user could set the device
+  in a pulse-direction mode and instead use it to count sporadic rising
+  edges from an arbitrary signal line unrelated to positioning. Users
+  should have the freedom to decide what their data represents.
+
+* Most counter devices represent data as unsigned integers anyway.
+
+  For example, whether the device is a tally counter or position
+  counter, the count data is represented to the user as an unsigned
+  integer value. So specifying that one device is representing tallies
+  while the other specifies positions does not provide much utility from
+  an interface perspective.
+
+For these reasons, the count_read and count_write callbacks have been
+redefined to pass count data directly as unsigned long instead of passed
+via opaque structures:
+
+        count_read(struct counter_device *counter,
+                   struct counter_count *count, unsigned long *val);
+        count_write(struct counter_device *counter,
+                    struct counter_count *count, unsigned long val);
+
+Similarly, the signal_read is redefined to pass Signal data directly as
+a counter_signal_value enum instead of via an opaque structure:
+
+        signal_read(struct counter_device *counter,
+                    struct counter_signal *signal,
+                    enum counter_signal_value *val);
+
+The counter_signal_value enum is simply the counter_signal_level enum
+redefined to remove the references to the Signal data "level" data type.
+
+William Breathitt Gray (4):
+  counter: Simplify the count_read and count_write callbacks
+  counter: Simplify the signal_read callback
+  docs: driver-api: generic-counter: Update Count and Signal data types
+  counter: 104-quad-8: Update count_read/count_write/signal_read
+    callbacks
+
+ Documentation/driver-api/generic-counter.rst |  22 ++--
+ drivers/counter/104-quad-8.c                 |  33 ++----
+ drivers/counter/counter.c                    | 101 +++----------------
+ include/linux/counter.h                      |  74 ++------------
+ 4 files changed, 42 insertions(+), 188 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.23.0
 
