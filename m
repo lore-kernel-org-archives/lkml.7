@@ -2,101 +2,145 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B98C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4518C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12FB214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:58:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AD7214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:59:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568552308;
-	bh=RzIxKkF9QaaNt1GjSKEtyMLCwfADtyW3l/O9MaHgMDc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uxC2JZskRLqNd8PnajcvkUwQpzdmhwY/7YnXleG6HySsFKcuhJROP0D67CSldTGLU
-	 Ty0InpZmT7vmEBPJ9qURwOSx748yYYkUn//1CtpzFSRL+50xkrUTBLvkyH2wwL9Mgs
-	 nk/9cIU43Ybnb4PwPofBZ9DGkijG7o33A1U1WfjM=
+	s=default; t=1568552394;
+	bh=ln1XYnDUNmHvQzhKYhNxFghmE7S90N/Di34Az2haAiE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BlxQSXsrIBAWdNP4fU+W5KRbGv9pnEvDK0p9SL+k+3gl66fYyUPyaf5JCY6ib+a/Q
+	 koj+km5TQ/JE53N/qp9kKqrQrt8r1oZnZpovhMhWM1dG3RJI+61LlUut+YQ2KWx0TW
+	 HvXi2lFEARWpTQk1ZC+8FDazxHwgxipiVwXpufaw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbfIOM62 (ORCPT
+        id S1731090AbfIOM7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 08:58:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
+        Sun, 15 Sep 2019 08:59:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfIOM61 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 08:58:27 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1726268AbfIOM7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 08:59:53 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49CC521479;
-        Sun, 15 Sep 2019 12:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D831521479;
+        Sun, 15 Sep 2019 12:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568552307;
-        bh=RzIxKkF9QaaNt1GjSKEtyMLCwfADtyW3l/O9MaHgMDc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pleBkKK9WNJsT7QxDvau3kvgbr9uR9KbIMX8bHSUTaAi6YbTEQ45ULu3GDxFu5Bki
-         JpWt+JkIEUz55rFKWb5FmE27qFqnL6Ph6p+61IGhbJhgd1Jr66Sg2jS0L8MNDEggQL
-         RHyz+DF1I702AWYD1eNUd5JFuykSxqbXdUqdnb5M=
-Date:   Sun, 15 Sep 2019 14:58:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
-Message-ID: <20190915125824.GA528036@kroah.com>
-References: <20190913130440.264749443@linuxfoundation.org>
- <aefa6832-073e-493c-8576-5b2f06e714fb@roeck-us.net>
- <20190914083126.GA523517@kroah.com>
- <353c2b75-290e-c796-4cc6-88681936210f@roeck-us.net>
+        s=default; t=1568552393;
+        bh=ln1XYnDUNmHvQzhKYhNxFghmE7S90N/Di34Az2haAiE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zygvL6ycuA9PSn7D9yZvQ74bwEJfxXhVkqzGFl/plytxSJ0WU7nhK6GrH+tOPC3vd
+         2PdWjTsXSH1hvJd7aO3qC3boDk7o2Awg/Qlc4ChxGwXYC/SObW6Q3gtyn6jk92B9nC
+         nCZWbV6PjXD5zT7HYclMbyBX0G1zDbJdWnlxt7ZY=
+Date:   Sun, 15 Sep 2019 13:59:48 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Andreas Klinger <ak@it-klinger.de>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] iio: adc: hx711: optimize performance in read
+ cycle
+Message-ID: <20190915135948.609aba98@archlinux>
+In-Reply-To: <20190909123746.lvd2q3dwgaksktuy@arbad>
+References: <20190909123746.lvd2q3dwgaksktuy@arbad>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <353c2b75-290e-c796-4cc6-88681936210f@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 05:49:32PM -0700, Guenter Roeck wrote:
-> Hi Greg,
+On Mon, 9 Sep 2019 14:37:48 +0200
+Andreas Klinger <ak@it-klinger.de> wrote:
+
+> Set gain in hx711_reset() to its default value after a reset cycle. This
+> omits one precautionary read cycle, because the read is performed in
+> hx711_set_gain_for_channel() anyway if gain has changed.
 > 
-> On 9/14/19 1:31 AM, Greg Kroah-Hartman wrote:
-> > On Sat, Sep 14, 2019 at 01:28:39AM -0700, Guenter Roeck wrote:
-> > > On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
-> > > > This is the start of the stable review cycle for the 4.9.193 release.
-> > > > There are 14 patches in this series, all will be posted as a response
-> > > > to this one.  If anyone has any issues with these being applied, please
-> > > > let me know.
-> > > > 
-> > > > Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-> > > > Anything received after that time might be too late.
-> > > > 
-> > > 
-> > > Is it really only me seeing this ?
-> > > 
-> > > drivers/vhost/vhost.c: In function 'translate_desc':
-> > > include/linux/compiler.h:549:38: error: call to '__compiletime_assert_1879' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
-> > > 
-> > > i386:allyesconfig, mips:allmodconfig and others, everywhere including
-> > > mainline. Culprit is commit a89db445fbd7f1 ("vhost: block speculation
-> > > of translated descriptors").
-> > 
-> > Nope, I just got another report of this on 5.2.y.  Problem is also in
-> > Linus's tree :(
-> > 
+> Check for DOUT low and if its high wait some time if it goes down
+> instead of doing a blind reset cycle when DOUT is not down.
 > 
-> Please apply upstream commit 0d4a3f2abbef ("Revert "vhost: block speculation
-> of translated descriptors") to v4.9.y-queue and later to fix the build problems.
-> Or maybe just drop the offending commit from the stable release queues.
+> This is a performance optimization which allows to query the sensor with
+> a higher frequency.
+> 
+> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Hi Andreas,
 
-I'm just going to drop the offending commit from everywhere and push out
-new -rcs in a bit...
+This one seems to have a slightly non trivial interaction with patch 1
+so will have to wait until the fixes-togreg branch works it's way back
+around to the upstream for the togreg branch.   Give me a poke if I seem
+to have lost it!
 
-thanks,
+Thanks,
 
-greg k-h
+Jonathan
+
+> ---
+>  drivers/iio/adc/hx711.c | 23 +++++------------------
+>  1 file changed, 5 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/hx711.c b/drivers/iio/adc/hx711.c
+> index 0678964dbd21..c8686558429b 100644
+> --- a/drivers/iio/adc/hx711.c
+> +++ b/drivers/iio/adc/hx711.c
+> @@ -23,6 +23,7 @@
+>  
+>  /* gain to pulse and scale conversion */
+>  #define HX711_GAIN_MAX		3
+> +#define HX711_RESET_GAIN	128
+>  
+>  struct hx711_gain_to_scale {
+>  	int			gain;
+> @@ -100,7 +101,6 @@ struct hx711_data {
+>  
+>  static int hx711_cycle(struct hx711_data *hx711_data)
+>  {
+> -	int val;
+>  	unsigned long flags;
+>  
+>  	/*
+> @@ -186,8 +186,7 @@ static int hx711_wait_for_ready(struct hx711_data *hx711_data)
+>  
+>  static int hx711_reset(struct hx711_data *hx711_data)
+>  {
+> -	int ret;
+> -	int val = gpiod_get_value(hx711_data->gpiod_dout);
+> +	int val = hx711_wait_for_ready(hx711_data);
+>  
+>  	if (val) {
+>  		/*
+> @@ -203,22 +202,10 @@ static int hx711_reset(struct hx711_data *hx711_data)
+>  		msleep(10);
+>  		gpiod_set_value(hx711_data->gpiod_pd_sck, 0);
+>  
+> -		ret = hx711_wait_for_ready(hx711_data);
+> -		if (ret)
+> -			return ret;
+> -		/*
+> -		 * after a reset the gain is 128 so we do a dummy read
+> -		 * to set the gain for the next read
+> -		 */
+> -		ret = hx711_read(hx711_data);
+> -		if (ret < 0)
+> -			return ret;
+> -
+> -		/*
+> -		 * after a dummy read we need to wait vor readiness
+> -		 * for not mixing gain pulses with the clock
+> -		 */
+>  		val = hx711_wait_for_ready(hx711_data);
+> +
+> +		/* after a reset the gain is 128 */
+> +		hx711_data->gain_set = HX711_RESET_GAIN;
+>  	}
+>  
+>  	return val;
+
