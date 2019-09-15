@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 048FCC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D526AC4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B60BB214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:53:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96F1B2168B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:53:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HUwCU5p/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8WwsUWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbfIOQxm (ORCPT
+        id S1727122AbfIOQxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 12:53:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34605 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726057AbfIOQxl (ORCPT
+        Sun, 15 Sep 2019 12:53:51 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35344 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfIOQxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 12:53:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so2207291pfa.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:53:40 -0700 (PDT)
+        Sun, 15 Sep 2019 12:53:51 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so21119410pfw.2
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
         bh=wnjVX8y3jjuiJNFHe5uOkqxCWTM5n6lVUDEKEUO860s=;
-        b=HUwCU5p/rPyk8m4saz8aml32uHKw4BTMSh5Y6TIkG4OvTsm0Rb5cgIEbeNfbLpguxi
-         E8etezLznc+kI7KhBiJbN0JttJDe2Se/Tp+9Um+EiS3i/nYQrrJwat3cUlEK/n9Vekt+
-         TP3TuFIFnFPxRU0+gI1k8D4m8pZUNP5LDDlyp96EdjCiOnwj5lJE2gsAyH3fBJ1y+x7/
-         bCl73hBcfDBIwPUnsruU9XuzRHKhWdN9d1Oo6zm5msXXFrVEsvLqWNLO8BJ7KDVpU+lK
-         Gzq51dpDFYNhD++DK/3HOYYttS8g/0TodkRqDjoGFlj/I0Zt1xOu4DqCCKcanYoSmzdm
-         YYfg==
+        b=E8WwsUWAmtESXISewsRUL10pd+pjCIykVXTDnkNjVkLKK+dLjj3NYBn4sVnl+xmbcb
+         NmkspuSNolTXapDYraPsa4n/WcqMNa/GruQT7Xvquq0/N4N3PJ+fbvB9k0YCgROrtCj7
+         RIXmdjTK1Yvvd//ju+XQi0nDD7I2Jybg+DdFuoxJ+WFWz+kGmTZrUEkfHlLqncxF1p4b
+         AKbFsgPFGnj0Tnpc0rGtN2Nij5/F9eS5kzszgGLcqMfg7imWzyjnawOE2gUf1B/+w5C2
+         3YPW84tsT3dcITg5ephoP0/IhLFPHWHK+9kMRNhJbADhx2I4Z9FFX3+BfSU7H9F7VLLU
+         BeFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
         bh=wnjVX8y3jjuiJNFHe5uOkqxCWTM5n6lVUDEKEUO860s=;
-        b=TRq6scSQDh6EKrp3Cy0d6I4tNK6xEZ656PvHKXwQ9jdVvC6x1MS04cGceN3BU2AoL+
-         GEPed0i1k8JB+xc8HKFjY+/5HH5aHmRExf0YY0PmRK2eaeIfkmECqLrlMKfPpfZ4fgyQ
-         U+wFhcBf4yqJnb8jgUV1Ed0cUy1NGd/5pTxfpEbB7/Q+Of300CJSdBK9DzW8mxhUGEFd
-         O4z7sg5KEHew9k9jBnvM8BXryiE0sCmSWQ6mtdElRjZMOEvQtu6h288ck03Ubns4W09B
-         qx1x2j8kUfJLqVk6VhjPHjv/8Pogc6eNacISzWYC5Hkoe1wgKTP5y+aFTGY299l3M0c8
-         GQ7A==
-X-Gm-Message-State: APjAAAXaEc5wza0JT5bRwuda/QHBgR3MU5i2K1++oELx+eZoWw70D0Y/
-        HcUue9paR5GGZDHpGqxg2rs=
-X-Google-Smtp-Source: APXvYqxWna99YStw5YRBrkDQemXY26rnCJB3XGThI8zr10DbF+qP+8f8JFyPMP+4smD1HBg72y8Ikw==
-X-Received: by 2002:aa7:97aa:: with SMTP id d10mr10482490pfq.176.1568566420540;
-        Sun, 15 Sep 2019 09:53:40 -0700 (PDT)
+        b=RQXOD2kjqYP9zxME24xWF5UKDiUq8SSGfRo1IWae8BqEL6XrjqW5kx38rZm4wXueDi
+         FlmunUT/phQSyOjzcUwTgErJxzUxfG/8pJzWTIPvBOnV6UvrUiyLfWiqrBJB6WvmUQN/
+         4kvEd+er6+nesh6v/CYtIWdiq8qW4ehFROGDv6C66mHBIWg79XniZVNwXrapTD3AiJaL
+         s8zkENhK94ANk2ocPghRZnooj/AxjiRNqwJEwDY5ZNBTAy5VaQCoKO9AZVUcuzM0IFN9
+         VzQtM8yKxxQa6dF3VvkRF6mfARWNoXopbKDxjLWI4aVanFZs18uUrk4FSQpFZ/abvVzT
+         wIlQ==
+X-Gm-Message-State: APjAAAX3N8Nyp3d/D76YpiGtJkkx389YFRjA0NPIRJXIZ9/gQc+fphMQ
+        NWbwhq5owfZ2icV3mvaweXo=
+X-Google-Smtp-Source: APXvYqzChEGbOonah3YVdUSXfiVbmy1TiA7c1KjPZ5G7w83njdgeeyAUDEx2VggYQbHLFTrTzL/bpA==
+X-Received: by 2002:a62:2702:: with SMTP id n2mr36485622pfn.73.1568566429704;
+        Sun, 15 Sep 2019 09:53:49 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id a4sm4383259pgq.6.2019.09.15.09.53.31
+        by smtp.gmail.com with ESMTPSA id a4sm4383259pgq.6.2019.09.15.09.53.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 09:53:40 -0700 (PDT)
+        Sun, 15 Sep 2019 09:53:49 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
         rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, guro@fb.com,
         Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH v4 7/7] mm, slab_common: modify kmalloc_caches[type][idx] to kmalloc_caches[idx][type]
-Date:   Mon, 16 Sep 2019 00:51:20 +0800
-Message-Id: <20190915165121.7237-12-lpf.vector@gmail.com>
+Subject: [PATCH v4 7/7] mm, slab_common: Modify kmalloc_caches[type][idx] to kmalloc_caches[idx][type]
+Date:   Mon, 16 Sep 2019 00:51:21 +0800
+Message-Id: <20190915165121.7237-13-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190915165121.7237-1-lpf.vector@gmail.com>
 References: <20190915165121.7237-1-lpf.vector@gmail.com>
