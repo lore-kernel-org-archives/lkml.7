@@ -2,112 +2,110 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C2C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7FC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB5F2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 725F52077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:22:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568546569;
+	bh=MLNdbiyNi4ENt8epqRqPv1TaTkDoJ6cWtnWJe1UOPYw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YQvZ4iWgm36Vkc1gPZalUaiyvbRwc//aJzxuYpIkTQrSkpsf4HPQomt//bxlOhrhU
+	 FIrLww1sCn8f6ySz8GnOCqK8dW0XbUo4zfqEaAn5NB5OU0HZmXgDQ6MiOBrahvcswT
+	 8gE0Fc/KRy/Pt3s/329rwRNIa1NF2ACprW5GeLBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbfIOLRv (ORCPT
+        id S1730163AbfIOLWr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 07:17:51 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45215 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725997AbfIOLRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 07:17:51 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FBHUCn022005;
-        Sun, 15 Sep 2019 13:17:30 +0200
-Date:   Sun, 15 Sep 2019 13:17:30 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
- is uninitialized
-Message-ID: <20190915111730.GA21993@1wt.eu>
-References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <20190915081747.GA1058@darwi-home-pc>
- <20190915085907.GC29771@gardel-login>
- <20190915093057.GF20811@1wt.eu>
- <20190915100201.GA2663@darwi-home-pc>
- <20190915104027.GG20811@1wt.eu>
- <20190915105539.GA1082@darwi-home-pc>
+        Sun, 15 Sep 2019 07:22:47 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52308 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfIOLWr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 07:22:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=56zqmhsjMtRUCKlYk+SxAg1yHp75qE9+3DpNLXrWEng=; b=GwwMVLsYAnn9ukgLmEPf4qaVg
+        3Ef8kV/O+KpJO9xdKRnuJbcykqI0MrPfnu/xYpuOJHjqp6YkPLpOdOHonwxFfp5R62ePkGl/9bSop
+        Ir365pCVsf7kel/p/RQG+fUBqRXijq5D58uu9CWUIzqnBHnt4GmxvZ82yIWL2r4u+Y1GI=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9Sc8-0007S4-1e; Sun, 15 Sep 2019 11:22:44 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 02C602740137; Sun, 15 Sep 2019 12:22:42 +0100 (BST)
+Date:   Sun, 15 Sep 2019 12:22:42 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Gareth Williams <gareth.williams.jx@renesas.com>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] spi: dw: Add compatible string for Renesas RZ/N1 SPI
+ Controller
+Message-ID: <20190915112242.GA43855@sirena.co.uk>
+References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1568376720-7402-4-git-send-email-gareth.williams.jx@renesas.com>
+ <CAHp75VeJY44oqYPhb-E8U1Uz5tKEJ1wZfmsGYEDttLzypHEAHA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
 Content-Disposition: inline
-In-Reply-To: <20190915105539.GA1082@darwi-home-pc>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <CAHp75VeJY44oqYPhb-E8U1Uz5tKEJ1wZfmsGYEDttLzypHEAHA@mail.gmail.com>
+X-Cookie: Exercise caution in your daily affairs.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 12:55:39PM +0200, Ahmed S. Darwish wrote:
-> On Sun, Sep 15, 2019 at 12:40:27PM +0200, Willy Tarreau wrote:
-> > On Sun, Sep 15, 2019 at 12:02:01PM +0200, Ahmed S. Darwish wrote:
-> > > On Sun, Sep 15, 2019 at 11:30:57AM +0200, Willy Tarreau wrote:
-> > > > On Sun, Sep 15, 2019 at 10:59:07AM +0200, Lennart Poettering wrote:
-> [...]
-> > > > > If Linux lets all that stuff run with awful entropy then
-> > > > > you pretend things where secure while they actually aren't. It's much
-> > > > > better to fail loudly in that case, I am sure.
-> > > > 
-> > > > This is precisely what this change permits : fail instead of block
-> > > > by default, and let applications decide based on the use case.
-> > > >
-> > > 
-> > > Unfortunately, not exactly.
-> > > 
-> > > Linus didn't want getrandom to return an error code / "to fail" in
-> > > that case, but to silently return CRNG-uninitialized /dev/urandom
-> > > data, to avoid user-space even working around the error code through
-> > > busy-loops.
-> > 
-> > But with this EINVAL you have the information that it only filled
-> > the buffer with whatever it could, right ? At least that was the
-> > last point I manage to catch in the discussion. Otherwise if it's
-> > totally silent, I fear that it will reintroduce the problem in a
-> > different form (i.e. libc will say "our randoms are not reliable
-> > anymore, let us work around this and produce blocking, solid randoms
-> > again to help all our users").
-> >
-> 
-> V1 of the patch I posted did indeed return -EINVAL. Linus then
-> suggested that this might make still some user-space act smart and
-> just busy-loop around that, basically blocking the boot again:
-> 
->     https://lkml.kernel.org/r/CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com
->     https://lkml.kernel.org/r/CAHk-=whSbo=dBiqozLoa6TFmMgbeB8d9krXXvXBKtpRWkG0rMQ@mail.gmail.com
-> 
-> So it was then requested to actually return what /dev/urandom would
-> return, so that user-space has no way whatsoever in knowing if
-> getrandom has failed. Then, it's the job of system integratos / BSP
-> builders to fix the inspect the big fat WARN on the kernel and fix
-> that.
 
-Then I was indeed a bit confused in the middle of the discussion as
-I didn't understand exactly this, thanks for the clarifying :-)
+--envbJBWh7q8WU6mo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But does it still block when called with GRND_RANDOM ? If so I guess
-I'm fine as it translates exactly the previous behavior of random vs
-urandom, and that GRND_NONBLOCK allows the application to fall back
-to reliable sources if needed (typically human interactions).
+On Sun, Sep 15, 2019 at 02:00:33PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 13, 2019 at 3:14 PM Gareth Williams
 
-Thanks,
-Willy
+> > The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
+> > additional registers for software CS control and DMA. This patch does not
+> > address the changes required for DMA support, it simply adds the compatible
+> > string. The CS registers are not needed as Linux can use gpios for the CS
+> > signals.
+
+> > +       { .compatible = "renesas,rzn1-spi", },
+
+> Can't you simple use in DT something like
+>   compatible = "renesas,rzn1-spi", "snps,dw-apb-ssi"
+> ?
+
+Yes, you can and should do that but it's still nice to list the
+compatibles explicitly in the driver in case someone leaves out the
+fallback compatible for whatever reason - if both the driver and the DT
+list things then there's a bit more robustness.
+
+--envbJBWh7q8WU6mo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+HwIACgkQJNaLcl1U
+h9AfuQf5AVfP2aLgb/wagBnPhqQNepUFArGUV9VrZqyKZbaEveqGp42TXTaWp4Z4
+F5vjPMGkBHfhHJoKWyJZiFnNaimOHVvH2MxsVxdxckvF5MDWShZO7xtKHGAqkwmv
+JGXJRWaSkVPW1WQ7rYXLLTqXYyhIYASbl1YNjymHxgw/aEr9Zn2XoxihmgeiLANg
+K990BsukJHIcY7n15boVvb15IqTiB2W51exwDyTHw5SMQ4zEt8IXexDn8meqZKzs
+x4qQeZKni+Y0Lykk9c6+Y7Sixf+P8XUjVaVW1jCjBWkmB9ebBnb6o4oSzhlHP4SC
+F8eS11Hqa8IvR+5S+AZLRgDTXVBYCQ==
+=BDOI
+-----END PGP SIGNATURE-----
+
+--envbJBWh7q8WU6mo--
