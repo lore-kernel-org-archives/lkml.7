@@ -2,103 +2,119 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F10C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A91C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 494FE20678
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C71F20678
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:15:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VREF9dGM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZvUsQS9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfIOLN7 (ORCPT
+        id S1729892AbfIOLPG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 07:13:59 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34981 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfIOLN7 (ORCPT
+        Sun, 15 Sep 2019 07:15:06 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46729 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfIOLPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 07:13:59 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n4so17692257pgv.2;
-        Sun, 15 Sep 2019 04:13:58 -0700 (PDT)
+        Sun, 15 Sep 2019 07:15:05 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q5so20686449pfg.13;
+        Sun, 15 Sep 2019 04:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vGC++bKSuV0/ZHeXvOktEZ3piBgJqAASmtSW9gcDz7s=;
-        b=VREF9dGMdMMX6ZJx1pB+O8KiiatL6uIa/VZT40Bvej1Uxn4+9l5TwCceBM8VumPNGw
-         IYwvIX+bR4Kefn3tJkagGe5Umh601Mu2164hRNHeN2YwKkyYufAxkp7Lz0KsDNGux6/h
-         r7sNB9qQDXBK7oqyDiCNOepZf/yeiJHtigS8zLm9B25gsGfwXXZi/TZNLr0CmzjROL+T
-         URTzACd1uGV6/oiT7rRFgiHPEXo/DUAHaZG4+3udlmPyRq+UROkVQ5epJwPxoAJyXSsS
-         pUBFW1TFCjwgpiB0PqGxkCV8Nb3E7neZWclmC6hocMLDz78ALvORvv2iiD4AEeFFb+Vs
-         76kg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XhFre/QK5MclL/7MBSxWJYR/qUHvDgMj7qi+Mpvzm0U=;
+        b=eZvUsQS9El9tw17hndYdKaxOFFYebB1jhsqmXMFmb9cgrldzp2KTvVDm5Y2zrjMfJB
+         aml4Zy++mNXNObMIMJARQchv+BdyrN769O0Er9H3CB/cZe+FvI0Z2F4PTSsGsh+76BER
+         EahTA4xT1lg+kpEEwIYcV7MeLfIiRuHLhvGvhMysC10xl6+tcvYpXWAroDJOKxlZf9po
+         pXvm/QV/eI3d210X76cBagHfFh52FtKBq/KynFvRGN+L1uxY4J3yrdr9jOI8k3pVJVbl
+         FRc9ZTl91Y/H3ZRoGCmO4gSNZjrEJ2WdQvRzfk1JKNH5SbhsOh5fg2hQb4p0fgHpjien
+         zKPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vGC++bKSuV0/ZHeXvOktEZ3piBgJqAASmtSW9gcDz7s=;
-        b=si0GabHP4nNlE5ulh+8fCaKQmoG4MPOIyUXvWPD9j52scCMFFMa3j6OlSWcJas99u4
-         gcIoIOGoZZqux2UrGdBtcSBzwWqiaAEoXHNZ4LZAhb5Z+YV3gQutX4UCJ/BTXko/ZPmM
-         QEp+LJL1Kq1YbAa3nd2U0Zv0aRQMS/wchZc/rfn3g7L+Lt+DR7qovjxHTl4EWtC3Yh3M
-         JkMuhchka1geqS8G3HYSao4CNoveMHTegASrFfR0q0FXIQrR+wK1iQGtAFZ3EOfX/ze5
-         VrZrU5idGCFMsFvwhDC4trTCcYzjI8qVONUrWdhvhnHgNk/ZTgBz15XaYVueRgpbcS2U
-         4Yeg==
-X-Gm-Message-State: APjAAAU/XHABoxpBryBHA9XW9KZJ4nICtb04I5f85I4COEUEu53cmeHs
-        Zzh4Q3SHzbIG2pqjM6xWwTV5Dc93qfaDLgrlJds=
-X-Google-Smtp-Source: APXvYqyIbP6ZNHGDxbrWlrznhA5vytzdFd4rqRsyaDgTksk3zIWCSt7TuedGEAfBJqPyP8aPmFZbFgaUHJQTX8Qigps=
-X-Received: by 2002:a17:90b:151:: with SMTP id em17mr8116611pjb.132.1568546038301;
- Sun, 15 Sep 2019 04:13:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XhFre/QK5MclL/7MBSxWJYR/qUHvDgMj7qi+Mpvzm0U=;
+        b=d5TEGB3FsXLOszwHmnOWeHEO16p23bSZHKJtAdp59fMjgFuFEOEZLYcmRfxVLPqylj
+         +ET3aol8aCh6OfXV/68vdNd7Kygp3eseo4A50HOTKvWOASwmgAnLrBc04gECbefqqFUy
+         FEGjHBxhhgu6+n/L90of+8UTKxnEtGUycCEx2eeVTMcUFsdIA7id7+X6QBXpVucHzpN8
+         4MVUpyLDS+qqgpzWUgC0hRcx34EmxLdhwLp2Xf9H/uVB5r1knys4ithd5mfoRp06iU7y
+         yrzHOOvwOy6529FNHIYctKgrqKUEyq1pBQlUx3O3G4pOeHxZvVKxy9euZgocICrxhTXW
+         i9xw==
+X-Gm-Message-State: APjAAAU2aYMc3DFxOMqzQ5P78uF65imSmkYgLgEMWzR2R7vCz430/MUL
+        uHIDo+Es/MCcJbsBFZBh34rm1gHPOlg=
+X-Google-Smtp-Source: APXvYqyYc1M4x8WB1QEQTGtYeO47iUVQUv3vdDUnUsze4qxOvh5yF8iRljkPmSEZ2iP51ZMM+JUv8w==
+X-Received: by 2002:a17:90a:37d1:: with SMTP id v75mr15434425pjb.33.1568546105006;
+        Sun, 15 Sep 2019 04:15:05 -0700 (PDT)
+Received: from nishad ([106.51.235.3])
+        by smtp.gmail.com with ESMTPSA id 69sm43051568pfb.145.2019.09.15.04.15.01
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Sep 2019 04:15:04 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 16:44:58 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: tuners: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190915111454.GA22020@nishad>
 MIME-Version: 1.0
-References: <20190913225547.GA106494@dtor-ws> <20190914170933.GV2680@smile.fi.intel.com>
- <20190915060524.GC237523@dtor-ws>
-In-Reply-To: <20190915060524.GC237523@dtor-ws>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 15 Sep 2019 14:13:46 +0300
-Message-ID: <CAHp75VdtnpO6GU8w_cTdc9dM4ob_hDt56aPU9a8iOgVw06uKQg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: mdio: switch to using gpiod_get_optional()
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 9:26 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Sat, Sep 14, 2019 at 08:09:33PM +0300, Andy Shevchenko wrote:
-> > On Fri, Sep 13, 2019 at 03:55:47PM -0700, Dmitry Torokhov wrote:
+This patch corrects the SPDX License Identifier style
+in header file related to media Drivers for Analog TV Tuners.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used)
 
-> > > +   mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
-> > > +                                            "reset", GPIOD_OUT_LOW);
-> > > +   error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
-> > > +   if (error)
-> > > +           return error;
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46.
 
-> > > +   if (mdiodev->reset_gpio)
-> >
-> > This is redundant check.
->
-> I see that gpiod_* API handle NULL desc and usually return immediately,
-> but frankly I am not that comfortable with it. I'm OK with functions
-> that free/destroy objects that recognize NULL resources,
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/media/tuners/tuner-xc2028-types.h | 2 +-
+ drivers/media/tuners/tuner-xc2028.h       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> but it is
-> unusual for other types of APIs.
+diff --git a/drivers/media/tuners/tuner-xc2028-types.h b/drivers/media/tuners/tuner-xc2028-types.h
+index 50d017a4822a..fcca39d3e006 100644
+--- a/drivers/media/tuners/tuner-xc2028-types.h
++++ b/drivers/media/tuners/tuner-xc2028-types.h
+@@ -1,5 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * SPDX-License-Identifier: GPL-2.0
+  * tuner-xc2028_types
+  *
+  * This file includes internal tipes to be used inside tuner-xc2028.
+diff --git a/drivers/media/tuners/tuner-xc2028.h b/drivers/media/tuners/tuner-xc2028.h
+index 7b58bc06e35c..2dd45d0765d7 100644
+--- a/drivers/media/tuners/tuner-xc2028.h
++++ b/drivers/media/tuners/tuner-xc2028.h
+@@ -1,5 +1,5 @@
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * SPDX-License-Identifier: GPL-2.0
+  * tuner-xc2028
+  *
+  * Copyright (c) 2007-2008 Mauro Carvalho Chehab <mchehab@kernel.org>
+-- 
+2.17.1
 
-CLK, reset, ... frameworks do check for NULL pointer since they
-provide an *_optional() getters. So, it's not unusual.
---
-With Best Regards,
-Andy Shevchenko
