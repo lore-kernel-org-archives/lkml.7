@@ -6,96 +6,145 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE074C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E0FCC4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9AB214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70744214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568578791;
-	bh=jCkVYwV6zbKgIt0Fdzu/rRWlWNH8bz+rGXp5+C0d2XQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xyC+Wp+pfZb8pFjjGcu5rxbP7iWQaWuNJaJMuijDsvnhmIQggwnR9Vf0gdfP8NTfi
-	 R/fom7EKalWP+XamodocCyj3Cw93kA3yMoBq9tvj38oTVfOHLzJwQwjJHPhRMnV+k5
-	 KItrMfG+m2vYsjS8etqzFLb/y00E6GDjASYn+83o=
+	s=default; t=1568579081;
+	bh=sC7ikNnsWRAYbznFu7wQ2gtP2Fcg8MOteGVoR9Lh3/4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=djZjFvcHjGWZFtfELcLKS2S4P6Y3ErpNDYW2q4///T0yEXVFwNorA4OmesB3scuZ/
+	 xgivj77pPPYSOvWn5/cvhebt09xi0ZqRHeUnx00W8niNvHqdS5J9ihFPa+p9gGLONy
+	 me9NCDql0jc8JuMGmd3KLUzCPbBRfWYHL5evDFDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728023AbfIOUTv (ORCPT
+        id S1728056AbfIOUYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 16:19:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbfIOUTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 16:19:50 -0400
-Received: from localhost (159.35.136.95.rev.vodafone.pt [95.136.35.159])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37949214AF;
-        Sun, 15 Sep 2019 20:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568578790;
-        bh=jCkVYwV6zbKgIt0Fdzu/rRWlWNH8bz+rGXp5+C0d2XQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FoFGRvIZFA1XkjcABtIPLpBTkKqEp/JFLlrWIz6VMyvY3RWzCWwug1FLfJ+DFDVGH
-         62JTuavOMoj8mRlmvw9fIeRHlOatVU+Gzj2M3I6EijrqQNCacrtvAuHMxyVSX+SBLd
-         pFKTkPeBV0vr5NuCx+0tUHWroj5+uRT9zoN+bjYg=
-Date:   Sun, 15 Sep 2019 16:19:43 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Ladi Prosek <lprosek@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 4.19 043/190] KVM: hyperv: define VP assist page helpers
-Message-ID: <20190915201943.GQ1546@sasha-vm>
-References: <20190913130559.669563815@linuxfoundation.org>
- <20190913130603.202370862@linuxfoundation.org>
- <20190915190130.GA18580@amd>
+        Sun, 15 Sep 2019 16:24:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59398 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725980AbfIOUYk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 16:24:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=z1I8ggNFeyUXoGVoeCtnR9V4qNP5XRlrgkARYhJNszc=; b=oO+x0r9K8VODlGFXXgDigEE6j
+        yS8uCZLjydx4HiExjV6cRP+oITbqdSnWCMgsmQNc+8ov6OJXmG33BnJ+igEI48lufHKYUy74Qg0Yv
+        HY7vuEefBHz1eotrbRBlo4HT4O3M9+ofYCKaEPXImmTkCFORR33fNv728w9zP1RCeYz+E=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9b4R-0001En-Lm; Sun, 15 Sep 2019 20:24:31 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id A7165274154D; Sun, 15 Sep 2019 21:24:30 +0100 (BST)
+Date:   Sun, 15 Sep 2019 21:24:30 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Mario Limonciello <mario.limonciello@dell.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alex Lu <alex_lu@realsil.com.cn>,
+        David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the net-next tree with Linus' tree
+Message-ID: <20190915202430.GD4352@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="UoPmpPX/dBe4BELn"
 Content-Disposition: inline
-In-Reply-To: <20190915190130.GA18580@amd>
+X-Cookie: Man and wife make one fool.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 09:01:30PM +0200, Pavel Machek wrote:
->On Fri 2019-09-13 14:04:58, Greg Kroah-Hartman wrote:
->> [ Upstream commit 72bbf9358c3676bd89dc4bd8fb0b1f2a11c288fc ]
->>
->> The state related to the VP assist page is still managed by the LAPIC
->> code in the pv_eoi field.
->
->I don't get it.
->
->>
->> +bool kvm_hv_assist_page_enabled(struct kvm_vcpu *vcpu)
->> +{
->> +	if (!(vcpu->arch.hyperv.hv_vapic & HV_X64_MSR_VP_ASSIST_PAGE_ENABLE))
->> +		return false;
->> +	return vcpu->arch.pv_eoi.msr_val & KVM_MSR_ENABLED;
->> +}
->> +EXPORT_SYMBOL_GPL(kvm_hv_assist_page_enabled);
->> +
->> +bool kvm_hv_get_assist_page(struct kvm_vcpu *vcpu,
->> +			    struct hv_vp_assist_page *assist_page)
->> +{
->> +	if (!kvm_hv_assist_page_enabled(vcpu))
->> +		return false;
->> +	return !kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.pv_eoi.data,
->> +				      assist_page, sizeof(*assist_page));
->> +}
->> +EXPORT_SYMBOL_GPL(kvm_hv_get_assist_page);
->> +
->
->This adds two functions, but not their users. What bug is it fixing? I
->don't see any users in the next patch, either.
 
-Look closer at the following patch.
+--UoPmpPX/dBe4BELn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---
-Thanks,
-Sasha
+Hi all,
+
+Today's linux-next merge of the net-next tree got a conflict in:
+
+  drivers/bluetooth/btusb.c
+
+between commit:
+
+  1ffdb51f28e8ec ("Revert "Bluetooth: btusb: driver to enable the usb-wakeu=
+p feature"")
+
+=66rom Linus' tree and commit:
+
+  9e45524a011107 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
+
+=66rom the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc drivers/bluetooth/btusb.c
+index ba41490543040,ed455de598eae..0000000000000
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@@ -1173,7 -1201,18 +1204,14 @@@ static int btusb_open(struct hci_dev *h
+  	}
+ =20
+  	data->intf->needs_remote_wakeup =3D 1;
+ -	/* device specific wakeup source enabled and required for USB
+ -	 * remote wakeup while host is suspended
+ -	 */
+ -	device_wakeup_enable(&data->udev->dev);
+ =20
++ 	/* Disable device remote wakeup when host is suspended
++ 	 * For Realtek chips, global suspend without
++ 	 * SET_FEATURE (DEVICE_REMOTE_WAKEUP) can save more power in device.
++ 	 */
++ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
++ 		device_wakeup_disable(&data->udev->dev);
++=20
+  	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+  		goto done;
+ =20
+@@@ -1237,6 -1276,12 +1275,11 @@@ static int btusb_close(struct hci_dev *
+  		goto failed;
+ =20
+  	data->intf->needs_remote_wakeup =3D 0;
++=20
++ 	/* Enable remote wake up for auto-suspend */
++ 	if (test_bit(BTUSB_WAKEUP_DISABLE, &data->flags))
++ 		data->intf->needs_remote_wakeup =3D 1;
++=20
+ -	device_wakeup_disable(&data->udev->dev);
+  	usb_autopm_put_interface(data->intf);
+ =20
+  failed:
+
+--UoPmpPX/dBe4BELn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+nf0ACgkQJNaLcl1U
+h9CDggf+Iqt7xzz9dEuHvuRYHQgM0bgjxSk9vVj/x8DPhEV+XhWQU6bkxkazQEFT
+/yFhPbYPhfSPhIT14h8x44H1YNoYXmhxq+U1xY5i8wvkNX96NWXKPPa3l35VWQIo
+adHTsBCx9arL7gzcNGCZnpeRnQahhzbISHK3pf6S2XbNEZyfeaCOHqWFKVnEEu8y
+nyiJCrkjhjeMnPI+0Gkxvt01H9eDWegG0/jsbjyKAIpSDnmfktxzdxL8dlZkkl0g
+OYchLdYJf+2dRFfUx+F8VqUwPETxrrzVy5eyVhRuXuZzv/2iS2z4TVYLzXvrc1hT
+V7bHjXAJgCVGj9d31wuzxWnXraY/NQ==
+=CrKv
+-----END PGP SIGNATURE-----
+
+--UoPmpPX/dBe4BELn--
