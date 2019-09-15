@@ -2,93 +2,218 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E89F6C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:20:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A557DC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:21:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB8E7214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:20:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ccPfpqqj"
+	by mail.kernel.org (Postfix) with ESMTP id 74DA22067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:21:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568571667;
+	bh=+6SIw9xseIA6TgKbKWQ5K8VwbyV1pCjpsoKqk2qnRd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cRCOTAMAXNH/RVb3veBF/lLM40i0knKlcQrRI/pyNYdxR6R8Gc+bEgFH9fC1Ljd9G
+	 oI+lCNMqRc7SEE1Z0fJY3f0dSO5+ZfQ6823K83zgRF9CvLbAWM7Qu1KOlkg0HgpEPS
+	 Txy/R3LPsvBx6wsFoWTIoKriGmLcEvjVeHwPMGLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726136AbfIOSUc (ORCPT
+        id S1726222AbfIOSUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 14:20:32 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38687 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfIOSUc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 14:20:32 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u28so4913747lfc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 11:20:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jrx+rbVytk1GGn4jWtFZwhssNYPhIpzI4TMimWuxSyw=;
-        b=ccPfpqqjUeN2rABSaF7iKNlS/7FTAmmDKkLrqbpdKqkInR+KAi26lrmix3dztSANXn
-         HgEdzA0vuh5P1FUpbHUCoMq8juCAeWVwbKNctjy7DfbAYKEKgN9WjNoYLGGwdQfnNa9S
-         L32W7xJp1bRCTfvCUih2EL94dhUTaumC7G6855FJQ9OpLHbY8WDLqCrVLhgRDizuPbDS
-         cNzf2PrVNuWJToKxvcqlMDlNBt6GYzmfBhYygH1LjeS1USv7WaFkFFAevwehWlm9fwWG
-         0DnQRqqJXP5CFKFNmmvrk+HHYIC4jWgoPBYB2VP2QgEYiMctdPENaAy5IqHZr8NS/DRP
-         ZyPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jrx+rbVytk1GGn4jWtFZwhssNYPhIpzI4TMimWuxSyw=;
-        b=GCJgR7gULBDrpY8MJnlOgSY+FcJb5Ye0FhC60Dx3GRIRmRHRU49e4zV/3Scjs9AhdS
-         lJfAkKJw88T3grbKmn6UiCymYaaREkjhSIczrk9p6wVO+OfpNelRPx9RVD45b6ivTf+F
-         1I8pL5IiDYODrfdSkmH4qef4eksxVta8TnxK4PJ13AMtffLtNld6gGZm/MFCwDfo+Bfw
-         SNP6oNVRtTNb29uh7DtO0MP1UedSM+N8p2eA9h602TLY7Ppibx8Z769a3urNEH1f+HfN
-         t+6TnXQtIpZxqeAdgVclqPBeMpD77x6xq66VXOcRpxiMSUBnn9cweo7WzmhiGpz4Umyu
-         CHyw==
-X-Gm-Message-State: APjAAAV9SFHXIzuJS+nODTWD6KZbEKnyaBNJ4AAowlgLEIDqlRfuRj8N
-        j/KEia0s/yS7IrwZCB1J3uKIH/DKv8r+D0QoGJ8=
-X-Google-Smtp-Source: APXvYqzAgczLDnQgzt9L/ZOmPZbxTpd6MFJREYg5+pWZF4LPYPU/arY67PJx4iTpqOOvDico7SAmsbn4ROhckEZQIsE=
-X-Received: by 2002:ac2:568c:: with SMTP id 12mr35788618lfr.133.1568571630406;
- Sun, 15 Sep 2019 11:20:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190830231527.22304-1-linux@rasmusvillemoes.dk>
- <20190912221927.18641-1-linux@rasmusvillemoes.dk> <CANiq72n_KxKGwrN4onWotocTuZjVSAqENF_5Pk9t1-pk7NDrgQ@mail.gmail.com>
- <d47740cc-a373-91a9-df33-d2def69a370d@rasmusvillemoes.dk> <20190913152117.GA458892@kroah.com>
-In-Reply-To: <20190913152117.GA458892@kroah.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Sun, 15 Sep 2019 20:20:19 +0200
-Message-ID: <CANiq72mxqugDLLYJ10VfBr75rt_p8kPDbDx9pDb2WOiqqpgtGQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] make use of gcc 9's "asm inline()"
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Nadav Amit <namit@vmware.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 15 Sep 2019 14:20:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:37196 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfIOSUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 14:20:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73095337;
+        Sun, 15 Sep 2019 11:20:49 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C624D3F67D;
+        Sun, 15 Sep 2019 11:20:46 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 19:20:40 +0100
+Message-ID: <861rwhs9on.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        David Johnson <davidj@sifive.com>,
+        Darius Rad <darius@bluespec.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net
+Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
+References: <8636gxskmj.wl-maz@kernel.org>
+        <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 5:21 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> Feel free to also take that patch through any tree, it's "obviously
-> correct" :)
+On Sun, 15 Sep 2019 18:31:33 +0100,
+Palmer Dabbelt <palmer@sifive.com> wrote:
 
-OK :) Picked all 6 in compiler-attributes:
+Hi Palmer,
 
-    https://github.com/ojeda/linux/commits/compiler-attributes
+> 
+> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
+> > On Thu, 12 Sep 2019 22:40:34 +0100,
+> > Darius Rad <darius@bluespec.com> wrote:
+> > 
+> > Hi Darius,
+> > 
+> >> 
+> >> As per the existing comment, irq_mask and irq_unmask do not need
+> >> to do anything for the PLIC.  However, the functions must exist
+> >> (the pointers cannot be NULL) as they are not optional, based on
+> >> the documentation (Documentation/core-api/genericirq.rst) as well
+> >> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
+> >> 
+> >> Signed-off-by: Darius Rad <darius@bluespec.com>
+> >> ---
+> >>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+> >>  1 file changed, 9 insertions(+), 4 deletions(-)
+> >> 
+> >> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> >> index cf755964f2f8..52d5169f924f 100644
+> >> --- a/drivers/irqchip/irq-sifive-plic.c
+> >> +++ b/drivers/irqchip/irq-sifive-plic.c
+> >> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+> >>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+> >>  }
+> >>  +/*
+> >> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> >> + * by reading claim and "unmasked" when writing it back.
+> >> + */
+> >> +static void plic_irq_mask(struct irq_data *d) { }
+> >> +static void plic_irq_unmask(struct irq_data *d) { }
+> > 
+> > This outlines a bigger issue. If your irqchip doesn't require
+> > mask/unmask, you're probably not using the right interrupt
+> > flow. Looking at the code, I see you're using handle_simple_irq, which
+> > is almost universally wrong.
+> > 
+> > As per the description above, these interrupts should be using the
+> > fasteoi flow, which is designed for this exact behaviour (the
+> > interrupt controller knows which interrupt is in flight and doesn't
+> > require SW to do anything bar signalling the EOI).
+> > 
+> > Another thing is that mask/unmask tends to be a requirement, while
+> > enable/disable tends to be optional. There is no hard line here, but
+> > the expectations are that:
+> > 
+> > (a) A disabled line can drop interrupts
+> > (b) A masked line cannot drop interrupts
+> > 
+> > Depending what the PLIC architecture mandates, you'll need to
+> > implement one and/or the other. Having just (a) is indicative of a HW
+> > bug, and I'm not assuming that this is the case. (b) only is pretty
+> > common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+> > only.
+> > 
+> >> +
+> >>  #ifdef CONFIG_SMP
+> >>  static int plic_set_affinity(struct irq_data *d,
+> >>  			     const struct cpumask *mask_val, bool force)
+> >> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+> >>   static struct irq_chip plic_chip = {
+> >>  	.name		= "SiFive PLIC",
+> >> -	/*
+> >> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> >> -	 * by reading claim and "unmasked" when writing it back.
+> >> -	 */
+> >>  	.irq_enable	= plic_irq_enable,
+> >>  	.irq_disable	= plic_irq_disable,
+> >> +	.irq_mask	= plic_irq_mask,
+> >> +	.irq_unmask	= plic_irq_unmask,
+> >>  #ifdef CONFIG_SMP
+> >>  	.irq_set_affinity = plic_set_affinity,
+> >>  #endif
+> > 
+> > Can you give the following patch a go? It brings the irq flow in line
+> > with what the HW can do. It is of course fully untested (not even
+> > compile tested...).
+> > 
+> > Thanks,
+> > 
+> > 	M.
+> > 
+> > From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+> > From: Marc Zyngier <maz@kernel.org>
+> > Date: Sun, 15 Sep 2019 15:17:45 +0100
+> > Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+> > 
+> > The SiFive PLIC interrupt controller seems to have all the HW
+> > features to support the fasteoi flow, but the driver seems to be
+> > stuck in a distant past. Bring it into the 21st century.
+> 
+> Thanks.  We'd gotten these comments during the review process but
+> nobody had gotten the time to actually fix the issues.
 
-I added Ingo's Acks and fixed a minor typo (has -> have) in the 3rd
-patch commit message. It will be in tomorrow's -next.
+No worries. The IRQ subsystem is an acquired taste... ;-)
 
-Cheers,
-Miguel
+> > 
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+> >  1 file changed, 15 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> > index cf755964f2f8..8fea384d392b 100644
+> > --- a/drivers/irqchip/irq-sifive-plic.c
+> > +++ b/drivers/irqchip/irq-sifive-plic.c
+> > @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+> >  	}
+> >  }
+> >  -static void plic_irq_enable(struct irq_data *d)
+> > +static void plic_irq_mask(struct irq_data *d)
+
+Of course, this is wrong. The perks of trying to do something at the
+last minute while boarding an airplane. Don't do that.
+
+This should of course read "plic_irq_unmask"...
+
+> >  {
+> >  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+> >  					   cpu_online_mask);
+> > @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+> >  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+> >  }
+> >  -static void plic_irq_disable(struct irq_data *d)
+> > +static void plic_irq_unmask(struct irq_data *d)
+
+... and this should be "plic_irq_mask".
+
+[...]
+
+> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
+
+Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
+the above bug should have kept the IRQ lines masked.
+
+> We should test them on the hardware, but I don't have any with me
+> right now.  David's probably in the best spot to do this, as he's got
+> a setup that does all the weird interrupt sources (ie, PCIe).
+> 
+> David: do you mind testing this?  I've put the patch here:
+> 
+>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
+>    -b plic-fasteoi
+
+I've pushed out a branch with the fixed patch:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
+
+Thanks,
+
+	M.
+
+-- 
+Jazz is not dead, it just smells funny.
