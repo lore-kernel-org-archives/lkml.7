@@ -2,176 +2,248 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 523C3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C64C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29840214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568554635;
-	bh=tgGeaqAJon44Je9AhJyBt4XGowvfWwlz86wGUciRlAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lyKldVTzHVW2LL/KNRybCQBoVA9agYFso5DyUoypXPVngUc46RnKeMtCbCQsBjDZD
-	 CVy/A9JHxLwv+ZJq4CfM6m0SWTOXsmjozIVJ/GbF+1J177q6hBhZkAdyqunSjo37Qt
-	 J92Um0Xl7oRWWPmst7ukhIb7/uZc+fYv0NW/L4As=
+	by mail.kernel.org (Postfix) with ESMTP id 1DA2E214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbfIONhO (ORCPT
+        id S1730230AbfIONjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57758 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbfIONhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:37:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 189552067B;
-        Sun, 15 Sep 2019 13:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568554631;
-        bh=tgGeaqAJon44Je9AhJyBt4XGowvfWwlz86wGUciRlAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hI+TFsXzGddr19fnOYpyN9DLa39XViNNFS0nLyxoLHrPwLiDn5Hj73QchixeZ3CFD
-         X8vRfZpA5XvSTAJTbs8jPhE/z78inbp6iVwstxlcqFy+XXQwh1BBzbGLLsIlKHn29p
-         lbC+/+H4GvCimE/W9KVQP40Wj0OeE03JB7+Ppr7E=
-Date:   Sun, 15 Sep 2019 15:37:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Thomas Backlund <tmb@mageia.org>
-Cc:     Stefan Lippers-Hollmann <s.l-h@gmx.de>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Subject: Re: [PATCH 5.2 36/37] vhost: block speculation of translated
- descriptors
-Message-ID: <20190915133708.GA552389@kroah.com>
-References: <20190913130510.727515099@linuxfoundation.org>
- <20190913130522.155505270@linuxfoundation.org>
- <20190914025411.3016e3d9@mir>
- <20190914055050.GA489003@kroah.com>
- <20190914091548.230a63de@mir>
- <20190914080836.GB522114@kroah.com>
- <368d254b-dc29-6309-062d-a2d07b5dad75@mageia.org>
+        Sun, 15 Sep 2019 09:39:21 -0400
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:58530 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbfIONjU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 09:39:20 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id B1D829E79B4;
+        Sun, 15 Sep 2019 14:39:18 +0100 (BST)
+Date:   Sun, 15 Sep 2019 14:39:17 +0100
+From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [RFC 1/4] counter: Simplify the count_read and count_write
+ callbacks
+Message-ID: <20190915143917.61385369@archlinux>
+In-Reply-To: <20190915055759.408690-2-vilhelm.gray@gmail.com>
+References: <20190915055759.408690-1-vilhelm.gray@gmail.com>
+        <20190915055759.408690-2-vilhelm.gray@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <368d254b-dc29-6309-062d-a2d07b5dad75@mageia.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 12:34:57PM +0300, Thomas Backlund wrote:
-> Den 14-09-2019 kl. 11:08, skrev Greg Kroah-Hartman:
-> > On Sat, Sep 14, 2019 at 09:15:48AM +0200, Stefan Lippers-Hollmann wrote:
-> > > Hi
-> > > 
-> > > On 2019-09-14, Greg Kroah-Hartman wrote:
-> > > > On Sat, Sep 14, 2019 at 02:54:11AM +0200, Stefan Lippers-Hollmann wrote:
-> > > > > On 2019-09-13, Greg Kroah-Hartman wrote:
-> > > > > > From: Michael S. Tsirkin <mst@redhat.com>
-> > > > > > 
-> > > > > > commit a89db445fbd7f1f8457b03759aa7343fa530ef6b upstream.
-> > > > > > 
-> > > > > > iovec addresses coming from vhost are assumed to be
-> > > > > > pre-validated, but in fact can be speculated to a value
-> > > > > > out of range.
-> > > > > > 
-> > > > > > Userspace address are later validated with array_index_nospec so we can
-> > > > > > be sure kernel info does not leak through these addresses, but vhost
-> > > > > > must also not leak userspace info outside the allowed memory table to
-> > > > > > guests.
-> > > > > > 
-> > > > > > Following the defence in depth principle, make sure
-> > > > > > the address is not validated out of node range.
-> > > [...]
-> > > > Do you have the same problem with Linus's tree right now?
-> > > 
-> > > Actually, yes I do (I had not tested i386 for 5.3~ within the last ~2
-> > > weeks, only amd64). Very similar kernel config, same compiler versions
-> > > but built in a slightly different environment (built directly on the bare
-> > > iron, in a amd64 multilib userspace, rather than a pure-i386 chroot on an
-> > > amd64 kernel).
-> > > 
-> > > $ git describe
-> > > v5.3-rc8-36-ga7f89616b737
-> > > 
-> > > $ LANG= make ARCH=x86 -j1 bzImage modules
-> > >    CALL    scripts/checksyscalls.sh
-> > >    CALL    scripts/atomic/check-atomics.sh
-> > >    CHK     include/generated/compile.h
-> > >    CHK     kernel/kheaders_data.tar.xz
-> > >    CC [M]  drivers/vhost/vhost.o
-> > > In file included from ./include/linux/export.h:45,
-> > >                   from ./include/linux/linkage.h:7,
-> > >                   from ./include/linux/kernel.h:8,
-> > >                   from ./include/linux/list.h:9,
-> > >                   from ./include/linux/wait.h:7,
-> > >                   from ./include/linux/eventfd.h:13,
-> > >                   from drivers/vhost/vhost.c:13:
-> > > drivers/vhost/vhost.c: In function 'translate_desc':
-> > > ./include/linux/compiler.h:350:38: error: call to '__compiletime_assert_2076' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
-> > >    350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-> > >        |                                      ^
-> > > ./include/linux/compiler.h:331:4: note: in definition of macro '__compiletime_assert'
-> > >    331 |    prefix ## suffix();    \
-> > >        |    ^~~~~~
-> > > ./include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
-> > >    350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
-> > >        |  ^~~~~~~~~~~~~~~~~~~
-> > > ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
-> > >     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
-> > >        |                                     ^~~~~~~~~~~~~~~~~~
-> > > ./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
-> > >     50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
-> > >        |  ^~~~~~~~~~~~~~~~
-> > > ./include/linux/nospec.h:56:2: note: in expansion of macro 'BUILD_BUG_ON'
-> > >     56 |  BUILD_BUG_ON(sizeof(_s) > sizeof(long));   \
-> > >        |  ^~~~~~~~~~~~
-> > > drivers/vhost/vhost.c:2076:5: note: in expansion of macro 'array_index_nospec'
-> > >   2076 |     array_index_nospec((unsigned long)(addr - node->start),
-> > >        |     ^~~~~~~~~~~~~~~~~~
-> > > make[2]: *** [scripts/Makefile.build:281: drivers/vhost/vhost.o] Error 1
-> > > make[1]: *** [scripts/Makefile.build:497: drivers/vhost] Error 2
-> > > make: *** [Makefile:1083: drivers] Error 2
-> > > 
-> > > $ git revert a89db445fbd7f1f8457b03759aa7343fa530ef6b
-> > > 
-> > > $ LANG= make ARCH=x86 -j16 bzImage modules
-> > >    CALL    scripts/atomic/check-atomics.sh
-> > >    CALL    scripts/checksyscalls.sh
-> > >    CHK     include/generated/compile.h
-> > >    CHK     kernel/kheaders_data.tar.xz
-> > >    Building modules, stage 2.
-> > > Kernel: arch/x86/boot/bzImage is ready  (#1)
-> > >    MODPOST 3464 modules
-> > > 
-> > > $ echo $?
-> > > 0
-> > > 
-> > > $ find . -name vhost\\.ko
-> > > ./drivers/vhost/vhost.ko
-> > > 
-> > > I've attached the affected kernel config for v5.3~/ i386.
-> > 
-> > Ok, good, we will be "bug compatible" at the very least now :)
-> > 
-> > When this gets fixed in Linus's tree we can backport the fix here as
-> > well.  The number of users of that compiler version/configuration is
-> > probably pretty low at the moment to want to hold off on this fix.
-> > 
+On Sun, 15 Sep 2019 14:57:56 +0900
+William Breathitt Gray <vilhelm.gray@gmail.com> wrote:
+
+> The count_read and count_write callbacks are simplified to pass val as
+> unsigned long rather than as an opaque data structure. The opaque
+> counter_count_read_value and counter_count_write_value structures,
+> counter_count_value_type enum, and relevant counter_count_read_value_set
+> and counter_count_write_value_get functions, are removed as they are no
+> longer used.
 > 
-> This is now reverted upstream:
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+
+Seems like a sensible bit of excessive abstraction removal to me.  I'm not
+totally sure why these got so complex in the first place though.
+
+Can you recall the reason as it might help to judge why we no longer
+think the same?
+
+Thanks,
+
+Jonathan
+> ---
+>  drivers/counter/counter.c | 66 +++++----------------------------------
+>  include/linux/counter.h   | 43 +++----------------------
+>  2 files changed, 12 insertions(+), 97 deletions(-)
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0d4a3f2abbef73b9e5bb5f12213c275565473588
+> diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
+> index 106bc7180cd8..1d08f1437b1b 100644
+> --- a/drivers/counter/counter.c
+> +++ b/drivers/counter/counter.c
+> @@ -246,60 +246,6 @@ void counter_signal_read_value_set(struct counter_signal_read_value *const val,
+>  }
+>  EXPORT_SYMBOL_GPL(counter_signal_read_value_set);
+>  
+> -/**
+> - * counter_count_read_value_set - set counter_count_read_value data
+> - * @val:	counter_count_read_value structure to set
+> - * @type:	property Count data represents
+> - * @data:	Count data
+> - *
+> - * This function sets an opaque counter_count_read_value structure with the
+> - * provided Count data.
+> - */
+> -void counter_count_read_value_set(struct counter_count_read_value *const val,
+> -				  const enum counter_count_value_type type,
+> -				  void *const data)
+> -{
+> -	switch (type) {
+> -	case COUNTER_COUNT_POSITION:
+> -		val->len = sprintf(val->buf, "%lu\n", *(unsigned long *)data);
+> -		break;
+> -	default:
+> -		val->len = 0;
+> -	}
+> -}
+> -EXPORT_SYMBOL_GPL(counter_count_read_value_set);
+> -
+> -/**
+> - * counter_count_write_value_get - get counter_count_write_value data
+> - * @data:	Count data
+> - * @type:	property Count data represents
+> - * @val:	counter_count_write_value structure containing data
+> - *
+> - * This function extracts Count data from the provided opaque
+> - * counter_count_write_value structure and stores it at the address provided by
+> - * @data.
+> - *
+> - * RETURNS:
+> - * 0 on success, negative error number on failure.
+> - */
+> -int counter_count_write_value_get(void *const data,
+> -				  const enum counter_count_value_type type,
+> -				  const struct counter_count_write_value *const val)
+> -{
+> -	int err;
+> -
+> -	switch (type) {
+> -	case COUNTER_COUNT_POSITION:
+> -		err = kstrtoul(val->buf, 0, data);
+> -		if (err)
+> -			return err;
+> -		break;
+> -	}
+> -
+> -	return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(counter_count_write_value_get);
+> -
+>  struct counter_attr_parm {
+>  	struct counter_device_attr_group *group;
+>  	const char *prefix;
+> @@ -788,13 +734,13 @@ static ssize_t counter_count_show(struct device *dev,
+>  	const struct counter_count_unit *const component = devattr->component;
+>  	struct counter_count *const count = component->count;
+>  	int err;
+> -	struct counter_count_read_value val = { .buf = buf };
+> +	unsigned long val;
+>  
+>  	err = counter->ops->count_read(counter, count, &val);
+>  	if (err)
+>  		return err;
+>  
+> -	return val.len;
+> +	return sprintf(buf, "%lu\n", val);
+>  }
+>  
+>  static ssize_t counter_count_store(struct device *dev,
+> @@ -806,9 +752,13 @@ static ssize_t counter_count_store(struct device *dev,
+>  	const struct counter_count_unit *const component = devattr->component;
+>  	struct counter_count *const count = component->count;
+>  	int err;
+> -	struct counter_count_write_value val = { .buf = buf };
+> +	unsigned long val;
+> +
+> +	err = kstrtoul(buf, 0, &val);
+> +	if (err)
+> +		return err;
+>  
+> -	err = counter->ops->count_write(counter, count, &val);
+> +	err = counter->ops->count_write(counter, count, val);
+>  	if (err)
+>  		return err;
+>  
+> diff --git a/include/linux/counter.h b/include/linux/counter.h
+> index a061cdcdef7c..7e40796598a6 100644
+> --- a/include/linux/counter.h
+> +++ b/include/linux/counter.h
+> @@ -300,24 +300,6 @@ struct counter_signal_read_value {
+>  	size_t len;
+>  };
+>  
+> -/**
+> - * struct counter_count_read_value - Opaque Count read value
+> - * @buf:	string representation of Count read value
+> - * @len:	length of string in @buf
+> - */
+> -struct counter_count_read_value {
+> -	char *buf;
+> -	size_t len;
+> -};
+> -
+> -/**
+> - * struct counter_count_write_value - Opaque Count write value
+> - * @buf:	string representation of Count write value
+> - */
+> -struct counter_count_write_value {
+> -	const char *buf;
+> -};
+> -
+>  /**
+>   * struct counter_ops - Callbacks from driver
+>   * @signal_read:	optional read callback for Signal attribute. The read
+> @@ -328,15 +310,10 @@ struct counter_count_write_value {
+>   *			signal_read callback.
+>   * @count_read:		optional read callback for Count attribute. The read
+>   *			value of the respective Count should be passed back via
+> - *			the val parameter. val points to an opaque type which
+> - *			should be set only by calling the
+> - *			counter_count_read_value_set function from within the
+> - *			count_read callback.
+> + *			the val parameter.
+>   * @count_write:	optional write callback for Count attribute. The write
+>   *			value for the respective Count is passed in via the val
+> - *			parameter. val points to an opaque type which should be
+> - *			accessed only by calling the
+> - *			counter_count_write_value_get function.
+> + *			parameter.
+>   * @function_get:	function to get the current count function mode. Returns
+>   *			0 on success and negative error code on error. The index
+>   *			of the respective Count's returned function mode should
+> @@ -357,11 +334,9 @@ struct counter_ops {
+>  			   struct counter_signal *signal,
+>  			   struct counter_signal_read_value *val);
+>  	int (*count_read)(struct counter_device *counter,
+> -			  struct counter_count *count,
+> -			  struct counter_count_read_value *val);
+> +			  struct counter_count *count, unsigned long *val);
+>  	int (*count_write)(struct counter_device *counter,
+> -			   struct counter_count *count,
+> -			   struct counter_count_write_value *val);
+> +			   struct counter_count *count, unsigned long val);
+>  	int (*function_get)(struct counter_device *counter,
+>  			    struct counter_count *count, size_t *function);
+>  	int (*function_set)(struct counter_device *counter,
+> @@ -486,19 +461,9 @@ enum counter_signal_value_type {
+>  	COUNTER_SIGNAL_LEVEL = 0
+>  };
+>  
+> -enum counter_count_value_type {
+> -	COUNTER_COUNT_POSITION = 0,
+> -};
+> -
+>  void counter_signal_read_value_set(struct counter_signal_read_value *const val,
+>  				   const enum counter_signal_value_type type,
+>  				   void *const data);
+> -void counter_count_read_value_set(struct counter_count_read_value *const val,
+> -				  const enum counter_count_value_type type,
+> -				  void *const data);
+> -int counter_count_write_value_get(void *const data,
+> -				  const enum counter_count_value_type type,
+> -				  const struct counter_count_write_value *const val);
+>  
+>  int counter_register(struct counter_device *const counter);
+>  void counter_unregister(struct counter_device *const counter);
 
-And now dropped from all of the stable branches.
-
-thanks,
-
-greg k-h
