@@ -2,261 +2,254 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1382EC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DDDC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAD0B214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262F5214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568568758;
+	bh=XGWIjewTbbEQGV/Hr703WPtEGI7ZOCRmBTJmzeiH2B0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oB1QBR6b+kLg7bkmXaOTPiY09LidWsCvzLogw9uYgu1uj66tXqQlBG/WstXJgFyT2
+	 n2/m8IyjD5YufSVKs8vclbccN92jpJGEx5cPaGY/+SVqEUoLynk3UQ27qLIOv84l9B
+	 zMHjGk2UoF49CatxuK9ISqzh2FaEH42RdZUggFbw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfIORbf (ORCPT
+        id S1727666AbfIORch (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:31:35 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37626 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIORbf (ORCPT
+        Sun, 15 Sep 2019 13:32:37 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33465 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfIORcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:31:35 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so18417384pfo.4
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:31:34 -0700 (PDT)
+        Sun, 15 Sep 2019 13:32:36 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so31611704ljd.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IMvYCEPcbJQk6uvHg/uZleqaQ0GLtqeaowrky7QhAac=;
+        b=SQ3SJZHA20v7FW42MRvShirFBRekszCXF96ECgcq+9WaPqiijSKYutTTfwgdrr6FsE
+         wFZs2V4Wn+lNeUF5+rv38fAB/zZTGSYQr0Q3p8oQcrmREZW6K1bUACKBxqUIj8LLs5mC
+         nBxcb+jXtvmMgfVNdNQ0XXUEAVg7FT0LXsw2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=7jPP6uykt4djIujvVe4JcrX0jlYqFug5SZAhTUjC5fU=;
-        b=tSWnir8REfrbz8owEt4o08WRWadX/sBcdtFmT2lwUaqNdOi9eEJvkMuS5xVSKVfcKg
-         U5WHLONyflrXoRAofJvIdDQcoOLLAv98/kzlMwIl8njbe08ms9Tl8GoKzpxqJ4PsCD+W
-         mzDn5/B+Rh7GTd1OFVvM4opz8cwSsKnvCN2TGggw3XHGeIyV/X/avTBsG0mhBryNcKkN
-         QE5g+EsnOqriTuq+fpCJDOQgBSX0ZsDEgWikMxY1RW3s0UT/a2bKT5AplEWMe7SOrEwe
-         TTDwWjnHGY+1MoOoNA67O4SEGcwpqtcvQPFg/fTvMthVYSS9QjSlzKsCvfQoRRMX3D/9
-         VhqA==
-X-Gm-Message-State: APjAAAU8GckDAoC8KFqpj4Dk+rcKKvYAqvWIz9fT9g/wnfWqbwG2qfRU
-        vj96cHTWffL0Lk1f52f9sA+jNQ==
-X-Google-Smtp-Source: APXvYqxq4EUBJIPAKXGYmJQK33mno/KylCwPXwHyaZL5QhyHScTMRF7BDzUNvZe0BZ0iCjoNHBkFrg==
-X-Received: by 2002:a63:1521:: with SMTP id v33mr9263997pgl.9.1568568694021;
-        Sun, 15 Sep 2019 10:31:34 -0700 (PDT)
-Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
-        by smtp.gmail.com with ESMTPSA id s24sm28979930pgm.3.2019.09.15.10.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 10:31:33 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 10:31:33 -0700 (PDT)
-X-Google-Original-Date: Sun, 15 Sep 2019 10:18:16 PDT (-0700)
-Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-In-Reply-To: <8636gxskmj.wl-maz@kernel.org>
-CC:     Darius Rad <darius@bluespec.com>, linux-riscv@lists.infradead.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     maz@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        David Johnson <davidj@sifive.com>
-Message-ID: <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IMvYCEPcbJQk6uvHg/uZleqaQ0GLtqeaowrky7QhAac=;
+        b=CPzO2Nng3AVBJVatx5f2wgkUTVpU9lfvDIKZRwH5ix5cNrkFvVvrqGguVAeg/GuVZM
+         p9b6kIvCDJjpWTBU5bapIB3LZXoucx7qhFFAuTr0Ho7HnE8G01v8uP0+hB/TjKXEh9Zo
+         ohKDiLBJnE70S9x1VC+QC6EveahYQCL5hbPbDltMWRgZDJpmnmbpwif2tODiE7iYCoI2
+         rNJp5hbPIu+AN9cGFGQZAqdALviPZnLz2JwB0MI9/wtrMUMlF7hy4L0LcUB8lKDbHnMq
+         hmE8thdM5mgLgg9pml+i/3yUJ3tXruHZJN35gdMbX5TLzh6zIqPDvtRf1pvLS6t+FSLo
+         U/Iw==
+X-Gm-Message-State: APjAAAUh/tvRT8DhO9zMKza9tV8T4TB2a/jrFY6ln8VayTA1bPXI8uYT
+        o165zr6R0iz7maD947Kr4RSfKQyRyvk=
+X-Google-Smtp-Source: APXvYqx6rgpK9iyBq/va4thzPoMOHii4/HZIpou6Cqw2GK3F04keh54OEy/6+kQC8vv9bC2sI7FkAQ==
+X-Received: by 2002:a2e:9a88:: with SMTP id p8mr3775124lji.86.1568568753186;
+        Sun, 15 Sep 2019 10:32:33 -0700 (PDT)
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
+        by smtp.gmail.com with ESMTPSA id y204sm3143410lfa.64.2019.09.15.10.32.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Sep 2019 10:32:32 -0700 (PDT)
+Received: by mail-lf1-f41.google.com with SMTP id u26so7912450lfg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:32:31 -0700 (PDT)
+X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr11144104lfn.52.1568568751509;
+ Sun, 15 Sep 2019 10:32:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=wjo6qDvh_fUnd2HdDb63YbWN09kE0FJPgCW+nBaWMCNAQ@mail.gmail.com>
+ <20190911160729.GF2740@mit.edu> <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+In-Reply-To: <20190915052242.GG19710@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 15 Sep 2019 10:32:15 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+Message-ID: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
+ CRNG is uninitialized
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <mzxreary@0pointer.de>
+Content-Type: multipart/mixed; boundary="0000000000003d7eca05929adfe4"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
-> On Thu, 12 Sep 2019 22:40:34 +0100,
-> Darius Rad <darius@bluespec.com> wrote:
->
-> Hi Darius,
->
->> 
->> As per the existing comment, irq_mask and irq_unmask do not need
->> to do anything for the PLIC.  However, the functions must exist
->> (the pointers cannot be NULL) as they are not optional, based on
->> the documentation (Documentation/core-api/genericirq.rst) as well
->> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
->> 
->> Signed-off-by: Darius Rad <darius@bluespec.com>
->> ---
->>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
->>  1 file changed, 9 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->> index cf755964f2f8..52d5169f924f 100644
->> --- a/drivers/irqchip/irq-sifive-plic.c
->> +++ b/drivers/irqchip/irq-sifive-plic.c
->> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
->>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->>  }
->>  
->> +/*
->> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->> + * by reading claim and "unmasked" when writing it back.
->> + */
->> +static void plic_irq_mask(struct irq_data *d) { }
->> +static void plic_irq_unmask(struct irq_data *d) { }
->
-> This outlines a bigger issue. If your irqchip doesn't require
-> mask/unmask, you're probably not using the right interrupt
-> flow. Looking at the code, I see you're using handle_simple_irq, which
-> is almost universally wrong.
->
-> As per the description above, these interrupts should be using the
-> fasteoi flow, which is designed for this exact behaviour (the
-> interrupt controller knows which interrupt is in flight and doesn't
-> require SW to do anything bar signalling the EOI).
->
-> Another thing is that mask/unmask tends to be a requirement, while
-> enable/disable tends to be optional. There is no hard line here, but
-> the expectations are that:
->
-> (a) A disabled line can drop interrupts
-> (b) A masked line cannot drop interrupts
->
-> Depending what the PLIC architecture mandates, you'll need to
-> implement one and/or the other. Having just (a) is indicative of a HW
-> bug, and I'm not assuming that this is the case. (b) only is pretty
-> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
-> only.
->
->> +
->>  #ifdef CONFIG_SMP
->>  static int plic_set_affinity(struct irq_data *d,
->>  			     const struct cpumask *mask_val, bool force)
->> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
->>  
->>  static struct irq_chip plic_chip = {
->>  	.name		= "SiFive PLIC",
->> -	/*
->> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->> -	 * by reading claim and "unmasked" when writing it back.
->> -	 */
->>  	.irq_enable	= plic_irq_enable,
->>  	.irq_disable	= plic_irq_disable,
->> +	.irq_mask	= plic_irq_mask,
->> +	.irq_unmask	= plic_irq_unmask,
->>  #ifdef CONFIG_SMP
->>  	.irq_set_affinity = plic_set_affinity,
->>  #endif
->
-> Can you give the following patch a go? It brings the irq flow in line
-> with what the HW can do. It is of course fully untested (not even
-> compile tested...).
->
-> Thanks,
->
-> 	M.
->
-> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
-> From: Marc Zyngier <maz@kernel.org>
-> Date: Sun, 15 Sep 2019 15:17:45 +0100
-> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
->
-> The SiFive PLIC interrupt controller seems to have all the HW
-> features to support the fasteoi flow, but the driver seems to be
-> stuck in a distant past. Bring it into the 21st century.
+--0000000000003d7eca05929adfe4
+Content-Type: text/plain; charset="UTF-8"
 
-Thanks.  We'd gotten these comments during the review process but nobody had 
-gotten the time to actually fix the issues.
+[ Added Lennart, who was active in the other thread ]
 
+On Sat, Sep 14, 2019 at 10:22 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
 >
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> index cf755964f2f8..8fea384d392b 100644
-> --- a/drivers/irqchip/irq-sifive-plic.c
-> +++ b/drivers/irqchip/irq-sifive-plic.c
-> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
->  	}
->  }
->  
-> -static void plic_irq_enable(struct irq_data *d)
-> +static void plic_irq_mask(struct irq_data *d)
->  {
->  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
->  					   cpu_online_mask);
-> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
->  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
->  }
->  
-> -static void plic_irq_disable(struct irq_data *d)
-> +static void plic_irq_unmask(struct irq_data *d)
->  {
->  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->  }
-> @@ -125,10 +125,8 @@ static int plic_set_affinity(struct irq_data *d,
->  	if (cpu >= nr_cpu_ids)
->  		return -EINVAL;
->  
-> -	if (!irqd_irq_disabled(d)) {
-> -		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-> -		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-> -	}
-> +	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-> +	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
->  
->  	irq_data_update_effective_affinity(d, cpumask_of(cpu));
->  
-> @@ -136,14 +134,18 @@ static int plic_set_affinity(struct irq_data *d,
->  }
->  #endif
->  
-> +static void plic_irq_eoi(struct irq_data *d)
-> +{
-> +	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
-> +
-> +	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
-> +}
-> +
->  static struct irq_chip plic_chip = {
->  	.name		= "SiFive PLIC",
-> -	/*
-> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-> -	 * by reading claim and "unmasked" when writing it back.
-> -	 */
-> -	.irq_enable	= plic_irq_enable,
-> -	.irq_disable	= plic_irq_disable,
-> +	.irq_mask	= plic_irq_mask,
-> +	.irq_unmask	= plic_irq_unmask,
-> +	.irq_eoi	= plic_irq_eoi,
->  #ifdef CONFIG_SMP
->  	.irq_set_affinity = plic_set_affinity,
->  #endif
-> @@ -152,7 +154,7 @@ static struct irq_chip plic_chip = {
->  static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
->  			      irq_hw_number_t hwirq)
->  {
-> -	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
-> +	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
->  	irq_set_chip_data(irq, NULL);
->  	irq_set_noprobe(irq);
->  	return 0;
-> @@ -188,7 +190,6 @@ static void plic_handle_irq(struct pt_regs *regs)
->  					hwirq);
->  		else
->  			generic_handle_irq(irq);
-> -		writel(hwirq, claim);
->  	}
->  	csr_set(sie, SIE_SEIE);
->  }
-> -- 
-> 2.20.1
->
->
-> -- 
-> Jazz is not dead, it just smells funny.
+> Thus, add an optional configuration option which stops getrandom(2)
+> from blocking, but instead returns "best efforts" randomness, which
+> might not be random or secure at all.
 
-Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
+So I hate having a config option for something like this.
 
-We should test them on the hardware, but I don't have any with me right now.  
-David's probably in the best spot to do this, as he's got a setup that does all 
-the weird interrupt sources (ie, PCIe).
+How about this attached patch instead? It only changes the waiting
+logic, and I'll quote the comment in full, because I think that
+explains not only the rationale, it explains every part of the patch
+(and is most of the patch anyway):
 
-David: do you mind testing this?  I've put the patch here:
+ * We refuse to wait very long for a blocking getrandom().
+ *
+ * The crng may not be ready during boot, but if you ask for
+ * blocking random numbers very early, there is no guarantee
+ * that you'll ever get any timely entropy.
+ *
+ * If you are sure you need entropy and that you can generate
+ * it, you need to ask for non-blocking random state, and then
+ * if that fails you must actively _do_something_ that causes
+ * enough system activity, perhaps asking the user to type
+ * something on the keyboard.
+ *
+ * Just asking for blocking random numbers is completely and
+ * fundamentally wrong, and the kernel will not play that game.
+ *
+ * We will block for at most 15 seconds at a time, and if called
+ * sequentially will decrease the blocking amount so that we'll
+ * block for at most 30s total - and if people continue to ask
+ * for blocking, at that point we'll just return whatever random
+ * state we have acquired.
+ *
+ * This will also complain loudly if the timeout happens, to let
+ * the distribution or system admin know about the problem.
+ *
+ * The process that gets the -EAGAIN will hopefully also log the
+ * error, to raise awareness that there may be use of random
+ * numbers without sufficient entropy.
 
-    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
-    -b plic-fasteoi
+Hmm? No strange behavior. No odd config variables. A bounded total
+boot-time wait of 30s (which is a completely random number, but I
+claimed it as the "big red button" time).
+
+And if you only do it once and fall back to something else it will
+only wait for 15s, and you'll have your error value so that you can
+log it properly.
+
+Yes, a single boot-time wait of 15s at boot is still "darn annoying",
+but it likely
+
+ (a) isn't so long that people consider it a boot failure and give up
+(but hopefully annoying enough that they'll report it)
+
+ (b) long enough that *if* the thing that is waiting is not actually
+blocking the boot sequence, the non-blocked part of the boot sequence
+should have time to do sufficient IO to get better randomness.
+
+So (a) is the "the system is still usable" part. While (b) is the
+"give it a chance, and even if it fails and you fall back on urandom
+or whatever, you'll actually be getting good randomness even if we
+can't perhaps _guarantee_ entropy".
+
+Also, if you have some user that wants to do the old-timey ssh-keygen
+thing with user input etc, we now have a documented way to do that:
+just do the nonblocking thing, and then make really really sure that
+you actually have something that generates more entropy if that
+nonblocking thing returns EAGAIN. But it's also very clear that at
+that point the program that wants this entropy guarantee has to _work_
+for it.
+
+Because just being lazy and say "block" without any entropy will
+return EAGAIN for a (continually decreasing) while, but then at some
+point stop and say "you're broken", and just give you the urandom
+data.
+
+Because if you really do nothing at all, and there is no activity
+what-so-ever for 15s because you blocked the boot, then I claim that
+it's better to return an error than to wait forever. And if you ignore
+the error and just retry, eventually we'll do the fallback for you.
+
+Of course, if you have something like rdrand, and told us you trust
+it, none of this matters at all, since we'll have initialized the pool
+long before.
+
+So this is unconditional, but it's basically "unconditionally somewhat
+flexibly reasonable". It should only ever trigger for the case where
+the boot sequence was fundamentally broken. And it will complain
+loudly (both at a kernel level, and hopefully at a systemd journal
+level too) if it ever triggers.
+
+And hey, if some distro wants to then revert this because they feel
+uncomfortable with this, that's now _their_ problem, not the problem
+of the upstream kernel. The upstream kernel tries to do something that
+I think is arguably fairly reasonable in all situations.
+
+                 Linus
+
+--0000000000003d7eca05929adfe4
+Content-Type: application/x-patch; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k0l8lgqd0>
+X-Attachment-Id: f_k0l8lgqd0
+
+IGRyaXZlcnMvY2hhci9yYW5kb20uYyB8IDU1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKyks
+IDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9jaGFyL3JhbmRvbS5jIGIvZHJp
+dmVycy9jaGFyL3JhbmRvbS5jCmluZGV4IDVkNWVhNGNlMTQ0Mi4uMGQ3ZGM4NmUwZjYwIDEwMDY0
+NAotLS0gYS9kcml2ZXJzL2NoYXIvcmFuZG9tLmMKKysrIGIvZHJpdmVycy9jaGFyL3JhbmRvbS5j
+CkBAIC0yMTE4LDYgKzIxMTgsNTUgQEAgY29uc3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyB1cmFu
+ZG9tX2ZvcHMgPSB7CiAJLmxsc2VlayA9IG5vb3BfbGxzZWVrLAogfTsKIAorLyoKKyAqIFdlIHJl
+ZnVzZSB0byB3YWl0IHZlcnkgbG9uZyBmb3IgYSBibG9ja2luZyBnZXRyYW5kb20oKS4KKyAqCisg
+KiBUaGUgY3JuZyBtYXkgbm90IGJlIHJlYWR5IGR1cmluZyBib290LCBidXQgaWYgeW91IGFzayBm
+b3IKKyAqIGJsb2NraW5nIHJhbmRvbSBudW1iZXJzIHZlcnkgZWFybHksIHRoZXJlIGlzIG5vIGd1
+YXJhbnRlZQorICogdGhhdCB5b3UnbGwgZXZlciBnZXQgYW55IHRpbWVseSBlbnRyb3B5LgorICoK
+KyAqIElmIHlvdSBhcmUgc3VyZSB5b3UgbmVlZCBlbnRyb3B5IGFuZCB0aGF0IHlvdSBjYW4gZ2Vu
+ZXJhdGUKKyAqIGl0LCB5b3UgbmVlZCB0byBhc2sgZm9yIG5vbi1ibG9ja2luZyByYW5kb20gc3Rh
+dGUsIGFuZCB0aGVuCisgKiBpZiB0aGF0IGZhaWxzIHlvdSBtdXN0IGFjdGl2ZWx5IF9kb19zb21l
+dGhpbmdfIHRoYXQgY2F1c2VzCisgKiBlbm91Z2ggc3lzdGVtIGFjdGl2aXR5LCBwZXJoYXBzIGFz
+a2luZyB0aGUgdXNlciB0byB0eXBlCisgKiBzb21ldGhpbmcgb24gdGhlIGtleWJvYXJkLgorICoK
+KyAqIEp1c3QgYXNraW5nIGZvciBibG9ja2luZyByYW5kb20gbnVtYmVycyBpcyBjb21wbGV0ZWx5
+IGFuZAorICogZnVuZGFtZW50YWxseSB3cm9uZywgYW5kIHRoZSBrZXJuZWwgd2lsbCBub3QgcGxh
+eSB0aGF0IGdhbWUuCisgKgorICogV2Ugd2lsbCBibG9jayBmb3IgYXQgbW9zdCAxNSBzZWNvbmRz
+IGF0IGEgdGltZSwgYW5kIGlmIGNhbGxlZAorICogc2VxdWVudGlhbGx5IHdpbGwgZGVjcmVhc2Ug
+dGhlIGJsb2NraW5nIGFtb3VudCBzbyB0aGF0IHdlJ2xsCisgKiBibG9jayBmb3IgYXQgbW9zdCAz
+MHMgdG90YWwgLSBhbmQgaWYgcGVvcGxlIGNvbnRpbnVlIHRvIGFzaworICogZm9yIGJsb2NraW5n
+LCBhdCB0aGF0IHBvaW50IHdlJ2xsIGp1c3QgcmV0dXJuIHdoYXRldmVyIHJhbmRvbQorICogc3Rh
+dGUgd2UgaGF2ZSBhY3F1aXJlZC4KKyAqCisgKiBUaGlzIHdpbGwgYWxzbyBjb21wbGFpbiBsb3Vk
+bHkgaWYgdGhlIHRpbWVvdXQgaGFwcGVucywgdG8gbGV0CisgKiB0aGUgZGlzdHJpYnV0aW9uIG9y
+IHN5c3RlbSBhZG1pbiBrbm93IGFib3V0IHRoZSBwcm9ibGVtLgorICoKKyAqIFRoZSBwcm9jZXNz
+IHRoYXQgZ2V0cyB0aGUgLUVBR0FJTiB3aWxsIGhvcGVmdWxseSBhbHNvIGxvZyB0aGUKKyAqIGVy
+cm9yLCB0byByYWlzZSBhd2FyZW5lc3MgdGhhdCB0aGVyZSBtYXkgYmUgdXNlIG9mIHJhbmRvbQor
+ICogbnVtYmVycyB3aXRob3V0IHN1ZmZpY2llbnQgZW50cm9weS4KKyAqLworc3RhdGljIGludCBn
+ZXRyYW5kb21fd2FpdCh2b2lkKQoreworCXN0YXRpYyB1bnNpZ25lZCBpbnQgZ2V0cmFuZG9tX3Rp
+bWVvdXQgPSAxNSpIWjsKKwl1bnNpZ25lZCBpbnQgdGltZW91dCA9IFJFQURfT05DRShnZXRyYW5k
+b21fdGltZW91dCk7CisJaW50IHJldDsKKworCS8qICJBdCBzb21lIHBvaW50IHlvdSBqdXN0IGhh
+dmUgdG8gZ2l2ZSB1cCBvbiBicm9rZW4gYm9vdCBzY3JpcHRzIiAqLworCWlmICghdGltZW91dCkK
+KwkJcmV0dXJuIDA7CisKKwlyZXQgPSB3YWl0X2V2ZW50X2ludGVycnVwdGlibGVfdGltZW91dChj
+cm5nX2luaXRfd2FpdCwgY3JuZ19yZWFkeSgpLCB0aW1lb3V0KTsKKwkvKiBTdWNjZXNzICg+MCkg
+b3IgaW50ZXJydXB0ZWQgKDwwKT8gKi8KKwlpZiAobGlrZWx5KHJldCkpCisJCXJldHVybiByZXQg
+PiAwID8gMCA6IHJldDsKKworCVdSSVRFX09OQ0UoZ2V0cmFuZG9tX3RpbWVvdXQsIHRpbWVvdXQg
+Pj4gMSk7CisJV0FSTl9PTkNFKDEsICJnZXRyYW5kb20oKSB0aW1lZCBvdXQgd2l0aCBubyBlbnRy
+b3B5Iik7CisJcmV0dXJuIC1FQUdBSU47Cit9CisKIFNZU0NBTExfREVGSU5FMyhnZXRyYW5kb20s
+IGNoYXIgX191c2VyICosIGJ1Ziwgc2l6ZV90LCBjb3VudCwKIAkJdW5zaWduZWQgaW50LCBmbGFn
+cykKIHsKQEAgLTIxMzIsMTEgKzIxODEsMTEgQEAgU1lTQ0FMTF9ERUZJTkUzKGdldHJhbmRvbSwg
+Y2hhciBfX3VzZXIgKiwgYnVmLCBzaXplX3QsIGNvdW50LAogCWlmIChmbGFncyAmIEdSTkRfUkFO
+RE9NKQogCQlyZXR1cm4gX3JhbmRvbV9yZWFkKGZsYWdzICYgR1JORF9OT05CTE9DSywgYnVmLCBj
+b3VudCk7CiAKLQlpZiAoIWNybmdfcmVhZHkoKSkgeworCWlmICh1bmxpa2VseSghY3JuZ19yZWFk
+eSgpKSkgewogCQlpZiAoZmxhZ3MgJiBHUk5EX05PTkJMT0NLKQogCQkJcmV0dXJuIC1FQUdBSU47
+Ci0JCXJldCA9IHdhaXRfZm9yX3JhbmRvbV9ieXRlcygpOwotCQlpZiAodW5saWtlbHkocmV0KSkK
+KwkJcmV0ID0gZ2V0cmFuZG9tX3dhaXQoKTsKKwkJaWYgKHJldCkKIAkJCXJldHVybiByZXQ7CiAJ
+fQogCXJldHVybiB1cmFuZG9tX3JlYWQoTlVMTCwgYnVmLCBjb3VudCwgTlVMTCk7Cg==
+--0000000000003d7eca05929adfe4--
