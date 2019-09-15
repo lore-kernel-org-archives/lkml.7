@@ -2,129 +2,155 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD93DC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BECC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F597214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F94214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:35:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KrX8c7JG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FcRrG3wk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VAAFCeAp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfIOM3v (ORCPT
+        id S1730642AbfIOMfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 08:29:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:36718 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730448AbfIOM3v (ORCPT
+        Sun, 15 Sep 2019 08:35:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47070 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfIOMfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 08:29:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=9p2NJ7BXbD4NZDyoxVh3Cv5cepB8PS65/rD5Ce0NUf8=; b=KrX8c7JGi47gemy02Slr+/J2I
-        Gp+EfycmlV+P7bdYQMrEWbtqcLDuOzSbj1JGG17tjfAGeax2abW9RwMmsOagJKPiLZoCzWCS0yLO/
-        skHja8Lhgeaz1ZO7mxNfWnlmX5ZdLaoZkB1e0BnNk0wYZgeIHdz5QRmH4/qONolqj2QjjGKwfQJ+H
-        pxUsvux0tRGxGMJ1d2fMSqU3COP6SYBs6TpSs1ClB2d565FL9lt/wcy9rafohvBMje86YF//3iaH/
-        2+2d1MZzquM+XAyGnAdLPs/a2Zqwiuo6jbQrv5qspFU/G3wAkzzG/YbvT0cxL61VoL+eFf+xNuOB1
-        53tmQ+uKw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:39810)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i9Tes-0006Iq-Jp; Sun, 15 Sep 2019 13:29:38 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i9Tej-0007lP-9q; Sun, 15 Sep 2019 13:29:29 +0100
-Date:   Sun, 15 Sep 2019 13:29:29 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Baruch Siach <baruch@tkos.co.il>
-Cc:     Andrew Lunn <andrew@lunn.ch>, tinywrkb <tinywrkb@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190915122929.GB25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
+        Sun, 15 Sep 2019 08:35:24 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7CD9960A50; Sun, 15 Sep 2019 12:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568550923;
+        bh=/dm/RBN7YVpLJXBPoMfGddvjbqU4V8BUtqoTROtEb0c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=FcRrG3wkuMGchyzt/pdAUtxyGXoOxeVNK0GEHEA99x/lf063H5h5wb541ZTU7Fo1V
+         6JZO2qUqdzN1K+D/70exL2uaac/oUUBBFmj97oR4JaH+yQkhN7BmLkf3jMrvwc8iCy
+         aW8MKQUM2nPbEQwDt5Rrd2AxZMnH43dV9QrtdNr8=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3741F602F8;
+        Sun, 15 Sep 2019 12:35:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568550922;
+        bh=/dm/RBN7YVpLJXBPoMfGddvjbqU4V8BUtqoTROtEb0c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VAAFCeApn0WXGp/4/FApM+fay7CmxjJ8Q5cVy4UQYLkwVG18Nan+eW+t9wGPhGlVK
+         YNx4nA0ZbSS7p0TzzYprq1uHHTPmA0hP7Vu/NBOwGaUqodFsdSvUUhfJ+so2xW4AhM
+         SqxqbzWXdP+PdD9hT8YMxZ31B8j8Hy8Dsx9+admg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3741F602F8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv5 0/3] QCOM smmu-500 wait-for-safe handling for sdm845 
+Date:   Sun, 15 Sep 2019 18:05:00 +0530
+Message-Id: <cover.1568549745.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87muf6oyvr.fsf@tarshish>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 09:30:00AM +0300, Baruch Siach wrote:
-> Hi Andrew,
-> 
-> On Tue, Sep 10 2019, Andrew Lunn wrote:
-> > On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
-> >> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
-> >> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
-> >>
-> >> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
-> >> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
-> >
-> > Hi Tinywrkb
-> >
-> > You emailed lots of people, but missed the PHY maintainers :-(
-> >
-> > Are you sure this is the patch which broken it? Did you do a git
-> > bisect.
-> 
-> Tinywrkb confirmed to me in private communication that revert of
-> 5502b218e001 fixes Ethernet for him on effected system.
-> 
-> He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> there was a plan to use a different 10/100 PHY for Solo/DualLite
-> SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> AR8035 PHY that supports 1Gb.
-> 
-> Commit 5502b218e001 might be triggering a hardware issue on the affected
-> Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> the moment.
+Previous version of the patches are at [1]:
 
-With 5.3 due out today, I'll be updating my systems to that, which will
-include quite a few variants of the Hummingboard.
+QCOM's implementation of smmu-500 on sdm845 adds a hardware logic called
+wait-for-safe. This logic helps in meeting the invalidation requirements
+from 'real-time clients', such as display and camera. This wait-for-safe
+logic ensures that the invalidations happen after getting an ack from these
+devices.
+In this patch-series we are disabling this wait-for-safe logic from the
+arm-smmu driver's probe as with this enabled the hardware tries to
+throttle invalidations from 'non-real-time clients', such as USB and UFS.
 
-It looks like one of my Solo Hummingboards (running a fully up to date
-Fedora 28) has encountered a problem, so needs a reboot...
+For detailed information please refer to patch [3/4] in this series.
+I have included the device tree patch too in this series for someone who
+would like to test out this. Here's a branch [2] that gets display on MTP
+SDM845 device.
 
-systemd-journald[436]: Failed to retrieve credentials for PID 17906, ignoring: Cannot allocate memory
-systemd-journald[436]: Failed to open runtime journal: Cannot allocate memory
+This patch series is inspired from downstream work to handle under-performance
+issues on real-time clients on sdm845. In downstream we add separate page table
+ops to handle TLB maintenance and toggle wait-for-safe in tlb_sync call so that
+achieve required performance for display and camera [3, 4].
 
-# ps aux
-USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
-...
-root       436  0.0  5.2 3128140 26392 ?       Ss   Aug03   1:20 /usr/lib/systemd/systemd-journald
-# uptime
- 13:28:41 up 42 days, 19:13,  1 user,  load average: 0.00, 0.03, 0.00
+Changes since v4:
+ * Addressed Stephen's comments.
+ * Moved QCOM specific implementation to arm-smmu-qcom.c as per Robin's suggestion.
 
-Looks like systemd-journald has a rather bad memory leak...
+Changes since v3:
+ * Based on arm-smmu implementation cleanup series [5] by Robin Murphy which is
+   already merged in Will's tree [6].
+ * Implemented the sdm845 specific reset hook which does arm_smmu_device_reset()
+   followed by making SCM call to disable the wait-for-safe logic.
+ * Removed depedency for SCM call on any dt flag. We invariably try to disable
+   the wait-for-safe logic on sdm845. The platforms such as mtp845, and db845
+   that implement handlers for this particular SCM call should be able disable
+   wait-for-safe logic.
+   Other platforms such as cheza don't enable the wait-for-safe logic at all
+   from their bootloaders. So there's no need to disable the same.
+ * No change in SCM call patches 1 & 2.
 
-#include <std-complaints-about-systemd>
+Changes since v2:
+ * Dropped the patch to add atomic io_read/write scm API.
+ * Removed support for any separate page table ops to handle wait-for-safe.
+   Currently just disabling this wait-for-safe logic from arm_smmu_device_probe()
+   to achieve performance on USB/UFS on sdm845.
+ * Added a device tree patch to add smmu option for fw-implemented support
+   for SCM call to take care of SAFE toggling.
+
+Changes since v1:
+ * Addressed Will and Robin's comments:
+    - Dropped the patch[4] that forked out __arm_smmu_tlb_inv_range_nosync(),
+      and __arm_smmu_tlb_sync().
+    - Cleaned up the errata patch further to use downstream polling mechanism
+      for tlb sync.
+ * No change in SCM call patches - patches 1 to 3.
+
+[1] https://patchwork.kernel.org/cover/11110643/
+[2] https://github.com/vivekgautam1/linux/tree/v5.2-rc4/sdm845-display-working
+[3] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7
+[4] https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/msm-4.9&id=8696005aaaf745de68f57793c1a534a34345c30a
+[5] https://patchwork.kernel.org/patch/11096265/
+[6] https://git.kernel.org/pub/scm/linux/kernel/git/will/linux.git/
+
+Vivek Gautam (3):
+  firmware: qcom_scm-64: Add atomic version of qcom_scm_call
+  firmware/qcom_scm: Add scm call to handle smmu errata
+  iommu: arm-smmu-impl: Add sdm845 implementation hook
+
+ drivers/firmware/qcom_scm-32.c |   5 ++
+ drivers/firmware/qcom_scm-64.c | 152 +++++++++++++++++++++++----------
+ drivers/firmware/qcom_scm.c    |   6 ++
+ drivers/firmware/qcom_scm.h    |   5 ++
+ drivers/iommu/Makefile         |   2 +-
+ drivers/iommu/arm-smmu-impl.c  |   7 +-
+ drivers/iommu/arm-smmu-qcom.c  |  32 +++++++
+ drivers/iommu/arm-smmu-qcom.h  |  11 +++
+ drivers/iommu/arm-smmu.h       |   2 +
+ include/linux/qcom_scm.h       |   2 +
+ 10 files changed, 177 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/iommu/arm-smmu-qcom.c
+ create mode 100644 drivers/iommu/arm-smmu-qcom.h
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
