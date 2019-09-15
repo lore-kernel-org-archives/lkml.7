@@ -2,138 +2,67 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C1B0C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB46C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 122E120830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:00:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6CL0Ncu"
+	by mail.kernel.org (Postfix) with ESMTP id 0B25B20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfIOHAi (ORCPT
+        id S1727216AbfIOHBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 03:00:38 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46275 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725788AbfIOHAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 03:00:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m3so17469235pgv.13;
-        Sun, 15 Sep 2019 00:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=qTxLl5voUFSb9X26smlelj8GYPRuvUJLayWNlgtrH8I=;
-        b=W6CL0NcuOOKiayvD0SZ2TQ8KNDiXRiTQoN+morrL2hU5DijtUSqNQM3zTPPdChx0j/
-         c9lrCWh+xKTHyxxva/vhIr6blk0ZF4gNl8oeb4lQyJCAMSzutvtbb66WFQPn2HfYdsMk
-         AeqKA36ulAIJuaFlkr0pr9FOryh9s/7wNXjtdaXl2rStcGrzQc5tWeXRmc5PSgJTryRx
-         wkZr1oSCapdVN3YouuleEWUawIH6Rb3RXCMV7KRZDGbEaEtTnwsMizb827nV9Y1NCj0v
-         k5QZj8DW+4x9hWs0Qn2BQo6H3+H26M6mXG+bmVw7gWsUGS4e88Ii21n0nX13wa58MBZ+
-         GeGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=qTxLl5voUFSb9X26smlelj8GYPRuvUJLayWNlgtrH8I=;
-        b=Sv3gnu8HoleEGjdmEWh+d0nBwfYdQ+xBMWRmJ2NHkRj8guqm1uivkQPALelYKTZZW/
-         Q0lfwXclRNgeMUKblshQpfRQFOI1++MG6oyGUYEb4v2J2mlzrj9U973KDpxblQ+wia8K
-         7SQ8bs/4Dj5pDG1SuURX9gSwBRgHM+xBXP/cVjVKTP60nhjDWGiZu15Btss4fpvDRQrw
-         mpdKMNREPVCJxn+SHb4kCWtHhxJG+INvz/wvqHrXtUqA7RmEBiqZutzCQoVAKDDgzfq6
-         2Oiv/UwBILI5plQr1uZMFz5tZ6CmzyAwkou387u7DRGvRUEQjdUqDGwkMAjJTbBDkqyG
-         5WZw==
-X-Gm-Message-State: APjAAAV/hYU7ugLQkDCo1gdVfi6oMpVjXWF0tk1XwbBrAEjeS5CoL/+Z
-        ddCcx6p1+6+j0SKauEphOGs=
-X-Google-Smtp-Source: APXvYqzDLofZo0Q9BogI7k5yAM89atbsKPZgSNVhbxB/0fbNPWM4aT0+glaa5BRRGORfoywzP7hEIw==
-X-Received: by 2002:a63:5222:: with SMTP id g34mr16131609pgb.405.1568530836882;
-        Sun, 15 Sep 2019 00:00:36 -0700 (PDT)
-Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
-        by smtp.gmail.com with ESMTPSA id 197sm16699453pge.39.2019.09.15.00.00.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:00:35 -0700 (PDT)
-From:   Satendra Singh Thakur <sst2005@gmail.com>
-To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
-        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
-        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
-        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
-        Satendra Singh Thakur <sst2005@gmail.com>
-Subject: [PATCH 0/9] added helper macros to remove duplicate code from probe functions of the platform drivers
-Date:   Sun, 15 Sep 2019 12:30:03 +0530
-Message-Id: <20190915070003.21260-1-sst2005@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 15 Sep 2019 03:01:22 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45081 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfIOHBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 03:01:21 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8F713NQ021628;
+        Sun, 15 Sep 2019 09:01:03 +0200
+Date:   Sun, 15 Sep 2019 09:01:03 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190915070103.GC20811@1wt.eu>
+References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com>
+ <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
+ <20190915065655.GB29681@gardel-login>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915065655.GB29681@gardel-login>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. For most of the platform drivers's probe include following steps
+On Sun, Sep 15, 2019 at 08:56:55AM +0200, Lennart Poettering wrote:
+> There's benefit in being able to wait until the pool is initialized
+> before we update the random seed stored on disk with a new one,
 
--memory allocation for driver's private structure
--getting io resources
--io remapping resources
--getting irq number
--registering irq
--setting driver's private data
--getting clock
--preparing and enabling clock
+And what exactly makes you think that waiting with arms crossed not
+doing anything else has any chance to make the situation change if
+you already had no such entropy available when reaching that first
+call, especially during early boot ?
 
-2. We have defined a set of macros to combine some or all of
-the above mentioned steps. This will remove redundant/duplicate
-code in drivers' probe functions of platform drivers.
-
-devm_platform_probe_helper(pdev, priv, clk_name);
-devm_platform_probe_helper_clk(pdev, priv, clk_name);
-devm_platform_probe_helper_irq(pdev, priv, clk_name,
-irq_hndlr, irq_flags, irq_name, irq_devid);
-devm_platform_probe_helper_all(pdev, priv, clk_name,
-irq_hndlr, irq_flags, irq_name, irq_devid);
-devm_platform_probe_helper_all_data(pdev, priv, clk_name,
-irq_hndlr, irq_flags, irq_name, irq_devid);
-
-3. Code is made devres compatible (wherever required)
-The functions: clk_get, request_irq, kzalloc, platform_get_resource
-are replaced with their devm_* counterparts.
-
-4. Few bugs are also fixed.
-
-Satendra Singh Thakur (9):
-  probe/dma : added helper macros to remove redundant/duplicate code
-    from probe functions of the dma controller drivers
-  probe/dma/jz4740: removed redundant code from jz4740 dma controller's 
-       probe function
-  probe/dma/zx: removed redundant code from zx dma controller's probe
-    function
-  probe/dma/qcom-bam: removed redundant code from qcom bam dma
-    controller's probe function
-  probe/dma/mtk-hs: removed redundant code from mediatek hs dma
-    controller's probe function
-  probe/dma/sun6i: removed redundant code from sun6i dma controller's
-    probe function
-  probe/dma/sun4i: removed redundant code from sun4i dma controller's
-    probe function
-  probe/dma/axi: removed redundant code from axi dma controller's probe
-    function
-  probe/dma/owl: removed redundant code from owl dma controller's probe
-    function
-
- drivers/dma/dma-axi-dmac.c       |  28 ++---
- drivers/dma/dma-jz4740.c         |  33 +++---
- drivers/dma/mediatek/mtk-hsdma.c |  38 +++----
- drivers/dma/owl-dma.c            |  29 ++---
- drivers/dma/qcom/bam_dma.c       |  71 +++++-------
- drivers/dma/sun4i-dma.c          |  30 ++----
- drivers/dma/sun6i-dma.c          |  30 ++----
- drivers/dma/zx_dma.c             |  35 ++----
- include/linux/probe-helper.h     | 179 +++++++++++++++++++++++++++++++
- 9 files changed, 280 insertions(+), 193 deletions(-)
- create mode 100644 include/linux/probe-helper.h
-
--- 
-2.17.1
-
+Willy
