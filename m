@@ -2,174 +2,354 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6A0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0290C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00F042077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B548F20830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:18:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bD1mTQj2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4hASCZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbfIOIMT (ORCPT
+        id S1726605AbfIOIR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 04:12:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42816 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfIOIMS (ORCPT
+        Sun, 15 Sep 2019 04:17:57 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36989 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfIOIR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 04:12:18 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so35780280wrm.9;
-        Sun, 15 Sep 2019 01:12:16 -0700 (PDT)
+        Sun, 15 Sep 2019 04:17:57 -0400
+Received: by mail-wm1-f66.google.com with SMTP id r195so6856457wme.2;
+        Sun, 15 Sep 2019 01:17:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ou0hWp/Yu/1AYHb9KISsweYejlcEfF6pByXOsrs5Ido=;
-        b=bD1mTQj2vedpXvLNklhedn09136/mOtnb/ESk4JxNi5DIaKWK1kV1TrdDp27vat9G1
-         CEc6hqD5V63wlEs56mMVHMUfdq9oDUe8PplzU5gBXRYL6CnN8SHjeSG3ijX1yha4kehG
-         egzldJnSahlLZpg8Y8vwm89T/ydGgN5ML2KUGyvrp1zPyq+6JC4j6rhudRMxnTcamEBZ
-         C7qPxopQnxqDjN6sJbB25WfpXxfJygcQHUTqdScvab8oAlZzzv4CCh0085NYEMUf7OqL
-         WYJ2qC8zayzQu1JDFxz9kj35lpIYi/dDs7GDN0fpybpXfpDUs6s3UFBk/Oi7hiUpOZGH
-         /0bg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kBymuQZwIi7Gt8cus30MN06HsVUiwcZDk2q8kzGa3qs=;
+        b=d4hASCZDucjkZXVueuUub7VJ+Bqlk1eoXnkmLQ+FI6b50EAI32VnCUNqx5D7E3Nwy1
+         GvVDpgYPuSoRH4iP0pSSk0500J811V7AQ9/PYkaTO65Daz1+qtDNplS9lq1cmFUQup3P
+         E3ly20nKsbV+oRAO0CP+7i9DEebvXSm45SkpyZodVtcC403zoYNCjPeZxVKGr/WbQP1v
+         AztIDW0QzdGsTzWCj88xDf6vEmgD/uEy+876vh7JOKkL95C0N2CBfbBwsZnd3J8CTer2
+         DoRjO43IMWC5cTPGtS9O83kkPMI5vBcWwh994eP8gYM7oQMtKoF9Rrg2pUXV/l3uq6PW
+         VbTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ou0hWp/Yu/1AYHb9KISsweYejlcEfF6pByXOsrs5Ido=;
-        b=PtnI1j2e7ofX2NiO8cm3aBFq5eB22ArgCoJhe2qk3F20NmDItpOPsoilD69rtuf6Jv
-         xn2rbadVjGee20Q8OydcF8ipxgC2vVQnlkyyBaAy8upDDvpnoD+e5wnDChs2sw7BsKxP
-         c+ihWoq8osDZkxr3GvdzMz4c6X8P0X64yc04+rksF39E16JY4Fyr3jkdSe9EVOjOliVa
-         G4heFwvmcveLiQRYSStZ4hLOZAjTEtGl9VswMX9sVVC7UCwrEysXz908neCtwxvCXheE
-         5DBlIDEtF7mx6maTesOqq+O2d3+jIMw9qyCZyAT7Frn4aAzb0IComZNlE7ptLNA8Jk/0
-         stjw==
-X-Gm-Message-State: APjAAAWnRkVs1DjW96ru0KexYzrVOVgFUmJXKv33sS5lYyok6qv7+cac
-        z8qRvuDOk3poL5YNvPBrUjc=
-X-Google-Smtp-Source: APXvYqzylM+gkMijy2O0b9MdS2UTOBlvoRi6hbGOEqqil7kBnXMbHnBcCDKE7UuEmQLYWBn1VKHs7g==
-X-Received: by 2002:a5d:5642:: with SMTP id j2mr14336944wrw.345.1568535136170;
-        Sun, 15 Sep 2019 01:12:16 -0700 (PDT)
-Received: from [10.105.145.132] ([88.128.80.35])
-        by smtp.gmail.com with ESMTPSA id o12sm10929299wrm.23.2019.09.15.01.12.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2019 01:12:14 -0700 (PDT)
-Cc:     mtk.manpages@gmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-man <linux-man@vger.kernel.org>,
-        Containers <containers@lists.linux-foundation.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jordan Ogas <jogas@lanl.gov>, werner@almesberger.net,
-        Al Viro <viro@ftp.linux.org.uk>
-Subject: Re: pivot_root(".", ".") and the fchdir() dance
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-References: <CAKgNAki0bR5zZr+kp_xjq+bNUky6-F+s2ep+jnR0YrjHhNMB1g@mail.gmail.com>
- <20190805103630.tu4kytsbi5evfrhi@mikami>
- <3a96c631-6595-b75e-f6a7-db703bf89bcf@gmail.com>
- <da747415-4c7a-f931-6f2e-2962da63c161@philippwendler.de>
- <CAKgNAkjS+x7aMVUiVSgCRwgi8rnukqJv=svtTARE-tt-oxQxWw@mail.gmail.com>
- <87r24piwhm.fsf@x220.int.ebiederm.org>
- <CAKgNAkhK2qBbz5aVY9VdK0UzvpZ=c7c7LWQ1MK2gu-rVKUz9_g@mail.gmail.com>
- <87ftl5donm.fsf@x220.int.ebiederm.org>
- <b8b9d8bd-e959-633f-b879-4bfe4eb0df23@gmail.com>
- <20190910111551.scam5payogqqvlri@wittgenstein>
- <30545c5c-ff4c-8b87-e591-40cc0a631304@gmail.com>
- <871rwnda47.fsf@x220.int.ebiederm.org>
-From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Message-ID: <448138b8-0d0c-5eb3-d5e5-04a26912d3a8@gmail.com>
-Date:   Sun, 15 Sep 2019 10:12:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kBymuQZwIi7Gt8cus30MN06HsVUiwcZDk2q8kzGa3qs=;
+        b=Y7z9SXCMpO8yeKBpi0nxJMc3Up/ajNAMeP2OqujKahCwk2JLztE9frz38JLbY5kypQ
+         8warZQfRTDFcddDmoXnQvge33UhaeKmPraeYM7iqWctDr2a7ZDVBkBl4eiUxP6gstrGO
+         14l5beMi4trOTs0imbqoiOIi4McgXRo0Vfk+XgUXGKB4Ez0k11IPlgt5ckGzxIrRePVA
+         uskCNiPqaDEMpZFeE3WJjD/NVjrFJvHxEVjJA0Hlq9xSKzudwkwGFNB5GZjk9xawshRU
+         dj5L2UkXmZSO/eljmAIBnDFg2X2TPY32ORh6oQSn0V2QWmEV93re7QjxuR0ZmvlEaHRF
+         NnUw==
+X-Gm-Message-State: APjAAAXouuIqQOxPsDm9OjVyMewtZdq0rpjO0OlUiqoWLIrkNArcraY7
+        T2Xj6Py12q+gSknPs8QgFIc=
+X-Google-Smtp-Source: APXvYqyl7qvRExRAJaO/zJz0oRxefFn4deMLiGrhwxr42bS6c7j6f3nlcPcHWpgrnYyuJDeUXXeueg==
+X-Received: by 2002:a1c:9a4a:: with SMTP id c71mr9076339wme.99.1568535473519;
+        Sun, 15 Sep 2019 01:17:53 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id 33sm42675006wra.41.2019.09.15.01.17.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 01:17:52 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 10:17:47 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Lennart Poettering <lennart@poettering.net>,
+        Willy Tarreau <w@1wt.eu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG is
+ uninitialized
+Message-ID: <20190915081747.GA1058@darwi-home-pc>
+References: <20190911160729.GF2740@mit.edu>
+ <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
 MIME-Version: 1.0
-In-Reply-To: <871rwnda47.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915052242.GG19710@mit.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Eric,
+Since Linux v3.17, getrandom() has been created as a new and more
+secure interface for pseudorandom data requests. It attempted to solve
+three problems as compared to /dev/urandom:
 
-On 9/11/19 1:06 AM, Eric W. Biederman wrote:
-> "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com> writes:
-> 
->> Hello Christian,
->>
->>>> All: I plan to add the following text to the manual page:
->>>>
->>>>        new_root and put_old may be the same  directory.   In  particular,
->>>>        the following sequence allows a pivot-root operation without need‐
->>>>        ing to create and remove a temporary directory:
->>>>
->>>>            chdir(new_root);
->>>>            pivot_root(".", ".");
->>>>            umount2(".", MNT_DETACH);
->>>
->>> Hm, should we mention that MS_PRIVATE or MS_SLAVE is usually needed
->>> before the umount2()? Especially for the container case... I think we
->>> discussed this briefly yesterday in person.
->> Thanks for noticing. That detail (more precisely: not MS_SHARED) is
->> already covered in the numerous other changes that I have pending
->> for this page:
->>
->>        The following restrictions apply:
->>        ...
->>        -  The propagation type of new_root and its parent mount must  not
->>           be MS_SHARED; similarly, if put_old is an existing mount point,
->>           its propagation type must not be MS_SHARED.
-> 
-> Ugh.  That is close but not quite correct.
-> 
-> A better explanation:
-> 
->     The pivot_root system call will never propagate any changes it makes.
->     The pivot_root system call ensures this is safe by verifying that
->     none of put_old, the parent of new_root, and parent of the root directory
->     have a propagation type of MS_SHARED.
+  1. the need to access filesystem paths, which can fail, e.g. under a
+     chroot
 
-Thanks for that. However, another question. You text has two changes.
-First, I understand why you reword the discussion to indicate the
-_purpose_ of the rules. However, you also, AFAICS, list a different set of
-of directories that can't be MS_SHARED:
+  2. the need to open a file descriptor, which can fail under file
+     descriptor exhaustion attacks
 
-I said: new_root, the parent of new_root, and put_old
-You said: the parent of new_root, and put_old, and parent of the
-root directory.
+  3. the possibility to get not-so-random data from /dev/urandom, due to
+     an incompletely initialized kernel entropy pool
 
-Was I wrong on this detail also?
+To solve the third problem, getrandom(2) was made to block until a
+proper amount of entropy has been accumulated. This basically made the
+system call have no guaranteed upper-bound for its waiting time.
 
-> The concern from our conversation at the container mini-summit was that
-> there is a pathology if in your initial mount namespace all of the
-> mounts are marked MS_SHARED like systemd does (and is almost necessary
-> if you are going to use mount propagation), that if new_root itself
-> is MS_SHARED then unmounting the old_root could propagate.
-> 
-> So I believe the desired sequence is:
-> 
->>>>            chdir(new_root);
-> +++            mount("", ".", MS_SLAVE | MS_REC, NULL);
->>>>            pivot_root(".", ".");
->>>>            umount2(".", MNT_DETACH);
-> 
-> The change to new new_root could be either MS_SLAVE or MS_PRIVATE.  So
-> long as it is not MS_SHARED the mount won't propagate back to the
-> parent mount namespace.
+As was said in c6e9d6f38894 (random: introduce getrandom(2) system
+call): "Any userspace program which uses this new functionality must
+take care to assure that if it is used during the boot process, that it
+will not cause the init scripts or other portions of the system startup
+to hang indefinitely."
 
-Thanks. I made that change.
+Meanwhile, user-facing Linux documentation, e.g. the urandom(4) and
+getrandom(2) manpages, didn't add such explicit warnings. It didn't
+also help that glibc, since v2.25, implemented an "OpenBSD-like"
+getentropy(3) in terms of getrandom(2).  OpenBSD getentropy(2) never
+blocked though, while linux-glibc version did, possibly indefinitely.
+Since that glibc change, even more applications at the boot-path began
+to implicitly reques randomness through getrandom(2); e.g., for an
+Xorg/Xwayland MIT cookie.
 
-Cheers,
+OpenBSD genentropy(2) never blocked because, as stated in its rnd(4)
+manpages, it saves entropy to disk on shutdown and restores it on boot.
+Moreover, the NetBSD bootloader, as shown in its boot(8), even have
+special commands to load a random seed file and pass it to the kernel.
+Meanwhile on a Linux systemd userland, systemd-random-seed(8) preserved
+a random seed across reboots at /var/lib/systemd/random-seed, but it
+never had the actual code, until very recently at v243, to ask the
+kernel to credit such entropy through an RNDADDENTROPY ioctl.
 
-Michael
+From a mix of the above factors, it began to be common for Embedded
+Linux systems to "get stuck at boot" unless a daemon like haveged is
+installed, or the BSP provider enabling the necessary hwrng driver in
+question and crediting its entropy; e.g. 62f95ae805fa (hwrng: omap - Set
+default quality). Over time, the issue began to even creep into
+consumer-level x86 laptops: mainstream distributions, like debian
+buster, began to recommend installing haveged as a workaround.
+
+Thus, on certain setups where there is no hwrng (embedded systems or VMs
+on a host lacking virtio-rng), or the hwrng is not trusted by some users
+(intel RDRAND), or sometimes it's just broken (amd RDRAND), the system
+boot can be *reliably* blocked.
+
+It can therefore be argued that there is no way to use getrandom() on
+Linux correctly, especially from shared libraries: GRND_NONBLOCK has
+to be used, and a fallback to some other interface like /dev/urandom
+is required, thus making the net result no better than just using
+/dev/urandom unconditionally.
+
+The issue is further exaggerated by recent file-system optimizations,
+e.g. b03755ad6f33 (ext4: make __ext4_get_inode_loc plug), which merges
+directory lookup code inode table IO, and thus minimizes the number of
+disk interrupts and entropy during boot. After that commit, a blocked
+boot can be reliably reproduced on a Thinkpad E480 laptop with
+standard ArchLinux user-space.
+
+Thus, don't trust user-space on calling getrandom(2) from the right
+context. Never block, by default, and just return data from the
+urandom source if entropy is not yet available. This is an explicit
+decision not to let user-space work around this through busy loops on
+error-codes.
+
+Note: this lowers the quality of random data returned by getrandom(2)
+to the level of randomness returned by /dev/urandom, with all the
+original security implications coming out of that, as discussed in
+problem "3." at the top of this commit log. If this is not desirable,
+offer users a fallback to old behavior, by CONFIG_RANDOM_BLOCK=y, or
+random.getrandom_block=true bootparam.
+
+[tytso@mit.edu: make the change to a non-blocking getrandom(2) optional]
+Link: https://lkml.kernel.org/r/20190914222432.GC19710@mit.edu
+Link: https://lkml.kernel.org/r/20190911173624.GI2740@mit.edu
+Link: https://factorable.net ("Widespread Weak Keys in Network Devices")
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lkml.kernel.org/r/CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com
+Rreported-by: Ahmed S. Darwish <darwish.07@gmail.com>
+Link: https://lkml.kernel.org/r/20190912034421.GA2085@darwi-home-pc
+Signed-off-by: Ahmed S. Darwish <darwish.07@gmail.com>
+---
+
+Notes:
+    changelog-v2:
+      - tytso: make blocking optional
+    
+    changelog-v3:
+      - more detailed commit log + historical context (thanks patrakov)
+      - remove WARN_ON_ONCE. It's pretty excessive, and the first caller
+        is systemd-random-seed(8), which we know it will not change.
+        Just print errors in the kernel log.
+    
+    $dmesg | grep random:
+    
+      [0.235843] random: get_random_bytes called from start_kernel+0x30f/0x4d7 with crng_init=0
+      [0.685682] random: fast init done
+      [2.405263] random: lvm: CRNG uninitialized (4 bytes read)
+      [2.480686] random: systemd-random-: getrandom (512 bytes): CRNG not yet initialized
+      [2.480687] random: systemd-random-: CRNG uninitialized (512 bytes read)
+      [3.265201] random: dbus-daemon: CRNG uninitialized (12 bytes read)
+      [3.835066] urandom_read: 1 callbacks suppressed
+      [3.835068] random: polkitd: CRNG uninitialized (8 bytes read)
+      [3.835509] random: polkitd: CRNG uninitialized (8 bytes read)
+      [3.835577] random: polkitd: CRNG uninitialized (8 bytes read)
+      [4.190653] random: gnome-session-b: getrandom (16 bytes): CRNG not yet initialized
+      [4.190658] random: gnome-session-b: getrandom (16 bytes): CRNG not yet initialized
+      [4.190662] random: gnome-session-b: getrandom (16 bytes): CRNG not yet initialized
+      [4.952299] random: crng init done
+      [4.952311] random: 3 urandom warning(s) missed due to ratelimiting
+      [4.952314] random: 1 getrandom warning(s) missed due to ratelimiting
+
+ drivers/char/Kconfig  | 33 +++++++++++++++++++++++++++++++--
+ drivers/char/random.c | 33 ++++++++++++++++++++++++++++-----
+ 2 files changed, 59 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 3e866885a405..337baeca5ebc 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -557,8 +557,6 @@ config ADI
+ 	  and SSM (Silicon Secured Memory).  Intended consumers of this
+ 	  driver include crash and makedumpfile.
  
-
-
+-endmenu
+-
+ config RANDOM_TRUST_CPU
+ 	bool "Trust the CPU manufacturer to initialize Linux's CRNG"
+ 	depends on X86 || S390 || PPC
+@@ -573,3 +571,34 @@ config RANDOM_TRUST_CPU
+ 	has not installed a hidden back door to compromise the CPU's
+ 	random number generation facilities. This can also be configured
+ 	at boot with "random.trust_cpu=on/off".
++
++config RANDOM_BLOCK
++	bool "Block if getrandom is called before CRNG is initialized"
++	help
++	  Say Y here if you want userspace programs which call
++	  getrandom(2) before the Cryptographic Random Number
++	  Generator (CRNG) is initialized to block until
++	  secure random numbers are available.
++
++	  Say N if you believe usability is more important than
++	  security, so if getrandom(2) is called before the CRNG is
++	  initialized, it should not block, but instead return "best
++	  effort" randomness which might not be very secure or random
++	  at all; but at least the system boot will not be delayed by
++	  minutes or hours.
++
++	  This can also be controlled at boot with
++	  "random.getrandom_block=on/off".
++
++	  Ideally, systems would be configured with hardware random
++	  number generators, and/or configured to trust CPU-provided
++	  RNG's.  In addition, userspace should generate cryptographic
++	  keys only as late as possible, when they are needed, instead
++	  of during early boot.  (For non-cryptographic use cases,
++	  such as dictionary seeds or MIT Magic Cookies, other
++	  mechanisms such as /dev/urandom or random(3) may be more
++	  appropropriate.)  This config option controls what the
++	  kernel should do as a fallback when the non-ideal case
++	  presents itself.
++
++endmenu
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 4a50ee2c230d..689fdb486785 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -511,6 +511,8 @@ static struct ratelimit_state unseeded_warning =
+ 	RATELIMIT_STATE_INIT("warn_unseeded_randomness", HZ, 3);
+ static struct ratelimit_state urandom_warning =
+ 	RATELIMIT_STATE_INIT("warn_urandom_randomness", HZ, 3);
++static struct ratelimit_state getrandom_warning =
++	RATELIMIT_STATE_INIT("warn_getrandom_randomness", HZ, 3);
+ 
+ static int ratelimit_disable __read_mostly;
+ 
+@@ -854,12 +856,19 @@ static void invalidate_batched_entropy(void);
+ static void numa_crng_init(void);
+ 
+ static bool trust_cpu __ro_after_init = IS_ENABLED(CONFIG_RANDOM_TRUST_CPU);
++static bool getrandom_block __ro_after_init = IS_ENABLED(CONFIG_RANDOM_BLOCK);
+ static int __init parse_trust_cpu(char *arg)
+ {
+ 	return kstrtobool(arg, &trust_cpu);
+ }
+ early_param("random.trust_cpu", parse_trust_cpu);
+ 
++static int __init parse_block(char *arg)
++{
++	return kstrtobool(arg, &getrandom_block);
++}
++early_param("random.getrandom_block", parse_block);
++
+ static void crng_initialize(struct crng_state *crng)
+ {
+ 	int		i;
+@@ -1053,6 +1062,12 @@ static void crng_reseed(struct crng_state *crng, struct entropy_store *r)
+ 				  urandom_warning.missed);
+ 			urandom_warning.missed = 0;
+ 		}
++		if (getrandom_warning.missed) {
++			pr_notice("random: %d getrandom warning(s) missed "
++				  "due to ratelimiting\n",
++				  getrandom_warning.missed);
++			getrandom_warning.missed = 0;
++		}
+ 	}
+ }
+ 
+@@ -1915,6 +1930,7 @@ int __init rand_initialize(void)
+ 	crng_global_init_time = jiffies;
+ 	if (ratelimit_disable) {
+ 		urandom_warning.interval = 0;
++		getrandom_warning.interval = 0;
+ 		unseeded_warning.interval = 0;
+ 	}
+ 	return 0;
+@@ -1984,8 +2000,8 @@ urandom_read(struct file *file, char __user *buf, size_t nbytes, loff_t *ppos)
+ 	if (!crng_ready() && maxwarn > 0) {
+ 		maxwarn--;
+ 		if (__ratelimit(&urandom_warning))
+-			printk(KERN_NOTICE "random: %s: uninitialized "
+-			       "urandom read (%zd bytes read)\n",
++			pr_err("random: %s: CRNG uninitialized "
++			       "(%zd bytes read)\n",
+ 			       current->comm, nbytes);
+ 		spin_lock_irqsave(&primary_crng.lock, flags);
+ 		crng_init_cnt = 0;
+@@ -2152,9 +2168,16 @@ SYSCALL_DEFINE3(getrandom, char __user *, buf, size_t, count,
+ 	if (!crng_ready()) {
+ 		if (flags & GRND_NONBLOCK)
+ 			return -EAGAIN;
+-		ret = wait_for_random_bytes();
+-		if (unlikely(ret))
+-			return ret;
++
++		if (__ratelimit(&getrandom_warning))
++			pr_err("random: %s: getrandom (%zd bytes): CRNG not "
++			       "yet initialized", current->comm, count);
++
++		if (getrandom_block) {
++			ret = wait_for_random_bytes();
++			if (unlikely(ret))
++				return ret;
++		}
+ 	}
+ 	return urandom_read(NULL, buf, count, NULL);
+ }
 -- 
-Michael Kerrisk
-Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
-Linux/UNIX System Programming Training: http://man7.org/training/
+darwi
+http://darwish.chasingpointers.com
