@@ -2,111 +2,120 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03207C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:12:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80049C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD2321479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB03214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568568022;
+	bh=aWKsYFOpYFcMG1Na4nI/6vuvtMughOEMHaS2+BM5oCs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=dhVym86Wdv87E1mukOs6jrSqzUn1B0Ei+9D8UhSGvMtPLUAAjcGhAYRWyn81mLUTl
+	 Rc/kmMUTPdrm/aLAn4ILjnMXfxiRFX92p/UUhS8ntKFMaLQdaM0g3yFbyfOcRJ5KFx
+	 PB7UOzA5l/jqt/b3j1BinekVq+y1Y1DfDECZ3Y/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfIORMF (ORCPT
+        id S1726665AbfIORUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:12:05 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:32810 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIORMF (ORCPT
+        Sun, 15 Sep 2019 13:20:20 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60124 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfIORUT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:12:05 -0400
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1i9Y1u-00037s-1D; Sun, 15 Sep 2019 12:09:42 -0500
-Message-ID: <fb07c36767c1b4c6bacfd4bb0fddf789d248573e.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        galak@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Sun, 15 Sep 2019 12:09:40 -0500
-In-Reply-To: <e9437d8c-564e-cc76-e8fd-54e4000c2349@c-s.fr>
-References: <b51b96090138aba1920d2cf7c0e0e348667f9a69.1566564560.git.christophe.leroy@c-s.fr>
-         <331759c1bcba5797d30f8eace74afb16ac5f3c36.1566564560.git.christophe.leroy@c-s.fr>
-         <b201df6242e7f6cebd525e0a301eef2afdb38f30.camel@buserror.net>
-         <e9437d8c-564e-cc76-e8fd-54e4000c2349@c-s.fr>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, galak@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH 2/2] powerpc/83xx: map IMMR with a BAT.
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Sun, 15 Sep 2019 13:20:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Vb3RI5wa2Xs1UyLdtQk1jJC3O0fNkUaE7+ZqTExFNVA=; b=v4Ad0REoWbhWxGmd6MIb7sQAI
+        aXPimFPOkqPJbgNgLDYUlm1D7X9QHbKlyZ6In9D+cA+MrbQR+zLoUIwuz47wWig1tFEunATt5In+l
+        7VFY70dwAfTJ1GvKB6qVjM6u5Qkeqnx1Y9ksVYEDD8npPjIDyOTHrDlqj/Uat8Bh2MdV0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9YC9-0000jR-8J; Sun, 15 Sep 2019 17:20:17 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 4C673274154D; Sun, 15 Sep 2019 18:20:16 +0100 (BST)
+Date:   Sun, 15 Sep 2019 18:20:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the mips tree with the arm-soc tree
+Message-ID: <20190915172016.GA4352@sirena.co.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-14 at 18:51 +0200, Christophe Leroy wrote:
-> 
-> Le 14/09/2019 à 16:34, Scott Wood a écrit :
-> > On Fri, 2019-08-23 at 12:50 +0000, Christophe Leroy wrote:
-> > > On mpc83xx with a QE, IMMR is 2Mbytes.
-> > > On mpc83xx without a QE, IMMR is 1Mbytes.
-> > > Each driver will map a part of it to access the registers it needs.
-> > > Some driver will map the same part of IMMR as other drivers.
-> > > 
-> > > In order to reduce TLB misses, map the full IMMR with a BAT.
-> > > 
-> > > Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> > > ---
-> > >   arch/powerpc/platforms/83xx/misc.c | 10 ++++++++++
-> > >   1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/arch/powerpc/platforms/83xx/misc.c
-> > > b/arch/powerpc/platforms/83xx/misc.c
-> > > index f46d7bf3b140..1e395b01c535 100644
-> > > --- a/arch/powerpc/platforms/83xx/misc.c
-> > > +++ b/arch/powerpc/platforms/83xx/misc.c
-> > > @@ -18,6 +18,8 @@
-> > >   #include <sysdev/fsl_soc.h>
-> > >   #include <sysdev/fsl_pci.h>
-> > >   
-> > > +#include <mm/mmu_decl.h>
-> > > +
-> > >   #include "mpc83xx.h"
-> > >   
-> > >   static __be32 __iomem *restart_reg_base;
-> > > @@ -145,6 +147,14 @@ void __init mpc83xx_setup_arch(void)
-> > >   	if (ppc_md.progress)
-> > >   		ppc_md.progress("mpc83xx_setup_arch()", 0);
-> > >   
-> > > +	if (!__map_without_bats) {
-> > > +		int immrsize = IS_ENABLED(CONFIG_QUICC_ENGINE) ? SZ_2M :
-> > > SZ_1M;
-> > 
-> > Any reason not to unconditionally make it 2M?  After all, the kernel being
-> > built with CONFIG_QUICC_ENGINE doesn't mean that the hardware you're
-> > running
-> > on has it...
-> > 
-> 
-> Euh .. ok. I didn't see it that way, but you are right.
-> 
-> Do you think it is not a problem to map 2M even when the quicc engine is 
-> not there ? Or should it check device tree instead ?
 
-It should be OK, since it's a guarded mapping.  Unless the IMMR base is not 2M
-aligned...
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Scott
+Hi all,
 
+Today's linux-next merge of the mips tree got a conflict in:
 
+  drivers/video/fbdev/Makefile
+
+between commit:
+
+  c7b46e0c33c5946 ("fbdev: remove w90x900/nuc900 platform drivers")
+
+=66rom the arm-soc tree and commit:
+
+  e305bff3a706f58 ("video/fbdev: Drop JZ4740 driver")
+
+=66rom the mips tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --git a/drivers/video/fbdev/Makefile b/drivers/video/fbdev/Makefile
+index aab7155884eaa..aa6352798cf4e 100644
+--- a/drivers/video/fbdev/Makefile
++++ b/drivers/video/fbdev/Makefile
+@@ -116,7 +116,6 @@ obj-y                             +=3D omap2/
+ obj-$(CONFIG_XEN_FBDEV_FRONTEND)  +=3D xen-fbfront.o
+ obj-$(CONFIG_FB_CARMINE)          +=3D carminefb.o
+ obj-$(CONFIG_FB_MB862XX)	  +=3D mb862xx/
+-obj-$(CONFIG_FB_JZ4740)		  +=3D jz4740_fb.o
+ obj-$(CONFIG_FB_PUV3_UNIGFX)      +=3D fb-puv3.o
+ obj-$(CONFIG_FB_HYPERV)		  +=3D hyperv_fb.o
+ obj-$(CONFIG_FB_OPENCORES)	  +=3D ocfb.o
+
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+cs8ACgkQJNaLcl1U
+h9AXbQf/W3dh85AhYXd/n4J/eiB4pjwYcHbXKT7QQ/pMTW5X4eLo9nQcou5dVbbs
+2+PMaQSZqXKpA0FZqO583SZuTq5EQA9FJWImrs+2Z67rFIG1oos9eGnZ+2Aab0BZ
+sCkpEoPK8umFqZ8bXKW6GmwJ54e8VP3ejmQAMeUctlSYY4y7c9TiZtVQPSIzhR42
+IKRsgT3b57rwiQG06+iDPrUsbt25UM0QQOvCUogLrDFm1S/sIwbYKMH2KU2C7UQt
+25iHEJqlgX+FEZCfg7b3LLmPAd/e0qD2apd0RG9IZdm44jKb4oKE+oek096Tqy/A
+azF4Zeyx7Q0fnafNbPHjx9j4QKxAwg==
+=PUJ/
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
