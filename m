@@ -2,144 +2,225 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB3CC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D6CC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101EA21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C447921479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:08:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="DpfGmWb6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sbh56VYo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfIORHw (ORCPT
+        id S1726764AbfIORIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:07:52 -0400
-Received: from mail-eopbgr790088.outbound.protection.outlook.com ([40.107.79.88]:3756
-        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726048AbfIORHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:07:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BCN1TMuWHykhw4NqoVOVPergJ2vhgYXNwDPB5jmLCIrkf4/RviwdZCJ3aLI0sr4kAAh9VAhUVCy+sSkCicMHGAt7MvekAMsCEu7CI8gaE4MzsNDe5I8Ft0bjnwiUyPeUfi0U013vmCODvGoauAUG7SThpL5XMnVKUf4e5YylVQ3ekSGPIebzfOoouG7VPVEPy6OgAKreEOoq1lEhFuojKvWBoEOk534H3qN94T6eFiAEiDOhffVEJsJ+hApOcR1RfuZ7j8yzYqHhg1U30rIk4GnmACnq88cIIr0VKn+hKjnXC/RVFhzBrC6i6gYzmJyQ/KfrSojF0hV6NhOhcHS8BA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/DW0su9blBzZE5LiHq1P8zqfYeTGEHhK88zGeyL0e2Y=;
- b=Q0S3MAZ8/C72ikRq+abtZcqfaQbEyn7fdLCVaEQEhb9YfnIhQVm8mPHJdxAhVvWpPwQ6Stexeutj2dBbkgoaiJhN83qQwqwux0yzPOKOyL8xm/BZVR9krzKGhfpZcG0GcBmb+u5UL4xLiNUjL1pH3T8qvC5KA25vuX10DkVusl0jS2NJF6Ioc3wOMewApFz5L3kZRNvt4UgiR14gcTrrlZ9x2BJie9zr14wsjBWRjVcN4r8YtGvv9gXZnZK2FwLUylqNbfClALLNscDpbSjDoZ4M3q9zELxCROyJ7ewLa563+Db69gR9B2PpMTGGW8k9wJS5LL4UW+ouKi3csqj5Sw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Sun, 15 Sep 2019 13:08:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42180 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfIORIZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 13:08:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z12so6493317pgp.9
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:08:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/DW0su9blBzZE5LiHq1P8zqfYeTGEHhK88zGeyL0e2Y=;
- b=DpfGmWb6lfe5y+xK0mGGE7428X9uACrq5w9MQDudhGJRh7B4Fckj/SI9/nGczp2dLTQaVDNX8bGII4MXlPYhugYmxyKcbYk1i7Kx9OChRDr8gLxsxO+Z5jfeJma/2PAOZZZyWPr2bFbY7HaWZZpGyfPSiYxuRPtw0oZXBo770qI=
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com (20.178.244.22) by
- MN2PR12MB3309.namprd12.prod.outlook.com (20.179.83.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Sun, 15 Sep 2019 17:07:43 +0000
-Received: from MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::ec02:b95d:560a:ad36]) by MN2PR12MB3455.namprd12.prod.outlook.com
- ([fe80::ec02:b95d:560a:ad36%7]) with mapi id 15.20.2263.023; Sun, 15 Sep 2019
- 17:07:43 +0000
-From:   "Mehta, Sanju" <Sanju.Mehta@amd.com>
-To:     "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Shah, Nehal-bakulchandra" <Nehal-bakulchandra.Shah@amd.com>,
-        "jdmason@kudzu.us" <jdmason@kudzu.us>,
-        "dave.jiang@intel.com" <dave.jiang@intel.com>,
-        "allenbh@gmail.com" <allenbh@gmail.com>
-CC:     "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Mehta, Sanju" <Sanju.Mehta@amd.com>
-Subject: [PATCH 1/2] ntb_hw_amd: Add a new NTB PCI device ID
-Thread-Topic: [PATCH 1/2] ntb_hw_amd: Add a new NTB PCI device ID
-Thread-Index: AQHVa+gW9+Bl/2VHLkO+yiE6eLNTog==
-Date:   Sun, 15 Sep 2019 17:07:43 +0000
-Message-ID: <1568567222-26810-1-git-send-email-Sanju.Mehta@amd.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MA1PR01CA0100.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:1::16) To MN2PR12MB3455.namprd12.prod.outlook.com
- (2603:10b6:208:d0::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Sanju.Mehta@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [165.204.156.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b058b68-e79e-428b-787b-08d739ff38d7
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MN2PR12MB3309;
-x-ms-traffictypediagnostic: MN2PR12MB3309:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR12MB33099C72D397BD8C578C1A6FE58D0@MN2PR12MB3309.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:361;
-x-forefront-prvs: 01613DFDC8
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(376002)(366004)(136003)(396003)(199004)(189003)(66476007)(66556008)(6436002)(36756003)(64756008)(66446008)(66946007)(7736002)(2616005)(186003)(2906002)(305945005)(14454004)(3846002)(6116002)(316002)(26005)(86362001)(2201001)(8676002)(50226002)(8936002)(81166006)(25786009)(81156014)(2501003)(71200400001)(476003)(71190400001)(54906003)(102836004)(110136005)(66066001)(6486002)(478600001)(5660300002)(486006)(6512007)(4326008)(6506007)(256004)(386003)(53936002)(99286004)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3309;H:MN2PR12MB3455.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: jxNA6bIlbq3G1LTXhtyQq2vqMT1sDlkzaFoAFkleaQmGx5Sukv4o3jbgJeaCmhyA9KM3kbweoC8uLTbf7EgZt7mOIva3+DDk2j+dt1Ls36xg+dHdXx9Ix84UtXtmJKvhC6yTCNOJqvvGTEDVevLw4eI55hs7aJ8dtJJyadYmb0l6rJO7yUyk6oOvF+65tOh7Z8JaAWZRxk4iYK1bI8LT8npYxu3hEizBypK3jvy76I6WV+sCmbctdNXKflzeDpI8hb9eBrZFdcANp0padozOr9SB03Xvcurp/3BJbnceM653h8Djc+YCNDxz7RwcXdlmcbyOnNhokT+PPuQ2Sb8EwdIA8UaedL2cZzfnmwALzq7C3dOQO7zwGC4qHH1QxFWnU/+trkGwaH0VSd1DzhUsaZ4eWwEElj8aDo/qaXWCzCQ=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADTfcPArVp8KQvFy/15pzSOdYF1sjsxn9QcodcYLZMM=;
+        b=sbh56VYoYCPgVgo+tM4ATL4gTlAJ6SKDQ6pdL7h/Te02+SWThammuEz1zKtbLmNerg
+         CBrJzV0GFMxc/g/s2woSryM0pJNyD26u7JJLjC5epi712zNWE2MJMryL1DqH12fuR6kw
+         D7Xx2rQHE70/hgxVev534Ci6jSQDNLcWbghf5x4+8WYABCMvhxHZDECYuhInSeyEYACp
+         vGs+3ux8wD7xEH5JXoCn770IJ/el1ixlwjaYL6VMW99SLjPU5gwDVLshhxfDw6+2lDQR
+         88dfvJbQ/Dr0stgovlZTea2cEdt/RM1Zldr7Lx4gTG8kSarQ6M/cvvngj17OakJmGLo5
+         XC/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ADTfcPArVp8KQvFy/15pzSOdYF1sjsxn9QcodcYLZMM=;
+        b=doimUCaE3AZQ2sCZU+JLb9dfK+Hu1yYyR7vi1RAdDg+ZSheyt/4qbubjYmSbG035Rj
+         lKG42TNJzzHzDoy0gtG5A+CwmPbGfWIEh+P6SL4cX4c/kCKBDEaTgbZFMhEOCgCm2zgk
+         QSqWI84q5IgrwpI0rbwtJxAFL4+xYmeAMUHejLzlY7ezH8iaRd4UiAL5RszTcdXnVkep
+         BwbivJD0t4hfGPdOSUwgg+JKv+OgUKAtt5l+lAW8IaJwAkq9SCt2Q6KyHGfX5hJbYouF
+         QkXiVgNTmrW0kflPm7s+jZOwnaniVLe1euJY3k1w3nWc3Hru1T9xdONpc6P8UyUkw3Bn
+         Fd1A==
+X-Gm-Message-State: APjAAAWaJNu5I1M4KK7CUQigIs5cTvS0vpMjdqWNraqpDFofXQYbl1aS
+        r+1OiCtsYuQOPMLaF6/wPTM=
+X-Google-Smtp-Source: APXvYqx9kovc+b+m054f+ug30POGDV7YO/zxPJKVkQA1rgkbMLaveUfUnZ2UsMHjQ43aEs8+XrLIpQ==
+X-Received: by 2002:a17:90a:d354:: with SMTP id i20mr16485031pjx.49.1568567304439;
+        Sun, 15 Sep 2019 10:08:24 -0700 (PDT)
+Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
+        by smtp.gmail.com with ESMTPSA id r28sm62279134pfg.62.2019.09.15.10.08.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 10:08:23 -0700 (PDT)
+From:   Pengfei Li <lpf.vector@gmail.com>
+To:     akpm@linux-foundation.org
+Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, guro@fb.com,
+        Pengfei Li <lpf.vector@gmail.com>
+Subject: [RESEND v4 0/7] mm, slab: Make kmalloc_info[] contain all types of names
+Date:   Mon, 16 Sep 2019 01:08:02 +0800
+Message-Id: <20190915170809.10702-1-lpf.vector@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b058b68-e79e-428b-787b-08d739ff38d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2019 17:07:43.4120
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5dR1j+1TYHQLFh5RVc4aKlutNwJRDD3kViHoCtl+fJv0D3ZLPqD7fow4ArZcS1rIA6W3KLvESmgPGyyDvWpvCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3309
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sanjay R Mehta <sanju.mehta@amd.com>
+Changes in v4
+--
+1. [old] abandon patch 4/4
+2. [new] patch 4/7:
+    - return ZERO_SIZE_ALLOC instead 0 for zero sized requests
+3. [new] patch 5/7:
+    - reorder kmalloc_info[], kmalloc_caches[] (in order of size)
+    - hard to split, so slightly larger
+4. [new] patch 6/7:
+    - initialize kmalloc_cache[] with the same size but different
+      types
+5. [new] patch 7/7:
+    - modify kmalloc_caches[type][idx] to kmalloc_caches[idx][type]
 
-Signed-off-by: Sanjay R Mehta <sanju.mehta@amd.com>
----
- drivers/ntb/hw/amd/ntb_hw_amd.c | 3 ++-
- drivers/ntb/hw/amd/ntb_hw_amd.h | 1 -
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Patch 4-7 are newly added, more information can be obtained from
+commit messages.
 
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.c b/drivers/ntb/hw/amd/ntb_hw_am=
-d.c
-index 2859cc9..e9286cf 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.c
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.c
-@@ -1124,7 +1124,8 @@ static const struct file_operations amd_ntb_debugfs_i=
-nfo =3D {
- };
-=20
- static const struct pci_device_id amd_ntb_pci_tbl[] =3D {
--	{PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_NTB)},
-+	{PCI_VDEVICE(AMD, 0x145b)},
-+	{PCI_VDEVICE(AMD, 0x148b)},
- 	{0}
- };
- MODULE_DEVICE_TABLE(pci, amd_ntb_pci_tbl);
-diff --git a/drivers/ntb/hw/amd/ntb_hw_amd.h b/drivers/ntb/hw/amd/ntb_hw_am=
-d.h
-index 8f3617a..3aac994 100644
---- a/drivers/ntb/hw/amd/ntb_hw_amd.h
-+++ b/drivers/ntb/hw/amd/ntb_hw_amd.h
-@@ -52,7 +52,6 @@
- #include <linux/ntb.h>
- #include <linux/pci.h>
-=20
--#define PCI_DEVICE_ID_AMD_NTB	0x145B
- #define AMD_LINK_HB_TIMEOUT	msecs_to_jiffies(1000)
- #define AMD_LINK_STATUS_OFFSET	0x68
- #define NTB_LIN_STA_ACTIVE_BIT	0x00000002
---=20
-2.7.4
+Changes in v3
+--
+1. restore __initconst (patch 1/4)
+2. rename patch 3/4
+3. add more clarification for patch 4/4
+
+Changes in v2
+--
+1. remove __initconst (patch 1/5)
+2. squash patch 2/5
+3. add ack tag from Vlastimil Babka
+
+
+There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+and KMALLOC_DMA.
+
+The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+generated by kmalloc_cache_name().
+
+Patch1 predefines the names of all types of kmalloc to save
+the time spent dynamically generating names.
+
+These changes make sense, and the time spent by new_kmalloc_cache()
+has been reduced by approximately 36.3%.
+
+                         Time spent by new_kmalloc_cache()
+                                  (CPU cycles)
+5.3-rc7                              66264
+5.3-rc7+patch_1-3                    42188
+
+
+bloat-o-meter
+--
+$ ./scripts/bloat-o-meter vmlinux.5.3-rc8 vmlinux.5.3-rc8+patch_1-7
+add/remove: 1/2 grow/shrink: 6/65 up/down: 872/-1621 (-749)
+Function                                     old     new   delta
+all_kmalloc_info                               -     832    +832
+crypto_create_tfm                            211     225     +14
+ieee80211_key_alloc                         1159    1169     +10
+nl80211_parse_sched_scan                    2787    2795      +8
+tg3_self_test                               4255    4259      +4
+find_get_context.isra                        634     637      +3
+sd_probe                                     947     948      +1
+nf_queue                                     671     670      -1
+trace_parser_get_init                         71      69      -2
+pkcs7_verify.cold                            318     316      -2
+units                                        323     320      -3
+nl80211_set_reg                              642     639      -3
+pkcs7_verify                                1503    1495      -8
+i915_sw_fence_await_dma_fence                445     437      -8
+nla_strdup                                   143     134      -9
+kmalloc_slab                                 102      93      -9
+xhci_alloc_tt_info                           349     338     -11
+xhci_segment_alloc                           303     289     -14
+xhci_alloc_container_ctx                     221     207     -14
+xfrm_policy_alloc                            277     263     -14
+selinux_sk_alloc_security                    119     105     -14
+sdev_evt_send_simple                         124     110     -14
+sdev_evt_alloc                                85      71     -14
+sbitmap_queue_init_node                      424     410     -14
+regulatory_hint_found_beacon                 400     386     -14
+nf_ct_tmpl_alloc                              91      77     -14
+gss_create_cred                              146     132     -14
+drm_flip_work_allocate_task                   76      62     -14
+cfg80211_stop_iface                          266     252     -14
+cfg80211_sinfo_alloc_tid_stats                83      69     -14
+cfg80211_port_authorized                     218     204     -14
+cfg80211_ibss_joined                         341     327     -14
+call_usermodehelper_setup                    155     141     -14
+bpf_prog_alloc_no_stats                      188     174     -14
+blk_alloc_flush_queue                        197     183     -14
+bdi_alloc_node                               201     187     -14
+_netlbl_catmap_getnode                       253     239     -14
+__igmp_group_dropped                         629     615     -14
+____ip_mc_inc_group                          481     467     -14
+xhci_alloc_command                           221     205     -16
+audit_log_d_path                             204     188     -16
+xprt_switch_alloc                            145     128     -17
+xhci_ring_alloc                              378     361     -17
+xhci_mem_init                               3673    3656     -17
+xhci_alloc_virt_device                       505     488     -17
+xhci_alloc_stream_info                       727     710     -17
+tcp_sendmsg_locked                          3129    3112     -17
+tcp_md5_do_add                               783     766     -17
+tcp_fastopen_defer_connect                   279     262     -17
+sr_read_tochdr.isra                          260     243     -17
+sr_read_tocentry.isra                        337     320     -17
+sr_is_xa                                     385     368     -17
+sr_get_mcn                                   269     252     -17
+scsi_probe_and_add_lun                      2947    2930     -17
+ring_buffer_read_prepare                     103      86     -17
+request_firmware_nowait                      405     388     -17
+ohci_urb_enqueue                            3185    3168     -17
+nfs_alloc_seqid                               96      79     -17
+nfs4_get_state_owner                        1049    1032     -17
+nfs4_do_close                                587     570     -17
+mempool_create_node                          173     156     -17
+ip6_setup_cork                              1030    1013     -17
+ida_alloc_range                              951     934     -17
+gss_import_sec_context                       187     170     -17
+dma_pool_alloc                               419     402     -17
+devres_open_group                            223     206     -17
+cfg80211_parse_mbssid_data                  2406    2389     -17
+ip_setup_cork                                374     354     -20
+kmalloc_caches                               336     312     -24
+__i915_sw_fence_await_sw_fence               429     405     -24
+kmalloc_cache_name                            57       -     -57
+new_kmalloc_cache                            112       -    -112
+create_kmalloc_caches                        270     148    -122
+kmalloc_info                                 432       8    -424
+Total: Before=14874616, After=14873867, chg -0.01%
+
+Pengfei Li (7):
+  mm, slab: Make kmalloc_info[] contain all types of names
+  mm, slab: Remove unused kmalloc_size()
+  mm, slab_common: Use enum kmalloc_cache_type to iterate over kmalloc
+    caches
+  mm, slab: Return ZERO_SIZE_ALLOC for zero sized kmalloc requests
+  mm, slab_common: Make kmalloc_caches[] start at size KMALLOC_MIN_SIZE
+  mm, slab_common: Initialize the same size of kmalloc_caches[]
+  mm, slab_common: Modify kmalloc_caches[type][idx] to
+    kmalloc_caches[idx][type]
+
+ include/linux/slab.h | 136 ++++++++++++++------------
+ mm/slab.c            |  11 ++-
+ mm/slab.h            |  10 +-
+ mm/slab_common.c     | 224 ++++++++++++++++++-------------------------
+ mm/slub.c            |  12 +--
+ 5 files changed, 183 insertions(+), 210 deletions(-)
+
+-- 
+2.21.0
 
