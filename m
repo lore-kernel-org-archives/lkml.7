@@ -2,98 +2,178 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 274A5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1030C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB03121479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:47:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YV6Kb/eL"
+	by mail.kernel.org (Postfix) with ESMTP id C5D2B2171F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568576908;
+	bh=j6QYpVZrAE0kvBwvdz3gJWJOFjQNgTfpJOj3/G5m004=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=ECikJOeKRVr20O51MzvdfgFIWGX2sk9QQGRFPhpXTt6T+vQ6uPYmGNEyZ9J9HxSpK
+	 bgUHql9i+bpDj/h8ROiIgEQoof2AswWIEMPsbwoDQgktoWGbTe9YE41JI/iHYRRXSS
+	 Fv6jlbN101EMJdat57MvlvfqtTxTi1KKTWUg9Fxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbfIOTro (ORCPT
+        id S1727766AbfIOTs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 15:47:44 -0400
-Received: from mail-io1-f41.google.com ([209.85.166.41]:37020 "EHLO
-        mail-io1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725536AbfIOTrn (ORCPT
+        Sun, 15 Sep 2019 15:48:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55034 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727681AbfIOTs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 15:47:43 -0400
-Received: by mail-io1-f41.google.com with SMTP id b19so13951818iob.4
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 12:47:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ps21+yPehanjsccA3pZUx6ng3VBZ3IcyIL4amI2VF5w=;
-        b=YV6Kb/eLk881/ykb8u2SWxFYQbT5+5klEOmw9fV/zDtdCEXG2iqUY5MzfrwySkLxwA
-         OOM5PQ+xIojQQ5LBiMmhcB1Wx7/Hbm9nPn9MaAN3E3WEh7tKYvWP+D+mbJHC+gq+ci7l
-         lEFDRVXbFzHU/lcd1Xih/GPBSfzAkCin/NidSim9UJdwJkqPkFiNfr5Z30Zj2QUKbSAo
-         U4YRgmm4KUwBTCm7oUOQYzyTyAEZLSpvbNJumG39JiW3FIaulBXeSfrqfgCrJkiStqPU
-         VgB5aSWZ81AI8zwpnk8LBsy7iC45NMbOcu9iVQI4mMywSx+UeCI7D+CglgHmwcxaoNLh
-         tqiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ps21+yPehanjsccA3pZUx6ng3VBZ3IcyIL4amI2VF5w=;
-        b=N2r0wsdkRTFQjyPdOHV+an7Do0Lqv9W1wETEBYQpdOdyb1cP7yibDrF6BeyyCVxlSx
-         jwWxClsICMjbXKMP8CCUQCKHKWEDaZ7iBBvYnvFxMIxODUFrjXAj+3bI1aMsvX5Kv8NS
-         mMQqdoUtWSMXkY3l3NpVJYGVJbv21/jUkm58FjaNdBFqqKbVAi+TTb7aBkQuGM5B4XD2
-         qTbsmQ50A4e5cZnRGTnyBIoBeBabprFQ0Eqj0Y5ZrYJ5XASt/O5ZLKLCn8Uhu2LcnA2+
-         vsJtReZ98SNuwz5C2+QIMFLqDfi7vBxZuzZ/t7FHOimlgkA50kZm6DNzn4WR/aHwvow8
-         qPqA==
-X-Gm-Message-State: APjAAAVbhW3f5KaVVBREPbIbvXap+hKAL1wMHDHoadVX3zgv0y/Ex9Of
-        t/mj4bbSI9kuxmCF9CYrFkv1Qbv6w42HKIsI7/Y=
-X-Google-Smtp-Source: APXvYqzouMT3490kgEIyPMulv062Ufqzn/3+z3GgV9OLnyn1nVykUuPn/Soja6AbuPnNw1wewiIpcMto3ChbI8F7FYM=
-X-Received: by 2002:a5e:c241:: with SMTP id w1mr5045599iop.36.1568576861178;
- Sun, 15 Sep 2019 12:47:41 -0700 (PDT)
+        Sun, 15 Sep 2019 15:48:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=la4zofXTsrcIrlIcvyDyOz1E7uqr6BBUHVC7GRhSSYM=; b=fwn8xSH6MbRNYLg2ebh4tpqSA
+        G1i/j6npEGoQm5Qs4516LbMAw5ZCgtVXZ2qR7+srXdrvSBbLSTzmA7aHKDteDs6pkp7CG0uUAEgo2
+        uoWKeeyvOb7GkYq3CPd2wWM5KOwb8lpSkOnJSRibnTPeBBFKSTUu82tHtdOu42c6EloeQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9aVP-00015X-Hj; Sun, 15 Sep 2019 19:48:19 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id ACF37274154D; Sun, 15 Sep 2019 20:48:18 +0100 (BST)
+Date:   Sun, 15 Sep 2019 20:48:18 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc:     linux-riscv@lists.infradead.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the jc_docs tree with the riscv-fixes
+ tree
+Message-ID: <20190915194818.GC4352@sirena.co.uk>
 MIME-Version: 1.0
-References: <20190830032948.13516-1-hdanton@sina.com> <CABXGCsNywbo90+wgiZ64Srm-KexypTbjiviwTW_BsO9Pm11GKQ@mail.gmail.com>
- <5d6e2298.1c69fb81.b5532.8395SMTPIN_ADDED_MISSING@mx.google.com>
- <CABXGCsMG2YrybO4_5jHaFQQxy2ywB53pY63qRfXK=ZKx5qc2Bw@mail.gmail.com>
- <CAKMK7uH9q09XadTV5Ezm=9aODErD=w_+8feujviVnF5LO_fggA@mail.gmail.com>
- <5d6f10a6.1c69fb81.6b104.af73SMTPIN_ADDED_MISSING@mx.google.com>
- <20190904083747.GE2112@phenom.ffwll.local> <CABXGCsMEjP-UQ5A1xpL-xWHxtFEsOUO14+cmWJUS1ff1hgReFA@mail.gmail.com>
- <CAKMK7uHQFpQjE8qxw5UUDg6xdbzcr0zaZ7P6WsBK7m0ksKdg3g@mail.gmail.com>
- <CABXGCsN_r6614xDft_FY5N-B1QRFkhz27Q5U7nnr=mwtOWyCUw@mail.gmail.com> <1d23703e-f6df-e663-a205-45c98cd125e8@amd.com>
-In-Reply-To: <1d23703e-f6df-e663-a205-45c98cd125e8@amd.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Mon, 16 Sep 2019 00:47:30 +0500
-Message-ID: <CABXGCsNA+p8QCGPduiTfOwdYsk+qGMXL9JTGsQXGtnDEDy4-xg@mail.gmail.com>
-Subject: Re: gnome-shell stuck because of amdgpu driver [5.3 RC5]
-To:     "Koenig, Christian" <Christian.Koenig@amd.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        Linux kernel <linux-kernel@vger.kernel.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 9 Sep 2019 at 14:15, Koenig, Christian <Christian.Koenig@amd.com> wrote:
->
-> I agree with Daniels analysis.
->
-> It looks like the problem is simply that PM turns of a block before all
-> work is done on that block.
->
-> Have you opened a bug report yet? If not then that would certainly help
-> cause it is really hard to extract all necessary information from that
-> mail thread.
 
-https://bugs.freedesktop.org/show_bug.cgi?id=111689
-It'll do?
+--0lnxQi9hkpPO77W3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---
-Best Regards,
-Mike Gavrilov.
+Hi all,
+
+Today's linux-next merge of the jc_docs tree got a conflict in:
+
+  Documentation/riscv/boot-image-header.rst
+
+between commit:
+
+  474efecb65dceb15f ("riscv: modify the Image header to improve compatibili=
+ty with the ARM64 header")
+
+=66rom the riscv tree and commit:
+
+  638b642f82bb8ee81 ("docs: riscv: convert boot-image-header.txt to ReST")
+
+=66rom the jc_docs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc Documentation/riscv/boot-image-header.rst
+index 14b1492f689bb,43e9bd0731d5f..0000000000000
+--- a/Documentation/riscv/boot-image-header.rst
++++ b/Documentation/riscv/boot-image-header.rst
+@@@ -15,10 -18,10 +18,10 @@@ The following 64-byte header is presen
+  	u64 image_size;		  /* Effective Image size, little endian */
+  	u64 flags;		  /* kernel flags, little endian */
+  	u32 version;		  /* Version of this header */
+- 	u32 res1  =3D 0;		  /* Reserved */
+- 	u64 res2  =3D 0;    	  /* Reserved */
++ 	u32 res1 =3D 0;		  /* Reserved */
++ 	u64 res2 =3D 0;		  /* Reserved */
+  	u64 magic =3D 0x5643534952; /* Magic number, little endian, "RISCV" */
+ -	u32 res3;		  /* Reserved for additional RISC-V specific header */
+ +	u32 magic2 =3D 0x56534905;  /* Magic number 2, little endian, "RSC\x05" =
+*/
+  	u32 res4;		  /* Reserved for PE COFF offset */
+ =20
+  This header format is compliant with PE/COFF header and largely inspired =
+=66rom
+@@@ -32,20 -37,25 +37,26 @@@ Note
+    code0 should be replaced with "MZ" magic string and res5(at offset 0x3c=
+) should
+    point to the rest of the PE/COFF header.
+ =20
+- - version field indicate header version number.
+- 	Bits 0:15  - Minor version
+- 	Bits 16:31 - Major version
++ - version field indicate header version number
++=20
++ 	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++ 	Bits 0:15   Minor version
++ 	Bits 16:31  Major version
++ 	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ =20
+    This preserves compatibility across newer and older version of the head=
+er.
+ -  The current version is defined as 0.1.
+ +  The current version is defined as 0.2.
+ =20
+ -- res3 is reserved for offset to any other additional fields. This makes =
+the
+ -  header extendible in future. One example would be to accommodate ISA
+ -  extension for RISC-V in future. For current version, it is set to be ze=
+ro.
+ +- The "magic" field is deprecated as of version 0.2.  In a future
+ +  release, it may be removed.  This originally should have matched up
+ +  with the ARM64 header "magic" field, but unfortunately does not.
+ +  The "magic2" field replaces it, matching up with the ARM64 header.
+ =20
+ -- In current header, the flag field has only one field.
+ +- In current header, the flags field has only one field.
+- 	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
++=20
++ 	=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++ 	Bit 0  Kernel endianness. 1 if BE, 0 if LE.
++ 	=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ =20
+  - Image size is mandatory for boot loader to load kernel image. Booting w=
+ill
+    fail otherwise.
+
+--0lnxQi9hkpPO77W3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+lYEACgkQJNaLcl1U
+h9AIJwf+IpEoaIl2e7XRmvVC/euyAd61fu4DP4yRHffIWEPpf1jrZEWztXj7X4dR
+ByierS/+oj2HeDKZJYcx+oRo1i4H6bchO3/1D1MrUpRHRi/nHCrhthBy/JBhEsQq
+NdQu7l5VOV3StJ1Vt2+QCW3+VXXhKhMhOhYW59ZeHyrFYFFZfjdm/d24I3CkZxPR
+JSuqlPNrHeXCfalOAdk4CnBHd4cYo0oSdaOX5Sy/uPWs44cpNbuEd1qOPVKKrLeI
+WKYwy76SahaMWE+028dvfsSC/KikQbhlFOcUedmvjpP1DLwte1QkDxQzZIIN20yI
+wEXRToDioWxtLMsdaVFB8CkD6okQOw==
+=wuYs
+-----END PGP SIGNATURE-----
+
+--0lnxQi9hkpPO77W3--
