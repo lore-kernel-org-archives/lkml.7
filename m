@@ -2,111 +2,222 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161BC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51526C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18249214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uv4CWWni"
+	by mail.kernel.org (Postfix) with ESMTP id 2B394214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:44:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568569441;
+	bh=ILm8WyzTkhUFSUtniQBlD+dDLRmwpJWiFqhVcjXOBQ8=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=2wD6k6D+uwWVHGSGAEeY79tr46j6+TqaXsi3xn6/Snxizy/E1rvwM/KOlhdKDMTbT
+	 hjov/0Wd+i3oH5KbJMhqY4MVNAWJDvZ+S48xz7tvTnq5HjXGMbNva+WpBeXgajdFta
+	 1p3F3vJ9bIHEnM2w12nCnafn+oydA7WAmZVirBlY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbfIORh6 (ORCPT
+        id S1728009AbfIORoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:37:58 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:34542 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfIORh5 (ORCPT
+        Sun, 15 Sep 2019 13:44:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43394 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIORn7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:37:57 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n9so18117125pgc.1;
-        Sun, 15 Sep 2019 10:37:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1F7aUJVQgduxhZxHfqJkmmUC8zgMBUZn2pCjL4AgRrE=;
-        b=uv4CWWnirInfH+uqYYzAqwEssTBS30r4kB1lG3CQt5qiAyNKeCbqMiGJj2/xPAsapN
-         ParDZKOrWA5zXCRB66CLBElxYr727uPqZMyTxbWJD79x2JWOyx/6kMSH6QLdlHuE6F5t
-         r+NJg56vmijpyyPIxYnePGYJPr89yHc+xFsgzpNq3B+AKVBua3V/gBnPduo2MT9j9Mah
-         iihhe5S3qwOirBswADfXeCW7+3w3/FMOp47KXmHhfi4iWpaPgbTuXg+e+bcM2QWJeCrB
-         DI1BHVP55UGVlyCnLL3Vdxs4Ai2nZwP+9rzJWDu4MlLM7yJ0jjo3Kn48uyNRmMzZYOgt
-         z/Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1F7aUJVQgduxhZxHfqJkmmUC8zgMBUZn2pCjL4AgRrE=;
-        b=bMeq735EselU7xP6vleRHm4N5Dm3XNTs86OH12goqbnexE+1pVbgQ0xaZyG9FI9qxQ
-         117FMtHKzuaWMgmYLDGNEaKMxMU6p7VjED+8fwnrfyxz6s/hoqBuwGNmwWJ5wSYYAEBS
-         QGWhaf2LdYET11VZb/MuCkRAPTpFtXeSPIAT5rPc3PRdMDoaknGPcTek5gqf2MdBAKjA
-         sHi80MRDk1H9RtfkPvNjPcLZq2/YhFFAEDuJ2YRBdxyTUaiJfBZ8nsqpWopuEzHOPF9K
-         nq8D4tEbvzOGKDCu1rBAyDPSydQtxo48BLDCulYCPtmYc3yZcFl0MXpqRcPP5PIhHcEU
-         AcoQ==
-X-Gm-Message-State: APjAAAUdeD6CFB80wr19iu0YCZVaqKxob1qzm3RXeMz7p0+w+eSQ/DYn
-        V4gUp7iI7jMvuj/Ny4DXMumVq2tGeeM=
-X-Google-Smtp-Source: APXvYqwDiZ7BjAhmWHrC10pzG4lkpQGykHTQ1xhzRDLapduQBdCCDD3gRvM1Rtu6BxU6p8Tz+R5Urw==
-X-Received: by 2002:a65:4489:: with SMTP id l9mr54273753pgq.207.1568569076754;
-        Sun, 15 Sep 2019 10:37:56 -0700 (PDT)
-Received: from [172.27.227.180] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id m12sm5997323pff.66.2019.09.15.10.37.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Sep 2019 10:37:55 -0700 (PDT)
-Subject: Re: [v3] iproute2-next: police: support 64bit rate and peakrate in tc
- utility
-To:     David Dai <zdai@linux.vnet.ibm.com>, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, jiri@resnulli.us, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     zdai@us.ibm.com
-References: <1567609611-27051-1-git-send-email-zdai@linux.vnet.ibm.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <4e78ccb9-5983-f5f8-dded-0b193125c43a@gmail.com>
-Date:   Sun, 15 Sep 2019 11:37:53 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        Sun, 15 Sep 2019 13:43:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8GlbM0Gk56jQSQ6J7WUvwVe9z+NrK2oBzeQQBTaeJ3w=; b=hn8txgJNqujrZw8x6TUDgOO/G
+        bjqYEgB0bySzdXeyKyecfQZIphuxYpEmWb2EJKx/6z1fW4EoNbMtXA3pvMrywLWtA7TqEhpg2AgdE
+        KF63FI9P7KoIK4NL793jp7rnkoLZn8Ym30m4huYtZTkwCKR5CjHYR1RUQfUy9p7T/nHNs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9YZ1-0000mg-WB; Sun, 15 Sep 2019 17:43:56 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 0AC0E274154D; Sun, 15 Sep 2019 18:43:54 +0100 (BST)
+Date:   Sun, 15 Sep 2019 18:43:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Joerg Schmidbauer <jschmidb@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the s390 tree with the s390-fixes tree
+Message-ID: <20190915174354.GB4352@sirena.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <1567609611-27051-1-git-send-email-zdai@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 9:06 AM, David Dai wrote:
-> For high speed adapter like Mellanox CX-5 card, it can reach upto
-> 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
-> in tc utility. However police action rate and peakrate are still limited
-> to 32bit value (upto 32 Gbits per second). Taking advantage of the 2 new
-> attributes TCA_POLICE_RATE64 and TCA_POLICE_PEAKRATE64 from kernel,
-> tc can use them to break the 32bit limit, and still keep the backward
-> binary compatibility.
-> 
-> Tested-by: David Dai <zdai@linux.vnet.ibm.com>
-> Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
-> ---
-> Changelog:
-> v1->v2:
->  - Change patch submit component from iproute2 to iproute2-next
->  - Move 2 attributes TCA_POLICE_RATE64 TCA_POLICE_PEAKRATE64 after
->    TCA_POLICE_PAD in pkt_cls.h header to be consistent with kernel's
->    pkt_cls.h header.
-> v2->v3:
->   - Use common functions of duparg and invarg in police filter.
-> ---
->  include/uapi/linux/pkt_cls.h |    2 +
->  tc/m_police.c                |  149 +++++++++++++++++++-----------------------
->  tc/tc_core.c                 |   29 ++++++++
->  tc/tc_core.h                 |    3 +
->  4 files changed, 102 insertions(+), 81 deletions(-)
-> 
 
-applied to iproute2-next.
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the s390 tree got a conflict in:
+
+  arch/s390/configs/debug_defconfig
+
+between commit:
+
+  3361f3193c747e8b ("s390: update configs")
+
+=66rom the s390-fixes tree and commit:
+
+  3c2eb6b76cabb7d9 ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
+
+=66rom the s390 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc arch/s390/configs/debug_defconfig
+index 74e78ec5beb68,a08e3dcd3e9db..0000000000000
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@@ -638,99 -580,6 +638,101 @@@ CONFIG_NLS_ISO8859_1=3D
+  CONFIG_NLS_ISO8859_15=3Dm
+  CONFIG_NLS_UTF8=3Dm
+  CONFIG_DLM=3Dm
+ +CONFIG_UNICODE=3Dy
+ +CONFIG_PERSISTENT_KEYRINGS=3Dy
+ +CONFIG_BIG_KEYS=3Dy
+ +CONFIG_ENCRYPTED_KEYS=3Dm
+ +CONFIG_SECURITY=3Dy
+ +CONFIG_SECURITY_NETWORK=3Dy
+ +CONFIG_FORTIFY_SOURCE=3Dy
+ +CONFIG_SECURITY_SELINUX=3Dy
+ +CONFIG_SECURITY_SELINUX_BOOTPARAM=3Dy
+ +CONFIG_SECURITY_SELINUX_DISABLE=3Dy
+ +CONFIG_INTEGRITY_SIGNATURE=3Dy
+ +CONFIG_INTEGRITY_ASYMMETRIC_KEYS=3Dy
+ +CONFIG_IMA=3Dy
+ +CONFIG_IMA_DEFAULT_HASH_SHA256=3Dy
+ +CONFIG_IMA_WRITE_POLICY=3Dy
+ +CONFIG_IMA_APPRAISE=3Dy
+ +CONFIG_CRYPTO_USER=3Dm
+ +# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+ +CONFIG_CRYPTO_PCRYPT=3Dm
+ +CONFIG_CRYPTO_CRYPTD=3Dm
+ +CONFIG_CRYPTO_TEST=3Dm
+ +CONFIG_CRYPTO_DH=3Dm
+ +CONFIG_CRYPTO_ECDH=3Dm
+ +CONFIG_CRYPTO_ECRDSA=3Dm
+ +CONFIG_CRYPTO_CHACHA20POLY1305=3Dm
+ +CONFIG_CRYPTO_AEGIS128=3Dm
+ +CONFIG_CRYPTO_AEGIS128L=3Dm
+ +CONFIG_CRYPTO_AEGIS256=3Dm
+ +CONFIG_CRYPTO_MORUS640=3Dm
+ +CONFIG_CRYPTO_MORUS1280=3Dm
+ +CONFIG_CRYPTO_CFB=3Dm
+ +CONFIG_CRYPTO_LRW=3Dm
+ +CONFIG_CRYPTO_PCBC=3Dm
+ +CONFIG_CRYPTO_KEYWRAP=3Dm
+ +CONFIG_CRYPTO_ADIANTUM=3Dm
+ +CONFIG_CRYPTO_XCBC=3Dm
+ +CONFIG_CRYPTO_VMAC=3Dm
+ +CONFIG_CRYPTO_CRC32=3Dm
+ +CONFIG_CRYPTO_XXHASH=3Dm
+ +CONFIG_CRYPTO_MICHAEL_MIC=3Dm
+ +CONFIG_CRYPTO_RMD128=3Dm
+ +CONFIG_CRYPTO_RMD160=3Dm
+ +CONFIG_CRYPTO_RMD256=3Dm
+ +CONFIG_CRYPTO_RMD320=3Dm
+ +CONFIG_CRYPTO_SHA3=3Dm
+ +CONFIG_CRYPTO_SM3=3Dm
+ +CONFIG_CRYPTO_TGR192=3Dm
+ +CONFIG_CRYPTO_WP512=3Dm
+ +CONFIG_CRYPTO_AES_TI=3Dm
+ +CONFIG_CRYPTO_ANUBIS=3Dm
+ +CONFIG_CRYPTO_ARC4=3Dm
+ +CONFIG_CRYPTO_BLOWFISH=3Dm
+ +CONFIG_CRYPTO_CAMELLIA=3Dm
+ +CONFIG_CRYPTO_CAST5=3Dm
+ +CONFIG_CRYPTO_CAST6=3Dm
+ +CONFIG_CRYPTO_FCRYPT=3Dm
+ +CONFIG_CRYPTO_KHAZAD=3Dm
+ +CONFIG_CRYPTO_SALSA20=3Dm
+ +CONFIG_CRYPTO_SEED=3Dm
+ +CONFIG_CRYPTO_SERPENT=3Dm
+ +CONFIG_CRYPTO_SM4=3Dm
+ +CONFIG_CRYPTO_TEA=3Dm
+ +CONFIG_CRYPTO_TWOFISH=3Dm
+ +CONFIG_CRYPTO_842=3Dm
+ +CONFIG_CRYPTO_LZ4=3Dm
+ +CONFIG_CRYPTO_LZ4HC=3Dm
+ +CONFIG_CRYPTO_ZSTD=3Dm
+ +CONFIG_CRYPTO_ANSI_CPRNG=3Dm
+ +CONFIG_CRYPTO_USER_API_HASH=3Dm
+ +CONFIG_CRYPTO_USER_API_SKCIPHER=3Dm
+ +CONFIG_CRYPTO_USER_API_RNG=3Dm
+ +CONFIG_CRYPTO_USER_API_AEAD=3Dm
+ +CONFIG_CRYPTO_STATS=3Dy
+ +CONFIG_ZCRYPT=3Dm
+ +CONFIG_PKEY=3Dm
+ +CONFIG_CRYPTO_PAES_S390=3Dm
+ +CONFIG_CRYPTO_SHA1_S390=3Dm
+ +CONFIG_CRYPTO_SHA256_S390=3Dm
+ +CONFIG_CRYPTO_SHA512_S390=3Dm
+++CONFIG_CRYPTO_SHA3_256_S390=3Dm
+++CONFIG_CRYPTO_SHA3_512_S390=3Dm
+ +CONFIG_CRYPTO_DES_S390=3Dm
+ +CONFIG_CRYPTO_AES_S390=3Dm
+ +CONFIG_CRYPTO_GHASH_S390=3Dm
+ +CONFIG_CRYPTO_CRC32_S390=3Dy
+ +CONFIG_CORDIC=3Dm
+ +CONFIG_CRC32_SELFTEST=3Dy
+ +CONFIG_CRC4=3Dm
+ +CONFIG_CRC7=3Dm
+ +CONFIG_CRC8=3Dm
+ +CONFIG_RANDOM32_SELFTEST=3Dy
+ +CONFIG_DMA_CMA=3Dy
+ +CONFIG_CMA_SIZE_MBYTES=3D0
+ +CONFIG_DMA_API_DEBUG=3Dy
+ +CONFIG_STRING_SELFTEST=3Dy
+  CONFIG_PRINTK_TIME=3Dy
+  CONFIG_DYNAMIC_DEBUG=3Dy
+  CONFIG_DEBUG_INFO=3Dy
 
 
+--8GpibOaaTibBMecb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+eFoACgkQJNaLcl1U
+h9BG5Qf+Ilf94j76DDrh6oITbngx0+eU5Olh5IClqwEw0Lk5LpWZ/vPiE3EGG9Mg
+il35/uqoT2NfN5/cYsGCLCLkCKczWYcy4oWozOTo/MtwXEl2mvMmRhJBZw7Tqs/U
+IF8eIesaMIFYfDQO2QwN5Lf/4ObHyAZP6A43FS88JnCj7fVHJzGW2u3sXSAFF0Vh
+VmW7DVRwo8EFzfDUo5GmfmPv0Tk3MB27L2HUvHF5mytkIzpwnLGY31zNRRAAP6WF
+gw0oeBrbbt+IrYoCqQvCQ7LfuLG533wFyB8mGZk6ERSA8vVgoo1VJYVc81MEVsEl
+tJ9TkzfZI0X5qLz9EF/oNWbEkXQHDA==
+=oHnu
+-----END PGP SIGNATURE-----
+
+--8GpibOaaTibBMecb--
