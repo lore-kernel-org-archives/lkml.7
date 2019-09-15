@@ -2,100 +2,137 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 470EFC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36B0C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D84D2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74705214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:09:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hapJB8ow"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbfIOI7K (ORCPT
+        id S1727388AbfIOJJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 04:59:10 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:38412 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfIOI7J (ORCPT
+        Sun, 15 Sep 2019 05:09:37 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44105 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfIOJJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 04:59:09 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id 9F34EE81176;
-        Sun, 15 Sep 2019 10:59:07 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 48AF2160ADC; Sun, 15 Sep 2019 10:59:07 +0200 (CEST)
-Date:   Sun, 15 Sep 2019 10:59:07 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
- is uninitialized
-Message-ID: <20190915085907.GC29771@gardel-login>
-References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <20190915081747.GA1058@darwi-home-pc>
+        Sun, 15 Sep 2019 05:09:37 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i18so5196649wru.11
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 02:09:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3quvaNUL5po7dhewh2pUgkOagoaEzjF4tpyOxM1okDg=;
+        b=hapJB8ow+/cWDLvkriy2Se/Qh+BFbMKIiVZ6EamwbbkAKEZ/NCHGkLRz6Yjekp1D7J
+         LqC8SZX5cCsRTAPbDF1XvaLiAc0QH04qWFBw+ZciB8VfTX9JFBR7ZdcoTCkbOlbLARXV
+         5rkXASBLsQNuSGqrwlmr9dBJU9wBIV6Xv2DIc1/OUq8XUImuHllPtHdlgQ5AB0SdKvzx
+         xIeX3dvGUzPi/0M3Y5lvdesKNJW164kEl3rKDfCzLi3FDITDDz2c5U/TWI7Of6+l1qby
+         3M5zqLkRHNEvqJ61i/VBmJyviGEAs3hV/MI7E/8nmNNsqwDgLseFRBp63hp3bG6MMuNy
+         I0Qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3quvaNUL5po7dhewh2pUgkOagoaEzjF4tpyOxM1okDg=;
+        b=RA5CheCO2YRLCMbuzVhJNgTOmX5thM08Ba3ow7vuPveNqfua8d4HZr/dEj1+6aizj+
+         PxupqmptUd1UjxRExBBlUwTmjkwwn4DurjHHPFXfAgrHODTIShYtYKesIG1TTI3qo4aH
+         SWjwfueGGDCyHQ+cmGYE6Ux3o+vma8iCK0cJl6H+1WJZAHnPTwJFEAU8cHhmkXDU84qt
+         13dQ1PiHXxGLDHiIuEAK6SilCJqEqc5GzyeCMC9ybq6xsOx0oc5jd1gdIiXUTkp7x5Uk
+         BCPZzUvK9Lzc0l4ZYtuWKun2+ocMQ5Muv3gLN4BPlTy6q8oZ0LWW21WULRtzSDlBe7m+
+         i+oQ==
+X-Gm-Message-State: APjAAAXE5WfWNJGjnj1T+el39YzoV/zrJojYHA8YRIl/Yo9is/xQ+4g+
+        euuXcWyPUETZIpKhoZOWEhA=
+X-Google-Smtp-Source: APXvYqw3iox93MRVQ3Mh9Ms/Shj0VYeq9VeFJlUyJQImsXAiD2Kc5XjSn9niZo/j8mXPfglg8qYS5A==
+X-Received: by 2002:adf:de08:: with SMTP id b8mr4194621wrm.200.1568538573340;
+        Sun, 15 Sep 2019 02:09:33 -0700 (PDT)
+Received: from lilas (reverse-117.fdn.fr. [80.67.176.117])
+        by smtp.gmail.com with ESMTPSA id e20sm70862642wrc.34.2019.09.15.02.09.31
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 15 Sep 2019 02:09:32 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 11:09:25 +0200
+From:   Sylvain 'ythier' Hitier <sylvain.hitier@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alex Shi <alex.shi@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        linux-kernel@vger.kernel.org, trivial@kernel.org
+Subject: [PATCH] x86: intel_tlb_table: small cleanups
+Message-ID: <20190915090917.GA5086@lilas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190915081747.GA1058@darwi-home-pc>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On So, 15.09.19 10:17, Ahmed S. Darwish (darwish.07@gmail.com) wrote:
+Remove the unneeded backslash at EOL: that's not a macro.
+And let's please checkpatch by aligning to open parenthesis.
 
-> Thus, don't trust user-space on calling getrandom(2) from the right
-> context. Never block, by default, and just return data from the
-> urandom source if entropy is not yet available. This is an explicit
-> decision not to let user-space work around this through busy loops on
-> error-codes.
->
-> Note: this lowers the quality of random data returned by getrandom(2)
-> to the level of randomness returned by /dev/urandom, with all the
-> original security implications coming out of that, as discussed in
-> problem "3." at the top of this commit log. If this is not desirable,
-> offer users a fallback to old behavior, by CONFIG_RANDOM_BLOCK=y, or
-> random.getrandom_block=true bootparam.
+For 0x4f descriptor, remove " */" from the info field.
+For 0xc2 descriptor, sync the beginning of info to match the tlb_type.
 
-This is an awful idea. It just means that all crypto that needs
-entropy doing during early boot will now be using weak keys, and
-doesn't even know it.
+(The value of info fields could be made more regular, but it's unused by
+the code and will be read only by developers, so don't bother.)
 
-Yeah, it's a bad situation, but I am very sure that failing loudly in
-this case is better than just sticking your head in the sand and
-ignoring the issue without letting userspace know is an exceptionally
-bad idea.
+Signed-off-by: Sylvain 'ythier' Hitier <sylvain.hitier@gmail.com>
+---
+ arch/x86/kernel/cpu/intel.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-We live in a world where people run HTTPS, SSH, and all that stuff in
-the initrd already. It's where SSH host keys are generated, and plenty
-session keys. If Linux lets all that stuff run with awful entropy then
-you pretend things where secure while they actually aren't. It's much
-better to fail loudly in that case, I am sure.
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 8d6d92e..24e619d 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -813,7 +813,7 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
+ 	{ 0x04, TLB_DATA_4M,		8,	" TLB_DATA 4 MByte pages, 4-way set associative" },
+ 	{ 0x05, TLB_DATA_4M,		32,	" TLB_DATA 4 MByte pages, 4-way set associative" },
+ 	{ 0x0b, TLB_INST_4M,		4,	" TLB_INST 4 MByte pages, 4-way set associative" },
+-	{ 0x4f, TLB_INST_4K,		32,	" TLB_INST 4 KByte pages */" },
++	{ 0x4f, TLB_INST_4K,		32,	" TLB_INST 4 KByte pages" },
+ 	{ 0x50, TLB_INST_ALL,		64,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
+ 	{ 0x51, TLB_INST_ALL,		128,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
+ 	{ 0x52, TLB_INST_ALL,		256,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
+@@ -841,7 +841,7 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
+ 	{ 0xba, TLB_DATA_4K,		64,	" TLB_DATA 4 KByte pages, 4-way associative" },
+ 	{ 0xc0, TLB_DATA_4K_4M,		8,	" TLB_DATA 4 KByte and 4 MByte pages, 4-way associative" },
+ 	{ 0xc1, STLB_4K_2M,		1024,	" STLB 4 KByte and 2 MByte pages, 8-way associative" },
+-	{ 0xc2, TLB_DATA_2M_4M,		16,	" DTLB 2 MByte/4MByte pages, 4-way associative" },
++	{ 0xc2, TLB_DATA_2M_4M,		16,	" TLB_DATA 2 MByte/4MByte pages, 4-way associative" },
+ 	{ 0xca, STLB_4K,		512,	" STLB 4 KByte pages, 4-way associative" },
+ 	{ 0x00, 0, 0 }
+ };
+@@ -853,8 +853,8 @@ static void intel_tlb_lookup(const unsigned char desc)
+ 		return;
+ 
+ 	/* look up this descriptor in the table */
+-	for (k = 0; intel_tlb_table[k].descriptor != desc && \
+-			intel_tlb_table[k].descriptor != 0; k++)
++	for (k = 0; intel_tlb_table[k].descriptor != desc &&
++	     intel_tlb_table[k].descriptor != 0; k++)
+ 		;
+ 
+ 	if (intel_tlb_table[k].tlb_type == 0)
+-- 
+1.7.10.4
 
-Quite frankly, I don't think this is something to fix in the
-kernel. Let the people putting together systems deal with this. Let
-them provide a creditable hw rng, and let them pay the price if they
-don't.
+Regards,
+Sylvain "ythier" HITIER
 
-Lennart
-
---
-Lennart Poettering, Berlin
+-- 
+Business is about being busy, not being rich...
+Lived 777 days in a Debian package => http://en.wikipedia.org/wiki/Apt,_Vaucluse
+There's THE room for ideals in this mechanical place!
