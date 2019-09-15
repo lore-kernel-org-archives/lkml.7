@@ -2,69 +2,75 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F6C4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436ACC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4AC214DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD84214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 12:44:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Keg7S5zn";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TmOF/AfY"
+	dkim=pass (1024-bit key) header.d=netforce.ua header.i=@netforce.ua header.b="PipIVkOF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbfIOMft (ORCPT
+        id S1727975AbfIOMoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 08:35:49 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47586 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbfIOMft (ORCPT
+        Sun, 15 Sep 2019 08:44:25 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33530 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726541AbfIOMoY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 08:35:49 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id EEAB860A60; Sun, 15 Sep 2019 12:35:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568550947;
-        bh=IsBSEjjIANA8MtWsNeTTbCEPgfYaHQqk7OkfGUFVEBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Keg7S5znp1h/7yRyBCMTUskaNyiU0aYQGMmLH9MfcBByQzwx0EouW2OqQKIZ+Bbkj
-         VO0ThwHXncTA/8HAb5hD/uGLbivoswizM6oX+2CCjwS0Rg/6A4Oa7f1D4pXHvYIgwT
-         b8e8svpSH0USRGKWv/XhBrGZmR+4p4jN9A7OMUEU=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 05F0160863;
-        Sun, 15 Sep 2019 12:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568550945;
-        bh=IsBSEjjIANA8MtWsNeTTbCEPgfYaHQqk7OkfGUFVEBk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmOF/AfYRAzWqN054FOJjjfh/Nz88xDCYMU1XRpdIQLm1srdNPEuU0T5hRBJoN7ac
-         0DwMgut1ouQ8NYMuXvYUFyu8xuIB7zYSMq1piJjPlEEjsvmde4SJlsH7hZQZ29zQHx
-         qANG2lHkBGMPJSAJ3krX5xdsOpAyEIx5DUtZh2ls=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 05F0160863
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv5 3/3] iommu: arm-smmu-impl: Add sdm845 implementation hook
-Date:   Sun, 15 Sep 2019 18:05:03 +0530
-Message-Id: <4ccbaf1f81c2bb2e7846da591fd542ab33f45586.1568549746.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1568549745.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1568549745.git.saiprakash.ranjan@codeaurora.org>
+        Sun, 15 Sep 2019 08:44:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id y127so2115432lfc.0
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 05:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netforce.ua; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFj5Gh6TGZA1arOapAJ2tmpTqH/CJaSifKu4rw3SbJg=;
+        b=PipIVkOF2Dqa/X61x5eYjgo9Fh8ef1m5QJ331U36vW22ClfNxvNqkcXj/v4JWkfq+C
+         Q42U83HjNsovM4bbXNuCjFf/kg3hNp+Wwegb0UI0DZEOpLovXPVqWPcKLPqcMN7tIMzW
+         mTL84UN1Mpn5fEP9SFUUPJgvhEl6FsMT31pIQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MFj5Gh6TGZA1arOapAJ2tmpTqH/CJaSifKu4rw3SbJg=;
+        b=ZIdcPcaJKQk8hPM1Fic2C0sxYbCGbctJNLX+R2wogsg3GXujVRZX0inBeroY1crVl9
+         iK2GKjm46vA4U0yFuYWQ4TLMFJ/I89wvqUrtS6hkZJtdaSAnetywIANySBmhjch0i1oB
+         zfdnpElaO6qbvUk8EAoHzMZ/6va8g1uF4s9j9XpKZslrTzNBW3+L5CeKcErZYOCtv7T0
+         p07Rl6lV3RanbcPR2qt5KVq7B2OAd3768Zun3ASpJjBaRAznmguYYjnyLKPSgT6OUOfc
+         zVMAp7UPE2ny2H60HfzhfeHBQCt7vtzC9T1QiTz9564DQuUbT1LB2MDyzTCue5AU+Cp6
+         H22g==
+X-Gm-Message-State: APjAAAUlSPlAnXF+a5vcRSTzXvZdf9KyNqtjApifCcrqjSbR0okA/ivc
+        fmUvWi5cbZ88rd9Hwn9FL/4vzt9GT1o=
+X-Google-Smtp-Source: APXvYqwPfJiyb6VwO8HmojQIrfBxm93gekDw9na/dZ90/f4+oy8hhpzP9igR0I8qLC4eYLZWbVQRdA==
+X-Received: by 2002:a19:2d19:: with SMTP id k25mr37919346lfj.76.1568551462691;
+        Sun, 15 Sep 2019 05:44:22 -0700 (PDT)
+Received: from rhea.localdomain ([37.46.255.109])
+        by smtp.gmail.com with ESMTPSA id 77sm7819743ljf.85.2019.09.15.05.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 05:44:22 -0700 (PDT)
+From:   ilya.pshonkin@netforce.ua
+To:     ilya.pshonkin@netforce.ua
+Cc:     Sudokamikaze <sudokamikaze@protonmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Tony Das <tdas444@gmail.com>,
+        Olek Poplavsky <woodenbits@gmail.com>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= <amade@asmblr.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jussi Laako <jussi@sonarnerd.net>,
+        Udo Eberhardt <udo.eberhardt@thesycon.de>,
+        Manuel Reinhardt <manuel.rhdt@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ALSA: usb-audio: Add Hiby device family to quirks for native DSD support
+Date:   Sun, 15 Sep 2019 15:43:59 +0300
+Message-Id: <20190915124400.6244-1-ilya.pshonkin@netforce.ua>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,191 +78,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Sudokamikaze <sudokamikaze@protonmail.com>
 
-Add reset hook for sdm845 based platforms to turn off
-the wait-for-safe sequence.
+This patch adds quirk VID ID for Hiby portable players family with native DSD playback support
 
-Understanding how wait-for-safe logic affects USB and UFS performance
-on MTP845 and DB845 boards:
-
-Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
-to address under-performance issues in real-time clients, such as
-Display, and Camera.
-On receiving an invalidation requests, the SMMU forwards SAFE request
-to these clients and waits for SAFE ack signal from real-time clients.
-The SAFE signal from such clients is used to qualify the start of
-invalidation.
-This logic is controlled by chicken bits, one for each - MDP (display),
-IFE0, and IFE1 (camera), that can be accessed only from secure software
-on sdm845.
-
-This configuration, however, degrades the performance of non-real time
-clients, such as USB, and UFS etc. This happens because, with wait-for-safe
-logic enabled the hardware tries to throttle non-real time clients while
-waiting for SAFE ack signals from real-time clients.
-
-On mtp845 and db845 devices, with wait-for-safe logic enabled by the
-bootloaders we see degraded performance of USB and UFS when kernel
-enables the smmu stage-1 translations for these clients.
-Turn off this wait-for-safe logic from the kernel gets us back the perf
-of USB and UFS devices until we re-visit this when we start seeing perf
-issues on display/camera on upstream supported SDM845 platforms.
-The bootloaders on these boards implement secure monitor callbacks to
-handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
-logic can be toggled.
-
-There are other boards such as cheza whose bootloaders don't enable this
-logic. Such boards don't implement callbacks to handle the specific SCM
-call so disabling this logic for such boards will be a no-op.
-
-This change is inspired by the downstream change from Patrick Daly
-to address performance issues with display and camera by handling
-this wait-for-safe within separte io-pagetable ops to do TLB
-maintenance. So a big thanks to him for the change and for all the
-offline discussions.
-
-Without this change the UFS reads are pretty slow:
-$ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
-10+0 records in
-10+0 records out
-10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
-real    0m 22.39s
-user    0m 0.00s
-sys     0m 0.01s
-
-With this change they are back to rock!
-$ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
-300+0 records in
-300+0 records out
-314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
-real    0m 1.03s
-user    0m 0.00s
-sys     0m 0.54s
-
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Sudokamikaze <sudokamikaze@protonmail.com>
 ---
- drivers/iommu/Makefile        |  2 +-
- drivers/iommu/arm-smmu-impl.c |  7 +++++--
- drivers/iommu/arm-smmu-qcom.c | 32 ++++++++++++++++++++++++++++++++
- drivers/iommu/arm-smmu-qcom.h | 11 +++++++++++
- drivers/iommu/arm-smmu.h      |  2 ++
- 5 files changed, 51 insertions(+), 3 deletions(-)
- create mode 100644 drivers/iommu/arm-smmu-qcom.c
- create mode 100644 drivers/iommu/arm-smmu-qcom.h
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 7caad48b4bc2..7d66e00a6924 100644
---- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
- obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
- obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
- obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
--obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
-+obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
- obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
- obj-$(CONFIG_DMAR_TABLE) += dmar.o
- obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-index 5c87a38620c4..ad835018f0e2 100644
---- a/drivers/iommu/arm-smmu-impl.c
-+++ b/drivers/iommu/arm-smmu-impl.c
-@@ -8,7 +8,7 @@
- #include <linux/of.h>
- 
- #include "arm-smmu.h"
--
-+#include "arm-smmu-qcom.h"
- 
- static int arm_smmu_gr0_ns(int offset)
- {
-@@ -109,7 +109,7 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
- #define ARM_MMU500_ACR_S2CRB_TLBEN	(1 << 10)
- #define ARM_MMU500_ACR_SMTNMB_TLBEN	(1 << 8)
- 
--static int arm_mmu500_reset(struct arm_smmu_device *smmu)
-+int arm_mmu500_reset(struct arm_smmu_device *smmu)
- {
- 	u32 reg, major;
- 	int i;
-@@ -170,5 +170,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
- 				  "calxeda,smmu-secure-config-access"))
- 		smmu->impl = &calxeda_impl;
- 
-+	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
-+		smmu->impl = &qcom_sdm845_smmu500_impl;
-+
- 	return smmu;
- }
-diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-new file mode 100644
-index 000000000000..10e9a5bbae06
---- /dev/null
-+++ b/drivers/iommu/arm-smmu-qcom.c
-@@ -0,0 +1,32 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/qcom_scm.h>
-+
-+#include "arm-smmu.h"
-+#include "arm-smmu-qcom.h"
-+
-+static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
-+{
-+	int ret;
-+
-+	arm_mmu500_reset(smmu);
-+
-+	/*
-+	 * To address performance degradation in non-real time clients,
-+	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
-+	 * such as MTP and db845, whose firmwares implement secure monitor
-+	 * call handlers to turn on/off the wait-for-safe logic.
-+	 */
-+	ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
-+	if (ret)
-+		dev_warn(smmu->dev, "Failed to turn off SAFE logic\n");
-+
-+	return ret;
-+}
-+
-+const struct arm_smmu_impl qcom_sdm845_smmu500_impl = {
-+	.reset = qcom_sdm845_smmu500_reset,
-+};
-diff --git a/drivers/iommu/arm-smmu-qcom.h b/drivers/iommu/arm-smmu-qcom.h
-new file mode 100644
-index 000000000000..915f8ea2b616
---- /dev/null
-+++ b/drivers/iommu/arm-smmu-qcom.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/*
-+ * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _ARM_SMMU_QCOM_H
-+#define _ARM_SMMU_QCOM_H
-+
-+extern const struct arm_smmu_impl qcom_sdm845_smmu500_impl;
-+
-+#endif /* _ARM_SMMU_QCOM_H */
-diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-index b19b6cae9b5e..f74fa3bb149d 100644
---- a/drivers/iommu/arm-smmu.h
-+++ b/drivers/iommu/arm-smmu.h
-@@ -399,4 +399,6 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
- 
- struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
- 
-+int arm_mmu500_reset(struct arm_smmu_device *smmu);
-+
- #endif /* _ARM_SMMU_H */
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 78858918cbc1..64a8d73972e3 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1655,6 +1655,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	case 0x152a:  /* Thesycon devices */
+ 	case 0x25ce:  /* Mytek devices */
+ 	case 0x2ab6:  /* T+A devices */
++	case 0xc502:  /* HiBy devices */
+ 		if (fp->dsd_raw)
+ 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
+ 		break;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.23.0
 
