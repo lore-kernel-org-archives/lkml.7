@@ -2,119 +2,108 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5855EC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A28BC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35313214DE
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DEDE214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568555655;
+	bh=TTUvGOD0UCo60psVmhopm9Jg7Es3S99N+IPaJwsltd4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0qC8p5MPVoQVuZxpFdVTQ4irITATlQ1xd3ZCyTsUE9A1fi0oJsqy3tD/eSKOJX2mg
+	 3eXkbF+mbq27LUoJGX+vK7wNNhkXrrSDpCUsZJszenHog6dRzu7EvWGlqzMPKykWSo
+	 Wg+EyKggp2mX53Lflu41jmfzQseDs94NPMPX+xQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfIONrq (ORCPT
+        id S1730842AbfIONyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:47:46 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:37576 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730694AbfIONrp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:47:45 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i9UsC-0004QS-Ez; Sun, 15 Sep 2019 15:47:28 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Paul Turner <pjt@google.com>,
-        Prarit Bhargava <prarit@redhat.com>
-Subject: Re: printk meeting at LPC
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
-        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
-        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
-        <20190905121101.60c78422@oasis.local.home>
-        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
-        <87k1acz5rx.fsf@linutronix.de>
-        <CAKMK7uHXTGKSyXgUOucNr4HSrcnBxVkkoqA=VzF4-=sZSq1MKw@mail.gmail.com>
-Date:   Sun, 15 Sep 2019 15:47:26 +0200
-In-Reply-To: <CAKMK7uHXTGKSyXgUOucNr4HSrcnBxVkkoqA=VzF4-=sZSq1MKw@mail.gmail.com>
-        (Daniel Vetter's message of "Fri, 13 Sep 2019 16:48:48 +0200")
-Message-ID: <87d0g18ydt.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Sun, 15 Sep 2019 09:54:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726024AbfIONyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 09:54:14 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D66214C6;
+        Sun, 15 Sep 2019 13:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568555653;
+        bh=TTUvGOD0UCo60psVmhopm9Jg7Es3S99N+IPaJwsltd4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KHc0lMPRfRStYGmvkeGU+eB74IQ8Tsvmad8+ieeCxRY6R9w9bFic71B3b3DelmXmC
+         wwWnyfmwO1eBN2bAh+KIwYlA2uMIbW8oAmpZ575CCz6DtwK0MjLlBz/9iSlgKJPAy1
+         yAHsaT1JRYkngxgtt87RK/h2LkcIQj6iveffNxuQ=
+Date:   Sun, 15 Sep 2019 15:54:09 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Park Ju Hyung <qkrwngud825@gmail.com>
+Cc:     alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        valdis.kletnieks@vt.edu
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190915135409.GA553917@kroah.com>
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190914133951.16501-1-qkrwngud825@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190914133951.16501-1-qkrwngud825@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-13, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
->> 2. A kernel thread will be created for each registered console, each
->> responsible for being the sole printers to their respective
->> consoles. With this, console printing is _fully_ decoupled from
->> printk() callers.
->
-> Is the plan to split the console_lock up into a per-console thing? Or
-> postponed for later on?
+On Sat, Sep 14, 2019 at 10:39:51PM +0900, Park Ju Hyung wrote:
+> Hi.
+> 
+> I just noticed that this exfat-staging drivers are based on the old 
+> Samsung's 1.x exFAT drivers.
+> 
+> I've been working to get the newer Samsung's driver(now named "sdFAT") 
+> to fit better for general Linux users, and I believe it can provide a 
+> better base for the community to work on(and hopefully complies better 
+> to the mainline coding standard).
+> 
+> GitHub link
+> https://github.com/arter97/exfat-linux
+> 
+> I also included some rudimentary benchmark results.
+> 
+> I encourage mainline developers to explore this driver base and see if 
+> it's worth to switch, since it's the early days of exfat-staging.
 
-AFAICT, the only purpose for a console_lock would be to synchronize
-between the console printing kthread and some other component that wants
-to write to that same device. So a per-console console_lock should be
-the proper solution. However, I will look into the details. My main
-concerns about this are the suspend/resume logic and the code sitting
-behind /dev/console. I will share details once I've sorted it all out.
+Note, this just showed up publically on August 12, where were you with
+all of this new code before then?  :)
 
->> 6. A new may-sleep function pr_flush() will be made available to wait
->> for all previously printk'd messages to be output on all consoles
->> before proceeding. For example:
->>
->>     pr_cont("Running test ABC... ");
->>     pr_flush();
->>
->>     do_test();
->>
->>     pr_cont("PASSED\n");
->>     pr_flush();
->
-> Just crossed my mind: Could/should we lockdep-annotate pr_flush (take
-> a lockdep map in there that we also take around the calls down into
-> console drivers in each of the console printing kthreads or something
-> like that)? Just to avoid too many surprises when people call pr_flush
-> from within gpu drivers and wonder why it doesn't work so well.
+> To others watching this thread:
+> It's more than likely that you can start using exFAT reliably right 
+> away by following the link above. It's tested on all major LTS kernels 
+> ranging from 3.4 to 4.19 and the ones Canonical uses for Ubuntu: 3.4, 
+> 3.10, 3.18, 4.1, 4.4, 4.9, 4.14, 4.19 and 4.15, 5.0, 5.2, and 5.3-rc.
 
-Why would it not work so well? Basically the task calling pr_flush()
-will monitor the lockless iterators of the various consoles until _all_
-have hit/passed the latest sequence number from the time of the call.
+For the in-kernel code, we would have to rip out all of the work you did
+for all older kernels, so that's a non-starter right there.
 
-> Although with this nice plan we'll take the modeset paths fully out of
-> the printk paths (even for normal outputs) I hope, so should be a lot
-> more reasonable.
+As for what codebase to work off of, I don't want to say it is too late,
+but really, this shows up from nowhere and we had to pick something so
+we found the best we could at that point in time.
 
-You will be running in your own preemptible kthread, so any paths you
-take should be safe.
+Is there anything specific in the codebase you have now, that is lacking
+in the in-kernel code?  Old-kernel-support doesn't count here, as we
+don't care about that as it is not applicable.  But functionality does
+matter, what has been added here that we can make use of?
 
-> From gpu perspective this all sounds extremely good and first
-> realistic plan that might lead us to an actually working bsod on
-> linux.
+And do you have any "real" development history to look at instead of the
+"one giant commit" of the initial code drop?  That is where we could
+actually learn what has changed over time.  Your repo as-is shows none
+of the interesting bits :(
 
-Are you planning on basing the bsod stuff on write_atomic() (which is
-used after entering an emergency state) or on the kmsg_dump facility? I
-would expect kmsg_dump might be more appropriate, unless there are
-concerns that the machine will die before getting that far (i.e. there
-is a lot that happens between when an OOPS begins and when kmsg_dumpers
-are invoked).
+thanks,
 
-John Ogness
+greg kh
