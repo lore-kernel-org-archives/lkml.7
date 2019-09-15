@@ -2,132 +2,119 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827F3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0860CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613CC20830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2DC220692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568539903;
+	bh=ZD60JmGurmPZteZvfiPfDthGkRvmyZU83/L0qNSDtLk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=K66EyRld3la+mJHHhtKtuKNMHpXKSCpQLkcviELJDblozWEIqYUiOyoTcXbkbmIR5
+	 2/Uodlo92Vr0LDuoCRFbmu99W1yABChfvGjiymn5JsoNtPcOF8CbdAZDhiIlvXBim5
+	 wuCVdCQQvMaF2ENbxzIBi4gAilEpZrU8DxsUFDNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfIOJbj (ORCPT
+        id S1728557AbfIOJbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 05:31:39 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:52676 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfIOJbj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 05:31:39 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 44F7ED3488973B84F1E8;
-        Sun, 15 Sep 2019 17:31:37 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sun, 15 Sep 2019
- 17:31:26 +0800
-Subject: [PATCH 2/2] crypto: hisilicon - Matching the dma address for
- dma_pool_free()
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <john.garry@huawei.com>, <Jonathan.Cameron@huawei.com>,
-        <mcgrof@kernel.org>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <c9c52443-59a6-f909-f98b-eddffe999c2b@huawei.com>
-Message-ID: <04d1e050-db06-5348-d0d9-ca6e8f98c42c@huawei.com>
-Date:   Sun, 15 Sep 2019 17:31:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <c9c52443-59a6-f909-f98b-eddffe999c2b@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+        Sun, 15 Sep 2019 05:31:42 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35010 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfIOJbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 05:31:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=nyo3F8+Gmt+Uhz9HQiAjvCjoWq5h5bVV0pcNn8IbSDs=; b=BtRFFzqZYniD
+        NiWHe8lOEdzpXwEggZQzBfkSVqz1Y+nhGRgQ2GbeOCBN0YC2FCSGxkE/1HK/UcQupwZ5itg83/jCQ
+        4HwUW5o8kp/26mo7bFytgjfpZXtQzfhwJwKj4docb6tqgeBCm9CDxnuenchFUGuOxClOdMqoMde9p
+        8/5I8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9QsV-00079Y-Vg; Sun, 15 Sep 2019 09:31:32 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 600B62740A09; Sun, 15 Sep 2019 10:31:31 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz,
+        plai@codeaurora.org, tiwai@suse.com
+Subject: Applied "ASoC: sdm845: remove unneeded semicolon" to the asoc tree
+In-Reply-To: <20190914031133.GA28447@SD>
+X-Patchwork-Hint: ignore
+Message-Id: <20190915093131.600B62740A09@ypsilon.sirena.org.uk>
+Date:   Sun, 15 Sep 2019 10:31:31 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When dma_pool_zalloc() fail in sec_alloc_and_fill_hw_sgl(),
-dma_pool_free() is invoked, but the parameters that sgl_current and
-sgl_current->next_sgl is not match.
+The patch
 
-Using sec_free_hw_sgl() instead of the original free routine.
+   ASoC: sdm845: remove unneeded semicolon
 
-Fixes: 915e4e8413da ("crypto: hisilicon - SEC security accelerator driver")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From fca11622d600228bec405456f41590155b3a3eca Mon Sep 17 00:00:00 2001
+From: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Date: Sat, 14 Sep 2019 08:41:33 +0530
+Subject: [PATCH] ASoC: sdm845: remove unneeded semicolon
+
+Remove excess semicolon after closing parenthesis.
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Link: https://lore.kernel.org/r/20190914031133.GA28447@SD
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/crypto/hisilicon/sec/sec_algs.c | 44 +++++++++++--------------
- 1 file changed, 19 insertions(+), 25 deletions(-)
+ sound/soc/qcom/sdm845.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/hisilicon/sec/sec_algs.c b/drivers/crypto/hisilicon/sec/sec_algs.c
-index 8c789b8671fc..331a682415d1 100644
---- a/drivers/crypto/hisilicon/sec/sec_algs.c
-+++ b/drivers/crypto/hisilicon/sec/sec_algs.c
-@@ -153,6 +153,24 @@ static void sec_alg_skcipher_init_context(struct crypto_skcipher *atfm,
- 				       ctx->cipher_alg);
- }
-
-+static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
-+			    dma_addr_t psec_sgl, struct sec_dev_info *info)
-+{
-+	struct sec_hw_sgl *sgl_current, *sgl_next;
-+	dma_addr_t sgl_next_dma;
-+
-+	sgl_current = hw_sgl;
-+	while (sgl_current) {
-+		sgl_next = sgl_current->next;
-+		sgl_next_dma = sgl_current->next_sgl;
-+
-+		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
-+
-+		sgl_current = sgl_next;
-+		psec_sgl = sgl_next_dma;
-+	}
-+}
-+
- static int sec_alloc_and_fill_hw_sgl(struct sec_hw_sgl **sec_sgl,
- 				     dma_addr_t *psec_sgl,
- 				     struct scatterlist *sgl,
-@@ -199,36 +217,12 @@ static int sec_alloc_and_fill_hw_sgl(struct sec_hw_sgl **sec_sgl,
- 	return 0;
-
- err_free_hw_sgls:
--	sgl_current = *sec_sgl;
--	while (sgl_current) {
--		sgl_next = sgl_current->next;
--		dma_pool_free(info->hw_sgl_pool, sgl_current,
--			      sgl_current->next_sgl);
--		sgl_current = sgl_next;
--	}
-+	sec_free_hw_sgl(*sec_sgl, *psec_sgl, info);
- 	*psec_sgl = 0;
-
- 	return ret;
- }
-
--static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
--			    dma_addr_t psec_sgl, struct sec_dev_info *info)
--{
--	struct sec_hw_sgl *sgl_current, *sgl_next;
--	dma_addr_t sgl_next_dma;
--
--	sgl_current = hw_sgl;
--	while (sgl_current) {
--		sgl_next = sgl_current->next;
--		sgl_next_dma = sgl_current->next_sgl;
--
--		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
--
--		sgl_current = sgl_next;
--		psec_sgl = sgl_next_dma;
--	}
--}
--
- static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
- 				   const u8 *key, unsigned int keylen,
- 				   enum sec_cipher_alg alg)
+diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
+index 882f52ed8231..28f3cef696e6 100644
+--- a/sound/soc/qcom/sdm845.c
++++ b/sound/soc/qcom/sdm845.c
+@@ -319,7 +319,7 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
+ 			snd_soc_dai_set_sysclk(cpu_dai,
+ 				Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
+ 				0, SNDRV_PCM_STREAM_PLAYBACK);
+-		};
++		}
+ 		break;
+ 
+ 	case SECONDARY_MI2S_TX:
 -- 
-2.23.0
+2.20.1
 
