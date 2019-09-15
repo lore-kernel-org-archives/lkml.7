@@ -2,94 +2,99 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE08C4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9347C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D141214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6452214C6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568578612;
+	bh=d/HrE/iGcEqOEmCdLte6zzmoLMwAvKRRiPAXELWKn3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FjW4LyfnTVlB1jhaZXObGTb1zN/wwMBqDpC2iTW/0ky0W20QKG3kFENVIWMk18oPy
+	 VXbP8kU7bElO9DFAvTKgsAYbUQoG7EUhjtzUCz35SOMoznMwXTbQtO/4TcjgmXDGfz
+	 Cr8U5DDDjDlwOtO4820FeLgaGfEasiCn+rRAeQRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfIOUP7 (ORCPT
+        id S1727896AbfIOUQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 16:15:59 -0400
-Received: from muru.com ([72.249.23.125]:33024 "EHLO muru.com"
+        Sun, 15 Sep 2019 16:16:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbfIOUP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 16:15:59 -0400
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 5585380BB;
-        Sun, 15 Sep 2019 20:16:29 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-omap@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Michael Scott <hashcode0f@gmail.com>,
-        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH] phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
-Date:   Sun, 15 Sep 2019 13:15:52 -0700
-Message-Id: <20190915201552.10867-1-tony@atomide.com>
-X-Mailer: git-send-email 2.23.0
+        id S1727666AbfIOUQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 16:16:51 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50F5D214AF;
+        Sun, 15 Sep 2019 20:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568578610;
+        bh=d/HrE/iGcEqOEmCdLte6zzmoLMwAvKRRiPAXELWKn3c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RPq2joGQ2Try6Oplud7Geb+58heA5O9WPpaFV+TgsTLEdLYxZJtAWLKcnE5WvUcgY
+         51KdN4G0BdcTMn14Z9pd/5PzdnnYrnnj2ZYSQecLJdj/ECyqpPSRa2m6rBwH22i8jU
+         od3ywG3yXgqXps+9ze5whibROFPS8x+liH1IgW64=
+Date:   Sun, 15 Sep 2019 13:16:48 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] crypto: sun4i-ss: erase key after use
+Message-ID: <20190915201648.GA1704@sol.localdomain>
+Mail-Followup-To: Corentin Labbe <clabbe.montjoie@gmail.com>,
+        davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        stable@vger.kernel.org
+References: <20190915183536.3835-1-clabbe.montjoie@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915183536.3835-1-clabbe.montjoie@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We have an interrupt handler for the wake-up GPIO pin, but we're missing
-the code to wake-up the system. This can cause timeouts receiving data
-for the UART that shares the wake-up GPIO pin with the USB PHY.
+On Sun, Sep 15, 2019 at 08:35:36PM +0200, Corentin Labbe wrote:
+> When a TFM is unregistered, the sun4i-ss driver does not clean the key used,
+> leaking it in memory.
+> This patch adds this absent key cleaning.
+> 
+> Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+> Cc: <stable@vger.kernel.org> # 4.3+
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+> index fa4b1b47822e..60d99370a4ec 100644
+> --- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+> +++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+> @@ -503,6 +503,8 @@ int sun4i_ss_cipher_init(struct crypto_tfm *tfm)
+>  void sun4i_ss_cipher_exit(struct crypto_tfm *tfm)
+>  {
+>  	struct sun4i_tfm_ctx *op = crypto_tfm_ctx(tfm);
+> +
+> +	memzero_explicit(op->key, op->keylen);
+>  	crypto_free_sync_skcipher(op->fallback_tfm);
+>  }
+>  
+> -- 
+> 2.21.0
+> 
 
-All we need to do is just wake the system and kick the autosuspend
-timeout to fix the issue.
+It's already zeroed by the kzfree() in crypto_destroy_tfm().
 
-Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
-Cc: Marcel Partap <mpartap@gmx.net>
-Cc: Merlijn Wajer <merlijn@wizzup.org>
-Cc: Michael Scott <hashcode0f@gmail.com>
-Cc: NeKit <nekit1000@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>
-Cc: Sebastian Reichel <sre@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/phy/motorola/phy-mapphone-mdm6600.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/motorola/phy-mapphone-mdm6600.c
---- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
-+++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
-@@ -243,10 +243,24 @@ static irqreturn_t phy_mdm6600_wakeirq_thread(int irq, void *data)
- {
- 	struct phy_mdm6600 *ddata = data;
- 	struct gpio_desc *mode_gpio1;
-+	int error, wakeup;
- 
- 	mode_gpio1 = ddata->mode_gpios->desc[PHY_MDM6600_MODE1];
--	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n",
--		gpiod_get_value(mode_gpio1));
-+	wakeup = gpiod_get_value(mode_gpio1);
-+	if (!wakeup)
-+		return IRQ_NONE;
-+
-+	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n", wakeup);
-+	error = pm_runtime_get_sync(ddata->dev);
-+	if (error < 0) {
-+		pm_runtime_put_noidle(ddata->dev);
-+
-+		return IRQ_NONE;
-+	}
-+
-+	/* Just wake-up and kick the autosuspend timer */
-+	pm_runtime_mark_last_busy(ddata->dev);
-+	pm_runtime_put_autosuspend(ddata->dev);
- 
- 	return IRQ_HANDLED;
- }
--- 
-2.23.0
+- Eric
