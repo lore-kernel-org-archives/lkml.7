@@ -2,175 +2,122 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FE9C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED018C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:27:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A4C214C6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3452214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:27:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568554031;
+	bh=kl00ageN6kCZz7MMtaCvKQM5LKvEsc6XqVXiC96l9mI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=vcoeyT/7lb0ae+TLBK3yhYxW6u3Wo9/oQyTYzAYHQ+d6neOAHj4c20mutB8CJ4BqJ
+	 xprZP5U30IXkgc2d8+TQurg/5PcyMK+SQTYs0qjmbXVTHMj0kOQISIMOgLkuA2HeWP
+	 xh2VNQVDSzc0k1+rkoBAl9z3Y466Vx6kDw+TKqJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfIONXa (ORCPT
+        id S1729293AbfION1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:23:30 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1302 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730054AbfIONX2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:23:28 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8FDMdFg053856
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:23:27 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v1djt1ht2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:23:27 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Sun, 15 Sep 2019 14:23:25 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 15 Sep 2019 14:23:23 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8FDNMet53674072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Sep 2019 13:23:22 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EC83A405F;
-        Sun, 15 Sep 2019 13:23:22 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D5578A405B;
-        Sun, 15 Sep 2019 13:23:20 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.199.54.91])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 15 Sep 2019 13:23:20 +0000 (GMT)
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-To:     linuxppc-dev@ozlabs.org
-Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 3/4] Documentation/ABI: mark /sys/kernel/fadump_* sysfs files deprecated
-Date:   Sun, 15 Sep 2019 18:53:09 +0530
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190915132310.13542-1-sourabhjain@linux.ibm.com>
-References: <20190915132310.13542-1-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19091513-0020-0000-0000-0000036CEECE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091513-0021-0000-0000-000021C28983
-Message-Id: <20190915132310.13542-4-sourabhjain@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909150147
+        Sun, 15 Sep 2019 09:27:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfION1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 09:27:11 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A4B8214C6;
+        Sun, 15 Sep 2019 13:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568554030;
+        bh=kl00ageN6kCZz7MMtaCvKQM5LKvEsc6XqVXiC96l9mI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EhzYCi/iqYzwBGe7UQlBtS+jONXcuLZETdKfOpf2eAG0vR+pc0IPIiUm7zTqmIf8r
+         +hRwditoB4ZX6WDRYzT6TuBJuWwSakA3RLl2u6CqNmtSf7px4DcEd0Q/5U6j2FcSX+
+         /JzLID+8PHzuXzi2wuS/ht9NPGBf+2zmpmIzvGw4=
+Date:   Sun, 15 Sep 2019 14:27:05 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] iio: accel: adxl372: Fix/remove limitation for
+ FIFO samples
+Message-ID: <20190915142705.028cb015@archlinux>
+In-Reply-To: <1568126612-13134-1-git-send-email-stefan.popa@analog.com>
+References: <1568126612-13134-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The /sys/kernel/fadump_* sysfs files are replicated under
-/sys/kernel/fadump/ directory. But we need to keep the old
-sysfs files to maintain the backward compatibility.
+On Tue, 10 Sep 2019 17:43:32 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-The sysfs files are scheduled to remove by 2021.
+> Currently, the driver sets the FIFO_SAMPLES register with the number of
+> sample sets (maximum of 170 for 3 axis data, 256 for 2-axis and 512 for
+> single axis). However, the FIFO_SAMPLES register should store the number
+> of samples, regardless of how the FIFO format is configured.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- .../{testing => obsolete}/sysfs-kernel-fadump_enabled    | 3 +++
- .../{testing => obsolete}/sysfs-kernel-fadump_registered | 3 +++
- .../sysfs-kernel-fadump_release_mem                      | 3 +++
- .../sysfs-kernel-fadump_release_opalcore                 | 3 +++
- Documentation/powerpc/firmware-assisted-dump.rst         | 9 +++++++++
- 5 files changed, 21 insertions(+)
- rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-fadump_enabled (66%)
- rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-fadump_registered (71%)
- rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-fadump_release_mem (73%)
- rename Documentation/ABI/{testing => obsolete}/sysfs-kernel-fadump_release_opalcore (70%)
+Fixes tags? I think it's 
+Fixes: f4f55ce38e5f ("iio:adxl372: Add FIFO and interrupts support")
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_enabled b/Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
-similarity index 66%
-rename from Documentation/ABI/testing/sysfs-kernel-fadump_enabled
-rename to Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
-index f73632b1c006..ca35a285905b 100644
---- a/Documentation/ABI/testing/sysfs-kernel-fadump_enabled
-+++ b/Documentation/ABI/obsolete/sysfs-kernel-fadump_enabled
-@@ -1,3 +1,6 @@
-+This ABI is deprecated and will be removed after 2021. It is replaced
-+with /sys/kernel/fadump/fadump_enabled.
-+
- What:		/sys/kernel/fadump_enabled
- Date:		Feb 2012
- Contact:	linuxppc-dev@lists.ozlabs.org
-diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_registered b/Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
-similarity index 71%
-rename from Documentation/ABI/testing/sysfs-kernel-fadump_registered
-rename to Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
-index 972e8c427ad4..2c1bc4adafb4 100644
---- a/Documentation/ABI/testing/sysfs-kernel-fadump_registered
-+++ b/Documentation/ABI/obsolete/sysfs-kernel-fadump_registered
-@@ -1,3 +1,6 @@
-+This ABI is deprecated and will be removed after 2021. It is replaced
-+with /sys/kernel/fadump/fadump_registered.
-+
- What:		/sys/kernel/fadump/fadump_registered
- Date:		Feb 2012
- Contact:	linuxppc-dev@lists.ozlabs.org
-diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_mem b/Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
-similarity index 73%
-rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_mem
-rename to Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
-index 9c20d64ab48d..8fef37d9b5ba 100644
---- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_mem
-+++ b/Documentation/ABI/obsolete/sysfs-kernel-fadump_release_mem
-@@ -1,3 +1,6 @@
-+This ABI is deprecated and will be removed after 2021. It is replaced
-+with /sys/kernel/fadump/fadump_release_mem.
-+
- What:		/sys/kernel/fadump_release_mem
- Date:		Feb 2012
- Contact:	linuxppc-dev@lists.ozlabs.org
-diff --git a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore b/Documentation/ABI/obsolete/sysfs-kernel-fadump_release_opalcore
-similarity index 70%
-rename from Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-rename to Documentation/ABI/obsolete/sysfs-kernel-fadump_release_opalcore
-index 53313c1d4e7a..c02be8f4471e 100644
---- a/Documentation/ABI/testing/sysfs-kernel-fadump_release_opalcore
-+++ b/Documentation/ABI/obsolete/sysfs-kernel-fadump_release_opalcore
-@@ -1,3 +1,6 @@
-+This ABI is deprecated and will be removed after 2021. It is replaced
-+with /sys/kernel/fadump/fadump_release_opalcore.
-+
- What:		/sys/kernel/fadump_release_opalcore
- Date:		Sep 2019
- Contact:	linuxppc-dev@lists.ozlabs.org
-diff --git a/Documentation/powerpc/firmware-assisted-dump.rst b/Documentation/powerpc/firmware-assisted-dump.rst
-index 0455a78486d5..4fd7f5eab97d 100644
---- a/Documentation/powerpc/firmware-assisted-dump.rst
-+++ b/Documentation/powerpc/firmware-assisted-dump.rst
-@@ -292,6 +292,15 @@ Here is the list of files under kernel sysfs:
- 
-     echo 1  > /sys/kernel/fadump_release_opalcore
- 
-+Note: The following FADump sysfs files are deprecated.
-+
-+    Deprecated                       Alternative
-+    -------------------------------------------------------------------------------
-+    /sys/kernel/fadump_enabled           /sys/kernel/fadump/fadump_enabled
-+    /sys/kernel/fadump_registered        /sys/kernel/fadump/fadump_registered
-+    /sys/kernel/fadump_release_mem       /sys/kernel/fadump/fadump_release_mem
-+    /sys/kernel/fadump_release_opalcore  /sys/kernel/fadump/fadump_release_opalcore
-+
- Here is the list of files under powerpc debugfs:
- (Assuming debugfs is mounted on /sys/kernel/debug directory.)
- 
--- 
-2.17.2
+Check I got that right though.
+
+One trivial inline that I have tidied up whilst applying.
+
+Applied to the fixes-togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
+
+
+> ---
+> Changes in v2:
+> 	- st->watermark needs to store the number of sample sets, 
+> 	  the total number of samples is computed in
+> 	  adxl372_configure_fifo() func.
+> 
+>  drivers/iio/accel/adxl372.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+> index 055227cb..7de5e1b 100644
+> --- a/drivers/iio/accel/adxl372.c
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -474,12 +474,17 @@ static int adxl372_configure_fifo(struct adxl372_state *st)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	fifo_samples = st->watermark & 0xFF;
+> +	/*
+> +	 * watermak stores the number of sets; we need to write the FIFO
+
+watermark
+
+> +	 * registers with the number of samples
+> +	 */
+> +	fifo_samples = (st->watermark * st->fifo_set_size);
+>  	fifo_ctl = ADXL372_FIFO_CTL_FORMAT_MODE(st->fifo_format) |
+>  		   ADXL372_FIFO_CTL_MODE_MODE(st->fifo_mode) |
+> -		   ADXL372_FIFO_CTL_SAMPLES_MODE(st->watermark);
+> +		   ADXL372_FIFO_CTL_SAMPLES_MODE(fifo_samples);
+>  
+> -	ret = regmap_write(st->regmap, ADXL372_FIFO_SAMPLES, fifo_samples);
+> +	ret = regmap_write(st->regmap,
+> +			   ADXL372_FIFO_SAMPLES, fifo_samples & 0xFF);
+>  	if (ret < 0)
+>  		return ret;
+>  
 
