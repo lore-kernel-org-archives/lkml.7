@@ -2,170 +2,237 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7643BC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF34C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A20206A4
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:16:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="ejAuYKri"
+	by mail.kernel.org (Postfix) with ESMTP id 23924214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 14:24:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568557472;
+	bh=ClUIEDCHC3LbaAf25emqs+pADt4j7X1utlfi0P+mDNU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Ue6Mp/cQLHznCND/SYaz/JW6nU7jVjcLvn3SQb+Mw64axxnJHpAKUBOAt19jqlcpG
+	 vFUKMwLcibdb1P3UhuSEJlM38VyZOtvKueqKzDxbc98m5rTuT5DmgoB2sS1c0VvOGq
+	 EzHKkLRy9PTgb6jp9EG/XDWHEoZlbsF57Hm9KROA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731665AbfIOOP7 (ORCPT
+        id S1731682AbfIOOYb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 10:15:59 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:37894 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726024AbfIOOP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 10:15:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=+Sr4NPjbaVlU3bIjCr/wLaVw22kxZgLPWY1ICbkVA1E=; b=ejAuYKriiw0ypu1l5nnqcttS6
-        MiWBKPSdxCxGdMVB9/al4vXj112vBRD0cuHJPaiatLYAMHUBcQLBRPSFl0+96FAppAm3O0eWKmFpC
-        zywvJPGd/r2BrPAI9ktCun9v3RJWF8lOpKAyEZjuKid7L2dXRW3PdrGmOF5CeeD/KLObbsOz12vi/
-        g370Xe5UaVlMn9NEUc0XgE/51m5xV8AQBpHlzu378KPkHcWjlWAWYPQ/GjQP4lf+Y23hbo7pf/pwI
-        mtIw5HHT4zqpPHaRDKhf/c/1s0vm7E2fY58d+0wFSMT7+blpYsipsRAQNNgDMm6e2ug4FOhvKGScx
-        MHz5+8HTQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60556)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i9VJh-0006iN-Kd; Sun, 15 Sep 2019 15:15:53 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i9VJg-0007pT-J2; Sun, 15 Sep 2019 15:15:52 +0100
-Date:   Sun, 15 Sep 2019 15:15:52 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        tinywrkb <tinywrkb@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190915141552.GD25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190915140639.GC25745@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190915140639.GC25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Sun, 15 Sep 2019 10:24:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:35088 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730611AbfIOOYb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 10:24:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A28128;
+        Sun, 15 Sep 2019 07:24:30 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 586D63F575;
+        Sun, 15 Sep 2019 07:24:27 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 15:24:20 +0100
+Message-ID: <8636gxskmj.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Darius Rad <darius@bluespec.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <529ec882-734f-17ae-e4cb-3aeb563ad1d5@bluespec.com>
+References: <529ec882-734f-17ae-e4cb-3aeb563ad1d5@bluespec.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 03:06:39PM +0100, Russell King - ARM Linux admin wrote:
-> On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > Tinywrkb confirmed to me in private communication that revert of
-> > > 5502b218e001 fixes Ethernet for him on effected system.
-> > > 
-> > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > AR8035 PHY that supports 1Gb.
-> > > 
-> > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > the moment.
-> > 
-> > Could somebody with an affected device show us the output of ethtool
-> > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > without that patch? We are missing a piece of the puzzle.
+On Thu, 12 Sep 2019 22:40:34 +0100,
+Darius Rad <darius@bluespec.com> wrote:
+
+Hi Darius,
+
 > 
-> Hang on.  5502b218e001 is in 5.2 already - it was merged as part of the
-> v5.1 merge window.  That means my imx6 Solo Hummingboard is already
-> running it with the AR8035 PHY, and it works fine.
+> As per the existing comment, irq_mask and irq_unmask do not need
+> to do anything for the PLIC.  However, the functions must exist
+> (the pointers cannot be NULL) as they are not optional, based on
+> the documentation (Documentation/core-api/genericirq.rst) as well
+> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
 > 
-> # dmesg
-> ...
-> OF: fdt: Machine model: SolidRun HummingBoard Solo/DualLite
-> ...
-> # ethtool eth0
-> Settings for eth0:
->         Supported ports: [ TP MII ]
->         Supported link modes:   10baseT/Half 10baseT/Full
->                                 100baseT/Half 100baseT/Full
->                                 1000baseT/Full
->         Supported pause frame use: Symmetric
->         Supports auto-negotiation: Yes
->         Supported FEC modes: Not reported
->         Advertised link modes:  10baseT/Half 10baseT/Full
->                                 100baseT/Half 100baseT/Full
->                                 1000baseT/Full
->         Advertised pause frame use: Symmetric
->         Advertised auto-negotiation: Yes
->         Advertised FEC modes: Not reported
->         Link partner advertised link modes:  10baseT/Half 10baseT/Full
->                                              100baseT/Half 100baseT/Full
->                                              1000baseT/Full
->         Link partner advertised pause frame use: Symmetric
->         Link partner advertised auto-negotiation: Yes
->         Link partner advertised FEC modes: Not reported
->         Speed: 1000Mb/s
->         Duplex: Full
->         Port: MII
->         PHYAD: 0
->         Transceiver: internal
->         Auto-negotiation: on
->         Supports Wake-on: d
->         Wake-on: d
->         Link detected: yes
+> Signed-off-by: Darius Rad <darius@bluespec.com>
+> ---
+>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index cf755964f2f8..52d5169f924f 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>  }
+>  
+> +/*
+> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> + * by reading claim and "unmasked" when writing it back.
+> + */
+> +static void plic_irq_mask(struct irq_data *d) { }
+> +static void plic_irq_unmask(struct irq_data *d) { }
 
-For some further testing, by changing the advertisment on the DSA
-switch (other end of this platform's link):
+This outlines a bigger issue. If your irqchip doesn't require
+mask/unmask, you're probably not using the right interrupt
+flow. Looking at the code, I see you're using handle_simple_irq, which
+is almost universally wrong.
 
-        Link partner advertised link modes:  10baseT/Half 10baseT/Full
-                                             100baseT/Half 100baseT/Full
-...
-        Speed: 100Mb/s
-        Duplex: Full
-===============
-        Link partner advertised link modes:  10baseT/Half 10baseT/Full
-                                             100baseT/Half
-...
-        Speed: 100Mb/s
-        Duplex: Half
-===============
-        Link partner advertised link modes:  10baseT/Half 10baseT/Full
-...
-        Speed: 10Mb/s
-        Duplex: Full
-===============
-        Link partner advertised link modes:  10baseT/Half
-...
-        Speed: 10Mb/s
-        Duplex: Half
+As per the description above, these interrupts should be using the
+fasteoi flow, which is designed for this exact behaviour (the
+interrupt controller knows which interrupt is in flight and doesn't
+require SW to do anything bar signalling the EOI).
 
-So it looks like the commit works as it should.  So there's something
-else going on.
+Another thing is that mask/unmask tends to be a requirement, while
+enable/disable tends to be optional. There is no hard line here, but
+the expectations are that:
 
-Note that the FEC does *not* support 1000baseT/Half.
+(a) A disabled line can drop interrupts
+(b) A masked line cannot drop interrupts
+
+Depending what the PLIC architecture mandates, you'll need to
+implement one and/or the other. Having just (a) is indicative of a HW
+bug, and I'm not assuming that this is the case. (b) only is pretty
+common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+only.
+
+> +
+>  #ifdef CONFIG_SMP
+>  static int plic_set_affinity(struct irq_data *d,
+>  			     const struct cpumask *mask_val, bool force)
+> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+>  
+>  static struct irq_chip plic_chip = {
+>  	.name		= "SiFive PLIC",
+> -	/*
+> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> -	 * by reading claim and "unmasked" when writing it back.
+> -	 */
+>  	.irq_enable	= plic_irq_enable,
+>  	.irq_disable	= plic_irq_disable,
+> +	.irq_mask	= plic_irq_mask,
+> +	.irq_unmask	= plic_irq_unmask,
+>  #ifdef CONFIG_SMP
+>  	.irq_set_affinity = plic_set_affinity,
+>  #endif
+
+Can you give the following patch a go? It brings the irq flow in line
+with what the HW can do. It is of course fully untested (not even
+compile tested...).
+
+Thanks,
+
+	M.
+
+From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Sun, 15 Sep 2019 15:17:45 +0100
+Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+
+The SiFive PLIC interrupt controller seems to have all the HW
+features to support the fasteoi flow, but the driver seems to be
+stuck in a distant past. Bring it into the 21st century.
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+index cf755964f2f8..8fea384d392b 100644
+--- a/drivers/irqchip/irq-sifive-plic.c
++++ b/drivers/irqchip/irq-sifive-plic.c
+@@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+ 	}
+ }
+ 
+-static void plic_irq_enable(struct irq_data *d)
++static void plic_irq_mask(struct irq_data *d)
+ {
+ 	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+ 					   cpu_online_mask);
+@@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+ 	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+ }
+ 
+-static void plic_irq_disable(struct irq_data *d)
++static void plic_irq_unmask(struct irq_data *d)
+ {
+ 	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+ }
+@@ -125,10 +125,8 @@ static int plic_set_affinity(struct irq_data *d,
+ 	if (cpu >= nr_cpu_ids)
+ 		return -EINVAL;
+ 
+-	if (!irqd_irq_disabled(d)) {
+-		plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+-		plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+-	}
++	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
++	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+ 
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
+ 
+@@ -136,14 +134,18 @@ static int plic_set_affinity(struct irq_data *d,
+ }
+ #endif
+ 
++static void plic_irq_eoi(struct irq_data *d)
++{
++	struct plic_handler *handler = this_cpu_ptr(&plic_handlers);
++
++	writel(d->hwirq, handler->hart_base + CONTEXT_CLAIM);
++}
++
+ static struct irq_chip plic_chip = {
+ 	.name		= "SiFive PLIC",
+-	/*
+-	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+-	 * by reading claim and "unmasked" when writing it back.
+-	 */
+-	.irq_enable	= plic_irq_enable,
+-	.irq_disable	= plic_irq_disable,
++	.irq_mask	= plic_irq_mask,
++	.irq_unmask	= plic_irq_unmask,
++	.irq_eoi	= plic_irq_eoi,
+ #ifdef CONFIG_SMP
+ 	.irq_set_affinity = plic_set_affinity,
+ #endif
+@@ -152,7 +154,7 @@ static struct irq_chip plic_chip = {
+ static int plic_irqdomain_map(struct irq_domain *d, unsigned int irq,
+ 			      irq_hw_number_t hwirq)
+ {
+-	irq_set_chip_and_handler(irq, &plic_chip, handle_simple_irq);
++	irq_set_chip_and_handler(irq, &plic_chip, handle_fasteoi_irq);
+ 	irq_set_chip_data(irq, NULL);
+ 	irq_set_noprobe(irq);
+ 	return 0;
+@@ -188,7 +190,6 @@ static void plic_handle_irq(struct pt_regs *regs)
+ 					hwirq);
+ 		else
+ 			generic_handle_irq(irq);
+-		writel(hwirq, claim);
+ 	}
+ 	csr_set(sie, SIE_SEIE);
+ }
+-- 
+2.20.1
+
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Jazz is not dead, it just smells funny.
