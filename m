@@ -2,143 +2,150 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B7C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A245C4CEC6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BA920830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E261C20873
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="FQQhywHX";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="TtUiShQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726205AbfIOGOB (ORCPT
+        id S1726717AbfIOGPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 02:14:01 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2269 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfIOGOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 02:14:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EBDFD36DDAEE5ECE5E61;
-        Sun, 15 Sep 2019 14:13:56 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sun, 15 Sep 2019
- 14:13:52 +0800
-Subject: Re: [PATCH v3 7/8] mips: numa: make node_to_cpumask_map()
- NUMA_NO_NODE aware for mips
-To:     Mike Rapoport <rppt@linux.ibm.com>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <anshuman.khandual@arm.com>,
-        <tglx@linutronix.de>, <cai@lca.pw>, <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
- <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
- <20190915054901.GC11429@linux.ibm.com>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <938be3af-ece4-7f5f-34d6-f949ee2a3d32@huawei.com>
-Date:   Sun, 15 Sep 2019 14:13:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <20190915054901.GC11429@linux.ibm.com>
-Content-Type: text/plain; charset="utf-8"
+        Sun, 15 Sep 2019 02:15:55 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:2560 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbfIOGPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 02:15:54 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8F6AE6i000891;
+        Sat, 14 Sep 2019 23:15:33 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=a9BHm7LQ7D86DcssRjdBO23bqjxkbSCbFSzbzZJKYqU=;
+ b=FQQhywHXIQ6G1STEDTU/8YNtOXXCFj7raeRAGKudeiFNWa4f0gw3GZRVcRwxOmGHoJM8
+ FHKheCu5rEw1REG6owenTXYQDfwv4+hVI/ZvmXX1WvtPz650QZuOREsSdS4rXfA30AGu
+ 7l0EAqrjqfcn67fCiBypqSdlBbL9W6qpjb0= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2v0v8atrx9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Sat, 14 Sep 2019 23:15:33 -0700
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub104.TheFacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 14 Sep 2019 23:15:32 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Sat, 14 Sep 2019 23:15:32 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BcGoTj8lD9sYLwFkHKnnNNaNTwVgABtgWubrLB8spdiEKMklwrIw+lI1Z/kGFZFNJoxxLJ+JzNMJpzqlJM2PZqsuaya2pr1mTqUFokNPZX9JF9y2pVyhNLa16wqYymLXGMsHBTq3eQyhMqXRHt+BAvn+po3WDYimSI76ticDy/bZWOCpm/3iY8m88XIlHtr+gjkIDoymGwT7OTe2o6lWmrqU9k7aDpjYV8bknaIaAVipvmA0Fb+/AN6NKGShEmLY447S/VTqmhaO/5Z3/I9ATiPUfcdfPKa7cfhhB1O3lyJGLk1bX11HANdLY9lgrP0MPBEmgY5jgKyDkxWK9Zzb6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a9BHm7LQ7D86DcssRjdBO23bqjxkbSCbFSzbzZJKYqU=;
+ b=I6BOZ3fzQA35beH+i+QjnkEV8jDGw/w2VteGaZV1qN17EXKgYU18Prch3h4ghvmtbUNERp3hJGCdN3xO2p++pDxZXhXZNGiQAY2f9ygSiU3nd1s85/Lwdb99A9D+oXe/LwzWznEf8SG/G0rfJeFUzOYhvJ0qkL3sZnwvag7q9/oJFv099XyNGJ6wD+BrIHg9+Tds90BNi6JAoKuhZG4jTQh3kKlGrWysdgHavRcRGyA9PVdJPoYgJwwdre4gL1jmfY1EpBQh8FaNH0TIUOh3+VL5GWmeljJCoIEYTdOhDBQ6wqkmc70r87Rn0w7I3JKttFwhIQscFapZ0gMGi7kFhw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a9BHm7LQ7D86DcssRjdBO23bqjxkbSCbFSzbzZJKYqU=;
+ b=TtUiShQd+vUkMilC9bHEImwJuFsq0fh6d7NIGRSBHGawmstMFsyUGbQ/lrFAgfeQcwv7gMBC3hOBZ2WUihKlSOm7QR26fe82P6rPPmioVTsB0p+P28wCGyn2O6/1b5+/kW7PCjTDurA14ffMWPEBUBDk84boOUvmp12xiFGrbPI=
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
+ MWHPR15MB1806.namprd15.prod.outlook.com (10.174.255.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Sun, 15 Sep 2019 06:15:30 +0000
+Received: from MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::2980:5c7f:8dde:174a]) by MWHPR15MB1216.namprd15.prod.outlook.com
+ ([fe80::2980:5c7f:8dde:174a%9]) with mapi id 15.20.2263.021; Sun, 15 Sep 2019
+ 06:15:30 +0000
+From:   Tao Ren <taoren@fb.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Vladimir Oltean" <olteanv@gmail.com>,
+        Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Justin Chen <justinpopo6@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH net-next v8 2/3] net: phy: add support for clause 37
+ auto-negotiation
+Thread-Topic: [PATCH net-next v8 2/3] net: phy: add support for clause 37
+ auto-negotiation
+Thread-Index: AQHVZ1Bi3JE3p3zeEkCydFApWQwsCKcrP8IAgAELiYA=
+Date:   Sun, 15 Sep 2019 06:15:30 +0000
+Message-ID: <f18aece7-f554-751a-dcfb-f897a196a732@fb.com>
+References: <20190909204906.2191290-1-taoren@fb.com>
+ <20190914141752.GC27922@lunn.ch>
+In-Reply-To: <20190914141752.GC27922@lunn.ch>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR03CA0004.namprd03.prod.outlook.com
+ (2603:10b6:300:117::14) To MWHPR15MB1216.namprd15.prod.outlook.com
+ (2603:10b6:320:22::17)
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [2620:10d:c090:180::7bb3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0f36ccd1-b0a8-44a5-70c4-08d739a41beb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600166)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1806;
+x-ms-traffictypediagnostic: MWHPR15MB1806:
+x-microsoft-antispam-prvs: <MWHPR15MB1806FABFD02E0967EA96049DB28D0@MWHPR15MB1806.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:785;
+x-forefront-prvs: 01613DFDC8
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(39860400002)(136003)(396003)(346002)(199004)(189003)(65956001)(65806001)(64756008)(66476007)(66446008)(66556008)(4744005)(66946007)(5660300002)(71190400001)(256004)(6436002)(6486002)(2616005)(71200400001)(52116002)(305945005)(7416002)(478600001)(58126008)(14454004)(102836004)(186003)(7736002)(386003)(229853002)(6506007)(76176011)(46003)(316002)(53546011)(54906003)(446003)(4326008)(31696002)(6116002)(476003)(99286004)(2906002)(11346002)(31686004)(6246003)(6916009)(36756003)(8676002)(6512007)(8936002)(486006)(81166006)(81156014)(86362001)(53936002)(25786009);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1806;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 1J7/ZGyWThGBjjjOyPbdc2RaSZUuS/ZO7FQSQe1UNm6IlLTj61l9I+Q2DEXUDljBu7YOgv5dwZ8Vh87oGdaY9U9ywnaLFHd2t1elbiVQsj4kJkg7WAfOxxQWb2/6dXHoSLzsxn4HZFgd1H6C3O+C5P18PBEG5Dp0gSBYZneO6HnQuZrFoJP4aEA6aAPGyJwHLySjsbPFUt5933Eb6/SGZfCdC5V6NapH1L6HjkV0+nOvKH3WQkcN1lZiL2Q/iDldUnkXeQSwkIcs1nA1B0Rxhf3eFckR/Sgkwb4RObNWU3wBVXhjpI7GEBeCoLLJ2QYBThB+X9TxZ9dNtt09Z7Ur2s9K2+K+enG/dOtV5duQ9YwMQ4M+NTNv3GmFad93h+12VPZGktCaFF/KEA51bb/U4QsijGSTO1acpL5wdPsv2PY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <19698D688129664786101BD59921B40C@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f36ccd1-b0a8-44a5-70c4-08d739a41beb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Sep 2019 06:15:30.5257
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A/YjFhRQRV0+Y2EFAq/XtjHiJ+NBVHA8rLeG7g1zfDuU2ZR1mAK5Py3BcGpvfMbC
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1806
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-15_03:2019-09-11,2019-09-15 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ adultscore=0 mlxlogscore=832 priorityscore=1501 malwarescore=0 bulkscore=0
+ spamscore=0 clxscore=1011 suspectscore=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909150067
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/15 13:49, Mike Rapoport wrote:
-> Hi,
-> 
-> On Thu, Sep 12, 2019 at 06:15:33PM +0800, Yunsheng Lin wrote:
->> When passing the return value of dev_to_node() to cpumask_of_node()
->> without checking the node id if the node id is NUMA_NO_NODE, there is
->> global-out-of-bounds detected by KASAN.
->>
->> From the discussion [1], NUMA_NO_NODE really means no node affinity,
->> which also means all cpus should be usable. So the cpumask_of_node()
->> should always return all cpus online when user passes the node id
->> as NUMA_NO_NODE, just like similar semantic that page allocator handles
->> NUMA_NO_NODE.
->>
->> But we cannot really copy the page allocator logic. Simply because the
->> page allocator doesn't enforce the near node affinity. It just picks it
->> up as a preferred node but then it is free to fallback to any other numa
->> node. This is not the case here and node_to_cpumask_map will only restrict
->> to the particular node's cpus which would have really non deterministic
->> behavior depending on where the code is executed. So in fact we really
->> want to return cpu_online_mask for NUMA_NO_NODE.
->>
->> Since this arch was already NUMA_NO_NODE aware, this patch only changes
->> it to return cpu_online_mask and use NUMA_NO_NODE instead of "-1".
->>
->> [1] https://lore.kernel.org/patchwork/patch/1125789/
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Suggested-by: Michal Hocko <mhocko@kernel.org>
->> ---
->> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
->>     for NUMA_NO_NODE case, and change the commit log to better justify
->>     the change.
->> ---
->>  arch/mips/include/asm/mach-ip27/topology.h | 4 ++--
-> 
-> Nit: the subject says "mips:", but this patch only touches sgi-ip27 and
-> loongson is updated as a separate patch. I don't see why both patches
-> cannot be merged. Moreover, the whole set can be made as a single patch,
-> IMHO.
-
-Thanks for reviewing.
-
-As this patchset touches a few files, which may has different maintainer.
-I am not sure if a separate patch for different arch will make the merging
-process easy, or a single patch will make the merging process easy?
-
-It can be made as a single patch if a single patch will make the merging
-process easy.
-
-> 
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
->> index 965f079..04505e6 100644
->> --- a/arch/mips/include/asm/mach-ip27/topology.h
->> +++ b/arch/mips/include/asm/mach-ip27/topology.h
->> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
->>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
->>  
->>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
->> -#define cpumask_of_node(node)	((node) == -1 ?				\
->> -				 cpu_all_mask :				\
->> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->> +				 cpu_online_mask :			\
->>  				 &hub_data(node)->h_cpus)
->>  struct pci_bus;
->>  extern int pcibus_to_node(struct pci_bus *);
->> -- 
->> 2.8.1
->>
-> 
-
+T24gOS8xNC8xOSA3OjE3IEFNLCBBbmRyZXcgTHVubiB3cm90ZToNCj4gT24gTW9uLCBTZXAgMDks
+IDIwMTkgYXQgMDE6NDk6MDZQTSAtMDcwMCwgVGFvIFJlbiB3cm90ZToNCj4+IEZyb206IEhlaW5l
+ciBLYWxsd2VpdCA8aGthbGx3ZWl0MUBnbWFpbC5jb20+DQo+Pg0KPj4gVGhpcyBwYXRjaCBhZGRz
+IHN1cHBvcnQgZm9yIGNsYXVzZSAzNyAxMDAwQmFzZS1YIGF1dG8tbmVnb3RpYXRpb24uDQo+Pg0K
+Pj4gU2lnbmVkLW9mZi1ieTogSGVpbmVyIEthbGx3ZWl0IDxoa2FsbHdlaXQxQGdtYWlsLmNvbT4N
+Cj4+IFNpZ25lZC1vZmYtYnk6IFRhbyBSZW4gPHRhb3JlbkBmYi5jb20+DQo+PiBUZXN0ZWQtYnk6
+IFJlbsOpIHZhbiBEb3JzdCA8b3BlbnNvdXJjZUB2ZG9yc3QuY29tPg0KPiANCj4gUmV2aWV3ZWQt
+Ynk6IEFuZHJldyBMdW5uIDxhbmRyZXdAbHVubi5jaD4NCj4gDQo+ICAgICBBbmRyZXcNCg0KVGhh
+bmtzIGEgbG90LCBBbmRyZXcuDQoNCg0KQ2hlZXJzLA0KDQpUYW8NCg==
