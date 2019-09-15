@@ -2,153 +2,143 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E84AFC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A05BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:32:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B76CF214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CE5E20830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568575924;
+	bh=lvlWNQSUZDgdvDwOtOBqaafDyHRgWvKyjYyW2nEtz5c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Xjip4z6NySM4Gz1XjtiBapHTNwyGwEb05SkfmW472U+HICei8BTUOefa3/Kua35H6
+	 YHRaDql9HAxcZImpUJqyadzJbmlKD4rr+7Xg4VKMr1iFL2Wgd3XAPvyNWMUXA5wEFR
+	 plW2QTJL5bntK6xTtx30v+tZ1etmvHnBkDbNGw2g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfIOT0b (ORCPT
+        id S1726720AbfIOTcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 15:26:31 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47786 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIOT0b (ORCPT
+        Sun, 15 Sep 2019 15:32:03 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39884 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725446AbfIOTcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 15:26:31 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id DFA1A28AE52
-Subject: Re: [PATCH v4 5/5] MAINTAINERS: Add reviewer to vimc driver
-To:     Shuah Khan <skhan@linuxfoundation.org>, mchehab@kernel.org,
-        andrealmeid@collabora.com, dafna.hirschfeld@collabora.com,
-        hverkuil-cisco@xs4all.nl, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1567822792.git.skhan@linuxfoundation.org>
- <a22e8a061fd0d9d8c9392e748a3182ce01f830e7.1567822793.git.skhan@linuxfoundation.org>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <67e46721-6740-3721-08eb-2b11d04da9f2@collabora.com>
-Date:   Sun, 15 Sep 2019 16:26:13 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Sun, 15 Sep 2019 15:32:03 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u26so8037878lfg.6
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 12:32:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rcwTblzMoitlkG90oc3RIazOAIPv3CGshIK8wAijmDI=;
+        b=TLbSa6seE1kBg0lI8CGXqWg2q0IZHoaE8aPo+wMvNk+p7Yf2/dfEZOHO5J2fqja4RK
+         yR9WsdJ5+HeLVL8ZdUnax5HeVBZfGlx0wU3aVJOynzvJGDEs+15V2Mx6QyMNLTDUPVX3
+         SqDg7rOoNzoYjpLIZZwGhi5HfhOrYNe4A7ggk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rcwTblzMoitlkG90oc3RIazOAIPv3CGshIK8wAijmDI=;
+        b=LedSHe3WR9u59LXRGTACzz4cG5ONlmkCXzdxOaO8uREwvUw5Rcih3NILFMN7moo1X6
+         Vik4LbbuRWMOyNepfT4+jymJq2s6qPeRIrVuzqkxdqwNg3JP5q4yLz9rDJndnDwMrflq
+         qSQQJr9EMd/dj5iVa+shEna8nHf2GJ1UaLmXQ730+WHaBp3gt3b1jqsn6LkAaeOiNO6Y
+         JMaSoYyfyKclhj/hw1YJwD3tB6ib/+GvPifLjqNbJ7wOHQ4obO/7fQmnihhrNamtGPrM
+         5E55d4Hf2Y5j5rDcYl4XKrDq62uS6vS0TtgjGIbkHF0tg0mJlW9K0c+Q1zY3CUPgeIMl
+         tYzQ==
+X-Gm-Message-State: APjAAAU0YNJEoxoqjP07ZWmaPwuz31xy+0Tv3ZRPAi2uBt35UxVm47z4
+        oxpFeXiL/jqxEwQqvkxgy2QGirK5CDY=
+X-Google-Smtp-Source: APXvYqxUc/ix7RH0VfH15XAqjju1b7DXXr9xzThIGaDtZY0ATmCW6SxzPVtMeme4k/Tiu7GbAczjVg==
+X-Received: by 2002:a19:f111:: with SMTP id p17mr1335982lfh.187.1568575920354;
+        Sun, 15 Sep 2019 12:32:00 -0700 (PDT)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id z26sm1380623ljz.62.2019.09.15.12.31.59
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Sep 2019 12:31:59 -0700 (PDT)
+Received: by mail-lf1-f49.google.com with SMTP id t8so25714266lfc.13
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 12:31:59 -0700 (PDT)
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr37106479lfp.61.1568575918864;
+ Sun, 15 Sep 2019 12:31:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a22e8a061fd0d9d8c9392e748a3182ce01f830e7.1567822793.git.skhan@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190912034421.GA2085@darwi-home-pc> <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc> <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu> <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190915183240.GA23155@1wt.eu> <20190915183659.GA23179@1wt.eu>
+ <CAHk-=wgFrRCL3WP7vyuZ-92xyqb97ADc=JNyyVCucZ1Q9oh8TA@mail.gmail.com> <20190915191814.GB23212@1wt.eu>
+In-Reply-To: <20190915191814.GB23212@1wt.eu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 15 Sep 2019 12:31:42 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
+Message-ID: <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
+ CRNG is uninitialized
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <mzxreary@0pointer.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Sep 15, 2019 at 12:18 PM Willy Tarreau <w@1wt.eu> wrote:
+>
+> Oh no I definitely don't want this behavior at all for urandom, what
+> I'm saying is that as long as getrandom() will have a lower quality
+> of service than /dev/urandom for non-important randoms
 
+Ahh, here you're talking about the fact that it can block at all being
+"lower quality".
 
-On 9/6/19 11:42 PM, Shuah Khan wrote:
-> After practically re-writing the driver to collpase it into a monolith,
-> I am adding myself as a reviewer for vimc driver.
+I do agree that getrandom() is doing some odd things. It has the
+"total blocking mode" of /dev/random (if you pass it GRND_RANDOM), but
+it has no mode of replacing /dev/urandom.
 
-Thank you!
+So if you want the /dev/urandom bvehavior, then no, getrandom() simply
+has never given you that.
 
-> 
-> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Use /dev/urandom if you want that.
 
-Acked-by: Helen Koike <helen.koike@collabora.com>
+Sad, but there it is. We could have a new flag (GRND_URANDOM) that
+actually gives the /dev/urandom behavior. But the ostensible reason
+for getrandom() was the blocking for entropy. See commit c6e9d6f38894
+("random: introduce getrandom(2) system call") from back in 2014.
 
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 7c62b45201d7..4529d257f8db 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17041,6 +17041,7 @@ F:	include/media/videobuf2-*
->  
->  VIMC VIRTUAL MEDIA CONTROLLER DRIVER
->  M:	Helen Koike <helen.koike@collabora.com>
-> +R:	Shuah Khan <skhan@linuxfoundation.org>
->  L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  W:	https://linuxtv.org
-> 
+The fact that it took five years to hit this problem is probably due
+to two reasons:
+
+ (a) we're actually pretty good about initializing the entropy pool
+fairly quickly most of the time
+
+ (b) people who started using 'getrandom()' and hit this issue
+presumably then backed away from it slowly and just used /dev/urandom
+instead.
+
+So it needed an actual "oops, we don't get as much entropy from the
+filesystem accesses" situation to actually turn into a problem. And
+presumably the people who tried out things like nvdimm filesystems
+never used Arch, and never used a sufficiently new systemd to see the
+"oh, without disk interrupts you don't get enough randomness to boot".
+
+One option is to just say that GRND_URANDOM is the default (ie never
+block, do the one-liner log entry to warn) and add a _new_ flag that
+says "block for entropy". But if we do that, then I seriously think
+that the new behavior should have that timeout limiter.
+
+For 5.3, I'll just revert the ext4 change, stupid as that is. That
+avoids the regression, even if it doesn't avoid the fundamental
+problem. And gives us time to discuss it.
+
+                 Linus
