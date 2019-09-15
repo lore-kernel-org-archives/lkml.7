@@ -2,99 +2,154 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED043C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58BBC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C9220830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568541187;
-	bh=eY/svIwzWeTPEPLCh0a5G9JGZm+IqSfCU4uCCdA91NE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Yhu11WkyeSXxgAUYDsW/ZrhaaomsXdvrc8uM4Al2aeXzfoDn7Iw/gmAEbPZE1z2p+
-	 cpy3hkfPblJoESpa4/RmLAQbghuVvgynxrqaxs1HpmsFrQU+RR36BxQhYKDDyXMO8P
-	 fodoKPeIF3ecowxE45Sk632/ILEL87RA2MiiD+2g=
+	by mail.kernel.org (Postfix) with ESMTP id A98472067D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eTMplotU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727607AbfIOJxH (ORCPT
+        id S1727649AbfIOKCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 05:53:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47994 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfIOJxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 05:53:06 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC8F42077C;
-        Sun, 15 Sep 2019 09:53:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568541186;
-        bh=eY/svIwzWeTPEPLCh0a5G9JGZm+IqSfCU4uCCdA91NE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=S3NIcyIyIRUhGkWWEzuE2IAuk2NIx7FVAcZfiTht66CwamPfJ3fnV+Jv8Z/Uccw9G
-         G6b0SLa4Jqh8xf1gP07alHNNodK87mirrmaiC/FA8zK2O5OnS31axNpQ4Ojw4+op/m
-         wnMBAzLIYfPfgF+e/0m9TZ9A5c/Po/FHeXCr5og4=
-Date:   Sun, 15 Sep 2019 10:53:00 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rohit Sarkar <rohitsarkar5398@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        gregkh@linuxfoundation.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Subject: Re: [PATCH] staging: iio: ADIS16240: Remove unused include
-Message-ID: <20190915105300.12cc105f@archlinux>
-In-Reply-To: <20190913203627.GA1320@SARKAR>
-References: <20190913203627.GA1320@SARKAR>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Sep 2019 06:02:12 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41575 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfIOKCL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 06:02:11 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h7so34941678wrw.8;
+        Sun, 15 Sep 2019 03:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Lq/56+aWk8HZUKxvrJKXQrsRwTL+BrL6ITyZ6xEfBMU=;
+        b=eTMplotUWxXR9+xdOydd7k/YYG1wMf4xowk3fBBO8Ad14YiO1v+93eKKoF753Adt2z
+         FEXDYuULX2VBu7So2FATETLh9YyXhoysnWaLTOdrXiUHmjTCSiGJxT4YOc7aRQtk+0x1
+         pJqpeu5taDtt43YRbUYe+knsiMEknUQf48uMoek0wCmXOA1ke29GscFEhpssj293Qil8
+         naBMZvXETS7av/1ZR05puMfen/j4Mhyk7NQ1NlqyJOO0TIL/RNGDWTpF203vp9VV52N1
+         HcC5ntSeXkuce2nEkiJarPdv4sCuB/bL9vaDKAFr3TYaXqDu9bsQ8rtYRl8cjF+c+5AC
+         GXKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Lq/56+aWk8HZUKxvrJKXQrsRwTL+BrL6ITyZ6xEfBMU=;
+        b=d7pPg68yOLbZwgGj23isnWUzr9lo6qcDwiXylaPbrbePm757h2RqyXpBaO0iu/vNmZ
+         E/v2KG0kNeHglvpuaS9LtuVJNWNUlvvFN8gyBbclT0XL/MnBE9zMV8yqOeovB33xwAY1
+         hHzKjG0ancW+NDV80mO3NUylfR3MhV0xtS75QHJSi/ougbaiCQUHPAkOg4MRJINqHx2Z
+         iS2i+EwRnr86S6Oye2KPCB0HWo2ZGwex2vlMtArz2kaE0AlnAPvdy4Cxlr8SuqMUwveo
+         cOS//3dVg7j2QlycIUR0wksVdaTzwTy5okp8HxnEgSGwvdMHZHeWQgBWSDXMLKL9rkdQ
+         ujgQ==
+X-Gm-Message-State: APjAAAVNIyzXqU8dSHU0y7aOsGCO4aPjLpss7tQAJ8HK7wjrQxdejdxx
+        wPBHGA8C2S6dkhHdfRDOISE=
+X-Google-Smtp-Source: APXvYqynHTtiZ3cK3pMtYZwbX+tQDkEKg9AwL+TUwPjd8uxv3yN6mmY/kcFY7S9AfxU+OFHtQ/1Kqw==
+X-Received: by 2002:a05:6000:10c2:: with SMTP id b2mr27798625wrx.45.1568541727973;
+        Sun, 15 Sep 2019 03:02:07 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
+        by smtp.gmail.com with ESMTPSA id w4sm5668769wrv.66.2019.09.15.03.02.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 03:02:07 -0700 (PDT)
+Date:   Sun, 15 Sep 2019 12:02:01 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
+ is uninitialized
+Message-ID: <20190915100201.GA2663@darwi-home-pc>
+References: <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <20190915081747.GA1058@darwi-home-pc>
+ <20190915085907.GC29771@gardel-login>
+ <20190915093057.GF20811@1wt.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915093057.GF20811@1wt.eu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 14 Sep 2019 02:06:27 +0530
-Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-
-> Bcc: 
-> Subject: [PATCH] staging: iio: adis16240: remove unused include
-> Reply-To: 
-Something odd happened here with patch formatting.  I fixed it up and
-applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
+On Sun, Sep 15, 2019 at 11:30:57AM +0200, Willy Tarreau wrote:
+> On Sun, Sep 15, 2019 at 10:59:07AM +0200, Lennart Poettering wrote:
+> > We live in a world where people run HTTPS, SSH, and all that stuff in
+> > the initrd already. It's where SSH host keys are generated, and plenty
+> > session keys.
 > 
-> '#include<linux/gpio.h>' isn't being used anywhere. Remove it.
-> 
-> Signed-off-by: Rohit Sarkar <rohitsarkar5398@gmail.com>
-> ---
->  drivers/staging/iio/accel/adis16240.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/staging/iio/accel/adis16240.c b/drivers/staging/iio/accel/adis16240.c
-> index 82099db4bf0c..a480409090c0 100644
-> --- a/drivers/staging/iio/accel/adis16240.c
-> +++ b/drivers/staging/iio/accel/adis16240.c
-> @@ -7,7 +7,6 @@
->  
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> -#include <linux/gpio.h>
->  #include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/kernel.h>
+> It is exactly the type of crap that create this situation : making
+> people developing such scripts believe that any random source was OK
+> to generate these, and as such forcing urandom to produce crypto-solid
+> randoms!
 
+Willy, let's tone it down please... the thread is already getting a
+bit toxic.
+
+> No, distro developers must know that it's not acceptable to
+> generate lifetime crypto keys from the early boot when no entropy is
+> available. At least with this change they will get an error returned
+> from getrandom() and will be able to ask the user to feed entropy, or
+> be able to say "it was impossible to generate the SSH key right now,
+> the daemon will only be started once it's possible", or "the SSH key
+> we produced will not be saved because it's not safe and is only usable
+> for this recovery session".
+> 
+> > If Linux lets all that stuff run with awful entropy then
+> > you pretend things where secure while they actually aren't. It's much
+> > better to fail loudly in that case, I am sure.
+> 
+> This is precisely what this change permits : fail instead of block
+> by default, and let applications decide based on the use case.
+>
+
+Unfortunately, not exactly.
+
+Linus didn't want getrandom to return an error code / "to fail" in
+that case, but to silently return CRNG-uninitialized /dev/urandom
+data, to avoid user-space even working around the error code through
+busy-loops.
+
+I understand the rationale behind that, of course, and this is what
+I've done so far in the V3 RFC.
+
+Nonetheless, this _will_, for example, make systemd-random-seed(8)
+save week seeds under /var/lib/systemd/random-seed, since the kernel
+didn't inform it about such weakness at all..
+
+The situation is so bad now, that it's more of "some user-space are
+more equal than others".. Let's just at least admit this while
+discussing the RFC patch in question.
+
+thanks,
+
+> > Quite frankly, I don't think this is something to fix in the
+> > kernel.
+> 
+> As long as it offers a single API to return randoms, and that it is
+> not possible not to block for low-quality randoms, it needs to be
+> at least addressed there. Then userspace can adapt. For now userspace
+> does not have this option just due to the kernel's way of exposing
+> randoms.
+> 
+> Willy
