@@ -2,119 +2,112 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A91C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB0C2C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C71F20678
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eZvUsQS9"
+	by mail.kernel.org (Postfix) with ESMTP id ABB5F2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbfIOLPG (ORCPT
+        id S1730094AbfIOLRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 07:15:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46729 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfIOLPF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 07:15:05 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so20686449pfg.13;
-        Sun, 15 Sep 2019 04:15:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=XhFre/QK5MclL/7MBSxWJYR/qUHvDgMj7qi+Mpvzm0U=;
-        b=eZvUsQS9El9tw17hndYdKaxOFFYebB1jhsqmXMFmb9cgrldzp2KTvVDm5Y2zrjMfJB
-         aml4Zy++mNXNObMIMJARQchv+BdyrN769O0Er9H3CB/cZe+FvI0Z2F4PTSsGsh+76BER
-         EahTA4xT1lg+kpEEwIYcV7MeLfIiRuHLhvGvhMysC10xl6+tcvYpXWAroDJOKxlZf9po
-         pXvm/QV/eI3d210X76cBagHfFh52FtKBq/KynFvRGN+L1uxY4J3yrdr9jOI8k3pVJVbl
-         FRc9ZTl91Y/H3ZRoGCmO4gSNZjrEJ2WdQvRzfk1JKNH5SbhsOh5fg2hQb4p0fgHpjien
-         zKPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XhFre/QK5MclL/7MBSxWJYR/qUHvDgMj7qi+Mpvzm0U=;
-        b=d5TEGB3FsXLOszwHmnOWeHEO16p23bSZHKJtAdp59fMjgFuFEOEZLYcmRfxVLPqylj
-         +ET3aol8aCh6OfXV/68vdNd7Kygp3eseo4A50HOTKvWOASwmgAnLrBc04gECbefqqFUy
-         FEGjHBxhhgu6+n/L90of+8UTKxnEtGUycCEx2eeVTMcUFsdIA7id7+X6QBXpVucHzpN8
-         4MVUpyLDS+qqgpzWUgC0hRcx34EmxLdhwLp2Xf9H/uVB5r1knys4ithd5mfoRp06iU7y
-         yrzHOOvwOy6529FNHIYctKgrqKUEyq1pBQlUx3O3G4pOeHxZvVKxy9euZgocICrxhTXW
-         i9xw==
-X-Gm-Message-State: APjAAAU2aYMc3DFxOMqzQ5P78uF65imSmkYgLgEMWzR2R7vCz430/MUL
-        uHIDo+Es/MCcJbsBFZBh34rm1gHPOlg=
-X-Google-Smtp-Source: APXvYqyYc1M4x8WB1QEQTGtYeO47iUVQUv3vdDUnUsze4qxOvh5yF8iRljkPmSEZ2iP51ZMM+JUv8w==
-X-Received: by 2002:a17:90a:37d1:: with SMTP id v75mr15434425pjb.33.1568546105006;
-        Sun, 15 Sep 2019 04:15:05 -0700 (PDT)
-Received: from nishad ([106.51.235.3])
-        by smtp.gmail.com with ESMTPSA id 69sm43051568pfb.145.2019.09.15.04.15.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 15 Sep 2019 04:15:04 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 16:44:58 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] media: tuners: Use the correct style for SPDX License
- Identifier
-Message-ID: <20190915111454.GA22020@nishad>
+        Sun, 15 Sep 2019 07:17:51 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45215 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725997AbfIOLRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 07:17:51 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FBHUCn022005;
+        Sun, 15 Sep 2019 13:17:30 +0200
+Date:   Sun, 15 Sep 2019 13:17:30 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
+ is uninitialized
+Message-ID: <20190915111730.GA21993@1wt.eu>
+References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <20190915081747.GA1058@darwi-home-pc>
+ <20190915085907.GC29771@gardel-login>
+ <20190915093057.GF20811@1wt.eu>
+ <20190915100201.GA2663@darwi-home-pc>
+ <20190915104027.GG20811@1wt.eu>
+ <20190915105539.GA1082@darwi-home-pc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190915105539.GA1082@darwi-home-pc>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in header file related to media Drivers for Analog TV Tuners.
-For C header files Documentation/process/license-rules.rst
-mandates C-like comments (opposed to C source files where
-C++ style should be used)
+On Sun, Sep 15, 2019 at 12:55:39PM +0200, Ahmed S. Darwish wrote:
+> On Sun, Sep 15, 2019 at 12:40:27PM +0200, Willy Tarreau wrote:
+> > On Sun, Sep 15, 2019 at 12:02:01PM +0200, Ahmed S. Darwish wrote:
+> > > On Sun, Sep 15, 2019 at 11:30:57AM +0200, Willy Tarreau wrote:
+> > > > On Sun, Sep 15, 2019 at 10:59:07AM +0200, Lennart Poettering wrote:
+> [...]
+> > > > > If Linux lets all that stuff run with awful entropy then
+> > > > > you pretend things where secure while they actually aren't. It's much
+> > > > > better to fail loudly in that case, I am sure.
+> > > > 
+> > > > This is precisely what this change permits : fail instead of block
+> > > > by default, and let applications decide based on the use case.
+> > > >
+> > > 
+> > > Unfortunately, not exactly.
+> > > 
+> > > Linus didn't want getrandom to return an error code / "to fail" in
+> > > that case, but to silently return CRNG-uninitialized /dev/urandom
+> > > data, to avoid user-space even working around the error code through
+> > > busy-loops.
+> > 
+> > But with this EINVAL you have the information that it only filled
+> > the buffer with whatever it could, right ? At least that was the
+> > last point I manage to catch in the discussion. Otherwise if it's
+> > totally silent, I fear that it will reintroduce the problem in a
+> > different form (i.e. libc will say "our randoms are not reliable
+> > anymore, let us work around this and produce blocking, solid randoms
+> > again to help all our users").
+> >
+> 
+> V1 of the patch I posted did indeed return -EINVAL. Linus then
+> suggested that this might make still some user-space act smart and
+> just busy-loop around that, basically blocking the boot again:
+> 
+>     https://lkml.kernel.org/r/CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com
+>     https://lkml.kernel.org/r/CAHk-=whSbo=dBiqozLoa6TFmMgbeB8d9krXXvXBKtpRWkG0rMQ@mail.gmail.com
+> 
+> So it was then requested to actually return what /dev/urandom would
+> return, so that user-space has no way whatsoever in knowing if
+> getrandom has failed. Then, it's the job of system integratos / BSP
+> builders to fix the inspect the big fat WARN on the kernel and fix
+> that.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+Then I was indeed a bit confused in the middle of the discussion as
+I didn't understand exactly this, thanks for the clarifying :-)
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/media/tuners/tuner-xc2028-types.h | 2 +-
- drivers/media/tuners/tuner-xc2028.h       | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+But does it still block when called with GRND_RANDOM ? If so I guess
+I'm fine as it translates exactly the previous behavior of random vs
+urandom, and that GRND_NONBLOCK allows the application to fall back
+to reliable sources if needed (typically human interactions).
 
-diff --git a/drivers/media/tuners/tuner-xc2028-types.h b/drivers/media/tuners/tuner-xc2028-types.h
-index 50d017a4822a..fcca39d3e006 100644
---- a/drivers/media/tuners/tuner-xc2028-types.h
-+++ b/drivers/media/tuners/tuner-xc2028-types.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * SPDX-License-Identifier: GPL-2.0
-  * tuner-xc2028_types
-  *
-  * This file includes internal tipes to be used inside tuner-xc2028.
-diff --git a/drivers/media/tuners/tuner-xc2028.h b/drivers/media/tuners/tuner-xc2028.h
-index 7b58bc06e35c..2dd45d0765d7 100644
---- a/drivers/media/tuners/tuner-xc2028.h
-+++ b/drivers/media/tuners/tuner-xc2028.h
-@@ -1,5 +1,5 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-- * SPDX-License-Identifier: GPL-2.0
-  * tuner-xc2028
-  *
-  * Copyright (c) 2007-2008 Mauro Carvalho Chehab <mchehab@kernel.org>
--- 
-2.17.1
-
+Thanks,
+Willy
