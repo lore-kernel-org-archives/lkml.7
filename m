@@ -2,171 +2,135 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FAC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C3CC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D581C214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:25:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UYfD8YoE"
+	by mail.kernel.org (Postfix) with ESMTP id DD0B021670
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568579493;
+	bh=6mIAH6vo76t63b1qMhQSOCwZEf/402oir9Vi+o1vJdA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Ww1fjbWbaS6j3RXl341Tss2VCXYl8Kvp0XpWCX8d0pxm6H5dLgU4wyWiZ5we8yfEw
+	 RcODAbA6VFAZbKh+MEX8PwavPOVb4oRUP2hKRrH9p7nN5iFvZA57Q0AaSLCYrj/lUd
+	 sbgFOJLv0X+Jei6QcbH9XDu7h4KMTqRPfAVA3E/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbfIOUZT (ORCPT
+        id S1728135AbfIOUbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 16:25:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:36154 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725980AbfIOUZS (ORCPT
+        Sun, 15 Sep 2019 16:31:33 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42732 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIOUbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 16:25:18 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8FKPFxX079402;
-        Sun, 15 Sep 2019 15:25:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568579115;
-        bh=0rptD92equBw98T8Sc+eiyWQzCHT0BO9if74fByfdOQ=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=UYfD8YoEiGBb9T+JfNuv+rosreY/huYtUqrdqpUxdpwqIrJhVhHkh8Uf5rKWcs6ek
-         TBg4SP/fDGM/TXvdBnys64I/u64nw7y+Wb8tVgqLwG1etQbcLSnEix1o6f1kTbC5r1
-         3sd6FSrrPiz3LA40eFa8yQgOcKuPtrCmEMXAey00=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8FKPFE2092151
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 15 Sep 2019 15:25:15 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 15
- Sep 2019 15:25:15 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 15 Sep 2019 15:25:14 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id x8FKPEbq097374;
-        Sun, 15 Sep 2019 15:25:14 -0500
-Date:   Sun, 15 Sep 2019 15:27:20 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 4/6] media: i2c: ov2659: Add optional powerdown gpio
- handling
-Message-ID: <20190915202720.63saxa7fbifn3qf3@ti.com>
-References: <20190912130007.4469-1-bparrot@ti.com>
- <20190912130007.4469-5-bparrot@ti.com>
- <CA+V-a8stmX2WmJEQRvvdOfHiFNgmEbtPTWtn+Fuq2h8SW4N3Hw@mail.gmail.com>
+        Sun, 15 Sep 2019 16:31:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DHTmG2flx5Wbb2G57ya+nWxxfsP7y93jPXl0YK0JzTk=; b=Nz24fm+0BTQFwfOk/jevo5rDx
+        za+kiDHAri1sNXmkQZXlDSvPGv29cZiA5lA6h9fsmcsNuyxplaDhc1n+v5OK3qE7HK/Ivey28ZOcR
+        5pqwavRYho2HnSJzLGtKHCnpdm8+byZF8t1/yvuhblnZOUPAe0VZWrko1+pHu+/L8Cxa0=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9bBA-0001Fr-T3; Sun, 15 Sep 2019 20:31:28 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 205AF274154D; Sun, 15 Sep 2019 21:31:28 +0100 (BST)
+Date:   Sun, 15 Sep 2019 21:31:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the net-next tree with Linus' tree
+Message-ID: <20190915203128.GE4352@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Dzs2zDY0zgkG72+7"
 Content-Disposition: inline
-In-Reply-To: <CA+V-a8stmX2WmJEQRvvdOfHiFNgmEbtPTWtn+Fuq2h8SW4N3Hw@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Sat [2019-Sep-14 11:33:42 +0100]:
-> Hi Benoit,
-> 
-> On Thu, Sep 12, 2019 at 1:58 PM Benoit Parrot <bparrot@ti.com> wrote:
-> >
-> > On some board it is possible that the sensor 'powerdown'
-> > pin might be controlled with a gpio instead of being
-> > tied to always powered.
-> >
-> > This patch add support to specify an optional gpio
-> > which will be set at probe time and remained on.
-> >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/i2c/Kconfig  |  2 +-
-> >  drivers/media/i2c/ov2659.c | 13 +++++++++++++
-> >  2 files changed, 14 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> > index 7eee1812bba3..315c1d8bdb7b 100644
-> > --- a/drivers/media/i2c/Kconfig
-> > +++ b/drivers/media/i2c/Kconfig
-> > @@ -634,7 +634,7 @@ config VIDEO_OV2640
-> >  config VIDEO_OV2659
-> >         tristate "OmniVision OV2659 sensor support"
-> >         depends on VIDEO_V4L2 && I2C
-> > -       depends on MEDIA_CAMERA_SUPPORT
-> > +       depends on MEDIA_CAMERA_SUPPORT && GPIOLIB
-> >         select V4L2_FWNODE
-> >         help
-> >           This is a Video4Linux2 sensor driver for the OmniVision
-> > diff --git a/drivers/media/i2c/ov2659.c b/drivers/media/i2c/ov2659.c
-> > index efbe6dc720e2..c64f73bef336 100644
-> > --- a/drivers/media/i2c/ov2659.c
-> > +++ b/drivers/media/i2c/ov2659.c
-> > @@ -32,6 +32,8 @@
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_graph.h>
-> > +#include <linux/of_gpio.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/videodev2.h>
-> > @@ -232,6 +234,8 @@ struct ov2659 {
-> >         struct sensor_register *format_ctrl_regs;
-> >         struct ov2659_pll_ctrl pll;
-> >         int streaming;
-> > +       /* used to control the sensor powerdownN pin */
-> > +       struct gpio_desc *pwrdn_gpio;
-> >  };
-> >
-> >  static const struct sensor_register ov2659_init_regs[] = {
-> > @@ -1391,6 +1395,7 @@ static int ov2659_probe(struct i2c_client *client)
-> >         struct v4l2_subdev *sd;
-> >         struct ov2659 *ov2659;
-> >         struct clk *clk;
-> > +       struct gpio_desc *gpio;
-> 
-> you don't need the local var here you can just assign it directly to pwrdn_gpio.
 
-Ok.
+--Dzs2zDY0zgkG72+7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> >         int ret;
-> >
-> >         if (!pdata) {
-> > @@ -1414,6 +1419,14 @@ static int ov2659_probe(struct i2c_client *client)
-> >             ov2659->xvclk_frequency > 27000000)
-> >                 return -EINVAL;
-> >
-> > +       /* Optional gpio don't fail if not present */
-> > +       gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-> > +                                      GPIOD_OUT_HIGH);
-> > +       if (IS_ERR(gpio))
-> > +               return PTR_ERR(gpio);
-> > +
-> > +       ov2659->pwrdn_gpio = gpio;
-> > +
-> apart from assigning it you don't actually use it.
-> 
-> you will also have to read the reset gpio pin and implement
-> ov2659_set_power() and
-> call it in appropriate places/ s_power ?
+Hi all,
 
-Well I am not sure I want to go that far.
-On most board I have the sensor is always powered as soon as the board gets
-powered. Which is why we go through a S/W reset before starting a stream.
+Today's linux-next merge of the net-next tree got a conflict in:
 
-I didn't want to change the logic here too much.
+  drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
 
-I'll check this out a little more.
+between commit:
 
-Benoit
+  bf280c0387ebbf8ee ("ixgbe: fix double clean of Tx descriptors with xdp")
 
-> 
-> Cheers,
-> --Prabhakar Lad
+=66rom Linus' tree and commit:
+
+  5c129241e2de79f09 ("ixgbe: add support for AF_XDP need_wakeup feature")
+
+=66rom the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+index a3b6d8c89127f,ad802a8909e0d..0000000000000
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+@@@ -682,10 -697,19 +691,17 @@@ bool ixgbe_clean_xdp_tx_irq(struct ixgb
+  	if (xsk_frames)
+  		xsk_umem_complete_tx(umem, xsk_frames);
+ =20
++ 	if (xsk_umem_uses_need_wakeup(tx_ring->xsk_umem)) {
++ 		if (tx_ring->next_to_clean =3D=3D tx_ring->next_to_use)
++ 			xsk_set_tx_need_wakeup(tx_ring->xsk_umem);
++ 		else
++ 			xsk_clear_tx_need_wakeup(tx_ring->xsk_umem);
++ 	}
++=20
+ -	xmit_done =3D ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+ -
+ -	return budget > 0 && xmit_done;
+ +	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+  }
+ =20
+- int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
++ int ixgbe_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
+  {
+  	struct ixgbe_adapter *adapter =3D netdev_priv(dev);
+  	struct ixgbe_ring *ring;
+
+--Dzs2zDY0zgkG72+7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+n58ACgkQJNaLcl1U
+h9DwzQf/aI32IeWsaQisGJxSgnZg4D4nmlJ1QxJewGNBtuW4snQcWR+HkdHA4C1S
+kOC5o/sh62IZOrz/SH/zy7zOzHTxxbcV4kZtPdaW9p+EtK/Bzeo2FSZaQ0M0E9LM
+Ml2pMWy4odAnBuluqc71tdcBhLz1q34GGTKwESpfAysxihHMqQv6gPNQwPTvDuvx
++l5DjOM6rNqUEhvzelT3AlhsowD++F7p9TogbPjrcEz3KQ7F7et5EWH+qW16Itmy
+aNEUYnx/hidqxNYALmh8qj7GKr/1/i13NSwKrjsOvFr1WSU0K0QQYZbxuPLZ0zcc
+csPcEF6g+EkkwTkw8Ic/e2cjgEJh0A==
+=hX7O
+-----END PGP SIGNATURE-----
+
+--Dzs2zDY0zgkG72+7--
