@@ -2,102 +2,101 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51668C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 15:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDAAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 15:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23731214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 15:12:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mr5ayy0/"
+	by mail.kernel.org (Postfix) with ESMTP id 070A12171F
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 15:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfIOPMo (ORCPT
+        id S1731820AbfIOPTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 11:12:44 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37828 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731146AbfIOPMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 11:12:43 -0400
-Received: by mail-lj1-f193.google.com with SMTP id c22so3600879ljj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 08:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zAx9CazxVD+2EMzZ/lZkcxY69ny3xVHSpQj5D2mK4Uw=;
-        b=Mr5ayy0/TC7tpybu8laITyS6x6IHn/pnad7LiWUGnFq4l9zP8FJPBC2PgQoVnuTECg
-         l0atzS7DZ0YR7binUwjXXfFDtw2AIfuGPLcZhpKHHOQMgyuypGe0OJtg0UsDVEa2vo2X
-         pisSnLD6s53uOiDcrVzoDWT2CFuQPMrf4wGHczm3k+2XASjNc+TTzP8T+/Or5F8P3pIK
-         y5Q19ukwYmt8ebECJ1mQhDr4VyxpLk7qAMWqBk/vGDe7hJmqq0i/4fPuliUcDDowxUyJ
-         1otchPoR+K3Tb4DxAACRU027rhO1ZeO/Q2YPT+io687FcQwts7aXohwQvnkmx5ss5RIn
-         KSJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zAx9CazxVD+2EMzZ/lZkcxY69ny3xVHSpQj5D2mK4Uw=;
-        b=tRKYKghth4GNbMcc1SfYgrE3lOGHbPqUSnUcXyOZNRCa4beTaZHSf+FAUNl41iT24p
-         12tDoKlp8KlRNXruWpaJ//ujW78T6mHoSB8rvBPmZoUswCLeTKuyKGBuHtE3P1eKScmB
-         YsrHmXH7xVbVlkKalWDBnorRr7qe78Iw1133Q3OfR5Plpkw3kzyYyW++u9qEjy+AvA97
-         Gk8Ly7hG3HiKwcYVcb5wifc2b7pQGV61C4oKAEmn1GOCjcKfgdCDvAbD61lA4YqFZ+E9
-         wsba6ri0pLBRcuy0yhUQAkSLNHKRCM2F3g2zfUtcHbGy5nSoi15rIFLeVpyBULkwD5cB
-         C7BQ==
-X-Gm-Message-State: APjAAAWu2FmGjOuLvfa55e90116EI1j3cAWAM1G5zonQqH7z4s2DvKx6
-        sN6Hp4PYs5v+mYR8carsRcQ1l6yYEznufF80nq0=
-X-Google-Smtp-Source: APXvYqwr95m+GptBpafCvbvDk9od9USENUa3h2bzPgCqbJySv3j0EJpADl5I4kac6CF3+FkpCUGWJYEvBoYOqrMGnsQ=
-X-Received: by 2002:a2e:95cd:: with SMTP id y13mr34653420ljh.188.1568560361938;
- Sun, 15 Sep 2019 08:12:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPM=9tws0GHMQd0Byunw3XJXq2vqsbbkoR-rqOxfL3f+Rptscw@mail.gmail.com>
- <CAHk-=wja+f_PCuibu+NqkTD_YL1AY2x4wgX6EwQ3oxCyMTw_9w@mail.gmail.com>
-In-Reply-To: <CAHk-=wja+f_PCuibu+NqkTD_YL1AY2x4wgX6EwQ3oxCyMTw_9w@mail.gmail.com>
-From:   Dave Airlie <airlied@gmail.com>
-Date:   Mon, 16 Sep 2019 01:12:30 +1000
-Message-ID: <CAPM=9tzo2HfwPsffe6wXGsyPhE-G+Ha7gpF=ONWUOLidxefV-Q@mail.gmail.com>
-Subject: Re: drm fixes for 5.3-rc9
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sun, 15 Sep 2019 11:19:37 -0400
+Received: from mga04.intel.com ([192.55.52.120]:64042 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730809AbfIOPTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 11:19:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 08:19:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,509,1559545200"; 
+   d="scan'208";a="193230922"
+Received: from uiqbal-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.54.112])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Sep 2019 08:19:30 -0700
+Date:   Sun, 15 Sep 2019 16:19:24 +0100
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        "# 4.0+" <stable@vger.kernel.org>,
+        Vadim Sukhomlinov <sukhomlinov@google.com>,
+        linux-integrity@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH AUTOSEL 4.19 126/167] tpm: Fix TPM 1.2 Shutdown sequence
+ to prevent future TPM operations
+Message-ID: <20190915151924.GA30709@linux.intel.com>
+References: <20190903162519.7136-1-sashal@kernel.org>
+ <20190903162519.7136-126-sashal@kernel.org>
+ <CAD=FV=W0YodeoOCiCv9zmv+-gswuU8U_XgrBnesE=wynTbDBiA@mail.gmail.com>
+ <20190903165346.hwqlrin77cmzjiti@cantor>
+ <20190903194335.GG5281@sasha-vm>
+ <f2224c094836a4b8989c1cd6243a0b7ad1261a87.camel@linux.intel.com>
+ <20190907220448.GB2012@sasha-vm>
+ <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909162808.ggcnrtvbvor7deqy@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 15 Sep 2019 at 04:58, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Thu, Sep 12, 2019 at 8:56 AM Dave Airlie <airlied@gmail.com> wrote:
-> >
-> > Hey Linus,
-> >
-> > From the maintainer summit, just some last minute fixes for final,
-> > details in the tag.
->
-> So because my mailbox was more unruly than normal (because of same
-> maintainer summit travel), I almost missed this email entirely.
->
-> Why? Because you don't have the normal "git pull" anywhere in the
-> email, so it doesn't trigger my search for important emails.
->
-> There's a "git" in the email body, but there's not a "pull" anywhere.
-> Could you add either a "please pull" or something to the email body -
-> or to make things _really_ obvious, add the "[GIT PULL]" prefix to the
-> subject line? Or anything, really, to whatever script or workflow you
-> use to generate these?
+On Mon, Sep 09, 2019 at 05:28:08PM +0100, Jarkko Sakkinen wrote:
+> On Sat, Sep 07, 2019 at 06:04:48PM -0400, Sasha Levin wrote:
+> > On Sat, Sep 07, 2019 at 09:55:18PM +0300, Jarkko Sakkinen wrote:
+> > > On Tue, 2019-09-03 at 15:43 -0400, Sasha Levin wrote:
+> > > > Right. I gave a go at backporting a few patches and this happens to be
+> > > > one of them. It will be a while before it goes in a stable tree
+> > > > (probably way after after LPC).
+> > > 
+> > > It *semantically* depends on
+> > > 
+> > > db4d8cb9c9f2 ("tpm: use tpm_try_get_ops() in tpm-sysfs.c.")
+> > > 
+> > > I.e. can cause crashes without the above patch. As a code change your
+> > > patch is fine but it needs the above patch backported to work in stable
+> > > manner.
+> > > 
+> > > So... either I can backport that one (because ultimately I have
+> > > responsibility to do that as the maintainer) but if you want to finish
+> > > this one that is what you need to backport in addition and then it
+> > > should be fine.
+> > 
+> > If you're ok with the backport of this commit, I can just add
+> > db4d8cb9c9f2 on top.
+> 
+> Sure, I've already gave my promise to do that :-)
 
-I've been manually writing the subject lines, seems I need to fix my brain.
+I ended up with:
 
-The reason I do that is I generate on one machine the body, and send
-it via the gmail webui on whatever machine I'm using. This helps
-avoids google tagging my emails as spam for generating them using
-someone elses smtp servers. I should probably setup properly sending
-gmail to avoid that.
+db4d8cb9c9f2 tpm: Fix TPM 1.2 Shutdown sequence to prevent future TPM operations
+2677ca98ae37 tpm: use tpm_try_get_ops() in tpm-sysfs.c.
+da379f3c1db0 tpm: migrate pubek_show to struct tpm_buf
 
-Dave.
+Since some time has passed I'l just restate that the reason for
+backporting 2677ca98ae37 was that tpm_class_shutdown() could pull carpet
+under the TPM 1.2 code. tpm_try_get_ops() makes sure that read lock is
+taken and chip->ops is not NULL if it successfully returns.
+
+Still need to test the patches with TPM 1.2 hardware before I can send
+them.
+
+/Jarkko
