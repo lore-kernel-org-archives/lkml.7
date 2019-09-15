@@ -2,178 +2,74 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1030C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA6AC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D2B2171F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568576908;
-	bh=j6QYpVZrAE0kvBwvdz3gJWJOFjQNgTfpJOj3/G5m004=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ECikJOeKRVr20O51MzvdfgFIWGX2sk9QQGRFPhpXTt6T+vQ6uPYmGNEyZ9J9HxSpK
-	 bgUHql9i+bpDj/h8ROiIgEQoof2AswWIEMPsbwoDQgktoWGbTe9YE41JI/iHYRRXSS
-	 Fv6jlbN101EMJdat57MvlvfqtTxTi1KKTWUg9Fxg=
+	by mail.kernel.org (Postfix) with ESMTP id DBA37216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BEkK6Kfe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbfIOTs2 (ORCPT
+        id S1727816AbfIOTsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 15:48:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55034 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbfIOTs1 (ORCPT
+        Sun, 15 Sep 2019 15:48:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53850 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfIOTsk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 15:48:27 -0400
+        Sun, 15 Sep 2019 15:48:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=la4zofXTsrcIrlIcvyDyOz1E7uqr6BBUHVC7GRhSSYM=; b=fwn8xSH6MbRNYLg2ebh4tpqSA
-        G1i/j6npEGoQm5Qs4516LbMAw5ZCgtVXZ2qR7+srXdrvSBbLSTzmA7aHKDteDs6pkp7CG0uUAEgo2
-        uoWKeeyvOb7GkYq3CPd2wWM5KOwb8lpSkOnJSRibnTPeBBFKSTUu82tHtdOu42c6EloeQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9aVP-00015X-Hj; Sun, 15 Sep 2019 19:48:19 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id ACF37274154D; Sun, 15 Sep 2019 20:48:18 +0100 (BST)
-Date:   Sun, 15 Sep 2019 20:48:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     linux-riscv@lists.infradead.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the jc_docs tree with the riscv-fixes
- tree
-Message-ID: <20190915194818.GC4352@sirena.co.uk>
+         bh=FHC/cyI11fcBqOeULhlqC5WFX/E6SlCRTb0STc8WVhM=; b=BEkK6Kfeut6a+qhG7i4ODVWAR
+        kbMiXuIcJLQ/8G9dH3/JsYxxVbnen8YSOTdeys/h4T5nJRov6jRX9PSpzoGyJVcsjGTmDWdCmW0Aq
+        5g2V4cSDEFW09vW8eQ5eqCGGp1aRB3jr3cWw76pH1d9unXmgv/q+n7RjfPb1fatL0FYkxcRxlkyHZ
+        jgiGSbD8tltjnG/7Sz7wam8QgztI6DOkFDownKXmMWgo3mS6tKU9IZxJC9UAQ/dTv++iSKuK8FlkG
+        GLMWrGfBjxc1i4E/fGvTrv4NO8X5z8xQoPk51g6IfdDwnKhqc4hPW4SW9KJaV6pRQg6aSZHltObTi
+        Pfd1Umiig==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1i9aVi-0000N9-05; Sun, 15 Sep 2019 19:48:38 +0000
+Subject: Re: pci: endpoint test BUG
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <5d9eda26-fb92-063e-f84d-7dfafe5d6b29@infradead.org>
+ <20190915163930.GX1131@ZenIV.linux.org.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b80bed82-26b3-2ad5-79bc-e3f805e0c6c9@infradead.org>
+Date:   Sun, 15 Sep 2019 12:48:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="0lnxQi9hkpPO77W3"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190915163930.GX1131@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/15/19 9:39 AM, Al Viro wrote:
+> On Sun, Sep 15, 2019 at 09:34:37AM -0700, Randy Dunlap wrote:
+>> Kernel is 5.3-rc8 on x86_64.
+>>
+>> Loading and removing the pci-epf-test module causes a BUG.
+> 
+> Ugh...  Could you try to reproduce it on earlier kernels?
+> 
 
---0lnxQi9hkpPO77W3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sure... will get back to you.
 
-Hi all,
-
-Today's linux-next merge of the jc_docs tree got a conflict in:
-
-  Documentation/riscv/boot-image-header.rst
-
-between commit:
-
-  474efecb65dceb15f ("riscv: modify the Image header to improve compatibili=
-ty with the ARM64 header")
-
-=66rom the riscv tree and commit:
-
-  638b642f82bb8ee81 ("docs: riscv: convert boot-image-header.txt to ReST")
-
-=66rom the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc Documentation/riscv/boot-image-header.rst
-index 14b1492f689bb,43e9bd0731d5f..0000000000000
---- a/Documentation/riscv/boot-image-header.rst
-+++ b/Documentation/riscv/boot-image-header.rst
-@@@ -15,10 -18,10 +18,10 @@@ The following 64-byte header is presen
-  	u64 image_size;		  /* Effective Image size, little endian */
-  	u64 flags;		  /* kernel flags, little endian */
-  	u32 version;		  /* Version of this header */
-- 	u32 res1  =3D 0;		  /* Reserved */
-- 	u64 res2  =3D 0;    	  /* Reserved */
-+ 	u32 res1 =3D 0;		  /* Reserved */
-+ 	u64 res2 =3D 0;		  /* Reserved */
-  	u64 magic =3D 0x5643534952; /* Magic number, little endian, "RISCV" */
- -	u32 res3;		  /* Reserved for additional RISC-V specific header */
- +	u32 magic2 =3D 0x56534905;  /* Magic number 2, little endian, "RSC\x05" =
-*/
-  	u32 res4;		  /* Reserved for PE COFF offset */
- =20
-  This header format is compliant with PE/COFF header and largely inspired =
-=66rom
-@@@ -32,20 -37,25 +37,26 @@@ Note
-    code0 should be replaced with "MZ" magic string and res5(at offset 0x3c=
-) should
-    point to the rest of the PE/COFF header.
- =20
-- - version field indicate header version number.
-- 	Bits 0:15  - Minor version
-- 	Bits 16:31 - Major version
-+ - version field indicate header version number
-+=20
-+ 	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ 	Bits 0:15   Minor version
-+ 	Bits 16:31  Major version
-+ 	=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-    This preserves compatibility across newer and older version of the head=
-er.
- -  The current version is defined as 0.1.
- +  The current version is defined as 0.2.
- =20
- -- res3 is reserved for offset to any other additional fields. This makes =
-the
- -  header extendible in future. One example would be to accommodate ISA
- -  extension for RISC-V in future. For current version, it is set to be ze=
-ro.
- +- The "magic" field is deprecated as of version 0.2.  In a future
- +  release, it may be removed.  This originally should have matched up
- +  with the ARM64 header "magic" field, but unfortunately does not.
- +  The "magic2" field replaces it, matching up with the ARM64 header.
- =20
- -- In current header, the flag field has only one field.
- +- In current header, the flags field has only one field.
-- 	Bit 0: Kernel endianness. 1 if BE, 0 if LE.
-+=20
-+ 	=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+ 	Bit 0  Kernel endianness. 1 if BE, 0 if LE.
-+ 	=3D=3D=3D=3D=3D  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- =20
-  - Image size is mandatory for boot loader to load kernel image. Booting w=
-ill
-    fail otherwise.
-
---0lnxQi9hkpPO77W3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+lYEACgkQJNaLcl1U
-h9AIJwf+IpEoaIl2e7XRmvVC/euyAd61fu4DP4yRHffIWEPpf1jrZEWztXj7X4dR
-ByierS/+oj2HeDKZJYcx+oRo1i4H6bchO3/1D1MrUpRHRi/nHCrhthBy/JBhEsQq
-NdQu7l5VOV3StJ1Vt2+QCW3+VXXhKhMhOhYW59ZeHyrFYFFZfjdm/d24I3CkZxPR
-JSuqlPNrHeXCfalOAdk4CnBHd4cYo0oSdaOX5Sy/uPWs44cpNbuEd1qOPVKKrLeI
-WKYwy76SahaMWE+028dvfsSC/KikQbhlFOcUedmvjpP1DLwte1QkDxQzZIIN20yI
-wEXRToDioWxtLMsdaVFB8CkD6okQOw==
-=wuYs
------END PGP SIGNATURE-----
-
---0lnxQi9hkpPO77W3--
+-- 
+~Randy
