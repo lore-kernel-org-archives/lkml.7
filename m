@@ -2,122 +2,109 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1F5C4CECA
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E878CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E717E20692
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3E2220692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aCfDZsbW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfIOBBC (ORCPT
+        id S1727049AbfIOBI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 21:01:02 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:44338 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726878AbfIOBBC (ORCPT
+        Sat, 14 Sep 2019 21:08:58 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41037 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbfIOBI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 21:01:02 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8F10bDk003842
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 14 Sep 2019 21:00:38 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 4A917420811; Sat, 14 Sep 2019 21:00:37 -0400 (EDT)
-Date:   Sat, 14 Sep 2019 21:00:37 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        Lennart Poettering <lennart@poettering.net>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190915010037.GE19710@mit.edu>
-References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190914211126.GA4355@darwi-home-pc>
- <20190914222432.GC19710@mit.edu>
- <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
+        Sat, 14 Sep 2019 21:08:58 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w17so5619580oiw.8
+        for <linux-kernel@vger.kernel.org>; Sat, 14 Sep 2019 18:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pVY7GYznZUijjBc7X2tclsJfpGNz8NESBfTF4Oaa2qY=;
+        b=aCfDZsbWEAWGGRMky2a5nmbJNhj/4+ui7XoQwZ3ntNOVLaO1OYoLJe3jVDKBsxA54q
+         I/EUDSWo9IUqdsl0vs/o+E9FjdxbNKikEeAS11oMyuzx2KyeFadayPu68SLOqdxIYK3i
+         plU1/lDlNs0YiFGQKMepyrmiPm4gfdHW3OZnnklSmEgCjAex31ctzzB1g2P70K5VO3k6
+         svRrr1/GNpgusqNsKe8p/ht1MkfWX1ei98ZK47BkOGbzQ3c3cRgIAAm+/+uBz4xnW5zK
+         7PMpdtAiaYyjDfqhRXBmNu024ExalLi4X/frubr281H0TaWGYDQ4koZHUCbeDiN0KsNl
+         zxSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition:in-reply-to
+         :user-agent;
+        bh=pVY7GYznZUijjBc7X2tclsJfpGNz8NESBfTF4Oaa2qY=;
+        b=uNjhk7SMfPRtmlU4TPXAF16mwBb0BhwfgLB4MRafHE0QmlPZ6bcVkaGbhP8JF7hAlb
+         fVoz6W5BYybOgSG7a+hjFQiveFPZAVHYn+JnGblhqXLNPGC2eOPjVQTVe1V55vRugwdE
+         7cYoqkwQp5WD9KwV5CuHCuIFDdVdd1lJ9m3ymmMMXOaC9lP1k2BXbiGFOCOgGnd3qF0S
+         1OJ8IaUioaLSZaKcEhKNSWFiQMxGuvaooEZwAMMMgxfTb1kKcDBx+QIbVoc5KoDzoI8A
+         B7uqrUrUCcCz65nWkT9+1zmR/0KgvFo75Mor8e4kBV+RJvksK2NnoihjA/4h57kCFSjb
+         4KMw==
+X-Gm-Message-State: APjAAAXDKU/BG34AbA8r+IIHJzPnN5cmLTtZq6z+z8u5Sa0monLj5PtB
+        Rdj/PQRq/abWRmLAiEaPYQ==
+X-Google-Smtp-Source: APXvYqzk0vH7Ypv5ygXpcKT6IjSLBaOk6loAWxvPTkM2yU6kWKDVNF10YkS57pigMx+uYzyB5Toz/w==
+X-Received: by 2002:a54:418a:: with SMTP id 10mr9079555oiy.88.1568509736833;
+        Sat, 14 Sep 2019 18:08:56 -0700 (PDT)
+Received: from serve.minyard.net (serve.minyard.net. [2001:470:b8f6:1b::1])
+        by smtp.gmail.com with ESMTPSA id 93sm12736604ota.16.2019.09.14.18.08.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 14 Sep 2019 18:08:55 -0700 (PDT)
+Received: from t560 (unknown [192.168.27.180])
+        by serve.minyard.net (Postfix) with ESMTPSA id B00271800D0;
+        Sun, 15 Sep 2019 01:08:53 +0000 (UTC)
+Date:   Sat, 14 Sep 2019 20:08:52 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Jes Sorensen <jes.sorensen@gmail.com>
+Cc:     openipmi-developer@lists.sourceforge.net, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Openipmi-developer] [PATCH 0/1] Fix race in ipmi timer cleanup
+Message-ID: <20190915010852.GG13407@t560>
+Reply-To: minyard@acm.org
+References: <20190828203625.32093-1-Jes.Sorensen@gmail.com>
+ <20190828223238.GB3294@t560>
+ <15517bfc-3022-509d-15ea-c2b8e7a91e0a@gmail.com>
+ <20190829181536.GC3294@t560>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190829181536.GC3294@t560>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 03:32:46PM -0700, Linus Torvalds wrote:
-> > Worse, it won't even accomplish something against an obstinant
-> > programmers.  Someone who is going to change their program to sleep
-> > loop waiting for getrandom(2) to not return with an error can just as
-> > easily check for a buffer which is zero-filled, or an unchanged
-> > buffer, and then sleep loop on that.
 > 
-> Again,  no they can't. They'll get random data in the buffer. And
-> there is no way they can tell how much entropy that random data has.
-
-That makes me even more worried.  It's probably going to be OK for
-modern x86 systems, since "best we can do" will include RDRAND
-(whether or not it's trusted).  But on systems without something like
-RDRAND --- e.g., ARM --- the "best we can do" could potentially be
-Really Bad.  Again, look back at the Mining Your P's and Q's paper
-from factorable.net.
-
-If we don't block, and we just return "the best we can do", and some
-insane userspace tries to generate a long-term private key (for SSH or
-TLS) in super-early boot, I think we owe them something beyond a big
-fat WARN_ON_ONCE.  We could return 0 for success, and yet "the best we
-can do" could be really terrible.
-
-> > For 5.3, can we please consider my proposal in [1]?
-> >
-> > [1] https://lore.kernel.org/linux-ext4/20190914162719.GA19710@mit.edu/
+> > 
+> > {disable,enable}_si_irq() themselves are racy:
+> > 
+> > static inline bool disable_si_irq(struct smi_info *smi_info)
+> > {
+> >         if ((smi_info->io.irq) && (!smi_info->interrupt_disabled)) {
+> >                 smi_info->interrupt_disabled = true;
+> > 
+> > Basically interrupt_disabled need to be atomic here to have any value,
+> > unless you ensure to have a spin lock around every access to it.
 > 
-> Honestly, to me that looks *much* worse than just saying that we need
-> to stop allowing insane user mode boot programs make insane choices
-> that have no basis in reality.
-> 
-> It may be the safest thing to do, but at that point we might as well
-> just revert the ext4 change entirely. I'd rather do that, than have
-> random filesystems start making random decisions based on crazy user
-> space behavior.
+> It needs to be atomic, yes, but I think just adding the spinlock like
+> I suggested will work.  You are right, the check for timer_running is
+> not necessary here, and I'm fine with removing it, but there are other
+> issues with interrupt_disabled (as you said) and with memory ordering
+> in the timer case.  So even if you remove the timer running check, the
+> lock is still required here.
 
-All we're doing is omitting the plug; I disagree that it's really all
-that random.  Honestly, I'd much rather just let distributions hang,
-and force them to fix it that way.  That's *much* better than silently
-give them "the best we can do", which might be "not really random at
-all".
+It turns out you were right, all that really needs to be done is the
+del_timer_sync().  I've added your patch to my queue.
 
-The reality is that there will be some platforms where we will block
-for a very long time, given certain kernel configs and certain really
-stupid userspace decisions --- OR, we can open up a really massive
-security hole given stupid userspace decisions.  Ext4 just got unlocky
-that a performance improvement patch happened to toggle one or two
-configurations from "working" to "not working".   
+Sorry for the trouble.
 
-But just saying, "oh well" and returning something which might not
-really be random with a success code is SUCH A TERRIBLE IDEA, that if
-you really prefer that, I'll accept the ext4 revert, even though I
-don't think we should be penalizing all ext4 performance just because
-of a few distros being stupid.
+Thanks,
 
-If the choice is between that and making some unsuspecting
-distributions being potentially completely insecure, it's no contest.
-I won't have that on my conscience.
-
-						- Ted
+-corey
