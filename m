@@ -2,103 +2,117 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB649C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4039FC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8604721479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:50:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrm2wxko"
+	by mail.kernel.org (Postfix) with ESMTP id 1F30321479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfIORuD (ORCPT
+        id S1728740AbfIOR7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:50:03 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33369 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728026AbfIORuD (ORCPT
+        Sun, 15 Sep 2019 13:59:47 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:55774 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIOR7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:50:03 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q10so21227774pfl.0;
-        Sun, 15 Sep 2019 10:50:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+FT6t6tAgH2CWVt57WKWzQSYmQRrb9LBfWstrY+JJng=;
-        b=nrm2wxkoyTJfutAKqZznB9wT9McfPgYJgWH5h1qWlOVl9xDWz+4MLH7RQKX1YY/9wH
-         QnM/PA7CaQCqiT/qoaJViSSP4UqiGGPH0oEMBtYTQTtFnd3N5OdLHrtzkF3KcMY3X9CJ
-         f0pnJhBQNNbBc78/UoWFyfS1WXCejvAi+LmYRQi+zyB1SczOQTRDSrofYP2WPHrV0iaW
-         O+snJtRQjvUCGXx+Ocb9BuOlnB8Dg9XMau7caOcUINLPHyIabFJ1/4FkYttSougQpWkU
-         IY9kj02ubIlWnI7iUEKC/AZ+Acdk1EaWESsdMpBVga7w0m+iG5yi4xKmjvL9idEggeFo
-         nfBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+FT6t6tAgH2CWVt57WKWzQSYmQRrb9LBfWstrY+JJng=;
-        b=DR0cBIGlLP6QfRUivJPBPWTBbkycgwAvFGv28t8PsoQ7f6YJbXK2fvcUwH2pyuf1gx
-         0tP1CbU8jzn9xHg6H+jKIqNt3hbvc2ax7mslDW23ptVYHUPow2qHBPPxPUZTWc+9jAJa
-         Yl5RWXVwvq0W4/Ok2CbD/vTcYOaCnDNzoa/KhH09o6vhzYPALQP/cu6d/pRoNA2q9t/9
-         bjmxxXbj77KmxPyARP6I2tbT3SDaMWmj2pA2u15TP+DocvUgI3ZmXlQ/UfDopUT6mxZC
-         w4TJywK//fRcdBB+UrkyRa+T4tYJeBVcvH7/b7u01e5Ot8TWjjzTu+msrpFvEt7EBVX5
-         /PtA==
-X-Gm-Message-State: APjAAAWwQAKdQ+4AC6sD8vJD0++uhilr4tKM9/YKcwZdv5EdY1nPYcJg
-        V0J6HwUBWnJD2LbAovz473X7KZHZLDiajA==
-X-Google-Smtp-Source: APXvYqxkFf79p8GWOY6U+WCEFFhYXhudX7QAcO6HQGVHzKHtn9RAgVMjxoAfD1HhlcB+8b58eYV6Lg==
-X-Received: by 2002:a63:487:: with SMTP id 129mr26134434pge.14.1568569801258;
-        Sun, 15 Sep 2019 10:50:01 -0700 (PDT)
-Received: from SARKAR ([1.186.12.73])
-        by smtp.gmail.com with ESMTPSA id c1sm60759116pfb.135.2019.09.15.10.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 10:50:00 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 23:19:54 +0530
-From:   Rohit Sarkar <rohitsarkar5398@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        gregkh@linuxfoundation.org, Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Rodrigo Carvalho <rodrigorsdc@gmail.com>
-Subject: Re: [PATCH] staging: iio: ADIS16240: Remove unused include
-Message-ID: <20190915174954.GA8247@SARKAR>
-References: <20190913203627.GA1320@SARKAR>
- <20190915105300.12cc105f@archlinux>
+        Sun, 15 Sep 2019 13:59:46 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i9Yo7-0006M9-9P; Sun, 15 Sep 2019 11:59:31 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i9Yo6-0007iN-AW; Sun, 15 Sep 2019 11:59:31 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <CAHk-=wiSFvb7djwa7D=-rVtnq3C5msh3u=CF7CVoU6hTJ=VdLw@mail.gmail.com>
+        <20190830160957.GC2634@redhat.com>
+        <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+        <87o906wimo.fsf@x220.int.ebiederm.org>
+        <20190902134003.GA14770@redhat.com>
+        <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+        <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+        <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+        <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
+        <87ftkzdpjd.fsf_-_@x220.int.ebiederm.org>
+        <20190915144129.GL30224@paulmck-ThinkPad-P72>
+Date:   Sun, 15 Sep 2019 12:59:10 -0500
+In-Reply-To: <20190915144129.GL30224@paulmck-ThinkPad-P72> (Paul E. McKenney's
+        message of "Sun, 15 Sep 2019 07:41:29 -0700")
+Message-ID: <87ef0hcufl.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190915105300.12cc105f@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-XM-SPF: eid=1i9Yo6-0007iN-AW;;;mid=<87ef0hcufl.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+LXTj+wchIcd4h01Tp9jA+22aUPdNOM/A=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2 4/4] task: RCUify the assignment of rq->curr
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 10:53:00AM +0100, Jonathan Cameron wrote:
-> On Sat, 14 Sep 2019 02:06:27 +0530
-> Rohit Sarkar <rohitsarkar5398@gmail.com> wrote:
-> 
-> > Bcc: 
-> > Subject: [PATCH] staging: iio: adis16240: remove unused include
-> > Reply-To: 
-> Something odd happened here with patch formatting.  I fixed it up and
-> applied to the togreg branch of iio.git and pushed out as testing
-> for the autobuilders to play with it.
-> 
-> Thanks,
-> 
-> Jonathan
-> 
+"Paul E. McKenney" <paulmck@kernel.org> writes:
 
-That's my bad, must have messed up while copying over the recipients
-from another thread.
+> So this looks good in and of itself, but I still do not see what prevents
+> the unfortunate sequence of events called out in my previous email.
+> On the other hand, if ->rcu and ->rcu_users were not allocated on top
+> of each other by a union, I would be happy to provide a Reviewed-by.
+>
+> And I am fundamentally distrusting of a refcount_dec_and_test() that
+> is immediately followed by code that clobbers the now-zero value.
+> Yes, this does have valid use cases, but it has a lot more invalid
+> use cases.  The valid use cases have excluded all increments somehow
+> else, so that the refcount_dec_and_test() call's only job is to
+> synchronize between concurrent calls to put_task_struct_rcu_user().
+> But I am not seeing the "excluded all increments somehow".
+>
+> So, what am I missing here?
 
-Thanks,
-Rohit
+Probably only that the users of the task_struct in this sense are now
+quite mature.
+
+The two data structures that allow rcu access to the task_struct are
+the pid hash and the runqueue.    The practical problem is that they
+have two very different lifetimes.  So we need some kind of logic that
+let's us know when they are both done.  A recount does that job very
+well.
+
+Placing the recount on the same storage as the unused (at that point)
+rcu_head removes the need to be clever in other ways to avoid bloating
+the task_struct.
+
+If you really want a reference to the task_struct from rcu context you
+can just use get_task_struct.  Because until the grace period completes
+it is guaranteed that the task_struct has a positive count.
+
+Right now I can't imagine a use case for wanting to increase rcu_users
+anywhere or to decrease rcu_users except where we do.  If there is such
+a case most likely it will increase the reference count at
+initialization time.
+
+If anyone validly wants to increment rcu_users from an rcu critical
+section we can move it out of the union at that time.
+
+Eric
