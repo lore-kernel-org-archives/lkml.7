@@ -2,136 +2,176 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44738C2BA1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE64C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076822077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:46:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQzCzvJE"
+	by mail.kernel.org (Postfix) with ESMTP id 4323F2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:47:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568584077;
+	bh=j22k5wM8MRW/WCU285aW/Ltb3jNTPEK0PIuQzhYsveA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=zZVUqzcoFDjgGgyvVulff03k60uLG00rMzU84wR+9szFovTFYe+cVZXF7fo2I2llB
+	 hrrvFLclnxYHZMSnFou/yvmBGkMOvYKe61x4xobk3TNRSQ8KKysTW+so3hSG/Qg9+l
+	 94AT75SI618HB6/ZZvlZlKi30L6LqWgUbd+emu+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726556AbfIOVqx (ORCPT
+        id S1726698AbfIOVr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 17:46:53 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:43867 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfIOVqw (ORCPT
+        Sun, 15 Sep 2019 17:47:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58338 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIOVrz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 17:46:52 -0400
-Received: by mail-lj1-f194.google.com with SMTP id d5so31885760lja.10
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 14:46:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vGboY1Ug06nQuNjlAhHa47y6oO8ayp/E0vNzgPvoh2A=;
-        b=AQzCzvJEMAzqcUzPAr43Ed9/PeX6iMi2hO/b3aNeOYvSLVO0JbcxrCkbT6TWj3TN5I
-         8gpSrmKYXqvGXkUOntFotwFmLqag7WHFXr3MjgC7JwoMYUT15QWm++9aPiCkklpV1lyo
-         yfvLBWN56y7mgDCLVUb0MR+vKnVteGL0TI2Dz2B/gmXMFZwuQntU2XqEG7IHX0dEuyeW
-         cT4ox7H9LOArjbYVYw94FKzC4k6bxQ347yuzk75Wf/hzgNP0jsp4YYYsQZzkA8dS3n5o
-         UedX4RqvHMygSkQtpiu5Ob3tYtTRTEDBdpkF9mWO4Lvp7Hlcs0C74PCXNrz3eQ0JJxkk
-         SYFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vGboY1Ug06nQuNjlAhHa47y6oO8ayp/E0vNzgPvoh2A=;
-        b=eOF0GdpVsySgzwUcrE4UlmwwnNMwBaZ2g2n0LCCR5SW1EkhrRWvgWEtGFmykqyDvFK
-         oH/GG/XXIx0cfD5RkfSOiyu+QZB3ARzuWshD6cLGT5oYmw2uXEcP3ohgrBBwg+2uKcGg
-         XS5uzHInlG4K1ZZfvSn3eqt73pfmQUOP/6gxL65oVml/Y/HKdmfkCtGw3AaJd4L9yBQM
-         gXWmeskNj0C8Hnl7hDnnWInIdrkbtV/2l/kv8HpLRGkp1gE+KUkWauv1DgEbdKknp6t6
-         MFtAXkG0Pl2/iFeu8Qx50vHtLO5ysbOm7Ks9ESnJHNrsS9YWYBu326jLnAJXkRRcVZEp
-         cm9Q==
-X-Gm-Message-State: APjAAAW/pm4M+WqxLUiG2nYV+/2X0/tVfe+VhnW98eN7XZMpMshqrmM5
-        beiA/ve5RHQ6GOTnzPyFGf0OcGLIy5Y=
-X-Google-Smtp-Source: APXvYqwFNn6c8zkLpgJmIk5huSj1K2GFhJIlyaZSseoTobOGvx/CIHfcSOG7spXLVGIIBLBvZL8bvA==
-X-Received: by 2002:a2e:2d5:: with SMTP id y82mr11309975lje.230.1568584010767;
-        Sun, 15 Sep 2019 14:46:50 -0700 (PDT)
-Received: from vitaly-Dell-System-XPS-L322X ([188.150.241.161])
-        by smtp.gmail.com with ESMTPSA id r19sm8012861ljd.95.2019.09.15.14.46.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 14:46:49 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 00:46:40 +0300
-From:   Vitaly Wool <vitalywool@gmail.com>
-To:     Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Seth Jennings <sjenning@redhat.com>
-Subject: [PATCH/RFC] zswap: do not map same object twice
-Message-Id: <20190916004640.b453167d3556c4093af4cf7d@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 15 Sep 2019 17:47:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=m5M8jHwpRhnr+X0rLnNmbxvmCMiKTEmQHloHEyEilcs=; b=GtdjDgpNN75hM3KepNeL0KPX9
+        sYRGTU5z9pfl3QtpaB6c8pdKRwIycZl88X6IyKUPgN9ZB4APCPpH1i8HjRCPfoDzEe5QUKNDAOPfY
+        Tp/X3x9xvWvcvl0M0sl5pFk2yyetk/lbzEi+4lJrT6MG2QUcC7fZQvPUnjzOuT1zJP2DM=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9cN3-0001SA-Vl; Sun, 15 Sep 2019 21:47:50 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 1C90427415FF; Sun, 15 Sep 2019 22:47:49 +0100 (BST)
+Date:   Sun, 15 Sep 2019 22:47:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Roman Li <Roman.Li@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Jun Lei <Jun.Lei@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the drm tree with the kbuild tree
+Message-ID: <20190915214748.GJ4352@sirena.co.uk>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NgG1H2o5aFKkgPy/"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zswap_writeback_entry() maps a handle to read swpentry first, and
-then in the most common case it would map the same handle again.
-This is ok when zbud is the backend since its mapping callback is
-plain and simple, but it slows things down for z3fold.
 
-Since there's hardly a point in unmapping a handle _that_ fast as
-zswap_writeback_entry() does when it reads swpentry, the
-suggestion is to keep the handle mapped till the end.
+--NgG1H2o5aFKkgPy/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
----
- mm/zswap.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+Hi all,
 
-diff --git a/mm/zswap.c b/mm/zswap.c
-index 0e22744a76cb..b35464bc7315 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -856,7 +856,6 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	/* extract swpentry from data */
- 	zhdr = zpool_map_handle(pool, handle, ZPOOL_MM_RO);
- 	swpentry = zhdr->swpentry; /* here */
--	zpool_unmap_handle(pool, handle);
- 	tree = zswap_trees[swp_type(swpentry)];
- 	offset = swp_offset(swpentry);
- 
-@@ -866,6 +865,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	if (!entry) {
- 		/* entry was invalidated */
- 		spin_unlock(&tree->lock);
-+		zpool_unmap_handle(pool, handle);
- 		return 0;
- 	}
- 	spin_unlock(&tree->lock);
-@@ -886,15 +886,13 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	case ZSWAP_SWAPCACHE_NEW: /* page is locked */
- 		/* decompress */
- 		dlen = PAGE_SIZE;
--		src = (u8 *)zpool_map_handle(entry->pool->zpool, entry->handle,
--				ZPOOL_MM_RO) + sizeof(struct zswap_header);
-+		src = (u8 *)zhdr + sizeof(struct zswap_header);
- 		dst = kmap_atomic(page);
- 		tfm = *get_cpu_ptr(entry->pool->tfm);
- 		ret = crypto_comp_decompress(tfm, src, entry->length,
- 					     dst, &dlen);
- 		put_cpu_ptr(entry->pool->tfm);
- 		kunmap_atomic(dst);
--		zpool_unmap_handle(entry->pool->zpool, entry->handle);
- 		BUG_ON(ret);
- 		BUG_ON(dlen != PAGE_SIZE);
- 
-@@ -940,6 +938,7 @@ static int zswap_writeback_entry(struct zpool *pool, unsigned long handle)
- 	spin_unlock(&tree->lock);
- 
- end:
-+	zpool_unmap_handle(pool, handle);
- 	return ret;
- }
- 
--- 
-2.17.1
+Today's linux-next merge of the drm tree got a conflict in:
+
+  drivers/gpu/drm/amd/display/dc/dml/Makefile
+
+between commit:
+
+  54b8ae66ae1a345 ("kbuild: change *FLAGS_<basetarget>.o to take the path r=
+elative to $(obj)")
+
+=66rom the kbuild tree and commits:
+
+  0f0727d971f6fdf ("drm/amd/display: readd -msse2 to prevent Clang from emi=
+tting libcalls to undefined SW FP routines")
+  542816ff168d8a3 ("drm/amd/display: Add DCN2.1 changes to DML")
+  b04641a3f4c54b0 ("drm/amd/display: Add Renoir DML")
+  057fc695e934a77 ("drm/amd/display: support "dummy pstate"")
+
+=66rom the drm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
+index 83792e2c0f0e4,af2a864a6da05..0000000000000
+--- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+@@@ -32,16 -32,29 +32,25 @@@ endi
+ =20
+  dml_ccflags :=3D -mhard-float -msse $(cc_stack_align)
+ =20
++ ifdef CONFIG_CC_IS_CLANG
++ dml_ccflags +=3D -msse2
++ endif
++=20
+ -CFLAGS_display_mode_lib.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o :=3D $(dml_ccflags)
+ =20
+  ifdef CONFIG_DRM_AMD_DC_DCN2_0
+ -CFLAGS_display_mode_vba.o :=3D $(dml_ccflags)
+ -CFLAGS_display_mode_vba_20.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_20.o :=3D $(dml_ccflags)
+ -CFLAGS_display_mode_vba_20v2.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_20v2.o :=3D $(dml_ccflags)
+ -endif
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o :=3D $(dml_ccflag=
+s)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o :=3D $(dml_ccf=
+lags)
+++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o :=3D $(dml_ccfl=
+ags)
+++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o :=3D $(dml_c=
+cflags)
++ ifdef CONFIG_DRM_AMD_DC_DCN2_1
+ -CFLAGS_display_mode_vba_21.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_calc_21.o :=3D $(dml_ccflags)
+ -endif
+ -ifdef CONFIG_DRM_AMD_DCN3AG
+ -CFLAGS_display_mode_vba_3ag.o :=3D $(dml_ccflags)
+++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o :=3D $(dml_ccflag=
+s)
+++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o :=3D $(dml_ccf=
+lags)
+  endif
+ -CFLAGS_dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
+ -CFLAGS_display_rq_dlg_helpers.o :=3D $(dml_ccflags)
+ -CFLAGS_dml_common_defs.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o :=3D $(dml_ccflags)
+ +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o :=3D $(dml_ccflags)
+ =20
+  DML =3D display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_c=
+alc.o \
+  	dml_common_defs.o
+
+--NgG1H2o5aFKkgPy/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+sYQACgkQJNaLcl1U
+h9A1Wgf/aYB4E5uPXEwza2IQcguTufjZTmITgJ8mTIXHcTVz7OHWVigGg3hySEbu
+vCTsipyL1NvIiwMbXRxJxTfLbkBV0/w3XQaEL+hvcYOshU7p1DGNb0ukZtExjYqy
+UywcNHC/yt2z2SGWj1w5lEwnkU/uDZ6eHsTp14JOUCcOG0rLNZ4NRHl8Q3Hi8mR1
+XQ9TF8PitKWVTTpurrDTKcysSOurUvYNbVwO6RsLd3CSdnzJkPxweiJKNEgkaLYg
+mm1wJPo/NlpsMwwdkZtKTcyvJA0Y3Qe+BPvoo5QfwUOzHStjRb43l/nQVz4eARDG
+B/jpBuIWhNZst06fyTwbxxnh/GvlNw==
+=2F48
+-----END PGP SIGNATURE-----
+
+--NgG1H2o5aFKkgPy/--
