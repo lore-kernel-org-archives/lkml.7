@@ -2,121 +2,104 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A33C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E37C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF3521479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:31:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=bfs.de header.i=@bfs.de header.b="IaBIg9Jf"
+	by mail.kernel.org (Postfix) with ESMTP id 5418A2168B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 13:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568554424;
+	bh=xDjZbTR43qjyChUY94InVKK0+hV7aPQ9u9XH0c6wwnw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Cv93jid3v8R2L/Tfzb5aJTD5zm6ojvbm3taeJweuEgcSzPYI6TlPwhlEvRw7W+LnP
+	 8e9B/yUICXjuZr75His+ppnPcmZJCvK7guxYsO17TOhq5sVQK5Htet6NgaCqC17MUv
+	 Za+TsyVY2S7PycoE/b32KhdFE1epQZ8jK6ghArZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbfIONbO (ORCPT
+        id S1731341AbfIONdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 09:31:14 -0400
-Received: from mx01-fr.bfs.de ([193.174.231.67]:2937 "EHLO mx01-fr.bfs.de"
+        Sun, 15 Sep 2019 09:33:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726378AbfIONbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 09:31:13 -0400
-Received: from mail-fr.bfs.de (mail-fr.bfs.de [10.177.18.200])
-        by mx01-fr.bfs.de (Postfix) with ESMTPS id 0C70620361;
-        Sun, 15 Sep 2019 15:31:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bfs.de; s=dkim201901;
-        t=1568554268; h=from:from:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fbHUZffN/lv6bdaRhbcUqjUt4bMuEhtD9udAascLPZw=;
-        b=IaBIg9JfnouBoriu06F8wwAe5gcahbjtfIzFWPeZL8bS2KirdhrbD0Mgrj4oge4c7fL1bW
-        jC9UAYIXMwtRh50ynleEOBwypVMxkWVsyqRfSOr4/7YnKd/LdxKvRquv9rTsyumOaMoNN3
-        fxKUZXHYR5dFhTKFw1Amt7ubRoBSxGFJqvz8puS9JBSuREjppJA7dTBij/rN6fsbuL6qx9
-        kEnvrWeoBg4UU+mvnV2P/VKX1P0o4lMKWN5jkEbjEZu7lrd/pm1a5JejuC9OvzAbggWMTL
-        KJ5+278kPc+kiYqtJRhPKSX0vdxMLtbuchJYbQGKNYO58V+7OrZ+Zzx/OQ1wNA==
-Received: from [134.92.181.33] (unknown [134.92.181.33])
-        by mail-fr.bfs.de (Postfix) with ESMTPS id C3BD5BEEBD;
-        Sun, 15 Sep 2019 15:31:07 +0200 (CEST)
-Message-ID: <5D7E3D1A.5070906@bfs.de>
-Date:   Sun, 15 Sep 2019 15:31:06 +0200
-From:   walter harms <wharms@bfs.de>
-Reply-To: wharms@bfs.de
-User-Agent: Mozilla/5.0 (X11; U; Linux x86_64; de; rv:1.9.1.16) Gecko/20101125 SUSE/3.0.11 Thunderbird/3.0.11
+        id S1730908AbfIONdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 09:33:43 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EECF214AF;
+        Sun, 15 Sep 2019 13:33:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568554422;
+        bh=xDjZbTR43qjyChUY94InVKK0+hV7aPQ9u9XH0c6wwnw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GQQ2P6vBNrxen7mnOvqv58YXPLtQs4M2WcX/VhCi4ZCPYbrLgFokTOb1j6Nqf8qSA
+         u01jbX/IqL2QfOyrH7HUFDzIgCtspqad/4hwlcc3eKhIHBD3H7Di0XZfUek1gu44jB
+         iZ0+eqpvzGzVnx1ZmmlhCRECgBgBmvyky/NfYf04=
+Date:   Sun, 15 Sep 2019 14:33:38 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Stefan Popa <stefan.popa@analog.com>
+Cc:     <Michael.Hennerich@analog.com>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] iio: accel: adxl372: Perform a reset at start up
+Message-ID: <20190915143338.6a064789@archlinux>
+In-Reply-To: <1568126686-13436-1-git-send-email-stefan.popa@analog.com>
+References: <1568126686-13436-1-git-send-email-stefan.popa@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-To:     Mao Wenan <maowenan@huawei.com>
-CC:     valentina.manea.m@gmail.com, shuah@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] usbip: vhci_hcd indicate failed message
-References: <20190915034332.21168-1-maowenan@huawei.com>
-In-Reply-To: <20190915034332.21168-1-maowenan@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Authentication-Results: mx01-fr.bfs.de
-X-Spamd-Result: default: False [-3.10 / 7.00];
-         ARC_NA(0.00)[];
-         HAS_REPLYTO(0.00)[wharms@bfs.de];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TAGGED_RCPT(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLYTO_ADDR_EQ_FROM(0.00)[];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_SEVEN(0.00)[7];
-         NEURAL_HAM(-0.00)[-0.999,0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[gmail.com];
-         MID_RHS_MATCH_FROM(0.00)[];
-         RCVD_TLS_ALL(0.00)[];
-         RCVD_COUNT_TWO(0.00)[2]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 10 Sep 2019 17:44:46 +0300
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-
-Am 15.09.2019 05:43, schrieb Mao Wenan:
-> If the return value of vhci_init_attr_group and
-> sysfs_create_group is non-zero, which mean they failed
-> to init attr_group and create sysfs group, so it would
-> better add 'failed' message to indicate that.
+> We need to perform a reset a start up to make sure that the chip is in a
+> consistent state. This reset also disables all the interrupts which
+> should only be enabled together with the iio buffer. Not doing this, was
+> sometimes causing unwanted interrupts to trigger.
 > 
-> Fixes: 0775a9cbc694 ("usbip: vhci extension: modifications to vhci driver")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+Added the same fixes tag, and cc for stable. We'll have to keep an eye
+on this though as there are other patches after the one hightlighted so
+they may not go on cleanly.
+
+Thanks,
+
+Jonathan
+
 > ---
->  drivers/usb/usbip/vhci_hcd.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Changes in v2:
+> 	- Instead of disabling the interrupts, now this patch performs
+> 	  a software reset.
 > 
-> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> index 000ab7225717..dd54c95d2498 100644
-> --- a/drivers/usb/usbip/vhci_hcd.c
-> +++ b/drivers/usb/usbip/vhci_hcd.c
-> @@ -1185,12 +1185,12 @@ static int vhci_start(struct usb_hcd *hcd)
->  	if (id == 0 && usb_hcd_is_primary_hcd(hcd)) {
->  		err = vhci_init_attr_group();
->  		if (err) {
-> -			pr_err("init attr group\n");
-> +			pr_err("init attr group failed\n");
->  			return err;
->  		}
->  		err = sysfs_create_group(&hcd_dev(hcd)->kobj, &vhci_attr_group);
->  		if (err) {
-> -			pr_err("create sysfs files\n");
-> +			pr_err("create sysfs failed\n");
+>  drivers/iio/accel/adxl372.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/iio/accel/adxl372.c b/drivers/iio/accel/adxl372.c
+> index 33edca8..8a00528 100644
+> --- a/drivers/iio/accel/adxl372.c
+> +++ b/drivers/iio/accel/adxl372.c
+> @@ -575,6 +575,14 @@ static int adxl372_setup(struct adxl372_state *st)
+>  		return -ENODEV;
+>  	}
+>  
+> +	/*
+> +	 * Perform a software reset to make sure the device is in a consistent
+> +	 * state after start up.
+> +	 */
+> +	ret = regmap_write(st->regmap, ADXL372_RESET, ADXL372_RESET_CODE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	ret = adxl372_set_op_mode(st, ADXL372_STANDBY);
+>  	if (ret < 0)
+>  		return ret;
 
-I guess "sysfs files" is here intended ?
-
-re,
- wh
-
->  			vhci_finish_attr_group();
->  			return err;
->  		}
