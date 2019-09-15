@@ -2,176 +2,121 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE64C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074EBC2BA1D
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4323F2077C
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568584077;
-	bh=j22k5wM8MRW/WCU285aW/Ltb3jNTPEK0PIuQzhYsveA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=zZVUqzcoFDjgGgyvVulff03k60uLG00rMzU84wR+9szFovTFYe+cVZXF7fo2I2llB
-	 hrrvFLclnxYHZMSnFou/yvmBGkMOvYKe61x4xobk3TNRSQ8KKysTW+so3hSG/Qg9+l
-	 94AT75SI618HB6/ZZvlZlKi30L6LqWgUbd+emu+8=
+	by mail.kernel.org (Postfix) with ESMTP id BE87A2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 21:58:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S1VB0FI7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726698AbfIOVr4 (ORCPT
+        id S1726965AbfIOV6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 17:47:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58338 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIOVrz (ORCPT
+        Sun, 15 Sep 2019 17:58:41 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53886 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfIOV6l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 17:47:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=m5M8jHwpRhnr+X0rLnNmbxvmCMiKTEmQHloHEyEilcs=; b=GtdjDgpNN75hM3KepNeL0KPX9
-        sYRGTU5z9pfl3QtpaB6c8pdKRwIycZl88X6IyKUPgN9ZB4APCPpH1i8HjRCPfoDzEe5QUKNDAOPfY
-        Tp/X3x9xvWvcvl0M0sl5pFk2yyetk/lbzEi+4lJrT6MG2QUcC7fZQvPUnjzOuT1zJP2DM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9cN3-0001SA-Vl; Sun, 15 Sep 2019 21:47:50 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 1C90427415FF; Sun, 15 Sep 2019 22:47:49 +0100 (BST)
-Date:   Sun, 15 Sep 2019 22:47:49 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the drm tree with the kbuild tree
-Message-ID: <20190915214748.GJ4352@sirena.co.uk>
+        Sun, 15 Sep 2019 17:58:41 -0400
+Received: by mail-wm1-f68.google.com with SMTP id i16so2022812wmd.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 14:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=asP2MeWC9oWpx/gaOK+HIONcvfsMWrL7pF7piAoOX20=;
+        b=S1VB0FI71TIhbEAW+HnuYeu8lYF8IPAD5FbR8FKruD2QVdqxM5xYfHY82UeYuYHI38
+         64nKSioCUrLEnubE0nEDImhDcGu1KxkcPyXvp2fQTSLRX6PqBfiSLWjroWJ0V2LZQ2hO
+         eAQ4HbdEBCwaVhQt62GLJLi5lXY0Ok9tQm6EmRi1VluYcF6AujQFN8e9yz/57qpOqxp6
+         9VhH0IskrMZgdi2BA7Sy8uhe1IzWkJRzYK+CgDyPlzzhzdrOcy/lLnMOPC6DtBCw4Vo8
+         vyaH+FP4qqe1U+ckkQW+aD3UkKy5N5p1sdrOwwVaGE6JVghnT/jz7B37T5nhQzIF2W52
+         P80w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=asP2MeWC9oWpx/gaOK+HIONcvfsMWrL7pF7piAoOX20=;
+        b=rMjLYDhRjaTFZrLkBWKSlOU0V07CylRCCWAOWahyvL7Nw2Sevppa+35KQMTFkc296e
+         6V7MDfq25zFG75TWRhSSYC+amhjpEJKQ1xToFJm19PzJYF1OAF7iG+cx7S/tdN93NIWi
+         3LDfb74ZzikF56KcteRU647LWZJjRRfAePieUCN9xz6CXwcv1jnLWQQaYcT4aaxEBRNw
+         LOFAqXkhvgqlOUIZ6bwroRovloUAvF2ZRfBt1AeeZVp0nfIbCz3smtF/BUXOwy3UUWUt
+         CPK7o03ALarKq6i4hu+BPehSKwThEJKgB0axYLYkF4H6HlcIeXW73Q7+vy0WUcd/265c
+         7OeA==
+X-Gm-Message-State: APjAAAUH3IReYTrkNlAfs6AfaM6P5SXwtmanQiGlhrD2qEUlraSEy87C
+        Rb/pmWoeXjbdN/oNJwCAxD4H7yPCL2DAZPcjw6o=
+X-Google-Smtp-Source: APXvYqyLaIkBfO0cRj9G3hwB3BPI2zKLvyTV1roHXRqM+QcYeakzYrOkMQC9znKnOdI6GUB/SfDLHZfnKgSmiUH2ZS0=
+X-Received: by 2002:a1c:eb16:: with SMTP id j22mr6071758wmh.176.1568584719359;
+ Sun, 15 Sep 2019 14:58:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NgG1H2o5aFKkgPy/"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190829005009.GA5895@embeddedor>
+In-Reply-To: <20190829005009.GA5895@embeddedor>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Sun, 15 Sep 2019 23:58:28 +0200
+Message-ID: <CAFLxGvx3fbWn=kazG342PO60uyA0HM2Lzt2j-k7+vTBhLSoAjA@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: super: Use struct_size() helper
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 29, 2019 at 2:50 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> One of the more common cases of allocation size calculations is finding
+> the size of a structure that has a zero-sized array at the end, along
+> with memory for some number of elements for that array. For example:
+>
+> struct ubifs_znode {
+>         ...
+>         struct ubifs_zbranch zbranch[];
+> };
+>
+> Make use of the struct_size() helper instead of an open-coded version
+> in order to avoid any potential type mistakes.
+>
+> So, replace the following form:
+>
+> sizeof(struct ubifs_znode) + c->fanout * sizeof(struct ubifs_zbranch)
+>
+> with:
+>
+> struct_size(c->cnext, zbranch, c->fanout)
+>
+> This code was detected with the help of Coccinelle.
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>  fs/ubifs/super.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+> index 2706f13e3eb9..ca86489048c8 100644
+> --- a/fs/ubifs/super.c
+> +++ b/fs/ubifs/super.c
+> @@ -661,8 +661,7 @@ static int init_constants_sb(struct ubifs_info *c)
+>         long long tmp64;
+>
+>         c->main_bytes = (long long)c->main_lebs * c->leb_size;
+> -       c->max_znode_sz = sizeof(struct ubifs_znode) +
+> -                               c->fanout * sizeof(struct ubifs_zbranch);
+> +       c->max_znode_sz = struct_size(c->cnext, zbranch, c->fanout);
 
---NgG1H2o5aFKkgPy/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+First of all, c->fanout is bound checked.
+I had to lookup how struct_size() works to understand this
+single line of code and why you use the completely unrelated c->cnext here.
+Sorry this change does not make the code any better just harder to read.
 
-Hi all,
-
-Today's linux-next merge of the drm tree got a conflict in:
-
-  drivers/gpu/drm/amd/display/dc/dml/Makefile
-
-between commit:
-
-  54b8ae66ae1a345 ("kbuild: change *FLAGS_<basetarget>.o to take the path r=
-elative to $(obj)")
-
-=66rom the kbuild tree and commits:
-
-  0f0727d971f6fdf ("drm/amd/display: readd -msse2 to prevent Clang from emi=
-tting libcalls to undefined SW FP routines")
-  542816ff168d8a3 ("drm/amd/display: Add DCN2.1 changes to DML")
-  b04641a3f4c54b0 ("drm/amd/display: Add Renoir DML")
-  057fc695e934a77 ("drm/amd/display: support "dummy pstate"")
-
-=66rom the drm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
-index 83792e2c0f0e4,af2a864a6da05..0000000000000
---- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-@@@ -32,16 -32,29 +32,25 @@@ endi
- =20
-  dml_ccflags :=3D -mhard-float -msse $(cc_stack_align)
- =20
-+ ifdef CONFIG_CC_IS_CLANG
-+ dml_ccflags +=3D -msse2
-+ endif
-+=20
- -CFLAGS_display_mode_lib.o :=3D $(dml_ccflags)
- +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o :=3D $(dml_ccflags)
- =20
-  ifdef CONFIG_DRM_AMD_DC_DCN2_0
- -CFLAGS_display_mode_vba.o :=3D $(dml_ccflags)
- -CFLAGS_display_mode_vba_20.o :=3D $(dml_ccflags)
- -CFLAGS_display_rq_dlg_calc_20.o :=3D $(dml_ccflags)
- -CFLAGS_display_mode_vba_20v2.o :=3D $(dml_ccflags)
- -CFLAGS_display_rq_dlg_calc_20v2.o :=3D $(dml_ccflags)
- -endif
- +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o :=3D $(dml_ccflags)
- +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o :=3D $(dml_ccflag=
-s)
- +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o :=3D $(dml_ccf=
-lags)
-++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o :=3D $(dml_ccfl=
-ags)
-++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o :=3D $(dml_c=
-cflags)
-+ ifdef CONFIG_DRM_AMD_DC_DCN2_1
- -CFLAGS_display_mode_vba_21.o :=3D $(dml_ccflags)
- -CFLAGS_display_rq_dlg_calc_21.o :=3D $(dml_ccflags)
- -endif
- -ifdef CONFIG_DRM_AMD_DCN3AG
- -CFLAGS_display_mode_vba_3ag.o :=3D $(dml_ccflags)
-++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o :=3D $(dml_ccflag=
-s)
-++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o :=3D $(dml_ccf=
-lags)
-  endif
- -CFLAGS_dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
- -CFLAGS_display_rq_dlg_helpers.o :=3D $(dml_ccflags)
- -CFLAGS_dml_common_defs.o :=3D $(dml_ccflags)
- +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o :=3D $(dml_ccflags)
- +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o :=3D $(dml_ccflags)
- +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o :=3D $(dml_ccflags)
- =20
-  DML =3D display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_c=
-alc.o \
-  	dml_common_defs.o
-
---NgG1H2o5aFKkgPy/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+sYQACgkQJNaLcl1U
-h9A1Wgf/aYB4E5uPXEwza2IQcguTufjZTmITgJ8mTIXHcTVz7OHWVigGg3hySEbu
-vCTsipyL1NvIiwMbXRxJxTfLbkBV0/w3XQaEL+hvcYOshU7p1DGNb0ukZtExjYqy
-UywcNHC/yt2z2SGWj1w5lEwnkU/uDZ6eHsTp14JOUCcOG0rLNZ4NRHl8Q3Hi8mR1
-XQ9TF8PitKWVTTpurrDTKcysSOurUvYNbVwO6RsLd3CSdnzJkPxweiJKNEgkaLYg
-mm1wJPo/NlpsMwwdkZtKTcyvJA0Y3Qe+BPvoo5QfwUOzHStjRb43l/nQVz4eARDG
-B/jpBuIWhNZst06fyTwbxxnh/GvlNw==
-=2F48
------END PGP SIGNATURE-----
-
---NgG1H2o5aFKkgPy/--
+-- 
+Thanks,
+//richard
