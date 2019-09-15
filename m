@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54371C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4A25C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CAF214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8884C214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wv2SR5sO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jo+e4APs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbfIOQwj (ORCPT
+        id S1726688AbfIOQwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 12:52:39 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45196 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726372AbfIOQwi (ORCPT
+        Sun, 15 Sep 2019 12:52:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46237 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726372AbfIOQwt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 12:52:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so21070613pfb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:52:38 -0700 (PDT)
+        Sun, 15 Sep 2019 12:52:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id a3so167060pgm.13
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 09:52:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
         bh=nii43oMTaFtktKbnijjugyrLFfb5ZKvbiN8kMj3vNPE=;
-        b=Wv2SR5sO7CBMS93mcNuzKaC33L131eKLxc2sWGOw4gZsA2mpeA6eOWAaQ/RIHpcvzE
-         UYJ4XZ0cp7TvEj4HUH5RXcDkYGpi4w7RgV9JDzthjil/VX+OCBWBLiGeksGPio5nQ4W/
-         n+P7xO6d5cPH1Y2J1pefYxNd2a+8t/tYy1U5iv+qth1jnHJ5CU82f/XrNno5sG7w6YdU
-         k8CQzOk8cSFIhkYRzTxSKtBvSH2vA3zRKAyWAPB3rtnYqJJ23EwyaBpsmIiHUeFdrX++
-         aRpLJJDVoVUYXcJKu5QRRIglkt97eQgVnqG/6gNYv3YgbZY8dd7gDsjlzpAuZyCQ/9hB
-         GHpQ==
+        b=jo+e4APs5xDRR8vZnH8rVBXMdzgGhpBwxw1z0mC3zae1JlCpMP62+atbzfzG4DzlJ4
+         weLCzW1zyxAYbUHZEPNrQtsLGmmxNCJWoa02cfILoRJfidraJ/kiXJgAl7L/E8Q0fs9c
+         Dn/J+0SvCTaHBHWnlM2UnCAVBdLyy6KgR6bwLi7xR2wQwJ/MXLv8ynXcZwlUN4nwfe+s
+         mxH+qYSu1vigjSVG1BrMLQUwD7FpJli522rbBGlbnGrt3xKG30eSKffnD0Y2HkDdyYzk
+         pUuTC/IUU8TzL15qlK7Wzrw6vMLteSA9xTkhgzsInyxQftpd8Cy5PZjQZfwwplgw50+k
+         yv6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
         bh=nii43oMTaFtktKbnijjugyrLFfb5ZKvbiN8kMj3vNPE=;
-        b=cpx1ErHqU+zzORJhRR61JFFVO29xhvB9w8ggfprUinnzRIo5dCkKimEoCELqKKZAJS
-         czIZn45mJ5Xw6xuPk4bNhBMR0ht8pUcikkdpbgPHCEazU00tlokAxBqW4HpEoL+Z5uRL
-         q7cKCTgIVxysm4HksIyZX2T6L1yfl2/5ucBXwZXzpiXzEnZe54nyEtYuwEOGWVAVM/h/
-         0G9bx/Txp7dmcqC+NUtfLc6h6Fghm+ytCjXyPtBNA4P0AEjae6AsFY1t2363TEj/fTbO
-         lTGnA8FewO2VtsJy2Om/wIJhdv9e7KHuvwvV6cIQNX/TcuNCa0w787YOJIPEy2Han3H1
-         jtVA==
-X-Gm-Message-State: APjAAAUpyY/1NRKhTYWK4G6UL21N0rF9QrMKBwm8DfG8jTE0+kvHck23
-        VpE9LGXDXE1rRnjuydY42LI=
-X-Google-Smtp-Source: APXvYqxYf54cYNQWLvZP6JklEbGw44XbGka9yQDf7cpKtKvKEjKS+BbJ7rhYqAqRIGCfavv9PckRFQ==
-X-Received: by 2002:aa7:8f03:: with SMTP id x3mr66745495pfr.91.1568566358307;
-        Sun, 15 Sep 2019 09:52:38 -0700 (PDT)
+        b=Zq91PpKX3VEkJzbS296rsYU0B9asGM2QUcmX60YlCCGPdHXEphtFuPfBfZ85tQnwEY
+         2gVnZZzIiha8NC5krB4Fa/9QvmcMm0s+GgYGZtQkEa7pcNe7pKS1mOD3C15nY0K6WzKo
+         wDCDrht8uagqJcvP4cRq3eCbV2s5u3FN0Usq8ZrdfrMxgLhhAVxTt0CQ3qEokAYkJ30P
+         aHNMuwJnpbEzF3CeXG+4C6jTe+vwqvk7jCnWBtMOJfmtu697h5E+jB/hS4jf4RJVvXMk
+         GFofWRCM6p5FZOOTEtDq4pvsrpXzR7jJ/s+8VUBa1f35rsKSbOVu8YafVaPpofaiZc8h
+         iWzA==
+X-Gm-Message-State: APjAAAXhudvkoxQjMIE/tlfhCAJX9TZbyps1Uj3kY4nFCTGVlPCG7vlc
+        jp2Tv+ziuSBb/xXoSgmTEOs=
+X-Google-Smtp-Source: APXvYqyTb4DRsLUcRsbIEyib6eSVHgjnGgZ0zUwvJ1lKLEu0+d9WiS+28E8PoS/0ro55mhxu8KF8iA==
+X-Received: by 2002:a62:7c4d:: with SMTP id x74mr7837018pfc.95.1568566368554;
+        Sun, 15 Sep 2019 09:52:48 -0700 (PDT)
 Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id a4sm4383259pgq.6.2019.09.15.09.52.29
+        by smtp.gmail.com with ESMTPSA id a4sm4383259pgq.6.2019.09.15.09.52.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 09:52:37 -0700 (PDT)
+        Sun, 15 Sep 2019 09:52:48 -0700 (PDT)
 From:   Pengfei Li <lpf.vector@gmail.com>
 To:     akpm@linux-foundation.org
 Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
         rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, guro@fb.com,
         Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH v4 4/7] mm, slab: return ZERO_SIZE_ALLOC for zero sized kmalloc requests
-Date:   Mon, 16 Sep 2019 00:51:14 +0800
-Message-Id: <20190915165121.7237-6-lpf.vector@gmail.com>
+Subject: [PATCH v4 4/7] mm, slab: Return ZERO_SIZE_ALLOC for zero sized kmalloc requests
+Date:   Mon, 16 Sep 2019 00:51:15 +0800
+Message-Id: <20190915165121.7237-7-lpf.vector@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190915165121.7237-1-lpf.vector@gmail.com>
 References: <20190915165121.7237-1-lpf.vector@gmail.com>
