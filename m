@@ -2,74 +2,134 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA6AC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D480C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBA37216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:48:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BEkK6Kfe"
+	by mail.kernel.org (Postfix) with ESMTP id 0DF8C21479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:55:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfIOTsl (ORCPT
+        id S1727832AbfIOTzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 15:48:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53850 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfIOTsk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 15:48:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FHC/cyI11fcBqOeULhlqC5WFX/E6SlCRTb0STc8WVhM=; b=BEkK6Kfeut6a+qhG7i4ODVWAR
-        kbMiXuIcJLQ/8G9dH3/JsYxxVbnen8YSOTdeys/h4T5nJRov6jRX9PSpzoGyJVcsjGTmDWdCmW0Aq
-        5g2V4cSDEFW09vW8eQ5eqCGGp1aRB3jr3cWw76pH1d9unXmgv/q+n7RjfPb1fatL0FYkxcRxlkyHZ
-        jgiGSbD8tltjnG/7Sz7wam8QgztI6DOkFDownKXmMWgo3mS6tKU9IZxJC9UAQ/dTv++iSKuK8FlkG
-        GLMWrGfBjxc1i4E/fGvTrv4NO8X5z8xQoPk51g6IfdDwnKhqc4hPW4SW9KJaV6pRQg6aSZHltObTi
-        Pfd1Umiig==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i9aVi-0000N9-05; Sun, 15 Sep 2019 19:48:38 +0000
-Subject: Re: pci: endpoint test BUG
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <5d9eda26-fb92-063e-f84d-7dfafe5d6b29@infradead.org>
- <20190915163930.GX1131@ZenIV.linux.org.uk>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <b80bed82-26b3-2ad5-79bc-e3f805e0c6c9@infradead.org>
-Date:   Sun, 15 Sep 2019 12:48:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 15 Sep 2019 15:55:07 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45468 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbfIOTzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 15:55:07 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FJsi6f023261;
+        Sun, 15 Sep 2019 21:54:44 +0200
+Date:   Sun, 15 Sep 2019 21:54:44 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        Lennart Poettering <mzxreary@0pointer.de>
+Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
+ CRNG is uninitialized
+Message-ID: <20190915195444.GA23245@1wt.eu>
+References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190915183240.GA23155@1wt.eu>
+ <20190915183659.GA23179@1wt.eu>
+ <CAHk-=wgFrRCL3WP7vyuZ-92xyqb97ADc=JNyyVCucZ1Q9oh8TA@mail.gmail.com>
+ <20190915191814.GB23212@1wt.eu>
+ <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190915163930.GX1131@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/15/19 9:39 AM, Al Viro wrote:
-> On Sun, Sep 15, 2019 at 09:34:37AM -0700, Randy Dunlap wrote:
->> Kernel is 5.3-rc8 on x86_64.
->>
->> Loading and removing the pci-epf-test module causes a BUG.
+On Sun, Sep 15, 2019 at 12:31:42PM -0700, Linus Torvalds wrote:
+> On Sun, Sep 15, 2019 at 12:18 PM Willy Tarreau <w@1wt.eu> wrote:
+> >
+> > Oh no I definitely don't want this behavior at all for urandom, what
+> > I'm saying is that as long as getrandom() will have a lower quality
+> > of service than /dev/urandom for non-important randoms
 > 
-> Ugh...  Could you try to reproduce it on earlier kernels?
+> Ahh, here you're talking about the fact that it can block at all being
+> "lower quality".
 > 
+> I do agree that getrandom() is doing some odd things. It has the
+> "total blocking mode" of /dev/random (if you pass it GRND_RANDOM), but
+> it has no mode of replacing /dev/urandom.
 
-Sure... will get back to you.
+Yep but with your change it's getting better.
 
--- 
-~Randy
+> So if you want the /dev/urandom bvehavior, then no, getrandom() simply
+> has never given you that.
+> 
+> Use /dev/urandom if you want that.
+
+It's not available in chroot, which is the main driver for getrandom()
+I guess.
+
+> Sad, but there it is. We could have a new flag (GRND_URANDOM) that
+> actually gives the /dev/urandom behavior. But the ostensible reason
+> for getrandom() was the blocking for entropy. See commit c6e9d6f38894
+> ("random: introduce getrandom(2) system call") from back in 2014.
+
+Oh I definitely know it's been a long debate.
+
+> The fact that it took five years to hit this problem is probably due
+> to two reasons:
+> 
+>  (a) we're actually pretty good about initializing the entropy pool
+> fairly quickly most of the time
+> 
+>  (b) people who started using 'getrandom()' and hit this issue
+> presumably then backed away from it slowly and just used /dev/urandom
+> instead.
+
+We've hit it the hard way more than a year ago already, when openssl
+adopted getrandom() instead of urandom for certain low-importance
+things in order to work better in chroots and/or avoid fd leaks. And
+even openssl had to work around these issues in multiple iterations
+(I don't remember how however).
+
+> So it needed an actual "oops, we don't get as much entropy from the
+> filesystem accesses" situation to actually turn into a problem. And
+> presumably the people who tried out things like nvdimm filesystems
+> never used Arch, and never used a sufficiently new systemd to see the
+> "oh, without disk interrupts you don't get enough randomness to boot".
+
+In my case the whole system is in the initramfs and the only accesses
+to the flash are to read the config. So that's pretty a limited source
+of interrupts for a headless system ;-)
+
+> One option is to just say that GRND_URANDOM is the default (ie never
+> block, do the one-liner log entry to warn) and add a _new_ flag that
+> says "block for entropy". But if we do that, then I seriously think
+> that the new behavior should have that timeout limiter.
+
+I think the timeout is a good thing to do, but it would be nice to
+let the application know that what was provided was probably not as
+good as expected (well if the application wants real random, it
+should use GRND_RANDOM).
+
+> For 5.3, I'll just revert the ext4 change, stupid as that is. That
+> avoids the regression, even if it doesn't avoid the fundamental
+> problem. And gives us time to discuss it.
+
+It's sad to see that being excessive on randomness leads to forcing
+totally unrelated subsystem to be less efficient :-(
+
+Willy
