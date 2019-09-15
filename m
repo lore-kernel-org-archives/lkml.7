@@ -2,258 +2,103 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0F1C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D706C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E8421479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E5F214DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="xA4HUn2S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDpr1LCc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726502AbfIOSep (ORCPT
+        id S1726582AbfIOSfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 14:34:45 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:40646 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbfIOSep (ORCPT
+        Sun, 15 Sep 2019 14:35:55 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51824 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbfIOSfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 14:34:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jsDc63G0j/DkI+K6Lr0zDi+b74Pxegfq3m7vm6p44LA=; b=xA4HUn2SQlkYKILPTZtzL/ftU
-        rvURYZewVLDafUKNvmdl3dqENKfLhvyt8Jn9ZivvyZeYd97KlrD0f7+BsDzoQpltyv7kPx7wH1skW
-        8XXj7NxRGa/lfH1P5wEL+Zsm5Tynd44hWyEMaL6zkGGPwIItBNi7S3AZRFTs1exQ/KZ8C3nSr9d6g
-        FQI1bybExS4bl3IB1i3Go91FxQhKvcK8eSTZ3QiIl4q394PI8Bex+Be2iR9Yu6IdHpcG+5AuaThs3
-        Y/1mtNvEsMZfOcmZ0zhwHdLvtUzp61iZ6Yb8Gl7PRszGbH9muB3gGr+cq8K/D+UQV5S9fb1W8RjWM
-        npVhifUEg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:60632)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1i9ZLv-0007hn-AA; Sun, 15 Sep 2019 19:34:27 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1i9ZLl-0007zu-3k; Sun, 15 Sep 2019 19:34:17 +0100
-Date:   Sun, 15 Sep 2019 19:34:17 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     kstewart@linuxfoundation.org, gustavo@embeddedor.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>, linux-mm@kvack.org,
-        sakari.ailus@linux.intel.com, bhelgaas@google.com,
-        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] arm: fix page faults in do_alignment
-Message-ID: <20190915183416.GF25745@shell.armlinux.org.uk>
-References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
- <20190830133522.GZ13294@shell.armlinux.org.uk>
- <87d0gmwi73.fsf@x220.int.ebiederm.org>
- <20190830203052.GG13294@shell.armlinux.org.uk>
- <87y2zav01z.fsf@x220.int.ebiederm.org>
- <20190830222906.GH13294@shell.armlinux.org.uk>
- <87mufmioqv.fsf@x220.int.ebiederm.org>
- <20190906151759.GM13294@shell.armlinux.org.uk>
+        Sun, 15 Sep 2019 14:35:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 7so7657485wme.1;
+        Sun, 15 Sep 2019 11:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lspMjLiionZILkbBr8xfiqwsFdKOXlG6Qqe5s5HG7c=;
+        b=BDpr1LCcQBR8RMm+cBgOIclbkpAVbLmO1JLnUiOzNq/PIurUa2s2f92YPB3ZKTopCR
+         MRAYLgrv9CWU5oG5nOtlquC6N85TVGGYrMeARJJpdGLIPbcqgmTtBVT3DUCFKVY0hc7G
+         n6oPbmLkQGjyqa2qVUur8LC5d/wrdeLfHreFpKuLEQJP5wKG1ffm+9gySglEj3TABwBr
+         Ly/t0K+kQlF0ck4Eq8zAMfC2N8uLJYv8k6siXy7Ym69TVO6PQRTziISyR3pYSpbnudRD
+         Msox/dobtnl8zwnoLyePA4tJ0Y+Y8JmYIauAE1rjoDMA9cu1/rsBySEUva62htVazwzc
+         jUew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0lspMjLiionZILkbBr8xfiqwsFdKOXlG6Qqe5s5HG7c=;
+        b=bjjcQWpjcz5X1rcblXt7SUKCUyAMLfZGFlwLbiWOx0PNrin6AHUDBXC7B8Y3C5ItEn
+         YXSuxOk2T4ij1jZn2XOPaCnl8rnSgwTSBftxJmi+lsRhPWMnOk77MoLJtVT+6AYn9JIn
+         lUEP1IHA9tOoGbNBsTsUI2XdOBbEaCAycDCaXFeBvoPC1X3Y4MM2tYOMWHVShXn+iA7K
+         Gyv5igUa2T7EgpDVfd4mJkuEs5TDW0dZdD64rDHM0XZo9eSGJgUMlV/hvL9hdugFwzlH
+         1bfCU6wCmTc60AJzl8ZZQQsyLoFUIDFftkuDn28K/rx3dZzMtdxFdPdDQQylNDgby7zV
+         oE3Q==
+X-Gm-Message-State: APjAAAXBbwt+mDUKqbGAnJ/PWJpRLVoMriDjNu08SIkuvVQui8DclRI/
+        VZGDKU28k87YsAskiIsCDgQ=
+X-Google-Smtp-Source: APXvYqxaHaJ3pIakOfUWi1LNN/GOhxVtf6MMn4HmvmZuJr5tm/FKdc97pvTfhJrcS2rbUqLHLMFrzA==
+X-Received: by 2002:a1c:a94b:: with SMTP id s72mr11109366wme.9.1568572551931;
+        Sun, 15 Sep 2019 11:35:51 -0700 (PDT)
+Received: from Red.localdomain ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id t203sm11365202wmf.42.2019.09.15.11.35.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Sep 2019 11:35:51 -0700 (PDT)
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     davem@davemloft.net, herbert@gondor.apana.org.au,
+        mripard@kernel.org, wens@csie.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Corentin Labbe <clabbe.montjoie@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] crypto: sun4i-ss: erase key after use
+Date:   Sun, 15 Sep 2019 20:35:36 +0200
+Message-Id: <20190915183536.3835-1-clabbe.montjoie@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906151759.GM13294@shell.armlinux.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 04:17:59PM +0100, Russell King - ARM Linux admin wrote:
-> On Mon, Sep 02, 2019 at 12:36:56PM -0500, Eric W. Biederman wrote:
-> > Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> > 
-> > > On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
-> > >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> > >> 
-> > >> > On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
-> > >> >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
-> > >> >> 
-> > >> >> > On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
-> > >> >> >> The function do_alignment can handle misaligned address for user and
-> > >> >> >> kernel space. If it is a userspace access, do_alignment may fail on
-> > >> >> >> a low-memory situation, because page faults are disabled in
-> > >> >> >> probe_kernel_address.
-> > >> >> >> 
-> > >> >> >> Fix this by using __copy_from_user stead of probe_kernel_address.
-> > >> >> >> 
-> > >> >> >> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
-> > >> >> >> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-> > >> >> >
-> > >> >> > NAK.
-> > >> >> >
-> > >> >> > The "scheduling while atomic warning in alignment handling code" is
-> > >> >> > caused by fixing up the page fault while trying to handle the
-> > >> >> > mis-alignment fault generated from an instruction in atomic context.
-> > >> >> >
-> > >> >> > Your patch re-introduces that bug.
-> > >> >> 
-> > >> >> And the patch that fixed scheduling while atomic apparently introduced a
-> > >> >> regression.  Admittedly a regression that took 6 years to track down but
-> > >> >> still.
-> > >> >
-> > >> > Right, and given the number of years, we are trading one regression for
-> > >> > a different regression.  If we revert to the original code where we
-> > >> > fix up, we will end up with people complaining about a "new" regression
-> > >> > caused by reverting the previous fix.  Follow this policy and we just
-> > >> > end up constantly reverting the previous revert.
-> > >> >
-> > >> > The window is very small - the page in question will have had to have
-> > >> > instructions read from it immediately prior to the handler being entered,
-> > >> > and would have had to be made "old" before subsequently being unmapped.
-> > >> 
-> > >> > Rather than excessively complicating the code and making it even more
-> > >> > inefficient (as in your patch), we could instead retry executing the
-> > >> > instruction when we discover that the page is unavailable, which should
-> > >> > cause the page to be paged back in.
-> > >> 
-> > >> My patch does not introduce any inefficiencies.  It onlys moves the
-> > >> check for user_mode up a bit.  My patch did duplicate the code.
-> > >> 
-> > >> > If the page really is unavailable, the prefetch abort should cause a
-> > >> > SEGV to be raised, otherwise the re-execution should replace the page.
-> > >> >
-> > >> > The danger to that approach is we page it back in, and it gets paged
-> > >> > back out before we're able to read the instruction indefinitely.
-> > >> 
-> > >> I would think either a little code duplication or a function that looks
-> > >> at user_mode(regs) and picks the appropriate kind of copy to do would be
-> > >> the best way to go.  Because what needs to happen in the two cases for
-> > >> reading the instruction are almost completely different.
-> > >
-> > > That is what I mean.  I'd prefer to avoid that with the large chunk of
-> > > code.  How about instead adding a local replacement for
-> > > probe_kernel_address() that just sorts out the reading, rather than
-> > > duplicating all the code to deal with thumb fixup.
-> > 
-> > So something like this should be fine?
-> > 
-> > Jing Xiangfeng can you test this please?  I think this fixes your issue
-> > but I don't currently have an arm development box where I could test this.
-> 
-> Sorry, only just got around to this again.  What I came up with is this:
+When a TFM is unregistered, the sun4i-ss driver does not clean the key used,
+leaking it in memory.
+This patch adds this absent key cleaning.
 
-I've heard nothing, so I've done nothing...
+Fixes: 6298e948215f ("crypto: sunxi-ss - Add Allwinner Security System crypto accelerator")
+Cc: <stable@vger.kernel.org> # 4.3+
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> 8<===
-> From: Russell King <rmk+kernel@armlinux.org.uk>
-> Subject: [PATCH] ARM: mm: fix alignment
-> 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-> ---
->  arch/arm/mm/alignment.c | 44 ++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 36 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
-> index 6067fa4de22b..529f54d94709 100644
-> --- a/arch/arm/mm/alignment.c
-> +++ b/arch/arm/mm/alignment.c
-> @@ -765,6 +765,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
->  	return NULL;
->  }
->  
-> +static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
-> +{
-> +	u32 instr = 0;
-> +	int fault;
-> +
-> +	if (user_mode(regs))
-> +		fault = get_user(instr, ip);
-> +	else
-> +		fault = probe_kernel_address(ip, instr);
-> +
-> +	*inst = __mem_to_opcode_arm(instr);
-> +
-> +	return fault;
-> +}
-> +
-> +static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
-> +{
-> +	u16 instr = 0;
-> +	int fault;
-> +
-> +	if (user_mode(regs))
-> +		fault = get_user(instr, ip);
-> +	else
-> +		fault = probe_kernel_address(ip, instr);
-> +
-> +	*inst = __mem_to_opcode_thumb16(instr);
-> +
-> +	return fault;
-> +}
-> +
->  static int
->  do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  {
-> @@ -772,10 +802,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  	unsigned long instr = 0, instrptr;
->  	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
->  	unsigned int type;
-> -	unsigned int fault;
->  	u16 tinstr = 0;
->  	int isize = 4;
->  	int thumb2_32b = 0;
-> +	int fault;
->  
->  	if (interrupts_enabled(regs))
->  		local_irq_enable();
-> @@ -784,15 +814,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  
->  	if (thumb_mode(regs)) {
->  		u16 *ptr = (u16 *)(instrptr & ~1);
-> -		fault = probe_kernel_address(ptr, tinstr);
-> -		tinstr = __mem_to_opcode_thumb16(tinstr);
-> +
-> +		fault = alignment_get_thumb(regs, ptr, &tinstr);
->  		if (!fault) {
->  			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
->  			    IS_T32(tinstr)) {
->  				/* Thumb-2 32-bit */
-> -				u16 tinst2 = 0;
-> -				fault = probe_kernel_address(ptr + 1, tinst2);
-> -				tinst2 = __mem_to_opcode_thumb16(tinst2);
-> +				u16 tinst2;
-> +				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
->  				instr = __opcode_thumb32_compose(tinstr, tinst2);
->  				thumb2_32b = 1;
->  			} else {
-> @@ -801,8 +830,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
->  			}
->  		}
->  	} else {
-> -		fault = probe_kernel_address((void *)instrptr, instr);
-> -		instr = __mem_to_opcode_arm(instr);
-> +		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
->  	}
->  
->  	if (fault) {
-> -- 
-> 2.7.4
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+index fa4b1b47822e..60d99370a4ec 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+@@ -503,6 +503,8 @@ int sun4i_ss_cipher_init(struct crypto_tfm *tfm)
+ void sun4i_ss_cipher_exit(struct crypto_tfm *tfm)
+ {
+ 	struct sun4i_tfm_ctx *op = crypto_tfm_ctx(tfm);
++
++	memzero_explicit(op->key, op->keylen);
+ 	crypto_free_sync_skcipher(op->fallback_tfm);
+ }
+ 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.21.0
+
