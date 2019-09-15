@@ -2,393 +2,101 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EDCC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94176C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4FF21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:44:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkO4LkH4"
+	by mail.kernel.org (Postfix) with ESMTP id 575A7214D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 18:47:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568573245;
+	bh=UOG1cXUpe6DtY0d3ne7xc3aPlj58oh6YiH4haf3Dt18=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=mE4/9fuPiDWeV2Ys61zfvrRXbQd3/jzbHNOYtlSStzPWwF76Djzht9x8LZTHienew
+	 1BEIp6ZLTSpANSWiaJBEToYRVu7Y987pq81MG7JOKeZC24XYSb8wtrWg9uc/8h243k
+	 FCEyjeSFHh+h5JSKI12Mcg3Yat1hmuWbftA/m7sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfIOSo1 (ORCPT
+        id S1726903AbfIOSrY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 14:44:27 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45833 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIOSo1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 14:44:27 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c21so1735371qtj.12;
-        Sun, 15 Sep 2019 11:44:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gjuD9aN3z5ZP5tKR9EsODbiavn1pZqmMfFq5Cg5cFqw=;
-        b=bkO4LkH4Jlf8toRAyIAYfcY2uhiHDG45tNWqXqbmzUo5+7dYSinRV032jzdUONl1nb
-         cXn5rDmPXWTpPXKqjnG1c7Uksh+1nNZznNR2nB3YSac/Q2nN0KWwvPVET1a8C3FBVzC/
-         wNdCPfy4L6Ry3c2uVDuV6RSbHM+SWDQU8ZJDoe4JJc629PlKByf/vfzG6rWXdEVpGaMt
-         K7oPNpqNYjyIyyPBUKre4R2GXb9MWtPq0RyrnoGqsJgXlPISDzfVoIaWst7D06/6cQmq
-         A6HZu2ZWczXOgwsgMxjsM/0ZS/siW/CaLZjorVDhSwX4Frd3YZFiLWB+VASlwex4G3cS
-         K2ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=gjuD9aN3z5ZP5tKR9EsODbiavn1pZqmMfFq5Cg5cFqw=;
-        b=eNKSUZLiDCFnkh7o8ACfOwnTrEjKQvY20gkte7+wlM4mfwquCdW+d7QqKFkplmqO0e
-         ClNX6WFVooz43hKsX93fqUIW+QQY+y8QnKHsx5jiAHUZglU66J03rKT2odV2Lj0gzwYK
-         bNvA5D5VL7572I0bntrySTioJQ/wguBj9u25n8E8FPVLrQfuuaPYbNucMh6LISRjUHVV
-         9P+ZpGcrCYvVjeseJziM6PvxB0UcRWYiRsGujssDHd0nDY4yhtar7HKC/yTvJSD0AtCY
-         iNdokqSANB2551aLYW3jUOVfKjRunwoVibRgftUmuGJnuSoE+IVxFJ7XVnUJEYUtIfyt
-         jTQg==
-X-Gm-Message-State: APjAAAU6NkbrbkBadJ8Q90i5ykNBHN10kgB71xrY8/LG+cKl1onJXR2z
-        KNFnNTbIEZNFMjzDw/y1CjFR65oh
-X-Google-Smtp-Source: APXvYqz+yyAeSOpkUsFDw6TVqIYK4YSsxX/naQpgDqdIxcxGIYNvRfjdyC66YvJeVGu1ypNyFQ1oAw==
-X-Received: by 2002:a0c:9665:: with SMTP id 34mr39432403qvy.223.1568573065126;
-        Sun, 15 Sep 2019 11:44:25 -0700 (PDT)
-Received: from localhost.localdomain ([187.101.47.190])
-        by smtp.gmail.com with ESMTPSA id e4sm3294601qkl.135.2019.09.15.11.44.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 11:44:23 -0700 (PDT)
-From:   =?UTF-8?q?Lucas=20A=2E=20M=2E=20Magalh=C3=A3es?= 
-        <lucmaga@gmail.com>
-To:     linux-media@vger.kernel.org
-Cc:     hverkuil@xs4all.nl, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, edusbarretto@gmail.com,
-        lkcamp@lists.libreplanetbr.org,
-        "Lucas A . M . Magalhaes" <lucmaga@gmail.com>
-Subject: [PATCH v2] media: vimc: fla: Add virtual flash subdevice
-Date:   Sun, 15 Sep 2019 15:44:19 -0300
-Message-Id: <20190915184419.32184-1-lucmaga@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Sun, 15 Sep 2019 14:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726823AbfIOSrY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 14:47:24 -0400
+Received: from paulmck-ThinkPad-P72 (96-84-246-146-static.hfc.comcastbusiness.net [96.84.246.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64F5520830;
+        Sun, 15 Sep 2019 18:47:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568573243;
+        bh=UOG1cXUpe6DtY0d3ne7xc3aPlj58oh6YiH4haf3Dt18=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=dUlUS2DjkDs1hKayspSm5nwRsuIT83cALpgsTPEwXvq4rk3vaNy/jwu8Q9p3WUOaU
+         Nmt06KXwUghUpQvmkkJTHJ1yJr1uIDOn4ejtJXx8PWjfoGUeiMKGGbFZ12+/Ctw0QD
+         FJY6g4/Ax2fnJpFPi/Wmd8noEzygFm2yhSipxqa0=
+Date:   Sun, 15 Sep 2019 11:47:17 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Chris Metcalf <cmetcalf@ezchip.com>,
+        Christoph Lameter <cl@linux.com>,
+        Kirill Tkhai <tkhai@yandex.ru>, Mike Galbraith <efault@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [PATCH v2 3/4] task: With a grace period after
+ finish_task_switch, remove unnecessary code
+Message-ID: <20190915184717.GP30224@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CAHk-=wiZY53ac=mp8R0gjqyUd4ksD3tGHsUS9gvoHiJOT5_cEg@mail.gmail.com>
+ <87o906wimo.fsf@x220.int.ebiederm.org>
+ <20190902134003.GA14770@redhat.com>
+ <87tv9uiq9r.fsf@x220.int.ebiederm.org>
+ <CAHk-=wgm+JNNtFZYTBUZ_eEPzebZ0s=kSq1SS6ETr+K5v4uHwg@mail.gmail.com>
+ <87k1aqt23r.fsf_-_@x220.int.ebiederm.org>
+ <87muf7f4bf.fsf_-_@x220.int.ebiederm.org>
+ <87lfurdpk9.fsf_-_@x220.int.ebiederm.org>
+ <20190915143212.GK30224@paulmck-ThinkPad-P72>
+ <CAHk-=wjT6LG6sDaZtfeT80B9RaMP-y7RNRM4F5CX2v2Z=o8e=A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjT6LG6sDaZtfeT80B9RaMP-y7RNRM4F5CX2v2Z=o8e=A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas A. M. Magalhaes <lucmaga@gmail.com>
+On Sun, Sep 15, 2019 at 10:07:24AM -0700, Linus Torvalds wrote:
+> On Sun, Sep 15, 2019 at 7:32 AM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > First, what am I looking for?
+> >
+> > I am looking for something that prevents the following:
+> >
+> > o       Task A acquires a reference to Task B's task_struct while
+> >         protected only by RCU, and is just about to increment ->rcu_users
+> >         when it is delayed.  Maybe its vCPU is preempted or something.
+> 
+> Where exactly do you see "increment ->rcu_users"
+> 
+> There are _no_ users that can increment rcu_users. The thing is
+> initialized to '2' when the process is created, and nobody ever
+> increments it. EVER.
+> 
+> It's only ever decremented, and when it hits zero we know that both
+> users are gone, and we start the rcu-delayed free.
 
-Add a virtual subdevice to simulate the flash control API.
-Those are the supported controls:
-v4l2-ctl -d /dev/v4l-subdev6 -L
-Flash Controls
+Color me blind and apologies for the noise!
 
-                       led_mode 0x009c0901 (menu)   : min=0 max=2 default=0 value=0
-                                0: Off
-                                1: Flash
-                                2: Torch
-                  strobe_source 0x009c0902 (menu)   : min=0 max=1 default=0 value=0
-                                0: Software
-                                1: External
-                         strobe 0x009c0903 (button) : flags=write-only, execute-on-write
-                    stop_strobe 0x009c0904 (button) : flags=write-only, execute-on-write
-                  strobe_status 0x009c0905 (bool)   : default=0 value=0 flags=read-only
-                 strobe_timeout 0x009c0906 (int)    : min=1 max=10 step=1 default=10 value=10
-           intensity_flash_mode 0x009c0907 (int)    : min=0 max=255 step=1 default=255 value=255
-           intensity_torch_mode 0x009c0908 (int)    : min=0 max=255 step=1 default=255 value=255
-            intensity_indicator 0x009c0909 (int)    : min=0 max=255 step=1 default=255 value=255
-                         faults 0x009c090a (bitmask): max=0x00000002 default=0x00000000 value=0x00000000
-
-Co-authored-by: Eduardo Barretto <edusbarretto@gmail.com>
-Signed-off-by: Eduardo Barretto <edusbarretto@gmail.com>
-Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
-
----
-Hi,
-
-This patch depends on the patch series
-        "Collapse vimc into single monolithic driver" version 4.
-
-Changes in v2:
-	- Fix v4l2-complience errors
-	- Add V4L2_CID_FLASH_STROBE_STATUS behavior
-	- Add V4L2_CID_FLASH_STROBE restrictions
-	- Remove vimc_fla_g_volatile_ctrl
-	- Remove unnecessarie V4L2_CID_FLASH_CLASS
-	- Change varables names
-	- Changes to apply over v4 of patch
-		"Collapse vimc into single monolithic driver"
----
- drivers/media/platform/vimc/Makefile      |   2 +-
- drivers/media/platform/vimc/vimc-common.c |   2 +
- drivers/media/platform/vimc/vimc-common.h |   4 +
- drivers/media/platform/vimc/vimc-core.c   |   5 +
- drivers/media/platform/vimc/vimc-flash.c  | 200 ++++++++++++++++++++++
- 5 files changed, 212 insertions(+), 1 deletion(-)
- create mode 100644 drivers/media/platform/vimc/vimc-flash.c
-
-diff --git a/drivers/media/platform/vimc/Makefile b/drivers/media/platform/vimc/Makefile
-index a53b2b532e9f..e759bbb04b14 100644
---- a/drivers/media/platform/vimc/Makefile
-+++ b/drivers/media/platform/vimc/Makefile
-@@ -1,6 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- vimc-y := vimc-core.o vimc-common.o vimc-streamer.o vimc-capture.o \
--		vimc-debayer.o vimc-scaler.o vimc-sensor.o
-+		vimc-debayer.o vimc-scaler.o vimc-sensor.o vimc-flash.o
- 
- obj-$(CONFIG_VIDEO_VIMC) += vimc.o
- 
-diff --git a/drivers/media/platform/vimc/vimc-common.c b/drivers/media/platform/vimc/vimc-common.c
-index a3120f4f7a90..cb786de75573 100644
---- a/drivers/media/platform/vimc/vimc-common.c
-+++ b/drivers/media/platform/vimc/vimc-common.c
-@@ -203,6 +203,8 @@ struct media_pad *vimc_pads_init(u16 num_pads, const unsigned long *pads_flag)
- 	struct media_pad *pads;
- 	unsigned int i;
- 
-+	if (!num_pads)
-+		return NULL;
- 	/* Allocate memory for the pads */
- 	pads = kcalloc(num_pads, sizeof(*pads), GFP_KERNEL);
- 	if (!pads)
-diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-index 236412ad7548..a1fbbc8066d3 100644
---- a/drivers/media/platform/vimc/vimc-common.h
-+++ b/drivers/media/platform/vimc/vimc-common.h
-@@ -169,6 +169,10 @@ struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 				     const char *vcfg_name);
- void vimc_sen_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
- 
-+struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
-+				     const char *vcfg_name);
-+void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved);
-+
- /**
-  * vimc_pads_init - initialize pads
-  *
-diff --git a/drivers/media/platform/vimc/vimc-core.c b/drivers/media/platform/vimc/vimc-core.c
-index a1218578cb9a..312723b4ed8a 100644
---- a/drivers/media/platform/vimc/vimc-core.c
-+++ b/drivers/media/platform/vimc/vimc-core.c
-@@ -91,6 +91,11 @@ static struct vimc_ent_config ent_config[] = {
- 		.add = vimc_cap_add,
- 		.rm = vimc_cap_rm,
- 	},
-+	{
-+		.name = "Flash Controller",
-+		.add = vimc_fla_add,
-+		.rm = vimc_fla_rm,
-+	}
- };
- 
- static const struct vimc_ent_link ent_links[] = {
-diff --git a/drivers/media/platform/vimc/vimc-flash.c b/drivers/media/platform/vimc/vimc-flash.c
-new file mode 100644
-index 000000000000..637e7d0a5919
---- /dev/null
-+++ b/drivers/media/platform/vimc/vimc-flash.c
-@@ -0,0 +1,200 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * vimc-flash.c Virtual Media Controller Driver
-+ *
-+ * Copyright (C) 2019
-+ * Contributors: Lucas A. M. Magalhães <lamm@lucmaga.dev>
-+ *               Eduardo Barretto <edusbarretto@gmail.com>
-+ *
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/kthread.h>
-+#include <linux/sched.h>
-+#include <linux/vmalloc.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-event.h>
-+#include <media/v4l2-subdev.h>
-+
-+#include "vimc-common.h"
-+
-+#define VIMC_FLASH_TIMEOUT_STEP 10000
-+#define VIMC_FLASH_TIMEOUT_MAX 50000000
-+
-+struct vimc_fla_device {
-+	struct vimc_ent_device ved;
-+	struct v4l2_subdev sd;
-+	struct v4l2_ctrl_handler hdl;
-+	int strobe_source;
-+	bool is_strobe;
-+	int led_mode;
-+	int indicator_intensity;
-+	int torch_intensity;
-+	int flash_intensity;
-+	u64 timeout;
-+	u64 last_strobe;
-+	struct task_struct *kthread;
-+};
-+
-+void vimc_fla_set_strobe_status(struct v4l2_ctrl_handler *hdl, bool value){
-+	struct v4l2_ctrl *c;
-+	c = v4l2_ctrl_find(hdl, V4L2_CID_FLASH_STROBE_STATUS);
-+	if (!c) return;
-+	v4l2_ctrl_s_ctrl(c, value);
-+
-+}
-+
-+static int vimc_fla_strobe_thread(void *data)
-+{
-+	struct vimc_fla_device *vfla = data;
-+	vimc_fla_set_strobe_status(&vfla->hdl, vfla->is_strobe);
-+	vfla->last_strobe = ktime_get_ns();
-+	while(vfla->is_strobe &&
-+		vfla->last_strobe + vfla->timeout > ktime_get_ns()){
-+		msleep_interruptible(VIMC_FLASH_TIMEOUT_STEP/1000);
-+	}
-+	vimc_fla_set_strobe_status(&vfla->hdl, false);
-+	return 0;
-+}
-+
-+static int vimc_fla_s_ctrl(struct v4l2_ctrl *c)
-+{
-+
-+	struct vimc_fla_device *vfla =
-+		container_of(c->handler, struct vimc_fla_device, hdl);
-+
-+	switch (c->id) {
-+	case V4L2_CID_FLASH_LED_MODE:
-+		vfla->led_mode = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_SOURCE:
-+		vfla->strobe_source = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE:
-+		if (vfla->led_mode != V4L2_FLASH_LED_MODE_FLASH ||
-+		    vfla->strobe_source != V4L2_FLASH_STROBE_SOURCE_SOFTWARE){
-+			return -EILSEQ;
-+		}
-+		vfla->is_strobe = true;
-+		vfla->kthread = kthread_run(vimc_fla_strobe_thread, vfla, "vimc-flash thread");
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_STATUS:
-+		vfla->is_strobe = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_STROBE_STOP:
-+		vfla->is_strobe = false;
-+		return 0;
-+	case V4L2_CID_FLASH_TIMEOUT:
-+		vfla->timeout = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_INTENSITY:
-+		vfla->flash_intensity = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_TORCH_INTENSITY:
-+		vfla->torch_intensity = c->val;
-+		return 0;
-+	case V4L2_CID_FLASH_INDICATOR_INTENSITY:
-+		vfla->indicator_intensity = c->val;
-+		return 0;
-+	}
-+	return 0;
-+}
-+
-+static const struct v4l2_ctrl_ops vimc_fla_ctrl_ops = {
-+	.s_ctrl = vimc_fla_s_ctrl,
-+};
-+
-+static const struct v4l2_subdev_core_ops vimc_fla_core_ops = {
-+	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-+	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-+};
-+
-+static const struct v4l2_subdev_ops vimc_fla_ops = {
-+	.core = &vimc_fla_core_ops,
-+};
-+
-+/* initialize device */
-+struct vimc_ent_device *vimc_fla_add(struct vimc_device *vimc,
-+				     const char *vcfg_name)
-+{
-+	struct v4l2_device *v4l2_dev = &vimc->v4l2_dev;
-+	struct vimc_fla_device *vfla;
-+	int ret;
-+
-+	/* Allocate the vfla struct */
-+	vfla = kzalloc(sizeof(*vfla), GFP_KERNEL);
-+	if (!vfla)
-+		return NULL;
-+
-+	v4l2_ctrl_handler_init(&vfla->hdl, 4);
-+
-+	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			       V4L2_CID_FLASH_LED_MODE,
-+			       V4L2_FLASH_LED_MODE_TORCH, ~0x7,
-+			       V4L2_FLASH_LED_MODE_NONE);
-+	v4l2_ctrl_new_std_menu(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			       V4L2_CID_FLASH_STROBE_SOURCE, 0x1, ~0x3,
-+			       V4L2_FLASH_STROBE_SOURCE_SOFTWARE);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE, 0, 0, 0, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE_STOP, 0, 0, 0, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_TIMEOUT, 0,
-+			  VIMC_FLASH_TIMEOUT_MAX,
-+			  VIMC_FLASH_TIMEOUT_STEP,
-+			  VIMC_FLASH_TIMEOUT_STEP);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_TORCH_INTENSITY, 0, 255, 1, 255);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_INTENSITY, 0, 255, 1, 255);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_INDICATOR_INTENSITY, 0, 255, 1, 255);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_STROBE_STATUS, 0, 1, 1, 0);
-+	v4l2_ctrl_new_std(&vfla->hdl, &vimc_fla_ctrl_ops,
-+			  V4L2_CID_FLASH_FAULT, 0,
-+			  V4L2_FLASH_FAULT_TIMEOUT, 0, 0);
-+	vfla->sd.ctrl_handler = &vfla->hdl;
-+	if (vfla->hdl.error) {
-+		ret = vfla->hdl.error;
-+		goto err_free_vfla;
-+	}
-+
-+	/* Initialize ved and sd */
-+	ret = vimc_ent_sd_register(&vfla->ved, &vfla->sd, v4l2_dev,
-+				   vcfg_name,
-+				   MEDIA_ENT_F_FLASH, 0, NULL,
-+				   NULL, &vimc_fla_ops);
-+	if (ret)
-+		goto err_free_hdl;
-+
-+	/* Initialize standard values */
-+	vfla->indicator_intensity = 0;
-+	vfla->torch_intensity = 0;
-+	vfla->flash_intensity = 0;
-+	vfla->is_strobe = false;
-+	vfla->timeout = 0;
-+	vfla->last_strobe = 0;
-+	vfla->led_mode = V4L2_FLASH_LED_MODE_NONE;
-+
-+	return &vfla->ved;
-+
-+err_free_hdl:
-+	v4l2_ctrl_handler_free(&vfla->hdl);
-+err_free_vfla:
-+	kfree(vfla);
-+
-+	return NULL;
-+}
-+
-+void vimc_fla_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
-+{
-+	struct vimc_fla_device *vfla;
-+
-+	if (!ved)
-+		return;
-+
-+	vfla = container_of(ved, struct vimc_fla_device, ved);
-+	vimc_ent_sd_unregister(ved, &vfla->sd);
-+}
--- 
-2.23.0
-
+							Thanx, Paul
