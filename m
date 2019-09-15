@@ -2,153 +2,91 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DCAC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98FBC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB6720830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 10:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970DF2053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 11:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Brx6abDN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p20pBb4M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbfIOKzv (ORCPT
+        id S1729229AbfIOLAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 06:55:51 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51913 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728308AbfIOKzv (ORCPT
+        Sun, 15 Sep 2019 07:00:46 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33544 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfIOLAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 06:55:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 7so6993907wme.1;
-        Sun, 15 Sep 2019 03:55:47 -0700 (PDT)
+        Sun, 15 Sep 2019 07:00:45 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q10so20703654pfl.0;
+        Sun, 15 Sep 2019 04:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R3LqYYMBT+nWIT12Cdfqk6UPzHE/cc0WsDTckw4FJZs=;
-        b=Brx6abDNQchwDnbthBGpqed/0B0BQnxO3vHj2PRO6R2BjfrK9epv0p1PWsmSZMgK98
-         tGfPfMFR3PV0H1xO6x/5lWdzkgLfZl7deSOmxgC4JyNfs6P6+bx0705L54Yk9Rd10g7J
-         c/ZvKQ/gx3sYV4RJ1Zsj5Hd3PE6DOdWg/RH94Pl5kyLQc90MB/fm4XlhzWSHtTNE6uRZ
-         6zLWfKEcUAx69QT+NKcE4fEeUiaR42F5MgF/oaE13g7Uf04/lhIgcD615FwenAvYs9xb
-         T2vPPGZ8Sv7WdLdpZVNVPChii+FAtH/uS4+CtBqTrKVwQtKQXvu2maXFaX8qFJy+RYe1
-         irhw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d9ULWGyjTvRvcs+e2Yr9L/eBPsXri8OnRsYgrDC1xvs=;
+        b=p20pBb4MLemTqg/ZyR8Z/+eIeXKniDpVbE7ullthIp+Qa8BvEWzgsKvto/w8qBIAzL
+         O8YYczWHbxeJU2s1FuN2ribAKzxhXNTfDKxT2r+DL8fVPqSsPo9PGz5cBszy+t/qkUXR
+         0l3wTsNCXGfhZuAjLolWwc9oGKo/IGP6z6kHTt3Nkty1NESIn/6ekdlgL+DVlLhsW76/
+         eZ4lqrclHSnXfPcr1qS63K9TPgvdIMPQVCD6JhElfMc3squMbcaXMSr8BDW8trES2MwQ
+         bWinlFSKlhHMSXawG/CEtqhk4igbqnoPo/FamITlpgHidQVoMaVh4q5nawDO4SoYIoqe
+         T/Uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R3LqYYMBT+nWIT12Cdfqk6UPzHE/cc0WsDTckw4FJZs=;
-        b=Z9kRHl1pZ0ilEExzRg07HNsKCk3Q9xslWdPvbqChkK8wLMF6mGdEaqpXsQ9Hwf8Jeu
-         V73CYajPk45c3X/xiXjacEDGVs+ZD7adGH2yzGH/vE6KMWA0FClWltkBZo+ZTYzkscF/
-         GWwlXxIJ7dBJ8EH5AYdzRiki7IxBEEMN8FsvRamsSrtVpoqC3jNVgeKOwOcuvdcUtad8
-         AkT1a/RNGfwPsCFwCt9E2P4cQMhpeScCCoNk3g89e6VXgnkOtiGSQSOnh6rVLu81+Vmm
-         6sMzuqAWjvjm+590hfqdQUeKJe10gdH5fggN+mfRJp7bfQVQBCOiQoJolIcMUZrPyadi
-         HeMQ==
-X-Gm-Message-State: APjAAAVh/Dyfna224jnSoXBeYBSnHEshNdzXLWk2y6cvKDLGMQgy3s5n
-        9sg+5PS27wh+UWmvtV/Yots=
-X-Google-Smtp-Source: APXvYqysZZAEzcpTrLXqkqwFRZwSy3lD2aLI4EXUa68ZomYgeY2G7fIsR/kpfWFagdaMyU1g0aEUgg==
-X-Received: by 2002:a1c:2d85:: with SMTP id t127mr10791113wmt.81.1568544947023;
-        Sun, 15 Sep 2019 03:55:47 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
-        by smtp.gmail.com with ESMTPSA id 33sm42989155wra.41.2019.09.15.03.55.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 03:55:46 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 12:55:39 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v3] random: getrandom(2): optionally block when CRNG
- is uninitialized
-Message-ID: <20190915105539.GA1082@darwi-home-pc>
-References: <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <20190915081747.GA1058@darwi-home-pc>
- <20190915085907.GC29771@gardel-login>
- <20190915093057.GF20811@1wt.eu>
- <20190915100201.GA2663@darwi-home-pc>
- <20190915104027.GG20811@1wt.eu>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d9ULWGyjTvRvcs+e2Yr9L/eBPsXri8OnRsYgrDC1xvs=;
+        b=cvmiE1dnvRe3roTb1J1bu2R+DEYgQ+s9meq9lMZ5zOkH8tjEEgyUi4C+y2Ai2pRfHi
+         TqgwnWcYPwzMNgjF2HcLWuu3lhSTqJC0jfZYvtWfHKnCwbsRZ4qy+zRSu/vc6pPGLbuJ
+         E67RRx1v8ku7lEhPYdaDbUxXpFNVGDhpE5CfcE0x2Kfc8dycUnJufHqhttk1h8dAieaX
+         0VFXq5Ehq8hxvz2DA8Q0jMnoxHneKGFibTBDXBlyJRz7ozNfWt+YoE15kU7i9LTyyrmX
+         LcOLsEsTMFB1XT5lBD3wM74LfbMOOL3Tq579wsLHW0bzBeQ74MkvVGuqfxZi/kBXK15D
+         bkUQ==
+X-Gm-Message-State: APjAAAUjM6gDpDpPwQE4jPWM4dgKyvJ+aYiXyPK0qzJzd1/sc4hvnIIv
+        TSujCwZ+G3vI+7/RhYm1pswBEeA2MzYM9lVBr/k=
+X-Google-Smtp-Source: APXvYqzRqqT1Z8Iy+S3yNqh4wOlL8hurOD1p5+F2vaROQJ7IE7fxo9xSAo0aZoLYWfU/dVg5Y//7g8epoVhT/faDPX4=
+X-Received: by 2002:aa7:811a:: with SMTP id b26mr9020046pfi.151.1568545244830;
+ Sun, 15 Sep 2019 04:00:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190915104027.GG20811@1wt.eu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com> <1568376720-7402-4-git-send-email-gareth.williams.jx@renesas.com>
+In-Reply-To: <1568376720-7402-4-git-send-email-gareth.williams.jx@renesas.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 15 Sep 2019 14:00:33 +0300
+Message-ID: <CAHp75VeJY44oqYPhb-E8U1Uz5tKEJ1wZfmsGYEDttLzypHEAHA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] spi: dw: Add compatible string for Renesas RZ/N1 SPI Controller
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 12:40:27PM +0200, Willy Tarreau wrote:
-> On Sun, Sep 15, 2019 at 12:02:01PM +0200, Ahmed S. Darwish wrote:
-> > On Sun, Sep 15, 2019 at 11:30:57AM +0200, Willy Tarreau wrote:
-> > > On Sun, Sep 15, 2019 at 10:59:07AM +0200, Lennart Poettering wrote:
-[...]
-> > > > If Linux lets all that stuff run with awful entropy then
-> > > > you pretend things where secure while they actually aren't. It's much
-> > > > better to fail loudly in that case, I am sure.
-> > > 
-> > > This is precisely what this change permits : fail instead of block
-> > > by default, and let applications decide based on the use case.
-> > >
-> > 
-> > Unfortunately, not exactly.
-> > 
-> > Linus didn't want getrandom to return an error code / "to fail" in
-> > that case, but to silently return CRNG-uninitialized /dev/urandom
-> > data, to avoid user-space even working around the error code through
-> > busy-loops.
-> 
-> But with this EINVAL you have the information that it only filled
-> the buffer with whatever it could, right ? At least that was the
-> last point I manage to catch in the discussion. Otherwise if it's
-> totally silent, I fear that it will reintroduce the problem in a
-> different form (i.e. libc will say "our randoms are not reliable
-> anymore, let us work around this and produce blocking, solid randoms
-> again to help all our users").
+On Fri, Sep 13, 2019 at 3:14 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
 >
-
-V1 of the patch I posted did indeed return -EINVAL. Linus then
-suggested that this might make still some user-space act smart and
-just busy-loop around that, basically blocking the boot again:
-
-    https://lkml.kernel.org/r/CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com
-    https://lkml.kernel.org/r/CAHk-=whSbo=dBiqozLoa6TFmMgbeB8d9krXXvXBKtpRWkG0rMQ@mail.gmail.com
-
-So it was then requested to actually return what /dev/urandom would
-return, so that user-space has no way whatsoever in knowing if
-getrandom has failed. Then, it's the job of system integratos / BSP
-builders to fix the inspect the big fat WARN on the kernel and fix
-that.
-
-This is the core of Lennart's critqueue of V3 above.
-
-> > I understand the rationale behind that, of course, and this is what
-> > I've done so far in the V3 RFC.
-> > 
-> > Nonetheless, this _will_, for example, make systemd-random-seed(8)
-> > save week seeds under /var/lib/systemd/random-seed, since the kernel
-> > didn't inform it about such weakness at all..
-> 
-> Then I am confused because I understood that the goal was to return
-> EINVAL or anything equivalent in which case the userspace knows what
-> it has to deal with :-/
+> From: Phil Edworthy <phil.edworthy@renesas.com>
 >
+> The Renesas RZ/N1 SPI Controller is based on the Synopsys DW SSI, but has
+> additional registers for software CS control and DMA. This patch does not
+> address the changes required for DMA support, it simply adds the compatible
+> string. The CS registers are not needed as Linux can use gpios for the CS
+> signals.
 
-Yeah, the discussion moved a bit beyond that.
+> +       { .compatible = "renesas,rzn1-spi", },
 
-thanks,
---darwi
+Can't you simple use in DT something like
+  compatible = "renesas,rzn1-spi", "snps,dw-apb-ssi"
+?
+
+-- 
+With Best Regards,
+Andy Shevchenko
