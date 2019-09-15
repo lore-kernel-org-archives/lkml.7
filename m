@@ -2,117 +2,111 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B2DC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5161BC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FD5216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18249214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="AuCxOItx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uv4CWWni"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfIOReq (ORCPT
+        id S1727982AbfIORh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:34:46 -0400
-Received: from mail.andi.de1.cc ([85.214.55.253]:45134 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727140AbfIORep (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:34:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RH3Ef5d/v7AONt/7OCwGtfOGl/ZPOxk/BNLO7+WUrvc=; b=AuCxOItxAXXy3fGbF9/x8IzmSv
-        tGCuMHC05jD9iNfKoMUQAl2DaePaOtKeIV2WoW4pKb9DOiNSCpZGbLl6lEiZPYmbJ53XsWH/0niWw
-        /PlR7DJNY3//d+JYjmNl5bFRFeDib33HA0PqO6TzET64gY137rJbQ53i/585fHhMSLK4=;
-Received: from p200300ccff4ebd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff4e:bd00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1i9YPu-0006G5-NN; Sun, 15 Sep 2019 19:34:31 +0200
-Date:   Sun, 15 Sep 2019 19:34:29 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>, lee.jones@linaro.org,
-        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, dmurphy@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fbdev@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH 1/2] backlight: lm3630a: add an enable gpio for the HWEN
- pin
-Message-ID: <20190915193429.5feef312@aktux>
-In-Reply-To: <20190915165204.GA4857@bug>
-References: <20190908203704.30147-1-andreas@kemnade.info>
-        <20190908203704.30147-2-andreas@kemnade.info>
-        <20190909105729.w5552rtop7rhghy2@holly.lan>
-        <20190909221349.46ca5a1f@aktux>
-        <20190910102156.vmprsjebmlphkv34@holly.lan>
-        <20190910210648.3594912d@kemnade.info>
-        <20190915165204.GA4857@bug>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 15 Sep 2019 13:37:58 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34542 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfIORh5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 13:37:57 -0400
+Received: by mail-pg1-f195.google.com with SMTP id n9so18117125pgc.1;
+        Sun, 15 Sep 2019 10:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1F7aUJVQgduxhZxHfqJkmmUC8zgMBUZn2pCjL4AgRrE=;
+        b=uv4CWWnirInfH+uqYYzAqwEssTBS30r4kB1lG3CQt5qiAyNKeCbqMiGJj2/xPAsapN
+         ParDZKOrWA5zXCRB66CLBElxYr727uPqZMyTxbWJD79x2JWOyx/6kMSH6QLdlHuE6F5t
+         r+NJg56vmijpyyPIxYnePGYJPr89yHc+xFsgzpNq3B+AKVBua3V/gBnPduo2MT9j9Mah
+         iihhe5S3qwOirBswADfXeCW7+3w3/FMOp47KXmHhfi4iWpaPgbTuXg+e+bcM2QWJeCrB
+         DI1BHVP55UGVlyCnLL3Vdxs4Ai2nZwP+9rzJWDu4MlLM7yJ0jjo3Kn48uyNRmMzZYOgt
+         z/Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1F7aUJVQgduxhZxHfqJkmmUC8zgMBUZn2pCjL4AgRrE=;
+        b=bMeq735EselU7xP6vleRHm4N5Dm3XNTs86OH12goqbnexE+1pVbgQ0xaZyG9FI9qxQ
+         117FMtHKzuaWMgmYLDGNEaKMxMU6p7VjED+8fwnrfyxz6s/hoqBuwGNmwWJ5wSYYAEBS
+         QGWhaf2LdYET11VZb/MuCkRAPTpFtXeSPIAT5rPc3PRdMDoaknGPcTek5gqf2MdBAKjA
+         sHi80MRDk1H9RtfkPvNjPcLZq2/YhFFAEDuJ2YRBdxyTUaiJfBZ8nsqpWopuEzHOPF9K
+         nq8D4tEbvzOGKDCu1rBAyDPSydQtxo48BLDCulYCPtmYc3yZcFl0MXpqRcPP5PIhHcEU
+         AcoQ==
+X-Gm-Message-State: APjAAAUdeD6CFB80wr19iu0YCZVaqKxob1qzm3RXeMz7p0+w+eSQ/DYn
+        V4gUp7iI7jMvuj/Ny4DXMumVq2tGeeM=
+X-Google-Smtp-Source: APXvYqwDiZ7BjAhmWHrC10pzG4lkpQGykHTQ1xhzRDLapduQBdCCDD3gRvM1Rtu6BxU6p8Tz+R5Urw==
+X-Received: by 2002:a65:4489:: with SMTP id l9mr54273753pgq.207.1568569076754;
+        Sun, 15 Sep 2019 10:37:56 -0700 (PDT)
+Received: from [172.27.227.180] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id m12sm5997323pff.66.2019.09.15.10.37.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Sep 2019 10:37:55 -0700 (PDT)
+Subject: Re: [v3] iproute2-next: police: support 64bit rate and peakrate in tc
+ utility
+To:     David Dai <zdai@linux.vnet.ibm.com>, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, jiri@resnulli.us, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     zdai@us.ibm.com
+References: <1567609611-27051-1-git-send-email-zdai@linux.vnet.ibm.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <4e78ccb9-5983-f5f8-dded-0b193125c43a@gmail.com>
+Date:   Sun, 15 Sep 2019 11:37:53 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1567609611-27051-1-git-send-email-zdai@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Sun, 15 Sep 2019 18:52:04 +0200
-Pavel Machek <pavel@ucw.cz> wrote:
-
-> Hi!
+On 9/4/19 9:06 AM, David Dai wrote:
+> For high speed adapter like Mellanox CX-5 card, it can reach upto
+> 100 Gbits per second bandwidth. Currently htb already supports 64bit rate
+> in tc utility. However police action rate and peakrate are still limited
+> to 32bit value (upto 32 Gbits per second). Taking advantage of the 2 new
+> attributes TCA_POLICE_RATE64 and TCA_POLICE_PEAKRATE64 from kernel,
+> tc can use them to break the 32bit limit, and still keep the backward
+> binary compatibility.
 > 
-> > > > > Is this needed?
-> > > > > 
-> > > > > This is a remove path, not a power management path, and we have no idea
-> > > > > what the original status of the pin was anyway?
-> > > > >     
-> > > > 
-> > > > Looking at Ishdn on page 5 of the datasheet, switching it off everytime
-> > > > possible seems not needed. We would need to call chip_init() everytime
-> > > > we enable the gpio or live with default values.
-> > > > Therefore I did decide to not put it into any power management path.
-> > > > But switching it on and not switching it off feels so unbalanced.     
-> > > 
-> > > Either the power consumed by the controller when strings aren't lit up
-> > > matters, in which case the driver should implement proper power
-> > > management or it doesn't matter and changing the pin state isn't needed.
-> > > 
-> > > I'm happy with either of the above but this looks like a third way,
-> > > where eager users could hack in a bit of extra power management by
-> > > forcing drivers to unbind. 
-> > >   
-> > I think I will take the simple way. I am quite sure that the power
-> > consumption with HWEN on and leds off does not matter. If someone
-> > later comes up and finds out that I misread the datasheet, things
-> > are prepared to be improved.  
+> Tested-by: David Dai <zdai@linux.vnet.ibm.com>
+> Signed-off-by: David Dai <zdai@linux.vnet.ibm.com>
+> ---
+> Changelog:
+> v1->v2:
+>  - Change patch submit component from iproute2 to iproute2-next
+>  - Move 2 attributes TCA_POLICE_RATE64 TCA_POLICE_PEAKRATE64 after
+>    TCA_POLICE_PAD in pkt_cls.h header to be consistent with kernel's
+>    pkt_cls.h header.
+> v2->v3:
+>   - Use common functions of duparg and invarg in police filter.
+> ---
+>  include/uapi/linux/pkt_cls.h |    2 +
+>  tc/m_police.c                |  149 +++++++++++++++++++-----------------------
+>  tc/tc_core.c                 |   29 ++++++++
+>  tc/tc_core.h                 |    3 +
+>  4 files changed, 102 insertions(+), 81 deletions(-)
 > 
-> Dunno.. if the power consumption does not matter, why does the chip have the enable
-> pin in the first place, and why do we bother supporting it? We could hardcode the
-> pin to enabled as well..
 
-Well, I agree having the pin and no power saving seems not to make
-sense. Two points here: I think it is a good idea to properly describe
-the hardware in the devicetree. What to do with that information is
-another thing.
-A problem is that at the moment I cannot easily measure consumption
-of the chip. Hmm, even testing a solution which disables the pin while
-the chip is not in use, is not so easy.
-But wait...
-I could use a wrong gpio but one that I can easily monitor to check if
-the pin is toggled. And set the real pin to high by some other means.
-And then use the real gpio to check if timings are correct (waiting
-enough after enabling the chip, e.g.
+applied to iproute2-next.
 
-Regards,
-Andreas
+
