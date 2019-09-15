@@ -2,190 +2,121 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AFBC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37650C4CECB
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1F6214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 05:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A1E20830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g23mLma/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qs5ea2mY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726646AbfIOF6x (ORCPT
+        id S1726802AbfIOGF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 01:58:53 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33159 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbfIOF6s (ORCPT
+        Sun, 15 Sep 2019 02:05:29 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45045 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfIOGF3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 01:58:48 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t11so15088262plo.0;
-        Sat, 14 Sep 2019 22:58:47 -0700 (PDT)
+        Sun, 15 Sep 2019 02:05:29 -0400
+Received: by mail-pl1-f196.google.com with SMTP id k1so15092327pls.11;
+        Sat, 14 Sep 2019 23:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LsvbpETHylsMeIUTajAZCGUDIJ8fG7jkQ6/Zagal4f4=;
-        b=g23mLma/2a6TaARGhUpC7gc6bpoYubqK0V9iy2PkfkRtOXM1F5gvrxfIiXhJBme5NI
-         WV0cMLB3tZCevcXhcGXgFfhCz19PeWIau37uiY1B0OEEAyvnn+uVAmCuVZid9Uqqe+A1
-         2MU8ASRmN8yamgq9wotT2olJRnlhRMtwQTl2TyyM79EP0ioLdj3EXiOtlx98xhN2m8H3
-         ICvvZuF6lEhpVZ3b52ZBoBbOe8QeaJR0iws23FIumQKGOqIhznsh+H0K3jxbIVt7AvKd
-         542a81zArZr3+QeGwmOsAGeL8FtdVAHI8iWzT4lzNMJPeIpySFm1aM6EXt5c7q3irRsQ
-         f+yQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OJ6q0tq8p00CvC/WL6ngIjiVDkJbPFjkP/CpoIw0kT8=;
+        b=qs5ea2mYlu6e60ZcbpGc0IPc28QvGarsfgphl8OX5wpevQ3Vt3UsLJRYAQKaq+Hm0Z
+         BobdSvY5see2jK8+6KjwLNQueni73vm6orBb0zbqmgiZ5p/6gWF6xUG7JIdBOR+4vu6N
+         adzt3UVkcmD5TqzOsHWmpZ9S7nFbCx0eUAQQxkqe/5PhpublRWAu3WbPr/Un/ra2EWUb
+         WD8/1KdaM9fr4LhREg+RU7FKxgbWidNO5HJSpCXfuO4EJ330V9ZDxbDGbhchmVhwBhr7
+         fRwykRp9AZBendjdSYJ7sQIazpD65jBNjJj5uw05ed99w15K1qv/yjop5Xgjtya/rXIE
+         Nteg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LsvbpETHylsMeIUTajAZCGUDIJ8fG7jkQ6/Zagal4f4=;
-        b=QEpzJHc6C4R75VrsMqrONnvU37jE8By4XE2+WiSDxA2X1qjHF5HSKLa8ihBL9kcaiA
-         kmSmiMHUnIcltzHP8n88q306hX24LfJuEytzDxw5hWCL5R4v+Hi9Bm63T2tO8l5vqYCB
-         MMA6MP13Kz55gpomYVwA87EPYLVeFAqqW8rWab2VjfMRDQyteMVy/ztwCNCexMPZpdXE
-         5KtBuU7jOY3/4gtnhQrUXosjn9Fp42FApulEprRa21UuuP9ahoBD6SmQ9gTzjamm0LiK
-         wQ8nUpUGW03gyrrQL8F95J45FuS6e/QjnmmAfUunK1s59bg/TC6wN4kGnE/nsmhg6rnF
-         4xzA==
-X-Gm-Message-State: APjAAAXoe6WpOLJxqtYyycvHgl/OyHCsZoEP1MFrHoX2MqYBAdLh7Xj0
-        /we98TBANEg5Q/GKoBMqk44=
-X-Google-Smtp-Source: APXvYqwE0q5NRJrimFW4H90K69yTDrGNMv6VHcHSbTnWP2cDMJiiW65zcneGUxGeO/WAa8Oh297njQ==
-X-Received: by 2002:a17:902:b607:: with SMTP id b7mr54622951pls.38.1568527127485;
-        Sat, 14 Sep 2019 22:58:47 -0700 (PDT)
-Received: from localhost.localdomain ([2001:268:c144:8b8a:e7a2:82ca:6689:77bb])
-        by smtp.gmail.com with ESMTPSA id 22sm3696658pfj.139.2019.09.14.22.58.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OJ6q0tq8p00CvC/WL6ngIjiVDkJbPFjkP/CpoIw0kT8=;
+        b=I95EzKGCnDgG7odEYTIbkW6duEyI6ySzKJ2Eym27DhIOffc0Lq+81Ol8WmPAjaL2x5
+         Rsa3JbMeFU/7pL9mGeueODEXhWUb6I7g73YTR5s/C6TkBz6xZ+5qi70xUcf6/QmNqkeC
+         W5OM2szF+SIfjyTTVnvtRxnIjg8X/sAZTRUdmhhe/ovbbzT8uqye0yPYP/6pQunZ00Mp
+         jRohTc0ml/l/joy7xFq2rhoy7LvJ3LU7VYLNpaTgFvVB2QLjL/lfsC2KCSe5HBNzb06A
+         /LYgYShvxS/D75jsD2tCJtzQRRN9yys0bKi2QCfdpZGQlJOvX4490zfTbGNcz5nAzOpO
+         Z6NQ==
+X-Gm-Message-State: APjAAAX5ulSkr8YenIC2p1WMW8VKC61S/s9op0OxtRZu7Y8BrHA0sRLZ
+        dmYdKhL/HJ14z0XXu4TcdsM=
+X-Google-Smtp-Source: APXvYqyGwUo79ROqsKFNRwJySkK2wLiNei2cfNNevV8YbrMfbdfqZXPruglZWuyvLd5wrs60JbEWhg==
+X-Received: by 2002:a17:902:7c88:: with SMTP id y8mr57612161pll.306.1568527528225;
+        Sat, 14 Sep 2019 23:05:28 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id j4sm547133pfn.29.2019.09.14.23.05.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 14 Sep 2019 22:58:46 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     jic23@jic23.retrosnub.co.uk
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [RFC 4/4] counter: 104-quad-8: Update count_read/count_write/signal_read callbacks
-Date:   Sun, 15 Sep 2019 14:57:59 +0900
-Message-Id: <20190915055759.408690-5-vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190915055759.408690-1-vilhelm.gray@gmail.com>
-References: <20190915055759.408690-1-vilhelm.gray@gmail.com>
+        Sat, 14 Sep 2019 23:05:26 -0700 (PDT)
+Date:   Sat, 14 Sep 2019 23:05:24 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] net: mdio: switch to using gpiod_get_optional()
+Message-ID: <20190915060524.GC237523@dtor-ws>
+References: <20190913225547.GA106494@dtor-ws>
+ <20190914170933.GV2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190914170933.GV2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The count_read and count_write callbacks pass unsigned long now, while
-the signal_read callback passes an enum counter_signal_value.
+On Sat, Sep 14, 2019 at 08:09:33PM +0300, Andy Shevchenko wrote:
+> On Fri, Sep 13, 2019 at 03:55:47PM -0700, Dmitry Torokhov wrote:
+> > The MDIO device reset line is optional and now that gpiod_get_optional()
+> > returns proper value when GPIO support is compiled out, there is no
+> > reason to use fwnode_get_named_gpiod() that I plan to hide away.
+> > 
+> > Let's switch to using more standard gpiod_get_optional() and
+> > gpiod_set_consumer_name() to keep the nice "PHY reset" label.
+> > 
+> > Also there is no reason to only try to fetch the reset GPIO when we have
+> > OF node, gpiolib can fetch GPIO data from firmwares as well.
+> > 
+> 
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/counter/104-quad-8.c | 33 ++++++++++-----------------------
- 1 file changed, 10 insertions(+), 23 deletions(-)
+Thanks Andy.
 
-diff --git a/drivers/counter/104-quad-8.c b/drivers/counter/104-quad-8.c
-index 00b113f4b958..17e67a84777d 100644
---- a/drivers/counter/104-quad-8.c
-+++ b/drivers/counter/104-quad-8.c
-@@ -562,11 +562,10 @@ static const struct iio_chan_spec quad8_channels[] = {
- };
- 
- static int quad8_signal_read(struct counter_device *counter,
--	struct counter_signal *signal, struct counter_signal_read_value *val)
-+	struct counter_signal *signal, enum counter_signal_value *val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	unsigned int state;
--	enum counter_signal_level level;
- 
- 	/* Only Index signal levels can be read */
- 	if (signal->id < 16)
-@@ -575,22 +574,19 @@ static int quad8_signal_read(struct counter_device *counter,
- 	state = inb(priv->base + QUAD8_REG_INDEX_INPUT_LEVELS)
- 		& BIT(signal->id - 16);
- 
--	level = (state) ? COUNTER_SIGNAL_LEVEL_HIGH : COUNTER_SIGNAL_LEVEL_LOW;
--
--	counter_signal_read_value_set(val, COUNTER_SIGNAL_LEVEL, &level);
-+	*val = (state) ? COUNTER_SIGNAL_HIGH : COUNTER_SIGNAL_LOW;
- 
- 	return 0;
- }
- 
- static int quad8_count_read(struct counter_device *counter,
--	struct counter_count *count, struct counter_count_read_value *val)
-+	struct counter_count *count, unsigned long *val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	const int base_offset = priv->base + 2 * count->id;
- 	unsigned int flags;
- 	unsigned int borrow;
- 	unsigned int carry;
--	unsigned long position;
- 	int i;
- 
- 	flags = inb(base_offset + 1);
-@@ -598,36 +594,27 @@ static int quad8_count_read(struct counter_device *counter,
- 	carry = !!(flags & QUAD8_FLAG_CT);
- 
- 	/* Borrow XOR Carry effectively doubles count range */
--	position = (unsigned long)(borrow ^ carry) << 24;
-+	*val = (unsigned long)(borrow ^ carry) << 24;
- 
- 	/* Reset Byte Pointer; transfer Counter to Output Latch */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP | QUAD8_RLD_CNTR_OUT,
- 	     base_offset + 1);
- 
- 	for (i = 0; i < 3; i++)
--		position |= (unsigned long)inb(base_offset) << (8 * i);
--
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &position);
-+		*val |= (unsigned long)inb(base_offset) << (8 * i);
- 
- 	return 0;
- }
- 
- static int quad8_count_write(struct counter_device *counter,
--	struct counter_count *count, struct counter_count_write_value *val)
-+	struct counter_count *count, unsigned long val)
- {
- 	const struct quad8_iio *const priv = counter->priv;
- 	const int base_offset = priv->base + 2 * count->id;
--	int err;
--	unsigned long position;
- 	int i;
- 
--	err = counter_count_write_value_get(&position, COUNTER_COUNT_POSITION,
--					    val);
--	if (err)
--		return err;
--
- 	/* Only 24-bit values are supported */
--	if (position > 0xFFFFFF)
-+	if (val > 0xFFFFFF)
- 		return -EINVAL;
- 
- 	/* Reset Byte Pointer */
-@@ -635,7 +622,7 @@ static int quad8_count_write(struct counter_device *counter,
- 
- 	/* Counter can only be set via Preset Register */
- 	for (i = 0; i < 3; i++)
--		outb(position >> (8 * i), base_offset);
-+		outb(val >> (8 * i), base_offset);
- 
- 	/* Transfer Preset Register to Counter */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_PRESET_CNTR, base_offset + 1);
-@@ -644,9 +631,9 @@ static int quad8_count_write(struct counter_device *counter,
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_BP, base_offset + 1);
- 
- 	/* Set Preset Register back to original value */
--	position = priv->preset[count->id];
-+	val = priv->preset[count->id];
- 	for (i = 0; i < 3; i++)
--		outb(position >> (8 * i), base_offset);
-+		outb(val >> (8 * i), base_offset);
- 
- 	/* Reset Borrow, Carry, Compare, and Sign flags */
- 	outb(QUAD8_CTR_RLD | QUAD8_RLD_RESET_FLAGS, base_offset + 1);
+> 
+> But see comment below.
+> 
+
+> > +	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
+> > +						 "reset", GPIOD_OUT_LOW);
+> > +	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
+> > +	if (error)
+> > +		return error;
+> > +
+> 
+> > +	if (mdiodev->reset_gpio)
+> 
+> This is redundant check.
+
+I see that gpiod_* API handle NULL desc and usually return immediately,
+but frankly I am not that comfortable with it. I'm OK with functions
+that free/destroy objects that recognize NULL resources, but it is
+unusual for other types of APIs.
+
+Thanks.
+
 -- 
-2.23.0
-
+Dmitry
