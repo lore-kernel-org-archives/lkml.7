@@ -2,176 +2,269 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18182C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C970C4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5CEA20830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:21:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7374F20830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfIOIVN (ORCPT
+        id S1727017AbfIOIX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 04:21:13 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2270 "EHLO huawei.com"
+        Sun, 15 Sep 2019 04:23:28 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:2222 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfIOIVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 04:21:12 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 6883986D29DAF84708BC;
-        Sun, 15 Sep 2019 16:21:10 +0800 (CST)
-Received: from HGHY2S004443181.china.huawei.com (10.184.52.157) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 15 Sep 2019 16:21:07 +0800
-From:   shikemeng <shikemeng@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <valentin.schneider@arm.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: Re: Re: Re: [PATCH] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
-Date:   Sun, 15 Sep 2019 08:21:02 +0000
-Message-ID: <1568535662-14956-1-git-send-email-shikemeng@huawei.com>
-X-Mailer: git-send-email 2.7.0.windows.1
-In-Reply-To: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
-References: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
+        id S1726146AbfIOIX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 04:23:28 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id AB7421CCDE4946DBBE9E;
+        Sun, 15 Sep 2019 16:23:22 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Sun, 15 Sep 2019 16:23:18 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
+CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
+        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
+        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
+        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
+        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
+        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
+Subject: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Date:   Sun, 15 Sep 2019 16:20:56 +0800
+Message-ID: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.184.52.157]
+X-Originating-IP: [10.67.212.75]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/09/2019 6:13,shikemeng wrote:
->>> From 089dbf0216628ac6ae98742ab90725ca9c2bf201 Mon Sep 17 00:00:00 2001
->>> From:  <shikemeng@huawei.com>
->>> Date: Tue, 10 Sep 2019 09:44:58 -0400
->>> Subject: [PATCH] sched: fix migration to invalid cpu in 
->>> __set_cpus_allowed_ptr
->>> 
->>> reason: migration to invalid cpu in __set_cpus_allowed_ptr archive 
->>> path: patches/euleros/sched
->>> 
->>
->>The above should probably be trimmed from the log.
->>
->
->Thanks for reminding me. I will remove this part in a new patch.
->
->>> Oops occur when running qemu on arm64:
->>>  Unable to handle kernel paging request at virtual address 
->>> ffff000008effe40  Internal error: Oops: 96000007 [#1] SMP  Process 
->>> migration/0 (pid: 12, stack limit = 0x00000000084e3736)
->>>  pstate: 20000085 (nzCv daIf -PAN -UAO)  pc : 
->>> __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->>>  lr : move_queued_task.isra.21+0x124/0x298
->>>  ...
->>>  Call trace:
->>>   __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->>>   __migrate_task+0xc8/0xe0
->>>   migration_cpu_stop+0x170/0x180
->>>   cpu_stopper_thread+0xec/0x178
->>>   smpboot_thread_fn+0x1ac/0x1e8
->>>   kthread+0x134/0x138
->>>   ret_from_fork+0x10/0x18
->>> 
->>> __set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask 
->>> to migrage the process if process is not currently running on any one 
->>> of the CPUs specified in affinity mask.__set_cpus_allowed_ptr will 
->>> choose an invalid dest_cpu(>= nr_cpu_ids, 1024 in my virtual machine) if CPUS in affinity mask are deactived by cpu_down after cpumask_intersects check.
->>
->>Right, cpumask_any_and() returns >= nr_cpu_ids when there isn't any valid CPU bit set.
->>
->>> Cpumask_test_cpu of dest_cpu afterwards is overflow and may passes if 
->>> corresponding bit is coincidentally set.
->>
->>Ouch. I was going to say the cpu_active_mask check from is_cpu_allowed() should've stopped the whole thing there, but AFAICT there's no safeguard against > nr_cpu_ids bit accesses. I see CONFIG_DEBUG_PER_CPU_MAPS should fire a warning for such accesses, but we don't enable it by default.
->>
->>Would it make sense to do something like
->>
->>	return test_bit(...) && cpu < nr_cpu_ids;
->>
->>for cpumask_test_cpu()? We still get the warn with the right config, but we prevent sneaky mistakes like this one. And it seems it's not the only one according to:
->>
->>--
->>virtual patch
->>virtual report
->>
->>@nocheck@
->>expression E;
->>identifier any_func =~ "^cpumask_any";
->>position pos;
->>@@
->>
->>E@pos = any_func(...);
->>... when != E >= nr_cpu_ids
->>    when != E < nr_cpu_ids
->>
->>@script:python depends on nocheck && report@ p << nocheck.pos; @@ coccilib.report.print_report(p[0], "Missing cpumask_any_*() return value check!")
->>---
->>
->>Some of those seem benign since they are on e.g. cpu_online_mask, some other are somewhat dubious (e.g. deadline.c::dl_task_can_attach()).
->>
->>As a consequence, kernel will access a invalid rq address associate with the invalid cpu in
->
->It's more thoughtful to add check in cpumask_test_cpu.It can solve this problem and can prevent other potential bugs.I will test it and resend
->a new patch.
->
+When passing the return value of dev_to_node() to cpumask_of_node()
+without checking if the device's node id is NUMA_NO_NODE, there is
+global-out-of-bounds detected by KASAN.
 
-Think again and again. As cpumask_check will fire a warning if cpu >= nr_cpu_ids, it seems that cpumask_check only expects cpu < nr_cpu_ids and it's
-caller's responsibility to very cpu is in valid range. Interfaces like cpumask_test_and_set_cpu, cpumask_test_and_clear_cpu and so on are not checking
-cpu < nr_cpu_ids either and may cause demage if cpu is out of range.
+From the discussion [1], NUMA_NO_NODE really means no node affinity,
+which also means all cpus should be usable. So the cpumask_of_node()
+should always return all cpus online when user passes the node id as
+NUMA_NO_NODE, just like similar semantic that page allocator handles
+NUMA_NO_NODE.
 
->>> migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs. Process as follows may trigger the Oops:
->>> 1) A process repeatedly bind itself to cpu0 and cpu1 in turn by 
->>> calling sched_setaffinity
->>> 2) A shell script repeatedly "echo 0 > 
->>> /sys/devices/system/cpu/cpu1/online" and "echo 1 > 
->>> /sys/devices/system/cpu/cpu1/online" in turn
->>> 3) Oops appears if the invalid cpu is set in memory after tested cpumask.
->>> 
->>> 
->>> Change-Id: I9c2f95aecd3da568991b7408397215f26c990e40
->>
->>- This doesn't respect the 75 char per line limit
->>- Change IDs don't belong here (we're not using Gerrit)
->>- You're missing a Signed-off-by.
->>
->>You'll find all the guidelines you need for formatting patches in Documentation/process/submitting-patches.rst.
->>
->
->Thanks for the guide.I will read it carefully before send next patch.
->
->>> ---
->>>  kernel/sched/core.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>> 
->>> diff --git a/kernel/sched/core.c b/kernel/sched/core.c index 
->>> 4b63fef..5181ea9 100644
->>> --- a/kernel/sched/core.c
->>> +++ b/kernel/sched/core.c
->>> @@ -1112,7 +1112,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->>>     if (cpumask_equal(&p->cpus_allowed, new_mask))
->>>         goto out;
->>> 
->>> -   if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
->>> +   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
->>> +   if (dest_cpu >= nr_cpu_ids) {
->>>         ret = -EINVAL;
->>>         goto out;
->>>     }
->>> @@ -1133,7 +1134,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->>>     if (cpumask_test_cpu(task_cpu(p), new_mask))
->>>         goto out;
->>> 
->>> -   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);>     if (task_running(rq, p) || p->state == TASK_WAKING) {
->>>         struct migration_arg arg = { p, dest_cpu };
->>>         /* Need help from migration thread: drop lock and wait. */
->>> --
->>> 1.8.5.6
->>> 
->
->Thansks for your review and advises.
+But we cannot really copy the page allocator logic. Simply because the
+page allocator doesn't enforce the near node affinity. It just picks it
+up as a preferred node but then it is free to fallback to any other numa
+node. This is not the case here and node_to_cpumask_map will only restrict
+to the particular node's cpus which would have really non deterministic
+behavior depending on where the code is executed. So in fact we really
+want to return cpu_online_mask for NUMA_NO_NODE.
+
+Some arches were already NUMA_NO_NODE aware, so only change them to return
+cpu_online_mask and use NUMA_NO_NODE instead of "-1".
+
+Also there is a debugging version of node_to_cpumask_map() for x86 and
+arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+And "fix" a sign "bug" since it is for debugging and should catch all the
+error cases.
+
+[1] https://lore.kernel.org/patchwork/patch/1125789/
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+---
+V4: Have all these changes in a single patch.
+V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+    for NUMA_NO_NODE case, and change the commit log to better justify
+    the change.
+V2: make the node id checking change to other arches too.
+---
+ arch/alpha/include/asm/topology.h                | 2 +-
+ arch/arm64/include/asm/numa.h                    | 3 +++
+ arch/arm64/mm/numa.c                             | 5 ++++-
+ arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
+ arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
+ arch/powerpc/include/asm/topology.h              | 6 +++---
+ arch/s390/include/asm/topology.h                 | 3 +++
+ arch/sparc/include/asm/topology_64.h             | 6 +++---
+ arch/x86/include/asm/topology.h                  | 3 +++
+ arch/x86/mm/numa.c                               | 7 +++++--
+ 10 files changed, 30 insertions(+), 13 deletions(-)
+
+diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
+index 5a77a40..836c9e2 100644
+--- a/arch/alpha/include/asm/topology.h
++++ b/arch/alpha/include/asm/topology.h
+@@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
+ 	int cpu;
+ 
+ 	if (node == NUMA_NO_NODE)
+-		return cpu_all_mask;
++		return cpu_online_mask;
+ 
+ 	cpumask_clear(&node_to_cpumask_map[node]);
+ 
+diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+index 626ad01..c8a4b31 100644
+--- a/arch/arm64/include/asm/numa.h
++++ b/arch/arm64/include/asm/numa.h
+@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4f241cc..bef4bdd 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -46,7 +46,10 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (WARN_ON(node >= nr_node_ids))
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
++	if (WARN_ON((unsigned int)node >= nr_node_ids))
+ 		return cpu_none_mask;
+ 
+ 	if (WARN_ON(node_to_cpumask_map[node] == NULL))
+diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+index 965f079..04505e6 100644
+--- a/arch/mips/include/asm/mach-ip27/topology.h
++++ b/arch/mips/include/asm/mach-ip27/topology.h
+@@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
+ extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+ 
+ #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+-#define cpumask_of_node(node)	((node) == -1 ?				\
+-				 cpu_all_mask :				\
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
+ 				 &hub_data(node)->h_cpus)
+ struct pci_bus;
+ extern int pcibus_to_node(struct pci_bus *);
+diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
+index 7ff819a..e78daa6 100644
+--- a/arch/mips/include/asm/mach-loongson64/topology.h
++++ b/arch/mips/include/asm/mach-loongson64/topology.h
+@@ -5,7 +5,9 @@
+ #ifdef CONFIG_NUMA
+ 
+ #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+-#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 &__node_data[(node)]->cpumask)
+ 
+ struct pci_bus;
+ extern int pcibus_to_node(struct pci_bus *);
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 2f7e1ea..309f847 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -17,9 +17,9 @@ struct device_node;
+ 
+ #include <asm/mmzone.h>
+ 
+-#define cpumask_of_node(node) ((node) == -1 ?				\
+-			       cpu_all_mask :				\
+-			       node_to_cpumask_map[node])
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 node_to_cpumask_map[node])
+ 
+ struct pci_bus;
+ #ifdef CONFIG_PCI
+diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
+index cca406f..1bd2e73 100644
+--- a/arch/s390/include/asm/topology.h
++++ b/arch/s390/include/asm/topology.h
+@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
+ #define cpumask_of_node cpumask_of_node
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return &node_to_cpumask_map[node];
+ }
+ 
+diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
+index 34c628a..8c29357 100644
+--- a/arch/sparc/include/asm/topology_64.h
++++ b/arch/sparc/include/asm/topology_64.h
+@@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
+ 	return numa_cpu_lookup_table[cpu];
+ }
+ 
+-#define cpumask_of_node(node) ((node) == -1 ?				\
+-			       cpu_all_mask :				\
+-			       &numa_cpumask_lookup_table[node])
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 &numa_cpumask_lookup_table[node])
+ 
+ struct pci_bus;
+ #ifdef CONFIG_PCI
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 4b14d23..7fa82e1 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad60..c676ffb 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (node >= nr_node_ids) {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
++	if ((unsigned int)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+-			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
++			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
+ 			node, nr_node_ids);
+ 		dump_stack();
+ 		return cpu_none_mask;
+-- 
+2.8.1
 
