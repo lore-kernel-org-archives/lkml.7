@@ -2,176 +2,103 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506D2C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FFFC4CECC
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21DB420873
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:02:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568566962;
-	bh=CdcdhgPr6DftSXJ4TfvATPLJKo0mmmt1R0pg3xt21DQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jAHEYil0AcAALME/alMNTDReMJ7zrbrzgHJw26Hspneuu1QO1IqFduZXv2C0nPp/1
-	 Bmkg6sAalaGUyuZxGBYnbJSsMEDKw05z8126LN3cgLcSIp3dtuZN/04I/VwMauZITU
-	 WZTWsXpKV8P9YWpvtc4AT4O//BJyTl0nO+7p6nXM=
+	by mail.kernel.org (Postfix) with ESMTP id 2134220873
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 17:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=sirena.org.uk header.i=@sirena.org.uk header.b="rLov94ay"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfIORCl (ORCPT
+        id S1726281AbfIORFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 13:02:41 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:38896 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbfIORCk (ORCPT
+        Sun, 15 Sep 2019 13:05:36 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35330 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfIORFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:02:40 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u28so4829366lfc.5
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:02:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hJog4a1KzN5ZWVAGm+sopT4jMum2Htu1nAr4w5DPQ7I=;
-        b=Jzge8itIrkMmk+5MxzJFOr2K2SmoFAEAqlVEVaDURIi+whXghMX7iENXyNMTIZ+vWW
-         DM69bi3TyUWtrCXoUO0j7yW1oyen2osJVfaw1v1KJOa6oOCij6UdODknmQzfqbdXpfWm
-         H7SoJdJNAInos2aeL3w8Supy47UcnJIebMcSA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hJog4a1KzN5ZWVAGm+sopT4jMum2Htu1nAr4w5DPQ7I=;
-        b=TN3+PyhlGzgTuxQy1a8Bw/BvJ7ONTnZq37Hy//Qih3UNOwO1Ik9/fEe12JUlbu5EHg
-         chxrcHSAhqpRASE1zbdBMntWgDKVXZdFTsnf+6eK4IhVsnXogoMxZk+WpWeeK/BvlRcK
-         uKBykTTowbTWSgwKS6KQf9ixO8X9ukfl/Updpswn899OJ6J/cmqn03YvYVmnVnThg4IZ
-         O1v5Cg/l6cOkOHjG5PozGFfdXqR1RGSYcnbocAbqXz87sPidQ2gAd3AwAlzuEeVE5Ajq
-         Od3MxSt1z7B7Z+O9PVigRaskXIyPu/eOJbJEzQvP3K/DqYhOQSrflukbzalWtYCnhNap
-         Z0DA==
-X-Gm-Message-State: APjAAAWqJekHaDcYS3g1gNll1Kz30sTxACQIgnbHPuh2erQYk12fexRl
-        i3y1bpUeRre6DZs9fsbhxpTqWwSn5GA=
-X-Google-Smtp-Source: APXvYqzH1S6MtWhtxqhHRiUnLqXIl1Le/OGpFdiFg5BWSiWrl0GcIevOldrWje7maiP2TD/GUYiD5A==
-X-Received: by 2002:ac2:44d2:: with SMTP id d18mr8464196lfm.67.1568566956731;
-        Sun, 15 Sep 2019 10:02:36 -0700 (PDT)
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
-        by smtp.gmail.com with ESMTPSA id p22sm7953457ljp.69.2019.09.15.10.02.34
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2019 10:02:35 -0700 (PDT)
-Received: by mail-lf1-f54.google.com with SMTP id r22so14306835lfm.1
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 10:02:34 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr31085363lfh.29.1568566954662;
- Sun, 15 Sep 2019 10:02:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com> <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
- <20190915065655.GB29681@gardel-login>
-In-Reply-To: <20190915065655.GB29681@gardel-login>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 15 Sep 2019 10:02:18 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
-Message-ID: <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     Lennart Poettering <mzxreary@0pointer.de>
-Cc:     "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 15 Sep 2019 13:05:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=From:Date:Message-Id:Subject:Cc:To
+        :Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=AuyiDl8MDIGY+YbRU7Ob/LNbuZpmlRDPfc8s26NwqD0=; b=rLov94ayWD0TEgXKeNyuxm8M/
+        K1Y9Ti7XIGyDhTniykL7jHqIIx889o5Ak48DqAcGpJY7Jw97pGRbwkQsDAr5g58gBd0CDhjd23n2z
+        NPpPHs0GGB92EzM6NeJKzZwgyAgDLd9mxf5RqXvm137i6oL8BVUvc2p5hmzMQEvF/cZGk=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9Xxo-0000hO-LD; Sun, 15 Sep 2019 17:05:28 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id CCE4A274154D; Sun, 15 Sep 2019 18:05:26 +0100 (BST)
+To:     "Luck, Tony" <tony.luck@intel.com>, Christoph Hellwig <hch@lst.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the ia64 tree with the dma-mapping tree
+Message-Id: <20190915170526.CCE4A274154D@ypsilon.sirena.org.uk>
+Date:   Sun, 15 Sep 2019 18:05:26 +0100 (BST)
+From:   Mark Brown <broonie@sirena.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 11:56 PM Lennart Poettering
-<mzxreary@0pointer.de> wrote:
->
-> I am not expecting the kernel to guarantee entropy. I just expecting
-> the kernel to not give me garbage knowingly. It's OK if it gives me
-> garbage unknowingly, but I have a problem if it gives me trash all the
-> time.
+Hi all,
 
-So realistically, we never actually give you *garbage*.
+Today's linux-next merge of the ia64 tree got a conflict in:
 
-It's just that we try very hard to actually give you some entropy
-guarantees, and that we can't always do in a timely manner -
-particularly if you don't help.
+   arch/ia64/hp/common/sba_iommu.c
 
-But on a PC, we can _almost_ guarantee entropy. Even with a golden
-image, we do mix in:
+between commit:
 
- - timestamp counter on every device interrupt (but "device interrupt"
-doesn't include things like the local CPU timer, so it really needs
-device activity)
+   f9f3232a7d0ab73 ("dma-mapping: explicitly wire up ->mmap and ->get_sgtable")
 
- - random boot and BIOS memory (dmi tables, the EFI RNG entry, etc)
+from the dma-mapping tree and commit:
 
- - various device state (things like MAC addresses when registering
-network devices, USB device numbers, etc)
+   974f83ec1e5afee ("ia64: rework iommu probing")
 
- - and obviously any CPU rdrand data
+from the ia64 tree.
 
-and note the "mix in" part - it's all designed so that you don't trust
-any of this for randomness on its own, but very much hopefully it
-means that almost *any* differences in boot environment will add a
-fair amount of unpredictable behavior.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-But also note the "on a PC" part.
-
-Also note that as far as the kernel is concerned, none of the above
-counts as "entropy" for us, except to a very small degree the device
-interrupt timing thing. But you need hundreds of interrupts for that
-to be considered really sufficient.
-
-And that's why things broke. It turns out that making ext4 be more
-efficient at boot caused fewer disk interrupts, and now we weren't
-convinced we had sufficient entropy. And the systemd boot thing just
-*stopped* waiting for entropy to magically appear, which is never will
-if the machine is idle and not doing anything.
-
-So do we give you "garbage" in getrandom()? We try really really hard
-not to, but it's exactly the "can we _guarantee_ that it has entropy"
-that ends up being the problem.
-
-So if some silly early boot process comes along, and asks for "true
-randomness", and just blocks for it without doing anything else,
-that's broken from a kernel perspective.
-
-In practice, the only situation we have had really big problems with
-not giving "garbage" isn't actually the "golden distro image" case you
-talk about. It's the "embedded device golden _system_ image" case,
-where the image isn't just the distribution, but the full bootloader
-state.
-
-Some cheap embedded MIPS CPU without even a timestamp counter, with
-identical flash contents for millions of devices, and doing a "on
-first boot, generate a long-term key" without even connecting to the
-network first.
-
-That's the thing Ted was pointing at:
-
-    https://factorable.net/weakkeys12.extended.pdf
-
-so yes, it can be "garbage", but it can be garbage only if you really
-really do things entirely wrong.
-
-But basically, you should never *ever* try to generate some long-lived
-key and then just wait for it without doing anything else. The
-"without doing anything else" is key here.
-
-But every time we've had a blocking interface, that's exactly what
-somebody has done. Which is why I consider that long blocking thing to
-be completely unacceptable. There is no reason to believe that the
-wait will ever end, partly exactly because we don't consider timer
-interrupts to add any timer randomness. So if you are just waiting,
-nothing necessarily ever happen.
-
-                 Linus
+diff --cc arch/ia64/hp/common/sba_iommu.c
+index 4c0ea6c2833d4,a7eff5e6d2606..0000000000000
+--- a/arch/ia64/hp/common/sba_iommu.c
++++ b/arch/ia64/hp/common/sba_iommu.c
+@@@ -2062,6 -2055,22 +2055,24 @@@ static int __init acpi_sba_ioc_init_acp
+  /* This has to run before acpi_scan_init(). */
+  arch_initcall(acpi_sba_ioc_init_acpi);
+  
++ static int sba_dma_supported (struct device *dev, u64 mask)
++ {
++ 	/* make sure it's at least 32bit capable */
++ 	return ((mask & 0xFFFFFFFFUL) == 0xFFFFFFFFUL);
++ }
++ 
++ static const struct dma_map_ops sba_dma_ops = {
++ 	.alloc			= sba_alloc_coherent,
++ 	.free			= sba_free_coherent,
++ 	.map_page		= sba_map_page,
++ 	.unmap_page		= sba_unmap_page,
++ 	.map_sg			= sba_map_sg_attrs,
++ 	.unmap_sg		= sba_unmap_sg_attrs,
++ 	.dma_supported		= sba_dma_supported,
+++	.mmap			= dma_common_mmap,
+++	.get_sgtable		= dma_common_get_sgtable,
++ };
++ 
+  static int __init
+  sba_init(void)
+  {
