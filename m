@@ -2,124 +2,186 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F21EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2BFC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9E602168B
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFCD8214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 16:11:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tGqwvjqx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Erd+t2mi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfIOQJ3 (ORCPT
+        id S1731888AbfIOQL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 12:09:29 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39933 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfIOQJ2 (ORCPT
+        Sun, 15 Sep 2019 12:11:29 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:42519 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726147AbfIOQL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 12:09:28 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so17987225pgi.6;
-        Sun, 15 Sep 2019 09:09:28 -0700 (PDT)
+        Sun, 15 Sep 2019 12:11:29 -0400
+Received: by mail-ua1-f65.google.com with SMTP id r19so501294uap.9;
+        Sun, 15 Sep 2019 09:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0DMl3xfabznWMbO20Q56GEPZg/nB8mi+Jij8NmjzC/Y=;
-        b=tGqwvjqxs8C7GM39r+zKPrXhjZpWw1awlsnR27TfVBRU8WzSA+Rg0Zou7Uza+qA7xn
-         6grp2xDAkkFCV1yM3yl648y9KP+N4FZV6t46kXJd/J+WOyUjlak5YGvL4JwtLaiS5JoZ
-         LwzqPzGfzRCTQgnXhMmJPJCgTjl4NhnAXexH09Xo4IFW1fNHvZq/nl118OQpMQleM0/P
-         5bANb3zrmU14/xeCDtpmSVZ8Kkv5Z3o9RiMTFN38je7A0aiZwkyF/9qVNeu4+fw7u7uT
-         ltNpctdCJMd1majvNq1z4w+XaqYeVJ2aQm5WruUylm1u0W0ViZHFAkhBxfh7XqFxd8XG
-         eNTQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jSWQJqSgzi0rRB4MB03H01txRo3ZEbvDz6ZQVxWpBys=;
+        b=Erd+t2miEUQ/AY1Xlk+AweRMJFkMT8HBCeMLi11DDHsLxD3Pa+IqMMXIIfpxyaYhcG
+         /aeqOlIwCYg6UM/tDyIoZOzBbwegNscxVfzC87LjiAuTcUitlULaD43HLu1zPGiw2KV7
+         TtOqFoNFHyRVONUq8TR/fBzZ3V2cEZgobua0m3r83q4AS8SOETKr4QTzb6qM+zjYkXkn
+         C0McYEJ04d28z1hAaR3s6PCOpns71MG3rz2RwRp/xOw3R8BsUR5Ze3KD033+y5FJkzTj
+         jyMnZE1dAxwc8bPBY+AVxQQFvzm3lVu6JHSaeAcK5gCGk7S1StHWlSABfVPHr5DYmWwh
+         t5QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0DMl3xfabznWMbO20Q56GEPZg/nB8mi+Jij8NmjzC/Y=;
-        b=sQkqZFju3Oi+3CinlS0mpl2Tr1o1I7vBjSI5FJ6fBW8ChWbhH2lJTXJoC6hHbzR2RX
-         oXwigUBUh44g4wh4i+tk949AzSzyXgTVjtldFGJGIIRmT1Bs9NOmkue9uFkIsYt6VRLK
-         Regew5oTccv2v5TDCOrZ3leOurQDjMdl8Q3H9nPlj1WCL/fy2UXBg/If1mTa6I7TSm9W
-         t1jcrKclCj5mdmY354yYpJxxZzz5iMhfpt+7phqGIpAR81R2SvfXNmaeiyvUdBwPNOMV
-         q5I4bx3a8iazen7eJGoZk1wPUWyd3fjRygxRtB6NQNQ9/zhJznLgIqK7+nSKCF2ry3nT
-         AWkA==
-X-Gm-Message-State: APjAAAWc+4SQ3yW6uotOiPZqO0dRjaDyIzGcjwX8GO3FN3YDM6ix7kD4
-        lm9pckoc7Io3lHHJEzNRt18=
-X-Google-Smtp-Source: APXvYqxetOfZyWP9i75ttJPQgJHGGWIhpSLUfvlrjejlBjv89V2O0HxshkQGj3iYyG0z1cidZB+lPQ==
-X-Received: by 2002:a17:90a:b282:: with SMTP id c2mr16277908pjr.135.1568563767975;
-        Sun, 15 Sep 2019 09:09:27 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x20sm21828429pfa.153.2019.09.15.09.09.25
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Sep 2019 09:09:26 -0700 (PDT)
-Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-References: <20190913130440.264749443@linuxfoundation.org>
- <aefa6832-073e-493c-8576-5b2f06e714fb@roeck-us.net>
- <20190914083126.GA523517@kroah.com>
- <353c2b75-290e-c796-4cc6-88681936210f@roeck-us.net>
- <20190915125824.GA528036@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8f402489-c8e8-38b2-88d1-d5eafe491492@roeck-us.net>
-Date:   Sun, 15 Sep 2019 09:09:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jSWQJqSgzi0rRB4MB03H01txRo3ZEbvDz6ZQVxWpBys=;
+        b=km/kpBdLHwretiwjzbhZzGvhdII/h4avAv/uIcK+q83KC9SiAbQiRe+gztb3HE6/11
+         9U8KpaCFkqgX0ed8kq03wVQE8uXbPllYRL8Oe8qFVmmhK7WkLlu01uAA9x9XlkLzHGak
+         rWUjg1qkyTh6JPFddK7UgkYhmOfDW+bezyl/uK0w/lVglJFkQyzmq9eN1ufmJH/hiyEC
+         BEGqVzvMKK95LZe0cKzh/gvuKm4Z3IPELBqzyTOLJF0r/hSTlLgsnpfpCHB5lhjXOyII
+         OulJP4XpX8soGviFVrodGtBlvQD3Te/Ug5B4Ri4WP6rGYb00B3A5eFLY37qDzVlIFTR3
+         B9EA==
+X-Gm-Message-State: APjAAAVGMnRhPnOkg44rIYzLM+BdYfvliGSuemtGCyuoKlkT3/yLn4Dk
+        ou9UBoPS96BaYzBQ/2W4PlHP/DjT4KpVscHXFXE=
+X-Google-Smtp-Source: APXvYqyB9j0r6bSS+9T87UFEPkzM/e4XMgBNe9Edu9uNZgf/FMBxUv/LhclgCMRJS0jFWtsVwrOBAVDShPeJKz7t0Ss=
+X-Received: by 2002:ab0:2808:: with SMTP id w8mr21830317uap.75.1568563886024;
+ Sun, 15 Sep 2019 09:11:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190915125824.GA528036@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
+ <20190914133951.16501-1-qkrwngud825@gmail.com> <20190915135409.GA553917@kroah.com>
+In-Reply-To: <20190915135409.GA553917@kroah.com>
+From:   Ju Hyung Park <qkrwngud825@gmail.com>
+Date:   Mon, 16 Sep 2019 01:11:14 +0900
+Message-ID: <CAD14+f2EqjUfr+Xwx9CDoqvCdeFo0UqYrVxN=s8Yo4b3KTyZXA@mail.gmail.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/15/19 5:58 AM, Greg Kroah-Hartman wrote:
-> On Sat, Sep 14, 2019 at 05:49:32PM -0700, Guenter Roeck wrote:
->> Hi Greg,
->>
->> On 9/14/19 1:31 AM, Greg Kroah-Hartman wrote:
->>> On Sat, Sep 14, 2019 at 01:28:39AM -0700, Guenter Roeck wrote:
->>>> On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
->>>>> This is the start of the stable review cycle for the 4.9.193 release.
->>>>> There are 14 patches in this series, all will be posted as a response
->>>>> to this one.  If anyone has any issues with these being applied, please
->>>>> let me know.
->>>>>
->>>>> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
->>>>> Anything received after that time might be too late.
->>>>>
->>>>
->>>> Is it really only me seeing this ?
->>>>
->>>> drivers/vhost/vhost.c: In function 'translate_desc':
->>>> include/linux/compiler.h:549:38: error: call to '__compiletime_assert_1879' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
->>>>
->>>> i386:allyesconfig, mips:allmodconfig and others, everywhere including
->>>> mainline. Culprit is commit a89db445fbd7f1 ("vhost: block speculation
->>>> of translated descriptors").
->>>
->>> Nope, I just got another report of this on 5.2.y.  Problem is also in
->>> Linus's tree :(
->>>
->>
->> Please apply upstream commit 0d4a3f2abbef ("Revert "vhost: block speculation
->> of translated descriptors") to v4.9.y-queue and later to fix the build problems.
->> Or maybe just drop the offending commit from the stable release queues.
-> 
-> I'm just going to drop the offending commit from everywhere and push out
-> new -rcs in a bit...
-> 
+Hi Greg,
 
-A quick rebuild of previously failed builds now passes, so looks like we are good.
+On Sun, Sep 15, 2019 at 10:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> Note, this just showed up publically on August 12, where were you with
+> all of this new code before then?  :)
 
-Guenter
+My sdFAT port, exfat-nofuse and the one on the staging tree, were all
+made by Samsung.
+And unless you guys had a chance to talk to Samsung developers
+directly, those all share the same faith of lacking proper development
+history.
+
+The source I used was from http://opensource.samsung.com, which
+provides kernel sources as tar.gz files.
+There is no code history available.
+
+> For the in-kernel code, we would have to rip out all of the work you did
+> for all older kernels, so that's a non-starter right there.
+
+I'm aware.
+I'm just letting mainline know that there is potentially another (much
+better) base that could be upstreamed.
+
+If you want me to rip out older kernel support for upstreaming, I'm
+more than happy to do so.
+
+> As for what codebase to work off of, I don't want to say it is too late,
+> but really, this shows up from nowhere and we had to pick something so
+> we found the best we could at that point in time.
+
+To be honest, whole public exFAT sources are all from nowhere unless
+you had internal access to Samsung's development archive.
+The one in the current staging tree isn't any better.
+
+I'm not even sure where the staging driver is from, actually.
+
+Samsung used the 1.2.x versioning until they switched to a new code
+base - sdFAT.
+The one in the staging tree is marked version 1.3.0(exfat_super.c).
+I failed to find anything 1.3.x from Samsung's public kernel sources.
+
+The last time exFAT 1.2.x was used was in Galaxy S7(released in 2016).
+Mine was originally based on sdFAT 2.1.10, used in Galaxy S10(released
+in March 2019) and it just got updated to 2.2.0, used in Galaxy
+Note10(released in August 2019).
+
+> Is there anything specific in the codebase you have now, that is lacking
+> in the in-kernel code?  Old-kernel-support doesn't count here, as we
+> don't care about that as it is not applicable.  But functionality does
+> matter, what has been added here that we can make use of?
+
+This is more of a suggestion of
+"Let's base on a *much more recent* snapshot for the community to work on",
+since the current one on the staging tree also lacks development history.
+
+The diff is way too big to even start understanding the difference.
+
+
+With that said though, I do have some vague but real reason as to why
+sdFAT base is better.
+
+With some major Android vendors showing interests in supporting exFAT,
+Motorola notably published their work on public Git repository with
+full development history(the only vendor to do this that I'm aware
+of).
+Commits like this:
+https://github.com/MotorolaMobilityLLC/kernel-msm/commit/7ab1657 is
+not merged to exFAT(including the current staging tree one) while it
+did for sdFAT.
+
+
+The only thing I regret is not working on porting sdFAT sooner.
+I definitely didn't anticipate Microsoft to suddenly lift legal issues
+on upstreaming exFAT just around when I happen to gain interest in
+porting sdFAT.
+
+If my port happened sooner, it would have been a no-brainer for it to
+be considered as a top candidate for upstreaming.
+
+> And do you have any "real" development history to look at instead of the
+> "one giant commit" of the initial code drop?  That is where we could
+> actually learn what has changed over time.  Your repo as-is shows none
+> of the interesting bits :(
+
+As I mentioned, development history is unobtainable, even for the
+current staging tree or exfat-nofuse.
+(If you guys took exfat-nofuse, you can also see that there's barely
+any real exFAT-related development done in that tree. Everything is
+basically fixes for newer kernel versions.)
+
+The best I could do, if someone's interested, is to diff all versions
+of exFAT/sdFAT throughout the Samsung's kernel versions, but that
+still won't give us reasons as to why the changes were made.
+
+TL;DR
+My suggestion - Let's base on a much newer driver that's matured more,
+contains more fixes, gives (slightly?) better performance and
+hopefully has better code quality.
+
+Both drivers are horrible.
+You said it yourself(for the current staging one), and even for my new
+sdFAT-base proposal, I'm definitely not comfortable seeing this kind
+of crap in mainline:
+https://github.com/arter97/exfat-linux/commit/0f1ddde
+
+However, it's clear to me that the sdFAT base is less-horrible.
+
+Please let me know what you think.
+
+> thanks,
+>
+> greg kh
+
+Thanks.
