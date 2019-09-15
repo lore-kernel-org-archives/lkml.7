@@ -2,119 +2,155 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0860CC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EDEC4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2DC220692
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568539903;
-	bh=ZD60JmGurmPZteZvfiPfDthGkRvmyZU83/L0qNSDtLk=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=K66EyRld3la+mJHHhtKtuKNMHpXKSCpQLkcviELJDblozWEIqYUiOyoTcXbkbmIR5
-	 2/Uodlo92Vr0LDuoCRFbmu99W1yABChfvGjiymn5JsoNtPcOF8CbdAZDhiIlvXBim5
-	 wuCVdCQQvMaF2ENbxzIBi4gAilEpZrU8DxsUFDNw=
+	by mail.kernel.org (Postfix) with ESMTP id 5827C20692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 09:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728557AbfIOJbm (ORCPT
+        id S1728560AbfIOJfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 05:31:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:35010 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfIOJbl (ORCPT
+        Sun, 15 Sep 2019 05:35:04 -0400
+Received: from mx2.yrkesakademin.fi ([85.134.45.195]:31969 "EHLO
+        mx2.yrkesakademin.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfIOJfE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 05:31:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=nyo3F8+Gmt+Uhz9HQiAjvCjoWq5h5bVV0pcNn8IbSDs=; b=BtRFFzqZYniD
-        NiWHe8lOEdzpXwEggZQzBfkSVqz1Y+nhGRgQ2GbeOCBN0YC2FCSGxkE/1HK/UcQupwZ5itg83/jCQ
-        4HwUW5o8kp/26mo7bFytgjfpZXtQzfhwJwKj4docb6tqgeBCm9CDxnuenchFUGuOxClOdMqoMde9p
-        8/5I8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9QsV-00079Y-Vg; Sun, 15 Sep 2019 09:31:32 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 600B62740A09; Sun, 15 Sep 2019 10:31:31 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     alsa-devel@alsa-project.org, bgoswami@codeaurora.org,
-        broonie@kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, perex@perex.cz,
-        plai@codeaurora.org, tiwai@suse.com
-Subject: Applied "ASoC: sdm845: remove unneeded semicolon" to the asoc tree
-In-Reply-To: <20190914031133.GA28447@SD>
-X-Patchwork-Hint: ignore
-Message-Id: <20190915093131.600B62740A09@ypsilon.sirena.org.uk>
-Date:   Sun, 15 Sep 2019 10:31:31 +0100 (BST)
+        Sun, 15 Sep 2019 05:35:04 -0400
+Subject: Re: [PATCH 5.2 36/37] vhost: block speculation of translated
+ descriptors
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stefan Lippers-Hollmann <s.l-h@gmx.de>
+CC:     <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+References: <20190913130510.727515099@linuxfoundation.org>
+ <20190913130522.155505270@linuxfoundation.org> <20190914025411.3016e3d9@mir>
+ <20190914055050.GA489003@kroah.com> <20190914091548.230a63de@mir>
+ <20190914080836.GB522114@kroah.com>
+From:   Thomas Backlund <tmb@mageia.org>
+Message-ID: <368d254b-dc29-6309-062d-a2d07b5dad75@mageia.org>
+Date:   Sun, 15 Sep 2019 12:34:57 +0300
+MIME-Version: 1.0
+In-Reply-To: <20190914080836.GB522114@kroah.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-WatchGuard-Spam-ID: str=0001.0A0C020F.5D7E05C6.0029,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+X-WatchGuard-Spam-Score: 0, clean; 0, virus threat unknown
+X-WatchGuard-Mail-Client-IP: 85.134.45.195
+X-WatchGuard-Mail-From: tmb@mageia.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Den 14-09-2019 kl. 11:08, skrev Greg Kroah-Hartman:
+> On Sat, Sep 14, 2019 at 09:15:48AM +0200, Stefan Lippers-Hollmann wrote:
+>> Hi
+>>
+>> On 2019-09-14, Greg Kroah-Hartman wrote:
+>>> On Sat, Sep 14, 2019 at 02:54:11AM +0200, Stefan Lippers-Hollmann wrote:
+>>>> On 2019-09-13, Greg Kroah-Hartman wrote:
+>>>>> From: Michael S. Tsirkin <mst@redhat.com>
+>>>>>
+>>>>> commit a89db445fbd7f1f8457b03759aa7343fa530ef6b upstream.
+>>>>>
+>>>>> iovec addresses coming from vhost are assumed to be
+>>>>> pre-validated, but in fact can be speculated to a value
+>>>>> out of range.
+>>>>>
+>>>>> Userspace address are later validated with array_index_nospec so we can
+>>>>> be sure kernel info does not leak through these addresses, but vhost
+>>>>> must also not leak userspace info outside the allowed memory table to
+>>>>> guests.
+>>>>>
+>>>>> Following the defence in depth principle, make sure
+>>>>> the address is not validated out of node range.
+>> [...]
+>>> Do you have the same problem with Linus's tree right now?
+>>
+>> Actually, yes I do (I had not tested i386 for 5.3~ within the last ~2
+>> weeks, only amd64). Very similar kernel config, same compiler versions
+>> but built in a slightly different environment (built directly on the bare
+>> iron, in a amd64 multilib userspace, rather than a pure-i386 chroot on an
+>> amd64 kernel).
+>>
+>> $ git describe
+>> v5.3-rc8-36-ga7f89616b737
+>>
+>> $ LANG= make ARCH=x86 -j1 bzImage modules
+>>    CALL    scripts/checksyscalls.sh
+>>    CALL    scripts/atomic/check-atomics.sh
+>>    CHK     include/generated/compile.h
+>>    CHK     kernel/kheaders_data.tar.xz
+>>    CC [M]  drivers/vhost/vhost.o
+>> In file included from ./include/linux/export.h:45,
+>>                   from ./include/linux/linkage.h:7,
+>>                   from ./include/linux/kernel.h:8,
+>>                   from ./include/linux/list.h:9,
+>>                   from ./include/linux/wait.h:7,
+>>                   from ./include/linux/eventfd.h:13,
+>>                   from drivers/vhost/vhost.c:13:
+>> drivers/vhost/vhost.c: In function 'translate_desc':
+>> ./include/linux/compiler.h:350:38: error: call to '__compiletime_assert_2076' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
+>>    350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>        |                                      ^
+>> ./include/linux/compiler.h:331:4: note: in definition of macro '__compiletime_assert'
+>>    331 |    prefix ## suffix();    \
+>>        |    ^~~~~~
+>> ./include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
+>>    350 |  _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>        |  ^~~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+>>     39 | #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>        |                                     ^~~~~~~~~~~~~~~~~~
+>> ./include/linux/build_bug.h:50:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+>>     50 |  BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+>>        |  ^~~~~~~~~~~~~~~~
+>> ./include/linux/nospec.h:56:2: note: in expansion of macro 'BUILD_BUG_ON'
+>>     56 |  BUILD_BUG_ON(sizeof(_s) > sizeof(long));   \
+>>        |  ^~~~~~~~~~~~
+>> drivers/vhost/vhost.c:2076:5: note: in expansion of macro 'array_index_nospec'
+>>   2076 |     array_index_nospec((unsigned long)(addr - node->start),
+>>        |     ^~~~~~~~~~~~~~~~~~
+>> make[2]: *** [scripts/Makefile.build:281: drivers/vhost/vhost.o] Error 1
+>> make[1]: *** [scripts/Makefile.build:497: drivers/vhost] Error 2
+>> make: *** [Makefile:1083: drivers] Error 2
+>>
+>> $ git revert a89db445fbd7f1f8457b03759aa7343fa530ef6b
+>>
+>> $ LANG= make ARCH=x86 -j16 bzImage modules
+>>    CALL    scripts/atomic/check-atomics.sh
+>>    CALL    scripts/checksyscalls.sh
+>>    CHK     include/generated/compile.h
+>>    CHK     kernel/kheaders_data.tar.xz
+>>    Building modules, stage 2.
+>> Kernel: arch/x86/boot/bzImage is ready  (#1)
+>>    MODPOST 3464 modules
+>>
+>> $ echo $?
+>> 0
+>>
+>> $ find . -name vhost\\.ko
+>> ./drivers/vhost/vhost.ko
+>>
+>> I've attached the affected kernel config for v5.3~/ i386.
+> 
+> Ok, good, we will be "bug compatible" at the very least now :)
+> 
+> When this gets fixed in Linus's tree we can backport the fix here as
+> well.  The number of users of that compiler version/configuration is
+> probably pretty low at the moment to want to hold off on this fix.
+> 
 
-   ASoC: sdm845: remove unneeded semicolon
+This is now reverted upstream:
 
-has been applied to the asoc tree at
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0d4a3f2abbef73b9e5bb5f12213c275565473588
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From fca11622d600228bec405456f41590155b3a3eca Mon Sep 17 00:00:00 2001
-From: Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Date: Sat, 14 Sep 2019 08:41:33 +0530
-Subject: [PATCH] ASoC: sdm845: remove unneeded semicolon
-
-Remove excess semicolon after closing parenthesis.
-
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Link: https://lore.kernel.org/r/20190914031133.GA28447@SD
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/qcom/sdm845.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-index 882f52ed8231..28f3cef696e6 100644
---- a/sound/soc/qcom/sdm845.c
-+++ b/sound/soc/qcom/sdm845.c
-@@ -319,7 +319,7 @@ static void  sdm845_snd_shutdown(struct snd_pcm_substream *substream)
- 			snd_soc_dai_set_sysclk(cpu_dai,
- 				Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
- 				0, SNDRV_PCM_STREAM_PLAYBACK);
--		};
-+		}
- 		break;
- 
- 	case SECONDARY_MI2S_TX:
--- 
-2.20.1
+--
+Thomas
 
