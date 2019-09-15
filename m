@@ -2,131 +2,271 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1FF2C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C444BC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBE5214D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568585155;
-	bh=EWn92g3Phulea1QmCJ66vYqdap3rP8f8a7HMaqYkOTQ=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=lSzrxWdO69pXSTfya2iD3pJvosw6iyKArbVF1S1ZOJvKtlQAoDzcgwNNbIzexKczI
-	 kWjvOPSqdwZP5ncouJPPHWioTcoADz9z0X+NrCRdUVWqGPkT8cC04G/QWC24ex8wdL
-	 JQvqGmVRxNENG7DIrT/ABa8epu5WGFFTaUavwyQY=
+	by mail.kernel.org (Postfix) with ESMTP id 81D3620692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnzrivaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfIOWFy (ORCPT
+        id S1727287AbfIOWRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 18:05:54 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60300 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfIOWFy (ORCPT
+        Sun, 15 Sep 2019 18:17:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45397 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbfIOWRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 18:05:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BZfamDuKW9zum2bvuldn42rfct2cwwZfcxINJ6AUDaU=; b=uaPxHNRnfn82HYDMOSTS0t0Ab
-        accoD3vXIPGEmMHOKsXnRS2L/TJO8tZbdlvqpKcmaGoFPbfdbib59bZilPBIaffRnFTXhhC56ABs4
-        THZT0bc/XeIEtRUmeJCBIuoOMbyiXuf913s+Nt+kW1zvDRkfTKOy45k63LhTQxn0JR/X8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9ceU-0001Th-Ao; Sun, 15 Sep 2019 22:05:50 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5F6DE27415FF; Sun, 15 Sep 2019 23:05:49 +0100 (BST)
-Date:   Sun, 15 Sep 2019 23:05:49 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jessica Yu <jeyu@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the modules tree with the kbuild tree
-Message-ID: <20190915220549.GK4352@sirena.co.uk>
+        Sun, 15 Sep 2019 18:17:06 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 4so18472911pgm.12;
+        Sun, 15 Sep 2019 15:17:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZjaV8y7yH/juQUdAbDmH776B3Iv6G5aiEBUh0Egz+/Q=;
+        b=HnzrivaJ4nFtWkW0DuY6TIIFdFBHZDtOtRKqj/g1j7vbZ85Ijn7LjLvdMbXpk2RLDC
+         9tPeHe6a9hL/N8UDStqrlKB+PQRrZDVeFRrMhGcQWAsEtgBYlfoP5rkLQo8j5SztjXpr
+         1a5gUwgJ0z9tkcRyAticqIJ6my81e1OtdeIIiUIGsY2gNGhhkf8UW9rzIkhxgHdnBeYW
+         9FMRZjcvIcbIQdGbK4pepcqraeDJFPEw/xkPorwb0MN6iMs4T7lSO8KH9+suaPp8rG77
+         eq+0fPsK3DXpQmPbpoPTNn7aeTo/KddhLIbL1whfZd36CjmFLvEVjboWAhc6szSRHGki
+         lr7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=ZjaV8y7yH/juQUdAbDmH776B3Iv6G5aiEBUh0Egz+/Q=;
+        b=Q44TEqeMRzXUm4xGTG+0tXXecBehhTq0Vwofkw0Liwp7Jsed8wYwI/477AFPXdRab4
+         D75rXerGTYSq8x2HpHH5267SEkqMGkzvDl3gW3f9ao7+ps40UVk46mEqgvbbi3mETUYH
+         uOE8k1En7jcDAmysHkR97afjF7mYOtnrpPfT9O5MSclvAU/jPgEvjnC0u7CuoBJ4YXdM
+         bTo9reOXmHqlBt3ILkX1Vv9WAZ/IxxpfRl4Fr4oC8Pp3NCSCGEr57W3mZzX4QKyNZV8I
+         gysvf035+0VxksU6UXy6e4WoMdmiirpVHTQhYMcKxZLcCUe7CH3IbemzpCBj6BsULQI9
+         Ckng==
+X-Gm-Message-State: APjAAAVHXcLWALpiA82rHyLZg518wJocsjTq7ATRCOpg9d+nMgWHqd2V
+        ip/BOexTyElvGKHJOR7g3LXSIMRl
+X-Google-Smtp-Source: APXvYqxIoBUAAqHXW9dNxBnuCioHwXa1PYno65gys8S6CHECtblnzbZVL7RIrmWeVi/Vj8+CGoh7lg==
+X-Received: by 2002:a65:450a:: with SMTP id n10mr17725708pgq.432.1568585825068;
+        Sun, 15 Sep 2019 15:17:05 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u17sm9758323pgf.8.2019.09.15.15.17.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 15 Sep 2019 15:17:03 -0700 (PDT)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon updates for v5.4
+Date:   Sun, 15 Sep 2019 15:17:02 -0700
+Message-Id: <20190915221702.28480-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9a9Vq1BJdYBEXpLG"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
---9a9Vq1BJdYBEXpLG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please pull hwmon updates for Linux v5.4 from signed tag:
 
-Hi all,
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.4
 
-Today's linux-next merge of the modules tree got a conflict in:
+Thanks,
+Guenter
+------
 
-  scripts/Makefile.modpost
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-between commit:
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
 
-  9b9a3f20cbe0ba ("kbuild: split final module linking out into Makefile.mod=
-final")
+are available in the Git repository at:
 
-=66rom the kbuild tree and commit:
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-for-v5.4
 
-  eb8305aecb958e ("cripts: Coccinelle script for namespace dependencies.")
+for you to fetch changes up to 4e19e72f45d360975c59df8272f98bff59f6b748:
 
-=66rom the modules tree.
+  hwmon: submitting-patches: Add note on comment style (2019-09-13 05:43:06 -0700)
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+----------------------------------------------------------------
+hwmon updates for v5.4
 
-diff --cc scripts/Makefile.modpost
-index 9800a3988f23e,743fe3a2e885f..0000000000000
---- a/scripts/Makefile.modpost
-+++ b/scripts/Makefile.modpost
-diff --git a/scripts/Makefile.modfinal b/scripts/Makefile.modfinal
-index 411c1e600e7dd..c164d644138ab 100644
---- a/scripts/Makefile.modfinal
-+++ b/scripts/Makefile.modfinal
-@@ -42,6 +42,8 @@ $(modules): %.ko: %.o %.mod.o $(KBUILD_LDS_MODULE) FORCE
-=20
- targets +=3D $(modules) $(modules:.ko=3D.mod.o)
-=20
-+nsdeps: __modpost
-+
- # Add FORCE to the prequisites of a target to force it to be always rebuil=
-t.
- # ------------------------------------------------------------------------=
----
-=20
+New drivers and chip support
+- Add Inspur Power System power supply driver
+- Add Synaptics AS370 PVT sensor driver
+- Add support for SHTC3 to shtc1 driver
+- Add support for NCT6116 to nct6775 driver
+- Add support for AMD family 17h, model 70h CPUs to k10temp driver
+- Add support for PCT2075 to lm75 driver
 
---9a9Vq1BJdYBEXpLG
-Content-Type: application/pgp-signature; name="signature.asc"
+Removed drivers
+- Remove ads1015 driver (now supported in iio)
 
------BEGIN PGP SIGNATURE-----
+Other changes
+- Convert drivers to use devm_i2c_new_dummy_device
+- Substantial structural improvements in lm75 driver
+  Add support for writing sample interval for supported chips
+- Add support for PSU version 2 to ibm-cffps driver
+- Add support for power attribute to iio_hwmon bridge
+- Add support for additional fan, voltage and temperature attributes
+  to nct7904 driver
+- Convert adt7475 driver to use hwmon_device_register_with_groups()
+- Convert k8temp driver to use hwmon_device_register_with_info()
+- Various other improvements and minor fixes
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+tbwACgkQJNaLcl1U
-h9B2tgf+Lzb9gTE3lWLQaPX/y4tmgBboES2YFIRs5O1gBqzMtXCeP2jqGNUJ7oCa
-WxJui9dd5pLNW3K0yLHSWf9u2scSmNpg62vPCTk+Rfx3nl7wOt2zdFQvKartW5sY
-kdNiWwx6fFNG+2G9SpUUxyPfmhl016xxU/eSpb+XL4h8PbILtSd+RT/fNgUnh6Mo
-+yLwPL/KhleFEMiwFzNWvoLb78+SIJv9i/wrpiwJhHEsIA6hEaoKvKQ1vQwVe7Au
-vsvQB6qcVaU5/j7dVnbS7jdfqGgz4XxKqQ5mwMs+VwrGO6zX37/3BiQeFdwSFkns
-uxOs3AECzmo+S6MiN1EIC4e7P879CQ==
-=M9oK
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+Bartosz Golaszewski (1):
+      hwmon: pmbus: ucd9000: remove unneeded include
 
---9a9Vq1BJdYBEXpLG--
+Björn Gerhart (1):
+      hwmon: (nct6775) Integrate new model nct6116
+
+Christophe JAILLET (1):
+      hwmon: (pmbus/max31785) Remove a useless #define
+
+Dan Robertson (2):
+      hwmon: (shtc1) fix shtc1 and shtw1 id mask
+      hwmon: (shtc1) add support for the SHTC3 sensor
+
+Daniel Mack (2):
+      device-tree: bindinds: add NXP PCT2075 as compatible device to LM75
+      hwmon: (lm75) add support for PCT2075
+
+Eddie James (2):
+      dt-bindings: hwmon: Document ibm,cffps2 compatible string
+      pmbus: (ibm-cffps) Add support for version 2 of the PSU
+
+Grant McEwan (1):
+      hwmon: (adt7475) Convert to use hwmon_device_register_with_groups()
+
+Guenter Roeck (8):
+      hwmon: (lm75) Fix write operations for negative temperatures
+      hwmon: Remove ads1015 driver
+      hwmon: (lm75) Support configuring the sample time for various chips
+      hwmon: (lm75) Move updating the sample interval to its own function
+      hwmon: (lm75) Add support for writing conversion time for TMP112
+      hwmon: (lm75) Add support for writing sampling period on PCT2075
+      hwmon: submitting-patches: Point to with_info API
+      hwmon: submitting-patches: Add note on comment style
+
+Iker Perez del Palomar Sustatxa (5):
+      hwmon: (lm75) Create structure to save all the configuration parameters.
+      hwmon: (lm75) Create function from code to write into registers
+      hwmon: (lm75) Add new fields into lm75_params_
+      hwmon: (lm75) Modularize lm75_write and make hwmon_chip writable
+      hwmon: (lm75) Aproximate sample times to data-sheet values
+
+Jean Delvare (1):
+      hwmon: w83795: Fan control option isn't that dangerous
+
+Jisheng Zhang (2):
+      hwmon: Add Synaptics AS370 PVT sensor driver
+      hwmon: (as370-hwmon) Add DT bindings for Synaptics AS370 PVT
+
+John Wang (2):
+      hwmon: pmbus: Add Inspur Power System power supply driver
+      dt-bindings: Add ipsps1 as a trivial device
+
+Marcel Bocu (2):
+      x86/amd_nb: Add PCI device IDs for family 17h, model 70h
+      hwmon: (k10temp) Add support for AMD family 17h, model 70h CPUs
+
+Mauro Carvalho Chehab (1):
+      docs: hwmon: pxe1610: convert to ReST format and add to the index
+
+Max Staudt (1):
+      hwmon/ltc2990: Generalise DT to fwnode support
+
+Michal Simek (1):
+      hwmon: (iio_hwmon) Enable power exporting from IIO
+
+Robert Karszniewicz (1):
+      hwmon: (k8temp) update to use new hwmon registration API
+
+Stefan Wahren (1):
+      hwmon: (raspberrypi) update MODULE_AUTHOR() email address
+
+Stephen Boyd (1):
+      hwmon: (npcm750-pwm-fan) Remove dev_err() usage after platform_get_irq()
+
+Wang Shenran (1):
+      hwmon: (acpi_power_meter) Change log level for 'unsafe software power cap'
+
+Wenwen Wang (1):
+      hwmon (coretemp) Fix a memory leak bug
+
+Wolfram Sang (6):
+      hwmon: (asb100) convert to i2c_new_dummy_device
+      hwmon: (smm665) convert to i2c_new_dummy_device
+      hwmon: (w83781d) convert to i2c_new_dummy_device
+      hwmon: (w83791d) convert to use devm_i2c_new_dummy_device
+      hwmon: (w83792d) convert to use devm_i2c_new_dummy_device
+      hwmon: (w83793d) convert to use devm_i2c_new_dummy_device
+
+amy.shih (3):
+      hwmon: (nct7904) Add extra sysfs support for fan, voltage and temperature.
+      hwmon: (nct7904) Fix incorrect temperature limitation register setting of LTD.
+      hwmon: (nct7904) Fix incorrect SMI status register setting of LTD temperature and fan.
+
+kbuild test robot (1):
+      hwmon: (as370-hwmon) fix devm_platform_ioremap_resource.cocci warnings
+
+ Documentation/devicetree/bindings/hwmon/as370.txt  |  11 +
+ .../devicetree/bindings/hwmon/ibm,cffps1.txt       |   8 +-
+ Documentation/devicetree/bindings/hwmon/lm75.txt   |   1 +
+ .../bindings/{hwmon => iio/adc}/ads1015.txt        |   0
+ .../devicetree/bindings/trivial-devices.yaml       |   2 +
+ Documentation/hwmon/ads1015.rst                    |  90 ----
+ Documentation/hwmon/index.rst                      |   2 +-
+ Documentation/hwmon/inspur-ipsps1.rst              |  79 ++++
+ Documentation/hwmon/lm75.rst                       |   6 +-
+ Documentation/hwmon/{pxe1610 => pxe1610.rst}       |  33 +-
+ Documentation/hwmon/shtc1.rst                      |  19 +-
+ Documentation/hwmon/submitting-patches.rst         |   8 +-
+ MAINTAINERS                                        |   8 -
+ arch/x86/kernel/amd_nb.c                           |   3 +
+ drivers/hwmon/Kconfig                              |  31 +-
+ drivers/hwmon/Makefile                             |   2 +-
+ drivers/hwmon/acpi_power_meter.c                   |   4 +-
+ drivers/hwmon/ads1015.c                            | 324 --------------
+ drivers/hwmon/adt7475.c                            | 146 +++----
+ drivers/hwmon/as370-hwmon.c                        | 145 +++++++
+ drivers/hwmon/asb100.c                             |  12 +-
+ drivers/hwmon/coretemp.c                           |   3 +-
+ drivers/hwmon/iio_hwmon.c                          |  18 +-
+ drivers/hwmon/k10temp.c                            |   1 +
+ drivers/hwmon/k8temp.c                             | 233 +++-------
+ drivers/hwmon/lm75.c                               | 462 +++++++++++++++-----
+ drivers/hwmon/ltc2990.c                            |  10 +-
+ drivers/hwmon/nct6775.c                            | 180 +++++++-
+ drivers/hwmon/nct7904.c                            | 476 +++++++++++++++++++--
+ drivers/hwmon/npcm750-pwm-fan.c                    |   4 +-
+ drivers/hwmon/pmbus/Kconfig                        |   9 +
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/ibm-cffps.c                    | 110 ++++-
+ drivers/hwmon/pmbus/inspur-ipsps.c                 | 228 ++++++++++
+ drivers/hwmon/pmbus/max31785.c                     |   2 -
+ drivers/hwmon/pmbus/ucd9000.c                      |   1 -
+ drivers/hwmon/raspberrypi-hwmon.c                  |   2 +-
+ drivers/hwmon/shtc1.c                              |  57 ++-
+ drivers/hwmon/smm665.c                             |   6 +-
+ drivers/hwmon/w83781d.c                            |   6 +-
+ drivers/hwmon/w83791d.c                            |  32 +-
+ drivers/hwmon/w83792d.c                            |  32 +-
+ drivers/hwmon/w83793.c                             |  30 +-
+ drivers/iio/adc/Kconfig                            |   2 +-
+ include/linux/pci_ids.h                            |   1 +
+ 45 files changed, 1817 insertions(+), 1023 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/as370.txt
+ rename Documentation/devicetree/bindings/{hwmon => iio/adc}/ads1015.txt (100%)
+ delete mode 100644 Documentation/hwmon/ads1015.rst
+ create mode 100644 Documentation/hwmon/inspur-ipsps1.rst
+ rename Documentation/hwmon/{pxe1610 => pxe1610.rst} (82%)
+ delete mode 100644 drivers/hwmon/ads1015.c
+ create mode 100644 drivers/hwmon/as370-hwmon.c
+ create mode 100644 drivers/hwmon/pmbus/inspur-ipsps.c
