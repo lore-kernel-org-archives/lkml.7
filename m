@@ -2,88 +2,94 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB92C4CEC6
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9809FC4CEC6
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8CE920873
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C732077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:33:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726278AbfIOGaG (ORCPT
+        id S1726293AbfIOGdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 02:30:06 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:37060 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfIOGaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 02:30:06 -0400
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 8A105440584;
-        Sun, 15 Sep 2019 09:30:01 +0300 (IDT)
-References: <20190910155507.491230-1-tinywrkb@gmail.com> <20190910185033.GD9761@lunn.ch>
-User-agent: mu4e 1.2.0; emacs 26.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     tinywrkb <tinywrkb@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        "open list\:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s max-speed
-In-reply-to: <20190910185033.GD9761@lunn.ch>
-Date:   Sun, 15 Sep 2019 09:30:00 +0300
-Message-ID: <87muf6oyvr.fsf@tarshish>
+        Sun, 15 Sep 2019 02:33:51 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45048 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725904AbfIOGdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 02:33:51 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8F6XNJP021550;
+        Sun, 15 Sep 2019 08:33:23 +0200
+Date:   Sun, 15 Sep 2019 08:33:23 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190915063323.GA20811@1wt.eu>
+References: <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190914211126.GA4355@darwi-home-pc>
+ <20190914222432.GC19710@mit.edu>
+ <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
+ <20190915010037.GE19710@mit.edu>
+ <CAHk-=wjGTV0e_P73V0B3cPVrfeoSZcV6CjQMgj-+yL-s38DKaw@mail.gmail.com>
+ <20190915020521.GF19710@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190915020521.GF19710@mit.edu>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Sat, Sep 14, 2019 at 10:05:21PM -0400, Theodore Y. Ts'o wrote:
+> I'd be willing to let it take at least 2 minutes, since that's slow
+> enough to be annoying.
 
-On Tue, Sep 10 2019, Andrew Lunn wrote:
-> On Tue, Sep 10, 2019 at 06:55:07PM +0300, tinywrkb wrote:
->> Cubox-i Solo/DualLite carrier board has 100Mb/s magnetics while the
->> Atheros AR8035 PHY on the MicroSoM v1.3 CPU module is a 1GbE PHY device.
->>
->> Since commit 5502b218e001 ("net: phy: use phy_resolve_aneg_linkmode in
->> genphy_read_status") ethernet is broken on Cubox-i Solo/DualLite devices.
->
-> Hi Tinywrkb
->
-> You emailed lots of people, but missed the PHY maintainers :-(
->
-> Are you sure this is the patch which broken it? Did you do a git
-> bisect.
+It's an eternity, and prevents a backup system from being turned on in
+time to replace a dead system. In fact the main problem with this is
+that it destroys uptime on already configured systems for the sake of
+making sure a private SSH key is produce correctly. It turns out that
+if we instead give the info to this tool that the produced random is
+not strong, this only tool that requires good entropy will be able to
+ask the user to type something to add real entropy. But making the
+system wait forever will not bring any extra entropy because the
+services cannot start, it will not even receive network traffic and
+will not be able to collect entropy. Sorry Ted, but I've been hit by
+this already. It's a real problem to see a system not finish to boot
+after a crash when you know your systems have only 5 minutes of total
+downtime allowed per year (5 nines). And when the SSH keys, like the
+rest of the config, were supposed to be either synchronized from the
+network or pre-populated in a system image, nobody finds this a valid
+justification for an extended downtime.
 
-Tinywrkb confirmed to me in private communication that revert of
-5502b218e001 fixes Ethernet for him on effected system.
+> Except the developer could (and *has) just ignored the warning, which
+> is what happened with /dev/urandom when it was accessed too early.
 
-He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-there was a plan to use a different 10/100 PHY for Solo/DualLite
-SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-AR8035 PHY that supports 1Gb.
+That's why it's nice to have getrandom() return the error : it will
+for once allow the developer of the program to care depending on the
+program. Those proposing to choose the pieces to present in Tetris
+will not care, those trying to generate an SSH key will care and will
+have solid and well known fallbacks. And the rare ones who need good
+randoms and ignore the error will be the ones *responsible* for this,
+it will not be the kernel anymore giving bad random.
 
-Commit 5502b218e001 might be triggering a hardware issue on the affected
-Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-the moment.
+BTW I was thinking that EAGAIN was semantically better than EINVAL to
+indicate that the same call should be done with blocking.
 
-baruch
-
---
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+Just my two cents,
+Willy
