@@ -2,171 +2,143 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AF1C4CECB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 805B7C4CEC6
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 164B920830
+	by mail.kernel.org (Postfix) with ESMTP id 56BA920830
 	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 06:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfIOGNy (ORCPT
+        id S1726205AbfIOGOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 02:13:54 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2220 "EHLO huawei.com"
+        Sun, 15 Sep 2019 02:14:01 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2269 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725497AbfIOGNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 02:13:54 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id EF37AF414E8AE11F52F8;
-        Sun, 15 Sep 2019 14:13:50 +0800 (CST)
-Received: from HGHY2S004443181.china.huawei.com (10.184.52.157) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 15 Sep 2019 14:13:45 +0800
-From:   shikemeng <shikemeng@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <valentin.schneider@arm.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
-Date:   Sun, 15 Sep 2019 06:13:41 +0000
-Message-ID: <1568528021-13744-1-git-send-email-shikemeng@huawei.com>
-X-Mailer: git-send-email 2.7.0.windows.1
-In-Reply-To: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
-References: <979d57f8-802b-57e5-632a-f94ad0f9d6a1@arm.com>
+        id S1725497AbfIOGOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 02:14:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EBDFD36DDAEE5ECE5E61;
+        Sun, 15 Sep 2019 14:13:56 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Sun, 15 Sep 2019
+ 14:13:52 +0800
+Subject: Re: [PATCH v3 7/8] mips: numa: make node_to_cpumask_map()
+ NUMA_NO_NODE aware for mips
+To:     Mike Rapoport <rppt@linux.ibm.com>
+CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <anshuman.khandual@arm.com>,
+        <tglx@linutronix.de>, <cai@lca.pw>, <robin.murphy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
+        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
+        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
+        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
+        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
+        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
+References: <1568283334-178380-1-git-send-email-linyunsheng@huawei.com>
+ <1568283334-178380-8-git-send-email-linyunsheng@huawei.com>
+ <20190915054901.GC11429@linux.ibm.com>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <938be3af-ece4-7f5f-34d6-f949ee2a3d32@huawei.com>
+Date:   Sun, 15 Sep 2019 14:13:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.52.157]
+In-Reply-To: <20190915054901.GC11429@linux.ibm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/09/2019 6:09,Valentin Schneider wrote:
->> From 089dbf0216628ac6ae98742ab90725ca9c2bf201 Mon Sep 17 00:00:00 2001
->> From:  <shikemeng@huawei.com>
->> Date: Tue, 10 Sep 2019 09:44:58 -0400
->> Subject: [PATCH] sched: fix migration to invalid cpu in 
->> __set_cpus_allowed_ptr
->> 
->> reason: migration to invalid cpu in __set_cpus_allowed_ptr archive 
->> path: patches/euleros/sched
->> 
->
->The above should probably be trimmed from the log.
->
-
-Thanks for reminding me. I will remove this part in a new patch.
-
->> Oops occur when running qemu on arm64:
->>  Unable to handle kernel paging request at virtual address 
->> ffff000008effe40  Internal error: Oops: 96000007 [#1] SMP  Process 
->> migration/0 (pid: 12, stack limit = 0x00000000084e3736)
->>  pstate: 20000085 (nzCv daIf -PAN -UAO)  pc : 
->> __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->>  lr : move_queued_task.isra.21+0x124/0x298
->>  ...
->>  Call trace:
->>   __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->>   __migrate_task+0xc8/0xe0
->>   migration_cpu_stop+0x170/0x180
->>   cpu_stopper_thread+0xec/0x178
->>   smpboot_thread_fn+0x1ac/0x1e8
->>   kthread+0x134/0x138
->>   ret_from_fork+0x10/0x18
->> 
->> __set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask 
->> to migrage the process if process is not currently running on any one 
->> of the CPUs specified in affinity mask.__set_cpus_allowed_ptr will 
->> choose an invalid dest_cpu(>= nr_cpu_ids, 1024 in my virtual machine) if CPUS in affinity mask are deactived by cpu_down after cpumask_intersects check.
->
->Right, cpumask_any_and() returns >= nr_cpu_ids when there isn't any valid CPU bit set.
->
->> Cpumask_test_cpu of dest_cpu afterwards is overflow and may passes if 
->> corresponding bit is coincidentally set.
->
->Ouch. I was going to say the cpu_active_mask check from is_cpu_allowed() should've stopped the whole thing there, but AFAICT there's no safeguard against > nr_cpu_ids bit accesses. I see CONFIG_DEBUG_PER_CPU_MAPS should fire a warning for such accesses, but we don't enable it by default.
->
->Would it make sense to do something like
->
->	return test_bit(...) && cpu < nr_cpu_ids;
->
->for cpumask_test_cpu()? We still get the warn with the right config, but we prevent sneaky mistakes like this one. And it seems it's not the only one according to:
->
->--
->virtual patch
->virtual report
->
->@nocheck@
->expression E;
->identifier any_func =~ "^cpumask_any";
->position pos;
->@@
->
->E@pos = any_func(...);
->... when != E >= nr_cpu_ids
->    when != E < nr_cpu_ids
->
->@script:python depends on nocheck && report@ p << nocheck.pos; @@ coccilib.report.print_report(p[0], "Missing cpumask_any_*() return value check!")
->---
->
->Some of those seem benign since they are on e.g. cpu_online_mask, some other are somewhat dubious (e.g. deadline.c::dl_task_can_attach()).
->
->As a consequence, kernel will access a invalid rq address associate with the invalid cpu in
-
-It's more thoughtful to add check in cpumask_test_cpu.It can solve this problem and can prevent other potential bugs.I will test it and resend
-a new patch.
-
->> migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs. Process as follows may trigger the Oops:
->> 1) A process repeatedly bind itself to cpu0 and cpu1 in turn by 
->> calling sched_setaffinity
->> 2) A shell script repeatedly "echo 0 > 
->> /sys/devices/system/cpu/cpu1/online" and "echo 1 > 
->> /sys/devices/system/cpu/cpu1/online" in turn
->> 3) Oops appears if the invalid cpu is set in memory after tested cpumask.
->> 
->> 
->> Change-Id: I9c2f95aecd3da568991b7408397215f26c990e40
->
->- This doesn't respect the 75 char per line limit
->- Change IDs don't belong here (we're not using Gerrit)
->- You're missing a Signed-off-by.
->
->You'll find all the guidelines you need for formatting patches in Documentation/process/submitting-patches.rst.
->
-
-Thanks for the guide.I will read it carefully before send next patch.
-
+On 2019/9/15 13:49, Mike Rapoport wrote:
+> Hi,
+> 
+> On Thu, Sep 12, 2019 at 06:15:33PM +0800, Yunsheng Lin wrote:
+>> When passing the return value of dev_to_node() to cpumask_of_node()
+>> without checking the node id if the node id is NUMA_NO_NODE, there is
+>> global-out-of-bounds detected by KASAN.
+>>
+>> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+>> which also means all cpus should be usable. So the cpumask_of_node()
+>> should always return all cpus online when user passes the node id
+>> as NUMA_NO_NODE, just like similar semantic that page allocator handles
+>> NUMA_NO_NODE.
+>>
+>> But we cannot really copy the page allocator logic. Simply because the
+>> page allocator doesn't enforce the near node affinity. It just picks it
+>> up as a preferred node but then it is free to fallback to any other numa
+>> node. This is not the case here and node_to_cpumask_map will only restrict
+>> to the particular node's cpus which would have really non deterministic
+>> behavior depending on where the code is executed. So in fact we really
+>> want to return cpu_online_mask for NUMA_NO_NODE.
+>>
+>> Since this arch was already NUMA_NO_NODE aware, this patch only changes
+>> it to return cpu_online_mask and use NUMA_NO_NODE instead of "-1".
+>>
+>> [1] https://lore.kernel.org/patchwork/patch/1125789/
+>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>> Suggested-by: Michal Hocko <mhocko@kernel.org>
 >> ---
->>  kernel/sched/core.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->> 
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c index 
->> 4b63fef..5181ea9 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -1112,7 +1112,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->>     if (cpumask_equal(&p->cpus_allowed, new_mask))
->>         goto out;
->> 
->> -   if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
->> +   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
->> +   if (dest_cpu >= nr_cpu_ids) {
->>         ret = -EINVAL;
->>         goto out;
->>     }
->> @@ -1133,7 +1134,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->>     if (cpumask_test_cpu(task_cpu(p), new_mask))
->>         goto out;
->> 
->> -   dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);>     if (task_running(rq, p) || p->state == TASK_WAKING) {
->>         struct migration_arg arg = { p, dest_cpu };
->>         /* Need help from migration thread: drop lock and wait. */
->> --
->> 1.8.5.6
->> 
+>> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+>>     for NUMA_NO_NODE case, and change the commit log to better justify
+>>     the change.
+>> ---
+>>  arch/mips/include/asm/mach-ip27/topology.h | 4 ++--
+> 
+> Nit: the subject says "mips:", but this patch only touches sgi-ip27 and
+> loongson is updated as a separate patch. I don't see why both patches
+> cannot be merged. Moreover, the whole set can be made as a single patch,
+> IMHO.
 
-Thansks for your review and advises.
+Thanks for reviewing.
+
+As this patchset touches a few files, which may has different maintainer.
+I am not sure if a separate patch for different arch will make the merging
+process easy, or a single patch will make the merging process easy?
+
+It can be made as a single patch if a single patch will make the merging
+process easy.
+
+> 
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+>> index 965f079..04505e6 100644
+>> --- a/arch/mips/include/asm/mach-ip27/topology.h
+>> +++ b/arch/mips/include/asm/mach-ip27/topology.h
+>> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
+>>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+>>  
+>>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+>> -#define cpumask_of_node(node)	((node) == -1 ?				\
+>> -				 cpu_all_mask :				\
+>> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+>> +				 cpu_online_mask :			\
+>>  				 &hub_data(node)->h_cpus)
+>>  struct pci_bus;
+>>  extern int pcibus_to_node(struct pci_bus *);
+>> -- 
+>> 2.8.1
+>>
+> 
 
