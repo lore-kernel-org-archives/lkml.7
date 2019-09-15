@@ -2,117 +2,114 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB8C2BA1D
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C16C4CECE
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68A3A20692
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:21:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tnPBDrO9"
+	by mail.kernel.org (Postfix) with ESMTP id 90D3321479
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 22:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568586448;
+	bh=i4NfPzqtkrhZDUbY8lz87lmymCK+89K6HM5X85MPx6c=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=IukHBTsSpq0bih9a3x166HxSawgcbOPCCbrZSWftlcjFD+CvZlyjNotitF5uyjnu9
+	 ocbKFkhDDFM6n4usHzxUboS8HTKQwtM7UAisFt4blhpwWzvMQODC3QGPA3uRAwaXU+
+	 GwF8lHK7zFXwmfTOOORJzr/2vOkq8sEZ555G4n08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727346AbfIOWV6 (ORCPT
+        id S1727409AbfIOW12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 18:21:58 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45879 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfIOWV6 (ORCPT
+        Sun, 15 Sep 2019 18:27:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40084 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfIOW11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 18:21:58 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z67so34232711qkb.12
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 15:21:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AfjoPCOD52jjFgBq/i5FYuS0UjsI4UNOYM48ZVeX3bE=;
-        b=tnPBDrO9qOYjSRmifs/kFutlE6E1HUrxpCCIivLA7x8+Zw4O1bf6X85jC7M7aumm5F
-         N/L93c6/ZdO7Q1Qejnli6ibosiEaiAWwAsIeMVQbIP9uXou+LLBQ1Jl+nPf8SGR6JEPb
-         6AV7ySCf4N4HPU4FJzhLrs0ktYrGknOxPkRaJjLTC5K/lALC58JiAo+cW/f9sx9o7zmu
-         3rqGYI/62mDMUQ/kGN/wbpVPCra1e5cazfePzj/+AR7iP38W+UxErkwNf6hsL/rycTh3
-         pZpMd5b4FsuzaXnpo3OgDgi4sqaO5HTttg7UQn6gRa2jyLVYIdcSP4J07d9UeP2nTeFF
-         r0Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AfjoPCOD52jjFgBq/i5FYuS0UjsI4UNOYM48ZVeX3bE=;
-        b=hC5GOOZubt4cBfO+ptxVrYmi2R7kYmDWptot+uWefwa0UWhDr9v14n0s4kneFvpdEn
-         JWkX+qbIjeScBrimJyQVl5V51c0RRguGrc5uMOL/4uTH7nJqLGTUcMKsWskhG04Z0ItM
-         4QxQ0Eqdosfyv1U6Y4AMalb1y8pbzdM/uxe5EUh5CUM6V35qjs5OypB+o5IJVbjuaenE
-         q3MYaDlqMJZxrNbj9jorIL7MCNfDbVgrFp9R1pBWV2fG6UEWPPbz0vs42QPc0Lz2KtNX
-         FEHSPMjZacwMiqQvkPZq+bIhQix5Xqt/Ts/9WbJVfMu/uQY1ogN+V9/o8AWhyLS/UTNM
-         pHdg==
-X-Gm-Message-State: APjAAAVOymE5ePENB5Czw8QPGjWvVL84tfqkHAoYXKko5OtwgIrw2wje
-        GOdVqGkt+FnyjO6h+JCGhXzhya+utR1H/hNRLbi+ZwPKFu0=
-X-Google-Smtp-Source: APXvYqzBYKegH8vmzwFoL27HDmfSnlzgRRw4WatjG7yk6CecWiFjmVQdYKvh3yDtbOQWSwIZ1kLaObi4NxNEOHnahXY=
-X-Received: by 2002:a37:b07:: with SMTP id 7mr56662105qkl.386.1568586115474;
- Sun, 15 Sep 2019 15:21:55 -0700 (PDT)
+        Sun, 15 Sep 2019 18:27:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cI1oeM2B+izAgKrDMv9hfQQk+wj7HnFmN2Nw9dEpHC8=; b=DKLseB5updjgpzffEWhyo+V9h
+        3qRK70pOX/G01xqWE1rZRbuDh85Tv/f81omDLtP1dQIBPatBhF/GcD1UV5EnFDpscQ4MXansh8fhs
+        4QRNPvD4WlauUGEETT9ufsAp3DnhAm1PignHAas4czD8na1t6tGQyIKnAsuPmKQ5xXLEE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9czK-0001VE-0Y; Sun, 15 Sep 2019 22:27:22 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2C8BE27415FF; Sun, 15 Sep 2019 23:27:21 +0100 (BST)
+Date:   Sun, 15 Sep 2019 23:27:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jessica Yu <jeyu@kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the modules tree with the
+ compiler-attributes tree
+Message-ID: <20190915222720.GL4352@sirena.co.uk>
 MIME-Version: 1.0
-References: <20190911141552.rtpdazx3ekfgsh3v@raspberrypi>
-In-Reply-To: <20190911141552.rtpdazx3ekfgsh3v@raspberrypi>
-From:   Austin Kim <austindh.kim@gmail.com>
-Date:   Mon, 16 Sep 2019 07:21:45 +0900
-Message-ID: <CADLLry5B07+Bqh5iys4tHi9OKsGGonmus0xZ4SzfK_ktceS9AQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH] ARM: module: Drop 'rel->r_offset < 0' statement
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        allison@lohutok.net, info@metux.net,
-        matthias.schiffer@ew.tq-group.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Jbyekxk18hnEXT0m"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Maintainer(Russell King)...
-Would you please update the feedback for this patch?
 
-2019=EB=85=84 9=EC=9B=94 11=EC=9D=BC (=EC=88=98) =EC=98=A4=ED=9B=84 11:16, =
-Austin Kim <austindh.kim@gmail.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> Since rel->r_offset is declared as Elf32_Addr,
-> this value is always non-negative.
-> typedef struct elf32_rel {
->   Elf32_Addr    r_offset;
->   Elf32_Word  r_info;
-> } Elf32_Rel;
->
-> typedef __u32   Elf32_Addr;
-> typedef unsigned int __u32;
->
-> Drop 'rel->r_offset < 0' statement which is always false.
-> Also change %u to %d in pr_err() for rel->r_offset.
->
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  arch/arm/kernel/module.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
-> index deef17f34..f805bcbda 100644
-> --- a/arch/arm/kernel/module.c
-> +++ b/arch/arm/kernel/module.c
-> @@ -92,8 +92,8 @@ apply_relocate(Elf32_Shdr *sechdrs, const char *strtab,=
- unsigned int symindex,
->                 sym =3D ((Elf32_Sym *)symsec->sh_addr) + offset;
->                 symname =3D strtab + sym->st_name;
->
-> -               if (rel->r_offset < 0 || rel->r_offset > dstsec->sh_size =
-- sizeof(u32)) {
-> -                       pr_err("%s: section %u reloc %u sym '%s': out of =
-bounds relocation, offset %d size %u\n",
-> +               if (rel->r_offset > dstsec->sh_size - sizeof(u32)) {
-> +                       pr_err("%s: section %u reloc %u sym '%s': out of =
-bounds relocation, offset %u size %u\n",
->                                module->name, relindex, i, symname,
->                                rel->r_offset, dstsec->sh_size);
->                         return -ENOEXEC;
-> --
-> 2.11.0
->
+--Jbyekxk18hnEXT0m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+Today's linux-next merge of the modules tree got a conflict in:
+
+  include/linux/export.h
+
+between at least commit:
+
+  69a94abb82eed ("export.h, genksyms: do not make genksyms calculate CRC of=
+ trimmed symbols")
+
+=66rom the compiler-attributes tree and commit:
+
+  cb9b55d21fe06 ("module: add support for symbol namespaces.")
+
+=66rom the modules tree.
+
+Since this conflcit is non-trivial, it's late and there's a good chance
+I'm not going to actually finish building -next today I've just used the
+commit from the last time -next was built, 3b5be16c7e90a69c, for the
+modules tree - sorry.  I'll have another go tomorrow.  This means none
+of the changes in modules-next are in -next as they were all committed
+in the past week.
+
+--Jbyekxk18hnEXT0m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+usgACgkQJNaLcl1U
+h9CmjQf/VmEsotBAsCPskLPJfUycNPOnsxDrQvEHW3ROeMU0QZx3susrJaAmzGwo
+QE8HtxX/3oKLgcb8P6FMrlRnjEBDZFepeaGJqFYrEXWs/OAR6jHyMsX9VSq19rtM
+YKAJFDMZwJRmALcdyZ+9BXtxDsGzF9JLyXY9OZEVGnTSkb+rjXLNn/cOybI3f1vD
+YuoMbzCPRJLhqh5PdVcaTeWDWTgTJG+UFY2oOepFMsZKlwABS149hEIVAju9YHpf
+TUiRHYZCTR2QbBHVlX5jQA8ENmZgBsyglp8XrpunNSfFoE5upd2ABh9InlvcX2qJ
+R0w5phoof3lmNTfXbTOV8Y+L5beNdg==
+=INNs
+-----END PGP SIGNATURE-----
+
+--Jbyekxk18hnEXT0m--
