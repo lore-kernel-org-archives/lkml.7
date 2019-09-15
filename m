@@ -2,134 +2,94 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D480C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAE08C4CECD
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DF8C21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 19:55:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D141214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 20:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfIOTzH (ORCPT
+        id S1727662AbfIOUP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 15:55:07 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45468 "EHLO 1wt.eu"
+        Sun, 15 Sep 2019 16:15:59 -0400
+Received: from muru.com ([72.249.23.125]:33024 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbfIOTzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 15:55:07 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8FJsi6f023261;
-        Sun, 15 Sep 2019 21:54:44 +0200
-Date:   Sun, 15 Sep 2019 21:54:44 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190915195444.GA23245@1wt.eu>
-References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190915183240.GA23155@1wt.eu>
- <20190915183659.GA23179@1wt.eu>
- <CAHk-=wgFrRCL3WP7vyuZ-92xyqb97ADc=JNyyVCucZ1Q9oh8TA@mail.gmail.com>
- <20190915191814.GB23212@1wt.eu>
- <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
+        id S1725270AbfIOUP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 16:15:59 -0400
+Received: from hillo.muru.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTP id 5585380BB;
+        Sun, 15 Sep 2019 20:16:29 +0000 (UTC)
+From:   Tony Lindgren <tony@atomide.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-omap@vger.kernel.org, Marcel Partap <mpartap@gmx.net>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Michael Scott <hashcode0f@gmail.com>,
+        NeKit <nekit1000@gmail.com>, Pavel Machek <pavel@ucw.cz>,
+        Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH] phy: mapphone-mdm6600: Fix timeouts by adding wake-up handling
+Date:   Sun, 15 Sep 2019 13:15:52 -0700
+Message-Id: <20190915201552.10867-1-tony@atomide.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiSdJ1ECOVz+T5iYc132m+XVVGi2nEiCQcT=+O-8FYUqA@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 12:31:42PM -0700, Linus Torvalds wrote:
-> On Sun, Sep 15, 2019 at 12:18 PM Willy Tarreau <w@1wt.eu> wrote:
-> >
-> > Oh no I definitely don't want this behavior at all for urandom, what
-> > I'm saying is that as long as getrandom() will have a lower quality
-> > of service than /dev/urandom for non-important randoms
-> 
-> Ahh, here you're talking about the fact that it can block at all being
-> "lower quality".
-> 
-> I do agree that getrandom() is doing some odd things. It has the
-> "total blocking mode" of /dev/random (if you pass it GRND_RANDOM), but
-> it has no mode of replacing /dev/urandom.
+We have an interrupt handler for the wake-up GPIO pin, but we're missing
+the code to wake-up the system. This can cause timeouts receiving data
+for the UART that shares the wake-up GPIO pin with the USB PHY.
 
-Yep but with your change it's getting better.
+All we need to do is just wake the system and kick the autosuspend
+timeout to fix the issue.
 
-> So if you want the /dev/urandom bvehavior, then no, getrandom() simply
-> has never given you that.
-> 
-> Use /dev/urandom if you want that.
+Fixes: 5d1ebbda0318 ("phy: mapphone-mdm6600: Add USB PHY driver for MDM6600 on Droid 4")
+Cc: Marcel Partap <mpartap@gmx.net>
+Cc: Merlijn Wajer <merlijn@wizzup.org>
+Cc: Michael Scott <hashcode0f@gmail.com>
+Cc: NeKit <nekit1000@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/phy/motorola/phy-mapphone-mdm6600.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-It's not available in chroot, which is the main driver for getrandom()
-I guess.
-
-> Sad, but there it is. We could have a new flag (GRND_URANDOM) that
-> actually gives the /dev/urandom behavior. But the ostensible reason
-> for getrandom() was the blocking for entropy. See commit c6e9d6f38894
-> ("random: introduce getrandom(2) system call") from back in 2014.
-
-Oh I definitely know it's been a long debate.
-
-> The fact that it took five years to hit this problem is probably due
-> to two reasons:
-> 
->  (a) we're actually pretty good about initializing the entropy pool
-> fairly quickly most of the time
-> 
->  (b) people who started using 'getrandom()' and hit this issue
-> presumably then backed away from it slowly and just used /dev/urandom
-> instead.
-
-We've hit it the hard way more than a year ago already, when openssl
-adopted getrandom() instead of urandom for certain low-importance
-things in order to work better in chroots and/or avoid fd leaks. And
-even openssl had to work around these issues in multiple iterations
-(I don't remember how however).
-
-> So it needed an actual "oops, we don't get as much entropy from the
-> filesystem accesses" situation to actually turn into a problem. And
-> presumably the people who tried out things like nvdimm filesystems
-> never used Arch, and never used a sufficiently new systemd to see the
-> "oh, without disk interrupts you don't get enough randomness to boot".
-
-In my case the whole system is in the initramfs and the only accesses
-to the flash are to read the config. So that's pretty a limited source
-of interrupts for a headless system ;-)
-
-> One option is to just say that GRND_URANDOM is the default (ie never
-> block, do the one-liner log entry to warn) and add a _new_ flag that
-> says "block for entropy". But if we do that, then I seriously think
-> that the new behavior should have that timeout limiter.
-
-I think the timeout is a good thing to do, but it would be nice to
-let the application know that what was provided was probably not as
-good as expected (well if the application wants real random, it
-should use GRND_RANDOM).
-
-> For 5.3, I'll just revert the ext4 change, stupid as that is. That
-> avoids the regression, even if it doesn't avoid the fundamental
-> problem. And gives us time to discuss it.
-
-It's sad to see that being excessive on randomness leads to forcing
-totally unrelated subsystem to be less efficient :-(
-
-Willy
+diff --git a/drivers/phy/motorola/phy-mapphone-mdm6600.c b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+--- a/drivers/phy/motorola/phy-mapphone-mdm6600.c
++++ b/drivers/phy/motorola/phy-mapphone-mdm6600.c
+@@ -243,10 +243,24 @@ static irqreturn_t phy_mdm6600_wakeirq_thread(int irq, void *data)
+ {
+ 	struct phy_mdm6600 *ddata = data;
+ 	struct gpio_desc *mode_gpio1;
++	int error, wakeup;
+ 
+ 	mode_gpio1 = ddata->mode_gpios->desc[PHY_MDM6600_MODE1];
+-	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n",
+-		gpiod_get_value(mode_gpio1));
++	wakeup = gpiod_get_value(mode_gpio1);
++	if (!wakeup)
++		return IRQ_NONE;
++
++	dev_dbg(ddata->dev, "OOB wake on mode_gpio1: %i\n", wakeup);
++	error = pm_runtime_get_sync(ddata->dev);
++	if (error < 0) {
++		pm_runtime_put_noidle(ddata->dev);
++
++		return IRQ_NONE;
++	}
++
++	/* Just wake-up and kick the autosuspend timer */
++	pm_runtime_mark_last_busy(ddata->dev);
++	pm_runtime_put_autosuspend(ddata->dev);
+ 
+ 	return IRQ_HANDLED;
+ }
+-- 
+2.23.0
