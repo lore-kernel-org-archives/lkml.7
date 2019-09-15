@@ -2,115 +2,122 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF27C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 00:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1F5C4CECA
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 969B92084F
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 00:49:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dCAi/s+y"
+	by mail.kernel.org (Postfix) with ESMTP id E717E20692
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 01:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726847AbfIOAth (ORCPT
+        id S1726976AbfIOBBC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 14 Sep 2019 20:49:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46593 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfIOAtg (ORCPT
+        Sat, 14 Sep 2019 21:01:02 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:44338 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726878AbfIOBBC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 14 Sep 2019 20:49:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id m3so17200549pgv.13;
-        Sat, 14 Sep 2019 17:49:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wBnwMEJx+PEZA7JM/vwWY64MaNrTvo1uguBqSdFStAc=;
-        b=dCAi/s+yyaNA4eqFert3ae70OzSYXOUoZOU2hvbsdsd5CsvSe4EP9eblaLpBU6FIeA
-         kIJiSa8IONs2c4sNt0t7K2swBq9wsFZ/qiXr7hLSYHDHNDaQtXVXHAId1d/U3NtDRpJF
-         YxqCtnkLFsFAOmNCqrap6QbOHh8fBeNKlaxDVOzZGyi8EIknbsbaIARNJG9bOd64G+5U
-         EOs4g39xTzt5z0NwGrTnN+yO0kKh98RjeTM93K3Bp9P47l2vzsdwTqwyKSovqhwWKZFW
-         Nz8g1hoRE89TiqwaC9h181DVCktnN3BEi170KQIzoSZ9KW2owfuQ0+vHlIyAkjkM2Fki
-         yz8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wBnwMEJx+PEZA7JM/vwWY64MaNrTvo1uguBqSdFStAc=;
-        b=GUEvpBpcuM8D0Ksnx5uLvgFj7eU6TdLjYQhvUXViUAiAft+9CgpVQbLO4Pib6Yirwl
-         VzymJ0PxHiXVNNykyAmaC66zXy5cU+BLwyrxHeZEZJTANbz8NtiWrEOL3kqxMTNgN8sO
-         1nEC1hfeTz1k45heKC1D4sSfhd6cgjEBFnXdijF6raQbjm4S5IOlWNdDDzocCP3pdRus
-         L4EFGrg5ApgQ+R27GM3JFAU+tul8MjIaZtzHTLNA4pY4/1KXA2TKYdpQPQgc9DXcEaIq
-         EyUrhXh7IoV47EIs/Ay7W8Q8ON1/SoQYMcCBxCvOSRWYL8egNTumrTNzKwNPlmfRqdrr
-         CuMg==
-X-Gm-Message-State: APjAAAX1Ypl5YylRGe8ztX0Ofe3ii8QiEP4JnQa5nWsZPlikTr9ano9Y
-        MQO5HtVpib6doJotA3AXRolXEJaN
-X-Google-Smtp-Source: APXvYqwkLHwZlWW5sGPEhhJBL97BHjBAICasaR63wnFysP0NS7/dBjFOId1IYvek/ubSplVfA+rsXw==
-X-Received: by 2002:a63:fa13:: with SMTP id y19mr3333276pgh.262.1568508575720;
-        Sat, 14 Sep 2019 17:49:35 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id q13sm18946928pfn.150.2019.09.14.17.49.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 14 Sep 2019 17:49:34 -0700 (PDT)
-Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-References: <20190913130440.264749443@linuxfoundation.org>
- <aefa6832-073e-493c-8576-5b2f06e714fb@roeck-us.net>
- <20190914083126.GA523517@kroah.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <353c2b75-290e-c796-4cc6-88681936210f@roeck-us.net>
-Date:   Sat, 14 Sep 2019 17:49:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sat, 14 Sep 2019 21:01:02 -0400
+Received: from callcc.thunk.org ([66.31.38.53])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8F10bDk003842
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 14 Sep 2019 21:00:38 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 4A917420811; Sat, 14 Sep 2019 21:00:37 -0400 (EDT)
+Date:   Sat, 14 Sep 2019 21:00:37 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Lennart Poettering <lennart@poettering.net>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190915010037.GE19710@mit.edu>
+References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190914211126.GA4355@darwi-home-pc>
+ <20190914222432.GC19710@mit.edu>
+ <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190914083126.GA523517@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi-y26j4yX5JtwqwXc7zKX1K8FLQGVcx49aSYuW8JwM+w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On 9/14/19 1:31 AM, Greg Kroah-Hartman wrote:
-> On Sat, Sep 14, 2019 at 01:28:39AM -0700, Guenter Roeck wrote:
->> On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.9.193 release.
->>> There are 14 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
->>> Anything received after that time might be too late.
->>>
->>
->> Is it really only me seeing this ?
->>
->> drivers/vhost/vhost.c: In function 'translate_desc':
->> include/linux/compiler.h:549:38: error: call to '__compiletime_assert_1879' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
->>
->> i386:allyesconfig, mips:allmodconfig and others, everywhere including
->> mainline. Culprit is commit a89db445fbd7f1 ("vhost: block speculation
->> of translated descriptors").
+On Sat, Sep 14, 2019 at 03:32:46PM -0700, Linus Torvalds wrote:
+> > Worse, it won't even accomplish something against an obstinant
+> > programmers.  Someone who is going to change their program to sleep
+> > loop waiting for getrandom(2) to not return with an error can just as
+> > easily check for a buffer which is zero-filled, or an unchanged
+> > buffer, and then sleep loop on that.
 > 
-> Nope, I just got another report of this on 5.2.y.  Problem is also in
-> Linus's tree :(
+> Again,  no they can't. They'll get random data in the buffer. And
+> there is no way they can tell how much entropy that random data has.
+
+That makes me even more worried.  It's probably going to be OK for
+modern x86 systems, since "best we can do" will include RDRAND
+(whether or not it's trusted).  But on systems without something like
+RDRAND --- e.g., ARM --- the "best we can do" could potentially be
+Really Bad.  Again, look back at the Mining Your P's and Q's paper
+from factorable.net.
+
+If we don't block, and we just return "the best we can do", and some
+insane userspace tries to generate a long-term private key (for SSH or
+TLS) in super-early boot, I think we owe them something beyond a big
+fat WARN_ON_ONCE.  We could return 0 for success, and yet "the best we
+can do" could be really terrible.
+
+> > For 5.3, can we please consider my proposal in [1]?
+> >
+> > [1] https://lore.kernel.org/linux-ext4/20190914162719.GA19710@mit.edu/
 > 
+> Honestly, to me that looks *much* worse than just saying that we need
+> to stop allowing insane user mode boot programs make insane choices
+> that have no basis in reality.
+> 
+> It may be the safest thing to do, but at that point we might as well
+> just revert the ext4 change entirely. I'd rather do that, than have
+> random filesystems start making random decisions based on crazy user
+> space behavior.
 
-Please apply upstream commit 0d4a3f2abbef ("Revert "vhost: block speculation
-of translated descriptors") to v4.9.y-queue and later to fix the build problems.
-Or maybe just drop the offending commit from the stable release queues.
+All we're doing is omitting the plug; I disagree that it's really all
+that random.  Honestly, I'd much rather just let distributions hang,
+and force them to fix it that way.  That's *much* better than silently
+give them "the best we can do", which might be "not really random at
+all".
 
-Thanks,
-Guenter
+The reality is that there will be some platforms where we will block
+for a very long time, given certain kernel configs and certain really
+stupid userspace decisions --- OR, we can open up a really massive
+security hole given stupid userspace decisions.  Ext4 just got unlocky
+that a performance improvement patch happened to toggle one or two
+configurations from "working" to "not working".   
+
+But just saying, "oh well" and returning something which might not
+really be random with a success code is SUCH A TERRIBLE IDEA, that if
+you really prefer that, I'll accept the ext4 revert, even though I
+don't think we should be penalizing all ext4 performance just because
+of a few distros being stupid.
+
+If the choice is between that and making some unsuspecting
+distributions being potentially completely insecure, it's no contest.
+I won't have that on my conscience.
+
+						- Ted
