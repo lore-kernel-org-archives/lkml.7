@@ -2,269 +2,172 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C970C4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C2E2C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7374F20830
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:23:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1708420830
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 08:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbfIOIX2 (ORCPT
+        id S1727216AbfIOI0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 04:23:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726146AbfIOIX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 04:23:28 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AB7421CCDE4946DBBE9E;
-        Sun, 15 Sep 2019 16:23:22 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 15 Sep 2019 16:23:18 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Date:   Sun, 15 Sep 2019 16:20:56 +0800
-Message-ID: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Sun, 15 Sep 2019 04:26:35 -0400
+Received: from mga06.intel.com ([134.134.136.31]:37734 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfIOI0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 04:26:34 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 01:26:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="190776812"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.147.113])
+  by orsmga006.jf.intel.com with ESMTP; 15 Sep 2019 01:26:31 -0700
+Date:   Sun, 15 Sep 2019 16:27:02 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Neftin, Sasha" <sasha.neftin@intel.com>,
+        "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] igb/igc: Don't warn on fatal read failures when the
+ device is removed
+Message-ID: <20190915082702.GI5541@shbuild999.sh.intel.com>
+References: <20190822183318.27634-1-lyude@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190822183318.27634-1-lyude@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When passing the return value of dev_to_node() to cpumask_of_node()
-without checking if the device's node id is NUMA_NO_NODE, there is
-global-out-of-bounds detected by KASAN.
+On Fri, Aug 23, 2019 at 02:33:18AM +0800, Lyude Paul wrote:
+> Fatal read errors are worth warning about, unless of course the device
+> was just unplugged from the machine - something that's a rather normal
+> occurence when the igb/igc adapter is located on a Thunderbolt dock. So,
+> let's only WARN() if there's a fatal read error while the device is
+> still present.
+> 
+> This fixes the following WARN splat that's been appearing whenever I
+> unplug my Caldigit TS3 Thunderbolt dock from my laptop:
+> 
+>   igb 0000:09:00.0 enp9s0: PCIe link lost
+>   ------------[ cut here ]------------
+>   igb: Failed to read reg 0x18!
+>   WARNING: CPU: 7 PID: 516 at
+>   drivers/net/ethernet/intel/igb/igb_main.c:756 igb_rd32+0x57/0x6a [igb]
+>   Modules linked in: igb dca thunderbolt fuse vfat fat elan_i2c mei_wdt
+>   mei_hdcp i915 wmi_bmof intel_wmi_thunderbolt iTCO_wdt
+>   iTCO_vendor_support x86_pkg_temp_thermal intel_powerclamp joydev
+>   coretemp crct10dif_pclmul crc32_pclmul i2c_algo_bit ghash_clmulni_intel
+>   intel_cstate drm_kms_helper intel_uncore syscopyarea sysfillrect
+>   sysimgblt fb_sys_fops intel_rapl_perf intel_xhci_usb_role_switch mei_me
+>   drm roles idma64 i2c_i801 ucsi_acpi typec_ucsi mei intel_lpss_pci
+>   processor_thermal_device typec intel_pch_thermal intel_soc_dts_iosf
+>   intel_lpss int3403_thermal thinkpad_acpi wmi int340x_thermal_zone
+>   ledtrig_audio int3400_thermal acpi_thermal_rel acpi_pad video
+>   pcc_cpufreq ip_tables serio_raw nvme nvme_core crc32c_intel uas
+>   usb_storage e1000e i2c_dev
+>   CPU: 7 PID: 516 Comm: kworker/u16:3 Not tainted 5.2.0-rc1Lyude-Test+ #14
+>   Hardware name: LENOVO 20L8S2N800/20L8S2N800, BIOS N22ET35W (1.12 ) 04/09/2018
+>   Workqueue: kacpi_hotplug acpi_hotplug_work_fn
+>   RIP: 0010:igb_rd32+0x57/0x6a [igb]
+>   Code: 87 b8 fc ff ff 48 c7 47 08 00 00 00 00 48 c7 c6 33 42 9b c0 4c 89
+>   c7 e8 47 45 cd dc 89 ee 48 c7 c7 43 42 9b c0 e8 c1 94 71 dc <0f> 0b eb
+>   08 8b 00 ff c0 75 b0 eb c8 44 89 e0 5d 41 5c c3 0f 1f 44
+>   RSP: 0018:ffffba5801cf7c48 EFLAGS: 00010286
+>   RAX: 0000000000000000 RBX: ffff9e7956608840 RCX: 0000000000000007
+>   RDX: 0000000000000000 RSI: ffffba5801cf7b24 RDI: ffff9e795e3d6a00
+>   RBP: 0000000000000018 R08: 000000009dec4a01 R09: ffffffff9e61018f
+>   R10: 0000000000000000 R11: ffffba5801cf7ae5 R12: 00000000ffffffff
+>   R13: ffff9e7956608840 R14: ffff9e795a6f10b0 R15: 0000000000000000
+>   FS:  0000000000000000(0000) GS:ffff9e795e3c0000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000564317bc4088 CR3: 000000010e00a006 CR4: 00000000003606e0
+>   DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+>   DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+>   Call Trace:
+>    igb_release_hw_control+0x1a/0x30 [igb]
+>    igb_remove+0xc5/0x14b [igb]
+>    pci_device_remove+0x3b/0x93
+>    device_release_driver_internal+0xd7/0x17e
+>    pci_stop_bus_device+0x36/0x75
+>    pci_stop_bus_device+0x66/0x75
+>    pci_stop_bus_device+0x66/0x75
+>    pci_stop_and_remove_bus_device+0xf/0x19
+>    trim_stale_devices+0xc5/0x13a
+>    ? __pm_runtime_resume+0x6e/0x7b
+>    trim_stale_devices+0x103/0x13a
+>    ? __pm_runtime_resume+0x6e/0x7b
+>    trim_stale_devices+0x103/0x13a
+>    acpiphp_check_bridge+0xd8/0xf5
+>    acpiphp_hotplug_notify+0xf7/0x14b
+>    ? acpiphp_check_bridge+0xf5/0xf5
+>    acpi_device_hotplug+0x357/0x3b5
+>    acpi_hotplug_work_fn+0x1a/0x23
+>    process_one_work+0x1a7/0x296
+>    worker_thread+0x1a8/0x24c
+>    ? process_scheduled_works+0x2c/0x2c
+>    kthread+0xe9/0xee
+>    ? kthread_destroy_worker+0x41/0x41
+>    ret_from_fork+0x35/0x40
+>   ---[ end trace 252bf10352c63d22 ]---
+>
 
-From the discussion [1], NUMA_NO_NODE really means no node affinity,
-which also means all cpus should be usable. So the cpumask_of_node()
-should always return all cpus online when user passes the node id as
-NUMA_NO_NODE, just like similar semantic that page allocator handles
-NUMA_NO_NODE.
+Thanks for the fix.
 
-But we cannot really copy the page allocator logic. Simply because the
-page allocator doesn't enforce the near node affinity. It just picks it
-up as a preferred node but then it is free to fallback to any other numa
-node. This is not the case here and node_to_cpumask_map will only restrict
-to the particular node's cpus which would have really non deterministic
-behavior depending on where the code is executed. So in fact we really
-want to return cpu_online_mask for NUMA_NO_NODE.
+Acked-by: Feng Tang <feng.tang@intel.com>
 
-Some arches were already NUMA_NO_NODE aware, so only change them to return
-cpu_online_mask and use NUMA_NO_NODE instead of "-1".
-
-Also there is a debugging version of node_to_cpumask_map() for x86 and
-arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
-And "fix" a sign "bug" since it is for debugging and should catch all the
-error cases.
-
-[1] https://lore.kernel.org/patchwork/patch/1125789/
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Suggested-by: Michal Hocko <mhocko@kernel.org>
----
-V4: Have all these changes in a single patch.
-V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
-    for NUMA_NO_NODE case, and change the commit log to better justify
-    the change.
-V2: make the node id checking change to other arches too.
----
- arch/alpha/include/asm/topology.h                | 2 +-
- arch/arm64/include/asm/numa.h                    | 3 +++
- arch/arm64/mm/numa.c                             | 5 ++++-
- arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
- arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
- arch/powerpc/include/asm/topology.h              | 6 +++---
- arch/s390/include/asm/topology.h                 | 3 +++
- arch/sparc/include/asm/topology_64.h             | 6 +++---
- arch/x86/include/asm/topology.h                  | 3 +++
- arch/x86/mm/numa.c                               | 7 +++++--
- 10 files changed, 30 insertions(+), 13 deletions(-)
-
-diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
-index 5a77a40..836c9e2 100644
---- a/arch/alpha/include/asm/topology.h
-+++ b/arch/alpha/include/asm/topology.h
-@@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
- 	int cpu;
- 
- 	if (node == NUMA_NO_NODE)
--		return cpu_all_mask;
-+		return cpu_online_mask;
- 
- 	cpumask_clear(&node_to_cpumask_map[node]);
- 
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 626ad01..c8a4b31 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4f241cc..bef4bdd 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -46,7 +46,10 @@ EXPORT_SYMBOL(node_to_cpumask_map);
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (WARN_ON(node >= nr_node_ids))
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
-+	if (WARN_ON((unsigned int)node >= nr_node_ids))
- 		return cpu_none_mask;
- 
- 	if (WARN_ON(node_to_cpumask_map[node] == NULL))
-diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
-index 965f079..04505e6 100644
---- a/arch/mips/include/asm/mach-ip27/topology.h
-+++ b/arch/mips/include/asm/mach-ip27/topology.h
-@@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
- extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
- 
- #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
--#define cpumask_of_node(node)	((node) == -1 ?				\
--				 cpu_all_mask :				\
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
- 				 &hub_data(node)->h_cpus)
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 7ff819a..e78daa6 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -5,7 +5,9 @@
- #ifdef CONFIG_NUMA
- 
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
--#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &__node_data[(node)]->cpumask)
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index 2f7e1ea..309f847 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -17,9 +17,9 @@ struct device_node;
- 
- #include <asm/mmzone.h>
- 
--#define cpumask_of_node(node) ((node) == -1 ?				\
--			       cpu_all_mask :				\
--			       node_to_cpumask_map[node])
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 node_to_cpumask_map[node])
- 
- struct pci_bus;
- #ifdef CONFIG_PCI
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index cca406f..1bd2e73 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
- #define cpumask_of_node cpumask_of_node
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return &node_to_cpumask_map[node];
- }
- 
-diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
-index 34c628a..8c29357 100644
---- a/arch/sparc/include/asm/topology_64.h
-+++ b/arch/sparc/include/asm/topology_64.h
-@@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
- 	return numa_cpu_lookup_table[cpu];
- }
- 
--#define cpumask_of_node(node) ((node) == -1 ?				\
--			       cpu_all_mask :				\
--			       &numa_cpumask_lookup_table[node])
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &numa_cpumask_lookup_table[node])
- 
- struct pci_bus;
- #ifdef CONFIG_PCI
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 4b14d23..7fa82e1 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad60..c676ffb 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (node >= nr_node_ids) {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
-+	if ((unsigned int)node >= nr_node_ids) {
- 		printk(KERN_WARNING
--			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-+			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
- 			node, nr_node_ids);
- 		dump_stack();
- 		return cpu_none_mask;
--- 
-2.8.1
-
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Fixes: 47e16692b26b ("igb/igc: warn when fatal read failure happens")
+> Cc: Feng Tang <feng.tang@intel.com>
+> Cc: Sasha Neftin <sasha.neftin@intel.com>
+> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+> Cc: intel-wired-lan@lists.osuosl.org
+> ---
+>  drivers/net/ethernet/intel/igb/igb_main.c | 3 ++-
+>  drivers/net/ethernet/intel/igc/igc_main.c | 3 ++-
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
+> index e5b7e638df28..1a7f7cd28df9 100644
+> --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> @@ -753,7 +753,8 @@ u32 igb_rd32(struct e1000_hw *hw, u32 reg)
+>  		struct net_device *netdev = igb->netdev;
+>  		hw->hw_addr = NULL;
+>  		netdev_err(netdev, "PCIe link lost\n");
+> -		WARN(1, "igb: Failed to read reg 0x%x!\n", reg);
+> +		WARN(pci_device_is_present(igb->pdev),
+> +		     "igb: Failed to read reg 0x%x!\n", reg);
+>  	}
+>  
+>  	return value;
+> diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+> index 28072b9aa932..f873a4b35eaf 100644
+> --- a/drivers/net/ethernet/intel/igc/igc_main.c
+> +++ b/drivers/net/ethernet/intel/igc/igc_main.c
+> @@ -3934,7 +3934,8 @@ u32 igc_rd32(struct igc_hw *hw, u32 reg)
+>  		hw->hw_addr = NULL;
+>  		netif_device_detach(netdev);
+>  		netdev_err(netdev, "PCIe link lost, device now detached\n");
+> -		WARN(1, "igc: Failed to read reg 0x%x!\n", reg);
+> +		WARN(pci_device_is_present(igc->pdev),
+> +		     "igc: Failed to read reg 0x%x!\n", reg);
+>  	}
+>  
+>  	return value;
+> -- 
+> 2.21.0
