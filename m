@@ -2,118 +2,319 @@ Return-Path: <SRS0=lz0T=XK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD6CC4CECC
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC761C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0040A21479
-	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 874AD2077C
+	for <linux-kernel@archiver.kernel.org>; Sun, 15 Sep 2019 07:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p5JDHkXg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dtYKXDrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727531AbfIOH1T (ORCPT
+        id S1727595AbfIOH1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 03:27:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37043 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfIOH1S (ORCPT
+        Sun, 15 Sep 2019 03:27:22 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45136 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfIOH1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 03:27:18 -0400
-Received: by mail-wr1-f68.google.com with SMTP id i1so35179307wro.4;
-        Sun, 15 Sep 2019 00:27:16 -0700 (PDT)
+        Sun, 15 Sep 2019 03:27:21 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x3so15111303plr.12;
+        Sun, 15 Sep 2019 00:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1aCBRCt6dPgfb+9wTTAqzCnn4saTlIOx+pRnOlimELM=;
-        b=p5JDHkXgMkVRdsCVo83bSLHJmo4Uo4OApsBhA5xesxywsxp0QzHoRH/TVIfJhZtrwx
-         1xGcfn9y+lP20fHBlvgnw3WkojUx3YMLXicytjfTbK4ca+HNFnch/CZfx/rCPFhE/YYb
-         asX7MMJc+ULN1vSnOzQS5090zbw1tFI6yxbSXqVAeR9J3AGjVrpFWJ4xZiYYSW2dO9DJ
-         rrQukuAwK+9qDg2/H6P8JefbAb/4mLcblYCks/wZtUeWdyfIuKdmSOIW8Q2No/fo08d0
-         wJGiCTXzZEME7so1JsqqHp65K9WwPpDBA+jqnW12+hNKgb7YcDoDFJcIPxOgCirGUjy0
-         NI2Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=GTvFcpOUyieP9opBGHsT+B42cxzpcATMaoHH0I+0J1I=;
+        b=dtYKXDrGv9xWSDJp5V4bb6UhJfXvdsElJS9v+PO1KZtmJZ+kYN/G9D3z6k7JM5CHjl
+         97txUbvRcF+RpggFFczLZtTVvIJYile1i3reqybCb/H3+gbeLHONkPJS5Kl/hRRTSemP
+         EX1Lfy+5tAcaww7+Jb4+QM4lWaq6m6ElB/Umpe07KOq+sHYnNAwsgetIDMkW45Iybgcu
+         ULay1kOBUmL/Ncvogpmx2RwNnx6xz6hbBxhmniOsGcKJOakPjT2YlxE6vYMjpjcr/4+1
+         rZscGGbTSeHWS/kccuXE5kcR/7+tA/x+jl3APtzJL+6qFag8BemK+9WG0Rni+V/Qlaco
+         18mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1aCBRCt6dPgfb+9wTTAqzCnn4saTlIOx+pRnOlimELM=;
-        b=XciOqriQr0td3d23oTlYTtpaKAWgl9VU2sM9zxMLMsQv/81pHqrSKTYAfwz3+ru5tq
-         QBzv9z06s4JlrI/wgzxnlWXLdr4vzGeSGku4DTYDPN7qqenTd4ZcevQaiEsL58o1UiQQ
-         9DoSlroVeDD5vAjSbmWSsermUH8optnjSKf0VwkPsaaWWQdc7KrHX0eigdGpDmphjcIA
-         dtkfmM0qJ2qKvic8KGRugqngQh6LpDlFMFEPbTOeJpK4aC9C4B/VyAjHMpfy0T+OhgYn
-         QIE8/erDY0DwZJjcFAyXTFd+wTFX6KEmyd4SEqJtQ3p/z8HCtyrbdOOsFLKVA1jr0Gbb
-         Fjvw==
-X-Gm-Message-State: APjAAAVqGZX6pBgS6afib2eeYaIixD2Y0SZGKbkBwGpRO2uth99Lbvtp
-        Rbef3QArLslPb562oO9oXiw=
-X-Google-Smtp-Source: APXvYqzHqvmZApQdOXGk7nsmMB3ZaPZIn/qNVv/npX47PFm/F1pqpDTe3QDeqywyy/dXkxVWmtzXCA==
-X-Received: by 2002:adf:f1c3:: with SMTP id z3mr7931391wro.147.1568532436020;
-        Sun, 15 Sep 2019 00:27:16 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D1401AF0812D8DEE03BEC.dip0.t-ipconnect.de. [2003:d0:6f2d:1401:af08:12d8:dee0:3bec])
-        by smtp.gmail.com with ESMTPSA id d193sm12446753wmd.0.2019.09.15.00.27.14
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=GTvFcpOUyieP9opBGHsT+B42cxzpcATMaoHH0I+0J1I=;
+        b=SCgKNE0/0nnyhjqHA8KIcorDjRlJJdKdkFZJuvXA4Uu688000nc2MFiVS35yjNimj0
+         trD9T5OGHYTDVf/YoCMDodtaob05Lq4oVenB5zbVzd89ZI0Byb8V6uY+PgWmwDNalzaR
+         WpqLzrayAQw/VAez0uxiMtkVDgbuP9o4xkK3hQs3goR28wSMGNzTlWfeneVv1lwD7hPM
+         nfB6CXwQviDEjWkyzjk/dTdkKqXeKAFcmFFlSIHiwURJpElm4/gbvjCarGJnG9oEo3B9
+         mFYKaUMdbfjMGQ9S6SSiwVZKq1LagB/8zmp8t4scXk1uJohJkPvs8mHftCN9JHX2Ib6Q
+         0t1w==
+X-Gm-Message-State: APjAAAVODRPA11dWSxNh2Aa7uHDzjDYjNOVNslzmA5xQfvb5VZ3Mq9l5
+        uNVbtaUvrppWuOP/YThq0tE=
+X-Google-Smtp-Source: APXvYqwfyHgYY759f5pUy7ZvnMQo/+BDd2d/wdpUuKRx33ViG0X3MEVEEhSs02ToRewoskfhy8mbOA==
+X-Received: by 2002:a17:902:820f:: with SMTP id x15mr37974997pln.130.1568532439090;
+        Sun, 15 Sep 2019 00:27:19 -0700 (PDT)
+Received: from satendra-MM061.ib-wrb304n.setup.in ([103.82.150.111])
+        by smtp.gmail.com with ESMTPSA id i19sm7254486pjx.1.2019.09.15.00.27.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 00:27:15 -0700 (PDT)
-Date:   Sun, 15 Sep 2019 09:27:05 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Lennart Poettering <mzxreary@0pointer.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190915072705.GA12869@darwi-home-pc>
-References: <20190911160729.GF2740@mit.edu>
- <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190915065142.GA29681@gardel-login>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Sun, 15 Sep 2019 00:27:18 -0700 (PDT)
+From:   Satendra Singh Thakur <sst2005@gmail.com>
+To:     dan.j.williams@intel.com, vkoul@kernel.org, jun.nie@linaro.org,
+        shawnguo@kernel.org, agross@kernel.org, sean.wang@mediatek.com,
+        matthias.bgg@gmail.com, maxime.ripard@bootlin.com, wens@csie.org,
+        lars@metafoo.de, afaerber@suse.de, manivannan.sadhasivam@linaro.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com,
+        Satendra Singh Thakur <sst2005@gmail.com>
+Subject: [PATCH 1/9] probe/dma : added helper macros to remove redundant/duplicate code from probe functions of the dma controller drivers
+Date:   Sun, 15 Sep 2019 12:56:44 +0530
+Message-Id: <20190915072644.23329-1-sst2005@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190915070003.21260-1-sst2005@gmail.com>
+References: <20190915070003.21260-1-sst2005@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 08:51:42AM +0200, Lennart Poettering wrote:
-> On Sa, 14.09.19 09:30, Linus Torvalds (torvalds@linux-foundation.org) wrote:
-[...]
-> 
-> And please don't break /dev/urandom again. The above code is the ony
-> way I see how we can make /dev/urandom-derived swap encryption safe,
-> and the only way I can see how we can sanely write a valid random seed
-> to disk after boot.
->
+1. For most of the drivers probe include following steps
 
-Any hope in making systemd-random-seed(8) credit that "random seed
-from previous boot" file, through RNDADDENTROPY, *by default*?
+a) memory allocation for driver's private structure
+b) getting io resources
+c) io remapping resources
+d) getting clock
+e) getting irq number
+f) registering irq
+g) preparing and enabling clock
+i) setting platform's drv data
 
-Because of course this makes the problem reliably go away on my system
-too (as discussed in the original bug report, but you were not CCed).
+2. We have defined a set of macros to combine above mentioned
+steps.
+This will remove redundant/duplicate code in drivers' probe
+functions.
 
-I know that by v243, just released 12 days ago, this can be optionally
-done through SYSTEMD_RANDOM_SEED_CREDIT=1. I wonder though if it can
-ever be done by default, just like what the BSDs does... This would
-solve a big part of the current problem.
+3. This macro combines all the steps except f), g) and i).
 
-> Lennart
+devm_platform_probe_helper(pdev, priv, clk_name);
 
-thanks,
+4. This macro combines all the steps except f) and i).
 
+devm_platform_probe_helper_clk(pdev, priv, clk_name);
+
+5. This macro combines all the steps except g) and i).
+
+devm_platform_probe_helper_irq(pdev, priv, clk_name,
+	irq_hndlr, irq_flags, irq_name, irq_devid);
+
+6. This is because, some drivers perform step f) and g)
+after hw init or subsys registration at very different points
+in the probe function. The step i) is called at the end of
+probe function by several drivers; while other drivers call it at
+different points in probe function.
+
+7. This macro combines above mentioned steps a) to g).
+
+devm_platform_probe_helper_all(pdev, priv, clk_name,
+	irq_hndlr, irq_flags, irq_name, irq_devid);
+
+8. This macro combines all of the above mentioned steps a) to i).
+
+devm_platform_probe_helper_all_data(pdev, priv, clk_name,
+	irq_hndlr, irq_flags, irq_name, irq_devid);
+9. Above macros will be useful for wide variety of probe
+functions of different drivers.
+
+Signed-off-by: Satendra Singh Thakur <satendrasingh.thakur@hcl.com>
+Signed-off-by: Satendra Singh Thakur <sst2005@gmail.com>
+---
+ include/linux/probe-helper.h | 179 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 179 insertions(+)
+ create mode 100644 include/linux/probe-helper.h
+
+diff --git a/include/linux/probe-helper.h b/include/linux/probe-helper.h
+new file mode 100644
+index 000000000000..7baa468509e3
+--- /dev/null
++++ b/include/linux/probe-helper.h
+@@ -0,0 +1,179 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *
++ * probe_helper.h - helper functions for platform drivers' probe
++ * function
++ * Author: Satendra Singh Thakur <satendrasingh.thakur@hcl.com> Sep 2019
++ *				  <sst2005@gmail.com>
++ */
++#ifndef _PROBE_HELPER_H_
++#define _PROBE_HELPER_H_
++
++#include <linux/platform_device.h>
++#include <linux/clk.h>
++
++/* devm_platform_probe_helper - Macro for helping probe method
++ * of platform drivers
++ * This macro combines the functions:
++ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++ * devm_clk_get, platform_get_irq
++ * @pdev platform device
++ * @priv driver's private object for memory allocation
++ * @clk_name clock name as in DT
++ */
++#define devm_platform_probe_helper(pdev, priv, clk_name)	\
++({	\
++	__label__ __out;	\
++	int __ret = 0;	\
++	priv = devm_kzalloc(&(pdev)->dev, sizeof(*priv), GFP_KERNEL);	\
++	if (!(priv)) {	\
++		dev_err(&(pdev)->dev, "devm_kzalloc failed\n");	\
++		__ret = -ENOMEM;	\
++		goto __out;	\
++	}	\
++	(priv)->base = devm_platform_ioremap_resource(pdev, 0);	\
++	if (IS_ERR((priv)->base)) {	\
++		dev_err(&(pdev)->dev,	\
++			"devm_platform_ioremap_resource failed\n");	\
++		__ret = PTR_ERR((priv)->base);	\
++		goto __out;	\
++	}	\
++	(priv)->clk = devm_clk_get(&(pdev)->dev, clk_name);	\
++	if (IS_ERR((priv)->clk)) {	\
++		dev_err(&(pdev)->dev, "devm_clk_get failed\n");	\
++		__ret = PTR_ERR((priv)->clk);	\
++		goto __out;	\
++	}	\
++	(priv)->irq = platform_get_irq(pdev, 0);	\
++	if ((priv)->irq < 0) {	\
++		dev_err(&(pdev)->dev, "platform_get_irq failed\n");	\
++		__ret = (priv)->irq;	\
++		goto __out;	\
++	}	\
++__out:	\
++	__ret;	\
++})
++
++/* devm_platform_probe_helper_irq - Macro for helping probe method
++ * of platform drivers
++ * This macro combines the functions:
++ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++ * devm_clk_get, platform_get_irq, devm_request_irq
++ * @pdev platform device
++ * @priv driver's private object for memory allocation
++ * @clk_name clock name as in DT
++ * @irq_hndlr interrupt handler function (isr)
++ * @irq_flags flags for interrupt registration
++ * @irq_name name of the interrupt handler
++ * @irq_devid device identifier for irq
++ */
++#define devm_platform_probe_helper_irq(pdev, priv, clk_name,	\
++		irq_hndlr, irq_flags, irq_name, irq_devid)	\
++({	\
++	__label__ __out;	\
++	int __ret = 0;	\
++	__ret = devm_platform_probe_helper(pdev, priv, clk_name);	\
++	if (__ret < 0)	\
++		goto __out;	\
++	__ret = devm_request_irq(&(pdev)->dev, (priv)->irq, irq_hndlr,	\
++			irq_flags, irq_name, irq_devid);	\
++	if (__ret < 0) {	\
++		dev_err(&(pdev)->dev,	\
++			"devm_request_irq failed for irq num %d\n",	\
++			(priv)->irq);	\
++		goto __out;	\
++	}	\
++__out:	\
++	__ret;	\
++})
++
++/* devm_platform_probe_helper_clk Macro - for helping probe method
++ * of platform drivers
++ * This macro combines the functions:
++ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++ * devm_clk_get, platform_get_irq, clk_prepare_enable
++ * @pdev platform device
++ * @priv driver's private object for memory allocation
++ * @clk_name clock name as in DT
++ */
++#define devm_platform_probe_helper_clk(pdev, priv, clk_name)	\
++({	\
++	__label__ __out;	\
++	int __ret = 0;	\
++	__ret = devm_platform_probe_helper(pdev, priv, clk_name);	\
++	if (__ret < 0)	\
++		goto __out;	\
++	__ret = clk_prepare_enable((priv)->clk);	\
++	if (__ret < 0) {	\
++		dev_err(&(pdev)->dev, "clk_prepare_enable failed\n");	\
++		goto __out;	\
++	}	\
++__out:	\
++	__ret;	\
++})
++
++/* devm_platform_probe_helper_all - Macro for helping probe method
++ * of platform drivers
++ * This macro combines the functions:
++ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++ * devm_clk_get, platform_get_irq, devm_request_irq,
++ * clk_prepare_enable
++ * @pdev platform device
++ * @priv driver's private object for memory allocation
++ * @clk_name clock name as in DT
++ * @irq_hndlr interrupt handler function (isr)
++ * @irq_flags flags for interrupt registration
++ * @irq_name name of the interrupt handler
++ * @irq_devid device identifier for irq
++ */
++#define devm_platform_probe_helper_all(pdev, priv, clk_name,	\
++	irq_hndlr, irq_flags, irq_name, irq_devid)	\
++({	\
++	__label__ __out;	\
++	int __ret = 0;	\
++	__ret = devm_platform_probe_helper_clk(pdev, priv, clk_name);	\
++	if (__ret < 0)	\
++		goto __out;	\
++	__ret = devm_request_irq(&(pdev)->dev, (priv)->irq,	\
++		irq_hndlr, irq_flags, irq_name, irq_devid);	\
++	if (__ret < 0) {	\
++		dev_err(&(pdev)->dev,	\
++			"devm_request_irq failed for irq num %d\n",	\
++			(priv)->irq);	\
++		if ((priv)->clk)	\
++			clk_disable_unprepare((priv)->clk);	\
++		goto __out;	\
++	}	\
++__out:	\
++	__ret;	\
++})
++
++/* devm_platform_probe_helper_all_data - Macro for helping probe method
++ * of platform drivers
++ * This macro combines the functions:
++ * devm_kzalloc, platform_get_resource, devm_ioremap_resource,
++ * devm_clk_get, platform_get_irq, devm_request_irq,
++ * clk_prepare_enable, platform_set_drvdata
++ * @pdev platform device
++ * @priv driver's private object for memory allocation
++ * @clk_name clock name as in DT
++ * @irq_hndlr interrupt handler function (isr)
++ * @irq_flags flags for interrupt registration
++ * @irq_name name of the interrupt handler
++ * @irq_devid device identifier for irq
++ */
++#define devm_platform_probe_helper_all_data(pdev, priv, clk_name,	\
++	irq_hndlr, irq_flags, irq_name, irq_devid)	\
++({	\
++	__label__ __out;	\
++	int __ret = 0;	\
++	__ret = devm_platform_probe_helper_all(pdev, priv, clk_name,	\
++		irq_hndlr, irq_flags, irq_name, irq_devid);	\
++	if (__ret < 0)	\
++		goto __out;	\
++	platform_set_drvdata(pdev, priv);	\
++__out:	\
++	__ret;	\
++})
++
++#endif /*_PROBE_HELPER_H_*/
 -- 
-darwi
-http://darwish.chasingpointers.com
+2.17.1
+
