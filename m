@@ -2,127 +2,220 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6830C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 011C2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:55:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABCAE20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC620206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:55:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390679AbfIPStl (ORCPT
+        id S1730949AbfIPSzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:49:41 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:38693 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390517AbfIPStM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:49:12 -0400
-Received: by mail-io1-f69.google.com with SMTP id a8so1172023ios.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=2XxfILjNqvgOnvsx3ytCFDxVQdXM6VVuZeypAV3t46k=;
-        b=bjOKtAuyt65oZO6iFLKM89k5GLyWF8f14+Z6SGbEYgypnZ6nlJePmLF6aO10xG+74r
-         2IUcgDI0vXbBDhQq771WKBD0v7/qJOLj31e+F9VwYs9dY4xtvP1Uq1nB9hcaPrC/Wd8N
-         8eqbo4hC/jQ0QDV1W6CNVC6TCPYbuQJ42T0e9Nw+9AhKoiIZXzZF5injawz0DwdsVWp9
-         TpSRF3SsCJCiklxhK+D8V5Pn5TwdpZwseKGEfw6Y6EL0Nege7MrBSWmXHs0zbzX2TIhE
-         i9Qkqc8PsLCrpiLO1LQtNzuvaf1lGu/EznvDcucUx8+Rc0okddFo0uWLgGM+b9bVKwjj
-         7C4w==
-X-Gm-Message-State: APjAAAWMysidlOJClLxAEXjxcf9YtD8xACfkiaasZlcmmJbEjwvks38m
-        cqKlu/OP7HgDobY3WdGmEiW0MjRAMYjOthBqCNd9TYzYpYaL
-X-Google-Smtp-Source: APXvYqxAYehskRVQgzFrr0XdVWHwzuwgpJNhn+ZxrlmyrvG4FhfWqX1sw21wt+LSz1OiL8vSN93vNtKXCpzyTEAWVtLie46dgvGd
+        Mon, 16 Sep 2019 14:55:54 -0400
+Received: from mga11.intel.com ([192.55.52.93]:17475 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfIPSzx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:55:53 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 11:55:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,513,1559545200"; 
+   d="scan'208";a="187228691"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Sep 2019 11:55:51 -0700
+Date:   Mon, 16 Sep 2019 11:55:51 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v4] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+Message-ID: <20190916185551.GL18871@linux.intel.com>
+References: <1568623199-5294-1-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:c8cd:: with SMTP id q13mr477547jao.133.1568659749937;
- Mon, 16 Sep 2019 11:49:09 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 11:49:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002b27c60592b00f38@google.com>
-Subject: WARNING in implement
-From:   syzbot <syzbot+38e7237add3712479d65@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
-        jikos@kernel.org, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568623199-5294-1-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Sep 16, 2019 at 04:39:59PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Filter out drastic fluctuation and random fluctuation, remove
+> timer_advance_adjust_done altogether, the adjustment would be 
+> continuous.
+> 
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 26 ++++++++++++--------------
+>  arch/x86/kvm/lapic.h |  1 -
+>  arch/x86/kvm/x86.c   |  2 +-
+>  arch/x86/kvm/x86.h   |  1 +
+>  4 files changed, 14 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index dbbe478..2585b86 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -69,6 +69,7 @@
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+>  /* step-by-step approximation to mitigate fluctuation */
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+> +#define LAPIC_TIMER_ADVANCE_FILTER 5000
+>  
+>  static inline int apic_test_vector(int vec, void *bitmap)
+>  {
+> @@ -1482,29 +1483,28 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>  					      s64 advance_expire_delta)
+>  {
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+> -	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+> -	u64 ns;
+> +	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
 
-syzbot found the following crash on:
+Is changing 'ns' to a u32 intentionaly?  It's still cast to a u32 in the
+calculations, and set from @advance_expire_delta.
 
-HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=170b213e600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=38e7237add3712479d65
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16830dc1600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f2d3fa600000
+> +
+> +	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+38e7237add3712479d65@syzkaller.appspotmail.com
+Shouldn't LAPIC_TIMER_ADVANCE_FILTER be used in the other "if ... > 5000"
+check?
+	
+	if (unlikely(timer_advance_ns > 5000))
 
-keytouch 0003:0926:3333.0001: implement() called with too large value 32769  
-(n: 1)! (kworker/0:1)
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 12 at drivers/hid/hid-core.c:1370  
-implement.cold+0x40/0x81 drivers/hid/hid-core.c:1370
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events hidinput_led_worker
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2a3/0x6da kernel/panic.c:219
-  __warn.cold+0x20/0x4a kernel/panic.c:576
-  report_bug+0x262/0x2a0 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:implement.cold+0x40/0x81 drivers/hid/hid-core.c:1370
-Code: 00 ef 01 00 48 c7 c2 a0 ac 52 86 48 c7 c6 c0 8a 52 86 4c 8d 88 70 06  
-00 00 e8 3f 3b 1a fe 48 c7 c7 20 8b 52 86 e8 fc 4e d7 fc <0f> 0b 44 21 e5  
-e9 06 3a ff ff e8 64 ad ec fc 49 8d bd 28 19 00 00
-RSP: 0018:ffff8881da20fb88 EFLAGS: 00010082
-RAX: 0000000000000024 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed103b441f63
-RBP: 0000000000008001 R08: 0000000000000024 R09: ffffed103b643ee7
-R10: ffffed103b643ee6 R11: ffff8881db21f737 R12: 0000000000000001
-R13: ffff8881d28d8000 R14: 0000000000000001 R15: 0000000000000001
-  hid_output_field drivers/hid/hid-core.c:1543 [inline]
-  hid_output_report+0x2dc/0x4c0 drivers/hid/hid-core.c:1562
-  __usbhid_submit_report drivers/hid/usbhid/hid-core.c:593 [inline]
-  usbhid_submit_report+0x65c/0xde0 drivers/hid/usbhid/hid-core.c:638
-  usbhid_request+0x3c/0x70 drivers/hid/usbhid/hid-core.c:1252
-  hidinput_led_worker+0xbd/0x360 drivers/hid/hid-input.c:1495
-  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x318/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+And maybe name it LAPIC_TIMER_ADVANCE_MAX or something?
 
+> +		abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+This should be aligned with the other 'abs', e.g.:
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+	if (abs(...) ||
+	    abs(...))
+		return
+
+> +		/* filter out random fluctuations */
+
+If you put the comment above the if statement then you can drop the
+parentheses.  And if you're going to bother with a comment, maybe be a bit
+more explicit?  E.g.:
+
+	/* Do not adjust for tiny fluctuations or large random spikes. */
+	if (abs(...) ||
+	    abs(...))
+		return;
+
+> +		return;
+> +	}
+>  
+>  	/* too early */
+>  	if (advance_expire_delta < 0) {
+>  		ns = -advance_expire_delta * 1000000ULL;
+>  		do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -		timer_advance_ns -= min((u32)ns,
+> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +		timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>  	} else {
+>  	/* too late */
+>  		ns = advance_expire_delta * 1000000ULL;
+>  		do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -		timer_advance_ns += min((u32)ns,
+> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>  	}
+>  
+> -	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> -		apic->lapic_timer.timer_advance_adjust_done = true;
+> -	if (unlikely(timer_advance_ns > 5000)) {
+> +	if (unlikely(timer_advance_ns > 5000))
+>  		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -		apic->lapic_timer.timer_advance_adjust_done = false;
+> -	}
+>  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  }
+>  
+> @@ -1524,7 +1524,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  	if (guest_tsc < tsc_deadline)
+>  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+>  
+> -	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> +	if (lapic_timer_advance_ns == -1)
+
+Rather than expose 'lapic_timer_advance_ns' from x86.c, what if we add a
+'static bool dynamically_adjust_timer_advance __read_mostly;' in lapic.c,
+and have that be set in kvm_create_lapic() and checked here?  That'd make
+this code a little more readable, would make this patch more obvious (it
+wasn't immediately clear why lapic_timer_advance_ns was being exposed),
+and would reduce the probability of unintentionally writing/corrupting the
+module param.
+
+>  		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+>  }
+>  
+> @@ -2302,10 +2302,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  	apic->lapic_timer.timer.function = apic_timer_fn;
+>  	if (timer_advance_ns == -1) {
+>  		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -		apic->lapic_timer.timer_advance_adjust_done = false;
+>  	} else {
+>  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> -		apic->lapic_timer.timer_advance_adjust_done = true;
+>  	}
+
+Parentheses can be dropped (unless this is converted to a local global, as
+above).
+
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 50053d2..2aad7e2 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -35,7 +35,6 @@ struct kvm_timer {
+>  	s64 advance_expire_delta;
+>  	atomic_t pending;			/* accumulated triggered timers */
+>  	bool hv_timer_in_use;
+> -	bool timer_advance_adjust_done;
+>  };
+>  
+>  struct kvm_lapic {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 83288ba..bb4574c 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -141,7 +141,7 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+>   * advancement entirely.  Any other value is used as-is and disables adaptive
+>   * tuning, i.e. allows priveleged userspace to set an exact advancement time.
+>   */
+> -static int __read_mostly lapic_timer_advance_ns = -1;
+> +int __read_mostly lapic_timer_advance_ns = -1;
+>  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+>  
+>  static bool __read_mostly vector_hashing = true;
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index b5274e2..1bf2d82 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -301,6 +301,7 @@ extern unsigned int min_timer_period_us;
+>  
+>  extern bool enable_vmware_backdoor;
+>  
+> +extern int lapic_timer_advance_ns;
+>  extern int pi_inject_timer;
+>  
+>  extern struct static_key kvm_no_apic_vcpu;
+> -- 
+> 2.7.4
+> 
