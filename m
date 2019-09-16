@@ -2,51 +2,59 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B916EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBDBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828FF2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62F222067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:39:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfIPXjJ (ORCPT
+        id S1729102AbfIPXjK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:39:09 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:40862 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIPXjJ (ORCPT
+        Mon, 16 Sep 2019 19:39:10 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:56978 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfIPXjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 19:39:09 -0400
-Received: by mail-io1-f69.google.com with SMTP id l9so2689356ioj.7
+Received: by mail-io1-f71.google.com with SMTP id n8so2620216ioh.23
         for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 16:39:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=iKc+zhdxH+3nqPb6vBtY+hBOW4mmEkW3AOEpTJNuYoo=;
-        b=HelZmqbE+HmH/x5R5FipqklfLB2KieOswY6j4Yzq47vAufE0LBVpILNQrWvU8lT13v
-         fPnUpg6O7XZVRAgJaYoTSublecp7k491PnrP7FQW/E0CCJdzoFfq63k43CjGqTCfo4ja
-         EdJblxTD9U9F6TFLyAuCAQStt6D/rJJaIYLx11yDTj0QcPmUU+9YZ/FGoTqS6W6dDWEG
-         JBCEEq6z0sjKlLeRJFfswAKjVR8M/KJgCd9/GBs0NvjfvnP72N2doEaBglC1vlB6uqdK
-         QHbmOtGgKqgcEycm2I1lFAypsf2ahN557wushbowx/1og7NVSNYnE4eOvyYXDAjYTG4e
-         jxxQ==
-X-Gm-Message-State: APjAAAXDOONQQdo+64dl0BLk0wHYTiSYyWJaufldmM0wfTNF/7VYr6ob
-        XYvPLNMXDmmu/vbqrU9n95QYJC9xx7nnz5bUWvG0txreAi3l
-X-Google-Smtp-Source: APXvYqxyRmV1cJ7RB0nr2RIYjAg5oky0Es0WzQT7R66QLfOWteLexRkpo4qSHaQHFZBp0Y0+LSzkW44fNJr9uwdiA5i9EnC4OfDQ
+        bh=dsEiraNwRgm8wyCXDp8ZxBjw4VcDAPzRPxd6mM9u8sk=;
+        b=PwziQrwtCPnRZ9+y2cGF6QNooPwqMxvhfjyHpvE2R7lfm7AtOoCcNJGas+UwTqx7yM
+         jj7AWi5MJ0KErkyQ4I1/TZiS9qYRIq6Iwkmhn54vsGCuKMKUX1lFGUJTrO3aHw0aYj3O
+         NTfOYKG0pjVfa4Vvx6MTC6RJ1kwyjsSvn+HCKTbVqsIFuK6ZJwVsAEW6JxzGfv8rMD6Y
+         YPG/X+NOb1xuNTX/NWGlwqrLO+u5xIdmgRaHIRg9i4rA5Gqwz/QMsag7NzdTZa0pmkx9
+         t+s4Qofz44profuojNVpbWE6mRxoz9PS9v3bGrXPtS1Iv7Hg5Ms4GIA9w1qi+jk19WrD
+         c32w==
+X-Gm-Message-State: APjAAAVOmP0dSWqePeZlfuHmlaIjQ0nJHpohqIdWqn4KK7zVpVZcKqvz
+        /yXu9d3kaL1QQ1EkWB29BGkpJyTH4EpKvZeyrVGa/8zBQTu1
+X-Google-Smtp-Source: APXvYqzSXv5F2fQ/LzsIQs5lD5I/baH0tP7f0G11VUkAh30cRzTKJIYiqwhn0ozvdI14GUhHsXxhZUsmLgDiP38cOIBmedzS5SYb
 MIME-Version: 1.0
-X-Received: by 2002:a02:1c02:: with SMTP id c2mr814086jac.118.1568677148227;
- Mon, 16 Sep 2019 16:39:08 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:39:08 -0700
+X-Received: by 2002:a6b:3804:: with SMTP id f4mr519700ioa.166.1568677147810;
+ Mon, 16 Sep 2019 16:39:07 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 16:39:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003006220592b41c5b@google.com>
-Subject: general protection fault in trace_probe_unlink
-From:   syzbot <syzbot+2f807f4d3a2a4e87f18f@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        mingo@redhat.com, rostedt@goodmis.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000029a3a00592b41c48@google.com>
+Subject: BUG: sleeping function called from invalid context in tcf_chain0_head_change_cb_del
+From:   syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        dsahern@gmail.com, f.fainelli@gmail.com, hawk@kernel.org,
+        idosch@mellanox.com, jakub.kicinski@netronome.com,
+        jhs@mojatatu.com, jiri@mellanox.com, jiri@resnulli.us,
+        john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        nikolay@cumulusnetworks.com, petrm@mellanox.com,
+        roopa@cumulusnetworks.com, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, vladbu@mellanox.com,
+        xdp-newbies@vger.kernel.org, xiyou.wangcong@gmail.com, yhs@fb.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,103 +65,85 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    2015a28f Add linux-next specific files for 20190915
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10f1dc65600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=110691c2286b679a
-dashboard link: https://syzkaller.appspot.com/bug?extid=2f807f4d3a2a4e87f18f
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e2ff1600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1255ba65600000
+HEAD commit:    1609d760 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10236abe600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ed2b148cd67382ec
+dashboard link: https://syzkaller.appspot.com/bug?extid=ac54455281db908c581e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=116c4b11600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ff270d600000
 
 The bug was bisected to:
 
-commit ca89bc071d5e4e981dcc52e0ca90f4500d332e42
-Author: Masami Hiramatsu <mhiramat@kernel.org>
-Date:   Wed Jun 19 15:07:49 2019 +0000
+commit c266f64dbfa2a970a13b0574246c0ddfec492365
+Author: Vlad Buslov <vladbu@mellanox.com>
+Date:   Mon Feb 11 08:55:32 2019 +0000
 
-     tracing/kprobe: Add multi-probe per event support
+     net: sched: protect block state with mutex
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17a0f2b5600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1460f2b5600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1060f2b5600000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16e7ca65600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=15e7ca65600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e7ca65600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+2f807f4d3a2a4e87f18f@syzkaller.appspotmail.com
-Fixes: ca89bc071d5e ("tracing/kprobe: Add multi-probe per event support")
+Reported-by: syzbot+ac54455281db908c581e@syzkaller.appspotmail.com
+Fixes: c266f64dbfa2 ("net: sched: protect block state with mutex")
 
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
-RBP: 00007ffc04171a30 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: ffffffffffffffff
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8633 Comm: syz-executor797 Not tainted 5.3.0-rc8-next-20190915  
-#0
+BUG: sleeping function called from invalid context at  
+kernel/locking/mutex.c:909
+in_atomic(): 1, irqs_disabled(): 0, pid: 9297, name: syz-executor942
+INFO: lockdep is turned off.
+Preemption disabled at:
+[<ffffffff8604de24>] spin_lock_bh include/linux/spinlock.h:343 [inline]
+[<ffffffff8604de24>] sch_tree_lock include/net/sch_generic.h:570 [inline]
+[<ffffffff8604de24>] sfb_change+0x284/0xd30 net/sched/sch_sfb.c:519
+CPU: 0 PID: 9297 Comm: syz-executor942 Not tainted 5.3.0-rc8+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
-Code: 0f 84 e1 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00  
-00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75  
-53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
-RSP: 0018:ffff888090a7f9d8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff88809b6f90c0 RCX: ffffffff817c0ca9
-RDX: 0000000000000000 RSI: ffffffff817c0a73 RDI: ffff88809b6f90c8
-RBP: ffff888090a7f9f0 R08: ffff88809a04e600 R09: ffffed1015d26aed
-R10: ffffed1015d26aec R11: ffff8880ae935763 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff88809b6f90c0 R15: ffff88809b6f90d0
-FS:  0000555556f99880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000006cc090 CR3: 00000000962b2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __list_del_entry include/linux/list.h:131 [inline]
-  list_del_init include/linux/list.h:190 [inline]
-  trace_probe_unlink+0x1f/0x200 kernel/trace/trace_probe.c:959
-  trace_probe_cleanup+0xd3/0x110 kernel/trace/trace_probe.c:973
-  trace_probe_init+0x3f2/0x510 kernel/trace/trace_probe.c:1011
-  alloc_trace_uprobe+0x5e/0x250 kernel/trace/trace_uprobe.c:353
-  create_local_trace_uprobe+0x109/0x4a0 kernel/trace/trace_uprobe.c:1508
-  perf_uprobe_init+0x131/0x210 kernel/trace/trace_event_perf.c:314
-  perf_uprobe_event_init+0x106/0x1a0 kernel/events/core.c:8898
-  perf_try_init_event+0x135/0x590 kernel/events/core.c:10184
-  perf_init_event kernel/events/core.c:10228 [inline]
-  perf_event_alloc.part.0+0x1b89/0x33d0 kernel/events/core.c:10505
-  perf_event_alloc kernel/events/core.c:10887 [inline]
-  __do_sys_perf_event_open+0xa2d/0x2d00 kernel/events/core.c:10989
-  __se_sys_perf_event_open kernel/events/core.c:10871 [inline]
-  __x64_sys_perf_event_open+0xbe/0x150 kernel/events/core.c:10871
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  ___might_sleep+0x3ff/0x530 kernel/sched/core.c:6608
+  __might_sleep+0x8f/0x100 kernel/sched/core.c:6561
+  __mutex_lock_common+0x4e/0x2820 kernel/locking/mutex.c:909
+  __mutex_lock kernel/locking/mutex.c:1077 [inline]
+  mutex_lock_nested+0x1b/0x30 kernel/locking/mutex.c:1092
+  tcf_chain0_head_change_cb_del+0x30/0x390 net/sched/cls_api.c:932
+  tcf_block_put_ext+0x3d/0x2a0 net/sched/cls_api.c:1502
+  tcf_block_put+0x6e/0x90 net/sched/cls_api.c:1515
+  sfb_destroy+0x47/0x70 net/sched/sch_sfb.c:467
+  qdisc_destroy+0x147/0x4d0 net/sched/sch_generic.c:968
+  qdisc_put+0x58/0x90 net/sched/sch_generic.c:992
+  sfb_change+0x52d/0xd30 net/sched/sch_sfb.c:522
+  qdisc_change net/sched/sch_api.c:1321 [inline]
+  tc_modify_qdisc+0x184d/0x1ea0 net/sched/sch_api.c:1623
+  rtnetlink_rcv_msg+0x889/0xd40 net/core/rtnetlink.c:5223
+  netlink_rcv_skb+0x19e/0x3d0 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x1c/0x20 net/core/rtnetlink.c:5241
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x787/0x900 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x993/0xc50 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x60d/0x910 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg net/socket.c:2363 [inline]
+  __x64_sys_sendmsg+0x17c/0x200 net/socket.c:2363
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x441269
-Code: e8 5c ae 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+RIP: 0033:0x447509
+Code: e8 5c 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 bb 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc04171a18 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441269
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000020000180
-RBP: 00007ffc04171a30 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffffff R11: 0000000000000246 R12: ffffffffffffffff
-R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace ef71b9b0abb5d24f ]---
-RIP: 0010:__list_del_entry_valid+0x85/0xf5 lib/list_debug.c:51
-Code: 0f 84 e1 00 00 00 48 b8 22 01 00 00 00 00 ad de 49 39 c4 0f 84 e2 00  
-00 00 48 b8 00 00 00 00 00 fc ff df 4c 89 e2 48 c1 ea 03 <80> 3c 02 00 75  
-53 49 8b 14 24 4c 39 f2 0f 85 99 00 00 00 49 8d 7d
-RSP: 0018:ffff888090a7f9d8 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: ffff88809b6f90c0 RCX: ffffffff817c0ca9
-RDX: 0000000000000000 RSI: ffffffff817c0a73 RDI: ffff88809b6f90c8
-RBP: ffff888090a7f9f0 R08: ffff88809a04e600 R09: ffffed1015d26aed
-R10: ffffed1015d26aec R11: ffff8880ae935763 R12: 0000000000000000
-R13: 0000000000000000 R14: ffff88809b6f90c0 R15: ffff88809b6f90d0
-FS:  0000555556f99880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000006cc090 CR3: 00000000962b2000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+ff 0f 83 ab 0e fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f49d6c94db8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dcc78 RCX: 0000000000447509
+RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000007
+RBP: 00000000006dcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00000000006dcc7c
+R13: 00007ffc5c2e9dff R14: 00007f49d6c959c0 R15: 000000000000002d
 
 
 ---
