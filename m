@@ -2,139 +2,88 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906F2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8AFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F39D214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:14:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568675645;
-	bh=RFV8tAN00Kz44FNU9hmqQHgEoIVUG1TxC7m3LsBAClQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iSeRWRbKX3dJXbqCg//JwyIlex9tRRjxFHZIOKWx2uorQS9kTxWTMu2uKJWPU4WjR
-	 dAhXyxDyIbY6tBOgrsLqe3XlKVHXCAC+0IrU+OaZPkNYJ77ntUJ4y/M8BN1AHc/KuN
-	 FsUiwaT2C1OuBV6wlX6OOyc2ZNevwEFfiSSfLdvY=
+	by mail.kernel.org (Postfix) with ESMTP id B7F22214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="Ra6btG2D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbfIPXOE (ORCPT
+        id S1733053AbfIPXPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:14:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfIPXOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:14:04 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A6D2171F
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 23:14:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568675642;
-        bh=RFV8tAN00Kz44FNU9hmqQHgEoIVUG1TxC7m3LsBAClQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LUFE8WENCVCj7dkzHa+oPoSR3tQFO1vbc8SAtKMLlJD9DPlmGpjKycm5HMO8PcPmd
-         cvbosdNVbWjMqfv/gEAHvXv4kpIOOvRGFwab1nNlFnP/VSQQPD9MF7APa3A1yzwlyl
-         vMrPOBRjVnNiyU78NVieafQ9o+KkYoxNGXCu2eGQ=
-Received: by mail-wr1-f41.google.com with SMTP id i18so1066382wru.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 16:14:02 -0700 (PDT)
-X-Gm-Message-State: APjAAAUDk79r/+05cyh3zYdaoadEkJUdBqFGJRzn+IKX8z8hmIID69cD
-        i9OjrzZ1iCoKEZP5YicY5lMc8NmbFry5YpCQYpCPiQ==
-X-Google-Smtp-Source: APXvYqwmT/FpPN87wsFrhr/UWZWsfxx0IDOd2ews787smlqkbpm3BpUzKDIXEMwesZ9ZfKkyvmn7TegvDdndyPOE/zE=
-X-Received: by 2002:adf:fe0f:: with SMTP id n15mr559686wrr.343.1568675641000;
- Mon, 16 Sep 2019 16:14:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190913072237.GA12381@zn.tnic> <CAHk-=wismo3SQvvKXg8j0W-eC+5Q-ctcYfr1QV3K-i90w5caBA@mail.gmail.com>
- <9dc9f1e6-5d19-167c-793d-2f4a5ebee097@rasmusvillemoes.dk> <20190913104232.GA4190@zn.tnic>
- <20190913163645.GC4190@zn.tnic> <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
- <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
- <CALCETrX8sR8ELEvUpdHug498dU6+MWSy_SagaRbuZZ9fkztmfw@mail.gmail.com> <CAHk-=whZJhU3c-djPcwCPyYh0y1YXKeyBuJZjq3CzW3v_YHgeg@mail.gmail.com>
-In-Reply-To: <CAHk-=whZJhU3c-djPcwCPyYh0y1YXKeyBuJZjq3CzW3v_YHgeg@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 16 Sep 2019 16:13:48 -0700
-X-Gmail-Original-Message-ID: <CALCETrUkBCh8h66pJCJtDGNtvhmVaNuppddsBLkQiHFoNrW-xg@mail.gmail.com>
-Message-ID: <CALCETrUkBCh8h66pJCJtDGNtvhmVaNuppddsBLkQiHFoNrW-xg@mail.gmail.com>
-Subject: Re: [RFC] Improve memset
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Borislav Petkov <bp@alien8.de>,
-        Rasmus Villemoes <mail@rasmusvillemoes.dk>,
-        x86-ml <x86@kernel.org>, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Mon, 16 Sep 2019 19:15:54 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:47305 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfIPXPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 19:15:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DV+mhw7u9TaBCTed3WKA8JOHXYeZQDmY3wg7iw/0JXE=; b=Ra6btG2D6qUC5IcEha2plrJPzi
+        q5GTYjuo4OmEgFYA4NZl28/rqdWrXiQwRvxiZnPPUImneLFYNI4GTA3DHVmE2XiObZMn4BQc7ohMS
+        Jb3NXVeAXHCchIqBj85TAjvJYoj2F5zcU1xoBq3mgSWsnIoPalK9sLYP3PmtZwKMItY8=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1iA0DY-0001od-DE; Tue, 17 Sep 2019 00:15:36 +0100
+Date:   Tue, 17 Sep 2019 00:15:36 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     "Alexander E. Patrakov" <patrakov@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
         lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916231536.e3grha2tqtdcrym7@srcf.ucam.org>
+References: <20190916042952.GB23719@1wt.eu>
+ <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
+ <20190916061252.GA24002@1wt.eu>
+ <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
+ <20190916172117.GB15263@mit.edu>
+ <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org>
+ <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com>
+ <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org>
+ <de1b9cd8-2f71-bf24-536a-70a3093f48d2@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <de1b9cd8-2f71-bf24-536a-70a3093f48d2@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 2:30 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Mon, Sep 16, 2019 at 10:41 AM Andy Lutomirski <luto@kernel.org> wrote:
-> >
-> > After some experimentation, I think y'all are just doing it wrong.
-> > GCC is very clever about this as long as it's given the chance.  This
-> > test, for example, generates excellent code:
-> >
-> > #include <string.h>
-> >
-> > __THROW __nonnull ((1)) __attribute__((always_inline)) void
-> > *memset(void *s, int c, size_t n)
-> > {
-> >     asm volatile ("nop");
-> >     return s;
-> > }
-> >
-> > /* generates 'nop' */
-> > void zero(void *dest, size_t size)
-> > {
-> >     __builtin_memset(dest, 0, size);
-> > }
->
-> I think the point was that we'd like to get the default memset (for
-> when __builtin_memset() doesn't generate inline code) also inlined
-> into just "rep stosb", instead of that tail-call "jmp memset".
+On Tue, Sep 17, 2019 at 04:13:36AM +0500, Alexander E. Patrakov wrote:
+> 17.09.2019 04:11, Matthew Garrett пишет:
+> > In one case we have "Systems don't boot, but you can downgrade your
+> > kernel"
+> 
+> You can't. There are way too many dedicated server providers where there is
+> no IPMI or any equivalent, and the only help that the staff can do is to
+> reinstall, wiping your data.
 
-Well, when I wrote this email, I *thought* it was inlining the
-'memset' function, but maybe I just can't read gcc's output today.
+In which case you're presumably running a distro kernel that's had a 
+decent amount of testing before you upgrade to it?
 
-It seems like gcc is maybe smart enough to occasionally optimize
-memset just because it's called 'memset'.  This generates good code:
-
-#include <stddef.h>
-
-inline void *memset(void *dest, int c, size_t n)
-{
-    /* Boris' implementation */
-    void *ret, *dummy;
-
-    asm volatile("push %%rdi\n\t"
-                     "mov %%rax, %%rsi\n\t"
-                     "mov %%rcx, %%rdx\n\t"
-                     "andl $7,%%edx\n\t"
-                     "shrq $3,%%rcx\n\t"
-                     "movzbl %%sil,%%esi\n\t"
-                     "movabs $0x0101010101010101,%%rax\n\t"
-                     "imulq %%rsi,%%rax\n\t"
-                     "rep stosq\n\t"
-                     "movl %%edx,%%ecx\n\t"
-                     "rep stosb\n\t"
-                     "pop %%rax\n\t"
-                     : "=&D" (ret), "=c" (dummy)
-                     : "0" (dest), "a" (c), "c" (n)
-                     : "rsi", "rdx", "memory");
-
-    return ret;
-}
-
-int one_word(void)
-{
-    int x;
-    memset(&x, 0, sizeof(x));
-    return x;
-}
-
-So maybe Boris' patch is good after all.
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
