@@ -2,140 +2,148 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72703C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E990EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43BAE2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:07:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OU5UqgGj"
+	by mail.kernel.org (Postfix) with ESMTP id CBA69214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732297AbfIPKHa (ORCPT
+        id S1729065AbfIPKPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:07:30 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40151 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732179AbfIPKHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:07:21 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190916100720euoutp012d02b88fd2a565a40e10b7f8b71f5a90~E40Fk83LV2490524905euoutp01b
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:07:20 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190916100720euoutp012d02b88fd2a565a40e10b7f8b71f5a90~E40Fk83LV2490524905euoutp01b
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568628440;
-        bh=Uy8PbI8Ay//0lPtuuye0Cr4E/yS+/gJgE62W7KlqB88=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OU5UqgGjGY6HuGv5V+CorBe0NhspzeUHj22GF68n4ohALSAkrlZkq41jakFiHbAeY
-         U5VOwE4zf9MZrLktuDUxOBQhqrgaTNmFqWfkj6tX357GShUd+6aXUd5NijgtEbdafE
-         O5c2iMvCXC2rdCsr4h4baLBPr2NREPEYci/3JJZw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190916100719eucas1p1e84d4fa680983ee4ec5878e476e7022c~E40Ey87c90424904249eucas1p1x;
-        Mon, 16 Sep 2019 10:07:19 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 7F.DE.04469.7DE5F7D5; Mon, 16
-        Sep 2019 11:07:19 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190916100718eucas1p1efcbabdf9dbe17a062ae83b8c19ac256~E40D-SBI20720607206eucas1p1N;
-        Mon, 16 Sep 2019 10:07:18 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190916100718eusmtrp2b28c2b52b5b47de5f999ceecc557c737~E40DxPHpI2883028830eusmtrp25;
-        Mon, 16 Sep 2019 10:07:18 +0000 (GMT)
-X-AuditID: cbfec7f2-54fff70000001175-ea-5d7f5ed77158
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id DD.48.04117.6DE5F7D5; Mon, 16
-        Sep 2019 11:07:18 +0100 (BST)
-Received: from AMDC3778.digital.local (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190916100717eusmtip283feedbd6c1b28f23253ea84770886ce~E40DCHngk2339323393eusmtip2X;
-        Mon, 16 Sep 2019 10:07:17 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, cw00.choi@samsung.com,
-        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v2 2/3] ARM: dts: exynos: fix too long line in memory device
-Date:   Mon, 16 Sep 2019 12:07:03 +0200
-Message-Id: <20190916100704.26692-3-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190916100704.26692-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTYRj229nZjqPFcUa+LFFZBSXkDYMPEjPox6B+SESRYTn1pJJbtqOW
-        GbkC85Z5qdRE00pTlqJOGVM0vDVNTZ1SimWoIzIvWZtXsIvzrPr3vM/7PN/z8PJRhKSJlFIx
-        qnhGrVLEygQivt64MXho7EJKqI9BS+CGojoSjy1/IXFZ9yCJc8zzBB4aqhfit3cWhHhC44p1
-        5vckHm0pEWBrdjfCRUOveLi2e1KIK8dMPPzhdrUAp7Z1C3HXQhqJV3tnUJCTvOZJDZI3F08K
-        5TpthkDeWJEi7/jWypPfb9IiuVXnFiwMEQVEMrExiYzaOzBMFG1oHyXivgiut318ytOgUTIT
-        OVJA+8NiRpogE4koCV2N4Guf0T4sI3j8eZnHDVYEd6atxF/LsqWC5BZVCGZbf/D/WfSbj7b8
-        FCWgvcCgvWoz7KKfI1jtCrFhgtbzIHvF1Yad6ZOwMLu03YNP74es3Axkw2L6KNSurAq4MHd4
-        Wd++HexIB8F69WvClgW0UQjajVR7o+OQN7SEOOwMcz1NQg67wu/mMh6HWdBkP7VrboI5p9Su
-        OQJdPSbS1pmgD0JdizdHH4Ppkk2+jQZ6J4wvOnH1d0K+vpDgaDGk35Vw6gPQdG/YHrQbqmoK
-        7I/LYaK3wH7QBwgmlr7zc5F78f+wcoS0yIVJYJVRDOurYq55sQolm6CK8oq4otShrb/U/6vH
-        YkArI+GdiKaQbIdYk3orVEIqEtkkZScCipDtEp9NTw6ViCMVSTcY9ZWL6oRYhu1Eeyi+zEWc
-        7DB1XkJHKeKZywwTx6j/bnmUo1SD9nlID6+twehMXs6sXwM1GRMwIPV8E9geOlXqkm0YKUr0
-        MOqDTk/8nK/s6BUXTlnKgoNGsupU/rFh3ubFF3PPyhs/G/1k0gGHyRO+p/JpT2tawplIXVFf
-        /yXTulOvck5SGP7OrM03jfQNN1j81kTjPolu3nvPPVwLif4UYcpRyPhstMLXk1Czij/BbdFd
-        RwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsVy+t/xe7rX4upjDbbu47fYOGM9q8X1L89Z
-        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht7jVIGOx6fE1VovLu+awWXzuPcJoMeP8PiaLtUfuslss
-        vX6RyeJ24wo2i9a9R9gtDr9pZ7X4duIRo4Ogx5p5axg9ds66y+6xaVUnm8fmJfUeB9/tYfLo
-        27KK0ePzJrkA9ig9m6L80pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy
-        1CJ9uwS9jB0HLjMXPGer2HtnIVMD42XWLkZODgkBE4kvn5YA2VwcQgJLGSUabu1mh0iISUza
-        tx3KFpb4c62LDaLoE6PE4ZVngTo4ONgE9CR2rCoEiYsILGeUOLbqLTOIwyxwhEmif9c8sBXC
-        Aj4Sb168B7NZBFQluid0MoLYvAL2Emu/fmOD2CAvsXrDAWYQm1PAQeLHiqNgthBQzZTrPxgn
-        MPItYGRYxSiSWlqcm55bbKRXnJhbXJqXrpecn7uJERgr24793LKDsetd8CFGAQ5GJR7ehta6
-        WCHWxLLiytxDjBIczEoivOEd1bFCvCmJlVWpRfnxRaU5qcWHGE2BjprILCWanA+M47ySeENT
-        Q3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalFMH1MHJxSDYwH9L5YTJk44/mTVPsTzLZb
-        FTSdWCZvOProktQGvWmuNw/1i2uyOM24MuEKb1+oe53qdhHVGr7Fa0qeqAv5rLA87jOBO2f3
-        qve2PYaSK6X8erg9laauWbRhzp5ZSs/ubYmW7DsT92aJ5Bwvp09X5h79djbx1kNP0Z0asaXv
-        WA57vro+5dDOD/KzlFiKMxINtZiLihMBMglGiasCAAA=
-X-CMS-MailID: 20190916100718eucas1p1efcbabdf9dbe17a062ae83b8c19ac256
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190916100718eucas1p1efcbabdf9dbe17a062ae83b8c19ac256
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190916100718eucas1p1efcbabdf9dbe17a062ae83b8c19ac256
-References: <20190916100704.26692-1-l.luba@partner.samsung.com>
-        <CGME20190916100718eucas1p1efcbabdf9dbe17a062ae83b8c19ac256@eucas1p1.samsung.com>
+        Mon, 16 Sep 2019 06:15:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:42904 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727945AbfIPKPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:15:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54C851000;
+        Mon, 16 Sep 2019 03:15:46 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C16263F59C;
+        Mon, 16 Sep 2019 03:15:45 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 11:15:44 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, bhelgaas@google.com,
+        Anvesh Salveru <anvesh.s@samsung.com>
+Subject: Re: [PATCH v2] PCI: dwc: Add support to add GEN3 related
+ equalization quirks
+Message-ID: <20190916101543.GM9720@e119886-lin.cambridge.arm.com>
+References: <CGME20190913104018epcas5p3d93265a6786dc2b7b8a7d3231bfe9c14@epcas5p3.samsung.com>
+ <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568371190-14590-1-git-send-email-pankaj.dubey@samsung.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Small fix moving the comment to line above making sure the lines do not
-exceed 80 characters.
+On Fri, Sep 13, 2019 at 04:09:50PM +0530, Pankaj Dubey wrote:
+> From: Anvesh Salveru <anvesh.s@samsung.com>
+> 
+> In some platforms, PCIe PHY may have issues which will prevent linkup
+> to happen in GEN3 or higher speed. In case equalization fails, link will
+> fallback to GEN1.
+> 
+> DesignWare controller gives flexibility to disable GEN3 equalization
+> completely or only phase 2 and 3 of equalization.
+> 
+> This patch enables the DesignWare driver to disable the PCIe GEN3
+> equalization by enabling one of the following quirks:
+>  - DWC_EQUALIZATION_DISABLE: To disable GEN3 equalization all phases
+>  - DWC_EQ_PHASE_2_3_DISABLE: To disable GEN3 equalization phase 2 & 3
+> 
+> Platform drivers can set these quirks via "quirk" variable of "dw_pcie"
+> struct.
+> 
+> Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+> Patchset v1 can be found at:
+>  - 1/2: https://lkml.org/lkml/2019/9/10/443
+>  - 2/2: https://lkml.org/lkml/2019/9/10/444
+> 
+> Changes w.r.t v1:
+>  - Squashed two patches from v1 into one as suggested by Gustavo
+>  - Addressed review comments from Andrew
+> 
+>  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++++
+>  drivers/pci/controller/dwc/pcie-designware.h |  9 +++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 7d25102..97fb18d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -466,4 +466,16 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		break;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +
+> +	if (pci->quirk & DWC_EQUALIZATION_DISABLE) {
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> +		val |= PORT_LOGIC_GEN3_EQ_DISABLE;
+> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> +	}
+> +
+> +	if (pci->quirk & DWC_EQ_PHASE_2_3_DISABLE) {
+> +		val = dw_pcie_readl_dbi(pci, PCIE_PORT_GEN3_RELATED);
+> +		val |= PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE;
+> +		dw_pcie_writel_dbi(pci, PCIE_PORT_GEN3_RELATED, val);
+> +	}
+>  }
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> index ffed084..e428b62 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.h
+> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> @@ -29,6 +29,10 @@
+>  #define LINK_WAIT_MAX_IATU_RETRIES	5
+>  #define LINK_WAIT_IATU			9
+>  
+> +/* Parameters for GEN3 related quirks */
+> +#define DWC_EQUALIZATION_DISABLE	BIT(1)
+> +#define DWC_EQ_PHASE_2_3_DISABLE	BIT(2)
+> +
+>  /* Synopsys-specific PCIe configuration registers */
+>  #define PCIE_PORT_LINK_CONTROL		0x710
+>  #define PORT_LINK_MODE_MASK		GENMASK(21, 16)
+> @@ -60,6 +64,10 @@
+>  #define PCIE_MSI_INTR0_MASK		0x82C
+>  #define PCIE_MSI_INTR0_STATUS		0x830
+>  
+> +#define PCIE_PORT_GEN3_RELATED		0x890
 
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I hadn't noticed this in the previous version - what is the proper
+name for this register? Does it end in _RELATED?
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-index fe885ca969af..059fa32d1a8f 100644
---- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-@@ -103,7 +103,8 @@
- 
- 		timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
- 			compatible	= "jedec,lpddr3-timings";
--			reg		= <800000000>; /* workaround: it shows max-freq */
-+			/* workaround: 'reg' shows max-freq */
-+			reg		= <800000000>;
- 			min-freq	= <100000000>;
- 			tRFC		= <65000>;
- 			tRRD		= <6000>;
--- 
-2.17.1
+Thanks,
 
+Andrew Murray
+
+> +#define PORT_LOGIC_GEN3_EQ_PHASE_2_3_DISABLE	BIT(9)
+> +#define PORT_LOGIC_GEN3_EQ_DISABLE		BIT(16)
+> +
+>  #define PCIE_ATU_VIEWPORT		0x900
+>  #define PCIE_ATU_REGION_INBOUND		BIT(31)
+>  #define PCIE_ATU_REGION_OUTBOUND	0
+> @@ -244,6 +252,7 @@ struct dw_pcie {
+>  	struct dw_pcie_ep	ep;
+>  	const struct dw_pcie_ops *ops;
+>  	unsigned int		version;
+> +	unsigned int		quirk;
+>  };
+>  
+>  #define to_dw_pcie_from_pp(port) container_of((port), struct dw_pcie, pp)
+> -- 
+> 2.7.4
+> 
