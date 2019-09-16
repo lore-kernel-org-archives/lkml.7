@@ -3,79 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D892C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446FAC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6506020890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C7D214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:07:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731673AbfIPJHP (ORCPT
+        id S1731698AbfIPJHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:07:15 -0400
-Received: from elvis.franken.de ([193.175.24.41]:52205 "EHLO elvis.franken.de"
+        Mon, 16 Sep 2019 05:07:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2592 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726541AbfIPJHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:07:15 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1i9myX-0002mF-00; Mon, 16 Sep 2019 11:07:13 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id E18CDC278F; Mon, 16 Sep 2019 11:07:05 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 11:07:05 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Message-ID: <20190916090705.GA5119@alpha.franken.de>
-References: <20190905154747.GB3650@rapoport-lnx>
- <20190905233800.0f6b3fb3722cde2f5a88663a@suse.de>
- <20190906130223.GA17704@rapoport-lnx>
- <20190909182242.c1ef9717d14b20212ef75954@suse.de>
- <20190910113243.GA19207@rapoport-lnx>
- <20190911160939.19f776535770d12ff51a2af7@suse.de>
- <20190912105831.GA10677@rapoport-lnx>
- <20190912155539.6151b0811e858455be4c8d86@suse.de>
- <20190912140912.GA13137@alpha.franken.de>
- <20190914104112.GA12045@rapoport-lnx>
+        id S1731674AbfIPJHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:07:47 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 02:07:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="176986019"
+Received: from opirvulx-wtg.ger.corp.intel.com (HELO localhost) ([10.252.55.135])
+  by orsmga007.jf.intel.com with ESMTP; 16 Sep 2019 02:07:42 -0700
+Date:   Mon, 16 Sep 2019 12:07:41 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Seunghun Han <kkamagui@gmail.com>
+Cc:     Vanya Lazeev <ivan.lazeev@gmail.com>, arnd@arndb.de,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Huewe <peterhuewe@gmx.de>
+Subject: Re: [PATCH v2] Fix fTPM on AMD Zen+ CPUs
+Message-ID: <20190916090741.GA31747@linux.intel.com>
+References: <CAHjaAcStAfarJoPG0tbSY0BVcp0-7Lvah2FdpmC_eCFfxaSVFw@mail.gmail.com>
+ <20190913140006.GA29755@linux.intel.com>
+ <20190913140218.GB29755@linux.intel.com>
+ <CAHjaAcSBCDnn7CwXfxYcfmRnAF2jdud1Sjwng_jtd8ASVS28Sg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190914104112.GA12045@rapoport-lnx>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAHjaAcSBCDnn7CwXfxYcfmRnAF2jdud1Sjwng_jtd8ASVS28Sg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 11:41:13AM +0100, Mike Rapoport wrote:
-> On Thu, Sep 12, 2019 at 04:09:12PM +0200, Thomas Bogendoerfer wrote:
-> > On Thu, Sep 12, 2019 at 03:55:39PM +0200, Thomas Bogendoerfer wrote:
-> > > - reserved[0xd]	[0x000000035bff8000-0x000000035bffffff], 0x0000000000008000 bytes flags: 0x0
-> > > 
-> > > I have no idea which reservation this is, but it's not from one of the
-> > > node data.
-> > 
-> > that's sparsemem's mem_section. And 
-> > 
-> >  free_bootmem_with_active_regions(node, end_pfn);
+On Mon, Sep 16, 2019 at 02:29:01PM +0900, Seunghun Han wrote:
+> >
+> > On Fri, Sep 13, 2019 at 03:00:06PM +0100, Jarkko Sakkinen wrote:
+> > > On Wed, Sep 11, 2019 at 02:17:48PM +0900, Seunghun Han wrote:
+> > > > Vanya,
+> > > > I also made a patch series to solve AMD's fTPM. My patch link is here,
+> > > > https://lkml.org/lkml/2019/9/9/132 .
+> > > >
+> > > > The maintainer, Jarkko, wanted me to remark on your patch, so I would
+> > > > like to cooperate with you.
+> > > >
+> > > > Your patch is good for me. If you are fine, I would like to take your
+> > > > patch and merge it with my patch series. I also would like to change
+> > > > some points Jason mentioned before.
+> > >
+> > > I rather handle the review processes separately because I can merge
+> > > Vanyas's patch first. Bundling them into patch set would only slow
+> > > down things.
+> >
+> > I did not ask to do anything. I just review code changes.
 > 
-> It seems that the call to free_bootmem_with_active_regions() should have
-> been removed along with bootmem and it's not needed now.
-> 
-> Can you please test the below version of the patch?
+> I got it. I should concentrate on my ACPI NVS problem.
+> Thank you.
 
-Patch is good. I've compared bootlogs and output is the same
-regarding memblock/memory debug messages.
+Eessentially what you want to do is to detach and backup the original
+NVS resources and put them back to the list with insert_resource() when
+tpm_crb is removed. At least I think this is what should be done but you
+should CC your patch also to the ACPI list for feedback.
 
-When this is merged, I'll have a look into using memblock_alloc
-for the node memory.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+/Jarkko
