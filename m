@@ -2,142 +2,154 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 485C0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97CDFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DF4F206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F487206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:04:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fa462Rcc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388777AbfIPVDD (ORCPT
+        id S2388840AbfIPVEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:03:03 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33340 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbfIPVDC (ORCPT
+        Mon, 16 Sep 2019 17:04:40 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50366 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730662AbfIPVEk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:03:02 -0400
-Received: by mail-io1-f70.google.com with SMTP id g15so2002820ioc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:03:01 -0700 (PDT)
+        Mon, 16 Sep 2019 17:04:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568667878;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Yoztt8L8+kYQRxMPtC85ya3BagHgDeduD2h1ZIAKqTc=;
+        b=fa462Rcc/kNO+Yrfm65UHYX0myr2VA+yUJL8rLC0QG4tXUMBhk7nOctb3zprfTroqCwBMu
+        +QJLGrPoU42UQ0A79OdElBDGbS6WDbGy0xQHGUjNMrz377k3A2jOrvSlchosHVmudAHAFM
+        vzukvQ8h1ZMOuw41JPAhUztXfTscx8U=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-82-Nyf1IN7zML2QvjYOJVRBGg-1; Mon, 16 Sep 2019 17:03:34 -0400
+Received: by mail-qt1-f197.google.com with SMTP id g16so1699055qtq.15
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:03:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=pegzZoOuKeyjSyEYptZcWb5iSCL7ogS2NV73sLALehE=;
-        b=jigY1q/KZwHy0lPWDueIKXeCElrBOVeur5XIHjnygGA0U+HzwKrWJEs/H8rmiE0lBU
-         y3WuS7qjATI8aEr3jb/G9WLcpoDBB7YAGDTOZ9y7Yg8O17ziKHqmJr8BRZANkiMU0vno
-         LNFrHkEEJ2myteaUB31oUV/o/ol7gIyTnkngZBF0Mz9GAP2F7XZlCQqShL9DmlTbSMV+
-         R6wJ9olM/Lvne0Q1i9268rES7QQ04XHV4X+zwsWtaWnSV4idywvy5XM7wuOdPT5iiHvf
-         E5CjZRRpzswB8P6j6u8BKOyyQ7O2bh8o7bKDMJ5p045Eu3KgGsQr1rIy/pVy7tRLY9qL
-         IaFw==
-X-Gm-Message-State: APjAAAVF3PnWgTE9fMEK+FaWyvPxiSkNO5wKiv6v0leS/8Fa2G7JlqNo
-        6lUPDzryA0rbe8kPOE/gLgkuGZbAhP4+UMbuXBcVX/jcnxcJ
-X-Google-Smtp-Source: APXvYqzmJHv/6PjArU0AxvjCHeETGWAhfXplrziNCRcp8zsTW3UJjrfSooQX5Ys43JXtqq9BWVvq10VGeusXHhnVbfTV72rL0FfP
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=BKNnujlsu7uye1NQvdtsoIEI5OprfE1Gweft1aGgxzQ=;
+        b=JuM15ra3oT9OiZ8rRK8k42Xz0DmnKXSpRDdJe1aN2eeubcvgK9/ntfuUWq17DnbGFC
+         KU++PZoWL8i0zDlhOG3VQrXPGyNX+o8ChMrlUJKV9qB8CROM2m87ghm0UAv8FB4R42p3
+         d+xZA6rcYSiWYXI7hYrbmiiQ0Bt0BAZPDbdpoJDXNNsscJum5tR+Ewt9nn6XDnUToinb
+         OVFFe/flHfH5Z+s62IlUr9qF07g3IJKWkOBa7P4UYXwxRlATvJNP/Ph2etDU2ntzh3qd
+         l+dbMW5u/Prhfyk4Vdl1E1q3E/l4mC1fRUznYnV3KgL+lsGFLhnei4NwjVTlPfZd7CUO
+         F6qA==
+X-Gm-Message-State: APjAAAVfHn53WuF/7hNg2REnVL8937ZRwbmAVwxFFZOPYwqUmP9a2yuw
+        GNJhzo7EuoEA8qExT6zUdF5IgQS0AnyxNEfZYKnx1zSEHIoG2ZBMP531LA/+oU4Bygp+7SGQFCj
+        LTaB1y6RgAMD5wmnxaWr1GFtO
+X-Received: by 2002:ac8:33c3:: with SMTP id d3mr393362qtb.41.1568667813949;
+        Mon, 16 Sep 2019 14:03:33 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxpQBB0hj2oaAzIGQjzBEgm3XQZHAPhewba41ewLeoppALXlTPdv580wJU2vy2IMPPQEnjBkg==
+X-Received: by 2002:ac8:33c3:: with SMTP id d3mr393327qtb.41.1568667813686;
+        Mon, 16 Sep 2019 14:03:33 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id k17sm176571qtk.7.2019.09.16.14.03.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 14:03:32 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:03:31 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Wrap the buffer from the caller to tpm_buf in
+ tpm_send()
+Message-ID: <20190916210331.l6enypnafk2cwako@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190916085008.22239-1-jarkko.sakkinen@linux.intel.com>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:bc02:: with SMTP id m2mr269603iof.247.1568667781078;
- Mon, 16 Sep 2019 14:03:01 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 14:03:01 -0700
-In-Reply-To: <Pine.LNX.4.44L0.1909161650440.1489-100000@iolanthe.rowland.org>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dcade20592b1edc7@google.com>
-Subject: Re: general protection fault in usb_set_interface
-From:   syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        kai.heng.feng@canonical.com, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mans@mansr.com, oneukum@suse.com,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190916085008.22239-1-jarkko.sakkinen@linux.intel.com>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: Nyf1IN7zML2QvjYOJVRBGg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon Sep 16 19, Jarkko Sakkinen wrote:
+>tpm_send() does not give anymore the result back to the caller. This
+>would require another memcpy(), which kind of tells that the whole
+>approach is somewhat broken. Instead, as Mimi suggested, this commit
+>just wraps the data to the tpm_buf, and thus the result will not go to
+>the garbage.
+>
+>Obviously this assumes from the caller that it passes large enough
+>buffer, which makes the whole API somewhat broken because it could be
+>different size than @buflen but since trusted keys is the only module
+>using this API right now I think that this fix is sufficient for the
+>moment.
+>
+>In the near future the plan is to replace the parameters with a tpm_buf
+>created by the caller.
+>
+>Reported-by: Mimi Zohar <zohar@linux.ibm.com>
+>Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+>Cc: stable@vger.kernel.org
+>Fixes: 412eb585587a ("use tpm_buf in tpm_transmit_cmd() as the IO paramete=
+r")
+>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>---
+> drivers/char/tpm/tpm-interface.c | 8 ++------
+> 1 file changed, 2 insertions(+), 6 deletions(-)
+>
+>diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-inter=
+face.c
+>index d9ace5480665..2459d36dd8cc 100644
+>--- a/drivers/char/tpm/tpm-interface.c
+>+++ b/drivers/char/tpm/tpm-interface.c
+>@@ -358,13 +358,9 @@ int tpm_send(struct tpm_chip *chip, void *cmd, size_t=
+ buflen)
+> =09if (!chip)
+> =09=09return -ENODEV;
+>
+>-=09rc =3D tpm_buf_init(&buf, 0, 0);
+>-=09if (rc)
+>-=09=09goto out;
+>-
+>-=09memcpy(buf.data, cmd, buflen);
+>+=09buf.data =3D cmd;
+> =09rc =3D tpm_transmit_cmd(chip, &buf, 0, "attempting to a send a command=
+");
+>-=09tpm_buf_destroy(&buf);
+>+
+> out:
+> =09tpm_put_ops(chip);
+> =09return rc;
+>--=20
+>2.20.1
+>
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-general protection fault in vidioc_querycap
+Nothing uses the out label any longer so it should be dropped as well, but =
+other than that...
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN
-CPU: 0 PID: 2937 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:usb_make_path include/linux/usb.h:914 [inline]
-RIP: 0010:vidioc_querycap+0x11c/0x320  
-drivers/media/usb/usbvision/usbvision-video.c:460
-Code: 80 3c 02 00 0f 85 03 02 00 00 4c 8b ad f0 17 00 00 48 b8 00 00 00 00  
-00 fc ff df 49 8d 7d 48 4d 8d 45 04 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 c7 01 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
-RSP: 0018:ffff8881c045fa28 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8881c045fc18 RCX: 0000000000000000
-RDX: 0000000000000009 RSI: 2e4c1f4252534d27 RDI: 0000000000000048
-RBP: ffff8881d5172100 R08: 0000000000000004 R09: fffffbfff0c90220
-R10: fffffbfff0c9021f R11: ffffffff864810f8 R12: ffff8881d517399c
-R13: 0000000000000000 R14: ffff8881c045fc48 R15: 0000000080050000
-FS:  00007fd17db9e700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f28e2972518 CR3: 00000001d9a2b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  v4l_querycap+0x121/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1058
-  __video_do_ioctl+0x969/0xba0 drivers/media/v4l2-core/v4l2-ioctl.c:2878
-  video_usercopy+0x446/0xf40 drivers/media/v4l2-core/v4l2-ioctl.c:3060
-  v4l2_ioctl+0x1a2/0x220 drivers/media/v4l2-core/v4l2-dev.c:360
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fd17d6d1347
-Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff  
-ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
-RSP: 002b:00007ffd9397d098 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007fd17d6d1347
-RDX: 00007ffd9397d0a0 RSI: 0000000080685600 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000400884
-R13: 00007ffd9397d1f0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace e95ba987ba08e9f8 ]---
-RIP: 0010:usb_make_path include/linux/usb.h:914 [inline]
-RIP: 0010:vidioc_querycap+0x11c/0x320  
-drivers/media/usb/usbvision/usbvision-video.c:460
-Code: 80 3c 02 00 0f 85 03 02 00 00 4c 8b ad f0 17 00 00 48 b8 00 00 00 00  
-00 fc ff df 49 8d 7d 48 4d 8d 45 04 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 c7 01 00 00 48 b8 00 00 00 00 00 fc ff df 4d 8b
-RSP: 0018:ffff8881c045fa28 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff8881c045fc18 RCX: 0000000000000000
-RDX: 0000000000000009 RSI: 2e4c1f4252534d27 RDI: 0000000000000048
-RBP: ffff8881d5172100 R08: 0000000000000004 R09: fffffbfff0c90220
-R10: fffffbfff0c9021f R11: ffffffff864810f8 R12: ffff8881d517399c
-R13: 0000000000000000 R14: ffff8881c045fc48 R15: 0000000080050000
-FS:  00007fd17db9e700(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f28e2972518 CR3: 00000001d9a2b000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
-Tested on:
-
-commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=12a52ac9600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=14e7f9c3600000
+Acked-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
