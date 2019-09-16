@@ -2,250 +2,149 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC934C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA49AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731CE214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:05:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluespec-com.20150623.gappssmtp.com header.i=@bluespec-com.20150623.gappssmtp.com header.b="jDyaB28h"
+	by mail.kernel.org (Postfix) with ESMTP id AEA4621670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732916AbfIPTFA (ORCPT
+        id S1733122AbfIPTFO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:05:00 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33534 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727947AbfIPTFA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:05:00 -0400
-Received: by mail-qk1-f193.google.com with SMTP id x134so1160838qkb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 12:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bluespec-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ff52y1FMBfOGXC1QXLgCWL9yIjtAUnNJjYA0n4sXHGw=;
-        b=jDyaB28hCrNYOCRVrHupPypicL1ZWl4EPcSsbp7/EzudZJFFCa++Osz22+InSHhqhe
-         8yQsqvJ3ftDs4KKneGwAWoW2HlQ8QgH7AqxuJYgaHIDsNxKJ6FjqQz0HXVqAoGgK1VW1
-         wUqLnq7n502HUVJ7g1CRAfoBCImwwZEFXzXf/3w6csHa34QvKZg8yTzolYCWLFXT+270
-         jRffzTJjXaWTYqVd2R9wFmU94C87uH50aejnQk4VMT/6tz2V85D0JIB84/q2rj1fmZSe
-         tIqBTuxhvnLQENgzjHYYiHLf+/mLzLmXT/6PiEjc5u6cwQef43ogBcLZ5Hgiqr0afHpp
-         DtYg==
+        Mon, 16 Sep 2019 15:05:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53112 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727947AbfIPTFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 15:05:14 -0400
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 822C84E938
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 19:05:13 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id 32so309498wrk.15
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 12:05:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=ff52y1FMBfOGXC1QXLgCWL9yIjtAUnNJjYA0n4sXHGw=;
-        b=rDOUU1GZkW3eW/XrNiL6x9NK2eOwjIWFdx8wQpRb0sZZUGF8caRbhxNa7oQT/hnALf
-         PrH2YqG8+3RuqCTkJbB1OXLv9pHAS+TbGdYx/XuHJnYwD08vNbLphCdZ2nvqZrsAT3cE
-         IsrRi06Z+wa/QF9sji6ct5urmti5pkB9VcjMjj6+jaEStTibQwuHcjxAGL91EsptOuJ7
-         gcfNinxdZ2hFcr4PCAdNq5GmjEk13JyIP5BCx23KaSsBg45IYqGn/51s/MRgQLO7mUJJ
-         +mp4KT55ECFSLw4IIr/x/cmpoLB2oDXJO+MOSJwia9w7EFOHasl73yxphutFiunnuupV
-         2K9Q==
-X-Gm-Message-State: APjAAAWvrYRV4vOTjGXqtjm2OKAJPF4rSaBoRxRjgglIv+2ORzNVXz8y
-        lKqC/s/P0a/O9VUHwJw32QGa
-X-Google-Smtp-Source: APXvYqyFqBGW3EZLWGfjxnG6wN9fqL/8sZ6Lh/2NMLDVcx8vQ5FCWUpgTf451SMMfsUw1I1EhgK/HQ==
-X-Received: by 2002:a37:2746:: with SMTP id n67mr1642026qkn.368.1568660698769;
-        Mon, 16 Sep 2019 12:04:58 -0700 (PDT)
-Received: from [0.0.0.0] (198-0-189-189-static.hfc.comcastbusiness.net. [198.0.189.189])
-        by smtp.gmail.com with ESMTPSA id u17sm6288511qkj.71.2019.09.16.12.04.57
+        bh=kwfy3FtDVpFu8a/shnATCDRidOaNKuHQNkUiFx1jDcM=;
+        b=Lx7dnVhVZpqkmo7a/XfoMhakqjN9/LYCQzo5Uc9UN9VbkbQHCSaxKC6HjrdNBki8/8
+         LchafVimqaQHAoOjUp0gL4wLgv/DqHtrVIf7mtBfg5II79/63sJ7J2Mzu7XP5DK/+AWY
+         hPxucfAoxQvMbeAZY+p9PwcY8gi++NI7+FXQitu/AQe/T5to5yacvzS1YQQs6+sSDQ76
+         la3pBhicOp5kcflwvuTOK7nFTbmlcDh6tKB1nBaFwLvDw+kYL9ahqly7UojTwLbV9dzw
+         RnfGYHX2DLY46Dv7mwqlpXhmc4kf17Z3h6J2f+FgmmuivCxK241pHUuPgKtrm0YTq5tz
+         uEkw==
+X-Gm-Message-State: APjAAAWUEWwbgMOhdjyuKi7ZVC5b7ByL06MuyO462v6IvWr8lAkV69Cm
+        Ab+xh5js2g26v6gjDSxw+5WenwuFlyCeaXne3bPK++ZJ29xkYRFqg9j1buVQ2DpfqK/sOjIHDRk
+        5iewYw0JmtBPnFAgdaVfB7gYN
+X-Received: by 2002:a7b:c353:: with SMTP id l19mr389552wmj.173.1568660712164;
+        Mon, 16 Sep 2019 12:05:12 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwjQ8O1Q4vinHdly+/ODVkUYax3hDGJ/mQpu0y17JrE1oBMvSsIKQ8r2GDRzOhHstpMNTbsog==
+X-Received: by 2002:a7b:c353:: with SMTP id l19mr389538wmj.173.1568660711877;
+        Mon, 16 Sep 2019 12:05:11 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (host198-203-dynamic.18-79-r.retail.telecomitalia.it. [79.18.203.198])
+        by smtp.gmail.com with ESMTPSA id c8sm24608059wrr.49.2019.09.16.12.05.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 12:04:58 -0700 (PDT)
-Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-To:     Marc Zyngier <maz@kernel.org>, Palmer Dabbelt <palmer@sifive.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        David Johnson <davidj@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-References: <8636gxskmj.wl-maz@kernel.org>
- <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
- <861rwhs9on.wl-maz@kernel.org>
-From:   Darius Rad <darius@bluespec.com>
-Message-ID: <3c0eb4e9-ee21-d07b-ad16-735b7dc06051@bluespec.com>
-Date:   Mon, 16 Sep 2019 15:04:56 -0400
+        Mon, 16 Sep 2019 12:05:11 -0700 (PDT)
+Subject: [CFP] Deadline extension: Real-Time Summit 2019 Call for
+ Presentations
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+To:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Tommaso Cucinotta <tommaso.cucinotta@sssup.it>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Luca Abeni <luca.abeni@santannapisa.it>
+References: <6c78f0b0-c124-b8b7-1cb9-7422179a8200@redhat.com>
+Message-ID: <fea220fb-11ea-8ad1-0625-7bc22dc92821@redhat.com>
+Date:   Mon, 16 Sep 2019 21:05:10 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <861rwhs9on.wl-maz@kernel.org>
+In-Reply-To: <6c78f0b0-c124-b8b7-1cb9-7422179a8200@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/15/19 2:20 PM, Marc Zyngier wrote:
-> On Sun, 15 Sep 2019 18:31:33 +0100,
-> Palmer Dabbelt <palmer@sifive.com> wrote:
-> 
-> Hi Palmer,
-> 
->>
->> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
->>> On Thu, 12 Sep 2019 22:40:34 +0100,
->>> Darius Rad <darius@bluespec.com> wrote:
->>>
->>> Hi Darius,
->>>
->>>>
->>>> As per the existing comment, irq_mask and irq_unmask do not need
->>>> to do anything for the PLIC.  However, the functions must exist
->>>> (the pointers cannot be NULL) as they are not optional, based on
->>>> the documentation (Documentation/core-api/genericirq.rst) as well
->>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
->>>>
->>>> Signed-off-by: Darius Rad <darius@bluespec.com>
->>>> ---
->>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
->>>>  1 file changed, 9 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>>> index cf755964f2f8..52d5169f924f 100644
->>>> --- a/drivers/irqchip/irq-sifive-plic.c
->>>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
->>>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->>>>  }
->>>>  +/*
->>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>> + * by reading claim and "unmasked" when writing it back.
->>>> + */
->>>> +static void plic_irq_mask(struct irq_data *d) { }
->>>> +static void plic_irq_unmask(struct irq_data *d) { }
->>>
->>> This outlines a bigger issue. If your irqchip doesn't require
->>> mask/unmask, you're probably not using the right interrupt
->>> flow. Looking at the code, I see you're using handle_simple_irq, which
->>> is almost universally wrong.
->>>
->>> As per the description above, these interrupts should be using the
->>> fasteoi flow, which is designed for this exact behaviour (the
->>> interrupt controller knows which interrupt is in flight and doesn't
->>> require SW to do anything bar signalling the EOI).
->>>
->>> Another thing is that mask/unmask tends to be a requirement, while
->>> enable/disable tends to be optional. There is no hard line here, but
->>> the expectations are that:
->>>
->>> (a) A disabled line can drop interrupts
->>> (b) A masked line cannot drop interrupts
->>>
->>> Depending what the PLIC architecture mandates, you'll need to
->>> implement one and/or the other. Having just (a) is indicative of a HW
->>> bug, and I'm not assuming that this is the case. (b) only is pretty
->>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
->>> only.
->>>
->>>> +
->>>>  #ifdef CONFIG_SMP
->>>>  static int plic_set_affinity(struct irq_data *d,
->>>>  			     const struct cpumask *mask_val, bool force)
->>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
->>>>   static struct irq_chip plic_chip = {
->>>>  	.name		= "SiFive PLIC",
->>>> -	/*
->>>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>> -	 * by reading claim and "unmasked" when writing it back.
->>>> -	 */
->>>>  	.irq_enable	= plic_irq_enable,
->>>>  	.irq_disable	= plic_irq_disable,
->>>> +	.irq_mask	= plic_irq_mask,
->>>> +	.irq_unmask	= plic_irq_unmask,
->>>>  #ifdef CONFIG_SMP
->>>>  	.irq_set_affinity = plic_set_affinity,
->>>>  #endif
->>>
->>> Can you give the following patch a go? It brings the irq flow in line
->>> with what the HW can do. It is of course fully untested (not even
->>> compile tested...).
->>>
->>> Thanks,
->>>
->>> 	M.
->>>
->>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
->>> From: Marc Zyngier <maz@kernel.org>
->>> Date: Sun, 15 Sep 2019 15:17:45 +0100
->>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
->>>
->>> The SiFive PLIC interrupt controller seems to have all the HW
->>> features to support the fasteoi flow, but the driver seems to be
->>> stuck in a distant past. Bring it into the 21st century.
->>
->> Thanks.  We'd gotten these comments during the review process but
->> nobody had gotten the time to actually fix the issues.
-> 
-> No worries. The IRQ subsystem is an acquired taste... ;-)
-> 
->>>
->>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>> ---
->>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
->>>  1 file changed, 15 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>> index cf755964f2f8..8fea384d392b 100644
->>> --- a/drivers/irqchip/irq-sifive-plic.c
->>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
->>>  	}
->>>  }
->>>  -static void plic_irq_enable(struct irq_data *d)
->>> +static void plic_irq_mask(struct irq_data *d)
-> 
-> Of course, this is wrong. The perks of trying to do something at the
-> last minute while boarding an airplane. Don't do that.
-> 
-> This should of course read "plic_irq_unmask"...
-> 
->>>  {
->>>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
->>>  					   cpu_online_mask);
->>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
->>>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
->>>  }
->>>  -static void plic_irq_disable(struct irq_data *d)
->>> +static void plic_irq_unmask(struct irq_data *d)
-> 
-> ... and this should be "plic_irq_mask".
-> 
-> [...]
-> 
->> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
->> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
-> 
-> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
-> the above bug should have kept the IRQ lines masked.
-> 
->> We should test them on the hardware, but I don't have any with me
->> right now.  David's probably in the best spot to do this, as he's got
->> a setup that does all the weird interrupt sources (ie, PCIe).
->>
->> David: do you mind testing this?  I've put the patch here:
->>
->>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
->>    -b plic-fasteoi
-> 
-> I've pushed out a branch with the fixed patch:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
-> 
+The Real-Time Summit is organized by the Linux Foundation Real-Time Linux (RTL)
+collaborative project. The event is intended to gather developers and users of
+Linux as a Real-Time Operating System. The main intent is to provide room for
+discussion between developers, tooling experts, and users.
 
-That patch works for me on real-ish hardware.  I tried on two FPGA
-systems that have different PLIC implementations.  Both include
-a PCIe root port (and associated interrupt source).  So for
-whatever it's worth:
+The summit will take place alongside the Open Source Summit + Embedded Linux
+Conference Europe 2019 in Lyon, France. The summit is planned the day after the
+main conference, Thursday, October 31st, 2019, from 8:00 to 17:00 at the
+conference venue. If you are already considering your travel arrangements for
+the Open Source Summit + Embedded Linux Conference Europe 2019 in Lyon, France,
+and you have a general interest in this topic, please extend your travel by one
+day to be in Lyon on Thursday, 31st.
 
-Tested-by: Darius Rad <darius@bluespec.com>
+If you are interested to present, please submit a proposal [1] before September
+14th, 2019, at 23:59 EST. Please provide a title, an abstract describing the
+proposed talk (900 characters maximum), a short biography (900 characters
+maximum), and describe the targeted audience (900 characters maximum). Please
+indicate the slot length you are aiming for: The format is a single track with
+presentation slots of 30, 45 or 60 minutes long. Considering that the
+presentation should use at most half of the slot time, leaving the rest of the
+slot reserved for discussion. The focus of this event is the discussion.
 
-> Thanks,
-> 
-> 	M.
-> 
+We are welcoming presentations from both end-users and developers, on topics
+covering, but not limited to:
+
+ - Real-time Linux development
+ - Real-time Linux evaluation
+ - Real-time Linux use cases (Success and failures)
+ - Real-time Linux tooling (tracing, configuration, …)
+ - Real-time Linux academic work, already presented or under development, for
+   direct feedback from practitioners community.
+
+Those can cover recently available technologies, ongoing work, and new ideas.
+
+Important Notes for Speakers:
+
+ - All speakers are required to adhere to the Linux Foundation events’ Code of
+   Conduct. We also highly recommend that speakers take the Linux Foundation
+   online Inclusive Speaker Orientation Course.
+
+ - Avoid sales or marketing pitches and discussing unlicensed or potentially
+   closed-source technologies when preparing your proposal; these talks are
+   almost always rejected due to the fact that they take away from the integrity
+   of our events, and are rarely well-received by conference attendees.
+
+ - All accepted speakers are required to submit their slides prior to the
+    event.
+
+Submission must be received by 11:59 pm PST on September 14th, 2019
+
+[1] Submission page: https://forms.gle/yQeqyrtJYezM5VRJA
+
+Important Dates:
+
+  - CFP *WAS*: Saturday, September 14th, 2019, 11:59PM PST
+  - CFP *IS*: Saturday, September 21th, 2019, 11:59PM PST
+  - Speaker notification: September 25st, 2019 (was 21)
+  - Conference: Thursday, October 31st, 2019
+
+Questions on submitting a proposal?
+Email Daniel Bristot de Oliveira <bristot@redhat.com>
+
+Thanks!
+-- Daniel
