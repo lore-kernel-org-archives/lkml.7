@@ -2,141 +2,140 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 497B9C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B22DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A7D20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7033A2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:13:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbfIPGIq (ORCPT
+        id S1729332AbfIPGN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 02:08:46 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:53098 "EHLO inva020.nxp.com"
+        Mon, 16 Sep 2019 02:13:29 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45723 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbfIPGIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 02:08:45 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 384761A053A;
-        Mon, 16 Sep 2019 08:08:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 254F11A0532;
-        Mon, 16 Sep 2019 08:08:38 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A02CD402BF;
-        Mon, 16 Sep 2019 14:08:31 +0800 (SGT)
-From:   Hui Song <hui.song_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Song Hui <hui.song_1@nxp.com>
-Subject: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to normal
-Date:   Mon, 16 Sep 2019 13:58:17 +0800
-Message-Id: <20190916055817.43425-1-hui.song_1@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1725798AbfIPGN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 02:13:29 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8G6Cqap024026;
+        Mon, 16 Sep 2019 08:12:52 +0200
+Date:   Mon, 16 Sep 2019 08:12:52 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916061252.GA24002@1wt.eu>
+References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
+ <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+ <20190916014050.GA7002@darwi-home-pc>
+ <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
+ <20190916024904.GA22035@mit.edu>
+ <20190916042952.GB23719@1wt.eu>
+ <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Hui <hui.song_1@nxp.com>
+On Sun, Sep 15, 2019 at 10:02:02PM -0700, Linus Torvalds wrote:
+> On Sun, Sep 15, 2019 at 9:30 PM Willy Tarreau <w@1wt.eu> wrote:
+> >
+> > I'd be in favor of adding in the man page something like "this
+> > random source is only suitable for applications which will not be
+> > harmed by getting a predictable value on output, and as such it is
+> > not suitable for generation of system keys or passwords, please
+> > use GRND_RANDOM for this".
+> 
+> The problem with GRND_RANDOM is that it also ends up extracting
+> entropy, and has absolutely horrendous performance behavior. It's why
+> hardly anybody uses /dev/random.
+>
+> Which nobody should really ever do. I don't understand why people want
+> that thing, considering that the second law of thermodynamics really
+> pretty much applies. If you can crack the cryptographic hashes well
+> enough to break them despite reseeding etc, people will have much more
+> serious issues than the entropy accounting.
 
-More than one gpio controllers can share one interrupt, change the
-driver to request shared irq.
+That's exactly what I was thinking about a few minutes ago and which
+drove me back to mutt :-)
 
-Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-Signed-off-by: Song Hui <hui.song_1@nxp.com>
----
-Changes in v5:
-	- add traverse every bit function.
-Changes in v4:
-	- convert 'pr_err' to 'dev_err'.
-Changes in v3:
-	- update the patch description.
-Changes in v2:
-	- delete the compatible of ls1088a.
- drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+> So the problem with getrandom() is that it only offered two flags, and
+> to make things worse they were the wrong ones.
+(...)
+>  - GRND_RANDOM | GRND_NONBLOCK - don't use
+> 
+>    This won't block, but it will decrease the blocking pool entropy.
+> 
+>    It might be an acceptable "get me a truly secure ring with reliable
+> performance", but when it fails, you're going to be unhappy, and there
+> is no obvious fallback.
+> 
+> So three out of four flag combinations end up being mostly "don't
+> use", and the fourth one isn't what you'd normally want (which is just
+> plain /dev/urandom semantics).
 
-diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-index 16a47de..3a06ca9 100644
---- a/drivers/gpio/gpio-mpc8xxx.c
-+++ b/drivers/gpio/gpio-mpc8xxx.c
-@@ -22,6 +22,7 @@
- #include <linux/irq.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
-+#include <linux/interrupt.h>
- 
- #define MPC8XXX_GPIO_PINS	32
- 
-@@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 		return -ENXIO;
- }
- 
--static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-+static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
- {
--	struct mpc8xxx_gpio_chip *mpc8xxx_gc = irq_desc_get_handler_data(desc);
--	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct mpc8xxx_gpio_chip *mpc8xxx_gc = (struct mpc8xxx_gpio_chip *)data;
- 	struct gpio_chip *gc = &mpc8xxx_gc->gc;
- 	unsigned int mask;
-+	int i;
- 
- 	mask = gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
- 		& gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
--	if (mask)
-+	for_each_set_bit(i, &mask, 32)
- 		generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
--						     32 - ffs(mask)));
--	if (chip->irq_eoi)
--		chip->irq_eoi(&desc->irq_data);
-+						     31 - i));
-+
-+	return IRQ_HANDLED;
- }
- 
- static void mpc8xxx_irq_unmask(struct irq_data *d)
-@@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 
- 	ret = gpiochip_add_data(gc, mpc8xxx_gc);
- 	if (ret) {
--		pr_err("%pOF: GPIO chip registration failed with status %d\n",
--		       np, ret);
-+		dev_err(&pdev->dev, "%pOF: GPIO chip registration failed with status %d\n",
-+			np, ret);
- 		goto err;
- 	}
- 
-@@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pdev)
- 	if (devtype->gpio_dir_in_init)
- 		devtype->gpio_dir_in_init(gc);
- 
--	irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
--					 mpc8xxx_gpio_irq_cascade, mpc8xxx_gc);
-+	ret = request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-+			  IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-+			  mpc8xxx_gc);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret = %d\n",
-+			np->full_name, mpc8xxx_gc->irqn, ret);
-+		goto err;
-+	}
-+
- 	return 0;
- err:
- 	iounmap(mpc8xxx_gc->regs);
--- 
-2.9.5
+I'm seeing it from a different angle. I now understand better why
+getrandom() absolutely wants to have an initialized pool, it's to
+encourage private key producers to use a secure, infinite source of
+randomness. Something that neither /dev/random nor /dev/urandom
+reliably provide. Unfortunately it does it by changing how urandom
+works while it ought to have done it as the replacement of /dev/random.
 
+The 3 random generation behaviors we currently support are :
+
+  - /dev/random: only returns safe random (blocks), AND depletes entropy.
+    getrandom(GRND_RANDOM) does the same.
+  - /dev/urandom: returns whatever (never blocks), inexhaustible
+  - getrandom(0): returns safe random (blocks), inexhaustible
+
+Historically we used to want to rely on /dev/random for SSH keys and
+certificates. It's arguable that with the massive increase of crypto
+usage, what used to be done only once in a system's life happens a
+bit more often and using /dev/random here can sometimes become a
+problem because it harms the whole system (thus why I said I think that
+we could almost require CAP_something to access it). Applications
+falling back to /dev/urandom obviously resulted in the massive mess
+we've seen years ago, even if it apparently solved the problem for
+their users. Thus getrandom(0) does make sense, but not as an
+alternative to urandom but to random, since it returns randoms safe
+for use for long lived keys.
+
+Couldn't we simply change the way things work ? Make GRND_RANDOM *not*
+deplate entropy, and document it as the only safe source, and make the
+default call return the same as /dev/urandom ? We can then use your
+timeout mechanism for the first one (which is not supposed to be called
+often and would be more accepted with a moderately long delay).
+
+Applications need to evolve as well. It's fine to use libraries to do
+whatever you need for you but ultimately the lib exports a function for
+a generic use case and doesn't know how to best adapt to the use case.
+Typically I would expect an SSH/HTTP daemon running in a recovery
+initramfs to produce unsafe randoms so that I can connect there without
+having to dance around it. However the self-signed cert produced there
+must not be saved, just like the SSH host key. But this means that the
+application (here the ssh-keygen or openssl) also need to be taught to
+purposely produce insecure keys when explicitly instructed to do so.
+Otherwise we know what will happen in the long term, since history
+repeats itself as long as the conditions are not changed :-/
+
+Willy
