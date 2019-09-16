@@ -2,116 +2,257 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85CB1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C941AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E93020678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885D021670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfIPWNL (ORCPT
+        id S1731119AbfIPWR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:13:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19300 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728676AbfIPWNL (ORCPT
+        Mon, 16 Sep 2019 18:17:26 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45804 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbfIPWR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:13:11 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8GM2KPo092358
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 18:13:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2hkbap4s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 18:13:10 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 16 Sep 2019 23:13:08 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Sep 2019 23:13:04 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8GMCcq642664314
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 22:12:38 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E69394C046;
-        Mon, 16 Sep 2019 22:13:03 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60F084C040;
-        Mon, 16 Sep 2019 22:13:03 +0000 (GMT)
-Received: from dhcp-9-31-103-196.watson.ibm.com (unknown [9.31.103.196])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Sep 2019 22:13:03 +0000 (GMT)
-Subject: Re: [GIT PULL] integrity subsystem updates for v5.4
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Mon, 16 Sep 2019 18:13:02 -0400
-In-Reply-To: <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
-References: <1568237365.5783.39.camel@linux.ibm.com>
-         <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 16 Sep 2019 18:17:26 -0400
+Received: by mail-pl1-f193.google.com with SMTP id x3so504332plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:17:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=WswZLnUEYCGfpfuQ51663IL0Rbi4vuXzWm78VorCSEY=;
+        b=FT6Hy3ZIAzAMwsp6VRKMmvtIsSzy/BXucFcMaRzFY3E0cnrbRbuh9B1nvfOuXwbn7e
+         PgptPWj+IluVDVMUPUCN1hfRHq1VtY7NOhMtDCQrm5udf9fmTpOPfgG6UmEyVhrl9FhH
+         x7oAaVsvPxlVPTW+OpKf7dwlObSDZH6eREV+5A03qUxOWMkEnS6f/9TXwxr/G4u8K/wY
+         z2TAVQq0rKQfuzO0ZQmAOKWc24k1ey84wgSo9x9A6na1SOER/YmM/lMb7InHuUWLpowL
+         KMm06FHv4xRTS4H3+zD4CsXVS+bknEM7AF+4F73upmgboEaZuVW+pj530gI5eML17nYL
+         m3Hw==
+X-Gm-Message-State: APjAAAUl9dajExDGS68Axga4TX/GbFhECXifmhN94GqfQLDnpqgxpsQn
+        OHdF4/WcHLMMGkNloby5aZC8vA==
+X-Google-Smtp-Source: APXvYqxWxOB9rd6IHEXpksPhYXEmRsptRYL8TloZUWLAfq9jxHLKmjFY1le5Bmt/tHHZLxTtxHsvIw==
+X-Received: by 2002:a17:902:820f:: with SMTP id x15mr429596pln.130.1568672245046;
+        Mon, 16 Sep 2019 15:17:25 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id 22sm92469pfo.131.2019.09.16.15.17.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 15:17:24 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 15:17:24 -0700 (PDT)
+X-Google-Original-Date: Mon, 16 Sep 2019 15:15:22 PDT (-0700)
+Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+In-Reply-To: <20190916223323.07664bc2@why>
+CC:     Darius Rad <darius@bluespec.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     maz@kernel.org
+Message-ID: <mhng-f418eee3-0240-4c67-8cda-b2c14f9a9df0@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091622-0028-0000-0000-0000039DCB45
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091622-0029-0000-0000-0000246041D0
-Message-Id: <1568671982.4975.145.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909160210
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-16 at 13:38 -0700, Linus Torvalds wrote:
-> On Wed, Sep 11, 2019 at 2:29 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > The major feature in this pull request is IMA support for measuring
-> > and appraising appended file signatures.  In addition are a couple of
-> > bug fixes and code cleanup to use struct_size().
-> 
-> How is the file signature any different from (and/or better than) the
-> fs-verity support?
-> 
-> The fs-verity support got fairly extensively discussed, and is
-> apparently going to actually be widely used by Android, and it an
-> independent feature of any security model.
-> 
-> What does the IMA version bring to the table?
+On Mon, 16 Sep 2019 14:33:23 PDT (-0700), maz@kernel.org wrote:
+> On Mon, 16 Sep 2019 13:51:58 -0700 (PDT)
+> Palmer Dabbelt <palmer@sifive.com> wrote:
+>
+>> On Mon, 16 Sep 2019 12:04:56 PDT (-0700), Darius Rad wrote:
+>> > On 9/15/19 2:20 PM, Marc Zyngier wrote:
+>> >> On Sun, 15 Sep 2019 18:31:33 +0100,
+>> >> Palmer Dabbelt <palmer@sifive.com> wrote:
+>> >>
+>> >> Hi Palmer,
+>> >>
+>> >>>
+>> >>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
+>> >>>> On Thu, 12 Sep 2019 22:40:34 +0100,
+>> >>>> Darius Rad <darius@bluespec.com> wrote:
+>> >>>>
+>> >>>> Hi Darius,
+>> >>>>
+>> >>>>>
+>> >>>>> As per the existing comment, irq_mask and irq_unmask do not need
+>> >>>>> to do anything for the PLIC.  However, the functions must exist
+>> >>>>> (the pointers cannot be NULL) as they are not optional, based on
+>> >>>>> the documentation (Documentation/core-api/genericirq.rst) as well
+>> >>>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
+>> >>>>>
+>> >>>>> Signed-off-by: Darius Rad <darius@bluespec.com>
+>> >>>>> ---
+>> >>>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+>> >>>>>  1 file changed, 9 insertions(+), 4 deletions(-)
+>> >>>>>
+>> >>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+>> >>>>> index cf755964f2f8..52d5169f924f 100644
+>> >>>>> --- a/drivers/irqchip/irq-sifive-plic.c
+>> >>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
+>> >>>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+>> >>>>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+>> >>>>>  }
+>> >>>>>  +/*
+>> >>>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> >>>>> + * by reading claim and "unmasked" when writing it back.
+>> >>>>> + */
+>> >>>>> +static void plic_irq_mask(struct irq_data *d) { }
+>> >>>>> +static void plic_irq_unmask(struct irq_data *d) { }
+>> >>>>
+>> >>>> This outlines a bigger issue. If your irqchip doesn't require
+>> >>>> mask/unmask, you're probably not using the right interrupt
+>> >>>> flow. Looking at the code, I see you're using handle_simple_irq, which
+>> >>>> is almost universally wrong.
+>> >>>>
+>> >>>> As per the description above, these interrupts should be using the
+>> >>>> fasteoi flow, which is designed for this exact behaviour (the
+>> >>>> interrupt controller knows which interrupt is in flight and doesn't
+>> >>>> require SW to do anything bar signalling the EOI).
+>> >>>>
+>> >>>> Another thing is that mask/unmask tends to be a requirement, while
+>> >>>> enable/disable tends to be optional. There is no hard line here, but
+>> >>>> the expectations are that:
+>> >>>>
+>> >>>> (a) A disabled line can drop interrupts
+>> >>>> (b) A masked line cannot drop interrupts
+>> >>>>
+>> >>>> Depending what the PLIC architecture mandates, you'll need to
+>> >>>> implement one and/or the other. Having just (a) is indicative of a HW
+>> >>>> bug, and I'm not assuming that this is the case. (b) only is pretty
+>> >>>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+>> >>>> only.
+>> >>>>
+>> >>>>> +
+>> >>>>>  #ifdef CONFIG_SMP
+>> >>>>>  static int plic_set_affinity(struct irq_data *d,
+>> >>>>>  			     const struct cpumask *mask_val, bool force)
+>> >>>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+>> >>>>>   static struct irq_chip plic_chip = {
+>> >>>>>  	.name		= "SiFive PLIC",
+>> >>>>> -	/*
+>> >>>>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+>> >>>>> -	 * by reading claim and "unmasked" when writing it back.
+>> >>>>> -	 */
+>> >>>>>  	.irq_enable	= plic_irq_enable,
+>> >>>>>  	.irq_disable	= plic_irq_disable,
+>> >>>>> +	.irq_mask	= plic_irq_mask,
+>> >>>>> +	.irq_unmask	= plic_irq_unmask,
+>> >>>>>  #ifdef CONFIG_SMP
+>> >>>>>  	.irq_set_affinity = plic_set_affinity,
+>> >>>>>  #endif
+>> >>>>
+>> >>>> Can you give the following patch a go? It brings the irq flow in line
+>> >>>> with what the HW can do. It is of course fully untested (not even
+>> >>>> compile tested...).
+>> >>>>
+>> >>>> Thanks,
+>> >>>>
+>> >>>> 	M.
+>> >>>>
+>> >>>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+>> >>>> From: Marc Zyngier <maz@kernel.org>
+>> >>>> Date: Sun, 15 Sep 2019 15:17:45 +0100
+>> >>>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+>> >>>>
+>> >>>> The SiFive PLIC interrupt controller seems to have all the HW
+>> >>>> features to support the fasteoi flow, but the driver seems to be
+>> >>>> stuck in a distant past. Bring it into the 21st century.
+>> >>>
+>> >>> Thanks.  We'd gotten these comments during the review process but
+>> >>> nobody had gotten the time to actually fix the issues.
+>> >>
+>> >> No worries. The IRQ subsystem is an acquired taste... ;-)
+>> >>
+>> >>>>
+>> >>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+>> >>>> ---
+>> >>>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+>> >>>>  1 file changed, 15 insertions(+), 14 deletions(-)
+>> >>>>
+>> >>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+>> >>>> index cf755964f2f8..8fea384d392b 100644
+>> >>>> --- a/drivers/irqchip/irq-sifive-plic.c
+>> >>>> +++ b/drivers/irqchip/irq-sifive-plic.c
+>> >>>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+>> >>>>  	}
+>> >>>>  }
+>> >>>>  -static void plic_irq_enable(struct irq_data *d)
+>> >>>> +static void plic_irq_mask(struct irq_data *d)
+>> >>
+>> >> Of course, this is wrong. The perks of trying to do something at the
+>> >> last minute while boarding an airplane. Don't do that.
+>> >>
+>> >> This should of course read "plic_irq_unmask"...
+>> >>
+>> >>>>  {
+>> >>>>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+>> >>>>  					   cpu_online_mask);
+>> >>>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+>> >>>>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+>> >>>>  }
+>> >>>>  -static void plic_irq_disable(struct irq_data *d)
+>> >>>> +static void plic_irq_unmask(struct irq_data *d)
+>> >>
+>> >> ... and this should be "plic_irq_mask".
+>> >>
+>> >> [...]
+>> >>
+>> >>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+>> >>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
+>> >>
+>> >> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
+>> >> the above bug should have kept the IRQ lines masked.
+>> >>
+>> >>> We should test them on the hardware, but I don't have any with me
+>> >>> right now.  David's probably in the best spot to do this, as he's got
+>> >>> a setup that does all the weird interrupt sources (ie, PCIe).
+>> >>>
+>> >>> David: do you mind testing this?  I've put the patch here:
+>> >>>
+>> >>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
+>> >>>    -b plic-fasteoi
+>> >>
+>> >> I've pushed out a branch with the fixed patch:
+>> >>
+>> >> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
+>> >>
+>> >
+>> > That patch works for me on real-ish hardware.  I tried on two FPGA
+>> > systems that have different PLIC implementations.  Both include
+>> > a PCIe root port (and associated interrupt source).  So for
+>> > whatever it's worth:
+>> >
+>> > Tested-by: Darius Rad <darius@bluespec.com>
+>>
+>> Awesome, thanks.  Would it be OK to put a "(on two hardware PLIC
+>> implementations)" after that, just so we're clear as to who tested
+>> what?
+>
+> Sure, no problem.
+>
+>> Assuming one of yours wasn't a SiFive PLIC then it'd be great if
+>> David could still give this a whack, but I don't think it strictly
+>> needs to block merging the patch.  I've included the right David this
+>> time, with any luck that will be more fruitful :)
+>
+> Well, we still have time before -rc1. Once David gets a chance to test
+> it, I'll apply it. Additional question: do you want this backported to
+> -stable? If so, how far?
 
-IMA currently defines a system wide policy for measuring, verifying a
-file's integrity (both mutable/immutable files) against known good
-values, and adding audit records containing the file hashes.  The
-policy isn't hard coded in the kernel, allowing people/companies to
-configure it as desired for their specific use case.
+Generally I've just been CCing stable on bug fixes and letting the automation 
+handle it.  4.19 was the first version with a PLIC driver, and that was pretty 
+broken so this should be deep down in the noise for anyone who's trying to use 
+that -- and I doubt anyone is trying to do so.
 
-Support for appended signatures already exists in the kernel for
-kernel modules.  This pull request adds IMA support for appended
-signatures in order to verify the kexec kernel image on OpenPOWER, as
-part of Secure and Trusted boot enablement.  This would allow distros
-to sign kernel images similar to how they currently sign kernel
-modules.
-
-IMA verifies file signatures up front, before allowing access to the
-file.  fs-verity verifies the signature of the Merkle tree (and other
-info), but does not verify the file data at the time of first use.
- There are pros and cons to each of these approaches.
-
-Mimi
-
+>
+> Thanks,
+>
+> 	M.
