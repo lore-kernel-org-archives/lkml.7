@@ -2,114 +2,130 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2BEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2927AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880AD2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:01:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DCF214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:07:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390183AbfIPRBO (ORCPT
+        id S2390274AbfIPRHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:01:14 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43672 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726082AbfIPRBO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:01:14 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8GH0SBJ032514
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 13:00:30 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id B581A420811; Mon, 16 Sep 2019 13:00:28 -0400 (EDT)
-Date:   Mon, 16 Sep 2019 13:00:28 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916170028.GA15263@mit.edu>
-References: <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com>
- <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
- <20190915065655.GB29681@gardel-login>
- <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
- <20190916032327.GB22035@mit.edu>
- <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
+        Mon, 16 Sep 2019 13:07:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57485 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390235AbfIPRHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 13:07:39 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2A2553084037;
+        Mon, 16 Sep 2019 17:07:39 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 472AF600F8;
+        Mon, 16 Sep 2019 17:07:38 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 11:07:37 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        James Harvey <jamespharvey20@gmail.com>
+Subject: Re: [PATCH 00/11] KVM: x86/mmu: Restore fast invalidate/zap flow
+Message-ID: <20190916110737.4abfc93d@x1.home>
+In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
+References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 16 Sep 2019 17:07:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 08:40:30PM -0700, Linus Torvalds wrote:
-> On Sun, Sep 15, 2019 at 8:23 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
-> >
-> > But not blocking is *precisely* what lead us to weak keys in network
-> > devices that were sold by the millions to users in their printers,
-> > wifi routers, etc.
+On Thu, 12 Sep 2019 19:46:01 -0700
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+
+> Restore the fast invalidate flow for zapping shadow pages and use it
+> whenever vCPUs can be active in the VM.  This fixes (in theory, not yet
+> confirmed) a regression reported by James Harvey where KVM can livelock
+> in kvm_mmu_zap_all() when it's invoked in response to a memslot update.
 > 
-> Ted, just admit that you are wrong on this, instead of writing the
-> above kind of bad fantasy.
+> The fast invalidate flow was removed as it was deemed to be unnecessary
+> after its primary user, memslot flushing, was reworked to zap only the
+> memslot in question instead of all shadow pages.  Unfortunately, zapping
+> only the memslot being (re)moved during a memslot update introduced a
+> regression for VMs with assigned devices.  Because we could not discern
+> why zapping only the relevant memslot broke device assignment, or if the
+> regression extended beyond device assignment, we reverted to zapping all
+> shadow pages when a memslot is (re)moved.
 > 
-> We have *always* supported blocking. It's called "/dev/random". And
-> guess what? Not blocking wasn't what lead to weak keys like you try to
-> imply.
+> The revert to "zap all" failed to account for subsequent changes that
+> have been made to kvm_mmu_zap_all() between then and now.  Specifically,
+> kvm_mmu_zap_all() now conditionally drops reschedules and drops mmu_lock
+> if a reschedule is needed or if the lock is contended.  Dropping the lock
+> allows other vCPUs to add shadow pages, and, with enough vCPUs, can cause
+> kvm_mmu_zap_all() to get stuck in an infinite loop as it can never zap all
+> pages before observing lock contention or the need to reschedule.
 > 
-> What led to weak keys is that /dev/random is useless and nobody sane
-> uses it, exactly because it always blocks.
+> The reasoning behind having kvm_mmu_zap_all() conditionally reschedule was
+> that it would only be used when the VM is inaccesible, e.g. when its
+> mm_struct is dying or when the VM itself is being destroyed.  In that case,
+> playing nice with the rest of the kernel instead of hogging cycles to free
+> unused shadow pages made sense.
+> 
+> Since it's unlikely we'll root cause the device assignment regression any
+> time soon, and that simply removing the conditional rescheduling isn't
+> guaranteed to return us to a known good state, restore the fast invalidate
+> flow for zapping on memslot updates, including mmio generation wraparound.
+> Opportunisticaly tack on a bug fix and a couple enhancements.
+> 
+> Alex and James, it probably goes without saying... please test, especially
+> patch 01/11 as a standalone patch as that'll likely need to be applied to
+> stable branches, assuming it works.  Thanks!
 
-How /dev/random blocks is very different from how getrandom(2) blocks.
-Getrandom(2) blocks until the CRNG, and then it never blocks again.
-/dev/random tries to do entropy accounting, and it blocks randomly all
-the time.  *That* is why it is useless.  I agree that /dev/random is
-bad, but I think you're taking the wrong message from it.  It's not
-that blocking is always bad; it's that insisting on entropy accounting
-and "true randomness" is bad.
+It looks like Paolo already included patch 01/11 in v5.3, I tested that
+and it behaves ok for the GPU assignment windows issue.  I applied the
+remaining 10 patches on v5.3 and tested those separately.  They also
+behave well for this test case.
 
-The getrandom(2) system call is modelled after *BSD's getentropy(2)
-call, and the fact that everyone is using is because for most use
-cases, it really is the right way to go.
+Tested-by: Alex Williamson <alex.williamson@redhat.com>
 
-I think that's the core of my disagreement with you.  I agree that
-what /dev/random does is wrong, and to date, we've kept it for
-backwards compatibility reasons.  Some of these reasons could be
-rational, or at least debated.  For example, GPG wants to use
-/dev/random because it thinks it's more secure, and if they are
-generating 4096 bit RSA keys, or something else which might be
-"post-quantuum cryptography", it's possible that /dev/random is going
-to be better than the CRNG for the hyper-paranoid.  Other use cases,
-such as some PCI compliance labs who think that getrandom(2) is not
-sufficiently secure, are just purely insane --- but that's assuming
-today's getrandom(2) is guaranteed to return cryptographically strong
-results, or nothing at all.
+Thanks,
+Alex 
 
-If we change the existing behavior of getrandom(2) with the default
-flags to mean, "we return whatever we feel like, and this includes
-something which looks random, but might be trivially reverse
-engineered by a research engineer", that is in my mind, a Really Bad
-Thing To Do.  And no, a big fat warning isn't sufficient, because
-there will be some systems integrators and application programmers who
-will ignore the kernel warning message.  They might not even look at
-dmesg, and a system console might not exist.
+> 
+> Sean Christopherson (11):
+>   KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
+>   KVM: x86/mmu: Treat invalid shadow pages as obsolete
+>   KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
+>   KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow
+>     page related tracepoints""
+>   KVM: x86/mmu: Revert "Revert "KVM: MMU: add tracepoint for
+>     kvm_mmu_invalidate_all_pages""
+>   KVM: x86/mmu: Revert "Revert "KVM: MMU: zap pages in batch""
+>   KVM: x86/mmu: Revert "Revert "KVM: MMU: collapse TLB flushes when zap
+>     all pages""
+>   KVM: x86/mmu: Revert "Revert "KVM: MMU: reclaim the zapped-obsolete
+>     page first""
+>   KVM: x86/mmu: Revert "KVM: x86/mmu: Remove is_obsolete() call"
+>   KVM: x86/mmu: Explicitly track only a single invalid mmu generation
+>   KVM: x86/mmu: Skip invalid pages during zapping iff root_count is zero
+> 
+>  arch/x86/include/asm/kvm_host.h |   4 +-
+>  arch/x86/kvm/mmu.c              | 154 ++++++++++++++++++++++++++++----
+>  arch/x86/kvm/mmutrace.h         |  42 +++++++--
+>  arch/x86/kvm/x86.c              |   1 +
+>  4 files changed, 173 insertions(+), 28 deletions(-)
+> 
 
-					- Ted
