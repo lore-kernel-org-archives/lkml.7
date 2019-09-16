@@ -2,78 +2,103 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDB4C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C469BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51A0F206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95E4520830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fl/lu1AW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732600AbfIPS6A (ORCPT
+        id S1732716AbfIPS7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:58:00 -0400
-Received: from mga03.intel.com ([134.134.136.65]:50422 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732369AbfIPS56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:57:58 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 11:57:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,513,1559545200"; 
-   d="scan'208";a="216307630"
-Received: from jvhicko1-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.104.227])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2019 11:57:56 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 2/2] soundwire: intel: remove X86 dependency
-Date:   Mon, 16 Sep 2019 13:57:39 -0500
-Message-Id: <20190916185739.32184-3-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190916185739.32184-1-pierre-louis.bossart@linux.intel.com>
-References: <20190916185739.32184-1-pierre-louis.bossart@linux.intel.com>
+        Mon, 16 Sep 2019 14:59:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:42839 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727917AbfIPS7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:59:09 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so298702pls.9;
+        Mon, 16 Sep 2019 11:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=DzSndrAt3W5Qpn/Z0ZHFWHP+YFwM5pnaWCeVZxGk0sY=;
+        b=Fl/lu1AW2AU8GF/kHqNLOJrGi83gqhB5xB5qlXB/KthNnSLzz5EYA4ukoHaafGNFie
+         GjteLbBxdSWqul4vNC7SWnAjX8l27OP/TnTKXrn9n/33TMu+5L2siDJtgBmRVmdErxCd
+         kB+U8yAhJYLMHNZsaAvxW0QNNWVt1raRY7RHiGi8Wh02RRLUNgaEryBxIh21loZ+EWz3
+         n4jSWd/5kEe1mQ9RSzozRakqNFuhd6iuCb4/SKppjbvFBmmvz9FMhD1sk6ouTM83aHzo
+         wLKyRX+1FDZ72/LapQ1mbMTBA/xF9wz8WaiDhiwRnFXQ13vetbAGl948H7IPAyPCqXIJ
+         ZUTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=DzSndrAt3W5Qpn/Z0ZHFWHP+YFwM5pnaWCeVZxGk0sY=;
+        b=RcDLAXbsqwJQMFgRSC81O1vuimPYZGbrHJKsTBSCzpedV4q1ElwP2fQUH90RMVT4wy
+         bTx5QmhwKHZ7FaWX4pY9dFvbfE1dx3B5CUtMcYK6O9Njsxej+xMVrogriIgUdoVNStYu
+         u5Wv2VyZThAtr4D1A4YYTca1xCSeLppdv6R0+h3i8GLqYEfugwl0Y4c6UBRucGQaLMds
+         IvcW09H9s7+l0lxw1NMdE5E65JayqixlTIPw48+29hiZ+mCkIac2qRgWIWPCIZxd5m/p
+         lOaGJxVqrZcxmtkM35MMj+1pw/D2giCCPkG3QT+fpCSO51pUx+yhQZzJ63NPIXVR04Yh
+         OsOA==
+X-Gm-Message-State: APjAAAU0cnr2MIonZu5TIZSFv7p7QJCGZECMcZAzTzGMmJh9lP7Pscd3
+        /HHix80w/MDyBaWWh1LBEKo=
+X-Google-Smtp-Source: APXvYqzQ7HX/m71MhWZKhGi2AZRp1T02V0yWaNMHVqCTdxTfUiu5p6wVz95QCk/XUDLg9ns2CdI3Ug==
+X-Received: by 2002:a17:902:b688:: with SMTP id c8mr1244877pls.98.1568660349002;
+        Mon, 16 Sep 2019 11:59:09 -0700 (PDT)
+Received: from SD ([2405:204:828a:aaec:8514:49dd:92d4:793d])
+        by smtp.gmail.com with ESMTPSA id x8sm37279153pfm.35.2019.09.16.11.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 11:59:08 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 00:28:58 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/3] i2c: qup: Remove dev_err() log after platform_get_irq*()
+ failure
+Message-ID: <20190916185857.GA14093@SD>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is not needed and may generate unmet dependencies when
-COMPILE_TEST is used for SOF.
+The debug message after platform_get_irq() failure is redundant
+because platform_get_irq() already prints an error. Thus remove it.
 
-ACPI is required, and should be tested when selecting this option.
+The semantic patch that makes this report is available
+in scripts/coccinelle/api/platform_get_irq.cocci.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Found using - http://coccinelle.lip6.fr/
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 ---
- drivers/soundwire/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-qup.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
-index f518273cfbe3..26902023f4e7 100644
---- a/drivers/soundwire/Kconfig
-+++ b/drivers/soundwire/Kconfig
-@@ -23,7 +23,7 @@ config SOUNDWIRE_CADENCE
- config SOUNDWIRE_INTEL
- 	tristate "Intel SoundWire Master driver"
- 	select SOUNDWIRE_CADENCE
--	depends on X86 && ACPI && SND_SOC
-+	depends on ACPI && SND_SOC
- 	help
- 	  SoundWire Intel Master driver.
- 	  If you have an Intel platform which has a SoundWire Master then
--- 
+diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+index 5519c19bfd9c..23c4893512b2 100644
+--- a/drivers/i2c/busses/i2c-qup.c
++++ b/drivers/i2c/busses/i2c-qup.c
+@@ -1767,7 +1767,6 @@ static int qup_i2c_probe(struct platform_device *pdev)
+
+ 	qup->irq = platform_get_irq(pdev, 0);
+ 	if (qup->irq < 0) {
+-		dev_err(qup->dev, "No IRQ defined\n");
+ 		return qup->irq;
+ 	}
+
+--
 2.20.1
 
