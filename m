@@ -2,139 +2,130 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4627FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA696C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197522067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:49:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="oMwTSL35"
+	by mail.kernel.org (Postfix) with ESMTP id 814E0214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568631051;
+	bh=U82Tr8FbEpQ0OJbT7LiytXXfUulzIz1X0TDl8YNIEFo=;
+	h=Subject:From:To:Cc:Date:List-ID:From;
+	b=jKIuPmBGHYAK4n99/sC7qpHlUJcedfW1/4T4Gi40HdqTqsayhX8+VX9fv1gF3e0MF
+	 D91Uh/gyOtv1dT6+xCVu/aI8DiJisuIOLM9Vf6OM3l8b0TT8bYw2aY3Je6PfiDmL48
+	 6V2hKtSKRVb6Bq54+f1XisEWJp2iTIpQ9+tJcOLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732149AbfIPKtU (ORCPT
+        id S1732441AbfIPKuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:49:20 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:57672 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIPKtU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:49:20 -0400
-Received: from pendragon.ideasonboard.com (bl10-204-24.dsl.telepac.pt [85.243.204.24])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 23444528;
-        Mon, 16 Sep 2019 12:49:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568630957;
-        bh=IJ33GGwVEPYw9W2Svv2WqsD52CGlGjL9G6YJNGHTZHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oMwTSL35xSuSyOTl6RhHwh1o+j+Uvjwm8/4rwbPknHrM3TCw9485BjtXdcqP2ss5P
-         2GW0QHFXzAvLMjiFUwcYeyrVT6sZMU322FtHsbxlSxoVrz/n//3sGHdL0Md+S2DF0e
-         pP0+djCRe+lj8ZPJ2IXZga2G0K3eHCebBs61NGvw=
-Date:   Mon, 16 Sep 2019 13:49:07 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com,
-        robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-Message-ID: <20190916104907.GB4734@pendragon.ideasonboard.com>
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
- <20190815004854.19860-6-masneyb@onstation.org>
- <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
- <20190916103614.GA1644@onstation.org>
+        Mon, 16 Sep 2019 06:50:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726059AbfIPKuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:50:50 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 263FE2067D;
+        Mon, 16 Sep 2019 10:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568631049;
+        bh=U82Tr8FbEpQ0OJbT7LiytXXfUulzIz1X0TDl8YNIEFo=;
+        h=Subject:From:To:Cc:Date:From;
+        b=gZQZ1UxGxemHcxzW4lTiVFDyiN1pDQzvh1P/DPEfwPGRSm7br5Yg+7s/t3gflhhIU
+         EYlot5c3IXiT8ZF2AdZgqoEiicgcM5NxM2hVQcp7o/IkuLQiW2YBSUFZ2I7lzi2FQ0
+         W/qUlSj2a2qV56RhQaJjGw37D626oEC1P1iLRlEQ=
+Message-ID: <f3b4a58a47b4eb3346581f541348a1fc18aabdce.camel@kernel.org>
+Subject: [GIT PULL] file locking changes for v5.4
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Bruce Fields <bfields@fieldses.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 16 Sep 2019 06:50:40 -0400
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-MnDTmiEyDIGT695orHds"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190916103614.GA1644@onstation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Brian,
 
-On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
-> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
-> > On 15.08.2019 02:48, Brian Masney wrote:
-> > > When attempting to configure this driver on a Nexus 5 phone (msm8974),
-> > > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
-> > > error. The downstream MSM kernel sources [1] shows that the proper value
-> > > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
-> > > probing to succeed.
-> > >
-> > > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
-> > >
-> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > > ---
-> > >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > index 25e063bcecbc..bc511fc605c9 100644
-> > > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > > @@ -6,7 +6,7 @@
-> > >  #ifndef __ANX78xx_H
-> > >  #define __ANX78xx_H
-> > >  
-> > > -#define TX_P0				0x70
-> > > +#define TX_P0				0x78
-> > 
-> > 
-> > This bothers me little. There are no upstream users, grepping android
-> > sources suggests that both values can be used [1][2]  (grep for "#define
-> > TX_P0"), moreover there is code suggesting both values can be valid [3].
-> > 
-> > Could you verify datasheet which i2c slave addresses are valid for this
-> > chip, if both I guess this patch should be reworked.
-> > 
-> > 
-> > [1]:
-> > https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
-> > 
-> > [2]:
-> > https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
-> > 
-> > [3]:
-> > https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
-> 
-> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
-> need to support both addresses. What do you think about moving these
-> addresses into device tree?
+--=-MnDTmiEyDIGT695orHds
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Assuming that the device supports different addresses (I can't validate
-that as I don't have access to the datasheet), and different addresses
-need to be used on different systems, then the address to be used needs
-to be provided by the firmware (DT in this case). Two options are
-possible, either specifying the address explicitly in the device's DT
-node, or specifying free addresses (in the form of a white list or black
-list) and allocating an address from that pool. The latter has been
-discussed in a BoF at the Linux Plumbers Conference last week,
-https://linuxplumbersconf.org/event/4/contributions/542/.
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b=
+:
 
-> The downstream and upstream kernel sources divide these addresses by two
-> to get the i2c address. Here's the code in upstream:
-> 
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
-> 
-> I'm not sure why the actual i2c address isn't used in this code.
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
--- 
-Regards,
+are available in the Git repository at:
 
-Laurent Pinchart
+  git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/file=
+lock-v5.4-1
+
+for you to fetch changes up to cfddf9f4c9f038c91c6c61d5cf3a161731b5c418:
+
+  locks: fix a memory leak bug in __break_lease() (2019-08-20 05:48:52 -040=
+0)
+
+----------------------------------------------------------------
+
+Hi Linus,
+
+Just a couple of minor bugfixes, a revision to a tracepoint to account
+for some earlier changes to the internals, and a patch to add a pr_warn
+message when someone tries to mount a filesystem with '-o mand' on a
+kernel that has that support disabled.
+
+----------------------------------------------------------------
+Jeff Layton (2):
+      locks: revise generic_add_lease tracepoint
+      locks: print a warning when mount fails due to lack of "mand" support
+
+Pavel Begunkov (1):
+      locks: Fix procfs output for file leases
+
+Wenwen Wang (1):
+      locks: fix a memory leak bug in __break_lease()
+
+ Documentation/filesystems/mandatory-locking.txt | 10 ++++++++++
+ fs/locks.c                                      | 11 ++++++-----
+ fs/namespace.c                                  | 11 ++++++++---
+ include/trace/events/filelock.h                 | 14 +++++++-------
+ 4 files changed, 31 insertions(+), 15 deletions(-)
+
+
+--=-MnDTmiEyDIGT695orHds
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJHBAABCAAxFiEES8DXskRxsqGE6vXTAA5oQRlWghUFAl1/aQATHGpsYXl0b25A
+a2VybmVsLm9yZwAKCRAADmhBGVaCFfKxEAC2xqzxj143HDWQqM3HbwDc6n7vMBFx
+d1kSFgQUoHSH5waAZ7to4AD1IPPk9aWQ6NQAWBLRHZ2/bfvkKtws9smoEKASgpVq
+P2xWuiylcgglxFsIyQutO53qS6l1m5E9+F8Zf0lq+n5JHqqhNTvXmNp8XNxiilv/
+dK12vy6XTXHeB3Hv2BPvvUMDrlwGWlQASIk1lyBUQ94RuLjGNaV93hL32YeGpEE0
+GaYooBHhH4+yOsZuWZpaiLmLSjncE7fLo2HUB5x6AKjEc1c1j8HbW88ckM51Umd8
+fH0efyyO3sZ31n/0Bs73ZQPhQCKtbEDD2YIrvqsqVnp3NLPnMe2t8wZbWX9dxKWG
+zGcJz03QAp4wwExL0F4OsqpbC6uFhJJqzdYuuPs+5kQFSW8chlcsXcKba6efFgPg
+EYNjKC4KhcKLJetegzFXsxpwjyAxjFHFisgdZAfPAYdtiymZ735JwVbJqE/BCzOW
+eRCOoT9PS5vEqxwPVpL+gc7VJDeWAluYXkASyuQj2G3QCM7pTidmjd6ybytroyup
+qV/9Ak4pBG4namBjJZ4STb/i84k9F1UOzKedUphqNmO2vuoSKv4WgnuoVoZCBaRE
+m2Tl2fdeKl1PPQjQH/WQZJR7imM4l1nBgHeTM1B7A0Lv542jgdI8FoWjeMFi2PIu
+kcGBj+HPhtlxKQ==
+=XdCd
+-----END PGP SIGNATURE-----
+
+--=-MnDTmiEyDIGT695orHds--
+
