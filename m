@@ -2,90 +2,151 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5206C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477AFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C04D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE10214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568657890;
+	bh=cvqXyAoP8LXl4eQWtl4xAFxdBZY+YNwOUsM8E8y5L+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DInVIh2Foo/sOLiphZoU5v02/mO8A6ylROISVgNn7URgWn7KzQIkisg5OTvzXjnmK
+	 TnKwfRgdZhGSTJGRNTY8xZImHZiEdOhC5VNCyK7kyvHy5VTZ7VbX7gUKBxkU+kScYX
+	 wgnMJG+Kg0UtANlskMPjqJ4SirjYg9qcTmR/hlEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbfIPSOO (ORCPT
+        id S2390280AbfIPSSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:14:14 -0400
-Received: from mga07.intel.com ([134.134.136.100]:15860 "EHLO mga07.intel.com"
+        Mon, 16 Sep 2019 14:18:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727039AbfIPSOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:14:14 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 11:14:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,513,1559545200"; 
-   d="scan'208";a="361605341"
-Received: from jvhicko1-mobl2.amr.corp.intel.com (HELO [10.254.104.227]) ([10.254.104.227])
-  by orsmga005.jf.intel.com with ESMTP; 16 Sep 2019 11:14:12 -0700
-Subject: Re: [alsa-devel] [PATCH 1/6] soundwire: fix startup sequence for
- Intel/Cadence
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20190813213227.5163-1-pierre-louis.bossart@linux.intel.com>
- <20190813213227.5163-2-pierre-louis.bossart@linux.intel.com>
- <20190904071108.GI2672@vkoul-mobl>
- <dc16e4d8-1d95-542c-869e-bdefc37d059b@linux.intel.com>
-Message-ID: <4734e29e-859d-745b-5cc6-ce70ca6e6c99@linux.intel.com>
-Date:   Mon, 16 Sep 2019 13:14:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1732383AbfIPSSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:18:08 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49CE206A4;
+        Mon, 16 Sep 2019 18:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568657887;
+        bh=cvqXyAoP8LXl4eQWtl4xAFxdBZY+YNwOUsM8E8y5L+I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hCmKcOBdZQjDrk/s24oKublKlHuvENgTEev4fbOttzaSiyY1s8W7HQFd0rotrvv87
+         S4zvcdSpSDg9o+9giWpiCF24fHzYKjBU7vVaY0TzRg42R6e8zdKauzviGVD913jFxO
+         FrwmDsU3hjX6DSKArgN63xEx+rHvAH21xb3FOAng=
+Date:   Mon, 16 Sep 2019 19:18:00 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Anup Patel <Anup.Patel@wdc.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        "guoren@kernel.org" <guoren@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        "julien.thierry@arm.com" <julien.thierry@arm.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "julien.grall@arm.com" <julien.grall@arm.com>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "christoffer.dall@arm.com" <christoffer.dall@arm.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+Message-ID: <20190916181800.7lfpt3t627byoomt@willie-the-truck>
+References: <20190912140256.fwbutgmadpjbjnab@willie-the-truck>
+ <mhng-166dcd4f-9483-4aab-a83a-914d70ddb5a4@palmer-si-x1e>
+ <MN2PR04MB606117F2AC47385EF23D267D8D8D0@MN2PR04MB6061.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <dc16e4d8-1d95-542c-869e-bdefc37d059b@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR04MB606117F2AC47385EF23D267D8D8D0@MN2PR04MB6061.namprd04.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
->>> @@ -1043,8 +1043,6 @@ static int intel_probe(struct platform_device 
->>> *pdev)
->>>       if (ret)
->>>           goto err_init;
->>> -    ret = sdw_cdns_enable_interrupt(&sdw->cdns);
->>> -
->>>       /* Read the PDI config and initialize cadence PDI */
->>>       intel_pdi_init(sdw, &config);
->>>       ret = sdw_cdns_pdi_init(&sdw->cdns, config);
->>> @@ -1062,6 +1060,18 @@ static int intel_probe(struct platform_device 
->>> *pdev)
->>>           goto err_init;
->>>       }
->>> +    ret = sdw_cdns_enable_interrupt(&sdw->cdns);
->>> +    if (ret < 0) {
->>> +        dev_err(sdw->cdns.dev, "cannot enable interrupts\n");
->>> +        goto err_init;
->>> +    }
->>> +
->>> +    ret = sdw_cdns_exit_reset(&sdw->cdns);
->>> +    if (ret < 0) {
->>> +        dev_err(sdw->cdns.dev, "unable to exit bus reset sequence\n");
->>> +        goto err_init;
->>
->> Don't you want to disable interrupts at least... before you return
->> error? err_init does bus cleanup and not controller one
+On Sun, Sep 15, 2019 at 05:03:38AM +0000, Anup Patel wrote:
 > 
-> yes good point, let me look at this.
+> 
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > owner@vger.kernel.org> On Behalf Of Palmer Dabbelt
+> > Sent: Saturday, September 14, 2019 7:31 PM
+> > To: will@kernel.org
+> > Cc: guoren@kernel.org; Will Deacon <will.deacon@arm.com>;
+> > julien.thierry@arm.com; aou@eecs.berkeley.edu; james.morse@arm.com;
+> > Arnd Bergmann <arnd@arndb.de>; suzuki.poulose@arm.com;
+> > marc.zyngier@arm.com; catalin.marinas@arm.com; Anup Patel
+> > <Anup.Patel@wdc.com>; linux-kernel@vger.kernel.org;
+> > rppt@linux.ibm.com; Christoph Hellwig <hch@infradead.org>; Atish Patra
+> > <Atish.Patra@wdc.com>; julien.grall@arm.com; gary@garyguo.net; Paul
+> > Walmsley <paul.walmsley@sifive.com>; christoffer.dall@arm.com; linux-
+> > riscv@lists.infradead.org; kvmarm@lists.cs.columbia.edu; linux-arm-
+> > kernel@lists.infradead.org; iommu@lists.linux-foundation.org
+> > Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+> > separate file
+> > 
+> > On Thu, 12 Sep 2019 07:02:56 PDT (-0700), will@kernel.org wrote:
+> > > On Sun, Sep 08, 2019 at 07:52:55AM +0800, Guo Ren wrote:
+> > >> On Mon, Jun 24, 2019 at 6:40 PM Will Deacon <will@kernel.org> wrote:
+> > >> > > I'll keep my system use the same ASID for SMP + IOMMU :P
+> > >> >
+> > >> > You will want a separate allocator for that:
+> > >> >
+> > >> > https://lkml.kernel.org/r/20190610184714.6786-2-jean-philippe.bruck
+> > >> > er@arm.com
+> > >>
+> > >> Yes, it is hard to maintain ASID between IOMMU and CPUMMU or
+> > >> different system, because it's difficult to synchronize the IO_ASID
+> > >> when the CPU ASID is rollover.
+> > >> But we could still use hardware broadcast TLB invalidation
+> > >> instruction to uniformly manage the ASID and IO_ASID, or OTHER_ASID in
+> > our IOMMU.
+> > >
+> > > That's probably a bad idea, because you'll likely stall execution on
+> > > the CPU until the IOTLB has completed invalidation. In the case of
+> > > ATS, I think an endpoint ATC is permitted to take over a minute to
+> > > respond. In reality, I suspect the worst you'll ever see would be in
+> > > the msec range, but that's still an unacceptable period of time to hold a
+> > CPU.
+> > >
+> > >> Welcome to join our disscusion:
+> > >> "Introduce an implementation of IOMMU in linux-riscv"
+> > >> 9 Sep 2019, 10:45 Jade-room-I&II (Corinthia Hotel Lisbon) RISC-V MC
+> > >
+> > > I attended this session, but it unfortunately raised many more
+> > > questions than it answered.
+> > 
+> > Ya, we're a long way from figuring this out.
+> 
+> For everyone's reference, here is our first attempt at RISC-V ASID allocator:
+> http://archive.lwn.net:8080/linux-kernel/20190329045111.14040-1-anup.patel@wdc.com/T/#u
 
-The existing code has no interrupt disable sequence.
+With a reply stating that the patch "absolutely does not work" ;)
 
-I will add this improved error handling in a follow-up patch, after the 
-capability to disable interrupts is added.
+What exactly do you want people to do with that? It's an awful lot of effort
+to review this sort of stuff and given that Guo Ren is talking about sharing
+page tables between the CPU and an accelerator, maybe you're better off
+stabilising Linux for the platforms that you can actually test rather than
+getting so far ahead of yourselves that you end up with a bunch of wasted
+work on patches that probably won't get merged any time soon.
+
+Seriously, they say "walk before you can run", but this is more "crawl
+before you can fly". What's the rush?
+
+Will
