@@ -2,147 +2,100 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEF5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AFBC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA7F2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 860D02067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568633852;
+	bh=FpxvfCJty4Chs8ux7uZhIRX9jfW+FpOVLEkLx7GYtBg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=H5gIw61008TiaEXULzGv8l5k+kd6GmbCAffLESDI7gTxuTgBhhJg5Vk0QDXeU6GCO
+	 oo4ZyQQu/QDoDk2aAKKq4SSpWls6Lsc6sbumar2XMAYkx7vV0ghVj3pMq1qQfx6iA0
+	 yUsOGG3tSHT4n1gnf17tiknxlYJsXXpAVTyKRxs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732364AbfIPLhV convert rfc822-to-8bit (ORCPT
+        id S1732374AbfIPLhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:37:21 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:30671 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729535AbfIPLhV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:37:21 -0400
-Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 19:37:19 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
- (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 19:37:18 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Mon, 16 Sep 2019 19:37:18 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     "tony.luck@intel.com" <tony.luck@intel.com>,
-        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
-CC:     David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
-Thread-Topic: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
-Thread-Index: AdVsgd4Hx9qLS1ujSl6gPpVD7JUbTw==
-Date:   Mon, 16 Sep 2019 11:37:18 +0000
-Message-ID: <ff93d38a81ea45848c6b634f72b9b9a5@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 16 Sep 2019 07:37:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41900 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727479AbfIPLhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:37:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BF7ACAF7C;
+        Mon, 16 Sep 2019 11:37:29 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 13:37:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] mm, thp: Do not queue fully unmapped pages for deferred
+ split
+Message-ID: <20190916113729.GF10231@dhcp22.suse.cz>
+References: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
+ <20190916103602.GD10231@dhcp22.suse.cz>
+ <5c946cd9-e17b-b184-37b7-250c6dfb977c@suse.cz>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c946cd9-e17b-b184-37b7-250c6dfb977c@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhaoxin newer CPUs support LMCE that compatible with Intel's
-"Machine-Check Architecture", so add support for Zhaoxin LMCE
-in mce/core.c.
+On Mon 16-09-19 13:11:37, Vlastimil Babka wrote:
+> On 9/16/19 12:36 PM, Michal Hocko wrote:
+> > On Fri 13-09-19 12:18:49, Kirill A. Shutemov wrote:
+> >> Adding fully unmapped pages into deferred split queue is not productive:
+> >> these pages are about to be freed or they are pinned and cannot be split
+> >> anyway.
+> >> 
+> >> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> >> ---
+> >>  mm/rmap.c | 14 ++++++++++----
+> >>  1 file changed, 10 insertions(+), 4 deletions(-)
+> >> 
+> >> diff --git a/mm/rmap.c b/mm/rmap.c
+> >> index 003377e24232..45388f1bf317 100644
+> >> --- a/mm/rmap.c
+> >> +++ b/mm/rmap.c
+> >> @@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
+> >>  	if (TestClearPageDoubleMap(page)) {
+> >>  		/*
+> >>  		 * Subpages can be mapped with PTEs too. Check how many of
+> >> -		 * themi are still mapped.
+> >> +		 * them are still mapped.
+> >>  		 */
+> >>  		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
+> >>  			if (atomic_add_negative(-1, &page[i]._mapcount))
+> >>  				nr++;
+> >>  		}
+> >> +
+> >> +		/*
+> >> +		 * Queue the page for deferred split if at least one small
+> >> +		 * page of the compound page is unmapped, but at least one
+> >> +		 * small page is still mapped.
+> >> +		 */
+> >> +		if (nr && nr < HPAGE_PMD_NR)
+> >> +			deferred_split_huge_page(page);
+> > 
+> > You've set nr to zero in the for loop so this cannot work AFAICS.
+> 
+> The for loop then does nr++ for each subpage that's still mapped?
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
- arch/x86/kernel/cpu/mce/core.c | 35 +++++++++++++++++++++++++++++++++--
- 1 file changed, 33 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 65c5a1f..acdd76b 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1132,6 +1132,27 @@ static bool __mc_check_crashing_cpu(int cpu)
- 		u64 mcgstatus;
- 
- 		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
-+
-+		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
-+			if (mcgstatus & MCG_STATUS_LMCES)
-+				return false;
-+
-+			if (!(mcgstatus & MCG_STATUS_LMCES)) {
-+				/*
-+				 * Clear the MCG_STATUS_RIPV valid status
-+				 * bit so that a second MCE won't cause a
-+				 * shutdown.
-+				 */
-+				if (mcgstatus & MCG_STATUS_RIPV)
-+					mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-+				/*
-+				 * On this CPU, skip synchronize regardless
-+				 * of MCG_STATUS_RIPV status.
-+				 */
-+				return true;
-+			}
-+		}
-+
- 		if (mcgstatus & MCG_STATUS_RIPV) {
- 			mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
- 			return true;
-@@ -1282,9 +1303,10 @@ void do_machine_check(struct pt_regs *regs, long error_code)
- 
- 	/*
- 	 * Check if this MCE is signaled to only this logical processor,
--	 * on Intel only.
-+	 * on Intel, Zhaoxin only.
- 	 */
--	if (m.cpuvendor == X86_VENDOR_INTEL)
-+	if (m.cpuvendor == X86_VENDOR_INTEL ||
-+	    m.cpuvendor == X86_VENDOR_ZHAOXIN)
- 		lmce = m.mcgstatus & MCG_STATUS_LMCES;
- 
- 	/*
-@@ -1795,9 +1817,15 @@ static void mce_zhaoxin_feature_init(struct cpuinfo_x86 *c)
- 	}
- 
- 	intel_init_cmci();
-+	intel_init_lmce();
- 	mce_adjust_timer = cmci_intel_adjust_timer;
- }
- 
-+static void mce_zhaoxin_feature_clear(struct cpuinfo_x86 *c)
-+{
-+	intel_clear_lmce();
-+}
-+
- static void __mcheck_cpu_init_vendor(struct cpuinfo_x86 *c)
- {
- 	switch (c->x86_vendor) {
-@@ -1834,6 +1862,9 @@ static void __mcheck_cpu_clear_vendor(struct cpuinfo_x86 *c)
- 	case X86_VENDOR_INTEL:
- 		mce_intel_feature_clear(c);
- 		break;
-+	case X86_VENDOR_ZHAOXIN:
-+		mce_zhaoxin_feature_clear(c);
-+		break;
- 	default:
- 		break;
- 	}
+I am blind obviously. Sorry about the noise. Then the patch looks
+correct.
 -- 
-2.7.4
+Michal Hocko
+SUSE Labs
