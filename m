@@ -2,142 +2,87 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D07DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92007C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34DD2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568660906;
-	bh=VEjbQ6XsX+YYhXcl5OM21N4T8yFWf9Sq/NUpXktWTWw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HJtGquulvnE53u93O9V6OAc7mXGu56Dn9WAYzf4KAxcHdvvPXosLKX6tfKkCCTUbz
-	 ExqVrseyPSRDG/LzGtbJRcE4cXTQ0XWMAw0cGpJ6BsF53EtPZveUXcMD43VlTxsiAm
-	 B+gtSz744bpELeXjGKK5JRbHGSmLYJA3++NnxxSk=
+	by mail.kernel.org (Postfix) with ESMTP id 77714206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:09:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390642AbfIPTI0 (ORCPT
+        id S2390743AbfIPTJ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55462 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 15:09:27 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:46279 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727958AbfIPTIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:08:25 -0400
-Received: from earth.universe (dyndsl-037-138-128-205.ewe-ip-backbone.de [37.138.128.205])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC286214AF;
-        Mon, 16 Sep 2019 19:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568660904;
-        bh=VEjbQ6XsX+YYhXcl5OM21N4T8yFWf9Sq/NUpXktWTWw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HqwcKpASn8pos11VD1w/1pw9fkaY7TKdbrD1kcZYLxf/fgzzc3Zk7SdsMcEZMCnna
-         zxEWxgwb1ehw6LlurD+aT9t0iQCKCrKjuTAsiaqUX9aKOKkUlgnhml5cOcIcKEBxRt
-         mVbG1S5xlc799+L68od+KvLClhoregMHebw/rHPg=
-Received: by earth.universe (Postfix, from userid 1000)
-        id 2F5E93C0CA1; Mon, 16 Sep 2019 21:08:22 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 21:08:22 +0200
-From:   Sebastian Reichel <sre@kernel.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-crypto@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Adam Ford <aford173@gmail.com>,
-        Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org
-Subject: Re: [PATCHv2 0/7] Non-urgent fixes and improvments for omap3-rom-rng
-Message-ID: <20190916190822.uo6b6nkzgu45yw4b@earth.universe>
-References: <20190914210300.15836-1-tony@atomide.com>
+        id S2390662AbfIPTJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 15:09:27 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8GJ8xTE025965;
+        Mon, 16 Sep 2019 21:08:59 +0200
+Date:   Mon, 16 Sep 2019 21:08:59 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916190858.GD24547@1wt.eu>
+References: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+ <20190916014050.GA7002@darwi-home-pc>
+ <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
+ <20190916024904.GA22035@mit.edu>
+ <20190916042952.GB23719@1wt.eu>
+ <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
+ <20190916061252.GA24002@1wt.eu>
+ <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
+ <20190916172117.GB15263@mit.edu>
+ <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="24nbsg2ye5tfefja"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190914210300.15836-1-tony@atomide.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 10:44:31AM -0700, Linus Torvalds wrote:
+>  - add new GRND_SECURE and GRND_INSECURE flags that have the actual
+> useful behaviors that we currently pretty much lack
+> 
+>  - consider the old 0-3 flag values legacy, deprecated, and unsafe
+> because they _will_ time out to fix the existing problem we have right
+> now because of their bad behavior.
 
---24nbsg2ye5tfefja
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think we can keep a flag to work like the current /dev/random and
+deplete entropy for the very rare cases where it's really desired
+to run this way (maybe even just for research), but it should require
+special permissions as it impacts the whole system.
 
-Hi,
+I think that your GRND_SECURE above means the current 0 situation,
+where we wait for initial entropy then not wait anymore, right ? If
+so it could remain the default setting, because at least it will not
+betray applications which rely on this reliability. And GRND_INSECURE
+will be decided on a case by case basis by applications that are caught
+waiting like sfdisk in initramfs or a MAC address generator for example.
+In this case it could even be called GRND_PREDICTABLE maybe to enforce
+its property compared to others.
 
-On Sat, Sep 14, 2019 at 02:02:53PM -0700, Tony Lindgren wrote:
-> Hi all,
->=20
-> Here are fixes and improvments for omap3-rom-rng that's been broken for
-> a while.
->=20
-> The first four patches get it working, and then the last two patches add
-> support for runtime PM.
->=20
-> I did not add Sebastian's acks from v1 set as many of the patches
-> changed. Please review again :)
->=20
-> Regards,
->=20
-> Tony
->=20
-> Changes since v1:
-> - Use clk_prepare_enable() as pointed out by Sebastian
-> - Simplify runtime PM changes patch
-> - Add a new patch for devm changes as suggested by Sebastian
->=20
->=20
-> Tony Lindgren (7):
->   ARM: OMAP2+: Check omap3-rom-rng for GP device instead of HS device
->   hwrng: omap3-rom - Fix missing clock by probing with device tree
->   hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not
->     idled
->   hwrng: omap3-rom - Initialize default quality to get data
->   hwrng: omap3-rom - Update to use standard driver data
->   hwrng: omap3-rom - Use runtime PM instead of custom functions
->   hwrng: omap3-rom - Use devm hwrng and runtime PM
->=20
->  .../devicetree/bindings/rng/omap3_rom_rng.txt |  27 +++
->  arch/arm/boot/dts/omap3-n900.dts              |   6 +
->  arch/arm/mach-omap2/pdata-quirks.c            |  14 +-
->  drivers/char/hw_random/omap3-rom-rng.c        | 168 +++++++++++-------
->  4 files changed, 139 insertions(+), 76 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.t=
-xt
+My guess is that we can fix the situation because nobody likes the
+problems that sporadically hit users. getrandom() was adopted quite
+quickly to solve issues related to using /dev/*random in chroots,
+I think the new flags will be adopted by those experiencing issues.
 
-For the series:
-
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-
--- Sebastian
-
-
---24nbsg2ye5tfefja
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAl1/3aIACgkQ2O7X88g7
-+pqmhRAAmRHBNqefO5fYTQqIOQ3AK22ocj2LZk96U4Hs1GkjGTj6+RugmGULKZUu
-72dN1Q+TlxTyJxtFAkgE8MWxXdMIe5ZI6TKFGN5Vm55+oW86iMgEvtYWDxHVHDVX
-HVlHneWvXso1xg2rVbJtoVvqvp/VZRSObUGGUW2vfjYNP2CcTCbbMeI5iXrJIC7b
-X0oYsgK+4yVx1n/wIWu5Bv7BBcCjjN83iKE/W6z69NUSJXjcV4q+uo4TEn8wtCsq
-JMNjwe3LHuoalcjgoZo7wx/4xpkxcXzdbEpdSBATxJLTTletpv7D72m/yUrV7+GI
-FFYPcz5gaF0f3hTvf6u5BVhPZls4gqF9/wp305elOl10Rc8Ne8H9dG1ijOpdw4Yu
-TeDfBPJjN5oyk/h75qeCaYldgPelS6gYXQ0DR5ioUsMhAJ0MxAdiYhm10AiezxY5
-dYpscBjfaEFb3vGwrIhItvhKq7o3Gm+gMvuJbXoUIjb92D1L1ZnnMiugOOtAxMPK
-i0DBknSag5pz6Eg9aKyxa4tMtJbl8mcX7aRAa4B+AJ4cVFBfYLNXOh6dc+USaK/I
-e5awYHgbUJu+FDdiOMqeJBoBmyCigyCYQZ1MY4iJblLMr4EqIncbZp47WbxKqVHD
-IzPPduLPSxJlBKEcS4UZrdVSI1KCZGnCLreCRfsnPl3zrPTrZDk=
-=lqm0
------END PGP SIGNATURE-----
-
---24nbsg2ye5tfefja--
+Just my two cents,
+Willy
