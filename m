@@ -2,98 +2,201 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 892B7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD779C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C405214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7335020650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="a4pCvoEV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HvpZyV9l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731126AbfIPIjY (ORCPT
+        id S1731159AbfIPIkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:39:24 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43751 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbfIPIjY (ORCPT
+        Mon, 16 Sep 2019 04:40:06 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33475 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfIPIkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:39:24 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r9so3549155edl.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 01:39:22 -0700 (PDT)
+        Mon, 16 Sep 2019 04:40:06 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t11so16600262plo.0;
+        Mon, 16 Sep 2019 01:40:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hwAolnsZsEE90RFUUFXiPfKI8w9qoMR+b3uin2XlILY=;
-        b=a4pCvoEVsOfSuq7jjr5OIe0A/DVYNN0JDDPlmDLEICk17UysrGPoPCdnEP2ZOO8TeT
-         4yq8w8LXsZUAvE3O87UQLIk769o0/NtRLi7+RSZYa0bsUIXFwba4iBRWiZPeBoVD/WRY
-         hxGyCz+HHWxe635XqQRGqJyzmwoIuQ1b4XcbHckEb78I7YYBjzPSWMxkSf1KINW3wOLm
-         EhhQsXngRx9q2mhqF280g4deG+XKdWdnTr1j8s9mleazbR7zq0Ixr8zidRv2Ww3OG2HX
-         r4qsyI9Zv51wyaCboJZBEkUCL2O3D5H5ruy6Nnib+6tqpGMFzqfJMqXvmQSIfLP+aiuR
-         eplg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=7SaNALNS0XQc4DieafiXumuTeR5mH5E0tN6UvZLTouA=;
+        b=HvpZyV9l4lsF6zOrXsLRLOTScgXD3xzucd73QTuHe3FvGhOcEZNClZ9+KW4+C1AN7U
+         uOzr/xPcA2ddEC2LFDwaQYJb1+5JlxLcpjRDaERbOK/gMDgKTamLCOVC0rnOL/eHqsUK
+         OwIkyMxGS6TBBvm31jLiTYA8RWW+pGf3YTj9Y1eGaL2Af/+3emPQ13fsX3cGtirgToEv
+         5MLibt6SEgk6PvzhdWo7uMQlzl9w5oKCVnyVyWOpZ+kZEA1lvN+cw2ueUAz2VDlos9Lu
+         4G8ZRuh/vT3LgNrSdecr5PqVmyU58xpkstcAC2c7FFmy8ZOduSIq9ydpiclr8gLMbFBP
+         bNvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hwAolnsZsEE90RFUUFXiPfKI8w9qoMR+b3uin2XlILY=;
-        b=QaFBnRKO82+YkkCyC5DNbZmHrkYrWQRQvbyXLDNqSjUloq40PgyAWGz1g669qzufKO
-         28yrljywsIPt60PPjWslzElBUm7B1zyLDggb69JgcErpdHx35i7QEgtPR4eGOLYaY9OO
-         bpcdhziSR6M2CTS6ShLdyp03dnxwfaqkwHveBqO5LlB0LwERr6jhaPXig7K316bpzNv4
-         gZpD5vPMTrno68Jp7XjRDvuwTMjGpKQdQPRORSz9viv7pW7RZ1t1Kj5vJrJYa4t2B+XK
-         +UOlYbP9T1MVHhQvz33K1a/Wp5Y7eyDUzgddu2YTSriXhUQbApmubycDQtjIWqG+kYkj
-         ikrA==
-X-Gm-Message-State: APjAAAV3d43RBjcYfiCJBOE9KlxdDmCDl/thv7gwzXGV+T8TKkLKjvt/
-        wqV+uC8qgLh7T9mfrUwCZcLP/g==
-X-Google-Smtp-Source: APXvYqyWuH/epvBa+jvhYtrHY/HCJV7DVodJ2Xobx+58rAjl0Fp8x8RmkUsyrJsesL5f6AC8vSqwqg==
-X-Received: by 2002:a17:906:1197:: with SMTP id n23mr51749838eja.122.1568623162322;
-        Mon, 16 Sep 2019 01:39:22 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id v8sm1900279edl.74.2019.09.16.01.39.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 01:39:21 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 432F1104174; Mon, 16 Sep 2019 11:39:23 +0300 (+03)
-Date:   Mon, 16 Sep 2019 11:39:23 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] mm: clean up validate_slab()
-Message-ID: <20190916083923.u45azgtdvaaxo2w3@box.shutemov.name>
-References: <20190912023111.219636-1-yuzhao@google.com>
- <20190914000743.182739-1-yuzhao@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190914000743.182739-1-yuzhao@google.com>
-User-Agent: NeoMutt/20180716
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7SaNALNS0XQc4DieafiXumuTeR5mH5E0tN6UvZLTouA=;
+        b=PfbW52FHT16AZeQ2fXHg19LQ134yFU9QSPqqk+gOHYAvik1rHuPXsUTrUBSkp0zFQC
+         DZ1RRb5zIR8Hdk9CIuAvCgdD/WP7giqq9ZNzM5O704vU46m8rZw7R/XTGMQ+AEwrbZSC
+         Dy8p+qerXUzvGX+zjp2u2C2VO0yrfyHfwmk+yqUbjBlGBwk9RxuqjjX4Vw79QI/werLr
+         VqK0W8uHLyLxUILlMp9tyN4ULtziwYiYNxfzuNecqJ7I5NjyCjdjaIAdkUwSvTqJ0dQ/
+         mqP9eW3txUjgDFXEiqXZDZ9UaCZNg3YBULztYzKCHtZB0a0jglkOD22X/USjOp48DH/J
+         r9Fw==
+X-Gm-Message-State: APjAAAWXQsWR67AJt6P8wFlTzm+EhlYziTKrQFjYE73WumJYGn5kvKI1
+        Bwh3Xi29elk1OseJMOh6Yvy+wEgg
+X-Google-Smtp-Source: APXvYqwu5cITqeiAEi4QFL9pRpNDpoDeJfXYSOvd9YwqHTvOD69wHbpDN7UWVLcnsyMqq7KXJJq/jw==
+X-Received: by 2002:a17:902:b40c:: with SMTP id x12mr63973886plr.145.1568623204869;
+        Mon, 16 Sep 2019 01:40:04 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id l124sm32781547pgl.54.2019.09.16.01.40.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 01:40:04 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v4] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+Date:   Mon, 16 Sep 2019 16:39:59 +0800
+Message-Id: <1568623199-5294-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 06:07:42PM -0600, Yu Zhao wrote:
-> The function doesn't need to return any value, and the check can be
-> done in one pass.
-> 
-> There is a behavior change: before the patch, we stop at the first
-> invalid free object; after the patch, we stop at the first invalid
-> object, free or in use. This shouldn't matter because the original
-> behavior isn't intended anyway.
-> 
-> Signed-off-by: Yu Zhao <yuzhao@google.com>
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Filter out drastic fluctuation and random fluctuation, remove
+timer_advance_adjust_done altogether, the adjustment would be 
+continuous.
 
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ arch/x86/kvm/lapic.c | 26 ++++++++++++--------------
+ arch/x86/kvm/lapic.h |  1 -
+ arch/x86/kvm/x86.c   |  2 +-
+ arch/x86/kvm/x86.h   |  1 +
+ 4 files changed, 14 insertions(+), 16 deletions(-)
+
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index dbbe478..2585b86 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -69,6 +69,7 @@
+ #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+ /* step-by-step approximation to mitigate fluctuation */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
++#define LAPIC_TIMER_ADVANCE_FILTER 5000
+ 
+ static inline int apic_test_vector(int vec, void *bitmap)
+ {
+@@ -1482,29 +1483,28 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+ 					      s64 advance_expire_delta)
+ {
+ 	struct kvm_lapic *apic = vcpu->arch.apic;
+-	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+-	u64 ns;
++	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
++
++	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
++		abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
++		/* filter out random fluctuations */
++		return;
++	}
+ 
+ 	/* too early */
+ 	if (advance_expire_delta < 0) {
+ 		ns = -advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns -= min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+ 	} else {
+ 	/* too late */
+ 		ns = advance_expire_delta * 1000000ULL;
+ 		do_div(ns, vcpu->arch.virtual_tsc_khz);
+-		timer_advance_ns += min((u32)ns,
+-			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+ 	}
+ 
+-	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+-		apic->lapic_timer.timer_advance_adjust_done = true;
+-	if (unlikely(timer_advance_ns > 5000)) {
++	if (unlikely(timer_advance_ns > 5000))
+ 		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-		apic->lapic_timer.timer_advance_adjust_done = false;
+-	}
+ 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
+ 
+@@ -1524,7 +1524,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+ 	if (guest_tsc < tsc_deadline)
+ 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+ 
+-	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
++	if (lapic_timer_advance_ns == -1)
+ 		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+ }
+ 
+@@ -2302,10 +2302,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+ 	apic->lapic_timer.timer.function = apic_timer_fn;
+ 	if (timer_advance_ns == -1) {
+ 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-		apic->lapic_timer.timer_advance_adjust_done = false;
+ 	} else {
+ 		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+-		apic->lapic_timer.timer_advance_adjust_done = true;
+ 	}
+ 
+ 
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 50053d2..2aad7e2 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -35,7 +35,6 @@ struct kvm_timer {
+ 	s64 advance_expire_delta;
+ 	atomic_t pending;			/* accumulated triggered timers */
+ 	bool hv_timer_in_use;
+-	bool timer_advance_adjust_done;
+ };
+ 
+ struct kvm_lapic {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 83288ba..bb4574c 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -141,7 +141,7 @@ module_param(tsc_tolerance_ppm, uint, S_IRUGO | S_IWUSR);
+  * advancement entirely.  Any other value is used as-is and disables adaptive
+  * tuning, i.e. allows priveleged userspace to set an exact advancement time.
+  */
+-static int __read_mostly lapic_timer_advance_ns = -1;
++int __read_mostly lapic_timer_advance_ns = -1;
+ module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+ 
+ static bool __read_mostly vector_hashing = true;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index b5274e2..1bf2d82 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -301,6 +301,7 @@ extern unsigned int min_timer_period_us;
+ 
+ extern bool enable_vmware_backdoor;
+ 
++extern int lapic_timer_advance_ns;
+ extern int pi_inject_timer;
+ 
+ extern struct static_key kvm_no_apic_vcpu;
 -- 
- Kirill A. Shutemov
+2.7.4
+
