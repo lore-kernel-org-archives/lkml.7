@@ -2,153 +2,312 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D2B8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81891C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C301120830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4119820830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lduYPSOP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403814AbfIPUbg (ORCPT
+        id S2387476AbfIPUfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:31:36 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:52342 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1733017AbfIPUbf (ORCPT
+        Mon, 16 Sep 2019 16:35:10 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33735 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733068AbfIPUfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:31:35 -0400
-Received: (qmail 7955 invoked by uid 2102); 16 Sep 2019 16:31:34 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Sep 2019 16:31:34 -0400
-Date:   Mon, 16 Sep 2019 16:31:34 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+e1d1a6e595adbd2458f1@syzkaller.appspotmail.com>
-cc:     glider@google.com, <gregkh@linuxfoundation.org>,
-        <kai.heng.feng@canonical.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>, <yuehaibing@huawei.com>
-Subject: Re: KMSAN: uninit-value in usb_autopm_put_interface
-In-Reply-To: <00000000000031432d0592b00f44@google.com>
-Message-ID: <Pine.LNX.4.44L0.1909161628090.1489-100000@iolanthe.rowland.org>
+        Mon, 16 Sep 2019 16:35:09 -0400
+Received: by mail-ed1-f65.google.com with SMTP id c4so1308100edl.0;
+        Mon, 16 Sep 2019 13:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q/rebv9wsO+q8MVXmYG+p/JA3CBBmZHyA6AXxuPQmzE=;
+        b=lduYPSOPBWb/QNwuuKaHgbUDwiu9BOLUDjJ8mujRs+fp6/iKrUb0zwi+0RaW5k4+zX
+         JJzjlW8gwNE4+jllQDkwjXl2cV35WgzxqC2i2RKB227EkxILI5SfXpl1oRsT3vrHpcsM
+         GfiMrutdZYxMpTGP032Tbry8R+cdeDbd6NTXgoLOvwOW+GPvkB5C611fdBGrQ948aRN0
+         3xsd4mqLj3jzY2N8ZZPMyr8ZTc/WkOaBw22voPB7ZS+ZZ/h6NaZ51vT991gbiR38kBhj
+         RC8x8/T8C3eOMSuNh6a1aC0zt7smPW0Dlv8d2ihnkyXy7xfKw/MeEAQMZcRtT87ijq9K
+         QzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q/rebv9wsO+q8MVXmYG+p/JA3CBBmZHyA6AXxuPQmzE=;
+        b=OkcRWZV/xdohxCl2EGd8IewmHe1yN6E7zga+aHy5Ces82DgFabxl/abyxl6LHU8UQa
+         20apMi+9Qj5hXg53vfOiMXZoR1hnfblzOOyBl/peJrXMzxrENQQ08YPsuMRDTfeYQoFO
+         X6aNGA9T33JJA4Y0+ksepKdbvrGyUjg6+irtvauKdjqW6jkbtywYJs8chGm8BRpII7W3
+         bQV0WhGY7aiT+zDIix7RlCzs9HoyfZhTWiUxYhNFnMfcDMl3ld15LAtSW6DY0NakXo72
+         LopQqbuz60tRUAuZq0DPIbbwzjY/UwgG8oHXPwASbp8WHtGOjQJ8zr5mdcvaOFoVZVYI
+         MY8Q==
+X-Gm-Message-State: APjAAAVrZTbeBjgLpefGhALuJ9vgA+1sNAPh82HkTpv2AuLBkvjaID1/
+        7rjoWSwnUahRIC5mhc+CnnFf4OUbm+PXKw4fXa0=
+X-Google-Smtp-Source: APXvYqxnZrbgwzQkVpTi0seq+qXX7utxHe2jpUINK2klL8SmspHXd1INix8kI1bAC6Gnn6hyzrRo6kH9l4pIWIgD78g=
+X-Received: by 2002:a50:935d:: with SMTP id n29mr1215602eda.294.1568666106912;
+ Mon, 16 Sep 2019 13:35:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20190916201154.212465-1-ddavenport@chromium.org>
+In-Reply-To: <20190916201154.212465-1-ddavenport@chromium.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 16 Sep 2019 13:34:55 -0700
+Message-ID: <CAF6AEGurXuCMj=bc5=9CwBqzNM_BKEaJupk+-V7=aYou=wgmDQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Remove unused function arguments
+To:     Drew Davenport <ddavenport@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Enrico Weigelt <info@metux.net>,
+        Bruce Wang <bzwang@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019, syzbot wrote:
-
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    014077b5 DO-NOT-SUBMIT: usb-fuzzer: main usb gadget fuzzer..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16a7dde1600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e1d1a6e595adbd2458f1
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176303e1600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e8f23e600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e1d1a6e595adbd2458f1@syzkaller.appspotmail.com
-> 
-> ==================================================================
-> BUG: KMSAN: uninit-value in __write_once_size include/linux/compiler.h:235  
-> [inline]
-> BUG: KMSAN: uninit-value in pm_runtime_mark_last_busy  
-> include/linux/pm_runtime.h:107 [inline]
-> BUG: KMSAN: uninit-value in usb_mark_last_busy include/linux/usb.h:774  
-> [inline]
-> BUG: KMSAN: uninit-value in usb_autopm_put_interface+0xf2/0x120  
-> drivers/usb/core/driver.c:1630
-> CPU: 0 PID: 11318 Comm: syz-executor549 Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
->   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
->   __write_once_size include/linux/compiler.h:235 [inline]
->   pm_runtime_mark_last_busy include/linux/pm_runtime.h:107 [inline]
->   usb_mark_last_busy include/linux/usb.h:774 [inline]
->   usb_autopm_put_interface+0xf2/0x120 drivers/usb/core/driver.c:1630
->   usbhid_power+0x12a/0x170 drivers/hid/usbhid/hid-core.c:1238
->   hid_hw_power include/linux/hid.h:1038 [inline]
->   drop_ref drivers/hid/hidraw.c:338 [inline]
->   hidraw_release+0x4a9/0x6b0 drivers/hid/hidraw.c:356
->   __fput+0x4c9/0xba0 fs/file_table.c:280
->   ____fput+0x37/0x40 fs/file_table.c:313
->   task_work_run+0x22e/0x2a0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop arch/x86/entry/common.c:163 [inline]
->   prepare_exit_to_usermode+0x39d/0x4d0 arch/x86/entry/common.c:194
->   syscall_return_slowpath+0x90/0x610 arch/x86/entry/common.c:274
->   do_syscall_64+0xe2/0xf0 arch/x86/entry/common.c:300
->   entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> RIP: 0033:0x401b20
-> Code: 01 f0 ff ff 0f 83 c0 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-> 44 00 00 83 3d ad 5b 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-> ff 0f 83 94 0b 00 00 c3 48 83 ec 08 e8 fa 00 00 00
-> RSP: 002b:00007ffc46217cb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-> RAX: ffffffffffffffea RBX: 0000000000000000 RCX: 0000000000401b20
-> RDX: 0000000000000000 RSI: 000000000010503d RDI: 00007ffc46217cc0
-> RBP: 6666666666666667 R08: 000000000000000f R09: 000000000000000b
-> R10: 0000000000000075 R11: 0000000000000246 R12: 0000000000402b40
-> R13: 0000000000402bd0 R14: 0000000000000000 R15: 0000000000000000
-> 
-> Uninit was created at:
->   kmsan_save_stack_with_flags mm/kmsan/kmsan.c:189 [inline]
->   kmsan_internal_poison_shadow+0x58/0xb0 mm/kmsan/kmsan.c:148
->   kmsan_slab_free+0x8d/0x100 mm/kmsan/kmsan_hooks.c:195
->   slab_free_freelist_hook mm/slub.c:1472 [inline]
->   slab_free mm/slub.c:3038 [inline]
->   kfree+0x4c1/0x2db0 mm/slub.c:3980
->   usb_release_interface+0x105/0x120 drivers/usb/core/message.c:1633
->   device_release+0xe2/0x380 drivers/base/core.c:1060
->   kobject_cleanup lib/kobject.c:693 [inline]
->   kobject_release lib/kobject.c:722 [inline]
->   kref_put include/linux/kref.h:65 [inline]
->   kobject_put+0x38d/0x480 lib/kobject.c:739
->   put_device+0x51/0x70 drivers/base/core.c:2264
->   usb_disable_device+0x69a/0x1150 drivers/usb/core/message.c:1248
->   usb_disconnect+0x51e/0xd60 drivers/usb/core/hub.c:2199
->   hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x3fd0/0x72f0 drivers/usb/core/hub.c:5441
->   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
->   worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
->   kthread+0x4b5/0x4f0 kernel/kthread.c:256
->   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-> ==================================================================
-> 
-> 
+On Mon, Sep 16, 2019 at 1:12 PM Drew Davenport <ddavenport@chromium.org> wrote:
+>
+> The arguments related to IOMMU port name have been unused since
+> commit 944fc36c31ed ("drm/msm: use upstream iommu") and can be removed.
+>
+> Signed-off-by: Drew Davenport <ddavenport@chromium.org>
 > ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+> Rob, in the original commit the port name stuff was left intentionally.
+> Would it be alright to remove it now?
 
-This is probably the same problem that was fixed in the Logitech driver
-earlier.  The fix still appears to be in linux-next (commit
-5f9242775bb6).
+Upstream support for snapdragon has improved considerably since then,
+it's been at least a couple years since I've had to backport drm to a
+downstream android vendor kernel.  (And I think the downstream vendor
+kernel is getting closer to upstream.)  So I think we can drop things
+that were originally left in place to simplify backporting to vendor
+kernel.
 
-Shouldn't syzbot wait until after the merge window before running tests
-like this?
+(Also, some of the regulator usage falls into this category.. at one
+point the downstream kernel modeled gdsc's as regulators, but upstream
+uses genpd.)
 
-Alan Stern
+BR,
+-R
 
+>
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 10 ++--------
+>  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 10 ++--------
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 10 ++--------
+>  drivers/gpu/drm/msm/msm_gpu.c            |  5 ++---
+>  drivers/gpu/drm/msm/msm_gpummu.c         |  6 ++----
+>  drivers/gpu/drm/msm/msm_iommu.c          |  6 ++----
+>  drivers/gpu/drm/msm/msm_mmu.h            |  4 ++--
+>  7 files changed, 14 insertions(+), 37 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index 58b0485dc375..3165c2db2541 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -30,10 +30,6 @@
+>  #define CREATE_TRACE_POINTS
+>  #include "dpu_trace.h"
+>
+> -static const char * const iommu_ports[] = {
+> -               "mdp_0",
+> -};
+> -
+>  /*
+>   * To enable overall DRM driver logging
+>   * # echo 0x2 > /sys/module/drm/parameters/debug
+> @@ -725,8 +721,7 @@ static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
+>
+>         mmu = dpu_kms->base.aspace->mmu;
+>
+> -       mmu->funcs->detach(mmu, (const char **)iommu_ports,
+> -                       ARRAY_SIZE(iommu_ports));
+> +       mmu->funcs->detach(mmu);
+>         msm_gem_address_space_put(dpu_kms->base.aspace);
+>
+>         dpu_kms->base.aspace = NULL;
+> @@ -752,8 +747,7 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
+>                 return PTR_ERR(aspace);
+>         }
+>
+> -       ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+> -                       ARRAY_SIZE(iommu_ports));
+> +       ret = aspace->mmu->funcs->attach(aspace->mmu);
+>         if (ret) {
+>                 DPU_ERROR("failed to attach iommu %d\n", ret);
+>                 msm_gem_address_space_put(aspace);
+> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> index 50711ccc8691..dda05436f716 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+> @@ -157,10 +157,6 @@ static long mdp4_round_pixclk(struct msm_kms *kms, unsigned long rate,
+>         }
+>  }
+>
+> -static const char * const iommu_ports[] = {
+> -       "mdp_port0_cb0", "mdp_port1_cb0",
+> -};
+> -
+>  static void mdp4_destroy(struct msm_kms *kms)
+>  {
+>         struct mdp4_kms *mdp4_kms = to_mdp4_kms(to_mdp_kms(kms));
+> @@ -172,8 +168,7 @@ static void mdp4_destroy(struct msm_kms *kms)
+>         drm_gem_object_put_unlocked(mdp4_kms->blank_cursor_bo);
+>
+>         if (aspace) {
+> -               aspace->mmu->funcs->detach(aspace->mmu,
+> -                               iommu_ports, ARRAY_SIZE(iommu_ports));
+> +               aspace->mmu->funcs->detach(aspace->mmu);
+>                 msm_gem_address_space_put(aspace);
+>         }
+>
+> @@ -524,8 +519,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
+>
+>                 kms->aspace = aspace;
+>
+> -               ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+> -                               ARRAY_SIZE(iommu_ports));
+> +               ret = aspace->mmu->funcs->attach(aspace->mmu);
+>                 if (ret)
+>                         goto fail;
+>         } else {
+> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> index 91cd76a2bab1..f8bd0bfcf4b0 100644
+> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> @@ -19,10 +19,6 @@
+>  #include "msm_mmu.h"
+>  #include "mdp5_kms.h"
+>
+> -static const char *iommu_ports[] = {
+> -               "mdp_0",
+> -};
+> -
+>  static int mdp5_hw_init(struct msm_kms *kms)
+>  {
+>         struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
+> @@ -233,8 +229,7 @@ static void mdp5_kms_destroy(struct msm_kms *kms)
+>                 mdp5_pipe_destroy(mdp5_kms->hwpipes[i]);
+>
+>         if (aspace) {
+> -               aspace->mmu->funcs->detach(aspace->mmu,
+> -                               iommu_ports, ARRAY_SIZE(iommu_ports));
+> +               aspace->mmu->funcs->detach(aspace->mmu);
+>                 msm_gem_address_space_put(aspace);
+>         }
+>  }
+> @@ -737,8 +732,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+>
+>                 kms->aspace = aspace;
+>
+> -               ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+> -                               ARRAY_SIZE(iommu_ports));
+> +               ret = aspace->mmu->funcs->attach(aspace->mmu);
+>                 if (ret) {
+>                         DRM_DEV_ERROR(&pdev->dev, "failed to attach iommu: %d\n",
+>                                 ret);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index a052364a5d74..122199af0381 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -838,7 +838,7 @@ msm_gpu_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev,
+>                 return ERR_CAST(aspace);
+>         }
+>
+> -       ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
+> +       ret = aspace->mmu->funcs->attach(aspace->mmu);
+>         if (ret) {
+>                 msm_gem_address_space_put(aspace);
+>                 return ERR_PTR(ret);
+> @@ -995,8 +995,7 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
+>         msm_gem_kernel_put(gpu->memptrs_bo, gpu->aspace, false);
+>
+>         if (!IS_ERR_OR_NULL(gpu->aspace)) {
+> -               gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu,
+> -                       NULL, 0);
+> +               gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu);
+>                 msm_gem_address_space_put(gpu->aspace);
+>         }
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+> index 34f643a0c28a..34980d8eb7ad 100644
+> --- a/drivers/gpu/drm/msm/msm_gpummu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
+> @@ -21,14 +21,12 @@ struct msm_gpummu {
+>  #define GPUMMU_PAGE_SIZE SZ_4K
+>  #define TABLE_SIZE (sizeof(uint32_t) * GPUMMU_VA_RANGE / GPUMMU_PAGE_SIZE)
+>
+> -static int msm_gpummu_attach(struct msm_mmu *mmu, const char * const *names,
+> -               int cnt)
+> +static int msm_gpummu_attach(struct msm_mmu *mmu)
+>  {
+>         return 0;
+>  }
+>
+> -static void msm_gpummu_detach(struct msm_mmu *mmu, const char * const *names,
+> -               int cnt)
+> +static void msm_gpummu_detach(struct msm_mmu *mmu)
+>  {
+>  }
+>
+> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> index 8c95c31e2b12..ad58cfe5998e 100644
+> --- a/drivers/gpu/drm/msm/msm_iommu.c
+> +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> @@ -23,16 +23,14 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+>         return 0;
+>  }
+>
+> -static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
+> -                           int cnt)
+> +static int msm_iommu_attach(struct msm_mmu *mmu)
+>  {
+>         struct msm_iommu *iommu = to_msm_iommu(mmu);
+>
+>         return iommu_attach_device(iommu->domain, mmu->dev);
+>  }
+>
+> -static void msm_iommu_detach(struct msm_mmu *mmu, const char * const *names,
+> -                            int cnt)
+> +static void msm_iommu_detach(struct msm_mmu *mmu)
+>  {
+>         struct msm_iommu *iommu = to_msm_iommu(mmu);
+>
+> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+> index 871d56303697..67a623f14319 100644
+> --- a/drivers/gpu/drm/msm/msm_mmu.h
+> +++ b/drivers/gpu/drm/msm/msm_mmu.h
+> @@ -10,8 +10,8 @@
+>  #include <linux/iommu.h>
+>
+>  struct msm_mmu_funcs {
+> -       int (*attach)(struct msm_mmu *mmu, const char * const *names, int cnt);
+> -       void (*detach)(struct msm_mmu *mmu, const char * const *names, int cnt);
+> +       int (*attach)(struct msm_mmu *mmu);
+> +       void (*detach)(struct msm_mmu *mmu);
+>         int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *sgt,
+>                         unsigned len, int prot);
+>         int (*unmap)(struct msm_mmu *mmu, uint64_t iova, unsigned len);
+> --
+> 2.20.1
+>
