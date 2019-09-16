@@ -2,103 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCBDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F38AC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDA75206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70C8B214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:03:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9jk8HNG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="usgnhg07"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390727AbfIPTBL (ORCPT
+        id S1730415AbfIPTDK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:01:11 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43464 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfIPTBJ (ORCPT
+        Mon, 16 Sep 2019 15:03:10 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36400 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfIPTDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:01:09 -0400
-Received: by mail-lf1-f66.google.com with SMTP id u3so796384lfl.10;
-        Mon, 16 Sep 2019 12:01:07 -0700 (PDT)
+        Mon, 16 Sep 2019 15:03:10 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f19so318409plr.3;
+        Mon, 16 Sep 2019 12:03:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=J2qEccuK5M0KaH9plkbZML+GYrMGeAxlIfBWhOFICTs=;
-        b=R9jk8HNGUF1B1xokpI6pOJu72n/BjXgo8Svaaslkju05WtSqxhkqLjYno7HaS3B0Ln
-         ezNFYvl10xAPTQpgL8/WmMcCYgVeJyDzgS6qhKgb7RAf9qdvsPnSU4djUo5iw/iwelwv
-         u2N09LuAq/vy8Ts48pnABo3oja+IR+PQnfhRKfNa7eJdHkHPntpK80s4hbs1v2Sr7Yld
-         AP9U38wmayYYts57xG1Z9FEcAGBIugGZ0Rcuy9VVmCNYz9Nd6IM7t5n4knVKFAY8QYhW
-         Y/MrPjugZ1vmFFzjzvQHTQF1PrPJWXmcegzv56NBgvAq8zjWdZkQL54hYPMdBetkd7is
-         8WHA==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=O593HMHr1X+t/3lCKgBpvy9WSO86CaTojEYHPvt/fEk=;
+        b=usgnhg07TRgsfaVdzt3E55MQ+J8ZG8EqLxQ4kckSs3uxRwVIVE0MRZ533n0fklbPf4
+         pckxTev4WnlQh+hY4cmeCUHKr7qz80TmkeQj56c4uHzcw+K7/PvOLSd0fpsO1P2quZZ7
+         OmbXUaaFu2SgIUmRpbVqHa5mNQsesQ8/0mL7yJ1MQItSEBUdtjzyUp0XNxtp5Bz2h77Q
+         tNisNAoSaCBIofjqKWWBTbvJcb2nIGW949Xz+ucy3So40fB7+XBC807UIY+SH87oXgMl
+         s/0ACbxVSc+LdAmFLaZxEij9evKOYVEeoukeCev3fjnh5ZrYnnacuiZ1C8qkck1ZhTuY
+         7eKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=J2qEccuK5M0KaH9plkbZML+GYrMGeAxlIfBWhOFICTs=;
-        b=GkJgygKboCdqlaE3JcNXcqS4npCPqphxsdwloI53ocjaPzzcYOBwGZGUMmqzNzf65x
-         FU3lgQSykkFSdCiQ5/LNP3KuRR0+7SwcLFRGPp4zHBsPxgX3tEQlFFw19wQBptvmRv7+
-         hERS9EGthEaSDvoG3KtQc4kRTJhm3kVVlL3lcnybiLFi2qtV74Od7BP0V6VFuv1+ZwNw
-         sZJq0Ryk08Cps0+31UC5fkUSRpSJ4dtnAqPiy9pk3Mev9hXoPHLdZVk91DitwlNhpJGQ
-         W+1hL5KL1C+/zZCx82tDVk8awAkqxbtCRWnBuFNQc+PJt8ShaB8LLxIF2b3wgl2rn8Ei
-         fqMA==
-X-Gm-Message-State: APjAAAWHghM9LWSLaH574flSnl47snMTKSwTFg1PxNFIO6AW8TNBBRPP
-        2lyzIfNuKwD/bgkNvTBkaiEAKzoopyXQIA==
-X-Google-Smtp-Source: APXvYqxC7lPyWDsE2FiRJETKwl4ssw78oh+b7m3LidNF7YQupn5sqcpmQ4S2mH3sZ2gOu43WSUsODw==
-X-Received: by 2002:ac2:4853:: with SMTP id 19mr475207lfy.69.1568660466662;
-        Mon, 16 Sep 2019 12:01:06 -0700 (PDT)
-Received: from arch.lan (89-70-31-203.dynamic.chello.pl. [89.70.31.203])
-        by smtp.gmail.com with ESMTPSA id z9sm8414053ljn.78.2019.09.16.12.01.05
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=O593HMHr1X+t/3lCKgBpvy9WSO86CaTojEYHPvt/fEk=;
+        b=eWwXvMHDEs1CaGKegezZiSG1c2H5BroiHiICUmCzojtCOt6r3JEnQS8EUh/KQC1B2p
+         LUgQz3hGTGTdGOD+vnbCxdAKPKgdSXkVNn2BtJZuGSVIMiyI6jrE5cAfJC+RMKj/7oOd
+         FoZhGlhwqRp1T58JMPM7Zmkn56jS3PAmvi2zsNx7MtMPI8P//NbGAP//t/Ug+wfkwXvS
+         ylFLMpq1E2WVbzQvCCk4ysxP9p0WQ5oYJzyANVg4syV75P16e59B1JnET1EeohZ2WSwQ
+         nY+0Y1A4r8NGzBfFy9JZ50SpFoBDJOICL3dE/LGMmzRxZXUViz814U9OYrkwiB9+gTji
+         t3bw==
+X-Gm-Message-State: APjAAAXoV6mwd8MkpU522p/pivO49HlmnkwgznNoBuIhIaWDnPw63tiw
+        Vq9jJQKMFY9mfQiwYYyzgHxvEnD7
+X-Google-Smtp-Source: APXvYqxuxI6u8zDVKZJbWfmjYLJJp9vLcVvaYS8HA2y5ASTUm3CVUjEZTsJMbtW3HHZqto0l/lLIAA==
+X-Received: by 2002:a17:902:9001:: with SMTP id a1mr1400116plp.148.1568660588129;
+        Mon, 16 Sep 2019 12:03:08 -0700 (PDT)
+Received: from SD ([2405:204:828a:aaec:8514:49dd:92d4:793d])
+        by smtp.gmail.com with ESMTPSA id i6sm67954035pfq.20.2019.09.16.12.03.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 12:01:06 -0700 (PDT)
-From:   Tomasz Duszynski <tduszyns@gmail.com>
-To:     linux-iio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        jic23@kernel.org, robh+dt@kernel.org,
-        Tomasz Duszynski <tduszyns@gmail.com>
-Subject: [PATCH 2/2] MAINTAINERS: add entry for ROHM BH1750 driver
-Date:   Mon, 16 Sep 2019 21:00:24 +0200
-Message-Id: <20190916190024.9955-3-tduszyns@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190916190024.9955-1-tduszyns@gmail.com>
-References: <20190916190024.9955-1-tduszyns@gmail.com>
+        Mon, 16 Sep 2019 12:03:07 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 00:32:54 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] i2c: qup: Use devm_platform_ioremap_resource helper
+Message-ID: <20190916190254.GA14207@SD>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as a ROHM BH1750 ambient light sensor driver maintainer.
+Use devm_platform_ioremap_resource helper which wraps
+platform_get_resource() and devm_ioremap_resource() together.
 
-Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+The semantic patch that makes this report is available
+in scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
+
+Found using - http://coccinelle.lip6.fr/
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
 ---
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-qup.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f0c03740b9fb..928059c5cd49 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13792,6 +13792,12 @@ L:	linux-serial@vger.kernel.org
- S:	Odd Fixes
- F:	drivers/tty/serial/rp2.*
- 
-+ROHM BH1750 AMBIENT LIGHT SENSOR DRIVER
-+M:	Tomasz Duszynski <tduszyns@gmail.com>
-+S:	Maintained
-+F:	drivers/iio/light/bh1750.c
-+F:	Documentation/devicetree/bindings/iio/light/bh1750.yaml
-+
- ROHM MULTIFUNCTION BD9571MWV-M PMIC DEVICE DRIVERS
- M:	Marek Vasut <marek.vasut+renesas@gmail.com>
- L:	linux-kernel@vger.kernel.org
--- 
-2.23.0
+diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+index 23c4893512b2..2d21168f81a0 100644
+--- a/drivers/i2c/busses/i2c-qup.c
++++ b/drivers/i2c/busses/i2c-qup.c
+@@ -1663,7 +1663,6 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 	static const int blk_sizes[] = {4, 16, 32};
+ 	struct qup_i2c_dev *qup;
+ 	unsigned long one_bit_t;
+-	struct resource *res;
+ 	u32 io_mode, hw_ver, size;
+ 	int ret, fs_div, hs_div;
+ 	u32 src_clk_freq = DEFAULT_SRC_CLK;
+@@ -1760,8 +1759,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	qup->base = devm_ioremap_resource(qup->dev, res);
++	qup->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(qup->base))
+ 		return PTR_ERR(qup->base);
+
+--
+2.20.1
 
