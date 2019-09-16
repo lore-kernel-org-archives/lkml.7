@@ -2,131 +2,105 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB237C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49265C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FAD21670
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:18:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568672339;
-	bh=Op5Ihb6k2RzV2iRhTcru7C/npUmLG/sT4UaIqM6wEsg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LzTUCgN56fSdTDRsWnn84Y7BOsLOt1TBHqbp0svILBaVEj0DUvCZS8lBHZNbZC8R7
-	 AfwmL4qoBvt8RSzYmEHUi6UMqbKnyMZsfeaPxwu5EwOEbVA4isUWgjWc146FWkVtSL
-	 Tjx4V9AAdIeiUwLSb12QA3GNrLrIh6iWOqwZmjMw=
+	by mail.kernel.org (Postfix) with ESMTP id 1740021670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oRZloT25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732965AbfIPWS7 (ORCPT
+        id S1733005AbfIPWTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:18:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:46534 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbfIPWS6 (ORCPT
+        Mon, 16 Sep 2019 18:19:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:38251 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728917AbfIPWTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:18:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LoptWHwpijT7MWtOlC9PckiSoFJqym7PhES1gwSMA20=; b=g3aCrtWnX6AbTSRElvNW1u7R3
-        OIVCWt57T7dH5LwPrSvYhxiLG/qFGQgE1W9EE1PUPw38kVaHTiWGLXTaC345rRsY8xRQFeNT+XTo/
-        53CXypLZpGGF696TwSO5wx+syljydzYvAz5pA8FPyWdNNVSRqb079bUMjCHH2V3h0tcAo=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9zKf-0005rw-6I; Mon, 16 Sep 2019 22:18:53 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 4D5582741A12; Mon, 16 Sep 2019 23:18:52 +0100 (BST)
-Date:   Mon, 16 Sep 2019 23:18:52 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xinpeng Liu <danielliu861@gmail.com>
-Subject: Re: linux-next: manual merge of the drm tree with the kbuild tree
-Message-ID: <20190916221852.GN4352@sirena.co.uk>
-References: <20190915214748.GJ4352@sirena.co.uk>
- <CAKwvOdkZ9_qp9V=H6tjpLyscct+g-aPqn-dPj8R+CGF4Rt_-Rw@mail.gmail.com>
+        Mon, 16 Sep 2019 18:19:34 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w10so524503plq.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5s0xpZGS83FwiMvCo1TIQP0cn/VBzbnyICFgBZ0OB8Y=;
+        b=oRZloT25WgrG1A2E2/rG1KEJTsek/VSatAe1mECK70Mcns8rFB4oQSbaFfzWOC5w+M
+         Xag6HGDZ5qz6fjMSOpYUmXJmJou5XfUcqmOTGP6pBjRziIzzNqZaUy3miVy+F4viGeqf
+         GvJ+WpgDdjCraSnaMKdWGwKfJf5MQwf0ojIHE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5s0xpZGS83FwiMvCo1TIQP0cn/VBzbnyICFgBZ0OB8Y=;
+        b=CcgiDo9k1J3BBuD/4NpMikvbePTHRJLYgzerB2huV5l8dCYyZbmUBIcqcIvH8VP3n1
+         3U5jTmqA8MianFqZB+DCCZgsd2GngIZ5DWZkDwJqhS1ff7DfJ8iMROAP3IC/zBiBhbjJ
+         i2zrAT1bxLbNpgsf1cdr0GEuUeM/FctrFKHUBj3xjjUqTYCk3gNcZYLCfds80A+LU1Ic
+         N5c5cDaNDk9L1DwL0NrjUrlG3vMjTTG+DVWm0orcPBuVeONUIpG0bUq2vfoI/cME/MWw
+         +vckk0vbs8Z+BZ215Q0UpTi3w8RO9Cd2ZJ0cL2qSoIJViehHzv89XtkLJX0cWnEeHwla
+         6u+w==
+X-Gm-Message-State: APjAAAU/aBj2qEwLBEHcblHjTcaTahgbgoJpCN6ZTIXa9yD6iA52J8jR
+        1UcbcTJZynGdI7EqPCBY/eLSyg==
+X-Google-Smtp-Source: APXvYqw7sxEBBotFfIGOpBAi2210wDBdfmyL+aBEJsT7xHpKccGKNe0o4n5mxz3F+CpkAM0d6b8t+w==
+X-Received: by 2002:a17:902:8f8e:: with SMTP id z14mr397883plo.3.1568672374134;
+        Mon, 16 Sep 2019 15:19:34 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k5sm113363pfp.109.2019.09.16.15.19.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 15:19:33 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 15:19:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     hpa@zytor.com, Peter Zijlstra <peterz@infradead.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Shawn Landden <shawn@git.icu>, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: treewide replacement of fallthrough comments with "fallthrough"
+ macro (was Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
+ keyword for switch/case use)
+Message-ID: <201909161516.A68C8239A@keescook>
+References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
+ <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
+ <20190731171429.GA24222@amd>
+ <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
+ <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
+ <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
+ <201907311301.EC1D84F@keescook>
+ <201908151049.809B9AFBA9@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xhJxprRH8Q4al5cy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOdkZ9_qp9V=H6tjpLyscct+g-aPqn-dPj8R+CGF4Rt_-Rw@mail.gmail.com>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <201908151049.809B9AFBA9@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 15, 2019 at 11:15:53AM -0700, Kees Cook wrote:
+> With that out of the way, yes, let's do a mass conversion. As mentioned
+> before, I think "fallthrough;" should be used here (to match "break;").
+> Let's fork the C language. :)
 
---xhJxprRH8Q4al5cy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+FWIW, last week I asked Linus at the maintainer's summit which he
+preferred ("__fallthrough" or "fallthrough") and he said "fallthrough".
 
-On Mon, Sep 16, 2019 at 02:06:46PM -0700, Nick Desaulniers wrote:
-> On Sun, Sep 15, 2019 at 2:47 PM Mark Brown <broonie@kernel.org> wrote:
+Joe, if you've still got the series ready, do you want to send it for
+this merge window before -rc1 gets cut?
 
-> >   0f0727d971f6fdf ("drm/amd/display: readd -msse2 to prevent Clang from=
- emitting libcalls to undefined SW FP routines")
-
-> ^ this patch is now broken due to the SHA above it.
-
-Right, all the sites that didn't conflict are broken.  Like I say I
-think there needs to be some coordination with the Kbuild changes here.
-
-> b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> index 2b399cfa72e6..ddb8d5649e79 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-> @@ -19,7 +19,7 @@ endif
->  CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o :=3D -mhard-float -msse
-> $(cc_stack_align)
-
-I can't do anything with patches without signoffs so I'm not going to
-apply this as a workaround.
-
-> > + ifdef CONFIG_DRM_AMD_DC_DCN2_1
-> >  -CFLAGS_display_mode_vba_21.o :=3D $(dml_ccflags)
-> >  -CFLAGS_display_rq_dlg_calc_21.o :=3D $(dml_ccflags)
-> >  -endif
->=20
-> ^ this endif should not be removed.
-
-There's an endif left there?  Someone sent a patch, I'm going to apply
-that.
-
---xhJxprRH8Q4al5cy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ACksACgkQJNaLcl1U
-h9DgwAf/Xz3C2AwblpHXUfgFr/B5z7uRUFylQhXku4Hsp+7VOtSdSeK7ww8Iff7G
-aWROHIYOXKHunNlrmT95MPOEgfcPHNfPf4HGQCRP2lpT2pzQ7esSx7E8UUnnI+7A
-fTTutRidlQWwM1BpBJZOOXlN4dOzmyrJ/vsx/H3fpEtaYKTD+veCDdIXpF4i8aN+
-nw+LIaWQSYMgLidrok4kTQcGXZokWMYpz+5CNXtxjfV9j9UpSI1/6WucGMps9ER1
-3CFlE7xaH5R7DKJD9DBEzVNMbcX6QaCFoyLG4Qhxyn92pQXIfqhekI7IQ2iyilTr
-j1cEYeM1KP40iCJRtqjwnEP6OSmIUg==
-=icNP
------END PGP SIGNATURE-----
-
---xhJxprRH8Q4al5cy--
+-- 
+Kees Cook
