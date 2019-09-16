@@ -2,112 +2,140 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF1DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4212C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B1F02067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B17214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ne1r7/Ag"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391810AbfIPVVZ convert rfc822-to-8bit (ORCPT
+        id S2403842AbfIPVWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:21:25 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21872 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730662AbfIPVVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:21:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 14:21:24 -0700
-X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
-   d="scan'208";a="191192461"
-Received: from jsanto5x-mobl.amr.corp.intel.com ([10.255.93.114])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 14:21:23 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PREEMPT_RT PATCH 2/3] i915: convert all irq_locks spinlocks to
- raw spinlocks
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-In-Reply-To: <20190903080335.pe45dmgmjvdvbyd4@linutronix.de>
-Date:   Mon, 16 Sep 2019 14:21:22 -0700
-Cc:     Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.com,
-        tglx@linutronix.com, linux-rt-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <9EF2695D-3FBD-40E0-BE8A-EB71AF4155A5@linux.intel.com>
-References: <20190820003319.24135-1-clark.williams@gmail.com>
- <20190820003319.24135-3-clark.williams@gmail.com>
- <20190903080335.pe45dmgmjvdvbyd4@linutronix.de>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Mon, 16 Sep 2019 17:22:11 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37415 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730662AbfIPVWL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:22:11 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c22so1362449ljj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:22:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dkfcLQF/tIOTeeIdqJMbWZiDa2xY+OxFlDcGtEBgvPs=;
+        b=Ne1r7/AgO+KtwYd1q/2KIaKaaNVBrZ4rRc78P2bYM3GwpWcUHmWOyELgVlqVdh92CK
+         LkmLdMeRMT4ZBrJiyiyHc0ZpKt+umUpYPWtdUw+v0YDx+77GAJ5udCaJYqPpP0D0KGMn
+         h9AKeK7WVmqBr6hcJlKcTDIOFRRqQ//NPx4cq6zUq1iS5f/8A3lY1BMe85bRO1lXPvwF
+         dvjVKuY9m/Gve/Lzc1wBAS2wzlDr5v62PRKAORIO3mHrnIShq9/kA9eFhbkQYOMRsXXF
+         u/Fs2whKmrqLDSKO0mOrvZn45qhzXviEKYvLiYrd8v1z4B4E71TKPwDgCvquQkz8+OsC
+         I9Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=dkfcLQF/tIOTeeIdqJMbWZiDa2xY+OxFlDcGtEBgvPs=;
+        b=Z8IU8VtZeofD/ToA1zFUtOyXmg7Qp2As6FN+dpWiGQDmvMT1Kg1ZR9jm8Le0eQtcZ/
+         DPjYUeDxk+J5HZMjdfdWplUsDTXxSscys/4/TdGao0HykcM7A50DB6rx3eQQjfDyL/3m
+         ckbi1PA84KdE5LviGYFtIcMCBD4y0Q7a1fQcDy7O3IEYWY1mkEHUuU4Im5fdjU5y/CH+
+         hqMPcf6GL5HTLfoK2B+b3/mtPoYVJYSBNROU0VsSm0THTn3zTTP/f1MrhiS1QmG2DztK
+         NgifWuCK7MSdGObGDymbG73ECT0wslN3YCmDcyO0mQWOeUa6qoSVvemaxkm2BX9XpGf/
+         TyQA==
+X-Gm-Message-State: APjAAAXAMsJo6MzBc6Zm0YCd66Y8bUSfvau6M+ZJMtY1rH0W/O+f1FJ7
+        DPu5LpeMUxZNwi55Tk7WqoqsEg==
+X-Google-Smtp-Source: APXvYqzV76u2849Gz4AEo8493X917I7CZ3AYhQkdkfboPLmd4/iYmWUbuNaLbkPD5JsM0UV8Mt7CpA==
+X-Received: by 2002:a2e:98d2:: with SMTP id s18mr4661ljj.68.1568668929218;
+        Mon, 16 Sep 2019 14:22:09 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id r6sm14547ljr.77.2019.09.16.14.22.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 14:22:08 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 00:22:06 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 01/14] samples: bpf: makefile: fix HDR_PROBE
+ "echo"
+Message-ID: <20190916212204.GA4420@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 01:13:23PM -0700, Andrii Nakryiko wrote:
+>On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> echo should be replaced with echo -e to handle '\n' correctly, but
+>> instead, replace it with printf as some systems can't handle echo -e.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  samples/bpf/Makefile | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 1d9be26b4edd..f50ca852c2a8 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -201,7 +201,7 @@ endif
+>>
+>>  # Don't evaluate probes and warnings if we need to run make recursively
+>>  ifneq ($(src),)
+>> -HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+>> +HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+>
+>printf change is fine, but I'm confused about \# at the beginning of
+>the string. Not sure what was the intent, but it seems like it should
+>work with just #include at the beginning.
 
+At least no warns, but looks like should work.
+Will try it in next v.
 
-> On Sep 3, 2019, at 1:03 AM, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> 
-> On 2019-08-19 19:33:18 [-0500], Clark Williams wrote:
->> From: Clark Williams <williams@redhat.com>
->> 
->> The following structures contain a member named 'irq_lock'.
->> These three locks are of type spinlock_t and are used in
->> multiple contexts including atomic:
->> 
->>    struct drm_i915_private
->>    struct intel_breadcrumbs
->>    strict intel_guc
->> 
->> Convert them all to be raw_spinlock_t so that lockdep and the lock
->> debugging code will be happy.
-> 
-> What is your motivation to make the lock raw?
-> I did the following:
-> 
-> void intel_engine_signal_breadcrumbs(struct intel_engine_cs *engine)
-> {
-> -       local_irq_disable();
-> -       intel_engine_breadcrumbs_irq(engine);
-> -       local_irq_enable();
-> +       if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL)) {
-> +               intel_engine_breadcrumbs_irq(engine);
-> +       } else {
-> +               local_irq_disable();
-> +               intel_engine_breadcrumbs_irq(engine);
-> +               local_irq_enable();
-> +       }
-> }
-> 
-> and lockdep was quiet (+ ignoring/patching the lockdep-irq-off-asserts).
-> The local_irq_disable() is here (my interpretation of the situation)
-> because that function is called from process context while the remaining
-> callers invoke intel_engine_breadcrumbs_irq() from the interrupt
-> handler and it acquires irq_lock via a plain spin_lock().  That
-> local_irq_disable() would be required if everyone did a _irqsave().
+>
+>>         $(HOSTCC) $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
+>>         echo okay)
+>>
+>> --
+>> 2.17.1
+>>
 
-I’ve tested this also on the v5.2.14-rt7 and can confirm that it avoids the need for making the locks raw.
-
-Tested-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
-
-Thanks,
-
-Sean
-
-> 
-> I tried to check how much worse the latency gets here but I didn't see
-> anything in a brief test. What I saw however is that switching to
-> fullscreen while playing a video gives me ~0.5 to ~2ms latency. This is
-> has nothing to do with this change, I have to dig deeper… It might be
-> one of the preempt_disable() section I just noticed.
-> I would prefer to keep the lock non-raw unless there is actual need for
-> it.
-> 
-> Sebastian
-
+-- 
+Regards,
+Ivan Khoronzhuk
