@@ -2,145 +2,96 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A511DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA94206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A53F206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729150AbfIPFqF (ORCPT
+        id S1729231AbfIPFrm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 01:46:05 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:2745 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727053AbfIPFqE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 01:46:04 -0400
-X-UUID: 1ab7ea77fe4148de9a65027ebe4a1bf6-20190916
-X-UUID: 1ab7ea77fe4148de9a65027ebe4a1bf6-20190916
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 694545173; Mon, 16 Sep 2019 13:45:52 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Sep
- 2019 13:45:48 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 16 Sep 2019 13:45:47 +0800
-Message-ID: <1568612747.7317.72.camel@mhfsdcap03>
-Subject: Re: [PATCH v3 3/7] usb: mtu3: support ip-sleep wakeup for MT8183
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Mon, 16 Sep 2019 13:45:47 +0800
-In-Reply-To: <20190911184453.GA2628@roeck-us.net>
-References: <1567150854-30033-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1567150854-30033-4-git-send-email-chunfeng.yun@mediatek.com>
-         <20190911184453.GA2628@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24914.004
-X-TM-AS-Result: No-8.235300-8.000000-10
-X-TMASE-MatchedRID: csPTYAMX1+HmLzc6AOD8DfHkpkyUphL9dfsypiTqGpue9toQ6h6LE2ng
-        VUDf4c8Y3UJTYve4D89VVkf0bJfBjyxppiUy9o4cA9lly13c/gElWygvtTclwFGLwJXlA4mIwBI
-        zUVtFoCLgRgaCjJFnr+xbYZUuzB/CsWFXqrN3c5D1WO1NzV/CYNi5W7Rf+s6QiiKPXbEds+4eMp
-        1P/J9F6H2dcFgFzv71OLoOGImc4B4M8jMXjBF+sIMbH85DUZXy3QfwsVk0UbtuRXh7bFKB7lAlx
-        8mk+INITqHBTq5IMRMciNlpck9RPvcGG72gNuthWClYJu9r4yY=
-X-TM-AS-User-Approved-Sender: No
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--8.235300-8.000000
-X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24914.004
-X-TM-SNTS-SMTP: 3242FE149AFF8C962B76284F45FA462CBA199288A603FDB43D5C66F530F60A4F2000:8
-X-MTK:  N
+        Mon, 16 Sep 2019 01:47:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:41048 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727053AbfIPFrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 01:47:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E2D4337;
+        Sun, 15 Sep 2019 22:47:41 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.43.143])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6DF843F67D;
+        Sun, 15 Sep 2019 22:50:08 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH] mm/hotplug: Reorder memblock_[free|remove]() calls in try_remove_memory()
+Date:   Mon, 16 Sep 2019 11:17:37 +0530
+Message-Id: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-11 at 11:44 -0700, Guenter Roeck wrote:
-> On Fri, Aug 30, 2019 at 03:40:50PM +0800, Chunfeng Yun wrote:
-> > Support USB wakeup by ip-sleep mode for MT8183, it's similar to
-> > MT8173
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> > v3: changes micros define
-> > 
-> > v2: no changes
-> > ---
-> >  drivers/usb/mtu3/mtu3_host.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-> > index c871b94f3e6f..4f8208885ebd 100644
-> > --- a/drivers/usb/mtu3/mtu3_host.c
-> > +++ b/drivers/usb/mtu3/mtu3_host.c
-> > @@ -18,6 +18,12 @@
-> >  #include "mtu3.h"
-> >  #include "mtu3_dr.h"
-> >  
-> > +/* mt8183 etc */
-> > +#define PERI_WK_CTRL0	0x20
-> > +#define WC0_IS_C(x)	(((x) & 0xf) << 28)  /* cycle debounce */
-> > +#define WC0_IS_P	BIT(12)	/* polarity */
-> > +#define WC0_IS_EN	BIT(6)
-> > +
-> 
-> For 64-bit builds, this results in:
-> 
-> drivers/usb/mtu3/mtu3_host.c: In function ‘ssusb_wakeup_ip_sleep_set’:
-> ./include/linux/bits.h:6:19: warning:
-> 	conversion from ‘long unsigned int’ to ‘u32’ {aka ‘unsigned int’}
-> 	changes value from ‘18446744073441120320’ to ‘4026536000’ [-Woverflow]
-> 
-> since WC0_IS_C() is sign extended to 64 bit and then truncated.
-Got it, thanks a lot
+In add_memory_resource() the memory range to be hot added first gets into
+the memblock via memblock_add() before arch_add_memory() is called on it.
+Reverse sequence should be followed during memory hot removal which already
+is being followed in add_memory_resource() error path. This now ensures
+required re-order between memblock_[free|remove]() and arch_remove_memory()
+during memory hot-remove.
 
-> 
-> Observed with gcc 7.4.0 and 8.3.0.
-> 
-> Guenter
-> 
-> >  /* mt8173 etc */
-> >  #define PERI_WK_CTRL1	0x4
-> >  #define WC1_IS_C(x)	(((x) & 0xf) << 26)  /* cycle debounce */
-> > @@ -30,7 +36,8 @@
-> >  #define SSC_SPM_INT_EN		BIT(1)
-> >  
-> >  enum ssusb_uwk_vers {
-> > -	SSUSB_UWK_V1 = 1,
-> > +	SSUSB_UWK_V0 = 0,
-> > +	SSUSB_UWK_V1,
-> >  	SSUSB_UWK_V2,
-> >  };
-> >  
-> > @@ -43,6 +50,11 @@ static void ssusb_wakeup_ip_sleep_set(struct ssusb_mtk *ssusb, bool enable)
-> >  	u32 reg, msk, val;
-> >  
-> >  	switch (ssusb->uwk_vers) {
-> > +	case SSUSB_UWK_V0:
-> > +		reg = ssusb->uwk_reg_base + PERI_WK_CTRL0;
-> > +		msk = WC0_IS_EN | WC0_IS_C(0xf) | WC0_IS_P;
-> > +		val = enable ? (WC0_IS_EN | WC0_IS_C(0x8)) : 0;
-> > +		break;
-> >  	case SSUSB_UWK_V1:
-> >  		reg = ssusb->uwk_reg_base + PERI_WK_CTRL1;
-> >  		msk = WC1_IS_EN | WC1_IS_C(0xf) | WC1_IS_P;
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Original patch https://lkml.org/lkml/2019/9/3/327
 
+Memory hot remove now works on arm64 without this because a recent commit
+60bb462fc7ad ("drivers/base/node.c: simplify unregister_memory_block_under_nodes()").
+
+David mentioned that re-ordering should still make sense for consistency
+purpose (removing stuff in the reverse order they were added). This patch
+is now detached from arm64 hot-remove series.
+
+https://lkml.org/lkml/2019/9/3/326
+
+ mm/memory_hotplug.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index c73f09913165..355c466e0621 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+-	memblock_free(start, size);
+-	memblock_remove(start, size);
+ 
+ 	/* remove memory block devices before removing memory */
+ 	remove_memory_block_devices(start, size);
+ 
+ 	arch_remove_memory(nid, start, size, NULL);
++	memblock_free(start, size);
++	memblock_remove(start, size);
+ 	__release_memory_resource(start, size);
+ 
+ 	try_offline_node(nid);
+-- 
+2.20.1
 
