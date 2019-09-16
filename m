@@ -2,97 +2,65 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31390C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 041FAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF47A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:21:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568618502;
-	bh=ZNzODOxruTg8StFF9gj8UjlKbahmC5vEdHRA5AUlXQs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=amNv04uuT3XqYBMXcSrxyAROK78KJSR3hiOhGSiU55f2TraobFOkt+R/PDkezJf2p
-	 XoYGypTucreSn+y09OBo0MTlEjgb4cWegunhH2nw9HHrFsLrSZ+gE+n9WRFD0eJiOf
-	 /AOV6ZOnnuaTBNL5ycMDOnS/20oCnv7W2Z1iLsfQ=
+	by mail.kernel.org (Postfix) with ESMTP id D3AF9206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:22:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728285AbfIPHVl (ORCPT
+        id S1729577AbfIPHWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfIPHVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:21:40 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3580206A4;
-        Mon, 16 Sep 2019 07:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568618500;
-        bh=ZNzODOxruTg8StFF9gj8UjlKbahmC5vEdHRA5AUlXQs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GFEe+YXDq1D7SlleJ3gt0iXMEu0DdY+ZGgYH0brOW8ZMldag9FGK8oSw4SKcEmD19
-         LwlwmHRtN8G4K7pvjCIj7HrIVPA91yY7uOqhRhQkx7cmAw6+obkWqf59oZdBulmRtJ
-         z5ADC604hp9Q8Vwl/6jGPYZfWJL7Tx8GU0gMh7Wg=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] arm64: use generic free_initrd_mem()
-Date:   Mon, 16 Sep 2019 10:21:28 +0300
-Message-Id: <1568618488-19055-1-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Sep 2019 03:22:55 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44476 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725776AbfIPHWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 03:22:54 -0400
+Received: from localhost (unknown [85.119.46.8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ED851152483C6;
+        Mon, 16 Sep 2019 00:22:51 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 09:22:44 +0200 (CEST)
+Message-Id: <20190916.092244.764910996352099184.davem@davemloft.net>
+To:     alexandru.ardelean@analog.com
+Cc:     netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        joabreu@synopsys.com, mcoquelin.stm32@gmail.com
+Subject: Re: [PATCH v3] net: stmmac: socfpga: re-use the `interface`
+ parameter from platform data
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190916070400.18721-1-alexandru.ardelean@analog.com>
+References: <20190916070400.18721-1-alexandru.ardelean@analog.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Sep 2019 00:22:54 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date: Mon, 16 Sep 2019 10:04:00 +0300
 
-arm64 calls memblock_free() for the initrd area in its implementation of
-free_initrd_mem(), but this call has no actual effect that late in the boot
-process. By the time initrd is freed, all the reserved memory is managed by
-the page allocator and the memblock.reserved is unused, so there is no
-point to update it.
+> The socfpga sub-driver defines an `interface` field in the `socfpga_dwmac`
+> struct and parses it on init.
+> 
+> The shared `stmmac_probe_config_dt()` function also parses this from the
+> device-tree and makes it available on the returned `plat_data` (which is
+> the same data available via `netdev_priv()`).
+> 
+> All that's needed now is to dig that information out, via some
+> `dev_get_drvdata()` && `netdev_priv()` calls and re-use it.
+> 
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-Without the memblock_free() call the only difference between arm64 and the
-generic versions of free_initrd_mem() is the memory poisoning. Switching
-arm64 to the generic version will enable the poisoning.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
-
-I've boot tested it on qemu and I've checked that kexec works.
-
- arch/arm64/mm/init.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f3c7952..8ad2934 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -567,14 +567,6 @@ void free_initmem(void)
- 	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
- }
- 
--#ifdef CONFIG_BLK_DEV_INITRD
--void __init free_initrd_mem(unsigned long start, unsigned long end)
--{
--	free_reserved_area((void *)start, (void *)end, 0, "initrd");
--	memblock_free(__virt_to_phys(start), end - start);
--}
--#endif
--
- /*
-  * Dump out memory limit information on panic.
-  */
--- 
-2.7.4
-
+Applied.
