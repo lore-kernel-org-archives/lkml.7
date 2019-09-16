@@ -2,159 +2,175 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C41DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5165CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D6B1206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:29:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23CE8206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:30:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="SgPNHmHU"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dgCGCeR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390362AbfIPS3A (ORCPT
+        id S2390400AbfIPSaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:29:00 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35982 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfIPS3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:29:00 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f19so280312plr.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Jp6I/WhdjgXBrLm8XFTV/W2CbBlPUTPrifY9W91dfHI=;
-        b=SgPNHmHUI3s6Y5U+Q0BVqT7wuZAahYN9Sp7bvK/WkhmSDCYSm5A+2HKPWAwtkqtGXp
-         9J3gPqcUCHFjkPsRUuU3/KOZR1hYBqyd/MNpI1ipdxi9pUvmGf4l8CrTHsTBzP2tIBQ8
-         hFmy5Ft2frUue4ny34BBNvYMvx8XYRjMj04QJzEGKwueGRY2SpndnAROT9qoBFdw5EJm
-         pmSgIzCOb60ekhNb5wLkLoTTOYA6xXYpqBLK5btuPldjQ2T2RWcShbymrS2g+P20jTDk
-         J+EEppal95vaxj+HdoxekXNZMooOdG9AHCiBegMOADmYTE4Cj6LN4ZjAIM8hUT2YUY+H
-         p7Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=Jp6I/WhdjgXBrLm8XFTV/W2CbBlPUTPrifY9W91dfHI=;
-        b=YoHkkPPF83LhpSpJS3M1mGJHUZj8uA6C0cVqVOCMOyeDkCd+eU652g+ekG617JCop7
-         isGAA8dLnO9IDyeRh+CDVn3foLA7mQssSEIr1f2lVb4oIrEI2iPgXbDmmuBTgfD4F23o
-         ZPTJ6VQXC2h1W0p/DIFLqOeAvzDhnyJ+j6Eul5rpyIlbBAtOaFvnyJI3cZ206cEkKzyn
-         d8xADaJwdVzVD2ec+HheVPdMD+/KurQDIog973fxLo9WLmSAxTQHTTspvtUdhb99hJ2H
-         41djr3fY4htv3oMggLy7zjZILIPEUiiAYVIC/ocu04j2FW2/MgAI9f7ngT7Biifc2GOJ
-         xIVQ==
-X-Gm-Message-State: APjAAAWmy2cWz0wbYhSHnlhdsSLtQvUeKctwKru0+bA0hKSZMB9I5XOo
-        sEEAB/IXL4JWjY3xZ+Tf6y280Q==
-X-Google-Smtp-Source: APXvYqyPLzCNMj7vNHvNiodpwn0FVuHbfPgpqBsoZRBBK2pBoeehbEWH1qRowZP5cnYDV+iwsY1UPQ==
-X-Received: by 2002:a17:902:5a44:: with SMTP id f4mr1093510plm.31.1568658539014;
-        Mon, 16 Sep 2019 11:28:59 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id a4sm12595350pfn.110.2019.09.16.11.28.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 11:28:58 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 11:28:58 -0700 (PDT)
-X-Google-Original-Date: Mon, 16 Sep 2019 11:28:52 PDT (-0700)
-Subject:     Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a separate file
-In-Reply-To: <20190916181800.7lfpt3t627byoomt@willie-the-truck>
-CC:     Anup Patel <Anup.Patel@wdc.com>, guoren@kernel.org,
-        Will Deacon <will.deacon@arm.com>, julien.thierry@arm.com,
-        aou@eecs.berkeley.edu, james.morse@arm.com,
-        Arnd Bergmann <arnd@arndb.de>, suzuki.poulose@arm.com,
-        marc.zyngier@arm.com, catalin.marinas@arm.com,
-        linux-kernel@vger.kernel.org, rppt@linux.ibm.com,
-        Christoph Hellwig <hch@infradead.org>,
-        Atish Patra <Atish.Patra@wdc.com>, julien.grall@arm.com,
-        gary@garyguo.net, Paul Walmsley <paul.walmsley@sifive.com>,
-        christoffer.dall@arm.com, linux-riscv@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     will@kernel.org
-Message-ID: <mhng-11e0cc7f-264b-4412-9424-2357bc27dcb3@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mon, 16 Sep 2019 14:30:24 -0400
+Received: from mout.gmx.net ([212.227.15.18]:37475 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbfIPSaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:30:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1568658578;
+        bh=5JYExOoizKoku5K5TgA/HNnjAWp4gGtovIt70J4r0CE=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
+        b=dgCGCeR81F8b9hOraeryyMarZeGV+JHEu9LMJQ5ulZCJ1kMCF3PEcWyQGlESpoVeN
+         G6nsCv9JzTn+g7Kwa0UTBu1HfBaUftg4KqOc3IIBqTx1bi99wl7f+8+If7P0Pq1dYL
+         hfi2UN/pGcmr2tH3T4dMEPedKB4nkSU/9RXK5JiE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ls3530.fritz.box ([92.116.141.197]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MnJlW-1iZ7ZO1qBo-00jMH4; Mon, 16
+ Sep 2019 20:29:38 +0200
+Date:   Mon, 16 Sep 2019 20:29:32 +0200
+From:   Helge Deller <deller@gmx.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        John David Anglin <dave.anglin@bell.net>
+Cc:     Sven Schnelle <svens@stackframe.org>,
+        Jeroen Roovers <jer@gentoo.org>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [GIT PULL] parisc architecture updates for kernel v5.4
+Message-ID: <20190916182932.GA8097@ls3530.fritz.box>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:440bKVaa1Q+3xLpUEUoFEcM5u1Bu8qPzEsOFS5a9qYSTqegTcu4
+ 3+uGsrPtdej3qhD8uC0MgJKpVsnx6ZwBa2fzzMKrFOJxQWY+Bg2H9TCIXx144RqvI9+n8OM
+ TgT0HcFglI8raLZo+5v2K3WeIsMjzFKmwUeWBEHcjEwHhj5IOdCtgS34tdPq5eV+CX0kbtL
+ UCBhBDYUF1k5VEr4TRSeg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6LUP+KjmiZs=:B3RVywv9l2zy0I+HselXkS
+ a69OURBWixa5VN0Db7QUuNo5Aqzyy4N2a2kp94kKE+kROUyQ5rCaHc2dpdVTThzGbmlc+YBz0
+ Hz8dA8wTeGYxagO3wp9KXTJftTl0T+6ITA2QXxIKwn8TvT8QDWrFck3K2ZBtPSSV4Uv+LAuKl
+ qyWgGA0cKeNOy7cgK7vKZnqTVGS/Twqeuzl/izVgoWRJVmLO/920yjASRhgSY5VJKX7HN1wJ5
+ DRPtt9ziqHuZiU5hKuNro89SsMQtUe+WsgHtfGURHC9i8o38Vvu8FCWRxZsuHUZ91AvfPhMV6
+ a6OGKhQmbW+1AhRMQVCIG/dh8HsctaMI+2hw6M78OEN3BAAe3PHRs4o6IaSyfRRllXUht8R7H
+ /qkstakpkrTPGni48EUM+qke0/CrRgJULis3H+ijt3MH7SU06n4u2fKRkS8Rz2sQRsgiW0VuI
+ BjvLFyLk/FEwtqu4zGkJ7wxY+ArZlort17T3B58pY9fjzJ0Hiawm4QtIeoHHJGtN2vzsJr6HP
+ Uvgqu/QSsjIUiV7hof0+3aHqEDieNWEb+WXICVcToTA538gL/Ok16M7ctqnA6HiW5B98NSWes
+ 0t2Y/l+xhSRwKaLIxpg+FfubZqrnjubQwNMZw4540vASUbcjoTtorOpD5Xpyg90DDM9Nueu/m
+ Si3UOiPGIjOAEMwHFK0AiBC0ys8zwM2toldouy1gWRIknnV/md2F+d8uHgQMSnRcXKHMMXChf
+ +OUPMvpyrZxy9yvNfP4+DqT67Y2WRwjnu86f8WLv/7D3Df7tedTr7qytRpeUMhehk8h/Bebd8
+ 3wOs3+cu5S7HXpUKLcRQK4nG5NZ0r8vpDhfyPa++bU2YKcpgWEKAEdIJDrossJtV8ve9rlMuG
+ sGG1hHM7SA7YjZKq3G2PpWSRPYPbnNGKmQnE+d0icf8RDkLiqhw9EnJ99LxF7jD116pTPhIow
+ QY+kaaHZEjF+V+djASec7ukkrvH5Q3yVhobQDP0Q9wdRHIfzd6ePDxngPMxuA+fyjeN6SKnri
+ J6fL/wogjiWB/Q0AxVLGtv6Zd1xzT9w3Zhxa8KX+0fl5ove0xF4Od6YcB2V4abhyDHrqAJpLl
+ QpJlTT2BriCK0BuNPH1pRxCiWMCEPpHlNi/eA7/sgvduqNXgEwDhiboOSpFMVj3MeR5/PMGla
+ rFpWg0hbD0fcLTY+E9mFcTmImcESyKQZuS1GMNlfO7J4ziLtlZZ0Bg+nfUexJX2UxBAbGuSJL
+ x6wYqSRvEhQYVagxDS4csV6Tcj26MOEStqYPEfA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 11:18:00 PDT (-0700), will@kernel.org wrote:
-> On Sun, Sep 15, 2019 at 05:03:38AM +0000, Anup Patel wrote:
->>
->>
->> > -----Original Message-----
->> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
->> > owner@vger.kernel.org> On Behalf Of Palmer Dabbelt
->> > Sent: Saturday, September 14, 2019 7:31 PM
->> > To: will@kernel.org
->> > Cc: guoren@kernel.org; Will Deacon <will.deacon@arm.com>;
->> > julien.thierry@arm.com; aou@eecs.berkeley.edu; james.morse@arm.com;
->> > Arnd Bergmann <arnd@arndb.de>; suzuki.poulose@arm.com;
->> > marc.zyngier@arm.com; catalin.marinas@arm.com; Anup Patel
->> > <Anup.Patel@wdc.com>; linux-kernel@vger.kernel.org;
->> > rppt@linux.ibm.com; Christoph Hellwig <hch@infradead.org>; Atish Patra
->> > <Atish.Patra@wdc.com>; julien.grall@arm.com; gary@garyguo.net; Paul
->> > Walmsley <paul.walmsley@sifive.com>; christoffer.dall@arm.com; linux-
->> > riscv@lists.infradead.org; kvmarm@lists.cs.columbia.edu; linux-arm-
->> > kernel@lists.infradead.org; iommu@lists.linux-foundation.org
->> > Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
->> > separate file
->> >
->> > On Thu, 12 Sep 2019 07:02:56 PDT (-0700), will@kernel.org wrote:
->> > > On Sun, Sep 08, 2019 at 07:52:55AM +0800, Guo Ren wrote:
->> > >> On Mon, Jun 24, 2019 at 6:40 PM Will Deacon <will@kernel.org> wrote:
->> > >> > > I'll keep my system use the same ASID for SMP + IOMMU :P
->> > >> >
->> > >> > You will want a separate allocator for that:
->> > >> >
->> > >> > https://lkml.kernel.org/r/20190610184714.6786-2-jean-philippe.bruck
->> > >> > er@arm.com
->> > >>
->> > >> Yes, it is hard to maintain ASID between IOMMU and CPUMMU or
->> > >> different system, because it's difficult to synchronize the IO_ASID
->> > >> when the CPU ASID is rollover.
->> > >> But we could still use hardware broadcast TLB invalidation
->> > >> instruction to uniformly manage the ASID and IO_ASID, or OTHER_ASID in
->> > our IOMMU.
->> > >
->> > > That's probably a bad idea, because you'll likely stall execution on
->> > > the CPU until the IOTLB has completed invalidation. In the case of
->> > > ATS, I think an endpoint ATC is permitted to take over a minute to
->> > > respond. In reality, I suspect the worst you'll ever see would be in
->> > > the msec range, but that's still an unacceptable period of time to hold a
->> > CPU.
->> > >
->> > >> Welcome to join our disscusion:
->> > >> "Introduce an implementation of IOMMU in linux-riscv"
->> > >> 9 Sep 2019, 10:45 Jade-room-I&II (Corinthia Hotel Lisbon) RISC-V MC
->> > >
->> > > I attended this session, but it unfortunately raised many more
->> > > questions than it answered.
->> >
->> > Ya, we're a long way from figuring this out.
->>
->> For everyone's reference, here is our first attempt at RISC-V ASID allocator:
->> http://archive.lwn.net:8080/linux-kernel/20190329045111.14040-1-anup.patel@wdc.com/T/#u
->
-> With a reply stating that the patch "absolutely does not work" ;)
->
-> What exactly do you want people to do with that? It's an awful lot of effort
-> to review this sort of stuff and given that Guo Ren is talking about sharing
-> page tables between the CPU and an accelerator, maybe you're better off
-> stabilising Linux for the platforms that you can actually test rather than
-> getting so far ahead of yourselves that you end up with a bunch of wasted
-> work on patches that probably won't get merged any time soon.
->
-> Seriously, they say "walk before you can run", but this is more "crawl
-> before you can fly". What's the rush?
+Hi Linus,
 
-I agree, and I think I've been pretty clear here: we're not merging this ASID 
-stuff until we have a platform we can test on, particularly as the platforms we 
-have now already need some wacky hacks around TLB flushing that we haven't 
-gotten to the bottom of.
+please pull the parisc architecture updates for kernel 5.4 from:
 
-> Will
+  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.4-1
+
+Major changes:
+* Make the powerpc implementation to read elf files available as a public
+  kexec interface so it can be re-used on other architectures (Sven)
+* Implement kexec on parisc (Sven)
+* Add kprobes on ftrace on parisc (Sven)
+* Fix kernel crash with HSC-PCI cards based on card-mode Dino
+* Add assembly implementations for memset, strlen, strcpy, strncpy and strcat
+* Some cleanups, documentation updates, warning fixes, ...
+
+Thanks,
+Helge
+
+----------------------------------------------------------------
+Helge Deller (8):
+      parisc: Add assembly implementations for memset, strlen, strcpy, strncpy and strcat
+      parisc: Add ALTERNATIVE_CODE() and ALT_COND_RUN_ON_QEMU
+      parisc: speed up flush_tlb_all_local with qemu
+      parisc: Avoid warning when loading hppb driver
+      parisc: Convert eisa_enumerator to use pr_cont()
+      parisc: Drop comments which are already in pci.h
+      parisc: Save some bytes in dino driver
+      parisc: Disable HP HSC-PCI Cards to prevent kernel crash
+
+Jeroen Roovers (1):
+      parisc: Have git ignore generated real2.S and firmware.c
+
+Jisheng Zhang (1):
+      kprobes/parisc: remove arch_kprobe_on_func_entry()
+
+Sven Schnelle (15):
+      parisc/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS support
+      parisc/ftrace: Add KPROBES_ON_FTRACE
+      parisc: Update feature list
+      parisc: trigger die notifier chain in parisc_terminate()
+      kexec: add KEXEC_ELF
+      kexec_elf: change order of elf_*_to_cpu() functions
+      kexec_elf: remove parsing of section headers
+      kexec_elf: remove PURGATORY_STACK_SIZE
+      kexec_elf: remove Elf_Rel macro
+      kexec_elf: remove unused variable in kexec_elf_load()
+      kexec_elf: support 32 bit ELF files
+      parisc: add __pdc_cpu_rendezvous()
+      parisc: add kexec syscall support
+      parisc: wire up kexec_file_load syscall
+      parisc: add support for kexec_file_load() syscall
+
+ .../features/core/jump-labels/arch-support.txt     |   2 +-
+ .../debug/kprobes-on-ftrace/arch-support.txt       |   2 +-
+ arch/Kconfig                                       |   3 +
+ arch/parisc/Kconfig                                |  25 +
+ arch/parisc/boot/compressed/.gitignore             |   2 +
+ arch/parisc/include/asm/alternative.h              |  11 +-
+ arch/parisc/include/asm/fixmap.h                   |   1 +
+ arch/parisc/include/asm/ftrace.h                   |   1 +
+ arch/parisc/include/asm/kexec.h                    |  37 ++
+ arch/parisc/include/asm/pdc.h                      |   1 +
+ arch/parisc/include/asm/string.h                   |  15 +
+ arch/parisc/kernel/Makefile                        |   2 +
+ arch/parisc/kernel/alternative.c                   |  23 +-
+ arch/parisc/kernel/entry.S                         |  99 ++++
+ arch/parisc/kernel/firmware.c                      |  13 +
+ arch/parisc/kernel/ftrace.c                        |  64 ++-
+ arch/parisc/kernel/kexec.c                         | 112 +++++
+ arch/parisc/kernel/kexec_file.c                    |  86 ++++
+ arch/parisc/kernel/kprobes.c                       |   4 -
+ arch/parisc/kernel/pacache.S                       |   9 +
+ arch/parisc/kernel/parisc_ksyms.c                  |   4 +
+ arch/parisc/kernel/pci.c                           |  11 -
+ arch/parisc/kernel/relocate_kernel.S               | 149 ++++++
+ arch/parisc/kernel/smp.c                           |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl            |   3 +-
+ arch/parisc/kernel/traps.c                         |   2 +
+ arch/parisc/lib/Makefile                           |   4 +-
+ arch/parisc/lib/memset.c                           |  91 ----
+ arch/parisc/lib/string.S                           | 136 +++++
+ arch/powerpc/Kconfig                               |   1 +
+ arch/powerpc/kernel/kexec_elf_64.c                 | 545 +--------------------
+ drivers/parisc/dino.c                              |  30 +-
+ drivers/parisc/eisa_enumerator.c                   |  10 +-
+ drivers/parisc/hppb.c                              |  11 +-
+ include/linux/kexec.h                              |  23 +
+ include/uapi/linux/kexec.h                         |   1 +
+ kernel/Makefile                                    |   1 +
+ kernel/kexec_elf.c                                 | 430 ++++++++++++++++
+ 38 files changed, 1289 insertions(+), 676 deletions(-)
+ create mode 100644 arch/parisc/include/asm/kexec.h
+ create mode 100644 arch/parisc/kernel/kexec.c
+ create mode 100644 arch/parisc/kernel/kexec_file.c
+ create mode 100644 arch/parisc/kernel/relocate_kernel.S
+ delete mode 100644 arch/parisc/lib/memset.c
+ create mode 100644 arch/parisc/lib/string.S
+ create mode 100644 kernel/kexec_elf.c
