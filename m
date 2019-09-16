@@ -2,102 +2,139 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22862C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC10C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC8222067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ACA0214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:37:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="iAa4MiEK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzSJYltu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbfIPXey (ORCPT
+        id S1730425AbfIPXhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:34:54 -0400
-Received: from cavan.codon.org.uk ([93.93.128.6]:47379 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725917AbfIPXey (ORCPT
+        Mon, 16 Sep 2019 19:37:07 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33383 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfIPXhH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:34:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X2q8aSnUy4dy03z0yGFvq5cDtugo9Mv7XGnsBb9G3Bk=; b=iAa4MiEKt/pSuLtIM34u8C1sW
-        HHlf+AHi/l5j+B4Z4Z0k+p3U6eMDp91kvCPlrGAlvN7/2pFnerYmrpTlrds1l4uKuu4UD2RIXJv9u
-        YW2hP7Ilkey8R69WYU4zMpfFKhHUbErDI/SRqn/q7IpqEli9w4dM4vCXhqDIFc0jB4wfQ=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1iA00g-0001fo-3D; Tue, 17 Sep 2019 00:02:18 +0100
-Date:   Tue, 17 Sep 2019 00:02:18 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org>
-References: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu>
- <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu>
- <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
- <20190916172117.GB15263@mit.edu>
- <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+        Mon, 16 Sep 2019 19:37:07 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so923183pfl.0;
+        Mon, 16 Sep 2019 16:37:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=URI/yswFiE1ZSmwaedQfzMb8JEkdgI6WBChh6fIJ4KY=;
+        b=KzSJYltu0IkNVl6391cXV9865+14apc48Gk8wU+926ikZOW8xQr4xnIv/C4FKddD0T
+         D4CvZ0VBmYb2HjjAi1O2glqu0SZeO0tVYJTnVUyB6S9o5eNyxE4BmjtK2XuYDFu0wCWi
+         7vIDLjhKxkBnCSEBZpIabXsVIcYEnfiUbKfaOJwRdmpsaMlYFDKzlzdo7UTVwXGEXkwi
+         6GlcQNdB0zPhCfxeGCBnIYZgo8BH3smOINeYvNVdPut753Ds7yMkn2Y8oDcEzeOVRdWk
+         OQmy7JQ4eGLQTYvPry6tPYZ7VG/JmST0GSx9Sa5VsHsVJ/BvymsSTxPYW59Qvhhmlx5L
+         41vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=URI/yswFiE1ZSmwaedQfzMb8JEkdgI6WBChh6fIJ4KY=;
+        b=WDbOfn+mn1Vo/mXGsZnK8lMi3IAQsQeH7BeZZFwUZ4YCZVFvc+GjSfbKlQT7Jo8BY7
+         XOfyagoxKC317uwAFjzV/rderyysSnQYSKIoJKBi5rXT4fUTYbr5xnmq6fkkqflYjKcY
+         SEdIONL8AdtswkM0WpblBory3f54y0QpcxW1lp6mCL2HHHsyDKsAwEDEaweaMpBmYLU/
+         HsxUajtdtcjB9Zfvo2Spbqw6nEVuy3dbxoXa5OiVoGCL/9Pc6sckkXit/PxNiJn1zyjL
+         fyJjwU7lQnmoJSG6EkiyHwu6356QJnkxSSz8QvBkER90x0n1YyEVpsltUhI6IqeIwgaL
+         2KnQ==
+X-Gm-Message-State: APjAAAVc10U3vYoA2IK2gJFhNrMPqG4GhWfxLJ0WSgZlXcAphQzlyOh6
+        k5MxIS7GNKUFGISt4dbp0+8=
+X-Google-Smtp-Source: APXvYqy5fuCh1asq2msnIG6advWVrJd9emc2wATGBbqJFZGUFr5OeSxdpGSFqchnkVWLRSg/dNV+xQ==
+X-Received: by 2002:a17:90a:ba90:: with SMTP id t16mr1913997pjr.104.1568677024675;
+        Mon, 16 Sep 2019 16:37:04 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id i19sm275722pjx.1.2019.09.16.16.37.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 16:37:03 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 16:37:01 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Robin Gong <yibin.gong@nxp.com>
+Cc:     robin <robin@protonic.nl>,
+        "linux-input @ vger . kernel . org" <linux-input@vger.kernel.org>,
+        "linux-kernel @ vger . kernel . org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        "linux-arm-kernel @ lists . infradead . org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3] input: keyboard: snvs_pwrkey: Send key events for
+ i.MX6 S, DL and Q
+Message-ID: <20190916233701.GH237523@dtor-ws>
+References: <20190904062329.97520-1-robin@protonic.nl>
+ <20190912201300.GA636@penguin>
+ <803592d161b9ca75d6ac1c2c54e891a1@protonic.nl>
+ <VE1PR04MB663896B94C68B5EF9AE0BE36898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+In-Reply-To: <VE1PR04MB663896B94C68B5EF9AE0BE36898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:44:31AM -0700, Linus Torvalds wrote:
->  - admit that the current situation actually causes problems, and has
-> _existing_ bugs.
-> 
->  - throw it out the window, with the timeout and big BIG warning when
-> the problem cases trigger
+On Mon, Sep 16, 2019 at 07:45:37AM +0000, Robin Gong wrote:
+> On 2019/9/13 15:31 robin <robin@protonic.nl> wrote:> 
+> > Hi Dmitry,
+> > 
+> > On 2019-09-12 22:13, Dmitry Torokhov wrote:
+> > > Hi Robin,
+> > >
+> > > On Wed, Sep 04, 2019 at 06:23:29AM +0000, Robin van der Gracht wrote:
+> > >> The first generation i.MX6 processors does not send an interrupt when
+> > >> the power key is pressed. It sends a power down request interrupt if
+> > >> the key is released before a hard shutdown (5 second press). This
+> > >> should allow software to bring down the SoC safely.
+> > >>
+> > >> For this driver to work as a regular power key with the older SoCs,
+> > >> we need to send a keypress AND release when we get the power down
+> > >> request irq.
+> > >>
+> > >> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+> > >> ---
+> > >> @@ -67,13 +83,17 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int
+> > >> irq, void *dev_id)  {
+> > >>  	struct platform_device *pdev = dev_id;
+> > >>  	struct pwrkey_drv_data *pdata = platform_get_drvdata(pdev);
+> > >> +	unsigned long expire = jiffies;
+> > >>  	u32 lp_status;
+> > >>
+> > >>  	pm_wakeup_event(pdata->input->dev.parent, 0);
+> > >>
+> > >>  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
+> > >> -	if (lp_status & SNVS_LPSR_SPO)
+> > >> -		mod_timer(&pdata->check_timer, jiffies +
+> > >> msecs_to_jiffies(DEBOUNCE_TIME));
+> > >> +	if (lp_status & SNVS_LPSR_SPO) {
+> > >> +		if (pdata->minor_rev > 0)
+> > >> +			expire = jiffies + msecs_to_jiffies(DEBOUNCE_TIME);
+> > >> +		mod_timer(&pdata->check_timer, expire);
+> > >
+> > > Why do we even need to fire the timer in case of the first generation
+> > > hardware? Just send press and release events directly from the ISR.
+> That timer looks like a software debounce to prevent unexpected and
+> meaningless interrupt/event caused by quick press/release.   
 
-The semantics many people want for secure key generation is urandom, but 
-with a guarantee that it's seeded. getrandom()'s default behaviour at 
-present provides that, and as a result it's used for a bunch of key 
-generation. Changing the default (even with kernel warnings) seems like 
-it risks people generating keys from an unseeded prng, and that seems 
-like a bad thing?
+Right, but in case of the first generation hardware we schedule the
+timer immediately (expire == 0) and do not check state of the hardware
+in the timer handler, but rather simply emit down/up events, so we do
+not really get any benefit from the timer (again, I am talking about
+first generation hardware only).
 
-It's definitely unfortunate that getrandom() doesn't have a GRND_URANDOM 
-flag that would make it useful for the "I want some vaguely random 
-numbers but I don't care that much and I don't necessarily have access 
-to /dev/urandom" case, but at the moment we have no way of 
-distinguishing between applications that are making this call because 
-they want the semantics of urandom but need it to be seeded (which is 
-one of the usecases getrandom() was introduced for in the first place) 
-and applications that are making this call because it was convenient and 
-the kernel usually ended up generating enough entropy in the first 
-place. Given the ambiguity, I don't see an easy way to solve for the 
-latter without breaking the former - and that could have some *very* bad 
-outcomes.
- 
+Thanks.
+
 -- 
-Matthew Garrett | mjg59@srcf.ucam.org
+Dmitry
