@@ -2,115 +2,108 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA4B9C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC480C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2592067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:06:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A329D214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:07:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568614067;
+	bh=iIAk2GnDHvnSCDAdd9xHtJ5zIkbFHqPbLjU7KLI8Rqo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HtirUMtHNrefyrGpLDACBeFqEKIstM2lKHnPsx2LJq7ue8pDbTydcnG19EmjAXzu9
+	 sieZqZEvpI8QesFN3U+kEVSRgq7YHCtmhSbKQvrVo3JpLXrbxb+7u56RDmb9Q9ZK0V
+	 zW3pFEZXGa7GUwv1ejJShUjVmSFvMnu8R/en361U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfIPGGt (ORCPT
+        id S1729512AbfIPGHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 02:06:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57030 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725270AbfIPGGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 02:06:49 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8G61rLR008774
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:06:46 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v24jh8ebw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:06:45 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 16 Sep 2019 07:06:44 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Sep 2019 07:06:39 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8G66c9755574628
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 06:06:38 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A8A4911C050;
-        Mon, 16 Sep 2019 06:06:38 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53A8811C04C;
-        Mon, 16 Sep 2019 06:06:38 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Sep 2019 06:06:38 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 16 Sep 2019 02:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725270AbfIPGHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 02:07:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CDA59A01B5;
-        Mon, 16 Sep 2019 16:06:36 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] Add bounds check for Hotplugged memory
-Date:   Mon, 16 Sep 2019 16:05:38 +1000
-X-Mailer: git-send-email 2.21.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 5960720890;
+        Mon, 16 Sep 2019 06:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568614064;
+        bh=iIAk2GnDHvnSCDAdd9xHtJ5zIkbFHqPbLjU7KLI8Rqo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wBiyiBrGHsGhGpZa2ms0CRYdWKlhL7YSFCnDiu/6Jv8BlXjQ4Cbc+bWinzVzfKtio
+         f73toQVkjPZstQFOBA/kbTkp/19M7LFKxiDe+fdjpo5ZCcCN5TGxfVOdtJxKEtofi5
+         8bDbCfy9fHcw4wtbM9mM2wGLsbiDVxgKe7d5lI34=
+Date:   Mon, 16 Sep 2019 08:07:42 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
+Message-ID: <20190916060742.GA605430@kroah.com>
+References: <20190913130440.264749443@linuxfoundation.org>
+ <aefa6832-073e-493c-8576-5b2f06e714fb@roeck-us.net>
+ <20190914083126.GA523517@kroah.com>
+ <353c2b75-290e-c796-4cc6-88681936210f@roeck-us.net>
+ <20190915125824.GA528036@kroah.com>
+ <8f402489-c8e8-38b2-88d1-d5eafe491492@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091606-0012-0000-0000-0000034C692D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091606-0013-0000-0000-00002186DDB4
-Message-Id: <20190916060544.21824-1-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=572 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909160066
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8f402489-c8e8-38b2-88d1-d5eafe491492@roeck-us.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Sun, Sep 15, 2019 at 09:09:24AM -0700, Guenter Roeck wrote:
+> On 9/15/19 5:58 AM, Greg Kroah-Hartman wrote:
+> > On Sat, Sep 14, 2019 at 05:49:32PM -0700, Guenter Roeck wrote:
+> > > Hi Greg,
+> > > 
+> > > On 9/14/19 1:31 AM, Greg Kroah-Hartman wrote:
+> > > > On Sat, Sep 14, 2019 at 01:28:39AM -0700, Guenter Roeck wrote:
+> > > > > On 9/13/19 6:06 AM, Greg Kroah-Hartman wrote:
+> > > > > > This is the start of the stable review cycle for the 4.9.193 release.
+> > > > > > There are 14 patches in this series, all will be posted as a response
+> > > > > > to this one.  If anyone has any issues with these being applied, please
+> > > > > > let me know.
+> > > > > > 
+> > > > > > Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+> > > > > > Anything received after that time might be too late.
+> > > > > > 
+> > > > > 
+> > > > > Is it really only me seeing this ?
+> > > > > 
+> > > > > drivers/vhost/vhost.c: In function 'translate_desc':
+> > > > > include/linux/compiler.h:549:38: error: call to '__compiletime_assert_1879' declared with attribute error: BUILD_BUG_ON failed: sizeof(_s) > sizeof(long)
+> > > > > 
+> > > > > i386:allyesconfig, mips:allmodconfig and others, everywhere including
+> > > > > mainline. Culprit is commit a89db445fbd7f1 ("vhost: block speculation
+> > > > > of translated descriptors").
+> > > > 
+> > > > Nope, I just got another report of this on 5.2.y.  Problem is also in
+> > > > Linus's tree :(
+> > > > 
+> > > 
+> > > Please apply upstream commit 0d4a3f2abbef ("Revert "vhost: block speculation
+> > > of translated descriptors") to v4.9.y-queue and later to fix the build problems.
+> > > Or maybe just drop the offending commit from the stable release queues.
+> > 
+> > I'm just going to drop the offending commit from everywhere and push out
+> > new -rcs in a bit...
+> > 
+> 
+> A quick rebuild of previously failed builds now passes, so looks like we are good.
 
-This series adds bounds checks for hotplugged memory, ensuring that
-it is within the physically addressable range (for platforms that
-define MAX_(POSSIBLE_)PHYSMEM_BITS.
+Wonderful, thanks for checking!
 
-This allows for early failure, rather than attempting to access
-bogus section numbers.
-
-Changelog:
- V2:
-   - Don't use MAX_POSSIBLE_PHYSMEM_BITS as it's wider that what
-     may be available
-
-Alastair D'Silva (2):
-  memory_hotplug: Add a bounds check to check_hotplug_memory_range()
-  mm: Add a bounds check in devm_memremap_pages()
-
- include/linux/memory_hotplug.h |  1 +
- mm/memory_hotplug.c            | 13 ++++++++++++-
- mm/memremap.c                  |  8 ++++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
-
--- 
-2.21.0
-
+greg k-h
