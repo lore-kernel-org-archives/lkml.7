@@ -2,299 +2,193 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A875C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA9CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:51:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46C8E21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F86020650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AchZsL8y"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qSrkDPzF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbfIPOrk (ORCPT
+        id S1733299AbfIPOvx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:47:40 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39854 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727937AbfIPOrk (ORCPT
+        Mon, 16 Sep 2019 10:51:53 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:40060 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfIPOvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:47:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u17so135275pgi.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 07:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ap/iQx5BaMbDDbZ/PwDKM/VLAAqHmAWjY/d3zJTaoAw=;
-        b=AchZsL8y6BmUqWecrjwrDZRs3JX50sZmVyMFL+4oB7VoOrNc/t5iJWTxnY8NsH5YEj
-         qMeD1dS0cG6M3gPTCzZKsHJJIjoi2VPObz53IzelsjfKryKMzAEjfryn045BdGi1sNOW
-         IYhGY+eHzjT7iNX/N6uIJH9o4N0QyJFFmAU6kSPSEG3NYjNJ3mOZB9IYU40rKBG33RHT
-         tmdu7z4cBD5synBIxIYxd5l+lnr9tILaWiJQNGxROu290GRwmH/0P/S+VDJMjmO8fn3V
-         bql3ZTfBmNUpKJRv4ToX/dIt+N0R6p0hYu7ID9V4j+7+JeoIRc+PghJ2WsGol6Rkmigs
-         Ftdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ap/iQx5BaMbDDbZ/PwDKM/VLAAqHmAWjY/d3zJTaoAw=;
-        b=LAzNLaNKXJYO7YjtASUanIVuR5HHIofa9+ef9BJBjSSmYbvR6+EHX26iZyYwVmi7UF
-         AQbxuTHADZOAnkhTZNeCdvSrPD0wo7ozio0kF7CIHK+AjqixXdxjQupqdvomHgBma/hA
-         S1LzUuHMLAclqi2RLk2mq3F4fDNCyakbKdEyEGrSVkEJ/bderzwhuvL1+r/X+1FAKL0u
-         vhJrYjgaekFGRxtLDmYu93OcGipz1dqfFzJfirrCNdoNOKSBJslPp6qB1ly989giaBMO
-         d2YJXghYcZS190ewoYPUWczG1W/nFDft7835GNbwx5UTIgkc3LpbzAF9sOlZCWd4Kfd/
-         7Iyw==
-X-Gm-Message-State: APjAAAUFoykOuv58p3JxPa7MWKSLmnDFHORwOAy76ecuamFZzt8NjfKQ
-        1hF6S0Ei1hBQ9un3gspIZ/I=
-X-Google-Smtp-Source: APXvYqxbiDWKbgfGTpb2sMSxrCcFiHNB9BEpZjV/ztznrOFPIyCbL79PaQnFlxxN67IWT8Towcojxw==
-X-Received: by 2002:a62:76d1:: with SMTP id r200mr73535722pfc.27.1568645257576;
-        Mon, 16 Sep 2019 07:47:37 -0700 (PDT)
-Received: from localhost.localdomain.localdomain ([2408:823c:c11:160:b8c3:8577:bf2f:3])
-        by smtp.gmail.com with ESMTPSA id d190sm15036004pgc.25.2019.09.16.07.47.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 07:47:37 -0700 (PDT)
-From:   Pengfei Li <lpf.vector@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     vbabka@suse.cz, cl@linux.com, penberg@kernel.org,
-        rientjes@google.com, iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, guro@fb.com,
-        Pengfei Li <lpf.vector@gmail.com>
-Subject: [PATCH v5 7/7] mm, slab_common: Modify kmalloc_caches[type][idx] to kmalloc_caches[idx][type]
-Date:   Mon, 16 Sep 2019 22:45:58 +0800
-Message-Id: <20190916144558.27282-8-lpf.vector@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190916144558.27282-1-lpf.vector@gmail.com>
-References: <20190916144558.27282-1-lpf.vector@gmail.com>
+        Mon, 16 Sep 2019 10:51:53 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GEppEZ048227;
+        Mon, 16 Sep 2019 09:51:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568645511;
+        bh=N2fNUTJ5FqCAIRceZLmcocaOVqYYlTS4Sz3JSM1s1To=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=qSrkDPzFGX2ZFyVswTk+k9SZ/PSDqAl54dAgfESJvwvmlkgBH/2wbURA42Z9NUHDX
+         pH5RdyNEf6MVprFGcL9tLGMdirKakBpDWhPtQPqso16J+5pQAZmGBpHYq6Sl1e3PLm
+         g5OTDCnQtwUXUU5QzRwdABJaqV6u+Ru0b4nUYAOs=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GEppft012452
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Sep 2019 09:51:51 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
+ Sep 2019 09:51:50 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 16 Sep 2019 09:51:48 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x8GEpoBQ048306;
+        Mon, 16 Sep 2019 09:51:50 -0500
+Date:   Mon, 16 Sep 2019 09:53:56 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
+Message-ID: <20190916145356.wddnnl3kk2awmbf4@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-6-bparrot@ti.com>
+ <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KMALLOC_NORMAL is the most frequently accessed, and kmalloc_caches[]
-is initialized by different types of the same size.
+Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Mon [2019-Sep-16 09:00:03 +0100]:
+> Hi Benoit,
+> 
+> Thank you for the patch.
+> 
+> On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
+> >
+> > Returning queued vb2 buffers back to user space is a common
+> > task best handled by a helper function.
+> >
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
+> >  1 file changed, 26 insertions(+), 28 deletions(-)
+> >
+> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > index 3a8ad9bdf283..52f7fc6e11dd 100644
+> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> >         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> >  }
+> >
+> > +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
+> > +                                   enum vb2_buffer_state state)
+> > +{
+> > +       struct vpfe_cap_buffer *buf, *node;
+> > +       unsigned long flags;
+> > +
+> > +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> > +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
+> > +               vb2_buffer_done(&buf->vb.vb2_buf, state);
+> > +               list_del(&buf->list);
+> > +       }
+> > +
+> > +       if (vpfe->cur_frm)
+> > +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
+> > +
+> > +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
+> > +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
+> > +
+> > +       vpfe->cur_frm = NULL;
+> > +       vpfe->next_frm = NULL;
+> > +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > +}
+> > +
+> >  /*
+> >   * vpfe_start_streaming : Starts the DMA engine for streaming
+> >   * @vb: ptr to vb2_buffer
+> > @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> >  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >  {
+> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> > -       struct vpfe_cap_buffer *buf, *tmp;
+> >         struct vpfe_subdev_info *sdinfo;
+> >         unsigned long flags;
+> >         unsigned long addr;
+> > @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> >         return 0;
+> >
+> >  err:
+> > -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
+> > -               list_del(&buf->list);
+> > -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+> > -       }
+> > -
+> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
+> > +       vpfe_pcr_enable(&vpfe->ccdc, 0);
+> 
+> please create a seperate patch for the above change.
 
-So modifying kmalloc_caches[type][idx] to kmalloc_caches[idx][type]
-will benefit performance.
+You mean a separate patch just for the vpfe_pcr_enable() call?
 
-$ ./scripts/bloat-o-meter vmlinux.patch_1-6 vmlinux.patch_1-7
-add/remove: 0/0 grow/shrink: 2/57 up/down: 8/-458 (-450)
-Function                                     old     new   delta
-tg3_self_test                               4255    4259      +4
-nf_queue                                     666     670      +4
-kmalloc_slab                                  97      93      -4
-i915_sw_fence_await_dma_fence                441     437      -4
-__igmp_group_dropped                         619     615      -4
-gss_import_sec_context                       176     170      -6
-xhci_alloc_command                           212     205      -7
-xprt_switch_alloc                            136     128      -8
-xhci_segment_alloc                           297     289      -8
-xhci_ring_alloc                              369     361      -8
-xhci_mem_init                               3664    3656      -8
-xhci_alloc_virt_device                       496     488      -8
-xhci_alloc_tt_info                           346     338      -8
-xhci_alloc_stream_info                       718     710      -8
-xhci_alloc_container_ctx                     215     207      -8
-xfrm_policy_alloc                            271     263      -8
-tcp_sendmsg_locked                          3120    3112      -8
-tcp_md5_do_add                               774     766      -8
-tcp_fastopen_defer_connect                   270     262      -8
-sr_read_tochdr.isra                          251     243      -8
-sr_read_tocentry.isra                        328     320      -8
-sr_is_xa                                     376     368      -8
-sr_get_mcn                                   260     252      -8
-selinux_sk_alloc_security                    113     105      -8
-sdev_evt_send_simple                         118     110      -8
-sdev_evt_alloc                                79      71      -8
-scsi_probe_and_add_lun                      2938    2930      -8
-sbitmap_queue_init_node                      418     410      -8
-ring_buffer_read_prepare                      94      86      -8
-request_firmware_nowait                      396     388      -8
-regulatory_hint_found_beacon                 394     386      -8
-ohci_urb_enqueue                            3176    3168      -8
-nla_strdup                                   142     134      -8
-nfs_alloc_seqid                               87      79      -8
-nfs4_get_state_owner                        1040    1032      -8
-nfs4_do_close                                578     570      -8
-nf_ct_tmpl_alloc                              85      77      -8
-mempool_create_node                          164     156      -8
-ip_setup_cork                                362     354      -8
-ip6_setup_cork                              1021    1013      -8
-gss_create_cred                              140     132      -8
-drm_flip_work_allocate_task                   70      62      -8
-dma_pool_alloc                               410     402      -8
-devres_open_group                            214     206      -8
-create_kmalloc_caches                        203     195      -8
-cfg80211_stop_iface                          260     252      -8
-cfg80211_sinfo_alloc_tid_stats                77      69      -8
-cfg80211_port_authorized                     212     204      -8
-cfg80211_parse_mbssid_data                  2397    2389      -8
-cfg80211_ibss_joined                         335     327      -8
-call_usermodehelper_setup                    149     141      -8
-bpf_prog_alloc_no_stats                      182     174      -8
-blk_alloc_flush_queue                        191     183      -8
-bdi_alloc_node                               195     187      -8
-audit_log_d_path                             196     188      -8
-_netlbl_catmap_getnode                       247     239      -8
-____ip_mc_inc_group                          475     467      -8
-__i915_sw_fence_await_sw_fence               417     405     -12
-ida_alloc_range                              955     934     -21
-Total: Before=14788957, After=14788507, chg -0.00%
+Benoit
 
-Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
-Acked-by: David Rientjes <rientjes@google.com>
----
- include/linux/slab.h |  6 +++---
- mm/slab.c            |  4 ++--
- mm/slab_common.c     |  8 ++++----
- mm/slub.c            | 12 ++++++------
- 4 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/include/linux/slab.h b/include/linux/slab.h
-index f53bb6980110..0842db5f7053 100644
---- a/include/linux/slab.h
-+++ b/include/linux/slab.h
-@@ -340,7 +340,7 @@ enum kmalloc_cache_type {
- 
- #ifndef CONFIG_SLOB
- extern struct kmem_cache *
--kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_CACHE_NUM];
-+kmalloc_caches[KMALLOC_CACHE_NUM][NR_KMALLOC_TYPES];
- 
- static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
- {
-@@ -582,7 +582,7 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
- 			return ZERO_SIZE_PTR;
- 
- 		return kmem_cache_alloc_trace(
--				kmalloc_caches[kmalloc_type(flags)][index],
-+				kmalloc_caches[index][kmalloc_type(flags)],
- 				flags, size);
- #endif
- 	}
-@@ -600,7 +600,7 @@ static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
- 			return ZERO_SIZE_PTR;
- 
- 		return kmem_cache_alloc_node_trace(
--				kmalloc_caches[kmalloc_type(flags)][i],
-+				kmalloc_caches[i][kmalloc_type(flags)],
- 						flags, node, size);
- 	}
- #endif
-diff --git a/mm/slab.c b/mm/slab.c
-index 7bc4e90e1147..079c3e6ced1f 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1246,7 +1246,7 @@ void __init kmem_cache_init(void)
- 	 * Initialize the caches that provide memory for the  kmem_cache_node
- 	 * structures first.  Without this, further allocations will bug.
- 	 */
--	kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE] = create_kmalloc_cache(
-+	kmalloc_caches[INDEX_NODE][KMALLOC_NORMAL] = create_kmalloc_cache(
- 				kmalloc_info[INDEX_NODE].name[KMALLOC_NORMAL],
- 				kmalloc_info[INDEX_NODE].size,
- 				ARCH_KMALLOC_FLAGS, 0,
-@@ -1263,7 +1263,7 @@ void __init kmem_cache_init(void)
- 		for_each_online_node(nid) {
- 			init_list(kmem_cache, &init_kmem_cache_node[CACHE_CACHE + nid], nid);
- 
--			init_list(kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE],
-+			init_list(kmalloc_caches[INDEX_NODE][KMALLOC_NORMAL],
- 					  &init_kmem_cache_node[SIZE_NODE + nid], nid);
- 		}
- 	}
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 00f2cfc66dbd..03d4c1521d21 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1028,7 +1028,7 @@ struct kmem_cache *__init create_kmalloc_cache(const char *name,
- }
- 
- struct kmem_cache *
--kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_CACHE_NUM] __ro_after_init =
-+kmalloc_caches[KMALLOC_CACHE_NUM][NR_KMALLOC_TYPES] __ro_after_init =
- { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
- EXPORT_SYMBOL(kmalloc_caches);
- 
-@@ -1090,7 +1090,7 @@ struct kmem_cache *kmalloc_slab(size_t size, gfp_t flags)
- 		index = fls(size - 1) - KMALLOC_IDX_ADJ_2;
- 	}
- 
--	return kmalloc_caches[kmalloc_type(flags)][index];
-+	return kmalloc_caches[index][kmalloc_type(flags)];
- }
- 
- 
-@@ -1171,10 +1171,10 @@ void __init setup_kmalloc_cache_index_table(void)
- static __always_inline void __init
- new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
- {
--	if (kmalloc_caches[type][idx])
-+	if (kmalloc_caches[idx][type])
- 		return;
- 
--	kmalloc_caches[type][idx] = create_kmalloc_cache(
-+	kmalloc_caches[idx][type] = create_kmalloc_cache(
- 					kmalloc_info[idx].name[type],
- 					kmalloc_info[idx].size, flags, 0,
- 					kmalloc_info[idx].size);
-diff --git a/mm/slub.c b/mm/slub.c
-index 0e92ebdcacc9..e87243a16768 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -4711,7 +4711,7 @@ static void __init resiliency_test(void)
- 	pr_err("\n1. kmalloc-16: Clobber Redzone/next pointer 0x12->0x%p\n\n",
- 	       p + 16);
- 
--	validate_slab_cache(kmalloc_caches[type][1]);
-+	validate_slab_cache(kmalloc_caches[1][type]);
- 
- 	/* Hmmm... The next two are dangerous */
- 	p = kzalloc(32, GFP_KERNEL);
-@@ -4720,33 +4720,33 @@ static void __init resiliency_test(void)
- 	       p);
- 	pr_err("If allocated object is overwritten then not detectable\n\n");
- 
--	validate_slab_cache(kmalloc_caches[type][2]);
-+	validate_slab_cache(kmalloc_caches[2][type]);
- 	p = kzalloc(64, GFP_KERNEL);
- 	p += 64 + (get_cycles() & 0xff) * sizeof(void *);
- 	*p = 0x56;
- 	pr_err("\n3. kmalloc-64: corrupting random byte 0x56->0x%p\n",
- 	       p);
- 	pr_err("If allocated object is overwritten then not detectable\n\n");
--	validate_slab_cache(kmalloc_caches[type][3]);
-+	validate_slab_cache(kmalloc_caches[3][type]);
- 
- 	pr_err("\nB. Corruption after free\n");
- 	p = kzalloc(128, GFP_KERNEL);
- 	kfree(p);
- 	*p = 0x78;
- 	pr_err("1. kmalloc-128: Clobber first word 0x78->0x%p\n\n", p);
--	validate_slab_cache(kmalloc_caches[type][5]);
-+	validate_slab_cache(kmalloc_caches[5][type]);
- 
- 	p = kzalloc(256, GFP_KERNEL);
- 	kfree(p);
- 	p[50] = 0x9a;
- 	pr_err("\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%p\n\n", p);
--	validate_slab_cache(kmalloc_caches[type][7]);
-+	validate_slab_cache(kmalloc_caches[7][type]);
- 
- 	p = kzalloc(512, GFP_KERNEL);
- 	kfree(p);
- 	p[512] = 0xab;
- 	pr_err("\n3. kmalloc-512: Clobber redzone 0xab->0x%p\n\n", p);
--	validate_slab_cache(kmalloc_caches[type][8]);
-+	validate_slab_cache(kmalloc_caches[8][type]);
- }
- #else
- #ifdef CONFIG_SYSFS
--- 
-2.21.0
-
+> 
+> Cheers,
+> --Prabhakar Lad
+> 
+> >         return ret;
+> >  }
+> >
+> > @@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+> >  {
+> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> >         struct vpfe_subdev_info *sdinfo;
+> > -       unsigned long flags;
+> >         int ret;
+> >
+> >         vpfe_pcr_enable(&vpfe->ccdc, 0);
+> > @@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
+> >                 vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
+> >
+> >         /* release all active buffers */
+> > -       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> > -       if (vpfe->cur_frm == vpfe->next_frm) {
+> > -               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> > -                               VB2_BUF_STATE_ERROR);
+> > -       } else {
+> > -               if (vpfe->cur_frm != NULL)
+> > -                       vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
+> > -                                       VB2_BUF_STATE_ERROR);
+> > -               if (vpfe->next_frm != NULL)
+> > -                       vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> > -                                       VB2_BUF_STATE_ERROR);
+> > -       }
+> > -
+> > -       while (!list_empty(&vpfe->dma_queue)) {
+> > -               vpfe->next_frm = list_entry(vpfe->dma_queue.next,
+> > -                                               struct vpfe_cap_buffer, list);
+> > -               list_del(&vpfe->next_frm->list);
+> > -               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
+> > -                               VB2_BUF_STATE_ERROR);
+> > -       }
+> > -       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
+> >  }
+> >
+> >  static int vpfe_g_pixelaspect(struct file *file, void *priv,
+> > --
+> > 2.17.1
+> >
