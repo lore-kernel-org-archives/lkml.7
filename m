@@ -2,107 +2,108 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F27C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E96C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB77B216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34995216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:18:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568639927;
-	bh=yEKQ2EzNebjen4C4J2ejh9i+DO97eD4kjLJii31E0sQ=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=MQ9dtTZ/Rru70fBCAk31k4CamTGzQL5et30DShGeaQbwBPiMV7J/pK9H26mqZjv2t
-	 UZOXhCknuFQT6s/NtDR+ZW/HxfrLYB132x/RM9u6L660XUTsdWo57jP3ERsUTDjvy4
-	 WvxQMNm7Wk440lw/AgQSaufbx1IcMYGFccE2Be84=
+	s=default; t=1568639937;
+	bh=GOmpw//erw4DKsV4qShfxBarB/2rXG7ktAJ49mrIltQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=F2Ys6qNysBGeEkb908edNdmQiRweOoVRmhq3zimwSXT3xZfF4+r98sJKZR1fGGIZF
+	 RXgc3juPz0DXpFy/ECSF2x1C/Q4/ExVfkQ+b4EVX4EfTD+uqjs5B/ShJFmY5JoK+QR
+	 yYTpwTlnwXcwI2DWAYj+vOS7ACCxkjZL6VHu3dEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733103AbfIPNSr (ORCPT
+        id S1733119AbfIPNS4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:18:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727999AbfIPNSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:18:46 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91FE821670;
-        Mon, 16 Sep 2019 13:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568639926;
-        bh=yEKQ2EzNebjen4C4J2ejh9i+DO97eD4kjLJii31E0sQ=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RXANIDI1sBFbF1f8K1T6U1H4McDlCVNenhffJ4BaAqis+MrU2Rf93FYYiiUQfdeI8
-         i5l6lIkoCbZuX17Tzm1gjNmLNzwA+3/hITc6uTmIFAYV0p4MV2Fo0TLmfwB1lL0L53
-         oC6H5CFlGokiBZDPVEKxzrGL5r6LP8obuT6jV9+c=
-Subject: Re: [PATCH v2] usbip: vhci_hcd indicate failed message
-To:     Mao Wenan <maowenan@huawei.com>, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, shuah <shuah@kernel.org>
-References: <5D7E3D1A.5070906@bfs.de>
- <20190915142223.158404-1-maowenan@huawei.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2743ad5b-9348-bd2b-4763-a2a199e6edad@kernel.org>
-Date:   Mon, 16 Sep 2019 07:18:30 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 09:18:56 -0400
+Received: from mail-wr1-f52.google.com ([209.85.221.52]:44038 "EHLO
+        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733105AbfIPNSz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:18:55 -0400
+Received: by mail-wr1-f52.google.com with SMTP id i18so8167258wru.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=2UjmY9rQe9c6bwok0NbrzQjI7nAkH8a7C/0EtpJRrqo=;
+        b=vAh0UUx26wfOL6zETX/Z56YLN9fSkfjyjzZGfbDB/8/JfxbaNn7UUhc0Y91vGXudRm
+         xsTdZyN7OnLqm5b9X0uFi4anHiPb/UHyPatTZcdvc7ytuGGLOQ+i7cXxst9CROGWUEdV
+         1LUR8eJFzRcRl3rd7F9Lrmz5SgouXpXgXwiPgaMYCuH16tmq009alDw6pfA23F6LZr6s
+         RCV0rHUfm2Acxpswzor76SrP8lBwXcU1jed3jml+IZCgYqCwNEIrSZLNiPXmLS3TWHPG
+         aaMWIBt+00XCA7ROn/+kz96zj0PrHxE+Wjw5hIxvl2Llrnea4KzVsJVjyvuYFEgGL0pP
+         Htwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=2UjmY9rQe9c6bwok0NbrzQjI7nAkH8a7C/0EtpJRrqo=;
+        b=PJQ5WXg1ts1wxTUFukdEF8nnUURQqU6TZ2iN1hEmnxPLhcMiB1yOI0EZ6xs6auSJQv
+         q6jFBWpAzmob9mX+fLbwOcdAiMeF6NGAS6uNoktUQhMKpUTCV7wWFf2gtpqRDI7C8Qvm
+         6/WEBhNJJhprL4In+XANZrE0bDzTnhjtgTWDf7zrahtig9gBF1VIU971yXgrSeKHZLlT
+         kLm1IFOxIOXH6+IfeBw27yR2fVYPP0SIPolW7ekgwUFEFLIWo3chhKqKDxiD/ud+ttE/
+         uhoZYROBPKAz3v95de3FGhQL2PNX+xvuRcUlv/G9UOTVMDp4/jUNtzkY8lzCV/zncWZM
+         sxZw==
+X-Gm-Message-State: APjAAAVJXKXUuQCeJrLW1TNnG31UhsidD82cVZjE3U93PSvgwseRQ4f4
+        +ry1GwC+PAvKgkL/tiLuRyo=
+X-Google-Smtp-Source: APXvYqwPbwlTRcQT5EVWrmEwVXvvVsrq6wFGoUUIw+FtFOsiYY3ufHtkSqbNTlFft4tUkSTU5KgMqQ==
+X-Received: by 2002:a5d:4745:: with SMTP id o5mr12351460wrs.125.1568639934144;
+        Mon, 16 Sep 2019 06:18:54 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id f3sm12642603wmh.9.2019.09.16.06.18.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 06:18:53 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 15:18:51 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] x86/hyperv changes for v5.4
+Message-ID: <20190916131851.GA27870@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190915142223.158404-1-maowenan@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/15/19 8:22 AM, Mao Wenan wrote:
-> If the return value of vhci_init_attr_group and
-> sysfs_create_group is non-zero, which mean they failed
-> to init attr_group and create sysfs group, so it would
-> better add 'failed' message to indicate that.
-> This patch also change pr_err to dev_err to trace which
-> device is failed.
-> 
-> Fixes: 0775a9cbc694 ("usbip: vhci extension: modifications to vhci driver")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> ---
->   v2: change pr_err to dev_err.
->   drivers/usb/usbip/vhci_hcd.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-> index 000ab7225717..bea28ec846ee 100644
-> --- a/drivers/usb/usbip/vhci_hcd.c
-> +++ b/drivers/usb/usbip/vhci_hcd.c
-> @@ -1185,12 +1185,12 @@ static int vhci_start(struct usb_hcd *hcd)
->   	if (id == 0 && usb_hcd_is_primary_hcd(hcd)) {
->   		err = vhci_init_attr_group();
->   		if (err) {
-> -			pr_err("init attr group\n");
-> +			dev_err(hcd_dev(hcd), "init attr group failed\n");
+Linus,
 
-Why not include err information in the message. Helps figure out why
-it failed.
+Please pull the latest x86-hyperv-for-linus git tree from:
 
->   			return err;
->   		}
->   		err = sysfs_create_group(&hcd_dev(hcd)->kobj, &vhci_attr_group);
->   		if (err) {
-> -			pr_err("create sysfs files\n");
-> +			dev_err(hcd_dev(hcd), "create sysfs files failed\n");
->   			vhci_finish_attr_group();
->   			return err;
->   		}
-> 
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-hyperv-for-linus
 
-Why not include err information in the message. Helps figure out why
-it failed.
+   # HEAD: 83527ef7abf7c02c33a90b00f0954db35415adbd drivers: hv: vmbus: Replace page definition with Hyper-V specific one
 
-thanks,
--- Shuah
+Misc updates related to page size abstractions within the HyperV code, in 
+preparation for future features.
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Maya Nakamura (3):
+      x86/hyperv: Create and use Hyper-V page definitions
+      x86/hyperv: Add functions to allocate/deallocate page for Hyper-V
+      drivers: hv: vmbus: Replace page definition with Hyper-V specific one
+
+
+ arch/x86/hyperv/hv_init.c          | 14 ++++++++++++++
+ arch/x86/include/asm/hyperv-tlfs.h | 12 +++++++++++-
+ arch/x86/include/asm/mshyperv.h    |  5 ++++-
+ drivers/hv/hyperv_vmbus.h          |  8 ++++----
+ 4 files changed, 33 insertions(+), 6 deletions(-)
+
