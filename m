@@ -2,149 +2,161 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E09C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C624C2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:32:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7102186A
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CvMLlj9S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389983AbfIPQcy (ORCPT
+        id S2390007AbfIPQem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:32:54 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:51394 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726930AbfIPQcx (ORCPT
+        Mon, 16 Sep 2019 12:34:42 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37724 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389984AbfIPQem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:32:53 -0400
-Received: (qmail 4755 invoked by uid 2102); 16 Sep 2019 12:32:52 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Sep 2019 12:32:52 -0400
-Date:   Mon, 16 Sep 2019 12:32:52 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     syzbot <syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com>,
-        Felipe Balbi <balbi@kernel.org>, <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: INFO: rcu detected stall in dummy_timer
-In-Reply-To: <CAAeHK+zrR3pB2R3yyyUdGM4Vrv77o47MHsgvbQ+LFHfiWBt1OQ@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1909161205280.1489-100000@iolanthe.rowland.org>
+        Mon, 16 Sep 2019 12:34:42 -0400
+Received: by mail-io1-f65.google.com with SMTP id b19so556592iob.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:34:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CK2Hw2Vm0/m4pdvX+3V10oRo4TFnQxQIXBdeHzhGxm4=;
+        b=CvMLlj9S+eWlpKN4KKfhPU33Ml2oTWcxMncEM0lAbDja/TSaJTwoykGCT7mY3RvsIW
+         8KqA7Xn35m+HodATZhJD8C7wG4+bc11fdt3gWpjDmcHgqGoynQcRdpLZfuwqSMrMhyoi
+         6AIz8dbTJqQsQXONcb2NPqWQCNgcfjbD7sCUNjEr6paE+5xLjIeaNW7BijxQdCWYfKWZ
+         PYfS6J8Z3FkQ7QL3FwtOelGVa4RI8MA8XaAUK21eJIR0ZABE0SGEoHZ0yYsVEIox7IES
+         GFWVvEnJohvLD6mbj8Yr8WkD5Ze5m11rqjg/8Tv0wFV+uZCn1m0cQcUEt5GG/ToV2Lxw
+         wuGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CK2Hw2Vm0/m4pdvX+3V10oRo4TFnQxQIXBdeHzhGxm4=;
+        b=Hw2XqWPMg8LD6MX6Kor4unN4jLZWw0ulbno9Z0pmSfkmAZ1OBG4En9AIeI0WTdy5g3
+         Rv+LJ8E7hFpuvEkBqH5S55vKkZywgyOVS+rC74+OeLaRPSv90hyCvaDsYAPh2b3RXi6d
+         Uk9LmzhRQcqWOHVcIAvb8U5xdODgbx++guq9z8hZCQLwpi2fxaR3Pa0zb4zJTRr4nQBu
+         ch94bPJCshUX0VGkn2VVpF00yY49CTY4qLBTTme2Fe6DVP/swols6c3/hcY18xpWcfV5
+         wReY+cIBlLphq9aMrdvQPzrTa7zSjSfS7GeOhdSiXa5boMqs5lz7I83cwJGr1OeoZ+49
+         D53g==
+X-Gm-Message-State: APjAAAWQNlDg4CDVHQG6/wpwoAx9XTPquuEzDLSL6hGITbom68gTcg82
+        TCmZN7xFGvuLM2AFsnLz3z9fN540iKIRBqKSQ/IJJg==
+X-Google-Smtp-Source: APXvYqxBRIWp22Nuxpvq+TC1v2IDPHTTfhih5iHwmGR6wIKl8ymDNqmXoJXJjb/b+Sd3CUGj5MBwFvxdxvlq6klGOK4=
+X-Received: by 2002:a05:6638:308:: with SMTP id w8mr834479jap.75.1568651680894;
+ Mon, 16 Sep 2019 09:34:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+References: <20190916162258.6528-1-vkuznets@redhat.com> <20190916162258.6528-3-vkuznets@redhat.com>
+In-Reply-To: <20190916162258.6528-3-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 16 Sep 2019 09:34:29 -0700
+Message-ID: <CALMp9eRa0-HO+JWGDoAFO1zOtNjrutfT7d4pLxjsxn-XiAJwwQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing
+ CPUID bit when SMT is impossible
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019, Andrey Konovalov wrote:
+On Mon, Sep 16, 2019 at 9:23 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Hyper-V 2019 doesn't expose MD_CLEAR CPUID bit to guests when it cannot
+> guarantee that two virtual processors won't end up running on sibling SMT
+> threads without knowing about it. This is done as an optimization as in
+> this case there is nothing the guest can do to protect itself against MDS
+> and issuing additional flush requests is just pointless. On bare metal the
+> topology is known, however, when Hyper-V is running nested (e.g. on top of
+> KVM) it needs an additional piece of information: a confirmation that the
+> exposed topology (wrt vCPU placement on different SMT threads) is
+> trustworthy.
+>
+> NoNonArchitecturalCoreSharing (CPUID 0x40000004 EAX bit 18) is described in
+> TLFS as follows: "Indicates that a virtual processor will never share a
+> physical core with another virtual processor, except for virtual processors
+> that are reported as sibling SMT threads." From KVM we can give such
+> guarantee in two cases:
+> - SMT is unsupported or forcefully disabled (just 'disabled' doesn't work
+>  as it can become re-enabled during the lifetime of the guest).
+> - vCPUs are properly pinned so the scheduler won't put them on sibling
+> SMT threads (when they're not reported as such).
 
-> On Fri, Sep 13, 2019 at 10:35 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Fri, 13 Sep 2019, syzbot wrote:
-> >
-> > > syzbot has found a reproducer for the following crash on:
-> > >
-> > > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=1146550d600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=b24d736f18a1541ad550
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11203fa5600000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162cd335600000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
-> > >
-> > > yurex 3-1:0.101: yurex_interrupt - unknown status received: -71
-> > > yurex 5-1:0.101: yurex_interrupt - unknown status received: -71
-> > > yurex 6-1:0.101: yurex_interrupt - unknown status received: -71
-> > > rcu: INFO: rcu_sched self-detected stall on CPU
-> >
-> > Andrey:
-> >
-> > This problem may be a result of overloading dummy_timer.  The kernel
-> > config you are using has CONFIG_HZ=100, but dummy-hcd needs
-> > CONFIG_HZ=1000 (see the comment on line 1789).  That is, lower values
-> > of HZ will occasionally lead to trouble, and this may be an example.
-> >
-> > Can you change the config value for HZ and see if the bug still
-> > reproduces?
-> 
-> Hi Alan,
-> 
-> I've tried running the reproducer with CONFIG_HZ=1000 and still got
-> the same stall message. It's accompanied by countless "yurex
-> 6-1:0.101: yurex_interrupt - unknown status received: -71" messages,
-> so I believe this is an issue in the yurex driver.
+That's a nice bit of information. Have you considered a mechanism for
+communicating this information to kvm guests in a way that doesn't
+require Hyper-V enlightenments?
 
-Maybe.  Depends on exactly what the reproducer is doing, something 
-which is not at all easy to figure out from the scripts or programs.
-
-I got the impression that the reproducer connects an emulated yurex
-device and then disconnects it -- but maybe that's not right at all.  
-Maybe the key point is that the reproducer sends a descriptor listing
-an endpoint address that doesn't actually exist; that would have a
-similar effect.  Can you tell?  (Trying to understand exactly what a
-syzkaller test program does is not for the faint of heart.)
-
-As far as I can remember, the USB spec doesn't say what a device should
-do when the host sends a packet to a non-existent endpoint.  Which
-means that some devices will do nothing at all, leading to the -71
-(-EPROTO) errors you see in the log.  Indeed, there's only one place in
-dummy_hcd.c where -EPROTO occurs -- for the case where an URB is sent
-to an endpoint not supported by the gadget.
-
-This leads to the question: How should the yurex driver (or any USB
-class driver, in fact) respond to a -EPROTO or similar error?  The 
-thing is, this sort of error typically arises in two circumstances:
-
-	The device was just unplugged, so of course it can't send
-	any packets back to the host;
-
-	Noise on the bus caused a packet to be lost or corrupted.
-
-In the first case, it doesn't much matter what the driver does because 
-the disconnection will be noticed and acted on within a few hundred 
-milliseconds (although I suppose a driver could generate a lot of 
-kernel-log spam during that time).
-
-In the second case, retrying the lost/corrupted packet is the right 
-response.
-
-But retrying is _not_ the right response in cases where the device is 
-never going to respond because the endpoint address is invalid.  This 
-can happen only in situations where the device provides incorrect 
-information (bad descriptors or something of that sort).  The only 
-suitable approach I can think of is to limit the number of retries.
-
-Retry-limiting is not the sort of thing we want to add to each
-individual USB class driver.  Maybe it can be handled in the USB core;  
-I'll try to write some code for it.  Under normal circumstances the
-issue just doesn't arise, because normal devices aren't malicious.
-
-> Why does dumy_hcd require CONFIG_HZ=1000? The comment doesn't really
-> explain the reason.
-
-Oh, that's simple enough.  USB events tend to happen at millisecond
-intervals.  The data on the USB bus is organized into frames (and
-microframes for high speed and SuperSpeed); a frame lasts one
-millisecond (and a microframe lasts 1/8 ms).  Many host controllers
-report important events when a frame boundary occurs (that's how 
-dummy-hcd works).
-
-So for proper timing of the emulation, dummy-hcd requires timer 
-interrupts with millisecond resolution.  I suppose the driver could be 
-changed to use a high-res timer instead of a normal kernel timer, but 
-for now that doesn't seem particularly important.
-
-Alan Stern
-
+> This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
+> first case. The second case is outside of KVM's domain of responsibility
+> (as vCPU pinning is actually done by someone who manages KVM's userspace -
+> e.g. libvirt pinning QEMU threads).
+>
+> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h | 7 +++++++
+>  arch/x86/kvm/hyperv.c              | 4 +++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index af78cd72b8f3..989a1efe7f5e 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -170,6 +170,13 @@
+>  /* Recommend using enlightened VMCS */
+>  #define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED            BIT(14)
+>
+> +/*
+> + * Virtual processor will never share a physical core with another virtual
+> + * processor, except for virtual processors that are reported as sibling SMT
+> + * threads.
+> + */
+> +#define HV_X64_NO_NONARCH_CORESHARING                  BIT(18)
+> +
+>  /* Nested features. These are HYPERV_CPUID_NESTED_FEATURES.EAX bits. */
+>  #define HV_X64_NESTED_GUEST_MAPPING_FLUSH              BIT(18)
+>  #define HV_X64_NESTED_MSR_BITMAP                       BIT(19)
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index fff790a3f4ee..9c187d16a9cd 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -23,6 +23,7 @@
+>  #include "ioapic.h"
+>  #include "hyperv.h"
+>
+> +#include <linux/cpu.h>
+>  #include <linux/kvm_host.h>
+>  #include <linux/highmem.h>
+>  #include <linux/sched/cputime.h>
+> @@ -1864,7 +1865,8 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+>                         ent->eax |= HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED;
+>                         if (evmcs_ver)
+>                                 ent->eax |= HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
+> -
+> +                       if (!cpu_smt_possible())
+> +                               ent->eax |= HV_X64_NO_NONARCH_CORESHARING;
+>                         /*
+>                          * Default number of spinlock retry attempts, matches
+>                          * HyperV 2016.
+> --
+> 2.20.1
+>
