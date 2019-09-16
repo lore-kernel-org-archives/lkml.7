@@ -2,138 +2,86 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 996CAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC6DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D8A2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:21:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YwKaQWKI"
+	by mail.kernel.org (Postfix) with ESMTP id E1D6C2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbfIPLV0 (ORCPT
+        id S1730969AbfIPLWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:21:26 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35964 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfIPLV0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:21:26 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GBLHpq018299;
-        Mon, 16 Sep 2019 06:21:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568632877;
-        bh=wfTbaAsMEgx246hNYVYOakABrMwbY3BN/kjsiLz4lDU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=YwKaQWKIwG6iHYhAUHn/s9YWwC3FEqt3x7BZZ2615UlRMglUhdtmYSnBW9rx9Nv9a
-         hqWt0g1hd2QlBYPKVEOYWCXYtjp/WUMgnMUTkd+7PO6jAv6HfyHdWcAQqWSWTAZDOQ
-         IdhtICJA+187SlQA3Bdt58PPtIPJyA5txDRxUstI=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GBLHkk031925
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Sep 2019 06:21:17 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
- Sep 2019 06:21:15 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 16 Sep 2019 06:21:15 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GBLFCr054256;
-        Mon, 16 Sep 2019 06:21:16 -0500
-Subject: Re: [PATCH 1/3] dt-bindings: dma: Add documentation for DMA domains
-To:     Rob Herring <robh@kernel.org>
-CC:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <devicetree@vger.kernel.org>
-References: <20190910115037.23539-1-peter.ujfalusi@ti.com>
- <20190910115037.23539-2-peter.ujfalusi@ti.com>
- <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <82254a3e-12fe-14d8-d49a-6627dd1d3559@ti.com>
-Date:   Mon, 16 Sep 2019 14:21:50 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 07:22:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:43560 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725971AbfIPLWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:22:52 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DC761000;
+        Mon, 16 Sep 2019 04:22:52 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F75F3F59C;
+        Mon, 16 Sep 2019 04:22:51 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 12:22:46 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Hillf Danton <hdanton@sina.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: pci: endpoint test BUG
+Message-ID: <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
+References: <20190916020630.1584-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <5d7ba96c.1c69fb81.ee467.32b9@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916020630.1584-1-hdanton@sina.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/09/2019 17.36, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 02:50:35PM +0300, Peter Ujfalusi wrote:
->> On systems where multiple DMA controllers available, non Slave (for example
->> memcpy operation) users can not be described in DT as there is no device
->> involved from the DMA controller's point of view, DMA binding is not usable.
->> However in these systems still a peripheral might need to be serviced by or
->> it is better to serviced by specific DMA controller.
->> When a memcpy is used to/from a memory mapped region for example a DMA in the
->> same domain can perform better.
->> For generic software modules doing mem 2 mem operations it also matter that
->> they will get a channel from a controller which is faster in DDR to DDR mode
->> rather then from the first controller happen to be loaded.
->>
->> This property is inherited, so it may be specified in a device node or in any
->> of its parent nodes.
+On Mon, Sep 16, 2019 at 10:06:30AM +0800, Hillf Danton wrote:
 > 
-> If a device needs mem2mem dma, I think we should just use the existing 
-> dma binding. The provider will need a way to define cell values which 
-> mean mem2mem.
-
-But isn't it going to be an abuse of the binding? Each DMA controller
-would hack this in different ways, probably using out of range DMA
-request/trigger number or if they have direction in the binding or some
-other parameter would be set to something invalid...
-
-> For generic s/w, it should be able to query the dma speed or get a 
-> preferred one IMO. It's not a DT problem.
+> On Sun, 15 Sep 2019 09:34:37 -0700
+> > 
+> > Kernel is 5.3-rc8 on x86_64.
+> > 
+> > Loading and removing the pci-epf-test module causes a BUG.
+> > 
+> > 
+> > [40928.435755] calling  pci_epf_test_init+0x0/0x1000 [pci_epf_test] @ 12132
+> > [40928.436717] initcall pci_epf_test_init+0x0/0x1000 [pci_epf_test] returned 0 after 891 usecs
+> > [40936.996081] ==================================================================
+> > [40936.996125] BUG: KASAN: use-after-free in pci_epf_remove_cfs+0x1ae/0x1f0
+> > [40936.996153] Write of size 8 at addr ffff88810a22a068 by task rmmod/12139
 > 
-> We measure memcpy speeds at boot time to select the fastest 
-> implementation for a chip, why not do that for mem2mem DMA?
-
-It would make an impact on boot time since the tests would need to be
-done with a large enough copy to be able to see clearly which one is faster.
-
-Also we should be able to handle different probing orders:
-client1 should have mem2mem channel from dma2.
-
-- dma1 probes
-- client1 probes and asks for a mem2mem channel
-- dma2 probes
-
-Here client1 should deffer until dma2 is probed.
-
-Probably the property should be dma-mem2mem-domain to be more precise on
-it's purpose and avoid confusion?
-
+> Fix fb0de5b8dcc6 and ef1433f717a2 if the current group::group_entry
+> used by pci epf does not break how configfs uses it.
 > 
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  .../devicetree/bindings/dma/dma-domain.yaml   | 88 +++++++++++++++++++
->>  1 file changed, 88 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/dma/dma-domain.yaml
-> 
-> Note that you have several errors in your schema. Run 'make dt_bindings_check'.
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -153,9 +153,11 @@ static void pci_epf_remove_cfs(struct pc
+>  		return;
+>  
+>  	mutex_lock(&pci_epf_mutex);
+> -	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
+> +	list_for_each_entry_safe(group, tmp, &driver->epf_group,
+> +							group_entry) {
+> +		list_del_init(&group->group_entry);
+>  		pci_ep_cfs_remove_epf_group(group);
+> -	list_del(&driver->epf_group);
+> +	}
+>  	mutex_unlock(&pci_epf_mutex);
+>  }
 
-That does not do anything on my system, but git dt-doc-validate running
-via https://github.com/robherring/yaml-bindings.git.
+Thank you Hillf. Kishon, can you confirm that's the proper fix for
+this bug please ? I would like to turn this into a patch and merge
+it in the upcoming merge window PR so it ought to be fairly quick,
+please let me know asap.
 
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Lorenzo
