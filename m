@@ -2,139 +2,141 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D62FEC4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD76EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5F47215EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83598206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CtEMSLfN";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BnzkZ5xA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732129AbfIPJrE (ORCPT
+        id S1732152AbfIPJr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:47:04 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:60772 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728985AbfIPJrD (ORCPT
+        Mon, 16 Sep 2019 05:47:56 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:51658 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728985AbfIPJr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:47:03 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id E141B4D574; Mon, 16 Sep 2019 11:46:30 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id DA40C4D564;
-        Mon, 16 Sep 2019 11:46:30 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 11:46:30 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Moore, Robert" <robert.moore@intel.com>
-cc:     Ferry Toth <fntoth@gmail.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
-In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.20.1909161134070.2910@fox.voss.local>
-References: <20190906174605.GY2680@smile.fi.intel.com> <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de> <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com> <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com> <20190913151228.GT2680@smile.fi.intel.com> <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com> <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 16 Sep 2019 05:47:56 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F2D426119D; Mon, 16 Sep 2019 09:47:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568627275;
+        bh=6xJTrm/4FdPry2IWK41+EWTv6nMQOj/ZbrFAur8PRO8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=CtEMSLfNKODgmgTIl1avrEGsUYzcrRLv6nACa1ERMn2ztSBN8sjE/mTKGV9mMxs7w
+         sY19bJRlWOSI2OhP9lpq+r8Og9KAYADpNclaRc0ekumn5vf7WGNWV5PV/v+Ju62YRT
+         P5UzlTub6KET3geoMuj1K/D0l3baKckQGVq8gHJo=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id C86496119D;
+        Mon, 16 Sep 2019 09:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568627273;
+        bh=6xJTrm/4FdPry2IWK41+EWTv6nMQOj/ZbrFAur8PRO8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BnzkZ5xAtXRcLXXlbPbam90N4NbATKZatLt13fEJWeHAJ27LvZywd8tlw7vtz1HDL
+         G3i9K34lbP713XcWXBK1EHzJBCZQL9aSDVNxHYHRPhZSZM9Ml5WkREXUMfQezPXvo0
+         0PkOheXSl94mc55AkvD+b/yT6EC0nZ4m3PsXExxs=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Sep 2019 15:17:52 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>, agross@kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        robin.murphy@arm.com, will.deacon@arm.com,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Subject: Re: [PATCH v4 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
+ hook
+In-Reply-To: <5d72761c.1c69fb81.bf5be.09b4@mx.google.com>
+References: <20190823063248.13295-1-vivek.gautam@codeaurora.org>
+ <20190823063248.13295-4-vivek.gautam@codeaurora.org>
+ <5d72761c.1c69fb81.bf5be.09b4@mx.google.com>
+Message-ID: <f61884eb2b71fe90a8b5dda6c33b1c9d@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019, Moore, Robert wrote:
->
->
-> -----Original Message-----
-> From: Ferry Toth [mailto:fntoth@gmail.com]
-> Sent: Friday, September 13, 2019 9:48 AM
-> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Moore, Robert <robert.moore@intel.com>
-> Cc: Nikolaus Voss <nv@vosn.de>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; nikolaus.voss@loewensteinmedical.de; Jan Kiszka <jan.kiszka@siemens.com>
-> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
->
-> Hello all,
->
-> Sorry to have sent our message with cancelled e-mail address. I have correct this now.
->
-> Op 13-09-19 om 17:12 schreef Shevchenko, Andriy:
->> On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
->>> -----Original Message-----
->>> From: Nikolaus Voss [mailto:nv@vosn.de]
->>> Sent: Friday, September 13, 2019 12:44 AM
->>> To: Moore, Robert <robert.moore@intel.com>
->>> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
->>> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len
->>> Brown <lenb@kernel.org>; Jacek Anaszewski
->>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
->>> <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org;
->>> linux-kernel@vger.kernel.org; Ferry Toth <ftoth@telfort.nl>;
->>> nikolaus.voss@loewensteinmedical.de
->>> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table
->>> index
->>>
->>> Bob,
->>>
->>> On Thu, 12 Sep 2019, Moore, Robert wrote:
->>>> The ability to unload an ACPI table (especially AML tables such as
->>>> SSDTs) is in the process of being deprecated in ACPICA -- since it
->>>> is also deprecated in the current ACPI specification. This is being
->>>> done because of the difficulty of deleting the namespace entries for
->>>> the table.  FYI, Windows does not properly support this function either.
->>>
->>> ok, I see it can be a problem to unload an AML table with all it's
->>> consequences e.g. with respect to driver unregistering in setups with
->>> complex dependencies. It will only work properly under certain
->>> conditions
->>> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
->>>
->>> AcpiTbUnloadTable is not exported, it is an internal interface only
->>> -- as recognized by the "AcpiTb".
->>
->> In Linux it became a part of ABI when the
->>
->> commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
->> Author: Jan Kiszka <jan.kiszka@siemens.com>
->> Date:   Fri Jun 9 20:36:31 2017 +0200
->>
->>      ACPI: configfs: Unload SSDT on configfs entry removal
->>
->> appeared in the kernel.
->
-> And the commit message explains quite well why it is an important feature:
->
-> "This allows to change SSDTs without rebooting the system.
-> It also allows to destroy devices again that a dynamically loaded SSDT created.
->
-> The biggest problem AFAIK is that under linux, many drivers cannot be unloaded. Also, there are many race conditions as the namespace entries "owned" by an SSDT being unloaded are deleted (out from underneath a driver).
->
-> This is widely similar to the DT overlay behavior."
->
->>> I'm not sure that I want to change the interface to AcpiLoadTable
->>> just for something that is being deprecated. Already, we throw an
->>> ACPI_EXCEPTION if the Unload operator is encountered in the AML byte
->>> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
->>>
->>>      ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
->>>          "AML Unload operator is not supported"));
+Hi Stephen,
 
-Bob, what is your suggestion to fix the regression then?
+On 2019-09-06 20:37, Stephen Boyd wrote:
+> Quoting Vivek Gautam (2019-08-22 23:32:48)
+>> diff --git a/drivers/iommu/arm-smmu-impl.c 
+>> b/drivers/iommu/arm-smmu-impl.c
+>> index 3f88cd078dd5..0aef87c41f9c 100644
+>> --- a/drivers/iommu/arm-smmu-impl.c
+>> +++ b/drivers/iommu/arm-smmu-impl.c
+>> @@ -102,7 +103,6 @@ static struct arm_smmu_device 
+>> *cavium_smmu_impl_init(struct arm_smmu_device *smm
+>>         return &cs->smmu;
+>>  }
+>> 
+>> -
+>>  #define ARM_MMU500_ACTLR_CPRE          (1 << 1)
+>> 
+>>  #define ARM_MMU500_ACR_CACHE_LOCK      (1 << 26)
+> 
+> Drop this hunk?
+> 
+>> @@ -147,6 +147,28 @@ static const struct arm_smmu_impl arm_mmu500_impl 
+>> = {
+>>         .reset = arm_mmu500_reset,
+>>  };
+>> 
+>> +static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>> +{
+>> +       int ret;
+>> +
+>> +       arm_mmu500_reset(smmu);
+>> +
+>> +       /*
+>> +        * To address performance degradation in non-real time 
+>> clients,
+>> +        * such as USB and UFS, turn off wait-for-safe on sdm845 based 
+>> boards,
+>> +        * such as MTP and db845, whose firmwares implement secure 
+>> monitor
+>> +        * call handlers to turn on/off the wait-for-safe logic.
+>> +        */
+>> +       ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
+>> +       if (ret)
+>> +               dev_warn(smmu->dev, "Failed to turn off SAFE 
+>> logic\n");
+>> +
+>> +       return 0;
+> 
+> return ret? Or intentionally don't return an error for failure?
+> 
+>> +}
+>> +
+>> +const struct arm_smmu_impl qcom_sdm845_smmu500_impl = {
+> 
+> static?
+> 
+>> +       .reset = qcom_sdm845_smmu500_reset,
+>> +};
+>> 
+>>  struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device 
+>> *smmu)
+>>  {
 
-We could revert acpi_configfs.c to use acpi_tb_install_and_load_table() 
-instead of acpi_load_table(), leaving loaded APCI objects uninitalized, 
-but at least, unloading will work again.
+Have addressed all your comments in v5.
 
-Do we have any other options?
+Thanks,
+Sai
 
-Niko
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
