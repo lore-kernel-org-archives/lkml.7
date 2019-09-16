@@ -2,186 +2,100 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA4AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F2FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952A2206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5035E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:58:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HACGFBeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388182AbfIPU41 (ORCPT
+        id S2388736AbfIPU6D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:56:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726024AbfIPU41 (ORCPT
+        Mon, 16 Sep 2019 16:58:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49706 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfIPU6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:56:27 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8GKlsMD078585;
-        Mon, 16 Sep 2019 16:55:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2hkb8h1x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 16:55:48 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8GKmUgH079756;
-        Mon, 16 Sep 2019 16:55:47 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2hkb8h15-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 16:55:47 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8GKoLAS025156;
-        Mon, 16 Sep 2019 20:55:46 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v0t9ak6f3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 20:55:46 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8GKtjxO48103824
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 20:55:45 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DFA9AC05F;
-        Mon, 16 Sep 2019 20:55:45 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 39B3DAC059;
-        Mon, 16 Sep 2019 20:55:42 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.45])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Sep 2019 20:55:42 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mon, 16 Sep 2019 16:58:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=yeJayqOR9sbkuSoE2xkkfI48PIerp6/smkJ5wYd6VHo=; b=HACGFBeKT5pI2El5XJm2wRaxy
+        4NzAYGacsQiBSEMLV48E2a8borqjI8BwHHRbsW6wzrSqUXk3pLIHNeJtYzwnHSCRELUd9zlsq7pgQ
+        +8CN3XusJBI5lrtz5NufdBfaJXfoQod4jEXvtAcAqZwq7jmo7AC/xzXs9vITUj6AXAU2OOSlUhAGA
+        vBt0tJ09fwkT6LoK1jv9AGl70cQOzqeGTt3iVzy8ylxmSzBxm32aWLHfgFZuD0HkYLqGNiEoaHnvn
+        /6VjKlZp2e6g7xv6Lb/fuqkNRkP43WpHtG61o39zZE+9D9fp25WmToPQESE1/2DtJtasDEW64MWr2
+        jNey2LZgw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1i9y4L-0001LW-Dy; Mon, 16 Sep 2019 20:57:57 +0000
+Date:   Mon, 16 Sep 2019 13:57:57 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     syzbot <syzbot+e38fe539fedfc127987e@syzkaller.appspotmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Christoph Lameter <cl@linux.com>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Souptick Joarder <jrdr.linux@gmail.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH 1/1] powerpc: mm: Check if serialize_against_pte_lookup() really needs to run
-Date:   Mon, 16 Sep 2019 17:55:27 -0300
-Message-Id: <20190916205527.1859-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.20.1
+        andreyknvl@google.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-usb@vger.kernel.org, mhocko@suse.com,
+        syzkaller-bugs@googlegroups.com, vbabka@suse.cz,
+        yang.shi@linux.alibaba.com, zhongjiang@huawei.com
+Subject: Re: WARNING in __alloc_pages_nodemask
+Message-ID: <20190916205756.GR29434@bombadil.infradead.org>
+References: <00000000000025ae690592b00fbd@google.com>
+ <alpine.DEB.2.21.1909161258150.118156@chino.kir.corp.google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909160204
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909161258150.118156@chino.kir.corp.google.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a process (qemu) with a lot of CPUs (128) try to munmap() a large chunk
-of memory (496GB) mapped with THP, it takes an average of 275 seconds,
-which can cause a lot of problems to the load (in qemu case, the guest
-will lock for this time).
+On Mon, Sep 16, 2019 at 01:00:11PM -0700, David Rientjes wrote:
+> On Mon, 16 Sep 2019, syzbot wrote:
+> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14b15371600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=e38fe539fedfc127987e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1093bed1600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1603cfc6600000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+e38fe539fedfc127987e@syzkaller.appspotmail.com
+> > 
+> > WARNING: CPU: 0 PID: 1720 at mm/page_alloc.c:4696
+> > __alloc_pages_nodemask+0x36f/0x780 mm/page_alloc.c:4696
+> > Kernel panic - not syncing: panic_on_warn set ...
 
-Trying to find the source of this bug, I found out most of this time is
-spent on serialize_against_pte_lookup(). This function will take a lot of
-time in smp_call_function_many() if there is more than a couple CPUs
-running the user process. Since it has to happen to all THP mapped, it will
-take a very long time for large amounts of memory.
+> > alloc_pages_current+0xff/0x200 mm/mempolicy.c:2153
+> > alloc_pages include/linux/gfp.h:509 [inline]
+> > kmalloc_order+0x1a/0x60 mm/slab_common.c:1257
+> > kmalloc_order_trace+0x18/0x110 mm/slab_common.c:1269
+> > __usbhid_submit_report drivers/hid/usbhid/hid-core.c:588 [inline]
+> > usbhid_submit_report+0x5b5/0xde0 drivers/hid/usbhid/hid-core.c:638
+> > usbhid_request+0x3c/0x70 drivers/hid/usbhid/hid-core.c:1252
+> > hid_hw_request include/linux/hid.h:1053 [inline]
+> > hiddev_ioctl+0x526/0x1550 drivers/hid/usbhid/hiddev.c:735
+> Adding Jiri and Benjamin.  The hid report length is simply too large for 
+> the page allocator to allocate: this is triggering because the resulting 
+> allocation order is > MAX_ORDER-1.  Any way to make this allocate less 
+> physically contiguous memory?
 
-By the docs, serialize_against_pte_lookup() is needed in order to avoid
-pmd_t to pte_t casting inside find_current_mm_pte() to happen concurrently
-with the next part of the functions it's called in.
-It does so by calling a do_nothing() on each CPU in mm->cpu_bitmap[];
-
-So, by what I could understand, if there is no find_current_mm_pte()
-running, there is no need to call serialize_against_pte_lookup().
-
-So, to avoid the cost of running serialize_against_pte_lookup(), I propose
-a counter that keeps track of how many find_current_mm_pte() are currently
-running, and if there is none, just skip smp_call_function_many().
-
-On my workload (qemu), I could see munmap's time reduction from 275 seconds
-to 418ms.
-
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
-
----
-I need more experienced people's help in order to understand if this is
-really a valid improvement, and if mm_struct is the best place to put such
-counter.
-
-Thanks!
----
- arch/powerpc/include/asm/pte-walk.h | 3 +++
- arch/powerpc/mm/book3s64/pgtable.c  | 2 ++
- include/linux/mm_types.h            | 1 +
- 3 files changed, 6 insertions(+)
-
-diff --git a/arch/powerpc/include/asm/pte-walk.h b/arch/powerpc/include/asm/pte-walk.h
-index 33fa5dd8ee6a..3b82cb3bd563 100644
---- a/arch/powerpc/include/asm/pte-walk.h
-+++ b/arch/powerpc/include/asm/pte-walk.h
-@@ -40,6 +40,8 @@ static inline pte_t *find_current_mm_pte(pgd_t *pgdir, unsigned long ea,
- {
- 	pte_t *pte;
- 
-+	atomic64_inc(&current->mm->lockless_ptlookup_count);
-+
- 	VM_WARN(!arch_irqs_disabled(), "%s called with irq enabled\n", __func__);
- 	VM_WARN(pgdir != current->mm->pgd,
- 		"%s lock less page table lookup called on wrong mm\n", __func__);
-@@ -53,6 +55,7 @@ static inline pte_t *find_current_mm_pte(pgd_t *pgdir, unsigned long ea,
- 	if (hshift)
- 		WARN_ON(*hshift);
- #endif
-+	atomic64_dec(&current->mm->lockless_ptlookup_count);
- 	return pte;
- }
- 
-diff --git a/arch/powerpc/mm/book3s64/pgtable.c b/arch/powerpc/mm/book3s64/pgtable.c
-index 7d0e0d0d22c4..8f6fc2f80071 100644
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -95,6 +95,8 @@ static void do_nothing(void *unused)
- void serialize_against_pte_lookup(struct mm_struct *mm)
- {
- 	smp_mb();
-+	if (atomic64_read(&mm->lockless_ptlookup_count) == 0)
-+		return;
- 	smp_call_function_many(mm_cpumask(mm), do_nothing, NULL, 1);
- }
- 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6a7a1083b6fb..97fb2545e967 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -518,6 +518,7 @@ struct mm_struct {
- #endif
- 	} __randomize_layout;
- 
-+	atomic64_t lockless_ptlookup_count;
- 	/*
- 	 * The mm_cpumask needs to be at the end of mm_struct, because it
- 	 * is dynamically sized based on nr_cpu_ids.
--- 
-2.20.1
+The HID code should, presumably, reject reports which are larger than
+PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER.  Particularly since it's using
+GFP_ATOMIC.
 
