@@ -2,224 +2,68 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FFC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0E4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B20C6214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC522067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730627AbfIPHLX (ORCPT
+        id S1730272AbfIPHMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:11:23 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:16688 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726082AbfIPHLW (ORCPT
+        Mon, 16 Sep 2019 03:12:25 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:44370 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726024AbfIPHMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:11:22 -0400
-X-UUID: f1b8921be39243db81135c57cd8880b7-20190916
-X-UUID: f1b8921be39243db81135c57cd8880b7-20190916
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1352235378; Mon, 16 Sep 2019 15:11:14 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
- (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Sep
- 2019 15:11:07 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 16 Sep 2019 15:11:06 +0800
-Message-ID: <1568617865.7317.74.camel@mhfsdcap03>
-Subject: Re: [Patch V9 3/8] phy: tegra: xusb: Add vbus override support on
- Tegra210
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Date:   Mon, 16 Sep 2019 15:11:05 +0800
-In-Reply-To: <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
-References: <1568354873-24073-1-git-send-email-nkristam@nvidia.com>
-         <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
-MIME-Version: 1.0
+        Mon, 16 Sep 2019 03:12:25 -0400
+Received: from localhost (unknown [85.119.46.8])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D26FE1517258D;
+        Mon, 16 Sep 2019 00:12:22 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 09:12:20 +0200 (CEST)
+Message-Id: <20190916.091220.1015956756124841222.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        christophe.roullier@st.com
+Subject: Re: [PATCH net] net: stmmac: Hold rtnl lock in suspend/resume
+ callbacks
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <66b6c1395e4bbc836e80083b89b2189ce7382d7b.1568360548.git.joabreu@synopsys.com>
+References: <66b6c1395e4bbc836e80083b89b2189ce7382d7b.1568360548.git.joabreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: DF578D0D8935BFB61BBE328B9FF34215B0B7C778C60519D9D891F49837686EC22000:8
-X-MTK:  N
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Sep 2019 00:12:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-09-13 at 11:37 +0530, Nagarjuna Kristam wrote:
-> Tegra XUSB device control driver needs to control vbus override
-> during its operations, add API for the support.
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Fri, 13 Sep 2019 11:50:32 +0200
+
+> We need to hold rnl lock in suspend and resume callbacks because phylink
+> requires it. Otherwise we will get a WARN() in suspend and resume.
 > 
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/phy/tegra/xusb-tegra210.c | 57 +++++++++++++++++++++++++++++++++++++++
->  drivers/phy/tegra/xusb.c          | 22 +++++++++++++++
->  drivers/phy/tegra/xusb.h          |  2 ++
->  include/linux/phy/tegra/xusb.h    |  4 ++-
->  4 files changed, 84 insertions(+), 1 deletion(-)
+> Also, move phylink start and stop callbacks to inside device's internal
+> lock so that we prevent concurrent HW accesses.
 > 
-> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
-> index 8c31f03..9e6f14b 100644
-> --- a/drivers/phy/tegra/xusb-tegra210.c
-> +++ b/drivers/phy/tegra/xusb-tegra210.c
-> @@ -65,6 +65,10 @@
->  #define XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(x) (1 << (1 + (x)))
->  #define XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(x) (1 << (8 + (x)))
->  
-> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(x) (0x080 + (x) * 0x40)
-> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP (1 << 18)
-> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN (1 << 22)
-> +
->  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
->  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
->  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
-> @@ -227,6 +231,12 @@
->  #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL6(x) (0xa74 + (x) * 0x40)
->  #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL6_RX_EQ_CTRL_H_VAL 0xfcf01368
->  
-> +#define XUSB_PADCTL_USB2_VBUS_ID 0xc60
-> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON (1 << 14)
-> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT 18
-> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK 0xf
-> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING 8
-> +
->  struct tegra210_xusb_fuse_calibration {
->  	u32 hs_curr_level[4];
->  	u32 hs_term_range_adj;
-> @@ -2016,6 +2026,51 @@ static const struct tegra_xusb_port_ops tegra210_usb3_port_ops = {
->  	.map = tegra210_usb3_port_map,
->  };
->  
-> +static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
-> +					      bool status)
-> +{
-> +	u32 value;
-> +
-> +	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
-> +
-> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
-> +
-> +	if (status) {
-> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
-> +		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
-> +			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
-> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
-> +			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
-> +	} else
-> +		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
-Nit: use braces in else branch
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+> Reported-by: Christophe ROULLIER <christophe.roullier@st.com>
+> Tested-by: Christophe ROULLIER <christophe.roullier@st.com>
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-> +
-> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
-> +
-> +	return 0;
-> +}
-> +
-> +static int tegra210_utmi_port_reset(struct phy *phy)
-> +{
-> +	struct tegra_xusb_padctl *padctl;
-> +	struct tegra_xusb_lane *lane;
-> +	u32 value;
-> +
-> +	lane = phy_get_drvdata(phy);
-> +	padctl = lane->pad->padctl;
-> +
-> +	value = padctl_readl(padctl,
-> +		     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(lane->index));
-> +
-> +	if ((value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP) ||
-> +	    (value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN)) {
-> +		tegra210_xusb_padctl_vbus_override(padctl, false);
-> +		tegra210_xusb_padctl_vbus_override(padctl, true);
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int
->  tegra210_xusb_read_fuse_calibration(struct tegra210_xusb_fuse_calibration *fuse)
->  {
-> @@ -2078,6 +2133,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
->  	.remove = tegra210_xusb_padctl_remove,
->  	.usb3_set_lfps_detect = tegra210_usb3_set_lfps_detect,
->  	.hsic_set_idle = tegra210_hsic_set_idle,
-> +	.vbus_override = tegra210_xusb_padctl_vbus_override,
-> +	.utmi_port_reset = tegra210_utmi_port_reset,
->  };
->  
->  static const char * const tegra210_xusb_padctl_supply_names[] = {
-> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> index b4b217e..bf4b008 100644
-> --- a/drivers/phy/tegra/xusb.c
-> +++ b/drivers/phy/tegra/xusb.c
-> @@ -1121,6 +1121,28 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
->  }
->  EXPORT_SYMBOL_GPL(tegra_xusb_padctl_usb3_set_lfps_detect);
->  
-> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
-> +							bool val)
-> +{
-> +	if (padctl->soc->ops->vbus_override)
-> +		return padctl->soc->ops->vbus_override(padctl, val);
-> +
-> +	return -ENOTSUPP;
-> +}
-> +EXPORT_SYMBOL_GPL(tegra_xusb_padctl_set_vbus_override);
-> +
-> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
-> +{
-> +	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
-> +	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
-> +
-> +	if (padctl->soc->ops->utmi_port_reset)
-> +		return padctl->soc->ops->utmi_port_reset(phy);
-> +
-> +	return -ENOTSUPP;
-> +}
-> +EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
-> +
->  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
->  MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-> index bd91832..da94fcc 100644
-> --- a/drivers/phy/tegra/xusb.h
-> +++ b/drivers/phy/tegra/xusb.h
-> @@ -373,6 +373,8 @@ struct tegra_xusb_padctl_ops {
->  			     unsigned int index, bool idle);
->  	int (*usb3_set_lfps_detect)(struct tegra_xusb_padctl *padctl,
->  				    unsigned int index, bool enable);
-> +	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
-> +	int (*utmi_port_reset)(struct phy *phy);
->  };
->  
->  struct tegra_xusb_padctl_soc {
-> diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
-> index ee59562..1235865 100644
-> --- a/include/linux/phy/tegra/xusb.h
-> +++ b/include/linux/phy/tegra/xusb.h
-> @@ -18,5 +18,7 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xusb_padctl *padctl,
->  				    unsigned int port, bool idle);
->  int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
->  					   unsigned int port, bool enable);
-> -
-> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
-> +					bool val);
-> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
->  #endif /* PHY_TEGRA_XUSB_H */
+Applied and queued up for v5.3 -stable.
 
-
+Thanks.
