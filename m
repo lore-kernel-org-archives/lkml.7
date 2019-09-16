@@ -2,128 +2,94 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AA0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB28BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C3A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C6D214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="abcnjjRp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388148AbfIPN6J (ORCPT
+        id S2388225AbfIPN66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:58:09 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37294 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbfIPN6J (ORCPT
+        Mon, 16 Sep 2019 09:58:58 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:33274 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfIPN66 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:58:09 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 0BFA83C0579;
-        Mon, 16 Sep 2019 15:58:06 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id IWPcCamjG3-f; Mon, 16 Sep 2019 15:57:59 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 6B0E33C00C4;
-        Mon, 16 Sep 2019 15:57:59 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 16 Sep
- 2019 15:57:58 +0200
-Date:   Mon, 16 Sep 2019 15:57:56 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     shuah <shuah@kernel.org>
-CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>
-Subject: Re: [PATCH 2/2] selftests: watchdog: Add command line option to show
- watchdog_info
-Message-ID: <20190916135756.GA24319@vmlxhi-102.adit-jv.com>
-References: <20190907085833.21167-1-erosca@de.adit-jv.com>
- <20190907085833.21167-2-erosca@de.adit-jv.com>
- <2b08fa83-185b-4eb7-1217-37ed31d810b5@kernel.org>
+        Mon, 16 Sep 2019 09:58:58 -0400
+Received: by mail-ua1-f66.google.com with SMTP id u31so2181665uah.0;
+        Mon, 16 Sep 2019 06:58:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xZkupYvtBSCgKvrJHoyKINcu7Om+TqesekV8j3GB0l8=;
+        b=abcnjjRp0vfqDss/cKOd135SiL2FsmKpPoVJY3cDGezMtJYB2RDqqK33YBjLeoK15k
+         52xq3IKCxncEyF6pFqAjp9j/Uu3gZAaeah9VUzvW5kPRoeqX+XTEL8QZvZOnIseZ/Ngw
+         qHCCcVfOKj83hZTbK6Ix/I6MS+PujIU+ATucD0mmoPkRWHs0KDbh395ALd+txHZbtBaT
+         gjL3gO/fj5TCK9YoySfJa3EHtyhoXpKOMydiT9aAWJ2THFtA0IgR3HXJOCkuNWOkz+Hx
+         CNzThJ/K0TJgQr9EJGz8xViE7j03o65dPMFUY+u/iztYZ3kZKAJIt/pbpm1NtyWQUnhg
+         M8JA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xZkupYvtBSCgKvrJHoyKINcu7Om+TqesekV8j3GB0l8=;
+        b=gxQfBSIr+j2V5y1+Mok0BM+kpZmpxj8MATkMLzo6mQJgegnGZuSpwGaXoFhZDYDLPT
+         2vKdhB45nTtWvtOHEJ/URLmWPEA5lh9iYAe0FDnz9Upi+I1tL5wlshfjTJ0qwH1AxnRR
+         9/tySsTG8NWlmF3ACJ75osPGRo8yzmRlaG98flgv3w5ZeAtq7hlwjr1dtOkTd2Ivtoj+
+         6RTAbZTHvUHqrlYALxXUn0gDD0SRRlN0960um8XGWoR/LlibLYjvhMuR7SuJSEkt0+N8
+         yrtP39M1Z6FKLSfsUnTRb6cBRVmySHodNsLeidUjXVJskTA38WEldkt0gZL4WZN7xLJl
+         hGCQ==
+X-Gm-Message-State: APjAAAUfdFTpfHmx8ollDmrOLrW1AaIMben2N18TOHkq0RY5O1cCwjVL
+        rq1SB4B87YDvOo/gLCtlXjKfYwCIKvyqEybWuqs=
+X-Google-Smtp-Source: APXvYqxCMEZl6OxrxpHpVk54lt6TihIEe1Fcqyo/s0j004PQA6BisRf6ikHlA0omRb/c6VbpoOQnGbGIAwgH8aLaW4Q=
+X-Received: by 2002:a9f:3110:: with SMTP id m16mr26100819uab.10.1568642336893;
+ Mon, 16 Sep 2019 06:58:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <2b08fa83-185b-4eb7-1217-37ed31d810b5@kernel.org>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+ <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com> <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
+In-Reply-To: <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 16 Sep 2019 11:00:47 -0300
+Message-ID: <CAOMZO5BftiJcpefSaM0-DAdhOqrKfv4k5n=y1RhbTpZ=HZDtOQ@mail.gmail.com>
+Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>
+Cc:     Robin Gong <yibin.gong@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, dmaengine@vger.kernel.org,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
-CC George
+Hi Philipp,
 
-On Mon, Sep 16, 2019 at 07:26:41AM -0600, shuah wrote:
-[..]
-> >   		case 'f':
-> >   			/* Handled above */
-> >   			break;
-> > +		case 'i':
-> > +			/*
-> > +			 * watchdog_info was obtained as part of file open
-> > +			 * validation. So we just show it here.
-> > +			 */
-> > +			oneshot = 1;
-> > +			printf("watchdog_info:\n");
-> > +			printf(" identity:\t\t%s\n", info.identity);
-> > +			printf(" firmware_version:\t%u\n",
-> > +			       info.firmware_version);
-> > +			printf(" options:\t\t%08x\n", info.options);
-> > +			break;
-> >   		default:
-> >   			usage(argv[0]);
-> > 
-> 
-> I would like to see these combined. Please don't add another argument.
-> Combine patch and 1&2.
+On Mon, Sep 16, 2019 at 10:55 AM Philipp Puschmann
+<philipp.puschmann@emlix.com> wrote:
 
-With all my appreciation for your comment, why do you think it is better
-to get rid of the new argument? I don't think it is user-friendly to
-always report the watchdog_info to the user. Just look at outputs [1-2]
-and imagine that the watchdog_info part would pop up unconditionally.
-It looks too busy to me.
+> Thanks for the hints. I will apply them if the contentual feedback is positive.
+>
+> p.s. Did you forget to add Andy? I don't see a Andy in the to- and cc-list.
 
-[1] watchdog-test -b -i
-Last boot is caused by: Power-On-Reset.
-watchdog_info:
- identity:              Renesas WDT Watchdog
- firmware_version:      0
- options:               000081a0
+Andy's e-mail is fugang.duan@nxp.com, which I added on Cc.
 
-[2] watchdog-test -i --help    
-watchdog_info:
- identity:              Renesas WDT Watchdog
- firmware_version:      0
- options:               000081a0
-Usage: ./watchdog-test [options]
- -f, --file             Open watchdog device file
-                        Default is /dev/watchdog
- -i, --info             Show watchdog_info
- -b, --bootstatus       Get last boot status (Watchdog/POR)
- -d, --disable          Turn off the watchdog timer
- -e, --enable           Turn on the watchdog timer
- -h, --help             Print the help message
- -p, --pingrate=P       Set ping rate to P seconds (default 1)
- -t, --timeout=T        Set timeout to T seconds
- -T, --gettimeout       Get the timeout
- -n, --pretimeout=T     Set the pretimeout to T seconds
- -N, --getpretimeout    Get the pretimeout
- -L, --gettimeleft      Get the time left until timer expires
+I think your patches look good and are in good shape to be resubmitted.
 
-Parameters are parsed left-to-right in real-time.
-Example: ./watchdog-test -d -t 10 -p 5 -e
-Example: ./watchdog-test -t 12 -T -n 7 -N
-
--- 
-Best Regards,
-Eugeniu.
+Thanks for fixing these hard to debug issues!
