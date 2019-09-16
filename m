@@ -2,117 +2,160 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DEFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E48FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5400E214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568668215;
-	bh=Tde6N2xhrmVBkJfj/im8DRub08KbWyqXLl1/zMxtQ6Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=An/10wg8+vqE7w4btvvEjwrSQhZpJiM49lUuzusk47d86ChrAvMdMBM4RGAx1u+Lu
-	 jVtuEpblv6kWWBkrJKS9EemARxYmfpye/zgwX1qUf5rwILSKw2TGm8XVNtHNwc4Bfd
-	 I/Crk9YzN9ofWutwm54PE80ZksmYbcO0zKAkhGGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 640F1214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:11:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ioYG6T3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388974AbfIPVKO (ORCPT
+        id S2389074AbfIPVLK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388909AbfIPVKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:10:14 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90754214AF;
-        Mon, 16 Sep 2019 21:10:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568668213;
-        bh=Tde6N2xhrmVBkJfj/im8DRub08KbWyqXLl1/zMxtQ6Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FsW3jY4EeWAULrHBDSmT917vaTr4bDCJcXllwSYUJRjK8Ai4H3rO9gXQKXu9TRMw7
-         s3SUzbwDXd/V/04UXu0dtglSvpj8+ooF8AAr+2KpuAILa8kA+yqhTLHJK+yUEZyi35
-         gnDeZvd3M2aL9N/Lom526UNpd3bH3ulyWhCnPSg4=
-Date:   Mon, 16 Sep 2019 22:10:08 +0100
-From:   Will Deacon <will@kernel.org>
-To:     KeMeng Shi <shikemeng@huawei.com>
-Cc:     akpm@linux-foundation.org, james.morris@microsoft.com,
-        gregkh@linuxfoundation.org, mortonm@chromium.org,
-        will.deacon@arm.com, kristina.martsenko@arm.com,
-        yuehaibing@huawei.com, malat@debian.org, j.neuschaefer@gmx.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] connector: report comm change event when modifying
- /proc/pid/task/tid/comm
-Message-ID: <20190916211008.ipqe3j7s22aannta@willie-the-truck>
-References: <20190916141341.658-1-shikemeng@huawei.com>
+        Mon, 16 Sep 2019 17:11:10 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56304 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388977AbfIPVLK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:11:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568668268;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7xTIXm4K2D6Qs2K7CtMCu5t3JJce0LvphVa9t+F5TPc=;
+        b=ioYG6T3ZxJcMUngzhCpZ3mGa/rpyGgIyIulzckN3aZvgsaOqKQOHhJYUGhD7wQgYwyA6pt
+        dQ9jRfILJEoRUccYNWBUjweAzkCsS7S1IfefcSQmMLd+r6EeasCxEdX/tx5t34M+KhXUfL
+        kxh+xlpSql7OKQh5zvCn2iQy7SHNRzo=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-175-IFiWI7iqM8qHe1ZcQjedlQ-1; Mon, 16 Sep 2019 17:04:56 -0400
+Received: by mail-qt1-f198.google.com with SMTP id z4so1769887qts.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:04:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:reply-to
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=4ERiCmOZ8H3sPNSQthd2g+0oVPuH4YPtd+sm2yhsBE0=;
+        b=rD7qdDjLFmZPNSju8jQVDQHufZI+rSrI39OGQ9ssUQJzFLwwslp2FNnkPaCwqBzlEf
+         LgrH7gOdz6vK4OVKsrckoBkjOdre/FN5SxIdybBSWI2AfSA9zLAJgLrgyjakrHAOzQ1S
+         WNSv8/hFhq/8/xNTOAdigEM5t+Riz+vZ4qWf4IVdIJdwJMW2BXxCXVdXIK635BhJeRuR
+         zUuQRDnVhTkWOsCsemXAA/8fOWuDOQChp0Lmr7lm4Xo9gkNHeYxLB3jbJ7uPLZ+5XdWm
+         RwgeNtjn23cgD2w92N+D959UfzwzNBcS5Qzu5zeudzCDfnX3uoo7Sx8owf9I3zRqy8gt
+         9xVw==
+X-Gm-Message-State: APjAAAU0fodcbqTKa2s4DNHPMiIoKXxvu5vmESMHcQryR4DVxNc/M9VR
+        9xB44J1tMJ7TsIdZMHpTT3CjX23SncF73gVX9NX+koY/dMZziCIyFSFMDEoLVyk0IDRVWKYsmk/
+        nCM9UQ5N4hToXipWIWrOPyOzk
+X-Received: by 2002:a05:6214:1549:: with SMTP id t9mr177778qvw.68.1568667896457;
+        Mon, 16 Sep 2019 14:04:56 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqw7QP6IN4If6IqdEiE7mlgnayhIJAjkoYIwxiFRX5sPKLM4tlcXgm2XeZ5ZkcZWqN/t9OIXUQ==
+X-Received: by 2002:a05:6214:1549:: with SMTP id t9mr177751qvw.68.1568667896220;
+        Mon, 16 Sep 2019 14:04:56 -0700 (PDT)
+Received: from localhost (ip70-163-223-149.ph.ph.cox.net. [70.163.223.149])
+        by smtp.gmail.com with ESMTPSA id 60sm99677qta.77.2019.09.16.14.04.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 14:04:55 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:04:54 -0700
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Wrap the buffer from the caller to tpm_buf in
+ tpm_send()
+Message-ID: <20190916210454.mq3g2m6s5a2syaxp@cantor>
+Reply-To: Jerry Snitselaar <jsnitsel@redhat.com>
+Mail-Followup-To: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-integrity@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>,
+        stable@vger.kernel.org, Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190916085008.22239-1-jarkko.sakkinen@linux.intel.com>
+ <20190916210331.l6enypnafk2cwako@cantor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20190916210331.l6enypnafk2cwako@cantor>
+User-Agent: NeoMutt/20180716
+X-MC-Unique: IFiWI7iqM8qHe1ZcQjedlQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20190916141341.658-1-shikemeng@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:13:41AM -0400, KeMeng Shi wrote:
-> Commit f786ecba41588 ("connector: add comm change event report to proc
->  connector") added proc_comm_connector to report comm change event, and
-> prctl will report comm change event when dealing with PR_SET_NAME case.
-> 
-> prctl can only set the name of the calling thread. In order to set the name
-> of other threads in a process, modifying /proc/self/task/tid/comm is a
-> general way.It's exactly how pthread_setname_np do to set name of a thread.
-> 
-> It's unable to get comm change event of thread if the name of thread is set
-> by other thread via pthread_setname_np. This update provides a chance for
-> application to monitor and control threads whose name is set by other
-> threads.
-> 
-> Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-> ---
->  fs/proc/base.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index ebea9501afb8..34ffe572ac69 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -94,6 +94,7 @@
->  #include <linux/sched/debug.h>
->  #include <linux/sched/stat.h>
->  #include <linux/posix-timers.h>
-> +#include <linux/cn_proc.h>
->  #include <trace/events/oom.h>
->  #include "internal.h"
->  #include "fd.h"
-> @@ -1549,10 +1550,12 @@ static ssize_t comm_write(struct file *file, const char __user *buf,
->  	if (!p)
->  		return -ESRCH;
->  
-> -	if (same_thread_group(current, p))
-> +	if (same_thread_group(current, p)) {
->  		set_task_comm(p, buffer);
-> -	else
-> +		proc_comm_connector(p);
-> +	} else {
->  		count = -EINVAL;
-> +	}
->  
->  	put_task_struct(p);
+On Mon Sep 16 19, Jerry Snitselaar wrote:
+>On Mon Sep 16 19, Jarkko Sakkinen wrote:
+>>tpm_send() does not give anymore the result back to the caller. This
+>>would require another memcpy(), which kind of tells that the whole
+>>approach is somewhat broken. Instead, as Mimi suggested, this commit
+>>just wraps the data to the tpm_buf, and thus the result will not go to
+>>the garbage.
+>>
+>>Obviously this assumes from the caller that it passes large enough
+>>buffer, which makes the whole API somewhat broken because it could be
+>>different size than @buflen but since trusted keys is the only module
+>>using this API right now I think that this fix is sufficient for the
+>>moment.
+>>
+>>In the near future the plan is to replace the parameters with a tpm_buf
+>>created by the caller.
+>>
+>>Reported-by: Mimi Zohar <zohar@linux.ibm.com>
+>>Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
+>>Cc: stable@vger.kernel.org
+>>Fixes: 412eb585587a ("use tpm_buf in tpm_transmit_cmd() as the IO paramet=
+er")
+>>Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+>>---
+>>drivers/char/tpm/tpm-interface.c | 8 ++------
+>>1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>>diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-inte=
+rface.c
+>>index d9ace5480665..2459d36dd8cc 100644
+>>--- a/drivers/char/tpm/tpm-interface.c
+>>+++ b/drivers/char/tpm/tpm-interface.c
+>>@@ -358,13 +358,9 @@ int tpm_send(struct tpm_chip *chip, void *cmd, size_=
+t buflen)
+>>=09if (!chip)
+>>=09=09return -ENODEV;
+>>
+>>-=09rc =3D tpm_buf_init(&buf, 0, 0);
+>>-=09if (rc)
+>>-=09=09goto out;
+>>-
+>>-=09memcpy(buf.data, cmd, buflen);
+>>+=09buf.data =3D cmd;
+>>=09rc =3D tpm_transmit_cmd(chip, &buf, 0, "attempting to a send a command=
+");
+>>-=09tpm_buf_destroy(&buf);
+>>+
+>>out:
+>>=09tpm_put_ops(chip);
+>>=09return rc;
+>>--=20
+>>2.20.1
+>>
+>
+>Nothing uses the out label any longer so it should be dropped as well, but=
+ other than that...
+>
+>Acked-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-The rough idea looks ok to me but I have two concerns:
+sigh (wrong emacs macro hit), that should be:
 
-  (1) This looks like it will be visible to userspace, and this changes
-      the behaviour after ~8 years of not reporting this event.
+Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
 
-  (2) What prevents proc_comm_connector(p) running concurrently with itself
-      via the prctl()? The locking seems to be confined to set_task_comm().
-
-Will
