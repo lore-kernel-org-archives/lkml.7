@@ -2,97 +2,105 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED781C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30DB5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA52F206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068DD206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:57:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CJF7A23i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfIPJ4j convert rfc822-to-8bit (ORCPT
+        id S1729987AbfIPJ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:56:39 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:20022 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725850AbfIPJ4i (ORCPT
+        Mon, 16 Sep 2019 05:57:18 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36361 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfIPJ5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:56:38 -0400
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 17:56:35 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 17:56:34 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Mon, 16 Sep 2019 17:56:34 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     "tony.luck@intel.com" <tony.luck@intel.com>,
-        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
-        David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: Re: [PATCH v3 2/4] x86/mce: Make 3 functions non-static
-Thread-Topic: [PATCH v3 2/4] x86/mce: Make 3 functions non-static
-Thread-Index: AdVsdQQVZe8Vv2u/TlS+IY5QKGD9vg==
-Date:   Mon, 16 Sep 2019 09:56:34 +0000
-Message-ID: <ab8adffb138d4b44b4189a6ccb491218@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
+        Mon, 16 Sep 2019 05:57:18 -0400
+Received: by mail-pg1-f195.google.com with SMTP id m29so3261917pgc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=Rkhdorkxe0qRZF13/02UUScKqG72498Hp24eJzEwJa4=;
+        b=CJF7A23iXJA/Af2Yb6R3fM9Va0UjPmaQ868Hl2yLvWV+aC47MYd9JdyW/tqY/iHD/L
+         MURnT8MBPkKqzDjW5NmJexiBpNlSeR7Sf9Pg0dylNDMSy+zIsx/uB/K7NHls5AhyF/Ua
+         HPTcBN5DwmxQsRtslqTLJko/yPFzBHJ1CHLufoG76YBwOuBY5XJJYiNPkfqJEFSlm0mR
+         K2SaXmJkKZpnRIDqLK+/2CsD6fIM2KMMZ1IWD3eMKpZ9jrQttWjJWjPKNmFSSOjEIZNV
+         g9COt5CZ3Z9PehnJDhitdG/itkGSBXYa43Mz1jPk8vv9dT97NIxqDhP8Diyb+mhBvllB
+         FGhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Rkhdorkxe0qRZF13/02UUScKqG72498Hp24eJzEwJa4=;
+        b=iAOwbVR1Wr4d7xyidKG8UMC+qBwKAMHZjqK4SZeG6ELs3RzwRfL60B+i7MuEjR3f2Q
+         EpBmSdQG9sGZYOF/lTRM0JG4NZOxslKxTmrkVCgc4vwRx956bo8J6fMgirZ0Yl8LyS11
+         p2LoveyTSpXPzO5XK/Lvda/Of1GVa40E3eQllIqsN2p/SdVWaVHFkvnVEfsjH5AiuXwN
+         8vXK2k8SjRixCC0btl/fGJRFOtiSMXh7wUFJJZcyQGIvTEbbXAvAvRbdnouq8pTw7MAX
+         86UDx7sn16FVrj4D+QJfVqs4lpFuibKmcEzh79r1Zu4iAfgCTB0CcV1NbFd6VVWggnC7
+         qcuA==
+X-Gm-Message-State: APjAAAVRya6Ian8AekH42HDigq66+EQF9RgVltPcy9B8YF6a4wq3pYn0
+        1v/suG26dJySqgfA2da2Umu7HQ==
+X-Google-Smtp-Source: APXvYqylK1NKzYEcF+uWSCu14dTOkiaD2Ge+hzHZl2r37nI3kD7UrB02MDpe0uV+PdmDsWO2Jvnqrg==
+X-Received: by 2002:aa7:8d12:: with SMTP id j18mr71147231pfe.33.1568627836100;
+        Mon, 16 Sep 2019 02:57:16 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id m2sm10355923pff.154.2019.09.16.02.57.12
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 02:57:15 -0700 (PDT)
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang@linaro.org,
+        bruce.chen@unisoc.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: eic: sprd: Fix the incorrect EIC offset when toggling
+Date:   Mon, 16 Sep 2019 17:56:56 +0800
+Message-Id: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019, Thomas Gleixner wrote:
->On Mon, 16 Sep 2019, Tony W Wang-oc wrote:
->
->> On Mon, Sep 16, 2019, Thomas Gleixner wrote:
->> >On Wed, 11 Sep 2019, Tony W Wang-oc wrote:
->> >
->> >> These functions are declared static and cannot be used in others
->> >> .c source file. this commit removes the static attribute and adds
->> >> the declaration to the header for these functions.
->> >
->> >I'm not Cc'ed on any patches which use those functions. Please Cc the
->> >relevant maintainers on all patches of such a patch series so contect can
->> >be seen.
->> >
->>
->> Patches 3/4, 4/4 in this patchsets are using these functions. Specifically,
->> "[PATCH v3 3/4] x86/mce: Add Zhaoxin CMCI support " in this patchsets is
->> using intel_init_cmci(), "[PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support"
->> is using intel_init_lmce() and intel_clear_lmce().
->>
->> I had sent all patches in this patchsets to your mailbox. Could you help to
->> check again? Thank you.
->
->Found them by now, but please make sure that you provide cover letter
->[PATCH vX 0/N ] and thread the patches proper so they reference the cover
->letter. git send-email does that for you.
+From: Bruce Chen <bruce.chen@unisoc.com>
 
-Ok, thank you, will send this patchsets with cover letter.
+When toggling the level trigger to emulate the edge trigger, the
+EIC offset is incorrect without adding the corresponding bank index,
+thus fix it.
 
-Sincerely
-TonyWWang-oc
+Fixes: 7bf0d7f62282 ("gpio: eic: Add edge trigger emulation for EIC")
+Signed-off-by: Bruce Chen <bruce.chen@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/gpio/gpio-eic-sprd.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+index 7b9ac4a..090539f 100644
+--- a/drivers/gpio/gpio-eic-sprd.c
++++ b/drivers/gpio/gpio-eic-sprd.c
+@@ -530,11 +530,12 @@ static void sprd_eic_handle_one_type(struct gpio_chip *chip)
+ 		}
+ 
+ 		for_each_set_bit(n, &reg, SPRD_EIC_PER_BANK_NR) {
+-			girq = irq_find_mapping(chip->irq.domain,
+-					bank * SPRD_EIC_PER_BANK_NR + n);
++			u32 offset = bank * SPRD_EIC_PER_BANK_NR + n;
++
++			girq = irq_find_mapping(chip->irq.domain, offset);
+ 
+ 			generic_handle_irq(girq);
+-			sprd_eic_toggle_trigger(chip, girq, n);
++			sprd_eic_toggle_trigger(chip, girq, offset);
+ 		}
+ 	}
+ }
+-- 
+1.7.9.5
 
