@@ -2,129 +2,139 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0B8C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2123FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D49DC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:12:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="khSq9uAQ"
+	by mail.kernel.org (Postfix) with ESMTP id F0E7D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfIPHM4 (ORCPT
+        id S1730657AbfIPHNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:12:56 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:38644 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfIPHMz (ORCPT
+        Mon, 16 Sep 2019 03:13:14 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:65157 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729732AbfIPHNN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:12:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x10so1373716pgi.5;
-        Mon, 16 Sep 2019 00:12:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0RlJ05uTroP58LEheLIV/N0JmFk4uyJbV6/x+X7o6VI=;
-        b=khSq9uAQ+4px8pQprdT33SHwhZgIWiE6QQUqn6A1d4BRFQ4fUYWlxSPGffYM4n6t3b
-         UO61+6G0TxDA8N2CIe/MqWg5GRELfVfZiwr6LHdo3yRQORIjapdOFylqeIO/WN9l9+ND
-         Ok2SQDvWaFXUmUYkDOsurn6olRrcGoJa0O+KR10nzwxI3SzTBCxvl7Tx9zKUyiTg1Q/0
-         r17BWqvhAbp/TnW0dfK8GlSSI2AM4xFt23VwJrOTFAtK1jEn8f6QSdGURkmvxwSL91QE
-         mcll2iyR8el5VnorIOVh9bznDxdST7Eebso4EWC+nvJc+Gg/kF93WP3u+KHBtr+JEbTD
-         /21A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0RlJ05uTroP58LEheLIV/N0JmFk4uyJbV6/x+X7o6VI=;
-        b=V0h2bCWJvwrWNPcGiEbWVICF0vrCNHF8YIQc51O2ltQSvumvbqKeXQA4Plds26YgSi
-         wflS1K+X/pu7SLq+W0coe/YJMmvL2POFQv2SGut+zC0hGjHu1f+e59yKMTqryDVuLo65
-         bfikrcldWaDA3BToLa1aFeOX71UdC4K0Kns/v+TjmK7HCdjMTjiBCpCa3TWCBzZ8RRGR
-         RjSBiJfAmBFBgmvP0QaLOvnpY8GaJ7TG1LaVk7hQyZLBejz1ll7HG/ZDWq67QiSbZiVz
-         hQoPRICfXIA/22WCFgFACU1tMtT0fYgTtY3Zco2NjwRS+IuSKlABgH6xJ4uZQHl5CntG
-         SBgQ==
-X-Gm-Message-State: APjAAAWMyvQ7d2GW01NJV75yeTc79Pr9hK45zzssMPlNWhVD7KbVgZ1o
-        jBhbZ6mpBC+L9UtQ0Emrv4sTGYYJ
-X-Google-Smtp-Source: APXvYqyK591X0S54vFzFEbUbk6IDBXuo3c1uMvTcq3UQZ7Dodoxn009XsU9TRj0u8Y3ekjlI7Z+w7Q==
-X-Received: by 2002:aa7:8e08:: with SMTP id c8mr64793973pfr.238.1568617974784;
-        Mon, 16 Sep 2019 00:12:54 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id r23sm8603061pjo.22.2019.09.16.00.12.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 16 Sep 2019 00:12:54 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
-Subject: [PATCH] KVM: X86: Fix warning in handle_desc
-Date:   Mon, 16 Sep 2019 15:12:49 +0800
-Message-Id: <1568617969-6934-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Sep 2019 03:13:13 -0400
+X-UUID: 1f818f2cd1ec455da55e4f37a1a78aee-20190916
+X-UUID: 1f818f2cd1ec455da55e4f37a1a78aee-20190916
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 372390825; Mon, 16 Sep 2019 15:13:01 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Sep
+ 2019 15:12:59 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Sep 2019 15:12:59 +0800
+Message-ID: <1568617979.7317.76.camel@mhfsdcap03>
+Subject: Re: [Patch V9 6/8] arm64: tegra: Enable xudc on Jetson TX1
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date:   Mon, 16 Sep 2019 15:12:59 +0800
+In-Reply-To: <1568354873-24073-7-git-send-email-nkristam@nvidia.com>
+References: <1568354873-24073-1-git-send-email-nkristam@nvidia.com>
+         <1568354873-24073-7-git-send-email-nkristam@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: SMEX-12.5.0.1684-8.5.1010-24914.004
+X-TM-AS-Result: No-6.260900-8.000000-10
+X-TMASE-MatchedRID: scwq2vQP8OHmLzc6AOD8DfHkpkyUphL9D+jls0cSwJNSMUnCl2ZytCiq
+        snPUKvF6nb6Z+uUpsD2j9EeGSOD5uMHmypFRLzeBfJy8LojR0khLXPA26IG0hN9RlPzeVuQQnVt
+        gvxMdrIPqUiXvyK0vLoAsU4eLkb8YsQmM31S41hxum3JC5AA1Oo1j+mrGi/PFCuSPuSVW5+7BWk
+        ElSj6UUV0SX0p6tZfVoFW8SPM0GkJNfs8n85Te8oMbH85DUZXylBlY5S+EP6fUZxEAlFPo846HM
+        5rqDwqty+X6UXAKBSEz7qcN3PQZ47SIFtlWoFdIV8SeOB1iUWenhwMcCUuGfA9pt9Vuvq9t50g1
+        BO70D8VyM5AenUwMMVrd8gRCyZfKBt93KmsktusUeH4FmTCnq7pmNLE8W69nMkY/2LNYoZQ10g7
+        fr0IQXQ==
+X-TM-AS-User-Approved-Sender: No
+X-TM-AS-User-Blocked-Sender: No
+X-TMASE-Result: 10--6.260900-8.000000
+X-TMASE-Version: SMEX-12.5.0.1684-8.5.1010-24914.004
+X-TM-SNTS-SMTP: 22076F1786B60BA1606AA38DFE81EF11B6F61B78F46793633D2B0E77A51737742000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Fri, 2019-09-13 at 11:37 +0530, Nagarjuna Kristam wrote:
+> Enable XUSB device mode driver for USB0 slot on Jetson TX1.
+> 
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Reviewed-by: JC Kuo <jckuo@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi | 31 +++++++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> index a7dc319..c1e106e 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi
+> @@ -1362,7 +1362,7 @@
+>  				status = "okay";
+>  
+>  				lanes {
+> -					usb2-0 {
+> +					micro_b: usb2-0 {
+>  						nvidia,function = "xusb";
+>  						status = "okay";
+>  					};
+> @@ -1483,6 +1483,21 @@
+>  		vmmc-supply = <&vdd_3v3_sd>;
+>  	};
+>  
+> +	usb@700d0000 {
+> +		status = "okay";
+> +		phys = <&micro_b>;
+> +		phy-names = "usb2";
+> +		avddio-usb-supply = <&vdd_3v3_sys>;
+> +		hvdd-usb-supply = <&vdd_1v8>;
+> +		usb-role-switch;
+> +
+> +		port {
+> +			usb_role_switch: endpoint {
+> +				remote-endpoint = <&usb_b_conn_ep>;
+> +			};
+> +		};
+> +	};
+> +
+>  	regulators {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> @@ -1641,4 +1656,18 @@
+>  			linux,code = <KEY_VOLUMEUP>;
+>  		};
+>  	};
+> +
+> +	usb_type_b: connector {
+> +		compatible = "linux,usb-b-connector", "gpio-usb-b-connector";
+use standard compatible "usb-b-connector" instead of
+"linux,usb-b-connector"
 
-Reported by syzkaller:
+> +		label = "micro-USB";
+> +		type = "micro";
+> +		vbus-gpio = <&gpio TEGRA_GPIO(Z, 0) GPIO_ACTIVE_LOW>;
+> +
+> +		port {
+> +			usb_b_conn_ep: endpoint {
+> +				remote-endpoint = <&usb_role_switch>;
+> +			};
+> +		};
+> +	};
+> +
+>  };
 
-	WARNING: CPU: 0 PID: 6544 at /home/kernel/data/kvm/arch/x86/kvm//vmx/vmx.c:4689 handle_desc+0x37/0x40 [kvm_intel]
-	CPU: 0 PID: 6544 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
-	RIP: 0010:handle_desc+0x37/0x40 [kvm_intel]
-	Call Trace:
-	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
-	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
-	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
-	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
-	 do_vfs_ioctl+0xa2/0x690
-	 ksys_ioctl+0x6d/0x80
-	 __x64_sys_ioctl+0x1a/0x20
-	 do_syscall_64+0x74/0x720
-	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-When CR4.UMIP is set, guest should have UMIP cpuid flag. Current 
-kvm set_sregs function doesn't have such check when userspace inputs 
-sregs values. SECONDARY_EXEC_DESC is enabled on writes to CR4.UMIP in 
-vmx_set_cr4 though guest doesn't have UMIP cpuid flag. The testcast 
-triggers handle_desc warning when executing ltr instruction since guest 
-architectural CR4 doesn't set UMIP. This patch fixes it by adding check 
-for guest UMIP cpuid flag when get sreg inputs from userspace.
-
-Reported-by: syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com
-Fixes: 0367f205a3b7 ("KVM: vmx: add support for emulating UMIP")
-Cc: stable@vger.kernel.org
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-Note: syzbot report link https://lkml.org/lkml/2019/9/11/799
-
- arch/x86/kvm/x86.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f7cfd8e..83288ba 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8645,6 +8645,10 @@ static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
- 			(sregs->cr4 & X86_CR4_OSXSAVE))
- 		return  -EINVAL;
- 
-+	if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) &&
-+			(sregs->cr4 & X86_CR4_UMIP))
-+		return -EINVAL;
-+
- 	if ((sregs->efer & EFER_LME) && (sregs->cr0 & X86_CR0_PG)) {
- 		/*
- 		 * When EFER.LME and CR0.PG are set, the processor is in
--- 
-2.7.4
 
