@@ -2,119 +2,121 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B73C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37BCC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B496216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:40:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568641247;
-	bh=CvBUyINxHFcwm/8iEcUnqNw7vDPPHpHNW3JmzsgREAc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=ti7F/kumJcWEjXeKfRKRxPMhDV94XXo2/RFQE6FoD4fKvTmibGuCPtT+XRbrAIKvq
-	 I6mG8y3LIqCxtjXMiwnpeP3SLGtyaPAW0PERexxe4cctMFKFUKF7MmcfrR3opgkYYj
-	 N1EHFsHLo9NfnMhvKkLXHIwgObKQE3dSegYiauM8=
+	by mail.kernel.org (Postfix) with ESMTP id A2B1E216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:41:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387650AbfIPNkq (ORCPT
+        id S2387660AbfIPNlx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:40:46 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50874 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733272AbfIPNkq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:40:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=w3bobEKmdltUYp3wdYywVRw65l/zXxvDNG8WKRQOF04=; b=L3h6qJyEkF7Z4Q+eevCqRrGLj
-        +p1+xrRJoB0E/NxBqrZjB8JC8uvC05p9FzBOnoTdjIm/1MIMpCbLzBcuvAF7Z8c+W5DDEZAZN/7b0
-        YbHO5liyYQAGum8+A6zBMyXIyu3xGimJTa4xWJgZOmie8US5dM7wE/O/TqzZrKVVYJTdA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9rF0-0004b0-56; Mon, 16 Sep 2019 13:40:30 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 91B992741A0D; Mon, 16 Sep 2019 14:40:29 +0100 (BST)
-Date:   Mon, 16 Sep 2019 14:40:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     David Howells <dhowells@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Viro <viro@ZenIV.linux.org.uk>,
-        Wenwen Wang <wenwen@cs.uga.edu>
-Cc:     linux-mtd@lists.infradead.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the vfs tree with the ubifs tree
-Message-ID: <20190916134029.GF4352@sirena.co.uk>
+        Mon, 16 Sep 2019 09:41:53 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:49096 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733054AbfIPNlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:41:52 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id 186535FAD2;
+        Mon, 16 Sep 2019 15:41:50 +0200 (CEST)
+Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
+To:     Robin Gong <yibin.gong@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "jslaby@suse.com" <jslaby@suse.com>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+ <VE1PR04MB66383FAB08506993B305AC8D898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <29d03762-866a-4fdc-eddb-e24f6e631412@emlix.com>
+Date:   Mon, 16 Sep 2019 15:41:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rMHhSL690X5+a0Qo"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VE1PR04MB66383FAB08506993B305AC8D898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Am 16.09.19 um 10:02 schrieb Robin Gong:
+> On 2019/9/11 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
+>> For some years and since many kernel versions there are reports that RX
+>> UART DMA channel stops working at one point. So far the usual workaround
+>> was to disable RX DMA. This patches try to fix the underlying problem.
+>>
+>> When a running sdma script does not find any usable destination buffer to put
+>> its data into it just leads to stopping the channel being scheduled again. As
+>> solution we we manually retrigger the sdma script for this channel and by this
+>> dissolve the freeze.
+>>
+>> While this seems to work fine so far a further patch in this series increases the
+>> number of RX DMA periods for UART to reduce use cases running into such a
+>> situation.
+>>
+>> This patch series was tested with the current kernel and backported to kernel
+>> 4.15 with a special use case using a WL1837MOD via UART and provoking the
+> Hi Philipp, Could your Bluetooth issue be reproduce on latest linux-next? Or did
+> your kernel which can be reproduced include the below patch?
+> 
+> commit d1a792f3b4072bfac4150bb62aa34917b77fdb6d
+> Author: Russell King - ARM Linux <linux@arm.linux.org.uk>
+> Date:   Wed Jun 25 13:00:33 2014 +0100
+> 
 
---rMHhSL690X5+a0Qo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Robin, yes i have reproduced the Bluetooth issue with my test case with kernel 4.15
+and the newest 5.3.0-rc8-next-20190915. My test-case includes several custom-boards
+communicating via Bluetooth with each other. I see the error within seconds to few minutes.
 
-Hi all,
+>     Update imx-sdma cyclic handling to report residue
+>> hanging of UART RX DMA within seconds after starting a test application.
+>> It resulted in well known
+>>   "Bluetooth: hci0: command 0x0408 tx timeout"
+>> errors and complete stop of UART data reception. Our Bluetooth traffic
+>> consists of many independent small packets, mostly only a few bytes, causing
+>> high usage of periods.
+>>
+>>
+>> Philipp Puschmann (4):
+>>   dmaengine: imx-sdma: fix buffer ownership
+>>   dmaengine: imx-sdma: fix dma freezes
+>>   serial: imx: adapt rx buffer and dma periods
+>>   dmaengine: imx-sdma: drop redundant variable
+>>
+>>  drivers/dma/imx-sdma.c   | 32 ++++++++++++++++++++++----------
+>>  drivers/tty/serial/imx.c |  5 ++---
+>>  2 files changed, 24 insertions(+), 13 deletions(-)
+>>
+>> --
+>> 2.23.0
+> 
 
-Today's linux-next merge of the vfs tree got a conflict in:
+-- 
 
-  fs/ubifs/super.c
+Philipp Puschmann, emlix GmbH, http://www.emlix.com
+Fon +49 551 30664-0, Fax +49 551 30664-11
+Gothaer Platz 3, 37083 Göttingen, Germany
+Sitz der Gesellschaft: Göttingen, Amtsgericht Goettingen HR B 3160
+Geschaeftsführung: Heike Jordan, Dr. Uwe Kracke
+Ust-IdNr.: DE 205 198 055
 
-between commit:
-
-  9163e0184bd7d5f ("ubifs: Fix memory leak bug in alloc_ubifs_info() error =
-path")
-
-=66rom the ubifs tree and commit:
-
-  50d7aad57710e2b ("vfs: Convert ubifs to use the new mount API")
-
-=66rom the vfs tree.
-
-I fixed it up dropping the ubifs change and can carry the fix as
-necessary. This is now fixed as far as linux-next is concerned, but any
-non trivial conflicts should be mentioned to your upstream maintainer
-when your tree is submitted for merging.  You may also want to consider
-cooperating with the maintainer of the conflicting tree to minimise any
-particularly complex conflicts.
-
-diff --cc fs/ubifs/super.c
-index 7d4547e5202de,a5fa725e7cf16..0000000000000
---- a/fs/ubifs/super.c
-+++ b/fs/ubifs/super.c
-
---rMHhSL690X5+a0Qo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/kMwACgkQJNaLcl1U
-h9DXgwf/QZnfXeiu+WYdJ0NjI/wa5d6J1ojcLsWvDBM/TIPEO8EMwBqvqgF03u0k
-SGg0TMTUDuQtR5s9dFlefWdbYWz1FPiOPED7mqkPXBUGUyGopHxM5Y5eRgoeVz64
-2jk0e87um3mPWW5X1+dhPBnjjlCeEp7R+t05VG440MI60hExp5NTKlQgDeM9TzaM
-Tz6FZlzMYJV2DJAEvBImpI9omlrfzyo2d6S4ZxGx45M/p1o5pfq25kl3R+1DYSYz
-Zn3xTdQoUi+YYyPwi4wYk/bt4Zu2rBArVr/nZrDDTZHDjHCkyinjyvGqaR3usr+h
-jn2/CH9wfVKTkZHsbyXRvK6XLZ+7oA==
-=RVjy
------END PGP SIGNATURE-----
-
---rMHhSL690X5+a0Qo--
+emlix - smart embedded open source
