@@ -2,118 +2,114 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FEBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2BEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEAB2184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880AD2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390220AbfIPQ4F (ORCPT
+        id S2390183AbfIPRBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:56:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49752 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727821AbfIPQ4F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:56:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 078A318CB8E2;
-        Mon, 16 Sep 2019 16:56:05 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C9E75D9DC;
-        Mon, 16 Sep 2019 16:55:58 +0000 (UTC)
-Message-ID: <500cabaa80f250b974409ee4a4fca59bf2e24564.camel@redhat.com>
-Subject: Re: [PATCH RT v3 5/5] rcutorture: Avoid problematic critical
- section nesting on RT
-From:   Scott Wood <swood@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Date:   Mon, 16 Sep 2019 11:55:57 -0500
-In-Reply-To: <20190912221706.GC150506@google.com>
-References: <20190911165729.11178-1-swood@redhat.com>
-         <20190911165729.11178-6-swood@redhat.com>
-         <20190912221706.GC150506@google.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Mon, 16 Sep 2019 13:01:14 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43672 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726082AbfIPRBO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 13:01:14 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8GH0SBJ032514
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Sep 2019 13:00:30 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id B581A420811; Mon, 16 Sep 2019 13:00:28 -0400 (EDT)
+Date:   Mon, 16 Sep 2019 13:00:28 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916170028.GA15263@mit.edu>
+References: <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com>
+ <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
+ <20190915065655.GB29681@gardel-login>
+ <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
+ <20190916032327.GB22035@mit.edu>
+ <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Mon, 16 Sep 2019 16:56:05 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-09-12 at 18:17 -0400, Joel Fernandes wrote:
-> On Wed, Sep 11, 2019 at 05:57:29PM +0100, Scott Wood wrote:
-> > rcutorture was generating some nesting scenarios that are not
-> > reasonable.  Constrain the state selection to avoid them.
-> > 
-> > Example #1:
-> > 
-> > 1. preempt_disable()
-> > 2. local_bh_disable()
-> > 3. preempt_enable()
-> > 4. local_bh_enable()
-> > 
-> > On PREEMPT_RT, BH disabling takes a local lock only when called in
-> > non-atomic context.  Thus, atomic context must be retained until after
-> > BH
-> > is re-enabled.  Likewise, if BH is initially disabled in non-atomic
-> > context, it cannot be re-enabled in atomic context.
-> > 
-> > Example #2:
-> > 
-> > 1. rcu_read_lock()
-> > 2. local_irq_disable()
-> > 3. rcu_read_unlock()
-> > 4. local_irq_enable()
+On Sun, Sep 15, 2019 at 08:40:30PM -0700, Linus Torvalds wrote:
+> On Sun, Sep 15, 2019 at 8:23 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+> >
+> > But not blocking is *precisely* what lead us to weak keys in network
+> > devices that were sold by the millions to users in their printers,
+> > wifi routers, etc.
 > 
-> If I understand correctly, these examples are not unrealistic in the real
-> world unless RCU is used in the scheduler.
-
-I hope you mean "not realistic", at least when it comes to explicit
-preempt/irq disabling rather than spinlock variants that don't disable
-preempt/irqs on PREEMPT_RT.
-
-> > If the thread is preempted between steps 1 and 2,
-> > rcu_read_unlock_special.b.blocked will be set, but it won't be
-> > acted on in step 3 because IRQs are disabled.  Thus, reporting of the
-> > quiescent state will be delayed beyond the local_irq_enable().
+> Ted, just admit that you are wrong on this, instead of writing the
+> above kind of bad fantasy.
 > 
-> Yes, with consolidated RCU this can happen but AFAIK it has not seen to be
-> a
-> problem since deferred QS reporting will happen take care of it, which can
-> also happen from subsequent rcu_read_unlock_special().
-
-The defer_qs_iw_pending stuff isn't in 5.2-rt.  Still, given patch 4/5 (and
-special.b.deferred_qs on mainline) this shouldn't present a deadlock concern
-(letting the test run a bit now to double check) so this patch could
-probably be limited to the "example #1" sequence.
-
-> > For now, these scenarios will continue to be tested on non-PREEMPT_RT
-> > kernels, until debug checks are added to ensure that they are not
-> > happening elsewhere.
+> We have *always* supported blocking. It's called "/dev/random". And
+> guess what? Not blocking wasn't what lead to weak keys like you try to
+> imply.
 > 
-> Are you seeing real issues that need this patch? It would be good to not
-> complicate rcutorture if not needed.
+> What led to weak keys is that /dev/random is useless and nobody sane
+> uses it, exactly because it always blocks.
 
-rcutorture crashes on RT without this patch (in particular due to the
-local_bh_disable misordering).
+How /dev/random blocks is very different from how getrandom(2) blocks.
+Getrandom(2) blocks until the CRNG, and then it never blocks again.
+/dev/random tries to do entropy accounting, and it blocks randomly all
+the time.  *That* is why it is useless.  I agree that /dev/random is
+bad, but I think you're taking the wrong message from it.  It's not
+that blocking is always bad; it's that insisting on entropy accounting
+and "true randomness" is bad.
 
--Scott
+The getrandom(2) system call is modelled after *BSD's getentropy(2)
+call, and the fact that everyone is using is because for most use
+cases, it really is the right way to go.
 
+I think that's the core of my disagreement with you.  I agree that
+what /dev/random does is wrong, and to date, we've kept it for
+backwards compatibility reasons.  Some of these reasons could be
+rational, or at least debated.  For example, GPG wants to use
+/dev/random because it thinks it's more secure, and if they are
+generating 4096 bit RSA keys, or something else which might be
+"post-quantuum cryptography", it's possible that /dev/random is going
+to be better than the CRNG for the hyper-paranoid.  Other use cases,
+such as some PCI compliance labs who think that getrandom(2) is not
+sufficiently secure, are just purely insane --- but that's assuming
+today's getrandom(2) is guaranteed to return cryptographically strong
+results, or nothing at all.
 
+If we change the existing behavior of getrandom(2) with the default
+flags to mean, "we return whatever we feel like, and this includes
+something which looks random, but might be trivially reverse
+engineered by a research engineer", that is in my mind, a Really Bad
+Thing To Do.  And no, a big fat warning isn't sufficient, because
+there will be some systems integrators and application programmers who
+will ignore the kernel warning message.  They might not even look at
+dmesg, and a system console might not exist.
+
+					- Ted
