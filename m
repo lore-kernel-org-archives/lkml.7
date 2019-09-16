@@ -2,114 +2,82 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3973C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85EEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7653F214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898962184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="EFCHz3OI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MnS880/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731632AbfIPL5T (ORCPT
+        id S1731844AbfIPL5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:57:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38279 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727309AbfIPL5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:57:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id o184so9982064wme.3
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 04:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=A8KpKxE5/TCH8dxfTxqIPDIeEF4A15g4Y1Nx2SIGDMM=;
-        b=EFCHz3OIRhtn7f84ycqptRsNU7sOugoVct7LGmPkUvlfrHMqotNHm4aA6HgkcJqEru
-         4ulzRNPTuYupGcXDbDRNC/6SH1sX0+RD9v6XuhhGyq1rgfMRwPr6AKyMYNZqSVDLVLxx
-         gpXl4TsIljDZ79UupeVt5WX/4j0ojl0XJaXllv93W7s2Dz1tqbiybFbUe+FzqVnzylbp
-         FBuihxhA9Hrzt5Ab9N6IQXwGKmqFTG8KKga/WRYLbsu4O5DPdieQLw0szr03eGj9VkiL
-         qnWZac7IYohHC4cbIsEI1iY5gJX/KI6Ewenp3fLYkqWI2VPJPqPAWmLjLCabIAdIj9mm
-         7+Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=A8KpKxE5/TCH8dxfTxqIPDIeEF4A15g4Y1Nx2SIGDMM=;
-        b=EhEVWJrChSoEtgtTsCKhMSTTkaL7YZLJiJ8iF+hJkuMtT/vFq1g9cHA2RCr5YlljVu
-         rfY/61av5toM1KKTRXlFdJXsCXJfRAY0HqFpECj4z00VeySXsGOFRTEotNGwblwUOwD0
-         fdKN1tXF3RqAMnChK/ApyPlI/KavvTEKzl+QAyYBfbu6I7kpdCY9As2teNLSvEWZuG0k
-         9kQW8fO5m+w/FVATzHC0sQG0wKBm/9fNoiI8T45GS25gOZLsBcxi0Xj6LmKSGPMszDiG
-         Xhj4kfaNIniXGeYe++n5hW9r17SEGIEPX1E2H2jRxMGwJPrIH9fblMA+hZXZ8r6Bupse
-         B+tw==
-X-Gm-Message-State: APjAAAU73pab2Jph3E3/iOsUQtmrLWuPnYp2macBMBxQ171rui7hfN+B
-        x8l9EN48eNAkLz96b1ADNIhe7w==
-X-Google-Smtp-Source: APXvYqwvaXAToK3N7Dq6gBnUUF2ouck3zigq8a1VamrYjh9bMW1cIFLpi8bkeIrkaTJxW6vXEmn4gw==
-X-Received: by 2002:a7b:c5c5:: with SMTP id n5mr11858939wmk.69.1568635036421;
-        Mon, 16 Sep 2019 04:57:16 -0700 (PDT)
-Received: from localhost ([195.200.173.126])
-        by smtp.gmail.com with ESMTPSA id r20sm1421258wmh.37.2019.09.16.04.57.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 04:57:15 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 04:57:14 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Andreas Schwab <schwab@suse.de>
-cc:     Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org,
-        jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
-In-Reply-To: <mvmzhjcr2d4.fsf@suse.de>
-Message-ID: <alpine.DEB.2.21.9999.1909160456010.7214@viisi.sifive.com>
-References: <20190910055923.28384-1-hch@lst.de> <mvm4l1kskny.fsf@suse.de> <20190910070503.GA31743@lst.de> <mvmzhjcr2d4.fsf@suse.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Mon, 16 Sep 2019 07:57:33 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:48254 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727309AbfIPL5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:57:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=4UEBmSW/CBCAG5QIZKu21BsfI/TdK0ur9EAw4ov1WC0=; b=MnS880/Oh+ouDAg0CzMdK2Yd+k
+        oiyBTGdngetVphZYVVNqOSa6zu50VBLkwu4hArnslqb7BbUfVR3r+cmrw52ZXCptTb0Ebrc+HlL91
+        sHoySAfa6u85292mXOo9oQuRlZ+SP7F1JvYcBmx3x3Xw5H5bbo1AwCudRbUhFqWUrpvE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1i9pdG-0001Zy-DD; Mon, 16 Sep 2019 13:57:26 +0200
+Date:   Mon, 16 Sep 2019 13:57:26 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, mkubecek@suse.cz
+Subject: Re: [PATCH v5 2/2] net: phy: adin: implement Energy Detect Powerdown
+ mode via phy-tunable
+Message-ID: <20190916115726.GA5552@lunn.ch>
+References: <20190916073526.24711-1-alexandru.ardelean@analog.com>
+ <20190916073526.24711-3-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1619585291-1568635034=:7214"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916073526.24711-3-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Mon, Sep 16, 2019 at 10:35:26AM +0300, Alexandru Ardelean wrote:
+> This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
+> phy-tunable feature.
+> EDPD is also enabled by default on PHY config_init, but can be disabled via
+> the phy-tunable control.
+> 
+> When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
+> periodic pulses, so that in case the other PHY is also on EDPD mode, there
+> is no lock-up situation where both sides are waiting for the other to
+> transmit.
+> 
+> Via the phy-tunable control, TX pulses can be disabled if specifying 0
+> `tx-interval` via ethtool.
+> 
+> The ADIN PHY supports only fixed 1 second intervals; they cannot be
+> configured. That is why the acceptable values are 1,
+> ETHTOOL_PHY_EDPD_DFLT_TX_MSECS and ETHTOOL_PHY_EDPD_NO_TX (which disables
+> TX pulses).
+> 
+> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
---8323329-1619585291-1568635034=:7214
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-On Tue, 10 Sep 2019, Andreas Schwab wrote:
-
-> On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
->=20
-> > On Tue, Sep 10, 2019 at 08:57:37AM +0200, Andreas Schwab wrote:
-> >> On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
-> >>=20
-> >> > The sifive serial driver implements earlycon support,
-> >>=20
-> >> It should probably be documented in admin-guide/kernel-parameters.txt.
-> >
-> > How so?  W=D1=96th OF and a stdout path you just set earlycon on the
-> > command line without any arguments and it will be found.
->=20
-> Doesn't work for me.
->=20
-> [    0.000000] Malformed early option 'earlycon'
-
-Try:
-
-    earlycon=3Dsifive,0x10010000
-
-If it works, you should see this message on the kernel console very early=
-=20
-in the boot:
-
-[    0.000000] earlycon: sifive0 at MMIO 0x0000000010010000 (options '')
-
-
-- Paul
---8323329-1619585291-1568635034=:7214--
+    Andrew
