@@ -2,86 +2,88 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FD4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC78206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8081206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390793AbfIPTQf (ORCPT
+        id S2390853AbfIPTSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:16:35 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:46291 "EHLO 1wt.eu"
+        Mon, 16 Sep 2019 15:18:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54264 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfIPTQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:16:35 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8GJGFgj025977;
-        Mon, 16 Sep 2019 21:16:15 +0200
-Date:   Mon, 16 Sep 2019 21:16:15 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Lennart Poettering <mzxreary@0pointer.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190916191615.GE24547@1wt.eu>
-References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190916180801.GB30990@gardel-login>
+        id S1733190AbfIPTSk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 15:18:40 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A19858E584;
+        Mon, 16 Sep 2019 19:18:40 +0000 (UTC)
+Received: from treble (ovpn-120-32.rdu2.redhat.com [10.10.120.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EB77819C4F;
+        Mon, 16 Sep 2019 19:18:38 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 14:18:36 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] objdump: restore quiet build output
+Message-ID: <20190916191836.4jwbndzivivejftg@treble>
+References: <20190910092031.2897823-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190916180801.GB30990@gardel-login>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20190910092031.2897823-1-arnd@arndb.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 16 Sep 2019 19:18:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 08:08:01PM +0200, Lennart Poettering wrote:
-> I mean, as I understand you are unhappy with behaviour you saw on
-> systemd systems; we can certainly improve behaviour of systemd in
-> userspace alone, i.e. abort the getrandom() after a while in userspace
-> and log about it using typical userspace logging to the console. I am
-> not sure why you want to do all that in the kernel, the kernel isn't
-> great at user interaction, and really shouldn't be.
+On Tue, Sep 10, 2019 at 11:20:24AM +0200, Arnd Bergmann wrote:
+> After a recent sync-check.sh update, a 'make -s' build prints a
+> single line of output from the 'cd -' command:
+> 
+>     /git/linux/tools/objtool
+> 
+> This is clearly unintended, so revert back to a completely quiet
+> build by redirecting the cd output to /dev/null.
+> 
+> Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  tools/objtool/sync-check.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/objtool/sync-check.sh b/tools/objtool/sync-check.sh
+> index 0a832e265a50..94b8d76c2851 100755
+> --- a/tools/objtool/sync-check.sh
+> +++ b/tools/objtool/sync-check.sh
+> @@ -48,4 +48,4 @@ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+>  check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+>  check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
+>  
+> -cd -
+> +cd - > /dev/null
+> -- 
+> 2.20.0
+> 
 
-Because the syscall will have the option to return what random data
-was available in this case, while if you try to fix it only from
-within systemd you currently don't even get that data.
+Arnaldo, do you want to pick this one up?
 
-> It appears to me you subscribe too much to an idea that userspace
-> people are not smart enough and couldn't implement something like
-> this. Turns out we can though, and there's no need to add logic that
-> appears to follow the logic of "never trust userspace"...
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-I personally see this very differently. If randoms were placed into a
-kernel compared to other operating systems doing everything in userspace,
-it's in part because it requires to collect data very widely to gather
-some entropy and that no isolated userspace alone can collect as much
-as the kernel. Or they each have to reimplement their own method, each
-with their own bugs, instead of fixing them all at a single place. All
-applications need random, there's no reason for having to force them
-all to implement them in detail.
-
-Willy
+-- 
+Josh
