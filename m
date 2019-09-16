@@ -2,101 +2,156 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DD5C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A3EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBC2F206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:01:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAAE1206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:02:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="aOBRGkMl"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p8W6QYTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731591AbfIPJBx (ORCPT
+        id S1731613AbfIPJCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:01:53 -0400
-Received: from onstation.org ([52.200.56.107]:40528 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729814AbfIPJBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:01:52 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 9B6193E8F9;
-        Mon, 16 Sep 2019 09:01:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1568624511;
-        bh=u3nzc9gqP8MUC4JhGKxS32T+hxVY4syKzPf8LbbTamQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aOBRGkMlz/PhmAyVxvgfThua6X09O9qLt8s9Z4+G/dU8zpnBGCcD6NpbPyO3rS0Qw
-         /GzuKCU0+FITC5ilWRJR5bvkSsGr0+bVtYVhSl/2Boz+5tl0ZiyVzEOgwWP1hg2fOz
-         E5dvSFXBtHXZtL88w+C57HA9DPyvfZwZz6KJQBQA=
-Date:   Mon, 16 Sep 2019 05:01:50 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 00/11] ARM: dts: qcom: msm8974: add support for external
- display
-Message-ID: <20190916090150.GA349@onstation.org>
-References: <CGME20190815004916epcas3p4d8a62e215eff5e227721d3449e6bfbd3@epcas3p4.samsung.com>
- <20190815004854.19860-1-masneyb@onstation.org>
- <2da29e80-73fb-8620-532e-0b5f54b00841@samsung.com>
+        Mon, 16 Sep 2019 05:02:40 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12116 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729124AbfIPJCj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:02:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f4fb30000>; Mon, 16 Sep 2019 02:02:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 02:02:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:02:37 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:02:37 +0000
+Received: from [10.24.44.187] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:02:33 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>, Jon Hunter <jonathanh@nvidia.com>
+CC:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <dan.j.williams@intel.com>,
+        <tiwai@suse.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <e9e822da-1cb9-b510-7639-43407fda8321@nvidia.com>
+ <75be49ac-8461-0798-b673-431ec527d74f@nvidia.com>
+ <20190719050459.GM12733@vkoul-mobl.Dlink>
+ <3e7f795d-56fb-6a71-b844-2fc2b85e099e@nvidia.com>
+ <20190729061010.GC12733@vkoul-mobl.Dlink>
+ <98954eb3-21f1-6008-f8e1-f9f9b82f87fb@nvidia.com>
+ <20190731151610.GT12733@vkoul-mobl.Dlink>
+ <c0f4de86-423a-35df-3744-40db89f2fdfe@nvidia.com>
+ <20190808123833.GX12733@vkoul-mobl.Dlink>
+ <a93a472d-b8f7-973f-6068-607492421472@nvidia.com>
+ <20190820110510.GQ12733@vkoul-mobl.Dlink>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <14c52eb7-8676-652a-ae7a-8713ba536f05@nvidia.com>
+Date:   Mon, 16 Sep 2019 14:32:30 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2da29e80-73fb-8620-532e-0b5f54b00841@samsung.com>
+In-Reply-To: <20190820110510.GQ12733@vkoul-mobl.Dlink>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568624563; bh=cuF+Igy2GwJ49vOlXWUBi0B7TdlTzJNkyFnoTY+Cp+E=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=p8W6QYTSLIdyL0nh46f7T29uFZxtD5dh+8czsxC6FG3mC7fMg70vz3Y/oNi869Edk
+         Avi4Z6Rz363YOQlYeoDUoinU/a7v/6iuA4PMdRfmGmrxq1PxeO2Q+/lwazHAaR/yh3
+         2xhvr8UV9opRCxFWJehx1MEPd9Cuk+71qfBYi6lfv2e5Rje4Y/SjII22fc4un9Lmyt
+         WzbwiYg3N3s46mLIQs0EaONSnU6gXnfCA8LQ4b5Pra33MX9VKEyfydpDjoqD65zj2S
+         6xG9xcN2QtjeG/7HWEaaNQflowW9E3xn/sU1CqUJQ2FjuopUWeFOL/hFW4A8wX/aL2
+         dcuS4E3CIdzkw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrzej,
+Sorry for the delay in replying.
 
-On Mon, Sep 16, 2019 at 10:13:58AM +0200, Andrzej Hajda wrote:
-> Hi Brian,
-> 
-> On 15.08.2019 02:48, Brian Masney wrote:
-> > This patch series begins to add support for the external display over
-> > HDMI that is supported on msm8974 SoCs. I'm testing this series on the
-> > Nexus 5, and I'm able to communicate with the HDMI bridge via the
-> > analogix-anx78xx driver, however the external display is not working
-> > yet.
-> >
-> > When I plug in the HDMI cable, the monitor detects that a device is
-> > hooked up, but nothing is shown on the external monitor. The hot plug
-> > detect GPIO (hpd-gpios) on the analogix-anx78xx bridge and MSM HDMI
-> > drivers do not change state when the slimport adapter or HDMI cable is
-> > plugged in or removed. I wonder if a regulator is not enabled somewhere?
-> > I have a comment in patch 10 regarding 'hpd-gdsc-supply' that may
-> > potentially be an issue.
-> >
-> > I'm still digging in on this, however I'd appreciate any feedback if
-> > anyone has time. Most of these patches are ready now, so I marked the
-> > ones that aren't ready with 'PATCH RFC'.
-> >
-> > I'm using an Analogix Semiconductor SP6001 SlimPort Micro-USB to 4K HDMI
-> > Adapter to connect my phone to an external display via a standard HDMI
-> > cable. This works just fine with the downstream MSM kernel using
-> > Android.
-> 
-> 
-> This patchset risks to be forgotten. To avoid it, at least partially, I
-> can merge patches 1-5, is it OK for you?
-
-That would be great if you could do that.
-
-Thanks,
-
-Brian
+On 8/20/2019 4:35 PM, Vinod Koul wrote:
+> On 19-08-19, 16:56, Jon Hunter wrote:
+>>>>>>>>> On this, I am inclined to think that dma driver should not be involved.
+>>>>>>>>> The ADMAIF needs this configuration and we should take the path of
+>>>>>>>>> dma_router for this piece and add features like this to it
+>>>>>>>> Hi Vinod,
+>>>>>>>>
+>>>>>>>> The configuration is needed by both ADMA and ADMAIF. The size is
+>>>>>>>> configurable
+>>>>>>>> on ADMAIF side. ADMA needs to know this info and program accordingly.
+>>>>>>> Well I would say client decides the settings for both DMA, DMAIF and
+>>>>>>> sets the peripheral accordingly as well, so client communicates the two
+>>>>>>> sets of info to two set of drivers
+>>>>>> That maybe, but I still don't see how the information is passed from the
+>>>>>> client in the first place. The current problem is that there is no means
+>>>>>> to pass both a max-burst size and fifo-size to the DMA driver from the
+>>>>>> client.
+>>>>> So one thing not clear to me is why ADMA needs fifo-size, I thought it
+>>>>> was to program ADMAIF and if we have client programme the max-burst
+>>>>> size to ADMA and fifo-size to ADMAIF we wont need that. Can you please
+>>>>> confirm if my assumption is valid?
+>>>> Let me see if I can clarify ...
+>>>>
+>>>> 1. The FIFO we are discussing here resides in the ADMAIF module which is
+>>>>     a separate hardware block the ADMA (although the naming make this
+>>>>     unclear).
+>>>>
+>>>> 2. The size of FIFO in the ADMAIF is configurable and it this is
+>>>>     configured via the ADMAIF registers. This allows different channels
+>>>>     to use different FIFO sizes. Think of this as a shared memory that is
+>>>>     divided into n FIFOs shared between all channels.
+>>>>
+>>>> 3. The ADMA, not the ADMAIF, manages the flow to the FIFO and this is
+>>>>     because the ADMAIF only tells the ADMA when a word has been
+>>>>     read/written (depending on direction), the ADMAIF does not indicate
+>>>>     if the FIFO is full, empty, etc. Hence, the ADMA needs to know the
+>>>>     total FIFO size.
+>>>>
+>>>> So the ADMA needs to know the FIFO size so that it does not overrun the
+>>>> FIFO and we can also set a burst size (less than the total FIFO size)
+>>>> indicating how many words to transfer at a time. Hence, the two parameters.
+>>> Thanks, I confirm this is my understanding as well.
+>>>
+>>> To compare to regular case for example SPI on DMA, SPI driver will
+>>> calculate fifo size & burst to be used and program dma (burst size) and
+>>> its own fifos accordingly
+>>>
+>>> So, in your case why should the peripheral driver not calculate the fifo
+>>> size for both ADMA and ADMAIF and (if required it's own FIFO) and
+>>> program the two (ADMA and ADMAIF).
+>>>
+>>> What is the limiting factor in this flow is not clear to me.
+>> The FIFO size that is configured by the ADMAIF driver needs to be given
+>> to the ADMA driver so that it can program its registers accordingly. The
+>> difference here is that both the ADMA and ADMAIF need the FIFO size.
+> Can you please help describing what it is programming using the FIFO
+> size of ADMAIF?
+**ADMA channel register is programmed with the same FIFO_SIZE as ADMAIF 
+channel
+to which it is mapped to.**
+As previously mentioned, HW (on ADMA) uses this value to understand the 
+FIFO depth
+and comes to know when a space of BURST_SIZE is available. ADMAIF is an 
+interface
+to AHUB and when data moves forward to other clients via AHUB, it sends 
+signal to
+ADMA per WORD basis. ADMA calculates this to know available space and 
+initiates a
+transfer when sufficient space is available.
+> Thanks
