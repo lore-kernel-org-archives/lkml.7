@@ -2,56 +2,51 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AABC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E608CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E2EB206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9316206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfIPKTI (ORCPT
+        id S1729881AbfIPKTO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:19:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:42227 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbfIPKTI (ORCPT
+        Mon, 16 Sep 2019 06:19:14 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:42234 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728662AbfIPKTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 06:19:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id x9so50052889ior.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:19:07 -0700 (PDT)
+Received: by mail-io1-f70.google.com with SMTP id x9so50052935ior.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:19:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=mAdUAM8YzOu9I1hdJOoj7a4Ffw1Bx1p0uX0fb4DD1J0=;
-        b=gS05fiX+BZpodRjLS09eq/ABFMi+vYty+Xlr8l9klS1Mc1DnbzD+DIzdR4NGsIXcBs
-         LkLS4yKwkM2cQ6hrplefqfQ03xhxZSjzvnm8RCUUNsJbxWMp649jXqTQ5dx/rXFQaDuY
-         +2DQ3oSh4JP5Yymk4lC3nymSgW/hLCGYUVzswofOqTPjO+iWDvYI11KPH58VDFgLFnYz
-         0UcooNGk1dDFE62/7GPKIEX2xUFVBlFdh+lDT3XxDB58aULggqJO6OerdyoUlfh0RjaZ
-         Kk7Y9rt2335PnesqCWB8hVd+/MnqUOF/xS54ql8Y3kTNcmd+GqpcT0fbL2zllGpCqHNT
-         UjRg==
-X-Gm-Message-State: APjAAAXsDWuqH8PMS2G/nFK6phbWhHEk+1p4omONfOQ0uSO55FxX6jqi
-        Du6eBIAHqvAqVxtm/dUWw2yAIAIGVWFdHurrt31c4ykwuZZe
-X-Google-Smtp-Source: APXvYqxaPk58ytdK63Zl+NR3Gjyqkc2VpDqzOgb9QEUfLW+h1dZo/dS1M5kQp+QkzpuP278DUi2cPthIFyKvnsn542dew8CORI72
+        bh=2TY2lBFk1if3tC3oyWyoCR1kViN6/jvV9jPqbnjNioI=;
+        b=hP+wsbu7gpT9pOZK92IIPhN7q73qacgsY8DwOpFZ03/fcLqMfM58C0NTpE2YZS6+xN
+         4153BALRx4D5ZXCeJgOnKiLAIufBO50EnTHj4rqXVW6JBbyES0WIEl7MwldavbXtl+2I
+         fshK+xJ+UdPHMU2XAjd/n+yeJXvErvafdvZbDbRyKnQPDK2o6/lMzqKYGNahpShRDjbc
+         DCoUPJJARXcC7IWD2rOZepRxiEVMsqAbNPDq1s0SDqEET76k65MVk0cOjrYBr2GjvrpU
+         hpWh1/uIoviI8RSGI9nCqFG71VEEM82uAfPYiQOmFWDM3D7XiBLZWHpo9X7uNjRE4P7E
+         nrJw==
+X-Gm-Message-State: APjAAAVqqklK1NuRRPCFxA/gM1byVPyMS2zGeN8dOgC77d4WoZ8CwUL/
+        5C1HdZYP7VSu5Sk87wxu4r/f0hwwmlPFoUslVX1VkFl+nNX6
+X-Google-Smtp-Source: APXvYqyRthIhVDzE4entVdIPKBCLHpjSnWAPjUTOwDLGwJZVXGGKsPpL9V6dX6zkX6+fnjW0TCnYj3jdSsqmKqhz7m/wC+035od6
 MIME-Version: 1.0
-X-Received: by 2002:a02:712b:: with SMTP id n43mr38481268jac.2.1568629146713;
- Mon, 16 Sep 2019 03:19:06 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 03:19:06 -0700
+X-Received: by 2002:a5e:da4d:: with SMTP id o13mr14353100iop.124.1568629147163;
+ Mon, 16 Sep 2019 03:19:07 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 03:19:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000001348750592a8ef50@google.com>
-Subject: INFO: task hung in cancel_delayed_work_sync
-From:   syzbot <syzbot+f39ab8494f6015e62360@syzkaller.appspotmail.com>
-To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
-        davem@davemloft.net, ilyal@mellanox.com,
-        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
-        kafai@fb.com, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, steffen.klassert@secunet.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
+Message-ID: <00000000000019e6c20592a8ef5d@google.com>
+Subject: KMSAN: uninit-value in __request_module
+From:   syzbot <syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com>
+To:     glider@google.com, linux-kernel@vger.kernel.org, mcgrof@kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,91 +57,86 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    f4b752a6 mlx4: fix spelling mistake "veify" -> "verify"
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1183c7fa600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
-dashboard link: https://syzkaller.appspot.com/bug?extid=f39ab8494f6015e62360
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14426d85600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=110c1af1600000
-
-The bug was bisected to:
-
-commit 3c4d7559159bfe1e3b94df3a657b2cda3a34e218
-Author: Dave Watson <davejwatson@fb.com>
-Date:   Wed Jun 14 18:37:39 2017 +0000
-
-     tls: kernel TLS support
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=144a4ffa600000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=164a4ffa600000
-console output: https://syzkaller.appspot.com/x/log.txt?x=124a4ffa600000
+HEAD commit:    014077b5 DO-NOT-SUBMIT: usb-fuzzer: main usb gadget fuzzer..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=10820859600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+dashboard link: https://syzkaller.appspot.com/bug?extid=618aacd49e8c8b8486bd
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=171a72f1600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162ff949600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f39ab8494f6015e62360@syzkaller.appspotmail.com
-Fixes: 3c4d7559159b ("tls: kernel TLS support")
+Reported-by: syzbot+618aacd49e8c8b8486bd@syzkaller.appspotmail.com
 
-INFO: task syz-executor279:9995 blocked for more than 143 seconds.
-       Not tainted 5.3.0-rc7+ #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor279 D24264  9995   9994 0x00000000
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_timeout+0x717/0xc50 kernel/time/timer.c:1783
-  do_wait_for_common kernel/sched/completion.c:83 [inline]
-  __wait_for_common kernel/sched/completion.c:104 [inline]
-  wait_for_common kernel/sched/completion.c:115 [inline]
-  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
-  __flush_work+0x508/0xa50 kernel/workqueue.c:3040
-  __cancel_work_timer+0x3d9/0x540 kernel/workqueue.c:3127
-  cancel_delayed_work_sync+0x1b/0x20 kernel/workqueue.c:3259
-  tls_sw_cancel_work_tx+0x68/0x80 net/tls/tls_sw.c:2063
-  tls_sk_proto_close+0x4ac/0x990 net/tls/tls_main.c:299
-  inet_release+0xed/0x200 net/ipv4/af_inet.c:427
-  inet6_release+0x53/0x80 net/ipv6/af_inet6.c:470
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:163
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x401f40
-Code: ff ff ff 25 62 63 20 00 68 08 00 00 00 e9 60 ff ff ff ff 25 5a 63 20  
-00 68 09 00 00 00 e9 50 ff ff ff ff 25 52 63 20 00 68 0a <00> 00 00 e9 40  
-ff ff ff ff 25 4a 63 20 00 68 0b 00 00 00 e9 30 ff
-RSP: 002b:00007fffd8200d58 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000401f40
-RDX: ffffffffffffffc1 RSI: 1201000000003618 RDI: 0000000000000004
-RBP: 00007fffd8200d70 R08: 0000000000000000 R09: 1201000000003618
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403170 R14: 0000000000000000 R15: 0000000000000000
-INFO: lockdep is turned off.
-NMI backtrace for cpu 1
-CPU: 1 PID: 1057 Comm: khungtaskd Not tainted 5.3.0-rc7+ #0
+netlink: 76 bytes leftover after parsing attributes in process  
+`syz-executor501'.
+==================================================================
+BUG: KMSAN: uninit-value in string_nocheck lib/vsprintf.c:606 [inline]
+BUG: KMSAN: uninit-value in string+0x4be/0x600 lib/vsprintf.c:668
+CPU: 1 PID: 12341 Comm: syz-executor501 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0x9d0/0xef0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
+  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
+  kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
+  __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
+  string_nocheck lib/vsprintf.c:606 [inline]
+  string+0x4be/0x600 lib/vsprintf.c:668
+  vsnprintf+0x218f/0x3210 lib/vsprintf.c:2503
+  __request_module+0x2b1/0x11c0 kernel/kmod.c:143
+  tcf_proto_lookup_ops+0x3e7/0x700 net/sched/cls_api.c:80
+  tcf_proto_is_unlocked net/sched/cls_api.c:168 [inline]
+  tc_new_tfilter+0xfe0/0x4ce0 net/sched/cls_api.c:2041
+  rtnetlink_rcv_msg+0xcb6/0x1580 net/core/rtnetlink.c:5214
+  netlink_rcv_skb+0x431/0x620 net/netlink/af_netlink.c:2477
+  rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5241
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0xf6c/0x1050 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x110f/0x1330 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+RIP: 0033:0x4401e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffc3690c568 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
+RDX: 0000000000000000 RSI: 0000000020000140 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a70
+R13: 0000000000401b00 R14: 0000000000000000 R15: 0000000000000000
+
+Uninit was created at:
+  kmsan_save_stack_with_flags mm/kmsan/kmsan.c:189 [inline]
+  kmsan_internal_poison_shadow+0x58/0xb0 mm/kmsan/kmsan.c:148
+  kmsan_slab_alloc+0xaa/0x120 mm/kmsan/kmsan_hooks.c:175
+  slab_alloc_node mm/slub.c:2790 [inline]
+  __kmalloc_node_track_caller+0xb55/0x1320 mm/slub.c:4388
+  __kmalloc_reserve net/core/skbuff.c:141 [inline]
+  __alloc_skb+0x306/0xa10 net/core/skbuff.c:209
+  alloc_skb include/linux/skbuff.h:1056 [inline]
+  netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+  netlink_sendmsg+0x783/0x1330 net/netlink/af_netlink.c:1892
+  sock_sendmsg_nosec net/socket.c:637 [inline]
+  sock_sendmsg net/socket.c:657 [inline]
+  ___sys_sendmsg+0x14ff/0x1590 net/socket.c:2311
+  __sys_sendmsg net/socket.c:2356 [inline]
+  __do_sys_sendmsg net/socket.c:2365 [inline]
+  __se_sys_sendmsg+0x305/0x460 net/socket.c:2363
+  __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2363
+  do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
+  entry_SYSCALL_64_after_hwframe+0x63/0xe7
+==================================================================
 
 
 ---
@@ -156,6 +146,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this bug, for details see:
 https://goo.gl/tpsmEJ#testing-patches
