@@ -2,130 +2,118 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2927AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C69C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DCF214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 469FB214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568653686;
+	bh=ZMyAyLAYsoa3qVfWHM7UVHAKR27uDdfrx5GN9gLS/z4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m0k9DlL6aSbtOW9hC4HJWy+gEcTcxU37vepEhBDZGFuuHWKePCmU5iGzJnB/r1J8J
+	 H7A+oNzJ9AM0NBeiZY1iopYAFuYveJa5ss0xD3p5q8IdSd3sTWalRNT3j+i7M8Z8kG
+	 7tMTqxoZkVu+Mpze3Q1/UuIefZYyuiZb3JZGrfdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390274AbfIPRHk (ORCPT
+        id S2390298AbfIPRHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:07:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57485 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390235AbfIPRHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:07:39 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2A2553084037;
-        Mon, 16 Sep 2019 17:07:39 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 472AF600F8;
-        Mon, 16 Sep 2019 17:07:38 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 11:07:37 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        James Harvey <jamespharvey20@gmail.com>
-Subject: Re: [PATCH 00/11] KVM: x86/mmu: Restore fast invalidate/zap flow
-Message-ID: <20190916110737.4abfc93d@x1.home>
-In-Reply-To: <20190913024612.28392-1-sean.j.christopherson@intel.com>
-References: <20190913024612.28392-1-sean.j.christopherson@intel.com>
-Organization: Red Hat
+        Mon, 16 Sep 2019 13:07:52 -0400
+Received: from mail-lj1-f175.google.com ([209.85.208.175]:38327 "EHLO
+        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390277AbfIPRHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 13:07:51 -0400
+Received: by mail-lj1-f175.google.com with SMTP id y23so670912ljn.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mhXl70av4EvOTbL0RRXS4SdgE4V4WRtYtcKsjJL619g=;
+        b=Fs3ihW1d0/7OhSFVjmMcwT0WBaV23WDO7f0r7V2eN5ewaGmCnHtgRxJ+CpdhycMKWW
+         rP4+Xi9hy0A30CcOwQKaYl7GEfN4Xr6h3g3ESaYI871rAs2uhfnN/bND0hOZVHWDEA6y
+         f3Qrk6EBNA9PfhZV/b9JMfp5fSM0rIwDkmdKQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mhXl70av4EvOTbL0RRXS4SdgE4V4WRtYtcKsjJL619g=;
+        b=kPbD4JvwwiE7Vw34dFvuV0TzgRE0vmZF3WIY+gaY+V1c2Fsg18Q4YWHXNp47RSoQim
+         Csedknntietn1YYHmNGPPt3A7o2mhPyLuECGlYdJ+hp+cG3a76jWhuLhwf5lS9/JnIHT
+         T0JYLc/jrKKIcdjedKSj8Gm1zUydBXPtEBjtReNKqR6AU2/46oX5f914I6z42mT6LeVx
+         1/X9EUHKFu2kJMRB20/wFk0SHwL5IxpP2eTSiY+yc5KA28yQBo0tFyXYs3/NjoITLW14
+         e3x25fH7+UReXo4p0jssHkn3kb62yEeztQhxPBj+qwR8AeG4WM8WDVjTQMa0U+xY1wp3
+         r1pA==
+X-Gm-Message-State: APjAAAU17aNqvI1ixZ6HRyomITLk05Wq9U2xDHoMeAddn1w45o72lLy4
+        MmCMwy6idZSvoSh2+zmgnRCuF6sOj7g=
+X-Google-Smtp-Source: APXvYqx0jq6cec5vfIrpCo20PyJTsyvPKacMKBDoQ8p/V/ZvxEHPsIRtyO9qrJURngEm3y1HPvTFpw==
+X-Received: by 2002:a2e:9e8f:: with SMTP id f15mr341126ljk.212.1568653667752;
+        Mon, 16 Sep 2019 10:07:47 -0700 (PDT)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id m25sm8296842ljg.35.2019.09.16.10.07.44
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
+Received: by mail-lj1-f169.google.com with SMTP id c22so678439ljj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
+X-Received: by 2002:a2e:2c02:: with SMTP id s2mr383093ljs.156.1568653664082;
+ Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 16 Sep 2019 17:07:39 +0000 (UTC)
+References: <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com> <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
+ <20190915065655.GB29681@gardel-login> <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
+ <20190916032327.GB22035@mit.edu> <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
+ <20190916170028.GA15263@mit.edu>
+In-Reply-To: <20190916170028.GA15263@mit.edu>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 16 Sep 2019 10:07:27 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiHNtmCAWGWmUn7LYnwGWdNvDavhzBdNdeeTnP4Wkk3gg@mail.gmail.com>
+Message-ID: <CAHk-=wiHNtmCAWGWmUn7LYnwGWdNvDavhzBdNdeeTnP4Wkk3gg@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 19:46:01 -0700
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+On Mon, Sep 16, 2019 at 10:00 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>
+> How /dev/random blocks is very different from how getrandom(2) blocks.
+> Getrandom(2) blocks until the CRNG, and then it never blocks again.
 
-> Restore the fast invalidate flow for zapping shadow pages and use it
-> whenever vCPUs can be active in the VM.  This fixes (in theory, not yet
-> confirmed) a regression reported by James Harvey where KVM can livelock
-> in kvm_mmu_zap_all() when it's invoked in response to a memslot update.
-> 
-> The fast invalidate flow was removed as it was deemed to be unnecessary
-> after its primary user, memslot flushing, was reworked to zap only the
-> memslot in question instead of all shadow pages.  Unfortunately, zapping
-> only the memslot being (re)moved during a memslot update introduced a
-> regression for VMs with assigned devices.  Because we could not discern
-> why zapping only the relevant memslot broke device assignment, or if the
-> regression extended beyond device assignment, we reverted to zapping all
-> shadow pages when a memslot is (re)moved.
-> 
-> The revert to "zap all" failed to account for subsequent changes that
-> have been made to kvm_mmu_zap_all() between then and now.  Specifically,
-> kvm_mmu_zap_all() now conditionally drops reschedules and drops mmu_lock
-> if a reschedule is needed or if the lock is contended.  Dropping the lock
-> allows other vCPUs to add shadow pages, and, with enough vCPUs, can cause
-> kvm_mmu_zap_all() to get stuck in an infinite loop as it can never zap all
-> pages before observing lock contention or the need to reschedule.
-> 
-> The reasoning behind having kvm_mmu_zap_all() conditionally reschedule was
-> that it would only be used when the VM is inaccesible, e.g. when its
-> mm_struct is dying or when the VM itself is being destroyed.  In that case,
-> playing nice with the rest of the kernel instead of hogging cycles to free
-> unused shadow pages made sense.
-> 
-> Since it's unlikely we'll root cause the device assignment regression any
-> time soon, and that simply removing the conditional rescheduling isn't
-> guaranteed to return us to a known good state, restore the fast invalidate
-> flow for zapping on memslot updates, including mmio generation wraparound.
-> Opportunisticaly tack on a bug fix and a couple enhancements.
-> 
-> Alex and James, it probably goes without saying... please test, especially
-> patch 01/11 as a standalone patch as that'll likely need to be applied to
-> stable branches, assuming it works.  Thanks!
+Yes and no.
 
-It looks like Paolo already included patch 01/11 in v5.3, I tested that
-and it behaves ok for the GPU assignment windows issue.  I applied the
-remaining 10 patches on v5.3 and tested those separately.  They also
-behave well for this test case.
+getrandom() very much blocks exactly like /dev/random, when you give
+it the GRND_RANDOM flag.
 
-Tested-by: Alex Williamson <alex.williamson@redhat.com>
+Which is completely broken, and was already known to be broken. So
+that flag is just plain stupid.
 
-Thanks,
-Alex 
+And getrandom() does *not* block like /dev/urandom does (ie not at
+all), which was actually useful, and very widely used.
 
-> 
-> Sean Christopherson (11):
->   KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
->   KVM: x86/mmu: Treat invalid shadow pages as obsolete
->   KVM: x86/mmu: Use fast invalidate mechanism to zap MMIO sptes
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: show mmu_valid_gen in shadow
->     page related tracepoints""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: add tracepoint for
->     kvm_mmu_invalidate_all_pages""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: zap pages in batch""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: collapse TLB flushes when zap
->     all pages""
->   KVM: x86/mmu: Revert "Revert "KVM: MMU: reclaim the zapped-obsolete
->     page first""
->   KVM: x86/mmu: Revert "KVM: x86/mmu: Remove is_obsolete() call"
->   KVM: x86/mmu: Explicitly track only a single invalid mmu generation
->   KVM: x86/mmu: Skip invalid pages during zapping iff root_count is zero
-> 
->  arch/x86/include/asm/kvm_host.h |   4 +-
->  arch/x86/kvm/mmu.c              | 154 ++++++++++++++++++++++++++++----
->  arch/x86/kvm/mmutrace.h         |  42 +++++++--
->  arch/x86/kvm/x86.c              |   1 +
->  4 files changed, 173 insertions(+), 28 deletions(-)
-> 
+So you really have the worst of both worlds.
 
+Yes, getrandom(0) does what /dev/random _should_ have done, and what
+getrandom(GRND_RANDOM) should be but isn't.
+
+But by making the choice it did, we now have three useless flag
+combinations, and we lack one people _want_ and need.
+
+And this design mistake very much caused the particular bug we are now hitting.
+
+                  Linus
