@@ -2,90 +2,128 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F83C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AA0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3DCC214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:56:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="F8FSYBCX"
+	by mail.kernel.org (Postfix) with ESMTP id 32C3A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbfIPN4q (ORCPT
+        id S2388148AbfIPN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:56:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33430 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387994AbfIPN4p (ORCPT
+        Mon, 16 Sep 2019 09:58:09 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:37294 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfIPN6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:56:45 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GDufEq034297;
-        Mon, 16 Sep 2019 08:56:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568642201;
-        bh=0gcT6rF9/y6ZRRp8KTYYKr6BbpmQjq19ySJfBPIhBZo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=F8FSYBCXaUypv/jxgCv3SRDgAEgwmwop/tuYNRn5mPZPv/szRMR5THhiw7+qt1rMj
-         6vPIDAjweSHKoBC6DT4h2ummlUtZFWxat4Hg2FV34U9jVVp9tQcd5MPidTTiKWn3Pc
-         zG/yUiJHOQWyW0yuUR0JSdTdthpIsQjI+yDfWzzQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GDufrV077214
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Sep 2019 08:56:41 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
- Sep 2019 08:56:40 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 16 Sep 2019 08:56:38 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GDueNP023557;
-        Mon, 16 Sep 2019 08:56:40 -0500
-Subject: Re: [PATCH v5 3/9] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-4-dmurphy@ti.com>
- <e842eef7-094a-a7dd-bcf1-90ed41bf45cd@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <0018201c-4e31-f3c4-13bf-a22536b12f1c@ti.com>
-Date:   Mon, 16 Sep 2019 08:58:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 09:58:09 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 0BFA83C0579;
+        Mon, 16 Sep 2019 15:58:06 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id IWPcCamjG3-f; Mon, 16 Sep 2019 15:57:59 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 6B0E33C00C4;
+        Mon, 16 Sep 2019 15:57:59 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Mon, 16 Sep
+ 2019 15:57:58 +0200
+Date:   Mon, 16 Sep 2019 15:57:56 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     shuah <shuah@kernel.org>
+CC:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 2/2] selftests: watchdog: Add command line option to show
+ watchdog_info
+Message-ID: <20190916135756.GA24319@vmlxhi-102.adit-jv.com>
+References: <20190907085833.21167-1-erosca@de.adit-jv.com>
+ <20190907085833.21167-2-erosca@de.adit-jv.com>
+ <2b08fa83-185b-4eb7-1217-37ed31d810b5@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <e842eef7-094a-a7dd-bcf1-90ed41bf45cd@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2b08fa83-185b-4eb7-1217-37ed31d810b5@kernel.org>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hi Shuah,
+CC George
 
-On 9/15/19 9:01 AM, Jacek Anaszewski wrote:
-> Dan,
->
-> This patch has the same issues I mentioned in the v4 review [0].
+On Mon, Sep 16, 2019 at 07:26:41AM -0600, shuah wrote:
+[..]
+> >   		case 'f':
+> >   			/* Handled above */
+> >   			break;
+> > +		case 'i':
+> > +			/*
+> > +			 * watchdog_info was obtained as part of file open
+> > +			 * validation. So we just show it here.
+> > +			 */
+> > +			oneshot = 1;
+> > +			printf("watchdog_info:\n");
+> > +			printf(" identity:\t\t%s\n", info.identity);
+> > +			printf(" firmware_version:\t%u\n",
+> > +			       info.firmware_version);
+> > +			printf(" options:\t\t%08x\n", info.options);
+> > +			break;
+> >   		default:
+> >   			usage(argv[0]);
+> > 
+> 
+> I would like to see these combined. Please don't add another argument.
+> Combine patch and 1&2.
 
-Sorry for that with all the rework done to this again the changes may 
-have been lost.
+With all my appreciation for your comment, why do you think it is better
+to get rid of the new argument? I don't think it is user-friendly to
+always report the watchdog_info to the user. Just look at outputs [1-2]
+and imagine that the watchdog_info part would pop up unconditionally.
+It looks too busy to me.
 
-I will update per v4 comments
+[1] watchdog-test -b -i
+Last boot is caused by: Power-On-Reset.
+watchdog_info:
+ identity:              Renesas WDT Watchdog
+ firmware_version:      0
+ options:               000081a0
 
-Dan
+[2] watchdog-test -i --help    
+watchdog_info:
+ identity:              Renesas WDT Watchdog
+ firmware_version:      0
+ options:               000081a0
+Usage: ./watchdog-test [options]
+ -f, --file             Open watchdog device file
+                        Default is /dev/watchdog
+ -i, --info             Show watchdog_info
+ -b, --bootstatus       Get last boot status (Watchdog/POR)
+ -d, --disable          Turn off the watchdog timer
+ -e, --enable           Turn on the watchdog timer
+ -h, --help             Print the help message
+ -p, --pingrate=P       Set ping rate to P seconds (default 1)
+ -t, --timeout=T        Set timeout to T seconds
+ -T, --gettimeout       Get the timeout
+ -n, --pretimeout=T     Set the pretimeout to T seconds
+ -N, --getpretimeout    Get the pretimeout
+ -L, --gettimeleft      Get the time left until timer expires
 
+Parameters are parsed left-to-right in real-time.
+Example: ./watchdog-test -d -t 10 -p 5 -e
+Example: ./watchdog-test -t 12 -T -n 7 -N
 
-> https://lore.kernel.org/linux-leds/684010e7-a47c-2bc8-2bf6-c632be31649b@gmail.com/
->
+-- 
+Best Regards,
+Eugeniu.
