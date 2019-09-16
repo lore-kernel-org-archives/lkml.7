@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4651C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B58C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A9AF214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB5520890
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hPklx83U"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bk54uahq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfIPJZN (ORCPT
+        id S1731941AbfIPJZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:25:13 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:9790 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfIPJZM (ORCPT
+        Mon, 16 Sep 2019 05:25:39 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17176 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725850AbfIPJZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:25:12 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7f54fc0002>; Mon, 16 Sep 2019 02:25:16 -0700
+        Mon, 16 Sep 2019 05:25:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f55130000>; Mon, 16 Sep 2019 02:25:39 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 02:25:12 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 02:25:37 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 16 Sep 2019 02:25:12 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 09:25:11 +0000
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:25:37 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:25:37 +0000
 Received: from [10.21.132.148] (10.124.1.5) by DRHQMAIL107.nvidia.com
  (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 09:25:09 +0000
-Subject: Re: [PATCH 4.19 000/190] 4.19.73-stable review
+ 2019 09:25:35 +0000
+Subject: Re: [PATCH 5.2 00/37] 5.2.15-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
         <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
         <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20190913130559.669563815@linuxfoundation.org>
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190913130510.727515099@linuxfoundation.org>
 From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <19825f80-ce83-48e6-95f5-2a3c0c77797e@nvidia.com>
-Date:   Mon, 16 Sep 2019 10:25:07 +0100
+Message-ID: <8ee066b8-ec21-ef87-dbb7-0c2328f93e6d@nvidia.com>
+Date:   Mon, 16 Sep 2019 10:25:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190913130559.669563815@linuxfoundation.org>
+In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
  DRHQMAIL107.nvidia.com (10.27.9.16)
@@ -58,26 +58,26 @@ Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568625916; bh=xMBpE0hYz7QADX4ChDD443vDHDFuypdYoXpswQBZLho=;
+        t=1568625939; bh=hNQLxXppVWp46OeYURikZOP7aKylr3ksobdyzwJ7adk=;
         h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Language:
          Content-Transfer-Encoding;
-        b=hPklx83UfYsy8tn8lsPh55rqyN5/uTsMBmNVcYjzDiqciG4KaLWicrqqk8V8nsh30
-         Ngf+4G2CjpSEN7sC7BVvXMJWKdRaCr2uN0+lgMYirEIG4R9xZI5iAwzpQhFKoSmXl1
-         GV53gwF+1pgsbTKK8q6HDH059loX67qUE1Mg0hGXz+UCF3T7K0opXkVZwarEPJZOBl
-         ZcQjqf+S7C6uE1jl7TNgk7kOHe3mcyzhuWJlayppwUXZrxOILoAP5pbQMYZWYC865/
-         RHTL2MPy4IBybqe/jIuW2yswReizIdxMcZdGRm6in5YdLbcjs5p2JVz7Z5YwdOATVO
-         7KM0HmLXOnXqw==
+        b=bk54uahqcPQacs7R5Rx06zgDLtS8GRQ9YPTIHQ10CQyF3LpaAG0G19ioO36n+h63i
+         bUsxKPABZWtF605RZ9ms8TmEbcEDEsyAE5ja5FDRmPICSaes/GTcTcy+TR51KvFoB+
+         FjYB27kZFdGgjoKO1x2ynOUeUBSKrpd94ntcHgzA40vIGdFRJTtaWgcV7+45H+oWAk
+         cTWeTE8GZOBTPCzJjRECfHnEOODtzvlir/QkRJG/i//LmjS3JmGIip03qZkdQo7A/p
+         vlyF2WEVPc2aSMRVnk/eKDX+8oVD16xgS1fRhjEIeypHCeVmRiT3IVT232Ms48D+bo
+         THH1xzIEiACxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 13/09/2019 14:04, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.73 release.
-> There are 190 patches in this series, all will be posted as a response
+On 13/09/2019 14:07, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.2.15 release.
+> There are 37 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -85,9 +85,9 @@ On 13/09/2019 14:04, Greg Kroah-Hartman wrote:
 > Anything received after that time might be too late.
 > 
 > The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.73-rc1.gz
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.15-rc1.gz
 > or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
 > and the diffstat can be found below.
 > 
 > thanks,
@@ -96,12 +96,12 @@ On 13/09/2019 14:04, Greg Kroah-Hartman wrote:
 
 All tests passing for Tegra ...
 
-Test results for stable-v4.19:
+Test results for stable-v5.2:
     12 builds:	12 pass, 0 fail
     22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
+    38 tests:	38 pass, 0 fail
 
-Linux version:	4.19.73-rc2-g2dcefb93b77d
+Linux version:	5.2.15-rc2-g4a69042627aa
 Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
                 tegra194-p2972-0000, tegra20-ventana,
                 tegra210-p2371-2180, tegra30-cardhu-a04
