@@ -2,94 +2,140 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5974C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8CDC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8237F214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568597857;
-	bh=BMfk88ico29ySmgOGny1z5/EkCwjKyHZo9oZsys7Pu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yyL6xz3MatoQdguEmbVPg6p65Osn/G+W8XC5l2Kbk5uwgQR00xl1u0cP60nTCr/2H
-	 +GcZFAKemJtPVyEesT4naob89GrM/lcZwGqpxH5HQbYK7EeU9avdyjyaFvwU3JfPFp
-	 O53wpfH+8Yut1+8kF6omAGoYSgWzlVCa8jJ01fhA=
+	by mail.kernel.org (Postfix) with ESMTP id 14C712067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Io9gq4kx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfIPBhh (ORCPT
+        id S1727774AbfIPBlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 21:37:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49120 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727080AbfIPBhg (ORCPT
+        Sun, 15 Sep 2019 21:41:01 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45015 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPBlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 21:37:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BMfk88ico29ySmgOGny1z5/EkCwjKyHZo9oZsys7Pu8=; b=SjixzUGcST2fpzETcSni45n2n
-        eB6G/YEV/CfuWKigy9XdPCSmiqoDYZHmPvkrwPhj2fmCGiEke4kBkw9gYsuHel9qYXEZ2Uhi9K+/R
-        QvmIN6j5PsvY8JJIy1AfLKXYIBe454nIyQY42hRX/AraEjr07eLFZUXamrFvrf7awTCA0=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9fxI-00029H-Vs; Mon, 16 Sep 2019 01:37:29 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 04F9E2741587; Mon, 16 Sep 2019 02:37:27 +0100 (BST)
-Date:   Mon, 16 Sep 2019 02:37:27 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linux-kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: no release today
-Message-ID: <20190916013727.GT4352@sirena.co.uk>
-References: <20190905160237.2e972a89@canb.auug.org.au>
+        Sun, 15 Sep 2019 21:41:00 -0400
+Received: by mail-wr1-f66.google.com with SMTP id i18so6427036wru.11;
+        Sun, 15 Sep 2019 18:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=s5NlWgemAgRgAck5V/LT2mO8N9Ly1ozLQCAwpxW+qmQ=;
+        b=Io9gq4kxX3/9yiKAj3stqnJrMuXjc0/Fv/uNXEN8rQ8qWJh9vjpX5WJOdkFb+OzVX3
+         kukd031wdu0fXYqw+lPw75A0y3wvKNkXQtBPoYy2BFDFoHyoGCRdVdqyyAeHY0SyhCzP
+         jln4+j1+1DfUoJ807AMeDIwy5ZTgSUXw9MDDk/C/fTE2NZtRhXK+nVRzbSMWBbl/1UBD
+         R8KS0ljobpqH447i45NN60s/2d2XQfjJFWQ6+zLuZ10bfjDNBSlz7KR+NPiCFVKItNSt
+         LHWL8WJZZyfQHG6PT93H3UFRbwuGOAnEHIoM2A194wEq8+Jeo5YAj3mDaV/g/x74dpLR
+         LJzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=s5NlWgemAgRgAck5V/LT2mO8N9Ly1ozLQCAwpxW+qmQ=;
+        b=fHy198bGx4SukQr2u9arnflxOKUAYO3d7zBFmz+QW0cOO4pA1SaF+c3TcY2hROnGkR
+         nvCGR+U0fWQMZ9U3+cEMcMZiMju0bmXC2yC+y+yfjZwXIm+UWDOYKVF8/40FeN9TZy6z
+         jjOzxgUE5qk1kiY9E1FqNHYjmoKkLgLeHgr6p/p0JKcn26bAUsozAkzdEKIX1QTEQLfF
+         HgfEI63yWx9ATibCJ903VKLNpsB0Gz2QvkWqd2KZ2FX1pt16oNkeXTT4eNrZTmdbw7jQ
+         WnEmVL82CCYNhAEIwNJiDZgo1Zr1Mi8emnNuBGNUUS/34Qp4hJXluTDSGl2m4SeKEDbb
+         Wvxw==
+X-Gm-Message-State: APjAAAW2qkttallZF5XNHLN0+bzyLX+19ePx/YxGeZ2lPvlJ0vCtOKpE
+        GUwP5TVidkAM4E7miHSR2h0=
+X-Google-Smtp-Source: APXvYqz6sCS29EwAmavddzyT7utN1acTq4CZlykL/oWxxNi/CQgskS/fJUcG222M03uXlt1coc57pg==
+X-Received: by 2002:a05:6000:10f:: with SMTP id o15mr9530373wrx.92.1568598057996;
+        Sun, 15 Sep 2019 18:40:57 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D144910CD9D07D5336EC2.dip0.t-ipconnect.de. [2003:d0:6f2d:1449:10cd:9d07:d533:6ec2])
+        by smtp.gmail.com with ESMTPSA id b144sm11061016wmb.3.2019.09.15.18.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 15 Sep 2019 18:40:57 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 03:40:50 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916014050.GA7002@darwi-home-pc>
+References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
+ <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
+ <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xPLL5cPndR2UZ7Mw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905160237.2e972a89@canb.auug.org.au>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Sep 15, 2019 at 09:29:55AM -0700, Linus Torvalds wrote:
+> On Sat, Sep 14, 2019 at 11:51 PM Lennart Poettering
+> <mzxreary@0pointer.de> wrote:
+> >
+> > Oh man. Just spend 5min to understand the situation, before claiming
+> > this was garbage or that was garbage. The code above does not block
+> > boot.
+> 
+> Yes it does. You clearly didn't read the thread.
+> 
+> > It blocks startup of services that explicit order themselves
+> > after the code above. There's only a few services that should do that,
+> > and the main system boots up just fine without waiting for this.
+> 
+> That's a nice theory, but it doesn't actually match reality.
+> 
+> There are clearly broken setups that use this for things that it
+> really shouldn't be used for. Asking for true randomness at boot
+> before there is any indication that randomness exists, and then just
+> blocking with no further action that could actually _generate_ said
+> randomness.
+> 
+> If your description was true that the system would come up and be
+> usable while the blocked thread is waiting for that to happen, things
+> would be fine.
+>
 
---xPLL5cPndR2UZ7Mw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+A small note here, especially after I've just read the commit log of
+72dbcf721566 ('Revert ext4: "make __ext4_get_inode_loc plug"'), which
+unfairly blames systemd there.
 
-On Thu, Sep 05, 2019 at 04:02:37PM +1000, Stephen Rothwell wrote:
+Yes, the systemd-random-seed(8) process blocks, but this is an
+isolated process, and it's only there as a synchronization point and
+to load/restore random seeds from disk across reboots.
 
-> As I said yesterday, there will be no release today, or any day until
-> September 30.
+The wisdom of having a sysnchronization service ("before/after urandom
+CRNG is inited") can be debated. That service though, and systemd in
+general, did _not_ block the overall system boot.
 
-I'm going to try to provide some builds for this week (16th-20th).
-There may also be a build for the 15th depending on how much rebuilding
-the rest of the trees is needed for the build I've got ongoing.
+What blocked the system boot was GDM/gnome-session implicitly calling
+getrandom() for the Xorg MIT cookie. This was shown in the strace log
+below:
 
---xPLL5cPndR2UZ7Mw
-Content-Type: application/pgp-signature; name="signature.asc"
+   https://lkml.kernel.org/r/20190910173243.GA3992@darwi-home-pc
 
------BEGIN PGP SIGNATURE-----
+thanks,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+51cACgkQJNaLcl1U
-h9CaIQf/X+bWHuxJxTJi47cSPu575HrnQuH0o3HuDF3CxxqBR1QyOZUgSbtsnfjR
-d7NK1G4a901K3i9phvaoOlx/7fch6oUs5HMbmzC2PDfkRzwRRqv39OFBMYtVSM8G
-IV8XIoolLxP9VWY4nt9jOlvRCs8vayFAFMYO2+x9M50zPrd0yqk3Lxfaev0+sUJu
-bGb4qXFyH9G5od03OEd32Wng39qZ+puguum7+pK8LpmBlE782rKAKgHyZ4bafVEc
-Zm1EXDYEUuRd9mNTNJL/6zUUl69bZr/UQSJCtdajQbcI8Rk5yI1B51bq3hULho14
-SqxPNymeWbiMzVxRuxvri5yTNT9eHg==
-=ifm5
------END PGP SIGNATURE-----
-
---xPLL5cPndR2UZ7Mw--
+-- 
+darwi
+http://darwish.chasingpointers.com
