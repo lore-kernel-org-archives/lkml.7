@@ -2,197 +2,102 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB809C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F175FC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC8820890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:20:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568611257;
-	bh=0Zp0/Naz0WUbXJutjSKemevgHRocsO7EMFcWzb2dl1Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=0+T4r3yahLrL1MPp3zJevzlmQ6Pt6n+G58mYbiEqi5DZcocfe5LP78xw7F7nXJKE8
-	 9FfjqUGUJBKf4BcBp1rnfbBnwhdp9gIUO6sCDfKmvcfqt+phtiYPaRl8QoK6bLJ7k7
-	 3i0ukpGBGemDEPVj9u9xG9hB+bA/sgU/juSrGaY0=
+	by mail.kernel.org (Postfix) with ESMTP id CF5E72067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfIPFU4 (ORCPT
+        id S1727505AbfIPFYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 01:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49864 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 01:24:05 -0400
+Received: from mga14.intel.com ([192.55.52.115]:10041 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfIPFU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 01:20:56 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7A222067B;
-        Mon, 16 Sep 2019 05:20:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568611255;
-        bh=0Zp0/Naz0WUbXJutjSKemevgHRocsO7EMFcWzb2dl1Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=awni9dksgHmJx9gTvqey0ukMhUw0fPydoBJv1SubKwoyxuqe/OomgiDpv4zwSvTWq
-         6IrShbxft+Mr7JZGQUrgh1plwzdI2vlB6mlsPM2p3hP/7vnJMyzgYN+WqvIrmSoljM
-         YtEjpk63iNa20lYgzpkEpwq/Bpbx8ft2uu4xPGEg=
-Date:   Sun, 15 Sep 2019 22:20:53 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [GIT PULL] fs-verity for 5.4
-Message-ID: <20190916052053.GB8269@sol.localdomain>
-Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
+        id S1726128AbfIPFYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 01:24:04 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 22:24:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
+   d="scan'208";a="216087558"
+Received: from abonnier-mobl5.ger.corp.intel.com (HELO localhost) ([10.252.54.54])
+  by fmsmga002.fm.intel.com with ESMTP; 15 Sep 2019 22:23:54 -0700
+Date:   Mon, 16 Sep 2019 08:23:49 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        sean.j.christopherson@intel.com, nhorman@redhat.com,
+        npmccallum@redhat.com, serge.ayoun@intel.com,
+        shay.katz-zamir@intel.com, haitao.huang@intel.com,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
+        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
+        cedric.xing@intel.com
+Subject: Re: [PATCH v22 00/24] Intel SGX foundations
+Message-ID: <20190916052349.GA4556@linux.intel.com>
+References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
+ <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
+ <20190914134136.GG9560@linux.intel.com>
+ <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+On Sat, Sep 14, 2019 at 08:32:38AM -0700, Dave Hansen wrote:
+> On 9/14/19 6:41 AM, Jarkko Sakkinen wrote:
+> > 
+> > The proposed LSM hooks give the granularity to make yes/no decision
+> > based on the
+> > 
+> > * The origin of the source of the source for the enclave.
+> > * The requested permissions for the added or mapped peage.
+> > 
+> > The hooks to do these checks are provided for mmap() and EADD
+> > operations.
+> > 
+> > With just file permissions you can still limit mmap() by having a
+> > privileged process to build the enclaves and pass the file descriptor
+> > to the enclave user who can mmap() the enclave within the constraints
+> > set by the enclave pages (their permissions refine the roof that you
+> > can mmap() any memory range within an enclave).
+> 
+> The LSM hooks are presumably fixing a problem that these patches
+> introduce.  What's that problem?
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+I've seen the claims that one would have to degrade one's LSM policy but
+I don't think that is true.
 
-are available in the Git repository at:
+With just UNIX permissions you have probably have to restrict the access
+to /dev/sgx/enclave to control who can build enclaves. The processes who
+do not have this privilege can mmap() the enclave once they get the file
+descriptor through forking or SCM_RIGHTS.
 
-  git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fsverity-for-linus
+After SGX_IOC_ENCLAVE_INIT, the memory layout is sealed and the client
+process can only use the enclave.
 
-for you to fetch changes up to 95ae251fe82838b85c6d37e5a1775006e2a42ae0:
+Further, we have /dev/sgx/provision to restrict, which enclaves can
+attest themselves to a remote party.
 
-  f2fs: add fs-verity support (2019-08-12 19:33:51 -0700)
+*If anything*, I would rather investigate possibility to use keyring for
+enclave signer's public keys or perhaps having extended attribute for
+the signer (SHA256) in the enclave file that could be compared during
+the EINIT.
 
-----------------------------------------------------------------
-Hi Linus,
+I think either can be considered post-upstreaming.
 
-Please consider pulling fs-verity for 5.4.
-
-fs-verity is a filesystem feature that provides Merkle tree based
-hashing (similar to dm-verity) for individual readonly files, mainly for
-the purpose of efficient authenticity verification.
-
-This pull request includes:
-
-(a) The fs/verity/ support layer and documentation.
-
-(b) fs-verity support for ext4 and f2fs.
-
-Compared to the original fs-verity patchset from last year, the UAPI to
-enable fs-verity on a file has been greatly simplified.  Lots of other
-things were cleaned up too.
-
-fs-verity is planned to be used by two different projects on Android;
-most of the userspace code is in place already.  Another userspace tool
-("fsverity-utils"), and xfstests, are also available.  e2fsprogs and
-f2fs-tools already have fs-verity support.  Other people have shown
-interest in using fs-verity too.
-
-I've tested this on ext4 and f2fs with xfstests, both the existing tests
-and the new fs-verity tests.  This has also been in linux-next since
-July 30 with no reported issues except a couple minor ones I found
-myself and folded in fixes for.
-
-Ted and I will be co-maintaining fs-verity.
-
-
-There will be some fairly straightforward merge conflicts with the ext4
-and f2fs trees.  I've tested the resolution of these in linux-next.
-
-This will also "silently" conflict (compiler warning only) with the key
-ACLs patchset, if you merge it again this cycle.  The resolution is to
-translate the key permissions to an ACL in fs/verity/signature.c.  I
-suggest using the resolution in linux-next, which I've tested.  This
-resolution avoids making any behavior changes; note that some of the old
-permissions map to multiple new permissions.
-
-----------------------------------------------------------------
-Eric Biggers (17):
-      fs-verity: add a documentation file
-      fs-verity: add MAINTAINERS file entry
-      fs-verity: add UAPI header
-      fs: uapi: define verity bit for FS_IOC_GETFLAGS
-      fs-verity: add Kconfig and the helper functions for hashing
-      fs-verity: add inode and superblock fields
-      fs-verity: add the hook for file ->open()
-      fs-verity: add the hook for file ->setattr()
-      fs-verity: add data verification hooks for ->readpages()
-      fs-verity: implement FS_IOC_ENABLE_VERITY ioctl
-      fs-verity: implement FS_IOC_MEASURE_VERITY ioctl
-      fs-verity: add SHA-512 support
-      fs-verity: support builtin file signatures
-      ext4: add basic fs-verity support
-      ext4: add fs-verity read support
-      ext4: update on-disk format documentation for fs-verity
-      f2fs: add fs-verity support
-
- Documentation/filesystems/ext4/inodes.rst   |   6 +-
- Documentation/filesystems/ext4/overview.rst |   1 +
- Documentation/filesystems/ext4/super.rst    |   2 +
- Documentation/filesystems/ext4/verity.rst   |  41 ++
- Documentation/filesystems/fsverity.rst      | 726 ++++++++++++++++++++++++++++
- Documentation/filesystems/index.rst         |   1 +
- Documentation/ioctl/ioctl-number.rst        |   1 +
- MAINTAINERS                                 |  12 +
- fs/Kconfig                                  |   2 +
- fs/Makefile                                 |   1 +
- fs/ext4/Makefile                            |   1 +
- fs/ext4/ext4.h                              |  23 +-
- fs/ext4/file.c                              |   4 +
- fs/ext4/inode.c                             |  55 ++-
- fs/ext4/ioctl.c                             |  13 +
- fs/ext4/readpage.c                          | 211 ++++++--
- fs/ext4/super.c                             |  18 +-
- fs/ext4/sysfs.c                             |   6 +
- fs/ext4/verity.c                            | 367 ++++++++++++++
- fs/f2fs/Makefile                            |   1 +
- fs/f2fs/data.c                              |  75 ++-
- fs/f2fs/f2fs.h                              |  20 +-
- fs/f2fs/file.c                              |  43 +-
- fs/f2fs/inode.c                             |   5 +-
- fs/f2fs/super.c                             |   3 +
- fs/f2fs/sysfs.c                             |  11 +
- fs/f2fs/verity.c                            | 247 ++++++++++
- fs/f2fs/xattr.h                             |   2 +
- fs/verity/Kconfig                           |  55 +++
- fs/verity/Makefile                          |  10 +
- fs/verity/enable.c                          | 377 +++++++++++++++
- fs/verity/fsverity_private.h                | 185 +++++++
- fs/verity/hash_algs.c                       | 280 +++++++++++
- fs/verity/init.c                            |  61 +++
- fs/verity/measure.c                         |  57 +++
- fs/verity/open.c                            | 356 ++++++++++++++
- fs/verity/signature.c                       | 157 ++++++
- fs/verity/verify.c                          | 281 +++++++++++
- include/linux/fs.h                          |  11 +
- include/linux/fsverity.h                    | 211 ++++++++
- include/uapi/linux/fs.h                     |   1 +
- include/uapi/linux/fsverity.h               |  40 ++
- 42 files changed, 3910 insertions(+), 70 deletions(-)
- create mode 100644 Documentation/filesystems/ext4/verity.rst
- create mode 100644 Documentation/filesystems/fsverity.rst
- create mode 100644 fs/ext4/verity.c
- create mode 100644 fs/f2fs/verity.c
- create mode 100644 fs/verity/Kconfig
- create mode 100644 fs/verity/Makefile
- create mode 100644 fs/verity/enable.c
- create mode 100644 fs/verity/fsverity_private.h
- create mode 100644 fs/verity/hash_algs.c
- create mode 100644 fs/verity/init.c
- create mode 100644 fs/verity/measure.c
- create mode 100644 fs/verity/open.c
- create mode 100644 fs/verity/signature.c
- create mode 100644 fs/verity/verify.c
- create mode 100644 include/linux/fsverity.h
- create mode 100644 include/uapi/linux/fsverity.h
+/Jarkko
