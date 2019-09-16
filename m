@@ -2,140 +2,118 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44347C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED58C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E783206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:28:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3AC206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:29:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r4xQx2sZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389085AbfIPP2H (ORCPT
+        id S2389147AbfIPP3v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:28:07 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39580 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727374AbfIPP2H (ORCPT
+        Mon, 16 Sep 2019 11:29:51 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34716 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfIPP3v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:28:07 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1i9sum-0003A6-HS; Mon, 16 Sep 2019 17:27:44 +0200
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D7A481C06CD;
-        Mon, 16 Sep 2019 17:27:43 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 15:27:43 -0000
-From:   "tip-bot2 for Sylvain 'ythier' Hitier" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/cpu: Clean up intel_tlb_table[]
-Cc:     "Sylvain 'ythier' Hitier" <sylvain.hitier@gmail.com>,
-        Alex Shi <alex.shi@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Rik van Riel <riel@surriel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, trivial@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
-In-Reply-To: <20190915090917.GA5086@lilas>
-References: <20190915090917.GA5086@lilas>
+        Mon, 16 Sep 2019 11:29:51 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so218192pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:29:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+y4AkvsKSUe07hNkypQ1HfKQPXtAqApgQQ2c6pYsyvM=;
+        b=r4xQx2sZTsVMGJQTG+yP4K5+89JMjruqVFAgOZPhHjy/5EkjLo1a+GA6OjtG8UcSAO
+         fvBhCoNTRyRrS6Ofwjw+bvMrNKaGQkXc1Uuk9sFidnQFMWlNE0jPWFEhejNhE6IvaJDA
+         m8mYa79vRNAwdeqXH6tiYsmBklPEU+vPM4OCoAjyp7c701HPMbeM0QF1B66YfF2EoD9T
+         jI7RZ2FLOTYh61RKVmjkGCq1L0resvYIZdl0COVppwxBXUik4hh127syb1lEODBawtYR
+         qyXRY5d02OFbdtt7s3xfzuwme6NwGVVbYTa7Q3Z9JbUNYkHgmsdHlsyLIRnbvKyrewHR
+         kZig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+y4AkvsKSUe07hNkypQ1HfKQPXtAqApgQQ2c6pYsyvM=;
+        b=eQ7acYTrEP6xruAJBgkVhnp4jzXqYnO9tvqVuuUm+i03GnuhWGCSIpYv2ssiYJn/Yf
+         VFbLqb1GMK/KM5/5OWHCWPwWecBtLhigm1pBzR0bqS3U2Iz5NPvP855rTmJdQe0+XyCb
+         c1AEz5qXuvgC57UTDBiixt5XmavGp1F25hQOTvO4CeYg/L3Ybt1dH8KlUfxc7/4IEK+k
+         Pr/CO+DJUJCiG5wfKhT+PCQy2x5i2BVDRWq/Yx785KovYBlZxLw7spohIy3fSpIqj1mQ
+         0FsqI0syf7NNJfL4lZ9ssp/YG4obkGRgXC6GG/wucLad13h3lO9Pxva6ZUTW3dTMfu62
+         TLDA==
+X-Gm-Message-State: APjAAAXQcDYbgVy0VlToNqgocYNR+ryJ2gxI1srGP6QUQImy9coPSuPi
+        pvaqjRpRP2onopYS5+yw1a5XaIiGENPVt112NP4xFg==
+X-Google-Smtp-Source: APXvYqx/vQc7AckoJDceJnazN6xeds3moRiKMgeAsWhEzJVlkiGKHFbOefeJamw6iyqI1oA7OyuAW3Aoh1iFTqCs1mE=
+X-Received: by 2002:a17:90a:1990:: with SMTP id 16mr278460pji.47.1568647790078;
+ Mon, 16 Sep 2019 08:29:50 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <156864766375.24167.2061010311416733334.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <0000000000004fb020059274a5ff@google.com> <Pine.LNX.4.44L0.1909131629230.1466-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909131629230.1466-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 16 Sep 2019 17:29:39 +0200
+Message-ID: <CAAeHK+zrR3pB2R3yyyUdGM4Vrv77o47MHsgvbQ+LFHfiWBt1OQ@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in dummy_timer
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com>,
+        Felipe Balbi <balbi@kernel.org>, chunfeng.yun@mediatek.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/mm branch of tip:
+On Fri, Sep 13, 2019 at 10:35 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Fri, 13 Sep 2019, syzbot wrote:
+>
+> > syzbot has found a reproducer for the following crash on:
+> >
+> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1146550d600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=b24d736f18a1541ad550
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11203fa5600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162cd335600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
+> >
+> > yurex 3-1:0.101: yurex_interrupt - unknown status received: -71
+> > yurex 5-1:0.101: yurex_interrupt - unknown status received: -71
+> > yurex 6-1:0.101: yurex_interrupt - unknown status received: -71
+> > rcu: INFO: rcu_sched self-detected stall on CPU
+>
+> Andrey:
+>
+> This problem may be a result of overloading dummy_timer.  The kernel
+> config you are using has CONFIG_HZ=100, but dummy-hcd needs
+> CONFIG_HZ=1000 (see the comment on line 1789).  That is, lower values
+> of HZ will occasionally lead to trouble, and this may be an example.
+>
+> Can you change the config value for HZ and see if the bug still
+> reproduces?
 
-Commit-ID:     77df779de742d6616d4ddd177cba152a75259104
-Gitweb:        https://git.kernel.org/tip/77df779de742d6616d4ddd177cba152a75259104
-Author:        Sylvain 'ythier' Hitier <sylvain.hitier@gmail.com>
-AuthorDate:    Sun, 15 Sep 2019 11:09:25 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Mon, 16 Sep 2019 17:23:46 +02:00
+Hi Alan,
 
-x86/cpu: Clean up intel_tlb_table[]
+I've tried running the reproducer with CONFIG_HZ=1000 and still got
+the same stall message. It's accompanied by countless "yurex
+6-1:0.101: yurex_interrupt - unknown status received: -71" messages,
+so I believe this is an issue in the yurex driver.
 
-- Remove the unneeded backslash at EOL: that's not a macro.
-  And let's please checkpatch by aligning to open parenthesis.
+Why does dumy_hcd require CONFIG_HZ=1000? The comment doesn't really
+explain the reason.
 
-- For 0x4f descriptor, remove " */" from the info field.
-
-- For 0xc2 descriptor, sync the beginning of info to match the tlb_type.
-
-(The value of info fields could be made more regular, but it's unused by
- the code and will be read only by developers, so don't bother.)
-
-Signed-off-by: Sylvain 'ythier' Hitier <sylvain.hitier@gmail.com>
-Cc: Alex Shi <alex.shi@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-Cc: Rik van Riel <riel@surriel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: trivial@kernel.org
-Link: https://lkml.kernel.org/r/20190915090917.GA5086@lilas
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/cpu/intel.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 8d6d92e..24e619d 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -813,7 +813,7 @@ static const struct _tlb_table intel_tlb_table[] = {
- 	{ 0x04, TLB_DATA_4M,		8,	" TLB_DATA 4 MByte pages, 4-way set associative" },
- 	{ 0x05, TLB_DATA_4M,		32,	" TLB_DATA 4 MByte pages, 4-way set associative" },
- 	{ 0x0b, TLB_INST_4M,		4,	" TLB_INST 4 MByte pages, 4-way set associative" },
--	{ 0x4f, TLB_INST_4K,		32,	" TLB_INST 4 KByte pages */" },
-+	{ 0x4f, TLB_INST_4K,		32,	" TLB_INST 4 KByte pages" },
- 	{ 0x50, TLB_INST_ALL,		64,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
- 	{ 0x51, TLB_INST_ALL,		128,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
- 	{ 0x52, TLB_INST_ALL,		256,	" TLB_INST 4 KByte and 2-MByte or 4-MByte pages" },
-@@ -841,7 +841,7 @@ static const struct _tlb_table intel_tlb_table[] = {
- 	{ 0xba, TLB_DATA_4K,		64,	" TLB_DATA 4 KByte pages, 4-way associative" },
- 	{ 0xc0, TLB_DATA_4K_4M,		8,	" TLB_DATA 4 KByte and 4 MByte pages, 4-way associative" },
- 	{ 0xc1, STLB_4K_2M,		1024,	" STLB 4 KByte and 2 MByte pages, 8-way associative" },
--	{ 0xc2, TLB_DATA_2M_4M,		16,	" DTLB 2 MByte/4MByte pages, 4-way associative" },
-+	{ 0xc2, TLB_DATA_2M_4M,		16,	" TLB_DATA 2 MByte/4MByte pages, 4-way associative" },
- 	{ 0xca, STLB_4K,		512,	" STLB 4 KByte pages, 4-way associative" },
- 	{ 0x00, 0, 0 }
- };
-@@ -853,8 +853,8 @@ static void intel_tlb_lookup(const unsigned char desc)
- 		return;
- 
- 	/* look up this descriptor in the table */
--	for (k = 0; intel_tlb_table[k].descriptor != desc && \
--			intel_tlb_table[k].descriptor != 0; k++)
-+	for (k = 0; intel_tlb_table[k].descriptor != desc &&
-+	     intel_tlb_table[k].descriptor != 0; k++)
- 		;
- 
- 	if (intel_tlb_table[k].tlb_type == 0)
+Thanks!
