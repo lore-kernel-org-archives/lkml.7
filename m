@@ -2,184 +2,117 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DAE8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DEFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55BDB214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:07:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YdLjxYgR"
+	by mail.kernel.org (Postfix) with ESMTP id 5400E214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568668215;
+	bh=Tde6N2xhrmVBkJfj/im8DRub08KbWyqXLl1/zMxtQ6Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=An/10wg8+vqE7w4btvvEjwrSQhZpJiM49lUuzusk47d86ChrAvMdMBM4RGAx1u+Lu
+	 jVtuEpblv6kWWBkrJKS9EemARxYmfpye/zgwX1qUf5rwILSKw2TGm8XVNtHNwc4Bfd
+	 I/Crk9YzN9ofWutwm54PE80ZksmYbcO0zKAkhGGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388890AbfIPVG7 (ORCPT
+        id S2388974AbfIPVKO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:06:59 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34419 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730662AbfIPVG6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:06:58 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so691107pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:06:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iS/KS7K2dpElo8VkeXq0MZCaa3SuE0K1o3j4psLcFA8=;
-        b=YdLjxYgRbkoi06bMhkQnbta7mRwdXc5iGkj16WLjvWHccLbl1IEoEQgQNK9cuSyldW
-         mnG6FyS+PTWXYUivgSnH4ar0Jz0Bnce/CsdKs9TZhWuClo9vkix9oeoonQEOa2uZcDCc
-         VwBR4oL1DF5bCfjUsZKsnNxhGxKXrY7zSIA14puGVdFeaO39XPeEtBC3r3MkEXp1dcHv
-         2ZyUHyoSYB1Z0yuR0gki0YDurp2BTja5VXeKRKLBTAHnqJrgbpYkAJnnt+kaFhh5rh0U
-         r9NF7VHvDToPuWN663YyucmZrI2bEzZAW+9yvVVYSiCbrFJjmCcxYnGDaBUB/bip6C+m
-         EiUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iS/KS7K2dpElo8VkeXq0MZCaa3SuE0K1o3j4psLcFA8=;
-        b=JNb6IpmMc/kUL/tlTWq+cGhfiTrWhsqQIXVwtnnT38V79xoY8PWCJGUyHQGUXZykgk
-         iooEmzYRxdXebSWZ16/sGEVg/zMPI5ZFMLU2dK4XU6dW8aYAYBMH3hTwov1Nsl0lzb3l
-         XGsOabgoSPonwQn71ZUuni+Kzfjtj6PjxThnPP1wvSY6vtUJrIDKjUocop5O0YGZ+PUZ
-         LD4gd17HhZNUScdTYkNxkIAiathwyd41a1j67YfvImc1DdgPe7koSPxgLs19iLSt4pIG
-         Hjf9/D5qQd3XoYugWg4SN2U13xSaXG+EyRAa2+mWdKKLNWd/Tht3pIVc5ElWCGx/7hBk
-         minw==
-X-Gm-Message-State: APjAAAXRtU8iDNBGGkcrV8oz43PJWwD1RtUFu9yssZIAgZ7xiNJD/jqY
-        GFl+0gJFcFWFZ3SNjtiwI6Z5UhTJxhau3NeWpCP0xg==
-X-Google-Smtp-Source: APXvYqxZco9RmXoG2vVXf/2rxlM8ja+bWzzGh23VEs5YPWBvIGKwLERa7drgEvqHT1ZmjmG63H9hom+fnxJ5QfbcVic=
-X-Received: by 2002:a62:5fc1:: with SMTP id t184mr414733pfb.84.1568668017409;
- Mon, 16 Sep 2019 14:06:57 -0700 (PDT)
+        Mon, 16 Sep 2019 17:10:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388909AbfIPVKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:10:14 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90754214AF;
+        Mon, 16 Sep 2019 21:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568668213;
+        bh=Tde6N2xhrmVBkJfj/im8DRub08KbWyqXLl1/zMxtQ6Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FsW3jY4EeWAULrHBDSmT917vaTr4bDCJcXllwSYUJRjK8Ai4H3rO9gXQKXu9TRMw7
+         s3SUzbwDXd/V/04UXu0dtglSvpj8+ooF8AAr+2KpuAILa8kA+yqhTLHJK+yUEZyi35
+         gnDeZvd3M2aL9N/Lom526UNpd3bH3ulyWhCnPSg4=
+Date:   Mon, 16 Sep 2019 22:10:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     KeMeng Shi <shikemeng@huawei.com>
+Cc:     akpm@linux-foundation.org, james.morris@microsoft.com,
+        gregkh@linuxfoundation.org, mortonm@chromium.org,
+        will.deacon@arm.com, kristina.martsenko@arm.com,
+        yuehaibing@huawei.com, malat@debian.org, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] connector: report comm change event when modifying
+ /proc/pid/task/tid/comm
+Message-ID: <20190916211008.ipqe3j7s22aannta@willie-the-truck>
+References: <20190916141341.658-1-shikemeng@huawei.com>
 MIME-Version: 1.0
-References: <20190915214748.GJ4352@sirena.co.uk>
-In-Reply-To: <20190915214748.GJ4352@sirena.co.uk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 16 Sep 2019 14:06:46 -0700
-Message-ID: <CAKwvOdkZ9_qp9V=H6tjpLyscct+g-aPqn-dPj8R+CGF4Rt_-Rw@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the drm tree with the kbuild tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Roman Li <Roman.Li@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Jun Lei <Jun.Lei@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Xinpeng Liu <danielliu861@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916141341.658-1-shikemeng@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 2:47 PM Mark Brown <broonie@kernel.org> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the drm tree got a conflict in:
->
->   drivers/gpu/drm/amd/display/dc/dml/Makefile
->
-> between commit:
->
->   54b8ae66ae1a345 ("kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)")
->
-> from the kbuild tree and commits:
->
->   0f0727d971f6fdf ("drm/amd/display: readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP routines")
+On Mon, Sep 16, 2019 at 10:13:41AM -0400, KeMeng Shi wrote:
+> Commit f786ecba41588 ("connector: add comm change event report to proc
+>  connector") added proc_comm_connector to report comm change event, and
+> prctl will report comm change event when dealing with PR_SET_NAME case.
+> 
+> prctl can only set the name of the calling thread. In order to set the name
+> of other threads in a process, modifying /proc/self/task/tid/comm is a
+> general way.It's exactly how pthread_setname_np do to set name of a thread.
+> 
+> It's unable to get comm change event of thread if the name of thread is set
+> by other thread via pthread_setname_np. This update provides a chance for
+> application to monitor and control threads whose name is set by other
+> threads.
+> 
+> Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
+> ---
+>  fs/proc/base.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index ebea9501afb8..34ffe572ac69 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -94,6 +94,7 @@
+>  #include <linux/sched/debug.h>
+>  #include <linux/sched/stat.h>
+>  #include <linux/posix-timers.h>
+> +#include <linux/cn_proc.h>
+>  #include <trace/events/oom.h>
+>  #include "internal.h"
+>  #include "fd.h"
+> @@ -1549,10 +1550,12 @@ static ssize_t comm_write(struct file *file, const char __user *buf,
+>  	if (!p)
+>  		return -ESRCH;
+>  
+> -	if (same_thread_group(current, p))
+> +	if (same_thread_group(current, p)) {
+>  		set_task_comm(p, buffer);
+> -	else
+> +		proc_comm_connector(p);
+> +	} else {
+>  		count = -EINVAL;
+> +	}
+>  
+>  	put_task_struct(p);
 
-^ this patch is now broken due to the SHA above it.
+The rough idea looks ok to me but I have two concerns:
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-index 2b399cfa72e6..ddb8d5649e79 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/Makefile
-@@ -19,7 +19,7 @@ endif
- CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o := -mhard-float -msse
-$(cc_stack_align)
+  (1) This looks like it will be visible to userspace, and this changes
+      the behaviour after ~8 years of not reporting this event.
 
- ifdef CONFIG_CC_IS_CLANG
--CFLAGS_dcn20_resource.o += -msse2
-+CFLAGS_$(AMDDALPATH)/dc/dcn20/dcn20_resource.o += -msse2
- endif
+  (2) What prevents proc_comm_connector(p) running concurrently with itself
+      via the prctl()? The locking seems to be confined to set_task_comm().
 
- AMD_DAL_DCN20 = $(addprefix $(AMDDALPATH)/dc/dcn20/,$(DCN20))
-
-
->   542816ff168d8a3 ("drm/amd/display: Add DCN2.1 changes to DML")
->   b04641a3f4c54b0 ("drm/amd/display: Add Renoir DML")
->   057fc695e934a77 ("drm/amd/display: support "dummy pstate"")
->
-> from the drm tree.
->
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->
-> diff --cc drivers/gpu/drm/amd/display/dc/dml/Makefile
-> index 83792e2c0f0e4,af2a864a6da05..0000000000000
-> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> @@@ -32,16 -32,29 +32,25 @@@ endi
->
->   dml_ccflags := -mhard-float -msse $(cc_stack_align)
->
-> + ifdef CONFIG_CC_IS_CLANG
-> + dml_ccflags += -msse2
-> + endif
-> +
->  -CFLAGS_display_mode_lib.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_lib.o := $(dml_ccflags)
->
->   ifdef CONFIG_DRM_AMD_DC_DCN2_0
->  -CFLAGS_display_mode_vba.o := $(dml_ccflags)
->  -CFLAGS_display_mode_vba_20.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_calc_20.o := $(dml_ccflags)
->  -CFLAGS_display_mode_vba_20v2.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_calc_20v2.o := $(dml_ccflags)
->  -endif
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_mode_vba.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
-> ++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o := $(dml_ccflags)
-> ++CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o := $(dml_ccflags)
-> + ifdef CONFIG_DRM_AMD_DC_DCN2_1
->  -CFLAGS_display_mode_vba_21.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_calc_21.o := $(dml_ccflags)
->  -endif
-
-^ this endif should not be removed.
-
-
->  -ifdef CONFIG_DRM_AMD_DCN3AG
->  -CFLAGS_display_mode_vba_3ag.o := $(dml_ccflags)
-> ++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o := $(dml_ccflags)
-> ++CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o := $(dml_ccflags)
->   endif
->  -CFLAGS_dml1_display_rq_dlg_calc.o := $(dml_ccflags)
->  -CFLAGS_display_rq_dlg_helpers.o := $(dml_ccflags)
->  -CFLAGS_dml_common_defs.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dml1_display_rq_dlg_calc.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/display_rq_dlg_helpers.o := $(dml_ccflags)
->  +CFLAGS_$(AMDDALPATH)/dc/dml/dml_common_defs.o := $(dml_ccflags)
->
->   DML = display_mode_lib.o display_rq_dlg_helpers.o dml1_display_rq_dlg_calc.o \
->         dml_common_defs.o
-
-
-
---
-Thanks,
-~Nick Desaulniers
+Will
