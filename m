@@ -2,160 +2,126 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 096D8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8164C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D3C20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 931CB20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CFJSWEMs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="PIAFpvxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388688AbfIPR5L (ORCPT
+        id S2388879AbfIPR55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:57:11 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33724 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbfIPR5L (ORCPT
+        Mon, 16 Sep 2019 13:57:57 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:57704 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727039AbfIPR55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:57:11 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g25so686521otl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:57:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tKNZtmKTuySbYvP8w0xm5HOjwNFPHAZdDNlcoO6z/s4=;
-        b=CFJSWEMs8joEKGJKJWATQ2SgPQIFPRLujUYDdXO3TJjr1R0fBUwERjJm+njog34eG0
-         g/dOqwt/sum69ElflFWh60xNEJJzuvdXBjdI9doHt6lVP8ME0016v/YRBVSDKqXNInwK
-         UhfwS+dz/JTiyoi74Mw+P0SxZkwInYGfHP6rY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tKNZtmKTuySbYvP8w0xm5HOjwNFPHAZdDNlcoO6z/s4=;
-        b=IIu6NwHn9Xm1qJFkqKZIr+0h0iALh800v9Qg5zvH0Mm6Ft5nWtBdkz0ETaPwHdbhj8
-         MFSzemEmHg4YJypdR/vuS2oyKWgRHQK1hUPAl8FRHCav0r5M+lDXZdFz3Zp6a5CbYBrH
-         PftNkltFgBONDLOpmSdUVQnBlM0wyjbqzF2p/rstX0RGlq+9prq7vlv3hrcuu+bX6Kbd
-         PnxZKcJcSPPxzYbO9UJMSb5+SZyi1vIzTQ0URhPgaBAvzNBoWZAW4HHMIFhhAMBz4BRX
-         CZ3DR2rrSVdAseFp1a3Ppp1eixd4tRDmcTsdyqEUCeYr0zsrQVQ6qX3JxY8aKIGChqLY
-         gNXg==
-X-Gm-Message-State: APjAAAXZUKSeusk7Wfe81FxjDJJvNoWbf5W4vCrUjkPHGFzd4JNabLmU
-        NOwRX6LXY8vFEhPQ7ECrkPj829oBJf4=
-X-Google-Smtp-Source: APXvYqyr5mtZymJlEJKFUTSxwc4X3vAvSsQCUfrkrMrdDHjUFW7z3ov8wFsebQTDhH6H6tNseXKphA==
-X-Received: by 2002:a05:6830:13d6:: with SMTP id e22mr360936otq.280.1568656630254;
-        Mon, 16 Sep 2019 10:57:10 -0700 (PDT)
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com. [209.85.210.47])
-        by smtp.gmail.com with ESMTPSA id x140sm4357346oix.42.2019.09.16.10.57.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 10:57:09 -0700 (PDT)
-Received: by mail-ot1-f47.google.com with SMTP id b2so610531otq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:57:08 -0700 (PDT)
-X-Received: by 2002:a9d:4d0d:: with SMTP id n13mr283174otf.351.1568656627845;
- Mon, 16 Sep 2019 10:57:07 -0700 (PDT)
+        Mon, 16 Sep 2019 13:57:57 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GHrxIj060857;
+        Mon, 16 Sep 2019 17:57:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=MW04ABQyhX38L88BI5M8vCF1lPosi66PbWP7/kQtqpg=;
+ b=PIAFpvxun7+qVBxZFDszVXHRA/MgZBM41g0e/eEHBbJuO7irIQIRez5bGELE/aB67CCd
+ iOOeSdcQ2NhAz+aZn67SIS6GAvIZtGltv9wcA1cKaOX2ivnNctcfSkIU3Rz7cmsYsfgX
+ b81W+KPanYtBGdhS0rh3LjS/Sv3zmV+AMd32kEUiKb44PKXT01kMKeG2ITCLUWLgKIGg
+ 09U64N9ao0ddUAP3RBuk4ACFY//NABdbYsJeezL3hmIWqMrd7PZ/0Y2Fit0AEG7WsHOj
+ ChAPbrCoZwhw1OSwd2KhPn//1IjvevGXOLw68ez0NDOKGjitjs6KbO/DlLHNeEQ9QFYy Wg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2v2bx2sbv7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 17:57:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GHrdYg179499;
+        Mon, 16 Sep 2019 17:57:34 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2v0p8uxxp0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Sep 2019 17:57:34 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8GHsJk8182132;
+        Mon, 16 Sep 2019 17:57:33 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2v0p8uxxnj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 17:57:33 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8GHvVD3028421;
+        Mon, 16 Sep 2019 17:57:31 GMT
+Received: from [10.209.226.111] (/10.209.226.111)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Sep 2019 10:57:31 -0700
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in rds_bind
+To:     Cong Wang <xiyou.wangcong@gmail.com>,
+        syzbot <syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com>
+Cc:     Arvid Brodin <arvid.brodin@alten.se>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        rds-devel@oss.oracle.com,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000bd36db0592ab9652@google.com>
+ <CAM_iQpXdTNVywYm6+vmAKMsBRcC6ySOX9Rcg70xhgdjJgbDJkw@mail.gmail.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <d64dee71-4927-4589-d865-7abf4cc266e6@oracle.com>
+Date:   Mon, 16 Sep 2019 10:57:30 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20190910151929.780-1-ncrews@chromium.org> <20190912080953.GO21254@piout.net>
- <CAHX4x87M6opd5Ob_TRwCQ3mYgeFaV55DYiTYccM2cNX2nD3oYA@mail.gmail.com> <20190916080219.GV21254@piout.net>
-In-Reply-To: <20190916080219.GV21254@piout.net>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Mon, 16 Sep 2019 11:56:56 -0600
-X-Gmail-Original-Message-ID: <CAHX4x84yRmYCoXcqhPdJWcb703vFZO=u5UjWJHjVWsrH4XZo1A@mail.gmail.com>
-Message-ID: <CAHX4x84yRmYCoXcqhPdJWcb703vFZO=u5UjWJHjVWsrH4XZo1A@mail.gmail.com>
-Subject: Re: [PATCH] rtc: wilco-ec: Sanitize values received from RTC
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Duncan Laurie <dlaurie@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAM_iQpXdTNVywYm6+vmAKMsBRcC6ySOX9Rcg70xhgdjJgbDJkw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909160176
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 2:02 AM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> On 15/09/2019 23:44:03+0100, Nick Crews wrote:
-> > Hi Alexandre, thanks for the thoughts.
-> >
-> > On Thu, Sep 12, 2019 at 9:09 AM Alexandre Belloni
-> > <alexandre.belloni@bootlin.com> wrote:
-> > >
-> > > Hi Nick,
-> > >
-> > > On 10/09/2019 16:19:29+0100, Nick Crews wrote:
-> > > > Check that the time received from the RTC HW is valid,
-> > > > otherwise the computation of rtc_year_days() in the next
-> > > > line could, and sometimes does, crash the kernel.
-> > > >
-> > > > While we're at it, fix the license to plain "GPL".
-> > > >
-> > > > Signed-off-by: Nick Crews <ncrews@chromium.org>
-> > > > ---
-> > > >  drivers/rtc/rtc-wilco-ec.c | 12 ++++++++++--
-> > > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
-> > > > index 8ad4c4e6d557..0ccbf2dce832 100644
-> > > > --- a/drivers/rtc/rtc-wilco-ec.c
-> > > > +++ b/drivers/rtc/rtc-wilco-ec.c
-> > > > @@ -110,8 +110,16 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
-> > > >       tm->tm_mday     = rtc.day;
-> > > >       tm->tm_mon      = rtc.month - 1;
-> > > >       tm->tm_year     = rtc.year + (rtc.century * 100) - 1900;
-> > > > -     tm->tm_yday     = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
-> > >
-> > > If your driver doesn't care about yday, userspace doesn't either. You
-> > > can simply not set it.
-> >
-> > This driver indeed does not care about yday, so it sounds good to me
-> > to simply not set it. However, I do still want to worry about the HW
-> > returning some bogus time. It could be indicative of some other problem,
-> > and I don't want to pass on this illegal time further up the stack. I can't
-> > think of a reason why an illegal time should exist at all, we should just
-> > deal with it as soon as possible. How about I remove setting yday as
-> > you suggest, but still keep the rtc_valid_tm() check?
-> >
->
-> As rtc_valid_tm would be the last thing the driver does in the callback
-> and the first thing the core does after returning from the callback,
-> you'd get two calls back to back which is not useful.
+On 9/16/19 9:49 AM, Cong Wang wrote:
+> On Mon, Sep 16, 2019 at 6:29 AM syzbot
+> <syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com> wrote:
+>>
+>> Hello,
+>>
+>> syzbot found the following crash on:
+>>
+>> HEAD commit:    f4b752a6 mlx4: fix spelling mistake "veify" -> "verify"
+>> git tree:       net
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=16cbebe6600000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=fae39afd2101a17ec624
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10753bc1600000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111dfc11600000
+>>
+>> The bug was bisected to:
+>>
+>> commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
+>> Author: Cong Wang <xiyou.wangcong@gmail.com>
+>> Date:   Thu Jul 4 00:21:13 2019 +0000
+>>
+>>       hsr: implement dellink to clean up resources
+> 
+> 
+> The crash has nothing to do with this commit. It is probably caused
+> by the lack of ->laddr_check in rds_loop_transport.
+> 
+Will have a look.
 
-Ah, I see now where the core checks that the time is valid
-in interface.c. Sounds good, I'll skip the check then.
-
->
-> > >
-> > > >
-> > > > +     if (rtc_valid_tm(tm)) {
-> > > > +             dev_warn(dev,
-> > > > +                      "Time computed from EC RTC is invalid: sec=%d, min=%d, hour=%d, mday=%d, mon=%d, year=%d",
-> > > > +                      tm->tm_sec, tm->tm_min, tm->tm_hour, tm->mday,
-> > > > +                      tm->mon, tm->year);
-> > > > +             return -EIO;
-> > > > +     }
-> > > > +
-> > > > +     tm->tm_yday = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
-> > > >       /* Don't compute day of week, we don't need it. */
-> > > >       tm->tm_wday = -1;
-> >
-> > Following our discussion, perhaps I'll just remove this too since the
-> > RTC core inits this to -1 already?
-> >
->
-> You can remove it.
-
-Will do!
-
->
->
-> --
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+regards,
+Santosh
