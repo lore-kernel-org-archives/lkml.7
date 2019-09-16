@@ -3,61 +3,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960E8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:59:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561E7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA95214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CFFE2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfIPL7B (ORCPT
+        id S1732142AbfIPMAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:59:01 -0400
-Received: from postamt.cs.uni-dortmund.de ([129.217.4.40]:57648 "EHLO
-        postamt.cs.uni-dortmund.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731379AbfIPL7A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:59:00 -0400
-X-Greylist: delayed 310 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Sep 2019 07:58:58 EDT
-Received: from postweb.cs.uni-dortmund.de (postweb [129.217.4.49])
-        (authenticated bits=0)
-        by postamt.cs.uni-dortmund.de (8.12.6/8.12.6) with ESMTPSA id x8GBrl1q025902
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 13:53:47 +0200 (MEST)
+        Mon, 16 Sep 2019 08:00:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54400 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731514AbfIPMAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 08:00:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 340B9AFF3;
+        Mon, 16 Sep 2019 12:00:40 +0000 (UTC)
+From:   Andreas Schwab <schwab@suse.de>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Cc:     Christoph Hellwig <hch@lst.de>, gregkh@linuxfoundation.org,
+        jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
+References: <20190910055923.28384-1-hch@lst.de> <mvm4l1kskny.fsf@suse.de>
+        <20190910070503.GA31743@lst.de> <mvmzhjcr2d4.fsf@suse.de>
+        <alpine.DEB.2.21.9999.1909160456010.7214@viisi.sifive.com>
+X-Yow:  I need to discuss BUY-BACK PROVISIONS with at least
+ six studio SLEAZEBALLS!!
+Date:   Mon, 16 Sep 2019 14:00:39 +0200
+In-Reply-To: <alpine.DEB.2.21.9999.1909160456010.7214@viisi.sifive.com> (Paul
+        Walmsley's message of "Mon, 16 Sep 2019 04:57:14 -0700 (PDT)")
+Message-ID: <mvm7e68fo2g.fsf@suse.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Sep 2019 13:53:47 +0200
-From:   Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
-To:     linux-kernel@vger.kernel.org, linux-admin@vger.kernel.org
-Subject: Running an application on a new VT
-Message-ID: <bbfcbea3f39a4a3689f4ffedf962fbbf@cs.uni-dortmund.de>
-X-Sender: christoph.pleger@cs.uni-dortmund.de
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Sep 16 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
 
-I am using the program openvt to run another program. openvt is used to 
-open a new virtual terminal and then run the given program on the new 
-VT. In my case, I want to start a KDE Plasma session on the new VT.
+> On Tue, 10 Sep 2019, Andreas Schwab wrote:
+>
+>> On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
+>> 
+>> > On Tue, Sep 10, 2019 at 08:57:37AM +0200, Andreas Schwab wrote:
+>> >> On Sep 10 2019, Christoph Hellwig <hch@lst.de> wrote:
+>> >> 
+>> >> > The sifive serial driver implements earlycon support,
+>> >> 
+>> >> It should probably be documented in admin-guide/kernel-parameters.txt.
+>> >
+>> > How so?  Wіth OF and a stdout path you just set earlycon on the
+>> > command line without any arguments and it will be found.
+>> 
+>> Doesn't work for me.
+>> 
+>> [    0.000000] Malformed early option 'earlycon'
+>
+> Try:
+>
+>     earlycon=sifive,0x10010000
 
-Unfortunately, this did not work as expected: After entering the command 
-'openvt -s -w -- dbus-run-session startplasmacompositor', the KDE 
-session did not start on the new VT, but on tty1, from where I had 
-entered the openvt command. Then, I tried with 'openvt -s -w -- 
-/bin/bash', but though this ran bash on a new virtual terminal, entering 
-'dbus-run-session startplasmacompositor' on the new VT caused a switch 
-back to tty1 and again, the desktop session started there.
+That's not what Christoph wants.
 
-Does anybody know why not the new VT is used for the desktop session and 
-how that behaviour can be changed?
+Andreas.
 
-Regards
-   Christoph
+-- 
+Andreas Schwab, SUSE Labs, schwab@suse.de
+GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
+"And now for something completely different."
