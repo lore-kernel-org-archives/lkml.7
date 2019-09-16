@@ -2,175 +2,215 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5165CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9C8C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23CE8206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08552206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:31:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="dgCGCeR8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y14M6zH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390400AbfIPSaY (ORCPT
+        id S2390467AbfIPSbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:30:24 -0400
-Received: from mout.gmx.net ([212.227.15.18]:37475 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726648AbfIPSaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:30:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1568658578;
-        bh=5JYExOoizKoku5K5TgA/HNnjAWp4gGtovIt70J4r0CE=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=dgCGCeR81F8b9hOraeryyMarZeGV+JHEu9LMJQ5ulZCJ1kMCF3PEcWyQGlESpoVeN
-         G6nsCv9JzTn+g7Kwa0UTBu1HfBaUftg4KqOc3IIBqTx1bi99wl7f+8+If7P0Pq1dYL
-         hfi2UN/pGcmr2tH3T4dMEPedKB4nkSU/9RXK5JiE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.141.197]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MnJlW-1iZ7ZO1qBo-00jMH4; Mon, 16
- Sep 2019 20:29:38 +0200
-Date:   Mon, 16 Sep 2019 20:29:32 +0200
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Cc:     Sven Schnelle <svens@stackframe.org>,
-        Jeroen Roovers <jer@gentoo.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [GIT PULL] parisc architecture updates for kernel v5.4
-Message-ID: <20190916182932.GA8097@ls3530.fritz.box>
+        Mon, 16 Sep 2019 14:31:39 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41186 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390349AbfIPSbi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:31:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h7so464336wrw.8;
+        Mon, 16 Sep 2019 11:31:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1iMF6L3+VhmjBO27E99c8WkPMR48r/DUbungJ/GCRrw=;
+        b=Y14M6zH05fh0o5jHPNEfwTNNbox8UTowDHGQ1dqAynnIXP3awj3ELo3LjNvfPvhqmi
+         1RvrMgMaG9lBcQl7HRFDyLHE6GR3eOSNNISNJVPRdA7OgYue48EzDQ1Ul4EbDkqN2pE5
+         BHk9X1egnXipxxoQh5s8pRmsyDXJpsn50dngNLBjNf8PKW/d8gXTW5dJEStts48H3PgV
+         UwEd7/Xt6yhf5Pq+sm41BIenWTgGxFkTdU2yTcQ8z8f3Tsg3tEeo1ZCoe0Ot2G69ZkM9
+         siRBW/feh33L+Jw/hLaYOOO5gobGXR6KXhTmVYOdikTZA4ZFLwZwa/gpuKYhEvOhvGeB
+         RqZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1iMF6L3+VhmjBO27E99c8WkPMR48r/DUbungJ/GCRrw=;
+        b=bHpqfnlxJHKtJMPhfYzFmmWHgAqWEoqgkP+bYk4HCLYkAjau3GaFytD5lBeafavz5r
+         S9An5CBiVI5wUWOJeZZphWcA7diLjAW+lriVlNfEAHU5990z40DcmkDgo26K3LVB4M3N
+         pjIlBoKs9s/xXx6SOnUvsDFjd3db+RIJbYU2nW061AqCAGrHbmaXRuBaxgdHM0Oq69SZ
+         dK2bjW14b+t9S9apy2v4Xn3Q0Jv2LB1On3t9u3ETe2PeEDSQpSZO1pQc93XsmW6pWL5g
+         R4HEVnPnXi9QAsHdgdeBovJMeq3E5BSCfmnEe9Iq82MY8DWnEy8xNo4rt20Qz6HShJ9P
+         Og3w==
+X-Gm-Message-State: APjAAAWm0/7HGBUdwprZWNj0a/67pNwuHCMyr0vRfA3MH1Ls9zUu+wXK
+        cVmfArVph+vxXrneVadxQ346JKD5
+X-Google-Smtp-Source: APXvYqyuVAR15t+jVRjP42X4hO3/ljtGSTmYQmtRF8sXKfbRs0haxRH/lQexOHIRM6q6ursD2E/1gQ==
+X-Received: by 2002:a5d:4041:: with SMTP id w1mr879032wrp.313.1568658693398;
+        Mon, 16 Sep 2019 11:31:33 -0700 (PDT)
+Received: from [192.168.1.19] (bgp90.neoplus.adsl.tpnet.pl. [83.28.79.90])
+        by smtp.gmail.com with ESMTPSA id j22sm71348381wre.45.2019.09.16.11.31.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 11:31:32 -0700 (PDT)
+Subject: Re: [PATCH v5 1/9] leds: multicolor: Add sysfs interface definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190911180115.21035-1-dmurphy@ti.com>
+ <20190911180115.21035-2-dmurphy@ti.com>
+ <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
+ <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4915583c-5381-72fd-8d4f-6901018f5c3e@gmail.com>
+Date:   Mon, 16 Sep 2019 20:31:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Provags-ID: V03:K1:440bKVaa1Q+3xLpUEUoFEcM5u1Bu8qPzEsOFS5a9qYSTqegTcu4
- 3+uGsrPtdej3qhD8uC0MgJKpVsnx6ZwBa2fzzMKrFOJxQWY+Bg2H9TCIXx144RqvI9+n8OM
- TgT0HcFglI8raLZo+5v2K3WeIsMjzFKmwUeWBEHcjEwHhj5IOdCtgS34tdPq5eV+CX0kbtL
- UCBhBDYUF1k5VEr4TRSeg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6LUP+KjmiZs=:B3RVywv9l2zy0I+HselXkS
- a69OURBWixa5VN0Db7QUuNo5Aqzyy4N2a2kp94kKE+kROUyQ5rCaHc2dpdVTThzGbmlc+YBz0
- Hz8dA8wTeGYxagO3wp9KXTJftTl0T+6ITA2QXxIKwn8TvT8QDWrFck3K2ZBtPSSV4Uv+LAuKl
- qyWgGA0cKeNOy7cgK7vKZnqTVGS/Twqeuzl/izVgoWRJVmLO/920yjASRhgSY5VJKX7HN1wJ5
- DRPtt9ziqHuZiU5hKuNro89SsMQtUe+WsgHtfGURHC9i8o38Vvu8FCWRxZsuHUZ91AvfPhMV6
- a6OGKhQmbW+1AhRMQVCIG/dh8HsctaMI+2hw6M78OEN3BAAe3PHRs4o6IaSyfRRllXUht8R7H
- /qkstakpkrTPGni48EUM+qke0/CrRgJULis3H+ijt3MH7SU06n4u2fKRkS8Rz2sQRsgiW0VuI
- BjvLFyLk/FEwtqu4zGkJ7wxY+ArZlort17T3B58pY9fjzJ0Hiawm4QtIeoHHJGtN2vzsJr6HP
- Uvgqu/QSsjIUiV7hof0+3aHqEDieNWEb+WXICVcToTA538gL/Ok16M7ctqnA6HiW5B98NSWes
- 0t2Y/l+xhSRwKaLIxpg+FfubZqrnjubQwNMZw4540vASUbcjoTtorOpD5Xpyg90DDM9Nueu/m
- Si3UOiPGIjOAEMwHFK0AiBC0ys8zwM2toldouy1gWRIknnV/md2F+d8uHgQMSnRcXKHMMXChf
- +OUPMvpyrZxy9yvNfP4+DqT67Y2WRwjnu86f8WLv/7D3Df7tedTr7qytRpeUMhehk8h/Bebd8
- 3wOs3+cu5S7HXpUKLcRQK4nG5NZ0r8vpDhfyPa++bU2YKcpgWEKAEdIJDrossJtV8ve9rlMuG
- sGG1hHM7SA7YjZKq3G2PpWSRPYPbnNGKmQnE+d0icf8RDkLiqhw9EnJ99LxF7jD116pTPhIow
- QY+kaaHZEjF+V+djASec7ukkrvH5Q3yVhobQDP0Q9wdRHIfzd6ePDxngPMxuA+fyjeN6SKnri
- J6fL/wogjiWB/Q0AxVLGtv6Zd1xzT9w3Zhxa8KX+0fl5ove0xF4Od6YcB2V4abhyDHrqAJpLl
- QpJlTT2BriCK0BuNPH1pRxCiWMCEPpHlNi/eA7/sgvduqNXgEwDhiboOSpFMVj3MeR5/PMGla
- rFpWg0hbD0fcLTY+E9mFcTmImcESyKQZuS1GMNlfO7J4ziLtlZZ0Bg+nfUexJX2UxBAbGuSJL
- x6wYqSRvEhQYVagxDS4csV6Tcj26MOEStqYPEfA==
+In-Reply-To: <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Dan,
 
-please pull the parisc architecture updates for kernel 5.4 from:
+On 9/16/19 3:56 PM, Dan Murphy wrote:
+> Hello
+> 
+> On 9/15/19 8:57 AM, Jacek Anaszewski wrote:
+>> Hi Dan,
+>>
+>> On 9/11/19 8:01 PM, Dan Murphy wrote:
+>>> Add a documentation of LED Multicolor LED class specific
+>>> sysfs attributes.
+>>>
+>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>> ---
+>>>   .../ABI/testing/sysfs-class-led-multicolor    | 73 +++++++++++++++++++
+>>>   1 file changed, 73 insertions(+)
+>>>   create mode 100644
+>>> Documentation/ABI/testing/sysfs-class-led-multicolor
+>>>
+>>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> new file mode 100644
+>>> index 000000000000..4ea54c2ad4c8
+>>> --- /dev/null
+>>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>>> @@ -0,0 +1,73 @@
+>>> +What:        /sys/class/leds/<led>/brightness
+>>> +Date:        Sept 2019
+>>> +KernelVersion:    5.5
+>>> +Contact:    Dan Murphy <dmurphy@ti.com>
+>>> +Description:    read/write
+>>> +        The multicolor class will redirect the device drivers call back
+>>> +        function for brightness control to the multicolor class
+>>> +        brightness control function.
+>>> +
+>>> +        Writing to this file will update all LEDs within the group to a
+>>> +        calculated percentage of what each color LED in the group is
+>>> set
+>>> +        to.  The percentage is calculated via the equation below:
+>>> +
+>>> +        led_brightness = requested_value *
+>>> led_color_intensity/led_color_max_intensity
+>>> +
+>>> +        For additional details please refer to
+>>> +        Documentation/leds/leds-class-multicolor.rst.
+>>> +
+>>> +        The value of the color is from 0 to
+>>> +        /sys/class/leds/<led>/max_brightness.
+>>> +
+>>> +What:        /sys/class/leds/<led>/colors/color_mix
+>>> +Date:        Sept 2019
+>>> +KernelVersion:    5.5
+>>> +Contact:    Dan Murphy <dmurphy@ti.com>
+>>> +Description:    read/write
+>>> +        The values written to this file should contain the intensity
+>>> +        values of each multicolor LED within the colors directory. The
+>>> +        index of given color is reported by the color_id file
+>>> present in
+>>> +        colors/<color> directory. The index determines the position in
+>>> +        the sequence of    intensities on which the related intensity
+>>> +        should be passed to this file.
+>>> +
+>>> +        For additional details please refer to
+>>> +        Documentation/leds/leds-class-multicolor.rst.
+>> As already mentioned in the reply to Pavel - let's avoid the
+>> introduction of another sysfs file with multiple values.
+> 
+> OK for clarification remove the color_mix and color_id files and keep
+> the intensity files?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.4-1
+Exactly.
 
-Major changes:
-* Make the powerpc implementation to read elf files available as a public
-  kexec interface so it can be re-used on other architectures (Sven)
-* Implement kexec on parisc (Sven)
-* Add kprobes on ftrace on parisc (Sven)
-* Fix kernel crash with HSC-PCI cards based on card-mode Dino
-* Add assembly implementations for memset, strlen, strcpy, strncpy and strcat
-* Some cleanups, documentation updates, warning fixes, ...
-
-Thanks,
-Helge
-
-----------------------------------------------------------------
-Helge Deller (8):
-      parisc: Add assembly implementations for memset, strlen, strcpy, strncpy and strcat
-      parisc: Add ALTERNATIVE_CODE() and ALT_COND_RUN_ON_QEMU
-      parisc: speed up flush_tlb_all_local with qemu
-      parisc: Avoid warning when loading hppb driver
-      parisc: Convert eisa_enumerator to use pr_cont()
-      parisc: Drop comments which are already in pci.h
-      parisc: Save some bytes in dino driver
-      parisc: Disable HP HSC-PCI Cards to prevent kernel crash
-
-Jeroen Roovers (1):
-      parisc: Have git ignore generated real2.S and firmware.c
-
-Jisheng Zhang (1):
-      kprobes/parisc: remove arch_kprobe_on_func_entry()
-
-Sven Schnelle (15):
-      parisc/ftrace: Add ARCH_SUPPORTS_FTRACE_OPS support
-      parisc/ftrace: Add KPROBES_ON_FTRACE
-      parisc: Update feature list
-      parisc: trigger die notifier chain in parisc_terminate()
-      kexec: add KEXEC_ELF
-      kexec_elf: change order of elf_*_to_cpu() functions
-      kexec_elf: remove parsing of section headers
-      kexec_elf: remove PURGATORY_STACK_SIZE
-      kexec_elf: remove Elf_Rel macro
-      kexec_elf: remove unused variable in kexec_elf_load()
-      kexec_elf: support 32 bit ELF files
-      parisc: add __pdc_cpu_rendezvous()
-      parisc: add kexec syscall support
-      parisc: wire up kexec_file_load syscall
-      parisc: add support for kexec_file_load() syscall
-
- .../features/core/jump-labels/arch-support.txt     |   2 +-
- .../debug/kprobes-on-ftrace/arch-support.txt       |   2 +-
- arch/Kconfig                                       |   3 +
- arch/parisc/Kconfig                                |  25 +
- arch/parisc/boot/compressed/.gitignore             |   2 +
- arch/parisc/include/asm/alternative.h              |  11 +-
- arch/parisc/include/asm/fixmap.h                   |   1 +
- arch/parisc/include/asm/ftrace.h                   |   1 +
- arch/parisc/include/asm/kexec.h                    |  37 ++
- arch/parisc/include/asm/pdc.h                      |   1 +
- arch/parisc/include/asm/string.h                   |  15 +
- arch/parisc/kernel/Makefile                        |   2 +
- arch/parisc/kernel/alternative.c                   |  23 +-
- arch/parisc/kernel/entry.S                         |  99 ++++
- arch/parisc/kernel/firmware.c                      |  13 +
- arch/parisc/kernel/ftrace.c                        |  64 ++-
- arch/parisc/kernel/kexec.c                         | 112 +++++
- arch/parisc/kernel/kexec_file.c                    |  86 ++++
- arch/parisc/kernel/kprobes.c                       |   4 -
- arch/parisc/kernel/pacache.S                       |   9 +
- arch/parisc/kernel/parisc_ksyms.c                  |   4 +
- arch/parisc/kernel/pci.c                           |  11 -
- arch/parisc/kernel/relocate_kernel.S               | 149 ++++++
- arch/parisc/kernel/smp.c                           |   1 +
- arch/parisc/kernel/syscalls/syscall.tbl            |   3 +-
- arch/parisc/kernel/traps.c                         |   2 +
- arch/parisc/lib/Makefile                           |   4 +-
- arch/parisc/lib/memset.c                           |  91 ----
- arch/parisc/lib/string.S                           | 136 +++++
- arch/powerpc/Kconfig                               |   1 +
- arch/powerpc/kernel/kexec_elf_64.c                 | 545 +--------------------
- drivers/parisc/dino.c                              |  30 +-
- drivers/parisc/eisa_enumerator.c                   |  10 +-
- drivers/parisc/hppb.c                              |  11 +-
- include/linux/kexec.h                              |  23 +
- include/uapi/linux/kexec.h                         |   1 +
- kernel/Makefile                                    |   1 +
- kernel/kexec_elf.c                                 | 430 ++++++++++++++++
- 38 files changed, 1289 insertions(+), 676 deletions(-)
- create mode 100644 arch/parisc/include/asm/kexec.h
- create mode 100644 arch/parisc/kernel/kexec.c
- create mode 100644 arch/parisc/kernel/kexec_file.c
- create mode 100644 arch/parisc/kernel/relocate_kernel.S
- delete mode 100644 arch/parisc/lib/memset.c
- create mode 100644 arch/parisc/lib/string.S
- create mode 100644 kernel/kexec_elf.c
+-- 
+Best regards,
+Jacek Anaszewski
