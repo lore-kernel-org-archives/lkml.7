@@ -2,165 +2,153 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA43BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8333AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B29C0206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54210206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:42:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TdKgVm1K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbfIPHmB (ORCPT
+        id S1730697AbfIPHmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:42:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46822 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728139AbfIPHmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:42:00 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C6AF3082E24;
-        Mon, 16 Sep 2019 07:41:59 +0000 (UTC)
-Received: from [10.36.117.103] (ovpn-117-103.ams2.redhat.com [10.36.117.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB9175C1D6;
-        Mon, 16 Sep 2019 07:41:57 +0000 (UTC)
-Subject: Re: [PATCH 03/10] mm,hwpoison-inject: don't pin for hwpoison_filter
-To:     Oscar Salvador <osalvador@suse.de>, n-horiguchi@ah.jp.nec.com
-Cc:     mhocko@kernel.org, mike.kravetz@oracle.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190910103016.14290-1-osalvador@suse.de>
- <20190910103016.14290-4-osalvador@suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <1c693242-9d64-a730-6590-b7b8180ccfc6@redhat.com>
-Date:   Mon, 16 Sep 2019 09:41:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 03:42:38 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40283 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPHmh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 03:42:37 -0400
+Received: by mail-pf1-f195.google.com with SMTP id x127so22462117pfb.7;
+        Mon, 16 Sep 2019 00:42:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iElSScH0z0U2B9GLYDqzyiyFEddhdSl2+XmoY+CYnvk=;
+        b=TdKgVm1KSuoUuweHXf8nrFV8eIYyOvfvBAR8TLSN5mcZF5YfmIOuzIWlWf+QDdiZT1
+         Ale/7tQIDRV+uk8ED/zr3/6d/4w19egG0pabScUjISNOlnBQ4FfeF3D600tfcaE2q/0l
+         w7CZMnm8p0iweES607fM/k/pSviFZKC1MpTkj6fF1VA2ppgJRsnQ8bZs6s0IrSMiBkuR
+         ALU2cFMahLZEPcaRhglEOAQrE2Y0AeUvBdmMsnfaH65r6PT0M7yylkEw4isUnDW0cPyr
+         L8F5e4YyNYDgUX7qnsRFY3UBOg55Mknax+rVLM8BMM/i8QxaUlx+Zt/siwIwmefmIdEb
+         84VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iElSScH0z0U2B9GLYDqzyiyFEddhdSl2+XmoY+CYnvk=;
+        b=A4tDtL+Zd8k+IukmuLYdvvCW9Z7P4tV5L2yMnoRs9Ww80nG420henJDtDUBONN25al
+         z2pKGIb1ini6fJal2dTBSCKqH5fASQoJur0MuAviux/fSqIGyY9p8b4iE9pL4i9nyrED
+         BZIlwupfyqxKXZ6QTpGuez57jT4BZ41JmoqhKPYe6WzqaOQLeyAiv7I/ef/td/cA8rc9
+         PJ7MyJetaZShRH/2Ino4WEvMw3e1oGoTwf+nmj7K1Kf62TYdZpsMG1mWkbZqf+t9/Rrp
+         QwYRuh1XiiGpEovtBnM8y11AEmcIlxXlsjBDJC5jsvJTZJv1H3GBpuM08GNgTpfM5xl6
+         3I/w==
+X-Gm-Message-State: APjAAAXSdNHE6taCRxnGMjCQedGOt3OIXhgoxZG0m0a+GlVqC1eniPI0
+        1Qs2z+PTKlczZgcJ0veAtiurMhws
+X-Google-Smtp-Source: APXvYqz6UXb+1m2RY5wgCOKMbqJoz8UuUxUz1PwKGU2byU6AGn21tsVQ4b9kP+cucwWs52QAxFK4wg==
+X-Received: by 2002:a63:ef4d:: with SMTP id c13mr17809326pgk.200.1568619757028;
+        Mon, 16 Sep 2019 00:42:37 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id s19sm36531063pfe.86.2019.09.16.00.42.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 00:42:36 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH v3] KVM: hyperv: Fix Direct Synthetic timers assert an interrupt w/o lapic_in_kernel
+Date:   Mon, 16 Sep 2019 15:42:32 +0800
+Message-Id: <1568619752-3885-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190910103016.14290-4-osalvador@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 16 Sep 2019 07:41:59 +0000 (UTC)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.09.19 12:30, Oscar Salvador wrote:
-> From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> 
-> Another memory error injection interface debugfs:hwpoison/corrupt-pfn
-> also takes bogus refcount for hwpoison_filter(). It's justified
-> because this does a coarse filter, expecting that memory_failure()
-> redoes the check for sure.
-> 
-> Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-> Signed-off-by: Oscar Salvador <osalvador@suse.de>
-> ---
->  mm/hwpoison-inject.c | 18 +++++-------------
->  1 file changed, 5 insertions(+), 13 deletions(-)
-> 
-> diff --git a/mm/hwpoison-inject.c b/mm/hwpoison-inject.c
-> index 5b7430bd83a6..0c8cdb80fd7d 100644
-> --- a/mm/hwpoison-inject.c
-> +++ b/mm/hwpoison-inject.c
-> @@ -26,11 +26,6 @@ static int hwpoison_inject(void *data, u64 val)
->  
->  	p = pfn_to_page(pfn);
->  	hpage = compound_head(p);
-> -	/*
-> -	 * This implies unable to support free buddy pages.
-> -	 */
-> -	if (!get_hwpoison_page(p))
-> -		return 0;
->  
->  	if (!hwpoison_filter_enable)
->  		goto inject;
-> @@ -40,23 +35,20 @@ static int hwpoison_inject(void *data, u64 val)
->  	 * This implies unable to support non-LRU pages.
->  	 */
->  	if (!PageLRU(hpage) && !PageHuge(p))
-> -		goto put_out;
-> +		return 0;
->  
->  	/*
-> -	 * do a racy check with elevated page count, to make sure PG_hwpoison
-> -	 * will only be set for the targeted owner (or on a free page).
-> +	 * do a racy check to make sure PG_hwpoison will only be set for
-> +	 * the targeted owner (or on a free page).
->  	 * memory_failure() will redo the check reliably inside page lock.
->  	 */
->  	err = hwpoison_filter(hpage);
->  	if (err)
-> -		goto put_out;
-> +		return 0;
->  
->  inject:
->  	pr_info("Injecting memory failure at pfn %#lx\n", pfn);
-> -	return memory_failure(pfn, MF_COUNT_INCREASED);
-> -put_out:
-> -	put_hwpoison_page(p);
-> -	return 0;
-> +	return memory_failure(pfn, 0);
->  }
->  
->  static int hwpoison_unpoison(void *data, u64 val)
-> 
+From: Wanpeng Li <wanpengli@tencent.com>
 
-After this change, get_hwpoison_page() is only used in
-mm/memory-failure.c - you might be able to un-export it and make it static.
+Reported by syzkaller:
 
+	kasan: GPF could be caused by NULL-ptr deref or user memory access
+	general protection fault: 0000 [#1] PREEMPT SMP KASAN
+	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
+	Call Trace:
+	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
+	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
+	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
+	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
+	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
+	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
+	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
+	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
+
+The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
+in addition, there is no lapic in the kernel, the counters value are small
+enough in order that kvm_hv_process_stimers() inject this already-expired
+timer interrupt into the guest through lapic in the kernel which triggers
+the NULL deferencing. This patch fixes it by don't advertise direct mode 
+synthetic timers and discarding the inject when lapic is not in kernel.
+
+syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
+
+Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+v2 -> v3:
+ * add the link of syzkaller source
+v1 -> v2:
+ * don't advertise direct mode synthetic timers when lapic is not in kernel
+
+ arch/x86/kvm/hyperv.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index c10a8b1..069e655 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
+ 		.vector = stimer->config.apic_vector
+ 	};
+ 
+-	return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	if (lapic_in_kernel(vcpu))
++		return !kvm_apic_set_irq(vcpu, &irq, NULL);
++	return 0;
+ }
+ 
+ static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
+@@ -1849,7 +1851,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
+ 
+ 			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
+ 			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
+-			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
++
++			/*
++			 * Direct Synthetic timers only make sense with in-kernel
++			 * LAPIC
++			 */
++			if (lapic_in_kernel(vcpu))
++				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
+ 
+ 			break;
+ 
 -- 
+2.7.4
 
-Thanks,
-
-David / dhildenb
