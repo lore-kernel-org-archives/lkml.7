@@ -2,163 +2,129 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF147C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B02AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE5E9214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA72214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itokVSgl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfIPRW1 (ORCPT
+        id S1732275AbfIPRWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:22:27 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:48560 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727593AbfIPRW0 (ORCPT
+        Mon, 16 Sep 2019 13:22:36 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38412 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732010AbfIPRWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:22:26 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8GHLHLs008743
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 13:21:18 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 87E6E420811; Mon, 16 Sep 2019 13:21:17 -0400 (EDT)
-Date:   Mon, 16 Sep 2019 13:21:17 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Willy Tarreau <w@1wt.eu>, Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916172117.GB15263@mit.edu>
-References: <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu>
- <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu>
- <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
+        Mon, 16 Sep 2019 13:22:36 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so772583qta.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rDB8uHDkgWN7+yrcA0FfYLtoe+OjSqFeu+VWqQjDn9I=;
+        b=itokVSglbnepYieFIOvlt/0B3BXlO2wgztzBJWDXit/kUzBppinOuLRUPbgVctrnlE
+         Xs+7vvbrQmv5LYTPN8Wi3loVrc108cIzN/YQvdjW58ZaCN1lxKsfH755TlliYEDnabFH
+         A6WLXRApELiiGrDYIhNaJmFqjk1rRQj8JGsvkRpjxxt/+4wIR/RL6IlQ+xsmQcufDL7o
+         ZDPk0v3tELCnCOKzUeZ18e+1iUzx5Em5giLoGWX8xcf5XUa0y/2VtVvSwBdNKuksYWWv
+         7whgoxnQEbZaqzK6mw2wouJQuGpYXPtqo/fSx/BrIsKjoa1325vMHR+2yfKQL6/nV+WS
+         FIwg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rDB8uHDkgWN7+yrcA0FfYLtoe+OjSqFeu+VWqQjDn9I=;
+        b=gRb6gBMSD58iPknYJwYgfmgIAY1S+XrEyc540Dq6iMCxfKHNruw7bsLMV422dcuMgo
+         isAoXaaqM8VHALydaNgDCyi2kJngsSe9JwG5lABqZJrs/SgDFuoZsxPlIXSeXkfgTk7S
+         ug/Yx7vZB0Q5rueqo4fo52gSLpAE3oyW972H+cvkMSsntALubIIIQXrPr8ad+iJQYUm5
+         2T+ybF9pFCX5AuxW0z9dQucICUbjaSIc+CGjDjvXYU0W+XW+XLj4K4aeu3hKAWS323vJ
+         BeGXX0sK4KOTnnFrp/WIbPgjLIc+ec0V8GM15KvmnqLPhAsbd/AgJygwRP9ev8zTKhsI
+         8qdg==
+X-Gm-Message-State: APjAAAUQO+dF3YdrLLCmsVYlmY8xGtMIAmSbwe4kscdeh0NIECgnYbGn
+        ceFpXeouc/jelldIVlNVzgdBRz20jINd9rzL05Q=
+X-Google-Smtp-Source: APXvYqyNxf9P5+HIEk2snNUL/kA+YguGWoN9sH1Euy3GdsF7mtVDOmDSkV7CR8UtRX+Q28d8U1CmoEHgealLu8qcH9g=
+X-Received: by 2002:ac8:f33:: with SMTP id e48mr720765qtk.123.1568654555208;
+ Mon, 16 Sep 2019 10:22:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Mon, 16 Sep 2019 10:22:18 -0700
+Message-ID: <CAHbLzkq7JT=KE9R_W6YfXmBJBeESgXZvdReS30sH8no63YQE0Q@mail.gmail.com>
+Subject: Re: [PATCH] mm, thp: Do not queue fully unmapped pages for deferred split
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
-> So the semantics that getrandom() should have had are:
-> 
->  getrandom(0) - just give me reasonable random numbers for any of a
-> million non-strict-long-term-security use (ie the old urandom)
-> 
->     - the nonblocking flag makes no sense here and would be a no-op
+On Fri, Sep 13, 2019 at 2:18 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+>
+> Adding fully unmapped pages into deferred split queue is not productive:
+> these pages are about to be freed or they are pinned and cannot be split
+> anyway.
 
-That change is what I consider highly problematic.  There are a *huge*
-number of applications which use cryptography which assumes that
-getrandom(0) means, "I'm guaranteed to get something safe
-cryptographic use".  Changing his now would expose a very large number
-of applications to be insecure.  Part of the problem here is that
-there are many different actors.  There is the application or
-cryptographic library developer, who may want to be sure they have
-cryptographically secure random numbers.  They are the ones who will
-select getrandom(0).
+This change looks good to me. Reviewed-by: Yang Shi <yang.shi@linux.alibaba.com>
 
-Then you have the distribution or consumer-grade electronics
-developers who may choose to run them too early in some init script or
-systemd unit files.  And some of these people may do something stupid,
-like run things too early, or omit the a hardware random number
-generator in their design, even though it's for a security critical
-purpose (say, a digital wallet for bitcoin).  Because some of these
-people might do something stupid, one argument (not mine) is that we
-must therefore not let getrandom() block.  But doing this penalizes
-the security of all the users of the application, not just the stupid
-ones.
-
->  getrandom(GRND_RANDOM) - get me actual _secure_ random numbers with
-> blocking until entropy pool fills (but not the completely invalid
-> entropy decrease accounting)
-> 
->     - the nonblocking flag is useful for bootup and for "I will
-> actually try to generate entropy".
-> 
-> and both of those are very very sensible actions. That would actually
-> have _fixed_ the problems we had with /dev/[u]random, both from a
-> performance standpoint and for a filesystem access standpoint.
-> 
-> But that is sadly not what we have right now.
-> 
-> And I suspect we can't fix it, since people have grown to depend on
-> the old behavior, and already know to avoid GRND_RANDOM because it's
-> useless with old kernels even if we fixed it with new ones.
-
-I don't think we can fix it, because it's the changing of
-getrandom(0)'s behavior which is the problem, not GRND_RANDOM.  People
-*expect* getrandom(0) to always return secure results.  I don't think
-we can make it sometimes return not-necessarily secure results
-depending on when the systems integrator or distribution decides to
-run the application, and depending on the hardware platform (yes,
-traditional x86 systems are probably fine, and fortunately x86
-embedded CPU are too expensive and have lousy power management, so no
-one really uses x86 for embedded yet, despite Intel's best efforts).
-That would just be a purely irresponsible thing to do, IMO.
-
-> Does anybody really seriously debate the above? Ted? Are you seriously
-> trying to claim that the existing GRND_RANDOM has any sensible use?
-> Are you seriously trying to claim that the fact that we don't have a
-> sane urandom source is a "feature"?
-
-There are people who can debate that GRND_RANDOM has any sensible use
-cases.  GPG uses /dev/random, and that was a fully informed choice.
-I'm not convinced, because I think that at least for now the CRNG is
-perfectly fine for 99.999% of the use cases.  Yes, in a post-quantum
-cryptography world, the CRNG might be screwed --- but so will most of
-the other cryptographic algorithms in the kernel.  So if anyone ever
-gets post-quantum cryptoanalytic attacks working, the use of the CRNG
-is going to be least of our problems.
-
-As I mentioned to you in Lisbon, I've been going back and forth about
-whether or not to rip out the entire /dev/random infrastructure,
-mainly for code maintainability reasons.  The only reason why I've
-been holding back is because there are (very few) non-insane people
-who do want to use it.  There are also a much larger of rational
-people who use it because they want some insane PCI compliance labs to
-go away.  What I suspect most of them are actually doing in practice
-is they use /dev/random, but they also use a hardware random number
-generator so /dev/random never actually blocks in practice.  The use
-of /dev/random is enough to make the PCI compliance lab go away, and
-the hardware random number generator (or virtio-rng on a VM) makes
-/dev/random useable.
-
-But I don't think we can reuse GRND_RANDOM for that reason.
-
-We could create a new flag, GRND_INSECURE, which never blocks.  And
-that that allows us to solve the problem for silly applications that
-are using getrandom(2) for non-cryptographic use cases.  Use cases
-might include Python dictionary seeds, gdm for MIT Magic Cookie, UUID
-generation where best efforts probably is good enough, etc.  The
-answer today is they should just use /dev/urandom, since that exists
-today, and we have to support it for backwards compatibility anyway.
-It sounds like gdm recently switched to getrandom(2), and I suspect
-that it's going to get caught on some hardware configs anyway, even
-without the ext4 optimization patch.  So I suspect gdm will switch
-back to /dev/urandom, and this particular pain point will probably go
-away.
-
-						- Ted
+>
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  mm/rmap.c | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+>
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 003377e24232..45388f1bf317 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
+>         if (TestClearPageDoubleMap(page)) {
+>                 /*
+>                  * Subpages can be mapped with PTEs too. Check how many of
+> -                * themi are still mapped.
+> +                * them are still mapped.
+>                  */
+>                 for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
+>                         if (atomic_add_negative(-1, &page[i]._mapcount))
+>                                 nr++;
+>                 }
+> +
+> +               /*
+> +                * Queue the page for deferred split if at least one small
+> +                * page of the compound page is unmapped, but at least one
+> +                * small page is still mapped.
+> +                */
+> +               if (nr && nr < HPAGE_PMD_NR)
+> +                       deferred_split_huge_page(page);
+>         } else {
+>                 nr = HPAGE_PMD_NR;
+>         }
+> @@ -1284,10 +1292,8 @@ static void page_remove_anon_compound_rmap(struct page *page)
+>         if (unlikely(PageMlocked(page)))
+>                 clear_page_mlock(page);
+>
+> -       if (nr) {
+> +       if (nr)
+>                 __mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
+> -               deferred_split_huge_page(page);
+> -       }
+>  }
+>
+>  /**
+> --
+> 2.21.0
+>
+>
