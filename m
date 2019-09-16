@@ -2,102 +2,145 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9609AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA01DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65ADB2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568633585;
-	bh=iIxyuJS4c3gyZmZiUv4TsXw80oSRQ4M0ioO9sQnza1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NBaJxzZj3YQpgWigEbmgrSRA7axB2rp7cZAi+LYoq1kTfsUQIURRRYIooYGUkHHJi
-	 lqM5nljtVsEV3jgxj9q8fegyDmzNmHwlR8a+sfpIsaeZlU5jdgKE4IA14g4xmxBysg
-	 39l/bC8o/0TXlb4R1dldyOrL/9CnPYrkAVlLuk28=
+	by mail.kernel.org (Postfix) with ESMTP id 99E192067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731904AbfIPLdE (ORCPT
+        id S1732099AbfIPLdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:33:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33854 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731391AbfIPLdE (ORCPT
+        Mon, 16 Sep 2019 07:33:05 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:55692 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731539AbfIPLdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 07:33:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LxUk3ICU2QigVita2oqwjs0LsOQGEVQfpyN1oIo5cfA=; b=o/oGuFto71ZIld6CAbgo0xzC1
-        3B8+qdsW+z/1cxXlVoCuQ/e+mFtw3oAUQz6hLAwBFuUXkdz9EcLby3gvE68N4QZM0rMZLBgpwHbH+
-        zDxPxn/po3nrncJNtz+KnNMakNnjqxnrou1uzNUoih5GHju7clajutJ02EawNInj/Px+k=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9pFY-00041W-Mk; Mon, 16 Sep 2019 11:32:56 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CCCAD2741A23; Mon, 16 Sep 2019 12:32:55 +0100 (BST)
-Date:   Mon, 16 Sep 2019 12:32:55 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Message-ID: <20190916113255.GA4352@sirena.co.uk>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id D44D228D45B
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Brian Masney <masneyb@onstation.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com,
+        robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
+        daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, linus.walleij@linaro.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        freedreno@lists.freedesktop.org
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+ <20190815004854.19860-6-masneyb@onstation.org>
+ <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+ <20190916103614.GA1644@onstation.org>
+ <20190916104907.GB4734@pendragon.ideasonboard.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
+Date:   Mon, 16 Sep 2019 13:32:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GlsaLUDw2IYctviq"
-Content-Disposition: inline
-In-Reply-To: <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190916104907.GB4734@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---GlsaLUDw2IYctviq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 16/9/19 12:49, Laurent Pinchart wrote:
+> Hi Brian,
+> 
+> On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
+>> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
+>>> On 15.08.2019 02:48, Brian Masney wrote:
+>>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
+>>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+>>>> error. The downstream MSM kernel sources [1] shows that the proper value
+>>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+>>>> probing to succeed.
+>>>>
+>>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+>>>>
+>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>>>> ---
+>>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>> index 25e063bcecbc..bc511fc605c9 100644
+>>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>> @@ -6,7 +6,7 @@
+>>>>  #ifndef __ANX78xx_H
+>>>>  #define __ANX78xx_H
+>>>>  
+>>>> -#define TX_P0				0x70
+>>>> +#define TX_P0				0x78
+>>>
+>>>
+>>> This bothers me little. There are no upstream users, grepping android
+>>> sources suggests that both values can be used [1][2]  (grep for "#define
+>>> TX_P0"), moreover there is code suggesting both values can be valid [3].
+>>>
+>>> Could you verify datasheet which i2c slave addresses are valid for this
+>>> chip, if both I guess this patch should be reworked.
+>>>
+>>>
+>>> [1]:
+>>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+>>>
+>>> [2]:
+>>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+>>>
+>>> [3]:
+>>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+>>
+>> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
+>> need to support both addresses. What do you think about moving these
+>> addresses into device tree?
+> 
+> Assuming that the device supports different addresses (I can't validate
+> that as I don't have access to the datasheet), and different addresses
+> need to be used on different systems, then the address to be used needs
+> to be provided by the firmware (DT in this case). Two options are
+> possible, either specifying the address explicitly in the device's DT
+> node, or specifying free addresses (in the form of a white list or black
+> list) and allocating an address from that pool. The latter has been
+> discussed in a BoF at the Linux Plumbers Conference last week,
+> https://linuxplumbersconf.org/event/4/contributions/542/.
+> 
+>> The downstream and upstream kernel sources divide these addresses by two
+>> to get the i2c address. Here's the code in upstream:
+>>
+>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+>>
+>> I'm not sure why the actual i2c address isn't used in this code.
+> 
 
-On Mon, Sep 16, 2019 at 03:38:43PM +0800, Ramuthevar,Vadivel MuruganX wrote:
+The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
+or control the chip from the AP. The I2C slave addresses used to control the
+ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
+access to different registers of the chip and AFAICS is not configurable.
 
-> Existing cadence drivers do not support SPI-NAND, it only supports to
-> SPI-NOR and SPI devices. To state that is the driver for the same IP
-> but due to different SPI flash memory(NAND) need to write from scratch.
+I don't think these addresses should be configured via DT but for the driver itself.
 
-What makes you say you need to write a separate driver?  It's perfectly
-possible to support the normal and flash I/O mechanisms in a single
-driver and as well as the maintainence issues obviously someone could
-build a system with both flash and non-flash devices on the same SPI
-controller.
+My wild guess is that the ANX7808 has different addresses, but I don't have the
+datasheet of this version.
 
---GlsaLUDw2IYctviq
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+ Enric
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/cuYACgkQJNaLcl1U
-h9BZEgf6A7cU/9Mcguk8zxT6d8uwEkFrWUSeIxR2aztdTbp5LhL6rUcO3xLsgkCU
-dZ4JAbLPoGgs259OdM22+ZBgdzs5V8Bkz26IQCdOgkGfM3I4EzUjVbDuxyLS4DBx
-MjkIMJESszbMzK5OpYQZHnPFixsF3h0KPqysktr58CeUPzfGAXVaIuVsmT0lSfHq
-DaDjUL2Zn7j8rgpA2/EM1sMyPiF1qTav07LBJ8ih7Z92W14/mO9TlWypJdfsB2dX
-aIpIemsrom83swwKBsCXHRU8sB6cbz35Sx3Mx0Z3lM6dhALcHdRE4xCiWwGIbpNT
-EEb1sXnWRIKgHh0uV8e/AoiT5S4bjg==
-=kev6
------END PGP SIGNATURE-----
-
---GlsaLUDw2IYctviq--
