@@ -2,90 +2,181 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B877C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A372C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:43:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CE5214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mQHbMgmD"
+	by mail.kernel.org (Postfix) with ESMTP id F1BFE20890
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:43:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568608983;
+	bh=4rcJxzMiJ0kL3oeus61W237iMC+QN9KmUsm6KcuW2AA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=2IXAr0+GL8YvIgiWhbc8g4CeYHIerRggvnhtthnG8RqtETjGVK6t/e1QOad+Rch1b
+	 6cnyJ2Z2AVKD2NEkcA2DE/t41BKndx9BZsU3BjbSYFIYfqJGXSMUmllIjLzZsPvD/2
+	 lzIMOARYPlIArpz77m5E2HhiJJjruL/0JcJO48tc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbfIPEkB (ORCPT
+        id S1727766AbfIPEnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 00:40:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41966 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727051AbfIPEkA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 00:40:00 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f5so382273ljg.8
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 21:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DlspV5URgvRkvXxNuJ156sbYo8cEx/JcT2NW3f+g8Cc=;
-        b=mQHbMgmDPSQo5jWR6FmzdZPro6bVfB3SpjjKxve6qbbF3jZTgThJKB33kvsSmsTnIf
-         SkDWiJWsCqF/NFlQ7CXSlGW3O/37K78hVAcHKlMFrgVpraUw++396y/9pbEf2c8B82cC
-         TtnxKow7s+UeISoCQlJyPnWRAr0+uMY/jk8uD2cky0ezy8RyHG9reqelus3qkmkmXjfQ
-         6xMqFgeBnf4oN+7nSXrd1WDl3g8OfXK2NgwoBxEmWbNdg3N0trbdJJvwGfG9vm13uzL6
-         kCTbUhaw4udJfAvN+EJwM8P3C2nWjyDJsYvfLtMCKu9hQ5FgwuG5Po28u5L9Msm145+G
-         GY7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DlspV5URgvRkvXxNuJ156sbYo8cEx/JcT2NW3f+g8Cc=;
-        b=ERZkCDYOLAdHvbmRLMk1D3hS9P5K1OGhpPPtQ8d8TAyqeqEHDX0HsGxqzJH11I/6R3
-         ZTANoM+AGb81+Uf8pPdXXgv+1xstVLEcBwWDXyBVcaDLUAljp9KvJQW/x3Fcb5M660/y
-         hsTJnHljL/rlfWRmSRtAE1KJ9CwWtoLqgxyuYAAFbVcQTCQlIa2JvQ8K7tmjjEk1rPQQ
-         x+gAyNmGq0K8WGmNYKNUet3PF8URKluBLYbVqaxV9438GqRiINxGWvotZLtxkDKs/2RZ
-         qXZotXgrO/Y/G9Wewwq7QSgpKKrrYoauVWnMhm2Nl/urySoXH2x+D5Lqijh3LPEYs35J
-         YD1w==
-X-Gm-Message-State: APjAAAUNY/4NZKYfjByxXrgqXcGRD4uHeBZVxKoOfSnvcgY9kMGm+OUf
-        hKhXZuPe9nDn8uCjkU55voxllOJRznTHRWIlowl/yw==
-X-Google-Smtp-Source: APXvYqwXAhA1+KV2YeA0HMI/AFvAmR6dcXicZUXuc6v3FG609JnY/H64rM/p0aX+SdvhdtnVqFB6IeHudBlSgubI54w=
-X-Received: by 2002:a2e:504f:: with SMTP id v15mr36798015ljd.67.1568608797345;
- Sun, 15 Sep 2019 21:39:57 -0700 (PDT)
+        Mon, 16 Sep 2019 00:43:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbfIPEnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 00:43:01 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D88620890;
+        Mon, 16 Sep 2019 04:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568608980;
+        bh=4rcJxzMiJ0kL3oeus61W237iMC+QN9KmUsm6KcuW2AA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EItaKWWwDdHY7poFsEpOeWckCdHgsaI3vWZd4OCM3mleS03tMJhUdEYSwGS+PAS4p
+         GDkifSKew/NoF+THgcrJKY5owHOMwO/r+844m3Z8yLIlzsYpuF5wWT/X/wBF/Fo727
+         7NYwTHUjLWQrcF82nqF6ZMrY+MGvy/sxSg2hceeM=
+Date:   Sun, 15 Sep 2019 21:42:58 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [GIT PULL] fscrypt updates for 5.4
+Message-ID: <20190916044258.GA8269@sol.localdomain>
+Mail-Followup-To: Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fscrypt@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
 MIME-Version: 1.0
-References: <1568200910-31368-1-git-send-email-sumit.garg@linaro.org> <20190913133057.GD7412@linux.intel.com>
-In-Reply-To: <20190913133057.GD7412@linux.intel.com>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Mon, 16 Sep 2019 10:09:45 +0530
-Message-ID: <CAFA6WYP3cYM6=sw7pAe_RmiTbxdOLHptPqmk8D=915TLF14Ecw@mail.gmail.com>
-Subject: Re: [PATCH] KEYS: asym_tpm: Use common tpm_buf for asymmetric keys
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     dhowells@redhat.com, keyrings@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 13 Sep 2019 at 19:01, Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> On Wed, Sep 11, 2019 at 04:51:50PM +0530, Sumit Garg wrote:
-> > Switch to utilize common heap based tpm_buf code for TPM based
-> > asymmetric keys rather than using stack based tpm_buf code.
-> >
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->
-> Can you roll instead a new version of the whole patch set?
+The following changes since commit e21a712a9685488f5ce80495b37b9fdbe96c230d:
 
-Okay, will send next version of whole patch-set along with this change.
+  Linux 5.3-rc3 (2019-08-04 18:40:12 -0700)
 
--Sumit
+are available in the Git repository at:
 
->
-> /Jarkko
+  git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git tags/fscrypt-for-linus
+
+for you to fetch changes up to 0642ea2409f3bfa105570e12854b8e2628db6835:
+
+  ext4 crypto: fix to check feature status before get policy (2019-08-31 10:00:29 -0500)
+
+----------------------------------------------------------------
+
+Hi Linus,
+
+This is a large update to fs/crypto/ which includes:
+
+- Add ioctls that add/remove encryption keys to/from a filesystem-level
+  keyring.  These fix user-reported issues where e.g. an encrypted home
+  directory can break NetworkManager, sshd, Docker, etc. because they
+  don't get access to the needed keyring.  These ioctls also provide a
+  way to lock encrypted directories that doesn't use the vm.drop_caches
+  sysctl, so is faster, more reliable, and doesn't always need root.
+
+- Add a new encryption policy version ("v2") which switches to a more
+  standard, secure, and flexible key derivation function, and starts
+  verifying that the correct key was supplied before using it.  The key
+  derivation improvement is needed for its own sake as well as for
+  ongoing feature work for which the current way is too inflexible.
+
+Work is in progress to update both Android and the 'fscrypt' userspace
+tool to use both these features.  (Working patches are available and
+just need to be reviewed+merged.)  Chrome OS will likely use them too.
+
+This has also been tested on ext4, f2fs, and ubifs with xfstests -- both
+the existing encryption tests, and the new tests for this.  This has
+also been in linux-next since Aug 16 with no reported issues.  I'm also
+using an fscrypt v2-encrypted home directory on my personal desktop.
+
+
+There will be a trivial merge conflict with the ext4 tree, due to both
+branches adding new ioctls.  Please keep the fscrypt ioctls grouped
+together in the list (see linux-next).
+
+There's also a conflict with the key ACLs patchset.  If you merge that
+patchset again, the resolution is to:
+
+1. Add NULL argument to request_key() in fs/crypto/keysetup_v1.c,
+   instead of in the deleted file fs/crypto/keyinfo.c.
+
+2. Translate the key permissions to ACLs in fs/crypto/keyring.c.
+   See linux-next for my recommended resolution, which avoids making any
+   behavior changes (note that some of the old permissions map to
+   multiple new permissions).
+
+----------------------------------------------------------------
+Chao Yu (1):
+      ext4 crypto: fix to check feature status before get policy
+
+Eric Biggers (26):
+      fscrypt: remove loadable module related code
+      fscrypt: clean up base64 encoding/decoding
+      fscrypt: make fscrypt_msg() take inode instead of super_block
+      fscrypt: improve warning messages for unsupported encryption contexts
+      fscrypt: improve warnings for missing crypto API support
+      fscrypt: use ENOPKG when crypto API support missing
+      fs, fscrypt: move uapi definitions to new header <linux/fscrypt.h>
+      fscrypt: use FSCRYPT_ prefix for uapi constants
+      fscrypt: use FSCRYPT_* definitions, not FS_*
+      fscrypt: add ->ci_inode to fscrypt_info
+      fscrypt: rename fscrypt_master_key to fscrypt_direct_key
+      fscrypt: refactor key setup code in preparation for v2 policies
+      fscrypt: move v1 policy key setup to keysetup_v1.c
+      fscrypt: rename keyinfo.c to keysetup.c
+      fscrypt: add FS_IOC_ADD_ENCRYPTION_KEY ioctl
+      fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl
+      fscrypt: add FS_IOC_GET_ENCRYPTION_KEY_STATUS ioctl
+      fscrypt: add an HKDF-SHA512 implementation
+      fscrypt: v2 encryption policy support
+      fscrypt: allow unprivileged users to add/remove keys for v2 policies
+      fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS ioctl
+      fscrypt: require that key be added when setting a v2 encryption policy
+      ext4: wire up new fscrypt ioctls
+      f2fs: wire up new fscrypt ioctls
+      ubifs: wire up new fscrypt ioctls
+      fscrypt: document the new ioctls and policy version
+
+ Documentation/filesystems/fscrypt.rst | 758 +++++++++++++++++++++-----
+ MAINTAINERS                           |   1 +
+ fs/crypto/Kconfig                     |   2 +
+ fs/crypto/Makefile                    |  10 +-
+ fs/crypto/crypto.c                    |  45 +-
+ fs/crypto/fname.c                     |  47 +-
+ fs/crypto/fscrypt_private.h           | 399 ++++++++++++--
+ fs/crypto/hkdf.c                      | 181 +++++++
+ fs/crypto/hooks.c                     |   6 +-
+ fs/crypto/keyinfo.c                   | 611 ---------------------
+ fs/crypto/keyring.c                   | 984 ++++++++++++++++++++++++++++++++++
+ fs/crypto/keysetup.c                  | 591 ++++++++++++++++++++
+ fs/crypto/keysetup_v1.c               | 340 ++++++++++++
+ fs/crypto/policy.c                    | 434 +++++++++++----
+ fs/ext4/ioctl.c                       |  32 ++
+ fs/ext4/super.c                       |   3 +
+ fs/f2fs/file.c                        |  58 ++
+ fs/f2fs/super.c                       |   2 +
+ fs/super.c                            |   2 +
+ fs/ubifs/ioctl.c                      |  20 +
+ fs/ubifs/super.c                      |  11 +
+ include/linux/fs.h                    |   1 +
+ include/linux/fscrypt.h               |  55 +-
+ include/uapi/linux/fs.h               |  54 +-
+ include/uapi/linux/fscrypt.h          | 181 +++++++
+ 25 files changed, 3827 insertions(+), 1001 deletions(-)
+ create mode 100644 fs/crypto/hkdf.c
+ delete mode 100644 fs/crypto/keyinfo.c
+ create mode 100644 fs/crypto/keyring.c
+ create mode 100644 fs/crypto/keysetup.c
+ create mode 100644 fs/crypto/keysetup_v1.c
+ create mode 100644 include/uapi/linux/fscrypt.h
