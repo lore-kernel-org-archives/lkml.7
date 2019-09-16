@@ -2,110 +2,99 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45035C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FB3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1555C206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:27:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SiThYn/j"
+	by mail.kernel.org (Postfix) with ESMTP id DA505206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfIPE11 (ORCPT
+        id S1727142AbfIPEaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 00:27:27 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36246 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbfIPE10 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 00:27:26 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s18so35048457qkj.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 21:27:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8XoVOeFGGpV3NsaCJeRAeZx/5oPFfdQGr3uV2lPYd14=;
-        b=SiThYn/jHEgjXTKt5tFheJ16F146aA4+g3/oEFUFc9xnOzCIkEkMsfp0W1k/bNvkO2
-         Sble5sCBKiFAuTBst2wmEIh7L10XbYxXYXtEetW62FKP788Uv1+uiezj3/272jW5UD8v
-         3qyAjU54jI6b/4xDNAV7pW78rOJq+UpM3Of5E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8XoVOeFGGpV3NsaCJeRAeZx/5oPFfdQGr3uV2lPYd14=;
-        b=aPkpK05tlhJSao9+0zDDF7p3ub4as4I3J9kw5bqOOYWX3/3v35EaMtayTsQjBosneg
-         iRN/C5475+pY7x0wM/veUw9CAzxXuav5wy6wJjhk3xyoSx9HwlJ8GLHYVcZPCA5op03o
-         DUce4noC3SeOu+q6ltzudgkN8tYRoCnjvj2F6/sCXaBJa9WJ7B6W1kl96mg+G4c3cPuB
-         B515dLiBwc/F5q4lSBH7BvtGFJUy/8BlAgm+Tcz1uwgi1yGJmchYxKyeFOvgbbL3a9pI
-         XBQ9MJ5itpNu5tzX+fNa76qAQOXhAcIyeIWXjwbYLXxgmta9I6zOOJhYSogRDNqn+Zy0
-         7dzg==
-X-Gm-Message-State: APjAAAXcVUzRooPtnMqoIYqINuxTaYqJ0b8Zm0kP7Dw++e11ljNDDkDH
-        5pv8rzhy1Tm8C4mw5nScTNTO8zVdSAOPJAgTj3ikYg==
-X-Google-Smtp-Source: APXvYqy3B5SLSjcNbHTRQV986urbgzRFhAJlX+7JHJVf+p+Rdmhf4pmAdsFzzlWtstjEUkxHrDwxjI5SO425T5cQqFE=
-X-Received: by 2002:a37:4c54:: with SMTP id z81mr26591697qka.18.1568608045551;
- Sun, 15 Sep 2019 21:27:25 -0700 (PDT)
+        Mon, 16 Sep 2019 00:30:21 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45652 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfIPEaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 00:30:20 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8G4Tqla023841;
+        Mon, 16 Sep 2019 06:29:52 +0200
+Date:   Mon, 16 Sep 2019 06:29:52 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916042952.GB23719@1wt.eu>
+References: <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
+ <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+ <20190916014050.GA7002@darwi-home-pc>
+ <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
+ <20190916024904.GA22035@mit.edu>
 MIME-Version: 1.0
-References: <20190912090404.89822-1-jitao.shi@mediatek.com>
-In-Reply-To: <20190912090404.89822-1-jitao.shi@mediatek.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 16 Sep 2019 12:27:14 +0800
-Message-ID: <CANMq1KBdZmGEO-MH33mhc4wCheJE2TBiUAXtt=YVr5aARDpiJg@mail.gmail.com>
-Subject: Re: [PATCH 0/3] add panel driver for innolux,p097pfg with ssd2825 bridge
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        cawa cheng <cawa.cheng@mediatek.com>,
-        =?UTF-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= 
-        <bibby.hsieh@mediatek.com>, CK HU <ck.hu@mediatek.com>,
-        stonea168@163.com, Sean Paul <seanpaul@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916024904.GA22035@mit.edu>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao,
+Hi Ted,
 
-On Thu, Sep 12, 2019 at 5:04 PM Jitao Shi <jitao.shi@mediatek.com> wrote:
->
-> Add driver to support panel innolux,p097pfg with bridge ssd2858.
-> SSD2858 can spilt dsi 4 lanes to 8 lanes.
->
-> Jitao Shi (3):
->   drm/panel: panel-innolux: Allow 2 reset pins for panel
->   dt-bindings: display: Add documentation for innolux,p097pfg_ssd2858
->     panel
->   drm/panel: panel-innolux: Add support for P097PFZ behind SSD2858
+On Sun, Sep 15, 2019 at 10:49:04PM -0400, Theodore Y. Ts'o wrote:
+> No matter *what* we do, it's going to either (a) make some
+> systems insecure, or (b) make some systems more likely hang while
+> booting.
 
-I'm the author of at least the first patch, and at least part of the
-third one, so it would have been better if you clarified the origin of
-the patches.
+I continue to strongly disagree with opposing these two. (b) is
+caused precisely because of this conflation. Life long keys are
+produced around once per system's life (at least this order of
+magnitude). Boot happens way more often. Users would not complain
+that systems fail to start if the two types of random are properly
+distinguished so that we don't fail to boot just for the sake of
+secure randoms that will never be consumed as such.
 
-Also, I do not believe that this is the right approach (this was
-always a temporary hack that we had no intent to upstream as-is), we'd
-probably want to add a proper bridge driver for SSD2858, and allow
-arbitrary panels behind it.
+Before systems had HWRNGs it was pretty common for some tools to
+ask the user to type hundreds of characters on the keyboard and
+use that (content+timings) to feed entropy while generating a key.
+This is acceptable once in a system's life. And on some systems
+with no entropy like VMs, it's commonly generated from a central
+place and never from the VM itself, so it's not a problem either.
 
-Please consider this series
-Nacked-by: Nicolas Boichat <drinkcat@chromium.org>
+In my opinion the problem recently happened because getrandom()
+was perceived as a good replacement for /dev/urandom and is way
+more convenient to use, so applications progressively started to
+use it without realizing that contrary to its ancestor it can
+block. And each time a system fails to boot confirms that entropy
+still remains a problem even on PCs in 2019. This is one more
+reason for clearly keeping two interfaces depending on what type
+of random is needed.
 
-Thanks,
+I'd be in favor of adding in the man page something like "this
+random source is only suitable for applications which will not be
+harmed by getting a predictable value on output, and as such it is
+not suitable for generation of system keys or passwords, please
+use GRND_RANDOM for this". This distinction currently is not clear
+enough for people who don't know this subtle difference, and can
+increase the interface's misuse.
 
->  .../display/panel/innolux,p097pfg_ssd2858.txt |  39 +++++
->  drivers/gpu/drm/panel/panel-innolux-p079zca.c | 140 ++++++++++++++++--
->  2 files changed, 164 insertions(+), 15 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p097pfg_ssd2858.txt
->
-> --
-> 2.21.0
->
+Regards,
+Willy
