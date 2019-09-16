@@ -2,110 +2,91 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF32EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A9C2206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F89E206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:12:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsJQjfcO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MnecJI64"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfIPXLg (ORCPT
+        id S1731282AbfIPXM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:11:36 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:44210 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfIPXLg (ORCPT
+        Mon, 16 Sep 2019 19:12:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43436 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728357AbfIPXM2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:11:36 -0400
-Received: by mail-pg1-f193.google.com with SMTP id i18so833041pgl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 16:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vXYdGqPDZM+NPePS/5Jwb2aUiY74/dpzWm8plNldnis=;
-        b=AsJQjfcODTLEi6ISfaOneaEzIWhMD6r3I+rK2M1rqWhbEnZQQxOfEsKkizJEDoBVod
-         h0GkT3gp7m0FsrwodxPrwAVP181bkD0Qbd0zLdGvPpkLL4ALUG79yb5UAv81e4JyluuC
-         oFtuLbLvcNAiFFENdP4XxwVYmQ//UUTDMDVhmN1IFU4ibpJYaH9uB4+FbkrZu4Hu004E
-         xvTHKuflAaX/Sw6D9PoaiXJMcnmOhla58gHqyC7NQNP67uozbGPyrfLQwDox4G139mna
-         TgG+rO990M89Mvd1NMf/vcfJasYyG+lDCDxWCKLMvROd1pX7DrngJWTs5Y1reXHuE/M5
-         jbew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vXYdGqPDZM+NPePS/5Jwb2aUiY74/dpzWm8plNldnis=;
-        b=txDwkME1peSVY9bszlYzHKhlM8lE2H4smSjTx+QHYqnEclAQLfWXjZCKjhKnWnaQMA
-         yGCA2CytM9N2R4eyRoFRJ8i4wwuAoR923t70Q9A6Uh7U1x6AWCpSyxhXmujp/gDa9kjR
-         H4YNvhTvBCX8s5w8w3Dx3x8oiw1XJzhr7iN1l71nykVmxzuqq4T5QdII71sJgNZABDe7
-         BGpiTK5VR+ig4Kb0hdHxO5kfdg7bcjnLuhvjYDtDDg65FCINOyeNHGfyC8z75eVfKCjo
-         8ESKYxdEi2NKwuUPrsiLKbRQpLCH8YMSpbu7l11KFbzt7IFceOIXNA30bgBBYVjnIf5R
-         ubsg==
-X-Gm-Message-State: APjAAAUqZO3VAI1MtoFw9jOK5HgBgdzk9DnoVl4kAN4cZcUWg3MZFiWQ
-        ni/bbW0b0yYSxolXxPFBjUk=
-X-Google-Smtp-Source: APXvYqxvfpv6SgXSwE0epprq0vUNZdDpJT1erTYjGihUH8dkTrdAZLrZ2NaOfexshSPpoutWjitWsQ==
-X-Received: by 2002:a17:90a:ca05:: with SMTP id x5mr1740392pjt.66.1568675494336;
-        Mon, 16 Sep 2019 16:11:34 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id v12sm152839pgr.31.2019.09.16.16.11.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Sep 2019 16:11:34 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:11:15 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     broonie@kernel.org, timur@kernel.org, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>
-Subject: Re: [PATCH v2 3/3] ASoC: fsl_sai: Fix TCSR.TE/RCSR.RE in synchronous
- mode
-Message-ID: <20190916231115.GD12789@Asurada-Nvidia.nvidia.com>
-References: <20190913192807.8423-1-daniel.baluta@nxp.com>
- <20190913192807.8423-4-daniel.baluta@nxp.com>
+        Mon, 16 Sep 2019 19:12:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=qx7q94gHn7s/YPwIKyrM9DaRifGENyYAu1Q/ylcesgo=; b=MnecJI64GA945xjMzZdduzvGT
+        yaDTLrHBsKJHFgzY5zrVwfwsT4jZtM5dT/xm7ln5wxgt4iSsVYtWWpAloUsj6yaGmlWnZlU0rWxsu
+        Pu7d1fJwHlqBaDPzmCInsX7w0uCSBCcjs9AoG7da2UMSa/sOFaCSoNtN11Skx7LtlstyuGDz4z6r/
+        ELvW6dAt6xgW8+g2iZ0kGQX5c4RTUwYdT+7i29CKcCLwkX2fntQuw5kVc0xqQcfrK1fuivOCln89Z
+        m8kGkDdDUfnLcjc8wub1U2otNqKaS2EVNk1fR+0HAWCAQFc6whVncNqrXIcRJTEJRhhT4MZ2zHa31
+        S/8tSVxRQ==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iA0AT-0003b1-9U; Mon, 16 Sep 2019 23:12:25 +0000
+To:     "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Korsgaard <jacmet@sunsite.dk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] serial: uartlite: fix exit path null pointer
+Message-ID: <9c8e6581-6fcc-a595-0897-4d90f5d710df@infradead.org>
+Date:   Mon, 16 Sep 2019 16:12:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913192807.8423-4-daniel.baluta@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Daniel,
+From: Randy Dunlap <rdunlap@infradead.org>
 
-On Fri, Sep 13, 2019 at 10:28:07PM +0300, Daniel Baluta wrote:
-> The SAI transmitter and receiver can be configured to operate with
-> synchronous bit clock and frame sync.
-> 
-> When Tx is synchronous with receiver RCSR.RE should be set in playback
-> to enable the receiver which provides bit clock and frame sync.
-> 
-> When Rx is synchronous with transmitter TCSR.TE should be set in record
-> to enable the transmitter which provides bit clock and frame sync.
+Call uart_unregister_driver() conditionally instead of
+unconditionally, only if it has been previously registered.
 
-I don't quite get what this patch fixes....can you explain?
+This uses driver.state, just as the sh-sci.c driver does.
 
-> @@ -539,8 +539,8 @@ static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
->  			   sai->synchronous[RX] ? FSL_SAI_CR2_SYNC : 0);
->  
->  	/*
-> -	 * It is recommended that the transmitter is the last enabled
-> -	 * and the first disabled.
+Fixes this null pointer dereference in tty_unregister_driver(),
+since the 'driver' argument is null:
 
-This is copied from iMX6SX Reference Manual, IIRC...And I just
-took a look at iMX8DXP/QXP RM: it has the exact same statement
-in "16.16.3.3.1 Synchronous mode" section.
+  general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
+  RIP: 0010:tty_unregister_driver+0x25/0x1d0
 
-> +	 * it is recommended that the asynchronous block to be the last enabled
-> +	 * and the first disabled
+Fixes: 238b8721a554 ("serial uartlite driver")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Peter Korsgaard <jacmet@sunsite.dk>
+---
+ drivers/tty/serial/uartlite.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So... why are we changing to this? Any update/explain?
+--- lnx-53.orig/drivers/tty/serial/uartlite.c
++++ lnx-53/drivers/tty/serial/uartlite.c
+@@ -897,7 +897,8 @@ static int __init ulite_init(void)
+ static void __exit ulite_exit(void)
+ {
+ 	platform_driver_unregister(&ulite_platform_driver);
+-	uart_unregister_driver(&ulite_uart_driver);
++	if (ulite_uart_driver.state)
++		uart_unregister_driver(&ulite_uart_driver);
+ }
+ 
+ module_init(ulite_init);
 
-Thank you
