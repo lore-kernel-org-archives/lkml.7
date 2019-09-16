@@ -2,146 +2,126 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C3CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15086C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6AC20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF9DF2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="zcYWu6+H"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nOSemX8d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730046AbfIPGor (ORCPT
+        id S1730070AbfIPGrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 02:44:47 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:26672 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbfIPGoq (ORCPT
+        Mon, 16 Sep 2019 02:47:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36044 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPGrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 02:44:46 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8G6gpeu029258;
-        Mon, 16 Sep 2019 02:44:25 -0400
-Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2050.outbound.protection.outlook.com [104.47.33.50])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2v0sy93dwx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 02:44:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CRhYDDk8jJxLPRfkxuyLCdTwn4o6TxhvqPSp0vZBdKoIX93Tzd+brqoumHVszTdRWcK9+7m78+9gvstUEsvFN9Sn5Ea2lYPhB3rK5Z5Rg4bAkMTpzXzGEsAmMhBEL0fJxo1OkBBiRFbPiOcLoK7qVbwNbj+TCcARzKBWZCjuzJYVpmkHVdCj8oMxtfk4S6sAXAm1uOVY/e1aG2J32ekyi01ta9rk31FUKslgVrFYl5v0iOfAthvRS1Yb9qMfc59g41Qoi9LWpN000onuAXQTT9ywjBvSOaRhEbg9rgRFxJ1OQGRKozc4gDqIzaeDbr4/WB661aWGhXAQqJyqwlh3Ow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ScVUnc7O04KIzRyP0eanAMoflGtZoTm1QQDeNDlcQUI=;
- b=W5gYdYPiTwt2PWZ50N4j7zWZDDLIkuSztI5bRlqVykkANTi7tvN8pEpEd0A3gxDcoycaB/ErAzbG3jipkwvTbzNGcudEGJKzbB+5op1yU1XsOsZJ8JUjxtyQBGon53GS6iIV1AAi1af5Drmijd87EjLO2OqTyLQewlWEj3oyuMXXSmg7QdQMX5LINFJUsUmvNTaeFPNzh9b6ZumJKUXxZDh16tjMLfb+rGhm/8RtuN8sLaomQoARdV0JvVOJbjqU9vpg7BoOPdEwXSPaiFSXdgP1jyDkr16hFHaS5bG03/6BxdhacRIxIfvC0QJyNW8+HgTzXrCpZ55ePISRP4c+9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ScVUnc7O04KIzRyP0eanAMoflGtZoTm1QQDeNDlcQUI=;
- b=zcYWu6+HaBPoznOTgVgvcbXy3wpNVH6X5VXUjrFuN+I0ICFo3m6eW60TmoWSHl/DCXWcinyedniArNrM4/7Q3XggqAdzZQHNBdQB9mlNEfAJwwlBi8xJciEB7z4DWmlXC88HgUSD748duU6zhkI0I16pwZSUVbPs08Y5QfVHpqM=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5366.namprd03.prod.outlook.com (20.180.14.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.24; Mon, 16 Sep 2019 06:44:23 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 06:44:23 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>
-CC:     "mkubecek@suse.cz" <mkubecek@suse.cz>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v4 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Thread-Topic: [PATCH v4 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Thread-Index: AQHVaW31z8y5cX9S1UqR8JRwRDVNC6crT4yAgAGNXQCAATbdAA==
-Date:   Mon, 16 Sep 2019 06:44:23 +0000
-Message-ID: <d19897f450cc22a629e0c408b72fbc702ca8fe8c.camel@analog.com>
-References: <20190912162812.402-1-alexandru.ardelean@analog.com>
-         <20190912162812.402-3-alexandru.ardelean@analog.com>
-         <20190914152931.GK27922@lunn.ch>
-         <53816513-436e-b33b-99cf-18fa98e468b1@gmail.com>
-In-Reply-To: <53816513-436e-b33b-99cf-18fa98e468b1@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1e91c201-f560-4559-3f34-08d73a714fa2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR03MB5366;
-x-ms-traffictypediagnostic: CH2PR03MB5366:
-x-microsoft-antispam-prvs: <CH2PR03MB5366AF0AD5980F9FA6EB8570F98C0@CH2PR03MB5366.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3383;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(346002)(396003)(39860400002)(366004)(376002)(189003)(199004)(25786009)(476003)(6512007)(53936002)(118296001)(66556008)(81156014)(36756003)(11346002)(446003)(2616005)(54906003)(81166006)(64756008)(66446008)(66476007)(5660300002)(6246003)(4326008)(8936002)(6436002)(7416002)(99286004)(6486002)(186003)(7736002)(305945005)(26005)(86362001)(229853002)(478600001)(76176011)(110136005)(6506007)(53546011)(76116006)(91956017)(102836004)(14454004)(316002)(3846002)(71190400001)(71200400001)(6116002)(486006)(66946007)(2501003)(2906002)(66066001)(8676002)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5366;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kfniJMQabqge+sBx0X/075cR/8LYY6z//ViQTlddnubDfSuRKHw/LSukZhaSSCgNfKNveG9Rho/Q/Yhh8lZizLvrBnvJwqHzb34d0lXrtH93hiHkpvYR8QYis2xLmhyGTXU5OiXmgADxSH9dUYdPFvDS/eg+6T0Ip1CI+MEJ3m+nSe/5eQ1I8MNIbeqKXA1LfquCAMU0LCuI1J5QytgYrFru5eT5JZmFvVMk/6Q6YVkizGpn/qEcD9yG5vd1IpKiVDf5flNQjaz7xure7DxqUQ4g7Ye12bOr820ascuP1jtuNco8pSKof1euUEdlb00AfbjeXXaBFHsq44TgQ424SYTTaKWUgS303nuaCbz2TRZJVZpPGOTHaXXl6MJujraPvPKnfsRa4U6VuJ2aAXOXmwMLF5e0JkiUk+E6gfrlAGs=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F3CA00B51D26304BA3FD7223515506E0@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 16 Sep 2019 02:47:36 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8G6l9bp084505;
+        Mon, 16 Sep 2019 01:47:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568616429;
+        bh=Q+vfPQYIZod6i1uRqr0rDbbdKt/ABZvDFbHaEMEpByQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nOSemX8dl1ArcozvxUsQcKzy9oFEzgIxkXe8cQdTobCKAHjMAN9HlmHRtxjBB4vHm
+         +Z79F0UQ7ZUYHFoKk9gvmL3CETBh9nX9x2X2tr6bvHEn++37ePW+uyjm241WPJAcYv
+         NIEojQE0mq1/ObILFlAPi9spmJbEcbaHu4trzKy8=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8G6l9CS081396
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Sep 2019 01:47:09 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
+ Sep 2019 01:47:06 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 16 Sep 2019 01:47:08 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8G6l4k3093156;
+        Mon, 16 Sep 2019 01:47:05 -0500
+Subject: Re: [PATCHv2 0/7] Non-urgent fixes and improvments for omap3-rom-rng
+To:     Tony Lindgren <tony@atomide.com>, Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
+CC:     <linux-crypto@vger.kernel.org>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Adam Ford <aford173@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <20190914210300.15836-1-tony@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <364b98db-2b0a-6317-178e-910397b32ffb@ti.com>
+Date:   Mon, 16 Sep 2019 09:47:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e91c201-f560-4559-3f34-08d73a714fa2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 06:44:23.6511
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: vUbObz8G6CRAEZSsKp30otLdx7DAbssA9E3vICDTb2qkrbL3cZLQPkJq8mMc0NXodJ+iOWdF62fTY5bNTVP4sOfR0ZHcolmrsS2L+NsUJPs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5366
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-16_03:2019-09-11,2019-09-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909160072
+In-Reply-To: <20190914210300.15836-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDE5LTA5LTE1IGF0IDA4OjExIC0wNzAwLCBGbG9yaWFuIEZhaW5lbGxpIHdyb3Rl
-Og0KPiBbRXh0ZXJuYWxdDQo+IA0KPiANCj4gDQo+IE9uIDkvMTQvMjAxOSA4OjI5IEFNLCBBbmRy
-ZXcgTHVubiB3cm90ZToNCj4gPiBPbiBUaHUsIFNlcCAxMiwgMjAxOSBhdCAwNzoyODoxMlBNICsw
-MzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3JvdGU6DQo+ID4gDQo+ID4gPiArc3RhdGljIGludCBh
-ZGluX3NldF9lZHBkKHN0cnVjdCBwaHlfZGV2aWNlICpwaHlkZXYsIHUxNiB0eF9pbnRlcnZhbCkN
-Cj4gPiA+ICt7DQo+ID4gPiArCXUxNiB2YWw7DQo+ID4gPiArDQo+ID4gPiArCWlmICh0eF9pbnRl
-cnZhbCA9PSBFVEhUT09MX1BIWV9FRFBEX0RJU0FCTEUpDQo+ID4gPiArCQlyZXR1cm4gcGh5X2Ns
-ZWFyX2JpdHMocGh5ZGV2LCBBRElOMTMwMF9QSFlfQ1RSTF9TVEFUVVMyLA0KPiA+ID4gKwkJCQko
-QURJTjEzMDBfTlJHX1BEX0VOIHwgQURJTjEzMDBfTlJHX1BEX1RYX0VOKSk7DQo+ID4gPiArDQo+
-ID4gPiArCXZhbCA9IEFESU4xMzAwX05SR19QRF9FTjsNCj4gPiA+ICsNCj4gPiA+ICsJc3dpdGNo
-ICh0eF9pbnRlcnZhbCkgew0KPiA+ID4gKwljYXNlIDEwMDA6IC8qIDEgc2Vjb25kICovDQo+ID4g
-PiArCQkvKiBmYWxsdGhyb3VnaCAqLw0KPiA+ID4gKwljYXNlIEVUSFRPT0xfUEhZX0VEUERfREZM
-VF9UWF9NU0VDUzoNCj4gPiA+ICsJCXZhbCB8PSBBRElOMTMwMF9OUkdfUERfVFhfRU47DQo+ID4g
-PiArCQkvKiBmYWxsdGhyb3VnaCAqLw0KPiA+ID4gKwljYXNlIEVUSFRPT0xfUEhZX0VEUERfTk9f
-VFg6DQo+ID4gPiArCQlicmVhazsNCj4gPiA+ICsJZGVmYXVsdDoNCj4gPiA+ICsJCXJldHVybiAt
-RUlOVkFMOw0KPiA+ID4gKwl9DQo+ID4gPiArDQo+ID4gPiArCXJldHVybiBwaHlfbW9kaWZ5KHBo
-eWRldiwgQURJTjEzMDBfUEhZX0NUUkxfU1RBVFVTMiwNCj4gPiA+ICsJCQkgIChBRElOMTMwMF9O
-UkdfUERfRU4gfCBBRElOMTMwMF9OUkdfUERfVFhfRU4pLA0KPiA+ID4gKwkJCSAgdmFsKTsNCj4g
-PiA+ICt9DQo+ID4gPiArDQo+ID4gPiAgDQo+ID4gPiArCXJjID0gYWRpbl9zZXRfZWRwZChwaHlk
-ZXYsIDEpOw0KPiA+ID4gKwlpZiAocmMgPCAwKQ0KPiA+ID4gKwkJcmV0dXJuIHJjOw0KPiA+IA0K
-PiA+IEhpIEFsZXhhbmRydQ0KPiA+IA0KPiA+IFNob3VsZG4ndCB0aGlzIGJlIGFkaW5fc2V0X2Vk
-cGQocGh5ZGV2LCAxMDAwKTsNCj4gDQo+IFRoYXQgZG9lcyBzb3VuZCBsaWtlIHRoZSBpbnRlbmRl
-ZCB1c2UsIG9yIHVzZQ0KPiBFVEhUT09MX1BIWV9FRFBEX0RGTFRfVFhfTVNFQ1MsIHdpdGggdGhh
-dCBmaXhlZDoNCg0KQWNrLg0KDQpNYW55IHRoYW5rcyBmb3IgY2F0Y2hpbmcgdGhpcy4NCkkgbWlz
-c2VkIGl0IHdoZW4gcmUtc3Bpbm5pbmcuDQoNCj4gDQo+IFJldmlld2VkLWJ5OiBGbG9yaWFuIEZh
-aW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4NCg==
+On 15/09/2019 00:02, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here are fixes and improvments for omap3-rom-rng that's been broken for
+> a while.
+> 
+> The first four patches get it working, and then the last two patches add
+> support for runtime PM.
+> 
+> I did not add Sebastian's acks from v1 set as many of the patches
+> changed. Please review again :)
+
+Series looks fine to me also, don't have possibility to test omap3 ROM 
+RNG though (don't have HW for this.) For the whole series:
+
+Reviewed-by: Tero Kristo <t-kristo@ti.com>
+
+
+
+> Regards,
+> 
+> Tony
+> 
+> Changes since v1:
+> - Use clk_prepare_enable() as pointed out by Sebastian
+> - Simplify runtime PM changes patch
+> - Add a new patch for devm changes as suggested by Sebastian
+> 
+> 
+> Tony Lindgren (7):
+>    ARM: OMAP2+: Check omap3-rom-rng for GP device instead of HS device
+>    hwrng: omap3-rom - Fix missing clock by probing with device tree
+>    hwrng: omap3-rom - Call clk_disable_unprepare() on exit only if not
+>      idled
+>    hwrng: omap3-rom - Initialize default quality to get data
+>    hwrng: omap3-rom - Update to use standard driver data
+>    hwrng: omap3-rom - Use runtime PM instead of custom functions
+>    hwrng: omap3-rom - Use devm hwrng and runtime PM
+> 
+>   .../devicetree/bindings/rng/omap3_rom_rng.txt |  27 +++
+>   arch/arm/boot/dts/omap3-n900.dts              |   6 +
+>   arch/arm/mach-omap2/pdata-quirks.c            |  14 +-
+>   drivers/char/hw_random/omap3-rom-rng.c        | 168 +++++++++++-------
+>   4 files changed, 139 insertions(+), 76 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/rng/omap3_rom_rng.txt
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
