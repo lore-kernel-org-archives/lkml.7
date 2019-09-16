@@ -2,268 +2,119 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A47C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F01BAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832F4214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:28:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="X1qADWrW"
+	by mail.kernel.org (Postfix) with ESMTP id B0CF1214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:32:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568673126;
+	bh=jB/TgHX0/r76X4MZvHSADWtxbouIxhGXGon83l1oFTI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XqUDMEDeS1tCXF1cqU3x9g1LRH0u6aFUlHw+k0T4Z4E48P3f78muiH71X0bxkitk0
+	 C/is14vxJddNxxh6VjpmyDIxdyWWwbUMol0gxfdG37SS1xScuVee9ywdbaLh5NVN/U
+	 vgfVI19ZqNUpxCHrMBwAA978dk+5nFchSaSY9xJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387415AbfIPW2e (ORCPT
+        id S1729352AbfIPWcG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:28:34 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49166 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728049AbfIPW2e (ORCPT
+        Mon, 16 Sep 2019 18:32:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:40384 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbfIPWcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:28:34 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GMOGBh072445;
-        Mon, 16 Sep 2019 22:28:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=a+S1+HQwi5n9jZN3U+l0LFhmQpDYNrmD4hYD1N1Wn6s=;
- b=X1qADWrWfJBrJOCtBrR/TNHFIPhsfiR72RsEufBpspSnngcBKcXilsY0DoCAgNp0xka6
- E/d8uvN7yBYar8SrfmBtDJSG+mty/Q4Ame2or6pWws7jUHHigdOfOzPLMKlHnMb6QeLo
- ecr+rvubyPXz6jpIyThb1z2Xj1bSQ2lN+xueU55zAehVUGPi01SrNAbZ0DkaQf91h59K
- 5pJWayeDr/5NDtmh/uDYDMoQphTgBGbSR+btDiuHK/wuQ622ufyQ/QHB9zWoDStJmsog
- IeT7qzpr7B+rEFRKcIvRuPgHoLVId2v/StXY8yiHM9OJHAoQpOb5T+1L6d0+8DlXKwdP yw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2v0ruqjbbv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 22:28:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GMPraV059834;
-        Mon, 16 Sep 2019 22:26:00 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v0qhqansd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 22:26:00 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8GMPx9f005776;
-        Mon, 16 Sep 2019 22:25:59 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 16 Sep 2019 15:25:59 -0700
-Subject: Re: [PATCH v4 5/9] hugetlb: remove duplicated code
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
-        mkoutny@suse.com
-References: <20190910233146.206080-1-almasrymina@google.com>
- <20190910233146.206080-6-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <9fc3270a-4da8-a126-ba91-9e2950b4c36e@oracle.com>
-Date:   Mon, 16 Sep 2019 15:25:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 16 Sep 2019 18:32:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=msLh9WbxBA7EbuXEsQM1F8/XWc+BFLvXBH9jc3Uggd8=; b=VMCIikLP6xHgM6dCFwKl27qn8
+        YLLMuBCGHFk9swkyMK8zSODwb1q9D8ICqjyXcVs4Jy1XBKsDoHliZbNaUz+v8tdyg2559+9xS72OF
+        tGyVs6Y0c4ValEGmSU4hWUzrC2bAbhslN2DJMDJDvIBKfJTuzTlcvXhHJaMRzh9YRLgJo=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9zXF-0005vZ-9X; Mon, 16 Sep 2019 22:31:53 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 813572741A12; Mon, 16 Sep 2019 23:31:52 +0100 (BST)
+Date:   Mon, 16 Sep 2019 23:31:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Roman.Li@amd.com,
+        amd-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amd/display: Fix compile error due to 'endif' missing
+Message-ID: <20190916223152.GO4352@sirena.co.uk>
+References: <20190916044651.GA72121@LGEARND20B15>
+ <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190910233146.206080-6-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909160213
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909160213
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="dBmMfAlnUmK8h9+K"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 4:31 PM, Mina Almasry wrote:
-> Remove duplicated code between region_chg and region_add, and refactor it into
-> a common function, add_reservation_in_range. This is mostly done because
-> there is a follow up change in this series that disables region
-> coalescing in region_add, and I want to make that change in one place
-> only. It should improve maintainability anyway on its own.
-> 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Like the previous patch, this is a good improvement indepentent of the
-rest of the series.  Thanks!
+--dBmMfAlnUmK8h9+K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
--- 
-Mike Kravetz
+On Tue, Sep 17, 2019 at 02:46:48AM +0900, Masahiro Yamada wrote:
+> On Mon, Sep 16, 2019 at 1:46 PM Austin Kim <austindh.kim@gmail.com> wrote:
 
-> ---
->  mm/hugetlb.c | 116 ++++++++++++++++++++++++---------------------------
->  1 file changed, 54 insertions(+), 62 deletions(-)
-> 
-> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> index bea51ae422f63..ce5ed1056fefd 100644
-> --- a/mm/hugetlb.c
-> +++ b/mm/hugetlb.c
-> @@ -244,6 +244,57 @@ struct file_region {
->  	long to;
->  };
-> 
-> +static long add_reservation_in_range(
-> +		struct resv_map *resv, long f, long t, bool count_only)
-> +{
-> +
-> +	long chg = 0;
-> +	struct list_head *head = &resv->regions;
-> +	struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
-> +
-> +	/* Locate the region we are before or in. */
-> +	list_for_each_entry(rg, head, link)
-> +		if (f <= rg->to)
-> +			break;
-> +
-> +	/* Round our left edge to the current segment if it encloses us. */
-> +	if (f > rg->from)
-> +		f = rg->from;
-> +
-> +	chg = t - f;
-> +
-> +	/* Check for and consume any regions we now overlap with. */
-> +	nrg = rg;
-> +	list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
-> +		if (&rg->link == head)
-> +			break;
-> +		if (rg->from > t)
-> +			break;
-> +
-> +		/* We overlap with this area, if it extends further than
-> +		 * us then we must extend ourselves.  Account for its
-> +		 * existing reservation.
-> +		 */
-> +		if (rg->to > t) {
-> +			chg += rg->to - t;
-> +			t = rg->to;
-> +		}
-> +		chg -= rg->to - rg->from;
-> +
-> +		if (!count_only && rg != nrg) {
-> +			list_del(&rg->link);
-> +			kfree(rg);
-> +		}
-> +	}
-> +
-> +	if (!count_only) {
-> +		nrg->from = f;
-> +		nrg->to = t;
-> +	}
-> +
-> +	return chg;
-> +}
-> +
->  /*
->   * Add the huge page range represented by [f, t) to the reserve
->   * map.  Existing regions will be expanded to accommodate the specified
-> @@ -257,7 +308,7 @@ struct file_region {
->  static long region_add(struct resv_map *resv, long f, long t)
->  {
->  	struct list_head *head = &resv->regions;
-> -	struct file_region *rg, *nrg, *trg;
-> +	struct file_region *rg, *nrg;
->  	long add = 0;
-> 
->  	spin_lock(&resv->lock);
-> @@ -287,38 +338,7 @@ static long region_add(struct resv_map *resv, long f, long t)
->  		goto out_locked;
->  	}
-> 
-> -	/* Round our left edge to the current segment if it encloses us. */
-> -	if (f > rg->from)
-> -		f = rg->from;
-> -
-> -	/* Check for and consume any regions we now overlap with. */
-> -	nrg = rg;
-> -	list_for_each_entry_safe(rg, trg, rg->link.prev, link) {
-> -		if (&rg->link == head)
-> -			break;
-> -		if (rg->from > t)
-> -			break;
-> -
-> -		/* If this area reaches higher then extend our area to
-> -		 * include it completely.  If this is not the first area
-> -		 * which we intend to reuse, free it. */
-> -		if (rg->to > t)
-> -			t = rg->to;
-> -		if (rg != nrg) {
-> -			/* Decrement return value by the deleted range.
-> -			 * Another range will span this area so that by
-> -			 * end of routine add will be >= zero
-> -			 */
-> -			add -= (rg->to - rg->from);
-> -			list_del(&rg->link);
-> -			kfree(rg);
-> -		}
-> -	}
-> -
-> -	add += (nrg->from - f);		/* Added to beginning of region */
-> -	nrg->from = f;
-> -	add += t - nrg->to;		/* Added to end of region */
-> -	nrg->to = t;
-> +	add = add_reservation_in_range(resv, f, t, false);
-> 
->  out_locked:
->  	resv->adds_in_progress--;
-> @@ -345,8 +365,6 @@ static long region_add(struct resv_map *resv, long f, long t)
->   */
->  static long region_chg(struct resv_map *resv, long f, long t)
->  {
-> -	struct list_head *head = &resv->regions;
-> -	struct file_region *rg;
->  	long chg = 0;
-> 
->  	spin_lock(&resv->lock);
-> @@ -375,34 +393,8 @@ static long region_chg(struct resv_map *resv, long f, long t)
->  		goto retry_locked;
->  	}
-> 
-> -	/* Locate the region we are before or in. */
-> -	list_for_each_entry(rg, head, link)
-> -		if (f <= rg->to)
-> -			break;
-> -
-> -	/* Round our left edge to the current segment if it encloses us. */
-> -	if (f > rg->from)
-> -		f = rg->from;
-> -	chg = t - f;
-> -
-> -	/* Check for and consume any regions we now overlap with. */
-> -	list_for_each_entry(rg, rg->link.prev, link) {
-> -		if (&rg->link == head)
-> -			break;
-> -		if (rg->from > t)
-> -			goto out;
-> +	chg = add_reservation_in_range(resv, f, t, true);
-> 
-> -		/* We overlap with this area, if it extends further than
-> -		 * us then we must extend ourselves.  Account for its
-> -		 * existing reservation. */
-> -		if (rg->to > t) {
-> -			chg += rg->to - t;
-> -			t = rg->to;
-> -		}
-> -		chg -= rg->to - rg->from;
-> -	}
-> -
-> -out:
->  	spin_unlock(&resv->lock);
->  	return chg;
->  }
-> --
-> 2.23.0.162.g0b9fbb3734-goog
-> 
+> > gcc throws compile error with below message:
+
+> GNU Make throws ...
+
+Xinpeng Liu via Nick Desaulniers sent a description of the problem and a
+patch so I think I'll be able to fix this.  However...
+
+> This is probably a merge mistake in linux-next.
+
+> If so, this should be directly fixed in the linux-next.
+
+> If it is not fixed in time,
+> please inform Linus to *not* follow the linux-next.
+
+...as I said before I think you definitely need to coordinate with the
+DRM people - Nick Desaulniers' patch 0f0727d971f6f (drm/amd/display:
+readd -msse2 to prevent Clang from emitting libcalls to undefined SW FP
+routines) breaks in places that don't have merge conflicts due to this
+change.  I wouldn't rely on the merge going well if things are sent
+as-is, the only reason this one showed up was that other people were
+adding new files to the Makefile.
+
+I've CCed Nick.
+
+--dBmMfAlnUmK8h9+K
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ADVcACgkQJNaLcl1U
+h9CpTAf/WVlKZHB2Ctr3ilkr7vpfMjEg59XRGkehdnNZnbqDxT4ydz27T7yuIHCw
+mtoSmDyKi0sUOxW3Jj09CRuMhmbu56hfaNodbB6Mf2fj7InHXHbJ+32kxgHg5wlS
+QIPMHLqU9w7wvidN6Ry6d6sinfokqcaiZVbmp0Q7sGcEb4CpVUGK64zuS2thwjSO
+7WdhJ55MC6yV2co4FYS8yp0hSFeSnudaMG1/n7yniVUKpRkCF/F0r+XdS0i/kfrf
+uE7cqXSfgk/DqnwscbZwuiFo0QcPuUfAuc7nJRrJkIXxQjAacepligIXioedCkQ1
+PK7Hsf/bRVBAE+piKlcp1DJe6TcPaw==
+=valx
+-----END PGP SIGNATURE-----
+
+--dBmMfAlnUmK8h9+K--
