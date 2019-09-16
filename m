@@ -2,126 +2,117 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 942D4C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D70C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672252184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568641410;
-	bh=nMWINvBRYRVVTCufa0veq4Tn0a8d3m004hO15aVcfjU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wfEzD4NJaMsa2e4Y7t97UpKM8UCj4ly0gscNXRCPpzvxHvjyVAEnU/i37fneURhTv
-	 Mh2rN4atIPR5RI7WNvY7owZY9ICtYeQYeS28kLm+ROe42wDm/kJBocuGZ8utEjjkcH
-	 Ql6FB8sjsj9/WKnvQ+baZocuTB9NmymK0osJTbLU=
+	by mail.kernel.org (Postfix) with ESMTP id A4C852171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388011AbfIPNn3 (ORCPT
+        id S2388033AbfIPNnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:43:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55130 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387912AbfIPNnQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:43:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z423eE0xltB3vRPrKrPJm5Vb6e31D3Z/WMIdhED2ET0=; b=tvH+odcCIft2As/zfFGQE6S56
-        PH2NK9V+SzVy3MI3204Qje10JQhIAz8/XxDooZRLx63PmOrlm9tTf9JsvcBWzQ02Nq14Cd1mdP96d
-        RgqFstRj6EGLt+sB1pDTD2fvgN4T97KCNVhurDhKGQqX5/8Ga2EENE6VEzFdrbhTNMAX4=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9rHa-0004c7-FY; Mon, 16 Sep 2019 13:43:10 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id F0EF92741A0D; Mon, 16 Sep 2019 14:43:09 +0100 (BST)
-Date:   Mon, 16 Sep 2019 14:43:09 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "baolin.wang@linaro.org" <baolin.wang@linaro.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "orsonzhai@gmail.com" <orsonzhai@gmail.com>,
-        "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>
-Subject: Re: [RFC PATCH 03/15] spi: make `cs_change_delay` the first user of
- the `spi_delay` logic
-Message-ID: <20190916134309.GH4352@sirena.co.uk>
-References: <20190913114550.956-1-alexandru.ardelean@analog.com>
- <20190913114550.956-4-alexandru.ardelean@analog.com>
- <20190916122505.GC4352@sirena.co.uk>
- <ae469c65828443524f9ff0409f1c7a81bf64cf6b.camel@analog.com>
- <20190916124707.GD4352@sirena.co.uk>
- <458cbb212fbd04c157c9861501f51c03ea958302.camel@analog.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u0lqphHC8S+ob1K0"
-Content-Disposition: inline
-In-Reply-To: <458cbb212fbd04c157c9861501f51c03ea958302.camel@analog.com>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 16 Sep 2019 09:43:35 -0400
+Received: from mga04.intel.com ([192.55.52.120]:53831 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387856AbfIPNnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:43:11 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 06:43:11 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
+   d="scan'208";a="387209045"
+Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.84])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Sep 2019 06:43:10 -0700
+From:   kan.liang@linux.intel.com
+To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V4 11/14] perf/x86/intel: Name global status bit in NMI handler
+Date:   Mon, 16 Sep 2019 06:41:25 -0700
+Message-Id: <20190916134128.18120-12-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190916134128.18120-1-kan.liang@linux.intel.com>
+References: <20190916134128.18120-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Kan Liang <kan.liang@linux.intel.com>
 
---u0lqphHC8S+ob1K0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The bit index number of global status is directly used in current NMI
+handler. Using a meaningful name to replace the number to improve the
+readability of code.
 
-On Mon, Sep 16, 2019 at 01:04:42PM +0000, Ardelean, Alexandru wrote:
-> On Mon, 2019-09-16 at 13:47 +0100, Mark Brown wrote:
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
-> > That v3 seems to be a small subset of this series?
+New patch for V4
 
-> Ack.
-> V3 is the first 4 patches from this series.
-> Well, patches 3 & 4 are squashed.
+ arch/x86/events/intel/core.c      | 6 +++---
+ arch/x86/include/asm/perf_event.h | 7 +++++--
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-> I am 100% convinced that the entire series is a good idea.
-> In the sense that a `struct spi_delay` may be a good idea, but at the same time, it may be un-needed.
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index b4b02bd24737..db1337ea0634 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2638,7 +2638,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 	/*
+ 	 * PEBS overflow sets bit 62 in the global status register
+ 	 */
+-	if (__test_and_clear_bit(62, (unsigned long *)&status)) {
++	if (__test_and_clear_bit(GLOBAL_STATUS_BUFFER_OVF_BIT, (unsigned long *)&status)) {
+ 		handled++;
+ 		x86_pmu.drain_pebs(regs);
+ 		status &= x86_pmu.intel_ctrl | GLOBAL_STATUS_TRACE_TOPAPMI;
+@@ -2647,7 +2647,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 	/*
+ 	 * Intel PT
+ 	 */
+-	if (__test_and_clear_bit(55, (unsigned long *)&status)) {
++	if (__test_and_clear_bit(GLOBAL_STATUS_TRACE_TOPAPMI_BIT, (unsigned long *)&status)) {
+ 		handled++;
+ 		if (unlikely(perf_guest_cbs && perf_guest_cbs->is_in_guest() &&
+ 			perf_guest_cbs->handle_intel_pt_intr))
+@@ -2659,7 +2659,7 @@ static int handle_pmi_common(struct pt_regs *regs, u64 status)
+ 	/*
+ 	 * Intel Perf mertrics
+ 	 */
+-	if (__test_and_clear_bit(48, (unsigned long *)&status)) {
++	if (__test_and_clear_bit(GLOBAL_STATUS_PERF_METRICS_OVF_BIT, (unsigned long *)&status)) {
+ 		handled++;
+ 		if (x86_pmu.update_topdown_event)
+ 			x86_pmu.update_topdown_event(NULL);
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 31b96e14935b..d7d3a7caba41 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -210,12 +210,15 @@ static inline bool is_topdown_idx(int idx)
+ #define INTEL_PMC_OTHER_TOPDOWN_BITS(bit)	(~(0x1ull << bit) & INTEL_PMC_MSK_TOPDOWN)
+ 
+ #define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
+-#define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
++#define GLOBAL_STATUS_BUFFER_OVF_BIT			62
++#define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(GLOBAL_STATUS_BUFFER_OVF_BIT)
+ #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
+ #define GLOBAL_STATUS_ASIF				BIT_ULL(60)
+ #define GLOBAL_STATUS_COUNTERS_FROZEN			BIT_ULL(59)
+ #define GLOBAL_STATUS_LBRS_FROZEN			BIT_ULL(58)
+-#define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(55)
++#define GLOBAL_STATUS_TRACE_TOPAPMI_BIT			55
++#define GLOBAL_STATUS_TRACE_TOPAPMI			BIT_ULL(GLOBAL_STATUS_TRACE_TOPAPMI_BIT)
++#define GLOBAL_STATUS_PERF_METRICS_OVF_BIT		48
+ 
+ /*
+  * Adaptive PEBS v4
+-- 
+2.17.1
 
-> All I wanted to do, was to add another delay somewhere, and got lost in the rework of current delays.
-> I thought about proposing just the first 4 patches [on their own], but I thought that showing the current series as-is
-> now, may be a good idea as well [to gather some feedback].
-
-I think it makes more sense to review as a whole series rather than only
-a part of the conversion, it doesn't really help to only do part of it.
-
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
-
---u0lqphHC8S+ob1K0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/kW0ACgkQJNaLcl1U
-h9AhYQf/a5Mv8ax53FhE2w2Iee+bq5bvfdkZRudCki/iqJxBUwCNKGfc62eBUwGY
-qva3K4T6zi4pbX0dWNMojeJ5lQ7Viu2bnR20voTcVJhOmplIgWhH57tVxRU5bnRt
-9205UV5Uc2FNDE1P60lC6Msts6I+8Rzx/a20fZ8pyXlVwOW4n0xxEkiMxYgg5mpo
-BbGVM5rYkasqqmq8KjbIKWYl/XwcWDIKw8mlyAuLAq4Vh8KRGfu+kRUY3IqNzDIj
-puzpCj6MJZW/8pzNfi/z6Lelkhtvmn04gEu0pMN2C1u9ILeUxixwtqQPv64qTR7I
-ySxA++9//Vej3QKiuzfu/u+eDK6+WA==
-=nPuT
------END PGP SIGNATURE-----
-
---u0lqphHC8S+ob1K0--
