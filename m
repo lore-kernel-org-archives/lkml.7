@@ -2,169 +2,321 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C88BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AEDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C09F214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C399520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mendozajonas.com header.i=@mendozajonas.com header.b="IEINNKSg";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WzsJzHq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726364AbfIPCjJ (ORCPT
+        id S1726720AbfIPCjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 22:39:09 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:41967 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726057AbfIPCjI (ORCPT
+        Sun, 15 Sep 2019 22:39:17 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:46969 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726057AbfIPCjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 22:39:08 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TcPeFvc_1568601543;
-Received: from JosephdeMacBook-Pro.local(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0TcPeFvc_1568601543)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 16 Sep 2019 10:39:03 +0800
-Subject: Re: [refcount] 26d2e0d5df:
- WARNING:at_lib/refcount.c:#refcount_warn_saturate
-To:     Will Deacon <will@kernel.org>,
-        kernel test robot <rong.a.chen@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>, lkp@01.org, mark@fasheh.com,
-        jlbec@evilplan.org, ocfs2-devel@oss.oracle.com
-References: <20190909015226.GM15734@shao2-debian>
- <20190912105640.2l6mtdjmcyyhmyun@willie-the-truck>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-Message-ID: <1330d305-9e78-b226-c3df-61d2469e2009@linux.alibaba.com>
-Date:   Mon, 16 Sep 2019 10:39:03 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
+        Sun, 15 Sep 2019 22:39:17 -0400
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.42])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3331D2129D;
+        Sun, 15 Sep 2019 22:39:15 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sun, 15 Sep 2019 22:39:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        mendozajonas.com; h=message-id:subject:from:to:cc:date
+        :in-reply-to:references:content-type:mime-version
+        :content-transfer-encoding; s=fm1; bh=6OpW8HhbwXo2Hu8BU/I+PUQwOL
+        AKU3qwgteJ0dZGU8o=; b=IEINNKSgO8ShfY+A4d1BkHyLrBwA9OBy53JmyZKN7s
+        n73E6XtYLolR3IinvnY5aqi9DSQgbnYtqz5vooqDHeutFkfUQEJhXM50cO+O7iQO
+        1r9h2LEDH5aJS3ezGUMb/wmOteT0SRRt2HOi8uMsCMHcZz56rPYDsMKAfkfIHhuP
+        d+G66OVk5O5hM4FTVs9yeaA8fdEtXfSPCN7wvIQ2t9eVoTXUBIBO9V/rOuq0PU2Y
+        2h6cuKSjM3UzgZUdzas70bdtF96C4gGkPakteE5A0bB+j/+GWdejKUvbfEBeTJgY
+        6e4ZSPIFtkutMsmMPsNfdf5vWgEWI3G2JH9mbn7qBmpw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=6OpW8HhbwXo2Hu8BU/I+PUQwOLAKU3qwgteJ0dZGU
+        8o=; b=WzsJzHq8WWewUfKjmIcDQy9RodGsgZDWraYlrFH2hOm93T6P8VhemdQw2
+        ZbgVccEupijtXIrlibI6nX0p+P39de9p06zT0Yj8uLKYwoZymgjDe79tSrWpWIKv
+        OGF3ZWQhhsc3MsR52p30qiFuwXuK7OC2lYKRzP/96rZzcSphAnkujT22OFDvBl3n
+        q/BQYjj6ef5rsVbUX8pCtBKjprfimCBUogiSxueUgcLfII2jYzM6UcgMYAjyCKSf
+        GGTqll/SRT9MGgoulMG0GQBdpsGWxTWzVj+PU8EP+yymzXa2kxqMSluHUf7aJA4H
+        XY2/nSJY+9FBjWsSf5W/nX6hHzi3g==
+X-ME-Sender: <xms:0vV-XahDiBp_lIMZE2_IbMJvCBukrZKd6IVOAHVTQrnjP2yK7aHX6w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddvgdeivdcutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefurghmuhgv
+    lhcuofgvnhguohiirgdqlfhonhgrshcuoehsrghmsehmvghnughoiigrjhhonhgrshdrtg
+    homheqnecukfhppedujeegrdduvdejrdduieegrdegheenucfrrghrrghmpehmrghilhhf
+    rhhomhepshgrmhesmhgvnhguohiirghjohhnrghsrdgtohhmnecuvehluhhsthgvrhfuih
+    iivgeptd
+X-ME-Proxy: <xmx:0vV-XdbkH6vMXjioTXH0Xh0FGix2YVyhyQk6FIZ8aWv8xIybEBQE9g>
+    <xmx:0vV-XbW0BwcUWot_7z3FiIzeR_K9T76IfJ8j4jLYlmvBkmJO9-O49Q>
+    <xmx:0vV-XWY6PwOGubhdKqUOiyVHcCQQiJFOA3OEdtdrkU3iN0LriU0nhQ>
+    <xmx:0_V-XSj2Tix6C29ADYYCeAY837sL9-l-OfCYkj5c37WrykGZQZ-9rA>
+Received: from Singularity (unknown [174.127.164.45])
+        by mail.messagingengine.com (Postfix) with ESMTPA id D930DD60057;
+        Sun, 15 Sep 2019 22:39:13 -0400 (EDT)
+Message-ID: <eb370d3280327b512828adc62b64656e65b22745.camel@mendozajonas.com>
+Subject: Re: [PATCH] net/ncsi: Disable global multicast filter
+From:   Samuel Mendoza-Jonas <sam@mendozajonas.com>
+To:     Vijay Khemka <vijaykhemka@fb.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>,
+        joel@jms.id.au, linux-aspeed@lists.ozlabs.org, sdasari@fb.com,
+        Christian Svensson <bluecmd@google.com>
+Date:   Sun, 15 Sep 2019 19:39:13 -0700
+In-Reply-To: <20190912190451.2362220-1-vijaykhemka@fb.com>
+References: <20190912190451.2362220-1-vijaykhemka@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 
 MIME-Version: 1.0
-In-Reply-To: <20190912105640.2l6mtdjmcyyhmyun@willie-the-truck>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 2019-09-12 at 12:04 -0700, Vijay Khemka wrote:
+> Disabling multicast filtering from NCSI if it is supported. As it
+> should not filter any multicast packets. In current code, multicast
+> filter is enabled and with an exception of optional field supported
+> by device are disabled filtering.
+> 
+> Mainly I see if goal is to disable filtering for IPV6 packets then
+> let
+> it disabled for every other types as well. As we are seeing issues
+> with
+> LLDP not working with this enabled filtering. And there are other
+> issues
+> with IPV6.
+> 
+> By Disabling this multicast completely, it is working for both IPV6
+> as
+> well as LLDP.
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 
+Hi Vijay,
 
-On 19/9/12 18:56, Will Deacon wrote:
-> [Adding the ocfs2 maintainers and mailing list]
-> 
-> On Mon, Sep 09, 2019 at 09:52:26AM +0800, kernel test robot wrote:
->> FYI, we noticed the following commit (built with gcc-7):
->>
->> commit: 26d2e0d5df5b9aab517d8327743e66fcb38e8136 ("refcount: Consolidate implementations of refcount_t")
->> https://kernel.googlesource.com/pub/scm/linux/kernel/git/will/linux.git refcount/full
-> 
-> This branch effectively enables REFCOUNT_FULL by default, so I think the
-> issue being flagged is a latent use-after-free in ocfs2, rather than a bug
-> in the refcount implementation.
-> 
->> in testcase: ocfs2test
->> with following parameters:
->>
->> 	disk: 1SSD
->> 	test: test-mkfs
->>
->>
->>
->> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-> 
-> [...]
-> 
->> If you fix the issue, kindly add following tag
->> Reported-by: kernel test robot <rong.a.chen@intel.com>
->>
->>
->> [   72.121725] BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1499
->> [   72.126078] in_atomic(): 1, irqs_disabled(): 0, pid: 2466, name: mount.ocfs2
->> [   72.128523] CPU: 1 PID: 2466 Comm: mount.ocfs2 Not tainted 5.3.0-rc3-00008-g26d2e0d5df5b9 #1
->> [   72.130522] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1 04/01/2014
->> [   72.132522] Call Trace:
->> [   72.134024]  dump_stack+0x5c/0x7b
->> [   72.135106]  ___might_sleep+0xf1/0x110
->> [   72.136280]  down_write+0x1c/0x50
->> [   72.137349]  configfs_depend_item+0x3a/0xb0
->> [   72.138597]  o2hb_region_pin+0xf9/0x180 [ocfs2_nodemanager]
-> 
-> This looks dodgy because o2hb_region_pin() asserts that the 'o2hb_live_lock'
-> is held, but then configfs_depend_item() calls inode_lock(), which can
-> sleep on the semaphore.
-> 
+There are definitely some current issues with multicast filtering and
+IPv6 when behind NC-SI at the moment. It would be nice to make this
+configurable instead of disabling the component wholesale but I don't
+believe this actually *breaks* anyone's configuration. It would be nice
+to see some Tested-By's from the OpenBMC people though.
 
-Yes, the warning exactly blames this.
-But this code lives here for a long time. I'm not sure why no blames
-before.
+I'll have a look at the multicast issues, CC'ing in Chris too who IIRC
+was looking at similar issues for u-bmc in case he got further.
 
+Acked-by: Samuel Mendoza-Jonas <sam@mendozajonas.com>
 
->> [   72.140103]  ? inode_init_always+0x120/0x1d0
->> [   72.141368]  o2hb_register_callback+0xc6/0x2a0 [ocfs2_nodemanager]
->> [   72.143016]  dlm_join_domain+0xbd/0x7a0 [ocfs2_dlm]
->> [   72.144441]  ? dlm_alloc_ctxt+0x50a/0x580 [ocfs2_dlm]
->> [   72.145880]  dlm_register_domain+0x31f/0x440 [ocfs2_dlm]
->> [   72.147395]  ? enqueue_entity+0x109/0x6c0
->> [   72.148658]  ? _cond_resched+0x19/0x30
->> [   72.149870]  o2cb_cluster_connect+0x132/0x2c0 [ocfs2_stack_o2cb]
->> [   72.151524]  ocfs2_cluster_connect+0x14b/0x220 [ocfs2_stackglue]
->> [   72.153237]  ocfs2_dlm_init+0x2f1/0x4b0 [ocfs2]
->> [   72.154647]  ? ocfs2_init_node_maps+0x50/0x50 [ocfs2]
->> [   72.156167]  ocfs2_fill_super+0xcfc/0x12b0 [ocfs2]
->> [   72.157640]  ? ocfs2_initialize_super+0x1030/0x1030 [ocfs2]
->> [   72.159395]  mount_bdev+0x173/0x1b0
->> [   72.160627]  legacy_get_tree+0x27/0x40
->> [   72.161900]  vfs_get_tree+0x25/0xf0
->> [   72.163138]  do_mount+0x691/0x9c0
->> [   72.164343]  ksys_mount+0x80/0xd0
->> [   72.165536]  __x64_sys_mount+0x21/0x30
->> [   72.166828]  do_syscall_64+0x5b/0x1f0
->> [   72.168124]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> [   72.169649] RIP: 0033:0x7f9aec59148a
->> [   72.170904] Code: 48 8b 0d 11 fa 2a 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d de f9 2a 00 f7 d8 64 89 01 48
->> [   72.175696] RSP: 002b:00007ffc97973af8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
->> [   72.177764] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f9aec59148a
->> [   72.179756] RDX: 00005630f7e3b3ee RSI: 00005630f988a0b0 RDI: 00005630f988a310
->> [   72.181768] RBP: 00007ffc97973ca0 R08: 00005630f988a2b0 R09: 0000000000000020
->> [   72.183776] R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffc97973b90
->> [   72.185795] R13: 0000000000000000 R14: 00005630f988b000 R15: 00007ffc97973b10
->> [   72.193593] o2dlm: Joining domain 87608FBB69A6455A927DB6EE644FA256 
->> [   72.193593] ( 
->> [   72.195534] 1 
->> [   72.196744] ) 1 nodes
->> [   72.201889] JBD2: Ignoring recovery information on journal
->> [   72.211850] ocfs2: Mounting device (8,0) on (node 1, slot 0) with ordered data mode.
->> [   72.261789] mount /dev/sda /mnt/ocfs2 /dev/sda          16515072      243712    16271360   2% /mnt/ocfs2
->> [   72.261792] 
->> [   72.268799] OK
->> [   72.268801] 
->> [   72.273936] create testdir /mnt/ocfs2/20190907_114755
->> [   72.273938] 
->> [   72.286732] create 15890 files .
->> [   72.286734] 
->> [   72.290339] 
->> [   76.331476] o2dlm: Leaving domain 87608FBB69A6455A927DB6EE644FA256
->> [   76.402235] blk_update_request: I/O error, dev fd0, sector 0 op 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
->> [   76.406909] floppy: error 10 while reading block 0
->> [   78.260271] ocfs2: Unmounting device (8,0) on (node 1)
->> [   78.264188] ------------[ cut here ]------------
->> [   78.267624] refcount_t: underflow; use-after-free.
+> ---
+>  net/ncsi/internal.h    |  7 +--
+>  net/ncsi/ncsi-manage.c | 98 +++++-----------------------------------
+> --
+>  2 files changed, 12 insertions(+), 93 deletions(-)
 > 
-> Here's the use-after-free, but I couldn't follow 'ocfs2_dismount_volume()'
-> enough to figure out where the refcount_t actually lives.
-> 
-> I've preserved the rest of the log below, in the hope that somebody more
-> familiar with ocfs2 can take a look. The original report, including the
-> .config, is here:
-> 
->   http://lkml.kernel.org/r/20190909015226.GM15734@shao2-debian
-> 
-From the dmesg, it has almost finished umount.
-And the following step is to clean up ocfs2 super. I also don't
-figure out how refcount_t related use-after-free during the flow
-of ocfs2_dismount_volume().
+> diff --git a/net/ncsi/internal.h b/net/ncsi/internal.h
+> index 0b3f0673e1a2..ad3fd7f1da75 100644
+> --- a/net/ncsi/internal.h
+> +++ b/net/ncsi/internal.h
+> @@ -264,9 +264,7 @@ enum {
+>  	ncsi_dev_state_config_ev,
+>  	ncsi_dev_state_config_sma,
+>  	ncsi_dev_state_config_ebf,
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	ncsi_dev_state_config_egmf,
+> -#endif
+> +	ncsi_dev_state_config_dgmf,
+>  	ncsi_dev_state_config_ecnt,
+>  	ncsi_dev_state_config_ec,
+>  	ncsi_dev_state_config_ae,
+> @@ -295,9 +293,6 @@ struct ncsi_dev_priv {
+>  #define NCSI_DEV_RESET		8            /* Reset state of
+> NC          */
+>  	unsigned int        gma_flag;        /* OEM GMA
+> flag               */
+>  	spinlock_t          lock;            /* Protect the NCSI
+> device    */
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	unsigned int        inet6_addr_num;  /* Number of IPv6
+> addresses   */
+> -#endif
+>  	unsigned int        package_probe_id;/* Current ID during
+> probe    */
+>  	unsigned int        package_num;     /* Number of
+> packages         */
+>  	struct list_head    packages;        /* List of
+> packages           */
+> diff --git a/net/ncsi/ncsi-manage.c b/net/ncsi/ncsi-manage.c
+> index 755aab66dcab..bce8b443289d 100644
+> --- a/net/ncsi/ncsi-manage.c
+> +++ b/net/ncsi/ncsi-manage.c
+> @@ -14,7 +14,6 @@
+>  #include <net/sock.h>
+>  #include <net/addrconf.h>
+>  #include <net/ipv6.h>
+> -#include <net/if_inet6.h>
+>  #include <net/genetlink.h>
+>  
+>  #include "internal.h"
+> @@ -978,9 +977,7 @@ static void ncsi_configure_channel(struct
+> ncsi_dev_priv *ndp)
+>  	case ncsi_dev_state_config_ev:
+>  	case ncsi_dev_state_config_sma:
+>  	case ncsi_dev_state_config_ebf:
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	case ncsi_dev_state_config_egmf:
+> -#endif
+> +	case ncsi_dev_state_config_dgmf:
+>  	case ncsi_dev_state_config_ecnt:
+>  	case ncsi_dev_state_config_ec:
+>  	case ncsi_dev_state_config_ae:
+> @@ -1033,23 +1030,23 @@ static void ncsi_configure_channel(struct
+> ncsi_dev_priv *ndp)
+>  		} else if (nd->state == ncsi_dev_state_config_ebf) {
+>  			nca.type = NCSI_PKT_CMD_EBF;
+>  			nca.dwords[0] = nc->caps[NCSI_CAP_BC].cap;
+> -			if (ncsi_channel_is_tx(ndp, nc))
+> +			/* if multicast global filtering is supported
+> then
+> +			 * disable it so that all multicast packet will
+> be
+> +			 * forwarded to management controller
+> +			 */
+> +			if (nc->caps[NCSI_CAP_GENERIC].cap &
+> +			     NCSI_CAP_GENERIC_MC)
+> +				nd->state = ncsi_dev_state_config_dgmf;
+> +			else if (ncsi_channel_is_tx(ndp, nc))
+>  				nd->state = ncsi_dev_state_config_ecnt;
+>  			else
+>  				nd->state = ncsi_dev_state_config_ec;
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -			if (ndp->inet6_addr_num > 0 &&
+> -			    (nc->caps[NCSI_CAP_GENERIC].cap &
+> -			     NCSI_CAP_GENERIC_MC))
+> -				nd->state = ncsi_dev_state_config_egmf;
+> -		} else if (nd->state == ncsi_dev_state_config_egmf) {
+> -			nca.type = NCSI_PKT_CMD_EGMF;
+> -			nca.dwords[0] = nc->caps[NCSI_CAP_MC].cap;
+> +		} else if (nd->state == ncsi_dev_state_config_dgmf) {
+> +			nca.type = NCSI_PKT_CMD_DGMF;
+>  			if (ncsi_channel_is_tx(ndp, nc))
+>  				nd->state = ncsi_dev_state_config_ecnt;
+>  			else
+>  				nd->state = ncsi_dev_state_config_ec;
+> -#endif /* CONFIG_IPV6 */
+>  		} else if (nd->state == ncsi_dev_state_config_ecnt) {
+>  			if (np->preferred_channel &&
+>  			    nc != np->preferred_channel)
+> @@ -1483,70 +1480,6 @@ int ncsi_process_next_channel(struct
+> ncsi_dev_priv *ndp)
+>  	return -ENODEV;
+>  }
+>  
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -static int ncsi_inet6addr_event(struct notifier_block *this,
+> -				unsigned long event, void *data)
+> -{
+> -	struct inet6_ifaddr *ifa = data;
+> -	struct net_device *dev = ifa->idev->dev;
+> -	struct ncsi_dev *nd = ncsi_find_dev(dev);
+> -	struct ncsi_dev_priv *ndp = nd ? TO_NCSI_DEV_PRIV(nd) : NULL;
+> -	struct ncsi_package *np;
+> -	struct ncsi_channel *nc;
+> -	struct ncsi_cmd_arg nca;
+> -	bool action;
+> -	int ret;
+> -
+> -	if (!ndp || (ipv6_addr_type(&ifa->addr) &
+> -	    (IPV6_ADDR_LINKLOCAL | IPV6_ADDR_LOOPBACK)))
+> -		return NOTIFY_OK;
+> -
+> -	switch (event) {
+> -	case NETDEV_UP:
+> -		action = (++ndp->inet6_addr_num) == 1;
+> -		nca.type = NCSI_PKT_CMD_EGMF;
+> -		break;
+> -	case NETDEV_DOWN:
+> -		action = (--ndp->inet6_addr_num == 0);
+> -		nca.type = NCSI_PKT_CMD_DGMF;
+> -		break;
+> -	default:
+> -		return NOTIFY_OK;
+> -	}
+> -
+> -	/* We might not have active channel or packages. The IPv6
+> -	 * required multicast will be enabled when active channel
+> -	 * or packages are chosen.
+> -	 */
+> -	np = ndp->active_package;
+> -	nc = ndp->active_channel;
+> -	if (!action || !np || !nc)
+> -		return NOTIFY_OK;
+> -
+> -	/* We needn't enable or disable it if the function isn't
+> supported */
+> -	if (!(nc->caps[NCSI_CAP_GENERIC].cap & NCSI_CAP_GENERIC_MC))
+> -		return NOTIFY_OK;
+> -
+> -	nca.ndp = ndp;
+> -	nca.req_flags = 0;
+> -	nca.package = np->id;
+> -	nca.channel = nc->id;
+> -	nca.dwords[0] = nc->caps[NCSI_CAP_MC].cap;
+> -	ret = ncsi_xmit_cmd(&nca);
+> -	if (ret) {
+> -		netdev_warn(dev, "Fail to %s global multicast filter
+> (%d)\n",
+> -			    (event == NETDEV_UP) ? "enable" :
+> "disable", ret);
+> -		return NOTIFY_DONE;
+> -	}
+> -
+> -	return NOTIFY_OK;
+> -}
+> -
+> -static struct notifier_block ncsi_inet6addr_notifier = {
+> -	.notifier_call = ncsi_inet6addr_event,
+> -};
+> -#endif /* CONFIG_IPV6 */
+> -
+>  static int ncsi_kick_channels(struct ncsi_dev_priv *ndp)
+>  {
+>  	struct ncsi_dev *nd = &ndp->ndev;
+> @@ -1725,11 +1658,6 @@ struct ncsi_dev *ncsi_register_dev(struct
+> net_device *dev,
+>  	}
+>  
+>  	spin_lock_irqsave(&ncsi_dev_lock, flags);
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	ndp->inet6_addr_num = 0;
+> -	if (list_empty(&ncsi_dev_list))
+> -		register_inet6addr_notifier(&ncsi_inet6addr_notifier);
+> -#endif
+>  	list_add_tail_rcu(&ndp->node, &ncsi_dev_list);
+>  	spin_unlock_irqrestore(&ncsi_dev_lock, flags);
+>  
+> @@ -1896,10 +1824,6 @@ void ncsi_unregister_dev(struct ncsi_dev *nd)
+>  
+>  	spin_lock_irqsave(&ncsi_dev_lock, flags);
+>  	list_del_rcu(&ndp->node);
+> -#if IS_ENABLED(CONFIG_IPV6)
+> -	if (list_empty(&ncsi_dev_list))
+> -		unregister_inet6addr_notifier(&ncsi_inet6addr_notifier)
+> ;
+> -#endif
+>  	spin_unlock_irqrestore(&ncsi_dev_lock, flags);
+>  
+>  	ncsi_unregister_netlink(nd->dev);
 
-Thanks,
-Joseph
