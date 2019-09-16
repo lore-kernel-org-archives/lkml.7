@@ -2,118 +2,156 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C311AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F6BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DAD1206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD46214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:01:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJfPZvXR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KYd1qA46"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732222AbfIPV5l (ORCPT
+        id S1732461AbfIPWB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:57:41 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41540 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfIPV5l (ORCPT
+        Mon, 16 Sep 2019 18:01:26 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36719 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732285AbfIPWBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:57:41 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x4so1793880qtq.8;
-        Mon, 16 Sep 2019 14:57:40 -0700 (PDT)
+        Mon, 16 Sep 2019 18:01:25 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so1439521ljj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:01:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Ccc5Jr2QV+dOoQlnYyIyk/hz3hUrFlu+neqQ9MdiY6A=;
-        b=SJfPZvXRHOyHLug4T5pKOWWNG8GmP4VZJqNOBzyjt6SnKx6azbNhYvA8F7G52Gvs0m
-         Bhe4965m76h9pCmdiu6U8aaHPUGSrbeRqK+xiXgwKWxo7qFHZdWCT88dWKn9rWLMxAUJ
-         F5y4vFaj1ivW4aisdEp2sSJw2Msn2z4hbNh4Rp3U/iXFrM2rz9X+DCh9+Q80tlQWU1jB
-         C0mgyB8CfsWHaajpyARVJVI9hDR8/KnftG2DEP5wj5hx4WLKtNpUQR0+Qxje7bitXZVi
-         3wQqsDFHnYaF7LkLo2B7N9XPx1NOWh1PduM7EHl5rYNPRn9Ne0zb8UvVIGHBB2IGfPmo
-         IMIg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=f3SMr7nW/IIKR4uf3MqZBa7hhd+3LcyORNLugjWgB8w=;
+        b=KYd1qA467jctBVyDgfFJXTEnxdMaK2KiExe6nlvwlt573Sil0F2vay6dqepe6Hrqsf
+         GXO6cWf0i4wM8q9idqXN0tKD2eV885lEJd6vjYGDIWEUPsq0ImhxXkff7dO2c1I5+C9S
+         hrqJ12L9qPlOaKw1otwnSpiLTFSwnaAI7j7Bwu8fspXMfB+sGjVadmRIN9goc6b6XD90
+         pezjko2N4amqKkiesyv9P/SusWs7fax9J/8jaU3qNxkVxVxObuydTkTFPbGmJrzc4bFA
+         lRACOpaNR5kmAhPjkySBXJjbwm4adBdd4wCGGw/i3g/Mi0CDo96EUBOA6VBwbIpnB1ZK
+         WiRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:in-reply-to
-         :message-id:references:user-agent:mime-version;
-        bh=Ccc5Jr2QV+dOoQlnYyIyk/hz3hUrFlu+neqQ9MdiY6A=;
-        b=ruqohVR2Ww7QT5HAfj+Hr9cztl0gNNhI1Avy3PI47R3KjZz8L4SWpwwjnbY4AcwfPb
-         4C1IfadguywXyP9vcAIrxImsXTQynGRzl48h88eO1AHsh3LXoxsQOgqTrvMhmRJVE11w
-         U+CSqw2OlfZiZIw334ydsM5uVBQj6x0eYzyZwSsi/7YzlkoP5UednpQFMMvQzToCwuxv
-         Pnp0iXWg9sMe92fQQGZapn90LTO/8jZYOzXdjWcn4ox6DOV7ZiJ/JW/WWYk8168KM0rZ
-         2GLDvlSRp/I1lcpzsIXKfOrkYgfX7ON3Ch+GkoqdOUXUrfxQDxXirnhHj7Nc8k4+rAXT
-         HMnw==
-X-Gm-Message-State: APjAAAX/Us2mgU7ARIWhee9dCAXcRnhwjNJrPq0x+ctOD3skZV/p2qL7
-        oTx46NRbYSIMROxz6eG0XxK1fWhoIQU=
-X-Google-Smtp-Source: APXvYqzK+H8rGcqTB+tAD4Ns84Z2t8gAXWILWjdB+3inuJaScvpYOUyF612wHtmv7+rzERXHxHyg6g==
-X-Received: by 2002:ac8:73c7:: with SMTP id v7mr668647qtp.106.1568671060313;
-        Mon, 16 Sep 2019 14:57:40 -0700 (PDT)
-Received: from planxty (rdwyon0600w-lp130-03-64-231-46-127.dsl.bell.ca. [64.231.46.127])
-        by smtp.gmail.com with ESMTPSA id v7sm145239qte.29.2019.09.16.14.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 14:57:39 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 23:57:32 +0200 (CEST)
-From:   John Kacur <jkacur@redhat.com>
-X-X-Sender: jkacur@planxty
-To:     Sultan Alsawaf <sultan@kerneltoast.com>
-cc:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        sebastian@breakpoint.cc, tglx@linutronix.de, rostedt@goodmis.org
-Subject: Re: [PATCH] rt-tests: backfire: Don't include asm/uaccess.h
- directly
-In-Reply-To: <20190903191321.6762-1-sultan@kerneltoast.com>
-Message-ID: <alpine.LFD.2.21.1909162356500.10273@planxty>
-References: <20190903191321.6762-1-sultan@kerneltoast.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=f3SMr7nW/IIKR4uf3MqZBa7hhd+3LcyORNLugjWgB8w=;
+        b=hoC7NFdDMOWtaaRrMyXYzU31W0ES48d3nMkmvav27l62/dmLYnxTxyMxQIrOEaPYf5
+         9diafeqAL6LVr5j2DYtppcNavcllB9/VB8aJPxGO/Usbl+D2wqYMhE+gvX3SGPy2k/5d
+         udA7ld4iZB9aJL7W7GEdQ1xBNlrFtwlbSj4UNFVCqC6+W8aLHr+BfkRAVT6u/FC4IcMW
+         TjWKVVRwrfTdXPMWqRAE/b671iS0CEtKtBe8CaMZHfze3o44cKcLWgvAO9l5H19eLGWY
+         eZo/x1r3b/GgiximS8qcB3vaB4yLEpePEuCSREGt6xV++wjP1xL12yaw0Sv1EOJhEVJh
+         8JLQ==
+X-Gm-Message-State: APjAAAVsJfxdl0hzDou5/yzjkCHp+IXEQz+0jU7uqL7sgS1ApxOP0Jjp
+        GAYYDY0SErWh2aQDNIkvifMM0g==
+X-Google-Smtp-Source: APXvYqw+ngzdkLuBJbzj+87LaoUrAcM9OkQTZa/zN5wMZhHB9fg4Q5ReA3BfYr3o4UJQQk95L5rvGg==
+X-Received: by 2002:a2e:8805:: with SMTP id x5mr66628ljh.102.1568671281368;
+        Mon, 16 Sep 2019 15:01:21 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id r8sm10192lfm.71.2019.09.16.15.01.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 15:01:20 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 01:01:18 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 04/14] samples: bpf: use own EXTRA_CFLAGS for
+ clang commands
+Message-ID: <20190916220117.GB4420@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-5-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzYJ5Q4rBHGET5z6nPBhh=8qAK7uuCK=Qnsh14FDH-24gA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzYJ5Q4rBHGET5z6nPBhh=8qAK7uuCK=Qnsh14FDH-24gA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 01:35:21PM -0700, Andrii Nakryiko wrote:
+>On Mon, Sep 16, 2019 at 4:01 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> It can overlap with CFLAGS used for libraries built with gcc if
+>> not now then in next patches. Correct it here for simplicity.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>
+>With GCC BPF front-end recently added, we should probably generalize
+>this to something like BPF_EXTRA_CFLAGS or something like that,
+>eventually. But for now:
+>
+>Acked-by: Andrii Nakryiko <andriin@fb.com>
 
+I can replace with BPF_EXTRA_CFLAGS in next v.
 
-On Tue, 3 Sep 2019, Sultan Alsawaf wrote:
+>
+>>  samples/bpf/Makefile | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index b59e77e2250e..8ecc5d0c2d5b 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -218,10 +218,10 @@ BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
+>>                           /bin/rm -f ./llvm_btf_verify.o)
+>>
+>>  ifneq ($(BTF_LLVM_PROBE),)
+>> -       EXTRA_CFLAGS += -g
+>> +       CLANG_EXTRA_CFLAGS += -g
+>>  else
+>>  ifneq ($(and $(BTF_LLC_PROBE),$(BTF_PAHOLE_PROBE),$(BTF_OBJCOPY_PROBE)),)
+>> -       EXTRA_CFLAGS += -g
+>> +       CLANG_EXTRA_CFLAGS += -g
+>>         LLC_FLAGS += -mattr=dwarfris
+>>         DWARF2BTF = y
+>>  endif
+>> @@ -280,8 +280,8 @@ $(obj)/hbm_edt_kern.o: $(src)/hbm.h $(src)/hbm_kern.h
+>>  # useless for BPF samples.
+>>  $(obj)/%.o: $(src)/%.c
+>>         @echo "  CLANG-bpf " $@
+>> -       $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(EXTRA_CFLAGS) -I$(obj) \
+>> -               -I$(srctree)/tools/testing/selftests/bpf/ \
+>> +       $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(CLANG_EXTRA_CFLAGS) \
+>> +               -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+>>                 -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+>>                 -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+>>                 -Wno-gnu-variable-sized-type-not-at-end \
+>> --
+>> 2.17.1
+>>
 
-> From: Sultan Alsawaf <sultan@kerneltoast.com>
-> 
-> Architecture-specific uaccess.h headers can have dependencies on
-> linux/uaccess.h (i.e., VERIFY_WRITE), so it cannot be included directly.
-> Since linux/uaccess.h includes asm/uaccess.h, just do that instead.
-> 
-> This fixes compile errors with certain kernels and architectures.
-> 
-> Signed-off-by: Sultan Alsawaf <sultan@kerneltoast.com>
-> ---
->  src/backfire/backfire.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/src/backfire/backfire.c b/src/backfire/backfire.c
-> index aaf9c4a..a8ac9f5 100644
-> --- a/src/backfire/backfire.c
-> +++ b/src/backfire/backfire.c
-> @@ -30,8 +30,8 @@
->  #include <linux/miscdevice.h>
->  #include <linux/proc_fs.h>
->  #include <linux/spinlock.h>
-> +#include <linux/uaccess.h>
->  
-> -#include <asm/uaccess.h>
->  #include <asm/system.h>
->  
->  #define BACKFIRE_MINOR MISC_DYNAMIC_MINOR
-> -- 
-> 2.23.0
-> 
-> 
-
-Signed-off-by: John Kacur <jkacur@redhat.com>
-But please in the future
-1. Don't cc lkml on this
-2. Include the maintainers in your patch
-
-Thanks
+-- 
+Regards,
+Ivan Khoronzhuk
