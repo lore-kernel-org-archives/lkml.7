@@ -2,155 +2,131 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D74C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BC6214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568655895;
-	bh=1EXPGR4gtXpCfPlF8vXVJixGLDaOuYwMS3HjOThade8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=up5cZnTCVRjOI33X/mTn07/1y1bFexCSQTNq6QYqKeklEyHNhzmN4vMJsT8wPo1rh
-	 RqJzj72qvaYZvzLUiVgkvTfpF7aZ2fEhg3g8XJgJc5y1kvuz0A5GrLcEy5JrqFovcy
-	 +r5kFq6IQpd+r7ZV/d93CTZnISHXQMX6fNXC+EOk=
+	by mail.kernel.org (Postfix) with ESMTP id 3B57B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zlmpEt5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388043AbfIPRoy (ORCPT
+        id S1732272AbfIPRrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:44:54 -0400
-Received: from mail-lf1-f51.google.com ([209.85.167.51]:42811 "EHLO
-        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfIPRox (ORCPT
+        Mon, 16 Sep 2019 13:47:31 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:59719 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfIPRrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:44:53 -0400
-Received: by mail-lf1-f51.google.com with SMTP id c195so630685lfg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uipfU8HulVEUTGxV4YdJJv+JjF46ahJtoBSAjnbUb1c=;
-        b=WOAENpjpGuUZ7Alp1ItN7/TmlL8bcS9/Z3/xKjjIfN0YI+SYYMoGtITKjTdjBG2d5a
-         J0Cbfi+4Uwsz+z7yaG3a/IhY1bqDJQpmQGM2M5pJ/Xy8SFGFV9201+C9pU6KQyoTOGfa
-         ZGgqDD3A0QEo81MYj1+6xzf+KpLWD6hKgAAx8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uipfU8HulVEUTGxV4YdJJv+JjF46ahJtoBSAjnbUb1c=;
-        b=SSkvey665NFKqZ2kaa3eYSrDCQL3HxVDVNLzGIsIbUBiEfqKUh/fQBWZzYK1KCR0OB
-         As8C9JPF4n5ntPUuo6T7yucxptGdpmnbtHszL/rTBucPj75YF4hS64mQraIuahI/5YQW
-         4j2XolOXQGqlOpzY+e4j8/mEpTd+schnCnRIkDMKAFHGXcRAhnXGvDL0y/pjs6AanlAC
-         bE6id32MIuy38gsqQtJGU5WdaH8P9qJqqNVhkGPuFS7LQU+fzp2rquBT0Q9daSViT2Dw
-         qn2uKbJSnTao5OsnQBFUgT1COBnAUMFc7dl34+Tc7BrxB/AwBCGEu+mN3aVPi5CfSRse
-         tq+w==
-X-Gm-Message-State: APjAAAXK2DywWzTvW6iOSyx7/rte92gnWsIMli2JbGH7txJV0Z/ANlgv
-        A4p6+jWjra8h/RMj/ye3oMiep3XSzfg=
-X-Google-Smtp-Source: APXvYqy0NHFhrl6AcHr/g5VVsUFAunZXh04vhqnxIcclYDp7wqbHLt27z1pEatRnCoOF81iKws8Q8g==
-X-Received: by 2002:ac2:4552:: with SMTP id j18mr352687lfm.120.1568655890174;
-        Mon, 16 Sep 2019 10:44:50 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com. [209.85.167.52])
-        by smtp.gmail.com with ESMTPSA id z72sm8583343ljb.98.2019.09.16.10.44.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 10:44:49 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id u28so650287lfc.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:44:48 -0700 (PDT)
-X-Received: by 2002:ac2:5a4c:: with SMTP id r12mr339324lfn.52.1568655888261;
- Mon, 16 Sep 2019 10:44:48 -0700 (PDT)
+        Mon, 16 Sep 2019 13:47:31 -0400
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x8GHlOSP000933
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:47:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x8GHlOSP000933
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568656045;
+        bh=snSC5CbpUuN1Cw3Ri9XlO0GR3QpMdN6LNC6tbl3IFpw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zlmpEt5sTfPYRKVA5/2rQkTcbsZtkXiTvMkIlsayE1VrEhTaMhEeG8laftJvYEfR1
+         3VNxQDEE8Z3FDKVGGqExRg8nMudu2nQAeutKtyU8QA1ZTI5AFebtE1Lft2BW1i5tY6
+         oWv40Jg2ztT15sZUv4yN+7Kz+ZxM4tpx3CWIGrSf7Ktva3EYlHeHutFdzHpHjloCXm
+         IoHT2/G/0Ly9eCrt5f4fIQhVNQnXCBHafQTK17cFb/fvJEvQHBWjWgNxszmBtKt15a
+         8WBtHiRHPjrxaLN+7BbZ3nrwTc3nsY5/W96QzrFjR+5ujrTpG5F8U4bVcISnD5dorL
+         syb0XIObdX5hw==
+X-Nifty-SrcIP: [209.85.217.50]
+Received: by mail-vs1-f50.google.com with SMTP id w195so201076vsw.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:47:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAVUJ+Ti7xbDFQDNEJQRH8Q/G0A/8psTgYME3XleiyXX+NpWPNFL
+        cXjegbok5c5oDMmMcY7TsDYJq90T7wCxnUt5BnI=
+X-Google-Smtp-Source: APXvYqw0crawiGP3RG9x21JW4rmaeJ/jyNDfUIdTYxkF1YqpKyOnmgLelaYfXtHPmP/3VofBZVarCj+rIB0skCe86ZI=
+X-Received: by 2002:a67:1e87:: with SMTP id e129mr578937vse.179.1568656044082;
+ Mon, 16 Sep 2019 10:47:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login> <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc> <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu> <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
- <20190916172117.GB15263@mit.edu>
-In-Reply-To: <20190916172117.GB15263@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 10:44:31 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
-Message-ID: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Willy Tarreau <w@1wt.eu>, Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
+References: <20190916044651.GA72121@LGEARND20B15>
+In-Reply-To: <20190916044651.GA72121@LGEARND20B15>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 17 Sep 2019 02:46:48 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
+Message-ID: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Fix compile error due to 'endif' missing
+To:     Austin Kim <austindh.kim@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mark Brown <broonie@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Roman.Li@amd.com, amd-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:21 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+(+CC Stephen Rothwell, Mark Brown)
+
+On Mon, Sep 16, 2019 at 1:46 PM Austin Kim <austindh.kim@gmail.com> wrote:
 >
-> We could create a new flag, GRND_INSECURE, which never blocks.  And
-> that that allows us to solve the problem for silly applications that
-> are using getrandom(2) for non-cryptographic use cases.
+> gcc throws compile error with below message:
 
-Note that getting "reasonably good random numbers" is definitely not silly.
+GNU Make throws ...
 
-If you are doing things like just shuffling a deck of cards for
-playing solitaire on your computer, getting a good enough source of
-randomness is nontrivial. Using getrandom() for that is a _very_ valid
-use. But it obviously does not need _secure_ random numbers.
 
-It is, in fact, _so_ random that we give that AT_RANDOM thing to every
-new process because people want things like that. Sadly, people often
-aren't aware of it, and don't use that as much as they could.
+This is probably a merge mistake in linux-next.
 
-(Btw, we should probably also mix in other per-process state, because
-right now people have actually attacked the boot-time AT_RANDOM to
-find canary data etc).
+If so, this should be directly fixed in the linux-next.
 
-So I think you are completely out to lunch by calling these "insecure"
-things "silly". They are very very common. *WAY* more common than
-making a long-term secure key will ever be. There's just a lot of use
-of reasonable randomness.
+If it is not fixed in time,
+please inform Linus to *not* follow the linux-next.
 
-You also are ignoring that we have an existing problem with existing
-applications. That happened exactly because those things are so
-common.
 
-So here's my suggestion:
+Thanks.
 
- - admit that the current situation actually causes problems, and has
-_existing_ bugs.
 
- - throw it out the window, with the timeout and big BIG warning when
-the problem cases trigger
 
- - add new GRND_SECURE and GRND_INSECURE flags that have the actual
-useful behaviors that we currently pretty much lack
+>
+> HDRINST usr/include/drm/i915_drm.h
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dml/Makefile:70: *** missing 'endif'.  Stop.
+> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu/drm/amd/amdgpu' failed
+> make[3]: *** [drivers/gpu/drm/amd/amdgpu] Error 2
+> make[3]: *** Waiting for unfinished jobs....
+>   HDRINST usr/include/drm/omap_drm.h
+>   HDRINST usr/include/drm/tegra_drm.h
+>   HDRINST usr/include/drm/drm_sarea.h
+>   HDRINST usr/include/drm/panfrost_drm.h
+>   HDRINST usr/include/drm/drm.h
+> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu/drm' failed
+> make[2]: *** [drivers/gpu/drm] Error 2
+> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu' failed
+> make[1]: *** [drivers/gpu] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+>
+> Add 'endif' to Makefile to stop compile error.
+>
+> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+> ---
+>  drivers/gpu/drm/amd/display/dc/dml/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> index a2eb59e..5b2a65b 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
+> @@ -44,6 +44,7 @@ CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
+>  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
+>  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o := $(dml_ccflags)
+>  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o := $(dml_ccflags)
+> +endif
+>  ifdef CONFIG_DRM_AMD_DC_DCN2_1
+>  CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o := $(dml_ccflags)
+>  CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o := $(dml_ccflags)
+> --
+> 2.6.2
+>
 
- - consider the old 0-3 flag values legacy, deprecated, and unsafe
-because they _will_ time out to fix the existing problem we have right
-now because of their bad behavior.
 
-And stop with the "insecure is silly". Insecure is not silly, and in
-fact should have been the default, because
-
- (a) insecure is and basically always will be the common case by far
-
- (b) insecure is the "not thinking about it" case and should thus be default
-
-and that (b) is also very much why 0 should have been that insecure case.
-
-Part of the problem is exactly the whole "_normally_ it just works, so
-using 0 without thinking about it tests out well".
-
-Which is why getrandom(0) is the main problem we face.
-
-Because defaults matter.
-
-               Linus
+-- 
+Best Regards
+Masahiro Yamada
