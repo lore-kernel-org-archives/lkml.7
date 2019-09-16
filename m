@@ -2,130 +2,161 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10409C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57671C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7E8206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568633759;
-	bh=SSLl/BhKysh7hNdjdqivwCIRljekkIMeLtLqdAe/AhI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=cz5VNc7AtQ0KPMsd9+PMNPf5zrZavcHcqaBZa8va3idpYeBo/ZSwAQZR+94B+sqxQ
-	 gVrtqoeICd4izX7cgjiWD2qjBLonnRhtYAQIyJXPNyMwTqrjhIDxazXQisd2I3QXKC
-	 HDtG9nz9eDNc++NIrtdwWJbWjZLeYLw08U3zjLGY=
+	by mail.kernel.org (Postfix) with ESMTP id 390FB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:36:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731690AbfIPLf4 (ORCPT
+        id S1732319AbfIPLgL convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:35:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42511 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbfIPLfz (ORCPT
+        Mon, 16 Sep 2019 07:36:11 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:30568 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731567AbfIPLgL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:35:55 -0400
-Received: by mail-wr1-f67.google.com with SMTP id q14so38456331wrm.9;
-        Mon, 16 Sep 2019 04:35:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Mv491UnCKS4JNd7z2SOkwV0dvUpBxBoTZTqacB4oBDQ=;
-        b=QlNxlAIQbvJb3OhnUhYCbkS2E2cmf2D/kPuUxGHT2UDqE/PX6Q+oUl305tVKtFn4Ht
-         zIK+pTyv1hzrnV2DLspJUU8QUSzIXviK30cKnUvMtXqkVcES+MtKtJaRYXSNqV9W1fGU
-         CegCxpAUaejap0b/1ehh1oZewOU1lyOYkZy5UhULLRSE+3LAyMCGBnX2Vx7QZ1r6+2Vk
-         Pc+1vW9DOpMnTthcU93e4Hg+6L5idXIbDwBuuGTSr6nH6f3AibmiRBBiEQH3yE5oEWQh
-         Zf40Kum8dKBkdOv4XNbMywvSDrrsCBYqeySGTwyXcQdtbPRWE2zkgjTtcV7kX7pfJJaP
-         NWzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=Mv491UnCKS4JNd7z2SOkwV0dvUpBxBoTZTqacB4oBDQ=;
-        b=SneGaGof9GNMahPws/mDELkkizRrBXevERSjf7p7U1qX1zDYG6JCKWmuBH+bphLgm3
-         O7OOwHdrJV9DsFZ+A1BHsb6mba2rMdfO5J7O34mS54M0/VQzIDe7U+QijyJB8Ls6hr+X
-         VjSFacuR5jjHACcUFImBYyDfLOzQxf53gkYFfsVMKk4CfUhVLLi0WFxICeVt47xSOdGT
-         Ql8tKR0gpLbkO1tZAVVKYdxawh9VPeW5EVOJueZnJj9b7hfBg8I5ajn8iTC8TD+MbZVx
-         BtjejpzuboZqDZgNgTPOS4gXeFL2zBn4f8s32BSk7AiHmuQO7+j7Kbm/VADCxVqSiU5q
-         wJjw==
-X-Gm-Message-State: APjAAAVSkyqD9yiC4Fuc+5d59+KtIgThxqvS5gEwihfj7DQl4R4pSBT2
-        Nes9Twyq0OqVdci/kW8fssYJir4d
-X-Google-Smtp-Source: APXvYqzFvF/jO3IjT5ZQsh3FJ2YQUpXu8iu759xLt+TfBC7t0w52DcNJOukvVWSAoosXgI55ZsTjIQ==
-X-Received: by 2002:a05:6000:162e:: with SMTP id v14mr1456582wrb.112.1568633752298;
-        Mon, 16 Sep 2019 04:35:52 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id y13sm74527067wrg.8.2019.09.16.04.35.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 04:35:51 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 13:35:49 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        James Morse <james.morse@arm.com>, linux-efi@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>
-Subject: [GIT PULL] EFI changes for v5.4
-Message-ID: <20190916113549.GA76922@gmail.com>
+        Mon, 16 Sep 2019 07:36:11 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
+ 2019 19:36:09 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
+ 2019 19:36:08 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Mon, 16 Sep 2019 19:36:08 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v3 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Topic: [PATCH v3 1/4] x86/mce: Add Zhaoxin MCE support
+Thread-Index: AdVsgZ9UPwR7QKdtRlW4qXXe20fCvg==
+Date:   Mon, 16 Sep 2019 11:36:08 +0000
+Message-ID: <8f8f409d76fb4216b0409a45bbf24f9c@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+All Zhaoxin newer CPUs support MCE that compatible with Intel's
+"Machine-Check Architecture", so add support for Zhaoxin MCE in
+mce/core.c.
 
-Please pull the latest efi-core-for-linus git tree from:
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/cpu/mce/core.c | 38 ++++++++++++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 10 deletions(-)
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-for-linus
-
-   # HEAD: d3dc0168e93233ba4d4ed9a2c506c9d2b8d8cd33 Merge tag 'efi-next' of git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi into efi/core
-
-The changes in this cycle were:
-
- - Refactoring of the EFI config table handling across architectures.
- - Add support for the Dell EMC OEM config table.
- - Include AER diagnostic output to CPER handling of fatal PCIe errors.
-
- Thanks,
-
-	Ingo
-
------------------->
-Ard Biesheuvel (3):
-      efi: x86: move efi_is_table_address() into arch/x86
-      efi/x86: move UV_SYSTAB handling into arch/x86
-      efi: ia64: move SAL systab handling out of generic EFI code
-
-Narendra K (1):
-      efi: Export Runtime Configuration Interface table to sysfs
-
-Xiaofei Tan (1):
-      efi: cper: print AER info of PCIe fatal error
-
-
- Documentation/ABI/testing/sysfs-firmware-efi |   8 ++
- arch/ia64/include/asm/sal.h                  |   1 +
- arch/ia64/include/asm/sn/sn_sal.h            |   2 +-
- arch/ia64/kernel/efi.c                       |   3 +
- arch/ia64/kernel/setup.c                     |   2 +-
- arch/x86/include/asm/efi.h                   |   5 +
- arch/x86/include/asm/uv/uv.h                 |   4 +-
- arch/x86/mm/ioremap.c                        |   1 +
- arch/x86/platform/efi/efi.c                  |  39 ++++++-
- arch/x86/platform/uv/bios_uv.c               |  10 +-
- drivers/firmware/efi/Kconfig                 |  13 +++
- drivers/firmware/efi/Makefile                |   1 +
- drivers/firmware/efi/cper.c                  |  15 +++
- drivers/firmware/efi/efi.c                   |  39 +------
- drivers/firmware/efi/rci2-table.c            | 147 +++++++++++++++++++++++++++
- include/linux/efi.h                          |  14 +--
- 16 files changed, 251 insertions(+), 53 deletions(-)
- create mode 100644 drivers/firmware/efi/rci2-table.c
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 743370e..7bcd8c1 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -488,8 +488,9 @@ int mce_usable_address(struct mce *m)
+ 	if (!(m->status & MCI_STATUS_ADDRV))
+ 		return 0;
+ 
+-	/* Checks after this one are Intel-specific: */
+-	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
++	/* Checks after this one are Intel/Zhaoxin-specific: */
++	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
++	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
+ 		return 1;
+ 
+ 	if (!(m->status & MCI_STATUS_MISCV))
+@@ -507,10 +508,13 @@ EXPORT_SYMBOL_GPL(mce_usable_address);
+ 
+ bool mce_is_memory_error(struct mce *m)
+ {
+-	if (m->cpuvendor == X86_VENDOR_AMD ||
+-	    m->cpuvendor == X86_VENDOR_HYGON) {
++	switch (m->cpuvendor) {
++	case X86_VENDOR_AMD:
++	case X86_VENDOR_HYGON:
+ 		return amd_mce_is_memory_error(m);
+-	} else if (m->cpuvendor == X86_VENDOR_INTEL) {
++
++	case X86_VENDOR_INTEL:
++	case X86_VENDOR_ZHAOXIN:
+ 		/*
+ 		 * Intel SDM Volume 3B - 15.9.2 Compound Error Codes
+ 		 *
+@@ -527,9 +531,10 @@ bool mce_is_memory_error(struct mce *m)
+ 		return (m->status & 0xef80) == BIT(7) ||
+ 		       (m->status & 0xef00) == BIT(8) ||
+ 		       (m->status & 0xeffc) == 0xc;
+-	}
+ 
+-	return false;
++	default:
++		return false;
++	}
+ }
+ EXPORT_SYMBOL_GPL(mce_is_memory_error);
+ 
+@@ -1697,6 +1702,18 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+ 		if (c->x86 == 6 && c->x86_model == 45)
+ 			quirk_no_way_out = quirk_sandybridge_ifu;
+ 	}
++
++	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
++		/*
++		 * All newer Zhaoxin CPUs support MCE broadcasting. Enable
++		 * synchronization with a one second timeout.
++		 */
++		if (c->x86 > 6 || (c->x86_model == 0x19 || c->x86_model == 0x1f)) {
++			if (cfg->monarch_timeout < 0)
++				cfg->monarch_timeout = USEC_PER_SEC;
++		}
++	}
++
+ 	if (cfg->monarch_timeout < 0)
+ 		cfg->monarch_timeout = 0;
+ 	if (cfg->bootlog != 0)
+@@ -2014,15 +2031,16 @@ static void mce_disable_error_reporting(void)
+ static void vendor_disable_error_reporting(void)
+ {
+ 	/*
+-	 * Don't clear on Intel or AMD or Hygon CPUs. Some of these MSRs
+-	 * are socket-wide.
++	 * Don't clear on Intel or AMD or Hygon or Zhaoxin CPUs. Some of these
++	 * MSRs are socket-wide.
+ 	 * Disabling them for just a single offlined CPU is bad, since it will
+ 	 * inhibit reporting for all shared resources on the socket like the
+ 	 * last level cache (LLC), the integrated memory controller (iMC), etc.
+ 	 */
+ 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL ||
+ 	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
+-	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
++	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN)
+ 		return;
+ 
+ 	mce_disable_error_reporting();
+-- 
+2.7.4
