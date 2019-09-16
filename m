@@ -2,187 +2,171 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF8DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9DEC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83DE214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD342216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:23:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="RKKl14EP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733156AbfIPNXX (ORCPT
+        id S1733167AbfIPNXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:23:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:44774 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728014AbfIPNXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:23:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3B7E337;
-        Mon, 16 Sep 2019 06:23:21 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A9C53F67D;
-        Mon, 16 Sep 2019 06:23:21 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 14:23:19 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
-        bhelgaas@google.com, linux-amlogic@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
-        repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
-Subject: Re: [PATCH v2 4/6] phy: meson-g12a-usb3-pcie: Add support for PCIe
- mode
-Message-ID: <20190916132319.GQ9720@e119886-lin.cambridge.arm.com>
-References: <20190916125022.10754-1-narmstrong@baylibre.com>
- <20190916125022.10754-5-narmstrong@baylibre.com>
+        Mon, 16 Sep 2019 09:23:46 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44851 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728014AbfIPNXq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:23:46 -0400
+Received: by mail-lj1-f194.google.com with SMTP id m13so5781242ljj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:23:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CF3OW7d/Rf3ORtiJgzWO74mrNFNVyAWFkt1EsQbcVHY=;
+        b=RKKl14EP9mpR3RvZCNbLM4UQh6i2X3PW21Kd2QhzoRmtPRBsTKJZTaQ3t0mx22RAug
+         MqOqyWeIqLf82PDtEHyMoXIe75Uf2wOUl3bG9wOl55XpqUXYMeCei+MsJXshXKnuQ3Bt
+         23Mw3AXsV/Lm+mTHb4MpCMM2akp2z5SMEF9Io=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CF3OW7d/Rf3ORtiJgzWO74mrNFNVyAWFkt1EsQbcVHY=;
+        b=CQIXgXeFmKMivJIdnpCUdETlF9baP7U4GXygEIK+gq6boZVI3z/dN4HYwNe59ieyxP
+         yrETyExo9X1jLaH8zMXylham8D9wytHyAtXvzaR6hCPN4aPMWSjcrm6n/QJbby4Ef7SX
+         YS3Wt19x0CuBPHtpx3Z3DTS2LxGXFPy4nhr//mHDwGCqAfRcTT4tSHKkGFg64L0SXFkI
+         nvGb7u0u7ixg+dOPKbkGdk2kRoKlF9dotB02Ck+tHDEG7h3+bNyhi4/D1A8MDdX+/ch7
+         u9xB1/UFdC9+gm0s/Q91vSyYa4LxIKj/AqYjcDxkgofMqNHpJGixN3/t2kiQDh+7lzQg
+         G3zw==
+X-Gm-Message-State: APjAAAVJ9DTZ5gyFAC1EIdKecVCMvUXaUK2UryqwjaHYJUM+c2cJCWeg
+        bWLrfaZ9RPsHAVoRQWHvl8VCCERGRT5IfeoP
+X-Google-Smtp-Source: APXvYqxsub36ELINpkxe/5dJkTmV6qsEd7F0EC4r6abUXemDeoJgioxe7n3c4h9uWZNUJF8XlDbXuw==
+X-Received: by 2002:a2e:9a18:: with SMTP id o24mr37351897lji.123.1568640223385;
+        Mon, 16 Sep 2019 06:23:43 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id d26sm1067639ljc.64.2019.09.16.06.23.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 06:23:42 -0700 (PDT)
+Subject: Re: [PATCH v2] printf: add support for printing symbolic error codes
+To:     =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org
+References: <20190830214655.6625-1-linux@rasmusvillemoes.dk>
+ <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+ <33592303-091c-c480-460f-e2acd89e99be@kleine-koenig.org>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <53331f01-dd77-b448-33ab-cb26dd4b9380@rasmusvillemoes.dk>
+Date:   Mon, 16 Sep 2019 15:23:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916125022.10754-5-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <33592303-091c-c480-460f-e2acd89e99be@kleine-koenig.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:50:20PM +0200, Neil Armstrong wrote:
-> This adds extended PCIe PHY functions for the Amlogic G12A
-> USB3+PCIE Combo PHY to support reset, power_on and power_off for
-> PCIe exclusively.
+On 16/09/2019 14.23, Uwe Kleine-König wrote:
+> Hello Rasmus,
 > 
-> With these callbacks, we can handle all the needed operations of the
-> Amlogic PCIe controller driver.
+> On 9/9/19 10:38 PM, Rasmus Villemoes wrote:
+>> It has been suggested several times to extend vsnprintf() to be able
+>> to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
+>> another attempt. Rather than adding another %p extension, simply teach
+>> plain %p to convert ERR_PTRs. While the primary use case is
+>>
+>>   if (IS_ERR(foo)) {
+>>     pr_err("Sorry, can't do that: %p\n", foo);
+>>     return PTR_ERR(foo);
+>>   }
+>>
+>> it is also more helpful to get a symbolic error code (or, worst case,
+>> a decimal number) in case an ERR_PTR is accidentally passed to some
+>> %p<something>, rather than the (efault) that check_pointer() would
+>> result in.
+>>
+>> With my embedded hat on, I've made it possible to remove this.
+>>
+>> I've tested that the #ifdeffery in errcode.c is sufficient to make
+>> this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
+>> 0day bot will tell me which ones I've missed.
+>>
+>> The symbols to include have been found by massaging the output of
+>>
+>>   find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
+>>
+>> In the cases where some common aliasing exists
+>> (e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
+>> I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
+>> to the bottom so that one takes precedence.
+>>
+>> Acked-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+>> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../phy/amlogic/phy-meson-g12a-usb3-pcie.c    | 70 ++++++++++++++++---
->  1 file changed, 61 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> index ac322d643c7a..08e322789e59 100644
-> --- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> +++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-> @@ -50,6 +50,8 @@
->  	#define PHY_R5_PHY_CR_ACK				BIT(16)
->  	#define PHY_R5_PHY_BS_OUT				BIT(17)
->  
-> +#define PCIE_RESET_DELAY					500
-> +
->  struct phy_g12a_usb3_pcie_priv {
->  	struct regmap		*regmap;
->  	struct regmap		*regmap_cr;
-> @@ -196,6 +198,10 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int data, ret;
->  
-> +	ret = reset_control_reset(priv->reset);
-> +	if (ret)
-> +		return ret;
+> Even with my ack already given I still think having %pE (or %pe) for
+> ints holding an error code is sensible. 
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+I don't understand why you'd want an explicit %p<something> to do what
+%p does by itself - in fact, with the current vsnprintf implementation,
+"%pe", ERR_PTR(-EFOO) would already do what you want (since after %p is
+processed, all alphanumeric are skipped whether they were interpreted or
+not). So we could "reserve" %pe perhaps in order to make the call sites
+a little more readable, but no code change in vsnprintf.c would be
+necessary.
 
-> +
->  	/* Switch PHY to USB3 */
->  	/* TODO figure out how to handle when PCIe was set in the bootloader */
->  	regmap_update_bits(priv->regmap, PHY_R0,
-> @@ -272,24 +278,64 @@ static int phy_g12a_usb3_init(struct phy *phy)
->  	return 0;
->  }
->  
-> -static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +static int phy_g12a_usb3_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	regmap_update_bits(priv->regmap, PHY_R0,
-> +			   PHY_R0_PCIE_POWER_STATE,
-> +			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1d));
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_reset(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  	int ret;
->  
-> -	ret = reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return 0;
-> +
-> +	ret = reset_control_assert(priv->reset);
->  	if (ret)
->  		return ret;
->  
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	ret = reset_control_deassert(priv->reset);
-> +	if (ret)
-> +		return ret;
-> +
-> +	udelay(PCIE_RESET_DELAY);
-> +
-> +	return 0;
-> +}
-> +
-> +static int phy_g12a_usb3_pcie_init(struct phy *phy)
-> +{
-> +	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
-> +
->  	if (priv->mode == PHY_TYPE_USB3)
->  		return phy_g12a_usb3_init(phy);
->  
-> -	/* Power UP PCIE */
-> -	/* TODO figure out when the bootloader has set USB3 mode before */
-> -	regmap_update_bits(priv->regmap, PHY_R0,
-> -			   PHY_R0_PCIE_POWER_STATE,
-> -			   FIELD_PREP(PHY_R0_PCIE_POWER_STATE, 0x1c));
-> -
->  	return 0;
->  }
->  
-> @@ -297,7 +343,10 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
->  {
->  	struct phy_g12a_usb3_pcie_priv *priv = phy_get_drvdata(phy);
->  
-> -	return reset_control_reset(priv->reset);
-> +	if (priv->mode == PHY_TYPE_USB3)
-> +		return reset_control_reset(priv->reset);
-> +
-> +	return 0;
->  }
->  
->  static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
-> @@ -326,6 +375,9 @@ static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
->  static const struct phy_ops phy_g12a_usb3_pcie_ops = {
->  	.init		= phy_g12a_usb3_pcie_init,
->  	.exit		= phy_g12a_usb3_pcie_exit,
-> +	.power_on	= phy_g12a_usb3_pcie_power_on,
-> +	.power_off	= phy_g12a_usb3_pcie_power_off,
-> +	.reset		= phy_g12a_usb3_pcie_reset,
->  	.owner		= THIS_MODULE,
->  };
->  
-> -- 
-> 2.22.0
-> 
+Or did you mean %pe with the argument being an (int*), so one would do
+
+  if (err < 0)
+    pr_err("bad: %pe\n", &err);
+
+Maybe I'd buy that one, though I don't think it's much worse to do
+
+  if (err < 0)
+    pr_err("bad: %p\n", ERR_PTR(err));
+
+Also, the former has less type safety/type genericity than the latter;
+if err happens to be a long (or s8 or s16) the former won't work while
+the latter will.
+
+Or perhaps you meant introduce a %d<something> extension? I still think
+that's a bad idea, and I've in the meantime found another reason
+(covering %d in particular): Netdevices can be given a name containing
+exactly one occurrence of %d (or no % at all), and then the actual name
+will be determined based on that pattern. These patterns are settable
+from userspace. And everything of course breaks horribly if somebody set
+a name to "bla%deth" and that got turned into "blaEPERMth".
+
+> So I wonder if it would be a
+> good idea to split this patch into one that introduces errcode() and
+> then the patch that teaches vsprintf about emitting its return value for
+> error valued pointers. Then I could rebase my initial patch for %pe on
+> top of your first one.
+
+Well, I think my patch as-is is simple enough, there's not much point
+separating the few lines in vsnprintf() from the introduction of
+errcode() (which, realistically, will never have other callers).
+
+> Other than that I wonder how we can go forward from here. So I think it
+> is time for v3 which picks up the few suggestions.
+
+Yes, I have actually prepared a v3, was just waiting for additional
+comments on my responses to the v2 review comments.
+
+Rasmus
