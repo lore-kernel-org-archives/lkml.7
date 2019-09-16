@@ -2,41 +2,40 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CB2C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33B5FC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E232067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE2022067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="nRTWHkqb"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Zmr5oxs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfIPHgC (ORCPT
+        id S1729640AbfIPHgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:36:02 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:13568 "EHLO
+        Mon, 16 Sep 2019 03:36:01 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:13566 "EHLO
         mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729231AbfIPHf6 (ORCPT
+        by vger.kernel.org with ESMTP id S1729229AbfIPHf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 03:35:58 -0400
 Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8G7XSkg022542;
-        Mon, 16 Sep 2019 03:35:43 -0400
-Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2055.outbound.protection.outlook.com [104.47.34.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2v0vu6b7aa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 03:35:43 -0400
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8G7XxW2022674;
+        Mon, 16 Sep 2019 03:35:39 -0400
+Received: from nam01-bn3-obe.outbound.protection.outlook.com (mail-bn3nam01lp2059.outbound.protection.outlook.com [104.47.33.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2v0vu6b7a8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Sep 2019 03:35:38 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=i3bs1GwimYEKU6w9K/V2MUBq5UjlbKtSIZUtPzO03JJQr0iyL2oaxFW7Odrouty4GZLd3InYDgDEtGce1xFXjPpyyJ78UYr1wqt9/WSJe41rp14lic2tdEpBaJhkkSEses0Z8wtlFvW45HIW5h5qpAGNLpZx2SscOPoh/qUYSInZJlNWWqdGNL/HOGyWFRKEK4nhJ2ATPsqTPBF3gxCFFwj/D4LfAl5jNkaub7tZ08XyiKU/oiOhqM8ANOjM/GHnDCUqIH47J3SFlz1ddSptZUmLyfuxI2aAczcbkxR6O/LgzRNo+5jvI6cDjTWyZDtgdtKq1eHtV8mp4afH9Chndg==
+ b=W4lblVOj/puljZdjtwNmWaplWNCmVLvluQc4MjDrftCLfDxbqYrQ4nrfmPyXfy6SdXrC5nd5bgj+sYDsRbZhE1R/6/He9643oYUT3CxzZwiQvnEL9Mh4Czaz/clWrM5QN4xwLS1Hzu3epWVejOitXWl10JMIZf6+fvOl4O0wWC7pvn2CGP4i1WSrVAJFuwoaTqR3cAlFfsMBEdh9MEt+MlNRZFIS4VYFHE8JzbQLB+AKIQyQVvCvmm1aZXOFPNzSOBCnpR9qd+Lfr17+MTSyOQyIlhF1r3onwe/1irb40uBEw3MbjRC7se9jxARs+oRKFphtmpm2byFYLlFvveGpxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VCHKJB9IECMs7tYFbhpj9+6o3jbLhgUZ5ox+8eS7Y1s=;
- b=ETWBA2NK9nrG3gMjPBBWVLFHrJAwaxgM0DGENtBz3BzVZQWZ03r01eyno+2Adlx2k+fygOanvIv2sVdX/tCuM1wOobXFc7SmfnQUnwgkejC6bHuS/JMQy5xXDO8ns0E9T7sYVGGwBfl8VVOYiZ40kLC5IX0XAjao936GIo3N8GDeStCxXBwJ/pkgE0pPVGon7rbo6sPcMO+/EPwLDgiVL1QURxeBknHwjDZ3UrbAcRevll5cOaN7YZ878ipcXSFNCNK+Hh2R0wcXohf3nD44q3+kfBTUrvjkQ0jUBpBo2/CgSs8hEPw8qfivYKo6QzISJ0btOBTClgQfW9WyqeDLdA==
+ bh=TatWPe1/XVHpXpiT64ypI5t1s6a1HGeg2/DcNuzV4NY=;
+ b=GwE33nWGyyUdE1CyHnTqG2QdNbLdWpUj8CFM6NONTEFU0227O3cv/HoPGJuasqZ3k1pHTxsapLppbvMsE9IbHY6rOTJuXQl/QmaCsImUUZRGHoa8bHs9Htr8IvYnzSvKEtyqEPgM/lW4bFLGOJYGbVoOoAJ0/EMTjhZWW5OnKuGxf3jCnh39ASsXbDC1393+DNejVG5yhU96/3JyhacKaWxSB+yocjSWshOiJ1xdQTLBCMyb6Zsz54rbqkVxHaAZoO0iNXXCwnFfKSackyLR+laZIWOCryztgbXiJyQE4B5T949OJD5aNJnrVxEosAQJYtO1+hj/bRQgyW+evytCTw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  137.71.25.57) smtp.rcpttodomain=davemloft.net smtp.mailfrom=analog.com;
  dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
@@ -44,32 +43,32 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VCHKJB9IECMs7tYFbhpj9+6o3jbLhgUZ5ox+8eS7Y1s=;
- b=nRTWHkqbB8RKwguuV8DkZYDnhBdq0hwxPA+mJtoCGFfNORigaN0fXoynjvNCtFCLUZzzdLI5IDoSNqyk2a72RC0MG5YbcWvG9F2AXRv4NOftTfpTbJXj2BN2VMb8iBULomqcPbSbvfjREK9uGfdu9XHFt/9/IDkANDBS1xMGLzM=
-Received: from DM6PR03CA0052.namprd03.prod.outlook.com (2603:10b6:5:100::29)
- by CY4PR03MB2533.namprd03.prod.outlook.com (2603:10b6:903:43::20) with
+ bh=TatWPe1/XVHpXpiT64ypI5t1s6a1HGeg2/DcNuzV4NY=;
+ b=Zmr5oxs1y3QYoZjE2mF0MXpJw0oHzOwQ0Q9uiV1cFbG4OQF0AryTff1+THDhKy5MJDEZqILZTjQzxvrMAeUtUsN0lLlgMUoCjbpovqoyfRHwaPxW2OMHh2ud1i9MJ+XLpL0UIppYBelOwFXyYjsrHbYpVe+rRKwz1Qt2Jf7IsBA=
+Received: from CY4PR03CA0100.namprd03.prod.outlook.com (2603:10b6:910:4d::41)
+ by DM6PR03MB5274.namprd03.prod.outlook.com (2603:10b6:5:24b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.17; Mon, 16 Sep
- 2019 07:35:41 +0000
-Received: from CY1NAM02FT008.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::200) by DM6PR03CA0052.outlook.office365.com
- (2603:10b6:5:100::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2199.19 via Frontend
- Transport; Mon, 16 Sep 2019 07:35:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.26; Mon, 16 Sep
+ 2019 07:35:37 +0000
+Received: from CY1NAM02FT038.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e45::202) by CY4PR03CA0100.outlook.office365.com
+ (2603:10b6:910:4d::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19 via Frontend
+ Transport; Mon, 16 Sep 2019 07:35:37 +0000
 Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
  137.71.25.57 as permitted sender) receiver=protection.outlook.com;
  client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
 Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT008.mail.protection.outlook.com (10.152.75.59) with Microsoft SMTP
+ CY1NAM02FT038.mail.protection.outlook.com (10.152.74.217) with Microsoft SMTP
  Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
- via Frontend Transport; Mon, 16 Sep 2019 07:35:41 +0000
+ via Frontend Transport; Mon, 16 Sep 2019 07:35:36 +0000
 Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8G7ZZgX021683
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8G7ZUwa021651
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 16 Sep 2019 00:35:35 -0700
+        Mon, 16 Sep 2019 00:35:30 -0700
 Received: from saturn.ad.analog.com (10.48.65.123) by
  NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 16 Sep 2019 03:35:40 -0400
+ 14.3.408.0; Mon, 16 Sep 2019 03:35:34 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
@@ -77,40 +76,38 @@ CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <f.fainelli@gmail.com>,
         <hkallweit1@gmail.com>, <andrew@lunn.ch>, <mkubecek@suse.cz>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v5 2/2] net: phy: adin: implement Energy Detect Powerdown mode via phy-tunable
-Date:   Mon, 16 Sep 2019 10:35:26 +0300
-Message-ID: <20190916073526.24711-3-alexandru.ardelean@analog.com>
+Subject: [PATCH v5 0/2] ethtool: implement Energy Detect Powerdown support via phy-tunable
+Date:   Mon, 16 Sep 2019 10:35:24 +0300
+Message-ID: <20190916073526.24711-1-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190916073526.24711-1-alexandru.ardelean@analog.com>
-References: <20190916073526.24711-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-EOPAttributedMessage: 0
 X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(376002)(136003)(346002)(199004)(189003)(50226002)(36756003)(426003)(486006)(11346002)(14444005)(110136005)(5660300002)(54906003)(50466002)(26005)(476003)(305945005)(107886003)(8936002)(126002)(86362001)(1076003)(7636002)(2616005)(7416002)(2201001)(186003)(446003)(2906002)(7696005)(51416003)(44832011)(76176011)(316002)(478600001)(356004)(2870700001)(48376002)(246002)(106002)(47776003)(6666004)(70586007)(336012)(4326008)(70206006)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2533;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(39860400002)(376002)(54534003)(189003)(199004)(246002)(4326008)(305945005)(110136005)(54906003)(107886003)(106002)(478600001)(8676002)(48376002)(2870700001)(7416002)(2906002)(36756003)(70206006)(26005)(336012)(70586007)(8936002)(7696005)(51416003)(2616005)(126002)(476003)(1076003)(486006)(426003)(50466002)(186003)(44832011)(356004)(86362001)(6666004)(316002)(7636002)(50226002)(47776003)(5660300002)(2201001)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB5274;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d0dd015f-2c95-4af1-91e4-08d73a7879ed
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:CY4PR03MB2533;
-X-MS-TrafficTypeDiagnostic: CY4PR03MB2533:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB2533C3D45C7B38508466B205F98C0@CY4PR03MB2533.namprd03.prod.outlook.com>
+X-MS-Office365-Filtering-Correlation-Id: 416ad344-1677-4a55-e938-08d73a78775a
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM6PR03MB5274;
+X-MS-TrafficTypeDiagnostic: DM6PR03MB5274:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB5274967C535BEFA5B3B42ADAF98C0@DM6PR03MB5274.namprd03.prod.outlook.com>
 X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-Forefront-PRVS: 0162ACCC24
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: pci7tPakBaHaKBR9/s8OvE2RYcHEYM6VQ+z9QA5igfPxVIF3+dFDG3+dl0DO81a6yw5/p5E5wutmXoLAgc63thUzT85Q9YwDbprMWHbPbAcTyyl2fvAFxcL3MI2nVTS4M8MW8LkGYmaA2xMmQa/B1FJhFSZIMyEzySfzGLo8Eb9GwL51XH+iTZTtpCrEKIpppGZt5AcbTNfNOJP0Gw1B3RksBOJXCTf5hAX7ULGHmYaviGonfrTrVvEo408aacx2OuTD+6gWDaNJ/jKZeEkc+AH+y5lakzHGGq8uk5QLKB1VSTzvaomcApIrYUFyFOU3IiVZdIh7WOsPukOLMXUKTyPSlt/VVTG+nF9uTYLALM5xdY01YlA8/BVls6/bITQOwfRcU3+GpX2xHKRzwAFqUCuId/SBfKRQyMj85zN1hdM=
+X-Microsoft-Antispam-Message-Info: CnZIBwpx16p3ZkzojDdNRoiWT1phMqN5nxz+ZwiymzcqFb+eRhGyzcRZvsccPkXxvYifxgwkUVjUxiedYxKw7cE+M6z0Uo2beQPDHRfDdsLxm932y3tZ814TD843KPBCq/K7zz9GPEB5wg8BdgmLRCG9EybiFX1NgN64T+R67XGNHnoqUYfJG51kxwwVaEudd34nUpt0xw9mR9p2iUsYOxTmsWanN6iixtpOBULCAN3WNt0uAvqBFgXQIBQBY24yj9ug0tWTqJGifEeafNlBcJCNHCDRe9aigqxUyjRZg1Rrp1E5SuQvYmHVh09FCIE+Kx5evHt5xH2mtcyYSRnhNY7Jczx13EfZcxnAqPeAlP6fu3rPsbJt7QrukApC8mQ34OxAEYLZ+qxKczz5EoUu6/kZIXPYeU/gG6w5qzdilYk=
 X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2019 07:35:41.1052
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2019 07:35:36.7866
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0dd015f-2c95-4af1-91e4-08d73a7879ed
+X-MS-Exchange-CrossTenant-Network-Message-Id: 416ad344-1677-4a55-e938-08d73a78775a
 X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2533
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB5274
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
  definitions=2019-09-16_04:2019-09-11,2019-09-16 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- spamscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 malwarescore=0
+ spamscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=757 malwarescore=0
  suspectscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1908290000 definitions=main-1909160082
@@ -119,129 +116,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
-phy-tunable feature.
-EDPD is also enabled by default on PHY config_init, but can be disabled via
-the phy-tunable control.
+This changeset proposes a new control for PHY tunable to control Energy
+Detect Power Down.
 
-When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
-periodic pulses, so that in case the other PHY is also on EDPD mode, there
-is no lock-up situation where both sides are waiting for the other to
-transmit.
+The `phy_tunable_id` has been named `ETHTOOL_PHY_EDPD` since it looks like
+this feature is common across other PHYs (like EEE), and defining
+`ETHTOOL_PHY_ENERGY_DETECT_POWER_DOWN` seems too long.
+    
+The way EDPD works, is that the RX block is put to a lower power mode,
+except for link-pulse detection circuits. The TX block is also put to low
+power mode, but the PHY wakes-up periodically to send link pulses, to avoid
+lock-ups in case the other side is also in EDPD mode.
+    
+Currently, there are 2 PHY drivers that look like they could use this new
+PHY tunable feature: the `adin` && `micrel` PHYs.
 
-Via the phy-tunable control, TX pulses can be disabled if specifying 0
-`tx-interval` via ethtool.
+This series updates only the `adin` PHY driver to support this new feature,
+as this chip has been tested. A change for `micrel` can be proposed after a
+discussion of the PHY-tunable API is resolved.
 
-The ADIN PHY supports only fixed 1 second intervals; they cannot be
-configured. That is why the acceptable values are 1,
-ETHTOOL_PHY_EDPD_DFLT_TX_MSECS and ETHTOOL_PHY_EDPD_NO_TX (which disables
-TX pulses).
+Alexandru Ardelean (2):
+  ethtool: implement Energy Detect Powerdown support via phy-tunable
+  net: phy: adin: implement Energy Detect Powerdown mode via phy-tunable
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/net/phy/adin.c | 61 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
+ drivers/net/phy/adin.c       | 61 ++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/ethtool.h | 22 +++++++++++++
+ net/core/ethtool.c           |  6 ++++
+ 3 files changed, 89 insertions(+)
 
-diff --git a/drivers/net/phy/adin.c b/drivers/net/phy/adin.c
-index 4dec83df048d..cf5a391c93e6 100644
---- a/drivers/net/phy/adin.c
-+++ b/drivers/net/phy/adin.c
-@@ -26,6 +26,11 @@
- 
- #define ADIN1300_RX_ERR_CNT			0x0014
- 
-+#define ADIN1300_PHY_CTRL_STATUS2		0x0015
-+#define   ADIN1300_NRG_PD_EN			BIT(3)
-+#define   ADIN1300_NRG_PD_TX_EN			BIT(2)
-+#define   ADIN1300_NRG_PD_STATUS		BIT(1)
-+
- #define ADIN1300_PHY_CTRL2			0x0016
- #define   ADIN1300_DOWNSPEED_AN_100_EN		BIT(11)
- #define   ADIN1300_DOWNSPEED_AN_10_EN		BIT(10)
-@@ -328,12 +333,62 @@ static int adin_set_downshift(struct phy_device *phydev, u8 cnt)
- 			    ADIN1300_DOWNSPEEDS_EN);
- }
- 
-+static int adin_get_edpd(struct phy_device *phydev, u16 *tx_interval)
-+{
-+	int val;
-+
-+	val = phy_read(phydev, ADIN1300_PHY_CTRL_STATUS2);
-+	if (val < 0)
-+		return val;
-+
-+	if (ADIN1300_NRG_PD_EN & val) {
-+		if (val & ADIN1300_NRG_PD_TX_EN)
-+			/* default is 1 second */
-+			*tx_interval = ETHTOOL_PHY_EDPD_DFLT_TX_MSECS;
-+		else
-+			*tx_interval = ETHTOOL_PHY_EDPD_NO_TX;
-+	} else {
-+		*tx_interval = ETHTOOL_PHY_EDPD_DISABLE;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adin_set_edpd(struct phy_device *phydev, u16 tx_interval)
-+{
-+	u16 val;
-+
-+	if (tx_interval == ETHTOOL_PHY_EDPD_DISABLE)
-+		return phy_clear_bits(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+				(ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN));
-+
-+	val = ADIN1300_NRG_PD_EN;
-+
-+	switch (tx_interval) {
-+	case 1000: /* 1 second */
-+		/* fallthrough */
-+	case ETHTOOL_PHY_EDPD_DFLT_TX_MSECS:
-+		val |= ADIN1300_NRG_PD_TX_EN;
-+		/* fallthrough */
-+	case ETHTOOL_PHY_EDPD_NO_TX:
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return phy_modify(phydev, ADIN1300_PHY_CTRL_STATUS2,
-+			  (ADIN1300_NRG_PD_EN | ADIN1300_NRG_PD_TX_EN),
-+			  val);
-+}
-+
- static int adin_get_tunable(struct phy_device *phydev,
- 			    struct ethtool_tunable *tuna, void *data)
- {
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 		return adin_get_downshift(phydev, data);
-+	case ETHTOOL_PHY_EDPD:
-+		return adin_get_edpd(phydev, data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -345,6 +400,8 @@ static int adin_set_tunable(struct phy_device *phydev,
- 	switch (tuna->id) {
- 	case ETHTOOL_PHY_DOWNSHIFT:
- 		return adin_set_downshift(phydev, *(const u8 *)data);
-+	case ETHTOOL_PHY_EDPD:
-+		return adin_set_edpd(phydev, *(const u16 *)data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-@@ -368,6 +425,10 @@ static int adin_config_init(struct phy_device *phydev)
- 	if (rc < 0)
- 		return rc;
- 
-+	rc = adin_set_edpd(phydev, ETHTOOL_PHY_EDPD_DFLT_TX_MSECS);
-+	if (rc < 0)
-+		return rc;
-+
- 	phydev_dbg(phydev, "PHY is using mode '%s'\n",
- 		   phy_modes(phydev->interface));
- 
 -- 
+
+Changelog v4 -> v5:
+* add Andrew's & Florian's Reviewed-by tags for patch 1
+* fixed patch 2 goof:
+  `rc = adin_set_edpd(phydev, 1);`
+    ->
+  `rc = adin_set_edpd(phydev, ETHTOOL_PHY_EDPD_DFLT_TX_MSECS);` 
+  this was omitted when re-spin to v4 was done
+* for patch 2 added Florian's Reviewed-by tag as this was suggested by him
+  and his accord was
+  `with that fixed: Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>`
+
+Changelog v3 -> v4:
+* impose the TX interval unit for EDPD to be milliseconds; the point was
+  raised by Michal; this should allow for intervals:
+   - as small as 1 millisecond, which does not sound like a power-saver
+   - as large as 65 seconds, which sounds like a lot to wait for a link to
+     come up
+
+Changelog v2 -> v3:
+* implement Andrew's review comments:
+  1. for patch `ethtool: implement Energy Detect Powerdown support via
+     phy-tunable`
+     - ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL == 0xffff
+     - ETHTOOL_PHY_EDPD_NO_TX            == 0xfffe
+     - added comment in include/uapi/linux/ethtool.h
+  2. for patch `net: phy: adin: implement Energy Detect Powerdown mode via
+     phy-tunable`
+     - added comments about interval & units for the ADIN PHY
+     - in `adin_set_edpd()`: add a switch statement of all the valid values
+     - in `adin_get_edpd()`: return `ETHTOOL_PHY_EDPD_DFLT_TX_INTERVAL`
+       since the PHY only supports a single TX-interval value (1 second)
+
+Changelog v1 -> v2:
+* initial series was made up of 2 sub-series: 1 for kernel & 1 for ethtool
+  in userspace; v2 contains only the kernel series
+
 2.20.1
 
