@@ -2,133 +2,85 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E362FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3128C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B776621670
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568673536;
-	bh=Ina8/CF/QnZuG52pbk+PJGkjw0JSxdUxedWdGRA7dRs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=MvqFLr+/wWedgnlb6CHIwy38b89ihYTK7NV9kHOtO66jyfbp6WhHxzL1w8PP0fvaH
-	 wW9oqgeoyP9Reu+n8DcO7dte57d7KJoONh9fStq+rbsLA4g3MzQ+Rm4hWiigAqCzBX
-	 SF/m1jmg59Fj6Kk9Eq98eHXkObvvqH4lqm1vfA2U=
+	by mail.kernel.org (Postfix) with ESMTP id A2D24214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbfIPWiz (ORCPT
+        id S2388176AbfIPWkB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:38:55 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51820 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387590AbfIPWix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:38:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tCYzz5zSAyNLvbuiFvhHQTnEYtPkNqQHmaQnLBL2sfU=; b=Ot9C6Pvu4f+zfTHJjI7/fqLhV
-        v31RPzM8PSIvYFgajrNwVzyoGUUc3FGHmmJqOwtzF9Bh7zd8D1lG9kWJ0mb6qx7btxDVZP9qcFNqZ
-        gNrFX5s25pgY+JdVdGqGJYTP81LBoAc0eSrOnrGx1r8DeO803W4EKkSdaRUcHmOlBJTZM=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9zdz-0005xv-AO; Mon, 16 Sep 2019 22:38:51 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8B6722741A12; Mon, 16 Sep 2019 23:38:50 +0100 (BST)
-Date:   Mon, 16 Sep 2019 23:38:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Tree for Sep 16
-Message-ID: <20190916223850.GQ4352@sirena.co.uk>
+        Mon, 16 Sep 2019 18:40:01 -0400
+Received: from mga02.intel.com ([134.134.136.20]:58611 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728232AbfIPWkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 18:40:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 15:40:00 -0700
+X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
+   d="scan'208";a="198493545"
+Received: from agluck-desk2.sc.intel.com ([10.3.52.68])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 15:40:00 -0700
+From:   Tony Luck <tony.luck@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tony Luck <tony.luck@intel.com>, "Ingo Molnar" <mingo@redhat.com>,
+        "Borislav Petkov" <bp@alien8.de>, "H Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Dave Hansen" <dave.hansen@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Radim Krcmar" <rkrcmar@redhat.com>,
+        "Sai Praneeth Prakhya" <sai.praneeth.prakhya@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
+        "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH 0/3] Fix some 4-byte vs. 8-byte alignment issues
+Date:   Mon, 16 Sep 2019 15:39:55 -0700
+Message-Id: <20190916223958.27048-1-tony.luck@intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
+References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ay2yXV/JY6JHtWz/"
-Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series is made up of three patches from Fenghua Yu's "Split lock"
+series last posted here:
 
---ay2yXV/JY6JHtWz/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+https://lore.kernel.org/kvm/1560897679-228028-1-git-send-email-fenghua.yu@intel.com/
 
-Hi all,
+Part 3 has been fixed to use a union to force alignment per
+feedback from Thomas.
 
-Changes since 20190915:
+These parts are all simple fixes which are a necessary pre-cursor
+before we can enable #AC traps for split lock access. But they
+are also worthwhile performance fixes in their own right. So
+no sense in holding them back while we discuss the merits of
+the rest of the series.
 
-The arm64 tree acquired a conflict with the compiler-attributes tree.
+Fenghua Yu (2):
+  x86/common: Align cpu_caps_cleared and cpu_caps_set to unsigned long
+  x86/split_lock: Align the x86_capability array to size of unsigned
+    long
 
-The ia64 tree acquired a conflict with the dma-mapping tree.
+Peter Zijlstra (1):
+  drivers/net/b44: Align pwol_mask to unsigned long for better
+    performance
 
-The vfs tree acquired a conflict with the ubifds tree.
+ arch/x86/include/asm/processor.h    | 10 +++++++++-
+ arch/x86/kernel/cpu/common.c        |  5 +++--
+ drivers/net/ethernet/broadcom/b44.c |  4 ++--
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-A workaround was applied for a merge issue between the drm and kbuild=20
-trees with a patch sent by Xinpeng Liu, Austin Kim sent a similar fix.
-There are further issues with this merge that still need to be resolved.
+-- 
+2.20.1
 
-Non-merge commits (relative to Linus' tree): 11922
- 11682 files changed, 762897 insertions(+), 376399 deletions(-)
-
-----------------------------------------------------------------------------
-
-I have created today's linux-next tree at
-git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
-are tracking the linux-next tree using git, you should not use "git pull"
-to do so as that will try to merge the new linux-next release with the
-old one.  You should use "git fetch" and checkout or reset to the new
-master.
-
-You can see which trees have been included by looking in the Next/Trees
-file in the source.  There are also quilt-import.log and merge.log
-files in the Next directory.  Between each merge, the tree was built
-with a defconfig for arm64, an allmodconfig for x86_64, a
-multi_v7_defconfig for arm and a native build of tools/perf.
-
-Below is a summary of the state of the merge.
-
-I am currently merging 310 trees (counting Linus' and 77 trees of bug
-fix patches pending for the current merge release).
-
-Stats about the size of the tree over time can be seen at
-http://neuling.org/linux-next-size.html .
-
-Status of my local build tests will be at
-http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
-advice about cross compilers/configs that work, we are always open to add
-more builds.
-
-Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
-Gortmaker for triage and bug fixes.
-
---ay2yXV/JY6JHtWz/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2ADvkACgkQJNaLcl1U
-h9BvMAf8D2aZsMcFhAdjgIYZ8t53eZZdHGBz17D1qh7hP6DbeP/Kn74Q3UfLM8MV
-xmwRP8iiTHh6r2oOIefI2m1C66s6f4wy0Mi7rFJFj0mPZa4fqQtgzxWnRsQpkxMT
-y1XJEYFBGZiMWuZma8iOGPeovC7gElNLfYe5oUeQyG+ks/63lMoD2uJ0cig1qXmo
-I4raV9eUQs9Cp1v3Qr7qGLXQaHEIFT74HFZ+F+njxEgQ9tiyZ33q/ELgcz4iZx0S
-LagL2HgUqkoZGrEMFVonwpLTG58hMhrNwXb4/RihhiewEDr5gdUSF+j5qn5gEl30
-4cZY/RfNj5YIYL19tui28Evx787MuQ==
-=Q/0x
------END PGP SIGNATURE-----
-
---ay2yXV/JY6JHtWz/--
