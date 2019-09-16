@@ -2,97 +2,94 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08629C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:38:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D29712067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7033206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:43:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568666321;
-	bh=EY6tme3ahlxbvqIuWhhP/CP4BgEmcGv1d6xzN7Rmy2Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qIThZZBrh57thwCa/PJCoT+OoDO9kYFSWKV0k+rA5xdLI1mCIG83KhVMJea4fw5Lz
-	 zonXDkCBURk3fSGjR36cVVPcMD/iz/jU2sWGvtfG3Kyvy1MpIzv1idl8nL9jSK/hSG
-	 0kWd+H+HjZHGOI5mKSfekJpCCLSls3IZpYbCFOTs=
+	s=default; t=1568666603;
+	bh=xAmdIKxn1vlp7D2ukzr9l0i4qp4XEa+oNjtGZw6WZaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uwOES/MU/yLofCtES1t4x71bSUFibYPgrjIAJOUXk799OU9Fcx7ClvnS1t4bMGUQy
+	 QxSnw3OMeJ/8Hl+sYub0GTYJ7qtXD0PNBXMSdZ5Sp2YKXDq1MZHZI3l6ad+/ScUsMb
+	 RZ09KUBJsvXn15No20n873T6tU4LOhROIxMkxg40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391424AbfIPUil (ORCPT
+        id S2391441AbfIPUnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:38:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46562 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387499AbfIPUik (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:38:40 -0400
-Received: by mail-lj1-f194.google.com with SMTP id e17so1188958ljf.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:38:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=me/tNrvpc38oLBmNgQpuGD2wwLksgIc0n84g04Pq6UM=;
-        b=hFnsr4SQxJjjqereCuTP+xGrGqVFwwB7+2ShWDl5Qp8pLxb4+MV1NinHIOPm4UaO/I
-         66LHrIpJRtRLDqw3UxiqboGbOYFJm3hraDsxkxsG2zVzCjIxcW00JkhtL3B0fbXwayOw
-         0lnLYFaWHXA2YaW+8dkcHiVuHzVd/UG+TSCPY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=me/tNrvpc38oLBmNgQpuGD2wwLksgIc0n84g04Pq6UM=;
-        b=tlwdpBl/JWxkEGCK869cS2M1i3rGT2b+RswYdFv1Idn4kw7GWIuVsgbgBBuVcaITWE
-         2RKQSJ1j1tFpYFIMO0atJ/aGOp9uLdOW+4YQxGHGG/z/1iqtTjnvlfwUNY7dIhDC17Q3
-         mdzh3KovoZua9KfhRy+V5EnXufyIqXcQ1/k4xOxzuQ2SfDJ9yoZ+c+XXUNvQxGUrHwMd
-         mDoRYfuKx6YqOaY8LEMGWjwO227EF1wGbByKH4cvgh6ZeBPrTtZ416Rn85uUe4NadnbA
-         3JJsqeZ/smM4AgIeNqn2s5fja4nsXcWQrQD5AALS4Rh0HLb+/kCSxDJk4OW13ytFmraR
-         A/GQ==
-X-Gm-Message-State: APjAAAUn3nC1ZoZVEukCMq4zwyZzy0HY9enpwGnQOAH0afow6E8++r50
-        ZRr6bqCBjpJJZUGrNm37WdkuujOawkA=
-X-Google-Smtp-Source: APXvYqyl6hcK9+45echxoQ21CSKODD1j3Y7j8UhreRzzk/+XKLDDOV4W5Did/ImU4ZufSw31bt0Dxw==
-X-Received: by 2002:a2e:5c09:: with SMTP id q9mr843599ljb.4.1568666317468;
-        Mon, 16 Sep 2019 13:38:37 -0700 (PDT)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
-        by smtp.gmail.com with ESMTPSA id w17sm9222708lfl.43.2019.09.16.13.38.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 13:38:36 -0700 (PDT)
-Received: by mail-lj1-f178.google.com with SMTP id y23so1252760ljn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:38:36 -0700 (PDT)
-X-Received: by 2002:a2e:5b9a:: with SMTP id m26mr801701lje.90.1568666316121;
- Mon, 16 Sep 2019 13:38:36 -0700 (PDT)
+        Mon, 16 Sep 2019 16:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730610AbfIPUnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:43:21 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B88920644;
+        Mon, 16 Sep 2019 20:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568666601;
+        bh=xAmdIKxn1vlp7D2ukzr9l0i4qp4XEa+oNjtGZw6WZaw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vpm6TZBpHuTrr8ztMUu/YYPHUYmg7DHismsZGJAUlj5f3XxO1HV5E8pXSsh4prrdr
+         seUB/1cHIFxAu2CVN0s/IryssXDKtLynvuFJdWdy93t+Q2gWQ9bw4Jx6WIFXlxh2MT
+         tgtPh0YgHLcWtayEArECdhSdRFEmlLXc0ZmygRSg=
+Date:   Mon, 16 Sep 2019 21:43:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Kees Cook <keescook@chromium.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, will.deacon@arm.com,
+        mark.rutland@arm.com
+Subject: Re: [PATCH 3/4] x86: use the correct function type for sys_ni_syscall
+Message-ID: <20190916204315.vtvlddghswbwlfkg@willie-the-truck>
+References: <20190913210018.125266-1-samitolvanen@google.com>
+ <20190913210018.125266-4-samitolvanen@google.com>
+ <CALCETrWquNJJ6yXdHA_F3h71hVrFjnpwmdH2NmGZyFu-V6Lnfg@mail.gmail.com>
+ <CABCJKud9ikdsfy9-bugbqKb-C7VXEEPJ_P1bO5KpGqv62Wuc7Q@mail.gmail.com>
+ <9E76DD0A-7FB0-4BDB-A8B5-920265337ACB@amacapital.net>
 MIME-Version: 1.0
-References: <1568237365.5783.39.camel@linux.ibm.com>
-In-Reply-To: <1568237365.5783.39.camel@linux.ibm.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 13:38:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
-Message-ID: <CAHk-=whuzoK+sP+feizU520p7ChHqdX8pmwyCnnKTyUNJKngZA@mail.gmail.com>
-Subject: Re: [GIT PULL] integrity subsystem updates for v5.4
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-security-module <linux-security-module@vger.kernel.org>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9E76DD0A-7FB0-4BDB-A8B5-920265337ACB@amacapital.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 2:29 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> The major feature in this pull request is IMA support for measuring
-> and appraising appended file signatures.  In addition are a couple of
-> bug fixes and code cleanup to use struct_size().
+On Fri, Sep 13, 2019 at 05:27:40PM -0700, Andy Lutomirski wrote:
+> > On Sep 13, 2019, at 4:26 PM, Sami Tolvanen <samitolvanen@google.com> wrote:
+> >> On Fri, Sep 13, 2019 at 3:45 PM Andy Lutomirski <luto@kernel.org> wrote:
+> >> Should this be SYSCALL_DEFINE0?
+> > 
+> > It can be, and that would also fix the issue. However, it does result
+> > in unnecessary error injection to be hooked up here, which is why
+> > arm64 preferred to avoid the macro when I fixed it there. S390 uses
+> > SYSCALL_DEFINE0 for this though and since sys_ni_syscall always
+> > returns -ENOSYS, it shouldn't be a huge problem. Thoughts?
+> > 
+> 
+> I don’t see why all syscalls except these  few should have error injection
+> hooked up.  It’s also IMO nicer from a maintenance perspective to have all
+> syscalls use the same macros.
+> 
+> Will, is there something I’m missing?
 
-How is the file signature any different from (and/or better than) the
-fs-verity support?
+There was a reasonable request from Mark (CC'd) not to allow error injection
+for unimplemented system calls, so that's why we took the approach that we
+did. There was also a vague plan to fix this for everybody [1] but evidently
+nobody found the time :(
 
-The fs-verity support got fairly extensively discussed, and is
-apparently going to actually be widely used by Android, and it an
-independent feature of any security model.
+Will
 
-What does the IMA version bring to the table?
-
-             Linus
+[1] https://lore.kernel.org/lkml/20190524215821.GA37129@google.com/T/#m6519b2aad06d8c384de1f55256f08687c83d8796
