@@ -2,69 +2,114 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C9FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE0AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5985D20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FC72184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uzU2VkkD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730584AbfIPPGu (ORCPT
+        id S2388944AbfIPPHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:06:50 -0400
-Received: from baldur.buserror.net ([165.227.176.147]:34794 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfIPPGu (ORCPT
+        Mon, 16 Sep 2019 11:07:34 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36302 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfIPPHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:06:50 -0400
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1i9sYG-0008L7-6q; Mon, 16 Sep 2019 10:04:28 -0500
-Message-ID: <71490f3b94b851106eb48c8909239f401d0018d1.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        galak@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Sep 2019 10:04:27 -0500
-In-Reply-To: <7f8f9747ef1ab2e1261cf83b03c1da321d47f7b7.1568616151.git.christophe.leroy@c-s.fr>
-References: <966e6d6a226f9786098d296239a6c65064e73a41.1568616151.git.christophe.leroy@c-s.fr>
-         <7f8f9747ef1ab2e1261cf83b03c1da321d47f7b7.1568616151.git.christophe.leroy@c-s.fr>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, galak@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v2 2/2] powerpc/83xx: map IMMR with a BAT.
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Mon, 16 Sep 2019 11:07:33 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so39293117wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:07:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YZ7GwPwdP1QaRAGCDi3zfIX/FY2fDnM1sr/RMCpFxxc=;
+        b=uzU2VkkDYVjQ1pTRUBOHpiQDlJuYycViFdnM2TZTPwRbR0+hs72PASEsad5ldWEHha
+         6YwaULFVAh7vUXhyKLVU4sJUP6XgqbItTQN7+FQTGReXDU2nwmRrbDpsB33iZTaXfZGk
+         /hyPUmC/1qHE/rSCxaVCgMuXBV/n0z9PuGGdu+OT8RtWn9xp9ARUADYcSUaN5+uA2Qz4
+         70Ayj4BJshAmRS0FoLOw089B9rb8FHgGNjnB/B8f2J+ETsc3GQ67QTYCeTwtx0jElo+A
+         qPMiqIBOdgda4xvjbBXhUbZHs1l/yrfqqUa7pD7EzbcMiUBo6s4KET/EDASXzqS0G1S5
+         ceyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=YZ7GwPwdP1QaRAGCDi3zfIX/FY2fDnM1sr/RMCpFxxc=;
+        b=MMnZFgbhbZhfySIb617c1LcJmqX8ZDV+SA4ZEqd0JC+XK+SqVtSJ5yBU+IKfJ9DKK7
+         RNMKRRlj9obABKb5ZxABhFwxnzlo/QhpQVQjGwb2g5jJArzlSQzP2IarTTUcTTU1JGl0
+         6tQeebhBRJNi43tiWxaykFkSsfeVxcu3zPZoOkQddkKlqV6HC2VSxW5l8CBH7yndE0Lj
+         zPIzx4jIJJ4zJsRPEq8u6O5/hyQ/Sq/VqQsYW2IeOVkPQLXA+zexlLFfM+K37rjDMC3x
+         pFX0ka5SDpKLe2F3NQEKf9qQTjnsDNMOkcWY2YoJxWjHvvAj3fayYjAOHY5Qu9NJJoaE
+         7R4Q==
+X-Gm-Message-State: APjAAAVGE5I+N948XdmZMd5J/Mz3zQEXOPKGVi8D+NjVVkk2y0MkUlna
+        9eeDzbODC9qOOnGpMKJrSP6PVg==
+X-Google-Smtp-Source: APXvYqwA6CN0baTI+QTv0trp9VIfjDxVv1LIVPFLl9Of0S+VCIenW7uhYJSYtsse4eqn443IXckKPQ==
+X-Received: by 2002:a5d:4689:: with SMTP id u9mr226479wrq.78.1568646451810;
+        Mon, 16 Sep 2019 08:07:31 -0700 (PDT)
+Received: from [192.168.0.101] (146-241-102-115.dyn.eolo.it. [146.241.102.115])
+        by smtp.gmail.com with ESMTPSA id 26sm113150wmf.20.2019.09.16.08.07.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 08:07:31 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 0/1] block, bfq: remove bfq prefix from cgroups filenames
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <c67c4d4b-ee56-85c1-5b94-7ae1704918b6@kernel.dk>
+Date:   Mon, 16 Sep 2019 17:07:29 +0200
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        noreply-spamdigest via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        cgroups@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1F3898DA-C61F-4FA7-B586-F0FA0CAF5069@linaro.org>
+References: <20190909073117.20625-1-paolo.valente@linaro.org>
+ <80C56C11-DA21-4036-9006-2F459ACE9A8C@linaro.org>
+ <c67c4d4b-ee56-85c1-5b94-7ae1704918b6@kernel.dk>
+To:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-16 at 06:42 +0000, Christophe Leroy wrote:
-> @@ -145,6 +147,15 @@ void __init mpc83xx_setup_arch(void)
->  	if (ppc_md.progress)
->  		ppc_md.progress("mpc83xx_setup_arch()", 0);
->  
-> +	if (!__map_without_bats) {
-> +		phys_addr_t immrbase = get_immrbase();
-> +		int immrsize = IS_ALIGNED(immrbase, SZ_2M) ? SZ_2M : SZ_1M;
-> +		unsigned long va = __fix_to_virt(FIX_IMMR_BASE);
 
-Why __fix_to_virt() and not fix_to_virt()?
 
--Scott
+> Il giorno 16 set 2019, alle ore 17:01, Jens Axboe <axboe@kernel.dk> ha =
+scritto:
+>=20
+> On 9/16/19 8:56 AM, Paolo Valente wrote:
+>> News of this change?  Can we have it (or the solution with the
+>> symlinks if you prefer it) for 5.4?
+>=20
+> Coordinate with Tejun and bundle the stuff we need into a series,
 
+Ok.
+
+Tejun, could you put your switch-off-io-cost code into a standalone
+patch, so that I can put it together with this one in a complete
+series?
+
+Thanks,
+Paolo
+
+
+> we
+> can definitely put that in 5.4. I did send out the initial pull =
+request
+> for block, but I've got a few things lined up for a secondary pull
+> later this week.
+>=20
+> --=20
+> Jens Axboe
+>=20
 
