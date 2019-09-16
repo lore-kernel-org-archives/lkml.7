@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71211C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5605E20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604A720665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390642AbfIPStc (ORCPT
+        id S2390662AbfIPStg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:49:32 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46233 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390524AbfIPStM (ORCPT
+        Mon, 16 Sep 2019 14:49:36 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:50024 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390519AbfIPStM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 14:49:12 -0400
-Received: by mail-io1-f72.google.com with SMTP id t11so1118564ioc.13
+Received: by mail-io1-f69.google.com with SMTP id j23so1108769iog.16
         for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=RkXqwUWWqXYWsyolkE4DiEvym9AqlDpeXVcvjbM0T6E=;
-        b=eB5hZSS9WsdMMCmtKRc6PKzD+9rDTK1RQ1l8U9069niqOBSZCZ25ylI1kRfCXknXqr
-         rJtyZLJHUR0MYez8c5cDeNF4uFCeU8997PltM0viq6FQHFaWHpBIuYjEzCvJ4hAxLb45
-         pNAWdIJ2om9DG/g8I39dVRxEC4HraX0+roct+OkllHQPhUrmeb/sDUYnMxdxurddPTer
-         XWopSq6dyx7VMWUlnZ/yI3exUV7cuSIgo8WjY2Zc+t1OfAPFPoXxIkFUyRbkotEEH3qb
-         XYvUltG7YEYrKat3lMa1KXHhsLqT60EZe1uVTPPwhRTISauhKx2EUyIqqGimE2dX36Am
-         7Q8g==
-X-Gm-Message-State: APjAAAXpxJkhX5dV67Nhxl637JscDI5sqNT9tLwZF/h0xD2LIP35W/WN
-        QvPd0K1SLEL8IjnifO0y69/Bxs8uLZpOYbQ/2GVCRLhz2dYo
-X-Google-Smtp-Source: APXvYqxxXCpmjr04+y3jhfncZOzWpQL4Rd6k+zewclwOpwBkr50eP18zWgNtJ6jKP8XvsrKB6dxhBv8Q1sBeZAuvY1k7PjgPnXkW
+        bh=qC0xNuCFT2K5WnrI4/kA6JnBcvDth6gxH5fcwxA7nY8=;
+        b=sBEyVRdBX+n130yDrRkI+vnoOeky8juyNDnJ2HEJlWZuSDtrYYZR9R3VjAqA9oEeeo
+         ntGeux26t/mEZhWz5e/MyLJU6IdHvBRyetVeQ0tY1h66rsbyH6s/urhMMRj7DmmgAej3
+         KpflQTdV2UfMbBF+V9W1nZetwH4S3lLR96BjSivlFjFMdFN0LSoc/z8hRfQMgzl696WH
+         b+smaHFFJ9HesLAEDvgiCWtBPsvQXsYmDbROvCvyZ24hrgBYSx/7RtPyb2qBLrBUytUy
+         EvUuSMjwrp7GD4yLGTBJ3TsRj+AfMEE8Yt7Mdv1LsZlwteTbwBwqTBpfL03tkQ1c4/5a
+         ylHQ==
+X-Gm-Message-State: APjAAAWN73vkQ1yIBFC02lr+rRD56IGEM4f526P5LlxDU411fxEj4Yi6
+        KIDWA8q7/eFJL5XQdxPEbfGmME/+FSPhJc+NemC7rAC/yrwo
+X-Google-Smtp-Source: APXvYqzKw6FgH6xAMwPcLI9wdVOOeC8ZFRLFEAJBBwP7sr2c4k62ShnUES16SzVQEDbsJCYL7dFaZuIncdwozN4VTNO9UUIPgDA5
 MIME-Version: 1.0
-X-Received: by 2002:a6b:210:: with SMTP id 16mr1534512ioc.104.1568659751579;
+X-Received: by 2002:a02:5585:: with SMTP id e127mr1524963jab.25.1568659751315;
  Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
 Date:   Mon, 16 Sep 2019 11:49:11 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000044408c0592b00ff5@google.com>
-Subject: KASAN: global-out-of-bounds Read in __pm_runtime_resume
-From:   syzbot <syzbot+cd157359d82e8d98c17b@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        len.brown@intel.com, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, pavel@ucw.cz,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000402f3a0592b00f13@google.com>
+Subject: KASAN: slab-out-of-bounds Read in ld_usb_read (2)
+From:   syzbot <syzbot+4a52dbcef08fddbc887e@syzkaller.appspotmail.com>
+To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
+        bhelgaas@google.com, enric.balletbo@collabora.com,
+        gregkh@linuxfoundation.org, kirr@nexedi.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        lkundrak@v3.sk, logang@deltatee.com,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,22 +63,23 @@ syzbot found the following crash on:
 
 HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=10efb5fa600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1462f9a5600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=cd157359d82e8d98c17b
+dashboard link: https://syzkaller.appspot.com/bug?extid=4a52dbcef08fddbc887e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+cd157359d82e8d98c17b@syzkaller.appspotmail.com
+Reported-by: syzbot+4a52dbcef08fddbc887e@syzkaller.appspotmail.com
 
+ldusb 3-1:0.98: Read buffer overflow, -2576376864 bytes dropped
 ==================================================================
-BUG: KASAN: global-out-of-bounds in __pm_runtime_resume+0x162/0x180  
-drivers/base/power/runtime.c:1069
-Read of size 1 at addr ffffffff863d87b1 by task syz-executor.2/13622
+BUG: KASAN: slab-out-of-bounds in _copy_to_user+0x124/0x150  
+lib/usercopy.c:27
+Read of size 536879616 at addr ffff8881ab680008 by task syz-executor.2/12817
 
-CPU: 0 PID: 13622 Comm: syz-executor.2 Not tainted 5.3.0-rc7+ #0
+CPU: 0 PID: 12817 Comm: syz-executor.2 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
 Call Trace:
@@ -85,41 +88,42 @@ Call Trace:
   print_address_description+0x6a/0x32c mm/kasan/report.c:351
   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
   kasan_report+0xe/0x12 mm/kasan/common.c:618
-  __pm_runtime_resume+0x162/0x180 drivers/base/power/runtime.c:1069
-  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
-  usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1709
-  usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
-  hid_hw_power include/linux/hid.h:1038 [inline]
-  hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3f50 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1089
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+  _copy_to_user+0x124/0x150 lib/usercopy.c:27
+  copy_to_user include/linux/uaccess.h:152 [inline]
+  ld_usb_read+0x31a/0x780 drivers/usb/misc/ldusb.c:495
+  __vfs_read+0x76/0x100 fs/read_write.c:425
+  vfs_read+0x1ea/0x430 fs/read_write.c:461
+  ksys_read+0x1e8/0x250 fs/read_write.c:587
   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4137d1
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007faea59927a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 00000000004137d1
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007faea5992850
-RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 00007faea59936d4
-R13: 00000000004c8cbf R14: 00000000004dfc90 R15: 00000000ffffffff
+RIP: 0033:0x4598e9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fad75925c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
+RDX: 0000000020002200 RSI: 0000000020001200 RDI: 0000000000000004
+RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fad759266d4
+R13: 00000000004c6d1a R14: 00000000004dc0c0 R15: 00000000ffffffff
 
-The buggy address belongs to the variable:
-  __param_str_xfer_debug+0x91/0x4a0
+The buggy address belongs to the page:
+page:ffffea0006ada000 refcount:1 mapcount:0 mapping:0000000000000000  
+index:0x0 compound_mapcount: 0
+flags: 0x200000000010000(head)
+raw: 0200000000010000 dead000000000100 dead000000000122 0000000000000000
+raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
 
 Memory state around the buggy address:
-  ffffffff863d8680: fa fa fa fa 00 00 00 02 fa fa fa fa 00 00 00 00
-  ffffffff863d8700: fa fa fa fa 00 00 00 02 fa fa fa fa 00 07 fa fa
-> ffffffff863d8780: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 07 fa
-                                      ^
-  ffffffff863d8800: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
-  ffffffff863d8880: 00 07 fa fa fa fa fa fa 00 00 06 fa fa fa fa fa
+  ffff8881ab6a0300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff8881ab6a0380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff8881ab6a0400: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+                    ^
+  ffff8881ab6a0480: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
+  ffff8881ab6a0500: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
 ==================================================================
 
 
