@@ -2,133 +2,106 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A35C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A255C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CB521852
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568651838;
-	bh=A4EC8rYENbB35cqZcR/Jp9eGTrxiDPiBK2ZwBJAd0RY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=Rx1tzpMLpQhlQngsYLpqC4+fgKAoOap7SPe0me/iYtIztrAUp8sHEVVO0/TH5V/ac
-	 PgL4V832jK1JNLv9D4l+uBG6YE+IBIcX7jo1xFqV/kOsJyGEeuGRIO7LhU/bNYLM8C
-	 +fYEYSa1sZJZF6dakLlVrrnE/vOYdQVeG5m+EveI=
+	by mail.kernel.org (Postfix) with ESMTP id 40A0321881
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wjcwn0bY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390025AbfIPQhR (ORCPT
+        id S2390042AbfIPQh3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbfIPQhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:37:17 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB7D214D9;
-        Mon, 16 Sep 2019 16:37:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568651836;
-        bh=A4EC8rYENbB35cqZcR/Jp9eGTrxiDPiBK2ZwBJAd0RY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=nLwejD44HX8XnRRvatCXwqkeSGcj194yx1ey+33mBRNN06oqL6nsQKBEU0X2O/atx
-         O++fLg6U1iwj8GQX4TKp30wMsOewvjUXl56CK1RtBAnwUUsPWWfFcGKSy0TRrDJXlv
-         E3Y9C9vI91BlxtXgO27qsR+fIwFGZDDb7GhstvIg=
-Subject: Re: [PATCH 2/6] selftests/clone3: add a check for invalid exit_signal
-To:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        linux-kselftest@vger.kernel.org
-Cc:     Adrian Reber <areber@redhat.com>, shuah <shuah@kernel.org>
-References: <cover.1568116761.git.esyr@redhat.com>
- <f5c715164c87a226afca711559e7ed72a70426a4.1568116761.git.esyr@redhat.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <f93052b9-9520-c53a-27dd-b096d3336576@kernel.org>
-Date:   Mon, 16 Sep 2019 10:37:15 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 12:37:29 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40729 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfIPQh3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:37:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b24so53415wmj.5;
+        Mon, 16 Sep 2019 09:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5GSLRtaWXP5trJhqVOplw/3NUbMs67XKaj1GvOZOB7Y=;
+        b=Wjcwn0bYH1NkN6RT5L8bAJuVTizoUSFL2YFRKqCKCmSD5HiQoZTg+VC9QMz2gRCp7+
+         1UNydDzMTvaoUs8OU7IMPPcuchD1IhtJhnCY2eDt+96Bum4e5Rd1IRBbQsTNE1tvMV1q
+         FTUlb9lbj4JWDlKAc5vf/SEpJCPsweWcQpCmShH1Kb+xkCp3KKcZhgw89WAyYfq7/CQx
+         W6xgPUrGbY0r0D7hhskHA8GqNv/EtHcugI6HfQ7tEAUmwxQjuRgvZxz5DUGZkg8VxhJM
+         ER61Iu6ZYtIS4i2kp+H4EtbvoggSB9SIGJurXd85S9eaDLT/2fSzHqZlgbYk39jZbbJP
+         fzJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5GSLRtaWXP5trJhqVOplw/3NUbMs67XKaj1GvOZOB7Y=;
+        b=jH/HSQkdgSMapanfiNtYu98W5OLgNUIaHmtg304wpmlYY5m8cv0OVq06MdYi54C6DD
+         fY5qZSq/7dS+NvBEYjyBpuEKhFkpSQ3QiTUwHebrfCXhrBhhrLotiN77zrAvPdfkM5XC
+         iPLiCyK93Zii7Xl9kITugXIKFg3iXOhxQJp5h1SrlHpZ7DS8AKNVMfgoVv7ZrZ+hJZHz
+         FFG4EfuBQAYibLU7SBMS7JRiLKNUrYbMf1Sg2Jy4OAM/oCxe1aLh2xNm4pCZ37J8sNcF
+         +n9fqk/S5284vngAran+DUJ1l/qYAWGva/opofdvAHK4/FgsKJrfmzlZ/2Ta7ZZ/CT0L
+         ZIlA==
+X-Gm-Message-State: APjAAAWqPr9IK6SnGvRx4kVbZA0MTy2sSaXC0nfGOuzK/SsoDoLfEfuV
+        t6/yiCUKUH/AHisJ1pq3e5PpIgHUUpEkBwr5F6I=
+X-Google-Smtp-Source: APXvYqzA+3qCVXj4SPQHZUzSNPHIKuJNpnJe+OL9j20Ou/1YJskceQAFv7l87MBB9gRCRvkGgnlPsye9L1/vGj+W0cc=
+X-Received: by 2002:a1c:1d4:: with SMTP id 203mr73764wmb.104.1568651846964;
+ Mon, 16 Sep 2019 09:37:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f5c715164c87a226afca711559e7ed72a70426a4.1568116761.git.esyr@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190916134029.GF4352@sirena.co.uk>
+In-Reply-To: <20190916134029.GF4352@sirena.co.uk>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Mon, 16 Sep 2019 18:37:15 +0200
+Message-ID: <CAFLxGvwZPBg7834aq4rqJyxMNCkNThPa2hGuwuuzpxYkHiQN7Q@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the vfs tree with the ubifs tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Artem Bityutskiy <dedekind1@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Wenwen Wang <wenwen@cs.uga.edu>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        linux-mtd@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 6:03 AM, Eugene Syromiatnikov wrote:
-> Check that the kernel fails calls with exit_signal with non-zero highest
-> 32 bits.
-> 
+On Mon, Sep 16, 2019 at 3:40 PM Mark Brown <broonie@kernel.org> wrote:
+>
+> Hi all,
+>
+> Today's linux-next merge of the vfs tree got a conflict in:
+>
+>   fs/ubifs/super.c
+>
+> between commit:
+>
+>   9163e0184bd7d5f ("ubifs: Fix memory leak bug in alloc_ubifs_info() error path")
+>
+> from the ubifs tree and commit:
+>
+>   50d7aad57710e2b ("vfs: Convert ubifs to use the new mount API")
+>
+> from the vfs tree.
+>
+> I fixed it up dropping the ubifs change and can carry the fix as
+> necessary. This is now fixed as far as linux-next is concerned, but any
+> non trivial conflicts should be mentioned to your upstream maintainer
+> when your tree is submitted for merging.  You may also want to consider
+> cooperating with the maintainer of the conflicting tree to minimise any
+> particularly complex conflicts.
 
-Describe what you are testing:
+Thanks a lot for letting me know!
 
-"Add a test case for clone3() non-zero highest 32 bits behavior. It
-should fail with exit_signal value??"
-
-Add checks for unsupported cases. Handle unsupported architectures
-and configurations with skip
-
-> * tools/testing/selftests/clone3/clone3.c (enum test_mode): Add
-> CLONE3_ARGS_BIG_EXIT_SIGNAL.
-> (call_clone3): Add args.exit_signal initialisation in case
-> test_mode == CLONE3_ARGS_BIG_EXIT_SIGNAL.
-> (main): Add test_clone3 clone check with
-> test_mode == CLONE3_ARGS_BIG_EXIT_SIGNAL.
-
-Please don't include pseudo code in the commit log.
-
-> 
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-> ---
->   tools/testing/selftests/clone3/clone3.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
-> index 7b65ee5..4f23a0c 100644
-> --- a/tools/testing/selftests/clone3/clone3.c
-> +++ b/tools/testing/selftests/clone3/clone3.c
-> @@ -28,6 +28,7 @@ enum test_mode {
->   	CLONE3_ARGS_NO_TEST,
->   	CLONE3_ARGS_ALL_0,
->   	CLONE3_ARGS_ALL_1,
-> +	CLONE3_ARGS_BIG_EXIT_SIGNAL,
->   };
->   
->   static pid_t raw_clone(struct clone_args *args, size_t size)
-> @@ -72,6 +73,10 @@ static int call_clone3(int flags, size_t size, enum test_mode test_mode)
->   		args.tls = 1;
->   		args.set_tid = 1;
->   		break;
-> +
-> +	case CLONE3_ARGS_BIG_EXIT_SIGNAL:
-> +		args.exit_signal = 0xbadc0ded00000000;
-
-Please add a comment to indicate what this is. I am assuming
-this bad sig val.
-
-> +		break;
->   	}
->   
->   	pid = raw_clone(&args, size);
-> @@ -146,6 +151,10 @@ int main(int argc, char *argv[])
->   	/* Do a clone3() with all members set to 1 */
->   	if (test_clone3(0, CLONE3_ARGS_SIZE_V0, -EINVAL, CLONE3_ARGS_ALL_1))
->   		goto on_error;
-> +	/* Do a clone3() with exit_signal having highest 32 bits non-zero */
-> +	if (test_clone3(0, CLONE3_ARGS_SIZE_V0, -EINVAL,
-> +			CLONE3_ARGS_BIG_EXIT_SIGNAL))
-> +		goto on_error;
->   	/*
->   	 * Do a clone3() with sizeof(struct clone_args) + 8
->   	 * and all members set to 0.
-> 
-
-thanks,
--- Shuah
+-- 
+Thanks,
+//richard
