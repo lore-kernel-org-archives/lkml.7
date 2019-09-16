@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6830C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604A720665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABCAE20665
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390662AbfIPStg (ORCPT
+        id S2390679AbfIPStl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:49:36 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:50024 "EHLO
+        Mon, 16 Sep 2019 14:49:41 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:38693 "EHLO
         mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390519AbfIPStM (ORCPT
+        with ESMTP id S2390517AbfIPStM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 14:49:12 -0400
-Received: by mail-io1-f69.google.com with SMTP id j23so1108769iog.16
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
+Received: by mail-io1-f69.google.com with SMTP id a8so1172023ios.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=qC0xNuCFT2K5WnrI4/kA6JnBcvDth6gxH5fcwxA7nY8=;
-        b=sBEyVRdBX+n130yDrRkI+vnoOeky8juyNDnJ2HEJlWZuSDtrYYZR9R3VjAqA9oEeeo
-         ntGeux26t/mEZhWz5e/MyLJU6IdHvBRyetVeQ0tY1h66rsbyH6s/urhMMRj7DmmgAej3
-         KpflQTdV2UfMbBF+V9W1nZetwH4S3lLR96BjSivlFjFMdFN0LSoc/z8hRfQMgzl696WH
-         b+smaHFFJ9HesLAEDvgiCWtBPsvQXsYmDbROvCvyZ24hrgBYSx/7RtPyb2qBLrBUytUy
-         EvUuSMjwrp7GD4yLGTBJ3TsRj+AfMEE8Yt7Mdv1LsZlwteTbwBwqTBpfL03tkQ1c4/5a
-         ylHQ==
-X-Gm-Message-State: APjAAAWN73vkQ1yIBFC02lr+rRD56IGEM4f526P5LlxDU411fxEj4Yi6
-        KIDWA8q7/eFJL5XQdxPEbfGmME/+FSPhJc+NemC7rAC/yrwo
-X-Google-Smtp-Source: APXvYqzKw6FgH6xAMwPcLI9wdVOOeC8ZFRLFEAJBBwP7sr2c4k62ShnUES16SzVQEDbsJCYL7dFaZuIncdwozN4VTNO9UUIPgDA5
+        bh=2XxfILjNqvgOnvsx3ytCFDxVQdXM6VVuZeypAV3t46k=;
+        b=bjOKtAuyt65oZO6iFLKM89k5GLyWF8f14+Z6SGbEYgypnZ6nlJePmLF6aO10xG+74r
+         2IUcgDI0vXbBDhQq771WKBD0v7/qJOLj31e+F9VwYs9dY4xtvP1Uq1nB9hcaPrC/Wd8N
+         8eqbo4hC/jQ0QDV1W6CNVC6TCPYbuQJ42T0e9Nw+9AhKoiIZXzZF5injawz0DwdsVWp9
+         TpSRF3SsCJCiklxhK+D8V5Pn5TwdpZwseKGEfw6Y6EL0Nege7MrBSWmXHs0zbzX2TIhE
+         i9Qkqc8PsLCrpiLO1LQtNzuvaf1lGu/EznvDcucUx8+Rc0okddFo0uWLgGM+b9bVKwjj
+         7C4w==
+X-Gm-Message-State: APjAAAWMysidlOJClLxAEXjxcf9YtD8xACfkiaasZlcmmJbEjwvks38m
+        cqKlu/OP7HgDobY3WdGmEiW0MjRAMYjOthBqCNd9TYzYpYaL
+X-Google-Smtp-Source: APXvYqxAYehskRVQgzFrr0XdVWHwzuwgpJNhn+ZxrlmyrvG4FhfWqX1sw21wt+LSz1OiL8vSN93vNtKXCpzyTEAWVtLie46dgvGd
 MIME-Version: 1.0
-X-Received: by 2002:a02:5585:: with SMTP id e127mr1524963jab.25.1568659751315;
- Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 11:49:11 -0700
+X-Received: by 2002:a02:c8cd:: with SMTP id q13mr477547jao.133.1568659749937;
+ Mon, 16 Sep 2019 11:49:09 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 11:49:09 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000402f3a0592b00f13@google.com>
-Subject: KASAN: slab-out-of-bounds Read in ld_usb_read (2)
-From:   syzbot <syzbot+4a52dbcef08fddbc887e@syzkaller.appspotmail.com>
-To:     alexandre.belloni@bootlin.com, andreyknvl@google.com,
-        bhelgaas@google.com, enric.balletbo@collabora.com,
-        gregkh@linuxfoundation.org, kirr@nexedi.com,
+Message-ID: <0000000000002b27c60592b00f38@google.com>
+Subject: WARNING in implement
+From:   syzbot <syzbot+38e7237add3712479d65@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        lkundrak@v3.sk, logang@deltatee.com,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,68 +61,60 @@ syzbot found the following crash on:
 
 HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1462f9a5600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=170b213e600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4a52dbcef08fddbc887e
+dashboard link: https://syzkaller.appspot.com/bug?extid=38e7237add3712479d65
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16830dc1600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f2d3fa600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4a52dbcef08fddbc887e@syzkaller.appspotmail.com
+Reported-by: syzbot+38e7237add3712479d65@syzkaller.appspotmail.com
 
-ldusb 3-1:0.98: Read buffer overflow, -2576376864 bytes dropped
-==================================================================
-BUG: KASAN: slab-out-of-bounds in _copy_to_user+0x124/0x150  
-lib/usercopy.c:27
-Read of size 536879616 at addr ffff8881ab680008 by task syz-executor.2/12817
-
-CPU: 0 PID: 12817 Comm: syz-executor.2 Not tainted 5.3.0-rc7+ #0
+keytouch 0003:0926:3333.0001: implement() called with too large value 32769  
+(n: 1)! (kworker/0:1)
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 12 at drivers/hid/hid-core.c:1370  
+implement.cold+0x40/0x81 drivers/hid/hid-core.c:1370
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+Workqueue: events hidinput_led_worker
 Call Trace:
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x6a/0x32c mm/kasan/report.c:351
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-  kasan_report+0xe/0x12 mm/kasan/common.c:618
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  _copy_to_user+0x124/0x150 lib/usercopy.c:27
-  copy_to_user include/linux/uaccess.h:152 [inline]
-  ld_usb_read+0x31a/0x780 drivers/usb/misc/ldusb.c:495
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x1ea/0x430 fs/read_write.c:461
-  ksys_read+0x1e8/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fad75925c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 0000000020002200 RSI: 0000000020001200 RDI: 0000000000000004
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fad759266d4
-R13: 00000000004c6d1a R14: 00000000004dc0c0 R15: 00000000ffffffff
-
-The buggy address belongs to the page:
-page:ffffea0006ada000 refcount:1 mapcount:0 mapping:0000000000000000  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010000(head)
-raw: 0200000000010000 dead000000000100 dead000000000122 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8881ab6a0300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8881ab6a0380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffff8881ab6a0400: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-                    ^
-  ffff8881ab6a0480: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-  ffff8881ab6a0500: fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe fe
-==================================================================
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:implement.cold+0x40/0x81 drivers/hid/hid-core.c:1370
+Code: 00 ef 01 00 48 c7 c2 a0 ac 52 86 48 c7 c6 c0 8a 52 86 4c 8d 88 70 06  
+00 00 e8 3f 3b 1a fe 48 c7 c7 20 8b 52 86 e8 fc 4e d7 fc <0f> 0b 44 21 e5  
+e9 06 3a ff ff e8 64 ad ec fc 49 8d bd 28 19 00 00
+RSP: 0018:ffff8881da20fb88 EFLAGS: 00010082
+RAX: 0000000000000024 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed103b441f63
+RBP: 0000000000008001 R08: 0000000000000024 R09: ffffed103b643ee7
+R10: ffffed103b643ee6 R11: ffff8881db21f737 R12: 0000000000000001
+R13: ffff8881d28d8000 R14: 0000000000000001 R15: 0000000000000001
+  hid_output_field drivers/hid/hid-core.c:1543 [inline]
+  hid_output_report+0x2dc/0x4c0 drivers/hid/hid-core.c:1562
+  __usbhid_submit_report drivers/hid/usbhid/hid-core.c:593 [inline]
+  usbhid_submit_report+0x65c/0xde0 drivers/hid/usbhid/hid-core.c:638
+  usbhid_request+0x3c/0x70 drivers/hid/usbhid/hid-core.c:1252
+  hidinput_led_worker+0xbd/0x360 drivers/hid/hid-input.c:1495
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Shutting down cpus with NMI
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
@@ -134,3 +124,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
