@@ -2,140 +2,118 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4212C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1EFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9B17214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:22:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ne1r7/Ag"
+	by mail.kernel.org (Postfix) with ESMTP id 253762067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:23:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403842AbfIPVWL (ORCPT
+        id S2403960AbfIPVXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:22:11 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37415 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730662AbfIPVWL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:22:11 -0400
-Received: by mail-lj1-f196.google.com with SMTP id c22so1362449ljj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:22:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dkfcLQF/tIOTeeIdqJMbWZiDa2xY+OxFlDcGtEBgvPs=;
-        b=Ne1r7/AgO+KtwYd1q/2KIaKaaNVBrZ4rRc78P2bYM3GwpWcUHmWOyELgVlqVdh92CK
-         LkmLdMeRMT4ZBrJiyiyHc0ZpKt+umUpYPWtdUw+v0YDx+77GAJ5udCaJYqPpP0D0KGMn
-         h9AKeK7WVmqBr6hcJlKcTDIOFRRqQ//NPx4cq6zUq1iS5f/8A3lY1BMe85bRO1lXPvwF
-         dvjVKuY9m/Gve/Lzc1wBAS2wzlDr5v62PRKAORIO3mHrnIShq9/kA9eFhbkQYOMRsXXF
-         u/Fs2whKmrqLDSKO0mOrvZn45qhzXviEKYvLiYrd8v1z4B4E71TKPwDgCvquQkz8+OsC
-         I9Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=dkfcLQF/tIOTeeIdqJMbWZiDa2xY+OxFlDcGtEBgvPs=;
-        b=Z8IU8VtZeofD/ToA1zFUtOyXmg7Qp2As6FN+dpWiGQDmvMT1Kg1ZR9jm8Le0eQtcZ/
-         DPjYUeDxk+J5HZMjdfdWplUsDTXxSscys/4/TdGao0HykcM7A50DB6rx3eQQjfDyL/3m
-         ckbi1PA84KdE5LviGYFtIcMCBD4y0Q7a1fQcDy7O3IEYWY1mkEHUuU4Im5fdjU5y/CH+
-         hqMPcf6GL5HTLfoK2B+b3/mtPoYVJYSBNROU0VsSm0THTn3zTTP/f1MrhiS1QmG2DztK
-         NgifWuCK7MSdGObGDymbG73ECT0wslN3YCmDcyO0mQWOeUa6qoSVvemaxkm2BX9XpGf/
-         TyQA==
-X-Gm-Message-State: APjAAAXAMsJo6MzBc6Zm0YCd66Y8bUSfvau6M+ZJMtY1rH0W/O+f1FJ7
-        DPu5LpeMUxZNwi55Tk7WqoqsEg==
-X-Google-Smtp-Source: APXvYqzV76u2849Gz4AEo8493X917I7CZ3AYhQkdkfboPLmd4/iYmWUbuNaLbkPD5JsM0UV8Mt7CpA==
-X-Received: by 2002:a2e:98d2:: with SMTP id s18mr4661ljj.68.1568668929218;
-        Mon, 16 Sep 2019 14:22:09 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id r6sm14547ljr.77.2019.09.16.14.22.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Sep 2019 14:22:08 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 00:22:06 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH v3 bpf-next 01/14] samples: bpf: makefile: fix HDR_PROBE
- "echo"
-Message-ID: <20190916212204.GA4420@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
- <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
- <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
+        Mon, 16 Sep 2019 17:23:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:27020 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727674AbfIPVXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:23:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 14:23:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
+   d="scan'208";a="201684014"
+Received: from dgitin-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.142.45])
+  by fmsmga001.fm.intel.com with ESMTP; 16 Sep 2019 14:23:46 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [RFC PATCH 0/9] soundwire: add Master device support, GreyBus style
+Date:   Mon, 16 Sep 2019 16:23:33 -0500
+Message-Id: <20190916212342.12578-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 01:13:23PM -0700, Andrii Nakryiko wrote:
->On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> echo should be replaced with echo -e to handle '\n' correctly, but
->> instead, replace it with printf as some systems can't handle echo -e.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  samples/bpf/Makefile | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
->> index 1d9be26b4edd..f50ca852c2a8 100644
->> --- a/samples/bpf/Makefile
->> +++ b/samples/bpf/Makefile
->> @@ -201,7 +201,7 @@ endif
->>
->>  # Don't evaluate probes and warnings if we need to run make recursively
->>  ifneq ($(src),)
->> -HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
->> +HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
->
->printf change is fine, but I'm confused about \# at the beginning of
->the string. Not sure what was the intent, but it seems like it should
->work with just #include at the beginning.
+The current use of platform devices leads to limitations in terms of
+API and problematic reference counts flagged during the review of
+sysfs patches.
 
-At least no warns, but looks like should work.
-Will try it in next v.
+As suggested by Greg KH, this patch series introduces a 'Master
+device' and gets rid of platform devices. The code is inspired by
+GreyBus, e.g. 'gb_hd_driver' is translated for the SoundWire context
+as 'sdw_md_driver' and likewise 'gb_host_device' is translated as
+'sdw_master_device'. There are differences in the way devices are
+created, using device_register instead of the multiple steps used in
+GreyBus.
 
->
->>         $(HOSTCC) $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
->>         echo okay)
->>
->> --
->> 2.17.1
->>
+All I know about GreyBus is that it's based on Unipro, so the
+code updates are based on a first-order analysis, it could very well
+be I missed concepts while trying to reverse-engineer the code in
+staging/greybus/. I focused on the concepts mainly and it's also
+possible that the dual-license for new files or plan-vanilla
+EXPORT_SYMBOL are not appropriate for all the changes in this
+series. Please don't take errors as deliberate intent to work-around
+GPL but rather as an indicator of maturity of the code only developed
+in the last few days.
+
+These changes make it possible to provide new callbacks, e.g splitting
+the bus startup from the initializations in probe, which is very much
+desired on Intel platforms to detect the machine driver as early as
+possible before the hardware is fully powered/enable. These patches
+will be provided as a separate RFC later today to illustrate the
+benefit of these changes.
+
+To make the code more consistent the first series of patches are
+renames. I did not rename 'sdw_slave' or 'module_sdw_driver' to avoid
+compatibility issues since there are codec drivers almost ready for
+integration. I don't have any specific opinion on if/when additional
+renames should be done, as long as there is a means to clearly
+identify what is specific to a SoundWire Master I am fine.
+
+Feedback and reviews welcome.
+
+Bard Liao (1):
+  soundwire: add device driver to sdw_md_driver
+
+Pierre-Louis Bossart (8):
+  soundwire: renames to prepare support for master drivers/devices
+  soundwire: rename dev_to_sdw_dev macro
+  soundwire: rename drv_to_sdw_slave_driver macro
+  soundwire: bus_type: rename sdw_drv_ to sdw_slave_drv
+  soundwire: intel: rename res field as link_res
+  soundwire: add support for sdw_slave_type
+  soundwire: add initial definitions for sdw_master_device
+  soundwire: intel: remove platform devices and provide new interface
+
+ drivers/base/regmap/regmap-sdw.c    |   4 +-
+ drivers/soundwire/Makefile          |   2 +-
+ drivers/soundwire/bus.c             |   2 +-
+ drivers/soundwire/bus_type.c        |  60 +++---
+ drivers/soundwire/intel.c           | 117 ++++++-----
+ drivers/soundwire/intel.h           |  22 +--
+ drivers/soundwire/intel_init.c      | 293 +++++++++++++++++++---------
+ drivers/soundwire/master.c          |  80 ++++++++
+ drivers/soundwire/slave.c           |   9 +-
+ include/linux/soundwire/sdw.h       |  39 +++-
+ include/linux/soundwire/sdw_intel.h |  86 +++++++-
+ include/linux/soundwire/sdw_type.h  |  34 +++-
+ 12 files changed, 551 insertions(+), 197 deletions(-)
+ create mode 100644 drivers/soundwire/master.c
 
 -- 
-Regards,
-Ivan Khoronzhuk
+2.20.1
+
