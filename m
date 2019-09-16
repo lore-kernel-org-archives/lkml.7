@@ -2,134 +2,120 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5027EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B843CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228F3216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED642171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568640318;
-	bh=OiAkGyDRKCvfn3vNFv3C2SeQILtTHjdtRNQHWGNDemA=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=gjbZA/8cB3G8eUtPthc4YZjSlQRt5qP1i2vvIPukg2vqTF6T/tJkHkopSHBSF8PFN
-	 jTC8PP6rCV5eL4RJneTlFwvaQvgY37ThLxlLSuot1fVcSft7njDsM8Pf2Cp4h6CEww
-	 bP+7+4wfpgIGBQPAqoNKvmZ8SGbOTgX79K5ZIiR8=
+	s=default; t=1568640324;
+	bh=JQdrtnmyKg2DjT5CLoYa3+kCDakSs39kT0Pa7rv8YAY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=wxqhdz4OPmL2M10CdgZ3ZJRb1qDKPXga4UEIzKbG4NDlCf5kREwSwNXF0IGnnfgbk
+	 VzFYTsgLhWImJzQgF/XMReyeESfKqty6TYFcl/xtP1FxKdQGfE8yXGkWHb4FrqS9tI
+	 Tm0HcRzKlkGO68q1o4U4tiSIIblQ1rENSTN9c7WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733176AbfIPNZR (ORCPT
+        id S1733190AbfIPNZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:25:17 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54723 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbfIPNZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:25:16 -0400
-Received: by mail-wm1-f67.google.com with SMTP id p7so10140898wmp.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=X7H3NzseuQmpiOdoQmBafMaPyBN8wulz+EJiV4/1jLk=;
-        b=rATz4Fb9jvhoiyikJwq3HPAiEs/Z5q7GFzsREtY55wZRarLu/lBzHwB3NzKYiR/dLv
-         +81WKNDBc/s/Dlgmg3sMqoXoL5Fa3rCRGsVHQph4Ef8v+vBdcR6/PCx/ESrY/SfHaQrD
-         G5GqqfnFAlcYUqHV1uvYwK3EN5Ihwu65jVhSVBTTmkCB6SxoQk7f/sOxH5jxPq9HkUBW
-         MRM+a10EMGKQse695TxAjULME4CpmEPFuj4Ya9/EBv7JxIXLM3dO/CPu3qjut0sL6E4q
-         UWy9AgO8yo1PWkQwuP+wau1nxdEG/0P1qQxjzIuhaKD8bEyTvNWOeJ8Nhdtyc0Sjui88
-         Bplw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=X7H3NzseuQmpiOdoQmBafMaPyBN8wulz+EJiV4/1jLk=;
-        b=RKShcBF73Vf58lYB6jGTDo84P5qsf5EyDu0eoNXPWTb2Q4Mzy8TaXMpGi39+vtSJlT
-         NrYuoPk89pBfNUthNYDx3dLLzOH40g1oq0TNRfCCmX7XaehfYN33DYcqcVz0EYBmI2ls
-         Cmd0J3ASPlG/QJkuErNCDBKxnriDwZXqK01oZkHHbOiAMBp4VQi3Eqgz0GjH2uyQnatQ
-         Byk/f9vAgmTMFRiS1FtKmO4/uHXg7virHmrvHqWlrf6Mdqdl+C0IYBIGLUFizOdfZ2xs
-         y/rCkz5G6nfvIb8CaiIuE4TlgS5dLhf+RWERwRGRhG//72YBwtjUzChOJxmVZGZOD5nn
-         GBCw==
-X-Gm-Message-State: APjAAAX9q8ylM7zbNSZLolA8JB/34a6ihVAP+TacEUNCwCoZeNm8RY8g
-        /K5mYSjdPWMVvQ6m197p5T4=
-X-Google-Smtp-Source: APXvYqwLPHmLO843aXcS4+u2r7JB+gu25VRB12QJT+1YK9zpCgN0xt3jbEUdqv5Ukv7OLtOmcDvClA==
-X-Received: by 2002:a1c:99cd:: with SMTP id b196mr13741244wme.83.1568640313280;
-        Mon, 16 Sep 2019 06:25:13 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id b16sm56001105wrh.5.2019.09.16.06.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 06:25:12 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 15:25:10 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Borislav Petkov <bp@alien8.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] x86/mm changes for v5.4
-Message-ID: <20190916132510.GA28017@gmail.com>
+        Mon, 16 Sep 2019 09:25:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48642 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727742AbfIPNZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:25:23 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E38B214D9;
+        Mon, 16 Sep 2019 13:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568640322;
+        bh=JQdrtnmyKg2DjT5CLoYa3+kCDakSs39kT0Pa7rv8YAY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Kya6U2nziL0KBsVYCrRT5pIoqQUuitGr+giC8DkexN5FVcktxHmIUHsBfD87wjzVd
+         V2quVZpQCriHWKgDsWXDkhDWrP6KdbLIN3THYSWQGaRqZUWTT2TY8MgOrio6hYQuud
+         ryFgUz0UybroQX8ILL0ckZ28d7JZbtp8AVv1wEyc=
+Subject: Re: [PATCH 1/2] selftests: watchdog: Validate optional file argument
+To:     Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>, shuah <shuah@kernel.org>
+References: <20190907085833.21167-1-erosca@de.adit-jv.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ed9db2a8-194f-3d42-7339-b66970f68552@kernel.org>
+Date:   Mon, 16 Sep 2019 07:25:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190907085833.21167-1-erosca@de.adit-jv.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On 9/7/19 2:58 AM, Eugeniu Rosca wrote:
+> From: "George G. Davis" <george_davis@mentor.com>
+> 
+> As reported by Eugeniu Rosca, the newly added optional file
+> argument does not validate if the file is indeed a watchdog, e.g.:
+> 
+> ./watchdog-test  -f /dev/zero
+> Watchdog Ticking Away!
+> 
+> Fix it by confirming that the WDIOC_GETSUPPORT ioctl succeeds.
+> 
+> Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+> v1: Applied/tested on commit ce54eab71e210f ("kunit: fix failure to build without printk") of
+>      https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next
+> 
+>   tools/testing/selftests/watchdog/watchdog-test.c | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
+> index afff120c7be6..6ed822dc2222 100644
+> --- a/tools/testing/selftests/watchdog/watchdog-test.c
+> +++ b/tools/testing/selftests/watchdog/watchdog-test.c
+> @@ -97,6 +97,7 @@ int main(int argc, char *argv[])
+>   	int c;
+>   	int oneshot = 0;
+>   	char *file = "/dev/watchdog";
+> +	struct watchdog_info info;
+>   
+>   	setbuf(stdout, NULL);
+>   
+> @@ -118,6 +119,16 @@ int main(int argc, char *argv[])
+>   		exit(-1);
+>   	}
+>   
+> +	/*
+> +	 * Validate that `file` is a watchdog device
+> +	 */
+> +	ret = ioctl(fd, WDIOC_GETSUPPORT, &info);
+> +	if (ret) {
+> +		printf("WDIOC_GETSUPPORT error '%s'\n", strerror(errno));
+> +		close(fd);
+> +		exit(ret);
+> +	}
+> +
+>   	optind = 0;
+>   
+>   	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
+> 
 
-Please pull the latest x86-mm-for-linus git tree from:
+Thanks for catching this. I will pull this in for second update for
+5.4-rc1.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-mm-for-linus
-
-   # HEAD: bc04a049f058a472695aa22905d57e2b1f4c77d9 x86/mm: Fix cpumask_of_node() error condition
-
-The changes in this cycle were:
-
- - Make cpumask_of_node() more robust against invalid node IDs
-
- - Simplify and speed up load_mm_cr4()
-
- - Unexport and remove various unused set_memory_*() APIs
-
- - Misc cleanups
-
- Thanks,
-
-	Ingo
-
------------------->
-Cao jin (1):
-      x86/fixmap: Cleanup outdated comments
-
-Christoph Hellwig (4):
-      x86/mm: Unexport set_memory_x() and set_memory_nx()
-      x86/mm: Remove the unused set_memory_array_*() functions
-      x86/mm: Remove set_pages_x() and set_pages_nx()
-      x86/mm: Remove the unused set_memory_wt() function
-
-Jan Kiszka (1):
-      x86/mm: Avoid redundant interrupt disable in load_mm_cr4()
-
-Peter Zijlstra (1):
-      x86/mm: Fix cpumask_of_node() error condition
-
-Vlastimil Babka (1):
-      x86/kconfig: Remove X86_DIRECT_GBPAGES dependency on !DEBUG_PAGEALLOC
-
-
- arch/x86/Kconfig                   |   2 +-
- arch/x86/events/core.c             |   2 +-
- arch/x86/include/asm/fixmap.h      |   5 +-
- arch/x86/include/asm/mmu_context.h |   8 +--
- arch/x86/include/asm/set_memory.h  |   8 ---
- arch/x86/include/asm/tlbflush.h    |  30 +++++++---
- arch/x86/kernel/machine_kexec_32.c |   4 +-
- arch/x86/mm/init_32.c              |   2 +-
- arch/x86/mm/numa.c                 |   4 +-
- arch/x86/mm/pageattr.c             | 110 -------------------------------------
- arch/x86/mm/tlb.c                  |   2 +-
- 11 files changed, 37 insertions(+), 140 deletions(-)
+thanks,
+-- Shuah
