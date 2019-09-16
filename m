@@ -2,78 +2,135 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EFEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BA5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FCE214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD32D214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S1iVH2Mg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbfIPNxp (ORCPT
+        id S2388069AbfIPNyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:53:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59146 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387682AbfIPNxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:53:45 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B486318C4276;
-        Mon, 16 Sep 2019 13:53:44 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A5DA617F85;
-        Mon, 16 Sep 2019 13:53:43 +0000 (UTC)
-Subject: Re: [PATCH 5/5] hugetlbfs: Limit wait time when trying to share huge
- PMD
-To:     Matthew Wilcox <willy@infradead.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20190911150537.19527-1-longman@redhat.com>
- <20190911150537.19527-6-longman@redhat.com>
- <ae7edcb8-74e5-037c-17e7-01b3cf9320af@oracle.com>
- <20190912034143.GJ29434@bombadil.infradead.org>
- <20190912044002.xp3c7jbpbmq4dbz6@linux-p48b>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <f22d641f-d36e-e61e-70aa-3e54632485fe@redhat.com>
-Date:   Mon, 16 Sep 2019 09:53:43 -0400
+        Mon, 16 Sep 2019 09:54:44 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42782 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbfIPNyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:54:43 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsb4N084722;
+        Mon, 16 Sep 2019 08:54:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568642077;
+        bh=l8yeJsF8FmT2WnVdhCOfEujrwIHFMa/BZ4gjgWzLKWk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=S1iVH2MgMmOKe6ECllqnFkshWA551SXE7hsEYqnVjkJyD62SzdGUT8p62g04H5+/d
+         uTNgpp7/9L2guOauipwSX6UYECEIP41nQkAHm5aO718nH6AduE1zpMeaIDdEMOARTL
+         hKwRYlLSxMiUGw9FvYKQlciIlvvT6/rM0/GM33pI=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsbhV072484;
+        Mon, 16 Sep 2019 08:54:37 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
+ Sep 2019 08:54:35 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 16 Sep 2019 08:54:35 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsauO095861;
+        Mon, 16 Sep 2019 08:54:37 -0500
+Subject: Re: [PATCH v5 1/9] leds: multicolor: Add sysfs interface definition
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190911180115.21035-1-dmurphy@ti.com>
+ <20190911180115.21035-2-dmurphy@ti.com>
+ <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
+Date:   Mon, 16 Sep 2019 08:56:14 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190912044002.xp3c7jbpbmq4dbz6@linux-p48b>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Mon, 16 Sep 2019 13:53:45 +0000 (UTC)
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/12/19 12:40 AM, Davidlohr Bueso wrote:
+Hello
+
+On 9/15/19 8:57 AM, Jacek Anaszewski wrote:
+> Hi Dan,
 >
-> I also think that the right solution is within the mm instead of adding
-> a new api to rwsem and the extra complexity/overhead to osq _just_ for
-> this
-> case. We've managed to not need timeout extensions in our locking
-> primitives
-> thus far, which is a good thing imo. 
+> On 9/11/19 8:01 PM, Dan Murphy wrote:
+>> Add a documentation of LED Multicolor LED class specific
+>> sysfs attributes.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> ---
+>>   .../ABI/testing/sysfs-class-led-multicolor    | 73 +++++++++++++++++++
+>>   1 file changed, 73 insertions(+)
+>>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> new file mode 100644
+>> index 000000000000..4ea54c2ad4c8
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
+>> @@ -0,0 +1,73 @@
+>> +What:		/sys/class/leds/<led>/brightness
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The multicolor class will redirect the device drivers call back
+>> +		function for brightness control to the multicolor class
+>> +		brightness control function.
+>> +
+>> +		Writing to this file will update all LEDs within the group to a
+>> +		calculated percentage of what each color LED in the group is set
+>> +		to.  The percentage is calculated via the equation below:
+>> +
+>> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
+>> +
+>> +		For additional details please refer to
+>> +		Documentation/leds/leds-class-multicolor.rst.
+>> +
+>> +		The value of the color is from 0 to
+>> +		/sys/class/leds/<led>/max_brightness.
+>> +
+>> +What:		/sys/class/leds/<led>/colors/color_mix
+>> +Date:		Sept 2019
+>> +KernelVersion:	5.5
+>> +Contact:	Dan Murphy <dmurphy@ti.com>
+>> +Description:	read/write
+>> +		The values written to this file should contain the intensity
+>> +		values of each multicolor LED within the colors directory. The
+>> +		index of given color is reported by the color_id file present in
+>> +		colors/<color> directory. The index determines the position in
+>> +		the sequence of	intensities on which the related intensity
+>> +		should be passed to this file.
+>> +
+>> +		For additional details please refer to
+>> +		Documentation/leds/leds-class-multicolor.rst.
+> As already mentioned in the reply to Pavel - let's avoid the
+> introduction of another sysfs file with multiple values.
 
-Adding a variant with timeout can be useful in resolving some potential
-deadlock issues found by lockdep. Anyway, there were talk about merging
-rt-mutex and regular mutex in the LPC last week. So we will need to have
-mutex_lock() variant with timeout for that to happen.
+OK for clarification remove the color_mix and color_id files and keep 
+the intensity files?
 
-Cheers,
-Longman
+Dan
 
