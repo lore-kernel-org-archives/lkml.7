@@ -2,249 +2,167 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC8C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D77B6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1592214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568669611;
-	bh=51RShDTpxAyqpkidEyHbEmkAslQyo+WfC7MF+z78ACE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=K19EIMubh0enuHCNoyby40Tx2vFTjdL9TPYW2HQ33Jp+vA2MVZ9lSWzOJVCbPfNID
-	 ZEZ6Zau9jIhothzMRYEIzUXhK/bq4qVmC4gxi0fpXTfnVyVm8sTNUzM744eTcWbIQg
-	 YW3+L1yXL6zbthxKDUCIujaPI6gQbxaczITuVwrI=
+	by mail.kernel.org (Postfix) with ESMTP id A383D206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ffpNPm2T";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VfQZztyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391923AbfIPVd3 (ORCPT
+        id S1728049AbfIPVfC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:33:29 -0400
-Received: from inca-roads.misterjones.org ([213.251.177.50]:56253 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2391905AbfIPVd2 (ORCPT
+        Mon, 16 Sep 2019 17:35:02 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:57270 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbfIPVfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:33:28 -0400
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
-        (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1i9ycf-0001TZ-K3; Mon, 16 Sep 2019 23:33:25 +0200
-Date:   Mon, 16 Sep 2019 22:33:23 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Darius Rad <darius@bluespec.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-Message-ID: <20190916223323.07664bc2@why>
-In-Reply-To: <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
-References: <3c0eb4e9-ee21-d07b-ad16-735b7dc06051@bluespec.com>
-        <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Sep 2019 17:35:02 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8GLSCfr022445;
+        Mon, 16 Sep 2019 14:34:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=r9mQlR6Fst5BvEGlE+nyyNP/QfOQ3LfP8YoEVC1c768=;
+ b=ffpNPm2TtGp7I9aRKtMYI3m4t0I5imebqWg/YvnPIjlils46iEg8S1PynoOebKNXHSqd
+ SSdXOGh+zWVZ8P/jSCjgq1TMG6eZdwp5iMTWDXfuKaJN4g+cIin/f8dbscVyUbaE8UUZ
+ pj6JWQechNbas6oy4SIrIiHgHO2iGcQIRmI= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2v2hs5g690-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Mon, 16 Sep 2019 14:34:53 -0700
+Received: from ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) by
+ ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 16 Sep 2019 14:34:52 -0700
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 16 Sep 2019 14:34:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mAN/P9TF0byLwt0cbxuyxF+3jeXKag7w4AoABY7jrNLSaQIFUyyTLDbFkS/9FhCFxL8tQx2Fy6Bopm2wfnDPXIYA575QDPL/3eljaKTGsWbFN0eFO7jWRpIHuLm0kyeuu9ENA3YrNhxynQhYYXYXmHlgHDkmHCotP71QKfnbwxZsiw7lly3TIrrb16DJ0CUPwh++IEdUxFegevqbTnXihlbMyE1yM0mMJKpK4AQSgzmGIyFW7OaOTe3PE/eB3gn49PDedGYwqnNuh7YYSNCckax77vRnVtiM7gfToqVh51NzeNitzWxPgHEMXvgUt/HUSGSAdyvuf7y9H0275x9SVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r9mQlR6Fst5BvEGlE+nyyNP/QfOQ3LfP8YoEVC1c768=;
+ b=n4KIM94GxKMU6b1fAETzh3Vcvio9O+9OaMtzN9cFpePCqkyB4YJFLDUdgEJO0NjGBgc2ppo5L1PM2mXPjvEElBuaGdFGMzsHuhO06S9+pAfdZeJbCzHhiz7MWdMy5G60SEqyLCGS+nqGOzNLJsF60cDH4A/R7SSFjG03VXgb0SCF26OjFAuy9fsYt7eIQ+9jTOK8WHWhEA34G6EOswXrRLkyLQbt0GZx8+48Hp16Hro/XH5fbb6JGAzTpUfwzNWBw9rL2k4X8Hu5P+ZUJ/iK82+E0I5WxwzNx/0lQxaQavaWpUuX0yR57kkBj2ApBJ3fL4mbkGhpYWEvlXZn6RjKSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=r9mQlR6Fst5BvEGlE+nyyNP/QfOQ3LfP8YoEVC1c768=;
+ b=VfQZztyEcFx/i0eSp5z+px1zIGC3zjUhhImXsZYfubmABI4qu7oZMkEZoark+MDHu66qm6b6LBYeD8cFY5slrhksg7LB+EBKi/ODreGBU21IRzSEM5Wk7oIHUebyXIhgelpiVS+TUeIwQOsjkuTWpJCeFLPw0BA3qPfbGPEtxg0=
+Received: from BYAPR15MB3432.namprd15.prod.outlook.com (20.179.59.152) by
+ BYAPR15MB3175.namprd15.prod.outlook.com (20.179.56.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Mon, 16 Sep 2019 21:34:51 +0000
+Received: from BYAPR15MB3432.namprd15.prod.outlook.com
+ ([fe80::1097:b86e:429:bdf0]) by BYAPR15MB3432.namprd15.prod.outlook.com
+ ([fe80::1097:b86e:429:bdf0%7]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
+ 21:34:51 +0000
+From:   Lucian Grijincu <lucian@fb.com>
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v3] mm: memory: fix /proc/meminfo reporting for
+ MLOCK_ONFAULT
+Thread-Topic: [PATCH v3] mm: memory: fix /proc/meminfo reporting for
+ MLOCK_ONFAULT
+Thread-Index: AQHVanfPge6XWMZkPE2ugM026yAHq6cuMMIAgAAyGAA=
+Date:   Mon, 16 Sep 2019 21:34:50 +0000
+Message-ID: <01045F3D-B141-42E8-86C9-FA17B0E5EEE2@fb.com>
+References: <20190913211119.416168-1-lucian@fb.com>
+ <20190916113532.GE10231@dhcp22.suse.cz>
+In-Reply-To: <20190916113532.GE10231@dhcp22.suse.cz>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Microsoft-MacOutlook/10.1d.0.190908
+x-originating-ip: [2620:10d:c090:200::a343]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 85be11c4-92d2-4926-3912-08d73aedb4ef
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB3175;
+x-ms-traffictypediagnostic: BYAPR15MB3175:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB317513E36BA0C81187CB1CFEAD8C0@BYAPR15MB3175.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0162ACCC24
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(376002)(346002)(136003)(39860400002)(51914003)(189003)(199004)(66476007)(36756003)(66556008)(14454004)(11346002)(2616005)(33656002)(486006)(102836004)(476003)(966005)(99286004)(186003)(71200400001)(71190400001)(46003)(446003)(478600001)(2906002)(86362001)(5660300002)(25786009)(256004)(76176011)(4326008)(14444005)(6116002)(6436002)(6506007)(58126008)(53936002)(316002)(53546011)(6486002)(6246003)(229853002)(7736002)(6512007)(305945005)(6916009)(6306002)(8676002)(81156014)(81166006)(8936002)(76116006)(91956017)(66946007)(64756008)(66446008)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3175;H:BYAPR15MB3432.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: cI8SoUZk2jCH7HkyYLEgj5mSasPHh2zhHTze1O2639hxcco+M9TbB84Ha9roHeCwEZdX0oKwTDBgdVOzCPWJqbXfVDVjTNgPx3OpBdoC/4+kXouFXFkI5USSprFkh3LYmUawt9tS419bSI+bol6g1vMSRwCYI+ahPNq5Et0FaoHpHvay9k3XOzRvzxMCjbLjRVF/3vqVeFwp/BfoRV3FeLwKemOpLbS+cyR6hARbq3616+uuI/VBiXnv9vfgk/P1snvngwHuDWUcOpbAmtD8NtPawt5QfocB8hDapoiJV0+C9sfTn58PNA5TjmXCFVAaKuzBuWGgTHtjZ93GxHqNv6ULFiWjyb0edBL2I6xsmuhdx9BD4kL2Vb+zsrN5F8brDOMJIC0MYFD7914EIL69sV/KXGIvj7pBL7AajhqhEYc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7EE9B7EF5A94B9448F05839D97BADBF3@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: palmer@sifive.com, darius@bluespec.com, david.abdurachmanov@sifive.com, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85be11c4-92d2-4926-3912-08d73aedb4ef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 21:34:51.1472
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jc6ALbz9uZyZC72bjeltIhAZq0tz21ep5XmeF3u6Qci2z7Cog/pR1kbgiZq7zE9k
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3175
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-16_08:2019-09-11,2019-09-16 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 clxscore=1011
+ malwarescore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
+ priorityscore=1501 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1909160206
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 13:51:58 -0700 (PDT)
-Palmer Dabbelt <palmer@sifive.com> wrote:
-
-> On Mon, 16 Sep 2019 12:04:56 PDT (-0700), Darius Rad wrote:
-> > On 9/15/19 2:20 PM, Marc Zyngier wrote:  
-> >> On Sun, 15 Sep 2019 18:31:33 +0100,
-> >> Palmer Dabbelt <palmer@sifive.com> wrote:
-> >>
-> >> Hi Palmer,
-> >>  
-> >>>
-> >>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:  
-> >>>> On Thu, 12 Sep 2019 22:40:34 +0100,
-> >>>> Darius Rad <darius@bluespec.com> wrote:
-> >>>>
-> >>>> Hi Darius,
-> >>>>  
-> >>>>>
-> >>>>> As per the existing comment, irq_mask and irq_unmask do not need
-> >>>>> to do anything for the PLIC.  However, the functions must exist
-> >>>>> (the pointers cannot be NULL) as they are not optional, based on
-> >>>>> the documentation (Documentation/core-api/genericirq.rst) as well
-> >>>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
-> >>>>>
-> >>>>> Signed-off-by: Darius Rad <darius@bluespec.com>
-> >>>>> ---
-> >>>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
-> >>>>>  1 file changed, 9 insertions(+), 4 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> >>>>> index cf755964f2f8..52d5169f924f 100644
-> >>>>> --- a/drivers/irqchip/irq-sifive-plic.c
-> >>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
-> >>>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
-> >>>>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
-> >>>>>  }
-> >>>>>  +/*
-> >>>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-> >>>>> + * by reading claim and "unmasked" when writing it back.
-> >>>>> + */
-> >>>>> +static void plic_irq_mask(struct irq_data *d) { }
-> >>>>> +static void plic_irq_unmask(struct irq_data *d) { }  
-> >>>>
-> >>>> This outlines a bigger issue. If your irqchip doesn't require
-> >>>> mask/unmask, you're probably not using the right interrupt
-> >>>> flow. Looking at the code, I see you're using handle_simple_irq, which
-> >>>> is almost universally wrong.
-> >>>>
-> >>>> As per the description above, these interrupts should be using the
-> >>>> fasteoi flow, which is designed for this exact behaviour (the
-> >>>> interrupt controller knows which interrupt is in flight and doesn't
-> >>>> require SW to do anything bar signalling the EOI).
-> >>>>
-> >>>> Another thing is that mask/unmask tends to be a requirement, while
-> >>>> enable/disable tends to be optional. There is no hard line here, but
-> >>>> the expectations are that:
-> >>>>
-> >>>> (a) A disabled line can drop interrupts
-> >>>> (b) A masked line cannot drop interrupts
-> >>>>
-> >>>> Depending what the PLIC architecture mandates, you'll need to
-> >>>> implement one and/or the other. Having just (a) is indicative of a HW
-> >>>> bug, and I'm not assuming that this is the case. (b) only is pretty
-> >>>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
-> >>>> only.
-> >>>>  
-> >>>>> +
-> >>>>>  #ifdef CONFIG_SMP
-> >>>>>  static int plic_set_affinity(struct irq_data *d,
-> >>>>>  			     const struct cpumask *mask_val, bool force)
-> >>>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
-> >>>>>   static struct irq_chip plic_chip = {
-> >>>>>  	.name		= "SiFive PLIC",
-> >>>>> -	/*
-> >>>>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
-> >>>>> -	 * by reading claim and "unmasked" when writing it back.
-> >>>>> -	 */
-> >>>>>  	.irq_enable	= plic_irq_enable,
-> >>>>>  	.irq_disable	= plic_irq_disable,
-> >>>>> +	.irq_mask	= plic_irq_mask,
-> >>>>> +	.irq_unmask	= plic_irq_unmask,
-> >>>>>  #ifdef CONFIG_SMP
-> >>>>>  	.irq_set_affinity = plic_set_affinity,
-> >>>>>  #endif  
-> >>>>
-> >>>> Can you give the following patch a go? It brings the irq flow in line
-> >>>> with what the HW can do. It is of course fully untested (not even
-> >>>> compile tested...).
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>> 	M.
-> >>>>
-> >>>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
-> >>>> From: Marc Zyngier <maz@kernel.org>
-> >>>> Date: Sun, 15 Sep 2019 15:17:45 +0100
-> >>>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
-> >>>>
-> >>>> The SiFive PLIC interrupt controller seems to have all the HW
-> >>>> features to support the fasteoi flow, but the driver seems to be
-> >>>> stuck in a distant past. Bring it into the 21st century.  
-> >>>
-> >>> Thanks.  We'd gotten these comments during the review process but
-> >>> nobody had gotten the time to actually fix the issues.  
-> >>
-> >> No worries. The IRQ subsystem is an acquired taste... ;-)
-> >>  
-> >>>>
-> >>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> >>>> ---
-> >>>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
-> >>>>  1 file changed, 15 insertions(+), 14 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
-> >>>> index cf755964f2f8..8fea384d392b 100644
-> >>>> --- a/drivers/irqchip/irq-sifive-plic.c
-> >>>> +++ b/drivers/irqchip/irq-sifive-plic.c
-> >>>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
-> >>>>  	}
-> >>>>  }
-> >>>>  -static void plic_irq_enable(struct irq_data *d)
-> >>>> +static void plic_irq_mask(struct irq_data *d)  
-> >>
-> >> Of course, this is wrong. The perks of trying to do something at the
-> >> last minute while boarding an airplane. Don't do that.
-> >>
-> >> This should of course read "plic_irq_unmask"...
-> >>  
-> >>>>  {
-> >>>>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
-> >>>>  					   cpu_online_mask);
-> >>>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
-> >>>>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
-> >>>>  }
-> >>>>  -static void plic_irq_disable(struct irq_data *d)
-> >>>> +static void plic_irq_unmask(struct irq_data *d)  
-> >>
-> >> ... and this should be "plic_irq_mask".
-> >>
-> >> [...]
-> >>  
-> >>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
-> >>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)  
-> >>
-> >> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
-> >> the above bug should have kept the IRQ lines masked.
-> >>  
-> >>> We should test them on the hardware, but I don't have any with me
-> >>> right now.  David's probably in the best spot to do this, as he's got
-> >>> a setup that does all the weird interrupt sources (ie, PCIe).
-> >>>
-> >>> David: do you mind testing this?  I've put the patch here:
-> >>>
-> >>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
-> >>>    -b plic-fasteoi  
-> >>
-> >> I've pushed out a branch with the fixed patch:
-> >>
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
-> >>  
-> >
-> > That patch works for me on real-ish hardware.  I tried on two FPGA
-> > systems that have different PLIC implementations.  Both include
-> > a PCIe root port (and associated interrupt source).  So for
-> > whatever it's worth:
-> >
-> > Tested-by: Darius Rad <darius@bluespec.com>  
-> 
-> Awesome, thanks.  Would it be OK to put a "(on two hardware PLIC
-> implementations)" after that, just so we're clear as to who tested
-> what?
-
-Sure, no problem.
-
-> Assuming one of yours wasn't a SiFive PLIC then it'd be great if
-> David could still give this a whack, but I don't think it strictly
-> needs to block merging the patch.  I've included the right David this
-> time, with any luck that will be more fruitful :)
-
-Well, we still have time before -rc1. Once David gets a chance to test
-it, I'll apply it. Additional question: do you want this backported to
--stable? If so, how far?
-
-Thanks,
-
-	M.
--- 
-Without deviation from the norm, progress is not possible.
+DQoNCu+7vz4gT24gOS8xNi8xOSwgMDQ6MzUsICJNaWNoYWwgSG9ja28iIDxtaG9ja29Aa2VybmVs
+Lm9yZz4gd3JvdGU6DQo+ICAgICA+IGRpZmYgLS1naXQgYS9tbS9tZW1vcnkuYyBiL21tL21lbW9y
+eS5jDQo+ICAgICA+IGluZGV4IGUwYzIzMmZlODFkOS4uNTVkYTI0ZjMzYmM0IDEwMDY0NA0KPiAg
+ICAgPiAtLS0gYS9tbS9tZW1vcnkuYw0KPiAgICAgPiArKysgYi9tbS9tZW1vcnkuYw0KPiAgICAg
+PiBAQCAtMzMxMSw2ICszMzExLDggQEAgdm1fZmF1bHRfdCBhbGxvY19zZXRfcHRlKHN0cnVjdCB2
+bV9mYXVsdCAqdm1mLCBzdHJ1Y3QgbWVtX2Nncm91cCAqbWVtY2csDQo+ICAgICA+ICAJfSBlbHNl
+IHsNCj4gICAgID4gIAkJaW5jX21tX2NvdW50ZXJfZmFzdCh2bWEtPnZtX21tLCBtbV9jb3VudGVy
+X2ZpbGUocGFnZSkpOw0KPiAgICAgPiAgCQlwYWdlX2FkZF9maWxlX3JtYXAocGFnZSwgZmFsc2Up
+Ow0KPiAgICAgPiArCQlpZiAodm1hLT52bV9mbGFncyAmIFZNX0xPQ0tFRCAmJiAhUGFnZVRyYW5z
+Q29tcG91bmQocGFnZSkpDQo+ICAgICA+ICsJCQltbG9ja192bWFfcGFnZShwYWdlKTsNCj4gICAg
+ID4gIAl9DQo+ICAgICA+ICAJc2V0X3B0ZV9hdCh2bWEtPnZtX21tLCB2bWYtPmFkZHJlc3MsIHZt
+Zi0+cHRlLCBlbnRyeSk7DQogICAgDQo+ICAgICBJIGR1bm5vLiBIYW5kbGluZyBpdCBoZXJlIGlu
+IGFsbG9jX3NldF9wdGUgc291bmRzIGEgYml0IHdlaXJkIHRvIG1lLg0KPiAgICAgQWx0b3VnaCB3
+ZSBhbHJlYWR5IGRvIG1sb2NrIGZvciBDb1cgcGFnZXMgdGhlcmUsIEkgdGhvdWdodCB0aGlzIHdh
+cyBtb3JlDQo+ICAgICBvZiBhbiBleGNlcHRpb24uDQo+ICAgICBJcyB0aGVyZSBhbnkgcmVhbCBy
+ZWFzb24gd2h5IHRoaXMgY2Fubm90IGJlIGRvbmUgaW4gdGhlIHN0YW5kYXJkICNQRg0KPiAgICAg
+cGF0aD8gZmluaXNoX2ZhdWx0IGZvciBleGFtcGxlPw0KDQphbGxvY19zZXRfcHRlIGlzIGNhbGxl
+ZCBmcm9tIGZpbmlzaF9mYXVsdCBodHRwczovL2dpdGh1Yi5jb20vdG9ydmFsZHMvbGludXgvYmxv
+Yi92NS4yL21tL21lbW9yeS5jI0wzNDAwDQoNCiAgIHZtX2ZhdWx0X3QgZmluaXNoX2ZhdWx0KHN0
+cnVjdCB2bV9mYXVsdCAqdm1mKQ0KICAgICAuLi4NCglpZiAoIXJldCkNCgkJcmV0ID0gYWxsb2Nf
+c2V0X3B0ZSh2bWYsIHZtZi0+bWVtY2csIHBhZ2UpOw0KDQphbmQgaW5zaWRlIGFsbG9jX3NldF9w
+dGUgb25lIG9mIHRoZSBicmFuY2hlcyBvZiB0aGUgaWYtY2xhdXNlIGFscmVhZHkgaGFuZGxlZCBt
+bG9ja2VkIHBhZ2VzOg0KaHR0cHM6Ly9naXRodWIuY29tL3RvcnZhbGRzL2xpbnV4L2Jsb2IvdjUu
+Mi9tbS9tZW1vcnkuYyNMMzM0OC1MMzM1Ng0KDQpJIGFkZGVkIGl0IHRvIHRoZSBlbHNlLWJyYW5j
+aCBhcyB0aGF0IHNlZW1lZCBsaWtlIHRoZSBsZWFzdCBpbnRydXNpdmUgY2hhbmdlLCBidXQgSSB3
+aWxsIG1vdmUgdGhpcyB0byBmaW5pc2hfZmF1bHQsIHByb2JhYmx5IGxpa2UgdGhpcyAoYWZ0ZXIg
+SSdtIGRvbmUgdGVzdGluZyk6DQoNCiAgIHZtX2ZhdWx0X3QgZmluaXNoX2ZhdWx0KHN0cnVjdCB2
+bV9mYXVsdCAqdm1mKQ0KICAgIC4uLg0KICAgICAgICBpZiAoIXJldCkNCiAgICAgICAgICAgICAg
+ICByZXQgPSBhbGxvY19zZXRfcHRlKHZtZiwgdm1mLT5tZW1jZywgcGFnZSk7DQorICAgICAgIGlm
+ICghcmV0ICYmICh2bWYtPnZtYS0+dm1fZmxhZ3MgJiBWTV9MT0NLRUQpICYmICFQYWdlVHJhbnND
+b21wb3VuZChwYWdlKSkNCisgICAgICAgICAgICAgICAgICAgICAgIG1sb2NrX3ZtYV9wYWdlKHBh
+Z2UpOw0KDQpUaGFua3MgZm9yIHRoZSByZXZpZXcgYW5kIHN1Z2dlc3Rpb25zIQ0KDQotLQ0KTHVj
+aWFuDQoNCg==
