@@ -2,109 +2,97 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C90BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31390C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A145206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF47A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568618502;
+	bh=ZNzODOxruTg8StFF9gj8UjlKbahmC5vEdHRA5AUlXQs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=amNv04uuT3XqYBMXcSrxyAROK78KJSR3hiOhGSiU55f2TraobFOkt+R/PDkezJf2p
+	 XoYGypTucreSn+y09OBo0MTlEjgb4cWegunhH2nw9HHrFsLrSZ+gE+n9WRFD0eJiOf
+	 /AOV6ZOnnuaTBNL5ycMDOnS/20oCnv7W2Z1iLsfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730664AbfIPHQ5 convert rfc822-to-8bit (ORCPT
+        id S1728285AbfIPHVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:16:57 -0400
-Received: from mga11.intel.com ([192.55.52.93]:34803 "EHLO mga11.intel.com"
+        Mon, 16 Sep 2019 03:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727109AbfIPHQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:16:57 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 00:16:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
-   d="scan'208";a="180348412"
-Received: from irsmsx153.ger.corp.intel.com ([163.33.192.75])
-  by orsmga008.jf.intel.com with ESMTP; 16 Sep 2019 00:16:54 -0700
-Received: from irsmsx155.ger.corp.intel.com (163.33.192.3) by
- IRSMSX153.ger.corp.intel.com (163.33.192.75) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 16 Sep 2019 08:16:53 +0100
-Received: from irsmsx104.ger.corp.intel.com ([169.254.5.103]) by
- irsmsx155.ger.corp.intel.com ([169.254.14.139]) with mapi id 14.03.0439.000;
- Mon, 16 Sep 2019 08:16:53 +0100
-From:   "Baldyga, Robert" <robert.baldyga@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rakowski, Michal" <michal.rakowski@intel.com>
-Subject: RE: [PATCH 0/2] nvme: Add kernel API for admin command
-Thread-Topic: [PATCH 0/2] nvme: Add kernel API for admin command
-Thread-Index: AQHVaiSqeBhk6f9KbEiN+m1w1CltIacpnGSAgARMMRA=
-Date:   Mon, 16 Sep 2019 07:16:52 +0000
-Message-ID: <850977D77E4B5C41926C0A7E2DAC5E234F2C9C09@IRSMSX104.ger.corp.intel.com>
-References: <20190913111610.9958-1-robert.baldyga@intel.com>
- <20190913143709.GA8525@lst.de>
-In-Reply-To: <20190913143709.GA8525@lst.de>
-Accept-Language: pl-PL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZDJjN2Q3NWMtOTA4My00MTk0LWI3MDgtNjdkODc4MDQzZjUxIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiYlRnMERubmMzNzBoUmp4Z3dLSjAyUkQ1KzhIQktWMW13Y3ZCMHhkMWhzRkJRdTdFdGhRdHVWNTFPc09rZ1pBZiJ9
-x-originating-ip: [163.33.239.182]
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+        id S1725776AbfIPHVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 03:21:40 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3580206A4;
+        Mon, 16 Sep 2019 07:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568618500;
+        bh=ZNzODOxruTg8StFF9gj8UjlKbahmC5vEdHRA5AUlXQs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GFEe+YXDq1D7SlleJ3gt0iXMEu0DdY+ZGgYH0brOW8ZMldag9FGK8oSw4SKcEmD19
+         LwlwmHRtN8G4K7pvjCIj7HrIVPA91yY7uOqhRhQkx7cmAw6+obkWqf59oZdBulmRtJ
+         z5ADC604hp9Q8Vwl/6jGPYZfWJL7Tx8GU0gMh7Wg=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH] arm64: use generic free_initrd_mem()
+Date:   Mon, 16 Sep 2019 10:21:28 +0300
+Message-Id: <1568618488-19055-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 04:37:09PM +0200, Christoph Hellwig wrote:
-> On Fri, Sep 13, 2019 at 01:16:08PM +0200, Robert Baldyga wrote:
-> > Hello,
-> > 
-> > This patchset adds two functions providing kernel to kernel API 
-> > for submiting NVMe admin commands. This is for use of NVMe-aware
-> > block device drivers stacking on top of NVMe drives. An example of
-> > such driver is Open CAS Linux [1] which uses NVMe extended LBA 
-> > formats and thus needs to issue commands like nvme_admin_identify.
-> 
-> We never add functionality for out of tree crap.  And this shit really
-> is a bunch of crap, so it is unlikely to ever be merged. 
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-So that modules which are by design out of tree have to hack around
-lack of API allowing to use functionality implemented by driver.
-Don't you think that this is what actually produces crap?
+arm64 calls memblock_free() for the initrd area in its implementation of
+free_initrd_mem(), but this call has no actual effect that late in the boot
+process. By the time initrd is freed, all the reserved memory is managed by
+the page allocator and the memblock.reserved is unused, so there is no
+point to update it.
 
-> Why can't intel sometimes actually do something useful for a change
-> instead of piling junk over junk?
+Without the memblock_free() call the only difference between arm64 and the
+generic versions of free_initrd_mem() is the memory poisoning. Switching
+arm64 to the generic version will enable the poisoning.
 
-Proposed API is equally useful for both in tree and out of tree modules,
-so I find your comment unrelated.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
 
-If you don't like the way it's done, we can look for alternatives.
-The point is to allow other drivers use NVMe admin commands, which is
-currently not possible as neither the block layer nor the nvme driver
-provides sufficient API.
+I've boot tested it on qemu and I've checked that kexec works.
 
-Best regards,
-Robert Baldyga
---------------------------------------------------------------------
+ arch/arm64/mm/init.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-Intel Technology Poland sp. z o.o.
-ul. Slowackiego 173 | 80-298 Gdansk | Sad Rejonowy Gdansk Polnoc | VII Wydzial Gospodarczy Krajowego Rejestru Sadowego - KRS 101882 | NIP 957-07-52-316 | Kapital zakladowy 200.000 PLN.
-
-Ta wiadomosc wraz z zalacznikami jest przeznaczona dla okreslonego adresata i moze zawierac informacje poufne. W razie przypadkowego otrzymania tej wiadomosci, prosimy o powiadomienie nadawcy oraz trwale jej usuniecie; jakiekolwiek
-przegladanie lub rozpowszechnianie jest zabronione.
-This e-mail and any attachments may contain confidential material for the sole use of the intended recipient(s). If you are not the intended recipient, please contact the sender and delete all copies; any review or distribution by
-others is strictly prohibited.
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index f3c7952..8ad2934 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -567,14 +567,6 @@ void free_initmem(void)
+ 	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
+ }
+ 
+-#ifdef CONFIG_BLK_DEV_INITRD
+-void __init free_initrd_mem(unsigned long start, unsigned long end)
+-{
+-	free_reserved_area((void *)start, (void *)end, 0, "initrd");
+-	memblock_free(__virt_to_phys(start), end - start);
+-}
+-#endif
+-
+ /*
+  * Dump out memory limit information on panic.
+  */
+-- 
+2.7.4
 
