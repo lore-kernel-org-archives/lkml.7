@@ -2,137 +2,116 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC7D1C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F47CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C318C216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 011BF20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568632398;
-	bh=4QQ2eiBlqJRzgxliw5y5akvBuWcVbxlPaiWGoXLDSwU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=BDUKuAY+d9Nt2Og7dh/Pc/nT7nmGLrRAgugijbx4QSE5jLadGB9RlyBanwXnof3pN
-	 OQZeblV+nRElNtEvRlXdeo9BxxWwEMFNr3YA72T1ly2UdB8H+PDQG7Zz7KV5OcDcM6
-	 IscV2ene33gjwbIGwfDEwyvGTzAMB+foR6/e0Wx0=
+	s=default; t=1568632537;
+	bh=+uBO5q/COWKPECOgSPFLvcXeJofqQ46Y2vvrzK7erRQ=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=k/4pSnp4q4cXCYIhDPIJNNGRFHVj1RHDzA4RGMg9GCppxycObQWj4julZDI/7tQ2/
+	 AJfATB55fMMY9AAuYte6SKZt2tOCqYBKducGrCF4EFk7BR0YKqIO85uRkzZrCEjN4M
+	 /kUHzj248BXCJNjmC9GLJAd37w75FZ5+7uNaoGmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbfIPLNS (ORCPT
+        id S1730170AbfIPLPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46792 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfIPLNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:13:17 -0400
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EE0020678;
-        Mon, 16 Sep 2019 11:13:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568632396;
-        bh=4QQ2eiBlqJRzgxliw5y5akvBuWcVbxlPaiWGoXLDSwU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kdNe0Xcs2py7uB37hd6OaC+BxcCHF5OAByCYeUHAyhugtMNIKvpzqdLnk1LCMAvSQ
-         L1akARt7IHyBiHokMbRVQBDV97iFrGKs7dO18RusjbkiH9i6Xgsb9OJybR91wGwiVE
-         +FebuWPhvzAXJ7y5QPEc0mjqDmAYymnRN99C3SEI=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Paul Burton <paul.burton@mips.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Subject: [PATCH v2] mips: sgi-ip27: switch from DISCONTIGMEM to SPARSEMEM
-Date:   Mon, 16 Sep 2019 14:13:10 +0300
-Message-Id: <1568632390-20893-1-git-send-email-rppt@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        Mon, 16 Sep 2019 07:15:36 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36558 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725971AbfIPLPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:15:35 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t3so9831479wmj.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 04:15:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=vmcSfcyvNHUIfgjndVUYPtpVZq6pnPBVlpt2pFBZtLs=;
+        b=TcLcC8XXmoR1UZXAPPbOOY8Q9ODDzqSL5T7+KywZcvSMONfTYuo0IeFE+JHOwPja9B
+         l7MAuYEZmSwPF6hRqPUN4Cbn+01PywN5S5L6P1yWRVWRVIHVHrGdQS39Qxgo9Pi0/Xtg
+         Y5kcfUZISxMEijZKDaJ+fxES99uv5MWxU6EU26VuzHzIUA0cXrN/JawXTbawbbpKuKVF
+         crV4JeibDpeqVMi/toCZCcqScOKcB4f8PzJew2mSJ6JVyE3UFRIhoLJtGjp9FmzMx0Be
+         VZDNqabAvknjRtylzeoenWkpizlaeSNa/awK8hCauMuH4aTb7YoBy5LozEJdqiLY9Zma
+         N3JQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=vmcSfcyvNHUIfgjndVUYPtpVZq6pnPBVlpt2pFBZtLs=;
+        b=Quc3ObaAkgAH7dTunROrC/HZm7TJ8u1Mjrw2sxVQdWlaxWFpAENsrrQxPQka2eArR1
+         P+Aeny+CgI8TTDadxtnpqf5FbIs0PR2H5DhDfUoO8cUW86FQj82KPNkbs252fVU7xQAw
+         z+TxCUDOJ4vvdHTYyXABubiJhbuP0jAzQzSY8OoEX+4X78rjhG9nNDmNk4dJJ8kI2A5i
+         I5biqR7ibBxWm2OGfgpcHidiL6fr3vgATaI+y1i8HMNNWlIq5kMGM6fkm5nfNo3vMN3+
+         RajHnYeLoeYFClxrcS1eDl/616K+N82oZAx05vhQYx2U/SzGB1DjMc0egbo/TswnyOe7
+         e4DQ==
+X-Gm-Message-State: APjAAAU2exfFqPy2pAgzwykJ4h7dl5ARVKo2m8nYRY7sT1gEmKzbA+jR
+        f19T0e6CkVwZhg65P7ZtHFvM6QVs
+X-Google-Smtp-Source: APXvYqy6zfvYSqlQ5W9YyeW5g7XeU41VVFynAZtvdceuURC4mKQaMH/KSCYeGNALymciHbbqcqTcLw==
+X-Received: by 2002:a1c:f913:: with SMTP id x19mr13287021wmh.2.1568632533640;
+        Mon, 16 Sep 2019 04:15:33 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a7sm43690175wra.43.2019.09.16.04.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 04:15:32 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 13:15:30 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] objtool change for v5.3
+Message-ID: <20190916111530.GA86274@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Linus,
 
-The memory initialization of SGI-IP27 is already half-way to support
-SPARSEMEM. It only had free_bootmem_with_active_regions() left-overs
-interfering with sparse_memory_present_with_active_regions().
+Please pull the latest core-objtool-for-linus git tree from:
 
-Replace these calls with simpler memblocks_present() call in prom_meminit()
-and adjust arch/mips/Kconfig to enable SPARSEMEM and SPARSEMEM_EXTREME for
-SGI-IP27.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git core-objtool-for-linus
 
-Co-developed-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
+   # HEAD: f73b3cc39c84220e6dccd463b5c8279b03514646 objtool: Clobber user CFLAGS variable
 
-v2: don't add extra sparse_init() and use memblocks_present() instead of
-sparse_memory_present_with_active_regions()
+Fix objtool builds with more exotic, user-defined CFLAGS.
 
- arch/mips/Kconfig                | 12 ++----------
- arch/mips/sgi-ip27/ip27-memory.c |  6 ++----
- 2 files changed, 4 insertions(+), 14 deletions(-)
+ Thanks,
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index d50fafd..e4b02b5 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -669,6 +669,7 @@ config SGI_IP22
- config SGI_IP27
- 	bool "SGI IP27 (Origin200/2000)"
- 	select ARCH_HAS_PHYS_TO_DMA
-+	select ARCH_SPARSEMEM_ENABLE
- 	select FW_ARC
- 	select FW_ARC64
- 	select BOOT_ELF64
-@@ -2633,18 +2634,9 @@ config ARCH_FLATMEM_ENABLE
- 	def_bool y
- 	depends on !NUMA && !CPU_LOONGSON2
+	Ingo
+
+------------------>
+Josh Poimboeuf (1):
+      objtool: Clobber user CFLAGS variable
+
+
+ tools/objtool/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 88158239622b..20f67fcf378d 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -35,7 +35,7 @@ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+ 	    -I$(srctree)/tools/objtool/arch/$(ARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+-CFLAGS   += -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
++CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
  
--config ARCH_DISCONTIGMEM_ENABLE
--	bool
--	default y if SGI_IP27
--	help
--	  Say Y to support efficient handling of discontiguous physical memory,
--	  for architectures which are either NUMA (Non-Uniform Memory Access)
--	  or have huge holes in the physical address space for other reasons.
--	  See <file:Documentation/vm/numa.rst> for more.
--
- config ARCH_SPARSEMEM_ENABLE
- 	bool
--	select SPARSEMEM_STATIC
-+	select SPARSEMEM_STATIC if !SGI_IP27
- 
- config NUMA
- 	bool "NUMA Support"
-diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-index fb077a9..9db8692 100644
---- a/arch/mips/sgi-ip27/ip27-memory.c
-+++ b/arch/mips/sgi-ip27/ip27-memory.c
-@@ -406,12 +406,8 @@ static void __init node_mem_init(cnodeid_t node)
- 	slot_freepfn += PFN_UP(sizeof(struct pglist_data) +
- 			       sizeof(struct hub_data));
- 
--	free_bootmem_with_active_regions(node, end_pfn);
--
- 	memblock_reserve(slot_firstpfn << PAGE_SHIFT,
- 			 ((slot_freepfn - slot_firstpfn) << PAGE_SHIFT));
--
--	sparse_memory_present_with_active_regions(node);
- }
- 
- /*
-@@ -444,6 +440,8 @@ void __init prom_meminit(void)
- 		}
- 		__node_data[node] = &null_node;
- 	}
-+
-+	memblocks_present();
- }
- 
- void __init prom_free_prom_memory(void)
--- 
-2.7.4
-
+ # Allow old libelf to be used:
