@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1620BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B27FFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDC3E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85B6621670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tp5OvP8r"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fA1ZBPhj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732534AbfIPKyx (ORCPT
+        id S1732510AbfIPKy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:54:53 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40615 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfIPKyw (ORCPT
+        Mon, 16 Sep 2019 06:54:58 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44140 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732535AbfIPKyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:54:52 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d17so9214673lfa.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:50 -0700 (PDT)
+        Mon, 16 Sep 2019 06:54:55 -0400
+Received: by mail-lj1-f196.google.com with SMTP id m13so5320690ljj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qALJbnp9FTLPJAoGDKJIaiGyevgs6xsdVhuDmgFkzac=;
-        b=Tp5OvP8rCaZb13D4ww3vj2mw2PWVAqGybOa6fUs/oIVw5T7/73Nqpmo57DltCqgBmW
-         W/9ysUCIVjTtDUmMneoWsxRoIIm7/1ZmqNsLJ+HjEvvkOOIiQYjOkchVu5eqKs/Mqt1X
-         VjfxITukqZHlV1t0Rqp7NNolwQVY8JYuqJ9aTg8QvAEanrhVhyRBlUtWCC2xv0LResJy
-         TDMAy3NvtfKh5oTRrkwcPoMTpDX87g8TjD24bYIbVovX1/Wj9J6d5+Ri38Y1b0NWoLst
-         CHjgzSYJCQAkhWGFdxr3rIBRjCkEgXHxMGQFp+nj7h4J2kMn6KpOxmGFCXE87IoRKeWc
-         23Kg==
+        bh=awMC2NNgYQwIhWG3qRO8zKuB3GE6M/09XFXZ6Czatbc=;
+        b=fA1ZBPhjkBsytlESQk6kpCQlXY2ePyrNVBUlN9vF9PL4a+tBgZiDhVywUcbg19c3Bt
+         AFVvZR1wfpLJcovFqZU/aQsKJXekdUri03k6Na1iWOGfp6K6Dp58O6CN7NSB6SPDLpfg
+         GXozVCNmNMDLClTQ87gCKyH9LKAUpqI+k+Kbnp0FZ2PA94mpFRY1q5zyGP+aXEbwImgB
+         OFvOewfBoSVb3rMrGhZmnr3GGZ/Ajob3fWyYwb1F8nLz6YwfPnoTqeH9KHRQvED/7xCu
+         AUV1acvpatip1LNApKO+AX58CTgYVBaSdpoGIR9HXyn994giZy6+fdPsNDCYKKXBskWH
+         9zdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qALJbnp9FTLPJAoGDKJIaiGyevgs6xsdVhuDmgFkzac=;
-        b=YbK/e6f0g/AZsWZdtafHBkkSjnPoTUsr+oEvo/rF8e7J8f5tjfymiHyDIUroHVD7EM
-         PIXZq7iEgx2TwloyIR3M/4Ralnql3NnDUwBIgOy1fMg2vipCK90nkzMeyOUoI8OHFx9b
-         8Jw285uGCLnjFi4tuGn31Enp8riPuBep74V3cdfbm3AzJcOFD9cUj4ZBV+lyDdmU5sJo
-         hCapusLW4A9XTsT1ZYRDYR575lbOLmaGG63HqPTsdWOZGhfIx6+jeMgE2iKGU2hZ2l5Z
-         TRqdE+3RqpsCedOrXa5Hukps1WdWbBMGmHU9kFZlPf9TNKYo3ag3QQ2b07jxnieKnnqN
-         oCoA==
-X-Gm-Message-State: APjAAAWBxwnSzKeOoztWNaYgmCn/n2ViE7hfg242jd7+Nqt3ySggBaH+
-        M2J2vrxrAc4WHZvLboeRk/Pg4g==
-X-Google-Smtp-Source: APXvYqzllcvzn3zCr2/UXmKKBqQnnGjipxHPlSqink4eIoGTL2UlV4EM6dmS/RiJ2HlREaZdmF9AnQ==
-X-Received: by 2002:ac2:5451:: with SMTP id d17mr37030113lfn.77.1568631289427;
-        Mon, 16 Sep 2019 03:54:49 -0700 (PDT)
+        bh=awMC2NNgYQwIhWG3qRO8zKuB3GE6M/09XFXZ6Czatbc=;
+        b=uDbsWYTSvi3JA5V01TZaGJHjiuVYtvxPXFajkuxsI6j4WZJVPCLD46Nhj5IH4Jz6+Q
+         2JiveRgE7bZwurC7Si0M2nPa1ytqZ2IyLtpSzaxyNZZNANSWIl4JO/qrMyacEiYvnJ3v
+         4Z3XV2R9Pg0p5QxERfUYdWThPyBiEjzUeTi7ppWNaByTJKI7NsCtOTAOmOzKd8wXJAHg
+         ghBWvJ1DsiLkTLevmA8qLkKMkzhhgbdBYW/5dGx3Ku4Jh++6jzS9EJulTk902WmYzbLf
+         5gmjqlISvofdZNHGKj8MpRS+pIAdRYTH7Hb0NB1RQp5+IzrT/0cAM0O1NDNP8EWeUISp
+         DlAA==
+X-Gm-Message-State: APjAAAWzQESMK1/YuLHRMMzfdgR7WRMorZFhH1UPzQEZ/OQsoCN4MzwY
+        /0Lj1VeXo8xbIXejaZGMSjJ1vw==
+X-Google-Smtp-Source: APXvYqxFe+l0B6DF4Vp4tbNkF7b9m5dt3qevx/stJMvJalGS+zpGTiuxgMApQNLetSWeV53H0vtR9w==
+X-Received: by 2002:a2e:98d2:: with SMTP id s18mr5649688ljj.68.1568631292008;
+        Mon, 16 Sep 2019 03:54:52 -0700 (PDT)
 Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.48
+        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 03:54:48 -0700 (PDT)
+        Mon, 16 Sep 2019 03:54:51 -0700 (PDT)
 From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
         davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
@@ -63,9 +63,9 @@ Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
         sergei.shtylyov@cogentembedded.com,
         Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v3 bpf-next 07/14] samples: bpf: add makefile.target for separate CC target build
-Date:   Mon, 16 Sep 2019 13:54:26 +0300
-Message-Id: <20190916105433.11404-8-ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v3 bpf-next 09/14] samples: bpf: makefile: use own flags but not host when cross compile
+Date:   Mon, 16 Sep 2019 13:54:28 +0300
+Message-Id: <20190916105433.11404-10-ivan.khoronzhuk@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
 References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
@@ -74,112 +74,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The makefile.target is added only and will be used in
-sample/bpf/Makefile later in order to switch cross-compiling on CC
-from HOSTCC environment.
+While compile natively, the hosts cflags and ldflags are equal to ones
+used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it should
+have own, used for target arch. While verification, for arm, arm64 and
+x86_64 the following flags were used alsways:
 
-The HOSTCC is supposed to build binaries and tools running on the host
-afterwards, in order to simplify build or so, like "fixdep" or else.
-In case of cross compiling "fixdep" is executed on host when the rest
-samples should run on target arch. In order to build binaries for
-target arch with CC and tools running on host with HOSTCC, lets add
-Makefile.target for simplicity, having definition and routines similar
-to ones, used in script/Makefile.host. This allows later add
-cross-compilation to samples/bpf with minimum changes.
+-Wall
+-O2
+-fomit-frame-pointer
+-Wmissing-prototypes
+-Wstrict-prototypes
 
-The tprog stands for target programs built with CC.
-
-Makefile.target contains only stuff needed for samples/bpf, potentially
-can be reused later and now needed only for unblocking tricky
-samples/bpf cross compilation.
+So, add them as they were verified and used before adding
+Makefile.target, but anyway limit it only for cross compile options as
+for host can be some configurations when another options can be used,
+So, for host arch samples left all as is, it allows to avoid potential
+option mistmatches for existent environments.
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 ---
- samples/bpf/Makefile.target | 75 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 samples/bpf/Makefile.target
+ samples/bpf/Makefile | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/samples/bpf/Makefile.target b/samples/bpf/Makefile.target
-new file mode 100644
-index 000000000000..fb6de63f7d2f
---- /dev/null
-+++ b/samples/bpf/Makefile.target
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# ==========================================================================
-+# Building binaries on the host system
-+# Binaries are not used during the compilation of the kernel, and intendent
-+# to be build for target board, target board can be host ofc. Added to build
-+# binaries to run not on host system.
-+#
-+# Sample syntax (see Documentation/kbuild/makefiles.rst for reference)
-+# tprogs-y := xsk_example
-+# Will compile xdpsock_example.c and create an executable named xsk_example
-+#
-+# tprogs-y    := xdpsock
-+# xdpsock-objs := xdpsock_1.o xdpsock_2.o
-+# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
-+# xdpsock, based on xdpsock_1.o and xdpsock_2.o
-+#
-+# Inherited from scripts/Makefile.host
-+#
-+__tprogs := $(sort $(tprogs-y))
-+
-+# C code
-+# Executables compiled from a single .c file
-+tprog-csingle	:= $(foreach m,$(__tprogs), \
-+			$(if $($(m)-objs),,$(m)))
-+
-+# C executables linked based on several .o files
-+tprog-cmulti	:= $(foreach m,$(__tprogs),\
-+			$(if $($(m)-objs),$(m)))
-+
-+# Object (.o) files compiled from .c files
-+tprog-cobjs	:= $(sort $(foreach m,$(__tprogs),$($(m)-objs)))
-+
-+tprog-csingle	:= $(addprefix $(obj)/,$(tprog-csingle))
-+tprog-cmulti	:= $(addprefix $(obj)/,$(tprog-cmulti))
-+tprog-cobjs	:= $(addprefix $(obj)/,$(tprog-cobjs))
-+
-+#####
-+# Handle options to gcc. Support building with separate output directory
-+
-+_tprogc_flags   = $(TPROGS_CFLAGS) \
-+                 $(TPROGCFLAGS_$(basetarget).o)
-+
-+# $(objtree)/$(obj) for including generated headers from checkin source files
-+ifeq ($(KBUILD_EXTMOD),)
-+ifdef building_out_of_srctree
-+_tprogc_flags   += -I $(objtree)/$(obj)
-+endif
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 1579cc16a1c2..b5c87a8b8b51 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -178,8 +178,17 @@ CLANG_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
+ TPROGS_CFLAGS += $(ARM_ARCH_SELECTOR)
+ endif
+ 
++ifdef CROSS_COMPILE
++TPROGS_CFLAGS += -Wall
++TPROGS_CFLAGS += -O2
++TPROGS_CFLAGS += -fomit-frame-pointer
++TPROGS_CFLAGS += -Wmissing-prototypes
++TPROGS_CFLAGS += -Wstrict-prototypes
++else
+ TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
+ TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
 +endif
 +
-+tprogc_flags    = -Wp,-MD,$(depfile) $(_tprogc_flags)
-+
-+# Create executable from a single .c file
-+# tprog-csingle -> Executable
-+quiet_cmd_tprog-csingle 	= CC  $@
-+      cmd_tprog-csingle	= $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ $< \
-+		$(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
-+$(tprog-csingle): $(obj)/%: $(src)/%.c FORCE
-+	$(call if_changed_dep,tprog-csingle)
-+
-+# Link an executable based on list of .o files, all plain c
-+# tprog-cmulti -> executable
-+quiet_cmd_tprog-cmulti	= LD  $@
-+      cmd_tprog-cmulti	= $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ \
-+			  $(addprefix $(obj)/,$($(@F)-objs)) \
-+			  $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
-+$(tprog-cmulti): $(tprog-cobjs) FORCE
-+	$(call if_changed,tprog-cmulti)
-+$(call multi_depend, $(tprog-cmulti), , -objs)
-+
-+# Create .o file from a single .c file
-+# tprog-cobjs -> .o
-+quiet_cmd_tprog-cobjs	= CC  $@
-+      cmd_tprog-cobjs	= $(CC) $(tprogc_flags) -c -o $@ $<
-+$(tprog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
-+	$(call if_changed_dep,tprog-cobjs)
+ TPROGS_CFLAGS += -I$(objtree)/usr/include
+ TPROGS_CFLAGS += -I$(srctree)/tools/lib/bpf/
+ TPROGS_CFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
 -- 
 2.17.1
 
