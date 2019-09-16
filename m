@@ -2,122 +2,370 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAEFEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C41C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:53:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A55A92067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:45:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256EB21848
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:53:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r5a/XbNS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IiWb4+sj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbfIPXp3 (ORCPT
+        id S1728845AbfIPXxg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:45:29 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45698 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIPXp2 (ORCPT
+        Mon, 16 Sep 2019 19:53:36 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:44268 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfIPXxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:45:28 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y72so894845pfb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 16:45:26 -0700 (PDT)
+        Mon, 16 Sep 2019 19:53:35 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q21so913943pfn.11;
+        Mon, 16 Sep 2019 16:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=gPeqNA84uKm/2CLfm5fXdDKqLvuPs/0PfIC1lZBDVcE=;
-        b=r5a/XbNS/jvudcLZbnEeEeBgDSpXdAkOEjlEqjWaVl7O/Keuu9SWppYwdpzqS9XUXd
-         I++cPOGgE3jNUdIa30WtGkrBMf4xdS9Zym5SrGinlequi+YmMUh3dt3nzoY9x4MaQWbL
-         a1PPBz0ECe86QyfBSkBMtFmZttbnAAC9nF7T3lvNBSbvbSfKh3CY6yHLQClu7mta6BxQ
-         qFbfpNyr2CMtxnhne3PMeSYau+1m6+CUl680SgEhuv4n7UrmGSjgdWsNsQX3wZLaNXlB
-         xWZyM1MT6hkXu/o0YiAC0cwF3yKfzKv0gwjjjK9Rc4eSqWan27FtAEqudrqfcz8ao8b2
-         yYzQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7yM8bc9dUdHZnwXo81JLespay94Pp7w4ktcsiUR2rz0=;
+        b=IiWb4+sjZ3upqo+z4y9O+5aDEK9yf3cceXa6QcMxaLH0OFv/2zLXDydVnkVUoStc09
+         mePffjU3Pcztlbu0EIoryNKXgCzisGPdFI7RMHAmEh7YhKK6PAFdDE1TqTxTdaP5u93X
+         6lxN6f67KdohNHPHP8/mRU9lrimUXFOy8f0H7Vdh+vQ8NO3jWgkRh0jHjQ325J3LEhNj
+         qETvcUNut+25Tc6ZVpTQ9dq3iRptCo/1HW/LhJIzSmkvRlNWreTXd+fngitkhA0KkEd1
+         6CGyiYxZIsfdSMrV5tyDcYU+Jsq/0H2CPkiQ3WzBVPJ72LBvWXsdMsccvIR2cxTiaIOd
+         sHvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=gPeqNA84uKm/2CLfm5fXdDKqLvuPs/0PfIC1lZBDVcE=;
-        b=nDZIcojodXKG/avNN1XxoGTKy8eVS1TDcc12SM/7yH6L2fD72aYLEJKMNOotIPQ2N3
-         HXmI7rAdeRHHEC4heUM+wRkZO340WpZAfqINVLucI1MoZu06xSWy33tb4LGcvar6KVtS
-         fhohcb8yNbFFmJDCEN2iSIvMNX8Ut5q0dcRBwZkU4pnZjoRAtTr94Uqd9iXY6BbEn4hB
-         Cn8mJwc9uJk7+BTWHP9xwrYBDYtPBehMxnPkiWnj2hHoZp97vu6ckxdBW77OQ6Cae49d
-         6l8Nhtsj/bQ9gqVkD6GMpnZg/uUh/eXq10LkAHAWPkD+fLfmtmyajUnFVcUxWwqncwne
-         S1VA==
-X-Gm-Message-State: APjAAAV77i57fNBQFVq29KMYzBj6BPcPnS9U2mKcIhb7xOnl7wxhJDgC
-        x5JyvQu93bkwqk345Sng/QQgSQ==
-X-Google-Smtp-Source: APXvYqw92C74smlwK4lp/45d9xzXzuNO1t7cK8J2Wk45GzI+dOKhN4oA5k/eAQn9NkOzFT8IyuIcgA==
-X-Received: by 2002:a62:b406:: with SMTP id h6mr1028857pfn.260.1568677526290;
-        Mon, 16 Sep 2019 16:45:26 -0700 (PDT)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id m24sm183103pgj.71.2019.09.16.16.45.25
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7yM8bc9dUdHZnwXo81JLespay94Pp7w4ktcsiUR2rz0=;
+        b=EIC5C6Qh4qTyTWw2aZFe6Y9ylF1SNzCZ6R6gGephPKN0P0+yqYI1sn+P204yUymLqo
+         dy3Dm1ZeQfUANnrUdtPh+YF7a7MuyMqgJDawR0XRewc17mFeb/I835WCE7Hi9w2SsjVf
+         TRihnfw9+/ZSjcETNwKPOJsLFmbpPa42bmTkZ76LXXtup+wbeQHmKHPBR9/xB3wshvQm
+         bBj9r40Mgsfzhrzoy6Qrmc2guunH2hWxu+3qNCupBXt1z5YWj88kJy5YDHPw46PJhmBG
+         /1ZWIY0w5SFv2LMGvF/EfyVrb4HdGjAt1nUnuZQPfWnFN5YdRRUGCrfp5HjKdn9BpOyh
+         JDtg==
+X-Gm-Message-State: APjAAAWovqFeySgoDUS8QagqZF3cVB5P0RJO5eRpn4nk2cg9Bb1ifNRK
+        YGF40ViCpJNxPum4blqUyD4=
+X-Google-Smtp-Source: APXvYqxI6uqo7dfGr8YwI6O/iAA3+texS3l1QJD5B7oqxNEFtnH+j1B8Nd7WU5Cs5gJnPgyQH4Gedg==
+X-Received: by 2002:a63:904:: with SMTP id 4mr715939pgj.36.1568678014086;
+        Mon, 16 Sep 2019 16:53:34 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id g11sm203237pgu.11.2019.09.16.16.53.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 16:45:25 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:45:24 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>
-cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Peter Gonda <pgonda@google.com>,
-        Jianxiong Gao <jxgao@google.com>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [bug] __blk_mq_run_hw_queue suspicious rcu usage
-In-Reply-To: <alpine.DEB.2.21.1909051534050.245316@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.1909161641320.9200@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1909041434580.160038@chino.kir.corp.google.com> <20190905060627.GA1753@lst.de> <alpine.DEB.2.21.1909051534050.245316@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 16 Sep 2019 16:53:33 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 16:53:30 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, olof@lixom.net,
+        mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com,
+        dinguyen@kernel.org, bjorn.andersson@linaro.org,
+        marcin.juszkiewicz@linaro.org, andriy.shevchenko@linux.intel.com,
+        yuehaibing@huawei.com, cw00.choi@samsung.com,
+        enric.balletbo@collabora.com, m.felsch@pengutronix.de,
+        ping.bai@nxp.com, ronald@innovation.ch, stefan@agner.ch,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V4 2/5] input: keyboard: imx_sc: Add i.MX system
+ controller key support
+Message-ID: <20190916235330.GI237523@dtor-ws>
+References: <1568602373-14164-1-git-send-email-Anson.Huang@nxp.com>
+ <1568602373-14164-2-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568602373-14164-2-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019, David Rientjes wrote:
-
-> > > Hi Christoph, Jens, and Ming,
-> > > 
-> > > While booting a 5.2 SEV-enabled guest we have encountered the following 
-> > > WARNING that is followed up by a BUG because we are in atomic context 
-> > > while trying to call set_memory_decrypted:
-> > 
-> > Well, this really is a x86 / DMA API issue unfortunately.  Drivers
-> > are allowed to do GFP_ATOMIC dma allocation under locks / rcu critical
-> > sections and from interrupts.  And it seems like the SEV case can't
-> > handle that.  We have some semi-generic code to have a fixed sized
-> > pool in kernel/dma for non-coherent platforms that have similar issues
-> > that we could try to wire up, but I wonder if there is a better way
-> > to handle the issue, so I've added Tom and the x86 maintainers.
-> > 
-> > Now independent of that issue using DMA coherent memory for the nvme
-> > PRPs/SGLs doesn't actually feel very optional.  We could do with
-> > normal kmalloc allocations and just sync it to the device and back.
-> > I wonder if we should create some general mempool-like helpers for that.
-> > 
+On Mon, Sep 16, 2019 at 10:52:50AM +0800, Anson Huang wrote:
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+> inside, the system controller is in charge of controlling power,
+> clock and scu key etc..
 > 
-> Thanks for looking into this.  I assume it's a non-starter to try to 
-> address this in _vm_unmap_aliases() itself, i.e. rely on a purge spinlock 
-> to do all synchronization (or trylock if not forced) for 
-> purge_vmap_area_lazy() rather than only the vmap_area_lock within it.  In 
-> other words, no mutex.
+> Adds i.MX system controller key driver support, Linux kernel has
+> to communicate with system controller via MU (message unit) IPC
+> to get scu key's status.
 > 
-> If that's the case, and set_memory_encrypted() can't be fixed to not need 
-> to sleep by changing _vm_unmap_aliases() locking, then I assume dmapool is 
-> our only alternative?  I have no idea with how large this should be.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> Changes since V3:
+> 	- switch the debounce and repeat interval time for delay work schdule;
+> 	- add .remove to handle group irq and notify etc..
+> ---
+>  drivers/input/keyboard/Kconfig      |   7 ++
+>  drivers/input/keyboard/Makefile     |   1 +
+>  drivers/input/keyboard/imx_sc_key.c | 190 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 198 insertions(+)
+>  create mode 100644 drivers/input/keyboard/imx_sc_key.c
+> 
+> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+> index 8911bc2..00f8428 100644
+> --- a/drivers/input/keyboard/Kconfig
+> +++ b/drivers/input/keyboard/Kconfig
+> @@ -469,6 +469,13 @@ config KEYBOARD_IMX
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called imx_keypad.
+>  
+> +config KEYBOARD_IMX_SC_KEY
+> +	tristate "IMX SCU Key Driver"
+> +	depends on IMX_SCU
+> +	help
+> +	  This is the system controller key driver for NXP i.MX SoCs with
+> +	  system controller inside.
+> +
+>  config KEYBOARD_NEWTON
+>  	tristate "Newton keyboard"
+>  	select SERIO
+> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+> index 9510325..f5b1752 100644
+> --- a/drivers/input/keyboard/Makefile
+> +++ b/drivers/input/keyboard/Makefile
+> @@ -29,6 +29,7 @@ obj-$(CONFIG_KEYBOARD_HIL)		+= hil_kbd.o
+>  obj-$(CONFIG_KEYBOARD_HIL_OLD)		+= hilkbd.o
+>  obj-$(CONFIG_KEYBOARD_IPAQ_MICRO)	+= ipaq-micro-keys.o
+>  obj-$(CONFIG_KEYBOARD_IMX)		+= imx_keypad.o
+> +obj-$(CONFIG_KEYBOARD_IMX_SC_KEY)	+= imx_sc_key.o
+>  obj-$(CONFIG_KEYBOARD_HP6XX)		+= jornada680_kbd.o
+>  obj-$(CONFIG_KEYBOARD_HP7XX)		+= jornada720_kbd.o
+>  obj-$(CONFIG_KEYBOARD_LKKBD)		+= lkkbd.o
+> diff --git a/drivers/input/keyboard/imx_sc_key.c b/drivers/input/keyboard/imx_sc_key.c
+> new file mode 100644
+> index 0000000..59c68fa
+> --- /dev/null
+> +++ b/drivers/input/keyboard/imx_sc_key.c
+> @@ -0,0 +1,190 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/init.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define DEBOUNCE_TIME	100
+> +#define REPEAT_INTERVAL	60
+> +
+> +#define SC_IRQ_BUTTON		1
+> +#define SC_IRQ_GROUP_WAKE	3
+> +#define IMX_SC_MISC_FUNC_GET_BUTTON_STATUS	18
+> +
+> +struct imx_key_drv_data {
+> +	int keycode;
+> +	bool keystate;  /* 1: pressed, 0: release */
+> +	bool delay_check;
+> +	struct delayed_work check_work;
+> +	struct input_dev *input;
+> +	struct imx_sc_ipc *key_ipc_handle;
+> +	struct notifier_block key_notifier;
+> +};
+> +
+> +struct imx_sc_msg_key {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u8 state;
+> +};
+> +
+> +static int imx_sc_key_notify(struct notifier_block *nb,
+> +			     unsigned long event, void *group)
+> +{
+> +	struct imx_key_drv_data *priv =
+> +				 container_of(nb,
+> +					      struct imx_key_drv_data,
+> +					      key_notifier);
+> +
+> +	if ((event & SC_IRQ_BUTTON) && (*(u8 *)group == SC_IRQ_GROUP_WAKE)
+> +	    && !priv->delay_check) {
+> +		priv->delay_check = 1;
+> +		schedule_delayed_work(&priv->check_work,
+> +				      msecs_to_jiffies(DEBOUNCE_TIME));
+
+If I am reading this right, you are trying to avoid scheduling the work
+again if it is already scheduled. You do not need to do that, as
+schedule_delayed_work() will take care of that (if you want to make sure
+the work is re-scheduled with updated expiration, you need to use
+mod_delayed_work).
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void imx_sc_check_for_events(struct work_struct *work)
+> +{
+> +	struct imx_key_drv_data *priv =
+> +				 container_of(work,
+> +					      struct imx_key_drv_data,
+> +					      check_work.work);
+> +	struct input_dev *input = priv->input;
+> +	struct imx_sc_msg_key msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	bool state;
+> +	int ret;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_MISC;
+> +	hdr->func = IMX_SC_MISC_FUNC_GET_BUTTON_STATUS;
+> +	hdr->size = 1;
+> +
+> +	ret = imx_scu_call_rpc(priv->key_ipc_handle, &msg, true);
+> +	if (ret) {
+> +		dev_err(&input->dev, "read imx sc key failed, ret %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	state = (bool)msg.state;
+> +
+> +	if (!state && !priv->keystate)
+> +		state = true;
+
+This needs an explanation please.
+
+> +
+> +	if (state ^ priv->keystate) {
+> +		pm_wakeup_event(input->dev.parent, 0);
+
+I'd expect this happening in imx_sc_key_notify() so that the device
+would have a change to run this work.
+
+> +		priv->keystate = state;
+> +		input_event(input, EV_KEY, priv->keycode, state);
+> +		input_sync(input);
+> +		if (!state)
+> +			priv->delay_check = 0;
+> +		pm_relax(priv->input->dev.parent);
+
+Are you sure you want to call pm_relax() unconditionally, and not when
+state == false (i.e. button released)?
+
+> +	}
+> +
+> +	if (state)
+> +		schedule_delayed_work(&priv->check_work,
+> +				      msecs_to_jiffies(REPEAT_INTERVAL));
+> +}
+> +
+> +static int imx_sc_key_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	static struct imx_key_drv_data *priv;
+> +	struct input_dev *input;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	ret = imx_scu_get_handle(&priv->key_ipc_handle);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (of_property_read_u32(np, "linux,keycode", &priv->keycode)) {
+> +		dev_err(&pdev->dev, "missing KEY_POWER in DT\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	INIT_DELAYED_WORK(&priv->check_work, imx_sc_check_for_events);
+> +
+> +	input = devm_input_allocate_device(&pdev->dev);
+> +	if (!input) {
+> +		dev_err(&pdev->dev, "failed to allocate the input device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	input->name = pdev->name;
+> +	input->phys = "imx-sc-key/input0";
+> +	input->id.bustype = BUS_HOST;
+> +
+> +	input_set_capability(input, EV_KEY, priv->keycode);
+> +
+> +	ret = input_register_device(input);
+> +	if (ret) {
+
+Could you please rename this (and elsewhere) from 'ret' to 'error'?
+
+> +		dev_err(&pdev->dev, "failed to register input device\n");
+> +		return ret;
+> +	}
+> +
+> +	priv->input = input;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	ret = imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, true);
+> +	if (ret) {
+> +		dev_warn(&pdev->dev, "enable scu group irq failed\n");
+> +		return ret;
+> +	}
+> +
+> +	priv->key_notifier.notifier_call = imx_sc_key_notify;
+> +	ret = imx_scu_irq_register_notifier(&priv->key_notifier);
+> +	if (ret) {
+> +		imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
+> +		dev_warn(&pdev->dev, "register scu notifier failed\n");
+
+		return error;
+> +	}
+> +
+> +	return ret;
+
+	return 0;
+> +}
+> +
+> +static int imx_sc_key_remove(struct platform_device *pdev)
+> +{
+> +	struct imx_key_drv_data *priv = platform_get_drvdata(pdev);
+> +
+> +	imx_scu_irq_group_enable(SC_IRQ_GROUP_WAKE, SC_IRQ_BUTTON, false);
+> +	imx_scu_irq_unregister_notifier(&priv->key_notifier);
+> +	cancel_delayed_work_sync(&priv->check_work);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_sc_key_ids[] = {
+> +	{ .compatible = "fsl,imx-sc-key" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_sc_key_ids);
+> +
+> +static struct platform_driver imx_sc_key_driver = {
+> +	.driver = {
+> +		.name = "imx-sc-key",
+> +		.of_match_table = imx_sc_key_ids,
+> +	},
+> +	.probe = imx_sc_key_probe,
+> +	.remove = imx_sc_key_remove,
+> +};
+> +module_platform_driver(imx_sc_key_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("i.MX System Controller Key Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
 > 
 
-Brijesh and Tom, we currently hit this any time we boot an SEV enabled 
-Ubuntu 18.04 guest; I assume that guest kernels, especially those of such 
-major distributions, are expected to work with warnings and BUGs when 
-certain drivers are enabled.
+Thanks.
 
-If the vmap purge lock is to remain a mutex (any other reason that 
-unmapping aliases can block?) then it appears that allocating a dmapool 
-is the only alternative.  Is this something that you'll be addressing 
-generically or do we need to get buy-in from the maintainers of this 
-specific driver?
+-- 
+Dmitry
