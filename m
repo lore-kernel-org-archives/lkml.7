@@ -2,202 +2,131 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71732C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94691C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2BB20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CDDA214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVXp8UFl"
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="BDFW/DHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfIPJZu (ORCPT
+        id S1731971AbfIPJ3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:25:50 -0400
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44492 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729508AbfIPJZt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:25:49 -0400
-Received: by mail-vk1-f193.google.com with SMTP id j21so7185vki.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lVvZxMvnkUm7v4Djpl2U0876asmMVjf66fovgS1q9Ug=;
-        b=gVXp8UFlHkCIlom8seAltI7o8a13/Hlm/Mrba9+7euLO02gFV09aCzpaMwkeF3hnxy
-         k0fLEskzYTy4q0fzku0gOQa/TVB30Y2dKSW4aLTAGpY5f0iNslDRd+2AUbeTIZFrLMuB
-         +HZLmGdI8ozvaGzqyyS/xCBTgRRTV3rlWz1TfY58/Ly1KeEMJlxd1TlQpvXm/s/+Tf4I
-         L4v9qCZq7b/5OewX8bdBVEZRWiVXXrUCTF4vRXPt2Uadh9AF7LUyg2JXRXAXmYgL9LpM
-         sGjnYi5LO/DbO8SVeT6H36hNq6nYPR96VGYq2rNxqUoRaIsW6nUNtJHDHJTATjL7AZyI
-         wXYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lVvZxMvnkUm7v4Djpl2U0876asmMVjf66fovgS1q9Ug=;
-        b=MaMgyfJwlr4im7MDIB3yigzvSEETI7UTWRh9RApAxMYUKZzkkQBMkwnP0wxOOWRC++
-         ZTY2kF4ymro+7BVolGAanvsqscVcZCLJudvhX7SlfsIaW0j40FSBl6HaCigL2kgXcpcF
-         gMZec9kbhn0ERpqfj5l90GJEf9p0jWfnO48d4wImlGYgMdtEGQ2K3zccx+HZvACQs7cc
-         fHivKLzMKVYoazxp7k8Qy3rMr8Ze8toanMyMuWuvd+q9oHlYQBFZfAsuo8MPcsQbU99i
-         xD6Af5kiS3drEHoJB1iaxYZy9HynARiR1Bh5Z27I7yS07o5i/xS4G5X1D6gXGtLTxYz9
-         dUUQ==
-X-Gm-Message-State: APjAAAXkvjnjVrzrpYEewqVopuWD3ppZhDHL9eTvNLJMmmUssipxZnBl
-        lcL7v3b1H7yKIZLQ4dAq6c7Cbjni54cCJVciDNbyjA==
-X-Google-Smtp-Source: APXvYqz8yNYoxi4lVLbhbNGaX+7YoPtphAV0D2lpTntT8mdxcEuM1NT2n7OYNKP0e1WxjFqDnGY2Wo/FL1nClmIaEw4=
-X-Received: by 2002:a1f:8fc4:: with SMTP id r187mr28293588vkd.17.1568625946461;
- Mon, 16 Sep 2019 02:25:46 -0700 (PDT)
+        Mon, 16 Sep 2019 05:29:31 -0400
+Received: from mail-eopbgr20113.outbound.protection.outlook.com ([40.107.2.113]:59552
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730020AbfIPJ3b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:29:31 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QNqBa5+a/jtceRrkyKvkwDuLGXLuYKmGSi+Azp4vJDn78DK4Pr6at+2JEbjfoC3cftiJEZ4cr8wbdfpkKJTFtg6htguu2ug0BrtgUjwTaM8gw/XRa7kf7+0jyt/kdz8mFGsDg9jRPYwwNi30mKFRgmpac80/Qbvc+xDZTC9rgnDcnogOybA8/nnZgfgSqknxlbWlzrYYrKN5oXjrM26/ZkcWkHKJ49hL56njO2QgsKHvikL14J2hJo9QeokL4cNF5mwKei97fvWlyzOKwSu0PK2IUJhWw34oUE4NWbyv51Hm/b29GAzYgEhzsBiE6f1DNVO0Gyp0mzHbOwWek0v4hw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bYb9NywJ0l4v2lplIUW/TeVRy/kB0HFQFrLJ6w8slxQ=;
+ b=AG6avP4seCILB4TjDzRTvScdt8zxcdTnH7h1bWxQYz1yLFWjXdx+Ndnc1aMIQRQAPNHaKFBy/lZthnIM1WB5eaA1sgLjyd0VwNOr8rz8UquhFbqjApKn0rsjREtYhXAE6I/TgmVw/giKgFdrM6ph3fszTanUAoyTAFoX0c54JkuUR510p+rq0uYAPvSVmU9iVOMSSzlbNGDd1gGXPxL1YHQ31gLM2/WMNC8fZC5CcQKGp51spn5Fmz0d4BcCRQFJldE5mnCZuoZnG5GqF5OLRKrO7LLMmY/dbfW4FJdVlzDRJqbx6KOuL9vgKvRgyFVbXimR1/rG41HjEkE0ixIwbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bYb9NywJ0l4v2lplIUW/TeVRy/kB0HFQFrLJ6w8slxQ=;
+ b=BDFW/DHxxe6YprSbzDC3lOcEuG8c+0U6Y0y9zt+k2lSW7oErfaSepi9A31lUV5pRT2wo0lGtltwWTdSzjqtjhPrFmYupK4ltiLth06G+vm8iV8GdKbaRrlu87DCbnsnFhz580C9nC0btHd39fEGBq89hHKGkUnGNLyTry7eyO1U=
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com (52.133.24.149) by
+ AM6PR0702MB3799.eurprd07.prod.outlook.com (52.133.23.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.17; Mon, 16 Sep 2019 09:29:28 +0000
+Received: from AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::892c:2b90:e54f:ab56]) by AM6PR0702MB3527.eurprd07.prod.outlook.com
+ ([fe80::892c:2b90:e54f:ab56%3]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
+ 09:29:28 +0000
+From:   "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>
+To:     Jean Delvare <jdelvare@suse.de>,
+        "Xu, Lingyan (NSB - CN/Hangzhou)" <lingyan.xu@nokia-sbell.com>
+CC:     "Adamski, Krzysztof (Nokia - PL/Wroclaw)" 
+        <krzysztof.adamski@nokia.com>,
+        "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i801_smbus: clear SMBALERT status bit and disable
+ SMBALERT interrupt
+Thread-Topic: [PATCH] i801_smbus: clear SMBALERT status bit and disable
+ SMBALERT interrupt
+Thread-Index: AQHVYf2CtQ6bNeFFV0qdOS3acGbEtQ==
+Date:   Mon, 16 Sep 2019 09:29:27 +0000
+Message-ID: <d7dce94a-d857-dc1e-1917-d715940bc356@nokia.com>
+References: <1565577634-18264-1-git-send-email-lingyan.xu@nokia-sbell.com>
+ <20190828155822.7cb13a7b@endymion>
+ <a6cd1872effd46c7ba088f28402b32b8@nokia-sbell.com>
+ <20190905145716.137e155a@endymion>
+In-Reply-To: <20190905145716.137e155a@endymion>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [131.228.32.167]
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
+x-clientproxiedby: HE1PR0402CA0006.eurprd04.prod.outlook.com
+ (2603:10a6:3:d0::16) To AM6PR0702MB3527.eurprd07.prod.outlook.com
+ (2603:10a6:209:11::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=alexander.sverdlin@nokia.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 317dbf5b-68e8-4fa9-af47-08d73a885edf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM6PR0702MB3799;
+x-ms-traffictypediagnostic: AM6PR0702MB3799:
+x-ld-processed: 5d471751-9675-428d-917b-70f44f9630b0,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0702MB379919EDCA55FB4CCFAA11BF888C0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0162ACCC24
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(376002)(39860400002)(136003)(346002)(199004)(189003)(58126008)(14444005)(2906002)(66446008)(64756008)(66556008)(66476007)(66946007)(8936002)(81166006)(8676002)(81156014)(6116002)(31686004)(256004)(486006)(3846002)(7736002)(305945005)(31696002)(86362001)(65806001)(65956001)(66066001)(53936002)(6512007)(6246003)(14454004)(6506007)(53546011)(25786009)(478600001)(386003)(6486002)(229853002)(36756003)(6436002)(76176011)(71190400001)(71200400001)(26005)(5660300002)(99286004)(102836004)(52116002)(4744005)(186003)(54906003)(446003)(2616005)(476003)(11346002)(110136005)(316002)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR0702MB3799;H:AM6PR0702MB3527.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 7M8mwm7q3PSv0kT3l7ZQy/3+RUNLj9+e01z6t0CaWf3WMBhT7NYxY1bp/3TmSvVrdyfrKe14yBAyVRpLJ/YFoK+qyVg1IKJRVB80cpW8tmQQjS7UDCQIVnExM3YYH0uIk9DpFPrtNkZw69zqzrCEyx8ja7mLJOKjG/SA3lGgnEXsuLuFyacYQSHZft8YGs3qOjs1evKNlCAmdqAFh54Vr8XC3GbKIvSW0GuBTJi5MmXY3J2HFL2/Ota3NktkP1mRhA9jftHKRzKhKWvyxy9SOZdacW+bZJgaHJocbV9pnGc9rZmI/XH88+1ek1Cb1hVO9neOfTwyiSx64Mq1/+Et5LUb7rizIq0axh6Ratc2a5pnV+PqXI6xqok1JlskCOYn68cXkBfO8SRE8tAfws6njWiqyGnw0hiEZT3HbKEIFz8=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <21C9BBA62CE96C4F957140A2A0952C3E@eurprd07.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190722193939.125578-1-dianders@chromium.org>
- <CAPDyKFoND5Kaam72zxO4wChO0z_1XL2KWX6oNjVcMUGA7G8RFg@mail.gmail.com> <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
-In-Reply-To: <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 16 Sep 2019 11:25:10 +0200
-Message-ID: <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO
- API to replug card
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ganapathi Bhat <gbhat@marvell.com>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Andreas Fenkart <afenkart@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        netdev <netdev@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 317dbf5b-68e8-4fa9-af47-08d73a885edf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 09:29:27.9514
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3sVi3afV+8eKhA8Mx7P/ki86y5y2+60OY7u6BERebAQTnI3uyjPexcutFwqvkB0XjBmf7Xe9orudrDPNRnzwy5V8Gk3rWRXPJNhSR1pk2RQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0702MB3799
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Sep 2019 at 23:26, Doug Anderson <dianders@chromium.org> wrote:
->
-> Hi,
->
-> On Thu, Jul 25, 2019 at 6:28 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >
-> > On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
-> > >
-> > > As talked about in the thread at:
-> > >
-> > > http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
-> > >
-> > > ...when the Marvell WiFi card tries to reset itself it kills
-> > > Bluetooth.  It was observed that we could re-init the card properly by
-> > > unbinding / rebinding the host controller.  It was also observed that
-> > > in the downstream Chrome OS codebase the solution used was
-> > > mmc_remove_host() / mmc_add_host(), which is similar to the solution
-> > > in this series.
-> > >
-> > > So far I've only done testing of this series using the reset test
-> > > source that can be simulated via sysfs.  Specifically I ran this test:
-> > >
-> > > for i in $(seq 1000); do
-> > >   echo "LOOP $i --------"
-> > >   echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
-> > >
-> > >   while true; do
-> > >     if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
-> > >       fail=$(( fail + 1 ))
-> > >       echo "Fail WiFi ${fail}"
-> > >       if [[ ${fail} == 3 ]]; then
-> > >         exit 1
-> > >       fi
-> > >     else
-> > >       fail=0
-> > >       break
-> > >     fi
-> > >   done
-> > >
-> > >   hciconfig hci0 down
-> > >   sleep 1
-> > >   if ! hciconfig hci0 up; then
-> > >     echo "Fail BT"
-> > >     exit 1
-> > >   fi
-> > > done
-> > >
-> > > I ran this several times and got several hundred iterations each
-> > > before a failure.  When I saw failures:
-> > >
-> > > * Once I saw a "Fail BT"; manually resetting the card again fixed it.
-> > >   I didn't give it time to see if it would have detected this
-> > >   automatically.
-> > > * Once I saw the ping fail because (for some reason) my device only
-> > >   got an IPv6 address from my router and the IPv4 ping failed.  I
-> > >   changed my script to use 'ping6' to see if that would help.
-> > > * Once I saw the ping fail because the higher level network stack
-> > >   ("shill" in my case) seemed to crash.  A few minutes later the
-> > >   system recovered itself automatically.  https://crbug.com/984593 if
-> > >   you want more details.
-> > > * Sometimes while I was testing I saw "Fail WiFi 1" indicating a
-> > >   transitory failure.  Usually this was an association failure, but in
-> > >   one case I saw the device do "Firmware wakeup failed" after I
-> > >   triggered the reset.  This caused the driver to trigger a re-reset
-> > >   of itself which eventually recovered things.  This was good because
-> > >   it was an actual test of the normal reset flow (not the one
-> > >   triggered via sysfs).
-> > >
-> > > Changes in v2:
-> > > - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
-> > > - s/contining/containing (Matthias Kaehlcke).
-> > > - Add Matthias Reviewed-by tag.
-> > > - Removed clear_bit() calls and old comment (Brian Norris).
-> > > - Explicit CC of Andreas Fenkart.
-> > > - Explicit CC of Brian Norris.
-> > > - Add "Fixes" pointing at the commit Brian talked about.
-> > > - Add Brian's Reviewed-by tag.
-> > >
-> > > Douglas Anderson (2):
-> > >   mmc: core: Add sdio_trigger_replug() API
-> > >   mwifiex: Make use of the new sdio_trigger_replug() API to reset
-> > >
-> > >  drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
-> > >  drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
-> > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 16 +-----------
-> > >  include/linux/mmc/host.h                    | 15 ++++++++++-
-> > >  include/linux/mmc/sdio_func.h               |  2 ++
-> > >  5 files changed, 63 insertions(+), 18 deletions(-)
-> > >
-> >
-> > Doug, thanks for sending this!
-> >
-> > As you know, I have been working on additional changes for SDIO
-> > suspend/resume (still WIP and not ready for sharing) and this series
-> > is related.
-> >
-> > The thing is, that even during system suspend/resume, synchronizations
-> > are needed between the different layers (mmc host, mmc core and
-> > sdio-funcs), which is common to the problem you want to solve.
-> >
-> > That said, I need to scratch my head a bit more before I can provide
-> > you some feedback on $subject series. Moreover, it's vacation period
-> > at my side so things are moving a bit slower. Please be patient.
->
-> I had kinda forgotten about this series after we landed it locally in
-> Chrome OS, but I realized that it never got resolved upstream.  Any
-> chance your head has been sufficiently scratched and you're now happy
-> with $subject series?  ;-)
-
-It's still on my TODO list. Apologize for the delay, but I still need
-more time to look into it, possibly later this week.
-
-In any case, let's make sure we get this problem resolved for v5.5.
-
-Kind regards
-Uffe
+SGkgSmVhbiwNCg0KT24gMDUvMDkvMjAxOSAxNDo1NywgSmVhbiBEZWx2YXJlIHdyb3RlOg0KPiBJ
+ZiB0aGlzIGlzIG9mIGFueSB2YWx1ZSB0byB5b3UsIEkgdHJpZWQgaW1wbGVtZW50aW5nIGl0IGlu
+IGkyYy1pODAxIGENCj4gZmV3IGRheXMgYWdvLiBJIGNhbid0IHJlYWxseSB0ZXN0IGl0IHRob3Vn
+aCBhcyBJIGRvbid0IGhhdmUgYW55IGRldmljZQ0KPiB3aGljaCB0cmlnZ2VycyBhbiBhbGVydCBv
+biBteSBzeXN0ZW0sIGJ1dCBJIGFtIHNoYXJpbmcgaXQgd2l0aCB5b3UgaWYNCj4geW91IHdhbnQg
+dG8gZ2l2ZSBpdCBhIHRyeS4gWW91IHdvdWxkIHN0aWxsIG5lZWQgdG8gd3JpdGUgdGhlIGNvZGUg
+aW4NCj4gdGhlIHNsYXZlIGRyaXZlci4NCg0KYW5kIEkgZm9yZ290IGFub3RoZXIgaXNzdWU6DQoN
+Cj4gQEAgLTE4OTcsOCArMTk1NiwxMCBAQCBzdGF0aWMgdm9pZCBpODAxX3JlbW92ZShzdHJ1Y3Qg
+cGNpX2RldiAqDQo+ICAJcG1fcnVudGltZV9mb3JiaWQoJmRldi0+ZGV2KTsNCj4gIAlwbV9ydW50
+aW1lX2dldF9ub3Jlc3VtZSgmZGV2LT5kZXYpOw0KPiAgDQo+IC0JaTgwMV9kaXNhYmxlX2hvc3Rf
+bm90aWZ5KHByaXYpOw0KPiArCWk4MDFfcmVzdG9yZV9zbHZjbWQocHJpdik7DQo+ICAJaTgwMV9k
+ZWxfbXV4KHByaXYpOw0KPiArCWlmIChwcml2LT5hcmEpDQo+ICsJCWkyY191bnJlZ2lzdGVyX2Rl
+dmljZShwcml2LT5hcmEpOw0KDQp0byBtZSBpdCBsb29rcyBsaWtlIGEgcmFjZSB3aXRoIElSUSBo
+YW5kbGVyIChJUlEgaXMgb25seSBkaXNhYmxlZCAqYWZ0ZXIqDQpyZW1vdmUoKSksIGl0IGNhbiBz
+dGlsbCBhdHRlbXB0IHRvIHVzZSBmcmVlZCBBUkEgZGV2aWNlIGFmdGVyIHRoaXMgbGluZS4gDQoN
+Cj4gIAlpMmNfZGVsX2FkYXB0ZXIoJnByaXYtPmFkYXB0ZXIpOw0KPiAgCWk4MDFfYWNwaV9yZW1v
+dmUocHJpdik7DQo+ICAJcGNpX3dyaXRlX2NvbmZpZ19ieXRlKGRldiwgU01CSFNUQ0ZHLCBwcml2
+LT5vcmlnaW5hbF9oc3RjZmcpOw0KDQotLSANCkJlc3QgcmVnYXJkcywNCkFsZXhhbmRlciBTdmVy
+ZGxpbi4NCg==
