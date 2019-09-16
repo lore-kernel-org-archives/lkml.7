@@ -2,100 +2,158 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5AFBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860D02067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568633852;
-	bh=FpxvfCJty4Chs8ux7uZhIRX9jfW+FpOVLEkLx7GYtBg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=H5gIw61008TiaEXULzGv8l5k+kd6GmbCAffLESDI7gTxuTgBhhJg5Vk0QDXeU6GCO
-	 oo4ZyQQu/QDoDk2aAKKq4SSpWls6Lsc6sbumar2XMAYkx7vV0ghVj3pMq1qQfx6iA0
-	 yUsOGG3tSHT4n1gnf17tiknxlYJsXXpAVTyKRxs4=
+	by mail.kernel.org (Postfix) with ESMTP id 6CBFE206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:39:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrzOfFUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732374AbfIPLhb (ORCPT
+        id S1731393AbfIPLjd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:37:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41900 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727479AbfIPLhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:37:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF7ACAF7C;
-        Mon, 16 Sep 2019 11:37:29 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 13:37:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm, thp: Do not queue fully unmapped pages for deferred
- split
-Message-ID: <20190916113729.GF10231@dhcp22.suse.cz>
-References: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
- <20190916103602.GD10231@dhcp22.suse.cz>
- <5c946cd9-e17b-b184-37b7-250c6dfb977c@suse.cz>
+        Mon, 16 Sep 2019 07:39:33 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:41201 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfIPLjd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:39:33 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f5so1399881ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 04:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=f5a1BChAu3dyalw+cUTX4tLGbm1QRrKJw1j9muYZIGY=;
+        b=TrzOfFUYFDWcU0Mm7IHUprpprBHhyiuhR38gvj9ZpcefblJY/uh/SlOYG7cY0/nw+M
+         ySXaxrk4fmlzmj4F8Yym3H2AdB53Ep4gnRJywFN1E6b44xVK/7Hz2JoGruyXKeJUz3Hm
+         qflyd1hMBUkNctqsc03vQiNeu7BIRFUlwhDts2gUV2acheK/t9JrpGuDGGBiSPU1DuUc
+         Fe462Hzo9eWyTXsmC/XtNQZJwkGXAFfa0UALKMZR7MrZeqMzEqjfoPeXEhGVRWgtIr6l
+         FeOF3ZPimXy8vkV4VyHgPV1gMPcTrG8sgExqCI2l9rRzBVk7Ves8n0L/s+7rA4GMtQH9
+         d3ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=f5a1BChAu3dyalw+cUTX4tLGbm1QRrKJw1j9muYZIGY=;
+        b=HvZraXhd7oKRe8+n5SobOa6Q/yOPUQILIewarMAIPqZTjSuLYF1u4nC9Cojx7RTiWn
+         1kyi4r7CBw2zZVZbqRhdCVwdg0jIN8v/0XfeaTxE5szBFvFfPAOrfAL3rckb21+PXCOc
+         RWT4nzB7p1B4kqqNevS6T9zCHVIQ/11CpXF/cJBLPaUXrEuQpJ66Xd+utqmrFKheTtys
+         FShrxKmtS6GSaLrirEjd+8b6LCaFCaIaj/dqE2bo3XaFXPSb/l98Yu80+HjEUMEPYeMp
+         yTMc4yF2h9R8l7hU/fIK90vEWCbjgrxKO/rEu1vAXpo0O1Biu5J2jjCII4UGS8SvIIC3
+         1j9Q==
+X-Gm-Message-State: APjAAAWZv6xlpqNIiHqSyZK07u2QJIp1M6we++nP6S/XTwC3U0C0L70l
+        o4FKMRvjr2g5PjwKcExvc4oxLsSNs90nOo6dcOq/2g==
+X-Google-Smtp-Source: APXvYqyF/vTMBQLIzMMmA4MjGs9N3Z29+Zd/qyQLXrhaXqKygcunzLEXfGCFRRSdXb2lj+2ry3V6W4CO/6S/R61sOck=
+X-Received: by 2002:a2e:9218:: with SMTP id k24mr37512846ljg.35.1568633971209;
+ Mon, 16 Sep 2019 04:39:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c946cd9-e17b-b184-37b7-250c6dfb977c@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1568224280.git.esyr@redhat.com>
+In-Reply-To: <cover.1568224280.git.esyr@redhat.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Mon, 16 Sep 2019 13:39:20 +0200
+Message-ID: <CADYN=9KM5YWat7Fbh52hB4=pjpwPRO5o62=Jg+D3SnEATy3CeA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/6] Update clone3 self-tests
+To:     Eugene Syromiatnikov <esyr@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Shuah Khan <shuah@kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Adrian Reber <areber@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 16-09-19 13:11:37, Vlastimil Babka wrote:
-> On 9/16/19 12:36 PM, Michal Hocko wrote:
-> > On Fri 13-09-19 12:18:49, Kirill A. Shutemov wrote:
-> >> Adding fully unmapped pages into deferred split queue is not productive:
-> >> these pages are about to be freed or they are pinned and cannot be split
-> >> anyway.
-> >> 
-> >> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >> ---
-> >>  mm/rmap.c | 14 ++++++++++----
-> >>  1 file changed, 10 insertions(+), 4 deletions(-)
-> >> 
-> >> diff --git a/mm/rmap.c b/mm/rmap.c
-> >> index 003377e24232..45388f1bf317 100644
-> >> --- a/mm/rmap.c
-> >> +++ b/mm/rmap.c
-> >> @@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
-> >>  	if (TestClearPageDoubleMap(page)) {
-> >>  		/*
-> >>  		 * Subpages can be mapped with PTEs too. Check how many of
-> >> -		 * themi are still mapped.
-> >> +		 * them are still mapped.
-> >>  		 */
-> >>  		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
-> >>  			if (atomic_add_negative(-1, &page[i]._mapcount))
-> >>  				nr++;
-> >>  		}
-> >> +
-> >> +		/*
-> >> +		 * Queue the page for deferred split if at least one small
-> >> +		 * page of the compound page is unmapped, but at least one
-> >> +		 * small page is still mapped.
-> >> +		 */
-> >> +		if (nr && nr < HPAGE_PMD_NR)
-> >> +			deferred_split_huge_page(page);
-> > 
-> > You've set nr to zero in the for loop so this cannot work AFAICS.
-> 
-> The for loop then does nr++ for each subpage that's still mapped?
+On Wed, 11 Sep 2019 at 20:02, Eugene Syromiatnikov <esyr@redhat.com> wrote:
+>
+> Hello.
+>
+> This patch set updates clone3 selftest in several aspects:
+>  - adding checks for exit_signal invalid values handling;
+>  - adding clone3 to selftests targets;
+>  - enabling clone3 tests on all architectures;
+>  - minor cleanups of the clone3 test.
+>
+> This respin alignes additional clone3 self-tests with v3 of the
+> exit_signal checking patch[1].
+>
+> Applied on top of brauer/linux.git/for-next.
+>
+> Changes since v2[2]:
+>  - CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG check is now expected to fail.
+>
+> Changes since v1[3]:
+>  - exit_signal check extended to cover more cases of invalid
+>    exit_signal value.
+>
+> [1] https://lkml.org/lkml/2019/9/11/677
+> [2] https://lkml.org/lkml/2019/9/10/768
+> [3] https://lkml.org/lkml/2019/9/10/416
+>
+> Eugene Syromiatnikov (6):
+>   selftests/clone3: convert test modes into an enum
+>   selftests/clone3: add a check for invalid exit_signal
+>   selftests/clone3: use uint64_t for flags parameter
+>   selftests/clone3: fix up format strings
+>   selftests/clone3: enable clone3 self-tests on all architectures
+>   selftests: add clone3 to TARGETS
 
-I am blind obviously. Sorry about the noise. Then the patch looks
-correct.
--- 
-Michal Hocko
-SUSE Labs
+I wasn't able to build this patchset for arm64, I applied it on tag
+next-20190904:
+
+$ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -skj$(getconf
+_NPROCESSORS_ONLN) headers_install
+$ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -skj$(getconf
+_NPROCESSORS_ONLN) -C tools/testing/selftests/clone3
+
+clone3_set_tid.c: In function =E2=80=98raw_clone=E2=80=99:
+clone3_set_tid.c:22:17: error: =E2=80=98__NR_clone3=E2=80=99 undeclared (fi=
+rst use in
+this function); did you mean =E2=80=98raw_clone=E2=80=99?
+  return syscall(__NR_clone3, args, sizeof(struct clone_args));
+                 ^~~~~~~~~~~
+                 raw_clone
+clone3_set_tid.c:22:17: note: each undeclared identifier is reported
+only once for each function it appears in
+make: *** [../lib.mk:138:
+/srv/src/kernel/kselftest-testing/tools/testing/selftests/clone3/clone3_set=
+_tid]
+Error 1
+clone3.c: In function =E2=80=98raw_clone=E2=80=99:
+clone3.c:41:17: error: =E2=80=98__NR_clone3=E2=80=99 undeclared (first use =
+in this
+function); did you mean =E2=80=98raw_clone=E2=80=99?
+  return syscall(__NR_clone3, args, size);
+                 ^~~~~~~~~~~
+                 raw_clone
+clone3.c:41:17: note: each undeclared identifier is reported only once
+for each function it appears in
+make: *** [../lib.mk:138:
+/srv/src/kernel/kselftest-testing/tools/testing/selftests/clone3/clone3]
+Error 1
+make: Target 'all' not remade because of errors.
+
+
+Any idea what I'm doing wrong?
+
+Cheers,
+Anders
+
+>
+>  tools/testing/selftests/Makefile        |  1 +
+>  tools/testing/selftests/clone3/Makefile |  4 +--
+>  tools/testing/selftests/clone3/clone3.c | 64 +++++++++++++++++++++++++++=
++-----
+>  3 files changed, 57 insertions(+), 12 deletions(-)
+>
+> --
+> 2.1.4
+>
