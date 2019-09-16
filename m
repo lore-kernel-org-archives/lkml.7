@@ -2,221 +2,121 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89165C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 438DFC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A27D2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzjYwpMT"
+	by mail.kernel.org (Postfix) with ESMTP id 1B40720873
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568598346;
+	bh=x8oyyIbwJK+bpPZk+H4JKi6dbYg9J63DwWP6vKa4XoU=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=eW7aiwA4zftpciCzTzpHvfjp6hB2mHXCyvBQjsRHRGIvHSEpbZrOAYXwZ/bsWTByV
+	 9UZUlWgn74bDWJ4G5iZaNMqLEzfj6w2SXwBuEK4S/x7sUPiyHra5CUWYJ3ahXUoRhu
+	 byHiRaimnlNFoVL3ICrfP1ZgwUhqb0MVNbghAYds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbfIPBpE (ORCPT
+        id S1729171AbfIPBpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 21:45:04 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38627 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfIPBpE (ORCPT
+        Sun, 15 Sep 2019 21:45:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:34566 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPBpp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 21:45:04 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w10so5025191plq.5
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 18:45:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fNnAnq8pDeljhZQ4pgIKWXaM6E5rsGED87rKuk4gjk8=;
-        b=nzjYwpMTP1y7w3N0WhvyyFQQwOr8d8qbDv4YObmyIib7IyAUBcul+5byappQyOVIPS
-         Dqq8kh9xySZGdarsR6D1u26oZGnDDUMZi+a+6aZ48GU2jYPbQM3Aj1St0Tq1NoONC3PB
-         hyxV+xHcpXHMsLKL+P+l6q6FcTVAya7m7ouCaVwvLNZF/0Rx/ir/MI6o3V84P8aKI+ts
-         DJ1q3a2kFi4ktMZp7BCmykYy6NIAzSQsaY2yTNBqwsD526wj6KGKopXBuO3ksZ9eFb3/
-         5K78S6grm1nfjSnrpfwR1MfyuoawoNyHhgEK9uHCdOEwV7eDA2RNMeIG8cj1dXAxiHUx
-         DRsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fNnAnq8pDeljhZQ4pgIKWXaM6E5rsGED87rKuk4gjk8=;
-        b=OmNXACRLyPEU9qzNVPBAqUyHS6lYXl9cbc3duhcviT2KTAYys/4Fbbn1PK60ipbx9N
-         H5ve28iAb/hmWTxYO0xbgQe8SMeSuavoCKfa56FL9gEhLZRugc1XubvUKEJYa762ChmW
-         fn15odFHhbKbN5z2Whz/Y3oJjOMGIWjwh3Yy2mv/Cdfh+o+j5h9mfCjAwAeUTGUDiCq7
-         O+3K9l/aa/jl54pSjsbdahg9ZU8ybYmF/btV1qV4OF82uhikCr0RaXsIn/doXu0+DbbL
-         g+C2wjO04kOkHARtQO1n69Rq17HWqjMgVlNux5jrNDd8l4LQpPdPqH9w/4ZkYkxjocEJ
-         E6WQ==
-X-Gm-Message-State: APjAAAVEc5lt20RRO+MAc8+69AgHEgF5IIeqqgflq0ry6RGg5ZPXmej5
-        rdpUgZPxqBQmjjhIFQOgTLI=
-X-Google-Smtp-Source: APXvYqxdgDyg1BgZoFwrA5D2pgqFh+fcaV8rX9gUUp7aqgZghpzjiomJ6OzKYVqhvUmCfXheWT5MQA==
-X-Received: by 2002:a17:902:854b:: with SMTP id d11mr57017596plo.146.1568598302555;
-        Sun, 15 Sep 2019 18:45:02 -0700 (PDT)
-Received: from [192.168.68.119] (220-245-129-191.tpgi.com.au. [220.245.129.191])
-        by smtp.gmail.com with ESMTPSA id t13sm3343972pfe.69.2019.09.15.18.44.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 15 Sep 2019 18:45:01 -0700 (PDT)
-Subject: Re: [PATCH V7 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls
- in try_remove_memory()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
- <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
-From:   Balbir Singh <bsingharora@gmail.com>
-Message-ID: <74bcbd36-3bec-be67-917d-60cd74cbcef0@gmail.com>
-Date:   Mon, 16 Sep 2019 11:44:50 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Sun, 15 Sep 2019 21:45:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=r9K3thlaEGsm6IDV53I4ktWkaE/snlWCDUXjKouUxM0=; b=xGnsOyGc+PXRA/cWK0Jnb0FOt
+        fIKDPCB/xvkNAb6vBFHEKWYxktbFbCXHvn7xnWzkW3aGcoGUx83obrnTkOY3+OjLSJcw0LQgtnjIx
+        iY+At2NXOtn2TDrdf0btkUoDeeBC9VHvEe2JAL/Nq5mmmcMrYEFtOa9UIXZYyS7xXjtYs=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9g5E-0002AJ-7I; Mon, 16 Sep 2019 01:45:40 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 68CF42741587; Mon, 16 Sep 2019 02:45:39 +0100 (BST)
+Date:   Mon, 16 Sep 2019 02:45:39 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Petr Vorel <pvorel@suse.cz>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the kselftest tree with the tpmdd tree
+Message-ID: <20190916014535.GU4352@sirena.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="A+KtNVtgI4x4SWvL"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--A+KtNVtgI4x4SWvL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/9/19 7:45 pm, Anshuman Khandual wrote:
-> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+Hi all,
 
-I could not find this path in the code, the only called for get_nid_for_pfn()
-was register_mem_sect_under_node() when the system is under boot.
+Today's linux-next merge of the kselftest tree got a conflict in:
 
-> entries between memory block and node. It first checks pfn validity with
-> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
-> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
-> 
-> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
-> which scans all mapped memblock regions with memblock_is_map_memory(). This
-> creates a problem in memory hot remove path which has already removed given
-> memory range from memory block with memblock_[remove|free] before arriving
-> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
-> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
-> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
-> of existing sysfs entries.
-> 
-> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
-> [   62.052517] ------------[ cut here ]------------
+  tools/testing/selftests/tpm2/Makefile
 
-This seems like arm64 is not ready for probe_store() via drivers/base/memory.c/ode.c
+between commit:
 
-> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
+  3fb2179b0f3553a ("selftests/tpm2: Add the missing TEST_FILES assignment")
 
+=66rom the tpmdd tree and commit:
 
+  d04e26067d13f01 ("selftests: tpm2: install python files")
 
-> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-> [   62.054589] Modules linked in:
-> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
-> [   62.056274] Hardware name: linux,dummy-virt (DT)
-> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
-> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
-> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
-> [   62.059842] sp : ffff0000168b3ce0
-> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
-> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
-> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
-> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
-> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
-> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
-> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
-> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
-> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
-> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
-> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
-> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
-> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
-> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
-> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
-> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
-> [   62.076930] Call trace:
-> [   62.077411]  add_memory_resource+0x1cc/0x1d8
-> [   62.078227]  __add_memory+0x70/0xa8
-> [   62.078901]  probe_store+0xa4/0xc8
-> [   62.079561]  dev_attr_store+0x18/0x28
-> [   62.080270]  sysfs_kf_write+0x40/0x58
-> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
-> [   62.081744]  __vfs_write+0x18/0x40
-> [   62.082400]  vfs_write+0xa4/0x1b0
-> [   62.083037]  ksys_write+0x5c/0xc0
-> [   62.083681]  __arm64_sys_write+0x18/0x20
-> [   62.084432]  el0_svc_handler+0x88/0x100
-> [   62.085177]  el0_svc+0x8/0xc
-> 
-> Re-ordering memblock_[free|remove]() with arch_remove_memory() solves the
-> problem on arm64 as pfn_valid() behaves correctly and returns positive
-> as memblock for the address range still exists. arch_remove_memory()
-> removes applicable memory sections from zone with __remove_pages() and
-> tears down kernel linear mapping. Removing memblock regions afterwards
-> is safe because there is no other memblock (bootmem) allocator user that
-> late. So nobody is going to allocate from the removed range just to blow
-> up later. Also nobody should be using the bootmem allocated range else
-> we wouldn't allow to remove it. So reordering is indeed safe.
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+=66rom the kselftest tree.
 
-Honestly, the issue is not clear from the changelog, largely
-because I can't find the use of get_nid_for_pfn()  being used
-in memory hotunplug. I can see why using pfn_valid() after
-memblock_free/remove is bad on the architecture.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-I think the checks to pfn_valid() can be avoided from the
-remove paths if we did the following
+diff --cc tools/testing/selftests/tpm2/Makefile
+index bf401f725eef8,1a5db1eb8ed51..0000000000000
+--- a/tools/testing/selftests/tpm2/Makefile
++++ b/tools/testing/selftests/tpm2/Makefile
+@@@ -2,4 -2,4 +2,5 @@@
+  include ../lib.mk
+ =20
+  TEST_PROGS :=3D test_smoke.sh test_space.sh
+ +TEST_FILES :=3D tpm2.py tpm2_tests.py
++ TEST_PROGS_EXTENDED :=3D tpm2.py tpm2_tests.py
 
-memblock_isolate_regions()
-for each isolate_region {
-	memblock_free
-	memblock_remove
-	arch_memory_remove
+--A+KtNVtgI4x4SWvL
+Content-Type: application/pgp-signature; name="signature.asc"
 
-	# ensure that __remove_memory can avoid calling pfn_valid
-}
+-----BEGIN PGP SIGNATURE-----
 
-Having said that, your patch is easier and if your assumption
-about not using the memblocks is valid (after arch_memory_remove())
-then might be the least resistant way forward
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+6T4ACgkQJNaLcl1U
+h9DrGgf9Fx4x4EFYxQf1Wd8MS1pgKI7l4p9OrLGVc25pEEPxhsmSjiCNIwjODgZ/
+B03mH96tCv12FnPLsfD+YxC8reCK1LrdpeFrdOAH32+EtjsI43XeMM/So+k6u3Rl
+hdikAPQmEo/IZzIL/bkAk7tkQmnrTzzDNtX0UQ2Lv+2k0kvlxtoJmAyZTj54Yuc9
+ZDMbM9gWg4myaZBQBHSZk9a/w7JGYtN5k5RyG7nDFieH1OCBiQ3oRLdVdFaXFmgH
+rGpVk3hyy8u+AI5Vvfn2tnsEaKoLkXKDpvHCTbNPZS4Bh/PeNf8/moXzpxTf7bVE
+oaGaD2UNMMlbGB8vQtKg+TCFwK+6Jw==
+=vsVz
+-----END PGP SIGNATURE-----
 
-Balbir Singh.
-
-
->  mm/memory_hotplug.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index c73f09913165..355c466e0621 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->  
->  	/* remove memmap entry */
->  	firmware_map_remove(start, start + size, "System RAM");
-> -	memblock_free(start, size);
-> -	memblock_remove(start, size);
->  
->  	/* remove memory block devices before removing memory */
->  	remove_memory_block_devices(start, size);
->  
->  	arch_remove_memory(nid, start, size, NULL);
-> +	memblock_free(start, size);
-> +	memblock_remove(start, size);
->  	__release_memory_resource(start, size);
->  
->  	try_offline_node(nid);
-> 
+--A+KtNVtgI4x4SWvL--
