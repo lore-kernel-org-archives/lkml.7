@@ -2,137 +2,265 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7192EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B91C5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C6E20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EEAD20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728010AbfIPN35 (ORCPT
+        id S2387485AbfIPNad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:29:57 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:54035 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733139AbfIPN3K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:29:10 -0400
-Received: by mail-io1-f72.google.com with SMTP id l21so50684938iob.20
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:29:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Is+d6dqD59UDWyRn9HoG+eKzIMsqRNy0LD3MnVyhGVI=;
-        b=ZULWFDw13lcyqVmeMlWg4AH5kU7aMEUKXaT94PCCnft339ShyJrZ2NvXsntPsY4c4l
-         yISe2UDxhQe0uSBy6ENVCgF6amC+CsGhqe7dKVg+QlH7xzdg0+VfpSZeR8GdmX87/8uR
-         7gtnQVqKq8BDVMPWGgm+o6gVZXmzXhUmKuKGPc3nlkAkvN0HM0+PpWrttXuemCJ5sV6Q
-         At009BSm4obSqm3cRd8sCC2KKEWky62mzRhjz/2Nbw4iT0o4x3dBH5/UxQ9ddegMAsA8
-         v3zlFo+J9kt5pvv0TOg7uZCTm51ZB5+IgosrFDQ0libvAWNOfnRs5baFtTP8nZtT3nJT
-         vUPQ==
-X-Gm-Message-State: APjAAAUV7zGXGAn2HZ1pXjAO6ePcIT4XF1FCHabd4KtyOa0bm1aTSu8N
-        sB1VOmUpq2ZaPfAtTMsCi0TvMFBKy784d8i+BBGLCs2oMIUi
-X-Google-Smtp-Source: APXvYqyLzrn6iiZVIWcm8eZceVi2PWZgTGKMtrYR8hDkGckeZGGAiakb+t1cexOZtT1aVd0Pc+k6T4mPfu7iBujPeYOMDpVBs75b
+        Mon, 16 Sep 2019 09:30:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2273 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727899AbfIPNac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:30:32 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 7836D3D1BAFEE3DA4D02;
+        Mon, 16 Sep 2019 21:30:27 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 16 Sep 2019 21:30:24 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
+CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
+        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
+        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
+        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
+        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
+        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
+Subject: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Date:   Mon, 16 Sep 2019 21:28:01 +0800
+Message-ID: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-X-Received: by 2002:a02:c8cd:: with SMTP id q13mr402813jao.133.1568640549268;
- Mon, 16 Sep 2019 06:29:09 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 06:29:09 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b83b550592ab965b@google.com>
-Subject: divide error in usbnet_update_max_qlen
-From:   syzbot <syzbot+6102c120be558c885f04@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, oneukum@suse.com,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+When passing the return value of dev_to_node() to cpumask_of_node()
+without checking if the device's node id is NUMA_NO_NODE, there is
+global-out-of-bounds detected by KASAN.
 
-syzbot found the following crash on:
+From the discussion [1], NUMA_NO_NODE really means no node affinity,
+which also means all cpus should be usable. So the cpumask_of_node()
+should always return all cpus online when user passes the node id as
+NUMA_NO_NODE, just like similar semantic that page allocator handles
+NUMA_NO_NODE.
 
-HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=117659fa600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=6102c120be558c885f04
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12107ba9600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=146014e6600000
+But we cannot really copy the page allocator logic. Simply because the
+page allocator doesn't enforce the near node affinity. It just picks it
+up as a preferred node but then it is free to fallback to any other numa
+node. This is not the case here and node_to_cpumask_map will only restrict
+to the particular node's cpus which would have really non deterministic
+behavior depending on where the code is executed. So in fact we really
+want to return cpu_online_mask for NUMA_NO_NODE.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6102c120be558c885f04@syzkaller.appspotmail.com
+Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
+which should be identical with cpu_online_mask when those arches do not
+support cpu hotplug, this patch also changes them to return cpu_online_mask
+in order to be consistent and use NUMA_NO_NODE instead of "-1".
 
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-cdc_ncm 1-1:1.0: MAC-Address: 42:42:42:42:42:42
-cdc_ncm 1-1:1.0: dwNtbInMaxSize=0 is too small. Using 2048
-cdc_ncm 1-1:1.0: setting rx_max = 2048
-divide error: 0000 [#1] SMP KASAN
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:usbnet_update_max_qlen drivers/net/usb/usbnet.c:344 [inline]
-RIP: 0010:usbnet_update_max_qlen+0x231/0x370 drivers/net/usb/usbnet.c:338
-Code: 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 46 01  
-00 00 48 8d bb f4 00 00 00 31 d2 b8 c8 63 01 00 48 89 f9 <48> f7 b3 a8 01  
-00 00 48 ba 00 00 00 00 00 fc ff df 48 c1 e9 03 0f
-RSP: 0018:ffff8881da20f010 EFLAGS: 00010246
-RAX: 00000000000163c8 RBX: ffff8881d5ad8ac0 RCX: ffff8881d5ad8bb4
-RDX: 0000000000000000 RSI: ffffffff8344ecde RDI: ffff8881d5ad8bb4
-RBP: 0000000000000003 R08: ffff8881da1f9800 R09: ffffed103ab5b00a
-R10: ffffed103ab5b009 R11: ffff8881d5ad804f R12: 0000000000000000
-R13: ffff8881d5ad8c38 R14: ffff8881d5ad8ac0 R15: ffff8881d2820c80
-FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f26d0180000 CR3: 00000001d38dd000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  cdc_ncm_update_rxtx_max+0x8e9/0xef0 drivers/net/usb/cdc_ncm.c:440
-  cdc_ncm_setup drivers/net/usb/cdc_ncm.c:667 [inline]
-  cdc_ncm_bind_common+0x1005/0x2570 drivers/net/usb/cdc_ncm.c:924
-  cdc_ncm_bind+0x7c/0x1c0 drivers/net/usb/cdc_ncm.c:1038
-  usbnet_probe+0xb43/0x23cf drivers/net/usb/usbnet.c:1722
-  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-  really_probe+0x281/0x6d0 drivers/base/dd.c:548
-  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x217/0x360 drivers/base/dd.c:894
-  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-  device_add+0xae6/0x16f0 drivers/base/core.c:2165
-  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-  port_event drivers/usb/core/hub.c:5359 [inline]
-  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+Also there is a debugging version of node_to_cpumask_map() for x86 and
+arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
 
-
+[1] https://lore.kernel.org/patchwork/patch/1125789/
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+V5: Drop unsigned "fix" change for x86/arm64, and change comment log
+    according to Michal's comment.
+V4: Have all these changes in a single patch.
+V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+    for NUMA_NO_NODE case, and change the commit log to better justify
+    the change.
+V2: make the node id checking change to other arches too.
+---
+ arch/alpha/include/asm/topology.h                | 2 +-
+ arch/arm64/include/asm/numa.h                    | 3 +++
+ arch/arm64/mm/numa.c                             | 3 +++
+ arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
+ arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
+ arch/powerpc/include/asm/topology.h              | 6 +++---
+ arch/s390/include/asm/topology.h                 | 3 +++
+ arch/sparc/include/asm/topology_64.h             | 6 +++---
+ arch/x86/include/asm/topology.h                  | 3 +++
+ arch/x86/mm/numa.c                               | 3 +++
+ 10 files changed, 27 insertions(+), 10 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
+index 5a77a40..836c9e2 100644
+--- a/arch/alpha/include/asm/topology.h
++++ b/arch/alpha/include/asm/topology.h
+@@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
+ 	int cpu;
+ 
+ 	if (node == NUMA_NO_NODE)
+-		return cpu_all_mask;
++		return cpu_online_mask;
+ 
+ 	cpumask_clear(&node_to_cpumask_map[node]);
+ 
+diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+index 626ad01..c8a4b31 100644
+--- a/arch/arm64/include/asm/numa.h
++++ b/arch/arm64/include/asm/numa.h
+@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4f241cc..f57202d 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	if (WARN_ON(node >= nr_node_ids))
+ 		return cpu_none_mask;
+ 
+diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+index 965f079..04505e6 100644
+--- a/arch/mips/include/asm/mach-ip27/topology.h
++++ b/arch/mips/include/asm/mach-ip27/topology.h
+@@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
+ extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+ 
+ #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+-#define cpumask_of_node(node)	((node) == -1 ?				\
+-				 cpu_all_mask :				\
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
+ 				 &hub_data(node)->h_cpus)
+ struct pci_bus;
+ extern int pcibus_to_node(struct pci_bus *);
+diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
+index 7ff819a..e78daa6 100644
+--- a/arch/mips/include/asm/mach-loongson64/topology.h
++++ b/arch/mips/include/asm/mach-loongson64/topology.h
+@@ -5,7 +5,9 @@
+ #ifdef CONFIG_NUMA
+ 
+ #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+-#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 &__node_data[(node)]->cpumask)
+ 
+ struct pci_bus;
+ extern int pcibus_to_node(struct pci_bus *);
+diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+index 2f7e1ea..309f847 100644
+--- a/arch/powerpc/include/asm/topology.h
++++ b/arch/powerpc/include/asm/topology.h
+@@ -17,9 +17,9 @@ struct device_node;
+ 
+ #include <asm/mmzone.h>
+ 
+-#define cpumask_of_node(node) ((node) == -1 ?				\
+-			       cpu_all_mask :				\
+-			       node_to_cpumask_map[node])
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 node_to_cpumask_map[node])
+ 
+ struct pci_bus;
+ #ifdef CONFIG_PCI
+diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
+index cca406f..1bd2e73 100644
+--- a/arch/s390/include/asm/topology.h
++++ b/arch/s390/include/asm/topology.h
+@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
+ #define cpumask_of_node cpumask_of_node
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return &node_to_cpumask_map[node];
+ }
+ 
+diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
+index 34c628a..8c29357 100644
+--- a/arch/sparc/include/asm/topology_64.h
++++ b/arch/sparc/include/asm/topology_64.h
+@@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
+ 	return numa_cpu_lookup_table[cpu];
+ }
+ 
+-#define cpumask_of_node(node) ((node) == -1 ?				\
+-			       cpu_all_mask :				\
+-			       &numa_cpumask_lookup_table[node])
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 &numa_cpumask_lookup_table[node])
+ 
+ struct pci_bus;
+ #ifdef CONFIG_PCI
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 4b14d23..7fa82e1 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad60..84b28ef 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	if (node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+ 			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
+-- 
+2.8.1
+
