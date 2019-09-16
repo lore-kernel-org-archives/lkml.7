@@ -2,71 +2,92 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 591FDC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:38:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2143BC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A0C20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:38:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 023F7206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731995AbfIPJi1 convert rfc822-to-8bit (ORCPT
+        id S1732010AbfIPJmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:38:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39538 "EHLO mx1.redhat.com"
+        Mon, 16 Sep 2019 05:42:14 -0400
+Received: from mga18.intel.com ([134.134.136.126]:23005 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725850AbfIPJi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:38:27 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D6D6B301A892;
-        Mon, 16 Sep 2019 09:38:26 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 92A4A5D9E1;
-        Mon, 16 Sep 2019 09:38:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190909150957.12abe684@endymion>
-References: <20190909150957.12abe684@endymion> <20190906130221.0b47a565@endymion> <20190906121510.GA17328@kroah.com>
-To:     Jean Delvare <jdelvare@suse.de>
-Cc:     dhowells@redhat.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Thomas <trenn@suse.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: /dev/mem and secure boot
+        id S1729713AbfIPJmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:42:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 02:42:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
+   d="scan'208";a="201566288"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 16 Sep 2019 02:42:09 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 16 Sep 2019 12:42:08 +0300
+Date:   Mon, 16 Sep 2019 12:42:08 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Jethro Beekman <jethro@fortanix.com>
+Cc:     Marek Vasut <marek.vasut@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] mtd: spi-nor: intel-spi: support chips without
+ software sequencer
+Message-ID: <20190916094208.GU28281@lahna.fi.intel.com>
+References: <69f4a8e8-7889-8b00-0adc-7faaef6b42e4@fortanix.com>
+ <32ab6570-c3b7-4eec-7a0b-69bc2f7f76dc@fortanix.com>
+ <20190916091157.GR28281@lahna.fi.intel.com>
+ <e284a2a8-1d4c-2b57-642c-c91f39a5ee99@fortanix.com>
+ <20190916091920.GS28281@lahna.fi.intel.com>
+ <f7708f65-1450-ce5a-7dfb-70d7ca4b9df1@fortanix.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5357.1568626704.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: 8BIT
-Date:   Mon, 16 Sep 2019 10:38:24 +0100
-Message-ID: <5358.1568626704@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 16 Sep 2019 09:38:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7708f65-1450-ce5a-7dfb-70d7ca4b9df1@fortanix.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jean Delvare <jdelvare@suse.de> wrote:
+On Mon, Sep 16, 2019 at 09:22:04AM +0000, Jethro Beekman wrote:
+> On 2019-09-16 11:19, Mika Westerberg wrote:
+> > On Mon, Sep 16, 2019 at 09:12:50AM +0000, Jethro Beekman wrote:
+> >> On 2019-09-16 11:11, Mika Westerberg wrote:
+> >>> Hi,
+> >>>
+> >>> On Sun, Sep 15, 2019 at 08:41:55PM +0000, Jethro Beekman wrote:
+> >>>> Could someone please review this?
+> >>>>
+> >>>> On 2019-09-04 03:15, Jethro Beekman wrote:
+> >>>>> Some flash controllers don't have a software sequencer. Avoid
+> >>>>> configuring the register addresses for it, and double check
+> >>>>> everywhere that its not accidentally trying to be used.
+> >>>
+> >>> All the supported types in intel_spi_init() set ->sregs so I don't see
+> >>> how we could end up calling functions with that not set properly. Which
+> >>> controller we are talking about here? CNL?
+> >>>
+> >>
+> >> Yes, see 2/2.
+> > 
+> > OK, thanks. Please mention that in the commit log as well.
+> 
+> It seems obvious to me that the need for a patch may be further
+> explained by the next patch in the patch set.
 
-> I wrongly assumed it had been merged upstream meanwhile but I was
-> wrong. David, any reason why this didn't happen?
-
-There were last-minute objections.
-
-The patches got redesigned somewhat by Matthew Garrett and are now pending
-pulling once again:
-
-	https://lore.kernel.org/linux-security-module/alpine.LRH.2.21.1909101402230.20291@namei.org/T/#u
-
-> Out of curiosity, are these patches in RHEL kernels?
-
-Fedora, yes, my patchset; RHEL-7 and RHEL-8, no.
-
-David
+Yes, that's fine but then you should make sure the intended reviewers
+get to see all the patches in the series. For me I got only Cc'd on this
+1/2 yesterday. I think I reviewed 2/2 some time ago.
