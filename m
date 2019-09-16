@@ -2,136 +2,104 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4E7C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A477EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 992C5214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77680214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568649575;
+	bh=q1MAUAUwls4xAVihZxg3h4OqfsOFaoaGc7iMOdVX6Mo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HDQV54ICPvxTIRG+z9wyvB0ILpWw1DA/ed1OqBL75X7rfeHlrENrvMz28XECihCYn
+	 ir2gDBCeebkx6ZI8BORen6WqxmDkP0Xjs/zLQCxQDK6oRT7x71jgu4S7CN9f69oX1i
+	 b0yal9TrdC9PsSaHxSGIIWHP45N7CHQp3XP40P+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfIPP5n (ORCPT
+        id S1731922AbfIPP7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:57:43 -0400
-Received: from relay.sw.ru ([185.231.240.75]:49108 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730023AbfIPP5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:57:43 -0400
-Received: from [172.16.25.5]
-        by relay.sw.ru with esmtp (Exim 4.92)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1i9tNU-0003lm-Nv; Mon, 16 Sep 2019 18:57:24 +0300
-Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Qian Cai <cai@lca.pw>, Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
- <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
- <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
- <1568297308.19040.5.camel@mtksdccf07>
- <613f9f23-c7f0-871f-fe13-930c35ef3105@suse.cz>
- <79fede05-735b-8477-c273-f34db93fd72b@virtuozzo.com>
- <6d58ce86-b2a4-40af-bf40-c604b457d086@suse.cz>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
-Date:   Mon, 16 Sep 2019 18:57:23 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 11:59:35 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58424 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731829AbfIPP7e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 11:59:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6Goen0A9OE9gqgWT3hJoh0DRnNeOa0bFJwwrQWV3ht0=; b=Tese8/pjYYvpN4Rvt4v74p0rS
+        v0oCFt9sV1YjjEBOwI0sxhs/P/Wu3NivcqKEseyp8nCoLDq1kSdUAxwzthdhcW2IKj41BaRm7jYvn
+        xoGOt5ZegH2xPAnHi4wdFdGnzOkkrHsMtsM3yBI1MCWm1Qj079mG82xaIFJgcYdHGiJQ0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9tPV-00052S-EG; Mon, 16 Sep 2019 15:59:29 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 1F6D22741A0D; Mon, 16 Sep 2019 16:59:28 +0100 (BST)
+Date:   Mon, 16 Sep 2019 16:59:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jessica Yu <jeyu@kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the modules tree with the
+ compiler-attributes tree
+Message-ID: <20190916155927.GI4352@sirena.co.uk>
+References: <20190915222720.GL4352@sirena.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <6d58ce86-b2a4-40af-bf40-c604b457d086@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="H7G8UhBuWJ9AoGD+"
+Content-Disposition: inline
+In-Reply-To: <20190915222720.GL4352@sirena.co.uk>
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 12:42 PM, Vlastimil Babka wrote:
-> On 9/12/19 7:05 PM, Andrey Ryabinin wrote:
->>
->> Or another alternative option (and actually easier one to implement), leave PAGE_OWNER as is (no "select"s in Kconfigs)
->> Make PAGE_OWNER_FREE_STACK like this:
->>
->> +config PAGE_OWNER_FREE_STACK
->> +	def_bool KASAN || DEBUG_PAGEALLOC
->> +	depends on PAGE_OWNER
->> +
->>
->> So, users that want alloc/free stack will have to enable CONFIG_PAGE_OWNER=y and add page_owner=on to boot cmdline.
->>
->>
->> Basically the difference between these alternative is whether we enable page_owner by default or not. But there is always a possibility to disable it.
-> 
-> OK, how about this?
-> 
- ...
 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c5d62f1c2851..d9e44671af3f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -710,8 +710,12 @@ static int __init early_debug_pagealloc(char *buf)
->  	if (kstrtobool(buf, &enable))
->  		return -EINVAL;
->  
-> -	if (enable)
-> +	if (enable) {
->  		static_branch_enable(&_debug_pagealloc_enabled);
-> +#ifdef CONFIG_PAGE_OWNER
-> +		page_owner_free_stack_disabled = false;
+--H7G8UhBuWJ9AoGD+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think this won't work with CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y
+On Sun, Sep 15, 2019 at 11:27:20PM +0100, Mark Brown wrote:
 
-> +#endif
-> +	}
->  
->  	return 0;
->  }
-> diff --git a/mm/page_owner.c b/mm/page_owner.c
-> index dee931184788..b589bfbc4795 100644
-> --- a/mm/page_owner.c
-> +++ b/mm/page_owner.c
-> @@ -24,13 +24,15 @@ struct page_owner {
->  	short last_migrate_reason;
->  	gfp_t gfp_mask;
->  	depot_stack_handle_t handle;
-> -#ifdef CONFIG_DEBUG_PAGEALLOC
-> +#ifdef CONFIG_PAGE_OWNER_FREE_STACK
->  	depot_stack_handle_t free_handle;
->  #endif
->  };
->  
->  static bool page_owner_disabled = true;
-> +bool page_owner_free_stack_disabled = true;
->  DEFINE_STATIC_KEY_FALSE(page_owner_inited);
-> +static DEFINE_STATIC_KEY_FALSE(page_owner_free_stack);
->  
->  static depot_stack_handle_t dummy_handle;
->  static depot_stack_handle_t failure_handle;
-> @@ -46,6 +48,9 @@ static int __init early_page_owner_param(char *buf)
->  	if (strcmp(buf, "on") == 0)
->  		page_owner_disabled = false;
->  
-> +	if (!page_owner_disabled && IS_ENABLED(CONFIG_KASAN))
+> Since this conflcit is non-trivial, it's late and there's a good chance
+> I'm not going to actually finish building -next today I've just used the
+> commit from the last time -next was built, 3b5be16c7e90a69c, for the
+> modules tree - sorry.  I'll have another go tomorrow.  This means none
+> of the changes in modules-next are in -next as they were all committed
+> in the past week.
 
-I'd rather keep all logic in one place, i.e. "if (!page_owner_disabled && (IS_ENABLED(CONFIG_KASAN) || debug_pagealloc_enabled())"
-With this no changes in early_debug_pagealloc() required and CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y should also work correctly.
+I had another look but I'm still not comfortable doing this merge in a
+sensible timeframe so I punted again, sorry.  I'll probably carry on
+doing this.
 
-> +		page_owner_free_stack_disabled = false;
-> +
->  	return 0;
->  }
->  early_param("page_owner", early_page_owner_param);
- 
+--H7G8UhBuWJ9AoGD+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/sV8ACgkQJNaLcl1U
+h9A8mAf+Jh44K8rTp+/29L9D52GuEB4fkLuhXGIaRQ8S5505+bIHGNQUqLEDjJRp
+svlafU4r7sjJt0YlnvI3qmC7u1xKb9FAFEbpTw7skFeQrtUs+j1UEZdc3x8FRmsH
+3nknSx2rma+UqsH9AIaCiutTQnphoNozTnhmznl2PS9X/yvrGafKn/DtZwvxLQJk
+zOajME2MEf7pikJWmm99A3JkeMWCs90bTd8W3WmfCigXToqbmNNAlNnjot8xmUr7
+tBFNmj5nGV1zs/PQ5QHXeaDtCmPcXgNJdTzbDgFrCmA4u7+iij59cw3tg/+PeT2c
+lWg2ZM43GQVmFrnwHLhxLiQoTbXzDg==
+=+igc
+-----END PGP SIGNATURE-----
+
+--H7G8UhBuWJ9AoGD+--
