@@ -2,140 +2,221 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D8CDC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89165C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C712067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A27D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:45:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Io9gq4kx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nzjYwpMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfIPBlB (ORCPT
+        id S1727792AbfIPBpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 21:41:01 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45015 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfIPBlA (ORCPT
+        Sun, 15 Sep 2019 21:45:04 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38627 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPBpE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 21:41:00 -0400
-Received: by mail-wr1-f66.google.com with SMTP id i18so6427036wru.11;
-        Sun, 15 Sep 2019 18:40:58 -0700 (PDT)
+        Sun, 15 Sep 2019 21:45:04 -0400
+Received: by mail-pl1-f195.google.com with SMTP id w10so5025191plq.5
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 18:45:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=s5NlWgemAgRgAck5V/LT2mO8N9Ly1ozLQCAwpxW+qmQ=;
-        b=Io9gq4kxX3/9yiKAj3stqnJrMuXjc0/Fv/uNXEN8rQ8qWJh9vjpX5WJOdkFb+OzVX3
-         kukd031wdu0fXYqw+lPw75A0y3wvKNkXQtBPoYy2BFDFoHyoGCRdVdqyyAeHY0SyhCzP
-         jln4+j1+1DfUoJ807AMeDIwy5ZTgSUXw9MDDk/C/fTE2NZtRhXK+nVRzbSMWBbl/1UBD
-         R8KS0ljobpqH447i45NN60s/2d2XQfjJFWQ6+zLuZ10bfjDNBSlz7KR+NPiCFVKItNSt
-         LHWL8WJZZyfQHG6PT93H3UFRbwuGOAnEHIoM2A194wEq8+Jeo5YAj3mDaV/g/x74dpLR
-         LJzw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=fNnAnq8pDeljhZQ4pgIKWXaM6E5rsGED87rKuk4gjk8=;
+        b=nzjYwpMTP1y7w3N0WhvyyFQQwOr8d8qbDv4YObmyIib7IyAUBcul+5byappQyOVIPS
+         Dqq8kh9xySZGdarsR6D1u26oZGnDDUMZi+a+6aZ48GU2jYPbQM3Aj1St0Tq1NoONC3PB
+         hyxV+xHcpXHMsLKL+P+l6q6FcTVAya7m7ouCaVwvLNZF/0Rx/ir/MI6o3V84P8aKI+ts
+         DJ1q3a2kFi4ktMZp7BCmykYy6NIAzSQsaY2yTNBqwsD526wj6KGKopXBuO3ksZ9eFb3/
+         5K78S6grm1nfjSnrpfwR1MfyuoawoNyHhgEK9uHCdOEwV7eDA2RNMeIG8cj1dXAxiHUx
+         DRsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=s5NlWgemAgRgAck5V/LT2mO8N9Ly1ozLQCAwpxW+qmQ=;
-        b=fHy198bGx4SukQr2u9arnflxOKUAYO3d7zBFmz+QW0cOO4pA1SaF+c3TcY2hROnGkR
-         nvCGR+U0fWQMZ9U3+cEMcMZiMju0bmXC2yC+y+yfjZwXIm+UWDOYKVF8/40FeN9TZy6z
-         jjOzxgUE5qk1kiY9E1FqNHYjmoKkLgLeHgr6p/p0JKcn26bAUsozAkzdEKIX1QTEQLfF
-         HgfEI63yWx9ATibCJ903VKLNpsB0Gz2QvkWqd2KZ2FX1pt16oNkeXTT4eNrZTmdbw7jQ
-         WnEmVL82CCYNhAEIwNJiDZgo1Zr1Mi8emnNuBGNUUS/34Qp4hJXluTDSGl2m4SeKEDbb
-         Wvxw==
-X-Gm-Message-State: APjAAAW2qkttallZF5XNHLN0+bzyLX+19ePx/YxGeZ2lPvlJ0vCtOKpE
-        GUwP5TVidkAM4E7miHSR2h0=
-X-Google-Smtp-Source: APXvYqz6sCS29EwAmavddzyT7utN1acTq4CZlykL/oWxxNi/CQgskS/fJUcG222M03uXlt1coc57pg==
-X-Received: by 2002:a05:6000:10f:: with SMTP id o15mr9530373wrx.92.1568598057996;
-        Sun, 15 Sep 2019 18:40:57 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D144910CD9D07D5336EC2.dip0.t-ipconnect.de. [2003:d0:6f2d:1449:10cd:9d07:d533:6ec2])
-        by smtp.gmail.com with ESMTPSA id b144sm11061016wmb.3.2019.09.15.18.40.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 18:40:57 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 03:40:50 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916014050.GA7002@darwi-home-pc>
-References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fNnAnq8pDeljhZQ4pgIKWXaM6E5rsGED87rKuk4gjk8=;
+        b=OmNXACRLyPEU9qzNVPBAqUyHS6lYXl9cbc3duhcviT2KTAYys/4Fbbn1PK60ipbx9N
+         H5ve28iAb/hmWTxYO0xbgQe8SMeSuavoCKfa56FL9gEhLZRugc1XubvUKEJYa762ChmW
+         fn15odFHhbKbN5z2Whz/Y3oJjOMGIWjwh3Yy2mv/Cdfh+o+j5h9mfCjAwAeUTGUDiCq7
+         O+3K9l/aa/jl54pSjsbdahg9ZU8ybYmF/btV1qV4OF82uhikCr0RaXsIn/doXu0+DbbL
+         g+C2wjO04kOkHARtQO1n69Rq17HWqjMgVlNux5jrNDd8l4LQpPdPqH9w/4ZkYkxjocEJ
+         E6WQ==
+X-Gm-Message-State: APjAAAVEc5lt20RRO+MAc8+69AgHEgF5IIeqqgflq0ry6RGg5ZPXmej5
+        rdpUgZPxqBQmjjhIFQOgTLI=
+X-Google-Smtp-Source: APXvYqxdgDyg1BgZoFwrA5D2pgqFh+fcaV8rX9gUUp7aqgZghpzjiomJ6OzKYVqhvUmCfXheWT5MQA==
+X-Received: by 2002:a17:902:854b:: with SMTP id d11mr57017596plo.146.1568598302555;
+        Sun, 15 Sep 2019 18:45:02 -0700 (PDT)
+Received: from [192.168.68.119] (220-245-129-191.tpgi.com.au. [220.245.129.191])
+        by smtp.gmail.com with ESMTPSA id t13sm3343972pfe.69.2019.09.15.18.44.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 15 Sep 2019 18:45:01 -0700 (PDT)
+Subject: Re: [PATCH V7 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls
+ in try_remove_memory()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com, will@kernel.org
+Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
+References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+ <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <74bcbd36-3bec-be67-917d-60cd74cbcef0@gmail.com>
+Date:   Mon, 16 Sep 2019 11:44:50 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 09:29:55AM -0700, Linus Torvalds wrote:
-> On Sat, Sep 14, 2019 at 11:51 PM Lennart Poettering
-> <mzxreary@0pointer.de> wrote:
-> >
-> > Oh man. Just spend 5min to understand the situation, before claiming
-> > this was garbage or that was garbage. The code above does not block
-> > boot.
+
+
+On 3/9/19 7:45 pm, Anshuman Khandual wrote:
+> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+
+I could not find this path in the code, the only called for get_nid_for_pfn()
+was register_mem_sect_under_node() when the system is under boot.
+
+> entries between memory block and node. It first checks pfn validity with
+> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
 > 
-> Yes it does. You clearly didn't read the thread.
+> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+> which scans all mapped memblock regions with memblock_is_map_memory(). This
+> creates a problem in memory hot remove path which has already removed given
+> memory range from memory block with memblock_[remove|free] before arriving
+> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
+> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
+> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
+> of existing sysfs entries.
 > 
-> > It blocks startup of services that explicit order themselves
-> > after the code above. There's only a few services that should do that,
-> > and the main system boots up just fine without waiting for this.
+> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
+> [   62.052517] ------------[ cut here ]------------
+
+This seems like arm64 is not ready for probe_store() via drivers/base/memory.c/ode.c
+
+> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
+
+
+
+> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> [   62.054589] Modules linked in:
+> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
+> [   62.056274] Hardware name: linux,dummy-virt (DT)
+> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
+> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
+> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
+> [   62.059842] sp : ffff0000168b3ce0
+> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
+> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
+> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
+> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
+> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
+> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
+> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
+> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
+> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
+> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
+> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
+> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
+> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
+> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
+> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
+> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
+> [   62.076930] Call trace:
+> [   62.077411]  add_memory_resource+0x1cc/0x1d8
+> [   62.078227]  __add_memory+0x70/0xa8
+> [   62.078901]  probe_store+0xa4/0xc8
+> [   62.079561]  dev_attr_store+0x18/0x28
+> [   62.080270]  sysfs_kf_write+0x40/0x58
+> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
+> [   62.081744]  __vfs_write+0x18/0x40
+> [   62.082400]  vfs_write+0xa4/0x1b0
+> [   62.083037]  ksys_write+0x5c/0xc0
+> [   62.083681]  __arm64_sys_write+0x18/0x20
+> [   62.084432]  el0_svc_handler+0x88/0x100
+> [   62.085177]  el0_svc+0x8/0xc
 > 
-> That's a nice theory, but it doesn't actually match reality.
+> Re-ordering memblock_[free|remove]() with arch_remove_memory() solves the
+> problem on arm64 as pfn_valid() behaves correctly and returns positive
+> as memblock for the address range still exists. arch_remove_memory()
+> removes applicable memory sections from zone with __remove_pages() and
+> tears down kernel linear mapping. Removing memblock regions afterwards
+> is safe because there is no other memblock (bootmem) allocator user that
+> late. So nobody is going to allocate from the removed range just to blow
+> up later. Also nobody should be using the bootmem allocated range else
+> we wouldn't allow to remove it. So reordering is indeed safe.
 > 
-> There are clearly broken setups that use this for things that it
-> really shouldn't be used for. Asking for true randomness at boot
-> before there is any indication that randomness exists, and then just
-> blocking with no further action that could actually _generate_ said
-> randomness.
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+
+Honestly, the issue is not clear from the changelog, largely
+because I can't find the use of get_nid_for_pfn()  being used
+in memory hotunplug. I can see why using pfn_valid() after
+memblock_free/remove is bad on the architecture.
+
+I think the checks to pfn_valid() can be avoided from the
+remove paths if we did the following
+
+memblock_isolate_regions()
+for each isolate_region {
+	memblock_free
+	memblock_remove
+	arch_memory_remove
+
+	# ensure that __remove_memory can avoid calling pfn_valid
+}
+
+Having said that, your patch is easier and if your assumption
+about not using the memblocks is valid (after arch_memory_remove())
+then might be the least resistant way forward
+
+Balbir Singh.
+
+
+>  mm/memory_hotplug.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> If your description was true that the system would come up and be
-> usable while the blocked thread is waiting for that to happen, things
-> would be fine.
->
-
-A small note here, especially after I've just read the commit log of
-72dbcf721566 ('Revert ext4: "make __ext4_get_inode_loc plug"'), which
-unfairly blames systemd there.
-
-Yes, the systemd-random-seed(8) process blocks, but this is an
-isolated process, and it's only there as a synchronization point and
-to load/restore random seeds from disk across reboots.
-
-The wisdom of having a sysnchronization service ("before/after urandom
-CRNG is inited") can be debated. That service though, and systemd in
-general, did _not_ block the overall system boot.
-
-What blocked the system boot was GDM/gnome-session implicitly calling
-getrandom() for the Xorg MIT cookie. This was shown in the strace log
-below:
-
-   https://lkml.kernel.org/r/20190910173243.GA3992@darwi-home-pc
-
-thanks,
-
--- 
-darwi
-http://darwish.chasingpointers.com
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index c73f09913165..355c466e0621 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+>  
+>  	/* remove memmap entry */
+>  	firmware_map_remove(start, start + size, "System RAM");
+> -	memblock_free(start, size);
+> -	memblock_remove(start, size);
+>  
+>  	/* remove memory block devices before removing memory */
+>  	remove_memory_block_devices(start, size);
+>  
+>  	arch_remove_memory(nid, start, size, NULL);
+> +	memblock_free(start, size);
+> +	memblock_remove(start, size);
+>  	__release_memory_resource(start, size);
+>  
+>  	try_offline_node(nid);
+> 
