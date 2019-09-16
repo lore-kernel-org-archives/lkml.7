@@ -7,150 +7,177 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B042C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4381E206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6C12067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:26:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="GeOASGPe"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="m0tE5l9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391394AbfIPUZq (ORCPT
+        id S2391409AbfIPU03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:25:46 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:50854 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391323AbfIPUZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:25:45 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46XHn30mqMz9v0sm;
-        Mon, 16 Sep 2019 22:25:43 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=GeOASGPe; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id caM0nXs_la48; Mon, 16 Sep 2019 22:25:43 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46XHn26pQMz9v0sn;
-        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568665542; bh=ReKMsxaHbWDh83WstmbL6OR0Dxw309zsyYpUY0QqQDw=;
-        h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=GeOASGPeskq2BaIMfsha+TKj7cqHYUDyf0RK3dDXJ2rWcqvpf4CV1Uobufr+YRNto
-         Ct+4lzQAotHjmkDiyD8Q7C+PaFijq9h6m5b6GvRMLgw8UFtL89SLJy2+1GuUYxJReV
-         7YErUG4p8848fyTNzIA173Thqf1RvTITa/Z7gaPM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0F0248B841;
-        Mon, 16 Sep 2019 22:25:43 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id b4B1RfBIUNYT; Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
-Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B69D28B847;
-        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
-Received: by localhost.localdomain (Postfix, from userid 0)
-        id A4CDA696E0; Mon, 16 Sep 2019 20:25:41 +0000 (UTC)
-Message-Id: <269a00951328fb6fa1be2fa3cbc76c19745019b7.1568665466.git.christophe.leroy@c-s.fr>
-In-Reply-To: <a212bd36fbd6179e0929b6c727febc35132ac25c.1568665466.git.christophe.leroy@c-s.fr>
-References: <a212bd36fbd6179e0929b6c727febc35132ac25c.1568665466.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 2/2] powerpc/83xx: map IMMR with a BAT.
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, oss@buserror.net,
-        galak@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 16 Sep 2019 20:25:41 +0000 (UTC)
+        Mon, 16 Sep 2019 16:26:29 -0400
+Received: from mail.efficios.com ([167.114.142.138]:38586 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733177AbfIPU02 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:26:28 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 349762D2E16;
+        Mon, 16 Sep 2019 16:26:27 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id cqKT6pE8k2Yk; Mon, 16 Sep 2019 16:26:26 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id AF3532D2E03;
+        Mon, 16 Sep 2019 16:26:26 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com AF3532D2E03
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568665586;
+        bh=Edl2EwdVavNOhnVKCHzg8QRXPTO+dPykDxXdhG5Kbbc=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=m0tE5l9LMLlF2Sua8CV4PLOLb53pG7G5dTI9jDdRvc9J4asazqFuUjOKoWVeZcx4N
+         SQVNrGBYb7zHwImO+a0H81bMfF9OEMH4CliHb+3UdYKlXhARJRyUGC2aMFpGfhz2Nr
+         HGFzvfbJsoFJkOVaBdo8Lj8uSpir7Tl/kr7xGH5fC10XnzY+miDlfQnziDj8+vMwvK
+         y4vp2MO0WnuJxwEqPqv68vu4kQLkU9dVnN58+EgJYcGzbiOLv4fysBvnh9I3DkGO1H
+         8fMwnskjjDpd1eiA3PZt3dcv7yzsu1BLBMJCVK10yS5IkWAbrv/PriOb5jWfDt0w34
+         d6k/qOzah4XPg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id vzadUWW5ct8D; Mon, 16 Sep 2019 16:26:26 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 970982D2DF9;
+        Mon, 16 Sep 2019 16:26:26 -0400 (EDT)
+Date:   Mon, 16 Sep 2019 16:26:26 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Neel Natu <neelnatu@google.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        linux-api <linux-api@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Message-ID: <1809268320.7843.1568665586487.JavaMail.zimbra@efficios.com>
+In-Reply-To: <819646407.3304.1568470889470.JavaMail.zimbra@efficios.com>
+References: <20190913151220.3105-1-mathieu.desnoyers@efficios.com> <20190913151220.3105-2-mathieu.desnoyers@efficios.com> <819646407.3304.1568470889470.JavaMail.zimbra@efficios.com>
+Subject: Re: [PATCH for 5.3 2/3] rseq: Fix: Unregister rseq for CLONE_SETTLS
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: rseq: Fix: Unregister rseq for CLONE_SETTLS
+Thread-Index: o9eZqvAOKmXphmxsJKc8X5whD/BREsteql3R
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On mpc83xx with a QE, IMMR is 2Mbytes and aligned on 2Mbytes boundarie.
-On mpc83xx without a QE, IMMR is 1Mbyte and 1Mbyte aligned.
+----- On Sep 14, 2019, at 10:21 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Each driver will map a part of it to access the registers it needs.
-Some drivers will map the same part of IMMR as other drivers.
+> There is an ongoing discussion on the choice of flag we want to care
+> about here. Therefore, please don't pull this patch until we reach an
+> agreement.
 
-In order to reduce TLB misses, map the full IMMR with a BAT. If it is
-2Mbytes aligned, map 2Mbytes. If there is no QE, the upper part will
-remain unused, but it doesn't harm as it is mapped as guarded memory.
+Following discussion with Neel Natu (Google) and Paul Turner (Google),
+I plan to modify this patch, and unregister RSEQ on clone CLONE_VM for the
+following reasons:
 
-When the IMMR is not aligned on a 2Mbytes boundarie, only map 1Mbyte.
+1) CLONE_THREAD requires CLONE_SIGHAND, which requires CLONE_VM to be
+   set. Therefore, just checking for CLONE_VM covers all CLONE_THREAD uses,
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+2) There is the possibility of an unlikely scenario where CLONE_SETTLS is used
+   without CLONE_VM. In order to be an issue, it would require that the rseq
+   TLS is in a shared memory area.
 
----
-v2:
-- use a fixmap area instead of playing with ioremap_bot
-- always map 2M unless IMMRBAR is only 1M aligned
+   I do not plan on adding CLONE_SETTLS to the set of clone flags which
+   unregister RSEQ, because it would require that we also unregister RSEQ
+   on set_thread_area(2) and arch_prctl(2) ARCH_SET_FS for completeness.
+   So rather than doing a partial solution, it appears better to let user-space
+   explicitly perform rseq unregistration across clone if needed in scenarios
+   where CLONE_VM is not set.
 
-v3:
-- replaced __fix_to_virt() by fix_to_virt()
----
- arch/powerpc/include/asm/fixmap.h  |  8 ++++++++
- arch/powerpc/platforms/83xx/misc.c | 11 +++++++++++
- 2 files changed, 19 insertions(+)
+Thoughts ?
 
-diff --git a/arch/powerpc/include/asm/fixmap.h b/arch/powerpc/include/asm/fixmap.h
-index 0cfc365d814b..79c3aa55f43d 100644
---- a/arch/powerpc/include/asm/fixmap.h
-+++ b/arch/powerpc/include/asm/fixmap.h
-@@ -15,6 +15,7 @@
- #define _ASM_FIXMAP_H
- 
- #ifndef __ASSEMBLY__
-+#include <linux/sizes.h>
- #include <asm/page.h>
- #include <asm/pgtable.h>
- #ifdef CONFIG_HIGHMEM
-@@ -63,6 +64,13 @@ enum fixed_addresses {
- 	FIX_IMMR_BASE = __ALIGN_MASK(FIX_IMMR_START, FIX_IMMR_SIZE - 1) - 1 +
- 		       FIX_IMMR_SIZE,
- #endif
-+#ifdef CONFIG_PPC_83xx
-+	/* For IMMR we need an aligned 2M area */
-+#define FIX_IMMR_SIZE	(SZ_2M / PAGE_SIZE)
-+	FIX_IMMR_START,
-+	FIX_IMMR_BASE = __ALIGN_MASK(FIX_IMMR_START, FIX_IMMR_SIZE - 1) - 1 +
-+		       FIX_IMMR_SIZE,
-+#endif
- 	/* FIX_PCIE_MCFG, */
- 	__end_of_fixed_addresses
- };
-diff --git a/arch/powerpc/platforms/83xx/misc.c b/arch/powerpc/platforms/83xx/misc.c
-index f46d7bf3b140..6399865a625e 100644
---- a/arch/powerpc/platforms/83xx/misc.c
-+++ b/arch/powerpc/platforms/83xx/misc.c
-@@ -18,6 +18,8 @@
- #include <sysdev/fsl_soc.h>
- #include <sysdev/fsl_pci.h>
- 
-+#include <mm/mmu_decl.h>
-+
- #include "mpc83xx.h"
- 
- static __be32 __iomem *restart_reg_base;
-@@ -145,6 +147,15 @@ void __init mpc83xx_setup_arch(void)
- 	if (ppc_md.progress)
- 		ppc_md.progress("mpc83xx_setup_arch()", 0);
- 
-+	if (!__map_without_bats) {
-+		phys_addr_t immrbase = get_immrbase();
-+		int immrsize = IS_ALIGNED(immrbase, SZ_2M) ? SZ_2M : SZ_1M;
-+		unsigned long va = fix_to_virt(FIX_IMMR_BASE);
-+
-+		setbat(-1, va, immrbase, immrsize, PAGE_KERNEL_NCG);
-+		update_bats();
-+	}
-+
- 	mpc83xx_setup_pci();
- }
- 
+Thanks,
+
+Mathieu
+
+
+> 
+> Thanks,
+> 
+> Mathieu
+> 
+> ----- On Sep 13, 2019, at 11:12 AM, Mathieu Desnoyers
+> mathieu.desnoyers@efficios.com wrote:
+> 
+>> It has been reported by Google that rseq is not behaving properly
+>> with respect to clone when CLONE_VM is used without CLONE_THREAD.
+>> It keeps the prior thread's rseq TLS registered when the TLS of the
+>> thread has moved, so the kernel deals with the wrong TLS.
+>> 
+>> The approach of clearing the per task-struct rseq registration
+>> on clone with CLONE_THREAD flag is incomplete. It does not cover
+>> the use-case of clone with CLONE_VM set, but without CLONE_THREAD.
+>> 
+>> Looking more closely at each of the clone flags:
+>> 
+>> - CLONE_THREAD,
+>> - CLONE_VM,
+>> - CLONE_SETTLS.
+>> 
+>> It appears that the flag we really want to track is CLONE_SETTLS, which
+>> moves the location of the TLS for the child, making the rseq
+>> registration point to the wrong TLS.
+>> 
+>> Suggested-by: "H . Peter Anvin" <hpa@zytor.com>
+>> Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
+>> Cc: Boqun Feng <boqun.feng@gmail.com>
+>> Cc: "H . Peter Anvin" <hpa@zytor.com>
+>> Cc: Paul Turner <pjt@google.com>
+>> Cc: Dmitry Vyukov <dvyukov@google.com>
+>> Cc: linux-api@vger.kernel.org
+>> Cc: <stable@vger.kernel.org>
+>> ---
+>> include/linux/sched.h | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/include/linux/sched.h b/include/linux/sched.h
+>> index 9f51932bd543..76bf55b5cccf 100644
+>> --- a/include/linux/sched.h
+>> +++ b/include/linux/sched.h
+>> @@ -1919,11 +1919,11 @@ static inline void rseq_migrate(struct task_struct *t)
+>> 
+>> /*
+>>  * If parent process has a registered restartable sequences area, the
+>> - * child inherits. Only applies when forking a process, not a thread.
+>> + * child inherits. Unregister rseq for a clone with CLONE_SETTLS set.
+>>  */
+>> static inline void rseq_fork(struct task_struct *t, unsigned long clone_flags)
+>> {
+>> -	if (clone_flags & CLONE_THREAD) {
+>> +	if (clone_flags & CLONE_SETTLS) {
+>> 		t->rseq = NULL;
+>> 		t->rseq_sig = 0;
+>> 		t->rseq_event_mask = 0;
+>> --
+>> 2.17.1
+> 
+> --
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
+
 -- 
-2.13.3
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
