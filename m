@@ -2,262 +2,105 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C832DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E44B216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568633736;
-	bh=jDEHWuhxlGkyknz+ThjKcwC31yVTREYwP+Pxdw4tbFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sdnGg8VTfIPDbWbpaD+EQ68vom+nhSmDAhNziik+R9VZFrfcUPI5nSbf/qLcT8EHe
-	 Y/nr60AWOIenTwxR5UFQdHS0Qe/2gpLmkYhY6DQaBjVOv8qGgRXLjPOYHB2twkm8Oh
-	 UCjRZjjaGNBdxn3nWmVsu8E51hgxo9JcMKz7X1uM=
+	by mail.kernel.org (Postfix) with ESMTP id EE6EA2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbfIPLfg (ORCPT
+        id S1732267AbfIPLf4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:35:36 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39450 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727479AbfIPLff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:35:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E888CAF11;
-        Mon, 16 Sep 2019 11:35:32 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 13:35:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Lucian Adrian Grijincu <lucian@fb.com>
-Cc:     linux-mm@kvack.org, Souptick Joarder <jrdr.linux@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH v3] mm: memory: fix /proc/meminfo reporting for
- MLOCK_ONFAULT
-Message-ID: <20190916113532.GE10231@dhcp22.suse.cz>
-References: <20190913211119.416168-1-lucian@fb.com>
+        Mon, 16 Sep 2019 07:35:56 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:30536 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731365AbfIPLfz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:35:55 -0400
+Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
+ 2019 19:35:51 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
+ (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
+ 2019 19:35:50 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Mon, 16 Sep 2019 19:35:50 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tony.luck@intel.com" <tony.luck@intel.com>,
+        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v3 0/4] x86/mce: Add supports for Zhaoxin MCA
+Thread-Topic: [PATCH v3 0/4] x86/mce: Add supports for Zhaoxin MCA
+Thread-Index: AdVsghaYSu2N9NgNSwS4zHAPRb3wjg==
+Date:   Mon, 16 Sep 2019 11:35:50 +0000
+Message-ID: <a26cd9adb0b74b838c30ff9299de9932@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913211119.416168-1-lucian@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc Hugh]
+Zhaoxin newer CPUs support MCE, CMCI and LMCE that compatible with
+Intel's "Machine-Check Architecture".
 
-On Fri 13-09-19 14:11:19, Lucian Adrian Grijincu wrote:
-> As pages are faulted in MLOCK_ONFAULT correctly updates
-> /proc/self/smaps, but doesn't update /proc/meminfo's Mlocked field.
-> 
-> - Before this /proc/meminfo fields didn't change as pages were faulted in:
-> 
-> = Start =
-> /proc/meminfo
-> Unevictable:       10128 kB
-> Mlocked:           10132 kB
-> = Creating testfile =
-> 
-> = after mlock2(MLOCK_ONFAULT) =
-> /proc/meminfo
-> Unevictable:       10128 kB
-> Mlocked:           10132 kB
-> /proc/self/smaps
-> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-> Locked:                0 kB
-> 
-> = after reading half of the file =
-> /proc/meminfo
-> Unevictable:       10128 kB
-> Mlocked:           10132 kB
-> /proc/self/smaps
-> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-> Locked:           524288 kB
-> 
-> = after reading the entire the file =
-> /proc/meminfo
-> Unevictable:       10128 kB
-> Mlocked:           10132 kB
-> /proc/self/smaps
-> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
-> Locked:          1048576 kB
-> 
-> = after munmap =
-> /proc/meminfo
-> Unevictable:       10128 kB
-> Mlocked:           10132 kB
-> /proc/self/smaps
-> 
-> - After: /proc/meminfo fields are properly updated as pages are touched:
-> 
-> = Start =
-> /proc/meminfo
-> Unevictable:          60 kB
-> Mlocked:              60 kB
-> = Creating testfile =
-> 
-> = after mlock2(MLOCK_ONFAULT) =
-> /proc/meminfo
-> Unevictable:          60 kB
-> Mlocked:              60 kB
-> /proc/self/smaps
-> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-> Locked:                0 kB
-> 
-> = after reading half of the file =
-> /proc/meminfo
-> Unevictable:      524220 kB
-> Mlocked:          524220 kB
-> /proc/self/smaps
-> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-> Locked:           524288 kB
-> 
-> = after reading the entire the file =
-> /proc/meminfo
-> Unevictable:     1048496 kB
-> Mlocked:         1048508 kB
-> /proc/self/smaps
-> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
-> Locked:          1048576 kB
-> 
-> = after munmap =
-> /proc/meminfo
-> Unevictable:         176 kB
-> Mlocked:              60 kB
-> /proc/self/smaps
-> 
-> Repro code.
-> ---
-> 
-> int mlock2wrap(const void* addr, size_t len, int flags) {
->   return syscall(SYS_mlock2, addr, len, flags);
-> }
-> 
-> void smaps() {
->   char smapscmd[1000];
->   snprintf(
->       smapscmd,
->       sizeof(smapscmd) - 1,
->       "grep testfile -A 20 /proc/%d/smaps | grep -E '(testfile|Locked)'",
->       getpid());
->   printf("/proc/self/smaps\n");
->   fflush(stdout);
->   system(smapscmd);
-> }
-> 
-> void meminfo() {
->   const char* meminfocmd = "grep -E '(Mlocked|Unevictable)' /proc/meminfo";
->   printf("/proc/meminfo\n");
->   fflush(stdout);
->   system(meminfocmd);
-> }
-> 
->   {                                                 \
->     int rc = (call);                                \
->     if (rc != 0) {                                  \
->       printf("error %d %s\n", rc, strerror(errno)); \
->       exit(1);                                      \
->     }                                               \
->   }
-> int main(int argc, char* argv[]) {
->   printf("= Start =\n");
->   meminfo();
-> 
->   printf("= Creating testfile =\n");
->   size_t size = 1 << 30; // 1 GiB
->   int fd = open("testfile", O_CREAT | O_RDWR, 0666);
->   {
->     void* buf = malloc(size);
->     write(fd, buf, size);
->     free(buf);
->   }
->   int ret = 0;
->   void* addr = NULL;
->   addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-> 
->   if (argc > 1) {
->     PCHECK(mlock2wrap(addr, size, MLOCK_ONFAULT));
->     printf("= after mlock2(MLOCK_ONFAULT) =\n");
->     meminfo();
->     smaps();
-> 
->     for (size_t i = 0; i < size / 2; i += 4096) {
->       ret += ((char*)addr)[i];
->     }
->     printf("= after reading half of the file =\n");
->     meminfo();
->     smaps();
-> 
->     for (size_t i = 0; i < size; i += 4096) {
->       ret += ((char*)addr)[i];
->     }
->     printf("= after reading the entire the file =\n");
->     meminfo();
->     smaps();
-> 
->   } else {
->     PCHECK(mlock(addr, size));
->     printf("= after mlock =\n");
->     meminfo();
->     smaps();
->   }
-> 
->   PCHECK(munmap(addr, size));
->   printf("= after munmap =\n");
->   meminfo();
->   smaps();
-> 
->   return ret;
-> }
-> 
-> ---
-> 
-> Signed-off-by: Lucian Adrian Grijincu <lucian@fb.com>
-> Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
+To enable the supports of Linux kernel to Zhaoxin's MCA, add
+specific patches for Zhaoxin's MCE, CMCI and LMCE. patches about
+Zhaoxin's CMCI, LMCE use 3 functions in mce/intel.c, so make these
+functions non-static.
 
-Fixes: b0f205c2a308 ("mm: mlock: add mlock flags to enable VM_LOCKONFAULT usage")
+Some Zhaoxin's CPUs have MCA bank 8, that only has one error called SVAD
+(System View Address Decoder) which be controlled by IA32_MC8.CTL.0.
+If enabled, the prefetch on these CPUs will cause SVAD machine check
+exception when virtual machine startup and cause system panic. Add a
+quirk for these Zhaoxin CPUs MCA bank 8.
 
-I am not really sure a backport to stable is really needed because an
-imprecise accounting is not really critical. Pages should eventually
-get accounted under memory pressure when they are attempted to unmap
-IIRC.
+v2->v3:
+ - Make ifelse-case to switch-case (patch 1/4)
+ - Simplify Zhaoxin CPU FMS checking (patch 1/4, 3/4)
+ - Revert 1 unused function intel_ppin_init() (patch 2/4)
+ - Rework mce_zhaoxin_feature_init() as static (patch 3/4)
+ - Rework comment about Zhaoxin MCA SVAD and CMCI (patch 3/4)
+ - Rework mce_zhaoxin_feature_clear() as static (patch 4/4)
+ - Add comment and change coding style (patch 4/4)
 
-Btw. the changelog could benefit from a more details on the issue and
-the fix description. The reproducer is really nice but it doesn't really
-explain the maze of the mlock accounting and why only the file backed
-memory has a problem.
+v1->v2:
+ - Fix redefinition of "mce_zhaoxin_feature_init" (patch 3/4)
+ - Fix redefinition of "mce_zhaoxin_feature_clear" (patch 4/4)
 
-> ---
->  mm/memory.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/memory.c b/mm/memory.c
-> index e0c232fe81d9..55da24f33bc4 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -3311,6 +3311,8 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
->  	} else {
->  		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
->  		page_add_file_rmap(page, false);
-> +		if (vma->vm_flags & VM_LOCKED && !PageTransCompound(page))
-> +			mlock_vma_page(page);
->  	}
->  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+TonyWWang-oc(4):
+ x86/mce: Add Zhaoxin MCE support
+ x86/mce: Make 3 functions non-static
+ x86/mce: Add Zhaoxin CMCI support
+ x86/mce: Add Zhaoxin LMCE support
 
-I dunno. Handling it here in alloc_set_pte sounds a bit weird to me.
-Altough we already do mlock for CoW pages there, I thought this was more
-of an exception.
-Is there any real reason why this cannot be done in the standard #PF
-path? finish_fault for example?
+ arch/x86/kernel/cpu/mce/core.c     | 98 +++++++++++++++++++++++++++++++++-----
+ arch/x86/kernel/cpu/mce/intel.c    | 11 +++--
+ arch/x86/kernel/cpu/mce/internal.h |  6 +++
+ 3 files changed, 99 insertions(+), 16 deletions(-)
+
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
