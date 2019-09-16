@@ -2,110 +2,73 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83480C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA88C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F71220665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:13:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRwz7uV8"
+	by mail.kernel.org (Postfix) with ESMTP id D9906206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568664945;
+	bh=IfZPB1lLT7YeN1wvqbbr7rMvQbP3HHxIn8t188n52Uw=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=QHJsXo0ulutsDO5GAGTpWw9mFCgtcprXyigS6h5vouL0kmlDPvzw/KS3jpYc1MGEe
+	 prLK170LFe+McaVuutEOxazPu1jhvGmCzKPKGPbGUi0RY/53Y/ZheSwh0lgnBtK3dd
+	 l6O+GGz++3Wf+PcbI9aDTa/KjJdv1djHCi91dzio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391236AbfIPUNg (ORCPT
+        id S1733151AbfIPUPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:13:36 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41987 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732909AbfIPUNg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:13:36 -0400
-Received: by mail-qt1-f195.google.com with SMTP id g16so1421844qto.9;
-        Mon, 16 Sep 2019 13:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EQieAOVOLhTB9NEpVxq8Psmz1z1YFHo6DuhpKMUCRdo=;
-        b=LRwz7uV8K4RxNPFBVi0eieRgWlVOgGyvMJhZOkQB+MF8KKUORN8uEab+0FD2qqW21D
-         AWJ8LjFaphwggHF4mEMtP9ZuDLG+PCQQao6821QgSwJbPXR0a70k89v0jTA3GzsyBsuF
-         lkMwDvlS7x6WM+JnT8J7YzbQxtB+gecQcYeX++xLMGz2SYCcFVVu+N24upDcXuLXaA46
-         NfBDICxlLX2LqWXv36wUP1SkDBbotnNXWOr1wbSdjZPumchaqY2H2xlVOYDbuJ6XT1br
-         18Mnx2SweaZzlRaSjyGqt2k0vmfff9fgNWrkCdAADlL+Wpe13OJ825uALoQBGw16hYzx
-         VbCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EQieAOVOLhTB9NEpVxq8Psmz1z1YFHo6DuhpKMUCRdo=;
-        b=I2KrR3SGXOWS1K1uDV1dj5G4Mde67d1DJPFVoDmMbGKUcdBaHzAeUPY5mQVcIGEOrS
-         hZXiydH2ZWqASwU2wOmSUY5NC++1cw8vM8qiiTLsLZVtWa8jY+mT0NDz4g478NSFqoyo
-         dOofqKR+khymttld05vG/ptv9lP/5/SM+CMxRWHLuEq/5a41BawOoC3fiKzvLLt4YfcM
-         2JxPHkcLt/tGDyEPIIg2OD/Sl6C/a3iFV4l/1+yaBU/js4zdAwRQBzYRVX4qTKuBUVh8
-         Swj0VqOqcF1ZHgaUIXfH4QSOWOiqdiRfBv8PnzsUtewbJwBooDaiau3hDdBqMa1mdykP
-         1axw==
-X-Gm-Message-State: APjAAAUG9aRn3JPBo3h5Vzjle4m/AHPSrNmeaRhJ1LzE0TU95Or8ItHj
-        ThZC16W0E1omN6LJTKsWqjpn6OLkoXuG5a+Mp3Y=
-X-Google-Smtp-Source: APXvYqy55J2qV/pLKyAHT18uBJJPB/CqoqSRNilFgZD/c0LOc1OPxIYx5lu+xFQLZrnxYuNio03D9QrZms1EOaqHr+g=
-X-Received: by 2002:a0c:e48b:: with SMTP id n11mr122806qvl.38.1568664815003;
- Mon, 16 Sep 2019 13:13:35 -0700 (PDT)
+        Mon, 16 Sep 2019 16:15:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728014AbfIPUPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:15:44 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29BC520665;
+        Mon, 16 Sep 2019 20:15:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568664944;
+        bh=IfZPB1lLT7YeN1wvqbbr7rMvQbP3HHxIn8t188n52Uw=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=Y+tiHc3sqmYd6W6rVYLK6Wx+1jPZ7D2jID/2awAYMFomgESxl/P7YiBdjnyE9OufO
+         avZkTd+5wrOebkenaN7MoJFydzkwjYfMklwHkdc1upzF3oyahtikMJcdatPBSY477P
+         VsMvsvdWIZYfkdX43Mbyd1utI8VVnQV09PzcJkCU=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 16 Sep 2019 13:13:23 -0700
-Message-ID: <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 01/14] samples: bpf: makefile: fix HDR_PROBE "echo"
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1568042692-11784-1-git-send-email-eugen.hristev@microchip.com>
+References: <1568042692-11784-1-git-send-email-eugen.hristev@microchip.com>
+Cc:     Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
+        Eugen.Hristev@microchip.com
+To:     Eugen.Hristev@microchip.com, alexandre.belloni@bootlin.com,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mturquette@baylibre.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] clk: at91: fix update bit maps on CFG_MOR write
+User-Agent: alot/0.8.1
+Date:   Mon, 16 Sep 2019 13:15:43 -0700
+Message-Id: <20190916201544.29BC520665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> echo should be replaced with echo -e to handle '\n' correctly, but
-> instead, replace it with printf as some systems can't handle echo -e.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Quoting Eugen.Hristev@microchip.com (2019-09-09 08:30:31)
+> From: Eugen Hristev <eugen.hristev@microchip.com>
+>=20
+> The regmap update bits call was not selecting the proper mask, considering
+> the bits which was updating.
+> Update the mask from call to also include OSCBYPASS.
+> Removed MOSCEN which was not updated.
+>=20
+> Fixes: 1bdf02326b71 ("clk: at91: make use of syscon/regmap internally")
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
->  samples/bpf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 1d9be26b4edd..f50ca852c2a8 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -201,7 +201,7 @@ endif
->
->  # Don't evaluate probes and warnings if we need to run make recursively
->  ifneq ($(src),)
-> -HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
-> +HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
 
-printf change is fine, but I'm confused about \# at the beginning of
-the string. Not sure what was the intent, but it seems like it should
-work with just #include at the beginning.
+Applied to clk-next
 
->         $(HOSTCC) $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
->         echo okay)
->
-> --
-> 2.17.1
->
