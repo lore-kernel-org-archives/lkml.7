@@ -2,183 +2,249 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9A72C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AC8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1082171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UPhuBkc9"
+	by mail.kernel.org (Postfix) with ESMTP id F1592214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:33:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568669611;
+	bh=51RShDTpxAyqpkidEyHbEmkAslQyo+WfC7MF+z78ACE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=K19EIMubh0enuHCNoyby40Tx2vFTjdL9TPYW2HQ33Jp+vA2MVZ9lSWzOJVCbPfNID
+	 ZEZ6Zau9jIhothzMRYEIzUXhK/bq4qVmC4gxi0fpXTfnVyVm8sTNUzM744eTcWbIQg
+	 YW3+L1yXL6zbthxKDUCIujaPI6gQbxaczITuVwrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391837AbfIPVdD (ORCPT
+        id S2391923AbfIPVd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:33:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38929 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391822AbfIPVdB (ORCPT
+        Mon, 16 Sep 2019 17:33:29 -0400
+Received: from inca-roads.misterjones.org ([213.251.177.50]:56253 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2391905AbfIPVd2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:33:01 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i1so711767pfa.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:32:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=4KlpoUo9uj/9AIAoQh/K8lKs7NdZLDMBdMrkCQaFlms=;
-        b=UPhuBkc9vW4zf5VfKtT0F79pMJmBcKsq8+jGCU3s3iehtMVblC2wGNLtda5np/N2rx
-         JwCx1UVEmlyKt/w8diRPdMFVlOY2kH4/aif9Y9e4ndxuu8vACRodDzZmTVDFR/RwQzUK
-         gwsHIZtCa4YhOdlSnxj0QcDiv5GzuoIR/l2YQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=4KlpoUo9uj/9AIAoQh/K8lKs7NdZLDMBdMrkCQaFlms=;
-        b=F6cDDr+do8XQ5UkpXb/Fo7ctRG4PcBANOMbnvnDjPF/+EYkXKFLx9gVLNUmZq1reoo
-         tc4UI5/c0zMIZJ2kzrBck3b5KWYUDgvG6WZYgklzFNOKEv5E0qZW9qGRvvn5Q6sxNB0w
-         k8qQjy6RHXYFJTGbROlgTUIaY/G6gmVFVCA01D7NhpgBUPUzOVO3+XdtC08YKFKEShac
-         bb16gEsfIMpin2wD4E7aAFWQxhnhEWSHknFpL3nzMKvTRN5EZFNmtSfjEgvVaSqhSOh4
-         X+pwz88pIoBlOnWhPIf49G2uD9Kp7/FvoISbVlBvAf7uqKxRV/sOwksw6jQ9XPYEajB0
-         6mfg==
-X-Gm-Message-State: APjAAAUziEqFvoCvQMNp8ao7Cs9Rez109a3aPuR15puHSy/QjyfCPw35
-        81Yu7PRrIboK392y4bDFh6nnGw==
-X-Google-Smtp-Source: APXvYqzNWVMHgw9GuBVr/tP0lAfAHs1WoOMf3wfEvoO14+//reQ/ES3liAd9pVPgxkc0CERucot+Kg==
-X-Received: by 2002:a62:83c8:: with SMTP id h191mr521538pfe.240.1568669578653;
-        Mon, 16 Sep 2019 14:32:58 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b185sm42002pfg.14.2019.09.16.14.32.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 14:32:57 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 14:32:56 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH] usercopy: Skip HIGHMEM page checking
-Message-ID: <201909161431.E69B29A0@keescook>
+        Mon, 16 Sep 2019 17:33:28 -0400
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by cheepnis.misterjones.org with esmtpsa (TLSv1.2:AES256-GCM-SHA384:256)
+        (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1i9ycf-0001TZ-K3; Mon, 16 Sep 2019 23:33:25 +0200
+Date:   Mon, 16 Sep 2019 22:33:23 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     Darius Rad <darius@bluespec.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jason@lakedaemon.net
+Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+Message-ID: <20190916223323.07664bc2@why>
+In-Reply-To: <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
+References: <3c0eb4e9-ee21-d07b-ad16-735b7dc06051@bluespec.com>
+        <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: palmer@sifive.com, darius@bluespec.com, david.abdurachmanov@sifive.com, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When running on a system with >512MB RAM with a 32-bit kernel built with:
+On Mon, 16 Sep 2019 13:51:58 -0700 (PDT)
+Palmer Dabbelt <palmer@sifive.com> wrote:
 
-	CONFIG_DEBUG_VIRTUAL=y
-	CONFIG_HIGHMEM=y
-	CONFIG_HARDENED_USERCOPY=y
+> On Mon, 16 Sep 2019 12:04:56 PDT (-0700), Darius Rad wrote:
+> > On 9/15/19 2:20 PM, Marc Zyngier wrote:  
+> >> On Sun, 15 Sep 2019 18:31:33 +0100,
+> >> Palmer Dabbelt <palmer@sifive.com> wrote:
+> >>
+> >> Hi Palmer,
+> >>  
+> >>>
+> >>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:  
+> >>>> On Thu, 12 Sep 2019 22:40:34 +0100,
+> >>>> Darius Rad <darius@bluespec.com> wrote:
+> >>>>
+> >>>> Hi Darius,
+> >>>>  
+> >>>>>
+> >>>>> As per the existing comment, irq_mask and irq_unmask do not need
+> >>>>> to do anything for the PLIC.  However, the functions must exist
+> >>>>> (the pointers cannot be NULL) as they are not optional, based on
+> >>>>> the documentation (Documentation/core-api/genericirq.rst) as well
+> >>>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
+> >>>>>
+> >>>>> Signed-off-by: Darius Rad <darius@bluespec.com>
+> >>>>> ---
+> >>>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
+> >>>>>  1 file changed, 9 insertions(+), 4 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> >>>>> index cf755964f2f8..52d5169f924f 100644
+> >>>>> --- a/drivers/irqchip/irq-sifive-plic.c
+> >>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
+> >>>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
+> >>>>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
+> >>>>>  }
+> >>>>>  +/*
+> >>>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> >>>>> + * by reading claim and "unmasked" when writing it back.
+> >>>>> + */
+> >>>>> +static void plic_irq_mask(struct irq_data *d) { }
+> >>>>> +static void plic_irq_unmask(struct irq_data *d) { }  
+> >>>>
+> >>>> This outlines a bigger issue. If your irqchip doesn't require
+> >>>> mask/unmask, you're probably not using the right interrupt
+> >>>> flow. Looking at the code, I see you're using handle_simple_irq, which
+> >>>> is almost universally wrong.
+> >>>>
+> >>>> As per the description above, these interrupts should be using the
+> >>>> fasteoi flow, which is designed for this exact behaviour (the
+> >>>> interrupt controller knows which interrupt is in flight and doesn't
+> >>>> require SW to do anything bar signalling the EOI).
+> >>>>
+> >>>> Another thing is that mask/unmask tends to be a requirement, while
+> >>>> enable/disable tends to be optional. There is no hard line here, but
+> >>>> the expectations are that:
+> >>>>
+> >>>> (a) A disabled line can drop interrupts
+> >>>> (b) A masked line cannot drop interrupts
+> >>>>
+> >>>> Depending what the PLIC architecture mandates, you'll need to
+> >>>> implement one and/or the other. Having just (a) is indicative of a HW
+> >>>> bug, and I'm not assuming that this is the case. (b) only is pretty
+> >>>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
+> >>>> only.
+> >>>>  
+> >>>>> +
+> >>>>>  #ifdef CONFIG_SMP
+> >>>>>  static int plic_set_affinity(struct irq_data *d,
+> >>>>>  			     const struct cpumask *mask_val, bool force)
+> >>>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
+> >>>>>   static struct irq_chip plic_chip = {
+> >>>>>  	.name		= "SiFive PLIC",
+> >>>>> -	/*
+> >>>>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
+> >>>>> -	 * by reading claim and "unmasked" when writing it back.
+> >>>>> -	 */
+> >>>>>  	.irq_enable	= plic_irq_enable,
+> >>>>>  	.irq_disable	= plic_irq_disable,
+> >>>>> +	.irq_mask	= plic_irq_mask,
+> >>>>> +	.irq_unmask	= plic_irq_unmask,
+> >>>>>  #ifdef CONFIG_SMP
+> >>>>>  	.irq_set_affinity = plic_set_affinity,
+> >>>>>  #endif  
+> >>>>
+> >>>> Can you give the following patch a go? It brings the irq flow in line
+> >>>> with what the HW can do. It is of course fully untested (not even
+> >>>> compile tested...).
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>> 	M.
+> >>>>
+> >>>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
+> >>>> From: Marc Zyngier <maz@kernel.org>
+> >>>> Date: Sun, 15 Sep 2019 15:17:45 +0100
+> >>>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
+> >>>>
+> >>>> The SiFive PLIC interrupt controller seems to have all the HW
+> >>>> features to support the fasteoi flow, but the driver seems to be
+> >>>> stuck in a distant past. Bring it into the 21st century.  
+> >>>
+> >>> Thanks.  We'd gotten these comments during the review process but
+> >>> nobody had gotten the time to actually fix the issues.  
+> >>
+> >> No worries. The IRQ subsystem is an acquired taste... ;-)
+> >>  
+> >>>>
+> >>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> >>>> ---
+> >>>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
+> >>>>  1 file changed, 15 insertions(+), 14 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> >>>> index cf755964f2f8..8fea384d392b 100644
+> >>>> --- a/drivers/irqchip/irq-sifive-plic.c
+> >>>> +++ b/drivers/irqchip/irq-sifive-plic.c
+> >>>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
+> >>>>  	}
+> >>>>  }
+> >>>>  -static void plic_irq_enable(struct irq_data *d)
+> >>>> +static void plic_irq_mask(struct irq_data *d)  
+> >>
+> >> Of course, this is wrong. The perks of trying to do something at the
+> >> last minute while boarding an airplane. Don't do that.
+> >>
+> >> This should of course read "plic_irq_unmask"...
+> >>  
+> >>>>  {
+> >>>>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
+> >>>>  					   cpu_online_mask);
+> >>>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
+> >>>>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
+> >>>>  }
+> >>>>  -static void plic_irq_disable(struct irq_data *d)
+> >>>> +static void plic_irq_unmask(struct irq_data *d)  
+> >>
+> >> ... and this should be "plic_irq_mask".
+> >>
+> >> [...]
+> >>  
+> >>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
+> >>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)  
+> >>
+> >> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
+> >> the above bug should have kept the IRQ lines masked.
+> >>  
+> >>> We should test them on the hardware, but I don't have any with me
+> >>> right now.  David's probably in the best spot to do this, as he's got
+> >>> a setup that does all the weird interrupt sources (ie, PCIe).
+> >>>
+> >>> David: do you mind testing this?  I've put the patch here:
+> >>>
+> >>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
+> >>>    -b plic-fasteoi  
+> >>
+> >> I've pushed out a branch with the fixed patch:
+> >>
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
+> >>  
+> >
+> > That patch works for me on real-ish hardware.  I tried on two FPGA
+> > systems that have different PLIC implementations.  Both include
+> > a PCIe root port (and associated interrupt source).  So for
+> > whatever it's worth:
+> >
+> > Tested-by: Darius Rad <darius@bluespec.com>  
+> 
+> Awesome, thanks.  Would it be OK to put a "(on two hardware PLIC
+> implementations)" after that, just so we're clear as to who tested
+> what?
 
-all execve()s will fail due to argv copying into kmap()ed pages, and on
-usercopy checking the calls ultimately of virt_to_page() will be looking
-for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
+Sure, no problem.
 
- ------------[ cut here ]------------
- kernel BUG at ../arch/x86/mm/physaddr.c:83!
- invalid opcode: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC
- CPU: 1 PID: 1 Comm: swapper/0 Not tainted 5.3.0-rc8 #6
- Hardware name: Dell Inc. Inspiron 1318/0C236D, BIOS A04 01/15/2009
- EIP: __phys_addr+0xaf/0x100
- ...
- Call Trace:
-  __check_object_size+0xaf/0x3c0
-  ? __might_sleep+0x80/0xa0
-  copy_strings+0x1c2/0x370
-  copy_strings_kernel+0x2b/0x40
-  __do_execve_file+0x4ca/0x810
-  ? kmem_cache_alloc+0x1c7/0x370
-  do_execve+0x1b/0x20
-  ...
+> Assuming one of yours wasn't a SiFive PLIC then it'd be great if
+> David could still give this a whack, but I don't think it strictly
+> needs to block merging the patch.  I've included the right David this
+> time, with any luck that will be more fruitful :)
 
-fs/exec.c:
-		kaddr = kmap(kmapped_page);
-	...
-	if (copy_from_user(kaddr+offset, str, bytes_to_copy)) ...
+Well, we still have time before -rc1. Once David gets a chance to test
+it, I'll apply it. Additional question: do you want this backported to
+-stable? If so, how far?
 
-Without CONFIG_DEBUG_VIRTUAL=y, these pages are effectively ignored,
-so now we do the same explicitly: detect and ignore kmap pages, instead
-of tripping over the check later.
+Thanks,
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: f5509cc18daa ("mm: Hardened usercopy")
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Randy, I dropped your other Tested-by, since this is a different
-approach. I would expect the results to be identical (i.e. my testing
-shows it works), but I didn't want to assume. :)
----
- include/linux/highmem.h | 7 +++++++
- mm/highmem.c            | 2 +-
- mm/usercopy.c           | 3 ++-
- 3 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index ea5cdbd8c2c3..c881698b8023 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -64,12 +64,19 @@ static inline void totalhigh_pages_set(long val)
- 
- void kmap_flush_unused(void);
- 
-+static inline bool is_kmap(unsigned long addr)
-+{
-+	return (addr >= PKMAP_ADDR(0) && addr < PKMAP_ADDR(LAST_PKMAP));
-+}
-+
- struct page *kmap_to_page(void *addr);
- 
- #else /* CONFIG_HIGHMEM */
- 
- static inline unsigned int nr_free_highpages(void) { return 0; }
- 
-+static inline bool is_kmap(unsigned long addr) { return false; }
-+
- static inline struct page *kmap_to_page(void *addr)
- {
- 	return virt_to_page(addr);
-diff --git a/mm/highmem.c b/mm/highmem.c
-index 107b10f9878e..e99eca4f63fa 100644
---- a/mm/highmem.c
-+++ b/mm/highmem.c
-@@ -151,7 +151,7 @@ struct page *kmap_to_page(void *vaddr)
- {
- 	unsigned long addr = (unsigned long)vaddr;
- 
--	if (addr >= PKMAP_ADDR(0) && addr < PKMAP_ADDR(LAST_PKMAP)) {
-+	if (is_kmap(addr)) {
- 		int i = PKMAP_NR(addr);
- 		return pte_page(pkmap_page_table[i]);
- 	}
-diff --git a/mm/usercopy.c b/mm/usercopy.c
-index 98e924864554..924e634cc95d 100644
---- a/mm/usercopy.c
-+++ b/mm/usercopy.c
-@@ -11,6 +11,7 @@
- #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
- 
- #include <linux/mm.h>
-+#include <linux/highmem.h>
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/task.h>
-@@ -224,7 +225,7 @@ static inline void check_heap_object(const void *ptr, unsigned long n,
- {
- 	struct page *page;
- 
--	if (!virt_addr_valid(ptr))
-+	if (!virt_addr_valid(ptr) || is_kmap((unsigned long)ptr))
- 		return;
- 
- 	page = virt_to_head_page(ptr);
+	M.
 -- 
-2.17.1
-
-
--- 
-Kees Cook
+Without deviation from the norm, progress is not possible.
