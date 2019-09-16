@@ -2,80 +2,88 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DDBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CADC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C57206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521BD206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:48:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388557AbfIPTrL (ORCPT
+        id S2388622AbfIPTsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:47:11 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:50622 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbfIPTrL (ORCPT
+        Mon, 16 Sep 2019 15:48:24 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:51922 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727920AbfIPTsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:47:11 -0400
-Received: from localhost (80-167-222-154-cable.dk.customer.tdc.net [80.167.222.154])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 70FB6153F26F6;
-        Mon, 16 Sep 2019 12:47:09 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 21:47:07 +0200 (CEST)
-Message-Id: <20190916.214707.1312089672859838604.davem@davemloft.net>
-To:     dongli.zhang@oracle.com
-Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] xen-netfront: do not assume sk_buff_head list is
- empty in error handling
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1568605619-22219-1-git-send-email-dongli.zhang@oracle.com>
-References: <1568605619-22219-1-git-send-email-dongli.zhang@oracle.com>
-X-Mailer: Mew version 6.8 on Emacs 26.2
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Sep 2019 12:47:11 -0700 (PDT)
+        Mon, 16 Sep 2019 15:48:24 -0400
+Received: (qmail 6952 invoked by uid 2102); 16 Sep 2019 15:48:23 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Sep 2019 15:48:23 -0400
+Date:   Mon, 16 Sep 2019 15:48:23 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+cc:     Andrey Konovalov <andreyknvl@google.com>,
+        syzbot <syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com>,
+        Felipe Balbi <balbi@kernel.org>, <chunfeng.yun@mediatek.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: Re: INFO: rcu detected stall in dummy_timer
+In-Reply-To: <20190916185933.GA1814003@kroah.com>
+Message-ID: <Pine.LNX.4.44L0.1909161525340.1489-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
-Date: Mon, 16 Sep 2019 11:46:59 +0800
+On Mon, 16 Sep 2019, Greg Kroah-Hartman wrote:
 
-> When skb_shinfo(skb) is not able to cache extra fragment (that is,
-> skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
-> the sk_buff_head list is already empty. As a result, cons is increased only
-> by 1 and returns to error handling path in xennet_poll().
-> 
-> However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
-> set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
-> buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
-> already cleared to NULL. This leads to NULL pointer access in the next
-> iteration to process rx ring buffer entries.
-> 
-> Below is how xennet_poll() does error handling. All remaining entries in
-> tmpq are accounted to queue->rx.rsp_cons without assuming how many
-> outstanding skbs are remained in the list.
-> 
->  985 static int xennet_poll(struct napi_struct *napi, int budget)
-> ... ...
-> 1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
-> 1033                   __skb_queue_head(&tmpq, skb);
-> 1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
-> 1035                   goto err;
-> 1036           }
-> 
-> It is better to always have the error handling in the same way.
-> 
-> Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> On Mon, Sep 16, 2019 at 12:32:52PM -0400, Alan Stern wrote:
 
-Applied and queued up for -stable.
+> > Retry-limiting is not the sort of thing we want to add to each
+> > individual USB class driver.  Maybe it can be handled in the USB core;  
+> > I'll try to write some code for it.  Under normal circumstances the
+> > issue just doesn't arise, because normal devices aren't malicious.
+> 
+> I think this issue came up years ago when people realized they could
+> "abuse" this through usbfs, but maybe I am mistaken.
+> 
+> The "do we retry or not" is an old discussion, and one I think we just
+> said, "if it errors out, we will not retry as something is wrong with
+> the device".
+
+Really?  I bet there are plenty of drivers whose interrupt-URB (or
+whatever) completion handlers just log an error message and blindly
+resubmit when they get an unexpected kind of error.
+
+>  Corrupted packets don't seem to be something that is even
+> noticable in the "real world".  When lots of noise happens on a system
+> that might cause this, usually the hub just disconnects the device and
+> resets it.
+
+I recall hearing from someone (many years ago -- the technology has
+certainly improved since then) about a device that would start getting
+errors whenever a noisy fluorescent light near the computer was
+switched on.  :-)  But yes, this sort of thing is very uncommon.
+
+So do you recommend editing drivers to prevent them from resubmitting
+URBs whenever they get an unrecognized error, such as -EPROTO, -EILSEQ,
+or -ETIME?  Then the driver would most likely stop working when one 
+of these errors happens.
+
+Alternatively, the USB core could keep track of these three kinds of
+bus errors for all endpoints and fail submissions when the error count
+gets too high.  That would end up having the same effect -- drivers
+would stop working -- but it might be a little more robust against
+noise and it wouldn't require editing lots of drivers.
+
+Alan Stern
+
