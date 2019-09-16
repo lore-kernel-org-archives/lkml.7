@@ -2,101 +2,120 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C70C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6013CC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91E521881
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327CF21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:50:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AccxtUY3"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Vcs6M85/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390197AbfIPQtk (ORCPT
+        id S2390256AbfIPQuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:49:40 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:35375 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfIPQtj (ORCPT
+        Mon, 16 Sep 2019 12:50:25 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:44384 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbfIPQuZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:49:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a24so335282pgj.2;
-        Mon, 16 Sep 2019 09:49:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W7qUWOCQv295QFg+kgQAJCdA5yUvErYXEpf5sx/e6XU=;
-        b=AccxtUY3qK7DBSc5mPgdjoEFUUwFSbVOWkIiZa3Pmed9s8B+Jq2cAj8vs9ZxCbEuPQ
-         +ObMojKzV113QlCwX3fdNfFZqpBxVg3+/dinNe8bpDnb4aXMqwXrtztLO1ArIkGalCXf
-         7ZcchRzkgPvLfXiuim6yLSV8DDntHLpxeIbLMuSC69hOVTr6Utoj3JV4YJwQ44DXPyh3
-         gwyBl5Uw4dR4PpvzgmQQNZAIIuDB1ybE8zDTbWVAdcx7JX4xuZ9YeSjPOTC+G+OEd4Kf
-         kmbRjkshIqP2VkU/jGT8VwpRm9zzTJsqSZUpmvAIOvFPcORJL53qE/Q3PD+O8Nr8loc2
-         KwsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W7qUWOCQv295QFg+kgQAJCdA5yUvErYXEpf5sx/e6XU=;
-        b=RFA+gak+hD2Ku2FpwOR4BnvMxL/jn9Pr9Y55RqoEe1KXM1H0A56bXfa18+GBhBCBW8
-         uNQHFlrkaM9S/G4e1ItivKMzr2rBo+qb08T5if2VEddI9esLGrzGRlgHh15Zgw9Bj1Uz
-         JGrqQsE9nxk+jAL2IW3kgH1mny55PK91B4sK58EmN584lhqaWEBubt9Y2VXMIqnYREep
-         Zmrl8iipddr4NQvH/P4lUC9m67rqKwkGYJuOJfqImMBabuuJQM+GgQb2ee5cNayyFyiD
-         +6Ty0IVBOryuyYVW6r1YwU54dvxSpE3E+r+NvR5zO+fvulz5eBNBElxiIgl+pmGSykDb
-         SAGA==
-X-Gm-Message-State: APjAAAUk0gvqqkPTCptYuRgEcahyEuOx8G2So2dUzeOVBgWX2u6R5LkN
-        RZmHTUmz7v9Qk8mcwKXoVU6MK6aSetUjkwok9CRiI7On
-X-Google-Smtp-Source: APXvYqyAXD0tyD7MrbcDTMVUL4D6V3O9kJa2CxpFLHUtljsyh604tYz4byuwunOlqXswIi8ORiop7tPu7FZNfCHgfDM=
-X-Received: by 2002:aa7:828c:: with SMTP id s12mr272706pfm.94.1568652578437;
- Mon, 16 Sep 2019 09:49:38 -0700 (PDT)
+        Mon, 16 Sep 2019 12:50:25 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GGoD3u102130;
+        Mon, 16 Sep 2019 11:50:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568652613;
+        bh=2b+w9YQph1a1K5kZUWKsHKuOd7pfACGRDbksa+TkdRA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Vcs6M85/gkrahpmIhP8LXX5RRffBwcmVWBNDm/YyoHWEFwOxImOtxAX3sJVVTcFtX
+         MirJnkKSzhTO7feL4Yc3NN917rGaDcSco+It5/pMKFX+NDOzu0xoPCaoxVHXXa5X0V
+         jltRnOf/nMpsl9kWvHBIZRB29tnqUXyhkxAndAj8=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GGoDwl039666
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 16 Sep 2019 11:50:13 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
+ Sep 2019 11:50:11 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 16 Sep 2019 11:50:13 -0500
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GGo9Cv058421;
+        Mon, 16 Sep 2019 11:50:10 -0500
+Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
+ Intel LGM SoC
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>, <broonie@kernel.org>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <linux-spi@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <cheol.yong.kim@intel.com>,
+        <qi-ming.wu@intel.com>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
+Date:   Mon, 16 Sep 2019 22:20:47 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <000000000000bd36db0592ab9652@google.com>
-In-Reply-To: <000000000000bd36db0592ab9652@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 16 Sep 2019 09:49:27 -0700
-Message-ID: <CAM_iQpXdTNVywYm6+vmAKMsBRcC6ySOX9Rcg70xhgdjJgbDJkw@mail.gmail.com>
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference in rds_bind
-To:     syzbot <syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com>
-Cc:     Arvid Brodin <arvid.brodin@alten.se>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        rds-devel@oss.oracle.com,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 6:29 AM syzbot
-<syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    f4b752a6 mlx4: fix spelling mistake "veify" -> "verify"
-> git tree:       net
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16cbebe6600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fae39afd2101a17ec624
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10753bc1600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111dfc11600000
->
-> The bug was bisected to:
->
-> commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
-> Author: Cong Wang <xiyou.wangcong@gmail.com>
-> Date:   Thu Jul 4 00:21:13 2019 +0000
->
->      hsr: implement dellink to clean up resources
+Hi,
 
+On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
+> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
+> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
+> using existing spi-nand framework with legacy spi protocol.
 
-The crash has nothing to do with this commit. It is probably caused
-by the lack of ->laddr_check in rds_loop_transport.
+Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
+just to support to different types of SPI memories. This is the reason
+why spi_mem_ops was introduced.
+
+Please rewrite this driver over to use spi_mem_ops (instead of using
+generic SPI xfers) so that same driver supports both SPI-NOR and
+SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
+can be deleted.
+
+There are few existing examples of spi_mem_ops users in drivers/spi/
+(git grep spi_mem_ops) and materials here on how to write such a driver:
+
+[1]
+https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
+[2] https://www.youtube.com/watch?v=PkWbuLM_gmU
+
+> 
+> Ramuthevar Vadivel Murugan (2):
+>   dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
+>   spi: cadence-qspi: Add QSPI support for Intel LGM SoC
+> 
+>  .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
+>  drivers/spi/Kconfig                                |   9 +
+>  drivers/spi/Makefile                               |   1 +
+>  drivers/spi/spi-cadence-qspi-apb.c                 | 644 +++++++++++++++++++++
+>  drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
+>  drivers/spi/spi-cadence-qspi.c                     | 461 +++++++++++++++
+>  drivers/spi/spi-cadence-qspi.h                     |  73 +++
+>  7 files changed, 1446 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
+>  create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
+>  create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
+>  create mode 100644 drivers/spi/spi-cadence-qspi.c
+>  create mode 100644 drivers/spi/spi-cadence-qspi.h
+> 
+
+-- 
+Regards
+Vignesh
