@@ -2,196 +2,135 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF84C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892FE2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05FB12067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PqUhJoOj"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OtxEOkSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391747AbfIPVTO (ORCPT
+        id S2391788AbfIPVTu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:19:14 -0400
-Received: from mail-eopbgr680119.outbound.protection.outlook.com ([40.107.68.119]:22599
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387825AbfIPVTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:19:13 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j3E0r3S46gA/0DQiuai3N+4/WK6QP+H2szrVUx0hqecJj74nlQ54JGFqWNc2I3T3G9V7rZQ8ke1MnaiMXYHrSrfYrifo5kx8Kt0aoMYHuq+UK5zLFBm7+1EtO7A1ewojgpYfWA+EditIhGUpnGdABGwAS/9USAF4jIwYpVcA3+uZVKUvzKr0rjEGm4F15xfQpYEeY6AiH+NR++pnJZ/lcJiymF8PRBYIUA1HwjoEbo/8vRdI0ue/XNyYAdSuwq5pG+uCYbgWq7NZxnAi/wQeGViG10IMjVOVSGVmBqe49Wall5pgOLh4UdEY5lstzOqBkpzV/FrCpGfnNJmlBDsXRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aBkIH2sCMLDhsm87o3O2Iza/8/fo4JBesVzF8XXU72M=;
- b=bzaWPjs+zMWNsr783YuMQ6YsLZG3hOzaub2OQ6nOanI0rl5AaJTem21WMSOa/4HFT1VZPQ4v745d5xSr2kCqOx1SW9uDxccwIg0nhOKPHRubvTXuNxw+bntgkor2TnLfoYfoRaDK6APFgiS99wR8Dyknqanfqj9cG/3l3sudwW5lWQnwUMrKDhqZc2l7G/deUXBOnnn8atOxM1RNQzeV+4QdJT69URH6opWzOYhIgZIbCwjUmTqCHucV8paPlu2syiudy/k2VD7WV1rso4nygAgqIDINUoU20vBc5E6udSXQniV1TakRxk+Bxcms/37cP8qq7KiZ6rwN+A8rFCG4SQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aBkIH2sCMLDhsm87o3O2Iza/8/fo4JBesVzF8XXU72M=;
- b=PqUhJoOjRcNjg99QWv/d7Na5irouCrtP5fbUeaFmESL6LxG0tNSLvm+k41dSC5QkIcj36k7tOA63tc+8826oa5/7hKYju5jZik5GC+mgAz4Ea1u1fSYcWLlAOonUgsR0m5sOaA35iCHq+dJy6z/oC3SO4kCUdUEgoMU36Sm/Lc0=
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com (20.179.53.80) by
- DM6PR21MB1451.namprd21.prod.outlook.com (20.180.23.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.10; Mon, 16 Sep 2019 21:19:09 +0000
-Received: from DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::2cde:35d7:e09a:5639]) by DM6PR21MB1337.namprd21.prod.outlook.com
- ([fe80::2cde:35d7:e09a:5639%6]) with mapi id 15.20.2263.005; Mon, 16 Sep 2019
- 21:19:09 +0000
-From:   Haiyang Zhang <haiyangz@microsoft.com>
-To:     Denis Efremov <efremov@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: RE: [PATCH v3 02/26] PCI: hv: Use PCI_STD_NUM_BARS
-Thread-Topic: [PATCH v3 02/26] PCI: hv: Use PCI_STD_NUM_BARS
-Thread-Index: AQHVbM9rTh2Y2PUhrEqo6UXJiPJtiacuzuKA
-Date:   Mon, 16 Sep 2019 21:19:08 +0000
-Message-ID: <DM6PR21MB1337B733B179578DAEA555DFCA8C0@DM6PR21MB1337.namprd21.prod.outlook.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-3-efremov@linux.com>
-In-Reply-To: <20190916204158.6889-3-efremov@linux.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=haiyangz@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-16T21:19:07.7862893Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=8230eaa9-5501-49ca-8f5c-b5c6c7145f5d;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=haiyangz@microsoft.com; 
-x-originating-ip: [96.61.92.94]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 552841b3-1635-489f-fe8a-08d73aeb8349
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR21MB1451;
-x-ms-traffictypediagnostic: DM6PR21MB1451:|DM6PR21MB1451:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR21MB1451F797BAFEDA038459198CCA8C0@DM6PR21MB1451.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(13464003)(189003)(199004)(110136005)(10290500003)(102836004)(53546011)(446003)(14454004)(66946007)(316002)(486006)(7736002)(66476007)(66556008)(64756008)(478600001)(476003)(4326008)(25786009)(6506007)(6246003)(186003)(26005)(86362001)(11346002)(8990500004)(66446008)(76116006)(33656002)(10090500001)(74316002)(5660300002)(6116002)(3846002)(6436002)(99286004)(52536014)(256004)(53936002)(2906002)(8676002)(229853002)(7696005)(76176011)(81156014)(8936002)(9686003)(66066001)(305945005)(22452003)(55016002)(71190400001)(71200400001)(81166006)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR21MB1451;H:DM6PR21MB1337.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 26r7DxL73h4QMx3BKKHeRTK6QSj9Au8ddcTyk9RMcdmZ3i6z+8BhP9B3p6X4E7eLEXt6gOGkneJfK5WT4XD9mq76Bdla45LLCqMChxzdvNFBhOvq9Cjsftaqijjb6KHxPKG+x75fXkJitBrYlJK3kHz3k8NLVyzsFja3ov3688eUgV29HYfqnbFv4mBeLEjEJrThKECwjn54AqSEZpNFkGHE4/WLjdnQBGs//HeOCaFoJ/Ls01yxTGnZT0LvaCSbqAqqs22/Y0eHW9v/b3D8fA57ArL8mZLyAqoppOId592XQdMkRrjCrcN0WCNZUvb48nZAN5h6OoJqOfvV6InlroxgyBpHcCkjjLA/FQZsU2hY62cSOSElLw5XO8dEdToOOuMZ8P3o5B9fYHOh+XyXoBJW0klN4YoT67Tz6cOa4pE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 552841b3-1635-489f-fe8a-08d73aeb8349
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 21:19:08.8932
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qdp/FCbcOSuvErRbTNUxyeqgufub3MAno+ZeNEQMpaHqSTe+XDjlvsxv9pT9DiyEfzLeijCUEFFeiK/gJF+6vA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1451
+        Mon, 16 Sep 2019 17:19:50 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36923 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728810AbfIPVTt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:19:49 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d2so1709698qtr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:19:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=H5UW5wagKW04F96GTBBaiTMgST09Ix10VZlrh75iTIo=;
+        b=OtxEOkSZUUbBW0Fo/uVlK5sm/VQ6FDj6guxqW4jppiLEFD/cFIbfMh064UM0SApcIb
+         K9w/1u4M2viEXs5Vltm0DLSfgJo5g7wQLyyTYlgVFwXVS2G/zMFSYsSi7Zq+uG8nCSVD
+         xWe9WSexYP5qCZmtVyq7vaOeJEGKN054XnUK1K+uZYI7GIB9Ccbk/3NwwyJduMFQO4FG
+         ZEg0jZaOht2IdxOAvuBLTKjwP8uLPUHbZt5tVXKuHjMsi4wJv5cd+Csg6frqXbxxQbtY
+         w6u0WQSmhOrSxOBEIQfRzLA40nIgjQ5w8zfd1xWwp9EbYal04YJ0r8xKckgLcHSo0yaM
+         tGZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H5UW5wagKW04F96GTBBaiTMgST09Ix10VZlrh75iTIo=;
+        b=ArUurb4CmXohl+Mfow9f4siesrg3Q2zo0e3fPeS7Izo8YHiKv+A0Y/e0tefo2VYTwv
+         9gOum0xhigLV2buweXMKkTNfu3ZGHskhZOuAVN52NKKfSp4IeIJ/+N7PJm3NdbIo3U8U
+         ++zPVWoknLSVmUgeKtUd1+D793ZAXOOJ3YMgXAk51aHcamijgOWStAtF9DIGqK5rPiVd
+         gCZxieAyeiCpF9+YXQpRiF6sRRhnTipUaiL9abVjltncF6vE8UmvQ9hcscI1yVaRlJp1
+         QywShdl+T30WJpkPlI/1K4x2PfsEzXlupaRkW0ubjnI9oAsI2ozSbbuW2KtR5OhCkzXz
+         D80A==
+X-Gm-Message-State: APjAAAV145bh7z/0HzxTNgT/OxxmCYiemX9Zw782KVwbRA5GFS0zDFzu
+        7RINMie52/qqxvgJhHzUAV3kWA==
+X-Google-Smtp-Source: APXvYqy47HRVWyxZtKhXKNRV49kIORiXqICCRRmpY6JGlEnmHtvQzwTiUaGQbDVWItZDSSLQW3MTkw==
+X-Received: by 2002:a0c:ec11:: with SMTP id y17mr313980qvo.159.1568668788749;
+        Mon, 16 Sep 2019 14:19:48 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id p77sm74711qke.6.2019.09.16.14.19.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 14:19:47 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] sched/fair: fix a -Wunused-function warning
+Date:   Mon, 16 Sep 2019 17:19:35 -0400
+Message-Id: <1568668775-2127-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+cfs_rq_clock_task() was first introduced in the commit f1b17280efbd
+("sched: Maintain runnable averages across throttled periods"). Over
+time, it has been graduately removed by the commits like,
 
+d31b1a66cbe0 ("sched/fair: Factorize PELT update")
+23127296889f ("sched/fair: Update scale invariance of PELT")
 
-> -----Original Message-----
-> From: Denis Efremov <efremov@linux.com>
-> Sent: Monday, September 16, 2019 4:42 PM
-> To: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Denis Efremov <efremov@linux.com>; linux-kernel@vger.kernel.org;
-> linux-pci@vger.kernel.org; Andrew Murray <andrew.murray@arm.com>;
-> linux-hyperv@vger.kernel.org; KY Srinivasan <kys@microsoft.com>; Haiyang
-> Zhang <haiyangz@microsoft.com>; Stephen Hemminger
-> <sthemmin@microsoft.com>; Sasha Levin <sashal@kernel.org>
-> Subject: [PATCH v3 02/26] PCI: hv: Use PCI_STD_NUM_BARS
->=20
-> Replace the magic constant (6) with define PCI_STD_NUM_BARS
-> representing the number of PCI BARs.
->=20
-> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
-> Cc: Haiyang Zhang <haiyangz@microsoft.com>
-> Cc: Stephen Hemminger <sthemmin@microsoft.com>
-> Cc: Sasha Levin <sashal@kernel.org>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-
-> hyperv.c
-> index 40b625458afa..1665c23b649f 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -307,7 +307,7 @@ struct pci_bus_relations {  struct
-> pci_q_res_req_response {
->  	struct vmpacket_descriptor hdr;
->  	s32 status;			/* negative values are failures */
-> -	u32 probed_bar[6];
-> +	u32 probed_bar[PCI_STD_NUM_BARS];
->  } __packed;
->=20
->  struct pci_set_power {
-> @@ -503,7 +503,7 @@ struct hv_pci_dev {
->  	 * What would be observed if one wrote 0xFFFFFFFF to a BAR and
-> then
->  	 * read it back, for each of the BAR offsets within config space.
->  	 */
-> -	u32 probed_bar[6];
-> +	u32 probed_bar[PCI_STD_NUM_BARS];
->  };
->=20
->  struct hv_pci_compl {
-> @@ -1327,7 +1327,7 @@ static void survey_child_resources(struct
-> hv_pcibus_device *hbus)
->  	 * so it's sufficient to just add them up without tracking alignment.
->  	 */
->  	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> -		for (i =3D 0; i < 6; i++) {
-> +		for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
->  			if (hpdev->probed_bar[i] &
-> PCI_BASE_ADDRESS_SPACE_IO)
->  				dev_err(&hbus->hdev->device,
->  					"There's an I/O BAR in this list!\n");
-> @@ -1401,7 +1401,7 @@ static void prepopulate_bars(struct
-> hv_pcibus_device *hbus)
->  	/* Pick addresses for the BARs. */
->  	do {
->  		list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> -			for (i =3D 0; i < 6; i++) {
-> +			for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
->  				bar_val =3D hpdev->probed_bar[i];
->  				if (bar_val =3D=3D 0)
->  					continue;
-> @@ -1558,7 +1558,7 @@ static void q_resource_requirements(void
-> *context, struct pci_response *resp,
->  			"query resource requirements failed: %x\n",
->  			resp->status);
->  	} else {
-> -		for (i =3D 0; i < 6; i++) {
-> +		for (i =3D 0; i < PCI_STD_NUM_BARS; i++) {
->  			completion->hpdev->probed_bar[i] =3D
->  				q_res_req->probed_bar[i];
->  		}
+Today, there is no single user of it, so it could be safely removed.
 
-Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
-Thanks.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/sched/fair.c | 16 ----------------
+ 1 file changed, 16 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 500f5db0de0b..0d0b812b6c49 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -749,7 +749,6 @@ void init_entity_runnable_average(struct sched_entity *se)
+ 	/* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
+ }
+ 
+-static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq);
+ static void attach_entity_cfs_rq(struct sched_entity *se);
+ 
+ /*
+@@ -4379,15 +4378,6 @@ static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
+ 	return &tg->cfs_bandwidth;
+ }
+ 
+-/* rq->task_clock normalized against any time this cfs_rq has spent throttled */
+-static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
+-{
+-	if (unlikely(cfs_rq->throttle_count))
+-		return cfs_rq->throttled_clock_task - cfs_rq->throttled_clock_task_time;
+-
+-	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
+-}
+-
+ /* returns 0 on failure to allocate runtime */
+ static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+ {
+@@ -4524,7 +4514,6 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
+ 
+ 	cfs_rq->throttle_count--;
+ 	if (!cfs_rq->throttle_count) {
+-		/* adjust cfs_rq_clock_task() */
+ 		cfs_rq->throttled_clock_task_time += rq_clock_task(rq) -
+ 					     cfs_rq->throttled_clock_task;
+ 
+@@ -5135,11 +5124,6 @@ static inline bool cfs_bandwidth_used(void)
+ 	return false;
+ }
+ 
+-static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
+-{
+-	return rq_clock_task(rq_of(cfs_rq));
+-}
+-
+ static void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec) {}
+ static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq) { return false; }
+ static void check_enqueue_throttle(struct cfs_rq *cfs_rq) {}
+-- 
+1.8.3.1
+
