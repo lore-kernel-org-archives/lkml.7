@@ -4,96 +4,117 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B56ABC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1141AC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADD62067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2212067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MtIjhXxk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dUaPMDJF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfIPF3O (ORCPT
+        id S1729076AbfIPFaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 01:29:14 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:45169 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbfIPF3O (ORCPT
+        Mon, 16 Sep 2019 01:30:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40405 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbfIPFaD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 01:29:14 -0400
-Received: by mail-yw1-f68.google.com with SMTP id x82so3019384ywd.12;
-        Sun, 15 Sep 2019 22:29:13 -0700 (PDT)
+        Mon, 16 Sep 2019 01:30:03 -0400
+Received: by mail-ot1-f67.google.com with SMTP id y39so34513574ota.7;
+        Sun, 15 Sep 2019 22:30:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=TO/AmfnKtANZ8mVZNESH/DlPEtWYchRuqQVqKflh/3Y=;
-        b=MtIjhXxkbLue/e0nStAilt/Bvuk+s4J8xquKYB9e9lghThNERr5xnsEdNNRrj7vz4Y
-         yDme9NMm9L4DBVrnq23lENWTU3WkGQ4xlTvAYhkgfBHSdJlGUYZQW1y34LM81lr7Xej/
-         TpfMoyuaW7xT9nNRPEwh8TOp4dZ/+uotGl23oFn0CqxGMFWC7ioL/WphTqVh7DgWy736
-         W/jrDmGUFU/lavzIeOq9nuNdsEkpNyBx4De5fIbb+eIWiuS2h+lwbYFCmpyquw/oQoN+
-         zxvtoRc5VIHmrNZsMDfThrAmkPH5lGeUf92s7HvPZzyVBZlY3/NMFTU0ybIraWSPtGBc
-         6ulw==
+        bh=uaOfZgiRYci8brLu6u70UJApCKOz1WkeM0Sygqw8wnU=;
+        b=dUaPMDJFgfbOyjiqlaeT54gDZiCJCSwKcGkpSShd2Bdb0E+fFnqdlfyolHVesJCpMs
+         W3XA4yH4Y3xF7vw4Rrm3Yq/YvufvF5YCuGx0s4Bx5i2LZ4xkfAVeJLiTSmMJU5Am6g81
+         TK0VtTndZobK6Ygt+fyZPeHVCurxCsCTYWKj7nbJRPAt7XwrOr7lDNw2VZtrjY4SbZ5h
+         mgSDt+X5ssdM9BYvoupdRoKyL/LS9iDpdLUrlfazIYC/sdA9WYr9llrwSidsRb45A4Il
+         X7sBCYO8dEuUdm0itK1/zcH+xLaJc9b5mpz+jKoXgKEdPsNUVd2VXn1GLI6h6FlgeDYp
+         FcCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=TO/AmfnKtANZ8mVZNESH/DlPEtWYchRuqQVqKflh/3Y=;
-        b=LmU7Ifphl5n5fpa3CC9bIBXd8nKK1XYtzpsBG6OCpB0LkIV4aRFzNUvP/eci+ZhMB9
-         b4gN8p3GDsYe3gwlwZ8Q9RgWQOdqd7gkUs86x3G1PIoI5N3ndmROJARI48EtdjvboRko
-         AbWyvrYpTurRdx6BMQVMvEpP8EVlvZfdi5N7FGrRyzAywne5iq0hTd3V70YhsXQbUl8R
-         MWnQQmb+FPEOb3qG8eL71nzEmSvXDV2xeJICr8uzF7PszHEU0g4uPqsH0FL+bGbpg+e3
-         86NRNrtKAa3bHnSDNVIibXRvcNux+4iqAMKgNLVJE/IKcu3ftSAp6SiH3Jsxs6I2ntmP
-         Qnlg==
-X-Gm-Message-State: APjAAAVd1OWMC5xhbYW6PmN733G+SbNsz3Rel/L3w4Hy1zk9wplnqivw
-        tKz1X6IP/kdVZ/uFsT+QHklx4ioulVx+OC4eQj4=
-X-Google-Smtp-Source: APXvYqzyjkJ0egxXhzgdWexlfKH5i4Q5Pavz0yuyznhk7LArfROmytXoN+G3x5dmWCvZkuPCSNDruiUolLkoDqeQ7dM=
-X-Received: by 2002:a0d:e64b:: with SMTP id p72mr41884972ywe.347.1568611752955;
- Sun, 15 Sep 2019 22:29:12 -0700 (PDT)
+        bh=uaOfZgiRYci8brLu6u70UJApCKOz1WkeM0Sygqw8wnU=;
+        b=qmah2Z3pYWgi8GuuPcWrlf3TyXh5oDr1H+ajKxAviV5JbjNLF/nTsVrQe7ipFq1nbn
+         EgECcU4ekNjj+fTG1O3BdZiJUvs828BejvIrzPwt2q4IsfKhPEg8IaAgesxc04evsoOC
+         Kg8R8iD2jklxyxJQgC3QhhDia1BFjEl6J0P8X4VP5ke33BK7oQdhAf+iqWuDmoIkhfxA
+         mkTnQb+Izu6msmYXNK7GOKDTgr6ZIpZQfMisKn8aDRA1skrv0eKDIQ8Y+YbofhsvVeoE
+         6McCsnmP4dI+rT/VASGd7bT0mdPeIibNlXEoWZSToyxfttCCYCWzYp+fuSP2D3Qp9trG
+         vRPA==
+X-Gm-Message-State: APjAAAXy7guzBg76CwtTGnz2Sztg/4Uw82nMCxjYbuVNah/EQcXjPvr2
+        m5KqWPNNhVQ20HVS31Jd2kqxZGG+SnzVAhZa2nKxVg==
+X-Google-Smtp-Source: APXvYqx9+/nthixP8A0pvQOeOP0zB3tjJ0mrqn4bOMi28alYMwtwVeyWhFVx9mdDHRY0hI1r9dz1fpHzngfdU0hjWqA=
+X-Received: by 2002:a9d:7859:: with SMTP id c25mr18945488otm.371.1568611801814;
+ Sun, 15 Sep 2019 22:30:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHjaAcStAfarJoPG0tbSY0BVcp0-7Lvah2FdpmC_eCFfxaSVFw@mail.gmail.com>
- <20190913140006.GA29755@linux.intel.com> <20190913140218.GB29755@linux.intel.com>
-In-Reply-To: <20190913140218.GB29755@linux.intel.com>
-From:   Seunghun Han <kkamagui@gmail.com>
-Date:   Mon, 16 Sep 2019 14:29:01 +0900
-Message-ID: <CAHjaAcSBCDnn7CwXfxYcfmRnAF2jdud1Sjwng_jtd8ASVS28Sg@mail.gmail.com>
-Subject: Re: [PATCH v2] Fix fTPM on AMD Zen+ CPUs
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Vanya Lazeev <ivan.lazeev@gmail.com>, arnd@arndb.de,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Huewe <peterhuewe@gmx.de>
+References: <20190915211818.GH4352@sirena.co.uk>
+In-Reply-To: <20190915211818.GH4352@sirena.co.uk>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Sun, 15 Sep 2019 22:29:35 -0700
+Message-ID: <CA+E=qVfm78f+2a2s=8Q7tL-fP7xCEj0v=_JXD_XbaR-2dfXmCA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drm tree with the drm-misc-fixes tree
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Qiang Yu <yuq825@gmail.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Sep 15, 2019 at 2:18 PM Mark Brown <broonie@kernel.org> wrote:
 >
-> On Fri, Sep 13, 2019 at 03:00:06PM +0100, Jarkko Sakkinen wrote:
-> > On Wed, Sep 11, 2019 at 02:17:48PM +0900, Seunghun Han wrote:
-> > > Vanya,
-> > > I also made a patch series to solve AMD's fTPM. My patch link is here,
-> > > https://lkml.org/lkml/2019/9/9/132 .
-> > >
-> > > The maintainer, Jarkko, wanted me to remark on your patch, so I would
-> > > like to cooperate with you.
-> > >
-> > > Your patch is good for me. If you are fine, I would like to take your
-> > > patch and merge it with my patch series. I also would like to change
-> > > some points Jason mentioned before.
-> >
-> > I rather handle the review processes separately because I can merge
-> > Vanyas's patch first. Bundling them into patch set would only slow
-> > down things.
+> Hi all,
+
+Hi Mark,
+
+> Today's linux-next merge of the drm tree got a conflict in:
 >
-> I did not ask to do anything. I just review code changes.
+>   drivers/gpu/drm/lima/lima_gem.c
+>
+> between commit:
+>
+>   21670bd78a25001cf8e ("drm/lima: fix lima_gem_wait() return value")
+>
+> from the drm-misc-fixes tree and commit:
+>
+>   52791eeec1d9f4a7e7f ("dma-buf: rename reservation_object to dma_resv")
+>
+> from the drm tree.
+>
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
-I got it. I should concentrate on my ACPI NVS problem.
-Thank you.
+Fix looks correct to me. Sorry for not testing my patch with
+linux-next, I'll make sure it at least compiles next time.
 
-Seunghun
+> diff --cc drivers/gpu/drm/lima/lima_gem.c
+> index b609dc030d6ca,ff3d9acc24fcf..0000000000000
+> --- a/drivers/gpu/drm/lima/lima_gem.c
+> +++ b/drivers/gpu/drm/lima/lima_gem.c
+> @@@ -341,8 -341,8 +341,8 @@@ int lima_gem_wait(struct drm_file *file
+>
+>         timeout = drm_timeout_abs_to_jiffies(timeout_ns);
+>
+> -       ret = drm_gem_reservation_object_wait(file, handle, write, timeout);
+> +       ret = drm_gem_dma_resv_wait(file, handle, write, timeout);
+>  -      if (ret == 0)
+>  +      if (ret == -ETIME)
+>                 ret = timeout ? -ETIMEDOUT : -EBUSY;
+>
+>         return ret;
