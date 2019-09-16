@@ -2,399 +2,246 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9961BC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649A920890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D5320873
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:03:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ie192P++"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axVUIv6t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfIPD7A (ORCPT
+        id S1726283AbfIPEDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 23:59:00 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36447 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729064AbfIPD7A (ORCPT
+        Mon, 16 Sep 2019 00:03:02 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42637 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfIPEDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 23:59:00 -0400
-Received: by mail-lf1-f66.google.com with SMTP id x80so26288038lff.3
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 20:58:58 -0700 (PDT)
+        Mon, 16 Sep 2019 00:03:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id c10so34357754otd.9;
+        Sun, 15 Sep 2019 21:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=m1Hhg7ODzcfgB+0HRjEGFZ4qLXUGKx1WsfevdMsgXfQ=;
-        b=ie192P++JSJGgRu63x8IOuJhIgehbcXnKEflP6krmR6luFcrbJjIngV9b3x4jfiAWe
-         8RFZxlyNmIo0LjfkP+PeatApQuJuRH9hK0aonDee87nCSD6ey1Mu/VmQUNsRvWRV5MDR
-         QaTBVfBLV2UeKXx6O8yDhxQsgORPgZ+ChtwZXFAmCSklEFht8utqkoh5EDFKKBRutOtw
-         Di0U4ORxnhvsYDg6E7S41DUjoZG0dA7gI9qfWZQJDt6wE750FLKhUJ2J0OigS2jLLXGu
-         Vn5qhrPTsuCASoUQzt/gObtRAMXwQOdbNiH6GKuIuOUxKma+FEFD7xfJzvk7v8MPHo18
-         k8yw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MO99i9mXaEOJiKYYZONOtDCqaLIAO0yEzXnTE3xFd9w=;
+        b=axVUIv6tfRpmCQypOp3Nufj7NSNtRNUeb9NufEPHAGxJ8SgNj6UdRWuWFtLsXSFNnT
+         7ZaiW+4NvLUY2+hdrgMM1tJRxLt18fJhxmDyBBHMtfsHe8YAxRAJNRCDfSZxVFfLF1Di
+         /iWmIyQd7QdGuj5kaQKG9c816QfBhnpuM1PcovlSNK+rCG/Zxm5bdViHQEuVGlP5NjaK
+         6AuUq2ILZfd9YWFQaKOVhsiDYKCgNeUTrKFjokX4hqhS0z5s+yjz6bCKV2HvJPfO9jIN
+         mgnmyWcsxgksSx71IbPiCPWQTHk1yw8pYzz2/M9JBJv0gwBX17Uzk76vci9c+p2/Gcqp
+         kqqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=m1Hhg7ODzcfgB+0HRjEGFZ4qLXUGKx1WsfevdMsgXfQ=;
-        b=k7mPvQHPfPHuKUb82PuTyfbQYu9AyEB64RsWOkFttiWwyQqJSAsColqOeAiIA0+V0U
-         E8gWgF1vxLE0knyGXS9NqheKC+0BYVoflImkLI51jsPJ+Xfh54WkDwa6rV4mO2WP3zsR
-         6uJmtwuDZQKtOxDGLzAIG0rjzf/zOT7aHhYib1eectYYbaem32qufqX90rw5Ec9kcfHc
-         l2cWG1tYJA42t4HFrh7PF/hAd6TxeGojmnQD2z3nsEQrWPX0ycR3x0zFL8IeDiM54gwy
-         03I78yLrwhiWP3PiWMDVu9nXf+4Ei5JzxUAlFm7Rzk1a3JRqKZXhDo6LkTAZ+aRamyDn
-         RKfA==
-X-Gm-Message-State: APjAAAUjI9CkslsCmrAyztAilR1MJvdmZE5W1wW8nt8cHtxe015KBV4b
-        /WRW5zF/5hQcILHNyov1eVE68+8+9jbhrBT8O8Jbrw==
-X-Google-Smtp-Source: APXvYqy3Kfnb2KshTyOFqsNrpNv2kdfDeG32bsbjf2HNOykwnsWu1+D+UrJJpf7zXjyivwnhcItlhp8RO9LVa289hKY=
-X-Received: by 2002:a19:117:: with SMTP id 23mr37730052lfb.115.1568606337155;
- Sun, 15 Sep 2019 20:58:57 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MO99i9mXaEOJiKYYZONOtDCqaLIAO0yEzXnTE3xFd9w=;
+        b=S5VgOErPQ8OswcVGdo6++c4dYPYtL+JGeAaAPFM5nw6Zyr5x9fFUQJ+Z3kICIEFf27
+         83WQ9u8hhA4lt+m9/ZNF1Z9HMf9SLscII2jErUXbtOtHYuvmNnXlNr4Wa5eY1yn5P0hJ
+         2krGtDFDcYXS/id7HwpzAEurwdLy0eH/4+QDjVeKAxpQFugCbVywc3CU7YWUchxFKUKX
+         eoizv4qU5o3igRhscUvL9C1t2kzsacFPalnQxy4SZOCvhHubcMwyN1n3dysTE0Xy0Snq
+         Om74K+XTUDKixzYzrxs5A6sjXsNOCetUFrU3guQ50ajqjSfvS9VriIl9GsrThOFlwIuI
+         FL2g==
+X-Gm-Message-State: APjAAAVDN26kJUgUdfNQZUAfrhjGE4pSqbeZsQDnGECZ/3obpMSCmn5I
+        NGkze3xVjXr9HUxwbBZfWBrqCuCJ7eBssKg/90w=
+X-Google-Smtp-Source: APXvYqz1THClfa3II9z8tDk6V/d875qMpiUs/xIoWf8/qmW7KQU7arC18V1uI5yIs3jrYcLpWxnEnmMtTXHhv84129A=
+X-Received: by 2002:a9d:4597:: with SMTP id x23mr31647946ote.185.1568606580868;
+ Sun, 15 Sep 2019 21:03:00 -0700 (PDT)
 MIME-Version: 1.0
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 16 Sep 2019 05:58:45 +0200
-Message-ID: <CACRpkdZX_uUGaHD9+abAG1w-OVyp0ihvEosjvcBe8gbvf4FCcw@mail.gmail.com>
-Subject: [GIT PULL] GPIO bulk changes for the v5.4 kernel
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+References: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
+ <a1c6c974-a6f2-aa71-aa2e-4c987447f419@redhat.com> <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
+ <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
+In-Reply-To: <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Mon, 16 Sep 2019 12:02:49 +0800
+Message-ID: <CANRm+Cy+5pompcDDS2C9YnxvE_-87i24gbBfc53Qa1tcWNck2Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Thu, 12 Sep 2019 at 20:37, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 12/09/19 02:34, Wanpeng Li wrote:
+> >>> -        timer_advance_ns -= min((u32)ns,
+> >>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> >>> +        timer_advance_ns -= ns;
+>
+> Looking more closely, this assignment...
+>
+> >>>    } else {
+> >>>    /* too late */
+> >>>        ns = advance_expire_delta * 1000000ULL;
+> >>>        do_div(ns, vcpu->arch.virtual_tsc_khz);
+> >>> -        timer_advance_ns += min((u32)ns,
+> >>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> >>> +        timer_advance_ns += ns;
+>
+> ... and this one are dead code now.  However...
+>
+> >>>    }
+> >>>
+> >>> +    timer_advance_ns = (apic->lapic_timer.timer_advance_ns *
+> >>> +        (LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) + advance_expire_delta) /
+> >>> +        LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>
+> ... you should instead remove this new assignment and just make the
+> assignments above just
+>
+>         timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>
+> and
+>
+>         timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>
+> In fact this whole last assignment is buggy, since advance_expire_delta
+> is in TSC units rather than nanoseconds.
+>
+> >>>    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> >>>        apic->lapic_timer.timer_advance_adjust_done = true;
+> >>>    if (unlikely(timer_advance_ns > 5000)) {
+> >> This looks great.  But instead of patch 2, why not remove
+> >> timer_advance_adjust_done altogether?
+> > It can fluctuate w/o stop.
+>
+> Possibly because of the wrong calculation of timer_advance_ns?
 
-the following is the bulk of GPIO changes for v5.4. The
-main information chunk about the updates is in the signed
-tag as always. This cycle has been pretty lively.
+Hi Paolo,
 
-You will notice that I merged in v5.3-rc7 at a late point.
-This was because the conflicts were really hairy between
-the -rc:s and the bulk of development: the kind where
-there is a variable rename in one branch and independent
-reshuffling of code in the other. This took me some
-substantial time to sort out, despite both changes being
-my own. I don't know if I'm especially bad at resolving
-conflicts but after failing to construct a branch for -next
-several times I just sat down and resolved the conflicts
-toward -rc7 once and for all. I still had to fix it up with
-a patch on top.
+Something like below? It still fluctuate when running complex guest os
+like linux. Removing timer_advance_adjust_done will hinder introduce
+patch v3 2/2 since there is no adjust done flag in each round
+evaluation. I have two questions here, best-effort tune always as
+below or periodically revaluate to get conservative value and get
+best-effort value in each round evaluation as patch v3 2/2, which one
+do you prefer? The former one can wast time to wait sometimes and the
+later one can not get the best latency. In addition, can the adaptive
+tune algorithm be using in all the scenarios contain
+RT/over-subscribe?
 
-Changes hitting Unicore and FMC in MAINTAINERS are
-eplained in the signed tag as well.
+---8<---
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 685d17c..895735b 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -69,6 +69,7 @@
+ #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+ /* step-by-step approximation to mitigate fluctuation */
+ #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
++#define LAPIC_TIMER_ADVANCE_FILTER 5000
 
-Please pull it in!
+ static inline int apic_test_vector(int vec, void *bitmap)
+ {
+@@ -1479,29 +1480,28 @@ static inline void
+adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+                           s64 advance_expire_delta)
+ {
+     struct kvm_lapic *apic = vcpu->arch.apic;
+-    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+-    u64 ns;
++    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
++
++    if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
++        abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
++        /* filter out random fluctuations */
++        return;
++    }
 
-Yours,
-Linus Walleij
+     /* too early */
+     if (advance_expire_delta < 0) {
+         ns = -advance_expire_delta * 1000000ULL;
+         do_div(ns, vcpu->arch.virtual_tsc_khz);
+-        timer_advance_ns -= min((u32)ns,
+-            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++        timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+     } else {
+     /* too late */
+         ns = advance_expire_delta * 1000000ULL;
+         do_div(ns, vcpu->arch.virtual_tsc_khz);
+-        timer_advance_ns += min((u32)ns,
+-            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
++        timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+     }
 
-The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a=
-:
+-    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+-        apic->lapic_timer.timer_advance_adjust_done = true;
+-    if (unlikely(timer_advance_ns > 5000)) {
++    if (unlikely(timer_advance_ns > 5000))
+         timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-        apic->lapic_timer.timer_advance_adjust_done = false;
+-    }
+     apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+ }
 
-  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+@@ -1521,7 +1521,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+     if (guest_tsc < tsc_deadline)
+         __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
 
-are available in the Git repository at:
+-    if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
++    if (lapic_timer_advance_ns == -1)
+         adjust_lapic_timer_advance(vcpu,
+apic->lapic_timer.advance_expire_delta);
+ }
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
-tags/gpio-v5.4-1
+@@ -2298,10 +2298,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int
+timer_advance_ns)
+     apic->lapic_timer.timer.function = apic_timer_fn;
+     if (timer_advance_ns == -1) {
+         apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+-        apic->lapic_timer.timer_advance_adjust_done = false;
+     } else {
+         apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+-        apic->lapic_timer.timer_advance_adjust_done = true;
+     }
 
-for you to fetch changes up to 11c43bb022b373d2fdb84950ebf1911362f3f010:
 
-  gpiolib: of: add a fallback for wlf,reset GPIO name (2019-09-12
-10:29:17 +0100)
+diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+index 50053d2..2aad7e2 100644
+--- a/arch/x86/kvm/lapic.h
++++ b/arch/x86/kvm/lapic.h
+@@ -35,7 +35,6 @@ struct kvm_timer {
+     s64 advance_expire_delta;
+     atomic_t pending;            /* accumulated triggered timers */
+     bool hv_timer_in_use;
+-    bool timer_advance_adjust_done;
+ };
 
-----------------------------------------------------------------
-This is the bulk of changes in the GPIO subsystem for the
-v5.4 kernel cycle.
+ struct kvm_lapic {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 93b0bd4..4f65ef1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -141,7 +141,7 @@
+  * advancement entirely.  Any other value is used as-is and disables adaptive
+  * tuning, i.e. allows priveleged userspace to set an exact advancement time.
+  */
+-static int __read_mostly lapic_timer_advance_ns = -1;
++int __read_mostly lapic_timer_advance_ns = -1;
+ module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
 
-Core changes:
+ static bool __read_mostly vector_hashing = true;
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 6594020..2c6ba86 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -301,6 +301,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+unsigned long cr2,
 
-- Support hierarchical GPIO irqchips. We now have three
-  consumers that can use this: Intel IXP4xx, ThunderX and
-  Qualcomm SPMI GPIO (in the pinctrl subsystem). The support
-  code has been long in the making and hashed out so it should
-  be easily adaptable for all hierarchical irqchip parents.
-  The code only gets compiled in if hierarchical irqchip
-  is used at the topmost irq controller at least, as the
-  hierarchical irqchip requires strict hierarchy all the
-  way up in the system.
+ extern bool enable_vmware_backdoor;
 
-- Determine the need for a "valid_mask" for GPIO lines on the
-  gpio_chip and conversely for the "valid_mask" for the GPIO
-  interrupt chip interrupt lines by looking for a
-  .init_valid_mask() callback in the main chip or GPIO interrupt
-  chip respectively. Allocate it with bitmap_alloc().
++extern int lapic_timer_advance_ns;
+ extern int pi_inject_timer;
 
-- Isolate the device tree/open firmware GPIO description code
-  out in its own file properly.
-
-- Isolate the ACPI GPIO description code out in its own file
-  properly.
-
-- Drop a whole lot of #ifdef:s in the main includes: it does
-  not hurt to keep the include items around, and we get
-  quicker and clearer compile failures if the appropriate
-  kernel symbols are not selected for drivers.
-
-New/deleted drivers:
-
-- New driver for Aspeed SGPIO.
-
-- The KS8695 driver is deleted as the platform gets deleted
-  from arch/arm in this kernel cycle.
-
-- The Cirrus Logic Madera driver now supports CS47L92 and
-  CS47L15.
-
-- The Freescale MPC8xxx now supports LS1028A and LS1088A.
-
-Driver improvements:
-
-- We pass the GPIO irqchip intialization by directly filling
-  in the struct instead of using set-up functions (the new
-  way) for Intel MID, Lynxpoint, Merrifield, XLP, HLWD, Aspeed,
-  ZX, VF610, TQMX86, MT7621, Zynq and EP93xx.
-
-Out-of-band changes:
-
-- Fix a GPIO header inclusion in Unicore - no response from
-  maintainer.
-
-- Drop FMC subsystem from MAINTAINERS - was deleted in the
-  GPIO tree last cycle so let's mop up the shards.
-
-----------------------------------------------------------------
-Andy Shevchenko (8):
-      gpiolib: of: Reshuffle contents of consumer.h for new library layout
-      gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h
-      gpiolib-acpi: Move acpi_dev_add_driver_gpios() et al to consumer.h
-      gpio: pca953x: Switch to use device_get_match_data()
-      gpio: pca953x: Use GENMASK() consistently
-      gpio: pca953x: Remove explicit comparison with 0
-      gpio: pca953x: Drop %s for constant string literals
-      MAINTAINERS: Remove stale record for gpio-intel-mid.c
-
-Anson Huang (1):
-      gpio: mxc: Use devm_clk_get_optional instead of devm_clk_get
-
-Arnd Bergmann (2):
-      gpio: remove ks8695 driver
-      gpio: lpc32xx: allow building on non-lpc32xx targets
-
-Bartosz Golaszewski (2):
-      gpio: em: use a helper variable for &pdev->dev
-      gpio: max77650: add MODULE_ALIAS()
-
-Brian Masney (1):
-      qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
-
-Charles Keepax (3):
-      gpio: arizona: Use local copy of pdata
-      gpio: madera: Use local copy of pdata
-      gpio: madera: Add support for Cirrus Logic CS47L92
-
-Christophe JAILLET (1):
-      gpio: ftgpio: Fix an error handling path in 'ftgpio_gpio_probe()'
-
-Chuhong Yuan (1):
-      gpio: pch: Use dev_get_drvdata
-
-Colin Ian King (2):
-      gpio: bd70528: fix spelling misstake "debouce" -> "debounce"
-      gpio: bd70528: remove redundant assignment to variable ret
-
-Denis Efremov (1):
-      MAINTAINERS: Remove FMC subsystem
-
-Ding Xiang (1):
-      gpio: ixp4xx: remove redundant dev_err message
-
-Dmitry Torokhov (2):
-      gpiolib: acpi: make acpi_can_fallback_to_crs() static
-      gpiolib: of: add a fallback for wlf,reset GPIO name
-
-Geert Uytterhoeven (5):
-      gpio: of: Make of_get_named_gpiod_flags() private
-      gpio: of: Make of_gpio_simple_xlate() private
-      gpio: of: Switch to EXPORT_SYMBOL_GPL()
-      gpio: devres: Switch to EXPORT_SYMBOL_GPL()
-      gpio: htc-egpio: Remove unused exported htc_egpio_get_wakeup_irq()
-
-Hennie Muller (1):
-      gpio: viperboard: Replace 'unsigned' with 'unsigned int'
-
-Hongwei Zhang (2):
-      dt-bindings: gpio: aspeed: Add SGPIO support
-      gpio: aspeed: Add SGPIO driver
-
-Jeremy Cline (1):
-      Documentation: gpio: fix function links in the HTML docs
-
-Linus Walleij (30):
-      unicore: Drop pointless include
-      gpio: of: Break out OF-only code
-      gpio: intel-mid: Pass irqchip when adding gpiochip
-      gpio: lynxpoint: Pass irqchip when adding gpiochip
-      gpio: merrifield: Pass irqchip when adding gpiochip
-      gpio: Add support for hierarchical IRQ domains
-      gpio: ixp4xx: Convert to hierarchical GPIOLIB_IRQCHIP
-      gpio: thunderx: Switch to GPIOLIB_IRQCHIP
-      gpio: cadence: Pass irqchip when adding gpiochip
-      gpio: xlp: Pass irqchip when adding gpiochip
-      gpio: hlwd: Pass irqchip when adding gpiochip
-      gpio: aspeed: Pass irqchip when adding gpiochip
-      gpio: Pass mask and size with the init_valid_mask()
-      pinctrl: stmfx: Use the callback to populate valid_mask
-      gpio: Use callback presence to determine need of valid_mask
-      gpio: ftgpio: Move hardware initialization
-      gpio: zx: Pass irqchip when adding gpiochip
-      gpio: vf610: Pass irqchip when adding gpiochip
-      gpio: tqmx86: Pass irqchip when adding gpiochip
-      gpio: mt7621: Pass irqchip when adding gpiochip
-      gpio: zynq: Pass irqchip when adding gpiochip
-      Merge tag 'gpio-v5.4-updates-for-linus' of
-git://git.kernel.org/.../brgl/linux into devel
-      gpio: ep93xx: Pass irqchip when adding gpiochip
-      gpio: gpiolib: Normalize return code variable name
-      gpio: of: Normalize return code variable name
-      gpio: Fix up merge collision in include file
-      Merge tag 'v5.3-rc7' into devel
-      gpio: Fix further merge errors
-      Merge tag 'intel-gpio-v5.4-1' of
-git://git.kernel.org/.../andy/linux-gpio-intel into devel
-      gpio: Initialize the irqchip valid_mask with a callback
-
-Lokesh Vutla (1):
-      dt-bindings: gpio: davinci: Add new compatible for J721E SoCs
-
-Marc Zyngier (1):
-      gpio/ixp4xx: Register the base PA instead of its VA in fwnode
-
-Masahiro Yamada (2):
-      gpio: remove less important #ifdef around declarations
-      gpio: refactor gpiochip_allocate_mask() with bitmap_alloc()
-
-Rashmica Gupta (5):
-      gpio: aspeed: Update documentation with ast2600 controllers
-      gpio/aspeed: Fix incorrect number of banks
-      gpio: aspeed: Setup irqchip dynamically
-      gpio: aspeed: Use ngpio property from device tree if available
-      gpio: aspeed: Add in ast2600 details to Aspeed driver
-
-Richard Fitzgerald (1):
-      gpio: madera: Add support for Cirrus Logic CS47L15
-
-Saiyam Doshi (1):
-      gpio: remove explicit comparison with 0
-
-Song Hui (4):
-      gpio: mpc8xxx: Add ls1028a device specify function.
-      gpio: mpc8xxx: Add new platforms GPIO DT node description
-      gpio: mpc8xxx: add ls1088a platform gpio node DT binding description
-      gpio: mpc8xxx: add ls1088a platform special function
-
-Stephen Boyd (2):
-      gpio: of: Fix hard-assigned valid_mask for OF case
-      gpio: Remove dev_err() usage after platform_get_irq()
-
-Stephen Rothwell (1):
-      gpio: stubs in headers should be inline
-
-Uwe Kleine-K=C3=B6nig (1):
-      gpio: mockup: don't depend twice on GPIOLIB
-
-YueHaibing (2):
-      gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h
-      gpio: creg-snps: use devm_platform_ioremap_resource() to simplify cod=
-e
-
- .../devicetree/bindings/gpio/gpio-aspeed.txt       |   7 +-
- .../devicetree/bindings/gpio/gpio-davinci.txt      |   1 +
- .../devicetree/bindings/gpio/gpio-mpc8xxx.txt      |  16 +-
- .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  45 ++
- Documentation/driver-api/gpio/driver.rst           | 138 ++++-
- MAINTAINERS                                        |  15 -
- arch/arm/configs/lpc32xx_defconfig                 |   1 +
- arch/unicore32/kernel/irq.c                        |   1 -
- drivers/gpio/Kconfig                               |  11 +-
- drivers/gpio/Makefile                              |   3 +-
- drivers/gpio/gpio-arizona.c                        |   4 +-
- drivers/gpio/gpio-aspeed.c                         | 117 ++--
- drivers/gpio/gpio-bd70528.c                        |   4 +-
- drivers/gpio/gpio-brcmstb.c                        |   4 +-
- drivers/gpio/gpio-cadence.c                        |  36 +-
- drivers/gpio/gpio-creg-snps.c                      |   4 +-
- drivers/gpio/gpio-dwapb.c                          |   1 +
- drivers/gpio/gpio-eic-sprd.c                       |   4 +-
- drivers/gpio/gpio-em.c                             |  37 +-
- drivers/gpio/gpio-ep93xx.c                         | 140 +++--
- drivers/gpio/gpio-ftgpio010.c                      |  14 +-
- drivers/gpio/gpio-grgpio.c                         |   2 -
- drivers/gpio/gpio-hlwd.c                           |  58 +-
- drivers/gpio/gpio-htc-egpio.c                      |  14 -
- drivers/gpio/gpio-intel-mid.c                      |  35 +-
- drivers/gpio/gpio-ixp4xx.c                         | 279 ++-------
- drivers/gpio/gpio-ks8695.c                         | 284 ---------
- drivers/gpio/gpio-lpc32xx.c                        | 118 ++--
- drivers/gpio/gpio-lynxpoint.c                      |  35 +-
- drivers/gpio/gpio-madera.c                         |  12 +-
- drivers/gpio/gpio-max77620.c                       |   4 +-
- drivers/gpio/gpio-max77650.c                       |   1 +
- drivers/gpio/gpio-mb86s7x.c                        |   1 +
- drivers/gpio/gpio-merrifield.c                     |  28 +-
- drivers/gpio/gpio-mpc8xxx.c                        |  32 +
- drivers/gpio/gpio-mt7621.c                         |  33 +-
- drivers/gpio/gpio-mxc.c                            |   9 +-
- drivers/gpio/gpio-pca953x.c                        |  70 +--
- drivers/gpio/gpio-pch.c                            |   6 +-
- drivers/gpio/gpio-pmic-eic-sprd.c                  |   4 +-
- drivers/gpio/gpio-sprd.c                           |   4 +-
- drivers/gpio/gpio-stmpe.c                          |  36 +-
- drivers/gpio/gpio-tb10x.c                          |   4 +-
- drivers/gpio/gpio-tegra.c                          |   4 +-
- drivers/gpio/gpio-thunderx.c                       | 163 ++---
- drivers/gpio/gpio-tqmx86.c                         |  50 +-
- drivers/gpio/gpio-vf610.c                          |  26 +-
- drivers/gpio/gpio-viperboard.c                     |  20 +-
- drivers/gpio/gpio-xgene-sb.c                       |   1 +
- drivers/gpio/gpio-xlp.c                            |  29 +-
- drivers/gpio/gpio-zx.c                             |  35 +-
- drivers/gpio/gpio-zynq.c                           |  41 +-
- drivers/gpio/gpiolib-acpi.c                        |  27 +-
- drivers/gpio/gpiolib-acpi.h                        |  96 +++
- drivers/gpio/gpiolib-devres.c                      |  28 +-
- drivers/gpio/gpiolib-of.c                          | 158 ++++-
- drivers/gpio/gpiolib-of.h                          |  38 ++
- drivers/gpio/gpiolib.c                             | 680 +++++++++++++----=
-----
- drivers/gpio/gpiolib.h                             | 120 ----
- drivers/gpio/sgpio-aspeed.c                        | 533 ++++++++++++++++
- drivers/pinctrl/intel/pinctrl-baytrail.c           |  16 +-
- drivers/pinctrl/intel/pinctrl-cherryview.c         |  42 +-
- drivers/pinctrl/pinctrl-stmfx.c                    |  18 +-
- drivers/pinctrl/qcom/Kconfig                       |   1 +
- drivers/pinctrl/qcom/pinctrl-msm.c                 |  23 +-
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  92 +--
- drivers/platform/x86/intel_int0002_vgpio.c         |  11 +-
- include/linux/acpi.h                               |  51 --
- include/linux/gpio.h                               |  13 -
- include/linux/gpio/consumer.h                      | 135 +++-
- include/linux/gpio/driver.h                        | 178 ++++--
- include/linux/of_gpio.h                            |  11 -
- include/linux/platform_data/gpio-htc-egpio.h       |   3 -
- sound/soc/intel/boards/bytcht_cx2072x.c            |   1 +
- sound/soc/intel/boards/cht_bsw_max98090_ti.c       |   1 +
- sound/soc/intel/boards/cht_bsw_rt5672.c            |   1 +
- 76 files changed, 2535 insertions(+), 1783 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
- delete mode 100644 drivers/gpio/gpio-ks8695.c
- create mode 100644 drivers/gpio/gpiolib-acpi.h
- create mode 100644 drivers/gpio/gpiolib-of.h
- create mode 100644 drivers/gpio/sgpio-aspeed.c
+ extern struct static_key kvm_no_apic_vcpu;
