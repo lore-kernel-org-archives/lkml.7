@@ -2,110 +2,86 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13039C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9D6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0059206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ppdLC1lq"
+	by mail.kernel.org (Postfix) with ESMTP id D605B206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbfIPI4e (ORCPT
+        id S1731482AbfIPI4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:56:34 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42435 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726541AbfIPI4d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:56:33 -0400
-Received: by mail-wr1-f65.google.com with SMTP id q14so37920995wrm.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 01:56:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Vq1aoYedsFkETd/evvKj1kUDyrvtLgO2i4JpK9RUX4Y=;
-        b=ppdLC1lqYnUcCqlKAXL7HjEJ0G2tfaDtIn7OYpN95IpPjKxBzBvhfnlS4AyyHrqzN9
-         Yv9rCHNf0Jgq6U68/WxhZo9DvYbNDCpbTCJlYB6Ud5lWBKBBaEb8ATX6viqnSsrPF47l
-         AWN6VdKdIF8OfmXz4gLZ8kkMEVmfzfgCdTYkjbtipvzn9yQuDyMLQGpHhMdHUtsfu0ty
-         TtiqazeeogLybhaX2QuHeYg8VtkpCvaCkGYHCGN2pU8wv9Wikm4D5fKjY/9hkq5gJMml
-         YFdF7ldiJCKvDd5WorvFISSxuO8DVy+jBL46kMLpp9fITlVRvVhMxsMciQFvyacXS4QU
-         mn7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Vq1aoYedsFkETd/evvKj1kUDyrvtLgO2i4JpK9RUX4Y=;
-        b=TiWJSvaKsR39tRYLfp2yW5ZNa7miMpO7+MxG7PKqIaszMx8h2gPlBoKR8dXnp6z6nS
-         TghbuwdlnW454dcTqrgdwB1YrsB4HagHDN+RL3Q/ilE3rvYF0DenJGy3xZ40vNezmucN
-         +GWwobNceCFSNy7EEj/+djUHz2zkO0o9+Hlthse4TcRcTr04p0NpD6/YvZbBWuzEQlzL
-         XU80HdiOzRzwG/7brpBC2WBQc4ON7tqReZPo8hl3+vOkQKtvBKP1HRJVRUiAFsiiA3VB
-         DbQTq5fVFleHIU4LnKuA5uUAHAhaIxX0sUWUyfKomefn09CA+aLG+APOcyV3gwrB9xnf
-         S8fQ==
-X-Gm-Message-State: APjAAAWz3Vhnqk8o7FrEcm/X8ACbM58Mfimz/gx+oaW+6sCKRH9XIaTZ
-        NywJbDhOklRP6LQHO5DhqKFwKK12Z+M=
-X-Google-Smtp-Source: APXvYqwA04G2ppjP8w4yxN9UCn7ReOQlW2AxCrp7r38f6ObzSEOHesyMu1XgTZOuROKjFNVeucEGeA==
-X-Received: by 2002:adf:fc0e:: with SMTP id i14mr19495430wrr.302.1568624190317;
-        Mon, 16 Sep 2019 01:56:30 -0700 (PDT)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id y14sm53847507wrd.84.2019.09.16.01.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 01:56:28 -0700 (PDT)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org
-Subject: [PATCH] habanalabs: handle F/W failure for sensor initialization
-Date:   Mon, 16 Sep 2019 11:56:26 +0300
-Message-Id: <20190916085626.1085-1-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 16 Sep 2019 04:56:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:42136 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731442AbfIPI4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:56:48 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 428591000;
+        Mon, 16 Sep 2019 01:56:48 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D9AD3F59C;
+        Mon, 16 Sep 2019 01:56:47 -0700 (PDT)
+Subject: Re: [PATCH] sched/rt: silence double clock update warning by using
+ rq_lock wrappers
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Phil Auld <pauld@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20190815145354.27484-1-pauld@redhat.com>
+ <f094734a-eeae-02db-dd0b-d7fe7e9d5db8@arm.com>
+Message-ID: <f388725d-1725-401f-bb44-9bcc785a124a@arm.com>
+Date:   Mon, 16 Sep 2019 09:56:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <f094734a-eeae-02db-dd0b-d7fe7e9d5db8@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the F/W fails to initialize the thermal sensors, print an
-appropriate error message to kernel log and fail the device
-initialization.
+[Added Steven to Cc]
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/goya/goya.c          | 5 +++++
- drivers/misc/habanalabs/include/hl_boot_if.h | 2 ++
- 2 files changed, 7 insertions(+)
+On 15/08/2019 18:24, Valentin Schneider wrote:
+> On 15/08/2019 15:53, Phil Auld wrote:
+>> With WARN_DOUBLE_CLOCK enabled a false positive warning can occur in rt
+>>
+>>         [] rq->clock_update_flags & RQCF_UPDATED
+>>         [] WARNING: CPU: 6 PID: 21426 at kernel/sched/core.c:225 
+>> 						update_rq_clock+0x90/0x130
+>>           [] Call Trace:
+>>           []  update_rq_clock+0x90/0x130
+>>           []  sched_rt_period_timer+0x11f/0x340
+>>           []  __hrtimer_run_queues+0x100/0x280
+>>           []  hrtimer_interrupt+0x100/0x220
+>>           []  smp_apic_timer_interrupt+0x6a/0x130
+>>           []  apic_timer_interrupt+0xf/0x20
+>>
+>> sched_rt_period_timer does:
+>>                 raw_spin_lock(&rq->lock);
+>>                 update_rq_clock(rq);
+>>
+>> which triggers the warning because of not using the rq_lock wrappers.
+>> So, use the wrappers.
+>>
+>> Signed-off-by: Phil Auld <pauld@redhat.com>
+>> Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Valentin Schneider <valentin.schneider@arm.com>
+>> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> 
+> Looks sane to me, and no missing _irqsave this time around ;)
+> 
+> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> 
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 6fba14b81f90..09caef7642fd 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2328,6 +2328,11 @@ static int goya_init_cpu(struct hl_device *hdev, u32 cpu_timeout)
- 				"ARM status %d - u-boot stopped by user\n",
- 				status);
- 			break;
-+		case CPU_BOOT_STATUS_TS_INIT_FAIL:
-+			dev_err(hdev->dev,
-+				"ARM status %d - Thermal Sensor initialization failed\n",
-+				status);
-+			break;
- 		default:
- 			dev_err(hdev->dev,
- 				"ARM status %d - Invalid status code\n",
-diff --git a/drivers/misc/habanalabs/include/hl_boot_if.h b/drivers/misc/habanalabs/include/hl_boot_if.h
-index 4cd04c090285..2853a2de8cf6 100644
---- a/drivers/misc/habanalabs/include/hl_boot_if.h
-+++ b/drivers/misc/habanalabs/include/hl_boot_if.h
-@@ -20,6 +20,8 @@ enum cpu_boot_status {
- 	CPU_BOOT_STATUS_DRAM_INIT_FAIL,
- 	CPU_BOOT_STATUS_FIT_CORRUPTED,
- 	CPU_BOOT_STATUS_UBOOT_NOT_READY,
-+	CPU_BOOT_STATUS_RESERVED,
-+	CPU_BOOT_STATUS_TS_INIT_FAIL,
- };
- 
- enum kmd_msg {
--- 
-2.17.1
-
+Stumbled on that one while reviewing my inbox, ping?
