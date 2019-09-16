@@ -2,70 +2,92 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FD2C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65709C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82464206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4151F206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfIPJM5 (ORCPT
+        id S1728049AbfIPJO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:12:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34455 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727147AbfIPJMz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:12:55 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i9n3x-0003F5-RD; Mon, 16 Sep 2019 09:12:49 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Lukasz Luba <l.luba@partner.samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Mon, 16 Sep 2019 05:14:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40634 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725985AbfIPJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:14:26 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 79B2B102BB32;
+        Mon, 16 Sep 2019 09:14:26 +0000 (UTC)
+Received: from [10.36.116.33] (ovpn-116-33.ams2.redhat.com [10.36.116.33])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C4B05D6A3;
+        Mon, 16 Sep 2019 09:14:23 +0000 (UTC)
+Subject: Re: [PATCH 0/5] iommu: Implement iommu_put_resv_regions_simple()
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        iommu@lists.linux-foundation.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        David Woodhouse <dwmw2@infradead.org>,
         linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] memory: exynos5422: fix spelling mistake "counld" -> "could"
-Date:   Mon, 16 Sep 2019 10:12:49 +0100
-Message-Id: <20190916091249.31950-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+References: <20190829111752.17513-1-thierry.reding@gmail.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <6254f754-eb37-6b1e-deea-7443d185d49b@redhat.com>
+Date:   Mon, 16 Sep 2019 11:14:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190829111752.17513-1-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 16 Sep 2019 09:14:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Hi Thierry,
 
-There is a spelling mistake in a dev_err message. Fix it.
+On 8/29/19 1:17 PM, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Most IOMMU drivers only need to free the memory allocated for each
+> reserved region. Instead of open-coding the loop to do this in each
+> driver, extract the code into a common function that can be used by
+> all these drivers.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/memory/samsung/exynos5422-dmc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If I am not wrong, all the drivers now use the
+iommu_put_resv_regions_simple helper. So we can wonder if the callback
+is still relevant?
 
-diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
-index 8c2ec29a7d57..ac5f55813900 100644
---- a/drivers/memory/samsung/exynos5422-dmc.c
-+++ b/drivers/memory/samsung/exynos5422-dmc.c
-@@ -1078,7 +1078,7 @@ static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
- 	ret = exynos5_counters_set_event(dmc);
- 	if (ret < 0) {
- 		exynos5_counters_disable_edev(dmc);
--		dev_err(dmc->dev, "counld not set event counter\n");
-+		dev_err(dmc->dev, "could not set event counter\n");
- 		return ret;
- 	}
- 
--- 
-2.20.1
+Thanks
 
+Eric
+> 
+> Thierry
+> 
+> Thierry Reding (5):
+>   iommu: Implement iommu_put_resv_regions_simple()
+>   iommu: arm: Use iommu_put_resv_regions_simple()
+>   iommu: amd: Use iommu_put_resv_regions_simple()
+>   iommu: intel: Use iommu_put_resv_regions_simple()
+>   iommu: virt: Use iommu_put_resv_regions_simple()
+> 
+>  drivers/iommu/amd_iommu.c    | 11 +----------
+>  drivers/iommu/arm-smmu-v3.c  | 11 +----------
+>  drivers/iommu/arm-smmu.c     | 11 +----------
+>  drivers/iommu/intel-iommu.c  | 11 +----------
+>  drivers/iommu/iommu.c        | 19 +++++++++++++++++++
+>  drivers/iommu/virtio-iommu.c | 14 +++-----------
+>  include/linux/iommu.h        |  2 ++
+>  7 files changed, 28 insertions(+), 51 deletions(-)
+> 
