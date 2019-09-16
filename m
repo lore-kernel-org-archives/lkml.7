@@ -2,166 +2,294 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0950C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:10:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0125C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37EC20665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A15C206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:12:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NZlH08CD";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="EPA874AW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JKZZBPDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732972AbfIPUKm (ORCPT
+        id S2391208AbfIPUMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:10:42 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:1322 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730467AbfIPUKm (ORCPT
+        Mon, 16 Sep 2019 16:12:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36331 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730467AbfIPUMb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:10:42 -0400
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id x8GK7r8i011126;
-        Mon, 16 Sep 2019 13:10:31 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=d6lLv4CQcuqPMEg/JaLwRKQ57jFBy6XFkjAvXWBifok=;
- b=NZlH08CD3Q6K2St0eXpyL7Fxm9PpdUaZN/Qp1wATM3goY7w+0s4qVXhgFxIg7h9EzMZV
- UdzVulphtFVHISNzQg1yZj0PqC3oe4ggud9glZ9CYIpkLyVVdJLJEVOZxXFSuwPDzde4
- Hf+NO+qBLZpdBx0Qpjd1MiLg5Ef81jZcHBA= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0001303.ppops.net with ESMTP id 2v21jpbjxu-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 13:10:31 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 16 Sep 2019 13:10:26 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 16 Sep 2019 13:10:26 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dR7Hu1xzT15EapEX0Zy/JCy+HkFvvIvL5Hr56wSPc9r00DoP800d6qUbbdb50ZHP2FUB5jJBMlSFPFVUOUTaU6p+HWYOe9Dwcw5IES3asN6mPn3h15AH9N9dezr4Nlc9JzK90uXlNURzD1+uO0NqRjxN1A1b2GN8uvvQctevHASpcCZiINnSR6M4FQFv4xzHteoB0MYMRqX/7OJPis0X0AhIgOwYy47CTwTFOGNh7a5NW2f2jkZ2pQ2Thpzikg2vEFgwWeRmXP4R7K0XXhIAn0nn4X2M8HO3bokhwcARxPWM9gfsXX9gJIkM+dBCv7DgT6o3yMRQ3rlfC9/Wo9Va3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d6lLv4CQcuqPMEg/JaLwRKQ57jFBy6XFkjAvXWBifok=;
- b=YETY8p5lJE+GWz4JCC1Xv95Isbi2l45r4bOEWeRSlJWnlBdxeMrhed5N9b6NZkXk0DJ3+p++svzPOkdLOKVFyW44OWUYh1JOq3yv8VWCO1WwV5MwPFcNs8xqXVkPU+5DcuvtUfbLYWTsLGZ0XzKYAUm3LDehJ+bCdnZj3fCttXxS0kRMNhoROnl7MANcKWxyVKs4ZNgaQdXifCd6sqXAJWjp3sDeUhuMj+jMcgpyEHofwTmv7WSnPpHyMTwUv2oM9R9NeqqR3lIqF3WniVzvnuVKBGbkcQYhoPklR90Wh57iGXvfiD3FH177RShnPDkUXwQgsCTm1R3hjpbx9+GhZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d6lLv4CQcuqPMEg/JaLwRKQ57jFBy6XFkjAvXWBifok=;
- b=EPA874AW2+560Vu3BQ7/CYt+hsxf+pNbhiYqr0Bl1z1zCKeTpPFYUnop9i6GuHb2OAAiiGCh+vSGahr1uB91m4qWE6gv4ZSPi4EqNopYed2PPhPCwNRXeXq1tSdzzPfO6X5CtfYljNGpQNa9rYMU0I3rnfPogU2922DSJH8orr0=
-Received: from BYAPR15MB2968.namprd15.prod.outlook.com (20.178.237.149) by
- BYAPR15MB3511.namprd15.prod.outlook.com (20.179.59.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.15; Mon, 16 Sep 2019 20:10:24 +0000
-Received: from BYAPR15MB2968.namprd15.prod.outlook.com
- ([fe80::ed08:6100:33b6:520a]) by BYAPR15MB2968.namprd15.prod.outlook.com
- ([fe80::ed08:6100:33b6:520a%4]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 20:10:24 +0000
-From:   Hechao Li <hechaol@fb.com>
-To:     Song Liu <songliubraving@fb.com>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kernel Team <Kernel-team@fb.com>, Jie Meng <jmeng@fb.com>
-Subject: Re: [PATCH] perf: rework memory accounting in perf_mmap()
-Thread-Topic: [PATCH] perf: rework memory accounting in perf_mmap()
-Thread-Index: AQHVY2o7Cb55MgzW70CjSsVfOs8326cuxyMAgAAHkYA=
-Date:   Mon, 16 Sep 2019 20:10:24 +0000
-Message-ID: <20190916201021.GA99598@hechaol-mbp.dhcp.thefacebook.com>
-References: <20190904214618.3795672-1-songliubraving@fb.com>
- <D0AB9FA0-B99D-4BE4-82FF-E3098EFFB208@fb.com>
-In-Reply-To: <D0AB9FA0-B99D-4BE4-82FF-E3098EFFB208@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO1PR15CA0043.namprd15.prod.outlook.com
- (2603:10b6:101:1f::11) To BYAPR15MB2968.namprd15.prod.outlook.com
- (2603:10b6:a03:f8::21)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:85fc]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 53b6c5c6-19d2-4550-beec-08d73ae1e8c2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR15MB3511;
-x-ms-traffictypediagnostic: BYAPR15MB3511:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB351129FB5D4B86D81DBFDEF7D58C0@BYAPR15MB3511.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1824;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(199004)(189003)(4326008)(476003)(5660300002)(4744005)(2906002)(486006)(6512007)(9686003)(76176011)(1076003)(64756008)(66556008)(66476007)(66946007)(52116002)(81156014)(8676002)(66446008)(6436002)(46003)(33656002)(498600001)(14454004)(86362001)(446003)(11346002)(229853002)(81166006)(6862004)(71190400001)(71200400001)(25786009)(6486002)(6246003)(53936002)(6116002)(14444005)(6636002)(8936002)(54906003)(99286004)(6506007)(7736002)(386003)(305945005)(53546011)(186003)(102836004)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3511;H:BYAPR15MB2968.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FTYIWHARKB+vZsyR/GPZKWdR4Zk5G7kMPW7uLEKWXqS9mtCTShGc6Hea6wgEOQBcsBrtIjhbvnTNl67Y1DUVJ1PmRpzc1VFZy++T67cqFiyw8bUwZSFn62BZUfILmnTF5T0rZLWLd+HDzdJj8jF+N9yeS6R7MEF8uaxosN6BFxTKV1HiQVIt0wst1mTbviu/N8SZl2sdfKb3qJ9fF/oxdpok/yxktDYoitr+j5bTLrUUpalTe1WxgO34TG0BNwtF8HPlXM/cuM+FDQXI/uw8GiLrlv0SkSoeknysRghZ2vZ6fLxfQVjWjrPDiJ6cQ1cJ7NvF0SSQk3tlcnfR3aZsWTVUiOJpmIWjBuRD+jYcErpg88cwH7PpfzOi+n3+RPTSlufPipFt66dXPdGecpfFGFfUo9tcAFPcGyeEHJ+K0v4=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C96D1D8D35690F4E9135B643F356DB68@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Sep 2019 16:12:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so2134142iof.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:12:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jMVNjeBZw+QRHXeQxTsoZGkawOBNhDNZJD6T/U9OKGY=;
+        b=JKZZBPDii2pzJHp6/gEpe7cIlYQTO6uK5sWwyHK0SjtY4w9Fj1GbLoo0AmBWIOpEsx
+         Qhdz57y2nB4rWTyYm4DhiVNu87ca+TnFxnOOosew33QCztwLCl/7yCLsN66V70Qsjfh0
+         UGa0w9hySXYgybR21jRu4DeNTBspRiZZU2XFk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jMVNjeBZw+QRHXeQxTsoZGkawOBNhDNZJD6T/U9OKGY=;
+        b=V3c3qAxahL0im7OFX+uhqwhwgbYCGqUwHD0eqsrCZyynKvscWLM5dKgDGidiDRJXRY
+         2Rww2+raoW5FDX3KNUocYG3QI2YeVCmjasRkT5BrcvtBBoww2koiKNkAgUT6a7ViI6D8
+         piO6fmH1e7KwLMiHxRf/fMwtT1T0Hbmt1rMlR5JbCNIa/T1CJt1mJiwelJ0j729znqJD
+         YhEx7EEZU+YzaXbOLb+Z1XgeaQ0+5nqrxIRy81+TWrMOFNzOnbirFXvDD8wxtoRrI0us
+         d0Q+OM3Xe1iRZRk8tHWiaPG2vcrEDJ1CUNh35CjKPA5xyuFDQVE7JdoxpTzgnfsgxD27
+         3Ofg==
+X-Gm-Message-State: APjAAAXA1gRMQPCDsZNSSBaIhTo8m/MwbmuouT4WAZ1HLP45upRaANxY
+        V7h0jMii3HrMVeqGnp/kYiY1uQ==
+X-Google-Smtp-Source: APXvYqwZD2sPLEaEH9epQfK2+ZohJh3Zw+fyP6e9BNym/JD/Aj9Wp0xuH1s3S284pa46PqyUtuTduA==
+X-Received: by 2002:a02:8502:: with SMTP id g2mr1998511jai.87.1568664748092;
+        Mon, 16 Sep 2019 13:12:28 -0700 (PDT)
+Received: from ddavenport4.bld.corp.google.com ([2620:15c:183:0:92f:a80a:519d:f777])
+        by smtp.gmail.com with ESMTPSA id s201sm69359922ios.83.2019.09.16.13.12.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 13:12:27 -0700 (PDT)
+From:   Drew Davenport <ddavenport@chromium.org>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Drew Davenport <ddavenport@chromium.org>,
+        Sean Paul <sean@poorly.run>, linux-kernel@vger.kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Clark <robdclark@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm@vger.kernel.org,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Enrico Weigelt <info@metux.net>,
+        Bruce Wang <bzwang@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/msm: Remove unused function arguments
+Date:   Mon, 16 Sep 2019 14:11:54 -0600
+Message-Id: <20190916201154.212465-1-ddavenport@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 53b6c5c6-19d2-4550-beec-08d73ae1e8c2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 20:10:24.6372
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bJPhf5xcqQiyv1NK43FI3QxgDyYPL73uycAjFPlVqpLrtVQCi2WjKzbIpLjaEsCU
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3511
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-16_07:2019-09-11,2019-09-16 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 phishscore=0
- malwarescore=0 mlxscore=0 suspectscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 clxscore=1011 spamscore=0 lowpriorityscore=0
- mlxlogscore=999 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909160197
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Song Liu <songliubraving@fb.com> wrote on Mon [2019-Sep-16 12:43:16 -0700]:
-> Hi Peter,
->=20
-> > On Sep 4, 2019, at 2:46 PM, Song Liu <songliubraving@fb.com> wrote:
-> >=20
-> > perf_mmap() always increases user->locked_vm. As a result, "extra" coul=
-d
-> > grow bigger than "user_extra", which doesn't make sense. Here is an
-> > example case:
-> >=20
-> > Note: Assume "user_lock_limit" is very small.
-> > | # of perf_mmap calls |vma->vm_mm->pinned_vm|user->locked_vm|
-> > | 0                    | 0                   | 0             |
-> > | 1                    | user_extra          | user_extra    |
-> > | 2                    | 3 * user_extra      | 2 * user_extra|
-> > | 3                    | 6 * user_extra      | 3 * user_extra|
-> > | 4                    | 10 * user_extra     | 4 * user_extra|
-> >=20
-> > Fix this by maintaining proper user_extra and extra.
-> >=20
-> > Reported-by: Hechao Li <hechaol@fb.com>
-> > Cc: Jie Meng <jmeng@fb.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Song Liu <songliubraving@fb.com>
->=20
-> Could you please share your feedbacks/comments on this one?
->=20
-> Thanks,
-> Song
+The arguments related to IOMMU port name have been unused since
+commit 944fc36c31ed ("drm/msm: use upstream iommu") and can be removed.
 
-The change looks good to me. Thanks, Song.
+Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+---
+Rob, in the original commit the port name stuff was left intentionally.
+Would it be alright to remove it now?
 
-Reviewed-By: Hechao Li <hechaol@fb.com>
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 10 ++--------
+ drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 10 ++--------
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 10 ++--------
+ drivers/gpu/drm/msm/msm_gpu.c            |  5 ++---
+ drivers/gpu/drm/msm/msm_gpummu.c         |  6 ++----
+ drivers/gpu/drm/msm/msm_iommu.c          |  6 ++----
+ drivers/gpu/drm/msm/msm_mmu.h            |  4 ++--
+ 7 files changed, 14 insertions(+), 37 deletions(-)
 
-Hechao
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 58b0485dc375..3165c2db2541 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -30,10 +30,6 @@
+ #define CREATE_TRACE_POINTS
+ #include "dpu_trace.h"
+ 
+-static const char * const iommu_ports[] = {
+-		"mdp_0",
+-};
+-
+ /*
+  * To enable overall DRM driver logging
+  * # echo 0x2 > /sys/module/drm/parameters/debug
+@@ -725,8 +721,7 @@ static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
+ 
+ 	mmu = dpu_kms->base.aspace->mmu;
+ 
+-	mmu->funcs->detach(mmu, (const char **)iommu_ports,
+-			ARRAY_SIZE(iommu_ports));
++	mmu->funcs->detach(mmu);
+ 	msm_gem_address_space_put(dpu_kms->base.aspace);
+ 
+ 	dpu_kms->base.aspace = NULL;
+@@ -752,8 +747,7 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
+ 		return PTR_ERR(aspace);
+ 	}
+ 
+-	ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+-			ARRAY_SIZE(iommu_ports));
++	ret = aspace->mmu->funcs->attach(aspace->mmu);
+ 	if (ret) {
+ 		DPU_ERROR("failed to attach iommu %d\n", ret);
+ 		msm_gem_address_space_put(aspace);
+diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+index 50711ccc8691..dda05436f716 100644
+--- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
+@@ -157,10 +157,6 @@ static long mdp4_round_pixclk(struct msm_kms *kms, unsigned long rate,
+ 	}
+ }
+ 
+-static const char * const iommu_ports[] = {
+-	"mdp_port0_cb0", "mdp_port1_cb0",
+-};
+-
+ static void mdp4_destroy(struct msm_kms *kms)
+ {
+ 	struct mdp4_kms *mdp4_kms = to_mdp4_kms(to_mdp_kms(kms));
+@@ -172,8 +168,7 @@ static void mdp4_destroy(struct msm_kms *kms)
+ 	drm_gem_object_put_unlocked(mdp4_kms->blank_cursor_bo);
+ 
+ 	if (aspace) {
+-		aspace->mmu->funcs->detach(aspace->mmu,
+-				iommu_ports, ARRAY_SIZE(iommu_ports));
++		aspace->mmu->funcs->detach(aspace->mmu);
+ 		msm_gem_address_space_put(aspace);
+ 	}
+ 
+@@ -524,8 +519,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
+ 
+ 		kms->aspace = aspace;
+ 
+-		ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+-				ARRAY_SIZE(iommu_ports));
++		ret = aspace->mmu->funcs->attach(aspace->mmu);
+ 		if (ret)
+ 			goto fail;
+ 	} else {
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+index 91cd76a2bab1..f8bd0bfcf4b0 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+@@ -19,10 +19,6 @@
+ #include "msm_mmu.h"
+ #include "mdp5_kms.h"
+ 
+-static const char *iommu_ports[] = {
+-		"mdp_0",
+-};
+-
+ static int mdp5_hw_init(struct msm_kms *kms)
+ {
+ 	struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
+@@ -233,8 +229,7 @@ static void mdp5_kms_destroy(struct msm_kms *kms)
+ 		mdp5_pipe_destroy(mdp5_kms->hwpipes[i]);
+ 
+ 	if (aspace) {
+-		aspace->mmu->funcs->detach(aspace->mmu,
+-				iommu_ports, ARRAY_SIZE(iommu_ports));
++		aspace->mmu->funcs->detach(aspace->mmu);
+ 		msm_gem_address_space_put(aspace);
+ 	}
+ }
+@@ -737,8 +732,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
+ 
+ 		kms->aspace = aspace;
+ 
+-		ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
+-				ARRAY_SIZE(iommu_ports));
++		ret = aspace->mmu->funcs->attach(aspace->mmu);
+ 		if (ret) {
+ 			DRM_DEV_ERROR(&pdev->dev, "failed to attach iommu: %d\n",
+ 				ret);
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a052364a5d74..122199af0381 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -838,7 +838,7 @@ msm_gpu_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev,
+ 		return ERR_CAST(aspace);
+ 	}
+ 
+-	ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
++	ret = aspace->mmu->funcs->attach(aspace->mmu);
+ 	if (ret) {
+ 		msm_gem_address_space_put(aspace);
+ 		return ERR_PTR(ret);
+@@ -995,8 +995,7 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
+ 	msm_gem_kernel_put(gpu->memptrs_bo, gpu->aspace, false);
+ 
+ 	if (!IS_ERR_OR_NULL(gpu->aspace)) {
+-		gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu,
+-			NULL, 0);
++		gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu);
+ 		msm_gem_address_space_put(gpu->aspace);
+ 	}
+ }
+diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
+index 34f643a0c28a..34980d8eb7ad 100644
+--- a/drivers/gpu/drm/msm/msm_gpummu.c
++++ b/drivers/gpu/drm/msm/msm_gpummu.c
+@@ -21,14 +21,12 @@ struct msm_gpummu {
+ #define GPUMMU_PAGE_SIZE SZ_4K
+ #define TABLE_SIZE (sizeof(uint32_t) * GPUMMU_VA_RANGE / GPUMMU_PAGE_SIZE)
+ 
+-static int msm_gpummu_attach(struct msm_mmu *mmu, const char * const *names,
+-		int cnt)
++static int msm_gpummu_attach(struct msm_mmu *mmu)
+ {
+ 	return 0;
+ }
+ 
+-static void msm_gpummu_detach(struct msm_mmu *mmu, const char * const *names,
+-		int cnt)
++static void msm_gpummu_detach(struct msm_mmu *mmu)
+ {
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+index 8c95c31e2b12..ad58cfe5998e 100644
+--- a/drivers/gpu/drm/msm/msm_iommu.c
++++ b/drivers/gpu/drm/msm/msm_iommu.c
+@@ -23,16 +23,14 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
+ 	return 0;
+ }
+ 
+-static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
+-			    int cnt)
++static int msm_iommu_attach(struct msm_mmu *mmu)
+ {
+ 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 
+ 	return iommu_attach_device(iommu->domain, mmu->dev);
+ }
+ 
+-static void msm_iommu_detach(struct msm_mmu *mmu, const char * const *names,
+-			     int cnt)
++static void msm_iommu_detach(struct msm_mmu *mmu)
+ {
+ 	struct msm_iommu *iommu = to_msm_iommu(mmu);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
+index 871d56303697..67a623f14319 100644
+--- a/drivers/gpu/drm/msm/msm_mmu.h
++++ b/drivers/gpu/drm/msm/msm_mmu.h
+@@ -10,8 +10,8 @@
+ #include <linux/iommu.h>
+ 
+ struct msm_mmu_funcs {
+-	int (*attach)(struct msm_mmu *mmu, const char * const *names, int cnt);
+-	void (*detach)(struct msm_mmu *mmu, const char * const *names, int cnt);
++	int (*attach)(struct msm_mmu *mmu);
++	void (*detach)(struct msm_mmu *mmu);
+ 	int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *sgt,
+ 			unsigned len, int prot);
+ 	int (*unmap)(struct msm_mmu *mmu, uint64_t iova, unsigned len);
+-- 
+2.20.1
+
