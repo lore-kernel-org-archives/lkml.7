@@ -2,107 +2,130 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4438AC4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:49:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D5E206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568602013;
-	bh=QAv1wrwDejkDmV91NQY2X7M054/YqXAPK4RMZ0u7rgY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=y/76Zr8FKCiNISnNpeUMPI0BC/aLivMa3t+iLQVAPx8xL+SJtgaGNRxB3YMMzIiQ6
-	 2a6g7LFSbP5FJ518C18M02H8u2104/XnbRLbiWRhtkj1tuKHLG8JDiqOZPDV/elP4L
-	 INTi2RUT9Jn2itsU6IShXvLvniSpIVnBo1aYRmyE=
+	by mail.kernel.org (Postfix) with ESMTP id C3E49206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:49:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfIPCqw (ORCPT
+        id S1727492AbfIPCti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 22:46:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52792 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfIPCqv (ORCPT
+        Sun, 15 Sep 2019 22:49:38 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36611 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727373AbfIPCth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 22:46:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6k+3CRYWLn1opUvIFHPqpUXKKfTT7JXNt22zBeg1anQ=; b=dn6b/L2Idtj4qHBzYq518fUyd
-        +bA0FUi34EqVEv54VCdHAXCjqAayMk3btTdPNVr/S2V4ckQnOJGYygBJIcr9d/XcpPnZjGpY423N1
-        4lNqvksTQCoiUmVTkV/zBfwHC62LOfDoX89G/SRvs97SAZO6pCWTkI9jrnB/kdsrE4Mxc=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9h2K-0002Gs-WC; Mon, 16 Sep 2019 02:46:45 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id CD49F2741587; Mon, 16 Sep 2019 03:46:43 +0100 (BST)
-Date:   Mon, 16 Sep 2019 03:46:43 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the akpm-current tree with the
- dma-mapping tree
-Message-ID: <20190916024643.GV4352@sirena.co.uk>
+        Sun, 15 Sep 2019 22:49:37 -0400
+Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8G2n5mh000962
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sun, 15 Sep 2019 22:49:06 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id A349E420811; Sun, 15 Sep 2019 22:49:04 -0400 (EDT)
+Date:   Sun, 15 Sep 2019 22:49:04 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Vito Caputo <vcaputo@pengaru.com>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190916024904.GA22035@mit.edu>
+References: <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914150206.GA2270@darwi-home-pc>
+ <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
+ <20190915065142.GA29681@gardel-login>
+ <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
+ <20190916014050.GA7002@darwi-home-pc>
+ <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NBQMqqtZQBFxm+aD"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
+In-Reply-To: <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Sep 15, 2019 at 06:48:34PM -0700, Vito Caputo wrote:
+> > A small note here, especially after I've just read the commit log of
+> > 72dbcf721566 ('Revert ext4: "make __ext4_get_inode_loc plug"'), which
+> > unfairly blames systemd there.
+    ...
+> > What blocked the system boot was GDM/gnome-session implicitly calling
+> > getrandom() for the Xorg MIT cookie. This was shown in the strace log
+> > below:
+> > 
+> >    https://lkml.kernel.org/r/20190910173243.GA3992@darwi-home-pc
 
---NBQMqqtZQBFxm+aD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that's correct, this isn't really systemd's fault.  It's a
+combination of GDM/gnome-session stupidly using MIT Magic Cookie at
+*all* (it was a bad idea 30 years ago, and it's a bad idea in 2019),
+GDM/gnome-session using getrandom(2) at all; it should have just stuck
+with /dev/urandom, or heck just used random_r(3) since when we're
+talking about MIT Magic Cookie, there's no real security *anyway*.
 
-Hi all,
+It's also a combination of the hardware used by this particular user,
+the init scripts in use that were probably not generating enough read
+requests compared to other distributions (ironically, distributions
+and init systems that try the hardest to accelerate the boot make this
+problem worse by reducing the entropy that can be harvested from I/O).
+And then when we optimzied ext4 so it would be more efficient, that
+tipped this particular user over the edge.
 
-Today's linux-next merge of the akpm-current tree got a conflict in:
+Linus might not have liked my proposal to disable the optimization if
+the CRNG isn't optimized, but ultimately this problem *has* gotten
+worse because we've optimized things more.  So to the extent that
+systemd has made systems boot faster, you could call that systemd's
+"fault" --- just as Linus reverting ext4's performance optimization is
+ssaying that it's ext4 "fault" because we had the temerity to try to
+make the file system be more efficient, and hence, reduce entropy that
+can be collected.
 
-  arch/arm/include/asm/xen/page-coherent.h
 
-between commits:
+Ultimately, though, the person who touches this last is whose "fault"
+it is.  And the problem is because it really is a no-win situation
+here.  No matter *what* we do, it's going to either (a) make some
+systems insecure, or (b) make some systems more likely hang while
+booting.  Whether you consider the risk of (a) or (b) to be worse is
+ultimately going to cause you to say that people of the contrary
+opinion are either "being reckless with system security", or
+"incompetent at system design".
 
-  bef4d2037d2143a ("xen/arm: consolidate page-coherent.h")
-  60d8cd572f655aa ("arm64/xen: fix xen-swiotlb cache flushing")
+And really, it's all going to depend on how the Linux kernel is being
+used.  The fact that Linux is being used in IOT devices, mobile
+handsets, desktops, servers running in VM's, user desktops, etc.,
+means that there will be some situations where blocking is going to be
+terrible, and some situations where a failure to provide system
+security could result in risking someone's life, health, or mission
+failure in some critical system.
 
-=66rom the dma-mapping tree and commit:
+That's why this discussion can easily get toxic.  If you are only
+focusing on one part of Linux market, then obviously *you* are the
+only sane one, and everyone *else* who disagrees with you must be
+incompetent.  When, perhaps, they may simply be focusing on a
+different part of the ecosystem where Linux is used.
 
-  46d5fa030cd9225 ("mm: introduce compound_nr()")
+> So did systemd-random-seed instead drain what little entropy there was
+> before GDM started, increasing the likelihood a subsequent getrandom()
+> call would block?
 
-=66rom the akpm-current tree.  The former appear to make the latter
-redundant so I resolved by dropping the relevant portions of the
-commit from the akpm tree.
+No.  Getrandom(2) uses the new CRNG, which is either initialized, or
+it's not.  Once it's initialized, it won't block again ever.
 
---NBQMqqtZQBFxm+aD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+95IACgkQJNaLcl1U
-h9AHygf+KVMji6+ph63ldaWsuCuu9YbY9E3LMpIZZIQASzXPfpFUEUhc+PCbW+Hq
-6xAJpovc/53ivp77IGIpAr93issgebNNnGqPVNig3erTbl/AXo/9EppWGRl4YIs/
-YYUFcj8V7x128ZkPSraUh/O7ZbFxf+NTxkFjTOBQaNqzRGmrjhviPxQ04mKb5E+R
-IDZzgCCBktMzEH7G7nWpTGOMD8rSqWqhLEWDutK0PEPCYuNj9R9a0yyA+vwFLuIU
-UnwuU7hP6D0IDPt6+fjZKG+0G5wsmXGOmo1snMJawGFUcKVDX3QGsP1Tz/TQDdz5
-hNIkfwwHqWHnVSoWp0x4UMR8qC8EHg==
-=ZZK4
------END PGP SIGNATURE-----
-
---NBQMqqtZQBFxm+aD--
+     	   	     		     	   - Ted
