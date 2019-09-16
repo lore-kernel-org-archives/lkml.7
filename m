@@ -4,116 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C69C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:08:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ECAC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 469FB214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:08:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568653686;
-	bh=ZMyAyLAYsoa3qVfWHM7UVHAKR27uDdfrx5GN9gLS/z4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=m0k9DlL6aSbtOW9hC4HJWy+gEcTcxU37vepEhBDZGFuuHWKePCmU5iGzJnB/r1J8J
-	 H7A+oNzJ9AM0NBeiZY1iopYAFuYveJa5ss0xD3p5q8IdSd3sTWalRNT3j+i7M8Z8kG
-	 7tMTqxoZkVu+Mpze3Q1/UuIefZYyuiZb3JZGrfdg=
+	by mail.kernel.org (Postfix) with ESMTP id A0F95214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:09:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rMOFMhCl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390298AbfIPRHw (ORCPT
+        id S1732620AbfIPRI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:07:52 -0400
-Received: from mail-lj1-f175.google.com ([209.85.208.175]:38327 "EHLO
-        mail-lj1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390277AbfIPRHv (ORCPT
+        Mon, 16 Sep 2019 13:08:59 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:47196 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727987AbfIPRI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:07:51 -0400
-Received: by mail-lj1-f175.google.com with SMTP id y23so670912ljn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mhXl70av4EvOTbL0RRXS4SdgE4V4WRtYtcKsjJL619g=;
-        b=Fs3ihW1d0/7OhSFVjmMcwT0WBaV23WDO7f0r7V2eN5ewaGmCnHtgRxJ+CpdhycMKWW
-         rP4+Xi9hy0A30CcOwQKaYl7GEfN4Xr6h3g3ESaYI871rAs2uhfnN/bND0hOZVHWDEA6y
-         f3Qrk6EBNA9PfhZV/b9JMfp5fSM0rIwDkmdKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mhXl70av4EvOTbL0RRXS4SdgE4V4WRtYtcKsjJL619g=;
-        b=kPbD4JvwwiE7Vw34dFvuV0TzgRE0vmZF3WIY+gaY+V1c2Fsg18Q4YWHXNp47RSoQim
-         Csedknntietn1YYHmNGPPt3A7o2mhPyLuECGlYdJ+hp+cG3a76jWhuLhwf5lS9/JnIHT
-         T0JYLc/jrKKIcdjedKSj8Gm1zUydBXPtEBjtReNKqR6AU2/46oX5f914I6z42mT6LeVx
-         1/X9EUHKFu2kJMRB20/wFk0SHwL5IxpP2eTSiY+yc5KA28yQBo0tFyXYs3/NjoITLW14
-         e3x25fH7+UReXo4p0jssHkn3kb62yEeztQhxPBj+qwR8AeG4WM8WDVjTQMa0U+xY1wp3
-         r1pA==
-X-Gm-Message-State: APjAAAU17aNqvI1ixZ6HRyomITLk05Wq9U2xDHoMeAddn1w45o72lLy4
-        MmCMwy6idZSvoSh2+zmgnRCuF6sOj7g=
-X-Google-Smtp-Source: APXvYqx0jq6cec5vfIrpCo20PyJTsyvPKacMKBDoQ8p/V/ZvxEHPsIRtyO9qrJURngEm3y1HPvTFpw==
-X-Received: by 2002:a2e:9e8f:: with SMTP id f15mr341126ljk.212.1568653667752;
-        Mon, 16 Sep 2019 10:07:47 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id m25sm8296842ljg.35.2019.09.16.10.07.44
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id c22so678439ljj.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
-X-Received: by 2002:a2e:2c02:: with SMTP id s2mr383093ljs.156.1568653664082;
- Mon, 16 Sep 2019 10:07:44 -0700 (PDT)
+        Mon, 16 Sep 2019 13:08:59 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GH4P1W001292;
+        Mon, 16 Sep 2019 17:08:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=+CZoGIQCmtw4Dmg5SfXe3o0NnRs6559XxydCd+jVXQ8=;
+ b=rMOFMhClnL2bIb+8Nz8OOxOVySEHQDVF7v5WrTP6O4DOPNid6vSs20yqRmykr5Gz5S6r
+ kEQ5I/e5q2a4124rN0SL0FLm7yDDepFxrRU5MeEjRmyTvMjBM3shn8py2/utRNjBM04Q
+ QeEE+SNMHy4EAv9/Di9znLR20SBcE56LvHiTeEyHCODmUGR8tEUUVaP0zsRWHlTbV+gu
+ Lz9yFjcsQfR1LsSgw1fOIqsIxFKcLEhKZLwHYZdhrW7OkRyqO27JQWpZB9oAS5pFCM04
+ X1akAgK9WEOHgAUqMW4IfDbFQBSvsi0g60nm6MJvt/dq09kWrKwqQzSp7DxhKqVSvqTa xg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v0ruqgv7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 17:08:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GH4QLn087910;
+        Mon, 16 Sep 2019 17:08:54 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2v0nb51tta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 17:08:54 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8GH8qL5007286;
+        Mon, 16 Sep 2019 17:08:53 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Sep 2019 10:08:52 -0700
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS: Maintainer Entry Profile
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+        <20190911184332.GL20699@kadam>
+        <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+        <yq1y2yrdg6w.fsf@oracle.com> <20190916070101.GE18977@kadam>
+Date:   Mon, 16 Sep 2019 13:08:45 -0400
+In-Reply-To: <20190916070101.GE18977@kadam> (Dan Carpenter's message of "Mon,
+        16 Sep 2019 10:01:01 +0300")
+Message-ID: <yq1blvkb23m.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-References: <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com> <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
- <20190915065655.GB29681@gardel-login> <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
- <20190916032327.GB22035@mit.edu> <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
- <20190916170028.GA15263@mit.edu>
-In-Reply-To: <20190916170028.GA15263@mit.edu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 10:07:27 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiHNtmCAWGWmUn7LYnwGWdNvDavhzBdNdeeTnP4Wkk3gg@mail.gmail.com>
-Message-ID: <CAHk-=wiHNtmCAWGWmUn7LYnwGWdNvDavhzBdNdeeTnP4Wkk3gg@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909160169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909160169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:00 AM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+
+Dan,
+
+>> One pet peeve I have is that people are pretty bad at indicating the
+>> intended target tree. I often ask for it in private mail but the
+>> practice doesn't seem to stick. I spend a ton of time guessing whether a
+>> patch is a fix for a new feature in the x+1 queue or a fix for the
+>> current release. It is not always obvious.
 >
-> How /dev/random blocks is very different from how getrandom(2) blocks.
-> Getrandom(2) blocks until the CRNG, and then it never blocks again.
+> The Fixes tag doesn't help?
 
-Yes and no.
+Always.
 
-getrandom() very much blocks exactly like /dev/random, when you give
-it the GRND_RANDOM flag.
+> Of course, you've never asked me or anyone on kernel-newbies that
+> question.  We don't normally know the answer either.  I do always try
+> to figure it out for networking, but it's kind of a pain in the butt
+> and I mess up surpisingly often for how much effort I put into getting
+> it right.
 
-Which is completely broken, and was already known to be broken. So
-that flag is just plain stupid.
+It's not a big issue for your patches. These are inevitably fixes and
+I'll pick an appropriate tree depending on where we are in the cycle,
+how likely one is to hit the issue, whether the driver is widely used,
+etc.
 
-And getrandom() does *not* block like /dev/urandom does (ie not at
-all), which was actually useful, and very widely used.
+Vendor driver submissions, however, are generally huge. Sometimes 50+
+patches per submission window. And during this window I often get on the
+order of 10 to 20 patches for the same driver in the fixes tree. It is
+not always easy to determine whether a bug fix series is for one tree or
+the other.
 
-So you really have the worst of both worlds.
-
-Yes, getrandom(0) does what /dev/random _should_ have done, and what
-getrandom(GRND_RANDOM) should be but isn't.
-
-But by making the choice it did, we now have three useless flag
-combinations, and we lack one people _want_ and need.
-
-And this design mistake very much caused the particular bug we are now hitting.
-
-                  Linus
+-- 
+Martin K. Petersen	Oracle Linux Engineering
