@@ -6,96 +6,254 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D53C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C8FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D953820830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:30:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8B220830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388659AbfIPOa3 (ORCPT
+        id S2388683AbfIPObs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:30:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46433 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388633AbfIPOa2 (ORCPT
+        Mon, 16 Sep 2019 10:31:48 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:44705 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388666AbfIPObs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:30:28 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1i9s1K-0003g6-HX; Mon, 16 Sep 2019 16:30:26 +0200
-Message-ID: <fcc6e54f56089d2204ca9aff79ac769a62b3adcb.camel@pengutronix.de>
-Subject: Re: [PATCH 4/4] dmaengine: imx-sdma: drop redundant variable
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-serial@vger.kernel.org, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, jslaby@suse.com, vkoul@kernel.org,
-        linux-imx@nxp.com, kernel@pengutronix.de,
-        gregkh@linuxfoundation.org, dmaengine@vger.kernel.org,
-        dan.j.williams@intel.com, festevam@gmail.com,
-        linux-arm-kernel@lists.infradead.org
-Date:   Mon, 16 Sep 2019 16:30:25 +0200
-In-Reply-To: <20190911144943.21554-5-philipp.puschmann@emlix.com>
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
-         <20190911144943.21554-5-philipp.puschmann@emlix.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 16 Sep 2019 10:31:48 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i9s2a-0007wn-L6; Mon, 16 Sep 2019 08:31:44 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1i9s2W-0008LR-Nc; Mon, 16 Sep 2019 08:31:44 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     kstewart@linuxfoundation.org, gustavo@embeddedor.com,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>, linux-mm@kvack.org,
+        sakari.ailus@linux.intel.com, bhelgaas@google.com,
+        tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+References: <1567171877-101949-1-git-send-email-jingxiangfeng@huawei.com>
+        <20190830133522.GZ13294@shell.armlinux.org.uk>
+        <87d0gmwi73.fsf@x220.int.ebiederm.org>
+        <20190830203052.GG13294@shell.armlinux.org.uk>
+        <87y2zav01z.fsf@x220.int.ebiederm.org>
+        <20190830222906.GH13294@shell.armlinux.org.uk>
+        <87mufmioqv.fsf@x220.int.ebiederm.org>
+        <20190906151759.GM13294@shell.armlinux.org.uk>
+        <20190915183416.GF25745@shell.armlinux.org.uk>
+Date:   Mon, 16 Sep 2019 09:31:20 -0500
+In-Reply-To: <20190915183416.GF25745@shell.armlinux.org.uk> (Russell King's
+        message of "Sun, 15 Sep 2019 19:34:17 +0100")
+Message-ID: <87pnk09utj.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain
+X-XM-SPF: eid=1i9s2W-0008LR-Nc;;;mid=<87pnk09utj.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/1FBeXbdxe/EgVxqKW7BQr0CbwMPFJQgQ=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] arm: fix page faults in do_alignment
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mi, 2019-09-11 at 16:49 +0200, Philipp Puschmann wrote:
-> In sdma_prep_dma_cyclic buf is redundant. Drop it.
-> 
-> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
+Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
 
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> On Fri, Sep 06, 2019 at 04:17:59PM +0100, Russell King - ARM Linux admin wrote:
+>> On Mon, Sep 02, 2019 at 12:36:56PM -0500, Eric W. Biederman wrote:
+>> > Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+>> > 
+>> > > On Fri, Aug 30, 2019 at 04:02:48PM -0500, Eric W. Biederman wrote:
+>> > >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+>> > >> 
+>> > >> > On Fri, Aug 30, 2019 at 02:45:36PM -0500, Eric W. Biederman wrote:
+>> > >> >> Russell King - ARM Linux admin <linux@armlinux.org.uk> writes:
+>> > >> >> 
+>> > >> >> > On Fri, Aug 30, 2019 at 09:31:17PM +0800, Jing Xiangfeng wrote:
+>> > >> >> >> The function do_alignment can handle misaligned address for user and
+>> > >> >> >> kernel space. If it is a userspace access, do_alignment may fail on
+>> > >> >> >> a low-memory situation, because page faults are disabled in
+>> > >> >> >> probe_kernel_address.
+>> > >> >> >> 
+>> > >> >> >> Fix this by using __copy_from_user stead of probe_kernel_address.
+>> > >> >> >> 
+>> > >> >> >> Fixes: b255188 ("ARM: fix scheduling while atomic warning in alignment handling code")
+>> > >> >> >> Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+>> > >> >> >
+>> > >> >> > NAK.
+>> > >> >> >
+>> > >> >> > The "scheduling while atomic warning in alignment handling code" is
+>> > >> >> > caused by fixing up the page fault while trying to handle the
+>> > >> >> > mis-alignment fault generated from an instruction in atomic context.
+>> > >> >> >
+>> > >> >> > Your patch re-introduces that bug.
+>> > >> >> 
+>> > >> >> And the patch that fixed scheduling while atomic apparently introduced a
+>> > >> >> regression.  Admittedly a regression that took 6 years to track down but
+>> > >> >> still.
+>> > >> >
+>> > >> > Right, and given the number of years, we are trading one regression for
+>> > >> > a different regression.  If we revert to the original code where we
+>> > >> > fix up, we will end up with people complaining about a "new" regression
+>> > >> > caused by reverting the previous fix.  Follow this policy and we just
+>> > >> > end up constantly reverting the previous revert.
+>> > >> >
+>> > >> > The window is very small - the page in question will have had to have
+>> > >> > instructions read from it immediately prior to the handler being entered,
+>> > >> > and would have had to be made "old" before subsequently being unmapped.
+>> > >> 
+>> > >> > Rather than excessively complicating the code and making it even more
+>> > >> > inefficient (as in your patch), we could instead retry executing the
+>> > >> > instruction when we discover that the page is unavailable, which should
+>> > >> > cause the page to be paged back in.
+>> > >> 
+>> > >> My patch does not introduce any inefficiencies.  It onlys moves the
+>> > >> check for user_mode up a bit.  My patch did duplicate the code.
+>> > >> 
+>> > >> > If the page really is unavailable, the prefetch abort should cause a
+>> > >> > SEGV to be raised, otherwise the re-execution should replace the page.
+>> > >> >
+>> > >> > The danger to that approach is we page it back in, and it gets paged
+>> > >> > back out before we're able to read the instruction indefinitely.
+>> > >> 
+>> > >> I would think either a little code duplication or a function that looks
+>> > >> at user_mode(regs) and picks the appropriate kind of copy to do would be
+>> > >> the best way to go.  Because what needs to happen in the two cases for
+>> > >> reading the instruction are almost completely different.
+>> > >
+>> > > That is what I mean.  I'd prefer to avoid that with the large chunk of
+>> > > code.  How about instead adding a local replacement for
+>> > > probe_kernel_address() that just sorts out the reading, rather than
+>> > > duplicating all the code to deal with thumb fixup.
+>> > 
+>> > So something like this should be fine?
+>> > 
+>> > Jing Xiangfeng can you test this please?  I think this fixes your issue
+>> > but I don't currently have an arm development box where I could test this.
+>> 
+>> Sorry, only just got around to this again.  What I came up with is this:
+>
+> I've heard nothing, so I've done nothing...
 
-> ---
->  drivers/dma/imx-sdma.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-> index 6a5a84504858..5b6beeee9f0e 100644
-> --- a/drivers/dma/imx-sdma.c
-> +++ b/drivers/dma/imx-sdma.c
-> @@ -1544,7 +1544,7 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  	struct sdma_engine *sdma = sdmac->sdma;
->  	int num_periods = buf_len / period_len;
->  	int channel = sdmac->channel;
-> -	int i = 0, buf = 0;
-> +	int i;
->  	struct sdma_desc *desc;
->  
->  	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
-> @@ -1565,7 +1565,7 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  		goto err_bd_out;
->  	}
->  
-> -	while (buf < buf_len) {
-> +	for (i = 0; i < num_periods; i++) {
->  		struct sdma_buffer_descriptor *bd = &desc->bd[i];
->  		int param;
->  
-> @@ -1592,9 +1592,6 @@ static struct dma_async_tx_descriptor
-> *sdma_prep_dma_cyclic(
->  		bd->mode.status = param;
->  
->  		dma_addr += period_len;
-> -		buf += period_len;
-> -
-> -		i++;
->  	}
->  
->  	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
+Sorry it wasn't clear you were looking for feedback.
 
+This looks functionally equivalent to the last test version I posted and
+that Jing Xiangfeng confirms solves his issue.
+
+So I say please merge whichever version you like.
+
+Eric
+
+>> 8<===
+>> From: Russell King <rmk+kernel@armlinux.org.uk>
+>> Subject: [PATCH] ARM: mm: fix alignment
+>> 
+>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>> ---
+>>  arch/arm/mm/alignment.c | 44 ++++++++++++++++++++++++++++++++++++--------
+>>  1 file changed, 36 insertions(+), 8 deletions(-)
+>> 
+>> diff --git a/arch/arm/mm/alignment.c b/arch/arm/mm/alignment.c
+>> index 6067fa4de22b..529f54d94709 100644
+>> --- a/arch/arm/mm/alignment.c
+>> +++ b/arch/arm/mm/alignment.c
+>> @@ -765,6 +765,36 @@ do_alignment_t32_to_handler(unsigned long *pinstr, struct pt_regs *regs,
+>>  	return NULL;
+>>  }
+>>  
+>> +static int alignment_get_arm(struct pt_regs *regs, u32 *ip, unsigned long *inst)
+>> +{
+>> +	u32 instr = 0;
+>> +	int fault;
+>> +
+>> +	if (user_mode(regs))
+>> +		fault = get_user(instr, ip);
+>> +	else
+>> +		fault = probe_kernel_address(ip, instr);
+>> +
+>> +	*inst = __mem_to_opcode_arm(instr);
+>> +
+>> +	return fault;
+>> +}
+>> +
+>> +static int alignment_get_thumb(struct pt_regs *regs, u16 *ip, u16 *inst)
+>> +{
+>> +	u16 instr = 0;
+>> +	int fault;
+>> +
+>> +	if (user_mode(regs))
+>> +		fault = get_user(instr, ip);
+>> +	else
+>> +		fault = probe_kernel_address(ip, instr);
+>> +
+>> +	*inst = __mem_to_opcode_thumb16(instr);
+>> +
+>> +	return fault;
+>> +}
+>> +
+>>  static int
+>>  do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>>  {
+>> @@ -772,10 +802,10 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>>  	unsigned long instr = 0, instrptr;
+>>  	int (*handler)(unsigned long addr, unsigned long instr, struct pt_regs *regs);
+>>  	unsigned int type;
+>> -	unsigned int fault;
+>>  	u16 tinstr = 0;
+>>  	int isize = 4;
+>>  	int thumb2_32b = 0;
+>> +	int fault;
+>>  
+>>  	if (interrupts_enabled(regs))
+>>  		local_irq_enable();
+>> @@ -784,15 +814,14 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>>  
+>>  	if (thumb_mode(regs)) {
+>>  		u16 *ptr = (u16 *)(instrptr & ~1);
+>> -		fault = probe_kernel_address(ptr, tinstr);
+>> -		tinstr = __mem_to_opcode_thumb16(tinstr);
+>> +
+>> +		fault = alignment_get_thumb(regs, ptr, &tinstr);
+>>  		if (!fault) {
+>>  			if (cpu_architecture() >= CPU_ARCH_ARMv7 &&
+>>  			    IS_T32(tinstr)) {
+>>  				/* Thumb-2 32-bit */
+>> -				u16 tinst2 = 0;
+>> -				fault = probe_kernel_address(ptr + 1, tinst2);
+>> -				tinst2 = __mem_to_opcode_thumb16(tinst2);
+>> +				u16 tinst2;
+>> +				fault = alignment_get_thumb(regs, ptr + 1, &tinst2);
+>>  				instr = __opcode_thumb32_compose(tinstr, tinst2);
+>>  				thumb2_32b = 1;
+>>  			} else {
+>> @@ -801,8 +830,7 @@ do_alignment(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
+>>  			}
+>>  		}
+>>  	} else {
+>> -		fault = probe_kernel_address((void *)instrptr, instr);
+>> -		instr = __mem_to_opcode_arm(instr);
+>> +		fault = alignment_get_arm(regs, (void *)instrptr, &instr);
+>>  	}
+>>  
+>>  	if (fault) {
+>> -- 
+>> 2.7.4
+>> 
+>> -- 
+>> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+>> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+>> According to speedtest.net: 11.9Mbps down 500kbps up
+>> 
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> 
