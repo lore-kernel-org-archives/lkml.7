@@ -2,72 +2,88 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AA4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:30:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ADFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA05B214C6
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:30:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BAA20650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:32:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DiAf2dDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731047AbfIPIa7 (ORCPT
+        id S1731107AbfIPIcd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:30:59 -0400
-Received: from mga18.intel.com ([134.134.136.126]:18636 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbfIPIa6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:30:58 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 01:30:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
-   d="scan'208";a="201554852"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 16 Sep 2019 01:30:55 -0700
-Received: by lahna (sSMTP sendmail emulation); Mon, 16 Sep 2019 11:30:54 +0300
-Date:   Mon, 16 Sep 2019 11:30:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: introduce devm_fwnode_gpiod_get_index()
-Message-ID: <20190916083054.GN28281@lahna.fi.intel.com>
-References: <20190913032240.50333-1-dmitry.torokhov@gmail.com>
- <20190913032240.50333-2-dmitry.torokhov@gmail.com>
- <20190913094007.GE28281@lahna.fi.intel.com>
- <20190913181310.GA237523@dtor-ws>
+        Mon, 16 Sep 2019 04:32:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36100 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731050AbfIPIcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:32:32 -0400
+Received: by mail-wr1-f66.google.com with SMTP id y19so37882435wrd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 01:32:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=RHbI26jBxHHVdC5MVSVSZ4FBgEGe0bhj06FcnSvvAak=;
+        b=DiAf2dDQwonEc0dwP6bV3KOIvQwSWBgMxY+xlRd8eBvVwiAUqKOLEEQjyiKpg2ohac
+         x37nvAHU1y5neDSKKO5JTG+KcqfqyPGr2o0TfE+fONNOoPhT7SM2V4+9wLNsFULgjcuf
+         OrUtWcUSIXWbjGpe0zAIbzqvgymDA5Af6lQUw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=RHbI26jBxHHVdC5MVSVSZ4FBgEGe0bhj06FcnSvvAak=;
+        b=fNhaRg95tz0oFNfxOjTh/lNBpO1tvAq6ZPa9Yi8vx451P8jDY3uaYo4/GpFGW3dtgn
+         MYMBLyavL0dF3skvDgahK4Km5lCMzk1nZJF6uE3scp9fuXoC77IgowfLwseJIDnFFueh
+         tQH+Lds2pVz1MxIksARy4UpwwEDN4TMba8wud0uJIiZt6yWFgRLfBZbi7tU5kuI8iUeD
+         Wezp38tSJsEFZqmjRd9a3K9uqs/h+aHPMrqDu6YsJdHyPQ96of+fVc7/qdgo2IuzbF+A
+         v7Y2iGFKt10SQFTfm9doZdG43kSWwZpu4U9Ct/SRepN4AFXzmF/tXX8EYSH8XsFAB1dO
+         1dLQ==
+X-Gm-Message-State: APjAAAWyxUbmW21I8pHSAPUwr7MyILprsdezmyYU/iwwYj36eh9ghS59
+        bYypHg5IP6jZEgRvTO1bySHebQ==
+X-Google-Smtp-Source: APXvYqyOWlPI+iH9ldqpYF5ndSWi7LO+9MgPecatfMrBWupl0SNLuoK1KYn5zuPQVCDI7otOAL0m+w==
+X-Received: by 2002:adf:ff8a:: with SMTP id j10mr51465080wrr.334.1568622750499;
+        Mon, 16 Sep 2019 01:32:30 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id a205sm23587277wmd.44.2019.09.16.01.32.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 01:32:29 -0700 (PDT)
+Subject: Re: [PATCH] brcmsmac: remove a useless test
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        franky.lin@broadcom.com, hante.meuleman@broadcom.com,
+        chi-hsien.lin@cypress.com, wright.feng@cypress.com,
+        kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        brcm80211-dev-list@cypress.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20190915193210.27357-1-christophe.jaillet@wanadoo.fr>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <fc7f0338-c1f6-0659-3767-57c09b45fbbb@broadcom.com>
+Date:   Mon, 16 Sep 2019 10:32:29 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913181310.GA237523@dtor-ws>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190915193210.27357-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 11:13:10AM -0700, Dmitry Torokhov wrote:
-> On Fri, Sep 13, 2019 at 12:40:07PM +0300, Mika Westerberg wrote:
-> > On Thu, Sep 12, 2019 at 08:22:38PM -0700, Dmitry Torokhov wrote:
-> > > devm_fwnode_get_index_gpiod_from_child() is too long, besides the fwnode
-> > > in question does not have to be a child of device node. Let's rename it
-> > > to devm_fwnode_gpiod_get_index() and keep the old name for compatibility
-> > > for now.
-> > 
-> > Shouldn't we convert all the users and drop that monstrosity
-> > devm_fwnode_get_index_gpiod_from_child() completely?
-> 
-> Yes, once we land this in 5.4 I will start blasting maintainers with
-> patches.
+On 9/15/2019 9:32 PM, Christophe JAILLET wrote:
+> 'pih' is known to be non-NULL at this point, so the test can be removed.
 
-OK, thanks for the clarification.
-
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Acked-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>   drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
