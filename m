@@ -2,69 +2,111 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B02C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C2CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014D820650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8364E20650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:17:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WB+VGe/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbfIPJRQ (ORCPT
+        id S1731852AbfIPJRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:17:16 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34545 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728176AbfIPJRQ (ORCPT
+        Mon, 16 Sep 2019 05:17:37 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:12776 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfIPJRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:17:16 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1i9n86-0003ev-Iq; Mon, 16 Sep 2019 09:17:06 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     John Garry <john.garry@huawei.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] scsi: hisi_sas: fix spelling mistake "digial" -> "digital"
-Date:   Mon, 16 Sep 2019 10:17:06 +0100
-Message-Id: <20190916091706.32268-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 16 Sep 2019 05:17:37 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f53360000>; Mon, 16 Sep 2019 02:17:42 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 02:17:36 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:17:36 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:17:36 +0000
+Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:17:33 +0000
+Subject: Re: [PATCH 4.9 00/14] 4.9.193-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190913130440.264749443@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <2ba644e7-3a31-bcb9-6778-006b5cfd9c45@nvidia.com>
+Date:   Mon, 16 Sep 2019 10:17:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190913130440.264749443@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568625462; bh=wwt+XH8nuoFpJ2rQ9aHt75oOCMOjIVVqukK2To+V9yQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=WB+VGe/CG9uUC+w376ZVmypjVts4XszuAokt2I/0jjQIcqX8M0EsBxD7fyMjyYs5d
+         PaH88Z8GUdQlD8IqL6XeUyNngBQC+mFK8rhavmsYo950CRT6lZPmRh+IVm13wM8RVJ
+         QrCjp+vjtglihPk1Y1LRtPirtcSskHRtNDwHxFrBS/l8rjmZo6rPXvf1fgwWKdK1ej
+         C6dlrpeT98XZlMtR1BGUtRxxbukQ2gGubEVqzEJv6ZoO2kluH+xO9c2ywl/z4U5kY/
+         kLGZhJGyUVtsSia+FITVr0r6YZvtbzqk5SQtIMsnOFGvHkNAVMl78P8vLVuWQ3S9Ck
+         NIYnb4H7W62lQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-There is a spelling mistake in literal string. Fix it.
+On 13/09/2019 14:06, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.193 release.
+> There are 14 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.193-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+All tests passing for Tegra ...
 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index d1513fdf1e00..e934d0b11745 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -3539,7 +3539,7 @@ static const struct {
- 	int		value;
- 	char		*name;
- } hisi_sas_debugfs_loop_modes[] = {
--	{ HISI_SAS_BIST_LOOPBACK_MODE_DIGITAL, "digial" },
-+	{ HISI_SAS_BIST_LOOPBACK_MODE_DIGITAL, "digital" },
- 	{ HISI_SAS_BIST_LOOPBACK_MODE_SERDES, "serdes" },
- 	{ HISI_SAS_BIST_LOOPBACK_MODE_REMOTE, "remote" },
- };
+Test results for stable-v4.9:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
+
+Linux version:	4.9.193-rc2-g61edd63129ae
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.20.1
-
+nvpublic
