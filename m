@@ -2,109 +2,84 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32007C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B3FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12180214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF9A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbfIPEx7 (ORCPT
+        id S1728303AbfIPEyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 00:53:59 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45673 "EHLO 1wt.eu"
+        Mon, 16 Sep 2019 00:54:15 -0400
+Received: from mga12.intel.com ([192.55.52.136]:52308 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfIPEx6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 00:53:58 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8G4rVbY023928;
-        Mon, 16 Sep 2019 06:53:31 +0200
-Date:   Mon, 16 Sep 2019 06:53:31 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916045331.GC23719@1wt.eu>
-References: <20190911160729.GF2740@mit.edu>
- <20190916035228.GA1767@gondor.apana.org.au>
- <CAHk-=wjQeiYu8Q_wcMgM-nAcW7KsBfG1+90DaTD5WF2cCeGCgA@mail.gmail.com>
+        id S1726128AbfIPEyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 00:54:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 21:54:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
+   d="scan'208";a="201524984"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Sep 2019 21:54:12 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1i9j1g-0003mB-9k; Mon, 16 Sep 2019 12:54:12 +0800
+Date:   Mon, 16 Sep 2019 12:53:50 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Pengfei Li <lpf.vector@gmail.com>
+Cc:     kbuild-all@01.org, akpm@linux-foundation.org, vbabka@suse.cz,
+        cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, guro@fb.com,
+        Pengfei Li <lpf.vector@gmail.com>
+Subject: Re: [RESEND v4 5/7] mm, slab_common: Make kmalloc_caches[] start at
+ size KMALLOC_MIN_SIZE
+Message-ID: <201909161257.ykb3lopd%lkp@intel.com>
+References: <20190915170809.10702-6-lpf.vector@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjQeiYu8Q_wcMgM-nAcW7KsBfG1+90DaTD5WF2cCeGCgA@mail.gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <20190915170809.10702-6-lpf.vector@gmail.com>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 09:21:06PM -0700, Linus Torvalds wrote:
-> The timer interrupt could be somewhat interesting if you are also
-> CPU-bound on a non-trivial load, because then "what program counter
-> got interrupted" ends up being possibly unpredictable - even with a
-> very stable timer interrupt source - and effectively stand in for a
-> cycle counter even on hardware that doesn't have a native TSC. Lots of
-> possible low-level jitter there to use for entropy. But especially if
-> you're just idly _waiting_ for entropy, you won't be "CPU-bound on an
-> interesting load" - you'll just hit the CPU idle loop all the time so
-> even that wouldn't work.
+Hi Pengfei,
 
-In the old DOS era, I used to produce randoms by measuring the time it
-took for some devices to reset themselves (typically 8250 UARTs could
-take in the order of milliseconds). And reading their status registers
-during the reset phase used to show various sequences of flags at
-approximate timings.
+Thank you for the patch! Perhaps something to improve:
 
-I suspect this method is still usable, even with SoCs full of peripherals,
-in part because not all clocks are synchronous, so we can retrieve a
-little bit of entropy by measuring edge transitions. I don't know how
-we can assess the number of bits provided by such method (probably
-log2(card(discrete values))) but maybe this is something we should
-progressively encourage drivers authors to do in the various device
-probing functions once we figure the best way to do it.
+[auto build test WARNING on linus/master]
+[cannot apply to v5.3 next-20190915]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-The idea is around this. Instead of :
+url:    https://github.com/0day-ci/linux/commits/Pengfei-Li/mm-slab-Make-kmalloc_info-contain-all-types-of-names/20190916-065820
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
-     probe(dev)
-     {
-          (...)
-          while (timeout && !(status_reg & STATUS_RDY))
-               timeout--;
-          (...)
-     }
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-We could do something like this (assuming 1 bit of randomness here) :
 
-     probe(dev)
-     {
-          (...)
-          prev_timeout = timeout;
-          prev_reg     = status_reg;
-          while (timeout && !(status_reg & STATUS_RDY)) {
-               if (status_reg != prev_reg) {
-                     add_device_randomness_bits(timeout - prev_timeout, 1);
-                     prev_timeout = timeout;
-                     prev_reg = status_reg;
-               }
-               timeout--;
-          }
-          (...)
-     }
+sparse warnings: (new ones prefixed by >>)
 
-It's also interesting to note that on many motherboards there are still
-multiple crystal oscillators (typically one per ethernet port) and that
-such types of independent, free-running clocks do present unpredictable
-edges compared to the CPU's clock, so when they affect the device's
-setup time, this does help quite a bit.
+>> mm/slab_common.c:1121:34: sparse: sparse: symbol 'all_kmalloc_info' was not declared. Should it be static?
 
-Willy
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
