@@ -2,111 +2,107 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F0AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF6DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62ED920830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0247C206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPncx+oi"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="qc2T5P4b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391364AbfIPUZO (ORCPT
+        id S2391378AbfIPUZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:25:14 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41209 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730502AbfIPUZO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:25:14 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x4so1485377qtq.8;
-        Mon, 16 Sep 2019 13:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=C1t82i6X11aZoLXvnOKNwH+tVPB4SBAU5NMbxltAh8Q=;
-        b=PPncx+oiRjtvht6VJEZH3QKIN/OO4JtQ0iaLZ7/FLKKvnaCK2XXBARhU6EUqnwXpWJ
-         pkUcBZzvF21P7z5mT9fZ+dSnCZtu4VzJku/YhNjK3hh/9WTvXChJ2TIF7fZjLW3r41x4
-         gDjyByBCQUpg4XWLHzHn90TbxgFsWRCe1+9mc0Beo8mJjVyTLjpeQKCsg4gcucElWcex
-         wLa4ojoRHLDp0+T4vOvYr1UTdmeal3wgfbziVl2q4OLODbKnzUi1k+geJsUJIZTtFsSn
-         kQPsberfZ6o/yUzTMOF9PHD0cVEUiTZq4cRYiQUGHB9CxlfCJSD/rAfVNhjh2HTOGgPV
-         KbaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=C1t82i6X11aZoLXvnOKNwH+tVPB4SBAU5NMbxltAh8Q=;
-        b=aF+hC7AowtleHOQc5vTYSTgAfsZYxKFm263MZhdvTxR2gxdeCi0MC+jWOTTKRC19aZ
-         z/R1wuuTjip7RD65ZJXNLGjX19qjvXtIUL0IAFWm1yYRtUSKdeh6SrCPRM20sL7WIa7n
-         loMM1XAuSgfuzpQHpXC9grvMrQSmKpggWe/DBEKEZ+J7OfTLach4Aj1IbmcSa2WioYvJ
-         sgjRggpcg3umYe9fxUf0NE100bvQ79RHCG7/9tllL45CsTChoGXKll0IIPB0EVGH3ElY
-         4Q0yQbHAWtWIYc5b5707kp5K4+wJrzpdnLqcNQqUgUHx1NRe6uvcmSKeBigXs64D//Ui
-         21QA==
-X-Gm-Message-State: APjAAAUHMNqVA0QiQ2CMoJ5Ym8f+LEU8r2ZzimPTOv9uVdzNoaUUzFxJ
-        Bw4bjUB4JQ7R/uh7cwNT+aYgoVTewqW4baIfMwE=
-X-Google-Smtp-Source: APXvYqxu+ci+i8bh13T9ReN3PfZ/8LKTC1ABrELo9BhvKuAV3JrhwLwUEB2Yv9J0BS4SaIcxktwx9mnyI3UZu7hmXz8=
-X-Received: by 2002:a0c:e48b:: with SMTP id n11mr166604qvl.38.1568665513084;
- Mon, 16 Sep 2019 13:25:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-4-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190916105433.11404-4-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 16 Sep 2019 13:25:02 -0700
-Message-ID: <CAEf4BzY+5YQpfJBOVzBfSdZAEcCFjZ9WbeFng8W6tb4M_UwGVQ@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 03/14] samples: bpf: makefile: use --target
- from cross-compile
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Sep 2019 16:25:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:31164 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730502AbfIPUZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:25:44 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46XHn274NLz9v0sp;
+        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qc2T5P4b; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id W_5UD_T94ppf; Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46XHn2603lz9v0sm;
+        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568665542; bh=EfeppcJfC7z4dz+NpDaNTk1OezSvA6hyV2vlPsX3zdQ=;
+        h=From:Subject:To:Cc:Date:From;
+        b=qc2T5P4bhLOJoXzmeUEqXDyn6GzxgKREKfKhCztODnRYXyep+GBRQ7r3P3b9aVk0w
+         IZu0kgm4yo7BGrqMGXF7+jeVO5XnbbH+PSDg4ze3CcVYSogFF0OQT9F4NULR+oQ4kU
+         PIowAGQfDB6Pq9R8VUcZweRRcG4LEqqkLg54eYlA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id EA2D98B848;
+        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id tvSznHTgdhzQ; Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id B3C738B841;
+        Mon, 16 Sep 2019 22:25:42 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id A38306B763; Mon, 16 Sep 2019 20:25:39 +0000 (UTC)
+Message-Id: <a212bd36fbd6179e0929b6c727febc35132ac25c.1568665466.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 1/2] powerpc/32s: automatically allocate BAT in setbat()
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, oss@buserror.net,
+        galak@kernel.crashing.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 16 Sep 2019 20:25:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 4:01 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> For cross compiling the target triple can be inherited from
-> cross-compile prefix as it's done in CLANG_FLAGS from kernel makefile.
-> So copy-paste this decision from kernel Makefile.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
+If no BAT is given to setbat(), select an available BAT.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
->  samples/bpf/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 43dee90dffa4..b59e77e2250e 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -195,7 +195,7 @@ BTF_PAHOLE ?= pahole
->  # Detect that we're cross compiling and use the cross compiler
->  ifdef CROSS_COMPILE
->  HOSTCC = $(CROSS_COMPILE)gcc
-> -CLANG_ARCH_ARGS = -target $(ARCH)
-> +CLANG_ARCH_ARGS = --target=$(notdir $(CROSS_COMPILE:%-=%))
->  endif
->
->  # Don't evaluate probes and warnings if we need to run make recursively
-> --
-> 2.17.1
->
+---
+v2: no change
+v3: no change
+---
+ arch/powerpc/mm/book3s32/mmu.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/mm/book3s32/mmu.c b/arch/powerpc/mm/book3s32/mmu.c
+index 84d5fab94f8f..69b2419accef 100644
+--- a/arch/powerpc/mm/book3s32/mmu.c
++++ b/arch/powerpc/mm/book3s32/mmu.c
+@@ -251,9 +251,18 @@ void __init setbat(int index, unsigned long virt, phys_addr_t phys,
+ {
+ 	unsigned int bl;
+ 	int wimgxpp;
+-	struct ppc_bat *bat = BATS[index];
++	struct ppc_bat *bat;
+ 	unsigned long flags = pgprot_val(prot);
+ 
++	if (index == -1)
++		index = find_free_bat();
++	if (index == -1) {
++		pr_err("%s: no BAT available for mapping 0x%llx\n", __func__,
++		       (unsigned long long)phys);
++		return;
++	}
++	bat = BATS[index];
++
+ 	if ((flags & _PAGE_NO_CACHE) ||
+ 	    (cpu_has_feature(CPU_FTR_NEED_COHERENT) == 0))
+ 		flags &= ~_PAGE_COHERENT;
+-- 
+2.13.3
+
