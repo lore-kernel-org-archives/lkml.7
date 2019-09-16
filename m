@@ -2,145 +2,262 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA01DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C832DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E192067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E44B216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568633736;
+	bh=jDEHWuhxlGkyknz+ThjKcwC31yVTREYwP+Pxdw4tbFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sdnGg8VTfIPDbWbpaD+EQ68vom+nhSmDAhNziik+R9VZFrfcUPI5nSbf/qLcT8EHe
+	 Y/nr60AWOIenTwxR5UFQdHS0Qe/2gpLmkYhY6DQaBjVOv8qGgRXLjPOYHB2twkm8Oh
+	 UCjRZjjaGNBdxn3nWmVsu8E51hgxo9JcMKz7X1uM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732099AbfIPLdF (ORCPT
+        id S1731540AbfIPLfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:33:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55692 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731539AbfIPLdE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:33:04 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id D44D228D45B
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Brian Masney <masneyb@onstation.org>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, agross@kernel.org, narmstrong@baylibre.com,
-        robdclark@gmail.com, sean@poorly.run, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
- <20190815004854.19860-6-masneyb@onstation.org>
- <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
- <20190916103614.GA1644@onstation.org>
- <20190916104907.GB4734@pendragon.ideasonboard.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
-Date:   Mon, 16 Sep 2019 13:32:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Sep 2019 07:35:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39450 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727479AbfIPLff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:35:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E888CAF11;
+        Mon, 16 Sep 2019 11:35:32 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 13:35:32 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Lucian Adrian Grijincu <lucian@fb.com>
+Cc:     linux-mm@kvack.org, Souptick Joarder <jrdr.linux@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@fb.com>, Roman Gushchin <guro@fb.com>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH v3] mm: memory: fix /proc/meminfo reporting for
+ MLOCK_ONFAULT
+Message-ID: <20190916113532.GE10231@dhcp22.suse.cz>
+References: <20190913211119.416168-1-lucian@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <20190916104907.GB4734@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913211119.416168-1-lucian@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+[Cc Hugh]
 
-On 16/9/19 12:49, Laurent Pinchart wrote:
-> Hi Brian,
+On Fri 13-09-19 14:11:19, Lucian Adrian Grijincu wrote:
+> As pages are faulted in MLOCK_ONFAULT correctly updates
+> /proc/self/smaps, but doesn't update /proc/meminfo's Mlocked field.
 > 
-> On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
->> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
->>> On 15.08.2019 02:48, Brian Masney wrote:
->>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
->>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
->>>> error. The downstream MSM kernel sources [1] shows that the proper value
->>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
->>>> probing to succeed.
->>>>
->>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
->>>>
->>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>>> ---
->>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>> index 25e063bcecbc..bc511fc605c9 100644
->>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>> @@ -6,7 +6,7 @@
->>>>  #ifndef __ANX78xx_H
->>>>  #define __ANX78xx_H
->>>>  
->>>> -#define TX_P0				0x70
->>>> +#define TX_P0				0x78
->>>
->>>
->>> This bothers me little. There are no upstream users, grepping android
->>> sources suggests that both values can be used [1][2]  (grep for "#define
->>> TX_P0"), moreover there is code suggesting both values can be valid [3].
->>>
->>> Could you verify datasheet which i2c slave addresses are valid for this
->>> chip, if both I guess this patch should be reworked.
->>>
->>>
->>> [1]:
->>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
->>>
->>> [2]:
->>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
->>>
->>> [3]:
->>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
->>
->> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
->> need to support both addresses. What do you think about moving these
->> addresses into device tree?
+> - Before this /proc/meminfo fields didn't change as pages were faulted in:
 > 
-> Assuming that the device supports different addresses (I can't validate
-> that as I don't have access to the datasheet), and different addresses
-> need to be used on different systems, then the address to be used needs
-> to be provided by the firmware (DT in this case). Two options are
-> possible, either specifying the address explicitly in the device's DT
-> node, or specifying free addresses (in the form of a white list or black
-> list) and allocating an address from that pool. The latter has been
-> discussed in a BoF at the Linux Plumbers Conference last week,
-> https://linuxplumbersconf.org/event/4/contributions/542/.
+> = Start =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> = Creating testfile =
 > 
->> The downstream and upstream kernel sources divide these addresses by two
->> to get the i2c address. Here's the code in upstream:
->>
->> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
->> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
->>
->> I'm not sure why the actual i2c address isn't used in this code.
+> = after mlock2(MLOCK_ONFAULT) =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:                0 kB
 > 
+> = after reading half of the file =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:           524288 kB
+> 
+> = after reading the entire the file =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 7f8714000000-7f8754000000 rw-s 00000000 08:04 50857050   /root/testfile
+> Locked:          1048576 kB
+> 
+> = after munmap =
+> /proc/meminfo
+> Unevictable:       10128 kB
+> Mlocked:           10132 kB
+> /proc/self/smaps
+> 
+> - After: /proc/meminfo fields are properly updated as pages are touched:
+> 
+> = Start =
+> /proc/meminfo
+> Unevictable:          60 kB
+> Mlocked:              60 kB
+> = Creating testfile =
+> 
+> = after mlock2(MLOCK_ONFAULT) =
+> /proc/meminfo
+> Unevictable:          60 kB
+> Mlocked:              60 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:                0 kB
+> 
+> = after reading half of the file =
+> /proc/meminfo
+> Unevictable:      524220 kB
+> Mlocked:          524220 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:           524288 kB
+> 
+> = after reading the entire the file =
+> /proc/meminfo
+> Unevictable:     1048496 kB
+> Mlocked:         1048508 kB
+> /proc/self/smaps
+> 7f2b9c600000-7f2bdc600000 rw-s 00000000 08:04 63045798   /root/testfile
+> Locked:          1048576 kB
+> 
+> = after munmap =
+> /proc/meminfo
+> Unevictable:         176 kB
+> Mlocked:              60 kB
+> /proc/self/smaps
+> 
+> Repro code.
+> ---
+> 
+> int mlock2wrap(const void* addr, size_t len, int flags) {
+>   return syscall(SYS_mlock2, addr, len, flags);
+> }
+> 
+> void smaps() {
+>   char smapscmd[1000];
+>   snprintf(
+>       smapscmd,
+>       sizeof(smapscmd) - 1,
+>       "grep testfile -A 20 /proc/%d/smaps | grep -E '(testfile|Locked)'",
+>       getpid());
+>   printf("/proc/self/smaps\n");
+>   fflush(stdout);
+>   system(smapscmd);
+> }
+> 
+> void meminfo() {
+>   const char* meminfocmd = "grep -E '(Mlocked|Unevictable)' /proc/meminfo";
+>   printf("/proc/meminfo\n");
+>   fflush(stdout);
+>   system(meminfocmd);
+> }
+> 
+>   {                                                 \
+>     int rc = (call);                                \
+>     if (rc != 0) {                                  \
+>       printf("error %d %s\n", rc, strerror(errno)); \
+>       exit(1);                                      \
+>     }                                               \
+>   }
+> int main(int argc, char* argv[]) {
+>   printf("= Start =\n");
+>   meminfo();
+> 
+>   printf("= Creating testfile =\n");
+>   size_t size = 1 << 30; // 1 GiB
+>   int fd = open("testfile", O_CREAT | O_RDWR, 0666);
+>   {
+>     void* buf = malloc(size);
+>     write(fd, buf, size);
+>     free(buf);
+>   }
+>   int ret = 0;
+>   void* addr = NULL;
+>   addr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+> 
+>   if (argc > 1) {
+>     PCHECK(mlock2wrap(addr, size, MLOCK_ONFAULT));
+>     printf("= after mlock2(MLOCK_ONFAULT) =\n");
+>     meminfo();
+>     smaps();
+> 
+>     for (size_t i = 0; i < size / 2; i += 4096) {
+>       ret += ((char*)addr)[i];
+>     }
+>     printf("= after reading half of the file =\n");
+>     meminfo();
+>     smaps();
+> 
+>     for (size_t i = 0; i < size; i += 4096) {
+>       ret += ((char*)addr)[i];
+>     }
+>     printf("= after reading the entire the file =\n");
+>     meminfo();
+>     smaps();
+> 
+>   } else {
+>     PCHECK(mlock(addr, size));
+>     printf("= after mlock =\n");
+>     meminfo();
+>     smaps();
+>   }
+> 
+>   PCHECK(munmap(addr, size));
+>   printf("= after munmap =\n");
+>   meminfo();
+>   smaps();
+> 
+>   return ret;
+> }
+> 
+> ---
+> 
+> Signed-off-by: Lucian Adrian Grijincu <lucian@fb.com>
+> Acked-by: Souptick Joarder <jrdr.linux@gmail.com>
 
-The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
-or control the chip from the AP. The I2C slave addresses used to control the
-ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
-access to different registers of the chip and AFAICS is not configurable.
+Fixes: b0f205c2a308 ("mm: mlock: add mlock flags to enable VM_LOCKONFAULT usage")
 
-I don't think these addresses should be configured via DT but for the driver itself.
+I am not really sure a backport to stable is really needed because an
+imprecise accounting is not really critical. Pages should eventually
+get accounted under memory pressure when they are attempted to unmap
+IIRC.
 
-My wild guess is that the ANX7808 has different addresses, but I don't have the
-datasheet of this version.
+Btw. the changelog could benefit from a more details on the issue and
+the fix description. The reproducer is really nice but it doesn't really
+explain the maze of the mlock accounting and why only the file backed
+memory has a problem.
 
-Best regards,
- Enric
+> ---
+>  mm/memory.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index e0c232fe81d9..55da24f33bc4 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3311,6 +3311,8 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+>  	} else {
+>  		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+>  		page_add_file_rmap(page, false);
+> +		if (vma->vm_flags & VM_LOCKED && !PageTransCompound(page))
+> +			mlock_vma_page(page);
+>  	}
+>  	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
 
+I dunno. Handling it here in alloc_set_pte sounds a bit weird to me.
+Altough we already do mlock for CoW pages there, I thought this was more
+of an exception.
+Is there any real reason why this cannot be done in the standard #PF
+path? finish_fault for example?
+-- 
+Michal Hocko
+SUSE Labs
