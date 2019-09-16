@@ -2,102 +2,127 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A68C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE42C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F50A216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568641331;
-	bh=P2iQPdNzyzEzIo5xXphEsVfTS5y8Krw9+a1tdE57GeU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jCBgijFj+afeQR/rEmrJLZNvkgxZsl06KTbDKu6JB+Zi/VVUg7ZMbj4zBp8MGISbV
-	 wVuw7OQ52buGr5FQNfH6njuhLtNGHNrfMFVPg5chA8K/5ScKtA+0iyajDj7DynqlkC
-	 XB++0Cav5/YPoJmD62Imw+ep2lalUYiOgxEus4us=
+	by mail.kernel.org (Postfix) with ESMTP id 6D16C216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387682AbfIPNmK (ORCPT
+        id S2387705AbfIPNmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:42:10 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53238 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733054AbfIPNmK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:42:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IhSYkleqI3JelFkIKmOLyDJ/rhb1T44sCZeTh4GOur0=; b=PfwKJr4TkGavs+jIV2Jgj/gIM
-        eK9Ws2URbDzqZisVOhvBDpQri9UXhfIkby2tyCHeDNYevg+xRGlvNZ2Vfc/8iYgwYX5bcmgBwyiNd
-        e7YhAYOxLULgDOSHlDg3fK5KHVrZiy0ooz07jF63eb0caakUKaWTNJ0dlTXsJ1Bg8/GYs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9rGW-0004bj-7j; Mon, 16 Sep 2019 13:42:04 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id BC1382741A0D; Mon, 16 Sep 2019 14:42:03 +0100 (BST)
-Date:   Mon, 16 Sep 2019 14:42:03 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Petr Vorel <pvorel@suse.cz>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the kselftest tree with the tpmdd
- tree
-Message-ID: <20190916134203.GG4352@sirena.co.uk>
-References: <20190916014535.GU4352@sirena.co.uk>
- <CADYN=9JntrniMnmEMd9igVSovEQjLV9q006cCATLHWrtBhWWHQ@mail.gmail.com>
+        Mon, 16 Sep 2019 09:42:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:45002 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733054AbfIPNmp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:42:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B21AD337;
+        Mon, 16 Sep 2019 06:42:44 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 288663F67D;
+        Mon, 16 Sep 2019 06:42:43 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:42:42 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
+        bhelgaas@google.com, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
+        repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
+Subject: Re: [PATCH v2 5/6] arm64: dts: meson-g12a: Add PCIe node
+Message-ID: <20190916134241.GR9720@e119886-lin.cambridge.arm.com>
+References: <20190916125022.10754-1-narmstrong@baylibre.com>
+ <20190916125022.10754-6-narmstrong@baylibre.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="HbTzC+AcCowV2D6d"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CADYN=9JntrniMnmEMd9igVSovEQjLV9q006cCATLHWrtBhWWHQ@mail.gmail.com>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190916125022.10754-6-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 02:50:21PM +0200, Neil Armstrong wrote:
+> This adds the Amlogic G12A PCI Express controller node, also
+> using the USB3+PCIe Combo PHY.
+> 
+> The PHY mode selection is static, thus the USB3+PCIe Combo PHY
+> phandle would need to be removed from the USB control node if the
+> shared differential lines are used for PCIe instead of USB3.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
---HbTzC+AcCowV2D6d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-On Mon, Sep 16, 2019 at 03:16:54PM +0200, Anders Roxell wrote:
-
-> If I re-read the Documentation/dev-tools/kselftest.rst
-> I think the patch from the kselftest tree should be dropped.
-
-> I saw that I didn't send an email to the tpm maintainers or the tpm
-> list when I sent the
-> patch, I'm sorry.
-
-If the change is fine that might be more trouble than it's worth, it's a
-trivial add/add conflict.  Up to those concerned though.
-
---HbTzC+AcCowV2D6d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/kSoACgkQJNaLcl1U
-h9B42Af9FCeFLU3AJ1eD9eMVeqJVdwEFFP6AMPXnrfkLGRi36tX7E4nEagJBDFOk
-fahF8r2zcT2wSU5xo8ROJJw5EhJr8Wh4DNgMWj+BqSSOi5mBTEG4AKe/MkhysJyN
-6WowFdahrSXF6FxnBgoCsInDEhpnvMo6Nf6QbB82itwoAEUFAld6x2U4d2JG4JUr
-Ah60Yszt+tniC4OOqs9BzBHYRTb+HyKqK+INJSvrEUBlJC0VBcBC0chdces5e32n
-gC5fDqUOc+n6sXyakTUtDoUmeHV82C3HZYK+X9HiTHoyljvbBhxZMkE6igj40nZx
-9bV0rHfHCQG8ZdeN8T/1tvLjLHsW0Q==
-=RS2A
------END PGP SIGNATURE-----
-
---HbTzC+AcCowV2D6d--
+> ---
+>  .../boot/dts/amlogic/meson-g12-common.dtsi    | 33 +++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-sm1.dtsi    |  4 +++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> index 852cf9cf121b..7330dc37b7a6 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
+> @@ -95,6 +95,39 @@
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> +		pcie: pcie@fc000000 {
+> +			compatible = "amlogic,g12a-pcie", "snps,dw-pcie";
+> +			reg = <0x0 0xfc000000 0x0 0x400000
+> +			       0x0 0xff648000 0x0 0x2000
+> +			       0x0 0xfc400000 0x0 0x200000>;
+> +			reg-names = "elbi", "cfg", "config";
+> +			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0>;
+> +			interrupt-map = <0 0 0 0 &gic GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> +			bus-range = <0x0 0xff>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			ranges = <0x81000000 0 0 0x0 0xfc600000 0 0x00100000
+> +				  0x82000000 0 0xfc700000 0x0 0xfc700000 0 0x1900000>;
+> +
+> +			clocks = <&clkc CLKID_PCIE_PHY
+> +				  &clkc CLKID_PCIE_COMB
+> +				  &clkc CLKID_PCIE_PLL>;
+> +			clock-names = "general",
+> +				      "pclk",
+> +				      "port";
+> +			resets = <&reset RESET_PCIE_CTRL_A>,
+> +				 <&reset RESET_PCIE_APB>;
+> +			reset-names = "port",
+> +				      "apb";
+> +			num-lanes = <1>;
+> +			phys = <&usb3_pcie_phy PHY_TYPE_PCIE>;
+> +			phy-names = "pcie";
+> +			status = "disabled";
+> +		};
+> +
+>  		ethmac: ethernet@ff3f0000 {
+>  			compatible = "amlogic,meson-axg-dwmac",
+>  				     "snps,dwmac-3.70a",
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> index 91492819d0d8..ee9ea3c69433 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-sm1.dtsi
+> @@ -135,6 +135,10 @@
+>  	power-domains = <&pwrc PWRC_SM1_ETH_ID>;
+>  };
+>  
+> +&pcie {
+> +	power-domains = <&pwrc PWRC_SM1_PCIE_ID>;
+> +};
+> +
+>  &pwrc {
+>  	compatible = "amlogic,meson-sm1-pwrc";
+>  };
+> -- 
+> 2.22.0
+> 
