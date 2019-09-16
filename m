@@ -2,107 +2,101 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5824C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C70C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1FBC214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:48:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568652520;
-	bh=9IgIL3nTOl+AnAnycBph4EY1UvcF4YxY8jH5un/5EXI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=fav8fCfTGTWrACZOioX1IqnBIldkD5VRUqAj385VykoorQVZaDUNgC0NOF9GP83lN
-	 chpOlVNFFWmySlv9X/kph2AmIicJ4m/ILjUsQL9qqOZOq6FyFzVuhSIjL6HSc1p6Db
-	 PAwypWeIczqG1qhoX2T6AYnIi03u91gmllwHSOg0=
+	by mail.kernel.org (Postfix) with ESMTP id B91E521881
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:49:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AccxtUY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390174AbfIPQsk (ORCPT
+        id S2390197AbfIPQtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:48:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390140AbfIPQsj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:48:39 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 659D2214D9;
-        Mon, 16 Sep 2019 16:48:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568652518;
-        bh=9IgIL3nTOl+AnAnycBph4EY1UvcF4YxY8jH5un/5EXI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VodzYAg+UfPWq3WKHJnIejPR+sXO1G3gL05enYHwjXQdmy157ZCKabefl3UKdQ+pj
-         08IHFY3fe3j/9u/A4KTLjoPITPjFJRQuBt8lHDKCcK2jMZRCdj/op5ySrIs4D7Bk4s
-         toGVj5lFUB8wGCmy0tJguhSo7eXw1sM1kqg5lqRA=
-Subject: Re: [PATCH 6/6] selftests: add clone3 to TARGETS
-To:     Eugene Syromiatnikov <esyr@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        linux-kselftest@vger.kernel.org
-Cc:     Adrian Reber <areber@redhat.com>, shuah <shuah@kernel.org>
-References: <cover.1568116761.git.esyr@redhat.com>
- <af8501d68f99c38232f9c462877ff562011c8bb5.1568116761.git.esyr@redhat.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <8bbd08bf-3500-40c7-ca15-06d0c84b596f@kernel.org>
-Date:   Mon, 16 Sep 2019 10:48:37 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 12:49:40 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35375 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbfIPQtj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:49:39 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a24so335282pgj.2;
+        Mon, 16 Sep 2019 09:49:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W7qUWOCQv295QFg+kgQAJCdA5yUvErYXEpf5sx/e6XU=;
+        b=AccxtUY3qK7DBSc5mPgdjoEFUUwFSbVOWkIiZa3Pmed9s8B+Jq2cAj8vs9ZxCbEuPQ
+         +ObMojKzV113QlCwX3fdNfFZqpBxVg3+/dinNe8bpDnb4aXMqwXrtztLO1ArIkGalCXf
+         7ZcchRzkgPvLfXiuim6yLSV8DDntHLpxeIbLMuSC69hOVTr6Utoj3JV4YJwQ44DXPyh3
+         gwyBl5Uw4dR4PpvzgmQQNZAIIuDB1ybE8zDTbWVAdcx7JX4xuZ9YeSjPOTC+G+OEd4Kf
+         kmbRjkshIqP2VkU/jGT8VwpRm9zzTJsqSZUpmvAIOvFPcORJL53qE/Q3PD+O8Nr8loc2
+         KwsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W7qUWOCQv295QFg+kgQAJCdA5yUvErYXEpf5sx/e6XU=;
+        b=RFA+gak+hD2Ku2FpwOR4BnvMxL/jn9Pr9Y55RqoEe1KXM1H0A56bXfa18+GBhBCBW8
+         uNQHFlrkaM9S/G4e1ItivKMzr2rBo+qb08T5if2VEddI9esLGrzGRlgHh15Zgw9Bj1Uz
+         JGrqQsE9nxk+jAL2IW3kgH1mny55PK91B4sK58EmN584lhqaWEBubt9Y2VXMIqnYREep
+         Zmrl8iipddr4NQvH/P4lUC9m67rqKwkGYJuOJfqImMBabuuJQM+GgQb2ee5cNayyFyiD
+         +6Ty0IVBOryuyYVW6r1YwU54dvxSpE3E+r+NvR5zO+fvulz5eBNBElxiIgl+pmGSykDb
+         SAGA==
+X-Gm-Message-State: APjAAAUk0gvqqkPTCptYuRgEcahyEuOx8G2So2dUzeOVBgWX2u6R5LkN
+        RZmHTUmz7v9Qk8mcwKXoVU6MK6aSetUjkwok9CRiI7On
+X-Google-Smtp-Source: APXvYqyAXD0tyD7MrbcDTMVUL4D6V3O9kJa2CxpFLHUtljsyh604tYz4byuwunOlqXswIi8ORiop7tPu7FZNfCHgfDM=
+X-Received: by 2002:aa7:828c:: with SMTP id s12mr272706pfm.94.1568652578437;
+ Mon, 16 Sep 2019 09:49:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <af8501d68f99c38232f9c462877ff562011c8bb5.1568116761.git.esyr@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <000000000000bd36db0592ab9652@google.com>
+In-Reply-To: <000000000000bd36db0592ab9652@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 16 Sep 2019 09:49:27 -0700
+Message-ID: <CAM_iQpXdTNVywYm6+vmAKMsBRcC6ySOX9Rcg70xhgdjJgbDJkw@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in rds_bind
+To:     syzbot <syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com>
+Cc:     Arvid Brodin <arvid.brodin@alten.se>,
+        David Miller <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>, linux-rdma@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        rds-devel@oss.oracle.com,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 6:03 AM, Eugene Syromiatnikov wrote:
-> * tools/testing/selftests/Makefile (TARGETS): Add clone3.
+On Mon, Sep 16, 2019 at 6:29 AM syzbot
+<syzbot+fae39afd2101a17ec624@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    f4b752a6 mlx4: fix spelling mistake "veify" -> "verify"
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16cbebe6600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=fae39afd2101a17ec624
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10753bc1600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=111dfc11600000
+>
+> The bug was bisected to:
+>
+> commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
+> Author: Cong Wang <xiyou.wangcong@gmail.com>
+> Date:   Thu Jul 4 00:21:13 2019 +0000
+>
+>      hsr: implement dellink to clean up resources
 
-Again. No filenames in the commit log. Please add more detail.
 
-
-"Adding clone3() tests to kselftest default run and details
-on what this tests"
-
-This will be helpful to users.
-
-> 
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-> ---
->   tools/testing/selftests/Makefile | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-> index 25b43a8c..05163e4 100644
-> --- a/tools/testing/selftests/Makefile
-> +++ b/tools/testing/selftests/Makefile
-> @@ -4,6 +4,7 @@ TARGETS += bpf
->   TARGETS += breakpoints
->   TARGETS += capabilities
->   TARGETS += cgroup
-> +TARGETS += clone3
->   TARGETS += cpufreq
->   TARGETS += cpu-hotplug
->   TARGETS += drivers/dma-buf
-> 
-
-Please make sure the test doesn't hang and all the use-cases listed
-in the kselftest.rst are supported.
-
-make kselftest
-make -C tools/testing/selftests
-O= and KBUILD_OUTPUT cases as well as running make directly
-in the clode3 dir.
-
-Please include test output and usage instructions if any to this
-commit log as this is the patch that enables it in the default run.
-
-thanks,
--- Shuah
+The crash has nothing to do with this commit. It is probably caused
+by the lack of ->laddr_check in rds_loop_transport.
