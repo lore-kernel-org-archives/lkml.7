@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD2AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD60C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D922216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E30216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568669721;
-	bh=3xVE3rXuiKCmRPLRFYOZWzFfnk3d3+JYNP3qnJCmJBw=;
+	s=default; t=1568669727;
+	bh=5uO4ZK+ssQUtg4QfbAuYx34TS0uHlZ66jVoKwVypizM=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Ip6HM/gLqmFDQlCt4IXCZpGwbwxEemz3QCBpYuN9+sHR0G8mrxE8hSn0u/ruB8glm
-	 64CbXJW2+a1aAvM+TWCuilRnkmPp6EJIwmnwaOmVdge/bl4f8LXahdHdWKzEAaQ5Uu
-	 Z4t0+c3NCF7Uot5mdbxJ6YP0zPjia48/iGaGRDEw=
+	b=u/JcickDl8wi7x+wGAXLjW35t3aI664eTcvdzzSdF6WHaLMoKswZDb5DBlckXmoIH
+	 9VeFWaCF6pRlRmtySo81KQGMpg/pZPeLlrj8y1gEN1CAdvRUtmPODXKb5aKx+KKd3Y
+	 52OHMlZ2jYzZU/vGJRyw+/zWKihWdyu66+n0uyEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfIPVfP (ORCPT
+        id S1732001AbfIPVfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 17:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729965AbfIPVfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725971AbfIPVfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 17:35:11 -0400
-Subject: Re: [GIT PULL] hwmon updates for v5.4
+Subject: Re: [GIT PULL] regmap updates for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568669710;
-        bh=3xVE3rXuiKCmRPLRFYOZWzFfnk3d3+JYNP3qnJCmJBw=;
+        s=default; t=1568669711;
+        bh=5uO4ZK+ssQUtg4QfbAuYx34TS0uHlZ66jVoKwVypizM=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=UBx2co4sk9Lj2bFiofZCxG+Yk2ubqAjaHzkOOYdu4nh3Lq0wdh0SjwFWHyDE4ALTt
-         zQ9081Q28B+70N3afuwvjkuYIeGi4QenkLQ3GUuRTaf4Q8/+vDvNTaFyTuM5wkGfyP
-         B96MCU9ZyBA+xOOpOhI62JV/hfaeYtPKJ84Npq0U=
+        b=urfbB18f+VEqmEytI4Fd62GjPy8z7sn7U/mFUEaMizI5FHwAhAQEWP7js9YvbyxVN
+         BAGMwcWGMM4l+t0K8R5Hpl+M8Ezp3LbVZzvauuDtjl7F1wEKUlvaCM5dMIs2xsGAN5
+         +xLC5kDWZdgjlVpKC9IU5O3giF1NY6YeIrv9PV0I=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190915221702.28480-1-linux@roeck-us.net>
-References: <20190915221702.28480-1-linux@roeck-us.net>
+In-Reply-To: <20190915224314.GM4352@sirena.co.uk>
+References: <20190915224314.GM4352@sirena.co.uk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190915221702.28480-1-linux@roeck-us.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
- hwmon-for-v5.4
-X-PR-Tracked-Commit-Id: 4e19e72f45d360975c59df8272f98bff59f6b748
+X-PR-Tracked-Message-Id: <20190915224314.GM4352@sirena.co.uk>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git
+ tags/regmap-v5.4
+X-PR-Tracked-Commit-Id: 1bd4584626a9715634d2cb91ae2ed0364c070b01
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6729fb666a3b5a9a5ffa1bb6589127f7e4d35c38
-Message-Id: <156866971044.13102.2758613399864026595.pr-tracker-bot@kernel.org>
-Date:   Mon, 16 Sep 2019 21:35:10 +0000
-To:     Guenter Roeck <linux@roeck-us.net>
+X-PR-Merge-Commit-Id: 0372fd1a70c4bc0731486851abe2048993f94a8d
+Message-Id: <156866971131.13102.9119921106884277411.pr-tracker-bot@kernel.org>
+Date:   Mon, 16 Sep 2019 21:35:11 +0000
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sun, 15 Sep 2019 15:17:02 -0700:
+The pull request you sent on Sun, 15 Sep 2019 23:43:14 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-for-v5.4
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git tags/regmap-v5.4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6729fb666a3b5a9a5ffa1bb6589127f7e4d35c38
+https://git.kernel.org/torvalds/c/0372fd1a70c4bc0731486851abe2048993f94a8d
 
 Thank you!
 
