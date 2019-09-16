@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091D6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D3BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:47:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D331B20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F660206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:47:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391696AbfIPUrv (ORCPT
+        id S2391714AbfIPUrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:47:51 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36822 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391655AbfIPUrt (ORCPT
+        Mon, 16 Sep 2019 16:47:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34066 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391687AbfIPUrw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:47:49 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t3so716561wmj.1;
-        Mon, 16 Sep 2019 13:47:47 -0700 (PDT)
+        Mon, 16 Sep 2019 16:47:52 -0400
+Received: by mail-wm1-f66.google.com with SMTP id y135so871409wmc.1;
+        Mon, 16 Sep 2019 13:47:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=jRXIYYCqTzf80wPMvUGVQBZL1Q1d4vGLXXoDHnC/zIQ=;
-        b=qp/sC5unG5ESbvaTRsJ7m6SuOgxTQQ8ptk6BtJaCJOi/z2Drew6QEZ3u6tBxFH0dXW
-         CNHsR1nohingnN7POvKiQpN0MLFQJB9ELBF1uuNACbQB+312oSM3HPhrflvPDsfRcyh3
-         Jkjv6fPfJe3Z8adxBhREj+jaZEHDc8KXtHjVLvnW+/HEk9t5iAc+6PURQzQ/3/MBglFs
-         xCrs0ROx+VFSA7gFlfE3pLXPUQh5xGpUwigFGTt6+LvrL1uTtw/++WSnlVCMCl6g94fF
-         WNKBbpP5GzS4lLYcnP1ciJbt8ebHeEzlJERuKg1iXi3QisxICDwXGI+SV/qxkGaisIZ4
-         hvAA==
-X-Gm-Message-State: APjAAAVNGSKoiSmoN4cR1lJ+C/D+SqHNC5koJvE+4/jzaFpCS9WhatZb
-        JYAKh140ffiyFnRr9fLfCDk=
-X-Google-Smtp-Source: APXvYqwTkEolBF+4/h20FKyB+xWEOb8/ZOCtjD6dCrukuPGeL6pmmum3arJeC1C9cYldAM8ty7ZNwQ==
-X-Received: by 2002:a1c:9ecb:: with SMTP id h194mr645276wme.35.1568666867296;
-        Mon, 16 Sep 2019 13:47:47 -0700 (PDT)
+        bh=52Ok3SbrITEZp2+/epaFkzm4cA6Xg3yiQs6lhoB6dtE=;
+        b=QmsRC2A8rWI/D2+psCaMFTL1158kKui/MBsjBR58T+JdQxzO46kpmZD0gNZASTt1Su
+         FRfLbAhaaXZvwNJBBuY9Ek/0YgdRycz7TJT7OrBL88RYtoJ3Rropdy0IEfhkbpsDtzxA
+         CtL2mLD5WJbpDYLuenOieIYXjTixnzapYY0qS3ZZVY4WRsgwDzUwPkMBwqdb/O50gvJz
+         bBzNBgJUhQDFjrusqKUCdvo6Mdh53m2fw0zMld/z9IbRD9qoQ0Oaa7S98seYgT/PMP/y
+         A9CJ9sMFBdgdCqEB4L3622CaPT1DlbPmBoIJHlCRkugpMyfHHgl3tAAcetT9nlUHfQfy
+         jMEw==
+X-Gm-Message-State: APjAAAUMagXesZsU+yNwgfK8C4AVifxWE4RM0CEvdbV3jnSCMYXFKl1d
+        jwgwfJxxp6cD9gBVkdfiabA=
+X-Google-Smtp-Source: APXvYqz6Jmo3KBQBa3LCnNmy1P65ruQhcV1dGeEJa0J9si07nknK6v9wQUPUY21xKRf/Wf3b3Yux/Q==
+X-Received: by 2002:a1c:7c0b:: with SMTP id x11mr675946wmc.92.1568666869752;
+        Mon, 16 Sep 2019 13:47:49 -0700 (PDT)
 Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.46
+        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.47.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:47:46 -0700 (PDT)
+        Mon, 16 Sep 2019 13:47:49 -0700 (PDT)
 From:   Denis Efremov <efremov@linux.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>
 Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        linux-usb@vger.kernel.org,
+        linux-usb@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v3 24/26] USB: core: Use PCI_STD_NUM_BARS
-Date:   Mon, 16 Sep 2019 23:41:56 +0300
-Message-Id: <20190916204158.6889-25-efremov@linux.com>
+Subject: [PATCH v3 25/26] usb: pci-quirks: Use PCI_STD_NUM_BARS
+Date:   Mon, 16 Sep 2019 23:41:57 +0300
+Message-Id: <20190916204158.6889-26-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190916204158.6889-1-efremov@linux.com>
 References: <20190916204158.6889-1-efremov@linux.com>
@@ -64,25 +65,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Use define PCI_STD_NUM_BARS instead of PCI_ROM_RESOURCE for the number of
 PCI BARs.
 
+Cc: Mathias Nyman <mathias.nyman@intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- drivers/usb/core/hcd-pci.c | 2 +-
+ drivers/usb/host/pci-quirks.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
-index 7537681355f6..3a79e8623d66 100644
---- a/drivers/usb/core/hcd-pci.c
-+++ b/drivers/usb/core/hcd-pci.c
-@@ -234,7 +234,7 @@ int usb_hcd_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 		/* UHCI */
- 		int	region;
+diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+index f6d04491df60..6c7f0a876b96 100644
+--- a/drivers/usb/host/pci-quirks.c
++++ b/drivers/usb/host/pci-quirks.c
+@@ -728,7 +728,7 @@ static void quirk_usb_handoff_uhci(struct pci_dev *pdev)
+ 	if (!pio_enabled(pdev))
+ 		return;
  
--		for (region = 0; region < PCI_ROM_RESOURCE; region++) {
-+		for (region = 0; region < PCI_STD_NUM_BARS; region++) {
- 			if (!(pci_resource_flags(dev, region) &
- 					IORESOURCE_IO))
- 				continue;
+-	for (i = 0; i < PCI_ROM_RESOURCE; i++)
++	for (i = 0; i < PCI_STD_NUM_BARS; i++)
+ 		if ((pci_resource_flags(pdev, i) & IORESOURCE_IO)) {
+ 			base = pci_resource_start(pdev, i);
+ 			break;
 -- 
 2.21.0
 
