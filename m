@@ -2,161 +2,133 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E09C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A35C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7102186A
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:34:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CvMLlj9S"
+	by mail.kernel.org (Postfix) with ESMTP id 87CB521852
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568651838;
+	bh=A4EC8rYENbB35cqZcR/Jp9eGTrxiDPiBK2ZwBJAd0RY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=Rx1tzpMLpQhlQngsYLpqC4+fgKAoOap7SPe0me/iYtIztrAUp8sHEVVO0/TH5V/ac
+	 PgL4V832jK1JNLv9D4l+uBG6YE+IBIcX7jo1xFqV/kOsJyGEeuGRIO7LhU/bNYLM8C
+	 +fYEYSa1sZJZF6dakLlVrrnE/vOYdQVeG5m+EveI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390007AbfIPQem (ORCPT
+        id S2390025AbfIPQhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:34:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37724 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389984AbfIPQem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:34:42 -0400
-Received: by mail-io1-f65.google.com with SMTP id b19so556592iob.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:34:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CK2Hw2Vm0/m4pdvX+3V10oRo4TFnQxQIXBdeHzhGxm4=;
-        b=CvMLlj9S+eWlpKN4KKfhPU33Ml2oTWcxMncEM0lAbDja/TSaJTwoykGCT7mY3RvsIW
-         8KqA7Xn35m+HodATZhJD8C7wG4+bc11fdt3gWpjDmcHgqGoynQcRdpLZfuwqSMrMhyoi
-         6AIz8dbTJqQsQXONcb2NPqWQCNgcfjbD7sCUNjEr6paE+5xLjIeaNW7BijxQdCWYfKWZ
-         PYfS6J8Z3FkQ7QL3FwtOelGVa4RI8MA8XaAUK21eJIR0ZABE0SGEoHZ0yYsVEIox7IES
-         GFWVvEnJohvLD6mbj8Yr8WkD5Ze5m11rqjg/8Tv0wFV+uZCn1m0cQcUEt5GG/ToV2Lxw
-         wuGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CK2Hw2Vm0/m4pdvX+3V10oRo4TFnQxQIXBdeHzhGxm4=;
-        b=Hw2XqWPMg8LD6MX6Kor4unN4jLZWw0ulbno9Z0pmSfkmAZ1OBG4En9AIeI0WTdy5g3
-         Rv+LJ8E7hFpuvEkBqH5S55vKkZywgyOVS+rC74+OeLaRPSv90hyCvaDsYAPh2b3RXi6d
-         Uk9LmzhRQcqWOHVcIAvb8U5xdODgbx++guq9z8hZCQLwpi2fxaR3Pa0zb4zJTRr4nQBu
-         ch94bPJCshUX0VGkn2VVpF00yY49CTY4qLBTTme2Fe6DVP/swols6c3/hcY18xpWcfV5
-         wReY+cIBlLphq9aMrdvQPzrTa7zSjSfS7GeOhdSiXa5boMqs5lz7I83cwJGr1OeoZ+49
-         D53g==
-X-Gm-Message-State: APjAAAWQNlDg4CDVHQG6/wpwoAx9XTPquuEzDLSL6hGITbom68gTcg82
-        TCmZN7xFGvuLM2AFsnLz3z9fN540iKIRBqKSQ/IJJg==
-X-Google-Smtp-Source: APXvYqxBRIWp22Nuxpvq+TC1v2IDPHTTfhih5iHwmGR6wIKl8ymDNqmXoJXJjb/b+Sd3CUGj5MBwFvxdxvlq6klGOK4=
-X-Received: by 2002:a05:6638:308:: with SMTP id w8mr834479jap.75.1568651680894;
- Mon, 16 Sep 2019 09:34:40 -0700 (PDT)
+        Mon, 16 Sep 2019 12:37:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbfIPQhR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:37:17 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BB7D214D9;
+        Mon, 16 Sep 2019 16:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568651836;
+        bh=A4EC8rYENbB35cqZcR/Jp9eGTrxiDPiBK2ZwBJAd0RY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nLwejD44HX8XnRRvatCXwqkeSGcj194yx1ey+33mBRNN06oqL6nsQKBEU0X2O/atx
+         O++fLg6U1iwj8GQX4TKp30wMsOewvjUXl56CK1RtBAnwUUsPWWfFcGKSy0TRrDJXlv
+         E3Y9C9vI91BlxtXgO27qsR+fIwFGZDDb7GhstvIg=
+Subject: Re: [PATCH 2/6] selftests/clone3: add a check for invalid exit_signal
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        linux-kselftest@vger.kernel.org
+Cc:     Adrian Reber <areber@redhat.com>, shuah <shuah@kernel.org>
+References: <cover.1568116761.git.esyr@redhat.com>
+ <f5c715164c87a226afca711559e7ed72a70426a4.1568116761.git.esyr@redhat.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <f93052b9-9520-c53a-27dd-b096d3336576@kernel.org>
+Date:   Mon, 16 Sep 2019 10:37:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190916162258.6528-1-vkuznets@redhat.com> <20190916162258.6528-3-vkuznets@redhat.com>
-In-Reply-To: <20190916162258.6528-3-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 16 Sep 2019 09:34:29 -0700
-Message-ID: <CALMp9eRa0-HO+JWGDoAFO1zOtNjrutfT7d4pLxjsxn-XiAJwwQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] KVM: x86: hyper-v: set NoNonArchitecturalCoreSharing
- CPUID bit when SMT is impossible
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-hyperv@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Roman Kagan <rkagan@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f5c715164c87a226afca711559e7ed72a70426a4.1568116761.git.esyr@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 9:23 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Hyper-V 2019 doesn't expose MD_CLEAR CPUID bit to guests when it cannot
-> guarantee that two virtual processors won't end up running on sibling SMT
-> threads without knowing about it. This is done as an optimization as in
-> this case there is nothing the guest can do to protect itself against MDS
-> and issuing additional flush requests is just pointless. On bare metal the
-> topology is known, however, when Hyper-V is running nested (e.g. on top of
-> KVM) it needs an additional piece of information: a confirmation that the
-> exposed topology (wrt vCPU placement on different SMT threads) is
-> trustworthy.
->
-> NoNonArchitecturalCoreSharing (CPUID 0x40000004 EAX bit 18) is described in
-> TLFS as follows: "Indicates that a virtual processor will never share a
-> physical core with another virtual processor, except for virtual processors
-> that are reported as sibling SMT threads." From KVM we can give such
-> guarantee in two cases:
-> - SMT is unsupported or forcefully disabled (just 'disabled' doesn't work
->  as it can become re-enabled during the lifetime of the guest).
-> - vCPUs are properly pinned so the scheduler won't put them on sibling
-> SMT threads (when they're not reported as such).
+On 9/10/19 6:03 AM, Eugene Syromiatnikov wrote:
+> Check that the kernel fails calls with exit_signal with non-zero highest
+> 32 bits.
+> 
 
-That's a nice bit of information. Have you considered a mechanism for
-communicating this information to kvm guests in a way that doesn't
-require Hyper-V enlightenments?
+Describe what you are testing:
 
-> This patch reports NoNonArchitecturalCoreSharing bit in to userspace in the
-> first case. The second case is outside of KVM's domain of responsibility
-> (as vCPU pinning is actually done by someone who manages KVM's userspace -
-> e.g. libvirt pinning QEMU threads).
->
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+"Add a test case for clone3() non-zero highest 32 bits behavior. It
+should fail with exit_signal value??"
+
+Add checks for unsupported cases. Handle unsupported architectures
+and configurations with skip
+
+> * tools/testing/selftests/clone3/clone3.c (enum test_mode): Add
+> CLONE3_ARGS_BIG_EXIT_SIGNAL.
+> (call_clone3): Add args.exit_signal initialisation in case
+> test_mode == CLONE3_ARGS_BIG_EXIT_SIGNAL.
+> (main): Add test_clone3 clone check with
+> test_mode == CLONE3_ARGS_BIG_EXIT_SIGNAL.
+
+Please don't include pseudo code in the commit log.
+
+> 
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 > ---
->  arch/x86/include/asm/hyperv-tlfs.h | 7 +++++++
->  arch/x86/kvm/hyperv.c              | 4 +++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> index af78cd72b8f3..989a1efe7f5e 100644
-> --- a/arch/x86/include/asm/hyperv-tlfs.h
-> +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> @@ -170,6 +170,13 @@
->  /* Recommend using enlightened VMCS */
->  #define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED            BIT(14)
->
-> +/*
-> + * Virtual processor will never share a physical core with another virtual
-> + * processor, except for virtual processors that are reported as sibling SMT
-> + * threads.
-> + */
-> +#define HV_X64_NO_NONARCH_CORESHARING                  BIT(18)
+>   tools/testing/selftests/clone3/clone3.c | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+> index 7b65ee5..4f23a0c 100644
+> --- a/tools/testing/selftests/clone3/clone3.c
+> +++ b/tools/testing/selftests/clone3/clone3.c
+> @@ -28,6 +28,7 @@ enum test_mode {
+>   	CLONE3_ARGS_NO_TEST,
+>   	CLONE3_ARGS_ALL_0,
+>   	CLONE3_ARGS_ALL_1,
+> +	CLONE3_ARGS_BIG_EXIT_SIGNAL,
+>   };
+>   
+>   static pid_t raw_clone(struct clone_args *args, size_t size)
+> @@ -72,6 +73,10 @@ static int call_clone3(int flags, size_t size, enum test_mode test_mode)
+>   		args.tls = 1;
+>   		args.set_tid = 1;
+>   		break;
 > +
->  /* Nested features. These are HYPERV_CPUID_NESTED_FEATURES.EAX bits. */
->  #define HV_X64_NESTED_GUEST_MAPPING_FLUSH              BIT(18)
->  #define HV_X64_NESTED_MSR_BITMAP                       BIT(19)
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index fff790a3f4ee..9c187d16a9cd 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -23,6 +23,7 @@
->  #include "ioapic.h"
->  #include "hyperv.h"
->
-> +#include <linux/cpu.h>
->  #include <linux/kvm_host.h>
->  #include <linux/highmem.h>
->  #include <linux/sched/cputime.h>
-> @@ -1864,7 +1865,8 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->                         ent->eax |= HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED;
->                         if (evmcs_ver)
->                                 ent->eax |= HV_X64_ENLIGHTENED_VMCS_RECOMMENDED;
-> -
-> +                       if (!cpu_smt_possible())
-> +                               ent->eax |= HV_X64_NO_NONARCH_CORESHARING;
->                         /*
->                          * Default number of spinlock retry attempts, matches
->                          * HyperV 2016.
-> --
-> 2.20.1
->
+> +	case CLONE3_ARGS_BIG_EXIT_SIGNAL:
+> +		args.exit_signal = 0xbadc0ded00000000;
+
+Please add a comment to indicate what this is. I am assuming
+this bad sig val.
+
+> +		break;
+>   	}
+>   
+>   	pid = raw_clone(&args, size);
+> @@ -146,6 +151,10 @@ int main(int argc, char *argv[])
+>   	/* Do a clone3() with all members set to 1 */
+>   	if (test_clone3(0, CLONE3_ARGS_SIZE_V0, -EINVAL, CLONE3_ARGS_ALL_1))
+>   		goto on_error;
+> +	/* Do a clone3() with exit_signal having highest 32 bits non-zero */
+> +	if (test_clone3(0, CLONE3_ARGS_SIZE_V0, -EINVAL,
+> +			CLONE3_ARGS_BIG_EXIT_SIGNAL))
+> +		goto on_error;
+>   	/*
+>   	 * Do a clone3() with sizeof(struct clone_args) + 8
+>   	 * and all members set to 0.
+> 
+
+thanks,
+-- Shuah
