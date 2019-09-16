@@ -2,111 +2,83 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF985C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F7C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9FEA206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:33:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="r7UlKu52"
+	by mail.kernel.org (Postfix) with ESMTP id DAA6F20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:36:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568658980;
+	bh=xvlWVEaWhC7ryJI9G/GikWh/UvQzkbDDSMDZpwdt40w=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=Qv3AcZxAuTig2lSpMk8lcucHOIqoMy5OdIVsaZ1GNEJ7HabF/XWGd94GHK2FV5kUC
+	 RQbN/z1MhOwgl+0WcoUQ2hImJ4AuZ7C9eQT50sE8iaPa6EF7necD7EX7AUWFJF5+Zl
+	 +Un1jRbE64JJwp5Siy+aRmhHmYWDRebDGU3RAdlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390489AbfIPSdS (ORCPT
+        id S2390489AbfIPSgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:33:18 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45530 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730086AbfIPSdR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:33:17 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GIXBT2024285;
-        Mon, 16 Sep 2019 13:33:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568658791;
-        bh=/uh3XzfLPxRlyD2osjtAPeq1YBIIpL6KBUPfwdUYWTk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=r7UlKu5213zI2y0xhxFiHA4LGMcV4yLLYVnrEQK3x2a5xV4dS6fnvbUr7uFAkeVgv
-         VVYxVnstDMTYooaLq2IU/k+TVtAFsJSi0bRkqy+C8EeNHOJ0XVHPkMr4z8AeAGlLHp
-         LJBl6i4MkqvQcP90SOQvswVKuvRm5aD4I+s0QDeE=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GIXBkg048005
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Sep 2019 13:33:11 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
- Sep 2019 13:33:09 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 16 Sep 2019 13:33:09 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GIXB5F082601;
-        Mon, 16 Sep 2019 13:33:11 -0500
-Subject: Re: [PATCH v5 6/9] leds: multicolor: Introduce a multicolor class
- definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-7-dmurphy@ti.com>
- <2bfd27cf-6703-48b8-be82-9b36066ef2ed@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <edc6aa22-3a9a-2a99-ccca-1bd3bf07f04b@ti.com>
-Date:   Mon, 16 Sep 2019 13:34:53 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 14:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727671AbfIPSgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 14:36:19 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50926206C2;
+        Mon, 16 Sep 2019 18:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568658979;
+        bh=xvlWVEaWhC7ryJI9G/GikWh/UvQzkbDDSMDZpwdt40w=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=waNAcjNk3fRU5KnMoElDx49GDeaygQ9aYPvQmwqnJ4jX/Q1k2oNtmoSR4HrpZMSvD
+         ijjboxUVQiDQn0KhxXezTJBagbw84gmnO1sjvSFSXrKGjTtzsjlVzRCXqJ5tVzBOhD
+         jt2zaLIi347ajBTWK8Ta0W3pJ4MYbz/GbyEN4UAM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <2bfd27cf-6703-48b8-be82-9b36066ef2ed@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4e1ddc50-7ae3-3ba9-7e41-80a834fa2dbf@linux.intel.com>
+References: <6a3c26bc6e25d883686287883528dbde30725922.1566975410.git.rahul.tanwar@linux.intel.com> <20190902222015.11360-1-martin.blumenstingl@googlemail.com> <d9e96dab-96be-0c14-b7af-e1f2dc07ebd2@linux.intel.com> <CAFBinCARQJ7q9q3r6c6Yr2SD0Oo_Drah-kxss3Obs-g=B1M28A@mail.gmail.com> <b7920723-1df2-62df-61c7-98c3a1665aa1@linux.intel.com> <CAFBinCA+J-HnXfRnquqviXvX0Jo84hoLC9=_uHbyWKZycwyAFw@mail.gmail.com> <4e1ddc50-7ae3-3ba9-7e41-80a834fa2dbf@linux.intel.com>
+Cc:     andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com,
+        qi-ming.wu@intel.com, rahul.tanwar@intel.com, robh+dt@kernel.org,
+        robh@kernel.org, yixin.zhu@linux.intel.com
+To:     "Kim, Cheol Yong" <cheol.yong.kim@linux.intel.com>,
+        "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v1 1/2] clk: intel: Add CGU clock driver for a new SoC
+User-Agent: alot/0.8.1
+Date:   Mon, 16 Sep 2019 11:36:18 -0700
+Message-Id: <20190916183619.50926206C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jacek
+Quoting Kim, Cheol Yong (2019-09-09 07:16:29)
+>=20
+> I've discussed internally the amount of efforts to create a reusable=20
+> regmap clock driver which might be reused by other companies too.
+>=20
+> It seems it requires significant efforts for implementation/tests. As we =
 
-On 9/15/19 11:20 AM, Jacek Anaszewski wrote:
->
->> +
->> +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
->> +				     struct led_classdev_mc *mcled_cdev,
->> +				     int color_id, int color_index)
->> +{
->> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
->> +	struct led_classdev_mc_priv *mc_priv;
->> +	int ret;
->> +
->> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
->> +	if (!mc_priv)
->> +		return -ENOMEM;
->> +
->> +	mc_priv->led_color_id = color_id;
->> +	mc_priv->mcled_cdev = mcled_cdev;
->> +
->> +	data->led_kobj = kobject_create_and_add(led_colors[color_id],
->> +						data->color_kobj);
-> No change here since previous version? What prevents you from following
-> what has been done for drivers/usb/core/ledtrig-usbport.c?
->
-> Use sysfs_create_group() for creating color dir
-> and sysfs_add_file_to_group() for adding files to it.
+> don't plan to support our old SOCs for now, I'm not sure if we need to=20
+> put such a big efforts.
+>=20
+> Stephan,
+>=20
+> It seems you don't like both meson/qcom regmap clock implementation.
+>=20
+> What is your opinion for our current CGU clock driver implementation?
+>=20
+>=20
 
-We have nested directories here.  colors is a directory and then the LED 
-color is a directory.
-
-So I am not sure how to create a group under another group without the 
-colors directory kobj.
-
-Wondering if you know of any examples?
-
-Dan
+If you're not going to use regmap in CGU then it doesn't matter to try
+to consolidate the regmap clk implementations.
 
