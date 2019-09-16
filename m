@@ -2,122 +2,92 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ECAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99C1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F95214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB726214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="rMOFMhCl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UrqMRtFB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732620AbfIPRI7 (ORCPT
+        id S1729062AbfIPRNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:08:59 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:47196 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727987AbfIPRI7 (ORCPT
+        Mon, 16 Sep 2019 13:13:42 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41008 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfIPRNm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:08:59 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GH4P1W001292;
-        Mon, 16 Sep 2019 17:08:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=+CZoGIQCmtw4Dmg5SfXe3o0NnRs6559XxydCd+jVXQ8=;
- b=rMOFMhClnL2bIb+8Nz8OOxOVySEHQDVF7v5WrTP6O4DOPNid6vSs20yqRmykr5Gz5S6r
- kEQ5I/e5q2a4124rN0SL0FLm7yDDepFxrRU5MeEjRmyTvMjBM3shn8py2/utRNjBM04Q
- QeEE+SNMHy4EAv9/Di9znLR20SBcE56LvHiTeEyHCODmUGR8tEUUVaP0zsRWHlTbV+gu
- Lz9yFjcsQfR1LsSgw1fOIqsIxFKcLEhKZLwHYZdhrW7OkRyqO27JQWpZB9oAS5pFCM04
- X1akAgK9WEOHgAUqMW4IfDbFQBSvsi0g60nm6MJvt/dq09kWrKwqQzSp7DxhKqVSvqTa xg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2v0ruqgv7h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 17:08:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GH4QLn087910;
-        Mon, 16 Sep 2019 17:08:54 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2v0nb51tta-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 17:08:54 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8GH8qL5007286;
-        Mon, 16 Sep 2019 17:08:53 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 16 Sep 2019 10:08:52 -0700
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS: Maintainer Entry Profile
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20190911184332.GL20699@kadam>
-        <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
-        <yq1y2yrdg6w.fsf@oracle.com> <20190916070101.GE18977@kadam>
-Date:   Mon, 16 Sep 2019 13:08:45 -0400
-In-Reply-To: <20190916070101.GE18977@kadam> (Dan Carpenter's message of "Mon,
-        16 Sep 2019 10:01:01 +0300")
-Message-ID: <yq1blvkb23m.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Mon, 16 Sep 2019 13:13:42 -0400
+Received: by mail-pl1-f193.google.com with SMTP id t10so171921plr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:13:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=eWIZJlqhAHtTIx9X5zi5DWCFg3CgWDLfKyYu8B/Dqv0=;
+        b=UrqMRtFBE3GvXdEZ3mz4KBdCWATWrVzB6xgssl49LAHwSohPzBdZJbplA59O71t985
+         cWOud704jWTuXFIfoEzNU8GTIoCTe66JMMUmaDUEEyBlFVzVcCjkYofMbv29jQb4PFsy
+         FrVBD2XlSEive97gMw66440RS2zDoTjKu9cZ/fSvfWmIGk/lhl4GU/N/I3k8VNfFZDHh
+         qMJSe136OsJ9MwVRTU5sgRgLdHDSZN89BsuJ+Dyx9uYmjVFJbTLQ4thjOhXbPOpYbB4k
+         PG2/9K2yG4CYVAjChzHpkVeArQkDkvxothAZHqdljNQK+TZm0JT7JMHMzx9KMf0VGN0w
+         V8MQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=eWIZJlqhAHtTIx9X5zi5DWCFg3CgWDLfKyYu8B/Dqv0=;
+        b=n/ZFaE9XiIHag0Bqp0QsHR0RF9lWzptArT/8W/ZdR1lYC5gTd3dsgigj+60xK7QvBT
+         j7CUKrNnAJ1CqNwUcO9KgXduGQ0BagD4U2S1fjqnrj/N8x0M2JTLLvzLH8cBzBuLorqp
+         6kYomn22hMW51LG5aYD4ICNEjAZZHGt2WzumWcpZorsR9TMd6OP9n0GxSst3ac4/LWSM
+         vOLmU5fB/Zf6C9MBCpUN6roBBC1s0U9opkJ4sJ3h4RxVDKZ+l5dIcnhhT2+c4HtVI88H
+         I5/bejqP/EOtUxEls+vlMxfVsG74nlLX1B64cFpZ1LgNVHLL+6msHl2JaO9osC9HnJgN
+         56Ow==
+X-Gm-Message-State: APjAAAX1zjhdeU15e4aOVJSNPMcf1Orl63tIWaiOZemWpFblTVB6nq8r
+        dJ7a1s6ndDd7QkW2nOpr5mw=
+X-Google-Smtp-Source: APXvYqwmpHdgGrbxJrWzk50f44QiS45DqOLgPoVS0nGtu/YyRgndV12FUcJZMiB2gxqgk/xkCGdlSQ==
+X-Received: by 2002:a17:902:248:: with SMTP id 66mr867870plc.19.1568654021414;
+        Mon, 16 Sep 2019 10:13:41 -0700 (PDT)
+Received: from SD ([2405:204:828a:aaec:8514:49dd:92d4:793d])
+        by smtp.gmail.com with ESMTPSA id q71sm124375pjb.26.2019.09.16.10.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 10:13:40 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 22:43:35 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Bob Copeland <me@bobcopeland.com>,
+        linux-karma-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: omfs: make use of kmemdup
+Message-ID: <20190916171335.GB4060@SD>
+References: <20190913171134.GA10301@SD>
+ <4fd20946-b991-0c0f-975e-ef79b433912b@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909160169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909160169
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4fd20946-b991-0c0f-975e-ef79b433912b@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Sep 14, 2019 at 08:24:37AM +0200, Markus Elfring wrote:
+> I suggest to take another look at a similar patch.
+> 
+> fs/omfs: make use of kmemdup
+> https://lore.kernel.org/r/20190721112326.GA5927@hari-Inspiron-1545/
+> https://lore.kernel.org/patchwork/patch/1102482/
+> https://lkml.org/lkml/2019/7/21/40
 
-Dan,
+Oh I missed that. The patch you pointed above is of July, 2019 but I am
+not seeing it in v5.3 or in next-20190915.
 
->> One pet peeve I have is that people are pretty bad at indicating the
->> intended target tree. I often ask for it in private mail but the
->> practice doesn't seem to stick. I spend a ton of time guessing whether a
->> patch is a fix for a new feature in the x+1 queue or a fix for the
->> current release. It is not always obvious.
->
-> The Fixes tag doesn't help?
+If you know, can you point to the fs/omfs tree. It will help not to send
+repeated change.
 
-Always.
-
-> Of course, you've never asked me or anyone on kernel-newbies that
-> question.  We don't normally know the answer either.  I do always try
-> to figure it out for networking, but it's kind of a pain in the butt
-> and I mess up surpisingly often for how much effort I put into getting
-> it right.
-
-It's not a big issue for your patches. These are inevitably fixes and
-I'll pick an appropriate tree depending on where we are in the cycle,
-how likely one is to hit the issue, whether the driver is widely used,
-etc.
-
-Vendor driver submissions, however, are generally huge. Sometimes 50+
-patches per submission window. And during this window I often get on the
-order of 10 to 20 patches for the same driver in the fixes tree. It is
-not always easy to determine whether a bug fix series is for one tree or
-the other.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+-Saiyam
