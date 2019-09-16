@@ -2,142 +2,116 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3E9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7CBC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C604214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568642152;
-	bh=Qw6DlJe9h17KJF1+v+dT72oQWDOddUyjHUhlMCEhp8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lvXrdaFX5qmIe1OTF1MwwgpxuPS/Ziki2QxFFQVCrnIUxYSkcTeI+tJK4OOrTjz9c
-	 zdBnwYXZmhXdFwQWElpWY2uqWzVOBVoha3h5rTF6nCJ5Yyb754N7w8YyIlw3pxDznV
-	 wTufpVdd4iV+s28p+SsatVMn8lPKGN0IUrIaQFIM=
+	by mail.kernel.org (Postfix) with ESMTP id 650E9214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="oSOoTaz7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388153AbfIPNzu (ORCPT
+        id S2388167AbfIPNzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:55:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41950 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbfIPNzt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:55:49 -0400
-Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5F82214AF;
-        Mon, 16 Sep 2019 13:55:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568642149;
-        bh=Qw6DlJe9h17KJF1+v+dT72oQWDOddUyjHUhlMCEhp8c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XPTufvuH1UTy/pOvMGZQdOF7SQV3VB01raZ4EKG+o4EXiEY3D2hLRYUlRw3OYTudk
-         7ifs3vTA3J/UlC1HeoIc5365txH9KKqQGWl5ssh7Ckkc1fx6SAp9yZrtpcJUD2NkJz
-         eu1aaMNnpR6YsHUTCAo2eol6j0CPHLbbhM6NdbPg=
-Date:   Mon, 16 Sep 2019 16:55:43 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mike Rapoport <rppt@linux.ibm.com>, linux-arch@vger.kernel.org
-Subject: Re: [PATCH] arm64: use generic free_initrd_mem()
-Message-ID: <20190916135542.GC5196@rapoport-lnx>
-References: <1568618488-19055-1-git-send-email-rppt@kernel.org>
- <0ba20aa4-d2dd-2263-6b5f-16a5c8a39f67@redhat.com>
+        Mon, 16 Sep 2019 09:55:52 -0400
+Received: from mail-eopbgr1300131.outbound.protection.outlook.com ([40.107.130.131]:31068
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388106AbfIPNzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:55:51 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hn2Tl3x5DkmA9mciUJk/Vx8hAtdw1jmsfvc4/jg6kg9pE4V3SirGUC0LqH1oA+5mKCBfuPsXM+S4ty3HA85d2Rn/Vt30x1A+2QMP3/fqOof9/t+ziV+N0dB4VgdPhU8chx3wQ/Q01VQIOzYYcK8BZsrqn8456NcekvnC7BAF8xKuBYmr8PJt1ZgSk0VCk9cQDB0BjnK84PdNdSa7vHVudTIPx2nlgAaL4yYJc1kTwT1q1Mi885yQP2W5H4ROFxuh+uaZm+7OUSkV8xn9Dd+GVi1XyBQzk+/dDMk2e8oUImuPuN7Go7c7MaImMfS0S4ZScAcTEcGWp1Pk+JSKdY4iZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfkCwFkcq8tReNHrTOn1faXDKvS5YVVzk1uXfTIUVB8=;
+ b=BEiLMu9rKq4SYlumQ3/sC8EgUdHm4etLzxXbjGpGu1u4KdqS3DmIdrkKRUNjxfPFSMXaU+/4hBVzAPgPEWaK62wb6E4mY8HGRlPo81oS2Qy+jbF5WbcQFYm2Bf4DmxdaWiWdejOwdtzDIlu5EopOp2GXaBJbZiONgBTwXaAsvW4xM9S0r7jh2+CowQbKZPPzi1vHXphTPsUXV9VT3D/rqbAq6KXA8OGo5R9sInfKxkgtlI+VIQ64nI7KOuEmiON46QSKvD3FyvSrW3BARDN4A3c61Zc6OQ6l1fGUqxQA59z2MmzTbEQJ9ErEp45RI5DyAwpyC6VcFMQhOQD3zSrvAw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gfkCwFkcq8tReNHrTOn1faXDKvS5YVVzk1uXfTIUVB8=;
+ b=oSOoTaz7q5RsAy1LhdXPCxBKvheTycd8Q9hNCuhZAzAvlTmVEy1qZLR+jBUXov8+bIrMKDR5p6VWzVq3ihkbxtRFTEdMlnsR/IWfbOU4Q79FmEsZuOJ2g3yN/lmfRZi/MPSzry9UugbApa6t76mS8zerDznEPIo2uLi7gDYy3mc=
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
+ TY2PR01MB2604.jpnprd01.prod.outlook.com (20.177.100.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Mon, 16 Sep 2019 13:55:45 +0000
+Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::7ce4:f502:8430:51a]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
+ ([fe80::7ce4:f502:8430:51a%7]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
+ 13:55:45 +0000
+From:   Gareth Williams <gareth.williams.jx@renesas.com>
+To:     "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: DRM Driver implementation question
+Thread-Topic: DRM Driver implementation question
+Thread-Index: AdVslX1ZBzegHzojRVS64lgG04s8jg==
+Date:   Mon, 16 Sep 2019 13:55:45 +0000
+Message-ID: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=gareth.williams.jx@renesas.com; 
+x-originating-ip: [193.141.220.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 77e73d7f-9dc0-4037-0885-08d73aad928d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY2PR01MB2604;
+x-ms-traffictypediagnostic: TY2PR01MB2604:|TY2PR01MB2604:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB2604388BC49EA2C4B804C4E5DF8C0@TY2PR01MB2604.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0162ACCC24
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(136003)(366004)(396003)(376002)(189003)(199004)(9686003)(4744005)(55016002)(33656002)(5660300002)(6436002)(54906003)(186003)(486006)(14454004)(3846002)(476003)(6116002)(110136005)(71200400001)(71190400001)(4326008)(7696005)(8936002)(478600001)(6506007)(25786009)(102836004)(26005)(81166006)(107886003)(66066001)(2906002)(99286004)(8676002)(256004)(86362001)(81156014)(66946007)(3480700005)(76116006)(2501003)(66446008)(66556008)(66476007)(305945005)(64756008)(7736002)(52536014)(74316002)(53936002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY2PR01MB2604;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9ShJkW3AAmsdPZwPfujhJzKzf/0XNpJkReCSEkGv41q3M1vG+jr1hgv5lpm4dY5wWCwqYHbQ/TDlKq4Vz3uKbhxQll6LJ/FovXl85OEuKBDJGWkuMWlBla0jFsKNxf27uNf8+pwpFmm2B83Z8bR01Rtt5I8ik+lOwRqkpdRHIawMi6/roQamozWgqce1pGBpaOnNgUPXB87m3Bx9DIfCaJ3fayuK4D4SttBNfBSe4yMD3aqCJSxq0cB4EXeq2Cgk4k/SOSZ4zCbb9OWmYY9/BbNN9wHOThM/F75So9ESpFny66vS2dk022JzVqmRB2ZOJfgTfKCt1dNws2el9BLaxRhmzXFrLvWmBRyy3ELr4aH4weYkTN+wjL/cj0PlOJmOjfG0OCJBB2NbwdaeCD1sCQjzzAjgNu3MZjIwH4UEhDU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0ba20aa4-d2dd-2263-6b5f-16a5c8a39f67@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77e73d7f-9dc0-4037-0885-08d73aad928d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 13:55:45.5196
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hc6SQAo0ptW1Zg77KQIHKsu7buYJB0CKRbr49TGlKjkDfD7iJMfo4aDXWVi8qzWyxo2FpG8GBT5nKS+rQxLpV8LCU0S32caD7ma9odcfx+0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2604
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(added linux-arch)
+Hi Laurent/Kieran,
 
-On Mon, Sep 16, 2019 at 08:23:29AM -0400, Laura Abbott wrote:
-> On 9/16/19 8:21 AM, Mike Rapoport wrote:
-> >From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> >arm64 calls memblock_free() for the initrd area in its implementation of
-> >free_initrd_mem(), but this call has no actual effect that late in the boot
-> >process. By the time initrd is freed, all the reserved memory is managed by
-> >the page allocator and the memblock.reserved is unused, so there is no
-> >point to update it.
-> >
-> 
-> People like to use memblock for keeping track of memory even if it has no
-> actual effect. We made this change explicitly (see 05c58752f9dc ("arm64: To remove
-> initrd reserved area entry from memblock") That said, moving to the generic
-> APIs would be nice. Maybe we can find another place to update the accounting?
+I need to upstream a driver for a display controller that within its regist=
+ers memory region contains registers related to a PWM device. The PWM devic=
+e is for controlling the backlight of the display.
+Ideally, I would like to create a separated driver for the PWM, so that I c=
+an re-use "pwm-backlight", but since the registers for the PWM are right in=
+ the middle of the registers for the display controller I would need to ior=
+emap the memory region for the PWM registers region twice, once from the di=
+splay controller driver, and once from the PWM driver.
+Do you think that the double ioremap would be acceptable upstream?
 
-Any other place in arch/arm64 would make it messy because it would have to
-duplicate keepinitrd logic.
+Kind Regards,
 
-We could put the memblock_free() in the generic free_initrd_mem() with
-something like:
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index c47dad0..403c6a0 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -531,6 +531,10 @@ void __weak free_initrd_mem(unsigned long start,
-unsigned long end)
- {
-        free_reserved_area((void *)start, (void *)end, POISON_FREE_INITMEM,
-                        "initrd");
-+
-+#ifdef CONFIG_ARCH_KEEP_MEMBLOCK
-+       memblock_free(__virt_to_phys(start), end - start);
-+#endif
- }
- 
- #ifdef CONFIG_KEXEC_CORE
-
-
-Then powerpc and s390 folks will also be able to track the initrd memory :)
-
-> >Without the memblock_free() call the only difference between arm64 and the
-> >generic versions of free_initrd_mem() is the memory poisoning. Switching
-> >arm64 to the generic version will enable the poisoning.
-> >
-> >Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> >---
-> >
-> >I've boot tested it on qemu and I've checked that kexec works.
-> >
-> >  arch/arm64/mm/init.c | 8 --------
-> >  1 file changed, 8 deletions(-)
-> >
-> >diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> >index f3c7952..8ad2934 100644
-> >--- a/arch/arm64/mm/init.c
-> >+++ b/arch/arm64/mm/init.c
-> >@@ -567,14 +567,6 @@ void free_initmem(void)
-> >  	unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begin));
-> >  }
-> >-#ifdef CONFIG_BLK_DEV_INITRD
-> >-void __init free_initrd_mem(unsigned long start, unsigned long end)
-> >-{
-> >-	free_reserved_area((void *)start, (void *)end, 0, "initrd");
-> >-	memblock_free(__virt_to_phys(start), end - start);
-> >-}
-> >-#endif
-> >-
-> >  /*
-> >   * Dump out memory limit information on panic.
-> >   */
-> >
-> 
-
--- 
-Sincerely yours,
-Mike.
+Gareth=09
