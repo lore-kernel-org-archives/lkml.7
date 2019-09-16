@@ -2,168 +2,107 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBDA8C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4438AC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA5F920650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULZDoqFy"
+	by mail.kernel.org (Postfix) with ESMTP id 11D5E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568602013;
+	bh=QAv1wrwDejkDmV91NQY2X7M054/YqXAPK4RMZ0u7rgY=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=y/76Zr8FKCiNISnNpeUMPI0BC/aLivMa3t+iLQVAPx8xL+SJtgaGNRxB3YMMzIiQ6
+	 2a6g7LFSbP5FJ518C18M02H8u2104/XnbRLbiWRhtkj1tuKHLG8JDiqOZPDV/elP4L
+	 INTi2RUT9Jn2itsU6IShXvLvniSpIVnBo1aYRmyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbfIPCqF (ORCPT
+        id S1727325AbfIPCqw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 22:46:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37470 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725783AbfIPCqF (ORCPT
+        Sun, 15 Sep 2019 22:46:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52792 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725783AbfIPCqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 22:46:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r195so8361687wme.2;
-        Sun, 15 Sep 2019 19:46:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5kEb1GKozkl890IucyU1VkOsWdEtrAKmCR508cfsxsw=;
-        b=ULZDoqFySylO2ZDx0iyZRGRs4Yb3vQ5Pt2pCgXCY/wa105PIHAyCqlB3bdaq02iGEG
-         VMJbTy74PclPhzRTCoVYyfx7b66pkJrVvM9Ds4CHq5nvoQKnhfky7dnML8mhVnh8nBX3
-         w6Ce7QLMtiPiZxJRy9Xrb1liC7j/+FFAEuTEg9ErCYk4aiRGIhKqagkICDKIna/fJx3c
-         VpmpQMWw8JglzT/wf+2rWWVfPwPCAn1e5FHTC/UcRVfnDLeeJ3JwH9+wFr4+DmHEogBP
-         GZClQ9ahnVJYWGvpqSqXckUfbJANnenGN3YLIKVaqiu7vkR0Iu7TmWghWgLIj/cBwKBV
-         m0AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5kEb1GKozkl890IucyU1VkOsWdEtrAKmCR508cfsxsw=;
-        b=jziqUpkH6n3IlOSacalQ978TATu3PT2dAu1MYUXxXtj0ifjSPYXYrXnG3xysjQC6Xi
-         5GBR67uUnsPz11murGrVDZOUued3ixeUmCobunJMdG2kq/h+gidnd0fqy5OUoR1wm0Y3
-         gD7ynyrTsSe96d15ltIoTOSrmwl32ltX4Jf3Jo7AHomvNxtrCcDD8uhWUd02h5R/QTV8
-         s/g6X7PzqeGSKSN1GbAnJLMIzERFbtoCpwgkC4htzBu0FX7qNox/Xkr3Yi5nTcSNygrc
-         IjwRxyDbnzz++kxu01sip7m6bzDPiq4+rwNK6r4040rxZjp+yEiFLD91ZsF9vYCkRe5H
-         HshA==
-X-Gm-Message-State: APjAAAUtekYDA2cTzbEU5eSZCkklKUCFk7cZCjkNwocwkbQEZiFFZXX5
-        0UwQqV5S0W2j3DLk/9DA/xA=
-X-Google-Smtp-Source: APXvYqzHtSOhP9IH3DJpJMOyHZKUQ9L3b9L7THxDGiMzkgaLBLz168weZqJVNs0miGtnPRCztv0zoA==
-X-Received: by 2002:a1c:110:: with SMTP id 16mr12635821wmb.88.1568601962890;
-        Sun, 15 Sep 2019 19:46:02 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D144910CD9D07D5336EC2.dip0.t-ipconnect.de. [2003:d0:6f2d:1449:10cd:9d07:d533:6ec2])
-        by smtp.gmail.com with ESMTPSA id t13sm71116373wra.70.2019.09.15.19.46.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Sep 2019 19:46:02 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 04:45:50 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Willy Tarreau <w@1wt.eu>, "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190916024550.GA1352@darwi-home-pc>
-References: <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
- <20190915183240.GA23155@1wt.eu>
- <CAHk-=wi0tSUuxqaCDMtwqdVbwvTXw2ZH2k1URHz069RTznEfVw@mail.gmail.com>
+        Sun, 15 Sep 2019 22:46:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6k+3CRYWLn1opUvIFHPqpUXKKfTT7JXNt22zBeg1anQ=; b=dn6b/L2Idtj4qHBzYq518fUyd
+        +bA0FUi34EqVEv54VCdHAXCjqAayMk3btTdPNVr/S2V4ckQnOJGYygBJIcr9d/XcpPnZjGpY423N1
+        4lNqvksTQCoiUmVTkV/zBfwHC62LOfDoX89G/SRvs97SAZO6pCWTkI9jrnB/kdsrE4Mxc=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9h2K-0002Gs-WC; Mon, 16 Sep 2019 02:46:45 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id CD49F2741587; Mon, 16 Sep 2019 03:46:43 +0100 (BST)
+Date:   Mon, 16 Sep 2019 03:46:43 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the akpm-current tree with the
+ dma-mapping tree
+Message-ID: <20190916024643.GV4352@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="NBQMqqtZQBFxm+aD"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wi0tSUuxqaCDMtwqdVbwvTXw2ZH2k1URHz069RTznEfVw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 11:59:41AM -0700, Linus Torvalds wrote:
-> On Sun, Sep 15, 2019 at 11:32 AM Willy Tarreau <w@1wt.eu> wrote:
-> >
-> > I think that the exponential decay will either not be used or
-> > be totally used, so in practice you'll always end up with 0 or
-> > 30s depending on the entropy situation
-> 
-> According to the systemd random-seed source snippet that Ahmed posted,
-> it actually just tries once (well, first once non-blocking, then once
-> blocking) and then falls back to reading urandom if it fails.
-> 
-> So assuming there's just one of those "read much too early" cases, I
-> think it actually matters.
->
 
-Just a quick note, the snippest I posted:
+--NBQMqqtZQBFxm+aD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    https://lkml.kernel.org/r/20190914150206.GA2270@darwi-home-pc
+Hi all,
 
-is not PID 1.
+Today's linux-next merge of the akpm-current tree got a conflict in:
 
-It's just a lowly process called "systemd-random-seed". Its main
-reason of existence is to load/restore a random seed file from and to
-disk across reboots (just like what sysv scripts did).
+  arch/arm/include/asm/xen/page-coherent.h
 
-The reason I posted it was to show that if we change getrandom() to
-silently return weak crypto instead of blocking or an error code,
-systemd-random-seed will break: it will save the resulting data to
-disk, then even _credit_ it (if asked to) in the next boot cycle
-through RNDADDENTROPY.
+between commits:
 
-> But while I tried to test this, on my F30 install, systemd seems to
-> always just use urandom().
-> 
-> I can trigger the urandom read warning easily enough (turn of CPU
-> rdrand trusting and increase the entropy requirement by a factor of
-> ten, and turn of the ioctl to add entropy from user space), just not
-> the getrandom() blocking case at all.
->
+  bef4d2037d2143a ("xen/arm: consolidate page-coherent.h")
+  60d8cd572f655aa ("arm64/xen: fix xen-swiotlb cache flushing")
 
-Yeah, because the problem was/is not with systemd :)
+=66rom the dma-mapping tree and commit:
 
-It is GDM/gnome-session which was blocking the graphical boot process.
+  46d5fa030cd9225 ("mm: introduce compound_nr()")
 
-Regarding reproducing the issue, through a quick trace_prink, all of
-below processes are calling getrandom() on my Arch system at boot:
+=66rom the akpm-current tree.  The former appear to make the latter
+redundant so I resolved by dropping the relevant portions of the
+commit from the akpm tree.
 
-    https://lkml.kernel.org/r/20190912034421.GA2085@darwi-home-pc
+--NBQMqqtZQBFxm+aD
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The fatal call was gnome-session's one, because gnome didn't continue
-_its own_ boot due to this blockage.
+-----BEGIN PGP SIGNATURE-----
 
-> So presumably that's because I have a systemd that doesn't use
-> getrandom() at all, or perhaps uses the 'rdrand' instruction directly.
-> Or maybe because Arch has some other oddity that just triggers the
-> problem.
->
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+95IACgkQJNaLcl1U
+h9AHygf+KVMji6+ph63ldaWsuCuu9YbY9E3LMpIZZIQASzXPfpFUEUhc+PCbW+Hq
+6xAJpovc/53ivp77IGIpAr93issgebNNnGqPVNig3erTbl/AXo/9EppWGRl4YIs/
+YYUFcj8V7x128ZkPSraUh/O7ZbFxf+NTxkFjTOBQaNqzRGmrjhviPxQ04mKb5E+R
+IDZzgCCBktMzEH7G7nWpTGOMD8rSqWqhLEWDutK0PEPCYuNj9R9a0yyA+vwFLuIU
+UnwuU7hP6D0IDPt6+fjZKG+0G5wsmXGOmo1snMJawGFUcKVDX3QGsP1Tz/TQDdz5
+hNIkfwwHqWHnVSoWp0x4UMR8qC8EHg==
+=ZZK4
+-----END PGP SIGNATURE-----
 
-It seems Arch is good at triggering this. For example, here is a
-another Arch user on a Thinkpad (different model than mine), also with
-GDM getting blocked on entropy:
-
-    https://bbs.archlinux.org/viewtopic.php?id=248035
-    
-    "As you can see, the system is literally waiting a half minute for
-    something - up until crng init is done"
-
-(The NetworkManager logs are just noise. I also had them, but completely
- disabling NetworkManager didn't do anything .. just made the logs
- cleaner)
-
-thanks,
-
---
-Ahmed Darwish
-http://darwish.chasingpointers.com
+--NBQMqqtZQBFxm+aD--
