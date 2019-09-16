@@ -2,161 +2,110 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2086EC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58006C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F256C214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB68214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568654157;
+	bh=79pepAEYn/V53T4640bz6gLw78E9AvaDTSLM7JrIR58=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AXbkwwtxhSrtGCNH2qgAuVH6wc1D0r+i1nl20vLTcy0sDc9HJMWW64xnStgr6y7qn
+	 yA3ucJk/lHb4XPFjuguLRvPfJWv0OEI9sm7RT9nlN7JNHHRmkHStDvcUlhv76xfw9W
+	 XgI1Q/6dOB5dVK1AgJYcIx8RHUvihwAE71+usI78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729582AbfIPRPV (ORCPT
+        id S1731320AbfIPRP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:15:21 -0400
-Received: from mx0a-002e3701.pphosted.com ([148.163.147.86]:19548 "EHLO
-        mx0a-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729297AbfIPRPU (ORCPT
+        Mon, 16 Sep 2019 13:15:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45598 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729797AbfIPRP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:15:20 -0400
-Received: from pps.filterd (m0134420.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8GHBrix025324;
-        Mon, 16 Sep 2019 17:14:58 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2v26gj34jr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 17:14:58 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id 9BC39A8;
-        Mon, 16 Sep 2019 17:14:56 +0000 (UTC)
-Received: from swahl-linux (swahl-linux.americas.hpqcorp.net [10.33.153.21])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 54A6045;
-        Mon, 16 Sep 2019 17:14:55 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 12:14:55 -0500
-From:   Steve Wahl <steve.wahl@hpe.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        Jordan Borgner <mail@jordan-borgner.de>,
-        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
-        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
-        dimitri.sivanich@hpe.com, mike.travis@hpe.com
-Subject: Re: [PATCH] x86/boot/64: Make level2_kernel_pgt pages invalid
- outside kernel area.
-Message-ID: <20190916171455.GJ7834@swahl-linux>
-References: <20190906212950.GA7792@swahl-linux>
- <20190909081414.5e3q47fzzruesscx@box>
- <20190910142810.GA7834@swahl-linux>
- <20190911002856.mx44pmswcjfpfjsb@box.shutemov.name>
- <20190911200835.GD7834@swahl-linux>
- <20190912101917.mbobjvkxhfttxddd@box>
- <20190913151415.GG7834@swahl-linux>
- <20190916090058.mteofmkkl37ob47k@box.shutemov.name>
- <4de3e0c2-7b59-c325-8d88-58220d721f71@intel.com>
+        Mon, 16 Sep 2019 13:15:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pKYQCMu5Ew9eTX6pbhaq2BMM6o7kuFp6qMQrSf8Ncmg=; b=IZkc4kQTdFury5z5agwZqDsTF
+        OD425v2AQe+39GC5L9AFsW6Z4Fmrbv7hueDCeEs5GC11uUplxLCPentN1Vps2kgpwF7orC+/KiWi+
+        GwXkixQeEb6I0/ggQ6QFKY3h4v8zWT/R2vxHq0ND1b+iLIKZtapGuPmCmgbpmo9I2nV2s=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9ubP-0005EI-CJ; Mon, 16 Sep 2019 17:15:51 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 5F6892741A0D; Mon, 16 Sep 2019 18:15:50 +0100 (BST)
+Date:   Mon, 16 Sep 2019 18:15:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        ksummit-discuss@lists.linuxfoundation.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+Message-ID: <20190916171550.GJ4352@sirena.co.uk>
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam>
+ <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <yq1y2yrdg6w.fsf@oracle.com>
+ <20190916070101.GE18977@kadam>
+ <yq1blvkb23m.fsf@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y3hCyKCCnioDaTIs"
 Content-Disposition: inline
-In-Reply-To: <4de3e0c2-7b59-c325-8d88-58220d721f71@intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-16_07:2019-09-11,2019-09-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- spamscore=0 clxscore=1011 mlxscore=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 phishscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909160170
+In-Reply-To: <yq1blvkb23m.fsf@oracle.com>
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 07:25:48AM -0700, Dave Hansen wrote:
-> On 9/16/19 2:00 AM, Kirill A. Shutemov wrote:
-> >>> I think we also need to make it clear that this is workaround for a broken
-> >>> hardware: speculative execution must not trigger a halt.
-> >> I think the word broken is a bit loaded here.  According to the UEFI
-> >> spec (version 2.8, page 167), "Regions that are backed by the physical
-> >> hardware, but are not supposed to be accessed by the OS, must be
-> >> returned as EfiReservedMemoryType."  Our interpretation is that
-> >> includes speculative accesses.
-> > +Dave.
-> > 
-> > I don't think it is. Speculative access is done by hardware, not OS.
-> > 
-> > BTW, isn't it a BIOS issue?
-> > 
-> > I believe it should have a way to hide a range of physical address space
-> > from OS or force a caching mode on to exclude it from speculative
-> > execution. Like setup MTRRs or something.
-> 
-> Ugh.  I bet that was a fun one to chase down.  Have the hardware
-> engineers learned a lesson or are they hiding behind the EFI spec in an
-> act of pure cowardice? ;)
 
-Yes, it was fun.  My main BIOS contact has explained to me how they are
-stuck between a rock and a hard place on any other options for this.
+--Y3hCyKCCnioDaTIs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> The patch is small and fixes a real problem.  The changelog is OK,
-> although I'd prefer some differentiation between "occupied by the
-> kernel" and the kernel *image*.
+On Mon, Sep 16, 2019 at 01:08:45PM -0400, Martin K. Petersen wrote:
 
-OK, is the phrase "kernel image" generally understood to cover
-everything from _text to _end, including the bss?  As long as that's
-true, I will adopt this phrase.
+> Vendor driver submissions, however, are generally huge. Sometimes 50+
+> patches per submission window. And during this window I often get on the
+> order of 10 to 20 patches for the same driver in the fixes tree. It is
+> not always easy to determine whether a bug fix series is for one tree or
+> the other.
 
-> The code is also gloriously free of any comments about what it's
-> doing or why.
+I get the impression that a lot of vendors just don't distinguish and
+only really care about getting things upstream, especially in the
+embedded world many of them realistically expect to be shipping a pile
+of out of tree patches to anyone using anything other than mainline
+anyway so it's not super clear to them that it's worthwhile.  This goes
+back to the converstations about stable and how vendors interact with
+that.
 
-I'm intending to add something like this in the next version:
+--Y3hCyKCCnioDaTIs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-/*
- * Only the region occupied by the kernel image has so far been checked against
- * the table of usable memory regions provided by the firmware, so
- * invalidate pages outside that region.  A page table entry that maps to
- * a reserved area of memory would allow processor speculation into that
- * area, and on some hardware (particularly the UV platform) speculation
- * into reserved areas can cause a system halt.
- */
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/w0UACgkQJNaLcl1U
+h9CWZQf/bJEaAhJ2Jmw6j0ouL6Ar57UT+tZpuzfw210a2H0xjdN9gERqaSmt7vtN
+oC3gvj3MXjUgszuLCeTTYNskiNrgmZq9yICZh0tLEUk8Qi21qZTnyLr7yOMxFinv
+rIG4zKkc2OY1M9RZEEasl78vgmX/WE8a1umabatF7a1QNes98pnoxaO+LF/VOJVM
+s3eNaantTut35U3PDDf5/F4I2KGof3xBq3lXhLAh8FfAGWT2DUSQdjlRE67Mg58b
+2UTgwcmcdAWDHYQpdEOhotF7vSnWWbm5LZ9djO4q2CZFD+HTCCtN1NpXpusR5RSI
+3JtgUwuHa8/ucGJ5O7yvSmL8FEw4cg==
+=sHVd
+-----END PGP SIGNATURE-----
 
-> But, I'm left with lots of questions:
-> 
-> Why do PMD-level changes fix this?  Is it because we 2MB pad the kernel
-> image?  Why can't we still get within 2MB of the memory address in
-> question?
-
-This fix works for our hardware because the problematic reserved
-regions are 64M aligned, and going up to the next 2MB boundary from
-_end is not going to cross the next 64M boundary.
-
-One could argue the next step would be going into
-boot/compressed/{kaslr.c, misc.c} and rounding the size of the kernel
-up to the next 2MB boundary to ensure the chosen random location is
-covered by usable RAM up to the next PMD-level boundary.  I did not go
-there because for us it is not necessary.
-
-> Is it in the lower 1MB, by chance?
-
-No, this is a reserved range at the top physical addresses for each
-NUMA node in a collection of them.  
-
-> If this is all about avoiding EFI reserved ranges, why doesn't the
-> patch *LOOK* At EFI reserved ranges?
-
-Because the range the kernel image is located in is already checked
-against them in boot/compressed/kaslr.c.  This will now be explained
-in the comment I mention above, which you had not yet seen.
-
---> Steve Wahl
-
-
--- 
-Steve Wahl, Hewlett Packard Enterprise
+--Y3hCyKCCnioDaTIs--
