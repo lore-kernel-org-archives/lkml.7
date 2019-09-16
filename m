@@ -2,69 +2,103 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653A1C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3754BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:41:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FE8214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B3B21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:41:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="oSAgnCbh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389327AbfIPPiU (ORCPT
+        id S2389340AbfIPPlD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:38:20 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:48490 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726334AbfIPPiU (ORCPT
+        Mon, 16 Sep 2019 11:41:03 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33985 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728567AbfIPPlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:38:20 -0400
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 8FC5A80478;
-        Mon, 16 Sep 2019 17:38:16 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 17:38:15 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, yingjoe.chen@mediatek.com,
-        eddie.huang@mediatek.com
-Subject: Re: [PATCH v5 0/8] add driver for boe, tv101wum-nl6, boe,
- tv101wum-n53, auo, kd101n80-45na and auo, b101uan08.3 panels
-Message-ID: <20190916153815.GA20997@ravnborg.org>
-References: <20190916022941.15404-1-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916022941.15404-1-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10
-        a=t5GJ4r0l-SeTeGRPmjgA:9 a=CjuIK1q_8ugA:10 a=pHzHmUro8NiASowvMSCR:22
-        a=Ew2E2A-JSTLzCXPT_086:22
+        Mon, 16 Sep 2019 11:41:02 -0400
+Received: by mail-qk1-f194.google.com with SMTP id q203so452877qke.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=2u752yS3oLnDaYH6yTgBbPOp6ynQQ7UEDYNUBRkEYzU=;
+        b=oSAgnCbhD4qDdHEm2xKg8gd+frd0gplSiPL7p871e/IbQ3Xl+AoJriMi48+WtFfMiH
+         Er7h6Ina/mwJDFGre4pqWP4axz9nWEaIsC0Mhg4jWWlTxJLjxt2PTXBMZIrdR7ueylMQ
+         JjnBypKA663HUGsAUZdZa+CJSiDEk7HeQOtW8iN1K2wpYE6VphkL0B7aNMOaXbqeI4fq
+         g7hWJaYnXgwqAaotMNT3gfqh6eze7k6/zlkaN/LbASqJE+8AKlLGIYlLCCa69g0youHX
+         5nbYx0F2ArTT0i4inpzgu4YzObm7Q/JOwgvXXPrTcIMrcswjP8l3AOMi6LPSITs/lgVR
+         ZhFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2u752yS3oLnDaYH6yTgBbPOp6ynQQ7UEDYNUBRkEYzU=;
+        b=Y8zIUrKw4mhAoSrdvRSd4LtzYLlDf+k804ZmPeT76rpAlDeig5lNXW2FJiNhZf8snu
+         xHQzBiD0ajzeWIFLxxrWQanAdtc7uGzkuAVuZ1EKuNP0uX+z6zGrMmXEnIKfsyCakIe+
+         obkxBVsun8yYVmXrhhH904/aoyylt9ScPvFSw9SzN661tSC1ICuCZ+4jbvvI6v9Wt5Qt
+         riMZt7m4IIOWZjdgetbwS7KrT66m28SArTTM8UWsymfvkn7JobEwihKTsJO1+zTNjT4k
+         GVjWC2MEed4jhmuLK+dOBD9K9E5b8iiqtNjHVFsSG0n/IEIgjKXLhJWMFNRSzPpRiWVd
+         PJjQ==
+X-Gm-Message-State: APjAAAWBheP0xGCLnk0/7bAsT52I9FvNHaGOqj5+glb7sFPx/3ULv63l
+        KfZcKRrFg5Yc+AW6gkEqtePakg==
+X-Google-Smtp-Source: APXvYqxNJDHhdXo/lPdcN5eN3wfR3/ruQiO+FQksjwQu3q6+KQ4rkXWYO3AyeTVSdow3GMBnLY3bCg==
+X-Received: by 2002:a37:aa02:: with SMTP id t2mr643049qke.154.1568648461865;
+        Mon, 16 Sep 2019 08:41:01 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id o28sm3162570qkk.106.2019.09.16.08.41.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 08:41:01 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/memcontrol: fix a -Wunused-function warning
+Date:   Mon, 16 Sep 2019 11:40:53 -0400
+Message-Id: <1568648453-5482-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jitao.
+mem_cgroup_id_get() was introduced in the commit 73f576c04b94
+("mm:memcontrol: fix cgroup creation failure after many small jobs").
 
-> Changes since v4:
+Later, it no longer has any user since the commits,
 
-You are hit by some of the progress made in the kernel.
-New dispaly bindings are preferred to be in meta-schma formal (.yaml
-files).
-This allows more formals checks and this is the format that we
-hope all display bindigns will migrate over to use once
-someone steps up and do a mass conversion.
+1f47b61fb407 ("mm: memcontrol: fix swap counter leak on swapout from offline cgroup")
+58fa2a5512d9 ("mm: memcontrol: add sanity checks for memcg->id.ref on get/put")
 
-This is a bit extra work now, but much better to have it done
-by someone who knows the HW.
+so safe to remove it.
 
-	Sam
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/memcontrol.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9ec5e12486a7..9a375b376157 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4675,11 +4675,6 @@ static void mem_cgroup_id_put_many(struct mem_cgroup *memcg, unsigned int n)
+ 	}
+ }
+ 
+-static inline void mem_cgroup_id_get(struct mem_cgroup *memcg)
+-{
+-	mem_cgroup_id_get_many(memcg, 1);
+-}
+-
+ static inline void mem_cgroup_id_put(struct mem_cgroup *memcg)
+ {
+ 	mem_cgroup_id_put_many(memcg, 1);
+-- 
+1.8.3.1
+
