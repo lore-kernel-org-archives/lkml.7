@@ -2,105 +2,160 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49265C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE7AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1740021670
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oRZloT25"
+	by mail.kernel.org (Postfix) with ESMTP id 79B6D216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:19:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733005AbfIPWTf (ORCPT
+        id S1733098AbfIPWTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:19:35 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38251 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728917AbfIPWTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:19:34 -0400
-Received: by mail-pl1-f196.google.com with SMTP id w10so524503plq.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5s0xpZGS83FwiMvCo1TIQP0cn/VBzbnyICFgBZ0OB8Y=;
-        b=oRZloT25WgrG1A2E2/rG1KEJTsek/VSatAe1mECK70Mcns8rFB4oQSbaFfzWOC5w+M
-         Xag6HGDZ5qz6fjMSOpYUmXJmJou5XfUcqmOTGP6pBjRziIzzNqZaUy3miVy+F4viGeqf
-         GvJ+WpgDdjCraSnaMKdWGwKfJf5MQwf0ojIHE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5s0xpZGS83FwiMvCo1TIQP0cn/VBzbnyICFgBZ0OB8Y=;
-        b=CcgiDo9k1J3BBuD/4NpMikvbePTHRJLYgzerB2huV5l8dCYyZbmUBIcqcIvH8VP3n1
-         3U5jTmqA8MianFqZB+DCCZgsd2GngIZ5DWZkDwJqhS1ff7DfJ8iMROAP3IC/zBiBhbjJ
-         i2zrAT1bxLbNpgsf1cdr0GEuUeM/FctrFKHUBj3xjjUqTYCk3gNcZYLCfds80A+LU1Ic
-         N5c5cDaNDk9L1DwL0NrjUrlG3vMjTTG+DVWm0orcPBuVeONUIpG0bUq2vfoI/cME/MWw
-         +vckk0vbs8Z+BZ215Q0UpTi3w8RO9Cd2ZJ0cL2qSoIJViehHzv89XtkLJX0cWnEeHwla
-         6u+w==
-X-Gm-Message-State: APjAAAU/aBj2qEwLBEHcblHjTcaTahgbgoJpCN6ZTIXa9yD6iA52J8jR
-        1UcbcTJZynGdI7EqPCBY/eLSyg==
-X-Google-Smtp-Source: APXvYqw7sxEBBotFfIGOpBAi2210wDBdfmyL+aBEJsT7xHpKccGKNe0o4n5mxz3F+CpkAM0d6b8t+w==
-X-Received: by 2002:a17:902:8f8e:: with SMTP id z14mr397883plo.3.1568672374134;
-        Mon, 16 Sep 2019 15:19:34 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k5sm113363pfp.109.2019.09.16.15.19.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 15:19:33 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 15:19:32 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     hpa@zytor.com, Peter Zijlstra <peterz@infradead.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
+        Mon, 16 Sep 2019 18:19:47 -0400
+Received: from mga17.intel.com ([192.55.52.151]:56687 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728917AbfIPWTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 18:19:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 15:19:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
+   d="scan'208";a="198489056"
+Received: from ray.jf.intel.com (HELO [10.7.201.140]) ([10.7.201.140])
+  by orsmga002.jf.intel.com with ESMTP; 16 Sep 2019 15:19:45 -0700
+Subject: Re: [PATCH] x86/boot/64: Make level2_kernel_pgt pages invalid outside
+ kernel area.
+To:     Steve Wahl <steve.wahl@hpe.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Shawn Landden <shawn@git.icu>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: treewide replacement of fallthrough comments with "fallthrough"
- macro (was Re: [RFC PATCH] compiler_attributes.h: Add 'fallthrough' pseudo
- keyword for switch/case use)
-Message-ID: <201909161516.A68C8239A@keescook>
-References: <e0dd3af448e38e342c1ac6e7c0c802696eb77fd6.1564549413.git.joe@perches.com>
- <1d2830aadbe9d8151728a7df5b88528fc72a0095.1564549413.git.joe@perches.com>
- <20190731171429.GA24222@amd>
- <ccc7fa72d0f83ddd62067092b105bd801479004b.camel@perches.com>
- <765E740C-4259-4835-A58D-432006628BAC@zytor.com>
- <20190731184832.GZ31381@hirez.programming.kicks-ass.net>
- <201907311301.EC1D84F@keescook>
- <201908151049.809B9AFBA9@keescook>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Juergen Gross <jgross@suse.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Jordan Borgner <mail@jordan-borgner.de>,
+        Feng Tang <feng.tang@intel.com>, linux-kernel@vger.kernel.org,
+        Baoquan He <bhe@redhat.com>, russ.anderson@hpe.com,
+        dimitri.sivanich@hpe.com, mike.travis@hpe.com
+References: <20190906212950.GA7792@swahl-linux>
+ <20190909081414.5e3q47fzzruesscx@box> <20190910142810.GA7834@swahl-linux>
+ <20190911002856.mx44pmswcjfpfjsb@box.shutemov.name>
+ <20190911200835.GD7834@swahl-linux> <20190912101917.mbobjvkxhfttxddd@box>
+ <20190913151415.GG7834@swahl-linux>
+ <20190916090058.mteofmkkl37ob47k@box.shutemov.name>
+ <4de3e0c2-7b59-c325-8d88-58220d721f71@intel.com>
+ <20190916171455.GJ7834@swahl-linux>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <c8eb79bc-05ea-1658-06d6-58af86358840@intel.com>
+Date:   Mon, 16 Sep 2019 15:19:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201908151049.809B9AFBA9@keescook>
+In-Reply-To: <20190916171455.GJ7834@swahl-linux>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 11:15:53AM -0700, Kees Cook wrote:
-> With that out of the way, yes, let's do a mass conversion. As mentioned
-> before, I think "fallthrough;" should be used here (to match "break;").
-> Let's fork the C language. :)
+On 9/16/19 10:14 AM, Steve Wahl wrote:
+> I'm intending to add something like this in the next version:
+> 
+> /*
+>  * Only the region occupied by the kernel image has so far been checked against
+>  * the table of usable memory regions provided by the firmware, so
+>  * invalidate pages outside that region.  A page table entry that maps to
+>  * a reserved area of memory would allow processor speculation into that
+>  * area, and on some hardware (particularly the UV platform) speculation
+>  * into reserved areas can cause a system halt.
+>  */
 
-FWIW, last week I asked Linus at the maintainer's summit which he
-preferred ("__fallthrough" or "fallthrough") and he said "fallthrough".
+This is a good start, but it's a bit imprecise.
 
-Joe, if you've still got the series ready, do you want to send it for
-this merge window before -rc1 gets cut?
+The KASLR code ensures that the kernel image itself doesn't overlap a
+reserved area, but it appears that we're mapping more than strictly just
+the kernel image.
 
--- 
-Kees Cook
+>> But, I'm left with lots of questions:
+>>
+>> Why do PMD-level changes fix this?  Is it because we 2MB pad the kernel
+>> image?  Why can't we still get within 2MB of the memory address in
+>> question?
+> 
+> This fix works for our hardware because the problematic reserved
+> regions are 64M aligned, and going up to the next 2MB boundary from
+> _end is not going to cross the next 64M boundary.
+
+I'd really prefer that we fix this once and for all rather than kicking
+the can down the road to the next hardware manufacturer that changes the
+alignment.
+
+> One could argue the next step would be going into
+> boot/compressed/{kaslr.c, misc.c} and rounding the size of the kernel
+> up to the next 2MB boundary to ensure the chosen random location is
+> covered by usable RAM up to the next PMD-level boundary.  I did not go
+> there because for us it is not necessary.
+
+Doing this would *fully* fix this issue, right?  Seems like the right
+thing to do to me.
+
+>> If this is all about avoiding EFI reserved ranges, why doesn't the
+>> patch *LOOK* At EFI reserved ranges?
+> 
+> Because the range the kernel image is located in is already checked
+> against them in boot/compressed/kaslr.c.  This will now be explained
+> in the comment I mention above, which you had not yet seen.
+
+Ahh, thanks for the explanation.  This will make for good changelog
+material.
