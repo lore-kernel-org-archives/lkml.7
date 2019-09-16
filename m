@@ -2,86 +2,220 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C33BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FB8C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587AC214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FE920650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:49:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbfIPHtk (ORCPT
+        id S1730741AbfIPHtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:49:40 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43531 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726648AbfIPHti (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:49:38 -0400
-Received: by mail-qt1-f195.google.com with SMTP id c3so631122qtv.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 00:49:38 -0700 (PDT)
+        Mon, 16 Sep 2019 03:49:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53934 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726648AbfIPHtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 03:49:49 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 580F6C010927
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 07:49:48 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id z205so251156wmb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 00:49:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EnB6rF+kEoB0y/dLzKOFheHfeoq2PLYWg3/5pMHIOV0=;
-        b=a1vtKIQkSg9ZSa20mc8C41mQpG1KVrJAxRD1J8U2lo2qsbmLu0q2S0aVduoMANtx+y
-         zgQJtNjPX/1phT6ojR84ZRWqaBNBmv0iV65Vjal+yYfSw/dXQNeYPS20fZ/389+K6zNi
-         U0u5Vg/FGM61Kn0jVXvWwrvCR6iSjKKkQXNbqkSX8d0l6xBFFdelXfglEQYDwkqb30VV
-         xoALjm+SFJUJcA8fSZpeP8iXoOVUl3g+BaMHIUBxuGNrdT4C24xKPMMT6+Fk9PSc4c6D
-         NrPx0FwISO0RPqllGgueIYCeniC0bzCyrL9CGXLpY5jety+N8NaGSiN6Plnf3GZH9N+5
-         9gsg==
-X-Gm-Message-State: APjAAAV+vNqDu7dfH4vl7Ta0c/QcU2tQCj+WIbRsdQsgNsrEjxy5cMT3
-        89xJ4Oi+V1We6OrR6Q/BrUomcSoJryMOFKT1/NI=
-X-Google-Smtp-Source: APXvYqyFZmHtVbkxl2VEYD0MBTCF/ulUgA/q2GShF0UOR6niQO7seRSw8CkjzspNUsZqPiPSFmIl13/oSJogmzO6JII=
-X-Received: by 2002:ac8:1a2e:: with SMTP id v43mr6882713qtj.204.1568620177658;
- Mon, 16 Sep 2019 00:49:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20170130110512.6943-1-thierry.reding@gmail.com> <20190914152544.GA17499@roeck-us.net>
-In-Reply-To: <20190914152544.GA17499@roeck-us.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Sep 2019 09:49:21 +0200
-Message-ID: <CAK8P3a3G_9EeK-Xp7ZeA0EN7WNzrL7AxoQcNZ8z-oe5NsTYW6g@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ARM, arm64: Remove arm_pm_restart()
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=fGp111aH2l7qegNh84iFHk3Dq9HJMbiQInTpzhHxUjw=;
+        b=rPGK642b7gG1a6I2Tdwg0o61U3ejeMfm1Fe1iTMEgAnzNB4Jx5yzWcvOfvIZHf+66V
+         e1AB0vmWTRk+aP4YZaXXobMiIGNxjRdvIf8vaefwtNH/Zy/zN27Idn/FzAYGqRlC7aIC
+         /0644va+rxtPb10S0IE8QmMhdm1phD63hk7YsOIxiOeGIlMkN+LI3VjLuv9qrUh2kKp1
+         0X7NHInAwEsk3cLWLVzkSI64CzDQcBV337PS2DQ9JYK5y8yhVXTIabOgaooK/4U4Qo8D
+         fd3kTS5ey8WpP7GnsYfqm4WjzWlJ/cM7l4Jkvzmp+DA5uDbEfrZTkxdAUzasU1tl2YL9
+         ddKw==
+X-Gm-Message-State: APjAAAVpuWRgagfXnLAEg7zn+CemOV3rFWOqY87fRsXd8yPiG26iUbNB
+        eMRHnd7DFST5cex3YePqyX3R+9ErxOi8cQCvyUmBm4iR4Hc1NP3VhsFESc3Hta8WnONOwC3DU5i
+        xRWb3j+vKVjOiSVMk4vCgWE/Z
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr12754708wma.131.1568620187037;
+        Mon, 16 Sep 2019 00:49:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqz4BrE1csH+OTX5L6dAVXGnYlSUv1/pV5xTBLWoRojR+i93OAxrK9YwYUjkNwhSm69x2hXH3A==
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr12754689wma.131.1568620186697;
+        Mon, 16 Sep 2019 00:49:46 -0700 (PDT)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id q25sm12852046wmq.27.2019.09.16.00.49.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2019 00:49:46 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
+ <a1c6c974-a6f2-aa71-aa2e-4c987447f419@redhat.com>
+ <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
+ <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
+ <CANRm+Cy+5pompcDDS2C9YnxvE_-87i24gbBfc53Qa1tcWNck2Q@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <82ff90b6-f518-e2a8-c4f5-ef4b294af15e@redhat.com>
+Date:   Mon, 16 Sep 2019 09:49:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <CANRm+Cy+5pompcDDS2C9YnxvE_-87i24gbBfc53Qa1tcWNck2Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 5:26 PM Guenter Roeck <linux@roeck-us.net> wrote:
-> On Mon, Jan 30, 2017 at 12:05:06PM +0100, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >
-> > Hi everyone,
-> >
-> > This small series is preparatory work for a series that I'm working on
-> > which attempts to establish a formal framework for system restart and
-> > power off.
-> >
-> > Guenter has done a lot of good work in this area, but it never got
-> > merged. I think this set is a valuable addition to the kernel because
-> > it converts all odd providers to the established mechanism for restart.
-> >
-> > Since this is stretched across both 32-bit and 64-bit ARM, as well as
-> > PSCI, and given the SoC/board level of functionality, I think it might
-> > make sense to take this through the ARM SoC tree in order to simplify
-> > the interdependencies. But it should also be possible to take patches
-> > 1-4 via their respective trees this cycle and patches 5-6 through the
-> > ARM and arm64 trees for the next cycle, if that's preferred.
-> >
->
-> We tried this twice now, and it seems to go nowhere. What does it take
-> to get it applied ?
+On 16/09/19 06:02, Wanpeng Li wrote:
+> Hi Paolo,
+> 
+> Something like below? It still fluctuate when running complex guest os
+> like linux. Removing timer_advance_adjust_done will hinder introduce
+> patch v3 2/2 since there is no adjust done flag in each round
+> evaluation.
 
-Can you send a pull request to soc@kernel.org after the merge window,
-with everyone else on Cc? If nobody objects, I'll merge it through
-the soc tree.
+That's not important, since the adjustment would be continuous.
 
-        Arnd
+How much fluctuation can you see?
+
+> I have two questions here, best-effort tune always as
+> below or periodically revaluate to get conservative value and get
+> best-effort value in each round evaluation as patch v3 2/2, which one
+> do you prefer? The former one can wast time to wait sometimes and the
+> later one can not get the best latency. In addition, can the adaptive
+> tune algorithm be using in all the scenarios contain
+> RT/over-subscribe?
+
+I prefer the former, like the patch below, mostly because of the extra
+complexity of the periodic reevaluation.
+
+Paolo
+
+> 
+> ---8<---
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 685d17c..895735b 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -69,6 +69,7 @@
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+>  /* step-by-step approximation to mitigate fluctuation */
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+> +#define LAPIC_TIMER_ADVANCE_FILTER 5000
+> 
+>  static inline int apic_test_vector(int vec, void *bitmap)
+>  {
+> @@ -1479,29 +1480,28 @@ static inline void
+> adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>                            s64 advance_expire_delta)
+>  {
+>      struct kvm_lapic *apic = vcpu->arch.apic;
+> -    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+> -    u64 ns;
+> +    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
+> +
+> +    if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
+> +        abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
+> +        /* filter out random fluctuations */
+> +        return;
+> +    }
+> 
+>      /* too early */
+>      if (advance_expire_delta < 0) {
+>          ns = -advance_expire_delta * 1000000ULL;
+>          do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -        timer_advance_ns -= min((u32)ns,
+> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +        timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>      } else {
+>      /* too late */
+>          ns = advance_expire_delta * 1000000ULL;
+>          do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -        timer_advance_ns += min((u32)ns,
+> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +        timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>      }
+> 
+> -    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> -        apic->lapic_timer.timer_advance_adjust_done = true;
+> -    if (unlikely(timer_advance_ns > 5000)) {
+> +    if (unlikely(timer_advance_ns > 5000))
+>          timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -        apic->lapic_timer.timer_advance_adjust_done = false;
+> -    }
+>      apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  }
+> 
+> @@ -1521,7 +1521,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>      if (guest_tsc < tsc_deadline)
+>          __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+> 
+> -    if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> +    if (lapic_timer_advance_ns == -1)
+>          adjust_lapic_timer_advance(vcpu,
+> apic->lapic_timer.advance_expire_delta);
+>  }
+> 
+> @@ -2298,10 +2298,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int
+> timer_advance_ns)
+>      apic->lapic_timer.timer.function = apic_timer_fn;
+>      if (timer_advance_ns == -1) {
+>          apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -        apic->lapic_timer.timer_advance_adjust_done = false;
+>      } else {
+>          apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> -        apic->lapic_timer.timer_advance_adjust_done = true;
+>      }
+> 
+> 
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 50053d2..2aad7e2 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -35,7 +35,6 @@ struct kvm_timer {
+>      s64 advance_expire_delta;
+>      atomic_t pending;            /* accumulated triggered timers */
+>      bool hv_timer_in_use;
+> -    bool timer_advance_adjust_done;
+>  };
+> 
+>  struct kvm_lapic {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 93b0bd4..4f65ef1 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -141,7 +141,7 @@
+>   * advancement entirely.  Any other value is used as-is and disables adaptive
+>   * tuning, i.e. allows priveleged userspace to set an exact advancement time.
+>   */
+> -static int __read_mostly lapic_timer_advance_ns = -1;
+> +int __read_mostly lapic_timer_advance_ns = -1;
+>  module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
+> 
+>  static bool __read_mostly vector_hashing = true;
+> diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+> index 6594020..2c6ba86 100644
+> --- a/arch/x86/kvm/x86.h
+> +++ b/arch/x86/kvm/x86.h
+> @@ -301,6 +301,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+> unsigned long cr2,
+> 
+>  extern bool enable_vmware_backdoor;
+> 
+> +extern int lapic_timer_advance_ns;
+>  extern int pi_inject_timer;
+> 
+>  extern struct static_key kvm_no_apic_vcpu;
+> 
+
