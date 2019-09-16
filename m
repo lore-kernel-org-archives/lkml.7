@@ -2,252 +2,311 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BA6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA23AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D91E521670
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2S9vcgs"
+	by mail.kernel.org (Postfix) with ESMTP id 90435214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733128AbfIPNT3 (ORCPT
+        id S1733136AbfIPNUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:19:29 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41949 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733043AbfIPNT2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:19:28 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x4so11502528qtq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:19:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=aZ3prQ2MeDSXxYktZG7mMEIanf5iPS/oBCM9iozvwW4=;
-        b=d2S9vcgs6v4gH4OH8OAVymCe0ul6kgViLHGVsU2o7gdBBjPqtcg5nPzrutJ8NVS1w9
-         jN6XJnJNsLtzv+lHlHhbFX8Zgd9uxTOavAntQD7SSJP76Bmwlf0P3YxBOuquds5uqeXE
-         1UKflEppxqF9sSy1aL0yVKr7GfeSLAGmqFXMYr6Hs/2s8teCdwfYEs9nUX8U6UN4hBPC
-         yz3q/9dvLxDCnxIfChxvJY90K+oood2mjlmleDLfuxcwWHHQCc432CKRd3bqikAwdmFb
-         QrEmDy/ygRBGUliTSLu1fvrTa12WWA0/B8mbcQsS/mKagDAh73kWIx3SyuBvkJ5BZFwF
-         vLVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=aZ3prQ2MeDSXxYktZG7mMEIanf5iPS/oBCM9iozvwW4=;
-        b=VBiYw4DKeBQa8TGLFkqwVAJKdIGp1mR8VNzgToNl2LCCLjKLchyl06rTP/5ns26x8a
-         s8Q+qSC5sg8+XrAGsXREDJzn9oKFL+6NRonGqG9otVLOi1y+tU7PBbRBzJFhPYyEtnq/
-         I80PkWw+V98hmukqheJsso9HhNnzyumKBVW3U+g1gxNDfmLN64moaSeifTksOGKszm/y
-         8R8OKTQGu8A9GunnFRkp2b+ThgPU+XWr9jnH5PVq7fvmU7HT4vCGc9ALlTTnwC+FSNku
-         iBhSHvvQW7DMhr4dZKMj7YE+UYRJfNRrQCWi1FcIBRpmDr8iO4zcDFIMh2xCEuzdaBNA
-         AbOw==
-X-Gm-Message-State: APjAAAWAXOcPMLBqRfcarWQI7QIaoN5Py4+olIyxeWboyts71KysCMMz
-        lpDPM7lapuUKh1UJQqGS8/dGwc8+dbuL9ZX01JYVUH8Q
-X-Google-Smtp-Source: APXvYqw+2su+EJJYEJ0WNUOevzruDoc5jnoVjvf91q9E+XMfpPxafQbGoC6EOHRsKgVqJNo8zwiU/q114VoLMVGFA4U=
-X-Received: by 2002:a0c:e5c6:: with SMTP id u6mr5136904qvm.106.1568639966038;
- Mon, 16 Sep 2019 06:19:26 -0700 (PDT)
+        Mon, 16 Sep 2019 09:20:55 -0400
+Received: from foss.arm.com ([217.140.110.172]:44724 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733043AbfIPNUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:20:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF5D337;
+        Mon, 16 Sep 2019 06:20:54 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A792B3F67D;
+        Mon, 16 Sep 2019 06:20:53 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:20:51 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
+        bhelgaas@google.com, linux-amlogic@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, yue.wang@Amlogic.com, maz@kernel.org,
+        repk@triplefau.lt, nick@khadas.com, gouwa@khadas.com
+Subject: Re: [PATCH v2 3/6] PCI: amlogic: meson: Add support for G12A
+Message-ID: <20190916132051.GP9720@e119886-lin.cambridge.arm.com>
+References: <20190916125022.10754-1-narmstrong@baylibre.com>
+ <20190916125022.10754-4-narmstrong@baylibre.com>
 MIME-Version: 1.0
-References: <20190909135205.10277-1-benjamin.gaignard@st.com> <20190909135205.10277-2-benjamin.gaignard@st.com>
-In-Reply-To: <20190909135205.10277-2-benjamin.gaignard@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 16 Sep 2019 15:19:15 +0200
-Message-ID: <CA+M3ks7Y998qW+dOLPD+WLUH-Qi-=-okTYwDh7SBB0xo5XAs_w@mail.gmail.com>
-Subject: Re: [PATCH] drm: atomic helper: fix W=1 warnings
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916125022.10754-4-narmstrong@baylibre.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 9 sept. 2019 =C3=A0 16:41, Benjamin Gaignard
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
-> Fix warnings with W=3D1.
-> Few for_each macro set variables that are never used later.
-> Prevent warning by marking these variables as __maybe_unused.
->
+On Mon, Sep 16, 2019 at 02:50:19PM +0200, Neil Armstrong wrote:
+> Add support for the Amlogic G12A SoC using a separate shared PHY.
+> 
+> This adds support for fetching a PHY phandle and call the PHY init,
+> reset and power on/off calls instead of writing in the PHY register or
+> toggling the PHY reset line.
+> 
+> The MIPI clock and the PHY memory resource are only required for the
+> Amlogic AXG SoC PCIe PHY setup, thus these elements are ignored for
+> the Amlogic G12A having a separate shared PHY.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/pci/controller/dwc/pci-meson.c | 128 ++++++++++++++++++++-----
+>  1 file changed, 105 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-meson.c b/drivers/pci/controller/dwc/pci-meson.c
+> index ab79990798f8..3772b02a5c55 100644
+> --- a/drivers/pci/controller/dwc/pci-meson.c
+> +++ b/drivers/pci/controller/dwc/pci-meson.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/reset.h>
+>  #include <linux/resource.h>
+>  #include <linux/types.h>
+> +#include <linux/phy/phy.h>
+>  
+>  #include "pcie-designware.h"
+>  
+> @@ -96,12 +97,18 @@ struct meson_pcie_rc_reset {
+>  	struct reset_control *apb;
+>  };
+>  
+> +struct meson_pcie_param {
+> +	bool has_shared_phy;
+> +};
+> +
+>  struct meson_pcie {
+>  	struct dw_pcie pci;
+>  	struct meson_pcie_mem_res mem_res;
+>  	struct meson_pcie_clk_res clk_res;
+>  	struct meson_pcie_rc_reset mrst;
+>  	struct gpio_desc *reset_gpio;
+> +	struct phy *phy;
+> +	const struct meson_pcie_param *param;
+>  };
+>  
+>  static struct reset_control *meson_pcie_get_reset(struct meson_pcie *mp,
+> @@ -123,10 +130,12 @@ static int meson_pcie_get_resets(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+>  
+> -	mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> -	if (IS_ERR(mrst->phy))
+> -		return PTR_ERR(mrst->phy);
+> -	reset_control_deassert(mrst->phy);
+> +	if (!mp->param->has_shared_phy) {
+> +		mrst->phy = meson_pcie_get_reset(mp, "phy", PCIE_SHARED_RESET);
+> +		if (IS_ERR(mrst->phy))
+> +			return PTR_ERR(mrst->phy);
+> +		reset_control_deassert(mrst->phy);
+> +	}
+>  
+>  	mrst->port = meson_pcie_get_reset(mp, "port", PCIE_NORMAL_RESET);
+>  	if (IS_ERR(mrst->port))
+> @@ -180,27 +189,52 @@ static int meson_pcie_get_mems(struct platform_device *pdev,
+>  	if (IS_ERR(mp->mem_res.cfg_base))
+>  		return PTR_ERR(mp->mem_res.cfg_base);
+>  
+> -	/* Meson SoC has two PCI controllers use same phy register*/
+> -	mp->mem_res.phy_base = meson_pcie_get_mem_shared(pdev, mp, "phy");
+> -	if (IS_ERR(mp->mem_res.phy_base))
+> -		return PTR_ERR(mp->mem_res.phy_base);
+> +	/* Meson AXG SoC has two PCI controllers use same phy register */
+> +	if (!mp->param->has_shared_phy) {
+> +		mp->mem_res.phy_base =
+> +			meson_pcie_get_mem_shared(pdev, mp, "phy");
+> +		if (IS_ERR(mp->mem_res.phy_base))
+> +			return PTR_ERR(mp->mem_res.phy_base);
+> +	}
+>  
+>  	return 0;
+>  }
+>  
+> -static void meson_pcie_power_on(struct meson_pcie *mp)
+> +static int meson_pcie_power_on(struct meson_pcie *mp)
+>  {
+> -	writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> +	int ret = 0;
+> +
+> +	if (mp->param->has_shared_phy) {
+> +		ret = phy_init(mp->phy);
+> +		if (ret)
+> +			return ret;
+> +
+> +		ret = phy_power_on(mp->phy);
+> +		if (ret) {
+> +			phy_exit(mp->phy);
+> +			return ret;
+> +		}
+> +	} else
+> +		writel(MESON_PCIE_PHY_POWERUP, mp->mem_res.phy_base);
+> +
+> +	return 0;
+>  }
+>  
+> -static void meson_pcie_reset(struct meson_pcie *mp)
+> +static int meson_pcie_reset(struct meson_pcie *mp)
+>  {
+>  	struct meson_pcie_rc_reset *mrst = &mp->mrst;
+> -
+> -	reset_control_assert(mrst->phy);
+> -	udelay(PCIE_RESET_DELAY);
+> -	reset_control_deassert(mrst->phy);
+> -	udelay(PCIE_RESET_DELAY);
+> +	int ret = 0;
+> +
+> +	if (mp->param->has_shared_phy) {
+> +		ret = phy_reset(mp->phy);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		reset_control_assert(mrst->phy);
+> +		udelay(PCIE_RESET_DELAY);
+> +		reset_control_deassert(mrst->phy);
+> +		udelay(PCIE_RESET_DELAY);
+> +	}
+>  
+>  	reset_control_assert(mrst->port);
+>  	reset_control_assert(mrst->apb);
+> @@ -208,6 +242,8 @@ static void meson_pcie_reset(struct meson_pcie *mp)
+>  	reset_control_deassert(mrst->port);
+>  	reset_control_deassert(mrst->apb);
+>  	udelay(PCIE_RESET_DELAY);
+> +
+> +	return 0;
+>  }
+>  
+>  static inline struct clk *meson_pcie_probe_clock(struct device *dev,
+> @@ -250,9 +286,11 @@ static int meson_pcie_probe_clocks(struct meson_pcie *mp)
+>  	if (IS_ERR(res->port_clk))
+>  		return PTR_ERR(res->port_clk);
+>  
+> -	res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> -	if (IS_ERR(res->mipi_gate))
+> -		return PTR_ERR(res->mipi_gate);
+> +	if (!mp->param->has_shared_phy) {
+> +		res->mipi_gate = meson_pcie_probe_clock(dev, "mipi", 0);
+> +		if (IS_ERR(res->mipi_gate))
+> +			return PTR_ERR(res->mipi_gate);
+> +	}
+>  
+>  	res->general_clk = meson_pcie_probe_clock(dev, "general", 0);
+>  	if (IS_ERR(res->general_clk))
+> @@ -524,6 +562,7 @@ static const struct dw_pcie_ops dw_pcie_ops = {
+>  
+>  static int meson_pcie_probe(struct platform_device *pdev)
+>  {
+> +	const struct meson_pcie_param *match_data;
+>  	struct device *dev = &pdev->dev;
+>  	struct dw_pcie *pci;
+>  	struct meson_pcie *mp;
+> @@ -537,6 +576,19 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	pci->dev = dev;
+>  	pci->ops = &dw_pcie_ops;
+>  
+> +	match_data = of_device_get_match_data(dev);
+> +	if (!match_data) {
+> +		dev_err(dev, "failed to get match data\n");
+> +		return -ENODEV;
+> +	}
+> +	mp->param = match_data;
+> +
+> +	if (mp->param->has_shared_phy) {
+> +		mp->phy = devm_phy_get(dev, "pcie");
+> +		if (IS_ERR(mp->phy))
+> +			return PTR_ERR(mp->phy);
+> +	}
+> +
+>  	mp->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+>  	if (IS_ERR(mp->reset_gpio)) {
+>  		dev_err(dev, "get reset gpio failed\n");
+> @@ -555,13 +607,22 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	meson_pcie_power_on(mp);
+> -	meson_pcie_reset(mp);
+> +	ret = meson_pcie_power_on(mp);
+> +	if (ret) {
+> +		dev_err(dev, "phy power on failed, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = meson_pcie_reset(mp);
+> +	if (ret) {
+> +		dev_err(dev, "reset failed, %d\n", ret);
+> +		goto err_phy;
+> +	}
+>  
+>  	ret = meson_pcie_probe_clocks(mp);
+>  	if (ret) {
+>  		dev_err(dev, "init clock resources failed, %d\n", ret);
+> -		return ret;
+> +		goto err_phy;
+>  	}
+>  
+>  	platform_set_drvdata(pdev, mp);
+> @@ -569,15 +630,36 @@ static int meson_pcie_probe(struct platform_device *pdev)
+>  	ret = meson_add_pcie_port(mp, pdev);
+>  	if (ret < 0) {
+>  		dev_err(dev, "Add PCIe port failed, %d\n", ret);
+> -		return ret;
+> +		goto err_phy;
+>  	}
+>  
+>  	return 0;
+> +
+> +err_phy:
+> +	if (mp->param->has_shared_phy) {
+> +		phy_power_off(mp->phy);
+> +		phy_exit(mp->phy);
+> +	}
 
-A little up on this one because it may exist others ways to fix these warni=
-ngs.
-Get feedback on this path could give the direction for similar ones in drm.
+Interestingly for AXG, if the probe fails we don't seem to do the opposite
+of MESON_PCIE_PHY_POWERUP. Though I can see this is a pre-existing issue that
+has little impact and probably rarely gets hit, so:
+
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
+However it would be *super really nice* to write a meson_pcie_power_off that
+mirrors meson_pcie_power_on that you could call here instead.
 
 Thanks,
-Benjamin
 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->  drivers/gpu/drm/drm_atomic_helper.c | 36 ++++++++++++++++++-------------=
------
->  1 file changed, 18 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_at=
-omic_helper.c
-> index aa16ea17ff9b..b69d17b0b9bd 100644
-> --- a/drivers/gpu/drm/drm_atomic_helper.c
-> +++ b/drivers/gpu/drm/drm_atomic_helper.c
-> @@ -262,7 +262,7 @@ steal_encoder(struct drm_atomic_state *state,
->               struct drm_encoder *encoder)
->  {
->         struct drm_crtc_state *crtc_state;
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *old_connector_state, *new_connector_s=
-tate;
->         int i;
->
-> @@ -412,7 +412,7 @@ mode_fixup(struct drm_atomic_state *state)
->  {
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *new_crtc_state;
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *new_conn_state;
->         int i;
->         int ret;
-> @@ -608,7 +608,7 @@ drm_atomic_helper_check_modeset(struct drm_device *de=
-v,
->  {
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *old_connector_state, *new_connector_s=
-tate;
->         int i, ret;
->         unsigned connectors_mask =3D 0;
-> @@ -984,7 +984,7 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
->  static void
->  disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_sta=
-te)
->  {
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *old_conn_state, *new_conn_state;
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> @@ -1173,7 +1173,7 @@ crtc_set_mode(struct drm_device *dev, struct drm_at=
-omic_state *old_state)
->  {
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *new_crtc_state;
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *new_conn_state;
->         int i;
->
-> @@ -1294,7 +1294,7 @@ void drm_atomic_helper_commit_modeset_enables(struc=
-t drm_device *dev,
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *old_crtc_state;
->         struct drm_crtc_state *new_crtc_state;
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *new_conn_state;
->         int i;
->
-> @@ -1384,7 +1384,7 @@ int drm_atomic_helper_wait_for_fences(struct drm_de=
-vice *dev,
->                                       struct drm_atomic_state *state,
->                                       bool pre_swap)
->  {
-> -       struct drm_plane *plane;
-> +       struct drm_plane __maybe_unused *plane;
->         struct drm_plane_state *new_plane_state;
->         int i, ret;
->
-> @@ -1431,7 +1431,7 @@ drm_atomic_helper_wait_for_vblanks(struct drm_devic=
-e *dev,
->                 struct drm_atomic_state *old_state)
->  {
->         struct drm_crtc *crtc;
-> -       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> +       struct drm_crtc_state __maybe_unused *old_crtc_state, *new_crtc_s=
-tate;
->         int i, ret;
->         unsigned crtc_mask =3D 0;
->
-> @@ -1621,7 +1621,7 @@ static void commit_work(struct work_struct *work)
->  int drm_atomic_helper_async_check(struct drm_device *dev,
->                                    struct drm_atomic_state *state)
->  {
-> -       struct drm_crtc *crtc;
-> +       struct drm_crtc __maybe_unused *crtc;
->         struct drm_crtc_state *crtc_state;
->         struct drm_plane *plane =3D NULL;
->         struct drm_plane_state *old_plane_state =3D NULL;
-> @@ -1982,9 +1982,9 @@ int drm_atomic_helper_setup_commit(struct drm_atomi=
-c_state *state,
->  {
->         struct drm_crtc *crtc;
->         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
-> -       struct drm_connector *conn;
-> +       struct drm_connector __maybe_unused *conn;
->         struct drm_connector_state *old_conn_state, *new_conn_state;
-> -       struct drm_plane *plane;
-> +       struct drm_plane __maybe_unused *plane;
->         struct drm_plane_state *old_plane_state, *new_plane_state;
->         struct drm_crtc_commit *commit;
->         int i, ret;
-> @@ -2214,7 +2214,7 @@ EXPORT_SYMBOL(drm_atomic_helper_fake_vblank);
->   */
->  void drm_atomic_helper_commit_hw_done(struct drm_atomic_state *old_state=
-)
->  {
-> -       struct drm_crtc *crtc;
-> +       struct drm_crtc __maybe_unused *crtc;
->         struct drm_crtc_state *old_crtc_state, *new_crtc_state;
->         struct drm_crtc_commit *commit;
->         int i;
-> @@ -2300,7 +2300,7 @@ EXPORT_SYMBOL(drm_atomic_helper_commit_cleanup_done=
-);
->  int drm_atomic_helper_prepare_planes(struct drm_device *dev,
->                                      struct drm_atomic_state *state)
->  {
-> -       struct drm_connector *connector;
-> +       struct drm_connector __maybe_unused *connector;
->         struct drm_connector_state *new_conn_state;
->         struct drm_plane *plane;
->         struct drm_plane_state *new_plane_state;
-> @@ -2953,9 +2953,9 @@ int drm_atomic_helper_disable_all(struct drm_device=
- *dev,
->  {
->         struct drm_atomic_state *state;
->         struct drm_connector_state *conn_state;
-> -       struct drm_connector *conn;
-> +       struct drm_connector __maybe_unused *conn;
->         struct drm_plane_state *plane_state;
-> -       struct drm_plane *plane;
-> +       struct drm_plane __maybe_unused *plane;
->         struct drm_crtc_state *crtc_state;
->         struct drm_crtc *crtc;
->         int ret, i;
-> @@ -3199,11 +3199,11 @@ int drm_atomic_helper_commit_duplicated_state(str=
-uct drm_atomic_state *state,
->  {
->         int i, ret;
->         struct drm_plane *plane;
-> -       struct drm_plane_state *new_plane_state;
-> +       struct drm_plane_state __maybe_unused *new_plane_state;
->         struct drm_connector *connector;
-> -       struct drm_connector_state *new_conn_state;
-> +       struct drm_connector_state __maybe_unused *new_conn_state;
->         struct drm_crtc *crtc;
-> -       struct drm_crtc_state *new_crtc_state;
-> +       struct drm_crtc_state __maybe_unused *new_crtc_state;
->
->         state->acquire_ctx =3D ctx;
->
-> --
-> 2.15.0
->
+Andrew Murray 
+
+> +
+> +	return ret;
+>  }
+>  
+> +static struct meson_pcie_param meson_pcie_axg_param = {
+> +	.has_shared_phy = false,
+> +};
+> +
+> +static struct meson_pcie_param meson_pcie_g12a_param = {
+> +	.has_shared_phy = true,
+> +};
+> +
+>  static const struct of_device_id meson_pcie_of_match[] = {
+>  	{
+>  		.compatible = "amlogic,axg-pcie",
+> +		.data = &meson_pcie_axg_param,
+> +	},
+> +	{
+> +		.compatible = "amlogic,g12a-pcie",
+> +		.data = &meson_pcie_g12a_param,
+>  	},
+>  	{},
+>  };
+> -- 
+> 2.22.0
+> 
