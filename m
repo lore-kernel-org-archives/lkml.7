@@ -2,121 +2,104 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B707FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFB4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 961A620678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FC020678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568650159;
+	bh=+xqkrfZQUYv9qQoMb9obJG1dhK0csNItrLmKUr0mTFw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=pwsqOJs+ZQPPyyqZ9X7lIc/Gns1wOLBsIjlcqPWDS4YhsANafEQo0fkQCLXOAE2wW
+	 Ib6n9Z4WSPfeNsnZ5S+jqz2JvtvCbLRPOg+sHgVMouQxPoy86eGs1M9n+yhGsO6P8F
+	 KC721xt1SgebQ8kT3jdNxXOWX6bXE09iP1Kwaa5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389616AbfIPQJK (ORCPT
+        id S2389646AbfIPQJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:09:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:34082 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732072AbfIPQJJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:09:09 -0400
-Received: by mail-io1-f71.google.com with SMTP id m25so337425ioo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:09:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=EC2s8BEqRAx9Dr0E2QNHTzJxeMHG454P6cMAn1PGkeg=;
-        b=MHDzMr7kgYekGpq85I1xo+UeV2e6B+NM36/8DOIOqj4Sh/vVA+z8wQ6MespvR2jI5s
-         93Hl/nCaE8tzqcJyQGgzp0V+O9UfacnMrDu6sjhTc9Pi5A8wYYoD1iRrhMyBQSdVx8oo
-         76dyId4zooOThDq0Bx7zOAkf+GukVF2Xu+fUFITnM0sBiq8qjiZBsNxC9WHpfOl8mqJN
-         /1zZMwIvxHqPPnqfuCQRZYF3rLg+SmkheI19z0tDyO2FNIdfkVqihN//W8nK/qaitVFj
-         xLCYbenzK+JP31pUMbQu1tHZZrygVaD6U+8tSAgwouN789qevwtFjCiHb9iaGpuukpVe
-         9uCA==
-X-Gm-Message-State: APjAAAXo+mY+PAe6dQwCe8MfffpIdu2S9rZFSrRHIQ1Fkp0DepncuHMh
-        vN4tqE6ZCuxQ4QpNqXmVAkzzKi+AY3E4Vx9211uXrjGA4ZG1
-X-Google-Smtp-Source: APXvYqxgrjyRDgUGY0231kJo3+PNXQQJKev3jLswEnQYXN+zlSCG7YyT3tkMrT/3iiQJJXuxYJgaNcDC3EKtMHA7Zgv2zXaMYWPQ
+        Mon, 16 Sep 2019 12:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49820 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728783AbfIPQJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:09:15 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FF8A20678;
+        Mon, 16 Sep 2019 16:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568650154;
+        bh=+xqkrfZQUYv9qQoMb9obJG1dhK0csNItrLmKUr0mTFw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=T4iNa/s9FMok1H5jFLps3Lu/MV9sWu+L0TZy4TtBXTdYj51qGTdJco13jsaLolcIi
+         IHxYVz9zMU0Z6zeewTbSnvDwMqcfOqsPdqAv+A5Vl26BNEt9fq5UPEE1HP5U1Nsxg4
+         sPk86446cbpBh1MMdlbhF/1AyLIxBP0y50aayusQ=
+Subject: Re: [PATCH] selftests/net: replace AF_MAX with INT_MAX in socket.c
+To:     Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20190916150337.18049-1-marcelo.cerri@canonical.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <212adcf8-566e-e06d-529f-f0ac18bd6a35@kernel.org>
+Date:   Mon, 16 Sep 2019 10:09:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a6b:2c07:: with SMTP id s7mr716787ios.254.1568650147447;
- Mon, 16 Sep 2019 09:09:07 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 09:09:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d0cc780592add25d@google.com>
-Subject: memory leak in h5_rx_pkt_start
-From:   syzbot <syzbot+6ce141c55b2f7aafd1c4@syzkaller.appspotmail.com>
-To:     johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org,
-        linux-kernel@vger.kernel.org, marcel@holtmann.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <20190916150337.18049-1-marcelo.cerri@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 9/16/19 9:03 AM, Marcelo Henrique Cerri wrote:
+> Use INT_MAX instead of AF_MAX, since libc might have a smaller value
+> of AF_MAX than the kernel, what causes the test to fail.
+> 
+> Signed-off-by: Marcelo Henrique Cerri <marcelo.cerri@canonical.com>
+> ---
+>   tools/testing/selftests/net/socket.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/net/socket.c b/tools/testing/selftests/net/socket.c
+> index afca1ead677f..10e75ba90124 100644
+> --- a/tools/testing/selftests/net/socket.c
+> +++ b/tools/testing/selftests/net/socket.c
+> @@ -6,6 +6,7 @@
+>   #include <sys/types.h>
+>   #include <sys/socket.h>
+>   #include <netinet/in.h>
+> +#include <limits.h>
+>   
+>   struct socket_testcase {
+>   	int	domain;
+> @@ -24,7 +25,10 @@ struct socket_testcase {
+>   };
+>   
+>   static struct socket_testcase tests[] = {
+> -	{ AF_MAX,  0,           0,           -EAFNOSUPPORT,    0 },
+> +	/* libc might have a smaller value of AF_MAX than the kernel
+> +	 * actually supports, so use INT_MAX instead.
+> +	 */
+> +	{ INT_MAX, 0,           0,           -EAFNOSUPPORT,    0  },
+>   	{ AF_INET, SOCK_STREAM, IPPROTO_TCP, 0,                1  },
+>   	{ AF_INET, SOCK_DGRAM,  IPPROTO_TCP, -EPROTONOSUPPORT, 1  },
+>   	{ AF_INET, SOCK_DGRAM,  IPPROTO_UDP, 0,                1  },
+> 
 
-syzbot found the following crash on:
+What failure are you seeing? It sounds arbitrary to use INT_MAX
+instead of AF_MAX. I think it is important to understand the
+failure first.
 
-HEAD commit:    1609d760 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1494a081600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=90cbcb59581ed842
-dashboard link: https://syzkaller.appspot.com/bug?extid=6ce141c55b2f7aafd1c4
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12185479600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1238c465600000
+Please note that AF_MAX is widely used in the kernel.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6ce141c55b2f7aafd1c4@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811469e100 (size 224):
-   comm "syz-executor068", pid 6860, jiffies 4294949784 (age 13.480s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-     00 c0 bf 20 81 88 ff ff 00 00 00 00 00 00 00 00  ... ............
-   backtrace:
-     [<0000000036b71133>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000036b71133>] slab_post_alloc_hook mm/slab.h:522 [inline]
-     [<0000000036b71133>] slab_alloc_node mm/slab.c:3262 [inline]
-     [<0000000036b71133>] kmem_cache_alloc_node+0x163/0x2f0 mm/slab.c:3574
-     [<00000000c50cdaae>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:197
-     [<0000000097f6a43a>] alloc_skb include/linux/skbuff.h:1055 [inline]
-     [<0000000097f6a43a>] bt_skb_alloc include/net/bluetooth/bluetooth.h:339  
-[inline]
-     [<0000000097f6a43a>] h5_rx_pkt_start+0x57/0xd0  
-drivers/bluetooth/hci_h5.c:474
-     [<00000000d2c8fdbf>] h5_recv+0x13f/0x1d0 drivers/bluetooth/hci_h5.c:563
-     [<00000000c4a86230>] hci_uart_tty_receive+0xba/0x200  
-drivers/bluetooth/hci_ldisc.c:613
-     [<0000000039786cc4>] tiocsti drivers/tty/tty_io.c:2197 [inline]
-     [<0000000039786cc4>] tty_ioctl+0x81c/0xa30 drivers/tty/tty_io.c:2573
-     [<00000000ba214ddb>] vfs_ioctl fs/ioctl.c:46 [inline]
-     [<00000000ba214ddb>] file_ioctl fs/ioctl.c:509 [inline]
-     [<00000000ba214ddb>] do_vfs_ioctl+0x62a/0x810 fs/ioctl.c:696
-     [<00000000fa2c3356>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:713
-     [<00000000eab0a027>] __do_sys_ioctl fs/ioctl.c:720 [inline]
-     [<00000000eab0a027>] __se_sys_ioctl fs/ioctl.c:718 [inline]
-     [<00000000eab0a027>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:718
-     [<00000000db7e89eb>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:296
-     [<000000008887ecc0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+thanks,
+-- Shuah
