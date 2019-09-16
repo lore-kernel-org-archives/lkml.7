@@ -2,135 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF1DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05FB12067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:19:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="OtxEOkSZ"
+	by mail.kernel.org (Postfix) with ESMTP id 6B1F02067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:21:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391788AbfIPVTu (ORCPT
+        id S2391810AbfIPVVZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:19:50 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36923 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfIPVTt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:19:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d2so1709698qtr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:19:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=H5UW5wagKW04F96GTBBaiTMgST09Ix10VZlrh75iTIo=;
-        b=OtxEOkSZUUbBW0Fo/uVlK5sm/VQ6FDj6guxqW4jppiLEFD/cFIbfMh064UM0SApcIb
-         K9w/1u4M2viEXs5Vltm0DLSfgJo5g7wQLyyTYlgVFwXVS2G/zMFSYsSi7Zq+uG8nCSVD
-         xWe9WSexYP5qCZmtVyq7vaOeJEGKN054XnUK1K+uZYI7GIB9Ccbk/3NwwyJduMFQO4FG
-         ZEg0jZaOht2IdxOAvuBLTKjwP8uLPUHbZt5tVXKuHjMsi4wJv5cd+Csg6frqXbxxQbtY
-         w6u0WQSmhOrSxOBEIQfRzLA40nIgjQ5w8zfd1xWwp9EbYal04YJ0r8xKckgLcHSo0yaM
-         tGZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=H5UW5wagKW04F96GTBBaiTMgST09Ix10VZlrh75iTIo=;
-        b=ArUurb4CmXohl+Mfow9f4siesrg3Q2zo0e3fPeS7Izo8YHiKv+A0Y/e0tefo2VYTwv
-         9gOum0xhigLV2buweXMKkTNfu3ZGHskhZOuAVN52NKKfSp4IeIJ/+N7PJm3NdbIo3U8U
-         ++zPVWoknLSVmUgeKtUd1+D793ZAXOOJ3YMgXAk51aHcamijgOWStAtF9DIGqK5rPiVd
-         gCZxieAyeiCpF9+YXQpRiF6sRRhnTipUaiL9abVjltncF6vE8UmvQ9hcscI1yVaRlJp1
-         QywShdl+T30WJpkPlI/1K4x2PfsEzXlupaRkW0ubjnI9oAsI2ozSbbuW2KtR5OhCkzXz
-         D80A==
-X-Gm-Message-State: APjAAAV145bh7z/0HzxTNgT/OxxmCYiemX9Zw782KVwbRA5GFS0zDFzu
-        7RINMie52/qqxvgJhHzUAV3kWA==
-X-Google-Smtp-Source: APXvYqy47HRVWyxZtKhXKNRV49kIORiXqICCRRmpY6JGlEnmHtvQzwTiUaGQbDVWItZDSSLQW3MTkw==
-X-Received: by 2002:a0c:ec11:: with SMTP id y17mr313980qvo.159.1568668788749;
-        Mon, 16 Sep 2019 14:19:48 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id p77sm74711qke.6.2019.09.16.14.19.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 14:19:47 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched/fair: fix a -Wunused-function warning
-Date:   Mon, 16 Sep 2019 17:19:35 -0400
-Message-Id: <1568668775-2127-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 16 Sep 2019 17:21:25 -0400
+Received: from mga04.intel.com ([192.55.52.120]:21872 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730662AbfIPVVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:21:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 14:21:24 -0700
+X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
+   d="scan'208";a="191192461"
+Received: from jsanto5x-mobl.amr.corp.intel.com ([10.255.93.114])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 14:21:23 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PREEMPT_RT PATCH 2/3] i915: convert all irq_locks spinlocks to
+ raw spinlocks
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+In-Reply-To: <20190903080335.pe45dmgmjvdvbyd4@linutronix.de>
+Date:   Mon, 16 Sep 2019 14:21:22 -0700
+Cc:     Clark Williams <clark.williams@gmail.com>, bigeasy@linutronix.com,
+        tglx@linutronix.com, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <9EF2695D-3FBD-40E0-BE8A-EB71AF4155A5@linux.intel.com>
+References: <20190820003319.24135-1-clark.williams@gmail.com>
+ <20190820003319.24135-3-clark.williams@gmail.com>
+ <20190903080335.pe45dmgmjvdvbyd4@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cfs_rq_clock_task() was first introduced in the commit f1b17280efbd
-("sched: Maintain runnable averages across throttled periods"). Over
-time, it has been graduately removed by the commits like,
 
-d31b1a66cbe0 ("sched/fair: Factorize PELT update")
-23127296889f ("sched/fair: Update scale invariance of PELT")
 
-Today, there is no single user of it, so it could be safely removed.
+> On Sep 3, 2019, at 1:03 AM, Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
+> 
+> On 2019-08-19 19:33:18 [-0500], Clark Williams wrote:
+>> From: Clark Williams <williams@redhat.com>
+>> 
+>> The following structures contain a member named 'irq_lock'.
+>> These three locks are of type spinlock_t and are used in
+>> multiple contexts including atomic:
+>> 
+>>    struct drm_i915_private
+>>    struct intel_breadcrumbs
+>>    strict intel_guc
+>> 
+>> Convert them all to be raw_spinlock_t so that lockdep and the lock
+>> debugging code will be happy.
+> 
+> What is your motivation to make the lock raw?
+> I did the following:
+> 
+> void intel_engine_signal_breadcrumbs(struct intel_engine_cs *engine)
+> {
+> -       local_irq_disable();
+> -       intel_engine_breadcrumbs_irq(engine);
+> -       local_irq_enable();
+> +       if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL)) {
+> +               intel_engine_breadcrumbs_irq(engine);
+> +       } else {
+> +               local_irq_disable();
+> +               intel_engine_breadcrumbs_irq(engine);
+> +               local_irq_enable();
+> +       }
+> }
+> 
+> and lockdep was quiet (+ ignoring/patching the lockdep-irq-off-asserts).
+> The local_irq_disable() is here (my interpretation of the situation)
+> because that function is called from process context while the remaining
+> callers invoke intel_engine_breadcrumbs_irq() from the interrupt
+> handler and it acquires irq_lock via a plain spin_lock().  That
+> local_irq_disable() would be required if everyone did a _irqsave().
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- kernel/sched/fair.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+I’ve tested this also on the v5.2.14-rt7 and can confirm that it avoids the need for making the locks raw.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 500f5db0de0b..0d0b812b6c49 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -749,7 +749,6 @@ void init_entity_runnable_average(struct sched_entity *se)
- 	/* when this task enqueue'ed, it will contribute to its cfs_rq's load_avg */
- }
- 
--static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq);
- static void attach_entity_cfs_rq(struct sched_entity *se);
- 
- /*
-@@ -4379,15 +4378,6 @@ static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
- 	return &tg->cfs_bandwidth;
- }
- 
--/* rq->task_clock normalized against any time this cfs_rq has spent throttled */
--static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
--{
--	if (unlikely(cfs_rq->throttle_count))
--		return cfs_rq->throttled_clock_task - cfs_rq->throttled_clock_task_time;
--
--	return rq_clock_task(rq_of(cfs_rq)) - cfs_rq->throttled_clock_task_time;
--}
--
- /* returns 0 on failure to allocate runtime */
- static int assign_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- {
-@@ -4524,7 +4514,6 @@ static int tg_unthrottle_up(struct task_group *tg, void *data)
- 
- 	cfs_rq->throttle_count--;
- 	if (!cfs_rq->throttle_count) {
--		/* adjust cfs_rq_clock_task() */
- 		cfs_rq->throttled_clock_task_time += rq_clock_task(rq) -
- 					     cfs_rq->throttled_clock_task;
- 
-@@ -5135,11 +5124,6 @@ static inline bool cfs_bandwidth_used(void)
- 	return false;
- }
- 
--static inline u64 cfs_rq_clock_task(struct cfs_rq *cfs_rq)
--{
--	return rq_clock_task(rq_of(cfs_rq));
--}
--
- static void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec) {}
- static bool check_cfs_rq_runtime(struct cfs_rq *cfs_rq) { return false; }
- static void check_enqueue_throttle(struct cfs_rq *cfs_rq) {}
--- 
-1.8.3.1
+Tested-by: Sean V Kelley <sean.v.kelley@linux.intel.com>
+
+Thanks,
+
+Sean
+
+> 
+> I tried to check how much worse the latency gets here but I didn't see
+> anything in a brief test. What I saw however is that switching to
+> fullscreen while playing a video gives me ~0.5 to ~2ms latency. This is
+> has nothing to do with this change, I have to dig deeper… It might be
+> one of the preempt_disable() section I just noticed.
+> I would prefer to keep the lock non-raw unless there is actual need for
+> it.
+> 
+> Sebastian
 
