@@ -2,193 +2,133 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC00C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE87DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E0D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60782171F
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568630557;
-	bh=9+wlTcELL5AtCJUjiak261GIkPhJgGhOU8ts5mQOiZY=;
+	s=default; t=1568630560;
+	bh=bUJ+jZ/h1RSOX8YkJwwxNRWyQVrqR2L7jeYHAKtgUBA=;
 	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=Ad9C67e3ZUyHQ66VcY5l1OPqkbr2fXRJ0ORX1CekTDK2DRS5QWsYLdSoTOCB4pIbw
-	 OsyuqFogl/d2Az+Qel77Ewbgc+cvUjY+K3CY57x/EJO1p/NyXD4LaVvg0hMfUFQcDk
-	 6jOwAUs+Huio8dAMZreJ9Xp/Vwv+fosf6lfFtumg=
+	b=bmzoOaeZev1vw59aOHR8mD5UReJEmFFkRxpEyOpwrSHbSgLZ+wICXT/tvjM7Cini0
+	 tiYEpgULADpxUE9fLtaA//4+QfWpEo9m6jk8TMzI41ey4tN202xtN8p5ExXQ24Vy95
+	 QpWUyA86yakeNWgimsIMUMggIYIi/+1zk9aQ6cKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731564AbfIPKmg (ORCPT
+        id S1731601AbfIPKmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726055AbfIPKmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:42:36 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 243E8206A4;
-        Mon, 16 Sep 2019 10:42:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568630554;
-        bh=9+wlTcELL5AtCJUjiak261GIkPhJgGhOU8ts5mQOiZY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MRNXarjCvkzAglQvPyzbgFMqKSpQHIsNqAOM7hatvOwoKr2DmjtJkfvgiVveMbK1P
-         otb9hONqI3hf6dyktfUy1uq3KJ3pb1vMANLewaVK6JUSYzPj9Bn7ZZkJn3Ob3Ey1qI
-         YHDwR2nz4g0DNYPcq42rap1Ykdxrx9aIyWSIGP1M=
-Date:   Mon, 16 Sep 2019 12:42:32 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.14.144
-Message-ID: <20190916104232.GA1386818@kroah.com>
+        Mon, 16 Sep 2019 06:42:40 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33738 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfIPKmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:42:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JZBjiu6mXEF4xljF1dJvnzItrxLJQ/ptLLfiyKsUZDM=; b=mcTQ3/PmWWPgIhdxeGMFgAW+F
+        1fLJopUTSjAisftrUQn8kbLQVK2OpQSbkj3b1Vl0Xi1aQeTUQ5YogfHaYMV7gY19ZeLXOWCTL2fav
+        4q8glNwUzm/puuhRvzWb4RtjCxXnv6Tet9/LAt/vUoJzQHqeHTcUyJDrILuyyw0AEqYMo=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9oSn-0003vN-9s; Mon, 16 Sep 2019 10:42:33 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 2E02B2741A23; Mon, 16 Sep 2019 11:42:32 +0100 (BST)
+Date:   Mon, 16 Sep 2019 11:42:31 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the arm64 tree with the
+ compiler-attributes tree
+Message-ID: <20190916104231.GX4352@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Y48FV0AvvvAm5Iyr"
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---M9NhX3UHpAaciwkO
+--Y48FV0AvvvAm5Iyr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-I'm announcing the release of the 4.14.144 kernel.
+Hi all,
 
-All users of the 4.14 kernel series must upgrade.
+Today's linux-next merge of the arm64 tree got a conflict in:
 
-The updated 4.14.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.14.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+  init/Kconfig
 
-thanks,
+between commit:
 
-greg k-h
+  eb111869301e15b7373 ("compiler-types.h: add asm_inline definition")
 
-------------
+=66rom the compiler-attributes tree and commit:
 
- Makefile                                       |    2 -
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |    2 +
- arch/powerpc/kernel/head_64.S                  |    2 +
- arch/powerpc/kernel/process.c                  |    3 +-
- drivers/clk/clk-s2mps11.c                      |    2 -
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c            |    8 ++---
- drivers/pci/dwc/pci-dra7xx.c                   |    3 +-
- drivers/pci/dwc/pcie-designware-ep.c           |   34 +++++++++++++++++++-=
------
- drivers/pci/dwc/pcie-designware.h              |    8 ++++-
- drivers/vhost/test.c                           |   13 ++++++---
- drivers/vhost/vhost.c                          |    4 +-
- include/net/ipv6_frag.h                        |    1=20
- include/net/xfrm.h                             |   17 ++++++++++++
- kernel/module.c                                |   22 ++++++++++++----
- kernel/sched/fair.c                            |    5 +++
- net/batman-adv/bat_iv_ogm.c                    |   20 +++++++++-----
- net/batman-adv/netlink.c                       |    2 -
- net/key/af_key.c                               |    4 ++
- net/vmw_vsock/hyperv_transport.c               |    8 +++++
- net/xfrm/xfrm_state.c                          |    2 -
- net/xfrm/xfrm_user.c                           |   14 ----------
- scripts/decode_stacktrace.sh                   |    2 -
- sound/pci/hda/hda_auto_parser.c                |    4 +-
- sound/pci/hda/hda_generic.c                    |    3 +-
- sound/pci/hda/hda_generic.h                    |    1=20
- sound/pci/hda/patch_realtek.c                  |    4 ++
- 26 files changed, 132 insertions(+), 58 deletions(-)
+  2d122942484c20b ("Revert "init/Kconfig: Fix infinite Kconfig recursion on=
+ PPC"")
 
-Christophe Leroy (1):
-      powerpc/64: mark start_here_multiplatform as __ref
+=66rom the arm64 tree.
 
-Cong Wang (1):
-      xfrm: clean up xfrm protocol checks
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-Dan Carpenter (1):
-      drm/vmwgfx: Fix double free in vmw_recv_msg()
+diff --cc init/Kconfig
+index 257e428c90472,d96127ebc44e0..cebadd0cfa50e
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@@ -30,9 -30,9 +30,12 @@@ config CC_CAN_LIN
+  config CC_HAS_ASM_GOTO
+        def_bool $(success,$(srctree)/scripts/gcc-goto.sh $(CC))
+ =20
+ +config CC_HAS_ASM_INLINE
+ +      def_bool $(success,echo 'void foo(void) { asm inline (""); }' | $(C=
+C) -x c - -c -o /dev/null)
+ +
++ config TOOLS_SUPPORT_RELR
++       def_bool $(success,env "CC=3D$(CC)" "LD=3D$(LD)" "NM=3D$(NM)" "OBJC=
+OPY=3D$(OBJCOPY)" $(srctree)/scripts/tools-support-relr.sh)
++=20
+  config CC_HAS_WARN_MAYBE_UNINITIALIZED
+        def_bool $(cc-option,-Wmaybe-uninitialized)
+        help
 
-Dexuan Cui (1):
-      hv_sock: Fix hang when a connection is closed
-
-Dmitry Voytik (1):
-      arm64: dts: rockchip: enable usb-host regulators at boot on rk3328-ro=
-ck64
-
-Eric Dumazet (2):
-      ip6: fix skb leak in ip6frag_expire_frag_queue()
-      batman-adv: fix uninit-value in batadv_netlink_get_ifindex()
-
-Greg Kroah-Hartman (1):
-      Linux 4.14.144
-
-Gustavo Romero (1):
-      powerpc/tm: Fix FP/VMX unavailable exceptions inside a transaction
-
-Hui Wang (1):
-      ALSA: hda/realtek - Fix the problem of two front mics on a ThinkCentre
-
-Liangyan (1):
-      sched/fair: Don't assign runtime for throttled cfs_rq
-
-Nathan Chancellor (1):
-      clk: s2mps11: Add used attribute to s2mps11_dt_match
-
-Nicolas Boichat (1):
-      scripts/decode_stacktrace: match basepath using shell prefix operator=
-, not regex
-
-Niklas Cassel (1):
-      PCI: designware-ep: Fix find_first_zero_bit() usage
-
-Sven Eckelmann (1):
-      batman-adv: Only read OGM tvlv_len after buffer len check
-
-Takashi Iwai (2):
-      ALSA: hda - Fix potential endless loop at applying quirks
-      ALSA: hda/realtek - Fix overridden device-specific initialization
-
-Tiwei Bie (1):
-      vhost/test: fix build for vhost test
-
-Vignesh R (1):
-      PCI: dra7xx: Fix legacy INTD IRQ handling
-
-YueHaibing (1):
-      kernel/module: Fix mem leak in module_add_modinfo_attrs
-
-yongduan (1):
-      vhost: make sure log_num < in_num
-
-
---M9NhX3UHpAaciwkO
+--Y48FV0AvvvAm5Iyr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl1/ZxgACgkQONu9yGCS
-aT4XrA/8DTXm9ldvNdRk+vcGB/b7SCztKaJcX/QGz7sO720Sp9xaYdkpvsoHk8aq
-reWhwj2PBzqrRBjbhfYr8heyqoiFn9tFI3X+xL+siHYdMzx96cE4e5oEQi7iVcDY
-QjBfR40/Kw/xzNv7++D5+aH/oNEbGOSOVYE7T92J0ZOQjV4Ew57lHC3qGb9+MYZE
-8c8Y9ufv08N44z7U1RXA0/AVcI/1ujqn5alkyqnGkWgmGZaKj8f5/CGxPfNNgxg1
-Hw/4JfEz3rIKG+xzCSjKSSNHOF7/HYRCecKJ4yf02j9ip9AAjLJcQ9WQpoNgCkV/
-aYHe0pPAIt4nb7AS+Ot8vl0cqwpVUe1h8aLTjnM+x2vjKeQ8sG3jyKeNYNJ/st6a
-GY57lVSRooQ8E+8GAWSj4+QX/EkA9E0fL9ppH/XgOTmhFfcIJIU+oawz/FzHxJUV
-HLyT4Rcs5FCmNBUGf36i9jx3fPEerdL4VUvfGwLUmHAocXU2ntGMqt04QXDyYJyS
-hZ17+SCUCG95wYkOQkvIjG3zHrOad0UNCNO3G3Y8Hclv+ugzoIcfqKaFWWIAr9AR
-50JLZcsFnsPqHEyKgeLpHrlulUtNu1v9qrQFn5SOx+VaaJBPF6yz6I+zL6QYoKee
-PWQXDiSGWygrAH53mQ7sCZr7fPyBbu70JN+8MRtgGIjHYIxonSo=
-=Wm3b
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/ZxcACgkQJNaLcl1U
+h9BiNgf7BUPhO+mDw5BCZm9EeRGqX2N+OfJwDTJ1+fa6mVSR7olKtg1n4raFn7Ex
+hbwCpqh0IL7tS9mvQOqo64zCUmhXDrMsiGe8Zk9iODnAETVdhGYM7vMC1YMLi5et
+KeNG/by+pMv56RXllDX/kXNvVAJptCUCWZAclLeHLWyb7bG2xpZfZy+3PIJlsWxU
+SvwNMegCobH50m5MSrDiYsoWq80mC8pKBOEqTuP1utmKDhLJR+aFu3P3BnnAu5wE
+EJieQaQ4C0TuNTcTSHVDicFQxYcTbmt8CDZcetNz27Get/pO13RYVYpnsGAKJJ60
+PBvRcHuMpwZChVP7TwRpgBfDBnECTA==
+=sijn
 -----END PGP SIGNATURE-----
 
---M9NhX3UHpAaciwkO--
+--Y48FV0AvvvAm5Iyr--
