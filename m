@@ -2,108 +2,73 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE74C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB01C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC19B20830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A3B20830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:47:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387623AbfIPNqr (ORCPT
+        id S2387723AbfIPNrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:46:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:45138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727806AbfIPNqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:46:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1E8A337;
-        Mon, 16 Sep 2019 06:46:45 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 596C63F67D;
-        Mon, 16 Sep 2019 06:46:45 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 14:46:43 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     khilman@baylibre.com, lorenzo.pieralisi@arm.com, kishon@ti.com,
-        bhelgaas@google.com, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        yue.wang@Amlogic.com, maz@kernel.org, repk@triplefau.lt,
-        nick@khadas.com, gouwa@khadas.com, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: pci: amlogic,meson-pcie: Add G12A
- bindings
-Message-ID: <20190916134643.GT9720@e119886-lin.cambridge.arm.com>
-References: <20190916125022.10754-1-narmstrong@baylibre.com>
- <20190916125022.10754-2-narmstrong@baylibre.com>
+        Mon, 16 Sep 2019 09:47:31 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:41459
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727806AbfIPNra (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:47:30 -0400
+X-IronPort-AV: E=Sophos;i="5.64,512,1559512800"; 
+   d="scan'208";a="319571104"
+Received: from unknown (HELO function) ([193.50.111.121])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/AES256-GCM-SHA384; 16 Sep 2019 15:47:28 +0200
+Received: from samy by function with local (Exim 4.92.2)
+        (envelope-from <samuel.thibault@ens-lyon.org>)
+        id 1i9rLk-0001yw-18; Mon, 16 Sep 2019 15:47:28 +0200
+Date:   Mon, 16 Sep 2019 15:47:28 +0200
+From:   Samuel Thibault <samuel.thibault@ens-lyon.org>
+To:     "Speakup is a screen review system for Linux." 
+        <speakup@linux-speakup.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org,
+        Simon Dickson <simonhdickson@gmail.com>,
+        Gregory Nowak <greg@gregn.net>, linux-kernel@vger.kernel.org,
+        John Covici <covici@ccs.covici.com>
+Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
+ speakup
+Message-ID: <20190916134727.4gi6rvz4sm6znrqc@function>
+Mail-Followup-To: Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        "Speakup is a screen review system for Linux." <speakup@linux-speakup.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, Simon Dickson <simonhdickson@gmail.com>,
+        Gregory Nowak <greg@gregn.net>, linux-kernel@vger.kernel.org,
+        John Covici <covici@ccs.covici.com>
+References: <20190725035352.GA7717@gregn.net>
+ <875znqhia0.fsf@cmbmachine.messageid.invalid>
+ <m3sgqucs1x.wl-covici@ccs.covici.com>
+ <CAOtcWM0qynSjnF6TtY_s7a51B7JweDb7jwdxStEmPvB9tJFU4Q@mail.gmail.com>
+ <20190821222209.GA4577@gregn.net>
+ <CAOtcWM0Jzo+wew-uiOmde+eZXEWZ310L8wXscWjJv5OXqXJe6Q@mail.gmail.com>
+ <20190909025429.GA4144@gregn.net>
+ <CAOtcWM0P=w-iBZzwekVrSpp7t2WO9RA5WP956zgDrNKvzA+4ZA@mail.gmail.com>
+ <20190915134300.GA552892@kroah.com>
+ <CAOtcWM2MD-Z1tg7gdgzrXiv7y62JrV7eHnTgXpv-LFW7zRApjg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916125022.10754-2-narmstrong@baylibre.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <CAOtcWM2MD-Z1tg7gdgzrXiv7y62JrV7eHnTgXpv-LFW7zRApjg@mail.gmail.com>
+Organization: I am not organized
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:50:17PM +0200, Neil Armstrong wrote:
-> Add PCIE bindings for the Amlogic G12A SoC, the support is the same
-> but the PHY is shared with USB3 to control the differential lines.
-> 
-> Thus this adds a phy phandle to control the PHY, and only requires the
-> MIPI clock for the Amlogic AXG SoC Family.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
+Okash Khawaja, le dim. 15 sept. 2019 19:41:30 +0100, a ecrit:
+> I have attached the descriptions.
 
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Attachment is missing :)
 
->  .../devicetree/bindings/pci/amlogic,meson-pcie.txt   | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> index efa2c8b9b85a..84fdc422792e 100644
-> --- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> @@ -9,13 +9,16 @@ Additional properties are described here:
->  
->  Required properties:
->  - compatible:
-> -	should contain "amlogic,axg-pcie" to identify the core.
-> +	should contain :
-> +	- "amlogic,axg-pcie" for AXG SoC Family
-> +	- "amlogic,g12a-pcie" for G12A SoC Family
-> +	to identify the core.
->  - reg:
->  	should contain the configuration address space.
->  - reg-names: Must be
->  	- "elbi"	External local bus interface registers
->  	- "cfg"		Meson specific registers
-> -	- "phy"		Meson PCIE PHY registers
-> +	- "phy"		Meson PCIE PHY registers for AXG SoC Family
->  	- "config"	PCIe configuration space
->  - reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
->  - clocks: Must contain an entry for each entry in clock-names.
-> @@ -23,12 +26,13 @@ Required properties:
->  	- "pclk"       PCIe GEN 100M PLL clock
->  	- "port"       PCIe_x(A or B) RC clock gate
->  	- "general"    PCIe Phy clock
-> -	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-> +	- "mipi"       PCIe_x(A or B) 100M ref clock gate for AXG SoC Family
->  - resets: phandle to the reset lines.
->  - reset-names: must contain "phy" "port" and "apb"
-> -       - "phy"         Share PHY reset
-> +       - "phy"         Share PHY reset for AXG SoC Family
->         - "port"        Port A or B reset
->         - "apb"         Share APB reset
-> +- phys: should contain a phandle to the shared phy for G12A SoC Family
->  - device_type:
->  	should be "pci". As specified in designware-pcie.txt
->  
-> -- 
-> 2.22.0
-> 
+Samuel
