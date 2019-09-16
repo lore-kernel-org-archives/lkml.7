@@ -5,309 +5,125 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81891C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6F7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4119820830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F27D2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lduYPSOP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NVDnnS7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387476AbfIPUfK (ORCPT
+        id S2391475AbfIPUfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:35:10 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33735 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733068AbfIPUfJ (ORCPT
+        Mon, 16 Sep 2019 16:35:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41826 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391449AbfIPUfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:35:09 -0400
-Received: by mail-ed1-f65.google.com with SMTP id c4so1308100edl.0;
-        Mon, 16 Sep 2019 13:35:07 -0700 (PDT)
+        Mon, 16 Sep 2019 16:35:33 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x4so1524936qtq.8;
+        Mon, 16 Sep 2019 13:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Q/rebv9wsO+q8MVXmYG+p/JA3CBBmZHyA6AXxuPQmzE=;
-        b=lduYPSOPBWb/QNwuuKaHgbUDwiu9BOLUDjJ8mujRs+fp6/iKrUb0zwi+0RaW5k4+zX
-         JJzjlW8gwNE4+jllQDkwjXl2cV35WgzxqC2i2RKB227EkxILI5SfXpl1oRsT3vrHpcsM
-         GfiMrutdZYxMpTGP032Tbry8R+cdeDbd6NTXgoLOvwOW+GPvkB5C611fdBGrQ948aRN0
-         3xsd4mqLj3jzY2N8ZZPMyr8ZTc/WkOaBw22voPB7ZS+ZZ/h6NaZ51vT991gbiR38kBhj
-         RC8x8/T8C3eOMSuNh6a1aC0zt7smPW0Dlv8d2ihnkyXy7xfKw/MeEAQMZcRtT87ijq9K
-         QzEw==
+        bh=ihyLcr/IE8dYmQPkpIxkQFwoGx9mvcYHtpb7Os1ZV9I=;
+        b=NVDnnS7Qjr/iIlDteTT8VdQpogh5KuOmqGAR+uyUiMRjAcDLr+uF+NSzaRmuN0SzyG
+         DDYmyjgeGNHR6DQI/SXQxp6dBzMWV0moM0bbd/wIxEDP4cbEuylTVBW9dhtl1fLoJKir
+         e/Xm32DiqsKNhoV3N9E/FgaWo8OCSgqeY4HAkOGfibBs6G5GbKmwrxCw1AFEl94rn6N3
+         Rnc/imUTNVAdFVs2RrLRgIaC+NuEht3gb6z51oHKDMXoWcRh6mpOyFGgnPRPHd+iXIlr
+         Ke1WZ3hTXpcUkIXD1nU0spWaYs8W0axbgLtphCVsDArRicsBh2GpteOCq1ejiKhThHHP
+         8Oag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Q/rebv9wsO+q8MVXmYG+p/JA3CBBmZHyA6AXxuPQmzE=;
-        b=OkcRWZV/xdohxCl2EGd8IewmHe1yN6E7zga+aHy5Ces82DgFabxl/abyxl6LHU8UQa
-         20apMi+9Qj5hXg53vfOiMXZoR1hnfblzOOyBl/peJrXMzxrENQQ08YPsuMRDTfeYQoFO
-         X6aNGA9T33JJA4Y0+ksepKdbvrGyUjg6+irtvauKdjqW6jkbtywYJs8chGm8BRpII7W3
-         bQV0WhGY7aiT+zDIix7RlCzs9HoyfZhTWiUxYhNFnMfcDMl3ld15LAtSW6DY0NakXo72
-         LopQqbuz60tRUAuZq0DPIbbwzjY/UwgG8oHXPwASbp8WHtGOjQJ8zr5mdcvaOFoVZVYI
-         MY8Q==
-X-Gm-Message-State: APjAAAVrZTbeBjgLpefGhALuJ9vgA+1sNAPh82HkTpv2AuLBkvjaID1/
-        7rjoWSwnUahRIC5mhc+CnnFf4OUbm+PXKw4fXa0=
-X-Google-Smtp-Source: APXvYqxnZrbgwzQkVpTi0seq+qXX7utxHe2jpUINK2klL8SmspHXd1INix8kI1bAC6Gnn6hyzrRo6kH9l4pIWIgD78g=
-X-Received: by 2002:a50:935d:: with SMTP id n29mr1215602eda.294.1568666106912;
- Mon, 16 Sep 2019 13:35:06 -0700 (PDT)
+        bh=ihyLcr/IE8dYmQPkpIxkQFwoGx9mvcYHtpb7Os1ZV9I=;
+        b=E2wfzM9LrOJysvDoS5serqsOAemdO9kavdBfdcOh2YQLcp+Ai9byzJUbuFzdklc09K
+         EIdRpSuz0OhIJ5TafDEJKibWv/zRuSZNMCBpbTvdvuvhuPsfN3Gr2ZhoSt3jrstabaZV
+         XddBI+elWiDMVyycEd0A5SoJyG7ZQcBt5N3V8l9LY31FMn17f/iYCJcVOqVylSx4KVJ+
+         NFtCbj7yw4lE0Pub0HJAUeHthvbYBBbLez+iY4AcAfZ6qKpZadJE/riU1CW43VjbOrKr
+         TiLYNMu3j2+XyrrtzKQVBjP87EWQ7RvFygOYwTmeE3ZzkX5sVzx1Zo1OIlTLzXQZMXrN
+         ZUCA==
+X-Gm-Message-State: APjAAAXnHuNl3pAp/lsfHeOCdfqd/76zA224eZ4iF79PuZZajFLXns+H
+        tXO/J5aLwUh5qPMKCnIYoElrkPD5rfMq3Buqexo=
+X-Google-Smtp-Source: APXvYqy8aV+MnFrM7mg9z9Q3FKj5HhJM55bINhYiDMgDGGW0Vt197cpT56rOs3YEQQ8XH4TDqGsRq5JFKRqX+bh0Zv4=
+X-Received: by 2002:ac8:7401:: with SMTP id p1mr259871qtq.141.1568666132646;
+ Mon, 16 Sep 2019 13:35:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190916201154.212465-1-ddavenport@chromium.org>
-In-Reply-To: <20190916201154.212465-1-ddavenport@chromium.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 16 Sep 2019 13:34:55 -0700
-Message-ID: <CAF6AEGurXuCMj=bc5=9CwBqzNM_BKEaJupk+-V7=aYou=wgmDQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Remove unused function arguments
-To:     Drew Davenport <ddavenport@chromium.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Enrico Weigelt <info@metux.net>,
-        Bruce Wang <bzwang@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-5-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190916105433.11404-5-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 16 Sep 2019 13:35:21 -0700
+Message-ID: <CAEf4BzYJ5Q4rBHGET5z6nPBhh=8qAK7uuCK=Qnsh14FDH-24gA@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 04/14] samples: bpf: use own EXTRA_CFLAGS for
+ clang commands
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 1:12 PM Drew Davenport <ddavenport@chromium.org> wrote:
+On Mon, Sep 16, 2019 at 4:01 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
 >
-> The arguments related to IOMMU port name have been unused since
-> commit 944fc36c31ed ("drm/msm: use upstream iommu") and can be removed.
+> It can overlap with CFLAGS used for libraries built with gcc if
+> not now then in next patches. Correct it here for simplicity.
 >
-> Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 > ---
-> Rob, in the original commit the port name stuff was left intentionally.
-> Would it be alright to remove it now?
 
-Upstream support for snapdragon has improved considerably since then,
-it's been at least a couple years since I've had to backport drm to a
-downstream android vendor kernel.  (And I think the downstream vendor
-kernel is getting closer to upstream.)  So I think we can drop things
-that were originally left in place to simplify backporting to vendor
-kernel.
+With GCC BPF front-end recently added, we should probably generalize
+this to something like BPF_EXTRA_CFLAGS or something like that,
+eventually. But for now:
 
-(Also, some of the regulator usage falls into this category.. at one
-point the downstream kernel modeled gdsc's as regulators, but upstream
-uses genpd.)
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-BR,
--R
-
+>  samples/bpf/Makefile | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 10 ++--------
->  drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c | 10 ++--------
->  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 10 ++--------
->  drivers/gpu/drm/msm/msm_gpu.c            |  5 ++---
->  drivers/gpu/drm/msm/msm_gpummu.c         |  6 ++----
->  drivers/gpu/drm/msm/msm_iommu.c          |  6 ++----
->  drivers/gpu/drm/msm/msm_mmu.h            |  4 ++--
->  7 files changed, 14 insertions(+), 37 deletions(-)
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index b59e77e2250e..8ecc5d0c2d5b 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -218,10 +218,10 @@ BTF_LLVM_PROBE := $(shell echo "int main() { return 0; }" | \
+>                           /bin/rm -f ./llvm_btf_verify.o)
 >
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index 58b0485dc375..3165c2db2541 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -30,10 +30,6 @@
->  #define CREATE_TRACE_POINTS
->  #include "dpu_trace.h"
->
-> -static const char * const iommu_ports[] = {
-> -               "mdp_0",
-> -};
-> -
->  /*
->   * To enable overall DRM driver logging
->   * # echo 0x2 > /sys/module/drm/parameters/debug
-> @@ -725,8 +721,7 @@ static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms)
->
->         mmu = dpu_kms->base.aspace->mmu;
->
-> -       mmu->funcs->detach(mmu, (const char **)iommu_ports,
-> -                       ARRAY_SIZE(iommu_ports));
-> +       mmu->funcs->detach(mmu);
->         msm_gem_address_space_put(dpu_kms->base.aspace);
->
->         dpu_kms->base.aspace = NULL;
-> @@ -752,8 +747,7 @@ static int _dpu_kms_mmu_init(struct dpu_kms *dpu_kms)
->                 return PTR_ERR(aspace);
->         }
->
-> -       ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
-> -                       ARRAY_SIZE(iommu_ports));
-> +       ret = aspace->mmu->funcs->attach(aspace->mmu);
->         if (ret) {
->                 DPU_ERROR("failed to attach iommu %d\n", ret);
->                 msm_gem_address_space_put(aspace);
-> diff --git a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> index 50711ccc8691..dda05436f716 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_kms.c
-> @@ -157,10 +157,6 @@ static long mdp4_round_pixclk(struct msm_kms *kms, unsigned long rate,
->         }
->  }
->
-> -static const char * const iommu_ports[] = {
-> -       "mdp_port0_cb0", "mdp_port1_cb0",
-> -};
-> -
->  static void mdp4_destroy(struct msm_kms *kms)
->  {
->         struct mdp4_kms *mdp4_kms = to_mdp4_kms(to_mdp_kms(kms));
-> @@ -172,8 +168,7 @@ static void mdp4_destroy(struct msm_kms *kms)
->         drm_gem_object_put_unlocked(mdp4_kms->blank_cursor_bo);
->
->         if (aspace) {
-> -               aspace->mmu->funcs->detach(aspace->mmu,
-> -                               iommu_ports, ARRAY_SIZE(iommu_ports));
-> +               aspace->mmu->funcs->detach(aspace->mmu);
->                 msm_gem_address_space_put(aspace);
->         }
->
-> @@ -524,8 +519,7 @@ struct msm_kms *mdp4_kms_init(struct drm_device *dev)
->
->                 kms->aspace = aspace;
->
-> -               ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
-> -                               ARRAY_SIZE(iommu_ports));
-> +               ret = aspace->mmu->funcs->attach(aspace->mmu);
->                 if (ret)
->                         goto fail;
->         } else {
-> diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> index 91cd76a2bab1..f8bd0bfcf4b0 100644
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -19,10 +19,6 @@
->  #include "msm_mmu.h"
->  #include "mdp5_kms.h"
->
-> -static const char *iommu_ports[] = {
-> -               "mdp_0",
-> -};
-> -
->  static int mdp5_hw_init(struct msm_kms *kms)
->  {
->         struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
-> @@ -233,8 +229,7 @@ static void mdp5_kms_destroy(struct msm_kms *kms)
->                 mdp5_pipe_destroy(mdp5_kms->hwpipes[i]);
->
->         if (aspace) {
-> -               aspace->mmu->funcs->detach(aspace->mmu,
-> -                               iommu_ports, ARRAY_SIZE(iommu_ports));
-> +               aspace->mmu->funcs->detach(aspace->mmu);
->                 msm_gem_address_space_put(aspace);
->         }
->  }
-> @@ -737,8 +732,7 @@ struct msm_kms *mdp5_kms_init(struct drm_device *dev)
->
->                 kms->aspace = aspace;
->
-> -               ret = aspace->mmu->funcs->attach(aspace->mmu, iommu_ports,
-> -                               ARRAY_SIZE(iommu_ports));
-> +               ret = aspace->mmu->funcs->attach(aspace->mmu);
->                 if (ret) {
->                         DRM_DEV_ERROR(&pdev->dev, "failed to attach iommu: %d\n",
->                                 ret);
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index a052364a5d74..122199af0381 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -838,7 +838,7 @@ msm_gpu_create_address_space(struct msm_gpu *gpu, struct platform_device *pdev,
->                 return ERR_CAST(aspace);
->         }
->
-> -       ret = aspace->mmu->funcs->attach(aspace->mmu, NULL, 0);
-> +       ret = aspace->mmu->funcs->attach(aspace->mmu);
->         if (ret) {
->                 msm_gem_address_space_put(aspace);
->                 return ERR_PTR(ret);
-> @@ -995,8 +995,7 @@ void msm_gpu_cleanup(struct msm_gpu *gpu)
->         msm_gem_kernel_put(gpu->memptrs_bo, gpu->aspace, false);
->
->         if (!IS_ERR_OR_NULL(gpu->aspace)) {
-> -               gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu,
-> -                       NULL, 0);
-> +               gpu->aspace->mmu->funcs->detach(gpu->aspace->mmu);
->                 msm_gem_address_space_put(gpu->aspace);
->         }
->  }
-> diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-> index 34f643a0c28a..34980d8eb7ad 100644
-> --- a/drivers/gpu/drm/msm/msm_gpummu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpummu.c
-> @@ -21,14 +21,12 @@ struct msm_gpummu {
->  #define GPUMMU_PAGE_SIZE SZ_4K
->  #define TABLE_SIZE (sizeof(uint32_t) * GPUMMU_VA_RANGE / GPUMMU_PAGE_SIZE)
->
-> -static int msm_gpummu_attach(struct msm_mmu *mmu, const char * const *names,
-> -               int cnt)
-> +static int msm_gpummu_attach(struct msm_mmu *mmu)
->  {
->         return 0;
->  }
->
-> -static void msm_gpummu_detach(struct msm_mmu *mmu, const char * const *names,
-> -               int cnt)
-> +static void msm_gpummu_detach(struct msm_mmu *mmu)
->  {
->  }
->
-> diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> index 8c95c31e2b12..ad58cfe5998e 100644
-> --- a/drivers/gpu/drm/msm/msm_iommu.c
-> +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> @@ -23,16 +23,14 @@ static int msm_fault_handler(struct iommu_domain *domain, struct device *dev,
->         return 0;
->  }
->
-> -static int msm_iommu_attach(struct msm_mmu *mmu, const char * const *names,
-> -                           int cnt)
-> +static int msm_iommu_attach(struct msm_mmu *mmu)
->  {
->         struct msm_iommu *iommu = to_msm_iommu(mmu);
->
->         return iommu_attach_device(iommu->domain, mmu->dev);
->  }
->
-> -static void msm_iommu_detach(struct msm_mmu *mmu, const char * const *names,
-> -                            int cnt)
-> +static void msm_iommu_detach(struct msm_mmu *mmu)
->  {
->         struct msm_iommu *iommu = to_msm_iommu(mmu);
->
-> diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-> index 871d56303697..67a623f14319 100644
-> --- a/drivers/gpu/drm/msm/msm_mmu.h
-> +++ b/drivers/gpu/drm/msm/msm_mmu.h
-> @@ -10,8 +10,8 @@
->  #include <linux/iommu.h>
->
->  struct msm_mmu_funcs {
-> -       int (*attach)(struct msm_mmu *mmu, const char * const *names, int cnt);
-> -       void (*detach)(struct msm_mmu *mmu, const char * const *names, int cnt);
-> +       int (*attach)(struct msm_mmu *mmu);
-> +       void (*detach)(struct msm_mmu *mmu);
->         int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *sgt,
->                         unsigned len, int prot);
->         int (*unmap)(struct msm_mmu *mmu, uint64_t iova, unsigned len);
+>  ifneq ($(BTF_LLVM_PROBE),)
+> -       EXTRA_CFLAGS += -g
+> +       CLANG_EXTRA_CFLAGS += -g
+>  else
+>  ifneq ($(and $(BTF_LLC_PROBE),$(BTF_PAHOLE_PROBE),$(BTF_OBJCOPY_PROBE)),)
+> -       EXTRA_CFLAGS += -g
+> +       CLANG_EXTRA_CFLAGS += -g
+>         LLC_FLAGS += -mattr=dwarfris
+>         DWARF2BTF = y
+>  endif
+> @@ -280,8 +280,8 @@ $(obj)/hbm_edt_kern.o: $(src)/hbm.h $(src)/hbm_kern.h
+>  # useless for BPF samples.
+>  $(obj)/%.o: $(src)/%.c
+>         @echo "  CLANG-bpf " $@
+> -       $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(EXTRA_CFLAGS) -I$(obj) \
+> -               -I$(srctree)/tools/testing/selftests/bpf/ \
+> +       $(Q)$(CLANG) $(NOSTDINC_FLAGS) $(LINUXINCLUDE) $(CLANG_EXTRA_CFLAGS) \
+> +               -I$(obj) -I$(srctree)/tools/testing/selftests/bpf/ \
+>                 -D__KERNEL__ -D__BPF_TRACING__ -Wno-unused-value -Wno-pointer-sign \
+>                 -D__TARGET_ARCH_$(SRCARCH) -Wno-compare-distinct-pointer-types \
+>                 -Wno-gnu-variable-sized-type-not-at-end \
 > --
-> 2.20.1
+> 2.17.1
 >
