@@ -2,186 +2,119 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD94BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931EDC4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746B5214DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hQbtcSCw"
+	by mail.kernel.org (Postfix) with ESMTP id 6803E206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfIPIAb (ORCPT
+        id S1730819AbfIPICW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:00:31 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:41781 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727705AbfIPIAb (ORCPT
+        Mon, 16 Sep 2019 04:02:22 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35441 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730792AbfIPICW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:00:31 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g13so4824826otp.8;
-        Mon, 16 Sep 2019 01:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4SEWfM7O8UbpERn/SUSxqqqr9oK+Dc78EcCy5Rgalfo=;
-        b=hQbtcSCwzANFp2mbS9qcOW/t4MH/dwN+7w700yohTH3Y3byTCE0FcFuyacizqKGAYT
-         j3/qMeiZIqcH3PVRfQDwlFCSY1KFioNEwby7aPV0mDWy/9kdKqr3gaID/KpMDe6CgZNs
-         rda8w+RA65pW6TVawUUBXWhlC6mrCmh7ES920W9sPZ1Jfvr9wCNBFBNBgIPVO2QXXCc1
-         Q1MThPUK8A9cb++I4CSTWcTTKaIfUkeYsgnSdPMv+pKqqPnX4Ow9RU1yO6+4rXIyOrnb
-         ufZjLLeQJjnRPTjchxfFJw9sb1QftfS/TropitOxBKBym50dKsV4VHOKcMBxb3Lmem2b
-         vcNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4SEWfM7O8UbpERn/SUSxqqqr9oK+Dc78EcCy5Rgalfo=;
-        b=IAekic/op0k+9+i8orgRx4RCUW24cHFRaXobcTE3wrNkQVKNnUgInzsoQHmuZzpQXF
-         xtonODjJRoYayPObv0yftC7rkptpNL7gmbvSt0rMws2TxFJJ8hpDc1+aAhgRxsPT4jhN
-         tjAl3E9ESnSSO+NDeVbg75N8UkeJ982ch3VXlIIyUYUGmiyPWzd12DU7tyVRrL2VxKFx
-         kVVox5g60MSmmF0ZQ6/h11P09klHeHvW9mNBPnDdWMzG3UkzTLb5cCUKufwSjH3D944J
-         h3ycI+Q6O225Is1jL+tuHIXvEc5/8XLlEGh4vSkzygr6eKkqvj7J9rLoBv0FvKx37q00
-         Q7pQ==
-X-Gm-Message-State: APjAAAVG6wOw/PztcNTg5/cdKyYRrVqo3EM9kdSXUNrnc/7BQRXFkXTY
-        T5RL+bubLcxkVqhp94k6wIWTnNuxoc9kJUiBGkU=
-X-Google-Smtp-Source: APXvYqwVaJiYiPYcneK9AbhXCJczf/z1pcVeDuq9ViSds/oCsL6kfy7yt6MuPORkJTl9wK2S/n/2j0lf9qZ0oQiBxHg=
-X-Received: by 2002:a9d:61d3:: with SMTP id h19mr50461808otk.325.1568620829938;
- Mon, 16 Sep 2019 01:00:29 -0700 (PDT)
+        Mon, 16 Sep 2019 04:02:22 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 6536D20000A;
+        Mon, 16 Sep 2019 08:02:19 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 10:02:19 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>, linux-rtc@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Duncan Laurie <dlaurie@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: Re: [PATCH] rtc: wilco-ec: Sanitize values received from RTC
+Message-ID: <20190916080219.GV21254@piout.net>
+References: <20190910151929.780-1-ncrews@chromium.org>
+ <20190912080953.GO21254@piout.net>
+ <CAHX4x87M6opd5Ob_TRwCQ3mYgeFaV55DYiTYccM2cNX2nD3oYA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190909162743.30114-1-bparrot@ti.com> <20190909162743.30114-6-bparrot@ti.com>
-In-Reply-To: <20190909162743.30114-6-bparrot@ti.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Mon, 16 Sep 2019 09:00:03 +0100
-Message-ID: <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
-Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHX4x87M6opd5Ob_TRwCQ3mYgeFaV55DYiTYccM2cNX2nD3oYA@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+On 15/09/2019 23:44:03+0100, Nick Crews wrote:
+> Hi Alexandre, thanks for the thoughts.
+> 
+> On Thu, Sep 12, 2019 at 9:09 AM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> >
+> > Hi Nick,
+> >
+> > On 10/09/2019 16:19:29+0100, Nick Crews wrote:
+> > > Check that the time received from the RTC HW is valid,
+> > > otherwise the computation of rtc_year_days() in the next
+> > > line could, and sometimes does, crash the kernel.
+> > >
+> > > While we're at it, fix the license to plain "GPL".
+> > >
+> > > Signed-off-by: Nick Crews <ncrews@chromium.org>
+> > > ---
+> > >  drivers/rtc/rtc-wilco-ec.c | 12 ++++++++++--
+> > >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/rtc/rtc-wilco-ec.c b/drivers/rtc/rtc-wilco-ec.c
+> > > index 8ad4c4e6d557..0ccbf2dce832 100644
+> > > --- a/drivers/rtc/rtc-wilco-ec.c
+> > > +++ b/drivers/rtc/rtc-wilco-ec.c
+> > > @@ -110,8 +110,16 @@ static int wilco_ec_rtc_read(struct device *dev, struct rtc_time *tm)
+> > >       tm->tm_mday     = rtc.day;
+> > >       tm->tm_mon      = rtc.month - 1;
+> > >       tm->tm_year     = rtc.year + (rtc.century * 100) - 1900;
+> > > -     tm->tm_yday     = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+> >
+> > If your driver doesn't care about yday, userspace doesn't either. You
+> > can simply not set it.
+> 
+> This driver indeed does not care about yday, so it sounds good to me
+> to simply not set it. However, I do still want to worry about the HW
+> returning some bogus time. It could be indicative of some other problem,
+> and I don't want to pass on this illegal time further up the stack. I can't
+> think of a reason why an illegal time should exist at all, we should just
+> deal with it as soon as possible. How about I remove setting yday as
+> you suggest, but still keep the rtc_valid_tm() check?
+> 
 
-Thank you for the patch.
+As rtc_valid_tm would be the last thing the driver does in the callback
+and the first thing the core does after returning from the callback,
+you'd get two calls back to back which is not useful.
 
-On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
->
-> Returning queued vb2 buffers back to user space is a common
-> task best handled by a helper function.
->
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
->  1 file changed, 26 insertions(+), 28 deletions(-)
->
-> diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> index 3a8ad9bdf283..52f7fc6e11dd 100644
-> --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
->         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
->  }
->
-> +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
-> +                                   enum vb2_buffer_state state)
-> +{
-> +       struct vpfe_cap_buffer *buf, *node;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
-> +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
-> +               vb2_buffer_done(&buf->vb.vb2_buf, state);
-> +               list_del(&buf->list);
-> +       }
-> +
-> +       if (vpfe->cur_frm)
-> +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
-> +
-> +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
-> +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
-> +
-> +       vpfe->cur_frm = NULL;
-> +       vpfe->next_frm = NULL;
-> +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-> +}
-> +
->  /*
->   * vpfe_start_streaming : Starts the DMA engine for streaming
->   * @vb: ptr to vb2_buffer
-> @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
->  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
->  {
->         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
-> -       struct vpfe_cap_buffer *buf, *tmp;
->         struct vpfe_subdev_info *sdinfo;
->         unsigned long flags;
->         unsigned long addr;
-> @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
->         return 0;
->
->  err:
-> -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
-> -               list_del(&buf->list);
-> -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
-> -       }
-> -
-> +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
-> +       vpfe_pcr_enable(&vpfe->ccdc, 0);
+> >
+> > >
+> > > +     if (rtc_valid_tm(tm)) {
+> > > +             dev_warn(dev,
+> > > +                      "Time computed from EC RTC is invalid: sec=%d, min=%d, hour=%d, mday=%d, mon=%d, year=%d",
+> > > +                      tm->tm_sec, tm->tm_min, tm->tm_hour, tm->mday,
+> > > +                      tm->mon, tm->year);
+> > > +             return -EIO;
+> > > +     }
+> > > +
+> > > +     tm->tm_yday = rtc_year_days(tm->tm_mday, tm->tm_mon, tm->tm_year);
+> > >       /* Don't compute day of week, we don't need it. */
+> > >       tm->tm_wday = -1;
+> 
+> Following our discussion, perhaps I'll just remove this too since the
+> RTC core inits this to -1 already?
+> 
 
-please create a seperate patch for the above change.
+You can remove it.
 
-Cheers,
---Prabhakar Lad
 
->         return ret;
->  }
->
-> @@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
->  {
->         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
->         struct vpfe_subdev_info *sdinfo;
-> -       unsigned long flags;
->         int ret;
->
->         vpfe_pcr_enable(&vpfe->ccdc, 0);
-> @@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
->                 vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
->
->         /* release all active buffers */
-> -       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
-> -       if (vpfe->cur_frm == vpfe->next_frm) {
-> -               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
-> -                               VB2_BUF_STATE_ERROR);
-> -       } else {
-> -               if (vpfe->cur_frm != NULL)
-> -                       vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
-> -                                       VB2_BUF_STATE_ERROR);
-> -               if (vpfe->next_frm != NULL)
-> -                       vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
-> -                                       VB2_BUF_STATE_ERROR);
-> -       }
-> -
-> -       while (!list_empty(&vpfe->dma_queue)) {
-> -               vpfe->next_frm = list_entry(vpfe->dma_queue.next,
-> -                                               struct vpfe_cap_buffer, list);
-> -               list_del(&vpfe->next_frm->list);
-> -               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
-> -                               VB2_BUF_STATE_ERROR);
-> -       }
-> -       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-> +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
->  }
->
->  static int vpfe_g_pixelaspect(struct file *file, void *priv,
-> --
-> 2.17.1
->
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
