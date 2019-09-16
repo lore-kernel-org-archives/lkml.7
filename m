@@ -2,97 +2,123 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728D2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E39FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A97121848
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404392184D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568648218;
-	bh=UVEDiSFb7PbBmSMCLBsQzUaNXwy9lDl9mXB28flFCjM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=eG8v4O7elZaNwgLK8/F6QlehEiIfMHbXAhMCOhbDstFwsHIjkfa39vRJaHuzjp0lR
-	 LIt3nO/LnGiDnpD2dInbQnqNA3poIfgDhJqHbnTjbfvB1mWy5r9Qpj5zM4MjgRU4u7
-	 XlNJFuZhANC5zZp8n8v3m51G7d8gUDdoRGNIrTKo=
+	s=default; t=1568648259;
+	bh=XXj6PzzdwbJempAZT8mwyx4CYSvHfLZU4rGUcOLrmg4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=R5EohJOOHjfEAlvXNxSarXi4j6Mn4xbAP/nOza29C5tzZNtrUvgBb393BgFYflcaX
+	 XGz8X0HtRKvFrlVLgHkpmReXztdEjCsm2sFkHe0dJfkYxVecWcFWDwrWbrZq73Q5a/
+	 49eNPRS3vdXsoXZrDRp6irYHU1zNwBWNGS6sjO4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389294AbfIPPg5 (ORCPT
+        id S2389312AbfIPPhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:36:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36506 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 11:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731764AbfIPPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:36:57 -0400
-Received: from paulmck-ThinkPad-P72 (96-84-246-146-static.hfc.comcastbusiness.net [96.84.246.146])
+        id S1726449AbfIPPhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 11:37:38 -0400
+Received: from localhost (unknown [104.132.0.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5076214D9;
-        Mon, 16 Sep 2019 15:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8477621848;
+        Mon, 16 Sep 2019 15:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568648216;
-        bh=UVEDiSFb7PbBmSMCLBsQzUaNXwy9lDl9mXB28flFCjM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=S4mKDYB5Uh2xN7T2aFOQ7jXK3WPpOjzcYSDbt6MBn8I7/78XOoRqqlJuYaJcQuJmi
-         X/LYo+Yujjsn8R8nsn6G/I3EqjRJLXKqadyob5XN+WQ8Y14ygoYuHQYrTU1/a+eeqn
-         U4BQjPTMllUR3eXwsbLn6nBPL3WV87gbkfCDkUzA=
-Date:   Mon, 16 Sep 2019 08:36:51 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
-Message-ID: <20190916153651.GW30224@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20190916145404.bukcmlliequu77wk@linutronix.de>
+        s=default; t=1568648257;
+        bh=XXj6PzzdwbJempAZT8mwyx4CYSvHfLZU4rGUcOLrmg4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MqtJ9JNOUsezx8vpaHP7Lx5WlpApry44nZeOLJlg05z0A/RcqEi/L+dvkedGzKZyR
+         I3IKnptiqHGvtHW+2heApzs2rczQD2Cc/DcwCAW/XAnwK62ryYFsDV7ZLWBYSeF9aq
+         R6j2M4J63vpAmQFs7IuYozNqrm2QCPWzI5+ZBw78=
+Date:   Mon, 16 Sep 2019 08:37:36 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
+ again
+Message-ID: <20190916153736.GA2493@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
+ <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
+ <20190909120443.GA31108@jaegeuk-macbookpro.roam.corp.google.com>
+ <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916145404.bukcmlliequu77wk@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 04:54:04PM +0200, Sebastian Andrzej Siewior wrote:
-> From: Wolfgang M. Reimer <linuxball@gmail.com>
+On 09/16, Chao Yu wrote:
+> On 2019/9/9 20:04, Jaegeuk Kim wrote:
+> > On 09/09, Chao Yu wrote:
+> >> On 2019/9/9 16:06, Jaegeuk Kim wrote:
+> >>> On 09/09, Chao Yu wrote:
+> >>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+> >>>>> GC must avoid select the same victim again.
+> >>>>
+> >>>> Blocks in previous victim will occupy addition free segment, I doubt after this
+> >>>> change, FGGC may encounter out-of-free space issue more frequently.
+> >>>
+> >>> Hmm, actually this change seems wrong by sec_usage_check().
+> >>> We may be able to avoid this only in the suspicious loop?
+> >>>
+> >>> ---
+> >>>  fs/f2fs/gc.c | 2 +-
+> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >>> index e88f98ddf396..5877bd729689 100644
+> >>> --- a/fs/f2fs/gc.c
+> >>> +++ b/fs/f2fs/gc.c
+> >>> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+> >>>  		round++;
+> >>>  	}
+> >>>  
+> >>> -	if (gc_type == FG_GC)
+> >>> +	if (gc_type == FG_GC && seg_freed)
+> >>
+> >> That's original solution Sahitya provided to avoid infinite loop of GC, but I
+> >> suggest to find the root cause first, then we added .invalid_segmap for that
+> >> purpose.
+> > 
+> > I've checked the Sahitya's patch. So, it seems the problem can happen due to
+> > is_alive or atomic_file.
 > 
-> Including rwlock.h directly will cause kernel builds to fail
-> if CONFIG_PREEMPT_RT is defined. The correct header file
-> (rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
-> is included by locktorture.c anyway.
+> For some conditions, this doesn't help, for example, two sections contain the
+> same fewest valid blocks, it will cause to loop selecting them if it fails to
+> migrate blocks.
 > 
-> Remove the include of linux/rwlock.h.
-> 
-> Signed-off-by: Wolfgang M. Reimer <linuxball@gmail.com>
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> How about keeping it as it is to find potential bug.
 
-Queued for further review and testing, thank you both!
+I think it'd be fine to merge this. Could you check the above scenario in more
+detail?
 
-							Thanx, Paul
+Thanks,
 
-> ---
->  kernel/locking/locktorture.c | 1 -
->  1 file changed, 1 deletion(-)
 > 
-> diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-> index c513031cd7e33..9fb042d610d23 100644
-> --- a/kernel/locking/locktorture.c
-> +++ b/kernel/locking/locktorture.c
-> @@ -16,7 +16,6 @@
->  #include <linux/kthread.h>
->  #include <linux/sched/rt.h>
->  #include <linux/spinlock.h>
-> -#include <linux/rwlock.h>
->  #include <linux/mutex.h>
->  #include <linux/rwsem.h>
->  #include <linux/smp.h>
-> -- 
-> 2.23.0
+> Thanks,
 > 
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>  		sbi->cur_victim_sec = NULL_SEGNO;
+> >>>  
+> >>>  	if (sync)
+> >>>
+> > .
+> > 
