@@ -2,115 +2,152 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585DCC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAD0C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EF12214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F46F2189D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:02:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jhfxILuE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vtu8Ti+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732053AbfIPQBq (ORCPT
+        id S1732165AbfIPQCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:01:46 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43834 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731937AbfIPQBq (ORCPT
+        Mon, 16 Sep 2019 12:02:45 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38527 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731937AbfIPQCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:01:46 -0400
-Received: by mail-pl1-f195.google.com with SMTP id 4so73539pld.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:01:44 -0700 (PDT)
+        Mon, 16 Sep 2019 12:02:45 -0400
+Received: by mail-ot1-f65.google.com with SMTP id h17so317981otn.5;
+        Mon, 16 Sep 2019 09:02:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BEJp88C2i8e+N1eeCwl/bIylkv3ygkyUoC1HYN2SV/k=;
-        b=jhfxILuEU5LSCsXnCz+qhXGXW+5xTSEXtoXYBOnG0tgqgkC8QZkpPUuxQS62iaEG8G
-         lT+fOZdcERuiq+rmr7NKKowWHPu1M3Nlu66ab6zYsjKUrb1NfoiBR4+pGdYnWyXPH9ia
-         n72cJDV1heSbw50qfUMyU8NJuMBHfd7NNfFemrdfpdYGV14gqqhLmCvweCBP5OZh0Eid
-         +tex2GW5MJvYVr4jZm8KmWW4oUqRExEUbwAwIJp6twGSL36gZnm0rNMmHBRrI4tzbdag
-         NGG8To8FUUqrnZkyiDoHUAbv71m5kZ38+aZMFOph6Txy+3qAiacUbGFD9gw64AHhFR/A
-         T/VA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DIzjw3IeSHDKWiLDD7SWp2puD5QNKXByzpUoQtfmTHw=;
+        b=Vtu8Ti+GX+9VdQ0WPwqKq128F1saRKZySXg/B8sTljkBZY/KpXSKWwyt6ptzGDAVbp
+         OV0OHQFcCYd6nrsvEXEod4SjtmSU1MD0VhBO91aoxcUU1VK8UM/O7JCrxk5XKAR+yrPo
+         BkjNlVcuI9rtVd73uNr+9ANnRKaHmXEstyT1kBdOgHbZZN0Jc1KA2PubOE2Pk4kBsHa7
+         7nz046EWVACQ//s1lxgRXE80rcc06tJlwe7obIiNKdUfkm1PpZGCVc00c1GmgKTAUij/
+         +Z+iQoXcWB5eqX+Yr+C47ijCGIql/J6NyKLnXGxH7hqOVywH501rNi/CGw5O083AXA/S
+         viVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BEJp88C2i8e+N1eeCwl/bIylkv3ygkyUoC1HYN2SV/k=;
-        b=BHuzw9nGondHfmQa/df1kPRgqL9eANcJw8i6hfmYGZ3clhkT1jWafcp9CktY5CmMYb
-         82qQjFEbuCRy7vtEwPDkwUGwn72uK4ZG7N6+/aTMMkKxc0tjdeNQT7IDk7oKQjzRDAz9
-         2XeomxWuJI25o1NnwcUPRCRF6H99WfrhR4MNSlpzMU/NEZEYHdTNS0+PSSIYAMLmcj1H
-         XzsOCgd6KoDvvqtrtlPqTOO4Y2jZ50Hr8/mW7LynwtdkOpUQd3eKseKSgnPLpQ88FnFl
-         VomK4lW9yn6oaiF7aS73BCr2F3ym0eEIylBkZjtxwyMGN3dmfwl709ZX2AduxwUevHw2
-         6X5g==
-X-Gm-Message-State: APjAAAVAIjeScyYAIs2MFPJuWgYafEIgpgnyFdGdYjfMnFjM/j91W9tB
-        LdV2yF3VdhcDTb8Mx48Umm5AnA==
-X-Google-Smtp-Source: APXvYqzMhCRQP8tJyGIBAZV9PplFz6in7yvRK1pn+2rxCPUn97+FSPxvfs4gGo1B4/W4BWJWbGEGrA==
-X-Received: by 2002:a17:902:b08f:: with SMTP id p15mr560731plr.158.1568649703947;
-        Mon, 16 Sep 2019 09:01:43 -0700 (PDT)
-Received: from ?IPv6:2605:e000:100e:83a1:c484:c1a1:f495:ecae? ([2605:e000:100e:83a1:c484:c1a1:f495:ecae])
-        by smtp.gmail.com with ESMTPSA id a8sm10024107pfo.118.2019.09.16.09.01.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 09:01:42 -0700 (PDT)
-Subject: Re: [PATCH 0/1] block, bfq: remove bfq prefix from cgroups filenames
-To:     Paolo Valente <paolo.valente@linaro.org>, Tejun Heo <tj@kernel.org>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        cgroups@vger.kernel.org
-References: <20190909073117.20625-1-paolo.valente@linaro.org>
- <80C56C11-DA21-4036-9006-2F459ACE9A8C@linaro.org>
- <c67c4d4b-ee56-85c1-5b94-7ae1704918b6@kernel.dk>
- <1F3898DA-C61F-4FA7-B586-F0FA0CAF5069@linaro.org>
- <20190916151643.GC3084169@devbig004.ftw2.facebook.com>
- <64329DDB-FFF4-4709-83B1-39D5E6BF6AB6@linaro.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <91deff5b-4a0d-a7ef-8bb2-7e7e5dad767b@kernel.dk>
-Date:   Mon, 16 Sep 2019 10:01:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DIzjw3IeSHDKWiLDD7SWp2puD5QNKXByzpUoQtfmTHw=;
+        b=IbLMpv8wQ4yWDVs67QUPy8KJwMOrb7H8/90HiLyKX3RRmv2T7Tagd4mzcWUPLRyBDN
+         ZlGRzn7U8tB2H4gsOcIgbn8aD1cYHr//O4lHw0h3y8qp3U3SF9Pnmc312IfQWUQeGZDK
+         CAM3MAcVlGy3DyzXVbQztdVOxD9490TPQ4iSfa+5TEfsX/GGdvgN147+ovG48lwKr27i
+         kZ+CzxLzTrrddzBcikRRaHPzbTYr6e7isHBBGTD1MYao+5fkbbK5j0BLqkG4TF7pDxo1
+         e27klmxsJ/3aN/3cO/de5yZVFEhaFkYWjfEANmHl+dbSqaM3nYtPprU9oaDbbqLVz9CT
+         TCVQ==
+X-Gm-Message-State: APjAAAWizt2qnpJoWirG+q6BRrtKrfWmsirAueKdgn+ctwijYUSBjdmY
+        Ldxr7RJeJch4ecVJud938+4BxX17Aen6DJAKzOw=
+X-Google-Smtp-Source: APXvYqw98ZOwyQeKoPkv4sLNxSOofT0MnSA9ib1WASg6JugOWr55F8MuBsIiFBaCgToeKVJSN48USeBX0xcnSR2kkBU=
+X-Received: by 2002:a9d:61d3:: with SMTP id h19mr168362otk.325.1568649762768;
+ Mon, 16 Sep 2019 09:02:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <64329DDB-FFF4-4709-83B1-39D5E6BF6AB6@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190909162743.30114-1-bparrot@ti.com> <20190909162743.30114-6-bparrot@ti.com>
+ <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com> <20190916145356.wddnnl3kk2awmbf4@ti.com>
+In-Reply-To: <20190916145356.wddnnl3kk2awmbf4@ti.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Mon, 16 Sep 2019 17:02:16 +0100
+Message-ID: <CA+V-a8t0ukJ9zkz1yLaReQzMBpcN4o1182ao4OQSyCgEu3M_VQ@mail.gmail.com>
+Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-media <linux-media@vger.kernel.org>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 9:21 AM, Paolo Valente wrote:
-> 
-> 
->> Il giorno 16 set 2019, alle ore 17:16, Tejun Heo <tj@kernel.org> ha scritto:
->>
->> Hello, Paolo.
->>
->> On Mon, Sep 16, 2019 at 05:07:29PM +0200, Paolo Valente wrote:
->>> Tejun, could you put your switch-off-io-cost code into a standalone
->>> patch, so that I can put it together with this one in a complete
->>> series?
->>
->> It was more of a proof-of-concept / example, so the note in the email
->> that the code is free to be modified / used any way you see fit.  That
->> said, if you like it as it is, I can surely prep it as a standalone
->> patch.
->>
-> 
-> AFAICT your proposal contains no evident error.  Plus, no one seems to
-> have complained about the idea (regardless from the exact
-> implementation).  So I guess the best next step is to go for it.
+On Mon, Sep 16, 2019 at 3:51 PM Benoit Parrot <bparrot@ti.com> wrote:
+>
+> Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Mon [2019-Sep-16 09:00:03 +0100]:
+> > Hi Benoit,
+> >
+> > Thank you for the patch.
+> >
+> > On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
+> > >
+> > > Returning queued vb2 buffers back to user space is a common
+> > > task best handled by a helper function.
+> > >
+> > > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > > ---
+> > >  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
+> > >  1 file changed, 26 insertions(+), 28 deletions(-)
+> > >
+> > > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
+> > > index 3a8ad9bdf283..52f7fc6e11dd 100644
+> > > --- a/drivers/media/platform/am437x/am437x-vpfe.c
+> > > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
+> > > @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> > >         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > >  }
+> > >
+> > > +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
+> > > +                                   enum vb2_buffer_state state)
+> > > +{
+> > > +       struct vpfe_cap_buffer *buf, *node;
+> > > +       unsigned long flags;
+> > > +
+> > > +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
+> > > +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
+> > > +               vb2_buffer_done(&buf->vb.vb2_buf, state);
+> > > +               list_del(&buf->list);
+> > > +       }
+> > > +
+> > > +       if (vpfe->cur_frm)
+> > > +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
+> > > +
+> > > +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
+> > > +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
+> > > +
+> > > +       vpfe->cur_frm = NULL;
+> > > +       vpfe->next_frm = NULL;
+> > > +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
+> > > +}
+> > > +
+> > >  /*
+> > >   * vpfe_start_streaming : Starts the DMA engine for streaming
+> > >   * @vb: ptr to vb2_buffer
+> > > @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
+> > >  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> > >  {
+> > >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
+> > > -       struct vpfe_cap_buffer *buf, *tmp;
+> > >         struct vpfe_subdev_info *sdinfo;
+> > >         unsigned long flags;
+> > >         unsigned long addr;
+> > > @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
+> > >         return 0;
+> > >
+> > >  err:
+> > > -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
+> > > -               list_del(&buf->list);
+> > > -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+> > > -       }
+> > > -
+> > > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
+> > > +       vpfe_pcr_enable(&vpfe->ccdc, 0);
+> >
+> > please create a seperate patch for the above change.
+>
+> You mean a separate patch just for the vpfe_pcr_enable() call?
+>
+yes, as the call to vpfe_pcr_enable() is to disable the CCDC and it
+doesn't match the patch
+description.
 
-Not filling me with a lot of confidence that you actually tested it?
-
--- 
-Jens Axboe
-
+Cheers,
+--Prabhakar Lad
