@@ -2,254 +2,175 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF93C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9C5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD47214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 651CF21670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KYTlY74K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbfIPWoq (ORCPT
+        id S1730424AbfIPWtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:44:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:49214 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726968AbfIPWoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:44:46 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63BDC337;
-        Mon, 16 Sep 2019 15:44:45 -0700 (PDT)
-Received: from [192.168.1.124] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 908EF3F67D;
-        Mon, 16 Sep 2019 15:44:43 -0700 (PDT)
-Subject: Re: [PATCHv5 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
- hook
-To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org, Andy Gross <agross@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1568549745.git.saiprakash.ranjan@codeaurora.org>
- <4ccbaf1f81c2bb2e7846da591fd542ab33f45586.1568549746.git.saiprakash.ranjan@codeaurora.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e9918121-71bb-703f-a696-b0e357e5eeff@arm.com>
-Date:   Mon, 16 Sep 2019 23:44:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Sep 2019 18:49:25 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44887 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726968AbfIPWtZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 18:49:25 -0400
+Received: by mail-pg1-f196.google.com with SMTP id i18so803875pgl.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kENGSqKmUqPPdpHJ6m4GwChtS1EbaBEMgzUsVpqeX1U=;
+        b=KYTlY74KGSWbho4hQT1Kz82jdfOZ08vd1IhAQfCPuEcB4xZTP3z/C9rAnkmFp1JoAo
+         gedBCFiDQTnXsZgbXrBCiGGdkSJFfPq+XWVE54HBL8CTVR0AEkyFd/QTUPKZVNXBe9Fd
+         QcFCPfmbvXIuaqCeeDI/lnLsMwthaUuTCxCLyK+MoF8FOWi0NgdgQtB9UJ9rzf9SBd8p
+         Zl8rVKIOO7ORISi5P5uJ/ZtceGBrc7H8r7zT2AwfU2IgYkhh59k19jRWxDduIOeZJmyu
+         v/pqhBQ1+LnLnNNNo4JhWPg/zHc+OBwamLbmzEuVnMjQNwp/xio4ydA3yBFeSRplafn8
+         6YEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kENGSqKmUqPPdpHJ6m4GwChtS1EbaBEMgzUsVpqeX1U=;
+        b=TDjad5mHjY4ceZpZDkSCNY1fsIbJ9NDQ+P6FlTtU5nBLHLQHzAYfP1QUH/FzWY0aqK
+         lDXOmQeFmQxGDi6tawgIbdl+oxe9/EOx8yuSDJC33sVZarpDG1Mn4bUpAm+EaDZkcPpi
+         W+7WaGn7aeLU+B1mtfAj2rnfxSYD1sJjV2TpBqdbDxqIkd82qDC5d3YiMB8s1Hac6nsi
+         BuSZMcqYTV7+HMJS1v9+XEiwaTO34ZSp0qCW+jLdP7NpdZvr/gssC3Fy3YrMChJtvH/d
+         i8ok0dtoQXVM3rVit3GOSbtH9Tuts07SNN0Thwv42kr12txWL2trgbZIUJqG14fIH/J5
+         wQPg==
+X-Gm-Message-State: APjAAAUXwrPJAXHhNkY7Yl3xusFfY8rHoiZ84vKmnad8mhgLTuN0XSXp
+        0an7q54vDXkq86Xt8gXQ7BE=
+X-Google-Smtp-Source: APXvYqwXeCRM152vISeSYObMSYFrVO5M8aKoHJ+Xbpqr49/LWf0mNi7lZ+lzTGlj/FuHFzmkelX9vA==
+X-Received: by 2002:a62:1b85:: with SMTP id b127mr813216pfb.56.1568674164260;
+        Mon, 16 Sep 2019 15:49:24 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id l23sm118212pgj.53.2019.09.16.15.49.23
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 15:49:24 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 15:49:05 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Daniel Baluta <daniel.baluta@nxp.com>
+Cc:     broonie@kernel.org, timur@kernel.org, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, lgirdwood@gmail.com, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, Mihai Serban <mihai.serban@nxp.com>
+Subject: Re: [PATCH v2 1/3] ASoC: fsl_sai: Fix noise when using EDMA
+Message-ID: <20190916224905.GB12789@Asurada-Nvidia.nvidia.com>
+References: <20190913192807.8423-1-daniel.baluta@nxp.com>
+ <20190913192807.8423-2-daniel.baluta@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <4ccbaf1f81c2bb2e7846da591fd542ab33f45586.1568549746.git.saiprakash.ranjan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913192807.8423-2-daniel.baluta@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-15 1:35 pm, Sai Prakash Ranjan wrote:
-> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+On Fri, Sep 13, 2019 at 10:28:05PM +0300, Daniel Baluta wrote:
+> From: Mihai Serban <mihai.serban@nxp.com>
 > 
-> Add reset hook for sdm845 based platforms to turn off
-> the wait-for-safe sequence.
+> EDMA requires the period size to be multiple of maxburst. Otherwise the
+> remaining bytes are not transferred and thus noise is produced.
 > 
-> Understanding how wait-for-safe logic affects USB and UFS performance
-> on MTP845 and DB845 boards:
+> We can handle this issue by adding a constraint on
+> SNDRV_PCM_HW_PARAM_PERIOD_SIZE to be multiple of tx/rx maxburst value.
 > 
-> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
-> to address under-performance issues in real-time clients, such as
-> Display, and Camera.
-> On receiving an invalidation requests, the SMMU forwards SAFE request
-> to these clients and waits for SAFE ack signal from real-time clients.
-> The SAFE signal from such clients is used to qualify the start of
-> invalidation.
-> This logic is controlled by chicken bits, one for each - MDP (display),
-> IFE0, and IFE1 (camera), that can be accessed only from secure software
-> on sdm845.
-> 
-> This configuration, however, degrades the performance of non-real time
-> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
-> logic enabled the hardware tries to throttle non-real time clients while
-> waiting for SAFE ack signals from real-time clients.
-> 
-> On mtp845 and db845 devices, with wait-for-safe logic enabled by the
-> bootloaders we see degraded performance of USB and UFS when kernel
-> enables the smmu stage-1 translations for these clients.
-> Turn off this wait-for-safe logic from the kernel gets us back the perf
-> of USB and UFS devices until we re-visit this when we start seeing perf
-> issues on display/camera on upstream supported SDM845 platforms.
-> The bootloaders on these boards implement secure monitor callbacks to
-> handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
-> logic can be toggled.
-> 
-> There are other boards such as cheza whose bootloaders don't enable this
-> logic. Such boards don't implement callbacks to handle the specific SCM
-> call so disabling this logic for such boards will be a no-op.
-> 
-> This change is inspired by the downstream change from Patrick Daly
-> to address performance issues with display and camera by handling
-> this wait-for-safe within separte io-pagetable ops to do TLB
-> maintenance. So a big thanks to him for the change and for all the
-> offline discussions.
-> 
-> Without this change the UFS reads are pretty slow:
-> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
-> 10+0 records in
-> 10+0 records out
-> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
-> real    0m 22.39s
-> user    0m 0.00s
-> sys     0m 0.01s
-> 
-> With this change they are back to rock!
-> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
-> 300+0 records in
-> 300+0 records out
-> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
-> real    0m 1.03s
-> user    0m 0.00s
-> sys     0m 0.54s
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+
+Thanks
+
 > ---
->   drivers/iommu/Makefile        |  2 +-
->   drivers/iommu/arm-smmu-impl.c |  7 +++++--
->   drivers/iommu/arm-smmu-qcom.c | 32 ++++++++++++++++++++++++++++++++
->   drivers/iommu/arm-smmu-qcom.h | 11 +++++++++++
->   drivers/iommu/arm-smmu.h      |  2 ++
->   5 files changed, 51 insertions(+), 3 deletions(-)
->   create mode 100644 drivers/iommu/arm-smmu-qcom.c
->   create mode 100644 drivers/iommu/arm-smmu-qcom.h
+> Changes since v1:
+> * rename variable to use_edma as per Nicolin's suggestion.
 > 
-> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-> index 7caad48b4bc2..7d66e00a6924 100644
-> --- a/drivers/iommu/Makefile
-> +++ b/drivers/iommu/Makefile
-> @@ -13,7 +13,7 @@ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
->   obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
->   obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
->   obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
-> -obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
-> +obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
->   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
->   obj-$(CONFIG_DMAR_TABLE) += dmar.o
->   obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
-> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-> index 5c87a38620c4..ad835018f0e2 100644
-> --- a/drivers/iommu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm-smmu-impl.c
-> @@ -8,7 +8,7 @@
->   #include <linux/of.h>
->   
->   #include "arm-smmu.h"
-> -
-> +#include "arm-smmu-qcom.h"
->   
->   static int arm_smmu_gr0_ns(int offset)
->   {
-> @@ -109,7 +109,7 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
->   #define ARM_MMU500_ACR_S2CRB_TLBEN	(1 << 10)
->   #define ARM_MMU500_ACR_SMTNMB_TLBEN	(1 << 8)
->   
-> -static int arm_mmu500_reset(struct arm_smmu_device *smmu)
-> +int arm_mmu500_reset(struct arm_smmu_device *smmu)
->   {
->   	u32 reg, major;
->   	int i;
-> @@ -170,5 +170,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->   				  "calxeda,smmu-secure-config-access"))
->   		smmu->impl = &calxeda_impl;
->   
-> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
-> +		smmu->impl = &qcom_sdm845_smmu500_impl;
-> +
->   	return smmu;
->   }
-> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
-> new file mode 100644
-> index 000000000000..10e9a5bbae06
-> --- /dev/null
-> +++ b/drivers/iommu/arm-smmu-qcom.c
-> @@ -0,0 +1,32 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/qcom_scm.h>
-> +
-> +#include "arm-smmu.h"
-> +#include "arm-smmu-qcom.h"
-> +
-> +static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
-> +{
-> +	int ret;
-> +
-> +	arm_mmu500_reset(smmu);
-> +
+>  sound/soc/fsl/fsl_sai.c | 15 +++++++++++++++
+>  sound/soc/fsl/fsl_sai.h |  1 +
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+> index ef0b74693093..b517e4bc1b87 100644
+> --- a/sound/soc/fsl/fsl_sai.c
+> +++ b/sound/soc/fsl/fsl_sai.c
+> @@ -628,6 +628,16 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+>  			   FSL_SAI_CR3_TRCE_MASK,
+>  			   FSL_SAI_CR3_TRCE);
+>  
 > +	/*
-> +	 * To address performance degradation in non-real time clients,
-> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
-> +	 * such as MTP and db845, whose firmwares implement secure monitor
-> +	 * call handlers to turn on/off the wait-for-safe logic.
+> +	 * EDMA controller needs period size to be a multiple of
+> +	 * tx/rx maxburst
 > +	 */
-> +	ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
-> +	if (ret)
-> +		dev_warn(smmu->dev, "Failed to turn off SAFE logic\n");
+> +	if (sai->soc_data->use_edma)
+> +		snd_pcm_hw_constraint_step(substream->runtime, 0,
+> +					   SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
+> +					   tx ? sai->dma_params_tx.maxburst :
+> +					   sai->dma_params_rx.maxburst);
 > +
-> +	return ret;
-> +}
-> +
-> +const struct arm_smmu_impl qcom_sdm845_smmu500_impl = {
-> +	.reset = qcom_sdm845_smmu500_reset,
-> +};
-> diff --git a/drivers/iommu/arm-smmu-qcom.h b/drivers/iommu/arm-smmu-qcom.h
-> new file mode 100644
-> index 000000000000..915f8ea2b616
-> --- /dev/null
-> +++ b/drivers/iommu/arm-smmu-qcom.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _ARM_SMMU_QCOM_H
-> +#define _ARM_SMMU_QCOM_H
-> +
-> +extern const struct arm_smmu_impl qcom_sdm845_smmu500_impl;
-
-I don't foresee this header being particularly beneficial - I'd rather 
-just have a single qcom_smmu_impl_init() entrypoint declared in 
-arm-smmu.h as per the Nvidia implementation[1], so you can then keep all 
-the other details private. With that change,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-Thanks,
-Robin.
-
-[1] 
-https://lore.kernel.org/linux-arm-kernel/1567481528-31163-3-git-send-email-vdumpa@nvidia.com/
-
-> +
-> +#endif /* _ARM_SMMU_QCOM_H */
-> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
-> index b19b6cae9b5e..f74fa3bb149d 100644
-> --- a/drivers/iommu/arm-smmu.h
-> +++ b/drivers/iommu/arm-smmu.h
-> @@ -399,4 +399,6 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
->   
->   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
->   
-> +int arm_mmu500_reset(struct arm_smmu_device *smmu);
-> +
->   #endif /* _ARM_SMMU_H */
+>  	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+>  			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
+>  
+> @@ -1026,30 +1036,35 @@ static int fsl_sai_remove(struct platform_device *pdev)
+>  
+>  static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
+>  	.use_imx_pcm = false,
+> +	.use_edma = false,
+>  	.fifo_depth = 32,
+>  	.reg_offset = 0,
+>  };
+>  
+>  static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
+>  	.use_imx_pcm = true,
+> +	.use_edma = false,
+>  	.fifo_depth = 32,
+>  	.reg_offset = 0,
+>  };
+>  
+>  static const struct fsl_sai_soc_data fsl_sai_imx7ulp_data = {
+>  	.use_imx_pcm = true,
+> +	.use_edma = false,
+>  	.fifo_depth = 16,
+>  	.reg_offset = 8,
+>  };
+>  
+>  static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
+>  	.use_imx_pcm = true,
+> +	.use_edma = false,
+>  	.fifo_depth = 128,
+>  	.reg_offset = 8,
+>  };
+>  
+>  static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
+>  	.use_imx_pcm = true,
+> +	.use_edma = true,
+>  	.fifo_depth = 64,
+>  	.reg_offset = 0,
+>  };
+> diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+> index b12cb578f6d0..76b15deea80c 100644
+> --- a/sound/soc/fsl/fsl_sai.h
+> +++ b/sound/soc/fsl/fsl_sai.h
+> @@ -157,6 +157,7 @@
+>  
+>  struct fsl_sai_soc_data {
+>  	bool use_imx_pcm;
+> +	bool use_edma;
+>  	unsigned int fifo_depth;
+>  	unsigned int reg_offset;
+>  };
+> -- 
+> 2.17.1
 > 
