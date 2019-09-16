@@ -2,105 +2,130 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C0CC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10409C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE6EA2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7E8206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568633759;
+	bh=SSLl/BhKysh7hNdjdqivwCIRljekkIMeLtLqdAe/AhI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=cz5VNc7AtQ0KPMsd9+PMNPf5zrZavcHcqaBZa8va3idpYeBo/ZSwAQZR+94B+sqxQ
+	 gVrtqoeICd4izX7cgjiWD2qjBLonnRhtYAQIyJXPNyMwTqrjhIDxazXQisd2I3QXKC
+	 HDtG9nz9eDNc++NIrtdwWJbWjZLeYLw08U3zjLGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732267AbfIPLf4 convert rfc822-to-8bit (ORCPT
+        id S1731690AbfIPLf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 16 Sep 2019 07:35:56 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:30536 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731365AbfIPLfz (ORCPT
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42511 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727479AbfIPLfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 16 Sep 2019 07:35:55 -0400
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 19:35:51 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 16 Sep
- 2019 19:35:50 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Mon, 16 Sep 2019 19:35:50 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     "tony.luck@intel.com" <tony.luck@intel.com>,
-        "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>
-CC:     David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v3 0/4] x86/mce: Add supports for Zhaoxin MCA
-Thread-Topic: [PATCH v3 0/4] x86/mce: Add supports for Zhaoxin MCA
-Thread-Index: AdVsghaYSu2N9NgNSwS4zHAPRb3wjg==
-Date:   Mon, 16 Sep 2019 11:35:50 +0000
-Message-ID: <a26cd9adb0b74b838c30ff9299de9932@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Received: by mail-wr1-f67.google.com with SMTP id q14so38456331wrm.9;
+        Mon, 16 Sep 2019 04:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Mv491UnCKS4JNd7z2SOkwV0dvUpBxBoTZTqacB4oBDQ=;
+        b=QlNxlAIQbvJb3OhnUhYCbkS2E2cmf2D/kPuUxGHT2UDqE/PX6Q+oUl305tVKtFn4Ht
+         zIK+pTyv1hzrnV2DLspJUU8QUSzIXviK30cKnUvMtXqkVcES+MtKtJaRYXSNqV9W1fGU
+         CegCxpAUaejap0b/1ehh1oZewOU1lyOYkZy5UhULLRSE+3LAyMCGBnX2Vx7QZ1r6+2Vk
+         Pc+1vW9DOpMnTthcU93e4Hg+6L5idXIbDwBuuGTSr6nH6f3AibmiRBBiEQH3yE5oEWQh
+         Zf40Kum8dKBkdOv4XNbMywvSDrrsCBYqeySGTwyXcQdtbPRWE2zkgjTtcV7kX7pfJJaP
+         NWzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=Mv491UnCKS4JNd7z2SOkwV0dvUpBxBoTZTqacB4oBDQ=;
+        b=SneGaGof9GNMahPws/mDELkkizRrBXevERSjf7p7U1qX1zDYG6JCKWmuBH+bphLgm3
+         O7OOwHdrJV9DsFZ+A1BHsb6mba2rMdfO5J7O34mS54M0/VQzIDe7U+QijyJB8Ls6hr+X
+         VjSFacuR5jjHACcUFImBYyDfLOzQxf53gkYFfsVMKk4CfUhVLLi0WFxICeVt47xSOdGT
+         Ql8tKR0gpLbkO1tZAVVKYdxawh9VPeW5EVOJueZnJj9b7hfBg8I5ajn8iTC8TD+MbZVx
+         BtjejpzuboZqDZgNgTPOS4gXeFL2zBn4f8s32BSk7AiHmuQO7+j7Kbm/VADCxVqSiU5q
+         wJjw==
+X-Gm-Message-State: APjAAAVSkyqD9yiC4Fuc+5d59+KtIgThxqvS5gEwihfj7DQl4R4pSBT2
+        Nes9Twyq0OqVdci/kW8fssYJir4d
+X-Google-Smtp-Source: APXvYqzFvF/jO3IjT5ZQsh3FJ2YQUpXu8iu759xLt+TfBC7t0w52DcNJOukvVWSAoosXgI55ZsTjIQ==
+X-Received: by 2002:a05:6000:162e:: with SMTP id v14mr1456582wrb.112.1568633752298;
+        Mon, 16 Sep 2019 04:35:52 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id y13sm74527067wrg.8.2019.09.16.04.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 04:35:51 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 13:35:49 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        James Morse <james.morse@arm.com>, linux-efi@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>
+Subject: [GIT PULL] EFI changes for v5.4
+Message-ID: <20190916113549.GA76922@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhaoxin newer CPUs support MCE, CMCI and LMCE that compatible with
-Intel's "Machine-Check Architecture".
+Linus,
 
-To enable the supports of Linux kernel to Zhaoxin's MCA, add
-specific patches for Zhaoxin's MCE, CMCI and LMCE. patches about
-Zhaoxin's CMCI, LMCE use 3 functions in mce/intel.c, so make these
-functions non-static.
+Please pull the latest efi-core-for-linus git tree from:
 
-Some Zhaoxin's CPUs have MCA bank 8, that only has one error called SVAD
-(System View Address Decoder) which be controlled by IA32_MC8.CTL.0.
-If enabled, the prefetch on these CPUs will cause SVAD machine check
-exception when virtual machine startup and cause system panic. Add a
-quirk for these Zhaoxin CPUs MCA bank 8.
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git efi-core-for-linus
 
-v2->v3:
- - Make ifelse-case to switch-case (patch 1/4)
- - Simplify Zhaoxin CPU FMS checking (patch 1/4, 3/4)
- - Revert 1 unused function intel_ppin_init() (patch 2/4)
- - Rework mce_zhaoxin_feature_init() as static (patch 3/4)
- - Rework comment about Zhaoxin MCA SVAD and CMCI (patch 3/4)
- - Rework mce_zhaoxin_feature_clear() as static (patch 4/4)
- - Add comment and change coding style (patch 4/4)
+   # HEAD: d3dc0168e93233ba4d4ed9a2c506c9d2b8d8cd33 Merge tag 'efi-next' of git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi into efi/core
 
-v1->v2:
- - Fix redefinition of "mce_zhaoxin_feature_init" (patch 3/4)
- - Fix redefinition of "mce_zhaoxin_feature_clear" (patch 4/4)
+The changes in this cycle were:
 
-TonyWWang-oc(4):
- x86/mce: Add Zhaoxin MCE support
- x86/mce: Make 3 functions non-static
- x86/mce: Add Zhaoxin CMCI support
- x86/mce: Add Zhaoxin LMCE support
+ - Refactoring of the EFI config table handling across architectures.
+ - Add support for the Dell EMC OEM config table.
+ - Include AER diagnostic output to CPER handling of fatal PCIe errors.
 
- arch/x86/kernel/cpu/mce/core.c     | 98 +++++++++++++++++++++++++++++++++-----
- arch/x86/kernel/cpu/mce/intel.c    | 11 +++--
- arch/x86/kernel/cpu/mce/internal.h |  6 +++
- 3 files changed, 99 insertions(+), 16 deletions(-)
+ Thanks,
 
--- 
-2.7.4
+	Ingo
+
+------------------>
+Ard Biesheuvel (3):
+      efi: x86: move efi_is_table_address() into arch/x86
+      efi/x86: move UV_SYSTAB handling into arch/x86
+      efi: ia64: move SAL systab handling out of generic EFI code
+
+Narendra K (1):
+      efi: Export Runtime Configuration Interface table to sysfs
+
+Xiaofei Tan (1):
+      efi: cper: print AER info of PCIe fatal error
+
+
+ Documentation/ABI/testing/sysfs-firmware-efi |   8 ++
+ arch/ia64/include/asm/sal.h                  |   1 +
+ arch/ia64/include/asm/sn/sn_sal.h            |   2 +-
+ arch/ia64/kernel/efi.c                       |   3 +
+ arch/ia64/kernel/setup.c                     |   2 +-
+ arch/x86/include/asm/efi.h                   |   5 +
+ arch/x86/include/asm/uv/uv.h                 |   4 +-
+ arch/x86/mm/ioremap.c                        |   1 +
+ arch/x86/platform/efi/efi.c                  |  39 ++++++-
+ arch/x86/platform/uv/bios_uv.c               |  10 +-
+ drivers/firmware/efi/Kconfig                 |  13 +++
+ drivers/firmware/efi/Makefile                |   1 +
+ drivers/firmware/efi/cper.c                  |  15 +++
+ drivers/firmware/efi/efi.c                   |  39 +------
+ drivers/firmware/efi/rci2-table.c            | 147 +++++++++++++++++++++++++++
+ include/linux/efi.h                          |  14 +--
+ 16 files changed, 251 insertions(+), 53 deletions(-)
+ create mode 100644 drivers/firmware/efi/rci2-table.c
