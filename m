@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D78C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C6FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285C9214DE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D94214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:29:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733305AbfIPN3b (ORCPT
+        id S2387404AbfIPN3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:29:31 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:47638 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733237AbfIPN3N (ORCPT
+        Mon, 16 Sep 2019 09:29:36 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:51030 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733225AbfIPN3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:29:13 -0400
-Received: by mail-io1-f70.google.com with SMTP id q1so32956598ios.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:29:12 -0700 (PDT)
+        Mon, 16 Sep 2019 09:29:12 -0400
+Received: by mail-io1-f69.google.com with SMTP id f5so12843501iob.17
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:29:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5ZUJhsqgpoCCn4jU5YhYsYU3T40C0q5cqL5dhqkQeqI=;
-        b=hy9lrEliA6vOWrMtQWXH5r984sMqcUbiPpRVhCpHv2RS4eYsd2UmIVJoqOxvBCBmnu
-         ApYOp6w8MD3HIdGKDYw6IbVdm4t3nExafLOonFHaC32a0XzwgMZ1OpJ7VxcpLzy6E5Dy
-         pNrYsvY8JuqF98X5wmKQc1zXslW+wPGWgehdYcYh0D7gq47qpyMRwLdGc76A3dHL/YGJ
-         mcUdfDmgtcaa2tRB0ugVfRUX2NaT6yztIQiC9QWXvOrCj/tL5Qw7Cgu1HIJrDr8vG7HI
-         RTJzq8lHIfhM2IuUif8Qa9MgZY0qlsl6ekxU1sk1FhlFQmxJb6BZHEbOeiNbUuh4bLCY
-         KdQA==
-X-Gm-Message-State: APjAAAWYGRZIR2A3g6vx8IBMyQeH1qHBs8GI56nX7a2h8GBUSOVYLusU
-        j0oOszLrXwWPu6BGm75+ExrrIsY7RzUpuE8A7LiJ4LDegBct
-X-Google-Smtp-Source: APXvYqxQ8gS9JKu5CWGDi2n0HkCBaJx8dcwVaidIgtmT3OjfgEyCIjrTsgva7oqzsn38gzf+eOiHqX+HLatv4EQFuNGKozMclNNk
+        bh=egJ9RlFuiaHOZXvDZ4i02K/0CianNMU6PJTp1Wkrn6U=;
+        b=YvNnjQjCBR3f4ZhsKM84YJsH7yUXmiEHtBSkdkqPLDXqzoxuSguV2g4Dr3yiHTl7cJ
+         xamlZcc3K44nQkU6MKTWA+urVDR4PZZd0LJC4H1I1hMmBty8YoVicVTOdVbc++S7+HCe
+         6XdI36gqx4PRli+Bh/XJH7Q18K+gBwws/rjgo4D+0N7shc6hC/SLacVOWHGeE40lzeIG
+         ZxmH45lIVWmUZvIArTJQqKlNbJnbeVzWdcbLH4Wccyj+URyB09u/yGgQ6T0gKPJtXuQW
+         16eUZeYIh3i22H/LCgUCsUkH3BrSFHbZWLIgleVz0wfn/sNTdQRpOwKCm+8KBD0WDIsg
+         MUTQ==
+X-Gm-Message-State: APjAAAVEenfmAXp4+wJKrIfRDsJv8bJ9UjBjUCGDb/5Iws8YLrXVaK0f
+        rowbmgsI739oCOl/cCLLzQ5ENwldWgz+t+7yIhH2eP1NLnCA
+X-Google-Smtp-Source: APXvYqwPAY8C2PSeu+AfTYRHsarRuhhvGYvnZQldDpncPnOCUfnCIcMFF1MaSHGKVQtq3cxFH3I4hGg0UDi9qAnTIjRo2wzkcY+z
 MIME-Version: 1.0
-X-Received: by 2002:a02:7797:: with SMTP id g145mr67307912jac.60.1568640552296;
- Mon, 16 Sep 2019 06:29:12 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 06:29:12 -0700
+X-Received: by 2002:a5d:9859:: with SMTP id p25mr15815937ios.142.1568640549930;
+ Mon, 16 Sep 2019 06:29:09 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 06:29:09 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e669b80592ab96fc@google.com>
-Subject: possible deadlock in tower_open
-From:   syzbot <syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com>
+Message-ID: <000000000000c2531f0592ab96fb@google.com>
+Subject: general protection fault in usb_set_interface
+From:   syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
 To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        legousb-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, starblue@users.sourceforge.net,
-        syzkaller-bugs@googlegroups.com
+        kai.heng.feng@canonical.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mans@mansr.com, oneukum@suse.com,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,124 +61,78 @@ syzbot found the following crash on:
 
 HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=13c8d14e600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=158b66f1600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=66935bec147fbf68d9f8
+dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f57db9600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127b61a5600000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+66935bec147fbf68d9f8@syzkaller.appspotmail.com
+Reported-by: syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.3.0-rc7+ #0 Not tainted
-------------------------------------------------------
-syz-executor.1/8155 is trying to acquire lock:
-0000000086c1bdfc (open_disc_mutex){+.+.}, at: tower_open+0xce/0x9b0  
-drivers/usb/misc/legousbtower.c:335
-
-but task is already holding lock:
-000000000f520f73 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
-drivers/usb/core/file.c:39
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (minor_rwsem){++++}:
-        down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-        usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
-        tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
-        usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-        __device_release_driver drivers/base/dd.c:1134 [inline]
-        device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-        bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-        device_del+0x420/0xb10 drivers/base/core.c:2339
-        usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-        usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-        hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-        hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-        port_event drivers/usb/core/hub.c:5359 [inline]
-        hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-        process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-        worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-        kthread+0x318/0x420 kernel/kthread.c:255
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
--> #0 (open_disc_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2405 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-        validate_chain kernel/locking/lockdep.c:2897 [inline]
-        __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-        lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-        tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
-        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-        do_dentry_open+0x494/0x1120 fs/open.c:797
-        do_last fs/namei.c:3416 [inline]
-        path_openat+0x1430/0x3f50 fs/namei.c:3533
-        do_filp_open+0x1a1/0x280 fs/namei.c:3563
-        do_sys_open+0x3c0/0x580 fs/open.c:1089
-        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(minor_rwsem);
-                                lock(open_disc_mutex);
-                                lock(minor_rwsem);
-   lock(open_disc_mutex);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor.1/8155:
-  #0: 000000000f520f73 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
-drivers/usb/core/file.c:39
-
-stack backtrace:
-CPU: 0 PID: 8155 Comm: syz-executor.1 Not tainted 5.3.0-rc7+ #0
+usb 3-1: usbvision_write_reg: failed: error -2
+usbvision_set_audio: can't write iopin register for audio switching
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN
+CPU: 1 PID: 1955 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
+RIP: 0010:usb_set_interface+0x34/0xa50 drivers/usb/core/message.c:1362
+Code: fc 55 53 48 83 ec 40 89 54 24 18 89 74 24 10 e8 22 1c ef fd 49 8d 7c  
+24 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 fb 08 00 00 49 8b 44 24 48 49 8d 7c 24 18 48 89
+RSP: 0018:ffff8881cb19fd50 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000009 RSI: ffffffff834ebe7e RDI: 0000000000000048
+RBP: ffff8881cb8e4200 R08: ffffffff88d21878 R09: ffffed103971cb43
+R10: ffff8881cb19fdc8 R11: ffff8881cb8e5a17 R12: 0000000000000000
+R13: ffff8881cb8e5a10 R14: ffff8881cb8e4cc8 R15: ffff8881cb8e5178
+FS:  00007f4f60b6d700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4f6060c330 CR3: 00000001cc3a8000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
-  check_prev_add kernel/locking/lockdep.c:2405 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-  validate_chain kernel/locking/lockdep.c:2897 [inline]
-  __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-  __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-  __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-  tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
-  usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3f50 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1089
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  usbvision_radio_close+0x105/0x250  
+drivers/media/usb/usbvision/usbvision-video.c:1114
+  v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
+  __fput+0x2d7/0x840 fs/file_table.c:280
+  task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+  do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4137d1
-Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48  
-83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007f56184c17a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 00000000004137d1
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007f56184c1850
-RBP: 000000000075c070 R08: 000000000000000f R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 00007f56184c26d4
-R13: 00000000004c8cab R14: 00000000004dfc78 R15: 00000000ffffffff
+RIP: 0033:0x7f4f6069b2b0
+Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
+07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+RSP: 002b:00007ffde2d50ee8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f4f6069b2b0
+RDX: 00007f4f60951df0 RSI: 0000000000000001 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 00007f4f60951df0 R09: 000000000000000a
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+R13: 00007ffde2d51040 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 62bd2b7512ab49ee ]---
+RIP: 0010:usb_set_interface+0x34/0xa50 drivers/usb/core/message.c:1362
+Code: fc 55 53 48 83 ec 40 89 54 24 18 89 74 24 10 e8 22 1c ef fd 49 8d 7c  
+24 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+85 fb 08 00 00 49 8b 44 24 48 49 8d 7c 24 18 48 89
+RSP: 0018:ffff8881cb19fd50 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000009 RSI: ffffffff834ebe7e RDI: 0000000000000048
+RBP: ffff8881cb8e4200 R08: ffffffff88d21878 R09: ffffed103971cb43
+R10: ffff8881cb19fdc8 R11: ffff8881cb8e5a17 R12: 0000000000000000
+R13: ffff8881cb8e5a10 R14: ffff8881cb8e4cc8 R15: ffff8881cb8e5178
+FS:  00007f4f60b6d700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f4f6060c330 CR3: 00000001cc3a8000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
@@ -188,3 +142,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this bug report. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
