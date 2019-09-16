@@ -2,93 +2,86 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C20FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22768206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CC78206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387662AbfIPTPV (ORCPT
+        id S2390793AbfIPTQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:15:21 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:32811 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfIPTPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:15:21 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x134so1196414qkb.0;
-        Mon, 16 Sep 2019 12:15:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=wUc3QBRhsqMMHvwIEi6V0XE3vX9eu/T89TukX6CeZiI=;
-        b=c+oJoM/WOFrA8iLVqvSbHE7msUsl9Sx6OwQY8JRYcO1GpNbwc4GWGRCw58TrEoWA50
-         hLccV0Hn/dIpqwE8lgmSY8ANuUfgOisTHJaE6y18UgAJEBE6Qwgq9AsJg76Y3qA59fb9
-         5hx95/siNpQt5v330pZf3nzs2/ashPwRHbHcZn16fRlSRUPUSHv8RQmnGhcH7Y0TaT3S
-         Aw7nuuYSp1VnlN1g98vjFT+0RHtwaGUOjzWTNdEdlXaXxRbhq2IWA8D7knoGIFcMMtQl
-         0shTAYfNMNGTvFpTA62g7qEqK2gMTE+tqWw1PNvFAj+zZ7TNtglCQ2ils4dlkMUwpKBw
-         pjuA==
-X-Gm-Message-State: APjAAAV9xE0V0pGcqDq9FpGU03s4QhHN5m7a9K7SyeRIkumCjNkc78QP
-        jjTBCJzQAqBiQpZxe1+CHvdKlfEDhiHSn+ujbU4=
-X-Google-Smtp-Source: APXvYqxbsy8a23okkYT9gLlSl1NfjJbzTB0IQVPck0cj7cyO0Cirse11Pyi1DQJ25JIBlJAH6rN51oL5RVa0mXU2N5Q=
-X-Received: by 2002:a37:a858:: with SMTP id r85mr1635451qke.394.1568661319809;
- Mon, 16 Sep 2019 12:15:19 -0700 (PDT)
+        Mon, 16 Sep 2019 15:16:35 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:46291 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfIPTQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 15:16:35 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id x8GJGFgj025977;
+        Mon, 16 Sep 2019 21:16:15 +0200
+Date:   Mon, 16 Sep 2019 21:16:15 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
+ CRNG is uninitialized
+Message-ID: <20190916191615.GE24547@1wt.eu>
+References: <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
+ <20190911173624.GI2740@mit.edu>
+ <20190912034421.GA2085@darwi-home-pc>
+ <20190912082530.GA27365@mit.edu>
+ <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
+ <20190914122500.GA1425@darwi-home-pc>
+ <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
+ <20190915052242.GG19710@mit.edu>
+ <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+ <20190916180801.GB30990@gardel-login>
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 16 Sep 2019 21:15:04 +0200
-Message-ID: <CAK8P3a0N9+-fmmg=oPVsKmoNb0vAYsASOneXUYBVAp8nyJEwdQ@mail.gmail.com>
-Subject: [GIT PULL] asm-generic changes for v5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Denis Efremov <efremov@linux.com>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916180801.GB30990@gardel-login>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
+On Mon, Sep 16, 2019 at 08:08:01PM +0200, Lennart Poettering wrote:
+> I mean, as I understand you are unhappy with behaviour you saw on
+> systemd systems; we can certainly improve behaviour of systemd in
+> userspace alone, i.e. abort the getrandom() after a while in userspace
+> and log about it using typical userspace logging to the console. I am
+> not sure why you want to do all that in the kernel, the kernel isn't
+> great at user interaction, and really shouldn't be.
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+Because the syscall will have the option to return what random data
+was available in this case, while if you try to fix it only from
+within systemd you currently don't even get that data.
 
-are available in the Git repository at:
+> It appears to me you subscribe too much to an idea that userspace
+> people are not smart enough and couldn't implement something like
+> this. Turns out we can though, and there's no need to add logic that
+> appears to follow the logic of "never trust userspace"...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git
-tags/asm-generic-5.4
+I personally see this very differently. If randoms were placed into a
+kernel compared to other operating systems doing everything in userspace,
+it's in part because it requires to collect data very widely to gather
+some entropy and that no isolated userspace alone can collect as much
+as the kernel. Or they each have to reimplement their own method, each
+with their own bugs, instead of fixing them all at a single place. All
+applications need random, there's no reason for having to force them
+all to implement them in detail.
 
-for you to fetch changes up to 9b87647c665dbf93173ca2f43986902b59dfbbba:
-
-  asm-generic: add unlikely to default BUG_ON(x) (2019-09-01 23:53:39 +0200)
-
-----------------------------------------------------------------
-asm-generic changes for v5.4
-
-Here are three small cleanup patches for the include/asm-generic
-directory. Christoph removes the __ioremap as part of a cleanup,
-Nico improves the constant do_div() optimization, and Denis
-changes BUG_ON() to be consistent with other implementations.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Christoph Hellwig (1):
-      asm-generic: don't provide __ioremap
-
-Denis Efremov (1):
-      asm-generic: add unlikely to default BUG_ON(x)
-
-Nicolas Pitre (1):
-      __div64_const32(): improve the generic C version
-
- include/asm-generic/bug.h   |  2 +-
- include/asm-generic/div64.h | 16 ++++++++++------
- include/asm-generic/io.h    |  9 ---------
- 3 files changed, 11 insertions(+), 16 deletions(-)
+Willy
