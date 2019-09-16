@@ -2,254 +2,111 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B2EC4CED0
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:52:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7F30216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:52:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D226B21670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:52:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jaG0/+IL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="enkRrJ55"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388164AbfIPUwA (ORCPT
+        id S2388123AbfIPUwT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:52:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39838 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbfIPUwA (ORCPT
+        Mon, 16 Sep 2019 16:52:19 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34071 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIPUwS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:52:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i1so644907pfa.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:51:59 -0700 (PDT)
+        Mon, 16 Sep 2019 16:52:18 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j1so1652976qth.1;
+        Mon, 16 Sep 2019 13:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QXDKOrZfphwrru5t9ZJj4hfad8qGZpQELCsOo06eR30=;
-        b=jaG0/+ILazGusEsO0D0crnmEcNVuVWc2LzfaDAD13sjnEcpi6phjg5hSm4qDNWUz6b
-         edxrGGd+W+J+JTtHkR7QOX2tD8CLok5MBKPb8GQl/mVVy9RUsN5qJoX7mcN0+4RpBQ/W
-         KYI1Xs0CtdSIfQZioiP6SKlNsQJ0Z1K7YFg6ZG/Bptmt3x7BHZh666GMc+HUehA8ayHP
-         yHo73cSZdIgPQ4pSRX5tQguxoO8GvXVjUgSnQtPhm0kB99W2F8o1THJycXLv5MA1g/U7
-         9PDV/Afs7ICRdOwxWr8UsSe7lythEJ3SYNF24b1idKWrdG9rpjNPohcNHFhEPbGAHEG6
-         9fYA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5E9DgtscC1GCtZrAXaWV/e6LeSvuqfRExaR2l222qbg=;
+        b=enkRrJ55r7CGq7yUK4OocWnjoUqN9/uub1ZCS+9yECQozqQ2jDtdumCB63K7CeXa+l
+         V0SxSGOa2bxm/UuZbey4+hVW3Iht0Nv47si42XYT9Til3uYobVfFgyM2oOxcedhJGTsa
+         SRfEmCG1mjtekX2nNy3N2WD8vbFBgpij7OBs4C6IZWXB2JNzS6I3POMHJ14q8B8euY0j
+         olun8rjtZ4LUOTrxIH+MGn4+lq21PMDeXOAzFdFtA7YZksoryS2UPeUl0VRQfYjBDFfw
+         0GOkbQduwoMvvmPtumFqWVDuHkSrHWAyaTuqiHTiiAFTsv08OgLSV6a1pXJIAO27yvlG
+         NaBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=QXDKOrZfphwrru5t9ZJj4hfad8qGZpQELCsOo06eR30=;
-        b=iGkE6xYXbvwnjokeO5vwVrgZmPY6w0Xnm7k3Fxw4+6EEx1YrTmG5WJfWhogy6m4SHZ
-         JBbIrW1k7XEXd+ixL1kONWdCcpv8yHM+6Emq0ElHSwOu6L4HoCeZgq3ZP9yi0sGRpcbL
-         LSItGU54u4DxPOxqXZyjociJXWPRDB7UJzAw5dqtYvNZZdtQVXDNhX+VRqQV3Jn2Nfio
-         sXZQMDWhyRZM+FZo8IINVz1N+VvdOa148E+93j19MGyfkVyboNEO0LzgnZGCN4yXQ/C0
-         0jJPACULN5kwNF8W0Zc9TtqV6gvTLZXqQ7qvFcKwKgMAf1qFbHkCzeVy1+3R+RVr3TGP
-         HkXA==
-X-Gm-Message-State: APjAAAXr1mRTPKq/z9SEgMY+HmiQcSQQlHd985uMvkLM6GxITV7ZKExP
-        h5OYqjPgl4wfQnmSqFBmRhjweQ==
-X-Google-Smtp-Source: APXvYqyrlQdOm/i9v7VAXh0c7Bk81buHuIxmi05+WqvxhTaOnchSP26xUeztMKdXys+6YfETei9QAQ==
-X-Received: by 2002:aa7:9508:: with SMTP id b8mr358188pfp.36.1568667119216;
-        Mon, 16 Sep 2019 13:51:59 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id h2sm3530360pfq.108.2019.09.16.13.51.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:51:58 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 13:51:58 -0700 (PDT)
-X-Google-Original-Date: Mon, 16 Sep 2019 13:42:30 PDT (-0700)
-Subject:     Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-In-Reply-To: <3c0eb4e9-ee21-d07b-ad16-735b7dc06051@bluespec.com>
-CC:     maz@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     Darius Rad <darius@bluespec.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>
-Message-ID: <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5E9DgtscC1GCtZrAXaWV/e6LeSvuqfRExaR2l222qbg=;
+        b=pQ086qCrJAZxk90lCU07eUltPVNd9NHJySnh92eOeSWGo2ZTovFNAx9RQhRU8NQMmz
+         PM3kZsofdJm0fQ0Z1Zcyu18Nubh9XlmbD/atAGZvQe/3wdByF+7dkEltlnLyJTzBYOR9
+         MUw+xC/xH/KBzWsqRxllzkBLCd40HGKE2UAxTCc/P37q8vWd0J6ToEYi0UQZ9QkZa4JF
+         foBt3N+RmWKC9YfFoFu8EePB2BkLPssIi7cIybEh2Hwq2QDSnR09ntQdSkaxny9/4NGr
+         6MrihgoUYU6X8hLUL2Zdj4huD5GJwa1ahVJf4woxZUn2h2MqRChKox7r5tyIjtt3rT2p
+         ZRbA==
+X-Gm-Message-State: APjAAAWpY0HN0fM1up2xAhHimYSLU+WgZcbJx3Itfek54hoZ9aC6u7sm
+        FLBugqAerwftNF3aDKV2175yTn3GdBgPl9zFQqE=
+X-Google-Smtp-Source: APXvYqyfMJnpEjwqE4JJFdMyeOIHHaKx1q6Z6c4or3iQtVgnN7odi3uyKCacD3BuDE1jEzb/b2tO2nkGx6ORAW/uLZc=
+X-Received: by 2002:ac8:7401:: with SMTP id p1mr324627qtq.141.1568667137518;
+ Mon, 16 Sep 2019 13:52:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-7-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190916105433.11404-7-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 16 Sep 2019 13:52:06 -0700
+Message-ID: <CAEf4BzYvt8=mnvo7jrSKhuHg-_kunb1F_F3g8hhwsZfWExEFPg@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 06/14] samples: bpf: makefile: drop
+ unnecessarily inclusion for bpf_load
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 12:04:56 PDT (-0700), Darius Rad wrote:
-> On 9/15/19 2:20 PM, Marc Zyngier wrote:
->> On Sun, 15 Sep 2019 18:31:33 +0100,
->> Palmer Dabbelt <palmer@sifive.com> wrote:
->>
->> Hi Palmer,
->>
->>>
->>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
->>>> On Thu, 12 Sep 2019 22:40:34 +0100,
->>>> Darius Rad <darius@bluespec.com> wrote:
->>>>
->>>> Hi Darius,
->>>>
->>>>>
->>>>> As per the existing comment, irq_mask and irq_unmask do not need
->>>>> to do anything for the PLIC.  However, the functions must exist
->>>>> (the pointers cannot be NULL) as they are not optional, based on
->>>>> the documentation (Documentation/core-api/genericirq.rst) as well
->>>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
->>>>>
->>>>> Signed-off-by: Darius Rad <darius@bluespec.com>
->>>>> ---
->>>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
->>>>>  1 file changed, 9 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>>>> index cf755964f2f8..52d5169f924f 100644
->>>>> --- a/drivers/irqchip/irq-sifive-plic.c
->>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
->>>>>  	plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->>>>>  }
->>>>>  +/*
->>>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>>> + * by reading claim and "unmasked" when writing it back.
->>>>> + */
->>>>> +static void plic_irq_mask(struct irq_data *d) { }
->>>>> +static void plic_irq_unmask(struct irq_data *d) { }
->>>>
->>>> This outlines a bigger issue. If your irqchip doesn't require
->>>> mask/unmask, you're probably not using the right interrupt
->>>> flow. Looking at the code, I see you're using handle_simple_irq, which
->>>> is almost universally wrong.
->>>>
->>>> As per the description above, these interrupts should be using the
->>>> fasteoi flow, which is designed for this exact behaviour (the
->>>> interrupt controller knows which interrupt is in flight and doesn't
->>>> require SW to do anything bar signalling the EOI).
->>>>
->>>> Another thing is that mask/unmask tends to be a requirement, while
->>>> enable/disable tends to be optional. There is no hard line here, but
->>>> the expectations are that:
->>>>
->>>> (a) A disabled line can drop interrupts
->>>> (b) A masked line cannot drop interrupts
->>>>
->>>> Depending what the PLIC architecture mandates, you'll need to
->>>> implement one and/or the other. Having just (a) is indicative of a HW
->>>> bug, and I'm not assuming that this is the case. (b) only is pretty
->>>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
->>>> only.
->>>>
->>>>> +
->>>>>  #ifdef CONFIG_SMP
->>>>>  static int plic_set_affinity(struct irq_data *d,
->>>>>  			     const struct cpumask *mask_val, bool force)
->>>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
->>>>>   static struct irq_chip plic_chip = {
->>>>>  	.name		= "SiFive PLIC",
->>>>> -	/*
->>>>> -	 * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>>> -	 * by reading claim and "unmasked" when writing it back.
->>>>> -	 */
->>>>>  	.irq_enable	= plic_irq_enable,
->>>>>  	.irq_disable	= plic_irq_disable,
->>>>> +	.irq_mask	= plic_irq_mask,
->>>>> +	.irq_unmask	= plic_irq_unmask,
->>>>>  #ifdef CONFIG_SMP
->>>>>  	.irq_set_affinity = plic_set_affinity,
->>>>>  #endif
->>>>
->>>> Can you give the following patch a go? It brings the irq flow in line
->>>> with what the HW can do. It is of course fully untested (not even
->>>> compile tested...).
->>>>
->>>> Thanks,
->>>>
->>>> 	M.
->>>>
->>>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
->>>> From: Marc Zyngier <maz@kernel.org>
->>>> Date: Sun, 15 Sep 2019 15:17:45 +0100
->>>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
->>>>
->>>> The SiFive PLIC interrupt controller seems to have all the HW
->>>> features to support the fasteoi flow, but the driver seems to be
->>>> stuck in a distant past. Bring it into the 21st century.
->>>
->>> Thanks.  We'd gotten these comments during the review process but
->>> nobody had gotten the time to actually fix the issues.
->>
->> No worries. The IRQ subsystem is an acquired taste... ;-)
->>
->>>>
->>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>> ---
->>>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
->>>>  1 file changed, 15 insertions(+), 14 deletions(-)
->>>>
->>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>>> index cf755964f2f8..8fea384d392b 100644
->>>> --- a/drivers/irqchip/irq-sifive-plic.c
->>>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
->>>>  	}
->>>>  }
->>>>  -static void plic_irq_enable(struct irq_data *d)
->>>> +static void plic_irq_mask(struct irq_data *d)
->>
->> Of course, this is wrong. The perks of trying to do something at the
->> last minute while boarding an airplane. Don't do that.
->>
->> This should of course read "plic_irq_unmask"...
->>
->>>>  {
->>>>  	unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
->>>>  					   cpu_online_mask);
->>>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
->>>>  	plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
->>>>  }
->>>>  -static void plic_irq_disable(struct irq_data *d)
->>>> +static void plic_irq_unmask(struct irq_data *d)
->>
->> ... and this should be "plic_irq_mask".
->>
->> [...]
->>
->>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
->>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
->>
->> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
->> the above bug should have kept the IRQ lines masked.
->>
->>> We should test them on the hardware, but I don't have any with me
->>> right now.  David's probably in the best spot to do this, as he's got
->>> a setup that does all the weird interrupt sources (ie, PCIe).
->>>
->>> David: do you mind testing this?  I've put the patch here:
->>>
->>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
->>>    -b plic-fasteoi
->>
->> I've pushed out a branch with the fixed patch:
->>
->> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
->>
+On Mon, Sep 16, 2019 at 4:01 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
 >
-> That patch works for me on real-ish hardware.  I tried on two FPGA
-> systems that have different PLIC implementations.  Both include
-> a PCIe root port (and associated interrupt source).  So for
-> whatever it's worth:
+> Drop inclusion for bpf_load -I$(objtree)/usr/include as it is
+> included for all objects anyway, with above line:
+> KBUILD_HOSTCFLAGS += -I$(objtree)/usr/include
 >
-> Tested-by: Darius Rad <darius@bluespec.com>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+> ---
 
-Awesome, thanks.  Would it be OK to put a "(on two hardware PLIC 
-implementations)" after that, just so we're clear as to who tested what?
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Assuming one of yours wasn't a SiFive PLIC then it'd be great if David could 
-still give this a whack, but I don't think it strictly needs to block merging 
-the patch.  I've included the right David this time, with any luck that will be 
-more fruitful :)
-
+>  samples/bpf/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->> Thanks,
->>
->> 	M.
->>
+> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+> index d3c8db3df560..9d923546e087 100644
+> --- a/samples/bpf/Makefile
+> +++ b/samples/bpf/Makefile
+> @@ -176,7 +176,7 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
+>  KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
+>  KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
+>
+> -HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
+> +HOSTCFLAGS_bpf_load.o += -Wno-unused-variable
+>
+>  KBUILD_HOSTLDLIBS              += $(LIBBPF) -lelf
+>  HOSTLDLIBS_tracex4             += -lrt
+> --
+> 2.17.1
+>
