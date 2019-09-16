@@ -2,99 +2,155 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199DBC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA2EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E3420678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKCX6scH"
+	by mail.kernel.org (Postfix) with ESMTP id 33DF220678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389897AbfIPQPn (ORCPT
+        id S2389913AbfIPQPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:15:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40563 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389857AbfIPQPm (ORCPT
+        Mon, 16 Sep 2019 12:15:48 -0400
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:8309 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389857AbfIPQPq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:15:42 -0400
-Received: by mail-pf1-f195.google.com with SMTP id x127so181267pfb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:15:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=K+pJPk2iXl0LixGuiysFHZxmO1vjBGFGOdrJivWtPCQ=;
-        b=GKCX6scHAe3UgbcWbSYj9UhGEhnAp5igFirmxVhIfdKD8kUhLG7HkdCa3KCBbyZhAH
-         rIqB/2HAR4MJMVczIAFlhjR5sVZ7da7ARxPGdNx/3HjK3U9OsDPIaESzw/6d3XA+XLiw
-         rWOES6DHJZCepE4RMrM71uDIgj/gOim8P4/CxBzgQmAlfHMFPDPYH1EMw385Vhmj7kRg
-         xxr0K3OY3BQpgGKupuHIJxDAqQ6On0B7Q+4+zFXLCMzZ2J14y38HeSZbZ4XNO9nZYtZE
-         gB0CKeHt6XChPihg5meAzZLbTLYT3C1+k31AiUqHJ15NKzADZwQ2mAOng2KtEJdDfpUX
-         cdTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=K+pJPk2iXl0LixGuiysFHZxmO1vjBGFGOdrJivWtPCQ=;
-        b=pO8I5AilxcKSnnY5JcQ7/FXk0DLiBAl3nTQ8huxMdWcEb+lLgn/rKs+6s8TUiDdN1X
-         svJrP2IwgKcN6jEXgkrZ4LhMmGG827ypMjt42ok9z2oeFudpjfKOlJ83fnOqx2KduXWL
-         SOzB4TFuFRnrYGXXm4qlTpmvWcYUQ38gvPxgwtIjDiOhanCzQIQ8mRptvn3pCMIc/Q3+
-         zuN3wWOXjG8U2UJibyW/CMN2VmebBcIX86tKGAvHIk127koi0cYnX53LWoWPMLMx1b01
-         Bqp28UBabATuDenoSCwB6BeGDRxbxEqSSSPXZiO2mvXWnSphDeHrS63fHQm4Rczbcy/C
-         VkCQ==
-X-Gm-Message-State: APjAAAVVr9+IK1LdtsNzUwJqf8BaAYCKy68qeTtHV464tf7lSFjzbD58
-        vu29bBYWIN0W5J4yvBBs11fj
-X-Google-Smtp-Source: APXvYqwaTIjGBFw6rlJrBeKVPsJzm0fIpIu190y0N7zwgbmlpXO1k7N9rTebjfrkX62HrT6vruUWJA==
-X-Received: by 2002:a65:57ca:: with SMTP id q10mr877pgr.52.1568650539809;
-        Mon, 16 Sep 2019 09:15:39 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:90b:91ce:94c2:ef93:5bd:cfe8])
-        by smtp.gmail.com with ESMTPSA id h66sm614134pjb.0.2019.09.16.09.15.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 09:15:39 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
-Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
-        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v5 8/8] MAINTAINERS: Add entry for BM1880 SoC clock driver
-Date:   Mon, 16 Sep 2019 21:44:47 +0530
-Message-Id: <20190916161447.32715-9-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org>
-References: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org>
+        Mon, 16 Sep 2019 12:15:46 -0400
+IronPort-SDR: mtj6ziQLOphqyJhpwGyrlc8UiJRYTuKxDJBBZXveCOK/HvnTzYu0nDrjc7L3muakEyacBPV9so
+ IgCM7dw7323+MBZ8TptG6LRQaVH1BVQzCHx09PqtDogL8pvpZ0Nll0eKRqtKdBLaHOsqdwWJUT
+ HcL52WqmSkvynwTaFdGfPExHXeG4USyikQdWyFp5MZTk23L+tlEDLvM/jyOBYly6B9W5r7cM/c
+ 8PbhDFb6/WhbY9cEHkQICqpkRXJLp773lCqJqmePlI+BprWCnQotNDcWz6xap1hRuUQ5OviEPR
+ PWY=
+X-IronPort-AV: E=Sophos;i="5.64,513,1559548800"; 
+   d="scan'208";a="41349369"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 16 Sep 2019 08:15:45 -0800
+IronPort-SDR: SUef5D1NBICP3TS7MwEABq9LpaU/dxuup5tbmQ8U2VieEcK4vLgt/Kddi6dFWJ5T5GwtisKkOs
+ RfTE8TEzfHa/6lZljB/Fi8dZzRufScbJj8bFaesEPLbynO72UH/cdTbSHWYTiV44yQaaciwS9r
+ 9g6vfyAnMoO9b+RDsN9g0jOamH3EAkEc2IW5Rqczp3BAmgdrqUyuiP1oLJ0CF9LaFOh07sWwcV
+ 5pltXGchw4T+8zqBGoukFe69UQ+XyXyuE0CnQct88CfOUAKVqsF+vGCGkm+qiMqqcZ/wa40wd+
+ Ems=
+Date:   Mon, 16 Sep 2019 12:15:41 -0400
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     shuah <shuah@kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] selftests: watchdog: Add command line option to show
+ watchdog_info
+Message-ID: <20190916161541.GB19227@mam-gdavis-lt>
+References: <20190907085833.21167-1-erosca@de.adit-jv.com>
+ <20190907085833.21167-2-erosca@de.adit-jv.com>
+ <2b08fa83-185b-4eb7-1217-37ed31d810b5@kernel.org>
+ <20190916135756.GA24319@vmlxhi-102.adit-jv.com>
+ <24cc0dde-6df3-3ea2-3e1d-0bc166bb48ac@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <24cc0dde-6df3-3ea2-3e1d-0bc166bb48ac@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add MAINTAINERS entry for Bitmain BM1880 SoC clock driver.
+Hello Shuah,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, Sep 16, 2019 at 10:05:17AM -0600, shuah wrote:
+> On 9/16/19 7:57 AM, Eugeniu Rosca wrote:
+> >Hi Shuah,
+> >CC George
+> >
+> >On Mon, Sep 16, 2019 at 07:26:41AM -0600, shuah wrote:
+> >[..]
+> >>>   		case 'f':
+> >>>   			/* Handled above */
+> >>>   			break;
+> >>>+		case 'i':
+> >>>+			/*
+> >>>+			 * watchdog_info was obtained as part of file open
+> >>>+			 * validation. So we just show it here.
+> >>>+			 */
+> >>>+			oneshot = 1;
+> >>>+			printf("watchdog_info:\n");
+> >>>+			printf(" identity:\t\t%s\n", info.identity);
+> >>>+			printf(" firmware_version:\t%u\n",
+> >>>+			       info.firmware_version);
+> >>>+			printf(" options:\t\t%08x\n", info.options);
+> >>>+			break;
+> >>>   		default:
+> >>>   			usage(argv[0]);
+> >>>
+> >>
+> >>I would like to see these combined. Please don't add another argument.
+> >>Combine patch and 1&2.
+> >
+> >With all my appreciation for your comment, why do you think it is better
+> >to get rid of the new argument? I don't think it is user-friendly to
+> >always report the watchdog_info to the user. Just look at outputs [1-2]
+> >and imagine that the watchdog_info part would pop up unconditionally.
+> >It looks too busy to me.
+> 
+> Yes it does look busy. I am okay with adding a second options
+> based on what you both said.
+> 
+> I don't like the commit log.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 997a4f8fe88e..280defec35b2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1503,8 +1503,10 @@ M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- F:	arch/arm64/boot/dts/bitmain/
-+F:	drivers/clk/clk-bm1880.c
- F:	drivers/pinctrl/pinctrl-bm1880.c
- F:	Documentation/devicetree/bindings/arm/bitmain.yaml
-+F:	Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
- F:	Documentation/devicetree/bindings/pinctrl/bitmain,bm1880-pinctrl.txt
- 
- ARM/CALXEDA HIGHBANK ARCHITECTURE
+Agreed, I didn't like it either - it was rather a draft.
+
+> 
+> Unfortunately this thread no longer contains the commit log.
+> 
+> I would like to see the commit log without any references to side
+> effects. It make it rather confusing.
+> 
+> "A side of affect of commit "selftests: watchdog: Add optional file
+> argument" is that arbitrary files may be opened for watchdog testing, e.g.
+> /dev/null. To prevent watchdog-test from operating on non-watchdog device
+> files, commit "selftests: watchdog: Validate optional file argument" was
+> added to validate that a file is indeed a watchdog device via an
+> ioctl(WDIOC_GETSUPPORT) call. Since the watchdog_info is available as a
+> result of the ioctl(WDIOC_GETSUPPORT) call, add a command line option to
+> show the watchdog_info."
+> 
+> I would drop all references to that.
+
+How about the following commit message for the squash commit for [1] and [2]?:
+
+"
+selftests: watchdog: Validate optional file argument
+
+As reported by Eugeniu Rosca, a side of affect of commit c3f2490d6e92
+("selftests: watchdog: Add optional file argument") is that arbitrary files
+may be opened for watchdog testing, e.g.
+
+./watchdog-test  -f /dev/zero
+Watchdog Ticking Away!
+
+To prevent watchdog-test from operating on non-watchdog device files,
+validate that a file is indeed a watchdog device via an
+ioctl(WDIOC_GETSUPPORT) call.
+
+While we're at it, since the watchdog_info is available as a result of the
+ioctl(WDIOC_GETSUPPORT) call, add a command line option to optionally show
+the watchdog_info.
+"
+
+Thanks!
+
+
+> 
+> thanks,
+> -- Shuah
+
 -- 
-2.17.1
-
+Regards,
+George
