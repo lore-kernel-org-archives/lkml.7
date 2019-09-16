@@ -2,99 +2,123 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1BEC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:40:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9369C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83806214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:40:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568673620;
-	bh=v0BlS9qRudLzu3np5+I/Md4DSfVdsMMy4Aqdqyg4bEE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gvDKFQceW++ffO2u7gxdq/8rUnosxd6oUSdJLOdwD20B46Qq5tDzMMlXNQTKMWLj+
-	 4NicnvZ+uSZw6ZXgt0kBOBk6JyaJhs1AUb3BwctJ/A77O7vFtcn9Jw60tyhCe7dfv8
-	 IQwm9dSfVWd+QyGtx+yIW2lHhVTEpLhKqryP9SrY=
+	by mail.kernel.org (Postfix) with ESMTP id 7F5ED21670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:43:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMUR9inG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388539AbfIPWkT (ORCPT
+        id S2387432AbfIPWnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:40:19 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54240 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728485AbfIPWkT (ORCPT
+        Mon, 16 Sep 2019 18:43:07 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43538 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727803AbfIPWnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:40:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v0BlS9qRudLzu3np5+I/Md4DSfVdsMMy4Aqdqyg4bEE=; b=jSbyU9wgvy0GCLFTmtoT7xYvN
-        JPyW9BOEBj9Z6KR9FJb0d8KRFUNFYWe+CHOsaVg4fBsEgGsc3Es74lQc0ZuPjavBOL7kM3INxjJiO
-        iLUMKvJO4Hc5aXHSyehGXhuHmB/oLwq3RVNvmrwUhYFQXddJo4Pev/6e+8+8syConmjd0=;
-Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9zfJ-0005yq-5T; Mon, 16 Sep 2019 22:40:13 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 8A1602741A12; Mon, 16 Sep 2019 23:40:12 +0100 (BST)
-Date:   Mon, 16 Sep 2019 23:40:12 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Hridya Valsaraju <hridya@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the char-misc tree with the vfs tree
-Message-ID: <20190916224012.GR4352@sirena.co.uk>
-References: <20190916012252.GS4352@sirena.co.uk>
+        Mon, 16 Sep 2019 18:43:07 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u72so797790pgb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cBZmVkDcKZz5zZDlHp5T39g0CCRjx154L73p3yLa6i4=;
+        b=IMUR9inG/mwmcrmffeDDt03n3boFWWZwMhpmFtIhuW8MN3yX8L6SCfAknaT4kLGDek
+         EmwPLX+yhIByGkpmzhWfqSRoaR7D+GP1+JsN6zESyBBEhY4/5gI8nMNniKe7bqG3Gz4Y
+         J+7jHPs6G4CvZ6ISiAoqmiuxErUqWwN20jkVflyBHSJyyC5P5eC4nsbKU/6k5b5mIrcD
+         +2aEeJBo3jI8jejEICUuxrdguC4UfvQk5UhGhGPwP16lX2YJIT3LZHAY3tDo1icmdAHF
+         QO0IhVJ8HWw/wgmmG56RiGW3i52MvGam0j52TJU61KU9TOhCMhdPXu44fqDnPiBjpuGZ
+         7+7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cBZmVkDcKZz5zZDlHp5T39g0CCRjx154L73p3yLa6i4=;
+        b=gSe+cOKtTYesdHF1LkpDa7aApG33TI/MZmKvDGW+YutsHG7MuuOKHy4KcGPnQEuOMC
+         L1p6Ie3JxQZoans4qXphzIbtwrDfG+a8ylsYkvKcPV5XlzNRpaVjLuALo3MerrlJgKCA
+         /txzd5p498J7WMfgHNGhcVNrIuYP3NbK9ksBlUDzNfx5SQGalI84RWgHOHZTDjZso/Hr
+         yThk95yC2T2CmFjihmjlf/cB2ZLL/VtUuaooCfY0Nu+40rJBlDH6j4/iiCgztmRcPwh+
+         bxjYItp10DvN2QM37xk+cjcPIgJFKlMrpr/jPtLw6ik23jK2x0Qc/zfFdSylLiThFxJZ
+         Eqqg==
+X-Gm-Message-State: APjAAAUgxY8PITb3hRE1rQn24Kcg4mCjRO5GtmX9h8BVAU+T/LXgK6fu
+        M+ssSIj62REpeFZlKvtyMSQ=
+X-Google-Smtp-Source: APXvYqwB6gvQcdks+jrYjCow1jWYalLI0aO/HIFRY6W9E6qaFAat/V97b6+aesqJTosfdItuAgcG0Q==
+X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr1736979pjo.58.1568673786005;
+        Mon, 16 Sep 2019 15:43:06 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id u4sm124058pfu.177.2019.09.16.15.43.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 15:43:05 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 15:42:45 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "perex@perex.cz" <perex@perex.cz>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
+ format
+Message-ID: <20190916224244.GA12789@Asurada-Nvidia.nvidia.com>
+References: <VE1PR04MB64791308D87F91C51412DF53E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
+ <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
+ <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XseMXOJqQDKhbErc"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916012252.GS4352@sirena.co.uk>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Sep 13, 2019 at 05:48:40AM +0000, S.j. Wang wrote:
+> Hi
+> 
+> > 
+> > On Tue, Sep 10, 2019 at 02:07:25AM +0000, S.j. Wang wrote:
+> > > > On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
+> > > > > The ASRC support 24bit/16bit/8bit input width, so S20_3LE format
+> > > > > should not be supported, it is word width is 20bit.
+> > > >
+> > > > I thought 3LE used 24-bit physical width. And the driver assigns
+> > > > ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit
+> > > > would go for that 24-bit slot also. I don't clearly recall if I had
+> > > > explicitly tested S20_3LE, but I feel it should work since I put there...
+> > >
+> > > For S20_3LE, the width is 20bit,  but the ASRC only support 24bit, if
+> > > set the ASRMCR1n.IWD= 24bit, because the actual width is 20 bit, the
+> > > volume is Lower than expected,  it likes 24bit data right shift 4 bit.
+> > > So it is not supported.
+> > 
+> > Hmm..S20_3LE right-aligns 20 bits in a 24-bit slot? I thought they're left
+> > aligned...
+> > 
+> > If this is the case...shouldn't we have the same lower-volume problem for
+> > all hardwares that support S20_3LE now?
+> 
+> Actually some hardware/module when they do transmission from FIFO
+> to shift register, they can select the start bit, for example from the 20th
+> bit. but not all module have this capability.
+> 
+> For ASRC, it haven't.  IWD can only cover the data width,  there is no
+> Other bit for slot width.
 
---XseMXOJqQDKhbErc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Okay..let's drop the S20_3LE then. But would it be possible
+for you to elaborate the reasoning into the commit message
+also? Just for case when people ask why we remove it simply.
 
-On Mon, Sep 16, 2019 at 02:22:53AM +0100, Mark Brown wrote:
-
-> Since it's very late and it seems useful to try to get a -next out with
-> the state prior to the merge window opening I've used commit
-> ec13c78d7b45 from the previous -next build rather than fix this up
-> sorry, I'll come back to it tomorrow.
-
-Sorry, I didn't actually get that done today as I had no time when the
-conflict came up so I continue to carry the old version of the tree.
-
---XseMXOJqQDKhbErc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2AD0sACgkQJNaLcl1U
-h9BwJgf/YdsDH7w3LhQNlu7BoOvHhM3fCjmn3JMe+X/8OHxJ3SzYCHmDTQomeMdL
-PahfsaAf+duCMhsjUJxyy7GoApXMB3irOwJ5QiGkZIRSmxwymg73cy7fmTiXqP+G
-aCfvzkxLgjbDGOKDpkdCb7TxWzrnGEMxGo9tapjDaV0puyUU7S9qcw2PQBLkrk4D
-L4JnG688HBwI5DAQaxKaz6aVvDN8wyHNuXbflbJwKi5qVw7Nsq5dmEgJqS2ET1M2
-wfSv63T7zpPWrX6aaoRN+FOhITq10VGAlNhqPzmsT+dtG7xwnfG+7NwbiEGq67Yv
-na+fmzkaqSzqXzRMdS7D1OORej+1XA==
-=2VsP
------END PGP SIGNATURE-----
-
---XseMXOJqQDKhbErc--
+Thanks
