@@ -2,77 +2,133 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592E6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD0BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABEC206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 228BB206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S5RsoMbg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="quevloJw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730100AbfIPKeC (ORCPT
+        id S1730253AbfIPKfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:34:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33034 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728736AbfIPKeB (ORCPT
+        Mon, 16 Sep 2019 06:35:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45312 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfIPKfA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:34:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0zriILmKCDGiikF7Oyn0qe09shDqYGPmrGUDW/y4opg=; b=S5RsoMbgYcp2ozJ24vD9vcYvg
-        3+waoNpeH7BdOwTZ9mQDwhqeRrL+u1yfQqcrYQX0AiE/o7ExBE5G6AUCLHNxsORb67Es/nqekoO5T
-        PpgBZ6Iq5p9gt5Jp/HreSVJHu6sHhJGjJldEJ4Kh2MiaYVaURe7jJM943cQKct3wRsipICdc8yLA9
-        0rZwUOVWuW/v96V9i0xfVeh6v61bBpYZl/XfXpxB/8vYe9bESSI4J+n5lWxXTS+V7kUepU22DrON/
-        +LcV+XAIUbB6y9UM12b26731Dae8/BvvXcQ9iSEo9zYvR3QPLxJLfR5IyWM2ZurzeZnSO4UxqfFn/
-        wFhlZ7E4A==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1i9oKN-00040J-Nw; Mon, 16 Sep 2019 10:33:51 +0000
-Date:   Mon, 16 Sep 2019 03:33:51 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jan Kara <jack@suse.cz>, zhangjs <zachary@baishancloud.com>,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916103351.GA14308@infradead.org>
-References: <CAHk-=whBQ+6c-h+htiv6pp8ndtv97+45AH9WvdZougDRM6M4VQ@mail.gmail.com>
- <20190910042107.GA1517@darwi-home-pc>
- <20190910115635.GB2740@mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910115635.GB2740@mit.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        Mon, 16 Sep 2019 06:35:00 -0400
+Received: by mail-pl1-f196.google.com with SMTP id x3so16708853plr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:34:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=jk4c4zL/SV4/PrtilS4c+jFyOdQUNqO3ciQy1rIE/SY=;
+        b=quevloJw4lR3MVUUciTFxdwTWDGH8dVsv0zO3X31eKful7n7wB3M39yO6SW535tQMe
+         xh3aGQZN25OyEMUmIU0k2uOymwc9vAWrL/FU20drZjUB8Zt4RDsPay3Vgzu/LLF0Szgf
+         NBq76R/s9CLnmawH3+rhr44u/lIG9mODdgl4vPO94jgobvoignbJ+RjklOFVbxarqloi
+         G1ehDQLxP78K21Q7R/+6+hY6vxqs59CmemKERAxt0ILhesRMmx6Yf7B988mcf7LlUPac
+         8CLxzGsElZU78Dl5h0Bth6wafPySFHW1L3EBeYQQq5RQxO2flFEna13ZxDbx5aNHn+24
+         4wGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jk4c4zL/SV4/PrtilS4c+jFyOdQUNqO3ciQy1rIE/SY=;
+        b=HW00hXL3SFHDw6chVrQ3ZNz8mzPVA9O3gYvFg2l5TSZVgbQrDGfkybQfFjsub4NZom
+         lfcHLzj8EP9f+vSShTYjhUk/zBrbUBKsE1cxNNUiLyxkL8qeKVuM6e4iDMyr3khn5swq
+         CIuEXJv5IADtzKyc6lzTojlocwAqB7ONnuDAYEp/r/RviBq4omGQq49i1yE4euiVXTQS
+         xXE7bIU8RIh8IqyqwGf1R/DV/HYCbvSJwmT/Z1rFt8f2a604+EqAouq6ef/GeXVAyYtl
+         535Gi4HCpMUpy8g1ASfLkNIJm+iG0ut5Czh+M1PzieHBEz7V324FJtz67Bf3reNMQLOz
+         6VFA==
+X-Gm-Message-State: APjAAAW/uIOZYiIDXuKuYHlDvDelIWlzkVRFM0W7hqoKIRV0jJh1ISoo
+        PvY17IyeoWlYpxOlxWWkGAvHfg==
+X-Google-Smtp-Source: APXvYqxfcYkBTvJ7uuwN3uBS+HBZqwsL/gzNCNxd1XaFzZDDDNNOJaOUREQNLcpjdsfnMYNo612W+A==
+X-Received: by 2002:a17:902:a983:: with SMTP id bh3mr62036620plb.311.1568630098536;
+        Mon, 16 Sep 2019 03:34:58 -0700 (PDT)
+Received: from localhost.localdomain ([117.252.69.68])
+        by smtp.gmail.com with ESMTPSA id d14sm58256914pfh.36.2019.09.16.03.34.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 16 Sep 2019 03:34:57 -0700 (PDT)
+From:   Sumit Garg <sumit.garg@linaro.org>
+To:     jarkko.sakkinen@linux.intel.com, dhowells@redhat.com,
+        peterhuewe@gmx.de
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
+        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
+        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
+        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
+        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
+        daniel.thompson@linaro.org, Sumit Garg <sumit.garg@linaro.org>
+Subject: [Patch v6 0/4] Create and consolidate trusted keys subsystem
+Date:   Mon, 16 Sep 2019 16:04:20 +0530
+Message-Id: <1568630064-14887-1-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 07:56:35AM -0400, Theodore Y. Ts'o wrote:
-> Hmm, I'm not seeing this on a Dell XPS 13 (model 9380) using a Debian
-> Bullseye (Testing) running a rc4+ kernel.
-> 
-> This could be because Debian is simply doing more I/O; or it could be
-> because I don't have some package installed which is trying to reading
-> from /dev/random or calling getrandom(2).  Previously, Fedora ran into
-> blocking issues because of some FIPS compliance patches to some
-> userspace daemons.  So it's going to be very user space dependent and
-> package dependent.
+This patch-set does restructuring of trusted keys code to create and
+consolidate trusted keys subsystem.
 
-Btw, I've been seeing this issue on debian testing with an XFS root
-file system ever since the blocking random changes went in.  There
-are a few reports (not from me) in the BTS since.  I ended up just
-giving up on gdm and using lightdm instead as it was clearly related
-to that.
+Also, patch #2 replaces tpm1_buf code used in security/keys/trusted.c and
+crypto/asymmertic_keys/asym_tpm.c files to use the common tpm_buf code.
+
+Changes in v6:
+1. Switch TPM asymmetric code also to use common tpm_buf code. These
+   changes required patches #1 and #2 update, so I have dropped review
+   tags from those patches.
+2. Incorporated miscellaneous comments from Jarkko.
+
+Changes in v5:
+1. Drop 5/5 patch as its more relavant along with TEE patch-set.
+2. Add Reviewed-by tag for patch #2.
+3. Fix build failure when "CONFIG_HEADER_TEST" and
+   "CONFIG_KERNEL_HEADER_TEST" config options are enabled.
+4. Misc changes to rename files.
+
+Changes in v4:
+1. Separate patch for export of tpm_buf code to include/linux/tpm.h
+2. Change TPM1.x trusted keys code to use common tpm_buf
+3. Keep module name as trusted.ko only
+
+Changes in v3:
+
+Move TPM2 trusted keys code to trusted keys subsystem.
+
+Changes in v2:
+
+Split trusted keys abstraction patch for ease of review.
+
+Sumit Garg (4):
+  tpm: Move tpm_buf code to include/linux/
+  KEYS: Use common tpm_buf for trusted and asymmetric keys
+  KEYS: trusted: Create trusted keys subsystem
+  KEYS: trusted: Move TPM2 trusted keys code
+
+ crypto/asymmetric_keys/asym_tpm.c                  | 101 +++---
+ drivers/char/tpm/tpm-chip.c                        |   1 +
+ drivers/char/tpm/tpm-interface.c                   |  56 ----
+ drivers/char/tpm/tpm.h                             | 230 -------------
+ drivers/char/tpm/tpm2-cmd.c                        | 308 +----------------
+ include/Kbuild                                     |   1 -
+ include/keys/{trusted.h => trusted_tpm.h}          |  49 +--
+ include/linux/tpm.h                                | 270 ++++++++++++++-
+ security/keys/Makefile                             |   2 +-
+ security/keys/trusted-keys/Makefile                |   8 +
+ .../{trusted.c => trusted-keys/trusted_tpm1.c}     |  92 +++---
+ security/keys/trusted-keys/trusted_tpm2.c          | 368 +++++++++++++++++++++
+ 12 files changed, 728 insertions(+), 758 deletions(-)
+ rename include/keys/{trusted.h => trusted_tpm.h} (77%)
+ create mode 100644 security/keys/trusted-keys/Makefile
+ rename security/keys/{trusted.c => trusted-keys/trusted_tpm1.c} (94%)
+ create mode 100644 security/keys/trusted-keys/trusted_tpm2.c
+
+-- 
+2.7.4
+
