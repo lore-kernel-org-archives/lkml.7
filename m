@@ -2,204 +2,116 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF75C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7F2C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04565206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CE34206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="B0liChI3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jy6+Fzxu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389038AbfIPPUj (ORCPT
+        id S2389081AbfIPPVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:20:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36365 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388609AbfIPPUi (ORCPT
+        Mon, 16 Sep 2019 11:21:07 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37615 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389039AbfIPPVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:20:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id t3so251865wmj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:20:35 -0700 (PDT)
+        Mon, 16 Sep 2019 11:21:07 -0400
+Received: by mail-wr1-f65.google.com with SMTP id i1so38760360wro.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:21:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:message-id:user-agent:mime-version;
-        bh=awtTXhQYInDaRNLRQOmqRN3PH/3AaVOJdo9EGYwStAM=;
-        b=B0liChI3Ql+DmGCvZBfzmpDJj+Qihyzh98bjutCItonoa5oqLJw23XygfkfTsCx7JL
-         sp89s6HevKYMWlSHSNemK+JIyDUP/nIcv31iVttcpHvyyrh+95UMwE2gXaK3mJKKoOlz
-         otKxb0u/IkaDekX548JJe7ifokxY//baXBn7VBb6s8eFuKsY9BTfqH84D1NU6nJrK+r0
-         4IkjTJU0N0mmtkXRnE5IvC42fI5sqhFNq5J0J8l7VjQFsJi+Nz/8M7RpziWZmclvhWWS
-         zRz6FWnSbUgdketzRUIk9Bsw4P4O8aAJdqXVJ17AUVtuwmc+QmdeiSioNYIBXfvyC/HS
-         PaRw==
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=K5n01uhQ5HwxlBE5M/2zmjIiad/mSltxdBurQPag48E=;
+        b=Jy6+FzxuA5xspP87WcsXSOV4KOdYZWkwZV9U8INYadGh7JZSwRWH/gbT0hmx1AVdJp
+         c3z4qE9I4ZBu1OjPKIDmA/xJwG31JNjYTHNY62FngQXJj5Ch5iIf3UvshZV0IaFH7yuh
+         v9qvTI6LiL9JqE+hz8CfexVxz2uXwVd5QIAsfhXlMbsTH/wDD/OOX1+fX6e0lOq7Dc6o
+         kpe/jGOTZFtoFFaRWaeYDiih2pLyUhyfw4aG8BiagqvcX5YT1xfGUnnl72ARPECAPPBr
+         BSGYMoyvKuKfPeDNJ+h/hWOJcuvDR9nehhvCOzGJkCoKRRPU+l6z5hvmHnbNmglWZkkH
+         9olg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:user-agent
-         :mime-version;
-        bh=awtTXhQYInDaRNLRQOmqRN3PH/3AaVOJdo9EGYwStAM=;
-        b=oJJimULmTq82NI0Mhkyi6h9/79qWjcTHYLvtMTleMEGT4sKPvLTaMbNCNjPMu/VUzr
-         IzbNWQpqOl6u9ghxtimt2qnU9nSXEbRX+oLCggDrvp5ppVkOevJX/14/VeUY/1SN8BUi
-         VigtsDwKhmJ7s1D2lo/1ed+IdsDsodA5rAL3WSJ4Q9+trSTrq/oSsFA+1u3hdK2mbVSX
-         XOqcGZzSvEqjKoam4Q/A/Z3aysMpW38UbNsJqVthwwx4sIksC2/gBo4OutAsbxLnYCsM
-         fbIgPZNN5s8Kvj5nxPz2zlJvIDxmewLvUszSLHH6A7gmvxC6J6rxRWWKZLYU5yUlYnsw
-         fcXg==
-X-Gm-Message-State: APjAAAW7leoZ+rT/gp2iFdp2XFEpZjaa9eB9N68N8dPWS2rTTrYNUNGL
-        AuWDkDZy8BU6kXOHxLrFWWSXOixRVOs=
-X-Google-Smtp-Source: APXvYqzv55te+vVQ6/L27I0bUkIIAv1ZlIHl8FtByVqPk+kpTCmGndZf6Ga2ciCjww9DelwyTmxImA==
-X-Received: by 2002:a7b:c306:: with SMTP id k6mr50330wmj.127.1568647234465;
-        Mon, 16 Sep 2019 08:20:34 -0700 (PDT)
-Received: from localhost ([195.200.173.126])
-        by smtp.gmail.com with ESMTPSA id b194sm122836wmg.46.2019.09.16.08.20.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 08:20:33 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 08:20:33 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     torvalds@linux-foundation.org
-cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] RISC-V updates for v5.4-rc1
-Message-ID: <alpine.DEB.2.21.9999.1909160819190.11980@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=K5n01uhQ5HwxlBE5M/2zmjIiad/mSltxdBurQPag48E=;
+        b=L2DYiNMFj4Zmy8xZL3HoEepA/aeOjb0xNxF/nO1axLmBsyaH5Eckt/JKnoCJSsEU9i
+         VNURzXCLVF0tbEheS5MOE56bjDvfAYc+hPWijEiRnA05RtscokYFarEK7OnzYZPXTvA7
+         e6qbiAS9zr26kuTTX0MAmWBeUdq1l9vg9+jbhgOvIbxGI7zQ2qW7UoqcnbqVVaZOFyhK
+         BBQLy+Gkdif3dqP8vpQIsMfK2nlwPx//s/poa422H9jEkdWVYoQ0kI53T8MUf8QKKAzl
+         6TUjf3ekdG0owIKzQsdgPKXCSFHKU5iYK+EZp/K5Pdq70ZLsFMZ5gUNy+PdZFouFLift
+         UWSg==
+X-Gm-Message-State: APjAAAUmod0i9yJz2EYoBGgvyNIrL8MX8H8bpeiqV/GlPs+qYSMMAYIV
+        O2JhfmEdeRnc2dHGAsqgAEwAtg==
+X-Google-Smtp-Source: APXvYqyjxEqp9sHAmo5kttc6Y0BlvcD5LMImSzPduV+19RimNQXROmwgEraX+NhAEljzg9KcrdGXzA==
+X-Received: by 2002:a5d:4b4e:: with SMTP id w14mr232550wrs.191.1568647263455;
+        Mon, 16 Sep 2019 08:21:03 -0700 (PDT)
+Received: from [192.168.0.101] (146-241-102-115.dyn.eolo.it. [146.241.102.115])
+        by smtp.gmail.com with ESMTPSA id c18sm7151337wrv.10.2019.09.16.08.21.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 08:21:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 0/1] block, bfq: remove bfq prefix from cgroups filenames
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190916151643.GC3084169@devbig004.ftw2.facebook.com>
+Date:   Mon, 16 Sep 2019 17:21:01 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        noreply-spamdigest via bfq-iosched 
+        <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        cgroups@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <64329DDB-FFF4-4709-83B1-39D5E6BF6AB6@linaro.org>
+References: <20190909073117.20625-1-paolo.valente@linaro.org>
+ <80C56C11-DA21-4036-9006-2F459ACE9A8C@linaro.org>
+ <c67c4d4b-ee56-85c1-5b94-7ae1704918b6@kernel.dk>
+ <1F3898DA-C61F-4FA7-B586-F0FA0CAF5069@linaro.org>
+ <20190916151643.GC3084169@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
 
-The following changes since commit a256f2e329df0773022d28df2c3d206b9aaf1e61:
 
-  RISC-V: Fix FIXMAP area corruption on RV32 systems (2019-08-28 15:30:12 -0700)
+> Il giorno 16 set 2019, alle ore 17:16, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> Hello, Paolo.
+>=20
+> On Mon, Sep 16, 2019 at 05:07:29PM +0200, Paolo Valente wrote:
+>> Tejun, could you put your switch-off-io-cost code into a standalone
+>> patch, so that I can put it together with this one in a complete
+>> series?
+>=20
+> It was more of a proof-of-concept / example, so the note in the email
+> that the code is free to be modified / used any way you see fit.  That
+> said, if you like it as it is, I can surely prep it as a standalone
+> patch.
+>=20
 
-are available in the Git repository at:
+AFAICT your proposal contains no evident error.  Plus, no one seems to
+have complained about the idea (regardless from the exact
+implementation).  So I guess the best next step is to go for it.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/riscv/linux.git tags/riscv/for-v5.4-rc1
+Thanks,
+Paolo
 
-for you to fetch changes up to 9ce06497c2722a0f9109e4cc3ce35b7a69617886:
+> Thanks.
+>=20
+> --=20
+> tejun
 
-  irqchip/sifive-plic: set max threshold for ignored handlers (2019-09-05 01:59:55 -0700)
-
-----------------------------------------------------------------
-RISC-V updates for v5.4-rc1
-
-Add the following new features:
-
-- Generic CPU topology description support for DT-based platforms,
-  including ARM64, ARM and RISC-V.
-
-- Sparsemem support
-
-- Perf callchain support
-
-- SiFive PLIC irqchip modifications, in preparation for M-mode Linux
-
-and clean up the code base:
-
-- Clean up chip-specific register (CSR) manipulation code, IPIs, TLB
-  flushing, and the RISC-V CPU-local timer code
-
-- Kbuild cleanup from one of the Kbuild maintainers
-
-----------------------------------------------------------------
-Atish Patra (4):
-      dt-binding: cpu-topology: Move cpu-map to a common binding.
-      cpu-topology: Move cpu topology code to common code.
-      arm: Use common cpu_topology structure and functions.
-      RISC-V: Parse cpu topology during boot.
-
-Bin Meng (1):
-      riscv: Using CSR numbers to access CSRs
-
-Christoph Hellwig (7):
-      riscv: refactor the IPI code
-      riscv: cleanup send_ipi_mask
-      riscv: optimize send_ipi_single
-      riscv: cleanup riscv_cpuid_to_hartid_mask
-      riscv: don't use the rdtime(h) pseudo-instructions
-      riscv: move the TLB flush logic out of line
-      irqchip/sifive-plic: set max threshold for ignored handlers
-
-Logan Gunthorpe (1):
-      RISC-V: Implement sparsemem
-
-Mao Han (3):
-      riscv: Add perf callchain support
-      riscv: Add support for perf registers sampling
-      riscv: Add support for libdw
-
-Masahiro Yamada (1):
-      riscv: add arch/riscv/Kbuild
-
-Paul Walmsley (1):
-      Merge tag 'common/for-v5.4-rc1/cpu-topology' into for-v5.4-rc1-branch
-
-Sudeep Holla (3):
-      Documentation: DT: arm: add support for sockets defining package boundaries
-      base: arch_topology: update Kconfig help description
-      MAINTAINERS: Add an entry for generic architecture topology
-
- .../{arm/topology.txt => cpu/cpu-topology.txt}     | 256 +++++++++++------
- MAINTAINERS                                        |   7 +
- arch/arm/include/asm/topology.h                    |  20 --
- arch/arm/kernel/topology.c                         |  60 +---
- arch/arm64/include/asm/topology.h                  |  23 --
- arch/arm64/kernel/topology.c                       | 303 +--------------------
- arch/riscv/Kbuild                                  |   3 +
- arch/riscv/Kconfig                                 |  24 ++
- arch/riscv/Makefile                                |   5 +-
- arch/riscv/include/asm/page.h                      |   2 +
- arch/riscv/include/asm/pgtable.h                   |  13 +
- arch/riscv/include/asm/smp.h                       |   6 -
- arch/riscv/include/asm/sparsemem.h                 |  11 +
- arch/riscv/include/asm/timex.h                     |  44 ++-
- arch/riscv/include/asm/tlbflush.h                  |  38 +--
- arch/riscv/include/uapi/asm/perf_regs.h            |  42 +++
- arch/riscv/kernel/Makefile                         |   4 +-
- arch/riscv/kernel/entry.S                          |   6 +-
- arch/riscv/kernel/fpu.S                            |   8 +-
- arch/riscv/kernel/head.S                           |   2 +-
- arch/riscv/kernel/perf_callchain.c                 |  94 +++++++
- arch/riscv/kernel/perf_regs.c                      |  44 +++
- arch/riscv/kernel/smp.c                            |  60 ++--
- arch/riscv/kernel/smpboot.c                        |   3 +
- arch/riscv/kernel/stacktrace.c                     |   4 +-
- arch/riscv/lib/uaccess.S                           |  12 +-
- arch/riscv/mm/Makefile                             |   3 +
- arch/riscv/mm/cacheflush.c                         |   1 -
- arch/riscv/mm/context.c                            |   7 +-
- arch/riscv/mm/init.c                               |  12 +-
- arch/riscv/mm/tlbflush.c                           |  35 +++
- drivers/base/Kconfig                               |   2 +-
- drivers/base/arch_topology.c                       | 298 ++++++++++++++++++++
- drivers/clocksource/timer-riscv.c                  |  17 +-
- drivers/irqchip/irq-sifive-plic.c                  |  12 +-
- include/linux/arch_topology.h                      |  26 ++
- include/linux/topology.h                           |   1 +
- tools/arch/riscv/include/uapi/asm/perf_regs.h      |  42 +++
- tools/perf/Makefile.config                         |   6 +-
- tools/perf/arch/riscv/Build                        |   1 +
- tools/perf/arch/riscv/Makefile                     |   4 +
- tools/perf/arch/riscv/include/perf_regs.h          |  96 +++++++
- tools/perf/arch/riscv/util/Build                   |   2 +
- tools/perf/arch/riscv/util/dwarf-regs.c            |  72 +++++
- tools/perf/arch/riscv/util/unwind-libdw.c          |  57 ++++
- 45 files changed, 1176 insertions(+), 612 deletions(-)
- rename Documentation/devicetree/bindings/{arm/topology.txt => cpu/cpu-topology.txt} (66%)
- create mode 100644 arch/riscv/Kbuild
- create mode 100644 arch/riscv/include/asm/sparsemem.h
- create mode 100644 arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 arch/riscv/kernel/perf_callchain.c
- create mode 100644 arch/riscv/kernel/perf_regs.c
- create mode 100644 arch/riscv/mm/tlbflush.c
- create mode 100644 tools/arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/Build
- create mode 100644 tools/perf/arch/riscv/Makefile
- create mode 100644 tools/perf/arch/riscv/include/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/util/Build
- create mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/riscv/util/unwind-libdw.c
