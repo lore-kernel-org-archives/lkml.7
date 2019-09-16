@@ -2,158 +2,113 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5C8C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4B4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:06:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB46E206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9776206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:06:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gIeEnxG4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GQOCBpsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfIPIDd (ORCPT
+        id S1730852AbfIPIGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:03:33 -0400
-Received: from mail-eopbgr00068.outbound.protection.outlook.com ([40.107.0.68]:44344
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727374AbfIPIDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:03:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wrk/aRXqc7Ki0rjY0K2kUOktreEdiNhNuXM78Q3Sdy7cjdqea72h8EKz5UAvSw44icswJY0c67lPS09j83bXFkfc6wsSdZjwX0HMzSBH5ttauKB6XCozulp4Hpw4kH4xSR83F7IvEww0yO5PNR7yNZda/hR0xlM4RXqZY4dlZ4Ab03TsWtkn6LNdn6KA/h86mQLWQo7WDu2QlMm59Mnb0jYvTFlDM6wRjImDXHQtGTHm7R8+YHCWBKtgse/XE3nmFAKL72ATa0pYtmvfVMAbqjoepv9Eo6eNqz8nbl1BZzOf78ZulhDXL5SctDfuvM7jFwZtWiKDnyLgS+NTFU2Evw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KPuvN+kDylNI+qUnXmqbN38GKnIwxTl7w0MidEyAfZs=;
- b=mbS8WmjfUeaaCrVboyS9XwYCprgR132Ureb+Yi8d4NLXu+eeRdnKghAu7+1rIQjnXpE2LYzV8KayWaPlpurK6oHIWhV9VhhDPOwQJJTNjbgQTad3JrxJJXikqZjVmZGd35VRY04sDSzkGZCah4LiZPxORsV0sRYJBz9wAlHhgSCSD1y7eObk6Yi8fepDjRU1eA34NHp5xiq4qsc+oSBwju1nKbVdP+rlguQVZb8He6o6ChoktT8QOvimiO0fnj7A9c99RcC9kDzOof80lcVtJWagZI9tkzawmvZYPf4FQ6J/kthivUM9PKj1KcEIpshB2/I+oxnqGHXESByWcaUjGw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KPuvN+kDylNI+qUnXmqbN38GKnIwxTl7w0MidEyAfZs=;
- b=gIeEnxG4OfwlNUxRQcs/5rjo4UY+fVo6+gQZULr0dQwk3lB7qK6jgrXt4QTSLZKcaoNl+Hw5jNND35R1KtNMSShrANI/LiBzq80MdMBq8ilM3NdQnwDNjt/SFwxWiDjFL0xVH3gDhQCAR34NbkkSIkvEDUY9REKDeZJcc5vqrtk=
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (20.179.235.81) by
- VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.233.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.17; Mon, 16 Sep 2019 08:02:49 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::c8ae:f1f7:b7be:5976]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::c8ae:f1f7:b7be:5976%4]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 08:02:49 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-Subject: RE: [PATCH 0/4] Fix UART DMA freezes for iMX6
-Thread-Topic: [PATCH 0/4] Fix UART DMA freezes for iMX6
-Thread-Index: AQHVaLAxu2UDdwNxk0eJG3Q3r0yNHKct9iKQ
-Date:   Mon, 16 Sep 2019 08:02:49 +0000
-Message-ID: <VE1PR04MB66383FAB08506993B305AC8D898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
-In-Reply-To: <20190911144943.21554-1-philipp.puschmann@emlix.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yibin.gong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 33c64e22-a496-4e98-a413-08d73a7c446a
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR04MB6496;
-x-ms-traffictypediagnostic: VE1PR04MB6496:|VE1PR04MB6496:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB649679AD6CFC9D65CB9F5733898C0@VE1PR04MB6496.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(39860400002)(376002)(189003)(199004)(14454004)(71200400001)(71190400001)(52536014)(478600001)(81166006)(316002)(76176011)(81156014)(2501003)(33656002)(7696005)(25786009)(66946007)(66476007)(64756008)(256004)(8676002)(4326008)(66446008)(66556008)(99286004)(5660300002)(229853002)(54906003)(6246003)(14444005)(66066001)(110136005)(6436002)(55016002)(9686003)(76116006)(11346002)(486006)(7416002)(3846002)(7736002)(86362001)(446003)(2906002)(102836004)(6116002)(186003)(305945005)(476003)(26005)(8936002)(53936002)(74316002)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6496;H:VE1PR04MB6638.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: MFCm1zv4tbzNCiFPQ1W2csUN1IgzUd3fkemEb0fz6qlJchlafWcAiMCeQXZG4vx5R69/b9DsOO+cfnFsm30FT3fIcLoSlqILF5omm9qg5TVVC0k8L339YKIHo5WoTMCkBU29ZoxZ58ZHuSokR59WKtD//nlagtVRx7smd/zTj9/BRegrF1Vi5lhdHALuG5CJIzOvRuTHAKX66F9u90ttLoMmSy7YkPpv160ZMMCGPT4PReKPDxw32XCZEtOIr6rvkBqw0JiC2+kKt85swXCvePvuCUoKiEfQWpCOtiMqWjZs0KUnHGUYg4V8W7BMIisyslEt32ZCTcKavY3AVTMzq7C7sGbQVerMwkJvwznqq4qK+LOrTOEfirKeaYmT5qhEKJIvECRnXmQtl+bAUJw1udJJqBUcaLXDgaTK+v5SSZk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 16 Sep 2019 04:06:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45682 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbfIPIGM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:06:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r5so3813852wrm.12
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 01:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=W+6eVtm06G2DnerzsFFEVB5vtcZxnWEKRgFaaXCgWGo=;
+        b=GQOCBpsSirGcGzdEHlMBfNDzJxPmMj0OYLiV9Nis/yw5ZZOxEauCXKX8VBw8RsVWuL
+         5LIF2kZ60pyykpYmXokmE8Ilnhfw2o5V13r9g2PgBApARfipqyJK51ipdgKvzhNGCXzW
+         kPWg4wZkXjT/Eq4D8amfyAwabb+GpLpEPNL8/oZbsTnUpAUD+hPiS4yYPCDg8Er7QzBc
+         ZPkTbUBSxFg2r1nsJ06/U6hnXMZNJtL8hnn6EIWZdCIv44z2Uk24gaZtGD+UVV4Oblr6
+         bq49385yj89jPCjNCz+E1LgaanKJPjcYwqIuhZgRDvsLC1NtRol/Nd99FUPtdwCJR6Ea
+         FITw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=W+6eVtm06G2DnerzsFFEVB5vtcZxnWEKRgFaaXCgWGo=;
+        b=L/wHY6X3ska8McEDkxYNvG4hC+ei7AbTwXHzE1ePJ8ixefvbkIDdv9/GRQs3Nm5qMm
+         5tFFVojI9wZ6Q43TCEKe4GMyeyGSZcwjfAXDAP2g05FrVVzplroQfUM4PnxaTJj34acZ
+         7wi8XeICV7xP9oIMRGepA89xLgHg2zkb5bPtXvdlmVqS5l3UFXj9f+Cg0TutmHCGA35O
+         gj0S+oCw2GU82HmvkivpMAk5u3BeA9P+BBIz1TeG5P/R7jmNAqrF4/qP48bDzZbVSCIs
+         wMJFHvCwYSSUAhWFqkR6+skqdwwfPW3wlC18f7IZNzNlIX/E7lpPAX9TBNNPf46wxk+Z
+         3C4g==
+X-Gm-Message-State: APjAAAXLqhQUEoLH97WonE9hSCaPTiLXowOG/66tUXS/DSTU1VZ8XA0k
+        XX4JlG/34Sm0VJtEGsfYpYEf5w==
+X-Google-Smtp-Source: APXvYqwwzj+YBGHiDs5snINLMmedhcTe4YAqB3nspNDmWc0373N7F0SNqZ0iNwFda6g+BLVUWjyeoQ==
+X-Received: by 2002:adf:d848:: with SMTP id k8mr5370448wrl.254.1568621170584;
+        Mon, 16 Sep 2019 01:06:10 -0700 (PDT)
+Received: from dell ([2.27.167.122])
+        by smtp.gmail.com with ESMTPSA id a13sm72513725wrf.73.2019.09.16.01.06.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 01:06:09 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 09:06:08 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Gene Chen <gene.chen.richtek@gmail.com>, gene_chen@richtek.com,
+        Wilma.Wu@mediatek.com, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@mediatek.corp-partner.google.com>
+Subject: Re: [PATCH] mfd: mt6360: add pmic mt6360 driver
+Message-ID: <20190916080608.GV26880@dell>
+References: <1568275837-3560-1-git-send-email-gene.chen.richtek@gmail.com>
+ <be0bbf3b-76f8-9e2a-7c51-d5987263a859@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 33c64e22-a496-4e98-a413-08d73a7c446a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 08:02:49.1571
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: J5iIFzzxLDqPHFAGVJcBV0mc0VHea3IF8mGB7X4Gl9YfBEwIc9NY9osidi5bqObLhkdny33eJ0j4ww1N1+298Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6496
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be0bbf3b-76f8-9e2a-7c51-d5987263a859@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/11 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
-> For some years and since many kernel versions there are reports that RX
-> UART DMA channel stops working at one point. So far the usual workaround
-> was to disable RX DMA. This patches try to fix the underlying problem.
->=20
-> When a running sdma script does not find any usable destination buffer to=
- put
-> its data into it just leads to stopping the channel being scheduled again=
-. As
-> solution we we manually retrigger the sdma script for this channel and by=
- this
-> dissolve the freeze.
->=20
-> While this seems to work fine so far a further patch in this series incre=
-ases the
-> number of RX DMA periods for UART to reduce use cases running into such a
-> situation.
->=20
-> This patch series was tested with the current kernel and backported to ke=
-rnel
-> 4.15 with a special use case using a WL1837MOD via UART and provoking the
-Hi Philipp, Could your Bluetooth issue be reproduce on latest linux-next? O=
-r did
-your kernel which can be reproduced include the below patch?
+On Thu, 12 Sep 2019, Matthias Brugger wrote:
 
-commit d1a792f3b4072bfac4150bb62aa34917b77fdb6d
-Author: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Date:   Wed Jun 25 13:00:33 2014 +0100
+> Hi Gene Chen,
+> 
+> Please use ./scripts/get_maintainer.pl to find out which are the maintainer(s)
+> for a specific series/patch.
+> 
+> I added Lee Jones, who is the maintainer of the MTD subsystem.
+> 
+> Right now I have no time to review the patches, sorry.
+> 
+> Regards,
+> Matthias
+> 
+> On 12/09/2019 10:10, Gene Chen wrote:
+> > From: Gene Chen <gene_chen@mediatek.corp-partner.google.com>
 
-    Update imx-sdma cyclic handling to report residue
-> hanging of UART RX DMA within seconds after starting a test application.
-> It resulted in well known
->   "Bluetooth: hci0: command 0x0408 tx timeout"
-> errors and complete stop of UART data reception. Our Bluetooth traffic
-> consists of many independent small packets, mostly only a few bytes, caus=
-ing
-> high usage of periods.
->=20
->=20
-> Philipp Puschmann (4):
->   dmaengine: imx-sdma: fix buffer ownership
->   dmaengine: imx-sdma: fix dma freezes
->   serial: imx: adapt rx buffer and dma periods
->   dmaengine: imx-sdma: drop redundant variable
->=20
->  drivers/dma/imx-sdma.c   | 32 ++++++++++++++++++++++----------
->  drivers/tty/serial/imx.c |  5 ++---
->  2 files changed, 24 insertions(+), 13 deletions(-)
->=20
-> --
-> 2.23.0
+Please resubmit this containing a suitable commit message with me on
+Cc.
 
+> > ---
+> >  drivers/mfd/Kconfig       |  12 ++
+> >  drivers/mfd/Makefile      |   1 +
+> >  drivers/mfd/mt6360-core.c | 463 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 476 insertions(+)
+> >  create mode 100644 drivers/mfd/mt6360-core.c
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
