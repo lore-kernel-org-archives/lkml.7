@@ -2,151 +2,160 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF71C4CECC
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C3FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4283F20650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568623420;
-	bh=0I9448mfOvHCRteRi6hOyCJsS+wHxO2oyzdjGSyl640=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rXVT8GKIDW8daTdxyN/do8fbQyolsoNSDMZj/Dr96bcyEwLouXyNNqxu1PZsqTBdl
-	 EC6Mzoar6oNuh1phSl5MLh4oA8Wtg5UcNCKVNPOC55yJmeonphCdfOOCZWkRXTHT9k
-	 zBcz90NT+qY2A2PocWaHYM4jcR8cVv2qEEpYCMec=
+	by mail.kernel.org (Postfix) with ESMTP id 9F5B620650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:44:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DmAolwHH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731285AbfIPInj (ORCPT
+        id S1731291AbfIPIoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:43:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33136 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731218AbfIPInj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:43:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 67640AE5E;
-        Mon, 16 Sep 2019 08:43:33 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 10:43:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
-        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
-        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
-        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
-        rafael@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190916084328.GC10231@dhcp22.suse.cz>
-References: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
+        Mon, 16 Sep 2019 04:44:19 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39535 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbfIPIoT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:44:19 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so1094439otr.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 01:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=am5fajrgYrh2eMM8UWTgzQSBhFr06neV3+14UIU2Y/w=;
+        b=DmAolwHHTOeh/Hn9bUFgOquLAlhvY3oBWsAFq4a55qQ9t6ihl+/dXiaiEF0HGByKMd
+         2sdOqTfFVC5P82zdXTJuoxPnbjG+gM1+nELbd23t0e8UKOA+uC1P8eN/oyTZ2nPYp7Jc
+         tVHCA82w6bQBg3GyDg1Uyr4060MEG0SPEy/Hc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=am5fajrgYrh2eMM8UWTgzQSBhFr06neV3+14UIU2Y/w=;
+        b=pAYP+cdwJ7IJTSeJODzrTrSd6Ia03x+Pc46rzURypoHyx+wNuCRVNMMBoxl8vh65mz
+         0P2OTnvCYn0CkV1kg6sNa+kHuFll0ogPEiBAi5yKsJV8fAckhdZOs3GYdJB1KXmlBJvD
+         7SnbqOb3SZDu7qCZ26nq8LSYti52thO8sLU/1QQn7gH7rEEAV2oYkp5eA3FmWT+nmbDW
+         9mAa1CzVnI4PJ1GDVxU/decZyt4Wzx9cRO4K7NIunZozrNw3i81G9CpSDqrqRK0x4HIL
+         AZNR5pZC3RdOjvv3xEckZjVBnsAP2uXOXWF4phBpTeOxznHtUsJ+93sZ2yvMV7WyUApH
+         Puyw==
+X-Gm-Message-State: APjAAAVGDv5BEOpjG6aPV4am6rovrL97pUaQKFOiPYRN2zdeiaz4jfiw
+        4ApLs3q59RpN3NcYguc6Dc38spD4TJtP91ySLPlHkw==
+X-Google-Smtp-Source: APXvYqw2VHQWbQNlXWcfCbo6X1xsUSi4YVc/jYjaoDA8FDbO/L/d+jj3uLaYrLOGf7HFNwQwxgBhxAwIxF41Tkrf/sI=
+X-Received: by 2002:a9d:7006:: with SMTP id k6mr41697080otj.303.1568623458276;
+ Mon, 16 Sep 2019 01:44:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net> <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net> <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+ <20190905121101.60c78422@oasis.local.home> <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+ <87k1acz5rx.fsf@linutronix.de> <CAKMK7uHXTGKSyXgUOucNr4HSrcnBxVkkoqA=VzF4-=sZSq1MKw@mail.gmail.com>
+ <87d0g18ydt.fsf@linutronix.de>
+In-Reply-To: <87d0g18ydt.fsf@linutronix.de>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Mon, 16 Sep 2019 10:44:07 +0200
+Message-ID: <CAKMK7uH-3PqezSBTX3Xh40xyZ0o9NQFBA5gnPq70HHBGLGp8-A@mail.gmail.com>
+Subject: Re: printk meeting at LPC
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Prarit Bhargava <prarit@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 15-09-19 16:20:56, Yunsheng Lin wrote:
-> When passing the return value of dev_to_node() to cpumask_of_node()
-> without checking if the device's node id is NUMA_NO_NODE, there is
-> global-out-of-bounds detected by KASAN.
-> 
-> >From the discussion [1], NUMA_NO_NODE really means no node affinity,
-> which also means all cpus should be usable. So the cpumask_of_node()
-> should always return all cpus online when user passes the node id as
-> NUMA_NO_NODE, just like similar semantic that page allocator handles
-> NUMA_NO_NODE.
-> 
-> But we cannot really copy the page allocator logic. Simply because the
-> page allocator doesn't enforce the near node affinity. It just picks it
-> up as a preferred node but then it is free to fallback to any other numa
-> node. This is not the case here and node_to_cpumask_map will only restrict
-> to the particular node's cpus which would have really non deterministic
-> behavior depending on where the code is executed. So in fact we really
-> want to return cpu_online_mask for NUMA_NO_NODE.
-> 
-> Some arches were already NUMA_NO_NODE aware, so only change them to return
-> cpu_online_mask and use NUMA_NO_NODE instead of "-1".
-> 
-> Also there is a debugging version of node_to_cpumask_map() for x86 and
-> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
-> And "fix" a sign "bug" since it is for debugging and should catch all the
-> error cases.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1125789/
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
+On Sun, Sep 15, 2019 at 3:48 PM John Ogness <john.ogness@linutronix.de> wrote:
+>
+> On 2019-09-13, Daniel Vetter <daniel.vetter@ffwll.ch> wrote:
+> >> 2. A kernel thread will be created for each registered console, each
+> >> responsible for being the sole printers to their respective
+> >> consoles. With this, console printing is _fully_ decoupled from
+> >> printk() callers.
+> >
+> > Is the plan to split the console_lock up into a per-console thing? Or
+> > postponed for later on?
+>
+> AFAICT, the only purpose for a console_lock would be to synchronize
+> between the console printing kthread and some other component that wants
+> to write to that same device. So a per-console console_lock should be
+> the proper solution. However, I will look into the details. My main
+> concerns about this are the suspend/resume logic and the code sitting
+> behind /dev/console. I will share details once I've sorted it all out.
+>
+> >> 6. A new may-sleep function pr_flush() will be made available to wait
+> >> for all previously printk'd messages to be output on all consoles
+> >> before proceeding. For example:
+> >>
+> >>     pr_cont("Running test ABC... ");
+> >>     pr_flush();
+> >>
+> >>     do_test();
+> >>
+> >>     pr_cont("PASSED\n");
+> >>     pr_flush();
+> >
+> > Just crossed my mind: Could/should we lockdep-annotate pr_flush (take
+> > a lockdep map in there that we also take around the calls down into
+> > console drivers in each of the console printing kthreads or something
+> > like that)? Just to avoid too many surprises when people call pr_flush
+> > from within gpu drivers and wonder why it doesn't work so well.
+>
+> Why would it not work so well? Basically the task calling pr_flush()
+> will monitor the lockless iterators of the various consoles until _all_
+> have hit/passed the latest sequence number from the time of the call.
 
-The change makes sense to me. I wish this particular thing wasn't
-duplicated so heavily - maybe we can unify all of them and use a common
-code? In a separate patch most likely...
+Classic deadlock like the below: Some thread:
 
-I would also not change cpu_all_mask -> cpu_online_mask in this patch.
-That is worth a patch on its own with some explanation. I haven't
-checked but I would suspect that alpha simply doesn't support cpu
-hotplug so the two things are the same. But this needs some explanation.
+mutex_lock(A);
+pr_flush();
+mutex_unlock(A);
 
-Other than that the patch looks good to me. Feel free to add
-Acked-by: Michal Hocko <mhocko@suse.com>
+And in the normal console write code also needs do to mutex_lock(A);
+mutex_unlock(A); somewhere.
 
-[...]
-> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
-> index 5a77a40..836c9e2 100644
-> --- a/arch/alpha/include/asm/topology.h
-> +++ b/arch/alpha/include/asm/topology.h
-> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
->  	int cpu;
->  
->  	if (node == NUMA_NO_NODE)
-> -		return cpu_all_mask;
-> +		return cpu_online_mask;
->  
->  	cpumask_clear(&node_to_cpumask_map[node]);
->  
-[...]
+> > Although with this nice plan we'll take the modeset paths fully out of
+> > the printk paths (even for normal outputs) I hope, so should be a lot
+> > more reasonable.
+>
+> You will be running in your own preemptible kthread, so any paths you
+> take should be safe.
+>
+> > From gpu perspective this all sounds extremely good and first
+> > realistic plan that might lead us to an actually working bsod on
+> > linux.
+>
+> Are you planning on basing the bsod stuff on write_atomic() (which is
+> used after entering an emergency state) or on the kmsg_dump facility? I
+> would expect kmsg_dump might be more appropriate, unless there are
+> concerns that the machine will die before getting that far (i.e. there
+> is a lot that happens between when an OOPS begins and when kmsg_dumpers
+> are invoked).
 
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index e6dad60..c676ffb 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
->   */
->  const struct cpumask *cpumask_of_node(int node)
->  {
-> -	if (node >= nr_node_ids) {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
-> +	if ((unsigned int)node >= nr_node_ids) {
->  		printk(KERN_WARNING
-> -			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-> +			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
->  			node, nr_node_ids);
->  		dump_stack();
->  		return cpu_none_mask;
+Yeah I think kms_dump is what the current patches use. From the fbcon
+pov the important bit here is the clearly split out write_atomic, so
+that we can make sure we never try to do anything stupid from special
+contexts. Aside from the printing itself we also have all kinds of fun
+stuff like unblank_screen() and console_unblank() currently in the
+panic path still.
 
-Why do we need this?
--- 
-Michal Hocko
-SUSE Labs
+-Daniel
+--
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
