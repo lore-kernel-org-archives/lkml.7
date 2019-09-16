@@ -2,128 +2,116 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D71BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07415C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA80214DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB3A20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="giWqacrf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbfIPD0L (ORCPT
+        id S1728864AbfIPD0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 23:26:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13358 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728809AbfIPD0L (ORCPT
+        Sun, 15 Sep 2019 23:26:30 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:45212 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbfIPD03 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 23:26:11 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8G3MXFJ062066
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 23:26:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v1vgkenmd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 23:26:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 16 Sep 2019 04:26:07 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Sep 2019 04:26:02 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8G3Q1Yx50462912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 03:26:01 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B08311C04A;
-        Mon, 16 Sep 2019 03:26:01 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB9E411C04C;
-        Mon, 16 Sep 2019 03:26:00 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Sep 2019 03:26:00 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id E0E33A01B5;
-        Mon, 16 Sep 2019 13:25:57 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     stable@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Mon, 16 Sep 2019 13:25:57 +1000
-In-Reply-To: <c4760639-68e8-6969-d0eb-97f12f814109@c-s.fr>
-References: <20190903052407.16638-1-alastair@au1.ibm.com>
-         <20190903052407.16638-2-alastair@au1.ibm.com>
-         <c4760639-68e8-6969-d0eb-97f12f814109@c-s.fr>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Sun, 15 Sep 2019 23:26:29 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c21so2761239qtj.12
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 20:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CHLN0YgFwIwYHZwb2pxqsYeg1mD8xv4r4aaeCn/rYDg=;
+        b=giWqacrfQiVrlrnNCNX19zBLZpYkzv/d++9UCHt+m3d0xxFhBXFbrJvUf9PYWWGly9
+         QwgCJhzTNtLQmfoHehdFE6KdHrmNsKx8VG6TI3VHmw54e8OGcYdzW9yfAbV0rgZ2wnu+
+         0Gvll6Br3/x5sSMVkiy3N1y0nyInMPEA/3gog=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CHLN0YgFwIwYHZwb2pxqsYeg1mD8xv4r4aaeCn/rYDg=;
+        b=t9EnZMbFpChNmrkFPFjFyUjOgVkbVSyKN3h8X0YPHS9R2HNJ/Hxgne33TDbF+aU3bo
+         PVCZR7EdhbJkj7UgPJ+/5obQa+H0o6tRs8PA7WY7T/j+3tSxgUZQwRMsowQWvLFGoc7z
+         n2M/4XXA0cnPRQgUtwV4ckblPqj7BoeqBHq776eaqGf4NRzrzybIOVn8VOVeUyoyh2At
+         MTSMYD3HmHssz3h+KbXelhlTC1432IfNMLivzhhWXW7OKWYWkILsLnq8h0tZJmilM4Xq
+         Nk9Y35s16sDe+FX2OKuchcM9JwXRHvE7iVpwzlsnM9W6uFIeQ4EZTOWFmpG5DplA2Hoo
+         QLHg==
+X-Gm-Message-State: APjAAAUbwhBIzXXs4otKFqySNUhX+RsCDTOUbqQ0KWxljQ6c9p9lMrj3
+        hvjojrecPojPuacyKyWlL1Xu+evhZLIvymUJwPlJuA==
+X-Google-Smtp-Source: APXvYqx4qQhOGqxA9L1RqOKMV0wdsrWpPIh1F9cp74vnCrQahZ7zJmqiFQZxyRi9xirkjPYk6Emlx9le5w5PNtjR/Ag=
+X-Received: by 2002:ac8:3647:: with SMTP id n7mr15936531qtb.159.1568604387185;
+ Sun, 15 Sep 2019 20:26:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091603-0028-0000-0000-0000039D501E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091603-0029-0000-0000-0000245FC33D
-Message-Id: <ed2fb3e4f4f6710f97178acef8f3ee8966cc9641.camel@au1.ibm.com>
-Subject: RE: [PATCH v2 1/6] powerpc: Allow flush_icache_range to work across ranges
- >4GB
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=852 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909160034
+References: <20190913220317.58289-1-dtor@chromium.org>
+In-Reply-To: <20190913220317.58289-1-dtor@chromium.org>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 16 Sep 2019 11:26:16 +0800
+Message-ID: <CANMq1KALGLdZmOgcrrOROU5BXjwnXWSfq6fr85jfRn079JympQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] HID: google: whiskers: more robust tablet mode detection
+To:     Dmitry Torokhov <dtor@chromium.org>
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-09-14 at 09:46 +0200, Christophe Leroy wrote:
-> 
-> Le 03/09/2019 à 07:23, Alastair D'Silva a écrit :
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > When calling flush_icache_range with a size >4GB, we were masking
-> > off the upper 32 bits, so we would incorrectly flush a range
-> > smaller
-> > than intended.
-> > 
-> > This patch replaces the 32 bit shifts with 64 bit ones, so that
-> > the full size is accounted for.
-> 
-> Isn't there the same issue in arch/powerpc/kernel/vdso64/cacheflush.S
-> ?
-> 
-> Christophe
+On Sat, Sep 14, 2019 at 6:03 AM Dmitry Torokhov <dtor@chromium.org> wrote:
+>
+> The USB interface may get detected before the platform/EC one, so let's
+> note the state of the base (if we receive event) and use it to correctly
+> initialize the tablet mode switch state.
+>
+> Also let's start the HID interface immediately when probing, this will
+> ensure that we correctly process "base folded" events that may be sent
+> as we initialize the base. Note that this requires us to add a release()
 
-Yes, there is. I'll fix it, but I wonder whether anything calls it? I
-asked Google, and every mention of it was in the kernel source or
-mailing list.
+s/release/remove/ ?
 
-Maybe BenH can chime in?
+> function where we stop and close the hardware and switch the LED
+> registration away from devm interface as we need to make sure that we
+> destroy the LED instance before we stop the hardware.
+>
+> Signed-off-by: Dmitry Torokhov <dtor@chromium.org>
+> ---
+>  drivers/hid/hid-google-hammer.c | 71 ++++++++++++++++++++++++++-------
+>  1 file changed, 56 insertions(+), 15 deletions(-)
+>
+> diff --git a/drivers/hid/hid-google-hammer.c b/drivers/hid/hid-google-hammer.c
+> index 84f8c127ebdc..4f64f93ddfcb 100644
+> --- a/drivers/hid/hid-google-hammer.c
+> +++ b/drivers/hid/hid-google-hammer.c
+> @@ -208,7 +209,14 @@ static int __cbas_ec_probe(struct platform_device *pdev)
+>                 return error;
+>         }
+>
+> -       input_report_switch(input, SW_TABLET_MODE, !cbas_ec.base_present);
+> +       if (!cbas_ec.base_present)
+> +               cbas_ec.base_folded = false;
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+I'm not sure to see why this is necessary? The folded base state
+should be in bss and false anyway, and even if it was true, it would
+not change the result of the expression below (!cbas_ec.base_present
+|| cbas_ec.base_folded).
 
+> +
+> +       dev_dbg(&pdev->dev, "%s: base: %d, folded: %d\n", __func__,
+> +               cbas_ec.base_present, cbas_ec.base_folded);
+> +
+> +       input_report_switch(input, SW_TABLET_MODE,
+> +                           !cbas_ec.base_present || cbas_ec.base_folded);
+>
+>         cbas_ec_set_input(input);
+>
