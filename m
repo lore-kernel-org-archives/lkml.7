@@ -2,112 +2,119 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BAC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0789C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9997206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35CE206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kyfsw2Ui"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o+zzeQpt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732631AbfIPKzM (ORCPT
+        id S1732642AbfIPKzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:55:12 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:19358 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbfIPKzK (ORCPT
+        Mon, 16 Sep 2019 06:55:18 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33863 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732583AbfIPKzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:55:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7f6a130000>; Mon, 16 Sep 2019 03:55:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 03:55:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 03:55:09 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 10:55:09 +0000
-Received: from [10.21.132.148] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 10:55:06 +0000
-From:   Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 4.14 00/21] 4.14.144-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190913130501.285837292@linuxfoundation.org>
-Message-ID: <c7186e08-3faa-5a4a-8c96-957592667199@nvidia.com>
-Date:   Mon, 16 Sep 2019 11:55:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568631315; bh=XtBvUo7ErPWpwywlPIBPO8hsGed2vWoZb2aISH+/vxk=;
-        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Kyfsw2UiYrJb3rNsHHBCZuRrbvb7YyV/8tSyxi1IREXX8H0UD3OkMOJfkll8lWE8p
-         x1RtdoMdmTuk5JbVCexvX+8yoMQYt5dwaO/OtQpaOZi5nTgE94n4sl2dM//d8Qmyay
-         P2gToeK+q8s7+UiEY3MAzK6TvoYjoEHWUPrzJDzMLf7JAyW4lot7SMPitqOJ6QMmfm
-         KOSXlwMnCo4Z0pR54pRA0jMPBZDYfmeih8sYmYGN3dQssfYq10OookQ5gvd+2Ape1Y
-         P/eNwSND87q5DTzR52xod2/s8HKVdg1m2nofuzpvDju22Ja1oUHPCMTdnzojA+pUUy
-         GsOf7p3N/a4Ww==
+        Mon, 16 Sep 2019 06:55:00 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r22so15775518lfm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=L1rbvOW+wQJfkI127ZZlgGnuYj2RYmEzxNGLFnF8DNQ=;
+        b=o+zzeQpt0mAYpx6mc2RIjYCWYyOjhTHqnHHulW/RKWFhLKUdVgrqTTPr3iHy5E374v
+         gG4cPe1wWsiBBnufog5HnjOQF5rH/3ruhSqJGzFNCB3Tx7RBfcMe458xx/vcOVqdU4ts
+         H/5JFK4Mt4r8nE+O035eNaJztJhlPuKngB+tr//LANN79yG1GKmd28Rk5SiJlpiZykoJ
+         V2B4/S10B+jsSXXcJqch1uNJyQ2ORizv9Nrw2rUMutmDleyxOSRakaDYiVvDKRcMHhej
+         Po+om1loSyc7BuoEjEhiDxDFLDwFH2Zx5+OY39T98MmR5JOB2iRCiX+TxdT2sBk1zq5o
+         cVYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=L1rbvOW+wQJfkI127ZZlgGnuYj2RYmEzxNGLFnF8DNQ=;
+        b=OLzmxERlDcDsbeC7i8f8ZjSofP+e562wb8J+fiTU0xMZHO4xvIch4B1TivUYLHj4Pw
+         bQIbb6gWM8lFGF0MTHuRv52C0NId7fh9CRtEEo64uDMTp08ptzf71sRHUGzXoviU7uTj
+         cwFY0FmywPmoZLnszEfUq9lVPvLd/HMGW7fERfWVPeGwDP4aHfx0B1JrqZlYTAyzpNtc
+         03uvS2UEDOxYTrfHbmF9uRpeEAJo6EUPuKp6N0dtA7hpuIt4J+aHQweMAgUBENGb8/4C
+         ngLk6XEqqqxntiHYhGlO4Ga63tLzGDq10ey12KpGyLNT2uVdlv77A2lMGi467JEqzsi2
+         FTkQ==
+X-Gm-Message-State: APjAAAUVb5SxED9sjUurXf9wVLENk8xc+goL1fMFt+hFV+e6gerH43Al
+        UpFUauqWFIIevG6JgzP9NJ2+bw==
+X-Google-Smtp-Source: APXvYqw+IShRYsfCy6UuVP1nv9ec7UYDVaoYikIxgQwnNQBgJGl+EwStDh+PySmzILReJ/PEBeHdIQ==
+X-Received: by 2002:a05:6512:251:: with SMTP id b17mr16802393lfo.35.1568631297220;
+        Mon, 16 Sep 2019 03:54:57 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 03:54:56 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v3 bpf-next 13/14] samples: bpf: makefile: add sysroot support
+Date:   Mon, 16 Sep 2019 13:54:32 +0300
+Message-Id: <20190916105433.11404-14-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Basically it only enables that was added by previous couple fixes.
+Sysroot contains correct libs installed and its headers ofc. Useful
+when working with NFC or virtual machine.
 
-On 13/09/2019 14:06, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.144 release.
-> There are 21 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Usage:
 
+clean (on demand)
+    make ARCH=arm -C samples/bpf clean
+    make ARCH=arm -C tools clean
+    make ARCH=arm clean
 
-All tests passing for Tegra ...
+configure and install headers:
 
-Test results for stable-v4.14:
-    8 builds:	8 pass, 0 fail
-    16 boots:	16 pass, 0 fail
-    24 tests:	24 pass, 0 fail
+    make ARCH=arm defconfig
+    make ARCH=arm headers_install
 
-Linux version:	4.14.144-rc2-ga0bf0c3c56ab
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
+build samples/bpf:
+    make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- samples/bpf/ \
+    SYSROOT="path/to/sysroot"
 
-Cheers
-Jon
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ samples/bpf/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 133123d4c7d7..57ddf055d6c3 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -194,6 +194,11 @@ TPROGS_CFLAGS += -I$(srctree)/tools/lib/
+ TPROGS_CFLAGS += -I$(srctree)/tools/include
+ TPROGS_CFLAGS += -I$(srctree)/tools/perf
+ 
++ifdef SYSROOT
++TPROGS_CFLAGS += --sysroot=${SYSROOT}
++TPROGS_LDFLAGS := -L${SYSROOT}/usr/lib
++endif
++
+ EXTRA_CXXFLAGS := $(TPROGS_CFLAGS)
+ 
+ # options not valid for C++
 -- 
-nvpublic
+2.17.1
+
