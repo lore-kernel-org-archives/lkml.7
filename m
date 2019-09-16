@@ -2,263 +2,206 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF69C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1ADDC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E22A20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:41:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bluespec-com.20150623.gappssmtp.com header.i=@bluespec-com.20150623.gappssmtp.com header.b="R3UkWtcN"
+	by mail.kernel.org (Postfix) with ESMTP id C1347214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729219AbfIPVlM (ORCPT
+        id S1729347AbfIPVmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:41:12 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41695 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbfIPVlM (ORCPT
+        Mon, 16 Sep 2019 17:42:10 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:51229 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfIPVmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:41:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x4so1743795qtq.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:41:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bluespec-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uKEk7pcTQOPJj3RB17gVy4JPb5ypaqKNo8RuaGXS238=;
-        b=R3UkWtcNWGujD8fkmMhGIDxxKHLAi6mcm39xmmHICtGEIwpUloFA5VYy2KLevUhPkN
-         zG2ACU8l2o6Lai7vdCCpJBa7fS2KhdTT4OqRtXRou7Sxq2XzIJCebXnn+7r4c7Bnud8h
-         SzXr6SAQGIRdmP06/3/AJSAwwdqwOqE5SLyZ0Oi9Ef0HlKWCfE2JF92gFDB/qn1DuER3
-         70DICIHglL1rbdEIqXq+oHNfI+BVju2pIKCaYdCM/EYY+cjrT4SJ88QoUcrOG5zaufpN
-         sL1pHi2V4qdI4QIF5ULY9bfTETsR9EpGO9xV8pXWvKEY2/76gdoeJRRriS0K1OSDMqex
-         GGfQ==
+        Mon, 16 Sep 2019 17:42:09 -0400
+Received: by mail-io1-f70.google.com with SMTP id a13so2092184ioh.18
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 14:42:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uKEk7pcTQOPJj3RB17gVy4JPb5ypaqKNo8RuaGXS238=;
-        b=AjRh+1LEmMpIiH9V02c3BrYc2JkIBELaI1elUbyxPt+airzNPXdlSB55D/xoERcB8Y
-         1OqN5rnbMTHQL5c2ydBk4st9UiFotbdz/Sb9/0ZQAlXxh8/chH244vpUUaJBuQpFr6Yy
-         Zk7ydxMHnLsghXRZDb8vFVoEX2geJQNvORqOV5Ryv2EM3czbihR6yqXmLHrp8UGnr9fZ
-         7O4MgF0WZkO6P1SV4BxeHxPTjk1sMvYi20GirTxOcpOFZLChBnehbpKG7NucSgC7rVU0
-         eLl5ViaupAXScMNxIu3DtYTiM5flfKkC/UR3CI0Ozxfs1dVvZoc3NJ1wxgHZ4cpmljDF
-         AlFQ==
-X-Gm-Message-State: APjAAAUvGrUNx4wRPklBmmbqQnw96iwsZiGrzxwgNh14AnC6FwFIKRYe
-        FvoVXLC1KSNztIO0N7UGykBQ
-X-Google-Smtp-Source: APXvYqz0NH1/5cvCw+LYXorC5ja42Ctcmhbotja18rZ9eEbBycTJdXZjVgQaGFdaeFlRPYYNwBkL/g==
-X-Received: by 2002:a05:6214:4d:: with SMTP id c13mr101308qvr.118.1568670069748;
-        Mon, 16 Sep 2019 14:41:09 -0700 (PDT)
-Received: from [0.0.0.0] (198-0-189-189-static.hfc.comcastbusiness.net. [198.0.189.189])
-        by smtp.gmail.com with ESMTPSA id k199sm129948qke.45.2019.09.16.14.41.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 14:41:09 -0700 (PDT)
-Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>
-Cc:     maz@kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-References: <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
-From:   Darius Rad <darius@bluespec.com>
-Message-ID: <be21db32-ff5c-b25a-c8d6-af5bbd0c5469@bluespec.com>
-Date:   Mon, 16 Sep 2019 17:41:07 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=vrP9JOoIMT13BIvgmwLENBjY554tFga0cUi/Ijgj+9M=;
+        b=kpAGu6FLVPDoLSm0BNo0adkiKm8CHy7camIT11MYerQsVi94k/OB1EHSZd7pz9jfKR
+         w6Cb3y2rE+cgNljzlFuy1dgN79I97TZKcejCgtKTdfD1jXPplXq//jjnMLEYu8yFxVOx
+         RyMUMbqW4CICwu7ybtaxOj+sn4FxWXjF1kSZ+uwjICZI/dvFKMdEyQUcCbSY/xGdfR6q
+         KbC9yAoCEs+wZnnUl+45bYWTrkIhzyNpe+RoZgic2otLoC7fLAUZCUf7Z2uzY5fAU178
+         Q4V9QqiWAxM+lXxdbYCyCBugxnZl38pyxfCB8y/hdb5WBZCYl5j7s3ycc1r12b8NBgYZ
+         6S8w==
+X-Gm-Message-State: APjAAAXvFm94bcD8B4lc5g3aSbWNPvEmXWk9KzsxpHG26KLb0BOjAvSw
+        VBCMOwVORF8dtFE9CvF4/zW6vucsPQsV+hg9/yap75Pn6oXM
+X-Google-Smtp-Source: APXvYqzHIwIsc5EjDKA7E6FN3wLOt9JNE5mEIX56p4Aicet6bUdgt0oSY/XyIlACVrO2+FaKHulgQhbmWfVSHT32MmYZtO78Msaq
 MIME-Version: 1.0
-In-Reply-To: <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a02:698d:: with SMTP id e135mr184654jac.128.1568670126972;
+ Mon, 16 Sep 2019 14:42:06 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 14:42:06 -0700
+In-Reply-To: <000000000000d58eb90592add24e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b02ae30592b279e4@google.com>
+Subject: Re: possible deadlock in usb_deregister_dev (2)
+From:   syzbot <syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 4:51 PM, Palmer Dabbelt wrote:
-> On Mon, 16 Sep 2019 12:04:56 PDT (-0700), Darius Rad wrote:
->> On 9/15/19 2:20 PM, Marc Zyngier wrote:
->>> On Sun, 15 Sep 2019 18:31:33 +0100,
->>> Palmer Dabbelt <palmer@sifive.com> wrote:
->>>
->>> Hi Palmer,
->>>
->>>>
->>>> On Sun, 15 Sep 2019 07:24:20 PDT (-0700), maz@kernel.org wrote:
->>>>> On Thu, 12 Sep 2019 22:40:34 +0100,
->>>>> Darius Rad <darius@bluespec.com> wrote:
->>>>>
->>>>> Hi Darius,
->>>>>
->>>>>>
->>>>>> As per the existing comment, irq_mask and irq_unmask do not need
->>>>>> to do anything for the PLIC.  However, the functions must exist
->>>>>> (the pointers cannot be NULL) as they are not optional, based on
->>>>>> the documentation (Documentation/core-api/genericirq.rst) as well
->>>>>> as existing usage (e.g., include/linux/irqchip/chained_irq.h).
->>>>>>
->>>>>> Signed-off-by: Darius Rad <darius@bluespec.com>
->>>>>> ---
->>>>>>  drivers/irqchip/irq-sifive-plic.c | 13 +++++++++----
->>>>>>  1 file changed, 9 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>>>>> index cf755964f2f8..52d5169f924f 100644
->>>>>> --- a/drivers/irqchip/irq-sifive-plic.c
->>>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>>>>> @@ -111,6 +111,13 @@ static void plic_irq_disable(struct irq_data *d)
->>>>>>      plic_irq_toggle(cpu_possible_mask, d->hwirq, 0);
->>>>>>  }
->>>>>>  +/*
->>>>>> + * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>>>> + * by reading claim and "unmasked" when writing it back.
->>>>>> + */
->>>>>> +static void plic_irq_mask(struct irq_data *d) { }
->>>>>> +static void plic_irq_unmask(struct irq_data *d) { }
->>>>>
->>>>> This outlines a bigger issue. If your irqchip doesn't require
->>>>> mask/unmask, you're probably not using the right interrupt
->>>>> flow. Looking at the code, I see you're using handle_simple_irq, which
->>>>> is almost universally wrong.
->>>>>
->>>>> As per the description above, these interrupts should be using the
->>>>> fasteoi flow, which is designed for this exact behaviour (the
->>>>> interrupt controller knows which interrupt is in flight and doesn't
->>>>> require SW to do anything bar signalling the EOI).
->>>>>
->>>>> Another thing is that mask/unmask tends to be a requirement, while
->>>>> enable/disable tends to be optional. There is no hard line here, but
->>>>> the expectations are that:
->>>>>
->>>>> (a) A disabled line can drop interrupts
->>>>> (b) A masked line cannot drop interrupts
->>>>>
->>>>> Depending what the PLIC architecture mandates, you'll need to
->>>>> implement one and/or the other. Having just (a) is indicative of a HW
->>>>> bug, and I'm not assuming that this is the case. (b) only is pretty
->>>>> common, and (a)+(b) has a few adepts. My bet is that it requires (b)
->>>>> only.
->>>>>
->>>>>> +
->>>>>>  #ifdef CONFIG_SMP
->>>>>>  static int plic_set_affinity(struct irq_data *d,
->>>>>>                   const struct cpumask *mask_val, bool force)
->>>>>> @@ -138,12 +145,10 @@ static int plic_set_affinity(struct irq_data *d,
->>>>>>   static struct irq_chip plic_chip = {
->>>>>>      .name        = "SiFive PLIC",
->>>>>> -    /*
->>>>>> -     * There is no need to mask/unmask PLIC interrupts.  They are "masked"
->>>>>> -     * by reading claim and "unmasked" when writing it back.
->>>>>> -     */
->>>>>>      .irq_enable    = plic_irq_enable,
->>>>>>      .irq_disable    = plic_irq_disable,
->>>>>> +    .irq_mask    = plic_irq_mask,
->>>>>> +    .irq_unmask    = plic_irq_unmask,
->>>>>>  #ifdef CONFIG_SMP
->>>>>>      .irq_set_affinity = plic_set_affinity,
->>>>>>  #endif
->>>>>
->>>>> Can you give the following patch a go? It brings the irq flow in line
->>>>> with what the HW can do. It is of course fully untested (not even
->>>>> compile tested...).
->>>>>
->>>>> Thanks,
->>>>>
->>>>>     M.
->>>>>
->>>>> From c0ce33a992ec18f5d3bac7f70de62b1ba2b42090 Mon Sep 17 00:00:00 2001
->>>>> From: Marc Zyngier <maz@kernel.org>
->>>>> Date: Sun, 15 Sep 2019 15:17:45 +0100
->>>>> Subject: [PATCH] irqchip/sifive-plic: Switch to fasteoi flow
->>>>>
->>>>> The SiFive PLIC interrupt controller seems to have all the HW
->>>>> features to support the fasteoi flow, but the driver seems to be
->>>>> stuck in a distant past. Bring it into the 21st century.
->>>>
->>>> Thanks.  We'd gotten these comments during the review process but
->>>> nobody had gotten the time to actually fix the issues.
->>>
->>> No worries. The IRQ subsystem is an acquired taste... ;-)
->>>
->>>>>
->>>>> Signed-off-by: Marc Zyngier <maz@kernel.org>
->>>>> ---
->>>>>  drivers/irqchip/irq-sifive-plic.c | 29 +++++++++++++++--------------
->>>>>  1 file changed, 15 insertions(+), 14 deletions(-)
->>>>>
->>>>> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
->>>>> index cf755964f2f8..8fea384d392b 100644
->>>>> --- a/drivers/irqchip/irq-sifive-plic.c
->>>>> +++ b/drivers/irqchip/irq-sifive-plic.c
->>>>> @@ -97,7 +97,7 @@ static inline void plic_irq_toggle(const struct cpumask *mask,
->>>>>      }
->>>>>  }
->>>>>  -static void plic_irq_enable(struct irq_data *d)
->>>>> +static void plic_irq_mask(struct irq_data *d)
->>>
->>> Of course, this is wrong. The perks of trying to do something at the
->>> last minute while boarding an airplane. Don't do that.
->>>
->>> This should of course read "plic_irq_unmask"...
->>>
->>>>>  {
->>>>>      unsigned int cpu = cpumask_any_and(irq_data_get_affinity_mask(d),
->>>>>                         cpu_online_mask);
->>>>> @@ -106,7 +106,7 @@ static void plic_irq_enable(struct irq_data *d)
->>>>>      plic_irq_toggle(cpumask_of(cpu), d->hwirq, 1);
->>>>>  }
->>>>>  -static void plic_irq_disable(struct irq_data *d)
->>>>> +static void plic_irq_unmask(struct irq_data *d)
->>>
->>> ... and this should be "plic_irq_mask".
->>>
->>> [...]
->>>
->>>> Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
->>>> Tested-by: Palmer Dabbelt <palmer@sifive.com> (QEMU Boot)
->>>
->>> Huhuh... It may be that QEMU doesn't implement the full-fat PLIC, as
->>> the above bug should have kept the IRQ lines masked.
->>>
->>>> We should test them on the hardware, but I don't have any with me
->>>> right now.  David's probably in the best spot to do this, as he's got
->>>> a setup that does all the weird interrupt sources (ie, PCIe).
->>>>
->>>> David: do you mind testing this?  I've put the patch here:
->>>>
->>>>    ssh://gitolite.kernel.org/pub/scm/linux/kernel/git/palmer/linux.git
->>>>    -b plic-fasteoi
->>>
->>> I've pushed out a branch with the fixed patch:
->>>
->>> git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/plic-fasteoi
->>>
->>
->> That patch works for me on real-ish hardware.  I tried on two FPGA
->> systems that have different PLIC implementations.  Both include
->> a PCIe root port (and associated interrupt source).  So for
->> whatever it's worth:
->>
->> Tested-by: Darius Rad <darius@bluespec.com>
-> 
-> Awesome, thanks.  Would it be OK to put a "(on two hardware PLIC implementations)" after that, just so we're clear as to who tested what?
+syzbot has found a reproducer for the following crash on:
 
-Fine by me.
+HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=175cdb95600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+dashboard link: https://syzkaller.appspot.com/bug?extid=f9549f5ee8a5416f0b95
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13961369600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139c811d600000
 
-> 
-> Assuming one of yours wasn't a SiFive PLIC then it'd be great if David could still give this a whack, but I don't think it strictly needs to block merging the patch.  I've included the right David this time, with any luck that will be more fruitful :)
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
 
-One of the systems I tested was based on rocket-chip, and the
-associated PLIC, which I guess is the SiFive PLIC, right?  Can't hurt
-to have more testing, though.
+usb 1-1: config 0 descriptor??
+legousbtower 1-1:0.219: LEGO USB Tower firmware version is 129.136 build  
+65535
+legousbtower 1-1:0.219: LEGO USB Tower #-160 now attached to major 180  
+minor 0
+usb 1-1: USB disconnect, device number 2
+======================================================
+WARNING: possible circular locking dependency detected
+5.3.0-rc7+ #0 Not tainted
+------------------------------------------------------
+kworker/0:1/12 is trying to acquire lock:
+0000000098630ee4 (minor_rwsem){++++}, at: usb_deregister_dev+0x95/0x230  
+drivers/usb/core/file.c:239
 
-> 
->>
->>> Thanks,
->>>
->>>     M.
->>>
+but task is already holding lock:
+00000000d9ad5b6f (open_disc_mutex){+.+.}, at: tower_disconnect+0x45/0x300  
+drivers/usb/misc/legousbtower.c:945
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #1 (open_disc_mutex){+.+.}:
+        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+        tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
+        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+        do_dentry_open+0x494/0x1120 fs/open.c:797
+        do_last fs/namei.c:3416 [inline]
+        path_openat+0x1430/0x3f50 fs/namei.c:3533
+        do_filp_open+0x1a1/0x280 fs/namei.c:3563
+        do_sys_open+0x3c0/0x580 fs/open.c:1089
+        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+        entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+-> #0 (minor_rwsem){++++}:
+        check_prev_add kernel/locking/lockdep.c:2405 [inline]
+        check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+        validate_chain kernel/locking/lockdep.c:2897 [inline]
+        __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+        lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+        down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+        usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
+        tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
+        usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+        __device_release_driver drivers/base/dd.c:1134 [inline]
+        device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+        bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+        device_del+0x420/0xb10 drivers/base/core.c:2339
+        usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+        usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+        hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+        hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+        port_event drivers/usb/core/hub.c:5359 [inline]
+        hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+        process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+        worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+        kthread+0x318/0x420 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(open_disc_mutex);
+                                lock(minor_rwsem);
+                                lock(open_disc_mutex);
+   lock(minor_rwsem);
+
+  *** DEADLOCK ***
+
+6 locks held by kworker/0:1/12:
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at:  
+__write_once_size include/linux/compiler.h:226 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at:  
+arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:855 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at:  
+atomic_long_set include/asm-generic/atomic-long.h:40 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at: set_work_data  
+kernel/workqueue.c:620 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+  #0: 00000000b8e7e1e7 ((wq_completion)usb_hub_wq){+.+.}, at:  
+process_one_work+0x827/0x1530 kernel/workqueue.c:2240
+  #1: 0000000054d9228f ((work_completion)(&hub->events)){+.+.}, at:  
+process_one_work+0x85b/0x1530 kernel/workqueue.c:2244
+  #2: 00000000f97c245e (&dev->mutex){....}, at: device_lock  
+include/linux/device.h:1223 [inline]
+  #2: 00000000f97c245e (&dev->mutex){....}, at: hub_event+0x17c/0x3640  
+drivers/usb/core/hub.c:5387
+  #3: 0000000035f038d2 (&dev->mutex){....}, at: device_lock  
+include/linux/device.h:1223 [inline]
+  #3: 0000000035f038d2 (&dev->mutex){....}, at: usb_disconnect+0x91/0x8d0  
+drivers/usb/core/hub.c:2190
+  #4: 00000000accb22e6 (&dev->mutex){....}, at:  
+device_release_driver_internal+0x23/0x500 drivers/base/dd.c:1162
+  #5: 00000000d9ad5b6f (open_disc_mutex){+.+.}, at:  
+tower_disconnect+0x45/0x300 drivers/usb/misc/legousbtower.c:945
+
+stack backtrace:
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
+  check_prev_add kernel/locking/lockdep.c:2405 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+  validate_chain kernel/locking/lockdep.c:2897 [inline]
+  __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+  down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+  usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
+  tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
+  usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+  __device_release_driver drivers/base/dd.c:1134 [inline]
+  device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+  bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+  device_del+0x420/0xb10 drivers/base/core.c:2339
+  usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+  usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+  hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  ? pwq_dec
+
