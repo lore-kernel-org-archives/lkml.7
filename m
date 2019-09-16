@@ -2,100 +2,129 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CC0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E9CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8B72067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85B8214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:59:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pNYUSbIS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="fV4Bdm1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732721AbfIPK4C (ORCPT
+        id S1727505AbfIPK72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:56:02 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45311 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732448AbfIPKyq (ORCPT
+        Mon, 16 Sep 2019 06:59:28 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:32054 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfIPK71 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:54:46 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so22747174ljb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=HSB3pC6OCIzwVYGBAJ0R7QI4CKajD+8ovp0KUKhem8g=;
-        b=pNYUSbISKlAVLelxCU1TU78GP/FlR+e7TlMVVNr+WQfkvrUyOQytDZ1zL1iVg/OgZe
-         6p6VltOKoWLDC/bPlR07+PqlPVKShLC8jd3pdogkkTiie7b6Q6qbewuXTyHcmiDnXpI9
-         nexFhZb6QkDjPMIgqjqoAenm82Eo5FSyqbzu2mVY2gkxjWC6rA3RJouf7eW9/956lUwo
-         n3ujW3x/Y0Utc6zd+V/GzPWYnPD5jAs+aoniDRHjpYyQyNDBZcy8WMo8xx8v4czDr4/y
-         wSRreUWlENL/nESYpqKX4+K4UeYnvtu6ZqfqWthcs5MXxnIME71OVkCZMJ/i342wY9xE
-         /9Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=HSB3pC6OCIzwVYGBAJ0R7QI4CKajD+8ovp0KUKhem8g=;
-        b=CWyjJFHXFyDMk9sa9Lo/4DKYzqaYGnVUDqAQ3OVzs6uUj5WVXdf0FSE22IYAZDgSKt
-         WkLJgXyyU6p7BkJS1dK/ElK6T34Ig/YfHLzGN8Im2XwRZLwWPxoQVmSYVWJzXwsnNEjj
-         WG/IssE9qkcPqASaihjROmEbWtv1MavQheOMDv8O6FIl7Ir8bBvTlacJSbgR1v7rdLji
-         swFma2dYA9O88mJ4FojW5BjEg0njREnI5dT9jtItunJX24T9PYd7SdDGj56BPsolgcGS
-         oYgh4cCb77tewW7S9XKtglP8lq6E167fh6LWocMM4d+JRj7SCTC8KowzTUD5KO6r7KKd
-         IQyg==
-X-Gm-Message-State: APjAAAXs8bukxoSsWm8lMSHdTu2EQTN+Tk/574oqGQ9wgoaFYX7Bt3dO
-        2ckJQE42Z8zZFIPVmOz0uZlRxA==
-X-Google-Smtp-Source: APXvYqx/A2fPKX099Lb1d4EObHCdvUw6KNT4rOt0p0xKK+1FDVo7yE677tG2x5n4sDmWFNFZZiiWsQ==
-X-Received: by 2002:a2e:9b43:: with SMTP id o3mr13477947ljj.214.1568631284266;
-        Mon, 16 Sep 2019 03:54:44 -0700 (PDT)
-Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 03:54:43 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v3 bpf-next 03/14] samples: bpf: makefile: use --target from cross-compile
-Date:   Mon, 16 Sep 2019 13:54:22 +0300
-Message-Id: <20190916105433.11404-4-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+        Mon, 16 Sep 2019 06:59:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568631562;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=8qBwnSrBAY6WABqgn1MijqgXdh4BqWoFPcRi7n52+qc=;
+        b=fV4Bdm1MBqOybpORSj0ui39/Qw+yJN7x/6Y+fX2NFMLLNLQzbW+Ylqii7n8yN5D021
+        +4mgis08kH87STWqeUOz0uxYHZllHJINsL3EwkU+13vbubYBBJXkWlTMEW5ikNN8ss3Y
+        B7Xe2HdJ47ypYzg8kE/FbPROOmR6TXcrHrhy695cZUI5/od27EZADuthE/pnoaKZMibA
+        ldb1BJ5wRDGoq9y2TOJAmy0Tecf4i6AkgfKKYXtTR4Z9VV8TVHFGlFi+OWO+8Z4MNn87
+        rr8QRZdl8OvNe/79lg+kLZmPXKi4XWHqPPWYdeVJUluGdsrI3Aq7QxWToRvDPA0PK5Xc
+        tadA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj4Qpw9iZeHmAgw43rXTg="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.27.0 DYNA|AUTH)
+        with ESMTPSA id u036f9v8GAxJPvu
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Mon, 16 Sep 2019 12:59:19 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190831084852.5e726cfa@aktux>
+Date:   Mon, 16 Sep 2019 12:59:19 +0200
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com>
+References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux>
+To:     Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For cross compiling the target triple can be inherited from
-cross-compile prefix as it's done in CLANG_FLAGS from kernel makefile.
-So copy-paste this decision from kernel Makefile.
+ping.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- samples/bpf/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Device omap3-gta04 is neither working with v5.3 nor linux-next quite a =
+while and we need a solution.
 
-diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-index 43dee90dffa4..b59e77e2250e 100644
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -195,7 +195,7 @@ BTF_PAHOLE ?= pahole
- # Detect that we're cross compiling and use the cross compiler
- ifdef CROSS_COMPILE
- HOSTCC = $(CROSS_COMPILE)gcc
--CLANG_ARCH_ARGS = -target $(ARCH)
-+CLANG_ARCH_ARGS = --target=$(notdir $(CROSS_COMPILE:%-=%))
- endif
- 
- # Don't evaluate probes and warnings if we need to run make recursively
--- 
-2.17.1
+> Am 31.08.2019 um 08:48 schrieb Andreas Kemnade <andreas@kemnade.info>:
+>=20
+> Hi,
+>=20
+> On Mon, 5 Aug 2019 12:29:19 +0200
+> Linus Walleij <linus.walleij@linaro.org> wrote:
+>=20
+>> On Fri, Jul 26, 2019 at 12:43 AM Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Jul 25, 2019 at 12:23 AM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote: =20
+>>=20
+>>>> I tried to convince Linus that this is the right way but he =
+convinced
+>>>> me that a fix that handles all cases does not exist.
+>>>>=20
+>>>> There seem to be embedded devices with older DTB (potentially in =
+ROM)
+>>>> which provide a plain 0 value for a gpios definition. And either =
+with
+>>>> or without spi-cs-high.
+>>>>=20
+>>>> Since "0" is the same as "GPIO_ACTIVE_HIGH", the absence of
+>>>> spi-cs-high was and must be interpreted as active low for these
+>>>> devices. This leads to the inversion logic in code.
+>>>>=20
+>>>> AFAIR it boils down to the question if gpiolib and the bindings
+>>>> should still support such legacy devices with out-of tree DTB,
+>>>> but force in-tree DTS to add the legacy spi-cs-high property.
+>>>>=20
+>>>> Or if we should fix the 2 or 3 cases of in-tree legacy cases
+>>>> and potentially break out-of tree DTBs. =20
+>>>=20
+>>> If it is small number of platforms, then the kernel could handle =
+those
+>>> cases explicitly as needed.
+>>>=20
+>>>> IMHO it is more general to keep the out-of-tree DTBs working
+>>>> and "fix" what we can control (in-tree DTS). =20
+
+>>>=20
+>>> If we do this, then we need to not call spi-cs-high legacy because
+>>> we're stuck with it forever. =20
+>>=20
+>> I agree. The background on it is here:
+>> https://lkml.org/lkml/2019/4/2/4
+>>=20
+>> Not using the negatively defined (i.e. if it is no there, the line is
+>> by default active low) spi-cs-high would break
+>> PowerPC, who were AFAICT using this to ship devices.
+>>=20
+> is this thing now just waiting for someone to do a s/legacy//?
+>=20
+> Regards,
+> Andreas
 
