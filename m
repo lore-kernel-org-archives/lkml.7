@@ -2,123 +2,116 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEF4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A8CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2594214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568654747;
-	bh=3E3N1LEw3o4T3J7HszrudP1YvhIen5QE0oWRWgoc2Eg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y922/pIxHDmbAx7BeOut4utpGlPhLylRcOwxQ1FCSFbiZmSt2/V2ptYqr7+mYIody
-	 WxlJDRmWfp7HYnG/2V+KNpF6+MVeye7jbrf8x2WmGvSN1o/hmv/r6nlkNpmy1w/Rgt
-	 YKwiNtizX1wPDlvegCX6kSz3IcXviLSOwdtK0NCM=
+	by mail.kernel.org (Postfix) with ESMTP id 956582067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730835AbfIPRZq (ORCPT
+        id S1732175AbfIPRkg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:25:46 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41920 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbfIPRZp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:25:45 -0400
-Received: by mail-lj1-f194.google.com with SMTP id f5so698293ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GDoPRf3O5U70HZ4jcVgvx0Z1NYw99N1yO48Z3M4xYr8=;
-        b=Mph/reUqez7LCvFpck2PPhm1EQlu6gNTHDoYSg1zfXh5tIWII/iGnvnCN2Kr/SsOmb
-         BTcMOWfAEWc+e2sFNBHejlEuj7QAoF4asCAxEL8Fvv88R8zylLuJ43c7T7XjCsS1cO/v
-         xFmFIzvWpIxdD3+f2ybCyZQQbhgA6gNNLVqR0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GDoPRf3O5U70HZ4jcVgvx0Z1NYw99N1yO48Z3M4xYr8=;
-        b=lZLfN5wTgbPeCLoGMoayAIkHr28Qu2qtQJmNmB0ZLmv3p1YEV2vQXrOKfXgyhInjyp
-         5A6rD+ygtVXH8qedGSHM4RZFLY+8aqcd2O97pdHVNa+x++EE87yy5cemFAkchoL/z+1X
-         CLoq8MO844jD/JZ8V8BvrbuHNGDK8vYsB/FKOLP69wZZxntNtBEGgFXxkpQ6qDGS4B6q
-         EbgWp9VcdCwjehykUHSSecwZOvWrB9jKz/f43XOphj9wm7gaXj8fsAzoIvsJQPkO70Gt
-         CIIaW7acIZzicGTs5wGpzmgYnqmmi/Y224FMuvuNmeHwsXQx7I9Fh/fU4IV0rfVViUFp
-         pEmA==
-X-Gm-Message-State: APjAAAVRwigd7sN+ErYELOpX8RhkdXhtJ9FR7plGDB9M2H+UHe/7BizL
-        wPbr35U6yA1K4CZJKYNKtnBjrUh30MA=
-X-Google-Smtp-Source: APXvYqzMUDulwZ8JukNEZ/wGXqyWWbcMX+JcS3QaFaRHpF3fjFcZhc5JRXnFqMtxMxHSU66NF5wLQA==
-X-Received: by 2002:a2e:6d12:: with SMTP id i18mr375458ljc.223.1568654743443;
-        Mon, 16 Sep 2019 10:25:43 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id t16sm9169317lfp.38.2019.09.16.10.25.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 10:25:42 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id 72so601345lfh.6
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:25:42 -0700 (PDT)
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr294789lfm.170.1568654741860;
- Mon, 16 Sep 2019 10:25:41 -0700 (PDT)
+        Mon, 16 Sep 2019 13:40:36 -0400
+Received: from mga06.intel.com ([134.134.136.31]:16443 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbfIPRkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 13:40:36 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 10:40:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,513,1559545200"; 
+   d="scan'208";a="386275060"
+Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
+  by fmsmga005.fm.intel.com with ESMTP; 16 Sep 2019 10:40:34 -0700
+Date:   Mon, 16 Sep 2019 10:40:35 -0700
+From:   "Luck, Tony" <tony.luck@intel.com>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
+Message-ID: <20190916174034.GA21132@agluck-desk2.amr.corp.intel.com>
+References: <ff93d38a81ea45848c6b634f72b9b9a5@zhaoxin.com>
 MIME-Version: 1.0
-References: <20190913072237.GA12381@zn.tnic> <CAHk-=wismo3SQvvKXg8j0W-eC+5Q-ctcYfr1QV3K-i90w5caBA@mail.gmail.com>
- <9dc9f1e6-5d19-167c-793d-2f4a5ebee097@rasmusvillemoes.dk> <20190913104232.GA4190@zn.tnic>
- <20190913163645.GC4190@zn.tnic> <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
-In-Reply-To: <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 10:25:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
-Message-ID: <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
-Subject: Re: [RFC] Improve memset
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Rasmus Villemoes <mail@rasmusvillemoes.dk>,
-        x86-ml <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff93d38a81ea45848c6b634f72b9b9a5@zhaoxin.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 2:18 AM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> Eh, this benchmark doesn't seem to provide any hints on where to set the
-> cut-off for a compile-time constant n, i.e. the 32 in
+On Mon, Sep 16, 2019 at 11:37:18AM +0000, Tony W Wang-oc wrote:
+> Zhaoxin newer CPUs support LMCE that compatible with Intel's
+> "Machine-Check Architecture", so add support for Zhaoxin LMCE
+> in mce/core.c.
+> 
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+>  arch/x86/kernel/cpu/mce/core.c | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 65c5a1f..acdd76b 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -1132,6 +1132,27 @@ static bool __mc_check_crashing_cpu(int cpu)
+>  		u64 mcgstatus;
+>  
+>  		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
+> +
+> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
+> +			if (mcgstatus & MCG_STATUS_LMCES)
+> +				return false;
+> +
+> +			if (!(mcgstatus & MCG_STATUS_LMCES)) {
 
-Yes, you'd need to use proper fixed-size memset's with
-__builtin_memset() to test that case. Probably easy enough with some
-preprocessor macros to expand to a lot of cases.
+Don't really need this test ... you already did "return false" if 
+the LMCES bit was set ... so this test is redundant (and you can avoid
+indenting the next dozen lines.
 
-But even then it will not show some of the advantages of inlining the
-memset (quite often you have a "memset structure to zero, then
-initialize a couple of fields" pattern, and gcc does much better for
-that when it just inlines the memset to stores - to the point of just
-removing all the memset entirely and just storing a couple of zeroes
-between the fields you initialized).
+> +				/*
+> +				 * Clear the MCG_STATUS_RIPV valid status
+> +				 * bit so that a second MCE won't cause a
+> +				 * shutdown.
+> +				 */
+> +				if (mcgstatus & MCG_STATUS_RIPV)
+> +					mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+> +				/*
+> +				 * On this CPU, skip synchronize regardless
+> +				 * of MCG_STATUS_RIPV status.
+> +				 */
+> +				return true;
+> +			}
+> +		}
+> +
 
-So the "inline constant sizes" case has advantages over and beyond the
-obvious ones. I suspect that a reasonable cut-off point is somethinig
-like "8*sizeof(long)". But look at things like "struct kstat" uses
-etc, the limit might actually be even higher than that.
+Otherwise I'm OK with the series.  May earlier comment about
+wanting to clean up all the vendor/family/model checks should
+be seen as a longer term goal. I don't want to block this waiting
+until the day we figure out how to make this prettier.
 
-Also note that while "rep stosb" is _reasonably_ good with current
-CPU's (ie roughly gen 8+), it's not so great a few generations ago
-(gen 6ish), and it can be absolutely horrid on older cores and/or
-atom. The limit for when it is a win ends up depending on whether I$
-footprint is an issue too, of course, but some of the bigger wins tend
-to happen when you have sizes >= 128.
+-Tony
 
-You can basically always beat "rep movs/stos" with hand-tuned AVX2/512
-code for specific cases if you don't look at I$ footprint and the cost
-of the AVX setup (and the cost of frequency changes, which often go
-hand-in-hand with the AVX use). So "rep movs/stos" is seldom
-_optimal_, but it tends to be "quite good" for modern CPU's with
-variable sizes that are in the 100+ byte range.
-
-             Linus
+[The "Content-Language: zh-CN" in the mail headers is still freaking out
+my version of mutt (Mutt 1.11.3 (2019-02-01)) ... but I figured out a
+simple script to dowload a raw copy of each patch from lore.kernel.org
+to work around that]
