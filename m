@@ -2,123 +2,254 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9369C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF93C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5ED21670
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMUR9inG"
+	by mail.kernel.org (Postfix) with ESMTP id 7FD47214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 22:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387432AbfIPWnH (ORCPT
+        id S2387481AbfIPWoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 18:43:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43538 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbfIPWnH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 18:43:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u72so797790pgb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 15:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cBZmVkDcKZz5zZDlHp5T39g0CCRjx154L73p3yLa6i4=;
-        b=IMUR9inG/mwmcrmffeDDt03n3boFWWZwMhpmFtIhuW8MN3yX8L6SCfAknaT4kLGDek
-         EmwPLX+yhIByGkpmzhWfqSRoaR7D+GP1+JsN6zESyBBEhY4/5gI8nMNniKe7bqG3Gz4Y
-         J+7jHPs6G4CvZ6ISiAoqmiuxErUqWwN20jkVflyBHSJyyC5P5eC4nsbKU/6k5b5mIrcD
-         +2aEeJBo3jI8jejEICUuxrdguC4UfvQk5UhGhGPwP16lX2YJIT3LZHAY3tDo1icmdAHF
-         QO0IhVJ8HWw/wgmmG56RiGW3i52MvGam0j52TJU61KU9TOhCMhdPXu44fqDnPiBjpuGZ
-         7+7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cBZmVkDcKZz5zZDlHp5T39g0CCRjx154L73p3yLa6i4=;
-        b=gSe+cOKtTYesdHF1LkpDa7aApG33TI/MZmKvDGW+YutsHG7MuuOKHy4KcGPnQEuOMC
-         L1p6Ie3JxQZoans4qXphzIbtwrDfG+a8ylsYkvKcPV5XlzNRpaVjLuALo3MerrlJgKCA
-         /txzd5p498J7WMfgHNGhcVNrIuYP3NbK9ksBlUDzNfx5SQGalI84RWgHOHZTDjZso/Hr
-         yThk95yC2T2CmFjihmjlf/cB2ZLL/VtUuaooCfY0Nu+40rJBlDH6j4/iiCgztmRcPwh+
-         bxjYItp10DvN2QM37xk+cjcPIgJFKlMrpr/jPtLw6ik23jK2x0Qc/zfFdSylLiThFxJZ
-         Eqqg==
-X-Gm-Message-State: APjAAAUgxY8PITb3hRE1rQn24Kcg4mCjRO5GtmX9h8BVAU+T/LXgK6fu
-        M+ssSIj62REpeFZlKvtyMSQ=
-X-Google-Smtp-Source: APXvYqwB6gvQcdks+jrYjCow1jWYalLI0aO/HIFRY6W9E6qaFAat/V97b6+aesqJTosfdItuAgcG0Q==
-X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr1736979pjo.58.1568673786005;
-        Mon, 16 Sep 2019 15:43:06 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id u4sm124058pfu.177.2019.09.16.15.43.05
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 16 Sep 2019 15:43:05 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 15:42:45 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     "S.j. Wang" <shengjiu.wang@nxp.com>
-Cc:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXT] Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample
- format
-Message-ID: <20190916224244.GA12789@Asurada-Nvidia.nvidia.com>
-References: <VE1PR04MB64791308D87F91C51412DF53E3B60@VE1PR04MB6479.eurprd04.prod.outlook.com>
- <20190912235103.GD24937@Asurada-Nvidia.nvidia.com>
- <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
+        Mon, 16 Sep 2019 18:44:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:49214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726968AbfIPWoq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 18:44:46 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63BDC337;
+        Mon, 16 Sep 2019 15:44:45 -0700 (PDT)
+Received: from [192.168.1.124] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 908EF3F67D;
+        Mon, 16 Sep 2019 15:44:43 -0700 (PDT)
+Subject: Re: [PATCHv5 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
+ hook
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, Andy Gross <agross@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1568549745.git.saiprakash.ranjan@codeaurora.org>
+ <4ccbaf1f81c2bb2e7846da591fd542ab33f45586.1568549746.git.saiprakash.ranjan@codeaurora.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e9918121-71bb-703f-a696-b0e357e5eeff@arm.com>
+Date:   Mon, 16 Sep 2019 23:44:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <VE1PR04MB6479A4161F9C71FD394A3DA9E3B30@VE1PR04MB6479.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4ccbaf1f81c2bb2e7846da591fd542ab33f45586.1568549746.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 05:48:40AM +0000, S.j. Wang wrote:
-> Hi
+On 2019-09-15 1:35 pm, Sai Prakash Ranjan wrote:
+> From: Vivek Gautam <vivek.gautam@codeaurora.org>
 > 
-> > 
-> > On Tue, Sep 10, 2019 at 02:07:25AM +0000, S.j. Wang wrote:
-> > > > On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
-> > > > > The ASRC support 24bit/16bit/8bit input width, so S20_3LE format
-> > > > > should not be supported, it is word width is 20bit.
-> > > >
-> > > > I thought 3LE used 24-bit physical width. And the driver assigns
-> > > > ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit
-> > > > would go for that 24-bit slot also. I don't clearly recall if I had
-> > > > explicitly tested S20_3LE, but I feel it should work since I put there...
-> > >
-> > > For S20_3LE, the width is 20bit,  but the ASRC only support 24bit, if
-> > > set the ASRMCR1n.IWD= 24bit, because the actual width is 20 bit, the
-> > > volume is Lower than expected,  it likes 24bit data right shift 4 bit.
-> > > So it is not supported.
-> > 
-> > Hmm..S20_3LE right-aligns 20 bits in a 24-bit slot? I thought they're left
-> > aligned...
-> > 
-> > If this is the case...shouldn't we have the same lower-volume problem for
-> > all hardwares that support S20_3LE now?
+> Add reset hook for sdm845 based platforms to turn off
+> the wait-for-safe sequence.
 > 
-> Actually some hardware/module when they do transmission from FIFO
-> to shift register, they can select the start bit, for example from the 20th
-> bit. but not all module have this capability.
+> Understanding how wait-for-safe logic affects USB and UFS performance
+> on MTP845 and DB845 boards:
 > 
-> For ASRC, it haven't.  IWD can only cover the data width,  there is no
-> Other bit for slot width.
+> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+> to address under-performance issues in real-time clients, such as
+> Display, and Camera.
+> On receiving an invalidation requests, the SMMU forwards SAFE request
+> to these clients and waits for SAFE ack signal from real-time clients.
+> The SAFE signal from such clients is used to qualify the start of
+> invalidation.
+> This logic is controlled by chicken bits, one for each - MDP (display),
+> IFE0, and IFE1 (camera), that can be accessed only from secure software
+> on sdm845.
+> 
+> This configuration, however, degrades the performance of non-real time
+> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+> logic enabled the hardware tries to throttle non-real time clients while
+> waiting for SAFE ack signals from real-time clients.
+> 
+> On mtp845 and db845 devices, with wait-for-safe logic enabled by the
+> bootloaders we see degraded performance of USB and UFS when kernel
+> enables the smmu stage-1 translations for these clients.
+> Turn off this wait-for-safe logic from the kernel gets us back the perf
+> of USB and UFS devices until we re-visit this when we start seeing perf
+> issues on display/camera on upstream supported SDM845 platforms.
+> The bootloaders on these boards implement secure monitor callbacks to
+> handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
+> logic can be toggled.
+> 
+> There are other boards such as cheza whose bootloaders don't enable this
+> logic. Such boards don't implement callbacks to handle the specific SCM
+> call so disabling this logic for such boards will be a no-op.
+> 
+> This change is inspired by the downstream change from Patrick Daly
+> to address performance issues with display and camera by handling
+> this wait-for-safe within separte io-pagetable ops to do TLB
+> maintenance. So a big thanks to him for the change and for all the
+> offline discussions.
+> 
+> Without this change the UFS reads are pretty slow:
+> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+> 10+0 records in
+> 10+0 records out
+> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+> real    0m 22.39s
+> user    0m 0.00s
+> sys     0m 0.01s
+> 
+> With this change they are back to rock!
+> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+> 300+0 records in
+> 300+0 records out
+> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+> real    0m 1.03s
+> user    0m 0.00s
+> sys     0m 0.54s
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/iommu/Makefile        |  2 +-
+>   drivers/iommu/arm-smmu-impl.c |  7 +++++--
+>   drivers/iommu/arm-smmu-qcom.c | 32 ++++++++++++++++++++++++++++++++
+>   drivers/iommu/arm-smmu-qcom.h | 11 +++++++++++
+>   drivers/iommu/arm-smmu.h      |  2 ++
+>   5 files changed, 51 insertions(+), 3 deletions(-)
+>   create mode 100644 drivers/iommu/arm-smmu-qcom.c
+>   create mode 100644 drivers/iommu/arm-smmu-qcom.h
+> 
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 7caad48b4bc2..7d66e00a6924 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -13,7 +13,7 @@ obj-$(CONFIG_MSM_IOMMU) += msm_iommu.o
+>   obj-$(CONFIG_AMD_IOMMU) += amd_iommu.o amd_iommu_init.o amd_iommu_quirks.o
+>   obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd_iommu_debugfs.o
+>   obj-$(CONFIG_AMD_IOMMU_V2) += amd_iommu_v2.o
+> -obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o
+> +obj-$(CONFIG_ARM_SMMU) += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+>   obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+>   obj-$(CONFIG_DMAR_TABLE) += dmar.o
+>   obj-$(CONFIG_INTEL_IOMMU) += intel-iommu.o intel-pasid.o
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index 5c87a38620c4..ad835018f0e2 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -8,7 +8,7 @@
+>   #include <linux/of.h>
+>   
+>   #include "arm-smmu.h"
+> -
+> +#include "arm-smmu-qcom.h"
+>   
+>   static int arm_smmu_gr0_ns(int offset)
+>   {
+> @@ -109,7 +109,7 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
+>   #define ARM_MMU500_ACR_S2CRB_TLBEN	(1 << 10)
+>   #define ARM_MMU500_ACR_SMTNMB_TLBEN	(1 << 8)
+>   
+> -static int arm_mmu500_reset(struct arm_smmu_device *smmu)
+> +int arm_mmu500_reset(struct arm_smmu_device *smmu)
+>   {
+>   	u32 reg, major;
+>   	int i;
+> @@ -170,5 +170,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>   				  "calxeda,smmu-secure-config-access"))
+>   		smmu->impl = &calxeda_impl;
+>   
+> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
+> +		smmu->impl = &qcom_sdm845_smmu500_impl;
+> +
+>   	return smmu;
+>   }
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> new file mode 100644
+> index 000000000000..10e9a5bbae06
+> --- /dev/null
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/qcom_scm.h>
+> +
+> +#include "arm-smmu.h"
+> +#include "arm-smmu-qcom.h"
+> +
+> +static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+> +{
+> +	int ret;
+> +
+> +	arm_mmu500_reset(smmu);
+> +
+> +	/*
+> +	 * To address performance degradation in non-real time clients,
+> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
+> +	 * such as MTP and db845, whose firmwares implement secure monitor
+> +	 * call handlers to turn on/off the wait-for-safe logic.
+> +	 */
+> +	ret = qcom_scm_qsmmu500_wait_safe_toggle(0);
+> +	if (ret)
+> +		dev_warn(smmu->dev, "Failed to turn off SAFE logic\n");
+> +
+> +	return ret;
+> +}
+> +
+> +const struct arm_smmu_impl qcom_sdm845_smmu500_impl = {
+> +	.reset = qcom_sdm845_smmu500_reset,
+> +};
+> diff --git a/drivers/iommu/arm-smmu-qcom.h b/drivers/iommu/arm-smmu-qcom.h
+> new file mode 100644
+> index 000000000000..915f8ea2b616
+> --- /dev/null
+> +++ b/drivers/iommu/arm-smmu-qcom.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _ARM_SMMU_QCOM_H
+> +#define _ARM_SMMU_QCOM_H
+> +
+> +extern const struct arm_smmu_impl qcom_sdm845_smmu500_impl;
 
-Okay..let's drop the S20_3LE then. But would it be possible
-for you to elaborate the reasoning into the commit message
-also? Just for case when people ask why we remove it simply.
+I don't foresee this header being particularly beneficial - I'd rather 
+just have a single qcom_smmu_impl_init() entrypoint declared in 
+arm-smmu.h as per the Nvidia implementation[1], so you can then keep all 
+the other details private. With that change,
 
-Thanks
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+Thanks,
+Robin.
+
+[1] 
+https://lore.kernel.org/linux-arm-kernel/1567481528-31163-3-git-send-email-vdumpa@nvidia.com/
+
+> +
+> +#endif /* _ARM_SMMU_QCOM_H */
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index b19b6cae9b5e..f74fa3bb149d 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -399,4 +399,6 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
+>   
+>   struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+>   
+> +int arm_mmu500_reset(struct arm_smmu_device *smmu);
+> +
+>   #endif /* _ARM_SMMU_H */
+> 
