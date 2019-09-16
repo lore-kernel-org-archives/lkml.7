@@ -2,160 +2,145 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF99C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C303EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74FA3206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95F78206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:46:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="LdS0fsqB";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="duPxUEPS"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="KfDuj5Tw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729916AbfIPJq0 (ORCPT
+        id S1732127AbfIPJqa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:46:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:50986 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729615AbfIPJq0 (ORCPT
+        Mon, 16 Sep 2019 05:46:30 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39502 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729811AbfIPJq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:46:26 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B5A2B61214; Mon, 16 Sep 2019 09:46:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568627185;
-        bh=ml5rnkJTMHmPAf4IGrPXykOFxktm7Cfyo+9yeKBWpwo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LdS0fsqBFhuJaY3Oq2v0QUY/Ab8EC/yJ+/hWwy1nG3VKjRFzp721DIW53xkNkzNEi
-         oxb5+2DigygmFang4ThnXW4Inp4IcE9YebR1WOdmcvfgDVLrNQCUZXuQ7cJ3LMQ+T9
-         kS0JXrIy+AiTupW2rAegmw+sRQcaC9fNRfNMwbsk=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 5706A61214;
-        Mon, 16 Sep 2019 09:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568627181;
-        bh=ml5rnkJTMHmPAf4IGrPXykOFxktm7Cfyo+9yeKBWpwo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=duPxUEPSEzsjcd7nUgQV8fgJSXBkiT6J8pqvO54GDG/emEJ+jVACz8NLsJMWGlR9+
-         y+ADWRpCf3SPpOFfmxcpB7CASL6Ke+6SfUrKjmSubwc6x7ResMTm/M4kh4iqYKhVQZ
-         UiMCWrafX6sUll0VyrqcEmuFM4EN8/SB6egdgZwM=
+        Mon, 16 Sep 2019 05:46:28 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r3so7978660wrj.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
+        b=KfDuj5Tw0d9lAA011CT56IlOxeT5+b42os5EcT1xOOoKs2ZS9keD0ad+1UskNMFL3X
+         UkZFMGvHWE8Yeo8ZVG/CfLeVSKc/MB3Nn5V1CVFx13CyXY2DuKZr07r/4zfSmiqpHMXS
+         j3GaSOvXnwKgS1g+/Vg6yBNUuJfsur2Iytnfs4e1JnhBxtF2MPASDsP/4Few/iP8as8N
+         rezTO0l6hc5KJOFPHy39mW7646QvPtaI3KTilyStlfGnlDWQhBjwgOHIumN+BLFKCxsi
+         941294jnJ1mAKM652I5pcyU0h2SqBgKheT+RZj+i5WQVR2oLJocq6Aw6TPzexSa+C+MD
+         nfRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hX0b7zC7u4DV3OF+QghzX3x2HnfB4enZLlboz/3QMWU=;
+        b=fJgEys0w2z3w376sQX3Y26Dj0zy2NNMwh+2wrC8mN/8GvxPn5+SGRsTi8weHLkSGlM
+         NwpRWd42pkqMAaaEuvpmOgQbFr9s3Q93clE2Y0a8nA53AkW8EFQnjXYS5U2WqAL2YhEm
+         01G2Up65uOBGn2uQHTVXrtWvjwMctdydm+uzH/9YmxwKkJ/quOlTyYzBzMBwwASgkJPg
+         j4JHdn3vF89s/nez7SZcuTtCfWWBo/Flz9k/G7Sw6EQ4l/DNuuQ6U2xaqpyka2PqxTux
+         hO+AVrkwUrhXsVweKBxiHNtZpHVhDn5phclxfqnLLt1OS+mfhctiYWUbu3tIiFhkjM/d
+         Ft0A==
+X-Gm-Message-State: APjAAAXvRx/jEE5M4tvdWYgVwGJxaMVwC1I30yqTNh/wLToNPDoI+Ukb
+        Ey86C3uWXi3duVRZy4WS6vsDTA==
+X-Google-Smtp-Source: APXvYqy8vo+FLXDSDTpi5E7qkxIeiJ6EwTo4fbKHUergwLitnTEA6T08YwwwN9PSmHTYFgN32oohKQ==
+X-Received: by 2002:a5d:5403:: with SMTP id g3mr6821829wrv.338.1568627186233;
+        Mon, 16 Sep 2019 02:46:26 -0700 (PDT)
+Received: from localhost.localdomain (amontpellier-652-1-281-69.w109-210.abo.wanadoo.fr. [109.210.96.69])
+        by smtp.gmail.com with ESMTPSA id r20sm1261251wmh.37.2019.09.16.02.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 02:46:25 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH] gpiolib: sanitize flags before allocating memory in lineevent_create()
+Date:   Mon, 16 Sep 2019 11:46:23 +0200
+Message-Id: <20190916094623.12125-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Sep 2019 15:16:21 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>, joro@8bytes.org,
-        agross@kernel.org, will.deacon@arm.com,
-        iommu@lists.linux-foundation.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v4 3/3] iommu: arm-smmu-impl: Add sdm845 implementation
- hook
-In-Reply-To: <9fb7d18c-e292-cbc9-aa6d-d85465ea249e@arm.com>
-References: <20190823063248.13295-1-vivek.gautam@codeaurora.org>
- <20190823063248.13295-4-vivek.gautam@codeaurora.org>
- <9fb7d18c-e292-cbc9-aa6d-d85465ea249e@arm.com>
-Message-ID: <f234e891bc16a1869ba8a929e52a49f7@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On 2019-09-10 18:56, Robin Murphy wrote:
-> On 23/08/2019 07:32, Vivek Gautam wrote:
->> Add reset hook for sdm845 based platforms to turn off
->> the wait-for-safe sequence.
->> 
->> Understanding how wait-for-safe logic affects USB and UFS performance
->> on MTP845 and DB845 boards:
->> 
->> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
->> to address under-performance issues in real-time clients, such as
->> Display, and Camera.
->> On receiving an invalidation requests, the SMMU forwards SAFE request
->> to these clients and waits for SAFE ack signal from real-time clients.
->> The SAFE signal from such clients is used to qualify the start of
->> invalidation.
->> This logic is controlled by chicken bits, one for each - MDP 
->> (display),
->> IFE0, and IFE1 (camera), that can be accessed only from secure 
->> software
->> on sdm845.
->> 
->> This configuration, however, degrades the performance of non-real time
->> clients, such as USB, and UFS etc. This happens because, with 
->> wait-for-safe
->> logic enabled the hardware tries to throttle non-real time clients 
->> while
->> waiting for SAFE ack signals from real-time clients.
->> 
->> On mtp845 and db845 devices, with wait-for-safe logic enabled by the
->> bootloaders we see degraded performance of USB and UFS when kernel
->> enables the smmu stage-1 translations for these clients.
->> Turn off this wait-for-safe logic from the kernel gets us back the 
->> perf
->> of USB and UFS devices until we re-visit this when we start seeing 
->> perf
->> issues on display/camera on upstream supported SDM845 platforms.
->> The bootloaders on these boards implement secure monitor callbacks to
->> handle a specific command - QCOM_SCM_SVC_SMMU_PROGRAM with which the
->> logic can be toggled.
->> 
->> There are other boards such as cheza whose bootloaders don't enable 
->> this
->> logic. Such boards don't implement callbacks to handle the specific 
->> SCM
->> call so disabling this logic for such boards will be a no-op.
->> 
->> This change is inspired by the downstream change from Patrick Daly
->> to address performance issues with display and camera by handling
->> this wait-for-safe within separte io-pagetable ops to do TLB
->> maintenance. So a big thanks to him for the change and for all the
->> offline discussions.
->> 
->> Without this change the UFS reads are pretty slow:
->> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
->> 10+0 records in
->> 10+0 records out
->> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
->> real    0m 22.39s
->> user    0m 0.00s
->> sys     0m 0.01s
->> 
->> With this change they are back to rock!
->> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
->> 300+0 records in
->> 300+0 records out
->> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
->> real    0m 1.03s
->> user    0m 0.00s
->> sys     0m 0.54s
->> 
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> ---
->>   drivers/iommu/arm-smmu-impl.c | 27 ++++++++++++++++++++++++++-
-> 
-> I'd be inclined to introduce the inevitable arm-smmu-qcom.c from the
-> start, and save worrying about moving this out later. Other than that,
-> though, the general self-contained shape of it all is every bit as
-> beautiful as I'd hoped :D
-> 
+Move all the flags sanitization before any memory allocation in
+lineevent_create() in order to remove a couple unneeded gotos.
 
-Have posted v5 with your suggestion.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/gpio/gpiolib.c | 42 ++++++++++++++++++------------------------
+ 1 file changed, 18 insertions(+), 24 deletions(-)
 
-Thanks,
-Sai
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index d9074191edef..194b0bcdcfb7 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -899,6 +899,24 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 
+ 	if (copy_from_user(&eventreq, ip, sizeof(eventreq)))
+ 		return -EFAULT;
++	
++	offset = eventreq.lineoffset;
++	lflags = eventreq.handleflags;
++	eflags = eventreq.eventflags;
++
++	if (offset >= gdev->ngpio)
++		return -EINVAL;
++
++	/* Return an error if a unknown flag is set */
++	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
++	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS))
++		return -EINVAL;
++
++	/* This is just wrong: we don't look for events on output lines */
++	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE))
++		return -EINVAL;
+ 
+ 	le = kzalloc(sizeof(*le), GFP_KERNEL);
+ 	if (!le)
+@@ -917,30 +935,6 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+ 		}
+ 	}
+ 
+-	offset = eventreq.lineoffset;
+-	lflags = eventreq.handleflags;
+-	eflags = eventreq.eventflags;
+-
+-	if (offset >= gdev->ngpio) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+-	/* Return an error if a unknown flag is set */
+-	if ((lflags & ~GPIOHANDLE_REQUEST_VALID_FLAGS) ||
+-	    (eflags & ~GPIOEVENT_REQUEST_VALID_FLAGS)) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+-	/* This is just wrong: we don't look for events on output lines */
+-	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
+-	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
+-	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
+-		ret = -EINVAL;
+-		goto out_free_label;
+-	}
+-
+ 	desc = &gdev->descs[offset];
+ 	ret = gpiod_request(desc, le->label);
+ 	if (ret)
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
+
