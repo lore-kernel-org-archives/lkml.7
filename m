@@ -2,121 +2,102 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C37BCC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A68C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2B1E216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:41:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F50A216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:42:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568641331;
+	bh=P2iQPdNzyzEzIo5xXphEsVfTS5y8Krw9+a1tdE57GeU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jCBgijFj+afeQR/rEmrJLZNvkgxZsl06KTbDKu6JB+Zi/VVUg7ZMbj4zBp8MGISbV
+	 wVuw7OQ52buGr5FQNfH6njuhLtNGHNrfMFVPg5chA8K/5ScKtA+0iyajDj7DynqlkC
+	 XB++0Cav5/YPoJmD62Imw+ep2lalUYiOgxEus4us=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387660AbfIPNlx (ORCPT
+        id S2387682AbfIPNmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:41:53 -0400
-Received: from mx1.emlix.com ([188.40.240.192]:49096 "EHLO mx1.emlix.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733054AbfIPNlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:41:52 -0400
-Received: from mailer.emlix.com (unknown [81.20.119.6])
-        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1.emlix.com (Postfix) with ESMTPS id 186535FAD2;
-        Mon, 16 Sep 2019 15:41:50 +0200 (CEST)
-Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
-To:     Robin Gong <yibin.gong@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "vkoul@kernel.org" <vkoul@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jslaby@suse.com" <jslaby@suse.com>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
-References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
- <VE1PR04MB66383FAB08506993B305AC8D898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-From:   Philipp Puschmann <philipp.puschmann@emlix.com>
-Openpgp: preference=signencrypt
-Message-ID: <29d03762-866a-4fdc-eddb-e24f6e631412@emlix.com>
-Date:   Mon, 16 Sep 2019 15:41:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 09:42:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53238 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733054AbfIPNmK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:42:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IhSYkleqI3JelFkIKmOLyDJ/rhb1T44sCZeTh4GOur0=; b=PfwKJr4TkGavs+jIV2Jgj/gIM
+        eK9Ws2URbDzqZisVOhvBDpQri9UXhfIkby2tyCHeDNYevg+xRGlvNZ2Vfc/8iYgwYX5bcmgBwyiNd
+        e7YhAYOxLULgDOSHlDg3fK5KHVrZiy0ooz07jF63eb0caakUKaWTNJ0dlTXsJ1Bg8/GYs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9rGW-0004bj-7j; Mon, 16 Sep 2019 13:42:04 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id BC1382741A0D; Mon, 16 Sep 2019 14:42:03 +0100 (BST)
+Date:   Mon, 16 Sep 2019 14:42:03 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Petr Vorel <pvorel@suse.cz>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kselftest tree with the tpmdd
+ tree
+Message-ID: <20190916134203.GG4352@sirena.co.uk>
+References: <20190916014535.GU4352@sirena.co.uk>
+ <CADYN=9JntrniMnmEMd9igVSovEQjLV9q006cCATLHWrtBhWWHQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB66383FAB08506993B305AC8D898C0@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HbTzC+AcCowV2D6d"
+Content-Disposition: inline
+In-Reply-To: <CADYN=9JntrniMnmEMd9igVSovEQjLV9q006cCATLHWrtBhWWHQ@mail.gmail.com>
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 16.09.19 um 10:02 schrieb Robin Gong:
-> On 2019/9/11 Philipp Puschmann <philipp.puschmann@emlix.com> wrote:
->> For some years and since many kernel versions there are reports that RX
->> UART DMA channel stops working at one point. So far the usual workaround
->> was to disable RX DMA. This patches try to fix the underlying problem.
->>
->> When a running sdma script does not find any usable destination buffer to put
->> its data into it just leads to stopping the channel being scheduled again. As
->> solution we we manually retrigger the sdma script for this channel and by this
->> dissolve the freeze.
->>
->> While this seems to work fine so far a further patch in this series increases the
->> number of RX DMA periods for UART to reduce use cases running into such a
->> situation.
->>
->> This patch series was tested with the current kernel and backported to kernel
->> 4.15 with a special use case using a WL1837MOD via UART and provoking the
-> Hi Philipp, Could your Bluetooth issue be reproduce on latest linux-next? Or did
-> your kernel which can be reproduced include the below patch?
-> 
-> commit d1a792f3b4072bfac4150bb62aa34917b77fdb6d
-> Author: Russell King - ARM Linux <linux@arm.linux.org.uk>
-> Date:   Wed Jun 25 13:00:33 2014 +0100
-> 
 
-Hi Robin, yes i have reproduced the Bluetooth issue with my test case with kernel 4.15
-and the newest 5.3.0-rc8-next-20190915. My test-case includes several custom-boards
-communicating via Bluetooth with each other. I see the error within seconds to few minutes.
+--HbTzC+AcCowV2D6d
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->     Update imx-sdma cyclic handling to report residue
->> hanging of UART RX DMA within seconds after starting a test application.
->> It resulted in well known
->>   "Bluetooth: hci0: command 0x0408 tx timeout"
->> errors and complete stop of UART data reception. Our Bluetooth traffic
->> consists of many independent small packets, mostly only a few bytes, causing
->> high usage of periods.
->>
->>
->> Philipp Puschmann (4):
->>   dmaengine: imx-sdma: fix buffer ownership
->>   dmaengine: imx-sdma: fix dma freezes
->>   serial: imx: adapt rx buffer and dma periods
->>   dmaengine: imx-sdma: drop redundant variable
->>
->>  drivers/dma/imx-sdma.c   | 32 ++++++++++++++++++++++----------
->>  drivers/tty/serial/imx.c |  5 ++---
->>  2 files changed, 24 insertions(+), 13 deletions(-)
->>
->> --
->> 2.23.0
-> 
+On Mon, Sep 16, 2019 at 03:16:54PM +0200, Anders Roxell wrote:
 
--- 
+> If I re-read the Documentation/dev-tools/kselftest.rst
+> I think the patch from the kselftest tree should be dropped.
 
-Philipp Puschmann, emlix GmbH, http://www.emlix.com
-Fon +49 551 30664-0, Fax +49 551 30664-11
-Gothaer Platz 3, 37083 Göttingen, Germany
-Sitz der Gesellschaft: Göttingen, Amtsgericht Goettingen HR B 3160
-Geschaeftsführung: Heike Jordan, Dr. Uwe Kracke
-Ust-IdNr.: DE 205 198 055
+> I saw that I didn't send an email to the tpm maintainers or the tpm
+> list when I sent the
+> patch, I'm sorry.
 
-emlix - smart embedded open source
+If the change is fine that might be more trouble than it's worth, it's a
+trivial add/add conflict.  Up to those concerned though.
+
+--HbTzC+AcCowV2D6d
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/kSoACgkQJNaLcl1U
+h9B42Af9FCeFLU3AJ1eD9eMVeqJVdwEFFP6AMPXnrfkLGRi36tX7E4nEagJBDFOk
+fahF8r2zcT2wSU5xo8ROJJw5EhJr8Wh4DNgMWj+BqSSOi5mBTEG4AKe/MkhysJyN
+6WowFdahrSXF6FxnBgoCsInDEhpnvMo6Nf6QbB82itwoAEUFAld6x2U4d2JG4JUr
+Ah60Yszt+tniC4OOqs9BzBHYRTb+HyKqK+INJSvrEUBlJC0VBcBC0chdces5e32n
+gC5fDqUOc+n6sXyakTUtDoUmeHV82C3HZYK+X9HiTHoyljvbBhxZMkE6igj40nZx
+9bV0rHfHCQG8ZdeN8T/1tvLjLHsW0Q==
+=RS2A
+-----END PGP SIGNATURE-----
+
+--HbTzC+AcCowV2D6d--
