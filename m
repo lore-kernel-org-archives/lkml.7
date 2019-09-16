@@ -6,95 +6,108 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FB3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC301C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA505206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8868206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:30:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727142AbfIPEaV (ORCPT
+        id S1727345AbfIPEa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 00:30:21 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:45652 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfIPEaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 00:30:20 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8G4Tqla023841;
-        Mon, 16 Sep 2019 06:29:52 +0200
-Date:   Mon, 16 Sep 2019 06:29:52 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916042952.GB23719@1wt.eu>
-References: <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu>
+        Mon, 16 Sep 2019 00:30:28 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:59927 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfIPEa1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 00:30:27 -0400
+Received: from fsav304.sakura.ne.jp (fsav304.sakura.ne.jp [153.120.85.135])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x8G4UPN1082368;
+        Mon, 16 Sep 2019 13:30:25 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav304.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp);
+ Mon, 16 Sep 2019 13:30:25 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav304.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126227201116.bbtec.net [126.227.201.116])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x8G4UI61082342
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Mon, 16 Sep 2019 13:30:25 +0900 (JST)
+        (envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Subject: Re: printk meeting at LPC
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Prarit Bhargava <prarit@redhat.com>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+ <20190905121101.60c78422@oasis.local.home>
+ <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+ <87k1acz5rx.fsf@linutronix.de>
+From:   Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Message-ID: <cfc7b1fa-e629-19a6-154b-0dd4f5604aa7@I-love.SAKURA.ne.jp>
+Date:   Mon, 16 Sep 2019 13:30:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916024904.GA22035@mit.edu>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <87k1acz5rx.fsf@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ted,
+On 2019/09/13 22:26, John Ogness wrote:
+> 6. A new may-sleep function pr_flush() will be made available to wait
+> for all previously printk'd messages to be output on all consoles before
+> proceeding. For example:
+> 
+>     pr_cont("Running test ABC... ");
+>     pr_flush();
+> 
+>     do_test();
+> 
+>     pr_cont("PASSED\n");
+>     pr_flush();
 
-On Sun, Sep 15, 2019 at 10:49:04PM -0400, Theodore Y. Ts'o wrote:
-> No matter *what* we do, it's going to either (a) make some
-> systems insecure, or (b) make some systems more likely hang while
-> booting.
+Don't we need to allow printk() callers to know the sequence number which
+the printk() has queued? Something like
 
-I continue to strongly disagree with opposing these two. (b) is
-caused precisely because of this conflation. Life long keys are
-produced around once per system's life (at least this order of
-magnitude). Boot happens way more often. Users would not complain
-that systems fail to start if the two types of random are properly
-distinguished so that we don't fail to boot just for the sake of
-secure randoms that will never be consumed as such.
+  u64 seq;
+  pr_info(...);
+  pr_info(...);
+  pr_info(...);
+  seq = pr_current_seq();
+  pr_wait_seq(seq);
 
-Before systems had HWRNGs it was pretty common for some tools to
-ask the user to type hundreds of characters on the keyboard and
-use that (content+timings) to feed entropy while generating a key.
-This is acceptable once in a system's life. And on some systems
-with no entropy like VMs, it's commonly generated from a central
-place and never from the VM itself, so it's not a problem either.
+in case concurrently executed printk() flooding keeps adding a lot of
+pending output?
 
-In my opinion the problem recently happened because getrandom()
-was perceived as a good replacement for /dev/urandom and is way
-more convenient to use, so applications progressively started to
-use it without realizing that contrary to its ancestor it can
-block. And each time a system fails to boot confirms that entropy
-still remains a problem even on PCs in 2019. This is one more
-reason for clearly keeping two interfaces depending on what type
-of random is needed.
+By the way, do we need to keep printk() return bytes like printf() ?
+Maybe we can make printk() return "void", for almost nobody can do
+meaningful things with the return value.
 
-I'd be in favor of adding in the man page something like "this
-random source is only suitable for applications which will not be
-harmed by getting a predictable value on output, and as such it is
-not suitable for generation of system keys or passwords, please
-use GRND_RANDOM for this". This distinction currently is not clear
-enough for people who don't know this subtle difference, and can
-increase the interface's misuse.
+> 9. Support for printk dictionaries will be discontinued. I will look
+> into who is using this and why. If printk dictionaries are important for
+> you, speak up now!
 
-Regards,
-Willy
+I think that dev_printk() is using "const char *dict, size_t dictlen," part
+via create_syslog_header(). Some userspace programs might depend on
+availability of such information.
+
