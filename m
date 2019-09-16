@@ -2,119 +2,399 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4008AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9961BC4CECF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F4D20890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:57:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568606222;
-	bh=jHscCwR520z2f2FZxR9F6Mo9SHIyoEz0tswC/hhyZIE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BSF6ZQ2nP5oz9AidiZZ5hRTVpffZ38Ic9XxJifkoBakoq9ANwKK0zRRueraqwKf47
-	 N7T4+oofW1aLilOa5ian6o1NRUkMqDlGiMuoRPMRwZvh/o7ids2++g2iggZIOO77PE
-	 EY5Mis/fE6DYrZMNGAmRg9Y4Sjn0NbB7McWl7fp8=
+	by mail.kernel.org (Postfix) with ESMTP id 649A920890
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:59:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ie192P++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbfIPD5B (ORCPT
+        id S1729231AbfIPD7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 23:57:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:37386 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbfIPD5B (ORCPT
+        Sun, 15 Sep 2019 23:59:00 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36447 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729064AbfIPD7A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 23:57:01 -0400
-Received: by mail-lj1-f193.google.com with SMTP id c22so4504228ljj.4
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 20:56:59 -0700 (PDT)
+        Sun, 15 Sep 2019 23:59:00 -0400
+Received: by mail-lf1-f66.google.com with SMTP id x80so26288038lff.3
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 20:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/WJOiZU+ONLAF5VZ8QdOdt/8naAIMcee9SR9+Sx4feo=;
-        b=CtTVmBweTrysJ5DoBdCUD/t7zNLy0x4eKmXubkXkdKS8+ArCc5ANYpzn9sH94OOKbs
-         Jk5h0KuyermsSKSl+qKF7ca6CUOT9A6LKnCKJZbR4H18skYWhZHhR7XelAKdszwFd9Z2
-         hKybKfniHYIfTwncY2S8j6sL+gJCjCg2rE644=
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=m1Hhg7ODzcfgB+0HRjEGFZ4qLXUGKx1WsfevdMsgXfQ=;
+        b=ie192P++JSJGgRu63x8IOuJhIgehbcXnKEflP6krmR6luFcrbJjIngV9b3x4jfiAWe
+         8RFZxlyNmIo0LjfkP+PeatApQuJuRH9hK0aonDee87nCSD6ey1Mu/VmQUNsRvWRV5MDR
+         QaTBVfBLV2UeKXx6O8yDhxQsgORPgZ+ChtwZXFAmCSklEFht8utqkoh5EDFKKBRutOtw
+         Di0U4ORxnhvsYDg6E7S41DUjoZG0dA7gI9qfWZQJDt6wE750FLKhUJ2J0OigS2jLLXGu
+         Vn5qhrPTsuCASoUQzt/gObtRAMXwQOdbNiH6GKuIuOUxKma+FEFD7xfJzvk7v8MPHo18
+         k8yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/WJOiZU+ONLAF5VZ8QdOdt/8naAIMcee9SR9+Sx4feo=;
-        b=MJhk41viJFetiV/OH13ABmC2rGggvbpY1/MOyhIPDxNBJg0h90uMdAxy47vMwBMrQ2
-         Ab3orDKApf1n4vt55k4sMb+1ncXLZp9o9SHmKH2XgVXrV/9cNT44OElz46YFvSb2G0kb
-         +zVd4JakhWg1BYGloL/1XRY9D7XUdjmF0hnuANM/HEqRotHv8DkK9OEYvOxsIbDHI3Bj
-         wCTFGthZD+jrXivhNZUn4tCnd0qHYaV4ZwZKHwFvToGO8BC4jSZQngXMe994ufNTZctN
-         uWbqxLPaSWtPR5zWhF/vbZSwh++0OGK7qcT68/WdlVRbl02YxIbw+5agm/KO805V4KNl
-         9YpQ==
-X-Gm-Message-State: APjAAAX2ZHC66CFdDTqBxivirXSSm6S4fKnh1/LRCvOJOjMZTVCkqGkc
-        qUdHFLuejj56kxpeNvUthIbZMGUYM/4=
-X-Google-Smtp-Source: APXvYqzWJgqHu3d72ezigTTH0cJIFgdoFKWpdSPxBUDBrA7hML392iC7SxlikqPVx2bK1l7OvxAxRw==
-X-Received: by 2002:a2e:9a82:: with SMTP id p2mr36471612lji.64.1568606218444;
-        Sun, 15 Sep 2019 20:56:58 -0700 (PDT)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
-        by smtp.gmail.com with ESMTPSA id r6sm2000862lfn.29.2019.09.15.20.56.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Sep 2019 20:56:56 -0700 (PDT)
-Received: by mail-lj1-f169.google.com with SMTP id d5so32310678lja.10
-        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 20:56:55 -0700 (PDT)
-X-Received: by 2002:a2e:2c02:: with SMTP id s2mr5154441ljs.156.1568606215653;
- Sun, 15 Sep 2019 20:56:55 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=m1Hhg7ODzcfgB+0HRjEGFZ4qLXUGKx1WsfevdMsgXfQ=;
+        b=k7mPvQHPfPHuKUb82PuTyfbQYu9AyEB64RsWOkFttiWwyQqJSAsColqOeAiIA0+V0U
+         E8gWgF1vxLE0knyGXS9NqheKC+0BYVoflImkLI51jsPJ+Xfh54WkDwa6rV4mO2WP3zsR
+         6uJmtwuDZQKtOxDGLzAIG0rjzf/zOT7aHhYib1eectYYbaem32qufqX90rw5Ec9kcfHc
+         l2cWG1tYJA42t4HFrh7PF/hAd6TxeGojmnQD2z3nsEQrWPX0ycR3x0zFL8IeDiM54gwy
+         03I78yLrwhiWP3PiWMDVu9nXf+4Ei5JzxUAlFm7Rzk1a3JRqKZXhDo6LkTAZ+aRamyDn
+         RKfA==
+X-Gm-Message-State: APjAAAUjI9CkslsCmrAyztAilR1MJvdmZE5W1wW8nt8cHtxe015KBV4b
+        /WRW5zF/5hQcILHNyov1eVE68+8+9jbhrBT8O8Jbrw==
+X-Google-Smtp-Source: APXvYqy3Kfnb2KshTyOFqsNrpNv2kdfDeG32bsbjf2HNOykwnsWu1+D+UrJJpf7zXjyivwnhcItlhp8RO9LVa289hKY=
+X-Received: by 2002:a19:117:: with SMTP id 23mr37730052lfb.115.1568606337155;
+ Sun, 15 Sep 2019 20:58:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190911173624.GI2740@mit.edu> <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu> <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <214fed0e-6659-def9-b5f8-a9d7a8cb72af@gmail.com> <CAHk-=wiB0e_uGpidYHf+dV4eeT+XmG-+rQBx=JJ110R48QFFWw@mail.gmail.com>
- <20190915065655.GB29681@gardel-login> <CAHk-=wi8wAP4P33KO6hU3D386Oupr=ZL4Or6Gw+1zDFjvz+MKA@mail.gmail.com>
- <20190916032327.GB22035@mit.edu> <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
-In-Reply-To: <CAHk-=wjM3aEiX-s3e8PnUjkiTzkF712vOfeJPoFDCVTJ+Pp+XA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 15 Sep 2019 20:56:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjPDR6_crhmvaoXDo8q6Joz5rD02bZpd2x9rr-LazPxRA@mail.gmail.com>
-Message-ID: <CAHk-=wjPDR6_crhmvaoXDo8q6Joz5rD02bZpd2x9rr-LazPxRA@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 16 Sep 2019 05:58:45 +0200
+Message-ID: <CACRpkdZX_uUGaHD9+abAG1w-OVyp0ihvEosjvcBe8gbvf4FCcw@mail.gmail.com>
+Subject: [GIT PULL] GPIO bulk changes for the v5.4 kernel
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 8:40 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> If you want secure keys, you can't rely on a blocking model, because
-> it ends up not working. Blocking leads to problems.
+Hi Linus,
 
-Side note: I'd argue that (despite my earlier mis-understanding) the
-only really valid use of "block until there is entropy" is the
-systemd-random-seed model that blocks not because it wants a secure
-key, but blocks because it wants to save the (now properly) random
-seed for later.
+the following is the bulk of GPIO changes for v5.4. The
+main information chunk about the updates is in the signed
+tag as always. This cycle has been pretty lively.
 
-So apologies to Lennart - he was very much right, and I mis-understood
-Ahmed's bug report. Systemd was blameless, and blocked correctly.
+You will notice that I merged in v5.3-rc7 at a late point.
+This was because the conflicts were really hairy between
+the -rc:s and the bulk of development: the kind where
+there is a variable rename in one branch and independent
+reshuffling of code in the other. This took me some
+substantial time to sort out, despite both changes being
+my own. I don't know if I'm especially bad at resolving
+conflicts but after failing to construct a branch for -next
+several times I just sat down and resolved the conflicts
+toward -rc7 once and for all. I still had to fix it up with
+a patch on top.
 
-While blocking for actual random keys was the usual bug, just for that
-silly and pointless MIT cookie that doesn't even need the secure
-randomness.
+Changes hitting Unicore and FMC in MAINTAINERS are
+eplained in the signed tag as well.
 
-But because the getrandom() interface was mis-designed (and only
-_looks_ like a more convenient interface for /dev/urandom, without
-being one), the MIT cookie code got the blocking whether it wanted to
-or not.
+Please pull it in!
 
-Just say no to blocking for key data.
+Yours,
+Linus Walleij
 
-            Linus
+The following changes since commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a=
+:
+
+  Linux 5.3-rc7 (2019-09-02 09:57:40 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.4-1
+
+for you to fetch changes up to 11c43bb022b373d2fdb84950ebf1911362f3f010:
+
+  gpiolib: of: add a fallback for wlf,reset GPIO name (2019-09-12
+10:29:17 +0100)
+
+----------------------------------------------------------------
+This is the bulk of changes in the GPIO subsystem for the
+v5.4 kernel cycle.
+
+Core changes:
+
+- Support hierarchical GPIO irqchips. We now have three
+  consumers that can use this: Intel IXP4xx, ThunderX and
+  Qualcomm SPMI GPIO (in the pinctrl subsystem). The support
+  code has been long in the making and hashed out so it should
+  be easily adaptable for all hierarchical irqchip parents.
+  The code only gets compiled in if hierarchical irqchip
+  is used at the topmost irq controller at least, as the
+  hierarchical irqchip requires strict hierarchy all the
+  way up in the system.
+
+- Determine the need for a "valid_mask" for GPIO lines on the
+  gpio_chip and conversely for the "valid_mask" for the GPIO
+  interrupt chip interrupt lines by looking for a
+  .init_valid_mask() callback in the main chip or GPIO interrupt
+  chip respectively. Allocate it with bitmap_alloc().
+
+- Isolate the device tree/open firmware GPIO description code
+  out in its own file properly.
+
+- Isolate the ACPI GPIO description code out in its own file
+  properly.
+
+- Drop a whole lot of #ifdef:s in the main includes: it does
+  not hurt to keep the include items around, and we get
+  quicker and clearer compile failures if the appropriate
+  kernel symbols are not selected for drivers.
+
+New/deleted drivers:
+
+- New driver for Aspeed SGPIO.
+
+- The KS8695 driver is deleted as the platform gets deleted
+  from arch/arm in this kernel cycle.
+
+- The Cirrus Logic Madera driver now supports CS47L92 and
+  CS47L15.
+
+- The Freescale MPC8xxx now supports LS1028A and LS1088A.
+
+Driver improvements:
+
+- We pass the GPIO irqchip intialization by directly filling
+  in the struct instead of using set-up functions (the new
+  way) for Intel MID, Lynxpoint, Merrifield, XLP, HLWD, Aspeed,
+  ZX, VF610, TQMX86, MT7621, Zynq and EP93xx.
+
+Out-of-band changes:
+
+- Fix a GPIO header inclusion in Unicore - no response from
+  maintainer.
+
+- Drop FMC subsystem from MAINTAINERS - was deleted in the
+  GPIO tree last cycle so let's mop up the shards.
+
+----------------------------------------------------------------
+Andy Shevchenko (8):
+      gpiolib: of: Reshuffle contents of consumer.h for new library layout
+      gpiolib: acpi: Split ACPI stuff to gpiolib-acpi.h
+      gpiolib-acpi: Move acpi_dev_add_driver_gpios() et al to consumer.h
+      gpio: pca953x: Switch to use device_get_match_data()
+      gpio: pca953x: Use GENMASK() consistently
+      gpio: pca953x: Remove explicit comparison with 0
+      gpio: pca953x: Drop %s for constant string literals
+      MAINTAINERS: Remove stale record for gpio-intel-mid.c
+
+Anson Huang (1):
+      gpio: mxc: Use devm_clk_get_optional instead of devm_clk_get
+
+Arnd Bergmann (2):
+      gpio: remove ks8695 driver
+      gpio: lpc32xx: allow building on non-lpc32xx targets
+
+Bartosz Golaszewski (2):
+      gpio: em: use a helper variable for &pdev->dev
+      gpio: max77650: add MODULE_ALIAS()
+
+Brian Masney (1):
+      qcom: spmi-gpio: convert to hierarchical IRQ helpers in gpio core
+
+Charles Keepax (3):
+      gpio: arizona: Use local copy of pdata
+      gpio: madera: Use local copy of pdata
+      gpio: madera: Add support for Cirrus Logic CS47L92
+
+Christophe JAILLET (1):
+      gpio: ftgpio: Fix an error handling path in 'ftgpio_gpio_probe()'
+
+Chuhong Yuan (1):
+      gpio: pch: Use dev_get_drvdata
+
+Colin Ian King (2):
+      gpio: bd70528: fix spelling misstake "debouce" -> "debounce"
+      gpio: bd70528: remove redundant assignment to variable ret
+
+Denis Efremov (1):
+      MAINTAINERS: Remove FMC subsystem
+
+Ding Xiang (1):
+      gpio: ixp4xx: remove redundant dev_err message
+
+Dmitry Torokhov (2):
+      gpiolib: acpi: make acpi_can_fallback_to_crs() static
+      gpiolib: of: add a fallback for wlf,reset GPIO name
+
+Geert Uytterhoeven (5):
+      gpio: of: Make of_get_named_gpiod_flags() private
+      gpio: of: Make of_gpio_simple_xlate() private
+      gpio: of: Switch to EXPORT_SYMBOL_GPL()
+      gpio: devres: Switch to EXPORT_SYMBOL_GPL()
+      gpio: htc-egpio: Remove unused exported htc_egpio_get_wakeup_irq()
+
+Hennie Muller (1):
+      gpio: viperboard: Replace 'unsigned' with 'unsigned int'
+
+Hongwei Zhang (2):
+      dt-bindings: gpio: aspeed: Add SGPIO support
+      gpio: aspeed: Add SGPIO driver
+
+Jeremy Cline (1):
+      Documentation: gpio: fix function links in the HTML docs
+
+Linus Walleij (30):
+      unicore: Drop pointless include
+      gpio: of: Break out OF-only code
+      gpio: intel-mid: Pass irqchip when adding gpiochip
+      gpio: lynxpoint: Pass irqchip when adding gpiochip
+      gpio: merrifield: Pass irqchip when adding gpiochip
+      gpio: Add support for hierarchical IRQ domains
+      gpio: ixp4xx: Convert to hierarchical GPIOLIB_IRQCHIP
+      gpio: thunderx: Switch to GPIOLIB_IRQCHIP
+      gpio: cadence: Pass irqchip when adding gpiochip
+      gpio: xlp: Pass irqchip when adding gpiochip
+      gpio: hlwd: Pass irqchip when adding gpiochip
+      gpio: aspeed: Pass irqchip when adding gpiochip
+      gpio: Pass mask and size with the init_valid_mask()
+      pinctrl: stmfx: Use the callback to populate valid_mask
+      gpio: Use callback presence to determine need of valid_mask
+      gpio: ftgpio: Move hardware initialization
+      gpio: zx: Pass irqchip when adding gpiochip
+      gpio: vf610: Pass irqchip when adding gpiochip
+      gpio: tqmx86: Pass irqchip when adding gpiochip
+      gpio: mt7621: Pass irqchip when adding gpiochip
+      gpio: zynq: Pass irqchip when adding gpiochip
+      Merge tag 'gpio-v5.4-updates-for-linus' of
+git://git.kernel.org/.../brgl/linux into devel
+      gpio: ep93xx: Pass irqchip when adding gpiochip
+      gpio: gpiolib: Normalize return code variable name
+      gpio: of: Normalize return code variable name
+      gpio: Fix up merge collision in include file
+      Merge tag 'v5.3-rc7' into devel
+      gpio: Fix further merge errors
+      Merge tag 'intel-gpio-v5.4-1' of
+git://git.kernel.org/.../andy/linux-gpio-intel into devel
+      gpio: Initialize the irqchip valid_mask with a callback
+
+Lokesh Vutla (1):
+      dt-bindings: gpio: davinci: Add new compatible for J721E SoCs
+
+Marc Zyngier (1):
+      gpio/ixp4xx: Register the base PA instead of its VA in fwnode
+
+Masahiro Yamada (2):
+      gpio: remove less important #ifdef around declarations
+      gpio: refactor gpiochip_allocate_mask() with bitmap_alloc()
+
+Rashmica Gupta (5):
+      gpio: aspeed: Update documentation with ast2600 controllers
+      gpio/aspeed: Fix incorrect number of banks
+      gpio: aspeed: Setup irqchip dynamically
+      gpio: aspeed: Use ngpio property from device tree if available
+      gpio: aspeed: Add in ast2600 details to Aspeed driver
+
+Richard Fitzgerald (1):
+      gpio: madera: Add support for Cirrus Logic CS47L15
+
+Saiyam Doshi (1):
+      gpio: remove explicit comparison with 0
+
+Song Hui (4):
+      gpio: mpc8xxx: Add ls1028a device specify function.
+      gpio: mpc8xxx: Add new platforms GPIO DT node description
+      gpio: mpc8xxx: add ls1088a platform gpio node DT binding description
+      gpio: mpc8xxx: add ls1088a platform special function
+
+Stephen Boyd (2):
+      gpio: of: Fix hard-assigned valid_mask for OF case
+      gpio: Remove dev_err() usage after platform_get_irq()
+
+Stephen Rothwell (1):
+      gpio: stubs in headers should be inline
+
+Uwe Kleine-K=C3=B6nig (1):
+      gpio: mockup: don't depend twice on GPIOLIB
+
+YueHaibing (2):
+      gpio: Move gpiochip_lock/unlock_as_irq to gpio/driver.h
+      gpio: creg-snps: use devm_platform_ioremap_resource() to simplify cod=
+e
+
+ .../devicetree/bindings/gpio/gpio-aspeed.txt       |   7 +-
+ .../devicetree/bindings/gpio/gpio-davinci.txt      |   1 +
+ .../devicetree/bindings/gpio/gpio-mpc8xxx.txt      |  16 +-
+ .../devicetree/bindings/gpio/sgpio-aspeed.txt      |  45 ++
+ Documentation/driver-api/gpio/driver.rst           | 138 ++++-
+ MAINTAINERS                                        |  15 -
+ arch/arm/configs/lpc32xx_defconfig                 |   1 +
+ arch/unicore32/kernel/irq.c                        |   1 -
+ drivers/gpio/Kconfig                               |  11 +-
+ drivers/gpio/Makefile                              |   3 +-
+ drivers/gpio/gpio-arizona.c                        |   4 +-
+ drivers/gpio/gpio-aspeed.c                         | 117 ++--
+ drivers/gpio/gpio-bd70528.c                        |   4 +-
+ drivers/gpio/gpio-brcmstb.c                        |   4 +-
+ drivers/gpio/gpio-cadence.c                        |  36 +-
+ drivers/gpio/gpio-creg-snps.c                      |   4 +-
+ drivers/gpio/gpio-dwapb.c                          |   1 +
+ drivers/gpio/gpio-eic-sprd.c                       |   4 +-
+ drivers/gpio/gpio-em.c                             |  37 +-
+ drivers/gpio/gpio-ep93xx.c                         | 140 +++--
+ drivers/gpio/gpio-ftgpio010.c                      |  14 +-
+ drivers/gpio/gpio-grgpio.c                         |   2 -
+ drivers/gpio/gpio-hlwd.c                           |  58 +-
+ drivers/gpio/gpio-htc-egpio.c                      |  14 -
+ drivers/gpio/gpio-intel-mid.c                      |  35 +-
+ drivers/gpio/gpio-ixp4xx.c                         | 279 ++-------
+ drivers/gpio/gpio-ks8695.c                         | 284 ---------
+ drivers/gpio/gpio-lpc32xx.c                        | 118 ++--
+ drivers/gpio/gpio-lynxpoint.c                      |  35 +-
+ drivers/gpio/gpio-madera.c                         |  12 +-
+ drivers/gpio/gpio-max77620.c                       |   4 +-
+ drivers/gpio/gpio-max77650.c                       |   1 +
+ drivers/gpio/gpio-mb86s7x.c                        |   1 +
+ drivers/gpio/gpio-merrifield.c                     |  28 +-
+ drivers/gpio/gpio-mpc8xxx.c                        |  32 +
+ drivers/gpio/gpio-mt7621.c                         |  33 +-
+ drivers/gpio/gpio-mxc.c                            |   9 +-
+ drivers/gpio/gpio-pca953x.c                        |  70 +--
+ drivers/gpio/gpio-pch.c                            |   6 +-
+ drivers/gpio/gpio-pmic-eic-sprd.c                  |   4 +-
+ drivers/gpio/gpio-sprd.c                           |   4 +-
+ drivers/gpio/gpio-stmpe.c                          |  36 +-
+ drivers/gpio/gpio-tb10x.c                          |   4 +-
+ drivers/gpio/gpio-tegra.c                          |   4 +-
+ drivers/gpio/gpio-thunderx.c                       | 163 ++---
+ drivers/gpio/gpio-tqmx86.c                         |  50 +-
+ drivers/gpio/gpio-vf610.c                          |  26 +-
+ drivers/gpio/gpio-viperboard.c                     |  20 +-
+ drivers/gpio/gpio-xgene-sb.c                       |   1 +
+ drivers/gpio/gpio-xlp.c                            |  29 +-
+ drivers/gpio/gpio-zx.c                             |  35 +-
+ drivers/gpio/gpio-zynq.c                           |  41 +-
+ drivers/gpio/gpiolib-acpi.c                        |  27 +-
+ drivers/gpio/gpiolib-acpi.h                        |  96 +++
+ drivers/gpio/gpiolib-devres.c                      |  28 +-
+ drivers/gpio/gpiolib-of.c                          | 158 ++++-
+ drivers/gpio/gpiolib-of.h                          |  38 ++
+ drivers/gpio/gpiolib.c                             | 680 +++++++++++++----=
+----
+ drivers/gpio/gpiolib.h                             | 120 ----
+ drivers/gpio/sgpio-aspeed.c                        | 533 ++++++++++++++++
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |  16 +-
+ drivers/pinctrl/intel/pinctrl-cherryview.c         |  42 +-
+ drivers/pinctrl/pinctrl-stmfx.c                    |  18 +-
+ drivers/pinctrl/qcom/Kconfig                       |   1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c                 |  23 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           |  92 +--
+ drivers/platform/x86/intel_int0002_vgpio.c         |  11 +-
+ include/linux/acpi.h                               |  51 --
+ include/linux/gpio.h                               |  13 -
+ include/linux/gpio/consumer.h                      | 135 +++-
+ include/linux/gpio/driver.h                        | 178 ++++--
+ include/linux/of_gpio.h                            |  11 -
+ include/linux/platform_data/gpio-htc-egpio.h       |   3 -
+ sound/soc/intel/boards/bytcht_cx2072x.c            |   1 +
+ sound/soc/intel/boards/cht_bsw_max98090_ti.c       |   1 +
+ sound/soc/intel/boards/cht_bsw_rt5672.c            |   1 +
+ 76 files changed, 2535 insertions(+), 1783 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/sgpio-aspeed.txt
+ delete mode 100644 drivers/gpio/gpio-ks8695.c
+ create mode 100644 drivers/gpio/gpiolib-acpi.h
+ create mode 100644 drivers/gpio/gpiolib-of.h
+ create mode 100644 drivers/gpio/sgpio-aspeed.c
