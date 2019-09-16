@@ -2,130 +2,99 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA696C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3B6C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814E0214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568631051;
-	bh=U82Tr8FbEpQ0OJbT7LiytXXfUulzIz1X0TDl8YNIEFo=;
-	h=Subject:From:To:Cc:Date:List-ID:From;
-	b=jKIuPmBGHYAK4n99/sC7qpHlUJcedfW1/4T4Gi40HdqTqsayhX8+VX9fv1gF3e0MF
-	 D91Uh/gyOtv1dT6+xCVu/aI8DiJisuIOLM9Vf6OM3l8b0TT8bYw2aY3Je6PfiDmL48
-	 6V2hKtSKRVb6Bq54+f1XisEWJp2iTIpQ9+tJcOLs=
+	by mail.kernel.org (Postfix) with ESMTP id B4BC72189D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LYey3wmg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732441AbfIPKuu (ORCPT
+        id S1732446AbfIPKyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:50:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34854 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726059AbfIPKuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:50:50 -0400
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 263FE2067D;
-        Mon, 16 Sep 2019 10:50:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568631049;
-        bh=U82Tr8FbEpQ0OJbT7LiytXXfUulzIz1X0TDl8YNIEFo=;
-        h=Subject:From:To:Cc:Date:From;
-        b=gZQZ1UxGxemHcxzW4lTiVFDyiN1pDQzvh1P/DPEfwPGRSm7br5Yg+7s/t3gflhhIU
-         EYlot5c3IXiT8ZF2AdZgqoEiicgcM5NxM2hVQcp7o/IkuLQiW2YBSUFZ2I7lzi2FQ0
-         W/qUlSj2a2qV56RhQaJjGw37D626oEC1P1iLRlEQ=
-Message-ID: <f3b4a58a47b4eb3346581f541348a1fc18aabdce.camel@kernel.org>
-Subject: [GIT PULL] file locking changes for v5.4
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Bruce Fields <bfields@fieldses.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Mon, 16 Sep 2019 06:50:40 -0400
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-MnDTmiEyDIGT695orHds"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
+        Mon, 16 Sep 2019 06:54:43 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39210 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfIPKyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:54:43 -0400
+Received: by mail-lf1-f65.google.com with SMTP id 72so784265lfh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6kzj0QUIRS1sDUroHtM76x4Sw0PaH661mS2z6H9lrYY=;
+        b=LYey3wmgdmHy2NTiQkVRdiP/+xWiXr7/VhQu0JvCqcUIAToMMaoYBOM6JFuBqaxkZ1
+         JfYQeW6MTnVu/A2LKmVE2hLug+wszlySKPK3lLmm5cC6B8YCZTCUrLGdZnxzx1ACnH70
+         UB4kW6+0PoqV7L3+af21M7FxoqOZMXAUDxZSKtf5Wwlpf/fPZeNLIS3PaJbluIKMIsao
+         zeKD032jBuH34HlHMsQ2ZAaBWHjzEdEuE2cwW2q876Uoe+JjqzWdVvHCsWaR/4ByQm/a
+         uhSDh/DlVgXPaV80sBavReU3gg/Ek+7zUMmJllxUFjANBPZRlVHU2OI0ORj/g+vLAgMn
+         Ac7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6kzj0QUIRS1sDUroHtM76x4Sw0PaH661mS2z6H9lrYY=;
+        b=rCsTqa2zcgVIs1zPjmlv6Dav0MFqyPA114W18rxcaevt1vmh3ab6bmWXb+8WxERwZx
+         3ReFMBWWqCIJaUPInKQBUtLcef3xGZFm4q+W2FMjO/fvkCaPtML5xugHAS9xOJ+/hN0E
+         7XBosrD/MFB/2ttll/ePzcBSRQJL7wR0eSdx+CI4lCOnA57KulOEQv+3XP6oLffpNfL1
+         2NzbZlxnPVywfVW9k7N6eqNEICGzPcCcCfyDsvkUFmbRvAGjOzRG4Gr7l/0qIm17fLTn
+         P6i1zIRfAndCF5Aa1FRr3iLY8Tdl+4wSbOUy8BHoySMbI0ZBv0OVsFBmcGaBYAYkobqJ
+         O61g==
+X-Gm-Message-State: APjAAAV/U7/tnd9BmvC/IyhfwdjusQDaQvAoQv1BsWTyTc46Olz4lWlf
+        4tcBP1L7PBzBJVHGPJjgT8mdNA==
+X-Google-Smtp-Source: APXvYqyJD8dqwWln86DwqzCKKtbka3vRqFxZgcxtBQ23F33WqEha0eXVuyLZUBHVuwzHF7MjlDRyUQ==
+X-Received: by 2002:ac2:4ad9:: with SMTP id m25mr11489559lfp.89.1568631281688;
+        Mon, 16 Sep 2019 03:54:41 -0700 (PDT)
+Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 03:54:41 -0700 (PDT)
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
+        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
+        john.fastabend@gmail.com
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com,
+        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Subject: [PATCH v3 bpf-next 01/14] samples: bpf: makefile: fix HDR_PROBE "echo"
+Date:   Mon, 16 Sep 2019 13:54:20 +0300
+Message-Id: <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+echo should be replaced with echo -e to handle '\n' correctly, but
+instead, replace it with printf as some systems can't handle echo -e.
 
---=-MnDTmiEyDIGT695orHds
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+---
+ samples/bpf/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b=
-:
-
-  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git tags/file=
-lock-v5.4-1
-
-for you to fetch changes up to cfddf9f4c9f038c91c6c61d5cf3a161731b5c418:
-
-  locks: fix a memory leak bug in __break_lease() (2019-08-20 05:48:52 -040=
-0)
-
-----------------------------------------------------------------
-
-Hi Linus,
-
-Just a couple of minor bugfixes, a revision to a tracepoint to account
-for some earlier changes to the internals, and a patch to add a pr_warn
-message when someone tries to mount a filesystem with '-o mand' on a
-kernel that has that support disabled.
-
-----------------------------------------------------------------
-Jeff Layton (2):
-      locks: revise generic_add_lease tracepoint
-      locks: print a warning when mount fails due to lack of "mand" support
-
-Pavel Begunkov (1):
-      locks: Fix procfs output for file leases
-
-Wenwen Wang (1):
-      locks: fix a memory leak bug in __break_lease()
-
- Documentation/filesystems/mandatory-locking.txt | 10 ++++++++++
- fs/locks.c                                      | 11 ++++++-----
- fs/namespace.c                                  | 11 ++++++++---
- include/trace/events/filelock.h                 | 14 +++++++-------
- 4 files changed, 31 insertions(+), 15 deletions(-)
-
-
---=-MnDTmiEyDIGT695orHds
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQJHBAABCAAxFiEES8DXskRxsqGE6vXTAA5oQRlWghUFAl1/aQATHGpsYXl0b25A
-a2VybmVsLm9yZwAKCRAADmhBGVaCFfKxEAC2xqzxj143HDWQqM3HbwDc6n7vMBFx
-d1kSFgQUoHSH5waAZ7to4AD1IPPk9aWQ6NQAWBLRHZ2/bfvkKtws9smoEKASgpVq
-P2xWuiylcgglxFsIyQutO53qS6l1m5E9+F8Zf0lq+n5JHqqhNTvXmNp8XNxiilv/
-dK12vy6XTXHeB3Hv2BPvvUMDrlwGWlQASIk1lyBUQ94RuLjGNaV93hL32YeGpEE0
-GaYooBHhH4+yOsZuWZpaiLmLSjncE7fLo2HUB5x6AKjEc1c1j8HbW88ckM51Umd8
-fH0efyyO3sZ31n/0Bs73ZQPhQCKtbEDD2YIrvqsqVnp3NLPnMe2t8wZbWX9dxKWG
-zGcJz03QAp4wwExL0F4OsqpbC6uFhJJqzdYuuPs+5kQFSW8chlcsXcKba6efFgPg
-EYNjKC4KhcKLJetegzFXsxpwjyAxjFHFisgdZAfPAYdtiymZ735JwVbJqE/BCzOW
-eRCOoT9PS5vEqxwPVpL+gc7VJDeWAluYXkASyuQj2G3QCM7pTidmjd6ybytroyup
-qV/9Ak4pBG4namBjJZ4STb/i84k9F1UOzKedUphqNmO2vuoSKv4WgnuoVoZCBaRE
-m2Tl2fdeKl1PPQjQH/WQZJR7imM4l1nBgHeTM1B7A0Lv542jgdI8FoWjeMFi2PIu
-kcGBj+HPhtlxKQ==
-=XdCd
------END PGP SIGNATURE-----
-
---=-MnDTmiEyDIGT695orHds--
+diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+index 1d9be26b4edd..f50ca852c2a8 100644
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -201,7 +201,7 @@ endif
+ 
+ # Don't evaluate probes and warnings if we need to run make recursively
+ ifneq ($(src),)
+-HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
++HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+ 	$(HOSTCC) $(KBUILD_HOSTCFLAGS) -x c - -o /dev/null 2>/dev/null && \
+ 	echo okay)
+ 
+-- 
+2.17.1
 
