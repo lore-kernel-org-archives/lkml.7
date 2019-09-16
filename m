@@ -2,350 +2,103 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 252B4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D2AC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3ACD21848
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B51214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388764AbfIPOhv (ORCPT
+        id S2388785AbfIPOh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:37:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:45616 "EHLO foss.arm.com"
+        Mon, 16 Sep 2019 10:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726821AbfIPOhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:37:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F1921000;
-        Mon, 16 Sep 2019 07:37:49 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90B873F67D;
-        Mon, 16 Sep 2019 07:37:48 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 15:37:47 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>, robh+dt@kernel.org
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
- ls1088a and ls2088a
-Message-ID: <20190916143746.GU9720@e119886-lin.cambridge.arm.com>
-References: <20190902031716.43195-1-xiaowei.bao@nxp.com>
- <20190902031716.43195-10-xiaowei.bao@nxp.com>
- <20190902124603.GJ9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB329970AE2C1812E88B9DE5A2F5B90@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190912124943.GD9720@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299CE219E17931066E1DA3CF5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
+        id S1726657AbfIPOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 10:37:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9888720830;
+        Mon, 16 Sep 2019 14:37:56 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 10:37:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Message-ID: <20190916103755.4c19eda9@gandalf.local.home>
+In-Reply-To: <20190916114158.GN5781@paasikivi.fi.intel.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+        <20190910071837.2e9110f8@oasis.local.home>
+        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+        <20190910142621.0bec208d@oasis.local.home>
+        <c458e734f5777561138b87228384808398547762.camel@perches.com>
+        <20190910150303.5a0d3904@oasis.local.home>
+        <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
+        <20190916114158.GN5781@paasikivi.fi.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM5PR04MB3299CE219E17931066E1DA3CF5B20@AM5PR04MB3299.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 04:10:22AM +0000, Xiaowei Bao wrote:
-> 
-> 
-> > -----Original Message-----
-> > From: Andrew Murray <andrew.murray@arm.com>
-> > Sent: 2019年9月12日 20:50
-> > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; Leo
-> > Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com; M.h.
-> > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
-> > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
-> > <zhiqiang.hou@nxp.com>
-> > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support for
-> > ls1088a and ls2088a
+On Mon, 16 Sep 2019 14:41:59 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+
+> > Well, if you think that works, OK great.
 > > 
-> > On Tue, Sep 03, 2019 at 01:47:36AM +0000, Xiaowei Bao wrote:
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Andrew Murray <andrew.murray@arm.com>
-> > > > Sent: 2019年9月2日 20:46
-> > > > To: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Cc: robh+dt@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
-> > > > Leo Li <leoyang.li@nxp.com>; kishon@ti.com; lorenzo.pieralisi@arm.com;
-> > M.h.
-> > > > Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
-> > > > Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
-> > > > gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
-> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org;
-> > > > arnd@arndb.de; gregkh@linuxfoundation.org; Z.q. Hou
-> > > > <zhiqiang.hou@nxp.com>
-> > > > Subject: Re: [PATCH v3 09/11] PCI: layerscape: Add EP mode support
-> > > > for ls1088a and ls2088a
-> > > >
-> > > > On Mon, Sep 02, 2019 at 11:17:14AM +0800, Xiaowei Bao wrote:
-> > > > > Add PCIe EP mode support for ls1088a and ls2088a, there are some
-> > > > > difference between LS1 and LS2 platform, so refactor the code of
-> > > > > the EP driver.
-> > > > >
-> > > > > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > > ---
-> > > > > v2:
-> > > > >  - This is a new patch for supporting the ls1088a and ls2088a platform.
-> > > > > v3:
-> > > > >  - Adjust the some struct assignment order in probe function.
-> > > > >
-> > > > >  drivers/pci/controller/dwc/pci-layerscape-ep.c | 72
-> > > > > +++++++++++++++++++-------
-> > > > >  1 file changed, 53 insertions(+), 19 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > index 5f0cb99..723bbe5 100644
-> > > > > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > > > > @@ -20,27 +20,29 @@
-> > > > >
-> > > > >  #define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
-> > > > >
-> > > > > -struct ls_pcie_ep {
-> > > > > -	struct dw_pcie		*pci;
-> > > > > -	struct pci_epc_features	*ls_epc;
-> > > > > +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +
-> > > > > +struct ls_pcie_ep_drvdata {
-> > > > > +	u32				func_offset;
-> > > > > +	const struct dw_pcie_ep_ops	*ops;
-> > > > > +	const struct dw_pcie_ops	*dw_pcie_ops;
-> > > > >  };
-> > > > >
-> > > > > -#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
-> > > > > +struct ls_pcie_ep {
-> > > > > +	struct dw_pcie			*pci;
-> > > > > +	struct pci_epc_features		*ls_epc;
-> > > > > +	const struct ls_pcie_ep_drvdata *drvdata; };
-> > > > >
-> > > > >  static int ls_pcie_establish_link(struct dw_pcie *pci)  {
-> > > > >  	return 0;
-> > > > >  }
-> > > > >
-> > > > > -static const struct dw_pcie_ops ls_pcie_ep_ops = {
-> > > > > +static const struct dw_pcie_ops dw_ls_pcie_ep_ops = {
-> > > > >  	.start_link = ls_pcie_establish_link,  };
-> > > > >
-> > > > > -static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > > > -	{ .compatible = "fsl,ls-pcie-ep",},
-> > > > > -	{ },
-> > > > > -};
-> > > > > -
-> > > > >  static const struct pci_epc_features*
-> > > > > ls_pcie_ep_get_features(struct dw_pcie_ep *ep)  { @@ -87,10 +89,39
-> > > > > @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > > > >  	}
-> > > > >  }
-> > > > >
-> > > > > -static const struct dw_pcie_ep_ops pcie_ep_ops = {
-> > > > > +static unsigned int ls_pcie_ep_func_conf_select(struct dw_pcie_ep
-> > *ep,
-> > > > > +						u8 func_no)
-> > > > > +{
-> > > > > +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> > > > > +	struct ls_pcie_ep *pcie = to_ls_pcie_ep(pci);
-> > > > > +
-> > > > > +	WARN_ON(func_no && !pcie->drvdata->func_offset);
-> > > > > +	return pcie->drvdata->func_offset * func_no; }
-> > > > > +
-> > > > > +static const struct dw_pcie_ep_ops ls_pcie_ep_ops = {
-> > > > >  	.ep_init = ls_pcie_ep_init,
-> > > > >  	.raise_irq = ls_pcie_ep_raise_irq,
-> > > > >  	.get_features = ls_pcie_ep_get_features,
-> > > > > +	.func_conf_select = ls_pcie_ep_func_conf_select, };
-> > > > > +
-> > > > > +static const struct ls_pcie_ep_drvdata ls1_ep_drvdata = {
-> > > > > +	.ops = &ls_pcie_ep_ops,
-> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > > > > +
-> > > > > +static const struct ls_pcie_ep_drvdata ls2_ep_drvdata = {
-> > > > > +	.func_offset = 0x20000,
-> > > > > +	.ops = &ls_pcie_ep_ops,
-> > > > > +	.dw_pcie_ops = &dw_ls_pcie_ep_ops, };
-> > > > > +
-> > > > > +static const struct of_device_id ls_pcie_ep_of_match[] = {
-> > > > > +	{ .compatible = "fsl,ls1046a-pcie-ep", .data = &ls1_ep_drvdata },
-> > > > > +	{ .compatible = "fsl,ls1088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > > > +	{ .compatible = "fsl,ls2088a-pcie-ep", .data = &ls2_ep_drvdata },
-> > > > > +	{ },
-> > > >
-> > > > This removes support for "fsl,ls-pcie-ep" - was that intentional? If
-> > > > you do plan to drop it please make sure you explain why in the
-> > > > commit message. See also my comments in your dt-binding patch.
-> > >
-> > > In fact, the u-boot will fixup the status property to 'status =
-> > > enabled' in PCI node of the DTS base on "fsl,ls-pcie-ep" compatible,
-> > > so "fsl,ls-pcie-ep" is used, I used this compatible before, because
-> > > the driver only support the LS1046a, but this time, I add the LS1088a
-> > > and LS2088a support, and these two boards have some difference form
-> > LS1046a, so I changed the compatible. I am not sure whether need to add
-> > "fsl,ls-pcie-ep"
-> > > in there, could you give some advice, thanks a lot.
+> > But could that work?
+> > How would an individual trace record know if
+> > another trace record used %pfw?
 > > 
-> > It sounds like "fsl,ls-pcie-ep" can be a fallback for "fsl,ls1046a-pcie-ep".
+> > Perhaps not reusing %pf, marking it reserved
+> > for a period of years, and using another unused
+> > prefix %p<type> like %pnfw may be simpler.  
 > 
-> This is not a fallback, the compatible "fsl,ls1046a-pcie-ep" is used by bootloader,
-> the bootloader will modify the status property, the bootloader code get the
-> PCI_HEADER_TYPE(0xe) of config space to decide enable which node(EP or RC)
-> status property. At the beginning, we plan to use one compatible "fsl,ls1046a-pcie-ep"
-> support all NXP's platform, but actually, due to the difference of each platform,
-> it is difficult.
+> %p[Ff]w does not exist (I grepped for it) in older kernels since v3.0. So
+> kernel support for %p[fF] and %pfw are mutually exclusive. If you're ok
+> with that, I could change the patch to check %pf isn't followed by 'w',
+> in order to support %pf on older kernels.
 
-I've looked at the U-Boot source [1] and device trees, I think I understand
-what happens here.
-
-The DT describes disabled nodes for both fsl,lsXXXXX-pcie and
-fsl,lxXXXXX-pcie-ep. U-Boot looks at the nodes and compares with the actual PCI
-config space to determine the current hardware configuration type. It will
-then *enable* either the RC or EP.
-
-However U-Boot currently only looks for a compatible string with "fsl,ls-pcie"
-or "fsl,ls-pcie-ep". This is why the DT needs to describe a PCI node as both
-"fsl,lsXXXXX-pcie-ep" and "fsl,ls-pcie" - the first for kernel and the second
-for the U-Boot. (The second is no longer needed by the kernel driver as you
-are now using the more specific names).
-
-Looking again at your bindings patch...
-
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index e20ceaa..762ae41 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -22,7 +22,9 @@  Required properties:
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-   EP mode:
--	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
-+	"fsl,ls1046a-pcie-ep" "fsl,ls-pcie-ep"
-+	"fsl,ls1088a-pcie-ep" "fsl,ls-pcie-ep"
-+	"fsl,ls2088a-pcie-ep" "fsl,ls-pcie-ep"
-
-... the "fsl,ls-pcie-ep" is added *only* to the EP mode.
-
-But doesn't U-Boot need "fsl,ls-pcie-ep" added to each of the RC modes as
-well, to ensure they are set to enabled before booting the kernel?
-
-Rob - Do we document compatible names like this that are used in the DT
-but not used by the kernel?
-
-In any case, prior to this series it would have been possible to use a
-ls1046a device with a DT that has only string "fsl,ls-pcie-ep" - now that
-doesn't work. If this is of concern then &ls1_ep_drvdata should also be
-used for fsl,ls-pcie-ep.
-
-Thanks,
-
-Andrew Murray
-
-[1] https://gitlab.denx.de/u-boot/u-boot/blob/master/drivers/pci/pcie_layerscape_fixup.c
+I think that's what I suggested to do.
 
 > 
-> > 
-> > I'm assuming that if someone used "fsl,ls1046a-pcie-ep" on ls1088a or
-> > ls2088a hardware it would still work, but without the multiple PF support.
-> > 
+> Although that still does not address using older tooling on newer kernels
+> with support for %pfw.
+
+That should be fine. I don't think it will crash those tools, they will
+just give out wrong information, and if people complain, we can try to
+get them to use the newer version of those tools ;-) (hopefully they
+don't complain to Linus).
+
 > 
-> I think the EP driver will not work if use current code, due to the current driver
-> need driver data. 
+> If you think that's an issue, I'll opt for another extension than %pfw,
+> which I chose originally since it's memorable --- fw for fwnode (names,
+> paths, and probably more in the future).
 > 
-> > I.e. if "fsl,ls-pcie-ep" is given, treat it as ls1046a.
-> 
-> 
-> 
-> > 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >
-> > > Thanks
-> > > Xiaowei
-> > >
-> > > >
-> > > > Thanks,
-> > > >
-> > > > Andrew Murray
-> > > >
-> > > > >  };
-> > > > >
-> > > > >  static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie, @@
-> > > > > -103,7
-> > > > > +134,7 @@ static int __init ls_add_pcie_ep(struct ls_pcie_ep
-> > > > > +*pcie,
-> > > > >  	int ret;
-> > > > >
-> > > > >  	ep = &pci->ep;
-> > > > > -	ep->ops = &pcie_ep_ops;
-> > > > > +	ep->ops = pcie->drvdata->ops;
-> > > > >
-> > > > >  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > > "addr_space");
-> > > > >  	if (!res)
-> > > > > @@ -142,20 +173,23 @@ static int __init ls_pcie_ep_probe(struct
-> > > > platform_device *pdev)
-> > > > >  	if (!ls_epc)
-> > > > >  		return -ENOMEM;
-> > > > >
-> > > > > -	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > > > "regs");
-> > > > > -	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > > > -	if (IS_ERR(pci->dbi_base))
-> > > > > -		return PTR_ERR(pci->dbi_base);
-> > > > > +	pcie->drvdata = of_device_get_match_data(dev);
-> > > > >
-> > > > > -	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > > > >  	pci->dev = dev;
-> > > > > -	pci->ops = &ls_pcie_ep_ops;
-> > > > > -	pcie->pci = pci;
-> > > > > +	pci->ops = pcie->drvdata->dw_pcie_ops;
-> > > > >
-> > > > >  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4),
-> > > > >
-> > > > > +	pcie->pci = pci;
-> > > > >  	pcie->ls_epc = ls_epc;
-> > > > >
-> > > > > +	dbi_base = platform_get_resource_byname(pdev,
-> > IORESOURCE_MEM,
-> > > > "regs");
-> > > > > +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-> > > > > +	if (IS_ERR(pci->dbi_base))
-> > > > > +		return PTR_ERR(pci->dbi_base);
-> > > > > +
-> > > > > +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-> > > > > +
-> > > > >  	platform_set_drvdata(pdev, pcie);
-> > > > >
-> > > > >  	ret = ls_add_pcie_ep(pcie, pdev);
-> > > > > --
-> > > > > 2.9.5
-> > > > >
+
+I'm fine with the switch, as long as newer tools know how to handle it.
+
+Make sure we also add a comment in the Linux kernel code that states
+that older kernels use to have 'f' and 'F' and that new tools look for
+'fw' to denote that this isn't an older kernel. This way, people will
+hopefully not add another 'fX' pointer name.
+
+-- Steve
