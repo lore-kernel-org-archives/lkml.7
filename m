@@ -2,128 +2,202 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD4CAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC366C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD1A3206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC30206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nOh+TcjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbfIPKqa (ORCPT
+        id S1731897AbfIPKsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:46:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40000 "EHLO mx1.suse.de"
+        Mon, 16 Sep 2019 06:48:50 -0400
+Received: from mail-eopbgr20066.outbound.protection.outlook.com ([40.107.2.66]:8318
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725826AbfIPKq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:46:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 686F8ACD7;
-        Mon, 16 Sep 2019 10:46:26 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 12:46:24 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc:     John Ogness <john.ogness@linutronix.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Prarit Bhargava <prarit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: printk meeting at LPC
-Message-ID: <20190916104624.n3jh363z37ah2kxa@pathway.suse.cz>
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
- <20190904123531.GA2369@hirez.programming.kicks-ass.net>
- <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
- <20190905143118.GP2349@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
- <20190905121101.60c78422@oasis.local.home>
- <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
- <87k1acz5rx.fsf@linutronix.de>
- <cfc7b1fa-e629-19a6-154b-0dd4f5604aa7@I-love.SAKURA.ne.jp>
+        id S1726118AbfIPKsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:48:50 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O5m8LBpY4xRNkZMPrkyHecDZrbasgaB16y+CjD9B5sDTwM+bU0hyS+inE5GnoPTHYK43AKyK3hZnF3uByZSGJdzZ6bVSC7O9bKqGuDvzRecAjrtb/SzgRCMcnl1fnkB56Tq1bCJTHrzn5T90j/S1osOeGp5gy9D97njVCLuFcJhGBK1m8q20CiBXGr4XXUDi7iHrQmwkNN/C5MgvBc6UAk8wHWo/GEat/JE3vUlH35x9LqHGpwZ8by7wdkuX5WeynZXuaU5dDiRVKnuhRmGF+NDmVL/nHkocnuo5eBG5YRP7inOltcJDaIzU+JJPNw/mCMdpicIohaHAHm6hDiMw7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lz5nCwYIolfmVGzHtBdeUgCCA5oglkLlgU3uELn8X7c=;
+ b=BQMjUJLEOH1FG6eMX80/NLNbTe3gWsAqgaTdNDKSDMm2Yz7GZVQx2JpZ6SmjL0AmtYKgZrQ7a1nGCYGdlnCgZ/QvcUb+1aqPtYjmgaS18vLGEV24psLVajr6aiHrYCQ6KZkPYdYC28HmpIF4iFKnK8AwZUasyMrOkRZCx1EYLljmrDRZk3VDYQBY8ZubI8VxqJB6TKHruo+X31buNKTq2/lIH9WKZ5/cdL2T8c7eK/Vm9GIymLdj+ucIS1wafQ5ICB9WBXQA5Oa59SlL9qo4NTp6R5J3UBymYaUF2V93b6uvZfOZWbhi+XpatIJhI5zzCJoqiaStXcs0EREkYmaSkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lz5nCwYIolfmVGzHtBdeUgCCA5oglkLlgU3uELn8X7c=;
+ b=nOh+TcjY+AkyB2Htwc4AP6pjxuTeZiQt9yiwEh5AJEC6HRa035XgdNpZdnuXD64oYsb6K6CXeAvgLtENainJrxVTP1SOr41cX/Be3kDCv258s7IN00rIW2KMQwWe0olqpNj6CKlPwf280GTSL4P1grcyC98/ueY+hxfrFAS36TQ=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB5099.eurprd04.prod.outlook.com (20.176.234.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.23; Mon, 16 Sep 2019 10:48:45 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
+ 10:48:45 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [1/3] soc: fsl: fix that flextimer cannot wakeup system in deep
+ sleep on LS1021A
+Thread-Topic: [1/3] soc: fsl: fix that flextimer cannot wakeup system in deep
+ sleep on LS1021A
+Thread-Index: AQHVbHqVUU3LCVOxq0WT1q6VQGzjvKcuHyAQ
+Date:   Mon, 16 Sep 2019 10:48:44 +0000
+Message-ID: <DB7PR04MB4490BF979AE65793A9C34E728F8C0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190916102556.16655-1-biwen.li@nxp.com>
+In-Reply-To: <20190916102556.16655-1-biwen.li@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5fb400e2-4b43-459c-eca0-08d73a9372cf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB5099;
+x-ms-traffictypediagnostic: DB7PR04MB5099:|DB7PR04MB5099:
+x-ms-exchange-purlcount: 8
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB5099E05FD7FDA47A5A886F598F8C0@DB7PR04MB5099.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0162ACCC24
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(396003)(39860400002)(346002)(189003)(199004)(53754006)(71200400001)(76176011)(110136005)(54906003)(446003)(66066001)(74316002)(11346002)(6246003)(66946007)(76116006)(229853002)(6436002)(486006)(64756008)(66556008)(66476007)(186003)(53936002)(55016002)(9686003)(6306002)(99286004)(8676002)(81156014)(81166006)(44832011)(8936002)(26005)(7696005)(102836004)(6506007)(71190400001)(33656002)(2501003)(5660300002)(52536014)(25786009)(966005)(7736002)(305945005)(476003)(66446008)(14454004)(478600001)(6116002)(3846002)(316002)(256004)(86362001)(4326008)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5099;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vaa1uh49Z48gP7WhIBR0fDz53M0rrWG2rZhbDluXF81XHM9BTUSIrZDnsGmOkeTVZK+agm1lwvfy/Adx41ZW/m62XYMElV3hozROBvGgmc09L4HGEnNNJGiEtnb/TbchDyHFNzqLeGsFRu9yg64iecBaDL06onTOHnrEIxsHBmsxjL1aOOfz0iDBRZHcNCoil3V46XDIraNvOeZfwsvIKvxf8MfPY/ofsLLsXC258JCbrr4nx9zjeeow6nQ5E25LDtopmHLkh99c8YaNgAmr+iyjT6fT9szt8GTK1caM3zIbz4auxzcZ2r/q4cwQKC12RpXi5xGgG6rOC61LcB47S9T3sYIxTaMFfPCN6erf9a1UfNPM7eK0hEi/iCxYsmdHfcLZhxcvip6ytnSFDCFtiHoyoV3/lebDU6O/4et1jlc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cfc7b1fa-e629-19a6-154b-0dd4f5604aa7@I-love.SAKURA.ne.jp>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fb400e2-4b43-459c-eca0-08d73a9372cf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 10:48:45.4078
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jBSEPREJh3pjwwkeSxGIYgO6Jc4X/b5WTkQdb7Nt7mC9SusXF0SzRtWlWK+LHw/NOpFDkao1xQjLYG6QYt2Ieg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-16 13:30:17, Tetsuo Handa wrote:
-> On 2019/09/13 22:26, John Ogness wrote:
-> > 6. A new may-sleep function pr_flush() will be made available to wait
-> > for all previously printk'd messages to be output on all consoles before
-> > proceeding. For example:
-> > 
-> >     pr_cont("Running test ABC... ");
-> >     pr_flush();
-> > 
-> >     do_test();
-> > 
-> >     pr_cont("PASSED\n");
-> >     pr_flush();
-> 
-> Don't we need to allow printk() callers to know the sequence number which
-> the printk() has queued? Something like
-> 
->   u64 seq;
->   pr_info(...);
->   pr_info(...);
->   pr_info(...);
->   seq = pr_current_seq();
->   pr_wait_seq(seq);
-> 
-> in case concurrently executed printk() flooding keeps adding a lot of
-> pending output?
+Hi all,
+	the linux patch depended by RCPM driver,FlexTimer driver and FlexTimer dts=
+, need apply these patches as follows:
 
-My expectation is that pr_flush() would wait only until the current
-message appears on all consoles. It will not wait for messages that
-would get added later.
+	1. RCPM driver:
 
+	https://patchwork.kernel.org/series/162731/mbox/ (https://patchwork.kernel=
+.org/patch/11105279/)
 
-> By the way, do we need to keep printk() return bytes like printf() ?
-> Maybe we can make printk() return "void", for almost nobody can do
-> meaningful things with the return value.
+	2. FlexTimer dts:
 
-It is true that I have never seen anyone checking the return value.
-On the other hand, it is a minor detail. And I would prefer to stay
-compatible with the userland printf() as much as possible.
+	https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kernel=
+.org/patchwork/patch/1112493/)
 
+	3. FlexTimer driver:
 
-> > 9. Support for printk dictionaries will be discontinued. I will look
-> > into who is using this and why. If printk dictionaries are important for
-> > you, speak up now!
-> 
-> I think that dev_printk() is using "const char *dict, size_t dictlen," part
-> via create_syslog_header(). Some userspace programs might depend on
-> availability of such information.
+	https://patchwork.ozlabs.org/series/124718/mbox/ (https://patchwork.ozlabs=
+.org/patch/1145999/)
 
-Yeah, but it seems to be the only dictionary writer. There were doubts
-(during the meeting) whether anyone was actually using the information.
+	https://patchwork.ozlabs.org/series/126942/mbox/ (https://patchwork.ozlabs=
+.org/patch/1152085/)
 
-Hmm, it seems that journalctl is able to filer device specific
-information, for example, I get:
+	4. Adjust drivers/soc/fsl/Makefile:
 
-$> journalctl _KERNEL_DEVICE=+usb:2-1
--- Logs begin at Tue 2019-08-13 09:00:03 CEST, end at Mon 2019-09-16 12:32:58 CEST. --
-Aug 13 09:00:04 linux-qszd kernel: usb 2-1: new high-speed USB device number 2 using ehci-pci
+remove the line 'obj-y +=3D ftm_alarm.o' in drivers/soc/fsl/Makefile to res=
+olve a compilation error=20
+> Why:
+>     - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
+>       Register RCPM_IPPDEXPCR1's default value is zero.
+>       So the register value that reading from register
+>       RCPM_IPPDEXPCR1 is always zero.
+>=20
+> How:
+>     - Save register RCPM_IPPDEXPCR1's value to
+>       register SCFG_SPARECR8.(uboot's psci also
+>       need reading value from the register SCFG_SPARECR8
+>       to set register RCPM_IPPDEXPCR1)
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+>  drivers/soc/fsl/rcpm.c | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>=20
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
+> 82c0ad5e663e..2bf37d38efe5 100644
+> --- a/drivers/soc/fsl/rcpm.c
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+>  #include <linux/kernel.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+>=20
+>  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+>=20
+> @@ -63,6 +65,33 @@ static int rcpm_pm_prepare(struct device *dev)
+>  					tmp |=3D value[i + 1];
+>  					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+>  				}
+> +				#ifdef CONFIG_SOC_LS1021A
+> +				/* Workaround: There is a bug of register ippdexpcr1,
+> +				 * cannot write it but can read it.Tt's default value is zero,
+> +				 * then read it will always returns zero.
+> +				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
+> +				 * And the value of ippdexpcr1 will be read from
+> SCFG_SPARECR8.
+> +				 */
+> +				{
+> +					struct regmap * rcpm_scfg_regmap =3D NULL;
+> +					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+> +					u32 reg_value =3D 0;
+> +
+> +					rcpm_scfg_regmap =3D
+> syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
+> +					if (rcpm_scfg_regmap) {
+> +						if (of_property_read_u32_array(dev->of_node,
+> +						    "fsl,rcpm-scfg", reg_offset,
+> rcpm->wakeup_cells + 1)) {
+> +							rcpm_scfg_regmap =3D NULL;
+> +							continue;
+> +						}
+> +						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1],
+> &reg_value);
+> +						/* Write value to register SCFG_SPARECR8 */
+> +						regmap_write(rcpm_scfg_regmap, reg_offset[i +
+> 1], tmp | reg_value);
+> +					}
+> +				}
+> +				#endif
+> +
+> +
+>  			}
+>  		}
+>  	} while (ws =3D wakeup_source_get_next(ws));
+> --
+> 2.17.1
 
-One question is if anyone is using this filtering. Simple grep is
-enough. Another question is whether it really needs to get passed
-this way.
-
-Best Regards,
-Petr
