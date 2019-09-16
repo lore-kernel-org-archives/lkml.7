@@ -2,215 +2,271 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C9C8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C4CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08552206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FEEE214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:32:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y14M6zH0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iOe1j1jF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390467AbfIPSbj (ORCPT
+        id S2390391AbfIPScb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:31:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41186 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390349AbfIPSbi (ORCPT
+        Mon, 16 Sep 2019 14:32:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42025 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfIPScb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:31:38 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h7so464336wrw.8;
-        Mon, 16 Sep 2019 11:31:34 -0700 (PDT)
+        Mon, 16 Sep 2019 14:32:31 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z12so468357pgp.9
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:32:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1iMF6L3+VhmjBO27E99c8WkPMR48r/DUbungJ/GCRrw=;
-        b=Y14M6zH05fh0o5jHPNEfwTNNbox8UTowDHGQ1dqAynnIXP3awj3ELo3LjNvfPvhqmi
-         1RvrMgMaG9lBcQl7HRFDyLHE6GR3eOSNNISNJVPRdA7OgYue48EzDQ1Ul4EbDkqN2pE5
-         BHk9X1egnXipxxoQh5s8pRmsyDXJpsn50dngNLBjNf8PKW/d8gXTW5dJEStts48H3PgV
-         UwEd7/Xt6yhf5Pq+sm41BIenWTgGxFkTdU2yTcQ8z8f3Tsg3tEeo1ZCoe0Ot2G69ZkM9
-         siRBW/feh33L+Jw/hLaYOOO5gobGXR6KXhTmVYOdikTZA4ZFLwZwa/gpuKYhEvOhvGeB
-         RqZQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=DfC+q6n84zbhMpsDUftY8nxKWK1YxhqqrQVWMmDQ1iE=;
+        b=iOe1j1jFBJLIr9wC3amj30A7BR8L42Sepf+99X8Xw+0aQFxFpVXVoAxma3Oij5vac7
+         kXvSwwsp4qasO2wuU1dZWyGYSZBrelQF+cuWdZLWR5SUXroXVUh/cmCWTBx1yI9i9b23
+         /VHzN5ia0Ww/wPdChU+2n6abo1xVMd7vweUZIMu2mOCkdX6FJKhViR46dYKvG+c9wNCu
+         4608Z2uj/T2ndpqN1ADEVhcLJLlaarv8wgpltM0OoLdZFkoNoP/eEX+OA9N3Qx3Ll6Wg
+         OSQcpsegLSfKnKbYNB/fVQSEzlYc+oLHd1c2LkLXYZxmsX1Qs5E/5fOF49ehIn+dhC0H
+         Mf2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=1iMF6L3+VhmjBO27E99c8WkPMR48r/DUbungJ/GCRrw=;
-        b=bHpqfnlxJHKtJMPhfYzFmmWHgAqWEoqgkP+bYk4HCLYkAjau3GaFytD5lBeafavz5r
-         S9An5CBiVI5wUWOJeZZphWcA7diLjAW+lriVlNfEAHU5990z40DcmkDgo26K3LVB4M3N
-         pjIlBoKs9s/xXx6SOnUvsDFjd3db+RIJbYU2nW061AqCAGrHbmaXRuBaxgdHM0Oq69SZ
-         dK2bjW14b+t9S9apy2v4Xn3Q0Jv2LB1On3t9u3ETe2PeEDSQpSZO1pQc93XsmW6pWL5g
-         R4HEVnPnXi9QAsHdgdeBovJMeq3E5BSCfmnEe9Iq82MY8DWnEy8xNo4rt20Qz6HShJ9P
-         Og3w==
-X-Gm-Message-State: APjAAAWm0/7HGBUdwprZWNj0a/67pNwuHCMyr0vRfA3MH1Ls9zUu+wXK
-        cVmfArVph+vxXrneVadxQ346JKD5
-X-Google-Smtp-Source: APXvYqyuVAR15t+jVRjP42X4hO3/ljtGSTmYQmtRF8sXKfbRs0haxRH/lQexOHIRM6q6ursD2E/1gQ==
-X-Received: by 2002:a5d:4041:: with SMTP id w1mr879032wrp.313.1568658693398;
-        Mon, 16 Sep 2019 11:31:33 -0700 (PDT)
-Received: from [192.168.1.19] (bgp90.neoplus.adsl.tpnet.pl. [83.28.79.90])
-        by smtp.gmail.com with ESMTPSA id j22sm71348381wre.45.2019.09.16.11.31.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 11:31:32 -0700 (PDT)
-Subject: Re: [PATCH v5 1/9] leds: multicolor: Add sysfs interface definition
-To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
-Cc:     robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=DfC+q6n84zbhMpsDUftY8nxKWK1YxhqqrQVWMmDQ1iE=;
+        b=hYQU6jnmtnldVlMCRJDbtz35+2hXXx3xclo+ok2ovSBkm2GSc+blwpgSrZAqmxmgM5
+         eIGwZzx8Vmk6unNs2qHlUJChG5o5GEY37CXUgQUU/GgqJ4O86VcsgOAT/YPbNh8vE8HX
+         V29ip9KKgkF60xl7mDrfu8k1U7DALRXzAwmj5NhAlNxUlOzR/Oo/RPM0vzJeZspBGsK5
+         mNk7FdSGmkijeTTlodjo4ALKKpUvg9lGnJAlc1cuKeGOJ5HZ6KPmetdC7SnNmmEXRvez
+         Hc7Ynbz/04R9dQOgGRHA9QtVo1nE8Htk4IWXXm2r/5h+D2f+wqveYi7IC0apbBiksyd1
+         n8cQ==
+X-Gm-Message-State: APjAAAVDKU/B6zfRBtZvC7e/DJPxDIlasADTXuZB/+Hs+Y78HdQW0IJm
+        uasDji2gEE9tkeIvW2m5OsncOA==
+X-Google-Smtp-Source: APXvYqyQP1cm9FOGzbIbT2loFwSSgsLlA/qIbFLKgPeoOGK1abPX9tBd6nq620wfTUZjC+VOx4VG9g==
+X-Received: by 2002:a65:4002:: with SMTP id f2mr440594pgp.447.1568658748539;
+        Mon, 16 Sep 2019 11:32:28 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id v4sm842126pff.181.2019.09.16.11.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 11:32:27 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 11:32:27 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Qian Cai <cai@lca.pw>, Pengfei Li <lpf.vector@gmail.com>
+cc:     cl@linux.com, penberg@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-2-dmurphy@ti.com>
- <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
- <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <4915583c-5381-72fd-8d4f-6901018f5c3e@gmail.com>
-Date:   Mon, 16 Sep 2019 20:31:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Subject: Re: [RFC PATCH] mm/slub: remove left-over debugging code
+In-Reply-To: <1568650294-8579-1-git-send-email-cai@lca.pw>
+Message-ID: <alpine.DEB.2.21.1909161128480.105847@chino.kir.corp.google.com>
+References: <1568650294-8579-1-git-send-email-cai@lca.pw>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan,
+On Mon, 16 Sep 2019, Qian Cai wrote:
 
-On 9/16/19 3:56 PM, Dan Murphy wrote:
-> Hello
+> SLUB_RESILIENCY_TEST and SLUB_DEBUG_CMPXCHG look like some left-over
+> debugging code during the internal development that probably nobody uses
+> it anymore. Remove them to make the world greener.
+
+Adding Pengfei Li who has been working on a patchset for modified handling 
+of kmalloc cache initialization and touches the resiliency test.
+
+I still find the resiliency test to be helpful/instructional for handling 
+unexpected conditions in these caches, so I'd suggest against removing it: 
+the only downside is that it's additional source code.  But it's helpful 
+source code for reference.
+
+The cmpxchg failures could likely be more generalized beyond SLUB since 
+there will be other dependencies in the kernel than just this allocator.
+
+(I assume you didn't send a Signed-off-by line because this is an RFC.)
+
+> ---
+>  mm/slub.c | 110 --------------------------------------------------------------
+>  1 file changed, 110 deletions(-)
 > 
-> On 9/15/19 8:57 AM, Jacek Anaszewski wrote:
->> Hi Dan,
->>
->> On 9/11/19 8:01 PM, Dan Murphy wrote:
->>> Add a documentation of LED Multicolor LED class specific
->>> sysfs attributes.
->>>
->>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>> ---
->>>   .../ABI/testing/sysfs-class-led-multicolor    | 73 +++++++++++++++++++
->>>   1 file changed, 73 insertions(+)
->>>   create mode 100644
->>> Documentation/ABI/testing/sysfs-class-led-multicolor
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> new file mode 100644
->>> index 000000000000..4ea54c2ad4c8
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->>> @@ -0,0 +1,73 @@
->>> +What:        /sys/class/leds/<led>/brightness
->>> +Date:        Sept 2019
->>> +KernelVersion:    5.5
->>> +Contact:    Dan Murphy <dmurphy@ti.com>
->>> +Description:    read/write
->>> +        The multicolor class will redirect the device drivers call back
->>> +        function for brightness control to the multicolor class
->>> +        brightness control function.
->>> +
->>> +        Writing to this file will update all LEDs within the group to a
->>> +        calculated percentage of what each color LED in the group is
->>> set
->>> +        to.  The percentage is calculated via the equation below:
->>> +
->>> +        led_brightness = requested_value *
->>> led_color_intensity/led_color_max_intensity
->>> +
->>> +        For additional details please refer to
->>> +        Documentation/leds/leds-class-multicolor.rst.
->>> +
->>> +        The value of the color is from 0 to
->>> +        /sys/class/leds/<led>/max_brightness.
->>> +
->>> +What:        /sys/class/leds/<led>/colors/color_mix
->>> +Date:        Sept 2019
->>> +KernelVersion:    5.5
->>> +Contact:    Dan Murphy <dmurphy@ti.com>
->>> +Description:    read/write
->>> +        The values written to this file should contain the intensity
->>> +        values of each multicolor LED within the colors directory. The
->>> +        index of given color is reported by the color_id file
->>> present in
->>> +        colors/<color> directory. The index determines the position in
->>> +        the sequence of    intensities on which the related intensity
->>> +        should be passed to this file.
->>> +
->>> +        For additional details please refer to
->>> +        Documentation/leds/leds-class-multicolor.rst.
->> As already mentioned in the reply to Pavel - let's avoid the
->> introduction of another sysfs file with multiple values.
+> diff --git a/mm/slub.c b/mm/slub.c
+> index 8834563cdb4b..f97155ba097d 100644
+> --- a/mm/slub.c
+> +++ b/mm/slub.c
+> @@ -150,12 +150,6 @@ static inline bool kmem_cache_has_cpu_partial(struct kmem_cache *s)
+>   * - Variable sizing of the per node arrays
+>   */
+>  
+> -/* Enable to test recovery from slab corruption on boot */
+> -#undef SLUB_RESILIENCY_TEST
+> -
+> -/* Enable to log cmpxchg failures */
+> -#undef SLUB_DEBUG_CMPXCHG
+> -
+>  /*
+>   * Mininum number of partial slabs. These will be left on the partial
+>   * lists even if they are empty. kmem_cache_shrink may reclaim them.
+> @@ -392,10 +386,6 @@ static inline bool __cmpxchg_double_slab(struct kmem_cache *s, struct page *page
+>  	cpu_relax();
+>  	stat(s, CMPXCHG_DOUBLE_FAIL);
+>  
+> -#ifdef SLUB_DEBUG_CMPXCHG
+> -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
+> -#endif
+> -
+>  	return false;
+>  }
+>  
+> @@ -433,10 +423,6 @@ static inline bool cmpxchg_double_slab(struct kmem_cache *s, struct page *page,
+>  	cpu_relax();
+>  	stat(s, CMPXCHG_DOUBLE_FAIL);
+>  
+> -#ifdef SLUB_DEBUG_CMPXCHG
+> -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
+> -#endif
+> -
+>  	return false;
+>  }
+>  
+> @@ -2004,45 +1990,11 @@ static inline unsigned long next_tid(unsigned long tid)
+>  	return tid + TID_STEP;
+>  }
+>  
+> -static inline unsigned int tid_to_cpu(unsigned long tid)
+> -{
+> -	return tid % TID_STEP;
+> -}
+> -
+> -static inline unsigned long tid_to_event(unsigned long tid)
+> -{
+> -	return tid / TID_STEP;
+> -}
+> -
+>  static inline unsigned int init_tid(int cpu)
+>  {
+>  	return cpu;
+>  }
+>  
+> -static inline void note_cmpxchg_failure(const char *n,
+> -		const struct kmem_cache *s, unsigned long tid)
+> -{
+> -#ifdef SLUB_DEBUG_CMPXCHG
+> -	unsigned long actual_tid = __this_cpu_read(s->cpu_slab->tid);
+> -
+> -	pr_info("%s %s: cmpxchg redo ", n, s->name);
+> -
+> -#ifdef CONFIG_PREEMPT
+> -	if (tid_to_cpu(tid) != tid_to_cpu(actual_tid))
+> -		pr_warn("due to cpu change %d -> %d\n",
+> -			tid_to_cpu(tid), tid_to_cpu(actual_tid));
+> -	else
+> -#endif
+> -	if (tid_to_event(tid) != tid_to_event(actual_tid))
+> -		pr_warn("due to cpu running other code. Event %ld->%ld\n",
+> -			tid_to_event(tid), tid_to_event(actual_tid));
+> -	else
+> -		pr_warn("for unknown reason: actual=%lx was=%lx target=%lx\n",
+> -			actual_tid, tid, next_tid(tid));
+> -#endif
+> -	stat(s, CMPXCHG_DOUBLE_CPU_FAIL);
+> -}
+> -
+>  static void init_kmem_cache_cpus(struct kmem_cache *s)
+>  {
+>  	int cpu;
+> @@ -2751,7 +2703,6 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
+>  				object, tid,
+>  				next_object, next_tid(tid)))) {
+>  
+> -			note_cmpxchg_failure("slab_alloc", s, tid);
+>  			goto redo;
+>  		}
+>  		prefetch_freepointer(s, next_object);
+> @@ -4694,66 +4645,6 @@ static int list_locations(struct kmem_cache *s, char *buf,
+>  }
+>  #endif	/* CONFIG_SLUB_DEBUG */
+>  
+> -#ifdef SLUB_RESILIENCY_TEST
+> -static void __init resiliency_test(void)
+> -{
+> -	u8 *p;
+> -	int type = KMALLOC_NORMAL;
+> -
+> -	BUILD_BUG_ON(KMALLOC_MIN_SIZE > 16 || KMALLOC_SHIFT_HIGH < 10);
+> -
+> -	pr_err("SLUB resiliency testing\n");
+> -	pr_err("-----------------------\n");
+> -	pr_err("A. Corruption after allocation\n");
+> -
+> -	p = kzalloc(16, GFP_KERNEL);
+> -	p[16] = 0x12;
+> -	pr_err("\n1. kmalloc-16: Clobber Redzone/next pointer 0x12->0x%p\n\n",
+> -	       p + 16);
+> -
+> -	validate_slab_cache(kmalloc_caches[type][4]);
+> -
+> -	/* Hmmm... The next two are dangerous */
+> -	p = kzalloc(32, GFP_KERNEL);
+> -	p[32 + sizeof(void *)] = 0x34;
+> -	pr_err("\n2. kmalloc-32: Clobber next pointer/next slab 0x34 -> -0x%p\n",
+> -	       p);
+> -	pr_err("If allocated object is overwritten then not detectable\n\n");
+> -
+> -	validate_slab_cache(kmalloc_caches[type][5]);
+> -	p = kzalloc(64, GFP_KERNEL);
+> -	p += 64 + (get_cycles() & 0xff) * sizeof(void *);
+> -	*p = 0x56;
+> -	pr_err("\n3. kmalloc-64: corrupting random byte 0x56->0x%p\n",
+> -	       p);
+> -	pr_err("If allocated object is overwritten then not detectable\n\n");
+> -	validate_slab_cache(kmalloc_caches[type][6]);
+> -
+> -	pr_err("\nB. Corruption after free\n");
+> -	p = kzalloc(128, GFP_KERNEL);
+> -	kfree(p);
+> -	*p = 0x78;
+> -	pr_err("1. kmalloc-128: Clobber first word 0x78->0x%p\n\n", p);
+> -	validate_slab_cache(kmalloc_caches[type][7]);
+> -
+> -	p = kzalloc(256, GFP_KERNEL);
+> -	kfree(p);
+> -	p[50] = 0x9a;
+> -	pr_err("\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%p\n\n", p);
+> -	validate_slab_cache(kmalloc_caches[type][8]);
+> -
+> -	p = kzalloc(512, GFP_KERNEL);
+> -	kfree(p);
+> -	p[512] = 0xab;
+> -	pr_err("\n3. kmalloc-512: Clobber redzone 0xab->0x%p\n\n", p);
+> -	validate_slab_cache(kmalloc_caches[type][9]);
+> -}
+> -#else
+> -#ifdef CONFIG_SYSFS
+> -static void resiliency_test(void) {};
+> -#endif
+> -#endif	/* SLUB_RESILIENCY_TEST */
+> -
+>  #ifdef CONFIG_SYSFS
+>  enum slab_stat_type {
+>  	SL_ALL,			/* All slabs */
+> @@ -5875,7 +5766,6 @@ static int __init slab_sysfs_init(void)
+>  	}
+>  
+>  	mutex_unlock(&slab_mutex);
+> -	resiliency_test();
+>  	return 0;
+>  }
+>  
+> -- 
+> 1.8.3.1
 > 
-> OK for clarification remove the color_mix and color_id files and keep
-> the intensity files?
-
-Exactly.
-
--- 
-Best regards,
-Jacek Anaszewski
+> 
