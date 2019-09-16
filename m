@@ -2,82 +2,62 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85EEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 960E8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898962184D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:57:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="MnS880/O"
+	by mail.kernel.org (Postfix) with ESMTP id 6FA95214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbfIPL5d (ORCPT
+        id S1731955AbfIPL7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:57:33 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:48254 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727309AbfIPL5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:57:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=4UEBmSW/CBCAG5QIZKu21BsfI/TdK0ur9EAw4ov1WC0=; b=MnS880/Oh+ouDAg0CzMdK2Yd+k
-        oiyBTGdngetVphZYVVNqOSa6zu50VBLkwu4hArnslqb7BbUfVR3r+cmrw52ZXCptTb0Ebrc+HlL91
-        sHoySAfa6u85292mXOo9oQuRlZ+SP7F1JvYcBmx3x3Xw5H5bbo1AwCudRbUhFqWUrpvE=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1i9pdG-0001Zy-DD; Mon, 16 Sep 2019 13:57:26 +0200
-Date:   Mon, 16 Sep 2019 13:57:26 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     netdev@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net,
-        robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, mkubecek@suse.cz
-Subject: Re: [PATCH v5 2/2] net: phy: adin: implement Energy Detect Powerdown
- mode via phy-tunable
-Message-ID: <20190916115726.GA5552@lunn.ch>
-References: <20190916073526.24711-1-alexandru.ardelean@analog.com>
- <20190916073526.24711-3-alexandru.ardelean@analog.com>
+        Mon, 16 Sep 2019 07:59:01 -0400
+Received: from postamt.cs.uni-dortmund.de ([129.217.4.40]:57648 "EHLO
+        postamt.cs.uni-dortmund.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731379AbfIPL7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 07:59:00 -0400
+X-Greylist: delayed 310 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Sep 2019 07:58:58 EDT
+Received: from postweb.cs.uni-dortmund.de (postweb [129.217.4.49])
+        (authenticated bits=0)
+        by postamt.cs.uni-dortmund.de (8.12.6/8.12.6) with ESMTPSA id x8GBrl1q025902
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Sep 2019 13:53:47 +0200 (MEST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916073526.24711-3-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 16 Sep 2019 13:53:47 +0200
+From:   Christoph Pleger <christoph.pleger@cs.uni-dortmund.de>
+To:     linux-kernel@vger.kernel.org, linux-admin@vger.kernel.org
+Subject: Running an application on a new VT
+Message-ID: <bbfcbea3f39a4a3689f4ffedf962fbbf@cs.uni-dortmund.de>
+X-Sender: christoph.pleger@cs.uni-dortmund.de
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:35:26AM +0300, Alexandru Ardelean wrote:
-> This driver becomes the first user of the kernel's `ETHTOOL_PHY_EDPD`
-> phy-tunable feature.
-> EDPD is also enabled by default on PHY config_init, but can be disabled via
-> the phy-tunable control.
-> 
-> When enabling EDPD, it's also a good idea (for the ADIN PHYs) to enable TX
-> periodic pulses, so that in case the other PHY is also on EDPD mode, there
-> is no lock-up situation where both sides are waiting for the other to
-> transmit.
-> 
-> Via the phy-tunable control, TX pulses can be disabled if specifying 0
-> `tx-interval` via ethtool.
-> 
-> The ADIN PHY supports only fixed 1 second intervals; they cannot be
-> configured. That is why the acceptable values are 1,
-> ETHTOOL_PHY_EDPD_DFLT_TX_MSECS and ETHTOOL_PHY_EDPD_NO_TX (which disables
-> TX pulses).
-> 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Hello,
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I am using the program openvt to run another program. openvt is used to 
+open a new virtual terminal and then run the given program on the new 
+VT. In my case, I want to start a KDE Plasma session on the new VT.
 
-    Andrew
+Unfortunately, this did not work as expected: After entering the command 
+'openvt -s -w -- dbus-run-session startplasmacompositor', the KDE 
+session did not start on the new VT, but on tty1, from where I had 
+entered the openvt command. Then, I tried with 'openvt -s -w -- 
+/bin/bash', but though this ran bash on a new virtual terminal, entering 
+'dbus-run-session startplasmacompositor' on the new VT caused a switch 
+back to tty1 and again, the desktop session started there.
+
+Does anybody know why not the new VT is used for the desktop session and 
+how that behaviour can be changed?
+
+Regards
+   Christoph
