@@ -2,57 +2,102 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135F0C4CECF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 705B6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8E3720890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A7F6206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:53:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbfIPFvj (ORCPT
+        id S1729398AbfIPFxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 01:51:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:26249 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727505AbfIPFvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 01:51:39 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 22:51:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
-   d="scan'208";a="201531517"
-Received: from deichhar-mobl1.ccr.corp.intel.com (HELO localhost) ([10.249.38.237])
-  by fmsmga001.fm.intel.com with ESMTP; 15 Sep 2019 22:51:33 -0700
-Date:   Mon, 16 Sep 2019 08:51:30 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     ivan.lazeev@gmail.com
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20190916055130.GA7925@linux.intel.com>
-References: <20190914171743.22786-1-ivan.lazeev@gmail.com>
+        Mon, 16 Sep 2019 01:53:53 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48860 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725270AbfIPFxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 01:53:53 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id CB8CDB3E637D25ED0F96;
+        Mon, 16 Sep 2019 13:53:48 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Sep 2019
+ 13:53:47 +0800
+Message-ID: <5D7F236B.3070409@huawei.com>
+Date:   Mon, 16 Sep 2019 13:53:47 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190914171743.22786-1-ivan.lazeev@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+To:     Kalle Valo <kvalo@codeaurora.org>
+CC:     <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] wlegacy: Remove unneeded variable and make function
+ to be void
+References: <1568306492-42998-1-git-send-email-zhongjiang@huawei.com> <1568306492-42998-3-git-send-email-zhongjiang@huawei.com> <87h85hh0hb.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <87h85hh0hb.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 08:17:44PM +0300, ivan.lazeev@gmail.com wrote:
-> +	struct list_head acpi_resources, crb_resources;
+On 2019/9/13 1:45, Kalle Valo wrote:
+> zhong jiang <zhongjiang@huawei.com> writes:
+>
+>> il4965_set_tkip_dynamic_key_info  do not need return value to
+>> cope with different ases. And change functon return type to void.
+>>
+>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>> ---
+>>  drivers/net/wireless/intel/iwlegacy/4965-mac.c | 8 ++------
+>>  1 file changed, 2 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/intel/iwlegacy/4965-mac.c b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+>> index ffb705b..a7bbfe2 100644
+>> --- a/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+>> +++ b/drivers/net/wireless/intel/iwlegacy/4965-mac.c
+>> @@ -3326,12 +3326,11 @@ struct il_mod_params il4965_mod_params = {
+>>  	return il_send_add_sta(il, &sta_cmd, CMD_SYNC);
+>>  }
+>>  
+>> -static int
+>> +static void
+>>  il4965_set_tkip_dynamic_key_info(struct il_priv *il,
+>>  				 struct ieee80211_key_conf *keyconf, u8 sta_id)
+>>  {
+>>  	unsigned long flags;
+>> -	int ret = 0;
+>>  	__le16 key_flags = 0;
+>>  
+>>  	key_flags |= (STA_KEY_FLG_TKIP | STA_KEY_FLG_MAP_KEY_MSK);
+>> @@ -3367,8 +3366,6 @@ struct il_mod_params il4965_mod_params = {
+>>  	memcpy(il->stations[sta_id].sta.key.key, keyconf->key, 16);
+>>  
+>>  	spin_unlock_irqrestore(&il->sta_lock, flags);
+>> -
+>> -	return ret;
+>>  }
+>>  
+>>  void
+>> @@ -3483,8 +3480,7 @@ struct il_mod_params il4965_mod_params = {
+>>  		    il4965_set_ccmp_dynamic_key_info(il, keyconf, sta_id);
+>>  		break;
+>>  	case WLAN_CIPHER_SUITE_TKIP:
+>> -		ret =
+>> -		    il4965_set_tkip_dynamic_key_info(il, keyconf, sta_id);
+>> +		il4965_set_tkip_dynamic_key_info(il, keyconf, sta_id);
+>>  		break;
+>>  	case WLAN_CIPHER_SUITE_WEP40:
+>>  	case WLAN_CIPHER_SUITE_WEP104:
+> To me this looks inconsistent with the rest of the cases in the switch
+> statement. And won't we then return the ret variable uninitalised?
+Yep,  I miss that.   please ignore the patch.  Thanks,
 
-Please do not create crb_resources. I said this already last time.
+Sincerely,
+zhong jiang
 
-/Jarkko
