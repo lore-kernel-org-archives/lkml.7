@@ -2,237 +2,115 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294CBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4E3C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E524820644
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC4D20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:17:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PvIG+jDB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYLsH1zd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733053AbfIPNRC (ORCPT
+        id S1733067AbfIPNRG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:17:02 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45997 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732956AbfIPNRB (ORCPT
+        Mon, 16 Sep 2019 09:17:06 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33866 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732956AbfIPNRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:17:01 -0400
-Received: by mail-qt1-f193.google.com with SMTP id c21so4406189qtj.12
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:17:00 -0700 (PDT)
+        Mon, 16 Sep 2019 09:17:05 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so7533pgc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 06:17:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=AfsCDT99MT8mtEXYRpUBfavmRU7fsMrXI5BMAHxEVzI=;
-        b=PvIG+jDBXVedgUPD3XcKjHXh5GDKqOp6YQ5ufoyVceXIoVGwopQ/YmWFL4OVJUNOw+
-         rg3JjZRxzKrimH/q3tVCDMKSdjV7ROqFcnQjv++HQZIGeb04XDwCnfTCIG5Imu9G5KV8
-         gLF4oc144DNkzKnQw/qZIYxWXGPKmWcCONm8fBjm7z+VxV6Od01gaoEALMr7xypDoMgs
-         wpuuuQE/8fFPWLwLag45b+0eFdLITFhpYc2ztug3j/N0eNOcGEYQbiWOAWl+RVmZ6vaU
-         OvNdfUtA3+I4Ob61xRGZrab2yZo4X5zqT3xf3vKvNRSHVhsC1r93oRlTtxCC9SSZvKyi
-         E0Mw==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MjQNGhXyoaNi7Ay7kNVBn/RrtRO16elkvB5c9bQH3Ng=;
+        b=SYLsH1zdYx57s482sWVsKSF+XeD7VvoNkey5U1eVajFgPK8kmYPyn3f5gFcvLHHk6p
+         Hlp/7O6ReChutEM4UnVYdCn2Bu0A6fkvud3HWeOnZ9GIcdDT7d74yANT1TS7HCDU5dUF
+         gfCVY0klDO1nG8E+b9beCtvCPTI3ujkQIexdKXh3oPbxNCrBnxHQEO5x6yhwtuOpQ9Rw
+         TyomXjmEkMLihQMJSpVktAcRmFbnMfd69cfA0PiBEiTFh7kRyDJ6u31swjN0DPTHmc6/
+         2A5etCKnUhuNqeKQ2uDTXkibkWD2wpD1xm3XwsN2gqy6zjegAojKbuDihzqMIjnC1Ov5
+         /yNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=AfsCDT99MT8mtEXYRpUBfavmRU7fsMrXI5BMAHxEVzI=;
-        b=qwrzL/DsrXA2g5hY/p0OfPzr0kk2OfJrfBQaXNoJuIh2uIHoOZTKt7MCH7c8Drr9do
-         HSvW9yR61COtJ+fiHZ/BrPJ2dYeDvfG9dB0JcP2F+ytce80L7plm206bJuZzALE4dCSb
-         7M/ovtuQG69VIU2qkYncujry/JmYLRdC/Mx0KEyhNR+F3TUlnTnK4X8myUdUqoq5Far6
-         iOwOe34WtMoAej+/ubNqIoSgu1FdDAtklBzSzqeJArxYIvc7hpCDGdHjw1jAnl3/o8eR
-         E3vx7UOl+F/DpWc+LclhR1hd+ZR56zm7Hv1LOc/g2Z5scvq7qrYxVBN0UIibyLHRdHVY
-         y2Kg==
-X-Gm-Message-State: APjAAAWM5kLb3iNP10ZKfpGwXDHI2QjLSDnK0IkeP8udLpb8+BRL4RI9
-        am32IEjo5cc6E97ry6d+b5xrnvhJDWwCJ1WtJhyI4w==
-X-Google-Smtp-Source: APXvYqx5f0B8c8vyFPb+oOLmnL41S+UwF4v1C7z9cTUD+w7lpIU7SP9FhUtOAvECDvDTB+VwcUKflfHRj/EyZJAuYrk=
-X-Received: by 2002:a0c:b359:: with SMTP id a25mr14290448qvf.242.1568639820337;
- Mon, 16 Sep 2019 06:17:00 -0700 (PDT)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MjQNGhXyoaNi7Ay7kNVBn/RrtRO16elkvB5c9bQH3Ng=;
+        b=YObRY4NtYoEwsqaYl3usTsNcRWbO1lR1N+/IQc1lo3NBD6/S78TRp2Yn/qC1GFuV0o
+         U+J1tkQbXoZOHrvoZpQ3HJytNOLcvEMeaHav9e3RtevPkO3FmcLLByruIwoC5QExXiM6
+         B+Zw2nwkSe9L2AMsGc0DwZiggyZCyxRyCNLxXB2wlfYBo7CofWfkZjTPSNH+wqgAx0P6
+         gZyFs4SpW5BucDh249jRukuAxyv8HTJe5YsS0650m9usRssHhG+hnHULvkbKs2i8/Cpe
+         cLi+mxS0+xRwPWdbFCjFZg/AENiwYbiSPcyKt5k+gMIE5FYTerPzUZpyhf97dFkvozgx
+         t7lA==
+X-Gm-Message-State: APjAAAXJLpJWO+XUCG0ERJVNVlmRJ3WPHHbe4+ohBy3qBNsaQXiXQMfD
+        jukX8L+WL4YUnT5UNvrRt80KlN8S
+X-Google-Smtp-Source: APXvYqwckFq6sIHAg9OHkleNo4ZFt8VL66JtMi1tyaXaSMHw+Aii21E3b+iAqnfcYHfZEFGZXFdG2w==
+X-Received: by 2002:a17:90a:9ab:: with SMTP id 40mr20663608pjo.38.1568639823740;
+        Mon, 16 Sep 2019 06:17:03 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id v43sm13446903pjb.1.2019.09.16.06.17.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 06:17:02 -0700 (PDT)
+Subject: Re: [PATCH 0/6] ARM, arm64: Remove arm_pm_restart()
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20170130110512.6943-1-thierry.reding@gmail.com>
+ <20190914152544.GA17499@roeck-us.net>
+ <CAK8P3a3G_9EeK-Xp7ZeA0EN7WNzrL7AxoQcNZ8z-oe5NsTYW6g@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <056ccf5c-6c6c-090b-6ca1-ab666021db48@roeck-us.net>
+Date:   Mon, 16 Sep 2019 06:17:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190909101254.24191-1-benjamin.gaignard@st.com>
-In-Reply-To: <20190909101254.24191-1-benjamin.gaignard@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Mon, 16 Sep 2019 15:16:49 +0200
-Message-ID: <CA+M3ks7XUt5co5HHBv1LPNB8CAPqDnrn4wr-oQeKOHnGj4Pyjg@mail.gmail.com>
-Subject: Re: [PATCH] drm: sti: fix W=1 warnings
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK8P3a3G_9EeK-Xp7ZeA0EN7WNzrL7AxoQcNZ8z-oe5NsTYW6g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 9 sept. 2019 =C3=A0 12:29, Benjamin Gaignard
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
-> Fix warnings when W=3D1.
-> No code changes, only clean up in sti internal structures and functions
-> descriptions.
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+On 9/16/19 12:49 AM, Arnd Bergmann wrote:
+> On Sat, Sep 14, 2019 at 5:26 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>> On Mon, Jan 30, 2017 at 12:05:06PM +0100, Thierry Reding wrote:
+>>> From: Thierry Reding <treding@nvidia.com>
+>>>
+>>> Hi everyone,
+>>>
+>>> This small series is preparatory work for a series that I'm working on
+>>> which attempts to establish a formal framework for system restart and
+>>> power off.
+>>>
+>>> Guenter has done a lot of good work in this area, but it never got
+>>> merged. I think this set is a valuable addition to the kernel because
+>>> it converts all odd providers to the established mechanism for restart.
+>>>
+>>> Since this is stretched across both 32-bit and 64-bit ARM, as well as
+>>> PSCI, and given the SoC/board level of functionality, I think it might
+>>> make sense to take this through the ARM SoC tree in order to simplify
+>>> the interdependencies. But it should also be possible to take patches
+>>> 1-4 via their respective trees this cycle and patches 5-6 through the
+>>> ARM and arm64 trees for the next cycle, if that's preferred.
+>>>
+>>
+>> We tried this twice now, and it seems to go nowhere. What does it take
+>> to get it applied ?
+> 
+> Can you send a pull request to soc@kernel.org after the merge window,
+> with everyone else on Cc? If nobody objects, I'll merge it through
+> the soc tree.
+> 
 
-For my own reference, applied on drm-misc-next
+Sure, I'll rebase and do that.
 
-> ---
->  drivers/gpu/drm/sti/sti_cursor.c |  2 +-
->  drivers/gpu/drm/sti/sti_dvo.c    |  2 +-
->  drivers/gpu/drm/sti/sti_gdp.c    |  2 +-
->  drivers/gpu/drm/sti/sti_hda.c    |  2 +-
->  drivers/gpu/drm/sti/sti_hdmi.c   |  4 ++--
->  drivers/gpu/drm/sti/sti_tvout.c  | 10 +++++-----
->  drivers/gpu/drm/sti/sti_vtg.c    |  2 +-
->  7 files changed, 12 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sti/sti_cursor.c b/drivers/gpu/drm/sti/sti_c=
-ursor.c
-> index 0bf7c332cf0b..ea64c1dcaf63 100644
-> --- a/drivers/gpu/drm/sti/sti_cursor.c
-> +++ b/drivers/gpu/drm/sti/sti_cursor.c
-> @@ -47,7 +47,7 @@ struct dma_pixmap {
->         void *base;
->  };
->
-> -/**
-> +/*
->   * STI Cursor structure
->   *
->   * @sti_plane:    sti_plane structure
-> diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_dvo.=
-c
-> index 9e6d5d8b7030..c33d0aaee82b 100644
-> --- a/drivers/gpu/drm/sti/sti_dvo.c
-> +++ b/drivers/gpu/drm/sti/sti_dvo.c
-> @@ -65,7 +65,7 @@ static struct dvo_config rgb_24bit_de_cfg =3D {
->         .awg_fwgen_fct =3D sti_awg_generate_code_data_enable_mode,
->  };
->
-> -/**
-> +/*
->   * STI digital video output structure
->   *
->   * @dev: driver device
-> diff --git a/drivers/gpu/drm/sti/sti_gdp.c b/drivers/gpu/drm/sti/sti_gdp.=
-c
-> index 8e926cd6a1c8..11595c748844 100644
-> --- a/drivers/gpu/drm/sti/sti_gdp.c
-> +++ b/drivers/gpu/drm/sti/sti_gdp.c
-> @@ -103,7 +103,7 @@ struct sti_gdp_node_list {
->         dma_addr_t btm_field_paddr;
->  };
->
-> -/**
-> +/*
->   * STI GDP structure
->   *
->   * @sti_plane:          sti_plane structure
-> diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_hda.=
-c
-> index 94e404f13234..3512a94a0fca 100644
-> --- a/drivers/gpu/drm/sti/sti_hda.c
-> +++ b/drivers/gpu/drm/sti/sti_hda.c
-> @@ -230,7 +230,7 @@ static const struct sti_hda_video_config hda_supporte=
-d_modes[] =3D {
->          AWGi_720x480p_60, NN_720x480p_60, VID_ED}
->  };
->
-> -/**
-> +/*
->   * STI hd analog structure
->   *
->   * @dev: driver device
-> diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti_hdm=
-i.c
-> index f03d617edc4c..87e34f7a6cfe 100644
-> --- a/drivers/gpu/drm/sti/sti_hdmi.c
-> +++ b/drivers/gpu/drm/sti/sti_hdmi.c
-> @@ -333,7 +333,6 @@ static void hdmi_infoframe_reset(struct sti_hdmi *hdm=
-i,
->   * Helper to concatenate infoframe in 32 bits word
->   *
->   * @ptr: pointer on the hdmi internal structure
-> - * @data: infoframe to write
->   * @size: size to write
->   */
->  static inline unsigned int hdmi_infoframe_subpack(const u8 *ptr, size_t =
-size)
-> @@ -543,13 +542,14 @@ static int hdmi_vendor_infoframe_config(struct sti_=
-hdmi *hdmi)
->         return 0;
->  }
->
-> +#define HDMI_TIMEOUT_SWRESET  100   /*milliseconds */
-> +
->  /**
->   * Software reset of the hdmi subsystem
->   *
->   * @hdmi: pointer on the hdmi internal structure
->   *
->   */
-> -#define HDMI_TIMEOUT_SWRESET  100   /*milliseconds */
->  static void hdmi_swreset(struct sti_hdmi *hdmi)
->  {
->         u32 val;
-> diff --git a/drivers/gpu/drm/sti/sti_tvout.c b/drivers/gpu/drm/sti/sti_tv=
-out.c
-> index e1b3c8cb7287..b1fc77b150da 100644
-> --- a/drivers/gpu/drm/sti/sti_tvout.c
-> +++ b/drivers/gpu/drm/sti/sti_tvout.c
-> @@ -157,9 +157,9 @@ static void tvout_write(struct sti_tvout *tvout, u32 =
-val, int offset)
->   *
->   * @tvout: tvout structure
->   * @reg: register to set
-> - * @cr_r:
-> - * @y_g:
-> - * @cb_b:
-> + * @cr_r: red chroma or red order
-> + * @y_g: y or green order
-> + * @cb_b: blue chroma or blue order
->   */
->  static void tvout_vip_set_color_order(struct sti_tvout *tvout, int reg,
->                                       u32 cr_r, u32 y_g, u32 cb_b)
-> @@ -214,7 +214,7 @@ static void tvout_vip_set_rnd(struct sti_tvout *tvout=
-, int reg, u32 rnd)
->   * @tvout: tvout structure
->   * @reg: register to set
->   * @main_path: main or auxiliary path
-> - * @sel_input: selected_input (main/aux + conv)
-> + * @video_out: selected_input (main/aux + conv)
->   */
->  static void tvout_vip_set_sel_input(struct sti_tvout *tvout,
->                                     int reg,
-> @@ -251,7 +251,7 @@ static void tvout_vip_set_sel_input(struct sti_tvout =
-*tvout,
->   *
->   * @tvout: tvout structure
->   * @reg: register to set
-> - * @in_vid_signed: used video input format
-> + * @in_vid_fmt: used video input format
->   */
->  static void tvout_vip_set_in_vid_fmt(struct sti_tvout *tvout,
->                 int reg, u32 in_vid_fmt)
-> diff --git a/drivers/gpu/drm/sti/sti_vtg.c b/drivers/gpu/drm/sti/sti_vtg.=
-c
-> index ef4009f11396..0b17ac8a3faa 100644
-> --- a/drivers/gpu/drm/sti/sti_vtg.c
-> +++ b/drivers/gpu/drm/sti/sti_vtg.c
-> @@ -121,7 +121,7 @@ struct sti_vtg_sync_params {
->         u32 vsync_off_bot;
->  };
->
-> -/**
-> +/*
->   * STI VTG structure
->   *
->   * @regs: register mapping
-> --
-> 2.15.0
->
+Thanks,
+Guenter
