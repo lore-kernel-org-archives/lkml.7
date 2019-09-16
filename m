@@ -2,134 +2,138 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A535C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07114C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B531206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC650206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sUGJYOj1"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tl3ojxBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbfIPX47 (ORCPT
+        id S1730006AbfIPX5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:56:59 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:47860 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728891AbfIPX46 (ORCPT
+        Mon, 16 Sep 2019 19:57:40 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:43754 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728891AbfIPX5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:56:58 -0400
-Received: by mail-qt1-f202.google.com with SMTP id p56so2257985qtj.14
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 16:56:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=bJmZANwzCFV2Iqz4LhMyBOSdTmADhZHqEPwCse8wah0=;
-        b=sUGJYOj1o9xCwXnv4wc+rHf8HlX3D1AlYIvZvyfihO9GHGvXi79ynXEVh/2RhqczAz
-         W+684pXzoiyFxTsRk9OmIKGhzVP04cxmhPod4hK6vh/4Y6ekcZzsm0U+/20KsWPN+XE7
-         /fXzxWAz8FiAfivCllUrUfspG4b1EtSjjNZ+pYwcsJLvU4Vip/1+kehaDdo13Zyjiqut
-         aaK9e8E8fR3smRXhz9TtmNYk9W9VrGnNqpOjZPlcM2GH1ylMQYyzoxrB0lGaWQ8fwGSu
-         UiEMQZh272qaXObuaGLMxfyS3y1staHLcfHBXQYkTatdxKpnVEdSJijAeHe8G9DZw6bN
-         JK0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=bJmZANwzCFV2Iqz4LhMyBOSdTmADhZHqEPwCse8wah0=;
-        b=deUx/pFwJiaIrs2ADbL/+iK86txt0wDj/l/fN70IxibQuAefs/lV6i3wD/Ete1DY5i
-         KITbrR3Y7YMAyNNZTQxrTYJ0+Z82F3AsdHiawJ06vjRVXaFX3hFDOGNbuxktckwAgYeK
-         he1irRi+C1upAVFqsqgbWkfrRhTP0HhiC5i89dOoEEr+laKJ4jUBHHIe+3XO6nBEPHxN
-         MMb39mCYlUrkSUvmWoYLg5aEiO2IgfeS3kszOoHuqCa5K4PMl2l15CBCIGG8dM1OffMr
-         lKQqOQ46rH6v/82zxOViDD50RTcRlokf1fmtFAkcfkfiBCpg2UISQb9dnfmzGXcL0dlI
-         2ZLg==
-X-Gm-Message-State: APjAAAW6xk8mg3UqzqwyhArs+wX22UvcYZfnHeGdzUgZ2Z+3gfJqPFDM
-        jRH5sRzPelTVoF0J80XvLarPy3VBIBI=
-X-Google-Smtp-Source: APXvYqwcRpAFsOLDZFs5gKrwwLxNf7Ug2TgXqFTU+omF07IxxIzz4SMFzPqGErLVhC+LGxmgdbZpsHquImU=
-X-Received: by 2002:aed:3c52:: with SMTP id u18mr1080316qte.194.1568678215490;
- Mon, 16 Sep 2019 16:56:55 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 16:56:42 -0700
-In-Reply-To: <20190916235642.167583-1-khazhy@google.com>
-Message-Id: <20190916235642.167583-2-khazhy@google.com>
-Mime-Version: 1.0
-References: <20190916235642.167583-1-khazhy@google.com>
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
-Subject: [PATCH v3 2/2] fuse: kmemcg account fs data
-From:   Khazhismel Kumykov <khazhy@google.com>
-To:     miklos@szeredi.hu
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shakeelb@google.com, Khazhismel Kumykov <khazhy@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 16 Sep 2019 19:57:39 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GNnx84096081;
+        Mon, 16 Sep 2019 23:57:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=IuSLh0fb/BvGl8pVix7sy0MqWGyNSfMj/T9waRFCoi8=;
+ b=Tl3ojxBSLNTUyPlp46F0uqZ9+/J9tk6YWvuggRkE92WBOn3WxBpiam3c9Z1CvBLiV1pt
+ r4GLLmcvDbTKOvsl9CphukxDVJCHsFkY0V8F7IkXWmAS0joTBNXJWCPwH07xRCRqgvU+
+ 9ac1clwPeFGamvbU1FKqYV8dPEArhoQuD9z9HST34oU4i6COHUwmF2fEfJMxbwv/ujid
+ bW5jXOXoTaI6wLbG1Vr3UwqZd3GUxWMdhxeBDBicSYxqhekT1N3XkXuvwhyFHNDsSpnU
+ Vev/1ep5bPue2h9jdCJ7Y06i/J/ZHcp1GDtGAxemTiAOJE/SGtHj/jENTVkorZWGQ1KH /g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v0r5pamr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 23:57:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GNrlI0014393;
+        Mon, 16 Sep 2019 23:57:07 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2v0p8vakx1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 23:57:07 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8GNv6Cb025921;
+        Mon, 16 Sep 2019 23:57:06 GMT
+Received: from [192.168.1.222] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 16 Sep 2019 16:57:06 -0700
+Subject: Re: [PATCH v4 6/9] hugetlb: disable region_add file_region coalescing
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
+        mkoutny@suse.com
+References: <20190910233146.206080-1-almasrymina@google.com>
+ <20190910233146.206080-7-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <abe11781-7267-e54e-0b81-46dc4ea6d5a4@oracle.com>
+Date:   Mon, 16 Sep 2019 16:57:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190910233146.206080-7-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909160227
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909160227
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-account per-file, dentry, and inode data
+On 9/10/19 4:31 PM, Mina Almasry wrote:
+> A follow up patch in this series adds hugetlb cgroup uncharge info the
+> file_region entries in resv->regions. The cgroup uncharge info may
+> differ for different regions, so they can no longer be coalesced at
+> region_add time. So, disable region coalescing in region_add in this
+> patch.
+> 
+> Behavior change:
+> 
+> Say a resv_map exists like this [0->1], [2->3], and [5->6].
+> 
+> Then a region_chg/add call comes in region_chg/add(f=0, t=5).
+> 
+> Old code would generate resv->regions: [0->5], [5->6].
+> New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
+> [5->6].
+> 
+> Special care needs to be taken to handle the resv->adds_in_progress
+> variable correctly. In the past, only 1 region would be added for every
+> region_chg and region_add call. But now, each call may add multiple
+> regions, so we can no longer increment adds_in_progress by 1 in region_chg,
+> or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
+> region_chg calls add_reservation_in_range() to count the number of regions
+> needed and allocates those, and that info is passed to region_add and
+> region_abort to decrement adds_in_progress correctly.
 
-blockdev/superblock and temporary per-request data was left alone, as
-this usually isn't accounted
+Hate to throw more theoretical examples at you but ...
 
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
----
- fs/fuse/dir.c   | 3 ++-
- fs/fuse/file.c  | 5 +++--
- fs/fuse/inode.c | 3 ++-
- 3 files changed, 7 insertions(+), 4 deletions(-)
+Consider an existing reserv_map like [3-10]
+Then a region_chg/add call comes in region_chg/add(f=0, t=10).
+The region_chg is going to return 3 (additional reservations needed), and
+also out_regions_needed = 1 as it would want to create a region [0-3].
+Correct?
+But, there is nothing to prevent another thread from doing a region_del [5-7]
+after the region_chg and before region_add.  Correct?
+If so, it seems the region_add would need to create two regions, but there
+is only one in the cache and we would BUG in get_file_region_entry_from_cache.
+Am I reading the code correctly?
 
-diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
-index 58557d4817e9..d572c900bb0f 100644
---- a/fs/fuse/dir.c
-+++ b/fs/fuse/dir.c
-@@ -279,7 +279,8 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
- #if BITS_PER_LONG < 64
- static int fuse_dentry_init(struct dentry *dentry)
- {
--	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry), GFP_KERNEL);
-+	dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry),
-+				   GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
- 
- 	return dentry->d_fsdata ? 0 : -ENOMEM;
- }
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index a2ea347c4d2c..862aff3665b5 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -63,12 +63,13 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
- {
- 	struct fuse_file *ff;
- 
--	ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL);
-+	ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL_ACCOUNT);
- 	if (unlikely(!ff))
- 		return NULL;
- 
- 	ff->fc = fc;
--	ff->release_args = kzalloc(sizeof(*ff->release_args), GFP_KERNEL);
-+	ff->release_args = kzalloc(sizeof(*ff->release_args),
-+				   GFP_KERNEL_ACCOUNT);
- 	if (!ff->release_args) {
- 		kfree(ff);
- 		return NULL;
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index 3d598a5bb5b5..6cb445bed89d 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -66,7 +66,8 @@ static struct file_system_type fuseblk_fs_type;
- 
- struct fuse_forget_link *fuse_alloc_forget(void)
- {
--	return kzalloc(sizeof(struct fuse_forget_link), GFP_KERNEL);
-+	return kzalloc(sizeof(struct fuse_forget_link),
-+		       GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
- }
- 
- static struct inode *fuse_alloc_inode(struct super_block *sb)
+The existing code wants to make sure region_add called after region_chg will
+never return error.  This is why all needed allocations were done in the
+region_chg call, and it was relatively easy to do in existing code when
+region_chg would only need one additional region at most.
+
+I'm thinking that we may have to make region_chg allocate the worst case
+number of regions (t - f)/2, OR change to the code such that region_add
+could return an error.
 -- 
-2.23.0.237.gc6a4ce50a0-goog
-
+Mike Kravetz
