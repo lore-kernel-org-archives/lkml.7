@@ -6,61 +6,60 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D59EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 291B1C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D582A214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F323E216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568669727;
-	bh=PiNFwM0Sr3u3cER5de0oCo3OV0xuvlqxbb0g/N2345I=;
+	s=default; t=1568669736;
+	bh=C/6PseyECzjiJ1b8hqViZjWGUKqI7ydDja4Ogyl6Vbw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Fs1zHTgZej7FKaprOH+nM3Iett70M4minuya3cP6xtJEyX2ihr37LTmxCm8YZXY6c
-	 nK2rK2Srn+ChqEKlQ5KzI3eHKhCNW9jsnTRGsai+Ie3150ulmlG3zsnWpXKMwKu0pZ
-	 35Nx+9im7nGp8MwzjNZ976Xye7kwcCQzb57UEtso=
+	b=ZIOPRy8f2LoJVq6wYGLoccb8knxM1/N2CO1hF7ZgFV1WMpjCkVprUXhtEwNc5B68/
+	 THUpft8TsCVVV6fVyGv44Ebt4IIgONWdxdj7pnuDcvB40F88fBazh7AaVbIMisE55p
+	 G1Ikusj5ujlnWP5FodIxtIECMI1iE5iwbxFDlNGg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfIPVf1 (ORCPT
+        id S1732072AbfIPVff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:35:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42200 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 17:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731317AbfIPVfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:35:13 -0400
-Subject: Re: [GIT PULL] i3c: Changes for 5.4
+        id S2387415AbfIPVfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:35:12 -0400
+Subject: Re: [GIT PULL] SPI updates for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568669713;
-        bh=PiNFwM0Sr3u3cER5de0oCo3OV0xuvlqxbb0g/N2345I=;
+        s=default; t=1568669711;
+        bh=C/6PseyECzjiJ1b8hqViZjWGUKqI7ydDja4Ogyl6Vbw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GK9PW7TrqDMDCT+lpfoOQ+KnC0/RUtawW6YojJsffShHqET9y72sE4+6YzYxmYTDj
-         q26btHYjJfM+YwxeUJxe8Y0dI2sNLY3mcJuEFQWZ9lhvQUWJvsoPiqhqn44zJ4BAnJ
-         7ualna3nlvRWkVDo9xRsT1Yg/F/EojiNrjZJ5anM=
+        b=aP35W/PHQ6Tu628TrZs8H0ef9G5pqvl0Hh+OVEIQPfmCSCbroAaRF1JccAE00hGYT
+         Tvd1CnrjwZRslQImkrhAff+aWwo1OhSBmZ//TD+M8/lo8NxmpeR1HLB6DdLcTXXbH/
+         OsTsqd5xcZJY4I/EaZyhXMIH7lEqttrXFsJxljR8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190916093953.05c99b3e@collabora.com>
-References: <20190916093953.05c99b3e@collabora.com>
+In-Reply-To: <20190915231811.GQ4352@sirena.co.uk>
+References: <20190915231811.GQ4352@sirena.co.uk>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190916093953.05c99b3e@collabora.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-5.4
-X-PR-Tracked-Commit-Id: 6030f42d20cedc04df019891851320f3e257038b
+X-PR-Tracked-Message-Id: <20190915231811.GQ4352@sirena.co.uk>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-v5.4
+X-PR-Tracked-Commit-Id: b769c5ba8aedc395ed04abe6db84a556d28beec1
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 31dda85e49da949fdea5fd4e1fdeeabc44e59625
-Message-Id: <156866971340.13102.13795117505251561651.pr-tracker-bot@kernel.org>
-Date:   Mon, 16 Sep 2019 21:35:13 +0000
-To:     Boris Brezillon <boris.brezillon@collabora.com>
+X-PR-Merge-Commit-Id: aa62325dc38de2be8b1c27eb180ad3751b3f58ec
+Message-Id: <156866971191.13102.14352639353908386650.pr-tracker-bot@kernel.org>
+Date:   Mon, 16 Sep 2019 21:35:11 +0000
+To:     Mark Brown <broonie@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-i3c <linux-i3c@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 16 Sep 2019 09:39:53 +0200:
+The pull request you sent on Mon, 16 Sep 2019 00:18:11 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git tags/i3c/for-5.4
+> https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-v5.4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/31dda85e49da949fdea5fd4e1fdeeabc44e59625
+https://git.kernel.org/torvalds/c/aa62325dc38de2be8b1c27eb180ad3751b3f58ec
 
 Thank you!
 
