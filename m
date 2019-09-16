@@ -2,148 +2,100 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7808C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D53C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8499120830
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D953820830
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388634AbfIPO3F (ORCPT
+        id S2388659AbfIPOa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:29:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39405 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727934AbfIPO3F (ORCPT
+        Mon, 16 Sep 2019 10:30:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46433 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388633AbfIPOa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:29:05 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1i9rzs-0000FQ-OA; Mon, 16 Sep 2019 16:28:56 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Paul Turner <pjt@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Prarit Bhargava <prarit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: printk meeting at LPC
-References: <20190807222634.1723-1-john.ogness@linutronix.de>
-        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
-        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
-        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
-        <20190905121101.60c78422@oasis.local.home>
-        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
-        <87k1acz5rx.fsf@linutronix.de>
-        <cfc7b1fa-e629-19a6-154b-0dd4f5604aa7@I-love.SAKURA.ne.jp>
-        <20190916104624.n3jh363z37ah2kxa@pathway.suse.cz>
-        <20190916094314.6053f988@gandalf.local.home>
-Date:   Mon, 16 Sep 2019 16:28:54 +0200
-In-Reply-To: <20190916094314.6053f988@gandalf.local.home> (Steven Rostedt's
-        message of "Mon, 16 Sep 2019 09:43:14 -0400")
-Message-ID: <87r24giac9.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Mon, 16 Sep 2019 10:30:28 -0400
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1i9s1K-0003g6-HX; Mon, 16 Sep 2019 16:30:26 +0200
+Message-ID: <fcc6e54f56089d2204ca9aff79ac769a62b3adcb.camel@pengutronix.de>
+Subject: Re: [PATCH 4/4] dmaengine: imx-sdma: drop redundant variable
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Philipp Puschmann <philipp.puschmann@emlix.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-serial@vger.kernel.org, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, jslaby@suse.com, vkoul@kernel.org,
+        linux-imx@nxp.com, kernel@pengutronix.de,
+        gregkh@linuxfoundation.org, dmaengine@vger.kernel.org,
+        dan.j.williams@intel.com, festevam@gmail.com,
+        linux-arm-kernel@lists.infradead.org
+Date:   Mon, 16 Sep 2019 16:30:25 +0200
+In-Reply-To: <20190911144943.21554-5-philipp.puschmann@emlix.com>
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+         <20190911144943.21554-5-philipp.puschmann@emlix.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-16, Steven Rostedt <rostedt@goodmis.org> wrote:
->>>> 6. A new may-sleep function pr_flush() will be made available to
->>>> wait for all previously printk'd messages to be output on all
->>>> consoles before proceeding. For example:
->>>> 
->>>>     pr_cont("Running test ABC... ");
->>>>     pr_flush();
->>>> 
->>>>     do_test();
->>>> 
->>>>     pr_cont("PASSED\n");
->>>>     pr_flush();  
->>> 
->>> Don't we need to allow printk() callers to know the sequence number
->>> which the printk() has queued? Something like
->>> 
->>>   u64 seq;
->>>   pr_info(...);
->>>   pr_info(...);
->>>   pr_info(...);
->>>   seq = pr_current_seq();
->>>   pr_wait_seq(seq);
->>> 
->>> in case concurrently executed printk() flooding keeps adding a lot
->>> of pending output?
->> 
->> My expectation is that pr_flush() would wait only until the current
->> message appears on all consoles. It will not wait for messages that
->> would get added later.
->
-> Right, I believe we agreed that pr_flush() would take care of all this.
+On Mi, 2019-09-11 at 16:49 +0200, Philipp Puschmann wrote:
+> In sdma_prep_dma_cyclic buf is redundant. Drop it.
+> 
+> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
 
-Yes, this is what we agreed on.
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
->>>> 9. Support for printk dictionaries will be discontinued. I will
->>>> look into who is using this and why. If printk dictionaries are
->>>> important for you, speak up now!
->>> 
->>> I think that dev_printk() is using "const char *dict, size_t
->>> dictlen," part via create_syslog_header(). Some userspace programs
->>> might depend on availability of such information.
->> 
->> Yeah, but it seems to be the only dictionary writer. There were
->> doubts (during the meeting) whether anyone was actually using the
->> information.
->> 
->> Hmm, it seems that journalctl is able to filer device specific
->> information, for example, I get:
->> 
->> $> journalctl _KERNEL_DEVICE=+usb:2-1  
->> -- Logs begin at Tue 2019-08-13 09:00:03 CEST, end at Mon 2019-09-16 12:32:58 CEST. --
->> Aug 13 09:00:04 linux-qszd kernel: usb 2-1: new high-speed USB device number 2 using ehci-pci
->> 
->> One question is if anyone is using this filtering. Simple grep is
->> enough. Another question is whether it really needs to get passed
->> this way.
->> 
->
-> If worse comes to worse, perhaps we let the console decide what to do
-> with it. Where all consoles but the "kmsg" one ignores it?
->
-> Then journalctl should work as normal.
->
-> Or will this break one of our other changes?
+> ---
+>  drivers/dma/imx-sdma.c | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 6a5a84504858..5b6beeee9f0e 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -1544,7 +1544,7 @@ static struct dma_async_tx_descriptor
+> *sdma_prep_dma_cyclic(
+>  	struct sdma_engine *sdma = sdmac->sdma;
+>  	int num_periods = buf_len / period_len;
+>  	int channel = sdmac->channel;
+> -	int i = 0, buf = 0;
+> +	int i;
+>  	struct sdma_desc *desc;
+>  
+>  	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
+> @@ -1565,7 +1565,7 @@ static struct dma_async_tx_descriptor
+> *sdma_prep_dma_cyclic(
+>  		goto err_bd_out;
+>  	}
+>  
+> -	while (buf < buf_len) {
+> +	for (i = 0; i < num_periods; i++) {
+>  		struct sdma_buffer_descriptor *bd = &desc->bd[i];
+>  		int param;
+>  
+> @@ -1592,9 +1592,6 @@ static struct dma_async_tx_descriptor
+> *sdma_prep_dma_cyclic(
+>  		bd->mode.status = param;
+>  
+>  		dma_addr += period_len;
+> -		buf += period_len;
+> -
+> -		i++;
+>  	}
+>  
+>  	return vchan_tx_prep(&sdmac->vc, &desc->vd, flags);
 
-The consoles will just iterate the ringbuffer. So if any console needs
-dictionary information, that information needs to be stored in the
-ringbuffer as well.
-
-The dictionary text and message text could be stored as concatenated
-strings. The descriptor would point separately to the beginning of
-dictionary and message. So the data-buffer would still be a clean
-collection of text. But AFAIK Linus didn't want to see that "extra" text
-at all.
-
-If we want to keep dictionary text out of the data-buffer, we could have
-a 2nd data-buffer dedicated for dictionary text. I expect it would not
-really complicate things. Especially if the dictionary part was "best
-effort" (i.e. if the dictionary text does not fit in the free part of
-its data-buffer, it is dropped).
-
-John Ogness
