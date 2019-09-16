@@ -2,131 +2,106 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D74C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDADFC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B57B216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:47:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zlmpEt5s"
+	by mail.kernel.org (Postfix) with ESMTP id 988B4214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:53:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732272AbfIPRrb (ORCPT
+        id S2388427AbfIPRx2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:47:31 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:59719 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfIPRrb (ORCPT
+        Mon, 16 Sep 2019 13:53:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34334 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388252AbfIPRx2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:47:31 -0400
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x8GHlOSP000933
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:47:25 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x8GHlOSP000933
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1568656045;
-        bh=snSC5CbpUuN1Cw3Ri9XlO0GR3QpMdN6LNC6tbl3IFpw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zlmpEt5sTfPYRKVA5/2rQkTcbsZtkXiTvMkIlsayE1VrEhTaMhEeG8laftJvYEfR1
-         3VNxQDEE8Z3FDKVGGqExRg8nMudu2nQAeutKtyU8QA1ZTI5AFebtE1Lft2BW1i5tY6
-         oWv40Jg2ztT15sZUv4yN+7Kz+ZxM4tpx3CWIGrSf7Ktva3EYlHeHutFdzHpHjloCXm
-         IoHT2/G/0Ly9eCrt5f4fIQhVNQnXCBHafQTK17cFb/fvJEvQHBWjWgNxszmBtKt15a
-         8WBtHiRHPjrxaLN+7BbZ3nrwTc3nsY5/W96QzrFjR+5ujrTpG5F8U4bVcISnD5dorL
-         syb0XIObdX5hw==
-X-Nifty-SrcIP: [209.85.217.50]
-Received: by mail-vs1-f50.google.com with SMTP id w195so201076vsw.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:47:25 -0700 (PDT)
-X-Gm-Message-State: APjAAAVUJ+Ti7xbDFQDNEJQRH8Q/G0A/8psTgYME3XleiyXX+NpWPNFL
-        cXjegbok5c5oDMmMcY7TsDYJq90T7wCxnUt5BnI=
-X-Google-Smtp-Source: APXvYqw0crawiGP3RG9x21JW4rmaeJ/jyNDfUIdTYxkF1YqpKyOnmgLelaYfXtHPmP/3VofBZVarCj+rIB0skCe86ZI=
-X-Received: by 2002:a67:1e87:: with SMTP id e129mr578937vse.179.1568656044082;
- Mon, 16 Sep 2019 10:47:24 -0700 (PDT)
+        Mon, 16 Sep 2019 13:53:28 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8GHb6qD016863
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:53:18 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v2dbgc8xh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 13:53:17 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Mon, 16 Sep 2019 18:53:15 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 16 Sep 2019 18:53:13 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8GHrBpA49873034
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 17:53:12 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF187A4053;
+        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 839A1A4051;
+        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
+Received: from sig-9-145-147-20.de.ibm.com (unknown [9.145.147.20])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
+Date:   Mon, 16 Sep 2019 19:53:10 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Cornelia Huck <cohuck@redhat.com>
+cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: fix intparm documentation
+In-Reply-To: <20190911164103.16156-1-cohuck@redhat.com>
+References: <20190911164103.16156-1-cohuck@redhat.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-References: <20190916044651.GA72121@LGEARND20B15>
-In-Reply-To: <20190916044651.GA72121@LGEARND20B15>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 17 Sep 2019 02:46:48 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
-Message-ID: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Fix compile error due to 'endif' missing
-To:     Austin Kim <austindh.kim@gmail.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mark Brown <broonie@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Roman.Li@amd.com, amd-gfx@lists.freedesktop.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19091617-0012-0000-0000-0000034CB6E3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091617-0013-0000-0000-000021872E16
+Message-Id: <alpine.LFD.2.21.1909161946570.3883@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=699 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909160175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC Stephen Rothwell, Mark Brown)
+On Wed, 11 Sep 2019, Cornelia Huck wrote:
+> The common I/O layer is maintaining an "intparm" inspired by
+> the hardware intparm for driver usage. This "intparm" is not
+> only applicaple for ssch, but also for hsch/csch. The kerneldoc
+> states that it is only updated for hsch/csch if no prior request
+> is pending; however, this is not what the code does (whether
+> that would actually desireable is a different issue.)
+> 
+> Let's at least fix the kerneldoc for now.
+> 
+> Fixes: b2ffd8e9a76e ("[S390] cio: Add docbook comments.")
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 
-On Mon, Sep 16, 2019 at 1:46 PM Austin Kim <austindh.kim@gmail.com> wrote:
->
-> gcc throws compile error with below message:
+I did a similar patch after a discusion with a colleague a couple of
+months ago but totally forgot about that... yours has better description
+and kdoc anyway ;-)
 
-GNU Make throws ...
+Applied. Thanks!
 
-
-This is probably a merge mistake in linux-next.
-
-If so, this should be directly fixed in the linux-next.
-
-If it is not fixed in time,
-please inform Linus to *not* follow the linux-next.
-
-
-Thanks.
-
-
-
->
-> HDRINST usr/include/drm/i915_drm.h
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dml/Makefile:70: *** missing 'endif'.  Stop.
-> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu/drm/amd/amdgpu' failed
-> make[3]: *** [drivers/gpu/drm/amd/amdgpu] Error 2
-> make[3]: *** Waiting for unfinished jobs....
->   HDRINST usr/include/drm/omap_drm.h
->   HDRINST usr/include/drm/tegra_drm.h
->   HDRINST usr/include/drm/drm_sarea.h
->   HDRINST usr/include/drm/panfrost_drm.h
->   HDRINST usr/include/drm/drm.h
-> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu/drm' failed
-> make[2]: *** [drivers/gpu/drm] Error 2
-> scripts/Makefile.modbuiltin:55: recipe for target 'drivers/gpu' failed
-> make[1]: *** [drivers/gpu] Error 2
-> make[1]: *** Waiting for unfinished jobs....
->
-> Add 'endif' to Makefile to stop compile error.
->
-> Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-> ---
->  drivers/gpu/drm/amd/display/dc/dml/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dml/Makefile b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> index a2eb59e..5b2a65b 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> +++ b/drivers/gpu/drm/amd/display/dc/dml/Makefile
-> @@ -44,6 +44,7 @@ CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20.o := $(dml_ccflags)
->  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20.o := $(dml_ccflags)
->  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_mode_vba_20v2.o := $(dml_ccflags)
->  CFLAGS_$(AMDDALPATH)/dc/dml/dcn20/display_rq_dlg_calc_20v2.o := $(dml_ccflags)
-> +endif
->  ifdef CONFIG_DRM_AMD_DC_DCN2_1
->  CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_mode_vba_21.o := $(dml_ccflags)
->  CFLAGS_$(AMDDALPATH)/dc/dml/dcn21/display_rq_dlg_calc_21.o := $(dml_ccflags)
-> --
-> 2.6.2
->
-
-
--- 
-Best Regards
-Masahiro Yamada
