@@ -2,125 +2,119 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EC9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1099FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:08:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCE1206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB937206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568657308;
+	bh=KbwPsELW3WIASO4863nxdNhKgePSrm4NMEwpLvuisQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yypP6ZvD0a0Vjv3UqSbK7mfN+h0MfbeJn4EnzN7I9Kn27YHjmFfKShr8NaLmis9aK
+	 OgMOX4ihlRozfPJnrRbCAc0rfCWBBJ7DY2mkYXsy6CLdIbqwC3JP+yUSrWS6fC6WLD
+	 277WxmBVEvklUCueiSHSQxji1P3Kx/hEht4l13JY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390160AbfIPSIE (ORCPT
+        id S2390234AbfIPSI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:08:04 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:39562 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389924AbfIPSIE (ORCPT
+        Mon, 16 Sep 2019 14:08:28 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49180 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729765AbfIPSI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:08:04 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id 21DEFE80FFC;
-        Mon, 16 Sep 2019 20:08:02 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id C5C67160ADC; Mon, 16 Sep 2019 20:08:01 +0200 (CEST)
-Date:   Mon, 16 Sep 2019 20:08:01 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC v2] random: optionally block in getrandom(2) when the
- CRNG is uninitialized
-Message-ID: <20190916180801.GB30990@gardel-login>
-References: <CAHk-=whW_AB0pZ0u6P9uVSWpqeb5t2NCX_sMpZNGy8shPDyDNg@mail.gmail.com>
- <CAHk-=wi_yXK5KSmRhgNRSmJSD55x+2-pRdZZPOT8Fm1B8w6jUw@mail.gmail.com>
- <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914122500.GA1425@darwi-home-pc>
- <008f17bc-102b-e762-a17c-e2766d48f515@gmail.com>
- <20190915052242.GG19710@mit.edu>
- <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+        Mon, 16 Sep 2019 14:08:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=IhH8eG5jrmv5K+PdK/jRPJRJORLMPGfQ9Mu0yZDLXao=; b=KwzTtsFTbybFw474V6VBrCeXi
+        EQ9ZNyYUDVea3mWV6fDFsK7Aanb7ZWj+GzYrXbtDNgrInzYj4Z9kpuBIILVqS/XXkS7RAK0ITFjG+
+        MSwdIU5caaopv9HF1cI5CDtZ1RF6vVqZUNH1Qlq8+A8Qbs46wi4iy0WP3ydsbUpI9zHLw=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9vQ9-0005Jy-2b; Mon, 16 Sep 2019 18:08:17 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 24F432741A0D; Mon, 16 Sep 2019 19:08:16 +0100 (BST)
+Date:   Mon, 16 Sep 2019 19:08:16 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Austin Kim <austindh.kim@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Roman.Li@amd.com,
+        amd-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amd/display: Fix compile error due to 'endif' missing
+Message-ID: <20190916180815.GK4352@sirena.co.uk>
+References: <20190916044651.GA72121@LGEARND20B15>
+ <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IKC1RK7+nRZ8SZaO"
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgg2T=3KxrO-BY3nHJgMEyApjnO3cwbQb_0vxsn9qKN8Q@mail.gmail.com>
+In-Reply-To: <CAK7LNARZMr5ZKGufi63GZrZ45k60faAiXr4mBB_mU9h_QifjxQ@mail.gmail.com>
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On So, 15.09.19 10:32, Linus Torvalds (torvalds@linux-foundation.org) wrote:
 
-> [ Added Lennart, who was active in the other thread ]
->
-> On Sat, Sep 14, 2019 at 10:22 PM Theodore Y. Ts'o <tytso@mit.edu> wrote:
+--IKC1RK7+nRZ8SZaO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Sep 17, 2019 at 02:46:48AM +0900, Masahiro Yamada wrote:
+> (+CC Stephen Rothwell, Mark Brown)
+>=20
+> On Mon, Sep 16, 2019 at 1:46 PM Austin Kim <austindh.kim@gmail.com> wrote:
 > >
-> > Thus, add an optional configuration option which stops getrandom(2)
-> > from blocking, but instead returns "best efforts" randomness, which
-> > might not be random or secure at all.
->
-> So I hate having a config option for something like this.
->
-> How about this attached patch instead? It only changes the waiting
-> logic, and I'll quote the comment in full, because I think that
-> explains not only the rationale, it explains every part of the patch
-> (and is most of the patch anyway):
->
->  * We refuse to wait very long for a blocking getrandom().
->  *
->  * The crng may not be ready during boot, but if you ask for
->  * blocking random numbers very early, there is no guarantee
->  * that you'll ever get any timely entropy.
->  *
->  * If you are sure you need entropy and that you can generate
->  * it, you need to ask for non-blocking random state, and then
->  * if that fails you must actively _do_something_ that causes
->  * enough system activity, perhaps asking the user to type
->  * something on the keyboard.
+> > gcc throws compile error with below message:
+>=20
+> GNU Make throws ...
+>=20
+>=20
 
-You are requesting a UI change here. Maybe the kernel shouldn't be the
-one figuring out UI.
+I don't have the original patch so I don't know what the issue being
+reported is :/  Whatever it is it wasn't caught by any of the builds
+done during the process of building -next and nothing is jumping out at
+me on KernelCI.
 
-I mean, as I understand you are unhappy with behaviour you saw on
-systemd systems; we can certainly improve behaviour of systemd in
-userspace alone, i.e. abort the getrandom() after a while in userspace
-and log about it using typical userspace logging to the console. I am
-not sure why you want to do all that in the kernel, the kernel isn't
-great at user interaction, and really shouldn't be.
+> This is probably a merge mistake in linux-next.
 
-If all you want is abort the getrandom() after 30s and a friendly
-message on screen, by all means, let's add that to systemd, I have
-zero problem with that. systemd has infrastructure for pushing that to
-the user, the kernel doesn't really have that so nicely.
+> If so, this should be directly fixed in the linux-next.
 
-It appears to me you subscribe too much to an idea that userspace
-people are not smart enough and couldn't implement something like
-this. Turns out we can though, and there's no need to add logic that
-appears to follow the logic of "never trust userspace"...
+> If it is not fixed in time,
+> please inform Linus to *not* follow the linux-next.
 
-i.e. why not just consider this all just a feature request for the
-systemd-random-seed.service, i.e. the service you saw the issue with
-to handle this on its own?
+It's probably worth coordinating this merge with DRM, it's not *super*
+complex but clearly there's some potential for error here and it was
+definitely annoyingly fiddly.
 
-> Hmm? No strange behavior. No odd config variables. A bounded total
-> boot-time wait of 30s (which is a completely random number, but I
-> claimed it as the "big red button" time).
+--IKC1RK7+nRZ8SZaO
+Content-Type: application/pgp-signature; name="signature.asc"
 
-As mentioned, in systemd's case, updating the random seed on disk
-is entirely fine to take 5h or so. I don't really think we really need
-to bound this in kernel space.
+-----BEGIN PGP SIGNATURE-----
 
-Lennart
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/z48ACgkQJNaLcl1U
+h9BEtAf8Cg6gsw4Wr7G6vas1AyCCbY8RUAsjUmUecWcXXaUrxAlhZINRy+3tV8pB
+1+uxPZZbpbrAtrb7GATiJZAEmCbazZP5PlHWivEgTfqSUQiHSDoX/5gvtaGdfQoq
+fEosO5kiJ1Z7uEjKLgqfdIotR0oGxYYBRAhMPs5Q+KDheHdNDVVkWjKkqfLGBMvc
+QxAbEbCfF3mk0MziIFmI4rmsREpvVE3YqWZFcp/u0dUbg/+hAf9/MKH2W1EK7qi4
+L45PCcnI9vR5hivC8iNYZnvFtg1IugOgX7kM/6Wp8g4jxvTPeZGqYG4LFfdRU2lx
+wMBC2pjSApPd0pdO0uUyA7Cjn9Tg/A==
+=cbJO
+-----END PGP SIGNATURE-----
 
---
-Lennart Poettering, Berlin
+--IKC1RK7+nRZ8SZaO--
