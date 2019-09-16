@@ -2,109 +2,123 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04F29C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEB8E214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568630165;
-	bh=pomYLwRYbCEbqyd6K6P8sKMkRv00Pd8/VCRXvD/0QKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HXoUSPgTSk7omhasEh4ZSIEtD6JQqxY9uggaFj6vZ0G11vH9HJk1/rE9FiPSa8tJw
-	 7Ql8rG2jpfCE/xNoDPwYR6W5vk/ppp7WiZQbtoDkOFn5JAq6T/T8bEdESuLsBp9eik
-	 iwvmiZfaNCZAuaEScjCg18oWC4XiVEKx3txarfWs=
+	by mail.kernel.org (Postfix) with ESMTP id 6DA6221848
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="mYdC2Jos"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfIPKgF (ORCPT
+        id S1731104AbfIPKgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:36:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34700 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726604AbfIPKgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:36:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2BC22ABD0;
-        Mon, 16 Sep 2019 10:36:03 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 12:36:02 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm, thp: Do not queue fully unmapped pages for deferred
- split
-Message-ID: <20190916103602.GD10231@dhcp22.suse.cz>
-References: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
+        Mon, 16 Sep 2019 06:36:17 -0400
+Received: from onstation.org ([52.200.56.107]:40790 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728134AbfIPKgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:36:17 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 35DF83E8F9;
+        Mon, 16 Sep 2019 10:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1568630176;
+        bh=4KQmgz71YU3A68V+Z3HaVPiT+RBIQPuGE3xqAmSJ6fE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mYdC2Jostpc6JnzwEQKwLhjI7/uhjM7Lt0RJ5HB20fuJn1eObXMqrg4rMz0NWQAha
+         9mZxUJPUj3+2M4JFGaGm27QPrkXQDLGJNiBeRsEplRktcZoLHydxXxBglCpX5+wd9L
+         fPvoREGjrIlTtEyAFeXHDspo9m5N2e4aerYO4rDQ=
+Date:   Mon, 16 Sep 2019 06:36:14 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
+        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
+        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, linus.walleij@linaro.org,
+        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        freedreno@lists.freedesktop.org
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+Message-ID: <20190916103614.GA1644@onstation.org>
+References: <20190815004854.19860-1-masneyb@onstation.org>
+ <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+ <20190815004854.19860-6-masneyb@onstation.org>
+ <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 13-09-19 12:18:49, Kirill A. Shutemov wrote:
-> Adding fully unmapped pages into deferred split queue is not productive:
-> these pages are about to be freed or they are pinned and cannot be split
-> anyway.
+On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
+> On 15.08.2019 02:48, Brian Masney wrote:
+> > When attempting to configure this driver on a Nexus 5 phone (msm8974),
+> > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+> > error. The downstream MSM kernel sources [1] shows that the proper value
+> > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+> > probing to succeed.
+> >
+> > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+> >
+> > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > ---
+> >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > index 25e063bcecbc..bc511fc605c9 100644
+> > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+> > @@ -6,7 +6,7 @@
+> >  #ifndef __ANX78xx_H
+> >  #define __ANX78xx_H
+> >  
+> > -#define TX_P0				0x70
+> > +#define TX_P0				0x78
 > 
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  mm/rmap.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 003377e24232..45388f1bf317 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
->  	if (TestClearPageDoubleMap(page)) {
->  		/*
->  		 * Subpages can be mapped with PTEs too. Check how many of
-> -		 * themi are still mapped.
-> +		 * them are still mapped.
->  		 */
->  		for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
->  			if (atomic_add_negative(-1, &page[i]._mapcount))
->  				nr++;
->  		}
-> +
-> +		/*
-> +		 * Queue the page for deferred split if at least one small
-> +		 * page of the compound page is unmapped, but at least one
-> +		 * small page is still mapped.
-> +		 */
-> +		if (nr && nr < HPAGE_PMD_NR)
-> +			deferred_split_huge_page(page);
+> This bothers me little. There are no upstream users, grepping android
+> sources suggests that both values can be used [1][2]  (grep for "#define
+> TX_P0"), moreover there is code suggesting both values can be valid [3].
+> 
+> Could you verify datasheet which i2c slave addresses are valid for this
+> chip, if both I guess this patch should be reworked.
+> 
+> 
+> [1]:
+> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+> 
+> [2]:
+> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+> 
+> [3]:
+> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
 
-You've set nr to zero in the for loop so this cannot work AFAICS.
+This address is 0x78 on my Nexus 5. Given [3] above it looks like we
+need to support both addresses. What do you think about moving these
+addresses into device tree?
 
->  	} else {
->  		nr = HPAGE_PMD_NR;
->  	}
-> @@ -1284,10 +1292,8 @@ static void page_remove_anon_compound_rmap(struct page *page)
->  	if (unlikely(PageMlocked(page)))
->  		clear_page_mlock(page);
->  
-> -	if (nr) {
-> +	if (nr)
->  		__mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
-> -		deferred_split_huge_page(page);
-> -	}
->  }
->  
->  /**
-> -- 
-> 2.21.0
+The downstream and upstream kernel sources divide these addresses by two
+to get the i2c address. Here's the code in upstream:
 
--- 
-Michal Hocko
-SUSE Labs
+https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+
+I'm not sure why the actual i2c address isn't used in this code.
+
+Brian
