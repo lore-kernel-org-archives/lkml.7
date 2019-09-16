@@ -2,193 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA9CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16A7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F86020650
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8387C20650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:52:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qSrkDPzF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxDbhb+s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733299AbfIPOvx (ORCPT
+        id S2387481AbfIPOw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:51:53 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:40060 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726690AbfIPOvx (ORCPT
+        Mon, 16 Sep 2019 10:52:27 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37160 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726690AbfIPOw1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:51:53 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GEppEZ048227;
-        Mon, 16 Sep 2019 09:51:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568645511;
-        bh=N2fNUTJ5FqCAIRceZLmcocaOVqYYlTS4Sz3JSM1s1To=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=qSrkDPzFGX2ZFyVswTk+k9SZ/PSDqAl54dAgfESJvwvmlkgBH/2wbURA42Z9NUHDX
-         pH5RdyNEf6MVprFGcL9tLGMdirKakBpDWhPtQPqso16J+5pQAZmGBpHYq6Sl1e3PLm
-         g5OTDCnQtwUXUU5QzRwdABJaqV6u+Ru0b4nUYAOs=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8GEppft012452
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 16 Sep 2019 09:51:51 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
- Sep 2019 09:51:50 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 16 Sep 2019 09:51:48 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id x8GEpoBQ048306;
-        Mon, 16 Sep 2019 09:51:50 -0500
-Date:   Mon, 16 Sep 2019 09:53:56 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-media <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 05/13] media: am437x-vpfe: Streamlined vb2 buffer cleanup
-Message-ID: <20190916145356.wddnnl3kk2awmbf4@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-6-bparrot@ti.com>
- <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
+        Mon, 16 Sep 2019 10:52:27 -0400
+Received: by mail-oi1-f196.google.com with SMTP id i16so3143401oie.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 07:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rz4fstL5PcNeH2URZIP6JUFkj0ovCM3jsOukQ2mghT8=;
+        b=LxDbhb+sepV6hNiFf95ePSFVMHfW7m75L/eVS418Gb9PcMncY1GPn8YZ9A1SzBayDC
+         ns+kJqdBBZP/YTxzVax4rw2aqHPjoxe20u934Qu7y4rp6M2Jd2zcL/hvwYoBORFVGfg+
+         i5pEwuAes4nlW6z/JhIH/rJHelMu98T3P0ueBWpcBFF5EgRV8mmKKML6Faw9na4/qoSw
+         6mgOC3io0FXPm6aPRXxGlZkEwa3ocY2GtPvHzO7SfAJ6YC1cbNY1PHPh0MsxuRhRI70k
+         zkYwjhech/VTX25+jUeOE8rg64XS4l2i6h9zEJUDlQ3VKM5l71QqqYtexpJ3xADP3mMT
+         g7xA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rz4fstL5PcNeH2URZIP6JUFkj0ovCM3jsOukQ2mghT8=;
+        b=iWedMP1i7U+v6oYVNpe6+EUDeGFCxZgv72rPJHiv+TZbEuFQiiZCv1cThKGVpLifKs
+         kuqDwf1zifx6+8CJuVSj3mz4OQL2SwH6sHYmn95xp3yjGE/hxlGHKjOYMTvb0uNmCDPr
+         nf/WdiYmLKc3tQKhnDhSHVhcTX3cH3126NtNfF6jHlI/uMjt4a58MQBUfK+vA8pi+Ief
+         lrFKWWBJUnig/SswQRJKlm31J+M3KsurPlmENL+ovo9s9TWMHGJCceNC0IzvO4P6MI03
+         jrJThp0pI5UMqyG2ctmd2BG1OaBIdyUICVpcRFqxF5ypIgzz7cMFi0v8FvFWMBpUQGxJ
+         qCtw==
+X-Gm-Message-State: APjAAAWi2+GJfYMrOYHF8b/zXw8TcAUB2cYmLIuG7viLjo1hqk4naX9i
+        lRtGzRTH1MDsvjIHIxsm7Phn8Ha91ftzTJWt1Dw=
+X-Google-Smtp-Source: APXvYqyVlzwEHQON5YK1RLDCgnErzpw4BALj+ECauWMeVLCvCJGCiUnF8aqP1wO8Dz6jqNGYbS/pIDujVHjsyJXjIJo=
+X-Received: by 2002:aca:c38b:: with SMTP id t133mr138124oif.22.1568645546529;
+ Mon, 16 Sep 2019 07:52:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8ub2rjkp0WyUDV8EKnvqR=jCbCdxGzeeNas2APyiJdsYg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190915170809.10702-1-lpf.vector@gmail.com> <20190915170809.10702-2-lpf.vector@gmail.com>
+ <alpine.DEB.2.21.1909151410250.211705@chino.kir.corp.google.com>
+In-Reply-To: <alpine.DEB.2.21.1909151410250.211705@chino.kir.corp.google.com>
+From:   Pengfei Li <lpf.vector@gmail.com>
+Date:   Mon, 16 Sep 2019 22:52:15 +0800
+Message-ID: <CAD7_sbHHNObV4Gw24FP_KUtB9d4qSBpy9jwjWhWKxNGGLVNMgQ@mail.gmail.com>
+Subject: Re: [RESEND v4 1/7] mm, slab: Make kmalloc_info[] contain all types
+ of names
+To:     David Rientjes <rientjes@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christopher Lameter <cl@linux.com>, penberg@kernel.org,
+        iamjoonsoo.kim@lge.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lad, Prabhakar <prabhakar.csengg@gmail.com> wrote on Mon [2019-Sep-16 09:00:03 +0100]:
-> Hi Benoit,
-> 
-> Thank you for the patch.
-> 
-> On Mon, Sep 9, 2019 at 5:26 PM Benoit Parrot <bparrot@ti.com> wrote:
+On Mon, Sep 16, 2019 at 5:38 AM David Rientjes <rientjes@google.com> wrote:
+>
+> On Mon, 16 Sep 2019, Pengfei Li wrote:
+>
+> > There are three types of kmalloc, KMALLOC_NORMAL, KMALLOC_RECLAIM
+> > and KMALLOC_DMA.
 > >
-> > Returning queued vb2 buffers back to user space is a common
-> > task best handled by a helper function.
+> > The name of KMALLOC_NORMAL is contained in kmalloc_info[].name,
+> > but the names of KMALLOC_RECLAIM and KMALLOC_DMA are dynamically
+> > generated by kmalloc_cache_name().
 > >
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >  drivers/media/platform/am437x/am437x-vpfe.c | 54 ++++++++++-----------
-> >  1 file changed, 26 insertions(+), 28 deletions(-)
+> > This patch predefines the names of all types of kmalloc to save
+> > the time spent dynamically generating names.
 > >
-> > diff --git a/drivers/media/platform/am437x/am437x-vpfe.c b/drivers/media/platform/am437x/am437x-vpfe.c
-> > index 3a8ad9bdf283..52f7fc6e11dd 100644
-> > --- a/drivers/media/platform/am437x/am437x-vpfe.c
-> > +++ b/drivers/media/platform/am437x/am437x-vpfe.c
-> > @@ -1949,6 +1949,29 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
-> >         spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-> >  }
+> > Besides, remove the kmalloc_cache_name() that is no longer used.
 > >
-> > +static void vpfe_return_all_buffers(struct vpfe_device *vpfe,
-> > +                                   enum vb2_buffer_state state)
-> > +{
-> > +       struct vpfe_cap_buffer *buf, *node;
-> > +       unsigned long flags;
-> > +
-> > +       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
-> > +       list_for_each_entry_safe(buf, node, &vpfe->dma_queue, list) {
-> > +               vb2_buffer_done(&buf->vb.vb2_buf, state);
-> > +               list_del(&buf->list);
-> > +       }
-> > +
-> > +       if (vpfe->cur_frm)
-> > +               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf, state);
-> > +
-> > +       if (vpfe->next_frm && vpfe->next_frm != vpfe->cur_frm)
-> > +               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf, state);
-> > +
-> > +       vpfe->cur_frm = NULL;
-> > +       vpfe->next_frm = NULL;
-> > +       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-> > +}
-> > +
-> >  /*
-> >   * vpfe_start_streaming : Starts the DMA engine for streaming
-> >   * @vb: ptr to vb2_buffer
-> > @@ -1957,7 +1980,6 @@ static void vpfe_buffer_queue(struct vb2_buffer *vb)
-> >  static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >  {
-> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
-> > -       struct vpfe_cap_buffer *buf, *tmp;
-> >         struct vpfe_subdev_info *sdinfo;
-> >         unsigned long flags;
-> >         unsigned long addr;
-> > @@ -2003,11 +2025,8 @@ static int vpfe_start_streaming(struct vb2_queue *vq, unsigned int count)
-> >         return 0;
-> >
-> >  err:
-> > -       list_for_each_entry_safe(buf, tmp, &vpfe->dma_queue, list) {
-> > -               list_del(&buf->list);
-> > -               vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
-> > -       }
-> > -
-> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_QUEUED);
-> > +       vpfe_pcr_enable(&vpfe->ccdc, 0);
-> 
-> please create a seperate patch for the above change.
+> > Signed-off-by: Pengfei Li <lpf.vector@gmail.com>
+> > Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> > Acked-by: Roman Gushchin <guro@fb.com>
+>
+> Acked-by: David Rientjes <rientjes@google.com>
+>
 
-You mean a separate patch just for the vpfe_pcr_enable() call?
+Thanks.
 
-Benoit
+> It's unfortunate the existing names are kmalloc-, dma-kmalloc-, and
+> kmalloc-rcl- since they aren't following any standard naming convention.
+>
+> Also not sure I understand the SET_KMALLOC_SIZE naming since this isn't
+> just setting a size.  Maybe better off as INIT_KMALLOC_INFO?
 
-> 
-> Cheers,
-> --Prabhakar Lad
-> 
-> >         return ret;
-> >  }
-> >
-> > @@ -2022,7 +2041,6 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
-> >  {
-> >         struct vpfe_device *vpfe = vb2_get_drv_priv(vq);
-> >         struct vpfe_subdev_info *sdinfo;
-> > -       unsigned long flags;
-> >         int ret;
-> >
-> >         vpfe_pcr_enable(&vpfe->ccdc, 0);
-> > @@ -2040,27 +2058,7 @@ static void vpfe_stop_streaming(struct vb2_queue *vq)
-> >                 vpfe_dbg(1, vpfe, "stream off failed in subdev\n");
-> >
-> >         /* release all active buffers */
-> > -       spin_lock_irqsave(&vpfe->dma_queue_lock, flags);
-> > -       if (vpfe->cur_frm == vpfe->next_frm) {
-> > -               vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
-> > -                               VB2_BUF_STATE_ERROR);
-> > -       } else {
-> > -               if (vpfe->cur_frm != NULL)
-> > -                       vb2_buffer_done(&vpfe->cur_frm->vb.vb2_buf,
-> > -                                       VB2_BUF_STATE_ERROR);
-> > -               if (vpfe->next_frm != NULL)
-> > -                       vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
-> > -                                       VB2_BUF_STATE_ERROR);
-> > -       }
-> > -
-> > -       while (!list_empty(&vpfe->dma_queue)) {
-> > -               vpfe->next_frm = list_entry(vpfe->dma_queue.next,
-> > -                                               struct vpfe_cap_buffer, list);
-> > -               list_del(&vpfe->next_frm->list);
-> > -               vb2_buffer_done(&vpfe->next_frm->vb.vb2_buf,
-> > -                               VB2_BUF_STATE_ERROR);
-> > -       }
-> > -       spin_unlock_irqrestore(&vpfe->dma_queue_lock, flags);
-> > +       vpfe_return_all_buffers(vpfe, VB2_BUF_STATE_ERROR);
-> >  }
-> >
-> >  static int vpfe_g_pixelaspect(struct file *file, void *priv,
-> > --
-> > 2.17.1
-> >
+Yes, this name is really better. I will rename SET_KMALLOC_SIZE to
+INIT_KMALLOC_INFO in v5.
+
+>
+> Nothing major though, so:
+>
+> Acked-by: David Rientjes <rientjes@google.com>
