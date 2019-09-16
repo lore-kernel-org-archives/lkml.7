@@ -2,158 +2,134 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0C7C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBFE206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TrzOfFUY"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9192067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 11:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568634076;
+	bh=ItIEi264BmnPHmxlri53zlCN6O9JWYJQ90U5gpYQpic=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=rACw9+PJBPRnYOjkRyUqD/vK4uy3YpxJobvEvRLgLDS0NnkLJhNlQz+Tk2XKtFmXg
+	 6zw1L2TK7mrEJwqcTpFnoUw4/K55b67dwD+WJ3Z1vR061Fk8tYrASCY010HkBBhigO
+	 H5NKJaXN0gb48hFD8PpFKTNI/yFzWcH8lY8xgCaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731393AbfIPLjd (ORCPT
+        id S1732099AbfIPLlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 07:39:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41201 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfIPLjd (ORCPT
+        Mon, 16 Sep 2019 07:41:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:33476 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725912AbfIPLlO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 07:39:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id f5so1399881ljg.8
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 04:39:32 -0700 (PDT)
+        Mon, 16 Sep 2019 07:41:14 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b9so4920374wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 04:41:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f5a1BChAu3dyalw+cUTX4tLGbm1QRrKJw1j9muYZIGY=;
-        b=TrzOfFUYFDWcU0Mm7IHUprpprBHhyiuhR38gvj9ZpcefblJY/uh/SlOYG7cY0/nw+M
-         ySXaxrk4fmlzmj4F8Yym3H2AdB53Ep4gnRJywFN1E6b44xVK/7Hz2JoGruyXKeJUz3Hm
-         qflyd1hMBUkNctqsc03vQiNeu7BIRFUlwhDts2gUV2acheK/t9JrpGuDGGBiSPU1DuUc
-         Fe462Hzo9eWyTXsmC/XtNQZJwkGXAFfa0UALKMZR7MrZeqMzEqjfoPeXEhGVRWgtIr6l
-         FeOF3ZPimXy8vkV4VyHgPV1gMPcTrG8sgExqCI2l9rRzBVk7Ves8n0L/s+7rA4GMtQH9
-         d3ZQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7Os/u0VdItyExV9ZxI/ioj3/7STwp91iuWfVjfmjBEo=;
+        b=eCK9ZVVsGFi35pIdsP+P4AM0/4YMdYXVhkGvEBmIHrioAGL1N5SnoOTmERIoTogKWI
+         IjQxdR+LStmWKYZbLfLvGkBPLSiGIOUE+zzQB+sGCoIPH/SDn05TMqS+01kUBD10SKzW
+         SXtjDW4viRFD+csBw6zEqGpRJXa6abtaPoIVRIaFW81O/+vlyyZq6R3gnaG614eKh11H
+         YEbD5UxkU2mPUOlx/eLw4nHVOTw4v0hl1kxbo5AVgt70G9YFVisubT0zotATU924tknB
+         30uE7xJAgl98V6c3VInHwRgVNOz03wso4mA+kaOa1TbMLxmrqbVN0DiIETtwflxj2ikc
+         u99w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f5a1BChAu3dyalw+cUTX4tLGbm1QRrKJw1j9muYZIGY=;
-        b=HvZraXhd7oKRe8+n5SobOa6Q/yOPUQILIewarMAIPqZTjSuLYF1u4nC9Cojx7RTiWn
-         1kyi4r7CBw2zZVZbqRhdCVwdg0jIN8v/0XfeaTxE5szBFvFfPAOrfAL3rckb21+PXCOc
-         RWT4nzB7p1B4kqqNevS6T9zCHVIQ/11CpXF/cJBLPaUXrEuQpJ66Xd+utqmrFKheTtys
-         FShrxKmtS6GSaLrirEjd+8b6LCaFCaIaj/dqE2bo3XaFXPSb/l98Yu80+HjEUMEPYeMp
-         yTMc4yF2h9R8l7hU/fIK90vEWCbjgrxKO/rEu1vAXpo0O1Biu5J2jjCII4UGS8SvIIC3
-         1j9Q==
-X-Gm-Message-State: APjAAAWZv6xlpqNIiHqSyZK07u2QJIp1M6we++nP6S/XTwC3U0C0L70l
-        o4FKMRvjr2g5PjwKcExvc4oxLsSNs90nOo6dcOq/2g==
-X-Google-Smtp-Source: APXvYqyF/vTMBQLIzMMmA4MjGs9N3Z29+Zd/qyQLXrhaXqKygcunzLEXfGCFRRSdXb2lj+2ry3V6W4CO/6S/R61sOck=
-X-Received: by 2002:a2e:9218:: with SMTP id k24mr37512846ljg.35.1568633971209;
- Mon, 16 Sep 2019 04:39:31 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition:user-agent;
+        bh=7Os/u0VdItyExV9ZxI/ioj3/7STwp91iuWfVjfmjBEo=;
+        b=B3Acrl2u6tuY1mYJERHDJHJklDXc8LGOvIX5gnVOI0JlEXdhnRhrYoyWaiIn1gDoxp
+         JT4b2YiRqtOS5MqFNlWEDQC5/h+C/U4EY+bU6n5lZv5ykjA8S6/NB71lggmET9UeX+yV
+         2Oo1/BN6Uiztw+ML5l8etCwZe21DPos7pYfCC+/qsyTuSDcwtnVEkuP6eVjtiYA/ieeA
+         abzYvSHWjdmwEZ9s1n58FzAbuBPETlfeAJdzHWE7DO55flSagrDLoPHbD15RsAHtFm1h
+         36z2vLgQ8HqBJTIx84mMYtW1YuKWKnMB3ZOQUf0EQ8vUbnkRVnJiZBYWqYFRtRHqveTg
+         zXgw==
+X-Gm-Message-State: APjAAAVfPlryOgFSNza9LJasoCVFChIp8fjLJLSim+fU0kNk+CF39CzW
+        NXANf8KBsYtVqzVCM1LPd3jhHvdu
+X-Google-Smtp-Source: APXvYqwGRtQFeRVc7vFcAShgepBSr7tloe2fkzchqmnLZsf02/6C7wk31nKULcuox7N7jFB6r+pXMQ==
+X-Received: by 2002:adf:f00b:: with SMTP id j11mr8571430wro.298.1568634072744;
+        Mon, 16 Sep 2019 04:41:12 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id q25sm13770415wmq.27.2019.09.16.04.41.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 04:41:12 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 13:41:10 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Will Deacon <will@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [GIT PULL] locking changes for v5.4
+Message-ID: <20190916114110.GA128086@gmail.com>
 MIME-Version: 1.0
-References: <cover.1568224280.git.esyr@redhat.com>
-In-Reply-To: <cover.1568224280.git.esyr@redhat.com>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Mon, 16 Sep 2019 13:39:20 +0200
-Message-ID: <CADYN=9KM5YWat7Fbh52hB4=pjpwPRO5o62=Jg+D3SnEATy3CeA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/6] Update clone3 self-tests
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Shuah Khan <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Adrian Reber <areber@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Sep 2019 at 20:02, Eugene Syromiatnikov <esyr@redhat.com> wrote:
->
-> Hello.
->
-> This patch set updates clone3 selftest in several aspects:
->  - adding checks for exit_signal invalid values handling;
->  - adding clone3 to selftests targets;
->  - enabling clone3 tests on all architectures;
->  - minor cleanups of the clone3 test.
->
-> This respin alignes additional clone3 self-tests with v3 of the
-> exit_signal checking patch[1].
->
-> Applied on top of brauer/linux.git/for-next.
->
-> Changes since v2[2]:
->  - CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG check is now expected to fail.
->
-> Changes since v1[3]:
->  - exit_signal check extended to cover more cases of invalid
->    exit_signal value.
->
-> [1] https://lkml.org/lkml/2019/9/11/677
-> [2] https://lkml.org/lkml/2019/9/10/768
-> [3] https://lkml.org/lkml/2019/9/10/416
->
-> Eugene Syromiatnikov (6):
->   selftests/clone3: convert test modes into an enum
->   selftests/clone3: add a check for invalid exit_signal
->   selftests/clone3: use uint64_t for flags parameter
->   selftests/clone3: fix up format strings
->   selftests/clone3: enable clone3 self-tests on all architectures
->   selftests: add clone3 to TARGETS
+Linus,
 
-I wasn't able to build this patchset for arm64, I applied it on tag
-next-20190904:
+Please pull the latest locking-core-for-linus git tree from:
 
-$ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -skj$(getconf
-_NPROCESSORS_ONLN) headers_install
-$ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -skj$(getconf
-_NPROCESSORS_ONLN) -C tools/testing/selftests/clone3
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking-core-for-linus
 
-clone3_set_tid.c: In function =E2=80=98raw_clone=E2=80=99:
-clone3_set_tid.c:22:17: error: =E2=80=98__NR_clone3=E2=80=99 undeclared (fi=
-rst use in
-this function); did you mean =E2=80=98raw_clone=E2=80=99?
-  return syscall(__NR_clone3, args, sizeof(struct clone_args));
-                 ^~~~~~~~~~~
-                 raw_clone
-clone3_set_tid.c:22:17: note: each undeclared identifier is reported
-only once for each function it appears in
-make: *** [../lib.mk:138:
-/srv/src/kernel/kselftest-testing/tools/testing/selftests/clone3/clone3_set=
-_tid]
-Error 1
-clone3.c: In function =E2=80=98raw_clone=E2=80=99:
-clone3.c:41:17: error: =E2=80=98__NR_clone3=E2=80=99 undeclared (first use =
-in this
-function); did you mean =E2=80=98raw_clone=E2=80=99?
-  return syscall(__NR_clone3, args, size);
-                 ^~~~~~~~~~~
-                 raw_clone
-clone3.c:41:17: note: each undeclared identifier is reported only once
-for each function it appears in
-make: *** [../lib.mk:138:
-/srv/src/kernel/kselftest-testing/tools/testing/selftests/clone3/clone3]
-Error 1
-make: Target 'all' not remade because of errors.
+   # HEAD: e57d143091f1c0b1a98140a4d2e63e113afb62c0 mutex: Fix up mutex_waiter usage
+
+This cycle's changes were:
+
+ - Improve rwsem scalability
+ - Add uninitialized rwsem debugging check
+ - Reduce lockdep's stacktrace memory usage and add diagnostics
+ - Misc cleanups, code consolidation and constification
+
+ Thanks,
+
+	Ingo
+
+------------------>
+Bart Van Assche (4):
+      locking/lockdep: Make it clear that what lock_class::key points at is not modified
+      stacktrace: Constify 'entries' arguments
+      locking/lockdep: Reduce space occupied by stack traces
+      locking/lockdep: Report more stack trace statistics
+
+Davidlohr Bueso (1):
+      locking/rwsem: Check for operations on an uninitialized rwsem
+
+Mukesh Ojha (2):
+      locking/mutex: Make __mutex_owner static to mutex.c
+      locking/mutex: Use mutex flags macro instead of hard code
+
+Peter Zijlstra (2):
+      locking/qspinlock,x86: Clarify virt_spin_lock_key
+      mutex: Fix up mutex_waiter usage
+
+Waiman Long (1):
+      locking/rwsem: Make handoff writer optimistically spin on owner
 
 
-Any idea what I'm doing wrong?
-
-Cheers,
-Anders
-
->
->  tools/testing/selftests/Makefile        |  1 +
->  tools/testing/selftests/clone3/Makefile |  4 +--
->  tools/testing/selftests/clone3/clone3.c | 64 +++++++++++++++++++++++++++=
-+-----
->  3 files changed, 57 insertions(+), 12 deletions(-)
->
-> --
-> 2.1.4
->
+ arch/x86/include/asm/qspinlock.h   |  15 ++++
+ include/linux/lockdep.h            |  11 +--
+ include/linux/mutex.h              |  25 +-----
+ include/linux/rwsem.h              |  10 +++
+ include/linux/stacktrace.h         |   4 +-
+ kernel/locking/lockdep.c           | 159 ++++++++++++++++++++++++++++---------
+ kernel/locking/lockdep_internals.h |   9 ++-
+ kernel/locking/lockdep_proc.c      |   8 +-
+ kernel/locking/mutex.c             |  26 ++++++
+ kernel/locking/rwsem.c             |  54 ++++++++++---
+ kernel/stacktrace.c                |   4 +-
+ 11 files changed, 241 insertions(+), 84 deletions(-)
