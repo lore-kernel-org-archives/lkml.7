@@ -2,156 +2,224 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 208B3C4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D21FFC4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAAD214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="uzv2qbzT"
+	by mail.kernel.org (Postfix) with ESMTP id B20C6214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 07:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730469AbfIPHKh (ORCPT
+        id S1730627AbfIPHLX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 03:10:37 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:30424 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730419AbfIPHKf (ORCPT
+        Mon, 16 Sep 2019 03:11:23 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:16688 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726082AbfIPHLW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 03:10:35 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8G77tYl014744;
-        Mon, 16 Sep 2019 03:10:33 -0400
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2054.outbound.protection.outlook.com [104.47.46.54])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2v0t293722-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Sep 2019 03:10:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Uu/LnwZKa86YysCcFRf0bQiVeN+6qruHveGqJD5XBctNt99wG0FDOci0/8PGPTNEc3d5+XD+FZqoW+H8Y5vkdVxfxV0qtVmGM0muGKGFzJbeLbSf6x6RxcOIEMgvxUm3YFhGXlL13G2Vq3Au/AhcapQ+p9lVMD7c3qNaDQqlHvGVSpZygm2JF6TApTTzWt+kovdKJJtOjO8jeHKgNf5Sx1/RaHtq32MvWlbl1H703lZ5FLZu5BmjAwr4vm5A50JtYWjABchJQZOb7oc5sNHrYj9uTuFHcZds1evhD86+UolX74o8Ely2pndWcCKF4oRkDFmzQOv6yId9/M7ac+hVDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N//v9tP42mO82MASuaLghoW7AUmfw1VhX5gXorThYfI=;
- b=VF8QrpEPq6E+DD/A/Qrox6aSqr4rgQfLlE4d0U6ao3kZ9Yn/Qnk/Yhr5MxelJ9siObbK9xgVp0EML9PsTVmYUhLKQPohabEVESe5lMPd+qe9pE/LMl1xYcrjP6BZ+pnPDYuNDjcT6vhtsVmnwzdFH98Swf5gJ3kidxMEkG2IUsXZpMtIucUUkoFiSwtQBq2GALgsmbGr/sH1EvtwcFgdnAlErN0j40af9qmWph0Ddy1ObFBm1aeqv0hYVMp75D97RE9/1QiafxnbI5w32uGTtJO/DRA1Fpyx3kpey2XOX5quDEUCMjVOXV9CAqVcQZ//oT33/pOLwQTZOCqFxQ2hiA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N//v9tP42mO82MASuaLghoW7AUmfw1VhX5gXorThYfI=;
- b=uzv2qbzTwDFAScI0JgpayEjA0k83Nw0E6Mdzd9MlmjRqu96LzQ5pgx1AjvhEwMNH1/ynM62rc+KXpTD1JcRA6CCDb3I88ug3arYQTlMHnyOsBkrc+h129qj0Ao7PjaTFztGEzo+xSEPiK7M7nW0ZraNReIfHB3MEr+e+0zUUlEA=
-Received: from CY4PR03CA0080.namprd03.prod.outlook.com (2603:10b6:910:4d::21)
- by DM5PR03MB2810.namprd03.prod.outlook.com (2603:10b6:3:11a::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.23; Mon, 16 Sep
- 2019 07:10:30 +0000
-Received: from BL2NAM02FT006.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e46::208) by CY4PR03CA0080.outlook.office365.com
- (2603:10b6:910:4d::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2220.19 via Frontend
- Transport; Mon, 16 Sep 2019 07:10:30 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- BL2NAM02FT006.mail.protection.outlook.com (10.152.76.239) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
- via Frontend Transport; Mon, 16 Sep 2019 07:10:29 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8G7AOlZ016106
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 16 Sep 2019 00:10:24 -0700
-Received: from saturn.ad.analog.com (10.48.65.123) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Mon, 16 Sep 2019 03:10:29 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <broonie@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v3 1/3] spi: move `cs_change_delay` backwards compat logic outside switch
-Date:   Mon, 16 Sep 2019 10:10:22 +0300
-Message-ID: <20190916071024.21447-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190916071024.21447-1-alexandru.ardelean@analog.com>
-References: <20190916071024.21447-1-alexandru.ardelean@analog.com>
+        Mon, 16 Sep 2019 03:11:22 -0400
+X-UUID: f1b8921be39243db81135c57cd8880b7-20190916
+X-UUID: f1b8921be39243db81135c57cd8880b7-20190916
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1352235378; Mon, 16 Sep 2019 15:11:14 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 16 Sep
+ 2019 15:11:07 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 16 Sep 2019 15:11:06 +0800
+Message-ID: <1568617865.7317.74.camel@mhfsdcap03>
+Subject: Re: [Patch V9 3/8] phy: tegra: xusb: Add vbus override support on
+ Tegra210
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <mark.rutland@arm.com>, <robh+dt@kernel.org>, <kishon@ti.com>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Date:   Mon, 16 Sep 2019 15:11:05 +0800
+In-Reply-To: <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
+References: <1568354873-24073-1-git-send-email-nkristam@nvidia.com>
+         <1568354873-24073-4-git-send-email-nkristam@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(136003)(396003)(376002)(346002)(189003)(199004)(47776003)(2906002)(2870700001)(246002)(86362001)(50466002)(8936002)(8676002)(26005)(6666004)(126002)(5660300002)(446003)(76176011)(11346002)(476003)(356004)(186003)(336012)(51416003)(4744005)(107886003)(7696005)(426003)(1076003)(70206006)(70586007)(478600001)(36756003)(2616005)(486006)(305945005)(44832011)(7636002)(110136005)(54906003)(316002)(2201001)(106002)(48376002)(50226002)(4326008)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR03MB2810;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c6f004eb-759f-4372-0096-08d73a74f52e
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM5PR03MB2810;
-X-MS-TrafficTypeDiagnostic: DM5PR03MB2810:
-X-Microsoft-Antispam-PRVS: <DM5PR03MB2810FCF439EEEF3E4DE9989DF98C0@DM5PR03MB2810.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
-X-Forefront-PRVS: 0162ACCC24
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: djWVo9yf9y70QUX6g5JUVw4Iaa5drOQdpbWvOEsO5KEEptPrGQsf56UPIyZ4+y2qWQItyfjB8FMNixms2rw9aMiK3xp/Wu3fsevKV1JpPkc1Ha4Ppv/ZsuPFW4oTLeeZEgcMNk59s+CxL2qsPgRzWRTNkk3AkdN+46qnsY9iuHre3FNkqxveQ40GsINrnD2KOtnHp1P13B0mQDrmge+Sorxoa45zELIaaoEzmI8gqN7QHsf5IAjqyNdoL3XYXCgcoemuZjjjFM7uUW5ZRSZLuPBfBuxvJwLCrPcyww05507N+YrIWyAwDqNiKbY0WQf6kDeIMsjDUdzwzIZL8Q5gPVBPFOuM6AOqryx15FRy35oE1QVF6DmgVZRhRXVLjpPVPQndGPYpRGtYyfvjubIoRBj2iJAt4Vk/xQwqBWmfFM4=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Sep 2019 07:10:29.9834
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c6f004eb-759f-4372-0096-08d73a74f52e
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR03MB2810
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-16_04:2019-09-11,2019-09-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- priorityscore=1501 clxscore=1015 malwarescore=0 suspectscore=0
- phishscore=0 lowpriorityscore=0 mlxscore=0 adultscore=0 bulkscore=0
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1909160077
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: DF578D0D8935BFB61BBE328B9FF34215B0B7C778C60519D9D891F49837686EC22000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The `cs_change_delay` backwards compatibility value could be moved outside
-of the switch statement.
-The only reason to do it, is to make the next patches easier to diff.
+On Fri, 2019-09-13 at 11:37 +0530, Nagarjuna Kristam wrote:
+> Tegra XUSB device control driver needs to control vbus override
+> during its operations, add API for the support.
+> 
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+>  drivers/phy/tegra/xusb-tegra210.c | 57 +++++++++++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.c          | 22 +++++++++++++++
+>  drivers/phy/tegra/xusb.h          |  2 ++
+>  include/linux/phy/tegra/xusb.h    |  4 ++-
+>  4 files changed, 84 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+> index 8c31f03..9e6f14b 100644
+> --- a/drivers/phy/tegra/xusb-tegra210.c
+> +++ b/drivers/phy/tegra/xusb-tegra210.c
+> @@ -65,6 +65,10 @@
+>  #define XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(x) (1 << (1 + (x)))
+>  #define XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(x) (1 << (8 + (x)))
+>  
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(x) (0x080 + (x) * 0x40)
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP (1 << 18)
+> +#define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN (1 << 22)
+> +
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(x) (0x084 + (x) * 0x40)
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_SHIFT 7
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
+> @@ -227,6 +231,12 @@
+>  #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL6(x) (0xa74 + (x) * 0x40)
+>  #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL6_RX_EQ_CTRL_H_VAL 0xfcf01368
+>  
+> +#define XUSB_PADCTL_USB2_VBUS_ID 0xc60
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON (1 << 14)
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT 18
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK 0xf
+> +#define XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING 8
+> +
+>  struct tegra210_xusb_fuse_calibration {
+>  	u32 hs_curr_level[4];
+>  	u32 hs_term_range_adj;
+> @@ -2016,6 +2026,51 @@ static const struct tegra_xusb_port_ops tegra210_usb3_port_ops = {
+>  	.map = tegra210_usb3_port_map,
+>  };
+>  
+> +static int tegra210_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+> +					      bool status)
+> +{
+> +	u32 value;
+> +
+> +	dev_dbg(padctl->dev, "%s vbus override\n", status ? "set" : "clear");
+> +
+> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_VBUS_ID);
+> +
+> +	if (status) {
+> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+> +		value &= ~(XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_MASK <<
+> +			   XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT);
+> +		value |= XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_FLOATING <<
+> +			 XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_SHIFT;
+> +	} else
+> +		value &= ~XUSB_PADCTL_USB2_VBUS_ID_OVERRIDE_VBUS_ON;
+Nit: use braces in else branch
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/spi/spi.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+> +
+> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_VBUS_ID);
+> +
+> +	return 0;
+> +}
+> +
+> +static int tegra210_utmi_port_reset(struct phy *phy)
+> +{
+> +	struct tegra_xusb_padctl *padctl;
+> +	struct tegra_xusb_lane *lane;
+> +	u32 value;
+> +
+> +	lane = phy_get_drvdata(phy);
+> +	padctl = lane->pad->padctl;
+> +
+> +	value = padctl_readl(padctl,
+> +		     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL0(lane->index));
+> +
+> +	if ((value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIP) ||
+> +	    (value & XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL0_ZIN)) {
+> +		tegra210_xusb_padctl_vbus_override(padctl, false);
+> +		tegra210_xusb_padctl_vbus_override(padctl, true);
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int
+>  tegra210_xusb_read_fuse_calibration(struct tegra210_xusb_fuse_calibration *fuse)
+>  {
+> @@ -2078,6 +2133,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
+>  	.remove = tegra210_xusb_padctl_remove,
+>  	.usb3_set_lfps_detect = tegra210_usb3_set_lfps_detect,
+>  	.hsic_set_idle = tegra210_hsic_set_idle,
+> +	.vbus_override = tegra210_xusb_padctl_vbus_override,
+> +	.utmi_port_reset = tegra210_utmi_port_reset,
+>  };
+>  
+>  static const char * const tegra210_xusb_padctl_supply_names[] = {
+> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+> index b4b217e..bf4b008 100644
+> --- a/drivers/phy/tegra/xusb.c
+> +++ b/drivers/phy/tegra/xusb.c
+> @@ -1121,6 +1121,28 @@ int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
+>  }
+>  EXPORT_SYMBOL_GPL(tegra_xusb_padctl_usb3_set_lfps_detect);
+>  
+> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
+> +							bool val)
+> +{
+> +	if (padctl->soc->ops->vbus_override)
+> +		return padctl->soc->ops->vbus_override(padctl, val);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL_GPL(tegra_xusb_padctl_set_vbus_override);
+> +
+> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy)
+> +{
+> +	struct tegra_xusb_lane *lane = phy_get_drvdata(phy);
+> +	struct tegra_xusb_padctl *padctl = lane->pad->padctl;
+> +
+> +	if (padctl->soc->ops->utmi_port_reset)
+> +		return padctl->soc->ops->utmi_port_reset(phy);
+> +
+> +	return -ENOTSUPP;
+> +}
+> +EXPORT_SYMBOL_GPL(tegra_phy_xusb_utmi_port_reset);
+> +
+>  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+>  MODULE_DESCRIPTION("Tegra XUSB Pad Controller driver");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+> index bd91832..da94fcc 100644
+> --- a/drivers/phy/tegra/xusb.h
+> +++ b/drivers/phy/tegra/xusb.h
+> @@ -373,6 +373,8 @@ struct tegra_xusb_padctl_ops {
+>  			     unsigned int index, bool idle);
+>  	int (*usb3_set_lfps_detect)(struct tegra_xusb_padctl *padctl,
+>  				    unsigned int index, bool enable);
+> +	int (*vbus_override)(struct tegra_xusb_padctl *padctl, bool set);
+> +	int (*utmi_port_reset)(struct phy *phy);
+>  };
+>  
+>  struct tegra_xusb_padctl_soc {
+> diff --git a/include/linux/phy/tegra/xusb.h b/include/linux/phy/tegra/xusb.h
+> index ee59562..1235865 100644
+> --- a/include/linux/phy/tegra/xusb.h
+> +++ b/include/linux/phy/tegra/xusb.h
+> @@ -18,5 +18,7 @@ int tegra_xusb_padctl_hsic_set_idle(struct tegra_xusb_padctl *padctl,
+>  				    unsigned int port, bool idle);
+>  int tegra_xusb_padctl_usb3_set_lfps_detect(struct tegra_xusb_padctl *padctl,
+>  					   unsigned int port, bool enable);
+> -
+> +int tegra_xusb_padctl_set_vbus_override(struct tegra_xusb_padctl *padctl,
+> +					bool val);
+> +int tegra_phy_xusb_utmi_port_reset(struct phy *phy);
+>  #endif /* PHY_TEGRA_XUSB_H */
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 75ac046cae52..c90e02e6d62f 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1114,16 +1114,15 @@ static void _spi_transfer_cs_change_delay(struct spi_message *msg,
- 	u32 hz;
- 
- 	/* return early on "fast" mode - for everything but USECS */
--	if (!delay && unit != SPI_DELAY_UNIT_USECS)
-+	if (!delay) {
-+		if (unit == SPI_DELAY_UNIT_USECS)
-+			_spi_transfer_delay_ns(10000);
- 		return;
-+	}
- 
- 	switch (unit) {
- 	case SPI_DELAY_UNIT_USECS:
--		/* for compatibility use default of 10us */
--		if (!delay)
--			delay = 10000;
--		else
--			delay *= 1000;
-+		delay *= 1000;
- 		break;
- 	case SPI_DELAY_UNIT_NSECS: /* nothing to do here */
- 		break;
--- 
-2.20.1
 
