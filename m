@@ -2,112 +2,202 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B58C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71732C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB5520890
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E2BB20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:25:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bk54uahq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gVXp8UFl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfIPJZj (ORCPT
+        id S1731970AbfIPJZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:25:39 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17176 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725850AbfIPJZi (ORCPT
+        Mon, 16 Sep 2019 05:25:50 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44492 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729508AbfIPJZt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:25:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7f55130000>; Mon, 16 Sep 2019 02:25:39 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 02:25:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:25:37 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 09:25:37 +0000
-Received: from [10.21.132.148] (10.124.1.5) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 09:25:35 +0000
-Subject: Re: [PATCH 5.2 00/37] 5.2.15-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190913130510.727515099@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <8ee066b8-ec21-ef87-dbb7-0c2328f93e6d@nvidia.com>
-Date:   Mon, 16 Sep 2019 10:25:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 05:25:49 -0400
+Received: by mail-vk1-f193.google.com with SMTP id j21so7185vki.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 02:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lVvZxMvnkUm7v4Djpl2U0876asmMVjf66fovgS1q9Ug=;
+        b=gVXp8UFlHkCIlom8seAltI7o8a13/Hlm/Mrba9+7euLO02gFV09aCzpaMwkeF3hnxy
+         k0fLEskzYTy4q0fzku0gOQa/TVB30Y2dKSW4aLTAGpY5f0iNslDRd+2AUbeTIZFrLMuB
+         +HZLmGdI8ozvaGzqyyS/xCBTgRRTV3rlWz1TfY58/Ly1KeEMJlxd1TlQpvXm/s/+Tf4I
+         L4v9qCZq7b/5OewX8bdBVEZRWiVXXrUCTF4vRXPt2Uadh9AF7LUyg2JXRXAXmYgL9LpM
+         sGjnYi5LO/DbO8SVeT6H36hNq6nYPR96VGYq2rNxqUoRaIsW6nUNtJHDHJTATjL7AZyI
+         wXYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lVvZxMvnkUm7v4Djpl2U0876asmMVjf66fovgS1q9Ug=;
+        b=MaMgyfJwlr4im7MDIB3yigzvSEETI7UTWRh9RApAxMYUKZzkkQBMkwnP0wxOOWRC++
+         ZTY2kF4ymro+7BVolGAanvsqscVcZCLJudvhX7SlfsIaW0j40FSBl6HaCigL2kgXcpcF
+         gMZec9kbhn0ERpqfj5l90GJEf9p0jWfnO48d4wImlGYgMdtEGQ2K3zccx+HZvACQs7cc
+         fHivKLzMKVYoazxp7k8Qy3rMr8Ze8toanMyMuWuvd+q9oHlYQBFZfAsuo8MPcsQbU99i
+         xD6Af5kiS3drEHoJB1iaxYZy9HynARiR1Bh5Z27I7yS07o5i/xS4G5X1D6gXGtLTxYz9
+         dUUQ==
+X-Gm-Message-State: APjAAAXkvjnjVrzrpYEewqVopuWD3ppZhDHL9eTvNLJMmmUssipxZnBl
+        lcL7v3b1H7yKIZLQ4dAq6c7Cbjni54cCJVciDNbyjA==
+X-Google-Smtp-Source: APXvYqz8yNYoxi4lVLbhbNGaX+7YoPtphAV0D2lpTntT8mdxcEuM1NT2n7OYNKP0e1WxjFqDnGY2Wo/FL1nClmIaEw4=
+X-Received: by 2002:a1f:8fc4:: with SMTP id r187mr28293588vkd.17.1568625946461;
+ Mon, 16 Sep 2019 02:25:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190913130510.727515099@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568625939; bh=hNQLxXppVWp46OeYURikZOP7aKylr3ksobdyzwJ7adk=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=bk54uahqcPQacs7R5Rx06zgDLtS8GRQ9YPTIHQ10CQyF3LpaAG0G19ioO36n+h63i
-         bUsxKPABZWtF605RZ9ms8TmEbcEDEsyAE5ja5FDRmPICSaes/GTcTcy+TR51KvFoB+
-         FjYB27kZFdGgjoKO1x2ynOUeUBSKrpd94ntcHgzA40vIGdFRJTtaWgcV7+45H+oWAk
-         cTWeTE8GZOBTPCzJjRECfHnEOODtzvlir/QkRJG/i//LmjS3JmGIip03qZkdQo7A/p
-         vlyF2WEVPc2aSMRVnk/eKDX+8oVD16xgS1fRhjEIeypHCeVmRiT3IVT232Ms48D+bo
-         THH1xzIEiACxQ==
+References: <20190722193939.125578-1-dianders@chromium.org>
+ <CAPDyKFoND5Kaam72zxO4wChO0z_1XL2KWX6oNjVcMUGA7G8RFg@mail.gmail.com> <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
+In-Reply-To: <CAD=FV=VTLoqGbxFFMT8h72cfHCLupyvZpD75JB0N86+kFA+vzw@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 16 Sep 2019 11:25:10 +0200
+Message-ID: <CAPDyKFrPHguMrMvXN0yHbD9GmEg4m=J1Un=LcpE0PB7WqMRYSg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] mmc: core: Fix Marvell WiFi reset by adding SDIO
+ API to replug card
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Andreas Fenkart <afenkart@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        netdev <netdev@vger.kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 11 Sep 2019 at 23:26, Doug Anderson <dianders@chromium.org> wrote:
+>
+> Hi,
+>
+> On Thu, Jul 25, 2019 at 6:28 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >
+> > On Mon, 22 Jul 2019 at 21:41, Douglas Anderson <dianders@chromium.org> wrote:
+> > >
+> > > As talked about in the thread at:
+> > >
+> > > http://lkml.kernel.org/r/CAD=FV=X7P2F1k_zwHc0mbtfk55-rucTz_GoDH=PL6zWqKYcpuw@mail.gmail.com
+> > >
+> > > ...when the Marvell WiFi card tries to reset itself it kills
+> > > Bluetooth.  It was observed that we could re-init the card properly by
+> > > unbinding / rebinding the host controller.  It was also observed that
+> > > in the downstream Chrome OS codebase the solution used was
+> > > mmc_remove_host() / mmc_add_host(), which is similar to the solution
+> > > in this series.
+> > >
+> > > So far I've only done testing of this series using the reset test
+> > > source that can be simulated via sysfs.  Specifically I ran this test:
+> > >
+> > > for i in $(seq 1000); do
+> > >   echo "LOOP $i --------"
+> > >   echo 1 > /sys/kernel/debug/mwifiex/mlan0/reset
+> > >
+> > >   while true; do
+> > >     if ! ping -w15 -c1 "${GW}" >/dev/null 2>&1; then
+> > >       fail=$(( fail + 1 ))
+> > >       echo "Fail WiFi ${fail}"
+> > >       if [[ ${fail} == 3 ]]; then
+> > >         exit 1
+> > >       fi
+> > >     else
+> > >       fail=0
+> > >       break
+> > >     fi
+> > >   done
+> > >
+> > >   hciconfig hci0 down
+> > >   sleep 1
+> > >   if ! hciconfig hci0 up; then
+> > >     echo "Fail BT"
+> > >     exit 1
+> > >   fi
+> > > done
+> > >
+> > > I ran this several times and got several hundred iterations each
+> > > before a failure.  When I saw failures:
+> > >
+> > > * Once I saw a "Fail BT"; manually resetting the card again fixed it.
+> > >   I didn't give it time to see if it would have detected this
+> > >   automatically.
+> > > * Once I saw the ping fail because (for some reason) my device only
+> > >   got an IPv6 address from my router and the IPv4 ping failed.  I
+> > >   changed my script to use 'ping6' to see if that would help.
+> > > * Once I saw the ping fail because the higher level network stack
+> > >   ("shill" in my case) seemed to crash.  A few minutes later the
+> > >   system recovered itself automatically.  https://crbug.com/984593 if
+> > >   you want more details.
+> > > * Sometimes while I was testing I saw "Fail WiFi 1" indicating a
+> > >   transitory failure.  Usually this was an association failure, but in
+> > >   one case I saw the device do "Firmware wakeup failed" after I
+> > >   triggered the reset.  This caused the driver to trigger a re-reset
+> > >   of itself which eventually recovered things.  This was good because
+> > >   it was an actual test of the normal reset flow (not the one
+> > >   triggered via sysfs).
+> > >
+> > > Changes in v2:
+> > > - s/routnine/routine (Brian Norris, Matthias Kaehlcke).
+> > > - s/contining/containing (Matthias Kaehlcke).
+> > > - Add Matthias Reviewed-by tag.
+> > > - Removed clear_bit() calls and old comment (Brian Norris).
+> > > - Explicit CC of Andreas Fenkart.
+> > > - Explicit CC of Brian Norris.
+> > > - Add "Fixes" pointing at the commit Brian talked about.
+> > > - Add Brian's Reviewed-by tag.
+> > >
+> > > Douglas Anderson (2):
+> > >   mmc: core: Add sdio_trigger_replug() API
+> > >   mwifiex: Make use of the new sdio_trigger_replug() API to reset
+> > >
+> > >  drivers/mmc/core/core.c                     | 28 +++++++++++++++++++--
+> > >  drivers/mmc/core/sdio_io.c                  | 20 +++++++++++++++
+> > >  drivers/net/wireless/marvell/mwifiex/sdio.c | 16 +-----------
+> > >  include/linux/mmc/host.h                    | 15 ++++++++++-
+> > >  include/linux/mmc/sdio_func.h               |  2 ++
+> > >  5 files changed, 63 insertions(+), 18 deletions(-)
+> > >
+> >
+> > Doug, thanks for sending this!
+> >
+> > As you know, I have been working on additional changes for SDIO
+> > suspend/resume (still WIP and not ready for sharing) and this series
+> > is related.
+> >
+> > The thing is, that even during system suspend/resume, synchronizations
+> > are needed between the different layers (mmc host, mmc core and
+> > sdio-funcs), which is common to the problem you want to solve.
+> >
+> > That said, I need to scratch my head a bit more before I can provide
+> > you some feedback on $subject series. Moreover, it's vacation period
+> > at my side so things are moving a bit slower. Please be patient.
+>
+> I had kinda forgotten about this series after we landed it locally in
+> Chrome OS, but I realized that it never got resolved upstream.  Any
+> chance your head has been sufficiently scratched and you're now happy
+> with $subject series?  ;-)
 
-On 13/09/2019 14:07, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.15 release.
-> There are 37 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.15-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+It's still on my TODO list. Apologize for the delay, but I still need
+more time to look into it, possibly later this week.
 
-All tests passing for Tegra ...
+In any case, let's make sure we get this problem resolved for v5.5.
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.2.15-rc2-g4a69042627aa
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Kind regards
+Uffe
