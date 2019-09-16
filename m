@@ -2,70 +2,109 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D11C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF633C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE091206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B8C3214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 01:23:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568596981;
+	bh=xxgZ1Q3z3vmCEsSNVt/oxyS2I9d6nQzQpHN46hLwkrI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Qj7tbwGmSbY7ef2MEoCLyaCf4YfabaQbYjd1nY54cjh5A4HqI2qm5jXF8VizTJPdf
+	 VtHzjseH3qj8FaJuA7rDPBJ0znBCWo7EnyXsVc262CI/lY/RbroahcYbI4J7359Irz
+	 lWtRNmoB1cwwtx9x0ozP+4hCauVVxPlECWAvptOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729039AbfIPBVC (ORCPT
+        id S1729075AbfIPBXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 21:21:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56726 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727192AbfIPBVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 21:21:02 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id DFFEE14AB25707A36B83;
-        Mon, 16 Sep 2019 09:21:00 +0800 (CST)
-Received: from [127.0.0.1] (10.177.224.82) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Sep 2019
- 09:20:53 +0800
-Subject: Re: [PATCH] ubifs: ubifs_tnc_start_commit: Fix OOB in layout_in_gaps
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     "zhangyi (F)" <yi.zhang@huawei.com>,
-        Richard Weinberger <richard@nod.at>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-References: <1563602720-113903-1-git-send-email-chengzhihao1@huawei.com>
- <CAFLxGvxEAGtQDFm4G3orY+M9yuthDA4j0+u=HbE9DKuo7H8WCg@mail.gmail.com>
- <0B80F9D4116B2F4484E7279D5A66984F7A7472@dggemi524-mbx.china.huawei.com>
- <CAFLxGvz__aw+BnfmGS3XXGqT6n6q-9miLPoVcL9KuvaZ2QbVUQ@mail.gmail.com>
- <0B80F9D4116B2F4484E7279D5A66984F7C0325@dggemi524-mbx.china.huawei.com>
- <CAFLxGvwpYHKi_nf0-uVWWpzG5Yv-hXgOD=9zHmmHHn+Fv+PJDA@mail.gmail.com>
-From:   Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <173d4c4b-1846-5dd5-b477-4eb21258d4b6@huawei.com>
-Date:   Mon, 16 Sep 2019 09:20:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Sun, 15 Sep 2019 21:23:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52790 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728872AbfIPBXA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 21:23:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=+2NX8howexdlblQAhSP9/O3k5EI3/NQZYnxbZcI+KRA=; b=m0mxagbs/RC0Mj3LmrSfAKj/s
+        WXVzv0nmqlqn28vZ3EhfykxBTWX5WjCG4dCF/PlPsHFHEPU6J0hBQB6rdM4vTTr4HYaLV4mPatHfk
+        gPgOTdhOB4I53GmBTeyrVI+E3stKqkBF3yvmRW5J6UiCqgSUzARZobDUhVwnd/2wgrCdA=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9fjC-00027l-Gh; Mon, 16 Sep 2019 01:22:54 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 558192741587; Mon, 16 Sep 2019 02:22:53 +0100 (BST)
+Date:   Mon, 16 Sep 2019 02:22:53 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian@brauner.io>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Hridya Valsaraju <hridya@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the char-misc tree with the vfs tree
+Message-ID: <20190916012252.GS4352@sirena.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvwpYHKi_nf0-uVWWpzG5Yv-hXgOD=9zHmmHHn+Fv+PJDA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.224.82]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YvpO9wCO44Ze8QQC"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--YvpO9wCO44Ze8QQC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2019/9/16 6:00, Richard Weinberger 写道:
-> On Fri, Aug 16, 2019 at 10:01 AM chengzhihao <chengzhihao1@huawei.com> wrote:
->>
->>>  ubifs_assert(c, p < c->gap_lebs + c->lst.idx_lebs);
->>
->> I've done 50 problem reproduces on different flash devices and made sure that the assertion was not triggered. See record.txt for details.
-> 
-> Thanks for letting me know. :)
-> I need to give this another thought, then we can apply it for -rc2.
-> 
-ACK. :)
+Hi all,
 
+Today's linux-next merge of the char-misc tree got a conflict in:
+
+  drivers/android/binderfs.c
+
+between commit:
+
+  e7d8840d4b626 ("vfs: Convert binderfs to use the new mount API")
+
+=66rom the vfs tree and commit:
+
+  f00834518ed31 ("binder: add a mount option to show global stats")
+
+=66rom the char-misc tree.
+
+Since it's very late and it seems useful to try to get a -next out with
+the state prior to the merge window opening I've used commit
+ec13c78d7b45 from the previous -next build rather than fix this up
+sorry, I'll come back to it tomorrow.
+
+--YvpO9wCO44Ze8QQC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+4+sACgkQJNaLcl1U
+h9DlKgf/aEhp80KPdPQ3byacESVuhc/yB4CJZpnFNEVataQ8UCrKspNsRvT48dZY
+PyLC/7PFocuteecFxfL3VgrOjaljcBHQl4wQkQCnrsGgx5VRl+kSXdY7I8UcAWNB
+TtZl0AAjUT9rP9bqj8gy6XkjRE/0qE3Q+WxP36QtUuSlqVMZtcm27I3KB8GboWQA
++E7stmjwCoLuraybxPfhs8PvNAzSft+ggMoCFJ6JcTK151ayAPSRykNbLs3cTgAd
+ot/CzQCRPBMsW+pL3UtARX8HQAyGhYKDjpyKuIINTubINGdgl/n82zSPOl7udohz
+x7UnY0TBcKfwwImzuQTJ/XFfLUL0Lg==
+=6x7Z
+-----END PGP SIGNATURE-----
+
+--YvpO9wCO44Ze8QQC--
