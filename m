@@ -2,76 +2,124 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D8BC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:41:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B50C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431EA206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:41:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B10A20890
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 03:46:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EJ8AcB/C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfIPDlb (ORCPT
+        id S1729042AbfIPDqk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 23:41:31 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:12434 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728295AbfIPDlb (ORCPT
+        Sun, 15 Sep 2019 23:46:40 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:41070 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfIPDqk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 23:41:31 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tda46496fb2ac1401c8e70@ACLMS3.advantech.com.tw>;
- Mon, 16 Sep 2019 11:41:28 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <bichan.lu@advantech.com.tw>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2,1/1] hwmon: (nct7904) Fix the incorrect value of vsen_mask in nct7904_data struct.
-Date:   Mon, 16 Sep 2019 11:41:11 +0800
-Message-ID: <20190916034111.2714-1-Amy.Shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.114]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+        Sun, 15 Sep 2019 23:46:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8G3hwwY088447;
+        Mon, 16 Sep 2019 03:46:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=vNyavF+kNZ2EentgkgqouBtUF5BzDxaCPrvgmTdCd9I=;
+ b=EJ8AcB/CxPBGTcQoc8+e3QHx1tEnOtacfeXDsolfGqcNSw1+KYAIKekDctVymWYSHGgp
+ nzo3mTPbLGBD25bGkQLamylSxDEwsDYIrdxVxMclkBe6mVaivW1p+babRcE7edhYCz01
+ iyRJuIAGxjhgAAic9BOkK3RoBMpRkKJlPUrdK18cBHSWVbIiBknnLuTdw1/MmU1SLAv1
+ ZbT8wFLNbZ4knovVYzL8ytn1S9i1KvMX40ddRi33MS+dIf1poZwL7XoDwaMnZC/aAdYI
+ LM1yX/jg9zuqZleZ49OplYdJoS6MISONMWFLCqcelqx37Tf7iembWDCD0nI827hGSwB+ 5g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2v0ruqcrqy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 03:46:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8G3hs2A195467;
+        Mon, 16 Sep 2019 03:46:26 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2v0nb3tekb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Sep 2019 03:46:26 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8G3kOHS018384;
+        Mon, 16 Sep 2019 03:46:25 GMT
+Received: from linux.cn.oracle.com (/10.182.69.106)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 15 Sep 2019 20:46:24 -0700
+From:   Dongli Zhang <dongli.zhang@oracle.com>
+To:     xen-devel@lists.xenproject.org
+Cc:     netdev@vger.kernel.org, boris.ostrovsky@oracle.com,
+        jgross@suse.com, sstabellini@kernel.org, davem@davemloft.net,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] xen-netfront: do not assume sk_buff_head list is empty in error handling
+Date:   Mon, 16 Sep 2019 11:46:59 +0800
+Message-Id: <1568605619-22219-1-git-send-email-dongli.zhang@oracle.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9381 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909160038
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9381 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909160039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+When skb_shinfo(skb) is not able to cache extra fragment (that is,
+skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS), xennet_fill_frags() assumes
+the sk_buff_head list is already empty. As a result, cons is increased only
+by 1 and returns to error handling path in xennet_poll().
 
-Voltage sensors overlap with external temperature sensors. Detect
-the multi-function of voltage, thermal diode and thermistor from
-register VT_ADC_MD_REG to set value of vsen_mask in nct7904_data
-struct.
+However, if the sk_buff_head list is not empty, queue->rx.rsp_cons may be
+set incorrectly. That is, queue->rx.rsp_cons would point to the rx ring
+buffer entries whose queue->rx_skbs[i] and queue->grant_rx_ref[i] are
+already cleared to NULL. This leads to NULL pointer access in the next
+iteration to process rx ring buffer entries.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+Below is how xennet_poll() does error handling. All remaining entries in
+tmpq are accounted to queue->rx.rsp_cons without assuming how many
+outstanding skbs are remained in the list.
+
+ 985 static int xennet_poll(struct napi_struct *napi, int budget)
+... ...
+1032           if (unlikely(xennet_set_skb_gso(skb, gso))) {
+1033                   __skb_queue_head(&tmpq, skb);
+1034                   queue->rx.rsp_cons += skb_queue_len(&tmpq);
+1035                   goto err;
+1036           }
+
+It is better to always have the error handling in the same way.
+
+Fixes: ad4f15dc2c70 ("xen/netfront: don't bug in case of too many frags")
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
 ---
-Changes in v2:
-- Moved the if statement to outside.
- drivers/hwmon/nct7904.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/xen-netfront.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 95b447cfa24c..e2b3ec74491a 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -921,6 +921,8 @@ static int nct7904_probe(struct i2c_client *client,
- 			data->tcpu_mask &= ~bit;
- 		else if (val == 0x1 || val == 0x2)
- 			data->temp_mode |= bit;
-+		if (val != 0)
-+			data->vsen_mask &= ~(0x06 << (i * 2));
- 	}
- 
- 	/* PECI */
+diff --git a/drivers/net/xen-netfront.c b/drivers/net/xen-netfront.c
+index 8d33970..5f5722b 100644
+--- a/drivers/net/xen-netfront.c
++++ b/drivers/net/xen-netfront.c
+@@ -906,7 +906,7 @@ static RING_IDX xennet_fill_frags(struct netfront_queue *queue,
+ 			__pskb_pull_tail(skb, pull_to - skb_headlen(skb));
+ 		}
+ 		if (unlikely(skb_shinfo(skb)->nr_frags >= MAX_SKB_FRAGS)) {
+-			queue->rx.rsp_cons = ++cons;
++			queue->rx.rsp_cons = ++cons + skb_queue_len(list);
+ 			kfree_skb(nskb);
+ 			return ~0U;
+ 		}
 -- 
-2.17.1
+2.7.4
 
