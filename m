@@ -2,32 +2,32 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32833C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2477C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09317214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8669B21852
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390925AbfIPTXx (ORCPT
+        id S2390939AbfIPTXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:23:53 -0400
+        Mon, 16 Sep 2019 15:23:54 -0400
 Received: from mga18.intel.com ([134.134.136.126]:60613 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387404AbfIPTXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:23:53 -0400
+        id S2387404AbfIPTXy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 15:23:54 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 12:23:52 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 12:23:53 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,513,1559545200"; 
-   d="scan'208";a="270291161"
+   d="scan'208";a="270291165"
 Received: from jvhicko1-mobl2.amr.corp.intel.com (HELO localhost.localdomain) ([10.254.104.227])
-  by orsmga001.jf.intel.com with ESMTP; 16 Sep 2019 12:23:51 -0700
+  by orsmga001.jf.intel.com with ESMTP; 16 Sep 2019 12:23:52 -0700
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -36,11 +36,14 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Bard liao <yung-chuan.liao@linux.intel.com>,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Subject: [PATCH 0/6] soundwire: intel/cadence: simplify PDI handling
-Date:   Mon, 16 Sep 2019 14:23:42 -0500
-Message-Id: <20190916192348.467-1-pierre-louis.bossart@linux.intel.com>
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: [PATCH 1/6] soundwire: intel: fix intel_register_dai PDI offsets and numbers
+Date:   Mon, 16 Sep 2019 14:23:43 -0500
+Message-Id: <20190916192348.467-2-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190916192348.467-1-pierre-louis.bossart@linux.intel.com>
+References: <20190916192348.467-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,30 +51,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These patches were originally submitted as '[RFC PATCH 00/11]
-soundwire: intel: simplify DAI/PDI handling'. There were no comments
-received.
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-This series only provides the PDI changes, which makes it simpler to
-review. The DAI changes will be provided with the complete series for
-ASoC/SOF integration, which is a larger change.
+There are two issues, likely copy/paste:
 
-Bard Liao (3):
-  soundwire: intel: fix intel_register_dai PDI offsets and numbers
-  soundwire: intel: remove playback/capture stream_name
-  soundwire: cadence_master: improve PDI allocation
+1. Use cdns->pcm.num_in instead of stream_num_in for consistency with
+the rest of the code. This was not detected earlier since platforms did
+not have input-only PDIs.
 
-Pierre-Louis Bossart (3):
-  soundwire: remove DAI_ID_RANGE definitions
-  soundwire: cadence/intel: simplify PDI/port mapping
-  soundwire: intel: don't filter out PDI0/1
+2. use the correct offset for bi-dir PDM, based on IN and OUT
+PDIs. Again this was not detected since PDM was not supported earlier.
 
- drivers/soundwire/cadence_master.c | 158 +++++++----------------------
- drivers/soundwire/cadence_master.h |  34 ++-----
- drivers/soundwire/intel.c          | 155 ++++++----------------------
- include/linux/soundwire/sdw.h      |   3 -
- 4 files changed, 73 insertions(+), 277 deletions(-)
+Reported-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ drivers/soundwire/intel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 2443b9b32b46..1814f6168801 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -901,7 +901,7 @@ static int intel_register_dai(struct sdw_intel *sdw)
+ 	/* Create PCM DAIs */
+ 	stream = &cdns->pcm;
+ 
+-	ret = intel_create_dai(cdns, dais, INTEL_PDI_IN, stream->num_in,
++	ret = intel_create_dai(cdns, dais, INTEL_PDI_IN, cdns->pcm.num_in,
+ 			       off, stream->num_ch_in, true);
+ 	if (ret)
+ 		return ret;
+@@ -932,7 +932,7 @@ static int intel_register_dai(struct sdw_intel *sdw)
+ 	if (ret)
+ 		return ret;
+ 
+-	off += cdns->pdm.num_bd;
++	off += cdns->pdm.num_out;
+ 	ret = intel_create_dai(cdns, dais, INTEL_PDI_BD, cdns->pdm.num_bd,
+ 			       off, stream->num_ch_bd, false);
+ 	if (ret)
 -- 
 2.20.1
 
