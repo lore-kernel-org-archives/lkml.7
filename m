@@ -2,140 +2,89 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7EAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0602C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81C7D20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568650653;
-	bh=4kTgEV+994f09JLJJHoUnJjJN2huDl/FjH8NLWXhJo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=NAiXdRxcM1mXudQcy1SOB1ut55buXHB8RcJAoCfgs/nZMN7gyBEh+F1s5Q2MSX6Xf
-	 PMpCBmWguq42tF7pKssmctHMkmtIAKGapjzqhiNrPN0GT3le5bRLgS59K4zr5yfj6n
-	 crr2J25we83XBrjQKaR7i45e2IrSPHATojYjm7LM=
+	by mail.kernel.org (Postfix) with ESMTP id 9CE6220678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="l21eG8ve"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbfIPQRc (ORCPT
+        id S1728939AbfIPQRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:17:32 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:38500 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIPQRc (ORCPT
+        Mon, 16 Sep 2019 12:17:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38547 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726055AbfIPQRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:17:32 -0400
-Received: by mail-lj1-f194.google.com with SMTP id y23so518216ljn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:17:31 -0700 (PDT)
+        Mon, 16 Sep 2019 12:17:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id h195so191417pfe.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qm5nFp4L20gwZCk9xWhvdF6dE9PnPMuHjDPFlxhyVHw=;
-        b=MwiU5mWXMBSXfDgbMXxLnobo8HMGeJQR80lomHYctbelSfvBbvltS81l9dAKTU1gLz
-         dsS8BFsV+weSgE45H3VfjD88vhb4mAU1RPEwWm+45it3Ah1tAVI/MAkb/nAk+iJU0WeD
-         g8hBBvmDRQhs1SLCmtlw/SSvnhl9EIlxC1+wA=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=sg+rKbrnTJbgR+NJ8QZZaCm04HUmVdI27xNUqxqbc1I=;
+        b=l21eG8ve4kGqoaP/uEZGS+srtJoVlzN8Aw0HF+n2pNPOXrRYFEPElZY2miEwEA9Hjd
+         qOtr4Mj5hslg2qnanka7RFbRLUwnvKM7RsykdxKan/SsQaHmFW8R8D4534utgMumdCg0
+         clnVrMGMNSQnKZBk+MAedYp13IKZhZhBUZ+9F+wLiihY6PS1m1uTKcKgw79kRmnfo1WS
+         RzgrZu7Vy/gpqlenhiTU1d9jpTqqGQIFnL9TCikoCIougst1B5/uT1cZZVHprTkwyYXT
+         av6KAyHt5Q/Gf98CN074DOlHxTlRBKUXR4HaVxmXlDQGDbU+lSPKgS73MgziTO/Btn+U
+         XSuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qm5nFp4L20gwZCk9xWhvdF6dE9PnPMuHjDPFlxhyVHw=;
-        b=WMCZzktLXVqRmnLBqYrR6u7JAC1XyEmjg16JKQotIroWfCUl7pDntMZejuew1nx1CO
-         DMXMMXrgwdyVaNCkZp9WsJGM4ndUBfnRLxIIcuYQWq8Se/eFO9U7yupCWEK5loIQRFT6
-         23H8dU3gzycIl6RLTtkfFeskMQlocS1F/b7YjG5IRv97kxDEUF37O/IAgRlONtLAX1lP
-         39XhUO52ZeoQWEpYh0fGT764X3cLNdytPD6q4oJOBRUzUu2vz4Au3DDibDJItYBm9fMW
-         g1a10i49Nna3gi+/p9xO25GomPSxxvBn/1UuE9MAO2WKKRVFyHYSroAw4WxUmTa6TZwn
-         Bswg==
-X-Gm-Message-State: APjAAAWxQ7J+SVE4OwVlott1aFw8la+wbAHC9eOJTXFc1UURNNErE5lI
-        G1g4axGar96RpOLS4y3odAgjEGa/eq4=
-X-Google-Smtp-Source: APXvYqzk/33dFIKW9gJltH8w9k0wPtvxJ/uep97LsT2iC9II+GFOx50LH9W7ittao/nvwmefezzxyw==
-X-Received: by 2002:a2e:8942:: with SMTP id b2mr272546ljk.38.1568650650262;
-        Mon, 16 Sep 2019 09:17:30 -0700 (PDT)
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
-        by smtp.gmail.com with ESMTPSA id l3sm9148472lfc.31.2019.09.16.09.17.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 09:17:27 -0700 (PDT)
-Received: by mail-lf1-f50.google.com with SMTP id c195so409461lfg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:17:27 -0700 (PDT)
-X-Received: by 2002:a19:f204:: with SMTP id q4mr116710lfh.29.1568650646859;
- Mon, 16 Sep 2019 09:17:26 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=sg+rKbrnTJbgR+NJ8QZZaCm04HUmVdI27xNUqxqbc1I=;
+        b=a2Ub1iDTs0uKN8RgkTcxHODKtBTjYHAiMM/9FzumLF37yiinomxX2WUcRw7Wq6eN6V
+         zU076yEwK6163fUM8vsvVF1rryGpoolqEf8FSPVF3x2xJ5c099wXfiQwLZ1vf0kt5z0O
+         MeF0LEc7we7utznekQob2xHOAMYt1sMDC0ey4kWTl6lXC3sYtKZ1VIzoY4Ds4d5kTWlf
+         p7XPxTHrKC4Z7NlKbcS62AKVEjsjsdtkI5v16v0rTIyFR27VRT7I+t5fXpfSB3yN2i8L
+         wBQXZ4/faLiUv3BNp4b9/kLBvm+cRenRffRGdb/q3Q+djKc0dAORhC/jENHWtGLlMTzq
+         jemA==
+X-Gm-Message-State: APjAAAXvjjisoDa6hZmtu1EkzFvEMFyNMdXk0Q2fUrEKkw9hFNh8N1fa
+        50fiQU19Vu4pvIgquYzkpw4XSQ==
+X-Google-Smtp-Source: APXvYqyHwegb6ytoRKzWCa3UbHRvPgC8rPKLgmGGxsEIjFPXHQjLiqKa158WRJvNEqeL+kix0Bz9Kg==
+X-Received: by 2002:a63:ed12:: with SMTP id d18mr5893619pgi.211.1568650669880;
+        Mon, 16 Sep 2019 09:17:49 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:83a1:c484:c1a1:f495:ecae? ([2605:e000:100e:83a1:c484:c1a1:f495:ecae])
+        by smtp.gmail.com with ESMTPSA id ep10sm1099575pjb.2.2019.09.16.09.17.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 09:17:49 -0700 (PDT)
+Subject: Re: [PATCH 0/4] block, bfq: series of improvements and small fixes of
+ the injection mechanism
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ulf.hansson@linaro.org, linus.walleij@linaro.org,
+        bfq-iosched@googlegroups.com, oleksandr@natalenko.name
+References: <20190822152037.15413-1-paolo.valente@linaro.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <74a65657-a988-a1ce-04b1-93486c5fb08f@kernel.dk>
+Date:   Mon, 16 Sep 2019 10:17:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc> <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login> <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc> <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu> <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com> <20190916061252.GA24002@1wt.eu>
-In-Reply-To: <20190916061252.GA24002@1wt.eu>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 09:17:10 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
-Message-ID: <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190822152037.15413-1-paolo.valente@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 11:13 PM Willy Tarreau <w@1wt.eu> wrote:
->
-> >
-> > So three out of four flag combinations end up being mostly "don't
-> > use", and the fourth one isn't what you'd normally want (which is just
-> > plain /dev/urandom semantics).
->
-> I'm seeing it from a different angle. I now understand better why
-> getrandom() absolutely wants to have an initialized pool, it's to
-> encourage private key producers to use a secure, infinite source of
-> randomness.
+On 8/22/19 9:20 AM, Paolo Valente wrote:
+> Hi Jens,
+> this patch series makes the injection mechanism better at preserving
+> control on I/O.
 
-Right. There is absolutely no question that that is a useful thing to have.
+Applied, thanks.
 
-And that's what GRND_RANDOM _should_ have meant. But didn't.
+-- 
+Jens Axboe
 
-So the semantics that getrandom() should have had are:
-
- getrandom(0) - just give me reasonable random numbers for any of a
-million non-strict-long-term-security use (ie the old urandom)
-
-    - the nonblocking flag makes no sense here and would be a no-op
-
- getrandom(GRND_RANDOM) - get me actual _secure_ random numbers with
-blocking until entropy pool fills (but not the completely invalid
-entropy decrease accounting)
-
-    - the nonblocking flag is useful for bootup and for "I will
-actually try to generate entropy".
-
-and both of those are very very sensible actions. That would actually
-have _fixed_ the problems we had with /dev/[u]random, both from a
-performance standpoint and for a filesystem access standpoint.
-
-But that is sadly not what we have right now.
-
-And I suspect we can't fix it, since people have grown to depend on
-the old behavior, and already know to avoid GRND_RANDOM because it's
-useless with old kernels even if we fixed it with new ones.
-
-Does anybody really seriously debate the above? Ted? Are you seriously
-trying to claim that the existing GRND_RANDOM has any sensible use?
-Are you seriously trying to claim that the fact that we don't have a
-sane urandom source is a "feature"?
-
-                   Linus
