@@ -2,92 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65709C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16EE5C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4151F206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEEC920650
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AqSNhBAA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbfIPJO1 (ORCPT
+        id S1731760AbfIPJQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:14:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40634 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725985AbfIPJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:14:26 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 79B2B102BB32;
-        Mon, 16 Sep 2019 09:14:26 +0000 (UTC)
-Received: from [10.36.116.33] (ovpn-116-33.ams2.redhat.com [10.36.116.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C4B05D6A3;
-        Mon, 16 Sep 2019 09:14:23 +0000 (UTC)
-Subject: Re: [PATCH 0/5] iommu: Implement iommu_put_resv_regions_simple()
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190829111752.17513-1-thierry.reding@gmail.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <6254f754-eb37-6b1e-deea-7443d185d49b@redhat.com>
-Date:   Mon, 16 Sep 2019 11:14:22 +0200
+        Mon, 16 Sep 2019 05:16:06 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:9331 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725985AbfIPJQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 05:16:06 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f52d90000>; Mon, 16 Sep 2019 02:16:10 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 02:16:05 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 02:16:05 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:16:04 +0000
+Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 09:16:02 +0000
+Subject: Re: [PATCH 4.4 0/9] 4.4.193-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190913130424.160808669@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <b8d90d3a-3af4-4a24-f214-41308e6c452e@nvidia.com>
+Date:   Mon, 16 Sep 2019 10:16:00 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190829111752.17513-1-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190913130424.160808669@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 16 Sep 2019 09:14:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568625370; bh=47uTJx5BslBdKfTNfesk8bwZlDFuhdEtuaadQsne9Cs=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AqSNhBAAV8wHRYLY+RWVtDsjXyisxgZR32CxhCYlLZO52imFVlX/LYF8FAOtFDn+V
+         +TZYvgQ7bpcsTxl9n8lDjHk2fmve1jko5Y92RniUOZfsNrpLvkJmkYQeC/AvCzzCSC
+         LP2z/mPDHZSzrnB2x3Yx2oiJ2+JMi/rbXNFXY+RQxis+WRMbJpBKFgCdrA+2dJjkIr
+         PFNdd/lJ36e06Ya+BoMYpYqm0XSQSHJSNvGMzmvcnPvTAGFEepOcSUuTlWVfM935r3
+         Bxp3VWl+Nh74KD5JVYEvk4f3Q2HlboBX79Kfo4Jwhr7nGGmxF6EXXW9pTMLwRuMliZ
+         49EJYavuOdmLg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thierry,
 
-On 8/29/19 1:17 PM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On 13/09/2019 14:06, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.193 release.
+> There are 9 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Most IOMMU drivers only need to free the memory allocated for each
-> reserved region. Instead of open-coding the loop to do this in each
-> driver, extract the code into a common function that can be used by
-> all these drivers.
+> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.193-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-If I am not wrong, all the drivers now use the
-iommu_put_resv_regions_simple helper. So we can wonder if the callback
-is still relevant?
 
-Thanks
+All tests passing for Tegra ...
 
-Eric
-> 
-> Thierry
-> 
-> Thierry Reding (5):
->   iommu: Implement iommu_put_resv_regions_simple()
->   iommu: arm: Use iommu_put_resv_regions_simple()
->   iommu: amd: Use iommu_put_resv_regions_simple()
->   iommu: intel: Use iommu_put_resv_regions_simple()
->   iommu: virt: Use iommu_put_resv_regions_simple()
-> 
->  drivers/iommu/amd_iommu.c    | 11 +----------
->  drivers/iommu/arm-smmu-v3.c  | 11 +----------
->  drivers/iommu/arm-smmu.c     | 11 +----------
->  drivers/iommu/intel-iommu.c  | 11 +----------
->  drivers/iommu/iommu.c        | 19 +++++++++++++++++++
->  drivers/iommu/virtio-iommu.c | 14 +++-----------
->  include/linux/iommu.h        |  2 ++
->  7 files changed, 28 insertions(+), 51 deletions(-)
-> 
+Test results for stable-v4.4:
+    6 builds:	6 pass, 0 fail
+    12 boots:	12 pass, 0 fail
+    19 tests:	19 pass, 0 fail
+
+Linux version:	4.4.193-rc1-g0a1ee44c6916
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra30-cardhu-a04
+
+Cheers
+Jon
+
+-- 
+nvpublic
