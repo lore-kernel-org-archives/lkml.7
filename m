@@ -2,268 +2,217 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA6FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC33C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8399C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2107B206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 09:50:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Li1QzNMO";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="C+cuGUnk"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LUYpa4Sh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732163AbfIPJsu (ORCPT
+        id S1732179AbfIPJuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 05:48:50 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52028 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728985AbfIPJsu (ORCPT
+        Mon, 16 Sep 2019 05:50:00 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:41174 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728985AbfIPJt7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 05:48:50 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3E9C860364; Mon, 16 Sep 2019 09:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568627328;
-        bh=gSMHSxm7daISBqRTn/P76XW22BqHURNzjdMI5TSKy5g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Li1QzNMOqZ0M9wH7mhVCzS7R43MVfCI/nWpopx2tZzAv3+y1xrh7NYYUzJgPkks9O
-         wKu0hv8AyR/nitzGKn2j8cFVd8y5D7QMzb3L9EJChJYcSzcQgjL67unFOp36Ns90lI
-         QUG6ye9EILvcGcOLFdoGNMQYY5wTCZTuqih27YQI=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 4627B60364;
-        Mon, 16 Sep 2019 09:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568627323;
-        bh=gSMHSxm7daISBqRTn/P76XW22BqHURNzjdMI5TSKy5g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=C+cuGUnkMSTI/eocGSGpoKbL9csPsW2566HwUgIrrDFAE4LaAWkOj9DD7tzTE0otv
-         AHtfOd0FrHTaAuUb39Shpe+RQUIl1WSyvprmdMuSPmpAMChnFsdY5znpME9V1rsixX
-         WXA9i4lwXgp9mAklqvq8YMzSuPFkI72UJS7aLFhI=
+        Mon, 16 Sep 2019 05:49:59 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190916094957euoutp027346ce9ff951682a4ae8ec8d8c772492~E4k6v_tz10348003480euoutp025
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:49:57 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190916094957euoutp027346ce9ff951682a4ae8ec8d8c772492~E4k6v_tz10348003480euoutp025
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568627397;
+        bh=iuHLb85Z2D3Szb5HcwZ4eEWC4tX/t5FH2HMb/lXL8xM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=LUYpa4Sh3S8XjbZGY7vITT/EJ2IwD14Svik/lE5EvSYeHsJJ2Gg9EfVQmJ6I4DS1f
+         IVz8ZJFtLTOd/DZ/78TydKSRZjizifz9P7Ut2Ak33BDiZjoavUaf1UIKqt4Zk08s7N
+         ppojjdbIUeBAgzWV0v50tmR2hIQwVSrrt82gbEmI=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190916094957eucas1p1035b14c56a867a0206e2e1d11c19645b~E4k5-3U-E2395523955eucas1p1O;
+        Mon, 16 Sep 2019 09:49:57 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 15.1B.04374.4CA5F7D5; Mon, 16
+        Sep 2019 10:49:56 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190916094956eucas1p24cc2a1dfa8565ba6e1ff3d4fd1f09f73~E4k5KmyED0502405024eucas1p2M;
+        Mon, 16 Sep 2019 09:49:56 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190916094955eusmtrp2debf0d072bbc1b2e06241b7ea59df52d~E4k48V3iW1858618586eusmtrp2l;
+        Mon, 16 Sep 2019 09:49:55 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-2e-5d7f5ac4b73e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 4B.F0.04166.3CA5F7D5; Mon, 16
+        Sep 2019 10:49:55 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190916094954eusmtip11d9afbb904d4a61073bd82cea965e2cb~E4k33i_DG2359023590eusmtip12;
+        Mon, 16 Sep 2019 09:49:54 +0000 (GMT)
+Subject: Re: [PATCH 3/3] dt-bindings: ddr: Add bindings for Samsung LPDDR3
+ memories
+To:     Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <a06caf21-b2a9-919f-6e73-69122fee5f66@partner.samsung.com>
+Date:   Mon, 16 Sep 2019 11:49:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <5d7ba95a.1c69fb81.bfd81.77ba@mx.google.com>
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 16 Sep 2019 15:18:43 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Vivek Gautam <vivek.gautam@codeaurora.org>, agross@kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        robin.murphy@arm.com, will.deacon@arm.com,
-        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] firmware: qcom_scm-64: Add atomic version of
- qcom_scm_call
-In-Reply-To: <5d727770.1c69fb81.c9062.ce60@mx.google.com>
-References: <20190823063248.13295-1-vivek.gautam@codeaurora.org>
- <20190823063248.13295-2-vivek.gautam@codeaurora.org>
- <5d727770.1c69fb81.c9062.ce60@mx.google.com>
-Message-ID: <56234ab589c9a140a0aeab722da9503a@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3Z2Li4nn1PzRaNwEN1Q0/rjWNIFREYEldGFYtmqg0Zu051W
+        qyRXoGml3cDLMldQrdZqtWxeikW6vJS6ZFR2o4uDoKaBWiSrzHkm+d/vfd7n430e+BhC9paM
+        Y/Zo9nE6jSpPTknEzrbRnkT31iLloiFHInu32k6yr0a+kKzZ3UOyp/u/EazHc4dmu4/5adbR
+        /5Jkvc21FDtc7kZstcclYm+539Ps1Ve9Ivbt0esUO/awkWZb/cdJ9mfHZ7QSK2x1NqRoMr2n
+        FQ5rGaW4d6VIUVFvRYphx6x11FZJ+m4ub89+Tpe8fIckt/mkXZTfFGfwtV6mjMgZcwKFMYCX
+        wOO2TnQCSRgZvo6gq+sJIQwjCDpGn9DCMIygu26Qmnxy8/yN0MKCoMVRGRoGEHjbAqKgKwpv
+        hK6TATrI0VgB72ptEyYC28RgMn4Yv8gwFE6CRmtB0CPFmeC7cVYcZDGeA2W9T4kgx+AtMPSx
+        lRQ8kdBZ45vwhOE0KGnwTDCBY+GNzywSeDY0DNROdAD8h4bOd15CiJ0Bpe02kcBR8LW9nhZ4
+        Jow1mUM6D8byy0jgQug/fTHkWQat7b1kMDOB54O9OVmQV8GY6RwVlAFHQN9ApBAhAs45qwhB
+        lkJpiUxwz4P6U89Dh2aAxVZJn0Fy05RipillTFPKmP7fvYTEVhTL6Xl1Dscv1nAHkniVmtdr
+        cpJ2adUONP7lnv1t/9GIXL93tiDMIHm41Fh8RCkjVfv5g+oWBAwhj5ZuLj2slEl3qw4e4nTa
+        bJ0+j+NbUDwjlsdKD0/7uE2Gc1T7uL0cl8/pJrciJizOiLJvv+bM14pS5Pq4NE6XubT7bL4y
+        zeBiZlesfxO/qVird4UXfE/Aqele/xp11vOM1Bff+fslqwt/NfMa1+AKrVnVEzhQ98DlvjBk
+        8cf0Wa55PznnagwdJnPkM7stkMlNpz4zfQs/VSVkFNdkJb3WSdfKDIOPvsQGyjbEt22/Khfz
+        uaqUBYSOV/0DAL2IlG4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLIsWRmVeSWpSXmKPExsVy+t/xu7qHo+pjDU5OMLHYOGM9q8X1L89Z
+        LeYfOcdq0f/4NbPF+fMb2C3ONr1ht9j0+BqrxeVdc9gsPvceYbSYcX4fk8XaI3fZLZZev8hk
+        cbtxBZvF/z072C0Ov2lntfh24hGjg4DHmnlrGD12zrrL7rFpVSebx+Yl9R59W1YxenzeJBfA
+        FqVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CXsat7
+        PVPBTqmKJ4cXsjUwbhPtYuTkkBAwkVg9eSV7FyMXh5DAUkaJ5/eOskAkxCQm7dvODmELS/y5
+        1sUGYgsJvGaUuDufB8QWFgiVONP9G6xGRMBD4s6cNWCDmAXWsUgsnviaCaLhILNE51G9LkYO
+        DjYBPYkdqwpBwrwCbhJPVk4E28UioCrRefEUM4gtKhAhcXjHLEaIGkGJkzOfgNVwClhKtG0/
+        D2YzC5hJzNv8kBnCFpe49WQ+E4QtL7H97RzmCYxCs5C0z0LSMgtJyywkLQsYWVYxiqSWFuem
+        5xYb6hUn5haX5qXrJefnbmIERvW2Yz8372C8tDH4EKMAB6MSD29Da12sEGtiWXFl7iFGCQ5m
+        JRHe8I7qWCHelMTKqtSi/Pii0pzU4kOMpkDPTWSWEk3OByacvJJ4Q1NDcwtLQ3Njc2MzCyVx
+        3g6BgzFCAumJJanZqakFqUUwfUwcnFINjDxuaQvCPuYennXzMbu58wXbnBnc6bO2yy6aaavs
+        Oenz3hNLQ/3izCduPJInuJb9+CeefN4NLUZCM7+n9NUJXlOXDJ7KP6/h57726lsm7Q+jUk59
+        beZnP7ms/4R0z4/8sGU1wWY7SoqdObMZn625e+GX0g2n3GL53/LS5ms0rLqXLdz7mL3ipRJL
+        cUaioRZzUXEiACZDB4wAAwAA
+X-CMS-MailID: 20190916094956eucas1p24cc2a1dfa8565ba6e1ff3d4fd1f09f73
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190906101407eucas1p15eb0df53374b27497b4793eab24becf6
+References: <CGME20190906101407eucas1p15eb0df53374b27497b4793eab24becf6@eucas1p1.samsung.com>
+        <20190906101344.3535-1-l.luba@partner.samsung.com>
+        <20190906101344.3535-4-l.luba@partner.samsung.com>
+        <CAJKOXPfoYxTVvt_bMQOs1=BkHzUuW_WvL9zn0jTGS6LLpv=fhQ@mail.gmail.com>
+        <52963d0d-cf48-7085-5581-a94c6e15e0bd@partner.samsung.com>
+        <CAJKOXPfEcURr_bLRaAdjWT3cb7mcuKTk8rmn7OTO=xtvjvJ=jQ@mail.gmail.com>
+        <5d7ba95a.1c69fb81.bfd81.77ba@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+Hi Rob,
 
-On 2019-09-06 20:42, Stephen Boyd wrote:
-> Quoting Vivek Gautam (2019-08-22 23:32:46)
->> There are scnenarios where drivers are required to make a
->> scm call in atomic context, such as in one of the qcom's
->> arm-smmu-500 errata [1].
->> 
->> [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/
->>       tree/drivers/iommu/arm-smmu.c?h=msm-4.9#n4842")
->> 
->> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->> ---
->>  drivers/firmware/qcom_scm-64.c | 136 
->> ++++++++++++++++++++++++++++-------------
->>  1 file changed, 92 insertions(+), 44 deletions(-)
->> 
->> diff --git a/drivers/firmware/qcom_scm-64.c 
->> b/drivers/firmware/qcom_scm-64.c
->> index 91d5ad7cf58b..b6dca32c5ac4 100644
->> --- a/drivers/firmware/qcom_scm-64.c
->> +++ b/drivers/firmware/qcom_scm-64.c
->> @@ -62,32 +62,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
->>  #define FIRST_EXT_ARG_IDX 3
->>  #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
->> 
->> -/**
->> - * qcom_scm_call() - Invoke a syscall in the secure world
->> - * @dev:       device
->> - * @svc_id:    service identifier
->> - * @cmd_id:    command identifier
->> - * @desc:      Descriptor structure containing arguments and return 
->> values
->> - *
->> - * Sends a command to the SCM and waits for the command to finish 
->> processing.
->> - * This should *only* be called in pre-emptible context.
->> -*/
->> -static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
->> -                        const struct qcom_scm_desc *desc,
->> -                        struct arm_smccc_res *res)
->> +static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
->> +                              struct arm_smccc_res *res, u32 fn_id,
->> +                              u64 x5, u32 type)
->> +{
->> +       u64 cmd;
->> +       struct arm_smccc_quirk quirk = {.id = 
->> ARM_SMCCC_QUIRK_QCOM_A6};
+On 9/13/19 4:36 PM, Rob Herring wrote:
+> On Fri, Sep 06, 2019 at 01:50:26PM +0200, Krzysztof Kozlowski wrote:
+>> On Fri, 6 Sep 2019 at 13:39, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> On 9/6/19 12:56 PM, Krzysztof Kozlowski wrote:
+>>>> On Fri, 6 Sep 2019 at 12:14, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>>>>
+>>>>> Add description of bindings for Samsung k3qf2f20db LPDDR3 memory.
+>>>>> Minor fixes in the old documentation.
+>>>>>
+>>>>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>>>>> ---
+>>>>>    .../devicetree/bindings/ddr/lpddr3.txt        | 29 +++++++++++++++++--
+>>>>>    1 file changed, 27 insertions(+), 2 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>>> index 3b2485b84b3f..de0905239767 100644
+>>>>> --- a/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>>> +++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
+>>>>> @@ -40,10 +40,34 @@ Child nodes:
+>>>>>      a given speed-bin. Please see Documentation/devicetree/
+>>>>>      bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
+>>>>>
+>>>>> +Samsung K3QF2F20DB LPDDR3 memory
+>>>>> +------------------------------------------------------------
+>>>>> +
+>>>>> +This binding uses the LPDDR3 binding (described above)
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible:  Should be:
+>>>>> +               "samsung,K3QF2F20DB"
+>>>>> +               followed by "jedec,lpddr3"
+>>>>> +- density  : <u32> representing density in Mb (Mega bits)
+>>>>> +- io-width : <u32> representing bus width. Possible value 32
+>>>>> +- #address-cells: Must be set to 1
+>>>>> +- #size-cells: Must be set to 0
+>>>>
+>>>> If you decided to repeat all properties again, then it deserves its
+>>>> own bindings file. However I though about simpler solution - just
+>>>> document compatible. Exactly the same as AT24 or AT25 EEPROM bindings.
+>>>> There is not much benefit from copying all these properties.
+>>> OK, I see. I will add only 'compatible' and skip the rest then.
+>>> So the lpddr3.txt file will get this addition:
+>>>
+>>> +Samsung K3QF2F20DB LPDDR3 memory
+>>> +------------------------------------------------------------
+>>> +
+>>> +This binding uses the LPDDR3 binding (described above)
+>>> +
+>>> +Required properties:
+>>> +- compatible:  Should be:
+>>> +               "samsung,K3QF2F20DB"
+>>> +               followed by "jedec,lpddr3"
+>>> +
+>>> +Optional properties:
+>>> +
+>>> +The optional properties are the same as in the LPDDR3 generic bindings and
+>>> +values should be taken from the data-sheet. Detailed bindings are described
+>>> +above.
+>>> +
+>>> +Child nodes:
+>>> +
+>>> +Detailed bindings are described in LPDDR3 generic bindings described above.
+>>> +
+>>>
+>>> Is it OK?
+>>
+>> To me it is still a lot of text just for one compatible and I can
+>> image more of such entries for other memories... However I do not mind
+>> and anyway, YAML will simplify it. If you're in doubt, wait for Rob's
+>> reply as this is his part.
 > 
-> Nitpick: Put spaces around braces please.
-> 
->> +
->> +       cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
->> +                                ARM_SMCCC_OWNER_SIP, fn_id);
->> +
->> +       quirk.state.a6 = 0;
->> +
->> +       do {
->> +               arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
->> +                                   desc->args[1], desc->args[2], x5,
->> +                                   quirk.state.a6, 0, res, &quirk);
->> +
->> +               if (res->a0 == QCOM_SCM_INTERRUPTED)
->> +                       cmd = res->a0;
->> +
->> +       } while (res->a0 == QCOM_SCM_INTERRUPTED);
->> +}
->> +
->> +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
->> +                            struct arm_smccc_res *res, u32 fn_id,
->> +                            u64 x5, bool atomic)
->> +{
->> +       int retry_count = 0;
->> +
->> +       if (!atomic) {
->> +               do {
->> +                       mutex_lock(&qcom_scm_lock);
->> +
->> +                       __qcom_scm_call_do(desc, res, fn_id, x5,
->> +                                          ARM_SMCCC_STD_CALL);
->> +
->> +                       mutex_unlock(&qcom_scm_lock);
->> +
->> +                       if (res->a0 == QCOM_SCM_V2_EBUSY) {
->> +                               if (retry_count++ > 
->> QCOM_SCM_EBUSY_MAX_RETRY)
->> +                                       break;
->> +                               msleep(QCOM_SCM_EBUSY_WAIT_MS);
->> +                       }
->> +               }  while (res->a0 == QCOM_SCM_V2_EBUSY);
->> +       } else {
->> +               __qcom_scm_call_do(desc, res, fn_id, x5, 
->> ARM_SMCCC_FAST_CALL);
->> +       }
-> 
-> To save on some indentation maybe you could write it like:
-> 
-> 	if (atomic) {
-> 		__qcom_scm_call_do(..)
-> 		return;
-> 	}
-> 
-> 	do {
-> 		mutex_lock(..)
-> 		...
-> 	} while (..);
-> 
->> +}
->> +
->> +static int ___qcom_scm_call(struct device *dev, u32 svc_id, u32 
->> cmd_id,
->> +                           const struct qcom_scm_desc *desc,
->> +                           struct arm_smccc_res *res, bool atomic)
->>  {
->>         int arglen = desc->arginfo & 0xf;
->> -       int retry_count = 0, i;
->> +       int i;
->>         u32 fn_id = QCOM_SCM_FNID(svc_id, cmd_id);
->> -       u64 cmd, x5 = desc->args[FIRST_EXT_ARG_IDX];
->> +       u64 x5 = desc->args[FIRST_EXT_ARG_IDX];
->>         dma_addr_t args_phys = 0;
->>         void *args_virt = NULL;
->>         size_t alloc_len;
->> -       struct arm_smccc_quirk quirk = {.id = 
->> ARM_SMCCC_QUIRK_QCOM_A6};
->> +       gfp_t flag = atomic ? GFP_ATOMIC : GFP_KERNEL;
->> 
->>         if (unlikely(arglen > N_REGISTER_ARGS)) {
->>                 alloc_len = N_EXT_QCOM_SCM_ARGS * sizeof(u64);
->> -               args_virt = kzalloc(PAGE_ALIGN(alloc_len), 
->> GFP_KERNEL);
->> +               args_virt = kzalloc(PAGE_ALIGN(alloc_len), flag);
->> 
->>                 if (!args_virt)
->>                         return -ENOMEM;
->> @@ -156,6 +169,41 @@ static int qcom_scm_call(struct device *dev, u32 
->> svc_id, u32 cmd_id,
->>         return 0;
->>  }
->> 
->> +/**
->> + * qcom_scm_call() - Invoke a syscall in the secure world
->> + * @dev:       device
->> + * @svc_id:    service identifier
->> + * @cmd_id:    command identifier
->> + * @desc:      Descriptor structure containing arguments and return 
->> values
->> + *
->> + * Sends a command to the SCM and waits for the command to finish 
->> processing.
->> + * This should *only* be called in pre-emptible context.
-> 
-> Add a might_sleep() then?
-> 
->> + */
->> +static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
->> +                        const struct qcom_scm_desc *desc,
->> +                        struct arm_smccc_res *res)
->> +{
->> +       return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, 
->> false);
->> +}
->> +
->> +/**
->> + * qcom_scm_call_atomic() - atomic variation of qcom_scm_call()
->> + * @dev:       device
->> + * @svc_id:    service identifier
->> + * @cmd_id:    command identifier
->> + * @desc:      Descriptor structure containing arguments and return 
->> values
->> + * @res:       Structure containing results from SMC/HVC call
->> + *
->> + * Sends a command to the SCM and waits for the command to finish 
->> processing.
->> + * This should be called in atomic context only.
-> 
-> Maybe add a cant_sleep()?
-> 
->> + */
->> +static int qcom_scm_call_atomic(struct device *dev, u32 svc_id, u32 
->> cmd_id,
->> +                               const struct qcom_scm_desc *desc,
->> +                               struct arm_smccc_res *res)
->> +{
->> +       return ___qcom_scm_call(dev, svc_id, cmd_id, desc, res, true);
->> +}
->> +
+> We can't have multiple (top-level) schema in one file, so better to add
+> in where the existing compatible strings are.
 
-Have addressed all your comments in v5.
+Thank you for your comment. I will add the needed string into existing
+compatible then.
 
-Thanks,
-Sai
+Regards,
+Lukasz
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
