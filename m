@@ -2,141 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 405A5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 028BAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E6E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9997206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:55:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MhheypW2"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Kyfsw2Ui"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732623AbfIPKzE (ORCPT
+        id S1732631AbfIPKzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:55:04 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34920 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732586AbfIPKzB (ORCPT
+        Mon, 16 Sep 2019 06:55:12 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19358 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729112AbfIPKzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:55:01 -0400
-Received: by mail-lf1-f67.google.com with SMTP id w6so27101470lfl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 03:54:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sLN8PEIzdXJ4vyRQJpg4LVfYYRixS2x0Ts7jhtzHOWM=;
-        b=MhheypW2XDysOKktHNsxSG7LxAVuj81gvn1nIXQCjY3ZjEOWVw64CWPx+TsC7e8i/L
-         N3aTKRxdyURBfnZY8cnxzthB0q06sfJEdgrJndGnTTm5DkQ05sqC18szpQVvwPI205JM
-         FD5UbVZfrw17pax6P2aNxvYr0kPjRThua9mL+vYGNNZLqWM5aAc2R1FBXyERvpvxhH9Y
-         sO3McigyojSgOHI03jFVLTIjTnYlbMcahGt86azSZyWWNsHChJFWikNBqpHmK10qnbhD
-         MUjWVDOpY59AA0cDjDtsDASxXF5BF6kAI1VLiq/RWUSorKaA/C3Pq9jt+rQKiEq3xjlk
-         8fRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sLN8PEIzdXJ4vyRQJpg4LVfYYRixS2x0Ts7jhtzHOWM=;
-        b=XzZtM3yuX5so8aNSRkfwPhcRbeaWN6lPWmFK3ux3getfjjIU1ibXKkKQOZ5THCcssH
-         n4gpslaFEj2gb3eCgbYyGenrE54MHcVBnQ320LleCQxzvPXP1EbkjmUfu3k3mLsIxC3p
-         P01Q9cqKNF1n70OBxWzhaloSrQ5PbSh11z2jWsnQ1x4S0NczuCVoIm+8Erf/86JWbNEW
-         vaWolduI6AIhuEBCcdv7lR9Lm1hoRs7yggVtexkF8TQSiv+88l5pXF50fL/GU92Roez4
-         RZE8VrUgDz0ip4rtYc2dEGFsIo0UbzMvyqAE3B9DGZxRE3bCzQWmiIwwDa/vxk04XqCt
-         vHgA==
-X-Gm-Message-State: APjAAAWnHh/VqtB92/Tg0dqAs8An/FUKtoVkC7UkDtTkYdGSVIlURpgs
-        pWWjy92tQ/4SVPXUZojqf7NRAA==
-X-Google-Smtp-Source: APXvYqy4XqmgKre21JjPHCrnRIiHAk6YzQKm/zoD14WloikJ/3u32TM1a02cS68ct/GlCIZU/MCNQQ==
-X-Received: by 2002:a19:4f5a:: with SMTP id a26mr37493210lfk.116.1568631298482;
-        Mon, 16 Sep 2019 03:54:58 -0700 (PDT)
-Received: from localhost.localdomain (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id v1sm8987737lfq.89.2019.09.16.03.54.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 03:54:57 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com,
-        davem@davemloft.net, jakub.kicinski@netronome.com, hawk@kernel.org,
-        john.fastabend@gmail.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH v3 bpf-next 14/14] samples: bpf: README: add preparation steps and sysroot info
-Date:   Mon, 16 Sep 2019 13:54:33 +0300
-Message-Id: <20190916105433.11404-15-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+        Mon, 16 Sep 2019 06:55:10 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d7f6a130000>; Mon, 16 Sep 2019 03:55:15 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 16 Sep 2019 03:55:09 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 16 Sep 2019 03:55:09 -0700
+Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 10:55:09 +0000
+Received: from [10.21.132.148] (10.124.1.5) by DRHQMAIL107.nvidia.com
+ (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
+ 2019 10:55:06 +0000
+From:   Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 4.14 00/21] 4.14.144-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190913130501.285837292@linuxfoundation.org>
+Message-ID: <c7186e08-3faa-5a4a-8c96-957592667199@nvidia.com>
+Date:   Mon, 16 Sep 2019 11:55:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190913130501.285837292@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ DRHQMAIL107.nvidia.com (10.27.9.16)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1568631315; bh=XtBvUo7ErPWpwywlPIBPO8hsGed2vWoZb2aISH+/vxk=;
+        h=X-PGP-Universal:From:Subject:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Kyfsw2UiYrJb3rNsHHBCZuRrbvb7YyV/8tSyxi1IREXX8H0UD3OkMOJfkll8lWE8p
+         x1RtdoMdmTuk5JbVCexvX+8yoMQYt5dwaO/OtQpaOZi5nTgE94n4sl2dM//d8Qmyay
+         P2gToeK+q8s7+UiEY3MAzK6TvoYjoEHWUPrzJDzMLf7JAyW4lot7SMPitqOJ6QMmfm
+         KOSXlwMnCo4Z0pR54pRA0jMPBZDYfmeih8sYmYGN3dQssfYq10OookQ5gvd+2Ape1Y
+         P/eNwSND87q5DTzR52xod2/s8HKVdg1m2nofuzpvDju22Ja1oUHPCMTdnzojA+pUUy
+         GsOf7p3N/a4Ww==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add couple preparation steps: clean and configuration. Also add newly
-added sysroot support info to cross-compile section.
----
- samples/bpf/README.rst | 41 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 36 insertions(+), 5 deletions(-)
 
-diff --git a/samples/bpf/README.rst b/samples/bpf/README.rst
-index 5f27e4faca50..d5845d73ab7d 100644
---- a/samples/bpf/README.rst
-+++ b/samples/bpf/README.rst
-@@ -14,6 +14,20 @@ Compiling requires having installed:
- Note that LLVM's tool 'llc' must support target 'bpf', list version
- and supported targets with command: ``llc --version``
- 
-+Clean and configuration
-+-----------------------
-+
-+It can be needed to clean tools, samples or kernel before trying new arch or
-+after some changes (on demand)::
-+
-+ make -C tools clean
-+ make -C samples/bpf clean
-+ make clean
-+
-+Configure kernel, defconfig for instance::
-+
-+ make defconfig
-+
- Kernel headers
- --------------
- 
-@@ -68,9 +82,26 @@ It is also possible to point make to the newly compiled 'llc' or
- Cross compiling samples
- -----------------------
- In order to cross-compile, say for arm64 targets, export CROSS_COMPILE and ARCH
--environment variables before calling make. This will direct make to build
--samples for the cross target.
-+environment variables before calling make. But do this before clean,
-+cofiguration and header install steps described above. This will direct make to
-+build samples for the cross target::
-+
-+ export ARCH=arm64
-+ export CROSS_COMPILE="aarch64-linux-gnu-"
-+
-+Headers can be also installed on RFC of target board if need to keep them in
-+sync (not necessarily and it creates a local "usr/include" directory also)::
-+
-+ make INSTALL_HDR_PATH=~/some_sysroot/usr headers_install
-+
-+Pointing LLC and CLANG is not necessarily if it's installed on HOST and have
-+in its targets appropriate arm64 arch (usually it has several arches).
-+Build samples::
-+
-+ make samples/bpf/
-+
-+Or build samples with SYSROOT if some header or library is absent in toolchain,
-+say libelf, providing address to file system containing headers and libs,
-+can be RFS of target board::
- 
--export ARCH=arm64
--export CROSS_COMPILE="aarch64-linux-gnu-"
--make samples/bpf/ LLC=~/git/llvm/build/bin/llc CLANG=~/git/llvm/build/bin/clang
-+ make samples/bpf/ SYSROOT=~/some_sysroot
+On 13/09/2019 14:06, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.144 release.
+> There are 21 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sun 15 Sep 2019 01:03:32 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.144-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+
+
+All tests passing for Tegra ...
+
+Test results for stable-v4.14:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
+
+Linux version:	4.14.144-rc2-ga0bf0c3c56ab
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
+
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
