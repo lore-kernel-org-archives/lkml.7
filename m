@@ -2,129 +2,123 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B02AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BEF4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA72214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itokVSgl"
+	by mail.kernel.org (Postfix) with ESMTP id F2594214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:25:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568654747;
+	bh=3E3N1LEw3o4T3J7HszrudP1YvhIen5QE0oWRWgoc2Eg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y922/pIxHDmbAx7BeOut4utpGlPhLylRcOwxQ1FCSFbiZmSt2/V2ptYqr7+mYIody
+	 WxlJDRmWfp7HYnG/2V+KNpF6+MVeye7jbrf8x2WmGvSN1o/hmv/r6nlkNpmy1w/Rgt
+	 YKwiNtizX1wPDlvegCX6kSz3IcXviLSOwdtK0NCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbfIPRWg (ORCPT
+        id S1730835AbfIPRZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:22:36 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38412 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732010AbfIPRWg (ORCPT
+        Mon, 16 Sep 2019 13:25:46 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41920 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727593AbfIPRZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:22:36 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so772583qta.5
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:22:35 -0700 (PDT)
+        Mon, 16 Sep 2019 13:25:45 -0400
+Received: by mail-lj1-f194.google.com with SMTP id f5so698293ljg.8
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=rDB8uHDkgWN7+yrcA0FfYLtoe+OjSqFeu+VWqQjDn9I=;
-        b=itokVSglbnepYieFIOvlt/0B3BXlO2wgztzBJWDXit/kUzBppinOuLRUPbgVctrnlE
-         Xs+7vvbrQmv5LYTPN8Wi3loVrc108cIzN/YQvdjW58ZaCN1lxKsfH755TlliYEDnabFH
-         A6WLXRApELiiGrDYIhNaJmFqjk1rRQj8JGsvkRpjxxt/+4wIR/RL6IlQ+xsmQcufDL7o
-         ZDPk0v3tELCnCOKzUeZ18e+1iUzx5Em5giLoGWX8xcf5XUa0y/2VtVvSwBdNKuksYWWv
-         7whgoxnQEbZaqzK6mw2wouJQuGpYXPtqo/fSx/BrIsKjoa1325vMHR+2yfKQL6/nV+WS
-         FIwg==
+        bh=GDoPRf3O5U70HZ4jcVgvx0Z1NYw99N1yO48Z3M4xYr8=;
+        b=Mph/reUqez7LCvFpck2PPhm1EQlu6gNTHDoYSg1zfXh5tIWII/iGnvnCN2Kr/SsOmb
+         BTcMOWfAEWc+e2sFNBHejlEuj7QAoF4asCAxEL8Fvv88R8zylLuJ43c7T7XjCsS1cO/v
+         xFmFIzvWpIxdD3+f2ybCyZQQbhgA6gNNLVqR0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=rDB8uHDkgWN7+yrcA0FfYLtoe+OjSqFeu+VWqQjDn9I=;
-        b=gRb6gBMSD58iPknYJwYgfmgIAY1S+XrEyc540Dq6iMCxfKHNruw7bsLMV422dcuMgo
-         isAoXaaqM8VHALydaNgDCyi2kJngsSe9JwG5lABqZJrs/SgDFuoZsxPlIXSeXkfgTk7S
-         ug/Yx7vZB0Q5rueqo4fo52gSLpAE3oyW972H+cvkMSsntALubIIIQXrPr8ad+iJQYUm5
-         2T+ybF9pFCX5AuxW0z9dQucICUbjaSIc+CGjDjvXYU0W+XW+XLj4K4aeu3hKAWS323vJ
-         BeGXX0sK4KOTnnFrp/WIbPgjLIc+ec0V8GM15KvmnqLPhAsbd/AgJygwRP9ev8zTKhsI
-         8qdg==
-X-Gm-Message-State: APjAAAUQO+dF3YdrLLCmsVYlmY8xGtMIAmSbwe4kscdeh0NIECgnYbGn
-        ceFpXeouc/jelldIVlNVzgdBRz20jINd9rzL05Q=
-X-Google-Smtp-Source: APXvYqyNxf9P5+HIEk2snNUL/kA+YguGWoN9sH1Euy3GdsF7mtVDOmDSkV7CR8UtRX+Q28d8U1CmoEHgealLu8qcH9g=
-X-Received: by 2002:ac8:f33:: with SMTP id e48mr720765qtk.123.1568654555208;
- Mon, 16 Sep 2019 10:22:35 -0700 (PDT)
+        bh=GDoPRf3O5U70HZ4jcVgvx0Z1NYw99N1yO48Z3M4xYr8=;
+        b=lZLfN5wTgbPeCLoGMoayAIkHr28Qu2qtQJmNmB0ZLmv3p1YEV2vQXrOKfXgyhInjyp
+         5A6rD+ygtVXH8qedGSHM4RZFLY+8aqcd2O97pdHVNa+x++EE87yy5cemFAkchoL/z+1X
+         CLoq8MO844jD/JZ8V8BvrbuHNGDK8vYsB/FKOLP69wZZxntNtBEGgFXxkpQ6qDGS4B6q
+         EbgWp9VcdCwjehykUHSSecwZOvWrB9jKz/f43XOphj9wm7gaXj8fsAzoIvsJQPkO70Gt
+         CIIaW7acIZzicGTs5wGpzmgYnqmmi/Y224FMuvuNmeHwsXQx7I9Fh/fU4IV0rfVViUFp
+         pEmA==
+X-Gm-Message-State: APjAAAVRwigd7sN+ErYELOpX8RhkdXhtJ9FR7plGDB9M2H+UHe/7BizL
+        wPbr35U6yA1K4CZJKYNKtnBjrUh30MA=
+X-Google-Smtp-Source: APXvYqzMUDulwZ8JukNEZ/wGXqyWWbcMX+JcS3QaFaRHpF3fjFcZhc5JRXnFqMtxMxHSU66NF5wLQA==
+X-Received: by 2002:a2e:6d12:: with SMTP id i18mr375458ljc.223.1568654743443;
+        Mon, 16 Sep 2019 10:25:43 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id t16sm9169317lfp.38.2019.09.16.10.25.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2019 10:25:42 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id 72so601345lfh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:25:42 -0700 (PDT)
+X-Received: by 2002:ac2:50cb:: with SMTP id h11mr294789lfm.170.1568654741860;
+ Mon, 16 Sep 2019 10:25:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
-In-Reply-To: <20190913091849.11151-1-kirill.shutemov@linux.intel.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Mon, 16 Sep 2019 10:22:18 -0700
-Message-ID: <CAHbLzkq7JT=KE9R_W6YfXmBJBeESgXZvdReS30sH8no63YQE0Q@mail.gmail.com>
-Subject: Re: [PATCH] mm, thp: Do not queue fully unmapped pages for deferred split
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20190913072237.GA12381@zn.tnic> <CAHk-=wismo3SQvvKXg8j0W-eC+5Q-ctcYfr1QV3K-i90w5caBA@mail.gmail.com>
+ <9dc9f1e6-5d19-167c-793d-2f4a5ebee097@rasmusvillemoes.dk> <20190913104232.GA4190@zn.tnic>
+ <20190913163645.GC4190@zn.tnic> <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
+In-Reply-To: <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 16 Sep 2019 10:25:25 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
+Message-ID: <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
+Subject: Re: [RFC] Improve memset
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rasmus Villemoes <mail@rasmusvillemoes.dk>,
+        x86-ml <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 2:18 AM Kirill A. Shutemov <kirill@shutemov.name> wrote:
+On Mon, Sep 16, 2019 at 2:18 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
 >
-> Adding fully unmapped pages into deferred split queue is not productive:
-> these pages are about to be freed or they are pinned and cannot be split
-> anyway.
+> Eh, this benchmark doesn't seem to provide any hints on where to set the
+> cut-off for a compile-time constant n, i.e. the 32 in
 
-This change looks good to me. Reviewed-by: Yang Shi <yang.shi@linux.alibaba.com>
+Yes, you'd need to use proper fixed-size memset's with
+__builtin_memset() to test that case. Probably easy enough with some
+preprocessor macros to expand to a lot of cases.
 
->
-> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> ---
->  mm/rmap.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index 003377e24232..45388f1bf317 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1271,12 +1271,20 @@ static void page_remove_anon_compound_rmap(struct page *page)
->         if (TestClearPageDoubleMap(page)) {
->                 /*
->                  * Subpages can be mapped with PTEs too. Check how many of
-> -                * themi are still mapped.
-> +                * them are still mapped.
->                  */
->                 for (i = 0, nr = 0; i < HPAGE_PMD_NR; i++) {
->                         if (atomic_add_negative(-1, &page[i]._mapcount))
->                                 nr++;
->                 }
-> +
-> +               /*
-> +                * Queue the page for deferred split if at least one small
-> +                * page of the compound page is unmapped, but at least one
-> +                * small page is still mapped.
-> +                */
-> +               if (nr && nr < HPAGE_PMD_NR)
-> +                       deferred_split_huge_page(page);
->         } else {
->                 nr = HPAGE_PMD_NR;
->         }
-> @@ -1284,10 +1292,8 @@ static void page_remove_anon_compound_rmap(struct page *page)
->         if (unlikely(PageMlocked(page)))
->                 clear_page_mlock(page);
->
-> -       if (nr) {
-> +       if (nr)
->                 __mod_node_page_state(page_pgdat(page), NR_ANON_MAPPED, -nr);
-> -               deferred_split_huge_page(page);
-> -       }
->  }
->
->  /**
-> --
-> 2.21.0
->
->
+But even then it will not show some of the advantages of inlining the
+memset (quite often you have a "memset structure to zero, then
+initialize a couple of fields" pattern, and gcc does much better for
+that when it just inlines the memset to stores - to the point of just
+removing all the memset entirely and just storing a couple of zeroes
+between the fields you initialized).
+
+So the "inline constant sizes" case has advantages over and beyond the
+obvious ones. I suspect that a reasonable cut-off point is somethinig
+like "8*sizeof(long)". But look at things like "struct kstat" uses
+etc, the limit might actually be even higher than that.
+
+Also note that while "rep stosb" is _reasonably_ good with current
+CPU's (ie roughly gen 8+), it's not so great a few generations ago
+(gen 6ish), and it can be absolutely horrid on older cores and/or
+atom. The limit for when it is a win ends up depending on whether I$
+footprint is an issue too, of course, but some of the bigger wins tend
+to happen when you have sizes >= 128.
+
+You can basically always beat "rep movs/stos" with hand-tuned AVX2/512
+code for specific cases if you don't look at I$ footprint and the cost
+of the AVX setup (and the cost of frequency changes, which often go
+hand-in-hand with the AVX use). So "rep movs/stos" is seldom
+_optimal_, but it tends to be "quite good" for modern CPU's with
+variable sizes that are in the 100+ byte range.
+
+             Linus
