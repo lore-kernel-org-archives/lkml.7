@@ -2,69 +2,119 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E77EEC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C700C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCE4F206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568669742;
-	bh=IuFtdRZy8Fw6/pIdcVat/3OLcaQYt0tbzzR7b91WMEM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=O8pbAf2dk0XIPmRoCrVw4gejqRFN44NhSvwH8Sbyatka+tC7t6wDgLMKobftAWNoZ
-	 dkhEiUSnPuZNgk//0v1Ey4mwYBEmtVSNW55X5c0ssUEiIIZgocAGJrtJg1zAqWMMTg
-	 gm907gblmNB7HL9nI9aqT4+5m+iW9dhbpeuQyIgk=
+	by mail.kernel.org (Postfix) with ESMTP id 6B84620644
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 21:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732114AbfIPVfm (ORCPT
+        id S1732482AbfIPVfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 17:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbfIPVfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 17:35:10 -0400
-Subject: Re: [GIT PULL] RAS updates for 5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568669709;
-        bh=IuFtdRZy8Fw6/pIdcVat/3OLcaQYt0tbzzR7b91WMEM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=tDZ5kfTtYwaejPyOqM8/iwTWCM7RLg4CilY+V2v8TmZ18KEgae9EbST3VMKnApWus
-         f0rRdr9m7ZJlwHzOqYO54icz9sTDy8bYsXYc6wpAv2yQlNR1IYZ/Vtmc8E6jQGiAt9
-         pMiHgfiZyUVv9B4r0mwEd1JPiKSFrg29JJrQIYOw=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190913080937.GB20745@zn.tnic>
-References: <20190913080937.GB20745@zn.tnic>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190913080937.GB20745@zn.tnic>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
-X-PR-Tracked-Commit-Id: b6ff24f7b5101101ff897dfdde3f37924e676bc2
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 8e97be2acd59e07539c5002e12ba6a9c0bb5e83b
-Message-Id: <156866970957.13102.2317125622371263603.pr-tracker-bot@kernel.org>
-Date:   Mon, 16 Sep 2019 21:35:09 +0000
-To:     Borislav Petkov <bp@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Tony Luck <tony.luck@intel.com>, x86-ml <x86@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
+        Mon, 16 Sep 2019 17:35:52 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:52656 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728552AbfIPVfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 17:35:52 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 46XKKt6p0Kz1r7hh;
+        Mon, 16 Sep 2019 23:35:46 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 46XKKt4s1Pz1qsD2;
+        Mon, 16 Sep 2019 23:35:46 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id vL_Z3Yvzkzi9; Mon, 16 Sep 2019 23:35:45 +0200 (CEST)
+X-Auth-Info: 7Yzorz4cL64cpIXYMwEei+hYY6VSe697biienY//MW0u7gRp/4RLUg4/7I3tvenS
+Received: from igel.home (ppp-46-244-165-89.dynamic.mnet-online.de [46.244.165.89])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 16 Sep 2019 23:35:45 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id A03192C0173; Mon, 16 Sep 2019 23:35:44 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 01/14] samples: bpf: makefile: fix HDR_PROBE "echo"
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+        <20190916105433.11404-2-ivan.khoronzhuk@linaro.org>
+        <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
+X-Yow:  I always wanted a NOSE JOB!!
+Date:   Mon, 16 Sep 2019 23:35:44 +0200
+In-Reply-To: <CAEf4BzZVTjCybmDgM0VBzv_L-LHtF8LcDyyKSWJm0ZA4jtJKcw@mail.gmail.com>
+        (Andrii Nakryiko's message of "Mon, 16 Sep 2019 13:13:23 -0700")
+Message-ID: <8736gvexfz.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 13 Sep 2019 10:10:39 +0200:
+On Sep 16 2019, Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git ras-core-for-linus
+> On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
+> <ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> echo should be replaced with echo -e to handle '\n' correctly, but
+>> instead, replace it with printf as some systems can't handle echo -e.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  samples/bpf/Makefile | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 1d9be26b4edd..f50ca852c2a8 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -201,7 +201,7 @@ endif
+>>
+>>  # Don't evaluate probes and warnings if we need to run make recursively
+>>  ifneq ($(src),)
+>> -HDR_PROBE := $(shell echo "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+>> +HDR_PROBE := $(shell printf "\#include <linux/types.h>\n struct list_head { int a; }; int main() { return 0; }" | \
+>
+> printf change is fine, but I'm confused about \# at the beginning of
+> the string.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/8e97be2acd59e07539c5002e12ba6a9c0bb5e83b
+From the NEWS of make 4.3:
 
-Thank you!
+* WARNING: Backward-incompatibility!
+  Number signs (#) appearing inside a macro reference or function invocation
+  no longer introduce comments and should not be escaped with backslashes:
+  thus a call such as:
+    foo := $(shell echo '#')
+  is legal.  Previously the number sign needed to be escaped, for example:
+    foo := $(shell echo '\#')
+  Now this latter will resolve to "\#".  If you want to write makefiles
+  portable to both versions, assign the number sign to a variable:
+    H := \#
+    foo := $(shell echo '$H')
+  This was claimed to be fixed in 3.81, but wasn't, for some reason.
+  To detect this change search for 'nocomment' in the .FEATURES variable.
+
+Andreas.
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
