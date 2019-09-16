@@ -2,135 +2,111 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BA5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 792BDC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD32D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S1iVH2Mg"
+	by mail.kernel.org (Postfix) with ESMTP id 55A44214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388069AbfIPNyo (ORCPT
+        id S2388147AbfIPNzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:54:44 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42782 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbfIPNyn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:54:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsb4N084722;
-        Mon, 16 Sep 2019 08:54:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568642077;
-        bh=l8yeJsF8FmT2WnVdhCOfEujrwIHFMa/BZ4gjgWzLKWk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=S1iVH2MgMmOKe6ECllqnFkshWA551SXE7hsEYqnVjkJyD62SzdGUT8p62g04H5+/d
-         uTNgpp7/9L2guOauipwSX6UYECEIP41nQkAHm5aO718nH6AduE1zpMeaIDdEMOARTL
-         hKwRYlLSxMiUGw9FvYKQlciIlvvT6/rM0/GM33pI=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsbhV072484;
-        Mon, 16 Sep 2019 08:54:37 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 16
- Sep 2019 08:54:35 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 16 Sep 2019 08:54:35 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8GDsauO095861;
-        Mon, 16 Sep 2019 08:54:37 -0500
-Subject: Re: [PATCH v5 1/9] leds: multicolor: Add sysfs interface definition
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
-CC:     <robh+dt@kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190911180115.21035-1-dmurphy@ti.com>
- <20190911180115.21035-2-dmurphy@ti.com>
- <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <eb08cd1b-a3eb-18db-0dd2-5c34637df9d5@ti.com>
-Date:   Mon, 16 Sep 2019 08:56:14 -0500
+        Mon, 16 Sep 2019 09:55:07 -0400
+Received: from mx1.emlix.com ([188.40.240.192]:49150 "EHLO mx1.emlix.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728005AbfIPNzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:55:07 -0400
+Received: from mailer.emlix.com (unknown [81.20.119.6])
+        (using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mx1.emlix.com (Postfix) with ESMTPS id E92B15FAD2;
+        Mon, 16 Sep 2019 15:55:04 +0200 (CEST)
+Subject: Re: [PATCH 0/4] Fix UART DMA freezes for iMX6
+To:     Fabio Estevam <festevam@gmail.com>,
+        Robin Gong <yibin.gong@nxp.com>,
+        Fugang Duan <fugang.duan@nxp.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Vinod <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
+References: <20190911144943.21554-1-philipp.puschmann@emlix.com>
+ <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com>
+From:   Philipp Puschmann <philipp.puschmann@emlix.com>
+Openpgp: preference=signencrypt
+Message-ID: <2613a28d-d363-ee4e-679a-e7442e6fde48@emlix.com>
+Date:   Mon, 16 Sep 2019 15:55:04 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <e34f4182-71d1-d51d-fb07-f88f6b88b6a3@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAOMZO5BKiZGF=iR071DaWLp-_7wTVJKLbOn3ihwPeVVSNF6nCg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Hi Fabio,
 
-On 9/15/19 8:57 AM, Jacek Anaszewski wrote:
-> Hi Dan,
->
-> On 9/11/19 8:01 PM, Dan Murphy wrote:
->> Add a documentation of LED Multicolor LED class specific
->> sysfs attributes.
+Am 12.09.19 um 20:23 schrieb Fabio Estevam:
+> Hi Philipp,
+> 
+> Thanks for submitting these fixes.
+> 
+> On Wed, Sep 11, 2019 at 11:50 AM Philipp Puschmann
+> <philipp.puschmann@emlix.com> wrote:
 >>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../ABI/testing/sysfs-class-led-multicolor    | 73 +++++++++++++++++++
->>   1 file changed, 73 insertions(+)
->>   create mode 100644 Documentation/ABI/testing/sysfs-class-led-multicolor
+>> For some years and since many kernel versions there are reports that
+>> RX UART DMA channel stops working at one point. So far the usual workaround was
+>> to disable RX DMA. This patches try to fix the underlying problem.
 >>
->> diff --git a/Documentation/ABI/testing/sysfs-class-led-multicolor b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> new file mode 100644
->> index 000000000000..4ea54c2ad4c8
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-class-led-multicolor
->> @@ -0,0 +1,73 @@
->> +What:		/sys/class/leds/<led>/brightness
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		The multicolor class will redirect the device drivers call back
->> +		function for brightness control to the multicolor class
->> +		brightness control function.
->> +
->> +		Writing to this file will update all LEDs within the group to a
->> +		calculated percentage of what each color LED in the group is set
->> +		to.  The percentage is calculated via the equation below:
->> +
->> +		led_brightness = requested_value * led_color_intensity/led_color_max_intensity
->> +
->> +		For additional details please refer to
->> +		Documentation/leds/leds-class-multicolor.rst.
->> +
->> +		The value of the color is from 0 to
->> +		/sys/class/leds/<led>/max_brightness.
->> +
->> +What:		/sys/class/leds/<led>/colors/color_mix
->> +Date:		Sept 2019
->> +KernelVersion:	5.5
->> +Contact:	Dan Murphy <dmurphy@ti.com>
->> +Description:	read/write
->> +		The values written to this file should contain the intensity
->> +		values of each multicolor LED within the colors directory. The
->> +		index of given color is reported by the color_id file present in
->> +		colors/<color> directory. The index determines the position in
->> +		the sequence of	intensities on which the related intensity
->> +		should be passed to this file.
->> +
->> +		For additional details please refer to
->> +		Documentation/leds/leds-class-multicolor.rst.
-> As already mentioned in the reply to Pavel - let's avoid the
-> introduction of another sysfs file with multiple values.
+>> When a running sdma script does not find any usable destination buffer to put
+>> its data into it just leads to stopping the channel being scheduled again. As
+>> solution we we manually retrigger the sdma script for this channel and by this
+>> dissolve the freeze.
+>>
+>> While this seems to work fine so far a further patch in this series increases
+>> the number of RX DMA periods for UART to reduce use cases running into such
+>> a situation.
+>>
+>> This patch series was tested with the current kernel and backported to
+>> kernel 4.15 with a special use case using a WL1837MOD via UART and provoking
+>> the hanging of UART RX DMA within seconds after starting a test application.
+>> It resulted in well known
+>>   "Bluetooth: hci0: command 0x0408 tx timeout"
+>> errors and complete stop of UART data reception. Our Bluetooth traffic consists
+>> of many independent small packets, mostly only a few bytes, causing high usage
+>> of periods.
+>>
+>>
+>> Philipp Puschmann (4):
+>>   dmaengine: imx-sdma: fix buffer ownership
+>>   dmaengine: imx-sdma: fix dma freezes
+>>   serial: imx: adapt rx buffer and dma periods
+>>   dmaengine: imx-sdma: drop redundant variable
+> 
+> I have some suggestions:
+> 
+> 1. Please split this in two series: one for dmaengine and other one for serial
+> 
+> 2. Please add Fixes tag when appropriate, so that the fixes can be
+> backported to stable kernels.
+> 
+> 3. Please Cc Robin and Andy
+> 
+> Thanks
+> 
 
-OK for clarification remove the color_mix and color_id files and keep 
-the intensity files?
+Thanks for the hints. I will apply them if the contentual feedback is positive.
 
-Dan
+p.s. Did you forget to add Andy? I don't see a Andy in the to- and cc-list.
 
