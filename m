@@ -2,116 +2,96 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7F2C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:21:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DF4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE34206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:21:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jy6+Fzxu"
+	by mail.kernel.org (Postfix) with ESMTP id DC931206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 15:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389081AbfIPPVH (ORCPT
+        id S2389022AbfIPPWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 11:21:07 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37615 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389039AbfIPPVH (ORCPT
+        Mon, 16 Sep 2019 11:22:20 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:50980 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726389AbfIPPWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 11:21:07 -0400
-Received: by mail-wr1-f65.google.com with SMTP id i1so38760360wro.4
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 08:21:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=K5n01uhQ5HwxlBE5M/2zmjIiad/mSltxdBurQPag48E=;
-        b=Jy6+FzxuA5xspP87WcsXSOV4KOdYZWkwZV9U8INYadGh7JZSwRWH/gbT0hmx1AVdJp
-         c3z4qE9I4ZBu1OjPKIDmA/xJwG31JNjYTHNY62FngQXJj5Ch5iIf3UvshZV0IaFH7yuh
-         v9qvTI6LiL9JqE+hz8CfexVxz2uXwVd5QIAsfhXlMbsTH/wDD/OOX1+fX6e0lOq7Dc6o
-         kpe/jGOTZFtoFFaRWaeYDiih2pLyUhyfw4aG8BiagqvcX5YT1xfGUnnl72ARPECAPPBr
-         BSGYMoyvKuKfPeDNJ+h/hWOJcuvDR9nehhvCOzGJkCoKRRPU+l6z5hvmHnbNmglWZkkH
-         9olg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=K5n01uhQ5HwxlBE5M/2zmjIiad/mSltxdBurQPag48E=;
-        b=L2DYiNMFj4Zmy8xZL3HoEepA/aeOjb0xNxF/nO1axLmBsyaH5Eckt/JKnoCJSsEU9i
-         VNURzXCLVF0tbEheS5MOE56bjDvfAYc+hPWijEiRnA05RtscokYFarEK7OnzYZPXTvA7
-         e6qbiAS9zr26kuTTX0MAmWBeUdq1l9vg9+jbhgOvIbxGI7zQ2qW7UoqcnbqVVaZOFyhK
-         BBQLy+Gkdif3dqP8vpQIsMfK2nlwPx//s/poa422H9jEkdWVYoQ0kI53T8MUf8QKKAzl
-         6TUjf3ekdG0owIKzQsdgPKXCSFHKU5iYK+EZp/K5Pdq70ZLsFMZ5gUNy+PdZFouFLift
-         UWSg==
-X-Gm-Message-State: APjAAAUmod0i9yJz2EYoBGgvyNIrL8MX8H8bpeiqV/GlPs+qYSMMAYIV
-        O2JhfmEdeRnc2dHGAsqgAEwAtg==
-X-Google-Smtp-Source: APXvYqyjxEqp9sHAmo5kttc6Y0BlvcD5LMImSzPduV+19RimNQXROmwgEraX+NhAEljzg9KcrdGXzA==
-X-Received: by 2002:a5d:4b4e:: with SMTP id w14mr232550wrs.191.1568647263455;
-        Mon, 16 Sep 2019 08:21:03 -0700 (PDT)
-Received: from [192.168.0.101] (146-241-102-115.dyn.eolo.it. [146.241.102.115])
-        by smtp.gmail.com with ESMTPSA id c18sm7151337wrv.10.2019.09.16.08.21.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 08:21:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/1] block, bfq: remove bfq prefix from cgroups filenames
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <20190916151643.GC3084169@devbig004.ftw2.facebook.com>
-Date:   Mon, 16 Sep 2019 17:21:01 +0200
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        cgroups@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <64329DDB-FFF4-4709-83B1-39D5E6BF6AB6@linaro.org>
-References: <20190909073117.20625-1-paolo.valente@linaro.org>
- <80C56C11-DA21-4036-9006-2F459ACE9A8C@linaro.org>
- <c67c4d4b-ee56-85c1-5b94-7ae1704918b6@kernel.dk>
- <1F3898DA-C61F-4FA7-B586-F0FA0CAF5069@linaro.org>
- <20190916151643.GC3084169@devbig004.ftw2.facebook.com>
-To:     Tejun Heo <tj@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Mon, 16 Sep 2019 11:22:19 -0400
+Received: (qmail 3452 invoked by uid 2102); 16 Sep 2019 11:22:18 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Sep 2019 11:22:18 -0400
+Date:   Mon, 16 Sep 2019 11:22:18 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Boqun Feng <boqun.feng@gmail.com>
+cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Documentation for plain accesses and data races
+In-Reply-To: <20190916051753.GA29216@tardis>
+Message-ID: <Pine.LNX.4.44L0.1909161119160.1489-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 16 Sep 2019, Boqun Feng wrote:
 
+> > executes if Y is a store.)  This is expressed by the visibility
+> > relation (vis), where X ->vis Y is defined to hold if there is an
+> > intermediate event Z such that:
+> > 
+> > 	X is connected to Z by a possibly empty sequence of
+> > 	cumul-fence links followed by an optional rfe link (if none of
+> > 	these links are present, X and Z are the same event),
+> > 
+> 
+> I wonder whehter we could add an optional ->coe or ->fre between X and
+> the possibly empty sequence of cumul-fence, smiliar to the definition
+> of ->prop. This makes sense because if we have
+> 
+> 	X ->coe X' (and X' in on CPU C)
+> 
+> , X must be already propagated to C before X' executed, according to our
+> operation model:
+> 
+> "... In particular, it must arrange for the store to be co-later than
+> (i.e., to overwrite) any other store to the same location which has
+> already propagated to CPU C."
 
-> Il giorno 16 set 2019, alle ore 17:16, Tejun Heo <tj@kernel.org> ha =
-scritto:
->=20
-> Hello, Paolo.
->=20
-> On Mon, Sep 16, 2019 at 05:07:29PM +0200, Paolo Valente wrote:
->> Tejun, could you put your switch-off-io-cost code into a standalone
->> patch, so that I can put it together with this one in a complete
->> series?
->=20
-> It was more of a proof-of-concept / example, so the note in the email
-> that the code is free to be modified / used any way you see fit.  That
-> said, if you like it as it is, I can surely prep it as a standalone
-> patch.
->=20
+You have misinterpreted the text.  The operational model says that if X 
+propagates to CPU C before X' executes then X ->coe X'.  It does _not_ 
+say that if X ->coe X' then X propagates to CPU C before X' executes.
 
-AFAICT your proposal contains no evident error.  Plus, no one seems to
-have complained about the idea (regardless from the exact
-implementation).  So I guess the best next step is to go for it.
+> In other words, we can define ->vis as:
+> 
+> 	let vis = prop ; ((strong-fence ; [Marked] ; xbstar) | (xbstar & int))
+> 
+> , and for this document, reference the "prop" section in
+> explanation.txt. This could make the model simple (both for description
+> and explanation), and one better thing is that we won't need commit in
+> Paul's dev branch:
+> 	
+> 	c683f2c807d2 "tools/memory-model: Fix data race detection for unordered store and load"
+> 
+> , and data race rules will look more symmetrical ;-)
+> 
+> Thoughts? Or am I missing something subtle here?
 
-Thanks,
-Paolo
+See above.
 
-> Thanks.
->=20
-> --=20
-> tejun
+Alan
 
