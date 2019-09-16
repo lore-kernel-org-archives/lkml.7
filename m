@@ -2,146 +2,101 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01023C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D459C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6CB206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD777206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:26:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KTotiNMc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390340AbfIPSZ3 (ORCPT
+        id S2390340AbfIPS06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:25:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39095 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729838AbfIPSZ3 (ORCPT
+        Mon, 16 Sep 2019 14:26:58 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43249 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfIPS05 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:25:29 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i9vgk-0007st-69; Mon, 16 Sep 2019 20:25:26 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1i9vgi-0005lJ-Tr; Mon, 16 Sep 2019 20:25:24 +0200
-Date:   Mon, 16 Sep 2019 20:25:24 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Guru Das Srinagesh <gurus@codeaurora.org>
-Cc:     linux-pwm@vger.kernel.org,
-        Thierry Reding <thierry.reding@gmail.com>,
-        kernel-team@android.com, Mark Salyzyn <salyzyn@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
-Subject: Re: [PATCH 1/2] pwm: Add different PWM output types support
-Message-ID: <20190916182524.5ebby6pbsbkuahci@pengutronix.de>
-References: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1568415464-20267-1-git-send-email-gurus@codeaurora.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 16 Sep 2019 14:26:57 -0400
+Received: by mail-qt1-f194.google.com with SMTP id c3so997789qtv.10
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=aGLQbvl4lzQC5/TXbcMtzuY6cM2BuLvsBEnb8j57QAk=;
+        b=KTotiNMcVlc2ur9IJSCApV52NW7xHvYTihJBLgnlipxQNoOT4b8tescPp0QB8sZ/7C
+         xkiTVYZeKdkgYXCT2/Pc/cN7SlweWaPPKXiUnVQ6cfWR2i8+8OSP5lNR/x+sNTOEo3b7
+         yjsYsbjOt8CYKHaXt76xDhPwHbFKzSlEkdIaMtqyGIDJNUp6eGLux13Xtosm8r3v0YbQ
+         5TOpo1Lw79HZXW2iVWSGgcGhw4nRCQ7YMgKZa3xPHcbW55humIWRzzPf1p5m9KBOI5Q5
+         PaJUGXsIfgbHda+pRnOEIVQaXPuQ2PWDDnLt9i59cEpr9ilwaSnAWieqdcGUYG5YMqbA
+         kVeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=aGLQbvl4lzQC5/TXbcMtzuY6cM2BuLvsBEnb8j57QAk=;
+        b=SarFJ/pobo4i5vpamzHFdCin2rqLsHxUBI84H1r0w8LNGuabPbp1RJ06PhrivfNK8F
+         ktzjl6aGBkpzHB0VpfwiyWecq+OSCGYP3lBtS6osN2sEBS6ukebS5zjqeowu2W1rr7bb
+         4rqpaDTa8rehOCOCGzruHI4Rxl0IN3Qd6GRo5pcaGdwO3BTk2D4Y7kgWqld4j8x1E32+
+         zcJC4TvM2WsR276ETcTZjGhrNO7pFPiH32UXn/877weAXn95Bb/wbXRAe9pVhN13Z0DV
+         zP0mHMHQqzfLxYUscoRkBLRNyhyc7niBwBtHQj3RHSpLsHBRCpntsxsN7aqQJGjg+I99
+         CJDQ==
+X-Gm-Message-State: APjAAAXC8EPt2AYLizktV0Kgtrx6j2c2bYNs83xvv7pPzqmDQkAEBkvs
+        lyS9XcfGWGk7Bpd18rQQVzw99g==
+X-Google-Smtp-Source: APXvYqz/I3HacN6FvkNZuh2Cn0GSGQRoiZWNIsCw+eVru8DTNDt8Rk9HRURFzC9KiNHUGdAZXxm3+w==
+X-Received: by 2002:aed:3903:: with SMTP id l3mr1044065qte.165.1568658416581;
+        Mon, 16 Sep 2019 11:26:56 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id i1sm1012700qkk.88.2019.09.16.11.26.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 11:26:55 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     ngupta@vflare.org, sergey.senozhatsky@gmail.com,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm/zsmalloc: fix a -Wunused-function warning
+Date:   Mon, 16 Sep 2019 14:26:48 -0400
+Message-Id: <1568658408-19374-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+set_zspage_inuse() was introduced in the commit 4f42047bbde0 ("zsmalloc:
+use accessor") but all the users of it were removed later by the
+commits,
 
-On Fri, Sep 13, 2019 at 03:57:43PM -0700, Guru Das Srinagesh wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
-> 
-> Normally, PWM channel has fixed output until software request to change
-> its settings. There are some PWM devices which their outputs could be
-> changed autonomously according to a predefined pattern programmed in
-> hardware. Add pwm_output_type enum type to identify these two different
-> PWM types and add relevant helper functions to set and get PWM output
-> types and pattern.
+bdb0af7ca8f0 ("zsmalloc: factor page chain functionality out")
+3783689a1aa8 ("zsmalloc: introduce zspage structure")
 
-I have problems to understand what your modulated mode does even after
-reading your commit log and the patch.
+so the function can be safely removed now.
 
-Also you should note here what is the intended usage and add support for
-it for at least one (preferably more) drivers to make this actually
-usable.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/zsmalloc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> Change-Id: Ia1f914a45ab4f4dd7be037a395eeb89d0e65a80e
-
-In Linux we don't use these. You're making it easier to apply your patch
-if you drop the change-id lines.
-
-> diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-> index 2389b86..ab703f2 100644
-> --- a/drivers/pwm/sysfs.c
-> +++ b/drivers/pwm/sysfs.c
-> @@ -215,11 +215,60 @@ static ssize_t capture_show(struct device *child,
->  	return sprintf(buf, "%u %u\n", result.period, result.duty_cycle);
->  }
->  
-> +static ssize_t output_type_show(struct device *child,
-> +			     struct device_attribute *attr,
-> +			     char *buf)
-> +{
-> +	const struct pwm_device *pwm = child_to_pwm_device(child);
-> +	const char *output_type = "unknown";
-> +	struct pwm_state state;
-> +
-> +	pwm_get_state(pwm, &state);
-> +	switch (state.output_type) {
-> +	case PWM_OUTPUT_FIXED:
-> +		output_type = "fixed";
-> +		break;
-> +	case PWM_OUTPUT_MODULATED:
-> +		output_type = "modulated";
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return snprintf(buf, PAGE_SIZE, "%s\n", output_type);
-> +}
-> +
-> +static ssize_t output_type_store(struct device *child,
-> +			      struct device_attribute *attr,
-> +			      const char *buf, size_t size)
-> +{
-> +	struct pwm_export *export = child_to_pwm_export(child);
-> +	struct pwm_device *pwm = export->pwm;
-> +	struct pwm_state state;
-> +	int ret = -EINVAL;
-> +
-> +	mutex_lock(&export->lock);
-> +	pwm_get_state(pwm, &state);
-> +	if (sysfs_streq(buf, "fixed"))
-> +		state.output_type = PWM_OUTPUT_FIXED;
-> +	else if (sysfs_streq(buf, "modulated"))
-> +		state.output_type = PWM_OUTPUT_MODULATED;
-> +	else
-> +		goto unlock;
-> +
-> +	ret = pwm_apply_state(pwm, &state);
-> +unlock:
-> +	mutex_unlock(&export->lock);
-> +
-> +	return ret ? : size;
-> +}
-
-So in sysfs you cannot set a pattern. Doesn't that mean this makes using
-modulated mode hardly useful?
-
-Best regards
-Uwe
-
+diff --git a/mm/zsmalloc.c b/mm/zsmalloc.c
+index e98bb6ab4f7e..24179cfe8784 100644
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -476,10 +476,6 @@ static inline int get_zspage_inuse(struct zspage *zspage)
+ 	return zspage->inuse;
+ }
+ 
+-static inline void set_zspage_inuse(struct zspage *zspage, int val)
+-{
+-	zspage->inuse = val;
+-}
+ 
+ static inline void mod_zspage_inuse(struct zspage *zspage, int val)
+ {
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.8.3.1
+
