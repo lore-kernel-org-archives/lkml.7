@@ -2,112 +2,108 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE7DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD5C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BFDF2067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AEF82067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 06:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d1i2F+MK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730086AbfIPGyA (ORCPT
+        id S1730134AbfIPGy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 02:54:00 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2224 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfIPGx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 02:53:59 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 80A58BA64200747B6DDF;
-        Mon, 16 Sep 2019 14:53:54 +0800 (CST)
-Received: from HGHY2S004443181.china.huawei.com (10.184.52.157) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 16 Sep 2019 14:53:53 +0800
-From:   KeMeng Shi <shikemeng@huawei.com>
-To:     <mingo@redhat.com>, <peterz@infradead.org>,
-        <valentin.schneider@arm.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] sched: fix migration to invalid cpu in __set_cpus_allowed_ptr
-Date:   Mon, 16 Sep 2019 06:53:28 +0000
-Message-ID: <1568616808-16808-1-git-send-email-shikemeng@huawei.com>
-X-Mailer: git-send-email 2.7.0.windows.1
+        Mon, 16 Sep 2019 02:54:57 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43640 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfIPGy4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 02:54:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tzJaBa6Gl/RcQrlmqurINpm8pLuFnjXV7rYhSXYeAPQ=; b=d1i2F+MKu4saF+Nr3xihbotUo1
+        y1lc4O5GDtQo/dHrmpmcCoo0bXKBRTn3YCupZhoRmj0riSBdJHuZfJcJAwl01Xr2kmklngp9jO4fl
+        QnFCDSg4rBf7URrMtHEQ92tu533lYqup2/HQVpI42pP1MeTVGtOf5OSQSht7uj4UOj4UV51O4V2CN
+        YKD3Eq7XoeGIu3L089du9pKsuQxjQt2HmPP4txbVl/+0G+/lPULsuNLaAA6z6jXAA6jEiuGf3itJW
+        WfGm/7Fk6t3ASc/MZOUvsdcN2a4Kpqh5HDw6HU+4ac+T/e9iPzUV5DAEF6wS+PBqiZ4ocg4OU8Rcf
+        N/K7mi6g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1i9kuM-0001r7-Cu; Mon, 16 Sep 2019 06:54:46 +0000
+Date:   Sun, 15 Sep 2019 23:54:46 -0700
+From:   "hch@infradead.org" <hch@infradead.org>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     "hch@infradead.org" <hch@infradead.org>,
+        Atish Patra <Atish.Patra@wdc.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "alankao@andestech.com" <alankao@andestech.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "anup@brainfault.org" <anup@brainfault.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>,
+        "alexios.zavras@intel.com" <alexios.zavras@intel.com>,
+        "gary@garyguo.net" <gary@garyguo.net>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>
+Subject: Re: [RFC PATCH 0/2] Add support for SBI version to 0.2
+Message-ID: <20190916065446.GA6566@infradead.org>
+References: <20190826233256.32383-1-atish.patra@wdc.com>
+ <20190827144624.GA18535@infradead.org>
+ <a31c39e8653bd04efe0051a5fd6f0238d33a80e7.camel@wdc.com>
+ <20190829105919.GB8968@infradead.org>
+ <4bd0a62ba36587661574e1bf8b094b0a28ec8941.camel@wdc.com>
+ <20190903073845.GA1170@infradead.org>
+ <CANs6eMmcbtJ5KTU00LpfTtXszsdi1Jem_5j6GWO+8Yo3JnvTqg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.52.157]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANs6eMmcbtJ5KTU00LpfTtXszsdi1Jem_5j6GWO+8Yo3JnvTqg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oops occur when running qemu on arm64:
- Unable to handle kernel paging request at virtual address ffff000008effe40
- Internal error: Oops: 96000007 [#1] SMP
- Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
- pstate: 20000085 (nzCv daIf -PAN -UAO)
- pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
- lr : move_queued_task.isra.21+0x124/0x298
- ...
- Call trace:
-  __ll_sc___cmpxchg_case_acq_4+0x4/0x20
-  __migrate_task+0xc8/0xe0
-  migration_cpu_stop+0x170/0x180
-  cpu_stopper_thread+0xec/0x178
-  smpboot_thread_fn+0x1ac/0x1e8
-  kthread+0x134/0x138
-  ret_from_fork+0x10/0x18
+On Fri, Sep 13, 2019 at 08:54:27AM -0700, Palmer Dabbelt wrote:
+> On Tue, Sep 3, 2019 at 12:38 AM hch@infradead.org <hch@infradead.org> wrote:
+> 
+> > On Fri, Aug 30, 2019 at 11:13:25PM +0000, Atish Patra wrote:
+> > > If I understood you clearly, you want to call it legacy in the spec and
+> > > just say v0.1 extensions.
+> > > 
+> > > The whole idea of marking them as legacy extensions to indicate that it
+> > > would be obsolete in the future.
+> > > 
+> > > But I am not too worried about the semantics here. So I am fine with
+> > > just changing the text to v0.1 if that avoids confusion.
+> >
+> > So my main problems is that we are lumping all the "legacy" extensions
+> > together.  While some of them are simply a bad idea and shouldn't
+> > really be implemented for anything new ever, others like the sfence.vma
+> > and ipi ones are needed until we have hardware support to avoid them
+> > and possibly forever for virtualization.
+> >
+> > So either we use different markers of legacy for them, or we at least
+> > define new extensions that replace them at the same time.  What I
+> > want to avoid is the possibіly of an implementation using the really
+> > legacy bits and new extensions at the same time.
+> >
+> 
+> Nominally we've got to replace these as well because we didn't include
+> the length of the hart mask. 
 
-__set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask to
-migrage the process if process is not currently running on any one of the
-CPUs specified in affinity mask. __set_cpus_allowed_ptr will choose an
-invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if 
-CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-check. cpumask_test_cpu of dest_cpu afterwards is overflow and may pass if
-corresponding bit is coincidentally set. As a consequence, kernel will
-access an invalid rq address associate with the invalid cpu in
-migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
+Well, let's do that as part of definining the first real post-0.1
+SBI then, and don't bother defining the old ones as legacy at all.
 
-Process as follows may trigger the Oops:
-1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-sched_setaffinity.
-2) A shell script repeatedly "echo 0 > /sys/devices/system/cpu/cpu1/online"
-and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-3) Oops appears if the invalid cpu is set in memory after tested cpumask.
-
-Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
----
-Changes in v2:
--solve format problems in log
-
- kernel/sched/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 3c7b90bcbe4e..087f4ac30b60 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1656,7 +1656,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_equal(p->cpus_ptr, new_mask))
- 		goto out;
- 
--	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-+	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-+	if (dest_cpu >= nr_cpu_ids) {
- 		ret = -EINVAL;
- 		goto out;
- 	}
-@@ -1677,7 +1678,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
- 	if (cpumask_test_cpu(task_cpu(p), new_mask))
- 		goto out;
- 
--	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
- 	if (task_running(rq, p) || p->state == TASK_WAKING) {
- 		struct migration_arg arg = { p, dest_cpu };
- 		/* Need help from migration thread: drop lock and wait. */
--- 
-2.19.1
-
-
+Just two different specs that don't interact except that we reserve
+extension space in the new one for the old one so that one SBI spec
+can implement both.
