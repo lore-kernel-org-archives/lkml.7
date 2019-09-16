@@ -2,106 +2,98 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E3F9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783B9C4CECC
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CE7206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdN+yvh+"
+	by mail.kernel.org (Postfix) with ESMTP id 5A44720890
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 08:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730884AbfIPIKI (ORCPT
+        id S1730902AbfIPIMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 04:10:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46933 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725951AbfIPIKH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 04:10:07 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g19so34740640otg.13;
-        Mon, 16 Sep 2019 01:10:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6c0nZaBPyfxRJBP1x7CxvAJ/ZjmFhBQPaFGw/S18y7Q=;
-        b=PdN+yvh+WkL6iTNeSqdLkEMFCZuiZNphjnxqHzIDG1WPT6d+7zDv5reX301C2lGIt9
-         yk9R1E+caTso+dcazIzGIBL7KBjoY+5UPkQC8tTJgIL41qrJxTHIvj78+yUfiUwZjPVR
-         sUZ/lhzI5IB72qOAexg+ij1CHYmnRHiwRFCtGheXfb9HYwWbWjjFHN6tqHGKX6fwylIM
-         A1QjtFgIhufwSpa2X6MjxZj80eM2BzRZ1AypvIF+Qdxk61/cMJjjeD3jkP8JZjq5Drfm
-         xFg9sc68AVSQWQNakBToufjyZnAjDuCiFVtCCQX6WBxQCb/yFdoeLFr4WCjxAWyHMD59
-         y7+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6c0nZaBPyfxRJBP1x7CxvAJ/ZjmFhBQPaFGw/S18y7Q=;
-        b=UkKM97CCpQkmU014ydr0n2A3gBA3fhle50cDALd+SgEQlVc7p04yMiL619sQLAApwk
-         Pg8OFrLFKAVqz53pc+SRNDC/nNE/ZevZxyG+4EkEiX+c4b6oqxBjfhHp+3fgKUpdPFVt
-         NSLLX/1g2toE9ZqQJZJcXbtWWapWp7UO2JWgrIV03NlUZjz4vVsk/ZVq6h6yG0HbxuR3
-         Pt5ICuWyCqTZrj0ztH0XgXCcmLLLIa7ky2XknkzKdnVols5374IV0RX62y0V405Lsc+s
-         0vU1/ishNFGDLPypP6600FYqjr4OcodMiVGDA6RtVritR+UqxcUMqpi6v1sxpxCpl4MX
-         aSEw==
-X-Gm-Message-State: APjAAAXXREyo1sM3tjCuw2GJKuDo/3AQRDydcNS6M8dSsuMycg+Qqjlk
-        jLvlPAFJICVvaB/9VogxJM7BU0TMIrm0ASgaoWU=
-X-Google-Smtp-Source: APXvYqy9uPAQ+ah6hl8UQV8HIUOFzGAJ/eOzn3CuAklH/Il+pYsf10+uIVot1+nZYu9GJs4tc46uzXj0xA/JzCik1mk=
-X-Received: by 2002:a9d:aa8:: with SMTP id 37mr49055047otq.56.1568621406942;
- Mon, 16 Sep 2019 01:10:06 -0700 (PDT)
+        Mon, 16 Sep 2019 04:12:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38260 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726075AbfIPIMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:12:53 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F025830A7B81;
+        Mon, 16 Sep 2019 08:12:52 +0000 (UTC)
+Received: from dcbz.redhat.com (ovpn-116-67.ams2.redhat.com [10.36.116.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EC425D772;
+        Mon, 16 Sep 2019 08:12:49 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 10:12:47 +0200
+From:   Adrian Reber <areber@redhat.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 0/6] Update clone3 self-tests
+Message-ID: <20190916081247.GC26734@dcbz.redhat.com>
+References: <cover.1568138393.git.esyr@redhat.com>
+ <20190916074933.j33qc2z3hynpj2gf@wittgenstein>
 MIME-Version: 1.0
-References: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
- <a1c6c974-a6f2-aa71-aa2e-4c987447f419@redhat.com> <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
- <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com> <CANRm+Cy+5pompcDDS2C9YnxvE_-87i24gbBfc53Qa1tcWNck2Q@mail.gmail.com>
- <82ff90b6-f518-e2a8-c4f5-ef4b294af15e@redhat.com>
-In-Reply-To: <82ff90b6-f518-e2a8-c4f5-ef4b294af15e@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 16 Sep 2019 16:09:55 +0800
-Message-ID: <CANRm+Cy-u4AJ8kBMy44JAv-7er9YmwgY0gbq1QR=Pt4MV9JvJA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916074933.j33qc2z3hynpj2gf@wittgenstein>
+X-Operating-System: Linux (5.2.9-200.fc30.x86_64)
+X-Load-Average: 1.27 1.13 1.00
+X-Unexpected: The Spanish Inquisition
+X-GnuPG-Key: gpg --recv-keys D3C4906A
+Organization: Red Hat
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 16 Sep 2019 08:12:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 at 15:49, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 16/09/19 06:02, Wanpeng Li wrote:
-> > Hi Paolo,
-> >
-> > Something like below? It still fluctuate when running complex guest os
-> > like linux. Removing timer_advance_adjust_done will hinder introduce
-> > patch v3 2/2 since there is no adjust done flag in each round
-> > evaluation.
->
-> That's not important, since the adjustment would be continuous.
->
-> How much fluctuation can you see?
+On Mon, Sep 16, 2019 at 09:49:34AM +0200, Christian Brauner wrote:
+> On Tue, Sep 10, 2019 at 07:01:30PM +0100, Eugene Syromiatnikov wrote:
+> > Hello.
+> > 
+> > This patch set updates clone3 selftest in several aspects:
+> >  - adding checks for exit_signal invalid values handling;
+> >  - adding clone3 to selftests targets;
+> >  - enabling clone3 tests on all architectures;
+> >  - minor cleanups of the clone3 test.
+> > 
+> > Applied on top of brauer/linux.git/for-next.
+> 
+> So I like this series a lot! Testing is very important.
+> And thanks for catching the clone3() exit_signal problem. This way we
+> got to release a non-broken kernel. :)
+> 
+> Some notes: I dropped the set_tid extension from the core process
+> updates for 5.4 because we ended up in a discussion that made it clear
+> we potentially need the ability to restore pids in multiple pid
+> namespaces. This means we need some more discussion and the patchset is
+> delayed for at least one release.
+> Unfortunately, this also means the test that you have based yours upon
+> does not exist anymore. However, the tests should not be blocked on
+> this. I'd encourage you to talk to Adrian (who is Cced here anyway) and
+> come up with a clone3() test suite I can merge. You can very likely do a
+> Co-Developed-by so no-ones work gets dropped. :)
+> 
+> Ideally I'd like to see:
+> - verifying passing different struct sizes works correctly
+> - verify that flag combinations work correctly
+> - verify that struct members have correct values etc. pp.
+> 
+> We definitely want the exit_signal test as a regression test so it
+> doesn't bite us again!
+> 
+> (Oh, please also add tool/test/selftests/clone3/ to the pidfd/core
+>  process MAINTAINERS entry.)
 
-After I add a trace_printk to observe more closely, the adjustment is
-continuous as expected.
+Eugene and I have already discussed this. We will resubmit the clone3()
+selftests in the next few days with all our changes combined.
 
->
-> > I have two questions here, best-effort tune always as
-> > below or periodically revaluate to get conservative value and get
-> > best-effort value in each round evaluation as patch v3 2/2, which one
-> > do you prefer? The former one can wast time to wait sometimes and the
-> > later one can not get the best latency. In addition, can the adaptive
-> > tune algorithm be using in all the scenarios contain
-> > RT/over-subscribe?
->
-> I prefer the former, like the patch below, mostly because of the extra
-> complexity of the periodic reevaluation.
-
-How about question two?
-
-    Wanpeng
+		Adrian
