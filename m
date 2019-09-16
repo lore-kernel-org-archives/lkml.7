@@ -2,142 +2,137 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E42C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B5E4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E27220678
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16A320678
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:15:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="c/76u5Nm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TCFJ+T5V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389579AbfIPQO2 (ORCPT
+        id S2389699AbfIPQPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:14:28 -0400
-Received: from mail-eopbgr1310108.outbound.protection.outlook.com ([40.107.131.108]:12288
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727296AbfIPQOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:14:25 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NKYrZqDbAJKl3u8l80cyTY6oLZjuADl9849ybqHgcP6EKtE9wA0eyZnD3nYbENvp071KwjG4RhjSeYI29WTjYbxhoynx8/0o5Nbxm98rANrc2w6FwQfROMeukjsLA0Ke1FxSBIVfHpc7je10IqUU59RLjssbKGMuntj2Ha5qE44DH/Xsp5SHcShAXyTkhJnrDpK74KMQRbew+jFql5vFtPqw8UgiSbp3qotDj/S5wVcJCc3IAAje5jyUEh2JbsX8sTloY5TIFdVGTfFzsUj5oHZ66IjFhBFq28hBtFUAqahmyJfzE8JIkjBThUUGK31QxjuwsiNwTL6Ks3QbM6trbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ycEPsitl+OnSYfPfmYEkvvLV31pXrYu7RxIeKo1AIF4=;
- b=Ibu6EEv1qLiWeY6DwtU1Zx7WBkX1b7GzzUzRC0stdJqnWLcMcRHP7CSiPH8jAj6a1NJ/siBVD0OFQ0XHC4jr8qry570pUOcdiRvRsNk3e+vgQf7aIrik2wZGjcMln+MbGQUX66yrFrl4To7cLBAF+lLHEZ7m+ZmJ8+E4auwLhgAhrFjZHAM2R1x7qnddvZ9nc6GyMKiTb384PwbukiabYZqmNngOeFHT7N7ehXlXF6WnyqNCXgILMsZFpab7BZyv0mxK4ISYuEVy/g8nliBoewBtY6+K870xHgh4u+EVnIA8kO8khY2aHwebZVKBV+abFM+CgSJr9Job2HmYYOaSrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Mon, 16 Sep 2019 12:15:04 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46762 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfIPQPD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:15:03 -0400
+Received: by mail-pg1-f195.google.com with SMTP id a3so248319pgm.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 09:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ycEPsitl+OnSYfPfmYEkvvLV31pXrYu7RxIeKo1AIF4=;
- b=c/76u5Nmh8kr63VjzvtiR8FoKvXEAN0SdMPH3B/LzMq4v3nrr2Ie2meI3zbfFGEst0uTTm8UnGXtVE6Bv9aVZkhBRNGppzDhlSpIQeeoesuPLApDBBIDLg+QXz2WIOujrm/ZEAJwwAfJEd8E4wgy8amlW8W4o17M2nfZ1a50a/o=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
- TY2PR01MB2172.jpnprd01.prod.outlook.com (52.133.184.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.14; Mon, 16 Sep 2019 16:14:14 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a%7]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 16:14:14 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/3] spi: dw: Add basic runtime PM support
-Thread-Topic: [PATCH 2/3] spi: dw: Add basic runtime PM support
-Thread-Index: AQHVaiyPrIzLbApuDUKmNvonSB+n+KcuY8iAgAAXkJA=
-Date:   Mon, 16 Sep 2019 16:14:13 +0000
-Message-ID: <TY2PR01MB2924AA1B012C2D305EE5C9B7DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
- <1568376720-7402-3-git-send-email-gareth.williams.jx@renesas.com>
- <CAMuHMdUnzmYEcp0B5MG7itB1JHtNL7Stj9S2EFB0U0y_naQVBQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdUnzmYEcp0B5MG7itB1JHtNL7Stj9S2EFB0U0y_naQVBQ@mail.gmail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gareth.williams.jx@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6682273f-73d3-4e36-3f55-08d73ac0ea9f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY2PR01MB2172;
-x-ms-traffictypediagnostic: TY2PR01MB2172:|TY2PR01MB2172:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB2172865EA5028D11D800F071DF8C0@TY2PR01MB2172.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(366004)(346002)(136003)(199004)(189003)(11346002)(9686003)(71200400001)(4326008)(478600001)(71190400001)(5660300002)(74316002)(6436002)(316002)(33656002)(66066001)(476003)(6916009)(305945005)(76116006)(66946007)(66556008)(66476007)(3846002)(186003)(55016002)(66446008)(64756008)(6116002)(7696005)(81156014)(8936002)(102836004)(2906002)(81166006)(76176011)(86362001)(52536014)(8676002)(25786009)(7736002)(26005)(54906003)(446003)(14454004)(14444005)(99286004)(6246003)(6506007)(53936002)(229853002)(256004)(486006)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:TY2PR01MB2172;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: KMNujQD5rdd7p6+Jl1QMPeinsLgetXiCGvMQ72DOOAIaVONRC86EbZSsfTFNZdzRP92ni8bYeKaGlrAnayscE6RKE3s67YZjjS8vxJ+KJPZQmxtkG1tILiKzuxfl+iRtP+fz9SodMUOUo4UiqtdVtpWRtoP+c2tGlIrhjGGggSbA7ucsxe/JKPBDAwGZIQseydaXtwudz5h8CwmHgi74w2sP9y2b3wIicPG8grMEg8OE61Ju6Vm/Y8zWHmEYbjWuVdIeeSB0bgCaYetfLQBmE5CK2rzu4q/McxsHElxc1CB1p3h2YJw3UvzubGkIYCi95DJkCNpRzNTLSg824CYFSAZ2o94J+BuQgHe8hQ4F8Vx70Yo6ozyUvEJjmBOlbxnTUHO17nOPlp+JubmQRIWpu/ISAs29KUVQaH8K57V6Jz8=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6682273f-73d3-4e36-3f55-08d73ac0ea9f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 16:14:13.4474
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JLAWeSxQSutpudYeY/rrdBiHm45ZiOp1jl7UVL/AKL42E6mUoMc+GM+NLRCW0A3hsDrp4/MQfj7pgctLm967sbxSFSbtj+iWd3fVPbpyDGc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2172
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=YqI202SP9Uvm6lQD97H4g3P2DuY2a7DQ+cgjEVc1iKE=;
+        b=TCFJ+T5VQp/PBhYSSCAmY4rWCPO61OkcTmlcfwPeLEQxWoNSKi4+kdpTZ3KgLao1bP
+         78YuAjmnc+fuu15yyj9WuXavFLo8vmEeWx9qRJzt2m4tH4E88ZFkNAIUws8SNjvV334h
+         ZuPxKFcj8jmDVbVXdIPSxRMx/rCG8AD6PQ8BL784ZjC1LzJKMv4fCABTrrpjSBnufWpR
+         ab8VVXa7At+aYgWye6PRjYBlah4HDNfLX/FlQRlnybwD/nSvKQB+0yTYJCVPvOACTUnJ
+         Sjjwkj38yDCfOyKJfB+vFJuVLkxtLsVxSuLrzVyu4hFFuOkAkQM87YzArntp+bofj1Ef
+         XhAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YqI202SP9Uvm6lQD97H4g3P2DuY2a7DQ+cgjEVc1iKE=;
+        b=FAaATCsfxEEmam3vvnzNdjEyoyA8mkALQ6C6R/Nn6U5SGjPvuxKQhfgwFV1RndqxYj
+         EPrsEdxslC86zFJ+h7dAketcGgB9dSzcLybRj6b4ajXORjaI55Dn/Bp6yDwOTAKlHazP
+         vFqr4HIPL7hOrbgMkxCXMrTkqxTWyesJDOzyYGCA5IAmG4jjVTNuTMJmOLtgsVs4pUgm
+         FluOHIL5BsoxXjBGneW8hK1cmAzaFZIQoRtUmQ6xgO2JGy6Q7akEtBXZEq+qZLFIuYQo
+         jQKFhNDIWUZh2c5lJ7QjgmWr0alUNgfWwgx+os1RpvssPwWETMZ4bYKD9IU/hEkeongN
+         dwtw==
+X-Gm-Message-State: APjAAAXl8qyBwiGD2mLKbtvvKrjGT/pAjL7sdd5zh0gv+SaLy/tOgk/Z
+        yDJZA73x18FE1Cu8fLC37xbf
+X-Google-Smtp-Source: APXvYqz3wknvxuDQCjKwVjta//PKTOY6hHZ8/aiT+AGaASzY6TDIDhkjaGXnLFFiW8AbLhsQ+RIWlw==
+X-Received: by 2002:a63:221f:: with SMTP id i31mr13278538pgi.251.1568650501307;
+        Mon, 16 Sep 2019 09:15:01 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:90b:91ce:94c2:ef93:5bd:cfe8])
+        by smtp.gmail.com with ESMTPSA id h66sm614134pjb.0.2019.09.16.09.14.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 09:15:00 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v5 0/8] Add Bitmain BM1880 clock driver
+Date:   Mon, 16 Sep 2019 21:44:39 +0530
+Message-Id: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCkkgYXBwcmVjaWF0ZSB0aGUgZmVlZGJhY2suDQoNCj4gT24gTW9uLCBTZXAg
-MTYsIDIwMTkgYXQgMTU6MzYgUE0gR2VlcnQgVXl0dGVyaG9ldmVuDQo+IDxnZWVydEBsaW51eC1t
-NjhrLm9yZz4gd3JvdGU6DQo+IEhpIEdhcmV0aCwNCj4gDQo+IE9uIEZyaSwgU2VwIDEzLCAyMDE5
-IGF0IDI6MTMgUE0gR2FyZXRoIFdpbGxpYW1zDQo+IDxnYXJldGgud2lsbGlhbXMuanhAcmVuZXNh
-cy5jb20+IHdyb3RlOg0KPiA+IEZyb206IFBoaWwgRWR3b3J0aHkgPHBoaWwuZWR3b3J0aHlAcmVu
-ZXNhcy5jb20+DQo+ID4NCj4gPiBFbmFibGUgcnVudGltZSBQTSBzbyB0aGF0IHRoZSBjbG9jayB1
-c2VkIHRvIGFjY2VzcyB0aGUgcmVnaXN0ZXJzIGluDQo+ID4gdGhlIHBlcmlwaGVyYWwgaXMgdHVy
-bmVkIG9uIHVzaW5nIGEgY2xvY2sgZG9tYWluLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUGhp
-bCBFZHdvcnRoeSA8cGhpbC5lZHdvcnRoeUByZW5lc2FzLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5
-OiBHYXJldGggV2lsbGlhbXMgPGdhcmV0aC53aWxsaWFtcy5qeEByZW5lc2FzLmNvbT4NCj4gDQo+
-IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4gDQo+ID4gLS0tIGEvZHJpdmVycy9zcGkvc3BpLWR3
-LmMNCj4gPiArKysgYi9kcml2ZXJzL3NwaS9zcGktZHcuYw0KPiA+IEBAIC0xMCw2ICsxMCw3IEBA
-DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2hp
-Z2htZW0uaD4NCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gKyNpbmNsdWRlIDxs
-aW51eC9wbV9ydW50aW1lLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4gICNp
-bmNsdWRlIDxsaW51eC9zcGkvc3BpLmg+DQo+ID4NCj4gPiBAQCAtNDk3LDYgKzQ5OCw5IEBAIGlu
-dCBkd19zcGlfYWRkX2hvc3Qoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QNCj4gZHdfc3BpICpk
-d3MpDQo+ID4gICAgICAgICBpZiAoZHdzLT5zZXRfY3MpDQo+ID4gICAgICAgICAgICAgICAgIG1h
-c3Rlci0+c2V0X2NzID0gZHdzLT5zZXRfY3M7DQo+ID4NCj4gPiArICAgICAgIHBtX3J1bnRpbWVf
-ZW5hYmxlKGRldik7DQo+ID4gKyAgICAgICBwbV9ydW50aW1lX2dldF9zeW5jKGRldik7DQo+IA0K
-PiBUaGUgc2Vjb25kIGxpbmUga2VlcHMgdGhlIGRldmljZSBwb3dlcmVkIGFsbCB0aGUgdGltZS4N
-Cj4gV2hhdCBhYm91dCBzZXR0aW5nIHNwaV9jb250cm9sbGVyLmF1dG9fcnVudGltZV9wbSA9IHRy
-dWUsIHNvIHRoZSBTUEkgY29kZQ0KPiBjYW4gbWFuYWdlIGl0cyBSdW50aW1lIFBNIHN0YXR1cz8N
-ClRoYXQgbWFrZXMgc2Vuc2UgYW5kIHdvcmtzIG9uIHRhcmdldCwgSSB3aWxsIGNoYW5nZSB0aGlz
-IGZvciBWMi4NCg0KPiANCj4gPiArDQo+ID4gICAgICAgICAvKiBCYXNpYyBIVyBpbml0ICovDQo+
-ID4gICAgICAgICBzcGlfaHdfaW5pdChkZXYsIGR3cyk7DQo+ID4NCj4gDQo+IFdoYXQgYWJvdXQg
-dGhlIGVycm9yIHBhdGg/DQo+IERvbid0IHlvdSBuZWVkIHRvIGRpc2FibGUgUnVudGltZSBQTSBh
-Z2FpbiBpbiBkd19zcGlfcmVtb3ZlX2hvc3QoKT8NCkkgd2lsbCBhZGQgYSBjYWxsIHRvIGRpc2Fi
-bGUgcG0gaW4gZHdfc3BpX3JlbW92ZV9ob3N0KCkgYW5kIHRoZSBlcnIgcGF0aCBpbg0KZHdfc3Bp
-X2FkZF9ob3N0IGZvciB2Mi4gDQoNCj4gDQo+IEkgYXNzdW1lIHRoaXMgd2lsbCBiZSBjYWxsZWQg
-ZnJvbSBkcml2ZXJzL3NwaS9zcGktZHctbW1pby5jLCB3aGljaCBhbHJlYWR5DQo+IGVuYWJsZXMg
-dGhlIGNsb2NrIGV4cGxpY2l0bHkgYWxsIHRoZSB0aW1lcj8NClllcywgc3BpLWR3LW1taW8uYyBh
-bHJlYWR5IGVuYWJsZXMgdGhlIGJ1cyBjbG9jaywgaG93ZXZlciB3ZSB3YW50IHRvIHVzZSBjbG9j
-ayANCmRvbWFpbiB0byBlbmFibGUgdGhlIGNsb2NrIGFuZCBub3QgZXhwbGljaXRseSBwcm92aWRl
-IHBjbGsgaW4gdGhlIGR0cy4gSWYgdGhlcmUgYXJlIA0Kbm8gb3RoZXIgdXNlcyBvZiB0aGF0IHBj
-bGssIHdlIGNhbiByZW1vdmUgdGhhdCBsYXRlciBvbi4gDQoNCj4gDQo+IEdye29ldGplLGVldGlu
-Z31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0g
-Z2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25z
-IHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdo
-ZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Ig
-c29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAt
-LSBMaW51cyBUb3J2YWxkcw0KDQoNCktpbmQgUmVnYXJkcywNCg0KR2FyZXRoDQo=
+Hello,
+
+This patchset adds common clock driver for Bitmain BM1880 SoC clock
+controller. The clock controller consists of gate, divider, mux
+and pll clocks with different compositions. Hence, the driver uses
+composite clock structure in place where multiple clocking units are
+combined together.
+
+This patchset also removes UART fixed clock and sources clocks from clock
+controller for Sophon Edge board where the driver has been validated.
+
+Thanks,
+Mani
+
+Changes in v5:
+
+* Incorporated review comments from Rob on dt binding
+
+Changes in v4:
+
+* Fixed devicetree binding issue
+* Added ARCH_BITMAIN as the default for the clk driver
+
+Changes in v3:
+
+* Switched to clk_hw_{register/unregister} APIs
+* Returned clk_hw from the in-driver registration helpers
+
+Changes in v2:
+
+* Converted the dt binding to YAML
+* Incorporated review comments from Stephen (majority of change is switching
+  to new way of specifying clk parents)
+
+
+Manivannan Sadhasivam (8):
+  clk: Zero init clk_init_data in helpers
+  clk: Warn if clk_init_data is not zero initialized
+  clk: Add clk_hw_unregister_composite helper function definition
+  dt-bindings: clock: Add devicetree binding for BM1880 SoC
+  arm64: dts: bitmain: Add clock controller support for BM1880 SoC
+  arm64: dts: bitmain: Source common clock for UART controllers
+  clk: Add common clock driver for BM1880 SoC
+  MAINTAINERS: Add entry for BM1880 SoC clock driver
+
+ .../bindings/clock/bitmain,bm1880-clk.yaml    |  76 ++
+ MAINTAINERS                                   |   2 +
+ .../boot/dts/bitmain/bm1880-sophon-edge.dts   |   9 -
+ arch/arm64/boot/dts/bitmain/bm1880.dtsi       |  28 +
+ drivers/clk/Kconfig                           |   7 +
+ drivers/clk/Makefile                          |   1 +
+ drivers/clk/clk-bm1880.c                      | 966 ++++++++++++++++++
+ drivers/clk/clk-composite.c                   |  13 +-
+ drivers/clk/clk-divider.c                     |   2 +-
+ drivers/clk/clk-fixed-rate.c                  |   2 +-
+ drivers/clk/clk-gate.c                        |   2 +-
+ drivers/clk/clk-mux.c                         |   2 +-
+ drivers/clk/clk.c                             |   8 +
+ include/dt-bindings/clock/bm1880-clock.h      |  82 ++
+ 14 files changed, 1186 insertions(+), 14 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/bitmain,bm1880-clk.yaml
+ create mode 100644 drivers/clk/clk-bm1880.c
+ create mode 100644 include/dt-bindings/clock/bm1880-clock.h
+
+-- 
+2.17.1
+
