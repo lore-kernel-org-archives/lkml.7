@@ -2,246 +2,137 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38E3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972E8C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63D5320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:03:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axVUIv6t"
+	by mail.kernel.org (Postfix) with ESMTP id 6B455206C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 04:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568607692;
+	bh=iXAZZBlBcQr49Ujyrx2PAgU08z9q6/pKp81lq5VIOUQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KFJ2zBUj6N6wEa/wDTNB6H7m4O1QzpCs7Lil+lRIwCDXXvYU9mvXdfBYUt6sRycS2
+	 0iQ3foJtLkdphHIRplo52BADxmv3cJzcUgR54vrZx9IALtNGd1i3hGETKwa22FFAhJ
+	 ObDPDKwzT2GvFnBgKvfODqucGJv0QroeasLFgNEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbfIPEDC (ORCPT
+        id S1726825AbfIPEV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 00:03:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42637 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfIPEDC (ORCPT
+        Mon, 16 Sep 2019 00:21:29 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36917 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726424AbfIPEV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 00:03:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c10so34357754otd.9;
-        Sun, 15 Sep 2019 21:03:01 -0700 (PDT)
+        Mon, 16 Sep 2019 00:21:28 -0400
+Received: by mail-lj1-f194.google.com with SMTP id c22so4538807ljj.4
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 21:21:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=MO99i9mXaEOJiKYYZONOtDCqaLIAO0yEzXnTE3xFd9w=;
-        b=axVUIv6tfRpmCQypOp3Nufj7NSNtRNUeb9NufEPHAGxJ8SgNj6UdRWuWFtLsXSFNnT
-         7ZaiW+4NvLUY2+hdrgMM1tJRxLt18fJhxmDyBBHMtfsHe8YAxRAJNRCDfSZxVFfLF1Di
-         /iWmIyQd7QdGuj5kaQKG9c816QfBhnpuM1PcovlSNK+rCG/Zxm5bdViHQEuVGlP5NjaK
-         6AuUq2ILZfd9YWFQaKOVhsiDYKCgNeUTrKFjokX4hqhS0z5s+yjz6bCKV2HvJPfO9jIN
-         mgnmyWcsxgksSx71IbPiCPWQTHk1yw8pYzz2/M9JBJv0gwBX17Uzk76vci9c+p2/Gcqp
-         kqqA==
+        bh=Rq2sexGvXyylQNcdJFz5T59iDA//hf3VzmIhHtRsXOM=;
+        b=TS2dDRbURQUMp4r1Uisuw67wWuJoMZhNT5OPAXaweTtn6/78ZH4Rpp+VPWpR7o2NR1
+         CboY8r7rDnKIGZ7IabPeLJ0qQ0BIXf2FzGUQw3ZtQS+i8c5fRMmwkQjWvgDauyGBly1Z
+         erb+PTSfVUna3DOAM0EpjpQnfViDxx/7mZRjE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=MO99i9mXaEOJiKYYZONOtDCqaLIAO0yEzXnTE3xFd9w=;
-        b=S5VgOErPQ8OswcVGdo6++c4dYPYtL+JGeAaAPFM5nw6Zyr5x9fFUQJ+Z3kICIEFf27
-         83WQ9u8hhA4lt+m9/ZNF1Z9HMf9SLscII2jErUXbtOtHYuvmNnXlNr4Wa5eY1yn5P0hJ
-         2krGtDFDcYXS/id7HwpzAEurwdLy0eH/4+QDjVeKAxpQFugCbVywc3CU7YWUchxFKUKX
-         eoizv4qU5o3igRhscUvL9C1t2kzsacFPalnQxy4SZOCvhHubcMwyN1n3dysTE0Xy0Snq
-         Om74K+XTUDKixzYzrxs5A6sjXsNOCetUFrU3guQ50ajqjSfvS9VriIl9GsrThOFlwIuI
-         FL2g==
-X-Gm-Message-State: APjAAAVDN26kJUgUdfNQZUAfrhjGE4pSqbeZsQDnGECZ/3obpMSCmn5I
-        NGkze3xVjXr9HUxwbBZfWBrqCuCJ7eBssKg/90w=
-X-Google-Smtp-Source: APXvYqz1THClfa3II9z8tDk6V/d875qMpiUs/xIoWf8/qmW7KQU7arC18V1uI5yIs3jrYcLpWxnEnmMtTXHhv84129A=
-X-Received: by 2002:a9d:4597:: with SMTP id x23mr31647946ote.185.1568606580868;
- Sun, 15 Sep 2019 21:03:00 -0700 (PDT)
+        bh=Rq2sexGvXyylQNcdJFz5T59iDA//hf3VzmIhHtRsXOM=;
+        b=IHWYXKOX3pERgP/CabXtinhkOcsJzuWe2+MlP+BXNTMcr75IOarJ2WSJrH1cIpjNeQ
+         x2sXYbMNuPYU4crbmYftDDdvv+5AsP3Wnpo1mOZC/qOpksbIBSJ0zAG/yqeW7TdZsAGG
+         NiMLw1SKpGkX/6HvKGnrRNXuEGdHb6R0BWGg0LMQ5YBqeAdh62rg8fLBnNAzdIV+fmS0
+         kfFcXrLfHGJWbAntKNrk+uYknf4CAqSf4VQKpDNhF9Fv8S//DcK9zi0xFoJqMy0JH+Sq
+         O048cbKeuRPB1CangN+jhMrA0suN9u+bwpJm7gr/bqzRCNaP/beMj05XDVZAJhIv5vTr
+         PjRQ==
+X-Gm-Message-State: APjAAAUJEnrR8oAfdigdX2il3Jcnur0OTv0IRTIz5kTZSD32FNM3LtMa
+        O1nhlImqLJvKSDQptzQ6kSW/FiACsKg=
+X-Google-Smtp-Source: APXvYqzix6z/+3XLW0TVkT6TdlfkzhPnfuoGolmJZFmpw/j/jz2xNTgvSRz3f+CfIrTki1HJ2Lz8hg==
+X-Received: by 2002:a2e:7a04:: with SMTP id v4mr2636918ljc.237.1568607684807;
+        Sun, 15 Sep 2019 21:21:24 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id b7sm2519578lfp.23.2019.09.15.21.21.22
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Sep 2019 21:21:23 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id f5so357015ljg.8
+        for <linux-kernel@vger.kernel.org>; Sun, 15 Sep 2019 21:21:22 -0700 (PDT)
+X-Received: by 2002:a05:651c:1108:: with SMTP id d8mr28431238ljo.180.1568607682512;
+ Sun, 15 Sep 2019 21:21:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <1566980342-22045-1-git-send-email-wanpengli@tencent.com>
- <a1c6c974-a6f2-aa71-aa2e-4c987447f419@redhat.com> <TY2PR02MB4160421A8C88D96C8BCB971180B00@TY2PR02MB4160.apcprd02.prod.outlook.com>
- <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
-In-Reply-To: <8054e73d-1e09-0f98-4beb-3caa501f2ac7@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 16 Sep 2019 12:02:49 +0800
-Message-ID: <CANRm+Cy+5pompcDDS2C9YnxvE_-87i24gbBfc53Qa1tcWNck2Q@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpeng.li@hotmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190911160729.GF2740@mit.edu> <20190916035228.GA1767@gondor.apana.org.au>
+In-Reply-To: <20190916035228.GA1767@gondor.apana.org.au>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 15 Sep 2019 21:21:06 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjQeiYu8Q_wcMgM-nAcW7KsBfG1+90DaTD5WF2cCeGCgA@mail.gmail.com>
+Message-ID: <CAHk-=wjQeiYu8Q_wcMgM-nAcW7KsBfG1+90DaTD5WF2cCeGCgA@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 at 20:37, Paolo Bonzini <pbonzini@redhat.com> wrote:
+On Sun, Sep 15, 2019 at 8:52 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
 >
-> On 12/09/19 02:34, Wanpeng Li wrote:
-> >>> -        timer_advance_ns -= min((u32)ns,
-> >>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-> >>> +        timer_advance_ns -= ns;
->
-> Looking more closely, this assignment...
->
-> >>>    } else {
-> >>>    /* too late */
-> >>>        ns = advance_expire_delta * 1000000ULL;
-> >>>        do_div(ns, vcpu->arch.virtual_tsc_khz);
-> >>> -        timer_advance_ns += min((u32)ns,
-> >>> -            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-> >>> +        timer_advance_ns += ns;
->
-> ... and this one are dead code now.  However...
->
-> >>>    }
-> >>>
-> >>> +    timer_advance_ns = (apic->lapic_timer.timer_advance_ns *
-> >>> +        (LAPIC_TIMER_ADVANCE_ADJUST_STEP - 1) + advance_expire_delta) /
-> >>> +        LAPIC_TIMER_ADVANCE_ADJUST_STEP;
->
-> ... you should instead remove this new assignment and just make the
-> assignments above just
->
->         timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
->
-> and
->
->         timer_advance -= ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP;
->
-> In fact this whole last assignment is buggy, since advance_expire_delta
-> is in TSC units rather than nanoseconds.
->
-> >>>    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-> >>>        apic->lapic_timer.timer_advance_adjust_done = true;
-> >>>    if (unlikely(timer_advance_ns > 5000)) {
-> >> This looks great.  But instead of patch 2, why not remove
-> >> timer_advance_adjust_done altogether?
-> > It can fluctuate w/o stop.
->
-> Possibly because of the wrong calculation of timer_advance_ns?
+> Can we perhaps artifically increase the interrupt rate while the
+> CRNG is not initialised?
 
-Hi Paolo,
+Long term (or even medium term in some areas), the problem really is
+that device interrupts during boot really are going away, rather than
+becoming more common.
 
-Something like below? It still fluctuate when running complex guest os
-like linux. Removing timer_advance_adjust_done will hinder introduce
-patch v3 2/2 since there is no adjust done flag in each round
-evaluation. I have two questions here, best-effort tune always as
-below or periodically revaluate to get conservative value and get
-best-effort value in each round evaluation as patch v3 2/2, which one
-do you prefer? The former one can wast time to wait sometimes and the
-later one can not get the best latency. In addition, can the adaptive
-tune algorithm be using in all the scenarios contain
-RT/over-subscribe?
+That just happened to be the case now because of improved plugging,
+but it's fundamentally the direction any storage is moving with faster
+flash interfaces.
 
----8<---
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 685d17c..895735b 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -69,6 +69,7 @@
- #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
- /* step-by-step approximation to mitigate fluctuation */
- #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
-+#define LAPIC_TIMER_ADVANCE_FILTER 5000
+The only interrupt we could easily increase the rate of in the kernel
+is the timer interrupt, but that's also the interrupt that is the
+least useful for randomness.
 
- static inline int apic_test_vector(int vec, void *bitmap)
- {
-@@ -1479,29 +1480,28 @@ static inline void
-adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
-                           s64 advance_expire_delta)
- {
-     struct kvm_lapic *apic = vcpu->arch.apic;
--    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
--    u64 ns;
-+    u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
-+
-+    if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
-+        abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
-+        /* filter out random fluctuations */
-+        return;
-+    }
+The timer interrupt could be somewhat interesting if you are also
+CPU-bound on a non-trivial load, because then "what program counter
+got interrupted" ends up being possibly unpredictable - even with a
+very stable timer interrupt source - and effectively stand in for a
+cycle counter even on hardware that doesn't have a native TSC. Lots of
+possible low-level jitter there to use for entropy. But especially if
+you're just idly _waiting_ for entropy, you won't be "CPU-bound on an
+interesting load" - you'll just hit the CPU idle loop all the time so
+even that wouldn't work.
 
-     /* too early */
-     if (advance_expire_delta < 0) {
-         ns = -advance_expire_delta * 1000000ULL;
-         do_div(ns, vcpu->arch.virtual_tsc_khz);
--        timer_advance_ns -= min((u32)ns,
--            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+        timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
-     } else {
-     /* too late */
-         ns = advance_expire_delta * 1000000ULL;
-         do_div(ns, vcpu->arch.virtual_tsc_khz);
--        timer_advance_ns += min((u32)ns,
--            timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+        timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
-     }
+But practically speaking timers really are not really much of an
+option. And if we are idle, even having a high-frequency TSC isn't all
+that useful with the timer interrupt, because the two tend to be very
+intimately related.
 
--    if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
--        apic->lapic_timer.timer_advance_adjust_done = true;
--    if (unlikely(timer_advance_ns > 5000)) {
-+    if (unlikely(timer_advance_ns > 5000))
-         timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
--        apic->lapic_timer.timer_advance_adjust_done = false;
--    }
-     apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- }
+Of course, if you're generating a host key for SSH or something like
+that, you could try to at least cause some network traffic while
+generating the key. That's not much of an option for the _kernel_, but
+for a program like ssh-keygen it certainly could be.
 
-@@ -1521,7 +1521,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-     if (guest_tsc < tsc_deadline)
-         __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+Blocking is fine if you simply don't care about time at all (the "five
+hours later is fine" situation), or if you have some a-priori
+knowledge that the machine is doing real interesting work that will
+generate entropy. But I don't see how the kernel can generate entropy
+on its own, particularly during boot (which is when the problem
+happens), when most devices aren't even necessarily meaningfully set
+up yet.
 
--    if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-+    if (lapic_timer_advance_ns == -1)
-         adjust_lapic_timer_advance(vcpu,
-apic->lapic_timer.advance_expire_delta);
- }
+Hopefully hw random number generators will make this issue effectively
+moot before we really end up having the "nvdimms and their ilk are
+common enough that you really have no early boot irq-driven disk IO at
+all".
 
-@@ -2298,10 +2298,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int
-timer_advance_ns)
-     apic->lapic_timer.timer.function = apic_timer_fn;
-     if (timer_advance_ns == -1) {
-         apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
--        apic->lapic_timer.timer_advance_adjust_done = false;
-     } else {
-         apic->lapic_timer.timer_advance_ns = timer_advance_ns;
--        apic->lapic_timer.timer_advance_adjust_done = true;
-     }
-
-
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 50053d2..2aad7e2 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -35,7 +35,6 @@ struct kvm_timer {
-     s64 advance_expire_delta;
-     atomic_t pending;            /* accumulated triggered timers */
-     bool hv_timer_in_use;
--    bool timer_advance_adjust_done;
- };
-
- struct kvm_lapic {
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 93b0bd4..4f65ef1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -141,7 +141,7 @@
-  * advancement entirely.  Any other value is used as-is and disables adaptive
-  * tuning, i.e. allows priveleged userspace to set an exact advancement time.
-  */
--static int __read_mostly lapic_timer_advance_ns = -1;
-+int __read_mostly lapic_timer_advance_ns = -1;
- module_param(lapic_timer_advance_ns, int, S_IRUGO | S_IWUSR);
-
- static bool __read_mostly vector_hashing = true;
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 6594020..2c6ba86 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -301,6 +301,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
-unsigned long cr2,
-
- extern bool enable_vmware_backdoor;
-
-+extern int lapic_timer_advance_ns;
- extern int pi_inject_timer;
-
- extern struct static_key kvm_no_apic_vcpu;
+           Linus
