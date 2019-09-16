@@ -2,103 +2,127 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D2AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD204C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B51214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9170B214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 14:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="MvDZcbks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388785AbfIPOh7 (ORCPT
+        id S1728371AbfIPOmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 10:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35512 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726657AbfIPOh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 10:37:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9888720830;
-        Mon, 16 Sep 2019 14:37:56 +0000 (UTC)
-Date:   Mon, 16 Sep 2019 10:37:55 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Message-ID: <20190916103755.4c19eda9@gandalf.local.home>
-In-Reply-To: <20190916114158.GN5781@paasikivi.fi.intel.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
-        <20190910084707.18380-2-sakari.ailus@linux.intel.com>
-        <20190910071837.2e9110f8@oasis.local.home>
-        <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
-        <20190910142621.0bec208d@oasis.local.home>
-        <c458e734f5777561138b87228384808398547762.camel@perches.com>
-        <20190910150303.5a0d3904@oasis.local.home>
-        <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
-        <20190916114158.GN5781@paasikivi.fi.intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 16 Sep 2019 10:42:22 -0400
+Received: from mail.efficios.com ([167.114.142.138]:42984 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725917AbfIPOmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 10:42:21 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 580962BCB71;
+        Mon, 16 Sep 2019 10:42:20 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id k0unBvUJKu5S; Mon, 16 Sep 2019 10:42:20 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 0BB612BCB6B;
+        Mon, 16 Sep 2019 10:42:20 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0BB612BCB6B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568644940;
+        bh=io4ddQ8pvBKTts4C+Pm2ajLWnUquU+K01gUuLLAUxmo=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=MvDZcbksjf3PuxeX8NRveA+kG1cR6p3iij/YxwCHnDNbpP3kehJKlskrNucrgFCQl
+         GjukTZUHb82vEtV8PiWxlMbUUUx1NoMilVjcx+0+bsD80itO46/BEhDTMvxcZn6Hoi
+         RKO4u3W67ovFuP2xQC7rFrA4thFUTCc+8b94SgIZz/HrAw3LVkNdWZ6XAZtlqDl6/b
+         G+YOrbX8mCTy0DdlMVqANuUpKNZm8Z3EnpMeqEi3R+LLxXXyuAvMXbhFNXW5NkL/Ld
+         Lofot3IpSpK0GbzgPTeM0O/FMztay8RY0rar4ndZXy542FofaVVQEsiGCMWpVnu77w
+         Xc5XJp266bJ1A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id ZM3MuJlBHuiv; Mon, 16 Sep 2019 10:42:19 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id DEF6E2BCB60;
+        Mon, 16 Sep 2019 10:42:19 -0400 (EDT)
+Date:   Mon, 16 Sep 2019 10:42:19 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Rantala, Tommi T." <tommi.t.rantala@nokia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        paulmck <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        stable <stable@vger.kernel.org>
+Message-ID: <1109991919.5481.1568644939856.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190914194716.ED5D020692@mail.kernel.org>
+References: <20190913151220.3105-3-mathieu.desnoyers@efficios.com> <20190914194716.ED5D020692@mail.kernel.org>
+Subject: Re: [PATCH for 5.3 3/3] rseq/selftests: Fix: Namespace gettid() for
+ compatibility with glibc 2.30
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.15_GA_3847 (ZimbraWebClient - FF69 (Linux)/8.8.15_GA_3847)
+Thread-Topic: rseq/selftests: Fix: Namespace gettid() for compatibility with glibc 2.30
+Thread-Index: DD+Mue4dYmH4wOVQj914v5FtBbUeaw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 14:41:59 +0300
-Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+----- On Sep 14, 2019, at 3:47 PM, Sasha Levin sashal@kernel.org wrote:
 
-> > Well, if you think that works, OK great.
-> > 
-> > But could that work?
-> > How would an individual trace record know if
-> > another trace record used %pfw?
-> > 
-> > Perhaps not reusing %pf, marking it reserved
-> > for a period of years, and using another unused
-> > prefix %p<type> like %pnfw may be simpler.  
+> Hi,
 > 
-> %p[Ff]w does not exist (I grepped for it) in older kernels since v3.0. So
-> kernel support for %p[fF] and %pfw are mutually exclusive. If you're ok
-> with that, I could change the patch to check %pf isn't followed by 'w',
-> in order to support %pf on older kernels.
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a -stable tag.
+> The stable tag indicates that it's relevant for the following trees: all
+> 
+> The bot has tested the following trees: v5.2.14, v4.19.72, v4.14.143, v4.9.192,
+> v4.4.192.
+> 
+> v5.2.14: Build OK!
+> v4.19.72: Build OK!
+> v4.14.143: Failed to apply! Possible dependencies:
+>    c960e9909d33 ("rseq/selftests: Provide parametrized tests")
+> 
+> v4.9.192: Failed to apply! Possible dependencies:
+>    c960e9909d33 ("rseq/selftests: Provide parametrized tests")
+> 
+> v4.4.192: Failed to apply! Possible dependencies:
+>    c960e9909d33 ("rseq/selftests: Provide parametrized tests")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
 
-I think that's what I suggested to do.
+rseq was merged into 4.18, so none of those patches are needed prior to that
+kernel version.
+
+This applies to all 3 rseq patches.
+
+Thanks,
+
+Mathieu
+
 
 > 
-> Although that still does not address using older tooling on newer kernels
-> with support for %pfw.
+> --
+> Thanks,
+> Sasha
 
-That should be fine. I don't think it will crash those tools, they will
-just give out wrong information, and if people complain, we can try to
-get them to use the newer version of those tools ;-) (hopefully they
-don't complain to Linus).
-
-> 
-> If you think that's an issue, I'll opt for another extension than %pfw,
-> which I chose originally since it's memorable --- fw for fwnode (names,
-> paths, and probably more in the future).
-> 
-
-I'm fine with the switch, as long as newer tools know how to handle it.
-
-Make sure we also add a comment in the Linux kernel code that states
-that older kernels use to have 'f' and 'F' and that new tools look for
-'fw' to denote that this isn't an older kernel. This way, people will
-hopefully not add another 'fX' pointer name.
-
--- Steve
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
