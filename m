@@ -2,137 +2,88 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E04C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 397A4C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9BCA206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B9C2067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 19:54:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pq/G5sgD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mX2Xn+XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391062AbfIPTyI (ORCPT
+        id S2391081AbfIPTyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 15:54:08 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36523 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbfIPTyH (ORCPT
+        Mon, 16 Sep 2019 15:54:13 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44842 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391064AbfIPTyM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 15:54:07 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t3so593216wmj.1;
-        Mon, 16 Sep 2019 12:54:05 -0700 (PDT)
+        Mon, 16 Sep 2019 15:54:12 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q21so540396pfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 12:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4PX9Kbdf/A/a4MaGAnVuIX5oyNGr0+JJhJb/XQGXlPk=;
-        b=Pq/G5sgDBwqO7N/NZoHq6vAnLQdnmqWF3ActxfgcfBHmPcaay1k310KGeT+4zLnbtf
-         e2VkRluXw2y5zJidKXyUAWYAncmIU6FJ4VI/aWaAxnyCkhGqW1Ka7fuUAVg0mCYfFtzx
-         FeS9X3Iwq8Ap4EBLpRwCMPVzTLhnB9ZeflCrvj+cOzaMAMzsvvDDOcucbLp0sjc86aYT
-         ZzUwBs+lqr2lf1VZSN+5yWugK6aXHW8mOoCnSFRXTzFfzkXDZdUKvTUju9KwPQhSR3lN
-         iSXmY+qh8DxbLz1tDu1OmneYH5Uj1tpttrQmJQwxAFtx/HS7/9wLkRiEhurlvj/Zik7B
-         7uyA==
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:to:from:subject:user-agent:date;
+        bh=lrC/Mm8MKJYbyIapp2rG+4YTQFTYoqtqhsULa6M5KsQ=;
+        b=mX2Xn+XJuSrIQX/3vRMQ3W21bf2fHZusW/23HHt9zZ96LdU0+hJ7E4PByjU+dH7zYD
+         ulY6b4QpLuANuBtNDdJHkGuUh/5d49Sin3OsQ1upuF6MRYF2Zc8V4Ke3MKCoka1L3h63
+         GKWf2RWu0iLRZoehcVgZgRmd/GlKHEpPnpYEE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4PX9Kbdf/A/a4MaGAnVuIX5oyNGr0+JJhJb/XQGXlPk=;
-        b=E2/kGpa2REY6GI+62fRTmCCT/pWToguA8UrM7vIqxqIiEdPRboVKREdzCIQP1GjsIF
-         JZsGyBYc6zvTUdpJiwYkYQnfvlrw362G4el2zsi5Zs7hZTVCNDbMc71ytNqoaHtHTXnr
-         RfHkIdpRx4z7K658uMIG2cd3UqRTdflMMxAjH8K6a4JmGr/VCD24maEuM9gbi27+vE2r
-         An1bldAGT5x7EmMjdsPVbI8tpDga7Y/9DpqyTK8bMzDvBS9b54hdzpFqCb4tEQT3oI7l
-         QM88xb6YLCOGUxCNfy31/UMDyEj+a3obEgg6dg6kgNyNmgJBs3iaozQkQL2lGkEUvAZ9
-         U/Sg==
-X-Gm-Message-State: APjAAAXNW1V0RqHe+hQeZbNokJZDvC8kyiaIHAulaMILeXE+1LAOnj/P
-        S8XTV8IRSUKKLP1C56GbLD0=
-X-Google-Smtp-Source: APXvYqwBdY4uOu0ZFcdaEBrivR93S7OYkwCljwilX1W+IUtywSMOglf7NIj5IKWKDBba0+vqOt4kXQ==
-X-Received: by 2002:a1c:4946:: with SMTP id w67mr537801wma.131.1568663644846;
-        Mon, 16 Sep 2019 12:54:04 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D148E24CC892DA859AC81.dip0.t-ipconnect.de. [2003:d0:6f2d:148e:24cc:892d:a859:ac81])
-        by smtp.gmail.com with ESMTPSA id m18sm53826700wrg.97.2019.09.16.12.54.02
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:to:from:subject
+         :user-agent:date;
+        bh=lrC/Mm8MKJYbyIapp2rG+4YTQFTYoqtqhsULa6M5KsQ=;
+        b=t3NDzoey3oqCGW8EmuRVltVsnOFmy/NwguaAAAu8VKsVcpDB9KItx2MxPp2w1cZsvg
+         RMEySS6SjNFA2+daXb+r0zU21lDyPaR3641Nvv06NrongMDZRNBqY+L96DRO8xnDroL6
+         q/sQZWBdHHyhdaAqX2VnzGaijzap7sYAsov9+tsTnrO3yWM8hNw1zus6z6uZha3PyR3r
+         MaBCuwAYtbTfxGaLwnQNU2Ybb/TXVOm8K4TRqO/3DUeoNyo6jCq2fMk0jzbJxp/9wVtn
+         ietLYfoPHI0LwwaioBsUq11BCldwj2ZK3L9NfQ4OuKv/BkktRe9p1GBIETBmkXJEPv2T
+         3uaw==
+X-Gm-Message-State: APjAAAXvbCuUGdrwFlz7grIaJcNlbC3ycDFxd2eaVCXV6Cbg4+muhPX+
+        eGMeJ3gRaT2SakGjf3+d0NlYxg==
+X-Google-Smtp-Source: APXvYqxUk+ttSr+TjZgdfGoX+v3Z9CTe/np15NOWgn4t9uKNcWkEJTPtjJik+Fqf9hb0pS4No35+ug==
+X-Received: by 2002:a62:1658:: with SMTP id 85mr56563pfw.195.1568663650915;
+        Mon, 16 Sep 2019 12:54:10 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x9sm29605116pgp.75.2019.09.16.12.54.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 12:54:04 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 21:53:57 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>, Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916195357.GA3312@darwi-home-pc>
-References: <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu>
- <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu>
- <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
- <20190916172117.GB15263@mit.edu>
+        Mon, 16 Sep 2019 12:54:10 -0700 (PDT)
+Message-ID: <5d7fe862.1c69fb81.8e5e3.2325@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916172117.GB15263@mit.edu>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <c88947d18c65a692a8f314e4ad996d9d2a997997.1568240476.git.amit.kucheria@linaro.org>
+References: <cover.1568240476.git.amit.kucheria@linaro.org> <c88947d18c65a692a8f314e4ad996d9d2a997997.1568240476.git.amit.kucheria@linaro.org>
+Cc:     linux-clk@vger.kernel.org
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, agross@kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com,
+        ilina@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tdas@codeaurora.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 4/5] clk: qcom: Initialise clock drivers earlier
+User-Agent: alot/0.8.1
+Date:   Mon, 16 Sep 2019 12:54:09 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 01:21:17PM -0400, Theodore Y. Ts'o wrote:
-> On Mon, Sep 16, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
-> > So the semantics that getrandom() should have had are:
-> > 
-> >  getrandom(0) - just give me reasonable random numbers for any of a
-> > million non-strict-long-term-security use (ie the old urandom)
-> > 
-> >     - the nonblocking flag makes no sense here and would be a no-op
-> 
-> That change is what I consider highly problematic.  There are a *huge*
-> number of applications which use cryptography which assumes that
-> getrandom(0) means, "I'm guaranteed to get something safe
-> cryptographic use".  Changing his now would expose a very large number
-> of applications to be insecure.  Part of the problem here is that
-> there are many different actors.  There is the application or
-> cryptographic library developer, who may want to be sure they have
-> cryptographically secure random numbers.  They are the ones who will
-> select getrandom(0).
-> 
-> Then you have the distribution or consumer-grade electronics
-> developers who may choose to run them too early in some init script or
-> systemd unit files.  And some of these people may do something stupid,
-> like run things too early, or omit the a hardware random number
-> generator in their design, even though it's for a security critical
-> purpose (say, a digital wallet for bitcoin).
+Quoting Amit Kucheria (2019-09-11 15:32:33)
+> Initialise the clock drivers on sdm845 and qcs404 in core_initcall so we
+> can have earlier access to cpufreq during booting.
+>=20
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
 
-Ted, you're really the expert here. My apologies though, every time I
-see the words "too early" I get a cramp... Please check my earlier
-reply:
+Did you want this patch to go through clk tree?
 
-    https://lkml.kernel.org/r/20190912034421.GA2085@darwi-home-pc
-
-Specifically the trace_printk log of all the getrandom(2) calls
-during an standard Archlinux boot...
-
-where is the "too early" boundary there? It's undefinable.
-
-You either have entropy, or you don't. And if you don't, it will stay
-like this forever, because if you had, you wouldn't have blocked in
-the first place...
-
-Thanks,
-
---
-Ahmed Darwish
-http://darwish.chasingpointers.com
