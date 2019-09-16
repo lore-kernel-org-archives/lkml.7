@@ -2,110 +2,93 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58006C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B15C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CB68214D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568654157;
-	bh=79pepAEYn/V53T4640bz6gLw78E9AvaDTSLM7JrIR58=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AXbkwwtxhSrtGCNH2qgAuVH6wc1D0r+i1nl20vLTcy0sDc9HJMWW64xnStgr6y7qn
-	 yA3ucJk/lHb4XPFjuguLRvPfJWv0OEI9sm7RT9nlN7JNHHRmkHStDvcUlhv76xfw9W
-	 XgI1Q/6dOB5dVK1AgJYcIx8RHUvihwAE71+usI78=
+	by mail.kernel.org (Postfix) with ESMTP id 796E321852
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 17:16:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s1+pQC3i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731320AbfIPRP4 (ORCPT
+        id S1732165AbfIPRQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 13:15:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45598 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729797AbfIPRP4 (ORCPT
+        Mon, 16 Sep 2019 13:16:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37212 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731748AbfIPRQ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:15:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pKYQCMu5Ew9eTX6pbhaq2BMM6o7kuFp6qMQrSf8Ncmg=; b=IZkc4kQTdFury5z5agwZqDsTF
-        OD425v2AQe+39GC5L9AFsW6Z4Fmrbv7hueDCeEs5GC11uUplxLCPentN1Vps2kgpwF7orC+/KiWi+
-        GwXkixQeEb6I0/ggQ6QFKY3h4v8zWT/R2vxHq0ND1b+iLIKZtapGuPmCmgbpmo9I2nV2s=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9ubP-0005EI-CJ; Mon, 16 Sep 2019 17:15:51 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5F6892741A0D; Mon, 16 Sep 2019 18:15:50 +0100 (BST)
-Date:   Mon, 16 Sep 2019 18:15:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        ksummit-discuss@lists.linuxfoundation.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
- Maintainer Entry Profile
-Message-ID: <20190916171550.GJ4352@sirena.co.uk>
-References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190911184332.GL20699@kadam>
- <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
- <yq1y2yrdg6w.fsf@oracle.com>
- <20190916070101.GE18977@kadam>
- <yq1blvkb23m.fsf@oracle.com>
+        Mon, 16 Sep 2019 13:16:29 -0400
+Received: by mail-io1-f65.google.com with SMTP id b19so873758iob.4
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 10:16:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NUJero5UkE6Fljf/Pm1mxTzFIA/90cizF+WESKd6Mss=;
+        b=s1+pQC3ihcD+84Cl+sriqk1pZOtccOPGfZAJyxTif7fCYa0kuMj1w/zZcHe4yTI8Jj
+         MgWiKcZL5WulHOpW0A22XsOPx9WzZ4wJa6nHwdHAG1i/bFKvwZFa1bwP3QmS1CZ1VwA4
+         8V9q7vRDMIu6/xUac9u15AOTO4fJ4kwS6RwGkc5hHCY/FqRLnSG6yqRFdE0EtauOHTMS
+         xjUv2hrjZ0OkPyU3B0wtGbRrucKEdBQmaEcTCPegbv8C7VSL2YrgpQb4IymGxE/gmZD0
+         g/kbE6AL80zoFUJa/XxGssyfy4aJ19WwdWt+ayyZpWkJ8lDx5YHgSkIhg41MBUy4AK+B
+         URPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NUJero5UkE6Fljf/Pm1mxTzFIA/90cizF+WESKd6Mss=;
+        b=gFfyQmriGgJgnQUbXXSP2cnIKHu1jx23qXLWXA/jQNsKxfFlZMi8DI8y5BHqzTIuoq
+         2w+6YlKPSEgevZk+U6jXzE8vaHuMMUVBvsofQ6UrNRiG++7iYr+3xp/ffXA0Anq6UTkF
+         wig59Fu9wAeXvvivFQkhSuN9DjKqdlvuZjOBy7yIJRrYPzB8OplCs3flKOcSL+KTRWw6
+         LTK1FLZzth1EcpIiy9e4AspM+dsYo5ly+A4MSAoUveLB9h9KmDZ9Hpb0JG/1T00mCARG
+         Zyv7sBXy67lBBNOidZrZ0apVitp6g6Lz2UTAYgu0SNNMhXG5ioyn1XtOgl76qzDPKixl
+         I4pg==
+X-Gm-Message-State: APjAAAU1ikUH41aMysvBn8nvk2W6DMpmLfYfrpCvC5lOODA7+5K5CxXh
+        8DewkR+zGQK7OYmPXUHPNZzZ3aHUUJKSu/EHYIG8Y6TxpERI9w==
+X-Google-Smtp-Source: APXvYqx3LYUfAKHGcDtvfqlYxzFFBjLjFGswJF8z3f9bdd3KJ9QJmUib4Dxrf4qVVJx1Zk8Pm6uGG3nf2LxfFtkTcaE=
+X-Received: by 2002:a02:b782:: with SMTP id f2mr1135007jam.48.1568654188556;
+ Mon, 16 Sep 2019 10:16:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Y3hCyKCCnioDaTIs"
-Content-Disposition: inline
-In-Reply-To: <yq1blvkb23m.fsf@oracle.com>
-X-Cookie: Man and wife make one fool.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190916162258.6528-1-vkuznets@redhat.com> <20190916162258.6528-2-vkuznets@redhat.com>
+In-Reply-To: <20190916162258.6528-2-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Mon, 16 Sep 2019 10:16:17 -0700
+Message-ID: <CALMp9eQP7Dup+mMuAiShNtH754R_Wwuvf63hezygh3TGR=a9rg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] cpu/SMT: create and export cpu_smt_possible()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 16, 2019 at 9:23 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> KVM needs to know if SMT is theoretically possible, this means it is
+> supported and not forcefully disabled ('nosmt=force'). Create and
+> export cpu_smt_possible() answering this question.
 
---Y3hCyKCCnioDaTIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Sep 16, 2019 at 01:08:45PM -0400, Martin K. Petersen wrote:
-
-> Vendor driver submissions, however, are generally huge. Sometimes 50+
-> patches per submission window. And during this window I often get on the
-> order of 10 to 20 patches for the same driver in the fixes tree. It is
-> not always easy to determine whether a bug fix series is for one tree or
-> the other.
-
-I get the impression that a lot of vendors just don't distinguish and
-only really care about getting things upstream, especially in the
-embedded world many of them realistically expect to be shipping a pile
-of out of tree patches to anyone using anything other than mainline
-anyway so it's not super clear to them that it's worthwhile.  This goes
-back to the converstations about stable and how vendors interact with
-that.
-
---Y3hCyKCCnioDaTIs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1/w0UACgkQJNaLcl1U
-h9CWZQf/bJEaAhJ2Jmw6j0ouL6Ar57UT+tZpuzfw210a2H0xjdN9gERqaSmt7vtN
-oC3gvj3MXjUgszuLCeTTYNskiNrgmZq9yICZh0tLEUk8Qi21qZTnyLr7yOMxFinv
-rIG4zKkc2OY1M9RZEEasl78vgmX/WE8a1umabatF7a1QNes98pnoxaO+LF/VOJVM
-s3eNaantTut35U3PDDf5/F4I2KGof3xBq3lXhLAh8FfAGWT2DUSQdjlRE67Mg58b
-2UTgwcmcdAWDHYQpdEOhotF7vSnWWbm5LZ9djO4q2CZFD+HTCCtN1NpXpusR5RSI
-3JtgUwuHa8/ucGJ5O7yvSmL8FEw4cg==
-=sHVd
------END PGP SIGNATURE-----
-
---Y3hCyKCCnioDaTIs--
+It seems to me that KVM really just wants to know if the scheduler can
+be trusted to avoid violating the invariant expressed by the Hyper-V
+enlightenment, NoNonArchitecturalCoreSharing. It is possible to do
+that even when SMT is enabled, if the scheduler is core-aware.
+Wouldn't it be better to implement a scheduler API that told you
+exactly what you wanted to know, rather than trying to infer the
+answer from various breadcrumbs?
