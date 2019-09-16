@@ -6,51 +6,43 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F175FC4CEC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F7CC49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:26:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF5E72067B
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 252912067B
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 05:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfIPFYF (ORCPT
+        id S1728932AbfIPF0Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 01:24:05 -0400
-Received: from mga14.intel.com ([192.55.52.115]:10041 "EHLO mga14.intel.com"
+        Mon, 16 Sep 2019 01:26:24 -0400
+Received: from mga07.intel.com ([134.134.136.100]:29724 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbfIPFYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 01:24:04 -0400
+        id S1725775AbfIPF0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 01:26:24 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 22:24:04 -0700
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Sep 2019 22:26:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,510,1559545200"; 
-   d="scan'208";a="216087558"
+X-IronPort-AV: E=Sophos;i="5.64,492,1559545200"; 
+   d="scan'208";a="190970096"
 Received: from abonnier-mobl5.ger.corp.intel.com (HELO localhost) ([10.252.54.54])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Sep 2019 22:23:54 -0700
-Date:   Mon, 16 Sep 2019 08:23:49 +0300
+  by orsmga006.jf.intel.com with ESMTP; 15 Sep 2019 22:26:18 -0700
+Date:   Mon, 16 Sep 2019 08:26:16 +0300
 From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        cedric.xing@intel.com
-Subject: Re: [PATCH v22 00/24] Intel SGX foundations
-Message-ID: <20190916052349.GA4556@linux.intel.com>
-References: <20190903142655.21943-1-jarkko.sakkinen@linux.intel.com>
- <eed916f3-73e1-2695-4cd1-0b252ac9b553@intel.com>
- <20190914134136.GG9560@linux.intel.com>
- <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
+To:     ivan.lazeev@gmail.com
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <20190916052616.GB4556@linux.intel.com>
+References: <20190914171743.22786-1-ivan.lazeev@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8339d3c0-8e80-9cd5-948e-47733f7c29b7@intel.com>
+In-Reply-To: <20190914171743.22786-1-ivan.lazeev@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,46 +50,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 08:32:38AM -0700, Dave Hansen wrote:
-> On 9/14/19 6:41 AM, Jarkko Sakkinen wrote:
-> > 
-> > The proposed LSM hooks give the granularity to make yes/no decision
-> > based on the
-> > 
-> > * The origin of the source of the source for the enclave.
-> > * The requested permissions for the added or mapped peage.
-> > 
-> > The hooks to do these checks are provided for mmap() and EADD
-> > operations.
-> > 
-> > With just file permissions you can still limit mmap() by having a
-> > privileged process to build the enclaves and pass the file descriptor
-> > to the enclave user who can mmap() the enclave within the constraints
-> > set by the enclave pages (their permissions refine the roof that you
-> > can mmap() any memory range within an enclave).
+On Sat, Sep 14, 2019 at 08:17:44PM +0300, ivan.lazeev@gmail.com wrote:
+> From: Ivan Lazeev <ivan.lazeev@gmail.com>
 > 
-> The LSM hooks are presumably fixing a problem that these patches
-> introduce.  What's that problem?
+> Bug link: https://bugzilla.kernel.org/show_bug.cgi?id=195657
+> 
+> cmd/rsp buffers are expected to be in the same ACPI region.
+> For Zen+ CPUs BIOS's might report two different regions, some of
+> them also report region sizes inconsistent with values from TPM
+> registers.
+> 
+> Memory configuration on ASRock x470 ITX:
+> 
+> db0a0000-dc59efff : Reserved
+> 	dc57e000-dc57efff : MSFT0101:00
+> 	dc582000-dc582fff : MSFT0101:00
 
-I've seen the claims that one would have to degrade one's LSM policy but
-I don't think that is true.
+This is interesting and great thing for us because we can test fully
+the tpm_crb part without requiring NVS tweaks. And NVS tweak can then
+be built on top of working code.
 
-With just UNIX permissions you have probably have to restrict the access
-to /dev/sgx/enclave to control who can build enclaves. The processes who
-do not have this privilege can mmap() the enclave once they get the file
-descriptor through forking or SCM_RIGHTS.
+So far I've seen only AMD fTPM's that report NVS regions. This is
+important thing to have in the commit message.
 
-After SGX_IOC_ENCLAVE_INIT, the memory layout is sealed and the client
-process can only use the enclave.
-
-Further, we have /dev/sgx/provision to restrict, which enclaves can
-attest themselves to a remote party.
-
-*If anything*, I would rather investigate possibility to use keyring for
-enclave signer's public keys or perhaps having extended attribute for
-the signer (SHA256) in the enclave file that could be compared during
-the EINIT.
-
-I think either can be considered post-upstreaming.
+I'll give a detailed review later on.
 
 /Jarkko
