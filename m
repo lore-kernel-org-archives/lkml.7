@@ -2,229 +2,158 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11BBC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA0EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E485214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:51:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="cq2qh7lC"
+	by mail.kernel.org (Postfix) with ESMTP id CEF5E214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfIPUvI (ORCPT
+        id S2387700AbfIPUvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:51:08 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:32586 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727126AbfIPUvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:51:08 -0400
-Received: from hkpgpgate101.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d7ff5a60000>; Tue, 17 Sep 2019 04:50:47 +0800
-Received: from HKMAIL101.nvidia.com ([10.18.16.10])
-  by hkpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 16 Sep 2019 13:50:46 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate101.nvidia.com on Mon, 16 Sep 2019 13:50:46 -0700
-Received: from HKMAIL101.nvidia.com (10.18.16.10) by HKMAIL101.nvidia.com
- (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 16 Sep
- 2019 20:50:46 +0000
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.51) by
- HKMAIL101.nvidia.com (10.18.16.10) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Mon, 16 Sep 2019 20:50:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hwbINpp065yNe7lP1MzBdFm299l8PQ/bjt6M9wRvFlHR8+t75iLStmpO2unVpdA0CTzOyHU64SH43At0KEO7wXWVpgjIkpEO8H1JikLqw+L8AGeHkGP1huE2yw9b2r8u/yVDLx2R93ilkq/8gW+ebv2ihm4wpYyfWn9YQoZkRXy1UDGuSwPZJ2rWohllzTZ1CaW0Cwk+d2LCXEQenKyo/Sr71ZSY88I+IKf5b7Mh+qspYhk4BAQKqQRXNTzWGs9ak5Gpefxi2Qbr1ffLflQna/bSWBQSshwBVj1FHU49urdebW1ij1HRQ1YVWOYsbexEU29Amjj1wss11GK6mMdymA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xX6DN+khmy+x2klsziefocuOXF+U9j0aBou2z+fEOvA=;
- b=H1M2wUXA/6D5lFbI/etqV25zWT4BUWuiZXIQxord4MNTOgUrLosWwehWQGCj2LgzErRmq1+6HEN7eNQi4eLyO/Tr84U38G4gp53uSFRdEffDO2Dv9a6TorFMvYhVDx4qO3BTENWI0XZNQvPNM53rC7/2jzwZljDUX9O1Ne1s9Z4yFNO7xjrGXBTKhf+9YjWq9KOKomJDz1PpCHVO7JQvLj31JU9W/AFj722Glw1l/gFsmTf83hZSp4o8Dv13cmO1hKoduQrWeCSUCm1ECTOVZMNgiGCKLZxJ+DCpJrCust5bhctKUkRlljImHVa5UnjwSketBIyvbKEvo6Ax5G1NAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB3015.namprd12.prod.outlook.com (20.178.55.78) by
- BYAPR12MB2773.namprd12.prod.outlook.com (20.177.126.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.26; Mon, 16 Sep 2019 20:50:43 +0000
-Received: from BYAPR12MB3015.namprd12.prod.outlook.com
- ([fe80::2da1:b02f:cd54:eae9]) by BYAPR12MB3015.namprd12.prod.outlook.com
- ([fe80::2da1:b02f:cd54:eae9%3]) with mapi id 15.20.2263.023; Mon, 16 Sep 2019
- 20:50:43 +0000
-From:   Nitin Gupta <nigupta@nvidia.com>
-To:     "rientjes@google.com" <rientjes@google.com>
-CC:     "keescook@chromium.org" <keescook@chromium.org>,
-        "willy@infradead.org" <willy@infradead.org>,
-        "vbabka@suse.cz" <vbabka@suse.cz>,
-        "aryabinin@virtuozzo.com" <aryabinin@virtuozzo.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "cai@lca.pw" <cai@lca.pw>,
-        "arunks@codeaurora.org" <arunks@codeaurora.org>,
-        "janne.huttunen@nokia.com" <janne.huttunen@nokia.com>,
-        "jannh@google.com" <jannh@google.com>,
-        "yuzhao@google.com" <yuzhao@google.com>,
-        "mhocko@suse.com" <mhocko@suse.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "guro@fb.com" <guro@fb.com>,
-        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "khlebnikov@yandex-team.ru" <khlebnikov@yandex-team.ru>
-Subject: Re: [RFC] mm: Proactive compaction
-Thread-Topic: [RFC] mm: Proactive compaction
-Thread-Index: AQHVVHvSPOoT6GjwikqO8JNrunJOkacu7k6AgAAJiQA=
-Date:   Mon, 16 Sep 2019 20:50:43 +0000
-Message-ID: <4b8b0cd5d7a246e9db1e1dd9b3bae7860d7ca2c0.camel@nvidia.com>
-References: <20190816214413.15006-1-nigupta@nvidia.com>
-         <alpine.DEB.2.21.1909161312050.118156@chino.kir.corp.google.com>
-In-Reply-To: <alpine.DEB.2.21.1909161312050.118156@chino.kir.corp.google.com>
-Reply-To: Nitin Gupta <nigupta@nvidia.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=nigupta@nvidia.com; 
-x-originating-ip: [216.228.112.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8547cc32-9d84-45ad-b9be-08d73ae78abc
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR12MB2773;
-x-ms-traffictypediagnostic: BYAPR12MB2773:
-x-ms-exchange-purlcount: 3
-x-microsoft-antispam-prvs: <BYAPR12MB277323FB0F312CCDB94DA4BCD88C0@BYAPR12MB2773.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0162ACCC24
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(366004)(136003)(346002)(39860400002)(199004)(189003)(6506007)(25786009)(53936002)(6246003)(4326008)(2501003)(43066004)(186003)(7416002)(11346002)(2616005)(2906002)(256004)(14444005)(446003)(476003)(6916009)(561944003)(3846002)(6116002)(66066001)(486006)(118296001)(71190400001)(6512007)(86362001)(5640700003)(71200400001)(76176011)(2351001)(5660300002)(99286004)(6306002)(102836004)(6436002)(26005)(81166006)(81156014)(6486002)(66476007)(66446008)(316002)(3450700001)(966005)(64756008)(66556008)(8676002)(36756003)(7736002)(14454004)(76116006)(8936002)(478600001)(66946007)(91956017)(54906003)(305945005)(229853002)(1730700003);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR12MB2773;H:BYAPR12MB3015.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nvidia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: FPaw/P196Bp+SK7wGY0QeOMog7x1Wa6abjaOcHcszkQOlSCfwLvoGQwYi2L108DMTn7Vl1s+OW2iFNNmoPCXBgX4DUUgUPmH2BPZj4Y9OBZ/+S5XESU7QQo2mtgClDeScicUfsAb5rIQnH8C4KgWJnH9wmqAp2Wi2fIZtVUki9YmdBmCW+IV/GYCUI9YAYK2O/pta098nO/8ryehXw8I7N9Coro5kqC9YRrn9AU0TjeMXSrfap6ETGJ/xeT5v4Yu+oxxteY/eg951f7vlW0JxbnGv9OoFPGJKKRVkRE5603qefRmdrggZd9M2BamwI+TJj7ATNp+yt/2N9WuOQVZMXRncPfOHOTtKYlCC3o/NdZ+/mBQKXz0i76GDt8/O0NUJuJRpDgGMSl6vEUOgIw5kzijhydwpn3HGDQdt5mh87I=
-x-ms-exchange-transport-forked: True
+        Mon, 16 Sep 2019 16:51:44 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:52398 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727126AbfIPUvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:51:43 -0400
+Received: (qmail 8224 invoked by uid 2102); 16 Sep 2019 16:51:42 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Sep 2019 16:51:42 -0400
+Date:   Mon, 16 Sep 2019 16:51:42 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <kai.heng.feng@canonical.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mans@mansr.com>, <oneukum@suse.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in usb_set_interface
+In-Reply-To: <000000000000c2531f0592ab96fb@google.com>
+Message-ID: <Pine.LNX.4.44L0.1909161650440.1489-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8547cc32-9d84-45ad-b9be-08d73ae78abc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Sep 2019 20:50:43.3506
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dirXsy94B3nd/Q50HB7K9b3HPEm9qx+lIkb/SRyrbl+PpyehIfVIfo5G3n0mqn3RZySDD+t1D0lvTo2TRPe6uA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB2773
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E954B80E73C5D94297971003F985BD19@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568667047; bh=xX6DN+khmy+x2klsziefocuOXF+U9j0aBou2z+fEOvA=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
-         x-ms-traffictypediagnostic:x-ms-exchange-purlcount:
-         x-microsoft-antispam-prvs:x-ms-oob-tlc-oobclassifiers:
-         x-forefront-prvs:x-forefront-antispam-report:received-spf:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam-message-info:
-         x-ms-exchange-transport-forked:MIME-Version:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-ID:
-         Content-Transfer-Encoding;
-        b=cq2qh7lChDAPIvjKtz3OiKdj/W8v9bh8c0kvq3MT9og3/JEAQp1NyE4NYnzacNCUn
-         yIyH75A8vxkepBo3G+am4XQAnuX/B5atA/v37WXE6CnYlYSG0ewjudOZgTRP9TN18t
-         DmjM28sRyYnDV0+h+WHZ0KhS48MGe9bjAy0p4Y8McriDHu4CIVbMfyC6yvaMFV1+hy
-         iiYcKzdzbnLx5O5te80cbARipSZJZ6f7m7iXfP0Z2Zt+z1KEG2pd3teO66Z8WdqItK
-         9WLbmLoLEesldw6Ti+ojEolBUoBdDY0OVkqRRD493mnHIH0Ym/xlyHKDyOpOZq1NL0
-         8icgFeKdy4CIQ==
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA5LTE2IGF0IDEzOjE2IC0wNzAwLCBEYXZpZCBSaWVudGplcyB3cm90ZToN
-Cj4gT24gRnJpLCAxNiBBdWcgMjAxOSwgTml0aW4gR3VwdGEgd3JvdGU6DQo+IA0KPiA+IEZvciBz
-b21lIGFwcGxpY2F0aW9ucyB3ZSBuZWVkIHRvIGFsbG9jYXRlIGFsbW9zdCBhbGwgbWVtb3J5IGFz
-DQo+ID4gaHVnZXBhZ2VzLiBIb3dldmVyLCBvbiBhIHJ1bm5pbmcgc3lzdGVtLCBoaWdoZXIgb3Jk
-ZXIgYWxsb2NhdGlvbnMgY2FuDQo+ID4gZmFpbCBpZiB0aGUgbWVtb3J5IGlzIGZyYWdtZW50ZWQu
-IExpbnV4IGtlcm5lbCBjdXJyZW50bHkgZG9lcw0KPiA+IG9uLWRlbWFuZCBjb21wYWN0aW9uIGFz
-IHdlIHJlcXVlc3QgbW9yZSBodWdlcGFnZXMgYnV0IHRoaXMgc3R5bGUgb2YNCj4gPiBjb21wYWN0
-aW9uIGluY3VycyB2ZXJ5IGhpZ2ggbGF0ZW5jeS4gRXhwZXJpbWVudHMgd2l0aCBvbmUtdGltZSBm
-dWxsDQo+ID4gbWVtb3J5IGNvbXBhY3Rpb24gKGZvbGxvd2VkIGJ5IGh1Z2VwYWdlIGFsbG9jYXRp
-b25zKSBzaG93cyB0aGF0IGtlcm5lbA0KPiA+IGlzIGFibGUgdG8gcmVzdG9yZSBhIGhpZ2hseSBm
-cmFnbWVudGVkIG1lbW9yeSBzdGF0ZSB0byBhIGZhaXJseQ0KPiA+IGNvbXBhY3RlZCBtZW1vcnkg
-c3RhdGUgd2l0aGluIDwxIHNlYyBmb3IgYSAzMkcgc3lzdGVtLiBTdWNoIGRhdGENCj4gPiBzdWdn
-ZXN0cyB0aGF0IGEgbW9yZSBwcm9hY3RpdmUgY29tcGFjdGlvbiBjYW4gaGVscCB1cyBhbGxvY2F0
-ZSBhIGxhcmdlDQo+ID4gZnJhY3Rpb24gb2YgbWVtb3J5IGFzIGh1Z2VwYWdlcyBrZWVwaW5nIGFs
-bG9jYXRpb24gbGF0ZW5jaWVzIGxvdy4NCj4gPiANCj4gPiBGb3IgYSBtb3JlIHByb2FjdGl2ZSBj
-b21wYWN0aW9uLCB0aGUgYXBwcm9hY2ggdGFrZW4gaGVyZSBpcyB0byBkZWZpbmUNCj4gPiBwZXIg
-cGFnZS1vcmRlciBleHRlcm5hbCBmcmFnbWVudGF0aW9uIHRocmVzaG9sZHMgYW5kIGxldCBrY29t
-cGFjdGQNCj4gPiB0aHJlYWRzIGFjdCBvbiB0aGVzZSB0aHJlc2hvbGRzLg0KPiA+IA0KPiA+IFRo
-ZSBsb3cgYW5kIGhpZ2ggdGhyZXNob2xkcyBhcmUgZGVmaW5lZCBwZXIgcGFnZS1vcmRlciBhbmQg
-ZXhwb3NlZA0KPiA+IHRocm91Z2ggc3lzZnM6DQo+ID4gDQo+ID4gICAvc3lzL2tlcm5lbC9tbS9j
-b21wYWN0aW9uL29yZGVyLVsxLi5NQVhfT1JERVJdL2V4dGZyYWdfe2xvdyxoaWdofQ0KPiA+IA0K
-PiA+IFBlci1ub2RlIGtjb21wYWN0ZCB0aHJlYWQgaXMgd29rZW4gdXAgZXZlcnkgZmV3IHNlY29u
-ZHMgdG8gY2hlY2sgaWYNCj4gPiBhbnkgem9uZSBvbiBpdHMgbm9kZSBoYXMgZXh0ZnJhZyBhYm92
-ZSB0aGUgZXh0ZnJhZ19oaWdoIHRocmVzaG9sZCBmb3INCj4gPiBhbnkgb3JkZXIsIGluIHdoaWNo
-IGNhc2UgdGhlIHRocmVhZCBzdGFydHMgY29tcGFjdGlvbiBpbiB0aGUgYmFja2dyb25kDQo+ID4g
-dGlsbCBhbGwgem9uZXMgYXJlIGJlbG93IGV4dGZyYWdfbG93IGxldmVsIGZvciBhbGwgb3JkZXJz
-LiBCeSBkZWZhdWx0DQo+ID4gYm90aCB0aGVzZSB0aHJlc29sZHMgYXJlIHNldCB0byAxMDAgZm9y
-IGFsbCBvcmRlcnMgd2hpY2ggZXNzZW50aWFsbHkNCj4gPiBkaXNhYmxlcyBrY29tcGFjdGQuDQo+
-ID4gDQo+ID4gVG8gYXZvaWQgd2FzdGluZyBDUFUgY3ljbGVzIHdoZW4gY29tcGFjdGlvbiBjYW5u
-b3QgaGVscCwgc3VjaCBhcyB3aGVuDQo+ID4gbWVtb3J5IGlzIGZ1bGwsIHdlIGNoZWNrIGJvdGgs
-IGV4dGZyYWcgPiBleHRmcmFnX2hpZ2ggYW5kDQo+ID4gY29tcGFjdGlvbl9zdWl0YWJsZSh6b25l
-KS4gVGhpcyBhbGxvd3Mga2NvbWFwY3RkIHRocmVhZCB0byBzdGF5cyBpbmFjdGl2ZQ0KPiA+IGV2
-ZW4gaWYgZXh0ZnJhZyB0aHJlc2hvbGRzIGFyZSBub3QgbWV0Lg0KPiA+IA0KPiA+IFRoaXMgcGF0
-Y2ggaXMgbGFyZ2VseSBiYXNlZCBvbiBpZGVhcyBmcm9tIE1pY2hhbCBIb2NrbyBwb3N0ZWQgaGVy
-ZToNCj4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1tbS8yMDE2MTIzMDEzMTQxMi5H
-STEzMzAxQGRoY3AyMi5zdXNlLmN6Lw0KPiA+IA0KPiA+IFRlc3RpbmcgZG9uZSAob24geDg2KToN
-Cj4gPiAgLSBTZXQgL3N5cy9rZXJuZWwvbW0vY29tcGFjdGlvbi9vcmRlci05L2V4dGZyYWdfe2xv
-dyxoaWdofSA9IHsyNSwgMzB9DQo+ID4gIHJlc3BlY3RpdmVseS4NCj4gPiAgLSBVc2UgYSB0ZXN0
-IHByb2dyYW0gdG8gZnJhZ21lbnQgbWVtb3J5OiB0aGUgcHJvZ3JhbSBhbGxvY2F0ZXMgYWxsIG1l
-bW9yeQ0KPiA+ICBhbmQgdGhlbiBmb3IgZWFjaCAyTSBhbGlnbmVkIHNlY3Rpb24sIGZyZWVzIDMv
-NCBvZiBiYXNlIHBhZ2VzIHVzaW5nDQo+ID4gIG11bm1hcC4NCj4gPiAgLSBrY29tcGFjdGQwIGRl
-dGVjdHMgZnJhZ21lbnRhdGlvbiBmb3Igb3JkZXItOSA+IGV4dGZyYWdfaGlnaCBhbmQgc3RhcnRz
-DQo+ID4gIGNvbXBhY3Rpb24gdGlsbCBleHRmcmFnIDwgZXh0ZnJhZ19sb3cgZm9yIG9yZGVyLTku
-DQo+ID4gDQo+ID4gVGhlIHBhdGNoIGhhcyBwbGVudHkgb2Ygcm91Z2ggZWRnZXMgYnV0IHBvc3Rp
-bmcgaXQgZWFybHkgdG8gc2VlIGlmIEknbQ0KPiA+IGdvaW5nIGluIHRoZSByaWdodCBkaXJlY3Rp
-b24gYW5kIHRvIGdldCBzb21lIGVhcmx5IGZlZWRiYWNrLg0KPiA+IA0KPiANCj4gSXMgdGhlcmUg
-YW4gdXBkYXRlIHRvIHRoaXMgcHJvcG9zYWwgb3Igbm9uLVJGQyBwYXRjaCB0aGF0IGhhcyBiZWVu
-IHBvc3RlZCANCj4gZm9yIHByb2FjdGl2ZSBjb21wYWN0aW9uPw0KPiANCj4gV2UndmUgaGFkIGdv
-b2Qgc3VjY2VzcyB3aXRoIHBlcmlvZGljYWxseSBjb21wYWN0aW5nIG1lbW9yeSBvbiBhIHJlZ3Vs
-YXIgDQo+IGNhZGVuY2Ugb24gc3lzdGVtcyB3aXRoIGh1Z2VwYWdlcyBlbmFibGVkLiAgVGhlIGNh
-ZGVuY2UgaXRzZWxmIGlzIGRlZmluZWQgDQo+IGJ5IHRoZSBhZG1pbiBidXQgaXQgY2F1c2VzIGto
-dWdlcGFnZWRbKl0gdG8gcGVyaW9kaWNhbGx5IHdha2V1cCBhbmQgaW52b2tlIA0KPiBjb21wYWN0
-aW9uIGluIGFuIGF0dGVtcHQgdG8ga2VlcCB6b25lcyBhcyBkZWZyYWdtZW50ZWQgYXMgcG9zc2li
-bGUgDQo+IChwZXJoYXBzIG1vcmUgInByb2FjdGl2ZSIgdGhhbiB3aGF0IGlzIHByb3Bvc2VkIGhl
-cmUgaW4gYW4gYXR0ZW1wdCB0byBrZWVwIA0KPiBhbGwgbWVtb3J5IGFzIHVuZnJhZ21lbnRlZCBh
-cyBwb3NzaWJsZSByZWdhcmRsZXNzIG9mIGV4dGZyYWcgdGhyZXNob2xkcykuICANCj4gSXQgYWxz
-byBhdm9pZHMgY29ybmVyLWNhc2VzIHdoZXJlIGtjb21wYWN0ZCBjb3VsZCBiZWNvbWUgbW9yZSBl
-eHBlbnNpdmUgDQo+IHRoYW4gd2hhdCBpcyBhbnRpY2lwYXRlZCBiZWNhdXNlIGl0IGlzIHVuc3Vj
-Y2Vzc2Z1bCBhdCBjb21wYWN0aW5nIG1lbW9yeSANCj4geWV0IHRoZSBleHRmcmFnIHRocmVzaG9s
-ZCBpcyBzdGlsbCBleGNlZWRlZC4NCj4gDQo+ICBbKl0gS2h1Z2VwYWdlZCBpbnN0ZWFkIG9mIGtj
-b21wYWN0ZCBvbmx5IGJlY2F1c2UgdGhpcyBpcyBvbmx5IGVuYWJsZWQNCj4gICAgICBmb3Igc3lz
-dGVtcyB3aGVyZSB0cmFuc3BhcmVudCBodWdlcGFnZXMgYXJlIGVuYWJsZWQsIHByb2JhYmx5IGJl
-dHRlcg0KPiAgICAgIG9mZiBpbiBrY29tcGFjdGQgdG8gYXZvaWQgZHVwbGljYXRpbmcgd29yayBi
-ZXR3ZWVuIHR3byBrdGhyZWFkcyBpZg0KPiAgICAgIHRoZXJlIGlzIGFscmVhZHkgYSBuZWVkIGZv
-ciBiYWNrZ3JvdW5kIGNvbXBhY3Rpb24uDQo+IA0KDQoNCkRpc2N1c3Npb24gb24gdGhpcyBSRkMg
-cGF0Y2ggcmV2b2x2ZWQgYXJvdW5kIHRoZSBpc3N1ZSBvZiBleHBvc2luZyB0b28NCm1hbnkgdHVu
-YWJsZXMgKHBlci1ub2RlLCBwZXItb3JkZXIsIFtsb3ctaGlnaF0gZXh0ZnJhZyB0aHJlc2hvbGRz
-KS4gSXQNCndhcyBzb3J0LW9mIGNvbmNsdWRlZCB0aGF0IG5vIGFkbWluIHdpbGwgZ2V0IHRoZXNl
-IHR1bmFibGVzIHJpZ2h0IGZvcg0KYSB2YXJpZXR5IG9mIHdvcmtsb2Fkcy4NCg0KVG8gZWxpbWlu
-YXRlIHRoZSBuZWVkIGZvciB0dW5hYmxlcywgSSBwcm9wb3NlZCBhbm90aGVyIHBhdGNoOg0KDQpo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExMTQwMDY3Lw0KDQp3aGljaCBkb2Vz
-IG5vdCBhZGQgYW55IHR1bmFibGVzIGJ1dCBleHRlbmRzIGFuZCBleHBvcnRzIGFuIGV4aXN0aW5n
-DQpmdW5jdGlvbiAoY29tcGFjdF96b25lX29yZGVyKS4gSW4gc3VtbWFyeSwgdGhpcyBuZXcgcGF0
-Y2ggYWRkcyBhDQpjYWxsYmFjayBmdW5jdGlvbiB3aGljaCBhbGxvd3MgYW55IGRyaXZlciB0byBp
-bXBsZW1lbnQgYWQtaG9jDQpjb21wYWN0aW9uIHBvbGljaWVzLiBUaGVyZSBpcyBhbHNvIGEgc2Ft
-cGxlIGRyaXZlciB3aGljaCBtYWtlcyB1c2UNCm9mIHRoaXMgaW50ZXJmYWNlIHRvIGtlZXAgaHVn
-ZXBhZ2UgZXh0ZXJuYWwgZnJhZ21lbnRhdGlvbiB3aXRoaW4NCnNwZWNpZmllZCByYW5nZSAoZXhw
-b3NlZCB0aHJvdWdoIGRlYnVnZnMpOg0KDQpodHRwczovL2dpdGxhYi5jb20vbmlndXB0YS9saW51
-eC9zbmlwcGV0cy8xODk0MTYxDQoNCi1OaXRpbg0KDQo=
+On Mon, 16 Sep 2019, syzbot wrote:
+
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=158b66f1600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14f57db9600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=127b61a5600000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
+> 
+> usb 3-1: usbvision_write_reg: failed: error -2
+> usbvision_set_audio: can't write iopin register for audio switching
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 1955 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> RIP: 0010:usb_set_interface+0x34/0xa50 drivers/usb/core/message.c:1362
+> Code: fc 55 53 48 83 ec 40 89 54 24 18 89 74 24 10 e8 22 1c ef fd 49 8d 7c  
+> 24 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+> 85 fb 08 00 00 49 8b 44 24 48 49 8d 7c 24 18 48 89
+> RSP: 0018:ffff8881cb19fd50 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000000009 RSI: ffffffff834ebe7e RDI: 0000000000000048
+> RBP: ffff8881cb8e4200 R08: ffffffff88d21878 R09: ffffed103971cb43
+> R10: ffff8881cb19fdc8 R11: ffff8881cb8e5a17 R12: 0000000000000000
+> R13: ffff8881cb8e5a10 R14: ffff8881cb8e4cc8 R15: ffff8881cb8e5178
+> FS:  00007f4f60b6d700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f4f6060c330 CR3: 00000001cc3a8000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   usbvision_radio_close+0x105/0x250  
+> drivers/media/usb/usbvision/usbvision-video.c:1114
+>   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
+>   __fput+0x2d7/0x840 fs/file_table.c:280
+>   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
+>   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+>   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
+>   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+>   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+>   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x7f4f6069b2b0
+> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
+> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
+> RSP: 002b:00007ffde2d50ee8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f4f6069b2b0
+> RDX: 00007f4f60951df0 RSI: 0000000000000001 RDI: 0000000000000003
+> RBP: 0000000000000000 R08: 00007f4f60951df0 R09: 000000000000000a
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
+> R13: 00007ffde2d51040 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 62bd2b7512ab49ee ]---
+> RIP: 0010:usb_set_interface+0x34/0xa50 drivers/usb/core/message.c:1362
+> Code: fc 55 53 48 83 ec 40 89 54 24 18 89 74 24 10 e8 22 1c ef fd 49 8d 7c  
+> 24 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
+> 85 fb 08 00 00 49 8b 44 24 48 49 8d 7c 24 18 48 89
+> RSP: 0018:ffff8881cb19fd50 EFLAGS: 00010206
+> RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+> RDX: 0000000000000009 RSI: ffffffff834ebe7e RDI: 0000000000000048
+> RBP: ffff8881cb8e4200 R08: ffffffff88d21878 R09: ffffed103971cb43
+> R10: ffff8881cb19fdc8 R11: ffff8881cb8e5a17 R12: 0000000000000000
+> R13: ffff8881cb8e5a10 R14: ffff8881cb8e4cc8 R15: ffff8881cb8e5178
+> FS:  00007f4f60b6d700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f4f6060c330 CR3: 00000001cc3a8000 CR4: 00000000001406e0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+
+Use-after-free bug.
+
+Alan Stern
+
+#syz test: https://github.com/google/kasan.git f0df5c1b
+
+ drivers/media/usb/usbvision/usbvision-video.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+===================================================================
+--- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
++++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+@@ -1111,7 +1111,8 @@ static int usbvision_radio_close(struct
+ 	mutex_lock(&usbvision->v4l2_lock);
+ 	/* Set packet size to 0 */
+ 	usbvision->iface_alt = 0;
+-	usb_set_interface(usbvision->dev, usbvision->iface,
++	if (usbvision->dev)
++		usb_set_interface(usbvision->dev, usbvision->iface,
+ 				    usbvision->iface_alt);
+ 
+ 	usbvision_audio_off(usbvision);
+
