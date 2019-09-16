@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2129C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EF0C4CECD
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6E020665
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5229218AE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 18:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390572AbfIPStO (ORCPT
+        id S2390587AbfIPStP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 14:49:14 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:48849 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730182AbfIPStN (ORCPT
+        Mon, 16 Sep 2019 14:49:15 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:46236 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390538AbfIPStO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 14:49:13 -0400
-Received: by mail-io1-f69.google.com with SMTP id w16so1119649ioc.15
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
+        Mon, 16 Sep 2019 14:49:14 -0400
+Received: by mail-io1-f71.google.com with SMTP id t11so1118618ioc.13
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 11:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=BWUhYr5I0gvS0fShhXckcm/OWj5Paob17MJ2Hn7ceY0=;
-        b=K2e1ErtuDTP2+2AkCpSaAxJnIcSZ/FUiVSa1uLwUnBIHjfIMs0GaFsSt02rxwnnW37
-         Z4xWoGgfEefAjiHQO27PjGM21oVjybjStrtmjjrx9uXv1s2wwaj1msmiItDBoeQkPtPa
-         t+jCFFimwWSbyrANCVOmUQ9rw5kBW8147khpP5JDAGWR5ic2L+JTE7712d+OlAeC4SBP
-         ZEuMyGT4VlsyvEtXgK2K458l2UjdieaxYhT1hTaMe55LU+1nKHZq4tuzOZh708vFC++A
-         Je5drR3FstKpqgSPLomICz7PWwjvrrNJ1fLRtsOc+ewcmRoHsUbGEvDxKilErza92F2h
-         tJRg==
-X-Gm-Message-State: APjAAAWNPEy8VIbronK2nR06qQcJSHg9RhG2kLxwhngpu0vCnVr3dKc3
-        13nO+f/CHVPTt/4DhNXJkwEwmlSL9TgViFzbqSHc/afNS/fT
-X-Google-Smtp-Source: APXvYqzrwpCm3kJA+hdMmImrFj68ACD9mAM46xaSDIDY3qjyC6nMnP08/1pttdOsVqlNT4T8pgKOYv3WkxPiQNbBU6CSFaZJKm24
+        bh=lsjoWdb29H1URgbvvIQ/akyCyj3dPalRUxcjRdE+WJI=;
+        b=bHOmXZh1kozPnIQz+bNctYWjI2HvY7hJb9LIlM4Bf3CNPVcI8jwHgTHMvDO+8NpwWW
+         zdyqwus0HSjzNsR4LCVbVHv+LNxO7TjoF8vCbKpTlkPsyJW373xrnDOPiFODX608PiaK
+         wkncujw9wUzJZ0SmDl5LVZGeEl4CYTOXtnioWnMOpd/UzWQXpNruheSYFaCXuX0GlPRx
+         elEYiLVLQM1y3v3/FnMxTpoF7QsZDUaSUHuWGIDsccd4lXOaCOfva6IIzhQNu6W41zZG
+         Z8WtN05d5DhyfGm2pF5kL70zDM9LHpyvoUUlLFc3v41uoWJoVLaSQrdyoBAZUZJ9dBrH
+         n5CA==
+X-Gm-Message-State: APjAAAUqLoALOzXRtsG+urPb0TVjWw/DY+SrPXI4rnVzdSFyqLwxsjTw
+        2OmSYn8PgaKCTTJag5xRTmjZpI9zuk2udS4YCaOY8FYSbaY0
+X-Google-Smtp-Source: APXvYqx1UYU5N0W/RNEBgs0Cch57LChMYV1Z8DTow0KuDWXjhamCR1KvF8xqIbScKKolvajXRI7SO66tQqU4w0hi/L0MTA5NnrpC
 MIME-Version: 1.0
-X-Received: by 2002:a02:245:: with SMTP id 66mr1506031jau.30.1568659750909;
- Mon, 16 Sep 2019 11:49:10 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 11:49:10 -0700
+X-Received: by 2002:a5d:91c8:: with SMTP id k8mr84730ior.232.1568659751875;
+ Mon, 16 Sep 2019 11:49:11 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 11:49:11 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000003a00b70592b00f85@google.com>
-Subject: BUG: bad usercopy in ld_usb_read (2)
-From:   syzbot <syzbot+4cd8c1b2445d0ffe05f6@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, andreyknvl@google.com, cai@lca.pw,
-        info@metux.net, isaacm@codeaurora.org, keescook@chromium.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, william.kucharski@oracle.com
+Message-ID: <00000000000048baec0592b00f00@google.com>
+Subject: WARNING: ODEBUG bug in usbhid_probe
+From:   syzbot <syzbot+d534bb48eb6d94062cfa@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,79 +60,83 @@ syzbot found the following crash on:
 
 HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
 git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=1681c9c1600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=14982e6e600000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=4cd8c1b2445d0ffe05f6
+dashboard link: https://syzkaller.appspot.com/bug?extid=d534bb48eb6d94062cfa
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4cd8c1b2445d0ffe05f6@syzkaller.appspotmail.com
+Reported-by: syzbot+d534bb48eb6d94062cfa@syzkaller.appspotmail.com
 
-ldusb 5-1:0.98: Read buffer overflow, 4466454212372071848 bytes dropped
-usercopy: Kernel memory exposure attempt detected from process stack  
-(offset 0, size 536871625)!
+usbhid 5-1:1.0: can't add hid device: -71
 ------------[ cut here ]------------
-kernel BUG at mm/usercopy.c:98!
-invalid opcode: 0000 [#1] SMP KASAN
-CPU: 1 PID: 17170 Comm: syz-executor.4 Not tainted 5.3.0-rc7+ #0
+ODEBUG: free active (active state 0) object type: timer_list hint:  
+hid_retry_timeout+0x0/0xd0 drivers/hid/usbhid/hid-core.c:712
+WARNING: CPU: 0 PID: 12 at lib/debugobjects.c:481  
+debug_print_object+0x160/0x250 lib/debugobjects.c:481
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-Code: e8 62 f0 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 c0  
-f7 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 c6 91 c1 ff <0f> 0b e8 36 f0  
-d6 ff e8 a1 90 fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-RSP: 0018:ffff8881d308fc40 EFLAGS: 00010282
-RAX: 0000000000000060 RBX: ffffffff85cdf4e0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed103a611f7a
-RBP: ffffffff85cdf6a0 R08: 0000000000000060 R09: fffffbfff11ad7a3
-R10: fffffbfff11ad7a2 R11: ffffffff88d6bd17 R12: ffffffff85cdf8c0
-R13: ffffffff85cdf4e0 R14: 00000000200002c9 R15: ffffffff85cdf4e0
-FS:  00007fc613f93700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f983cbbf000 CR3: 00000001cc33e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Workqueue: usb_hub_wq hub_event
 Call Trace:
-  __check_object_size mm/usercopy.c:276 [inline]
-  __check_object_size.cold+0x91/0xbb mm/usercopy.c:250
-  check_object_size include/linux/thread_info.h:119 [inline]
-  check_copy_size include/linux/thread_info.h:150 [inline]
-  copy_to_user include/linux/uaccess.h:151 [inline]
-  ld_usb_read+0x304/0x780 drivers/usb/misc/ldusb.c:495
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x1ea/0x430 fs/read_write.c:461
-  ksys_read+0x1e8/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc613f92c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 00000000200002c9 RSI: 0000000020000280 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fc613f936d4
-R13: 00000000004c6d1a R14: 00000000004dc0c0 R15: 00000000ffffffff
-Modules linked in:
----[ end trace b440da0257bb7015 ]---
-RIP: 0010:usercopy_abort+0xb9/0xbb mm/usercopy.c:98
-Code: e8 62 f0 d6 ff 49 89 d9 4d 89 e8 4c 89 e1 41 56 48 89 ee 48 c7 c7 c0  
-f7 cd 85 ff 74 24 08 41 57 48 8b 54 24 20 e8 c6 91 c1 ff <0f> 0b e8 36 f0  
-d6 ff e8 a1 90 fd ff 8b 54 24 04 49 89 d8 4c 89 e1
-RSP: 0018:ffff8881d308fc40 EFLAGS: 00010282
-RAX: 0000000000000060 RBX: ffffffff85cdf4e0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed103a611f7a
-RBP: ffffffff85cdf6a0 R08: 0000000000000060 R09: fffffbfff11ad7a3
-R10: fffffbfff11ad7a2 R11: ffffffff88d6bd17 R12: ffffffff85cdf8c0
-R13: ffffffff85cdf4e0 R14: 00000000200002c9 R15: ffffffff85cdf4e0
-FS:  00007fc613f93700(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f983cbbf000 CR3: 00000001cc33e000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2a3/0x6da kernel/panic.c:219
+  __warn.cold+0x20/0x4a kernel/panic.c:576
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:481
+Code: dd 40 f6 da 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48  
+8b 14 dd 40 f6 da 85 48 c7 c7 80 eb da 85 e8 25 c5 31 ff <0f> 0b 83 05 0b  
+fc a7 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
+RSP: 0018:ffff8881da20f178 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
+RDX: 0000000000040000 RSI: ffffffff81288ddd RDI: ffffed103b441e21
+RBP: 0000000000000001 R08: ffff8881da1f9800 R09: ffffed103b645d58
+R10: ffffed103b645d57 R11: ffff8881db22eabf R12: ffffffff86d0dd60
+R13: ffffffff812e7c20 R14: ffff8881cfebe8c8 R15: ffff8881d412fa80
+  __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
+  debug_check_no_obj_freed+0x2df/0x443 lib/debugobjects.c:994
+  free_pages_prepare mm/page_alloc.c:1174 [inline]
+  __free_pages_ok+0x222/0x1d70 mm/page_alloc.c:1420
+  usbhid_probe+0xcd1/0xfa0 drivers/hid/usbhid/hid-core.c:1395
+  usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+  generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+  usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+  really_probe+0x281/0x6d0 drivers/base/dd.c:548
+  driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+  __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+  bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x217/0x360 drivers/base/dd.c:894
+  bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+  device_add+0xae6/0x16f0 drivers/base/core.c:2165
+  usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+  hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+  port_event drivers/usb/core/hub.c:5359 [inline]
+  hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+  process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
+  kthread+0x318/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
 ---
