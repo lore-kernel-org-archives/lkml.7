@@ -2,245 +2,143 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB267C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:26:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D34C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66CE32171F
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:26:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C048421670
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 12:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="T2TOmDna"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JQ9QXNTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732685AbfIPMZ7 (ORCPT
+        id S1732546AbfIPM3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 08:25:59 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44381 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732490AbfIPMZ7 (ORCPT
+        Mon, 16 Sep 2019 08:29:49 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59295 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732452AbfIPM3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 08:25:59 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190916122557euoutp02a0da0caa4cab3d5adde1f97acb4f0bad~E6tHPzngq2830128301euoutp02R
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 12:25:57 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190916122557euoutp02a0da0caa4cab3d5adde1f97acb4f0bad~E6tHPzngq2830128301euoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568636757;
-        bh=pd4LFeq8Hf58x/uaWkVtzZwd7F67Yro/hz+c01DyRcI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=T2TOmDnahUthPHi9YcaYdbBQel9Sc0qqCn1FJ+pZu4rTZMqSyyO73UFBP8z+Wm//4
-         RIxz3xcgBppvptdP4JIfeM1nJFj0x/oPaRzUsAbsRKdUaJVN8OmYJNNbMHT3RF2mvf
-         My6mjNkBFXCIH56CGALBRLlVeWCVxYlssw7DSHdY=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190916122555eucas1p1b403dcd9a69c421eec08dea14a4aabf7~E6tGKH_RG0799707997eucas1p1N;
-        Mon, 16 Sep 2019 12:25:55 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 35.93.04469.35F7F7D5; Mon, 16
-        Sep 2019 13:25:55 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190916122555eucas1p100b7f2c9c7c63a585a8b96aafb931c01~E6tFWzA1e0775607756eucas1p1P;
-        Mon, 16 Sep 2019 12:25:55 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190916122554eusmtrp29217d31fe51b7619dabfd1be6c2cf541~E6tFIeilQ1085610856eusmtrp2y;
-        Mon, 16 Sep 2019 12:25:54 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-c7-5d7f7f536494
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 47.D6.04166.25F7F7D5; Mon, 16
-        Sep 2019 13:25:54 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190916122553eusmtip281778247ca06eec9d1ec906ab34edca4~E6tETXae41817718177eusmtip2D;
-        Mon, 16 Sep 2019 12:25:53 +0000 (GMT)
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-To:     Brian Masney <masneyb@onstation.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <d729f4cd-1d00-fc8b-1688-78c9f325eeac@samsung.com>
-Date:   Mon, 16 Sep 2019 14:25:52 +0200
+        Mon, 16 Sep 2019 08:29:48 -0400
+X-Greylist: delayed 309 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Sep 2019 08:29:47 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568636987;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xuFZUsJJRGLuvev598sKrB52HnexJgaP+W91bQH5myw=;
+        b=JQ9QXNTxTP7ss/agk+X/Ztcm3NCq7fd54eIldJV0Zem8CNQS0EEDr50qUubcy8qElmKcfH
+        h5svejFxeEiYXX+lDspz4ym8093Y0BFqNgFEN2+cWV3rAZHtoR5G/Cg0TyiyFgM0G9olFO
+        CrkW6uUyipEfl3EkiVkj/JtTJ6fowqU=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-IKeH67IrPcSQHE4C7cC94g-1; Mon, 16 Sep 2019 08:23:32 -0400
+Received: by mail-qk1-f200.google.com with SMTP id n135so41766540qke.23
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 05:23:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aFQYEXYlxKj3Sm3zW29/VoCLHuhuxmTHLOejlFqsxPw=;
+        b=UoLC3SvmLych4f8OxjvMItvXX88T65phYLknXYk3MheyS2RpXLtGU7GZEjGAiW7Dhj
+         wIOSu+cjxHP5Rs4TimvJtoVe7sLO9Yx/9nSAJAOXc58N9ajbGH2dwVFQAhR5/ytUAYkr
+         /oxEnf8SnwStun8kq+geq1Hvr0NeVMyg6Zz2kf697E5Go+SkjY+gCK4xVTEHMb0AeEeY
+         GfC0h/qVyUpGpB2PD5ipS9TMpeddzrl6g1ANLDaxEh//XddouHId+RYCnkxF8syKIo9m
+         YEGRbJ/HLgbaGxaAqV+QOLBTWPh/krPww1aT5YBmnwS6LYGTyys5afPHMY96puiWhvyr
+         0DyQ==
+X-Gm-Message-State: APjAAAX4kXUyy8j8mxUtJAzWMmZajhtADJBFfJw8Ltw94PbV6OBnh2YJ
+        UBM37osAZ3X0zQ8niQqX/geVDVBjqCoR1OVImUZqarO1aRxllsSmnH1mEoTJua4zIzuz5+A0k8l
+        Ci1u4zbGVo2k/Mn/yGd/aVVGJ
+X-Received: by 2002:a37:bcc6:: with SMTP id m189mr48798058qkf.436.1568636611756;
+        Mon, 16 Sep 2019 05:23:31 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqxDIGS3OQUOohOp1Ug/qVyEA/U4iNc6+2vozZatrm/x1j+LyqlIhVdzXycKw8RYr2Oc+YqI6g==
+X-Received: by 2002:a37:bcc6:: with SMTP id m189mr48798037qkf.436.1568636611494;
+        Mon, 16 Sep 2019 05:23:31 -0700 (PDT)
+Received: from [192.168.1.157] (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
+        by smtp.gmail.com with ESMTPSA id z5sm21437547qtb.49.2019.09.16.05.23.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 16 Sep 2019 05:23:30 -0700 (PDT)
+Subject: Re: [PATCH] arm64: use generic free_initrd_mem()
+To:     Mike Rapoport <rppt@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+References: <1568618488-19055-1-git-send-email-rppt@kernel.org>
+From:   Laura Abbott <labbott@redhat.com>
+Message-ID: <0ba20aa4-d2dd-2263-6b5f-16a5c8a39f67@redhat.com>
+Date:   Mon, 16 Sep 2019 08:23:29 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190916120228.GA3045@onstation.org>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1568618488-19055-1-git-send-email-rppt@kernel.org>
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRTut/tUWtxN04NJ0SAio9QM+kUPCvrjBv2hVNADq1vdluWW7Gbv
-        nJXWMrTZ2y0tS5nKophpOlJrSstso/Uws2QLpXf2tHea2y3yv++c833nOx8cllCfp2PYNP1m
-        0aAX0jV0OFl747t30kKjMTXhq3089nb/JHG+t1WB25p6STxQW0jgMy1eCt/ve0dj+2MXwqef
-        exB+8PUlgVvfPCDxwcIyBh/7ZVNgR3c7hQubPAy+5zxN4/KHPgU+bH1NYVfBcvy89BuBcxta
-        GNx1tAXNGcnbS+yIf9eRy/B1XWWIb/hyluTrLV0MbzUVUbyj6iDN3zTfVfBP2q/S/JUvAYr3
-        H3Ir+OoyI1/eEcG7nZ0Mfy3/KMl/coxO5paFz1wrpqdtEQ3xs1eFr6+22+iMCxO22Y4VM9mo
-        RpOHwljgpsKzwHEmiNVcBYJDPfPzUPgg/owg+1YpKRefENhO5FH/FFZHCZIHNgTvrWW0XLxF
-        sLf3R4gVwaXAbYuXDuJIToDuxjchBcHtJ6Hw3JGQIc1NgN/Vj0IkJTcbDjjNITHJjYOGtuIQ
-        HsktgY+BZkrmqKC1qGfwJpYN46aAf1+oTXBjYF+NlZBxNHT2nFEEvYALsFBQ+pQI8oGbB3mV
-        s+QEEfDKfZmRcSwM1Af5QWwEf0UOIWtNCGou1RPyYAY0u31UcA8xePNFZ7zcngvmNh8prx8B
-        HW9V8gkj4Ejtyb+uSjDtV8vsseD31PxdGA3ld/poM9JYhuSyDAljGRLG8t/3LCKrULSYKem0
-        opSoF7dOlgSdlKnXTl6zSedAg6/b1u/+WIf67q52IY5FmuHK7NysVDUlbJG261wIWEITqUze
-        bUxVK9cK23eIhk0rDZnpouRCo1hSE63cOSywXM1phc3iRlHMEA3/pgo2LCYbqdQ7vH3C0vxR
-        Rb0rLvdfq2pOemluqa9OOEVHNZK5A4v0ppR1CbaLCZEHYozD2p1RGZ6xSa7G1/7jYlblLt/E
-        F/eTdu+pTI7SLjF4xcSNOaYuV4pwc4G2WPLVfZje9AS/UJmy4hsW57R6ptWlXY+d8/hUf6cr
-        dn6P6lVcwYbfP3UaUlovJMYRBkn4A6FlcQK2AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzH931+3XPN6XGV+8qGnTWyeXJX6Zvphg2PYcL8WGl5lmdF3V27
-        52p+TEVCWZT84yn9oNMkTXerrmjlpNyukiiJxLKh/BoqJj+qY+u/1/Z+vf74bB8aV9pJX3q/
-        wSyYDHyCmvIgXL9bXyzdlpoatcxSwqKOwZ8Eyu5wYsjV+JFAf2pycVTU3EGixyOfKFTxzAFQ
-        wZt2gLrH3uHI+b6bQJm5pTJ0YbwMQ9bBHhLlNrbL0KP6AgpZnjzE0Ln8YRI5zkaiNyXfcZTR
-        0CxD/XnNYJUPV1FYAbhPvRkyzt5fCriG0WKCq5P6ZVz+6YskZy3PpLj7OV0Y97znNsXVjr4k
-        uYEzrRhnK03lLL1eXGt9n4xrys4juK/WeeFMBLvSZEwyCwvijKI5TB2pQVpWE4pYbVAoqwkM
-        iVqhDVYH6FbuExL2JwumAN1eNs5WUUYl3vA/WHbhkiwNVKuzgJyGTBDMtxaCLOBBKxkLgJcz
-        h3D3oIK3ij78Yy843pNFuaVhAI9/LMMmBy9mK2yTOqhJ9mZ46Pp5dUrCmZMErKtsIN3FTRx2
-        j1QRkxbF+MNftqdThYLRwVP1OeQkE4wfbHBdmmIfZje8a5eA25kFnRdfT7Q0LWe0cCB9SsGZ
-        RXC8sAt383yYXp3/j1Ww73URlgOU0rRampZI0xJpWlIMiHLgLSSJ+li9qGFFXi8mGWLZGKPe
-        Cia+pqblh80Ouqq2OwBDA/UMRVpGSpSS5JPFQ3oHgDSu9laEH02NUir28YcOCyZjtCkpQRAd
-        IHjitlzc1yfGOPGDBnO0JlgTgkI1IYEhgcuRWqU4zdzZo2RiebMQLwiJgul/h9Fy3zTgufna
-        jrH2yuqIY9ROc+PcLRsMHtfPh9Oe8xds6o75su6UIX5XdvTcxctLZvr0dGqji2e/WP3AhS17
-        q+NH158bGWgfbdPJ4x+eOGLPs6UHduosCz3jmmrXql45zZ6Sk51DyTePkfdK04Kl4gMpfnXf
-        Oq9s5NdEbmj5XFU51KoKYzzUhBjHa5bgJpH/C4U8smxLAwAA
-X-CMS-MailID: 20190916122555eucas1p100b7f2c9c7c63a585a8b96aafb931c01
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
-References: <20190815004854.19860-1-masneyb@onstation.org>
-        <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
-        <20190815004854.19860-6-masneyb@onstation.org>
-        <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
-        <20190916103614.GA1644@onstation.org>
-        <20190916104907.GB4734@pendragon.ideasonboard.com>
-        <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
-        <20190916120228.GA3045@onstation.org>
+X-MC-Unique: IKeH67IrPcSQHE4C7cC94g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.09.2019 14:02, Brian Masney wrote:
-> On Mon, Sep 16, 2019 at 01:32:58PM +0200, Enric Balletbo i Serra wrote:
->> Hi,
->>
->> On 16/9/19 12:49, Laurent Pinchart wrote:
->>> Hi Brian,
->>>
->>> On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
->>>> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
->>>>> On 15.08.2019 02:48, Brian Masney wrote:
->>>>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
->>>>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
->>>>>> error. The downstream MSM kernel sources [1] shows that the proper value
->>>>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
->>>>>> probing to succeed.
->>>>>>
->>>>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
->>>>>>
->>>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>>>>> ---
->>>>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> index 25e063bcecbc..bc511fc605c9 100644
->>>>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> @@ -6,7 +6,7 @@
->>>>>>  #ifndef __ANX78xx_H
->>>>>>  #define __ANX78xx_H
->>>>>>  
->>>>>> -#define TX_P0				0x70
->>>>>> +#define TX_P0				0x78
->>>>>
->>>>> This bothers me little. There are no upstream users, grepping android
->>>>> sources suggests that both values can be used [1][2]  (grep for "#define
->>>>> TX_P0"), moreover there is code suggesting both values can be valid [3].
->>>>>
->>>>> Could you verify datasheet which i2c slave addresses are valid for this
->>>>> chip, if both I guess this patch should be reworked.
->>>>>
->>>>>
->>>>> [1]:
->>>>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
->>>>>
->>>>> [2]:
->>>>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
->>>>>
->>>>> [3]:
->>>>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
->>>> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
->>>> need to support both addresses. What do you think about moving these
->>>> addresses into device tree?
->>> Assuming that the device supports different addresses (I can't validate
->>> that as I don't have access to the datasheet), and different addresses
->>> need to be used on different systems, then the address to be used needs
->>> to be provided by the firmware (DT in this case). Two options are
->>> possible, either specifying the address explicitly in the device's DT
->>> node, or specifying free addresses (in the form of a white list or black
->>> list) and allocating an address from that pool. The latter has been
->>> discussed in a BoF at the Linux Plumbers Conference last week,
->>> https://linuxplumbersconf.org/event/4/contributions/542/.
->>>
->>>> The downstream and upstream kernel sources divide these addresses by two
->>>> to get the i2c address. Here's the code in upstream:
->>>>
->>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
->>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
->>>>
->>>> I'm not sure why the actual i2c address isn't used in this code.
->> The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
->> or control the chip from the AP. The I2C slave addresses used to control the
->> ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
->> access to different registers of the chip and AFAICS is not configurable.
->>
->> I don't think these addresses should be configured via DT but for the driver itself.
->>
->> My wild guess is that the ANX7808 has different addresses, but I don't have the
->> datasheet of this version.
-> I'm able to communicate with the 7808 on my Nexus 5 using the 0x78
-> address. Given that the addresses appear to be fixed per model, maybe it
-> makes sense to drop the address #defines and add the addresses to the
-> data pointer in the driver's of_match_table like so:
->
-> static const struct of_device_id anx78xx_match_table[] = {
->         { .compatible = "analogix,anx7808", .data = PTR_TO_7808_ADDRS },
->         { .compatible = "analogix,anx7812", .data = PTR_TO_781X_ADDRS },
->         { .compatible = "analogix,anx7814", .data = PTR_TO_781X_ADDRS },
->         { .compatible = "analogix,anx7818", .data = PTR_TO_781X_ADDRS },
->         { /* sentinel */ },
-> };
->
-> Brian
->
->
+On 9/16/19 8:21 AM, Mike Rapoport wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>=20
+> arm64 calls memblock_free() for the initrd area in its implementation of
+> free_initrd_mem(), but this call has no actual effect that late in the bo=
+ot
+> process. By the time initrd is freed, all the reserved memory is managed =
+by
+> the page allocator and the memblock.reserved is unused, so there is no
+> point to update it.
+>=20
 
-I have spotted following comment on chromium's ML[1]:
+People like to use memblock for keeping track of memory even if it has no
+actual effect. We made this change explicitly (see 05c58752f9dc ("arm64: To=
+ remove
+initrd reserved area entry from memblock") That said, moving to the generic
+APIs would be nice. Maybe we can find another place to update the accountin=
+g?
 
-> The locations are hard coded in the register spec.  Furthermore, each
-> one can be changed independently--for example the Android driver puts
-> 0x38 at 0x3c but leaves the rest alone.
-
-It is not entirely clear, but IMO it suggests these addresses are
-hardware configurable.
-
-
-[1]:
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/44601/2/drivers/auxdisplay/slimport.c#331
-
-
-Regards
-
-Andrzej
+> Without the memblock_free() call the only difference between arm64 and th=
+e
+> generic versions of free_initrd_mem() is the memory poisoning. Switching
+> arm64 to the generic version will enable the poisoning.
+>=20
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>=20
+> I've boot tested it on qemu and I've checked that kexec works.
+>=20
+>   arch/arm64/mm/init.c | 8 --------
+>   1 file changed, 8 deletions(-)
+>=20
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index f3c7952..8ad2934 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -567,14 +567,6 @@ void free_initmem(void)
+>   =09unmap_kernel_range((u64)__init_begin, (u64)(__init_end - __init_begi=
+n));
+>   }
+>  =20
+> -#ifdef CONFIG_BLK_DEV_INITRD
+> -void __init free_initrd_mem(unsigned long start, unsigned long end)
+> -{
+> -=09free_reserved_area((void *)start, (void *)end, 0, "initrd");
+> -=09memblock_free(__virt_to_phys(start), end - start);
+> -}
+> -#endif
+> -
+>   /*
+>    * Dump out memory limit information on panic.
+>    */
+>=20
 
