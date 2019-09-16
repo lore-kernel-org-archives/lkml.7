@@ -2,123 +2,112 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C6D4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D59C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DA6221848
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="mYdC2Jos"
+	by mail.kernel.org (Postfix) with ESMTP id 1985D214DE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 10:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731104AbfIPKgR (ORCPT
+        id S1731250AbfIPKgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 06:36:17 -0400
-Received: from onstation.org ([52.200.56.107]:40790 "EHLO onstation.org"
+        Mon, 16 Sep 2019 06:36:23 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:47284 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728134AbfIPKgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 06:36:17 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 35DF83E8F9;
-        Mon, 16 Sep 2019 10:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1568630176;
-        bh=4KQmgz71YU3A68V+Z3HaVPiT+RBIQPuGE3xqAmSJ6fE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mYdC2Jostpc6JnzwEQKwLhjI7/uhjM7Lt0RJ5HB20fuJn1eObXMqrg4rMz0NWQAha
-         9mZxUJPUj3+2M4JFGaGm27QPrkXQDLGJNiBeRsEplRktcZoLHydxXxBglCpX5+wd9L
-         fPvoREGjrIlTtEyAFeXHDspo9m5N2e4aerYO4rDQ=
-Date:   Mon, 16 Sep 2019 06:36:14 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        enric.balletbo@collabora.com, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-Message-ID: <20190916103614.GA1644@onstation.org>
-References: <20190815004854.19860-1-masneyb@onstation.org>
- <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
- <20190815004854.19860-6-masneyb@onstation.org>
- <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+        id S1726604AbfIPKgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 06:36:23 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6520C1A0572;
+        Mon, 16 Sep 2019 12:36:21 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 22DBD1A0207;
+        Mon, 16 Sep 2019 12:36:17 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 92EDF402BF;
+        Mon, 16 Sep 2019 18:36:11 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [1/3] soc: fsl: fix that flextimer cannot wakeup system in deep sleep on LS1021A
+Date:   Mon, 16 Sep 2019 18:25:54 +0800
+Message-Id: <20190916102556.16655-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
-> On 15.08.2019 02:48, Brian Masney wrote:
-> > When attempting to configure this driver on a Nexus 5 phone (msm8974),
-> > setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
-> > error. The downstream MSM kernel sources [1] shows that the proper value
-> > for TX_P0 is 0x78, not 0x70, so correct the value to allow device
-> > probing to succeed.
-> >
-> > [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> >  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > index 25e063bcecbc..bc511fc605c9 100644
-> > --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
-> > @@ -6,7 +6,7 @@
-> >  #ifndef __ANX78xx_H
-> >  #define __ANX78xx_H
-> >  
-> > -#define TX_P0				0x70
-> > +#define TX_P0				0x78
-> 
-> 
-> This bothers me little. There are no upstream users, grepping android
-> sources suggests that both values can be used [1][2]  (grep for "#define
-> TX_P0"), moreover there is code suggesting both values can be valid [3].
-> 
-> Could you verify datasheet which i2c slave addresses are valid for this
-> chip, if both I guess this patch should be reworked.
-> 
-> 
-> [1]:
-> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
-> 
-> [2]:
-> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
-> 
-> [3]:
-> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+Why:
+    - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
+      Register RCPM_IPPDEXPCR1's default value is zero.
+      So the register value that reading from register
+      RCPM_IPPDEXPCR1 is always zero.
 
-This address is 0x78 on my Nexus 5. Given [3] above it looks like we
-need to support both addresses. What do you think about moving these
-addresses into device tree?
+How:
+    - Save register RCPM_IPPDEXPCR1's value to
+      register SCFG_SPARECR8.(uboot's psci also
+      need reading value from the register SCFG_SPARECR8
+      to set register RCPM_IPPDEXPCR1)
 
-The downstream and upstream kernel sources divide these addresses by two
-to get the i2c address. Here's the code in upstream:
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
+---
+ drivers/soc/fsl/rcpm.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
-https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+index 82c0ad5e663e..2bf37d38efe5 100644
+--- a/drivers/soc/fsl/rcpm.c
++++ b/drivers/soc/fsl/rcpm.c
+@@ -13,6 +13,8 @@
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
+ #include <linux/kernel.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
+ 
+ #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+ 
+@@ -63,6 +65,33 @@ static int rcpm_pm_prepare(struct device *dev)
+ 					tmp |= value[i + 1];
+ 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+ 				}
++				#ifdef CONFIG_SOC_LS1021A
++				/* Workaround: There is a bug of register ippdexpcr1,
++				 * cannot write it but can read it.Tt's default value is zero,
++				 * then read it will always returns zero.
++				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
++				 * And the value of ippdexpcr1 will be read from SCFG_SPARECR8.
++				 */
++				{
++					struct regmap * rcpm_scfg_regmap = NULL;
++					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
++					u32 reg_value = 0;
++
++					rcpm_scfg_regmap = syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
++					if (rcpm_scfg_regmap) {
++						if (of_property_read_u32_array(dev->of_node,
++						    "fsl,rcpm-scfg", reg_offset, rcpm->wakeup_cells + 1)) {
++							rcpm_scfg_regmap = NULL;
++							continue;
++						}
++						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1], &reg_value);
++						/* Write value to register SCFG_SPARECR8 */
++						regmap_write(rcpm_scfg_regmap, reg_offset[i + 1], tmp | reg_value);
++					}
++				}
++				#endif
++
++
+ 			}
+ 		}
+ 	} while (ws = wakeup_source_get_next(ws));
+-- 
+2.17.1
 
-I'm not sure why the actual i2c address isn't used in this code.
-
-Brian
