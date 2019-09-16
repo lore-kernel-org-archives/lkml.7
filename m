@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4330BC49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563B1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 091DE216C8
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29261216C8
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 13:43:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387835AbfIPNnI (ORCPT
+        id S2387862AbfIPNnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 09:43:08 -0400
+        Mon, 16 Sep 2019 09:43:11 -0400
 Received: from mga04.intel.com ([192.55.52.120]:53809 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387758AbfIPNnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 09:43:01 -0400
+        id S2387823AbfIPNnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 09:43:07 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 06:43:01 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 06:43:07 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,512,1559545200"; 
-   d="scan'208";a="387209003"
+   d="scan'208";a="387209025"
 Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.84])
-  by fmsmga006.fm.intel.com with ESMTP; 16 Sep 2019 06:43:01 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 16 Sep 2019 06:43:06 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 04/14] perf/x86/intel: Basic support for metrics counters
-Date:   Mon, 16 Sep 2019 06:41:18 -0700
-Message-Id: <20190916134128.18120-5-kan.liang@linux.intel.com>
+Subject: [PATCH V4 08/14] perf/x86/intel: Support per thread RDPMC TopDown metrics
+Date:   Mon, 16 Sep 2019 06:41:22 -0700
+Message-Id: <20190916134128.18120-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190916134128.18120-1-kan.liang@linux.intel.com>
 References: <20190916134128.18120-1-kan.liang@linux.intel.com>
@@ -47,334 +47,213 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Metrics counters (hardware counters containing multiple metrics)
-are modeled as separate registers for each TopDown metric events,
-with an extra reg being used for coordinating access to the
-underlying register in the scheduler.
+With Icelake CPUs, the TopDown metrics are directly available as fixed
+counters and do not require generic counters, which make it possible to
+measure TopDown per thread/process instead of only per core.
 
-Adds the basic infrastructure to separate the scheduler register indexes
-from the actual hardware register indexes. In most cases the MSR address
-is already used correctly, but for code using indexes we need calculate
-the correct underlying register.
+The metrics and slots values have to be saved/restored during context
+switching.
+The saved values are also used as previous values to calculate the
+delta.
 
-The TopDown metric events share the fixed counter 3. It only needs
-enable/disable once for them.
-
-Naming:
-The events which uses Metrics counters are called TopDown metric
-events or metric events in the code.
-The fixed counter 3 is called TopDown slots event or slots event.
-Topdown events stand for metric events + slots event in the code.
-
-Thank Peter Zijlstra very much to clean up the patch. All the topdown
-support has been properly placed in the fixed counter functions. So the
-is_topdown_idx() only need to be check once. Also, clean up the
-x86_assign_hw_event() by converting multiple if-else statements to a
-switch statement.
+The PERF_METRICS MSR value will be returned if RDPMC metrics events.
 
 Originally-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
 
-Changes since V3:
-- Separate BTS index patch
-- Apply Peter's cleanup patch
+No changes since V3
 
- arch/x86/events/core.c            | 23 ++++++--
- arch/x86/events/intel/core.c      | 98 ++++++++++++++++++++++---------
- arch/x86/events/perf_event.h      | 14 +++++
- arch/x86/include/asm/msr-index.h  |  1 +
- arch/x86/include/asm/perf_event.h | 28 +++++++++
- 5 files changed, 129 insertions(+), 35 deletions(-)
+ arch/x86/events/core.c       |   5 +-
+ arch/x86/events/intel/core.c | 102 ++++++++++++++++++++++++++++-------
+ include/linux/perf_event.h   |   3 ++
+ 3 files changed, 91 insertions(+), 19 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 15b90b1a8fb1..fc8b0cbe5dc1 100644
+index 283de3e548b4..585fe1a81bf0 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -1054,22 +1054,33 @@ static inline void x86_assign_hw_event(struct perf_event *event,
- 				struct cpu_hw_events *cpuc, int i)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-+	int idx;
+@@ -2198,7 +2198,10 @@ static int x86_pmu_event_idx(struct perf_event *event)
+ 	if (!(event->hw.flags & PERF_X86_EVENT_RDPMC_ALLOWED))
+ 		return 0;
  
--	hwc->idx = cpuc->assign[i];
-+	idx = hwc->idx = cpuc->assign[i];
- 	hwc->last_cpu = smp_processor_id();
- 	hwc->last_tag = ++cpuc->tags[i];
- 
--	if (hwc->idx == INTEL_PMC_IDX_FIXED_BTS) {
-+	switch (hwc->idx) {
-+	case INTEL_PMC_IDX_FIXED_BTS:
- 		hwc->config_base = 0;
- 		hwc->event_base	= 0;
--	} else if (hwc->idx >= INTEL_PMC_IDX_FIXED) {
-+		break;
-+
-+	case INTEL_PMC_IDX_FIXED_METRIC_BASE ... INTEL_PMC_IDX_FIXED_METRIC_BASE + 3:
-+		/* All METRIC events are mapped onto the fixed SLOTS event */
-+		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-+		/* fall through */
-+	case INTEL_PMC_IDX_FIXED ... INTEL_PMC_IDX_FIXED_BTS - 1:
- 		hwc->config_base = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
--		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (hwc->idx - INTEL_PMC_IDX_FIXED);
--		hwc->event_base_rdpmc = (hwc->idx - INTEL_PMC_IDX_FIXED) | 1<<30;
--	} else {
-+		hwc->event_base = MSR_ARCH_PERFMON_FIXED_CTR0 + (idx - INTEL_PMC_IDX_FIXED);
-+		hwc->event_base_rdpmc = (idx - INTEL_PMC_IDX_FIXED) | 1<<30;
-+		break;
-+
-+	default:
- 		hwc->config_base = x86_pmu_config_addr(hwc->idx);
- 		hwc->event_base  = x86_pmu_event_addr(hwc->idx);
- 		hwc->event_base_rdpmc = x86_pmu_rdpmc_index(hwc->idx);
-+		break;
+-	if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
++	/* Return PERF_METRICS MSR value for metrics event */
++	if (is_metric_idx(idx))
++		idx = 1 << 29;
++	else if (x86_pmu.num_counters_fixed && idx >= INTEL_PMC_IDX_FIXED) {
+ 		idx -= INTEL_PMC_IDX_FIXED;
+ 		idx |= 1 << 30;
  	}
- }
- 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index f0208ee554fc..c7e093e5abd2 100644
+index 71f3086a8adc..7ec0f350d2ac 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2129,27 +2129,60 @@ static inline void intel_pmu_ack_status(u64 ack)
- 	wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, ack);
+@@ -2262,6 +2262,11 @@ static int icl_set_topdown_event_period(struct perf_event *event)
+ 		local64_set(&hwc->period_left, 0);
+ 	}
+ 
++	if ((hwc->saved_slots) && is_first_topdown_event_in_group(event)) {
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, hwc->saved_slots);
++		wrmsrl(MSR_PERF_METRICS, hwc->saved_metric);
++	}
++
+ 	perf_event_update_userpage(event);
+ 
+ 	return 0;
+@@ -2280,7 +2285,7 @@ static u64 icl_get_metrics_event_value(u64 metric, u64 slots, int idx)
+ 	return  mul_u64_u32_div(slots, val, 0xff);
  }
  
--static void intel_pmu_disable_fixed(struct hw_perf_event *hwc)
-+static inline bool event_is_checkpointed(struct perf_event *event)
-+{
-+	return unlikely(event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
+-static void __icl_update_topdown_event(struct perf_event *event,
++static u64 icl_get_topdown_value(struct perf_event *event,
+ 				       u64 slots, u64 metrics)
+ {
+ 	int idx = event->hw.idx;
+@@ -2291,7 +2296,50 @@ static void __icl_update_topdown_event(struct perf_event *event,
+ 	else
+ 		delta = slots;
+ 
+-	local64_add(delta, &event->count);
++	return delta;
 +}
 +
-+static inline void intel_set_masks(struct perf_event *event, int idx)
- {
--	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
++static void __icl_update_topdown_event(struct perf_event *event,
++				       u64 slots, u64 metrics,
++				       u64 last_slots, u64 last_metrics)
++{
++	u64 delta, last = 0;
++
++	delta = icl_get_topdown_value(event, slots, metrics);
++	if (last_slots)
++		last = icl_get_topdown_value(event, last_slots, last_metrics);
++
++	/*
++	 * The 8bit integer fraction of metric may be not accurate,
++	 * especially when the changes is very small.
++	 * For example, if only a few bad_spec happens, the fraction
++	 * may be reduced from 1 to 0. If so, the bad_spec event value
++	 * will be 0 which is definitely less than the last value.
++	 * Avoid update event->count for this case.
++	 */
++	if (delta > last) {
++		delta -= last;
++		local64_add(delta, &event->count);
++	}
++}
++
++static void update_saved_topdown_regs(struct perf_event *event,
++				      u64 slots, u64 metrics)
++{
 +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	struct perf_event *other;
++	int idx;
 +
-+	if (event->attr.exclude_host)
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-+	if (event->attr.exclude_guest)
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-+	if (event_is_checkpointed(event))
-+		__set_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-+}
++	event->hw.saved_slots = slots;
++	event->hw.saved_metric = metrics;
 +
-+static inline void intel_clear_masks(struct perf_event *event, int idx)
-+{
-+	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_guest_mask);
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_ctrl_host_mask);
-+	__clear_bit(idx, (unsigned long *)&cpuc->intel_cp_status);
-+}
-+
-+static void intel_pmu_disable_fixed(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
- 	u64 ctrl_val, mask;
-+	int idx = hwc->idx;
- 
--	mask = 0xfULL << (idx * 4);
-+	if (is_topdown_idx(idx)) {
-+		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+		/*
-+		 * When there are other Top-Down events still active,
-+		 * don't disable the SLOTS counter.
-+		 */
-+		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
-+			return;
-+		idx = INTEL_PMC_IDX_FIXED_SLOTS;
++	for_each_set_bit(idx, cpuc->active_mask, INTEL_PMC_IDX_TD_BE_BOUND + 1) {
++		if (!is_topdown_idx(idx))
++			continue;
++		other = cpuc->events[idx];
++		other->hw.saved_slots = slots;
++		other->hw.saved_metric = metrics;
 +	}
- 
-+	intel_clear_masks(event, idx);
-+
-+	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
- 	rdmsrl(hwc->config_base, ctrl_val);
- 	ctrl_val &= ~mask;
- 	wrmsrl(hwc->config_base, ctrl_val);
  }
  
--static inline bool event_is_checkpointed(struct perf_event *event)
--{
--	return (event->hw.config & HSW_IN_TX_CHECKPOINTED) != 0;
--}
--
- static void intel_pmu_disable_event(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
- 	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
- 		intel_pmu_disable_bts();
-@@ -2157,18 +2190,19 @@ static void intel_pmu_disable_event(struct perf_event *event)
- 		return;
- 	}
- 
--	cpuc->intel_ctrl_guest_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_ctrl_host_mask &= ~(1ull << hwc->idx);
--	cpuc->intel_cp_status &= ~(1ull << hwc->idx);
--
--	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL))
--		intel_pmu_disable_fixed(hwc);
--	else
-+	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
-+		intel_pmu_disable_fixed(event);
-+	} else {
-+		intel_clear_masks(event, hwc->idx);
- 		x86_pmu_disable_event(event);
-+	}
- 
- 	/*
- 	 * Needs to be called after x86_pmu_disable_event,
- 	 * so we don't trigger the event without PEBS bit set.
-+	 *
-+	 * Metric stuff doesn't do PEBS. So the early exit from
-+	 * intel_pmu_disable_fixed() is OK.
- 	 */
- 	if (unlikely(event->attr.precise_ip))
- 		intel_pmu_pebs_disable(event);
-@@ -2193,8 +2227,22 @@ static void intel_pmu_read_event(struct perf_event *event)
- static void intel_pmu_enable_fixed(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
- 	u64 ctrl_val, mask, bits = 0;
-+	int idx = hwc->idx;
-+
-+	if (is_topdown_idx(idx)) {
-+		struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+		/*
-+		 * When there are other Top-Down events already active,
-+		 * don't enable the SLOTS counter.
-+		 */
-+		if (*(u64 *)cpuc->active_mask & INTEL_PMC_OTHER_TOPDOWN_BITS(idx))
-+			return;
-+
-+		idx = INTEL_PMC_IDX_FIXED_SLOTS;
-+	}
-+
-+	intel_set_masks(event, idx);
- 
- 	/*
- 	 * Enable IRQ generation (0x8), if not PEBS,
-@@ -2214,6 +2262,7 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- 	if (x86_pmu.version > 2 && hwc->config & ARCH_PERFMON_EVENTSEL_ANY)
- 		bits |= 0x4;
- 
-+	idx -= INTEL_PMC_IDX_FIXED;
- 	bits <<= (idx * 4);
- 	mask = 0xfULL << (idx * 4);
- 
-@@ -2231,7 +2280,6 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- static void intel_pmu_enable_event(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
--	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 
- 	if (unlikely(hwc->idx == INTEL_PMC_IDX_FIXED_BTS)) {
- 		if (!__this_cpu_read(cpu_hw_events.enabled))
-@@ -2241,23 +2289,15 @@ static void intel_pmu_enable_event(struct perf_event *event)
- 		return;
- 	}
- 
--	if (event->attr.exclude_host)
--		cpuc->intel_ctrl_guest_mask |= (1ull << hwc->idx);
--	if (event->attr.exclude_guest)
--		cpuc->intel_ctrl_host_mask |= (1ull << hwc->idx);
--
--	if (unlikely(event_is_checkpointed(event)))
--		cpuc->intel_cp_status |= (1ull << hwc->idx);
--
- 	if (unlikely(event->attr.precise_ip))
- 		intel_pmu_pebs_enable(event);
- 
- 	if (unlikely(hwc->config_base == MSR_ARCH_PERFMON_FIXED_CTR_CTRL)) {
- 		intel_pmu_enable_fixed(event);
--		return;
-+	} else {
-+		intel_set_masks(event, hwc->idx);
-+		__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
- 	}
--
--	__x86_pmu_enable_event(hwc, ARCH_PERFMON_EVENTSEL_ENABLE);
- }
- 
- static void intel_pmu_add_event(struct perf_event *event)
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index ecacfbf4ebc1..116cfc5c3293 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -356,6 +356,20 @@ struct cpu_hw_events {
- #define FIXED_EVENT_CONSTRAINT(c, n)	\
- 	EVENT_CONSTRAINT(c, (1ULL << (32+n)), FIXED_EVENT_FLAGS)
- 
-+/*
-+ * Special metric counters do not actually exist, but get remapped
-+ * to a combination of FxCtr3 + MSR_PERF_METRICS
-+ *
-+ * This allocates them to a dummy offset for the scheduler.
-+ * This does not allow sharing of multiple users of the same
-+ * metric without multiplexing, even though the hardware supports that
-+ * in principle.
-+ */
-+
-+#define METRIC_EVENT_CONSTRAINT(c, n)						\
-+	EVENT_CONSTRAINT(c, (1ULL << (INTEL_PMC_IDX_FIXED_METRIC_BASE+n)),	\
-+	FIXED_EVENT_FLAGS)
-+
  /*
-  * Constraint on the Event code + UMask
-  */
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index de753206b427..5ebfd97d4ac9 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -798,6 +798,7 @@
- #define MSR_CORE_PERF_FIXED_CTR0	0x00000309
- #define MSR_CORE_PERF_FIXED_CTR1	0x0000030a
- #define MSR_CORE_PERF_FIXED_CTR2	0x0000030b
-+#define MSR_CORE_PERF_FIXED_CTR3	0x0000030c
- #define MSR_CORE_PERF_FIXED_CTR_CTRL	0x0000038d
- #define MSR_CORE_PERF_GLOBAL_STATUS	0x0000038e
- #define MSR_CORE_PERF_GLOBAL_CTRL	0x0000038f
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index eb460b63e07b..31b96e14935b 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -181,6 +181,34 @@ struct x86_pmu_capability {
-  */
- #define INTEL_PMC_IDX_FIXED_BTS				(INTEL_PMC_IDX_FIXED + 15)
+@@ -2305,6 +2353,7 @@ static u64 icl_update_topdown_event(struct perf_event *event)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct perf_event *other;
+ 	u64 slots, metrics;
++	bool reset = true;
+ 	int idx;
  
-+/*
-+ * We model PERF_METRICS as more magic fixed-mode PMCs, one for each metric
-+ *
-+ * Internally they all map to Fixed Ctr 3 (SLOTS), and allocate PERF_METRICS
-+ * as an extra_reg. PERF_METRICS has no own configuration, but we fill in
-+ * the configuration of FxCtr3 to enforce that all the shared users of SLOTS
-+ * have the same configuration.
-+ */
-+#define INTEL_PMC_IDX_FIXED_METRIC_BASE		(INTEL_PMC_IDX_FIXED + 16)
-+#define INTEL_PMC_IDX_TD_RETIRING		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 0)
-+#define INTEL_PMC_IDX_TD_BAD_SPEC		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 1)
-+#define INTEL_PMC_IDX_TD_FE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 2)
-+#define INTEL_PMC_IDX_TD_BE_BOUND		(INTEL_PMC_IDX_FIXED_METRIC_BASE + 3)
-+#define INTEL_PMC_MSK_TOPDOWN			((0xfull << INTEL_PMC_IDX_FIXED_METRIC_BASE) | \
-+						 INTEL_PMC_MSK_FIXED_SLOTS)
+ 	/*
+@@ -2326,26 +2375,46 @@ static u64 icl_update_topdown_event(struct perf_event *event)
+ 		if (!is_topdown_idx(idx))
+ 			continue;
+ 		other = cpuc->events[idx];
+-		__icl_update_topdown_event(other, slots, metrics);
++		__icl_update_topdown_event(other, slots, metrics,
++					   event ? event->hw.saved_slots : 0,
++					   event ? event->hw.saved_metric : 0);
+ 	}
+ 
+ 	/*
+ 	 * Check and update this event, which may have been cleared
+ 	 * in active_mask e.g. x86_pmu_stop()
+ 	 */
+-	if (event && !test_bit(event->hw.idx, cpuc->active_mask))
+-		__icl_update_topdown_event(event, slots, metrics);
++	if (event && !test_bit(event->hw.idx, cpuc->active_mask)) {
++		__icl_update_topdown_event(event, slots, metrics,
++					   event->hw.saved_slots,
++					   event->hw.saved_metric);
+ 
+-	/*
+-	 * To avoid the known issues as below, the PERF_METRICS and
+-	 * Fixed counter 3 are reset for each read.
+-	 * - The 8bit metrics ratio values lose precision when the
+-	 *   measurement period gets longer.
+-	 * - The PERF_METRICS may report wrong value if its delta was
+-	 *   less than 1/255 of Fixed counter 3.
+-	 */
+-	wrmsrl(MSR_PERF_METRICS, 0);
+-	wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
++		/*
++		 * In x86_pmu_stop(), the event is cleared in active_mask first,
++		 * then drain the delta, which indicates context switch for
++		 * counting.
++		 * Save metric and slots for context switch.
++		 * Don't need to reset the PERF_METRICS and Fixed counter 3.
++		 * Because the values will be restored in next schedule in.
++		 */
++		update_saved_topdown_regs(event, slots, metrics);
++		reset = false;
++	}
 +
-+static inline bool is_metric_idx(int idx)
-+{
-+	return (unsigned)(idx - INTEL_PMC_IDX_FIXED_METRIC_BASE) < 4;
-+}
++	if (reset) {
++		/*
++		 * To avoid the known issues as below, the PERF_METRICS and
++		 * Fixed counter 3 are reset for each read.
++		 * - The 8bit metrics ratio values lose precision when the
++		 *   measurement period gets longer.
++		 * - The PERF_METRICS may report wrong value if its delta was
++		 *   less than 1/255 of Fixed counter 3.
++		 */
++		wrmsrl(MSR_PERF_METRICS, 0);
++		wrmsrl(MSR_CORE_PERF_FIXED_CTR3, 0);
++		if (event)
++			update_saved_topdown_regs(event, 0, 0);
++	}
+ 
+ 	return slots;
+ }
+@@ -3538,9 +3607,6 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 			event->attr.config1 = event->hw.config &
+ 					      X86_ALL_EVENT_FLAGS;
+ 			event->hw.flags |= PERF_X86_EVENT_TOPDOWN;
+-
+-			if (is_metric_event(event))
+-				event->hw.flags &= ~PERF_X86_EVENT_RDPMC_ALLOWED;
+ 		}
+ 	}
+ 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 61448c19a132..c125068f2e16 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -133,6 +133,9 @@ struct hw_perf_event {
+ 
+ 			struct hw_perf_event_extra extra_reg;
+ 			struct hw_perf_event_extra branch_reg;
 +
-+static inline bool is_topdown_idx(int idx)
-+{
-+	return is_metric_idx(idx) || idx == INTEL_PMC_IDX_FIXED_SLOTS;
-+}
-+
-+#define INTEL_PMC_OTHER_TOPDOWN_BITS(bit)	(~(0x1ull << bit) & INTEL_PMC_MSK_TOPDOWN)
-+
- #define GLOBAL_STATUS_COND_CHG				BIT_ULL(63)
- #define GLOBAL_STATUS_BUFFER_OVF			BIT_ULL(62)
- #define GLOBAL_STATUS_UNC_OVF				BIT_ULL(61)
++			u64		saved_slots;
++			u64		saved_metric;
+ 		};
+ 		struct { /* software */
+ 			struct hrtimer	hrtimer;
 -- 
 2.17.1
 
