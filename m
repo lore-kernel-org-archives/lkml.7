@@ -2,130 +2,108 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D7C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 958C2C4CEC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E49206C2
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD1621479
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 02:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbfIPCti (ORCPT
+        id S1727663AbfIPCxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 15 Sep 2019 22:49:38 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36611 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727373AbfIPCth (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 15 Sep 2019 22:49:37 -0400
-Received: from callcc.thunk.org (pool-72-93-95-157.bstnma.fios.verizon.net [72.93.95.157])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8G2n5mh000962
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sun, 15 Sep 2019 22:49:06 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id A349E420811; Sun, 15 Sep 2019 22:49:04 -0400 (EDT)
-Date:   Sun, 15 Sep 2019 22:49:04 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Vito Caputo <vcaputo@pengaru.com>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190916024904.GA22035@mit.edu>
-References: <20190911173624.GI2740@mit.edu>
- <20190912034421.GA2085@darwi-home-pc>
- <20190912082530.GA27365@mit.edu>
- <CAHk-=wjyH910+JRBdZf_Y9G54c1M=LBF8NKXB6vJcm9XjLnRfg@mail.gmail.com>
- <20190914150206.GA2270@darwi-home-pc>
- <CAHk-=wjuVT+2oj_U2V94MBVaJdWsbo1RWzy0qXQSMAUnSaQzxw@mail.gmail.com>
- <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
+        Sun, 15 Sep 2019 22:53:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727510AbfIPCxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 15 Sep 2019 22:53:10 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9047EFAC9337E64CF0B9;
+        Mon, 16 Sep 2019 10:53:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 16 Sep
+ 2019 10:53:07 +0800
+Subject: Re: [PATCH] quota: fix wrong condition in is_quota_modification()
+To:     Jan Kara <jack@suse.cz>
+CC:     Jan Kara <jack@suse.com>, <chao@kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190911093650.35329-1-yuchao0@huawei.com>
+ <20190912100610.GA14773@quack2.suse.cz>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <ce4fe030-7ad4-134d-e0c4-77dc2c618b15@huawei.com>
+Date:   Mon, 16 Sep 2019 10:53:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190912100610.GA14773@quack2.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Sep 15, 2019 at 06:48:34PM -0700, Vito Caputo wrote:
-> > A small note here, especially after I've just read the commit log of
-> > 72dbcf721566 ('Revert ext4: "make __ext4_get_inode_loc plug"'), which
-> > unfairly blames systemd there.
-    ...
-> > What blocked the system boot was GDM/gnome-session implicitly calling
-> > getrandom() for the Xorg MIT cookie. This was shown in the strace log
-> > below:
-> > 
-> >    https://lkml.kernel.org/r/20190910173243.GA3992@darwi-home-pc
+On 2019/9/12 18:06, Jan Kara wrote:
+> On Wed 11-09-19 17:36:50, Chao Yu wrote:
+>> Quoted from
+>> commit 3da40c7b0898 ("ext4: only call ext4_truncate when size <= isize")
+>>
+>> " At LSF we decided that if we truncate up from isize we shouldn't trim
+>>   fallocated blocks that were fallocated with KEEP_SIZE and are past the
+>>  new i_size.  This patch fixes ext4 to do this. "
+>>
+>> And generic/092 of fstest have covered this case for long time, however
+>> is_quota_modification() didn't adjust based on that rule, so that in
+>> below condition, we will lose to quota block change:
+>> - fallocate blocks beyond EOF
+>> - remount
+>> - truncate(file_path, file_size)
+>>
+>> Fix it.
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  include/linux/quotaops.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/include/linux/quotaops.h b/include/linux/quotaops.h
+>> index dc905a4ff8d7..bd30acad3a7f 100644
+>> --- a/include/linux/quotaops.h
+>> +++ b/include/linux/quotaops.h
+>> @@ -22,7 +22,7 @@ static inline struct quota_info *sb_dqopt(struct super_block *sb)
+>>  /* i_mutex must being held */
+>>  static inline bool is_quota_modification(struct inode *inode, struct iattr *ia)
+>>  {
+>> -	return (ia->ia_valid & ATTR_SIZE && ia->ia_size != inode->i_size) ||
+>> +	return (ia->ia_valid & ATTR_SIZE && ia->ia_size <= inode->i_size) ||
+>>  		(ia->ia_valid & ATTR_UID && !uid_eq(ia->ia_uid, inode->i_uid)) ||
+>>  		(ia->ia_valid & ATTR_GID && !gid_eq(ia->ia_gid, inode->i_gid));
+>>  }
+> 
+> OK, but your change makes i_size extension not to be quota modification
 
-Yes, that's correct, this isn't really systemd's fault.  It's a
-combination of GDM/gnome-session stupidly using MIT Magic Cookie at
-*all* (it was a bad idea 30 years ago, and it's a bad idea in 2019),
-GDM/gnome-session using getrandom(2) at all; it should have just stuck
-with /dev/urandom, or heck just used random_r(3) since when we're
-talking about MIT Magic Cookie, there's no real security *anyway*.
+I just try to adapt below rules covered with generic/092, which restrict to not
+trim preallocate blocks beyond i_size, in that case, filesystem won't change
+i_blocks.
 
-It's also a combination of the hardware used by this particular user,
-the init scripts in use that were probably not generating enough read
-requests compared to other distributions (ironically, distributions
-and init systems that try the hardest to accelerate the boot make this
-problem worse by reducing the entropy that can be harvested from I/O).
-And then when we optimzied ext4 so it would be more efficient, that
-tipped this particular user over the edge.
+1) truncate(i_size) will trim all blocks past i_size.
+2) truncate(x) where x > i_size will not trim all blocks past i_size.
 
-Linus might not have liked my proposal to disable the optimization if
-the CRNG isn't optimized, but ultimately this problem *has* gotten
-worse because we've optimized things more.  So to the extent that
-systemd has made systems boot faster, you could call that systemd's
-"fault" --- just as Linus reverting ext4's performance optimization is
-ssaying that it's ext4 "fault" because we had the temerity to try to
-make the file system be more efficient, and hence, reduce entropy that
-can be collected.
+However, I'm okay with your change, because there could be filesystems won't
+follow above rule.
 
+Thanks,
 
-Ultimately, though, the person who touches this last is whose "fault"
-it is.  And the problem is because it really is a no-win situation
-here.  No matter *what* we do, it's going to either (a) make some
-systems insecure, or (b) make some systems more likely hang while
-booting.  Whether you consider the risk of (a) or (b) to be worse is
-ultimately going to cause you to say that people of the contrary
-opinion are either "being reckless with system security", or
-"incompetent at system design".
-
-And really, it's all going to depend on how the Linux kernel is being
-used.  The fact that Linux is being used in IOT devices, mobile
-handsets, desktops, servers running in VM's, user desktops, etc.,
-means that there will be some situations where blocking is going to be
-terrible, and some situations where a failure to provide system
-security could result in risking someone's life, health, or mission
-failure in some critical system.
-
-That's why this discussion can easily get toxic.  If you are only
-focusing on one part of Linux market, then obviously *you* are the
-only sane one, and everyone *else* who disagrees with you must be
-incompetent.  When, perhaps, they may simply be focusing on a
-different part of the ecosystem where Linux is used.
-
-> So did systemd-random-seed instead drain what little entropy there was
-> before GDM started, increasing the likelihood a subsequent getrandom()
-> call would block?
-
-No.  Getrandom(2) uses the new CRNG, which is either initialized, or
-it's not.  Once it's initialized, it won't block again ever.
-
-     	   	     		     	   - Ted
+> which is IMO wrong. So I think the condition should just be:
+> 
+> 	return (ia->ia_valid & ATTR_SIZE) || ...
+> 
+> I'll fix the patch up and pull it into my tree.
+> 
+> 									Honza
+> 
