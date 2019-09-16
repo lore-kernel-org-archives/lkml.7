@@ -2,106 +2,130 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A255C4CECD
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58390C49ED7
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A0321881
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:37:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wjcwn0bY"
+	by mail.kernel.org (Postfix) with ESMTP id 295FD214D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 16:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568652029;
+	bh=nAd7VWDdh6f8BChag+MS/I8GI49oB6sxV0473vFpljo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ogGfSlI5qh6eq7Oab3nW9V0C3bBhyhgWeWpUS4qXxSmqergvRX7RIIJKejXdA7lhC
+	 l0hLDwog0uuIfpY1xT0BhVB8SdFhafsg/z7aVwP6rj+43erkG0lh8zB63gYSpLacTX
+	 PelE8hGb4fAjmRAf6vhuuGTc3dpMqtoBDtVbdpic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390042AbfIPQh3 (ORCPT
+        id S2390046AbfIPQk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 12:37:29 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40729 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbfIPQh3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 12:37:29 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b24so53415wmj.5;
-        Mon, 16 Sep 2019 09:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5GSLRtaWXP5trJhqVOplw/3NUbMs67XKaj1GvOZOB7Y=;
-        b=Wjcwn0bYH1NkN6RT5L8bAJuVTizoUSFL2YFRKqCKCmSD5HiQoZTg+VC9QMz2gRCp7+
-         1UNydDzMTvaoUs8OU7IMPPcuchD1IhtJhnCY2eDt+96Bum4e5Rd1IRBbQsTNE1tvMV1q
-         FTUlb9lbj4JWDlKAc5vf/SEpJCPsweWcQpCmShH1Kb+xkCp3KKcZhgw89WAyYfq7/CQx
-         W6xgPUrGbY0r0D7hhskHA8GqNv/EtHcugI6HfQ7tEAUmwxQjuRgvZxz5DUGZkg8VxhJM
-         ER61Iu6ZYtIS4i2kp+H4EtbvoggSB9SIGJurXd85S9eaDLT/2fSzHqZlgbYk39jZbbJP
-         fzJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5GSLRtaWXP5trJhqVOplw/3NUbMs67XKaj1GvOZOB7Y=;
-        b=jH/HSQkdgSMapanfiNtYu98W5OLgNUIaHmtg304wpmlYY5m8cv0OVq06MdYi54C6DD
-         fY5qZSq/7dS+NvBEYjyBpuEKhFkpSQ3QiTUwHebrfCXhrBhhrLotiN77zrAvPdfkM5XC
-         iPLiCyK93Zii7Xl9kITugXIKFg3iXOhxQJp5h1SrlHpZ7DS8AKNVMfgoVv7ZrZ+hJZHz
-         FFG4EfuBQAYibLU7SBMS7JRiLKNUrYbMf1Sg2Jy4OAM/oCxe1aLh2xNm4pCZ37J8sNcF
-         +n9fqk/S5284vngAran+DUJ1l/qYAWGva/opofdvAHK4/FgsKJrfmzlZ/2Ta7ZZ/CT0L
-         ZIlA==
-X-Gm-Message-State: APjAAAWqPr9IK6SnGvRx4kVbZA0MTy2sSaXC0nfGOuzK/SsoDoLfEfuV
-        t6/yiCUKUH/AHisJ1pq3e5PpIgHUUpEkBwr5F6I=
-X-Google-Smtp-Source: APXvYqzA+3qCVXj4SPQHZUzSNPHIKuJNpnJe+OL9j20Ou/1YJskceQAFv7l87MBB9gRCRvkGgnlPsye9L1/vGj+W0cc=
-X-Received: by 2002:a1c:1d4:: with SMTP id 203mr73764wmb.104.1568651846964;
- Mon, 16 Sep 2019 09:37:26 -0700 (PDT)
+        Mon, 16 Sep 2019 12:40:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727050AbfIPQk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 12:40:28 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E5FD214D9;
+        Mon, 16 Sep 2019 16:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568652027;
+        bh=nAd7VWDdh6f8BChag+MS/I8GI49oB6sxV0473vFpljo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=avjDOL511fCSVE5gWNJexazlOhs/NWuc/7zVIta8BrPBFbm2E+9MDOQtAN0FPjZuJ
+         6cBfHv1btdr6Zaqo3ZHfcDs7AyE6RH82ZJOEYlevb2TRG7HMPWX3ybPY5sGg840BFJ
+         SWGxTzkhaAmxtUIr0fs8YsiA76Q31Ilvm2vPe7hg=
+Subject: Re: [PATCH 3/6] selftests/clone3: use uint64_t for flags parameter
+To:     Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        linux-kselftest@vger.kernel.org
+Cc:     Adrian Reber <areber@redhat.com>, shuah <shuah@kernel.org>
+References: <cover.1568116761.git.esyr@redhat.com>
+ <3f7bd9f0446360f90f12b9e9d3af1de2f5133a81.1568116761.git.esyr@redhat.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <1b15fe21-76d9-a858-08a8-02e19afc6b11@kernel.org>
+Date:   Mon, 16 Sep 2019 10:40:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20190916134029.GF4352@sirena.co.uk>
-In-Reply-To: <20190916134029.GF4352@sirena.co.uk>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Mon, 16 Sep 2019 18:37:15 +0200
-Message-ID: <CAFLxGvwZPBg7834aq4rqJyxMNCkNThPa2hGuwuuzpxYkHiQN7Q@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the vfs tree with the ubifs tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Wenwen Wang <wenwen@cs.uga.edu>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linux-mtd@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <3f7bd9f0446360f90f12b9e9d3af1de2f5133a81.1568116761.git.esyr@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 3:40 PM Mark Brown <broonie@kernel.org> wrote:
->
-> Hi all,
->
-> Today's linux-next merge of the vfs tree got a conflict in:
->
->   fs/ubifs/super.c
->
-> between commit:
->
->   9163e0184bd7d5f ("ubifs: Fix memory leak bug in alloc_ubifs_info() error path")
->
-> from the ubifs tree and commit:
->
->   50d7aad57710e2b ("vfs: Convert ubifs to use the new mount API")
->
-> from the vfs tree.
->
-> I fixed it up dropping the ubifs change and can carry the fix as
-> necessary. This is now fixed as far as linux-next is concerned, but any
-> non trivial conflicts should be mentioned to your upstream maintainer
-> when your tree is submitted for merging.  You may also want to consider
-> cooperating with the maintainer of the conflicting tree to minimise any
-> particularly complex conflicts.
+On 9/10/19 6:03 AM, Eugene Syromiatnikov wrote:
+> Flags parameter in both userspace and kernel clone args is 64-bit wide,
+> there's little reason to have it signed and 32-bit in tests.
+> 
 
-Thanks a lot for letting me know!
+So what are doing? You are stating the problem here, how are you
+fixing it?
 
--- 
-Thanks,
-//richard
+> * tools/testing/selftests/clone3/clone3.c: Include <inttypes.h> and
+> <stdint.h>.
+> (call_clone3): Change flags parameter type from int to uint64_t.
+> (test_clone3): Change flags parameter type from int to uint64_t; change
+> the format string that prints it accordingly.
+> 
+
+I am not going to say this again. Please don't include pseudo code in
+the commit log.
+
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> ---
+>   tools/testing/selftests/clone3/clone3.c | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+> index 4f23a0c..1746a9b 100644
+> --- a/tools/testing/selftests/clone3/clone3.c
+> +++ b/tools/testing/selftests/clone3/clone3.c
+> @@ -4,8 +4,10 @@
+>   
+>   #define _GNU_SOURCE
+>   #include <errno.h>
+> +#include <inttypes.h>
+>   #include <linux/types.h>
+>   #include <linux/sched.h>
+> +#include <stdint.h>
+>   #include <stdio.h>
+>   #include <stdlib.h>
+>   #include <sys/syscall.h>
+> @@ -36,7 +38,7 @@ static pid_t raw_clone(struct clone_args *args, size_t size)
+>   	return syscall(__NR_clone3, args, size);
+>   }
+>   
+> -static int call_clone3(int flags, size_t size, enum test_mode test_mode)
+> +static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
+>   {
+>   	struct clone_args args = {0};
+>   	pid_t ppid = -1;
+> @@ -102,12 +104,13 @@ static int call_clone3(int flags, size_t size, enum test_mode test_mode)
+>   	return 0;
+>   }
+>   
+> -static int test_clone3(int flags, size_t size, int expected,
+> +static int test_clone3(uint64_t flags, size_t size, int expected,
+>   		       enum test_mode test_mode)
+>   {
+>   	int ret;
+>   
+> -	ksft_print_msg("[%d] Trying clone3() with flags 0x%x (size %d)\n",
+> +	ksft_print_msg("[%d] Trying clone3() with flags %#" PRIx64 " (size %d)"
+> +			"\n",
+>   			getpid(), flags, size);
+>   	ret = call_clone3(flags, size, test_mode);
+>   	ksft_print_msg("[%d] clone3() with flags says :%d expected %d\n",
+> 
+
+thanks,
+-- Shuah
