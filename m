@@ -2,99 +2,185 @@ Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416F7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABFE0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1442D206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 797AE206A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 20:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="hVMA8BWM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8Vzfxsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391281AbfIPUSI (ORCPT
+        id S2391296AbfIPUST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 16:18:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:30184 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbfIPUSH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 16:18:07 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46XHcG4XQtz9v0sm;
-        Mon, 16 Sep 2019 22:18:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=hVMA8BWM; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PiOu49LYUBUM; Mon, 16 Sep 2019 22:18:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46XHcG3Kwbz9v0sl;
-        Mon, 16 Sep 2019 22:18:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568665086; bh=Oc7QqPHRv6G+INGV1Il1EHOkAwSu+426AB7PrqORGOw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hVMA8BWMLx4Af6rO3TbEdlG8FAACNgino3PlfsJ6UbnnHqfodpDS47p3L0wv3bzdJ
-         tWtTahLLvFF6DpMJ83xBvrK5i+bBzzrw5R41KVE6wA4+HCKiDHnmJzGq9SUIkd5x4A
-         76snh5V+b6gSdxZ9XPoYKfvLqkGwS1tQfaUSxlYU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 768C28B847;
-        Mon, 16 Sep 2019 22:18:06 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id t6Ds54bdJKMc; Mon, 16 Sep 2019 22:18:06 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E00FE8B841;
-        Mon, 16 Sep 2019 22:18:05 +0200 (CEST)
-Subject: Re: [PATCH v2 2/2] powerpc/83xx: map IMMR with a BAT.
-To:     Scott Wood <oss@buserror.net>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        galak@kernel.crashing.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <966e6d6a226f9786098d296239a6c65064e73a41.1568616151.git.christophe.leroy@c-s.fr>
- <7f8f9747ef1ab2e1261cf83b03c1da321d47f7b7.1568616151.git.christophe.leroy@c-s.fr>
- <71490f3b94b851106eb48c8909239f401d0018d1.camel@buserror.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <faa12987-1c3d-b554-de03-cb1be34112ad@c-s.fr>
-Date:   Mon, 16 Sep 2019 22:18:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 16 Sep 2019 16:18:19 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38610 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728003AbfIPUST (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 16:18:19 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so773078wrx.5;
+        Mon, 16 Sep 2019 13:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xelTtxQZNwUHjKI4djBQXcsmyeU/4Lfzkk0E8IqczKA=;
+        b=L8VzfxsqHQ8LcrCqNVEWoPzMvYKROKLYU/J8tGhPijGQhyCO9BBrfr72WIL9HPeYwo
+         qzFAjUFT7z/91no63Cf2rMMHKb7zFTsFbRqpNvqB1iUnnHW/5pzllQFBru36mL252oXZ
+         dGe6+ifSvDtuKPvrX097jah+28NzIZMeATbwTYreHA+y4IsDo/j1F1ZcHMn2uu6A03eR
+         ++RamHOyCNdpDt7w0ypnhrtSuoxCdowILD+EiH0kvOYAcX1rHrflzwMNd8Lna/LdDmMV
+         93Wo4+14Hv3UPtTxxnUL7uDnZ6+ZsqYPdp4uB4HlR4+H1YS9QXiFMFq1oERMGJzSuSss
+         fn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=xelTtxQZNwUHjKI4djBQXcsmyeU/4Lfzkk0E8IqczKA=;
+        b=Dxl5Plz1YAwG+a8TnnsH9L6InfoxJNjr4l+B5dSLDq0ApnJJTAkNUYQWmsIZjQmtuM
+         jKHoVjCSvnMZMeyrJrcxi2W17Tg+zc3g2N3EBlDh7TpaSO+2/JiCVChf9m4oXda/KL7p
+         e9qDDgu8CAPqOrKpWjEZjnjpreGN2pIdzCCprVn4mQajwXVh/gBaR6Rxj+eQsMgXeNTA
+         OfrSSOkXg+WQsXkdNESUAS3unvS8Mxd4VzM7pJVcqCoxmzG5/R/gC2uKryf6QecQ5S5B
+         lTfzNuO5y39/LIKoTvj7UKuMZwja3peqerWuhmQvM3+tFIQplanKKvrYJ4GKOohCLSGi
+         4GAA==
+X-Gm-Message-State: APjAAAUTmni1Owi5TVkFoUNwRtnhErxmHvM6hV/+xSiKKh4XZucmx9Ul
+        Aah6HcMneMfWhx2btdqMnSYcxYQ3
+X-Google-Smtp-Source: APXvYqz35KSANFy1K7cjmog1aUsHShUSOPyVP5JNXlDOsnGpAKbSxjaYZmR2blryXIRlNualQROPcQ==
+X-Received: by 2002:a5d:5403:: with SMTP id g3mr121808wrv.338.1568665096013;
+        Mon, 16 Sep 2019 13:18:16 -0700 (PDT)
+Received: from [192.168.1.19] (bgp90.neoplus.adsl.tpnet.pl. [83.28.79.90])
+        by smtp.gmail.com with ESMTPSA id n17sm7835wrp.37.2019.09.16.13.18.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 13:18:15 -0700 (PDT)
+Subject: Re: [PATCH v5 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     robh+dt@kernel.org, linux-leds@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190911180115.21035-1-dmurphy@ti.com>
+ <20190911180115.21035-7-dmurphy@ti.com>
+ <2bfd27cf-6703-48b8-be82-9b36066ef2ed@gmail.com>
+ <edc6aa22-3a9a-2a99-ccca-1bd3bf07f04b@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <43f810ed-f477-1c8e-5f96-ba2c5ef824eb@gmail.com>
+Date:   Mon, 16 Sep 2019 22:18:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <71490f3b94b851106eb48c8909239f401d0018d1.camel@buserror.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <edc6aa22-3a9a-2a99-ccca-1bd3bf07f04b@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 16/09/2019 à 17:04, Scott Wood a écrit :
-> On Mon, 2019-09-16 at 06:42 +0000, Christophe Leroy wrote:
->> @@ -145,6 +147,15 @@ void __init mpc83xx_setup_arch(void)
->>   	if (ppc_md.progress)
->>   		ppc_md.progress("mpc83xx_setup_arch()", 0);
->>   
->> +	if (!__map_without_bats) {
->> +		phys_addr_t immrbase = get_immrbase();
->> +		int immrsize = IS_ALIGNED(immrbase, SZ_2M) ? SZ_2M : SZ_1M;
->> +		unsigned long va = __fix_to_virt(FIX_IMMR_BASE);
+On 9/16/19 8:34 PM, Dan Murphy wrote:
+> Jacek
 > 
-> Why __fix_to_virt() and not fix_to_virt()?
+> On 9/15/19 11:20 AM, Jacek Anaszewski wrote:
+>>
+>>> +
+>>> +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
+>>> +                     struct led_classdev_mc *mcled_cdev,
+>>> +                     int color_id, int color_index)
+>>> +{
+>>> +    struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+>>> +    struct led_classdev_mc_priv *mc_priv;
+>>> +    int ret;
+>>> +
+>>> +    mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv),
+>>> GFP_KERNEL);
+>>> +    if (!mc_priv)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    mc_priv->led_color_id = color_id;
+>>> +    mc_priv->mcled_cdev = mcled_cdev;
+>>> +
+>>> +    data->led_kobj = kobject_create_and_add(led_colors[color_id],
+>>> +                        data->color_kobj);
+>> No change here since previous version? What prevents you from following
+>> what has been done for drivers/usb/core/ledtrig-usbport.c?
+>>
+>> Use sysfs_create_group() for creating color dir
+>> and sysfs_add_file_to_group() for adding files to it.
 > 
+> We have nested directories here.  colors is a directory and then the LED
+> color is a directory.
+> 
+> So I am not sure how to create a group under another group without the
+> colors directory kobj.
+> 
+> Wondering if you know of any examples?
 
-Euh ... because I copy/pasted it from 
-/arch/powerpc/include/asm/nohash/32/mmu-8xx.h
+Hmm, that indeed seems not to be allowed. kobject_create_and_add()
+seems to be the only solution to achieve nested directories.
+Nonetheless we will have to first justify the need for that to Greg.
 
-But yes I can do fix_to_virt() instead.
-
-Christophe
+-- 
+Best regards,
+Jacek Anaszewski
