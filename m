@@ -2,106 +2,119 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_LOCAL_NOVOWEL,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C2BC4CED0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B56EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64BE4218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:56:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568746587;
-	bh=mbODalGRNQoWNnowm2tS1pcY2EbwBFAWll84phPGxbA=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=uKZPesjjq9CfldNQ5PH9F+X4FxM40fkVVtlupLKQ+pIIJvypTjz80g1PVv6WF2VGk
-	 m6xUNaw6ytoyO5qbbzDBNjJoyBQb+4YqjuiBhnrqY2oQn7Ryrf//fc3PIXgHQKal28
-	 BOYjpDk01JAquDe4Z0MkvxtqFDN0VRNwdmkvO+ZY=
+	by mail.kernel.org (Postfix) with ESMTP id 6EDF5214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:59:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NbK2DVn9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbfIQS40 (ORCPT
+        id S1729732AbfIQS7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:56:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725927AbfIQS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:56:26 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A4A8214AF;
-        Tue, 17 Sep 2019 18:56:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568746585;
-        bh=mbODalGRNQoWNnowm2tS1pcY2EbwBFAWll84phPGxbA=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=X2afMEBspYqrVXT0KNPzGo8hs6SqE7bnObaYtDnvMs7z38QOJlK4gbKabuaAqCbOP
-         ECW6wcm77plYCjJXgCBwwyyI+0OSQOARJZVVveEUXUP3MPVeTbryP4q99Pt9Jmw6Ld
-         HKuDFOJ+H+7HjkuwaGkz3B4DI6P4W2cia6BT6KaQ=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
-References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org> <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joerg Roedel <joro@8bytes.org>
-To:     Jordan Crouse <jcrouse@codeaurora.org>,
-        freedreno@lists.freedesktop.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/7] dt-bindings: arm-smmu: Add Adreno GPU variant
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 11:56:24 -0700
-Message-Id: <20190917185625.8A4A8214AF@mail.kernel.org>
+        Tue, 17 Sep 2019 14:59:22 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46916 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfIQS7W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:59:22 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t8so3687386lfc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 11:59:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=dyuKhmzoMsbtM5H85infDrEkbEV6Ixbxarte1ObFGk0=;
+        b=NbK2DVn9q0mEgbm8RATY4iFGicQZh6cH/8s2X7tkuc9lJBv9VJ0pNcIRn0IkEkJRJx
+         ZGIOyg97bX+/DzoRKZvT2QMMqdrOG4/Dwp9QdWL2YAP2UfU6GnbVurqn50CEW01rYQKg
+         ycaYqsUJHN8A733YK0OfgV5gaVv1YgjcEgqKyHT333ouFyXPVfP+/WGuENSz49XA/JXw
+         Vy14qr3QQzmXdu+ZStFOzbL2rvhVHqU2vqTAZ6+8Eg8iZ0mqonaycTybwtgNxY3znHrv
+         GMTpqwvLB2JfKZGCNFakt7kIMZbamj2RmQisIfEsgL/zmCAwz2tBraCyCWoaR096eFIC
+         PzNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dyuKhmzoMsbtM5H85infDrEkbEV6Ixbxarte1ObFGk0=;
+        b=NQSr5/K0Xkel3WeN7WCrUjovweb3RWLXl3G7hptc+B55KduCcux2nIeL636syz3/pG
+         q6krH/Cn2YBfQU3p0rS+Q98HKbgjSuQskw/V8OvnC6SPyfjCBkyjw69Qx5n0GiJfbVR/
+         pep5OjMZ6RmPhWWsQPldli75FOQh9V30c/E9uiefc2OhBe9jbcXSKrwMBPjZTjiFSBmZ
+         VWTNBva7seCO/ciaojZoztRzy/Etzs76o7lXPQUTlVjIZYsk4+pn3wjx8cPmuNomMo5p
+         FSjnYvZQplI848q3Zl0xjS8fH/6F9a8YE2ucEnDWKiBjrvP5AnYMXoOiTtBla+vZ609R
+         phew==
+X-Gm-Message-State: APjAAAWxJlx9y/XY+Rf5/KZ3vpMYE5yt+y7+Hb9aVgWk5Qso7kQt2OS4
+        FmU6QoOOK+GYJ0C2RBNDGl4=
+X-Google-Smtp-Source: APXvYqxnNzrUX1SZAZFrr7uID+PtmazTg1aQvfYAbQBTc0mmMkg6V3GJEaMkr20MOcTljLg9GIOjvg==
+X-Received: by 2002:ac2:491a:: with SMTP id n26mr2937567lfi.182.1568746760346;
+        Tue, 17 Sep 2019 11:59:20 -0700 (PDT)
+Received: from octofox.hsd1.ca.comcast.net. (jcmvbkbc-1-pt.tunnel.tserv24.sto1.ipv6.he.net. [2001:470:27:1fa::2])
+        by smtp.gmail.com with ESMTPSA id 6sm573038lfa.24.2019.09.17.11.59.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 11:59:19 -0700 (PDT)
+From:   Max Filippov <jcmvbkbc@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Subject: [PULL 0/4] xtensa updates for v5.4
+Date:   Tue, 17 Sep 2019 11:59:05 -0700
+Message-Id: <20190917185905.2761-1-jcmvbkbc@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jordan Crouse (2019-08-20 12:06:27)
-> Add a compatible string to identify SMMUs that are attached
-> to Adreno GPU devices that wish to support split pagetables.
->=20
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->=20
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Docum=
-entation/devicetree/bindings/iommu/arm,smmu.txt
-> index 3133f3b..3b07896 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -18,6 +18,7 @@ conditions.
->                          "arm,mmu-500"
->                          "cavium,smmu-v2"
->                          "qcom,smmu-v2"
-> +                       "qcom,adreno-smmu-v2"
+Hi Linus,
 
-Is the tabbing weird here or just my MUA is failing?
+please pull the following batch of updates for the Xtensa architecture:
 
-> =20
->                    depending on the particular implementation and/or the
->                    version of the architecture implemented.
-> @@ -31,6 +32,12 @@ conditions.
->                    as below, SoC-specific compatibles:
->                    "qcom,sdm845-smmu-500", "arm,mmu-500"
-> =20
-> +                 "qcom,adreno-smmu-v2" is a special implementation for
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-Heh, special.
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
 
-> +                 SMMU devices attached to the Adreno GPU on Qcom devices.
-> +                 If selected, this will enable split pagetable (TTBR1)
+are available in the git repository at:
 
-Is this selected? Sounds like Kconfig here.
+  git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190917
 
-> +                 support. Only use this if the GPU target is capable of
-> +                 supporting 64 bit addresses.
-> +
->  - reg           : Base address and size of the SMMU.
-> =20
+for you to fetch changes up to 982792f45894878b9ec13df81e6e02209b34cb11:
+
+  xtensa: virt: move PCI root complex to KIO range (2019-09-02 00:09:30 -0700)
+
+----------------------------------------------------------------
+Xtensa updates for v5.4:
+
+- add support for xtensa call0 ABI in userspace;
+- update xtensa virt board DTS for PCI root complex in KIO range;
+- remove free_initrd_mem.
+
+----------------------------------------------------------------
+Max Filippov (3):
+      xtensa: clean up PS_WOE_BIT usage
+      xtensa: add support for call0 ABI in userspace
+      xtensa: virt: move PCI root complex to KIO range
+
+Mike Rapoport (1):
+      xtensa: remove free_initrd_mem
+
+ arch/xtensa/Kconfig                 | 48 +++++++++++++++++++++++++++++++++++++
+ arch/xtensa/boot/dts/virt.dts       |  8 +++----
+ arch/xtensa/include/asm/io.h        |  1 +
+ arch/xtensa/include/asm/processor.h | 11 +++++++--
+ arch/xtensa/include/asm/regs.h      |  1 +
+ arch/xtensa/kernel/entry.S          | 42 ++++++++++++++++++++++++++++----
+ arch/xtensa/kernel/head.S           |  2 +-
+ arch/xtensa/kernel/setup.c          |  9 +++----
+ arch/xtensa/kernel/signal.c         | 26 +++++++++++++-------
+ arch/xtensa/kernel/stacktrace.c     |  5 ++++
+ arch/xtensa/kernel/traps.c          |  4 ++++
+ arch/xtensa/mm/init.c               | 10 --------
+ 12 files changed, 132 insertions(+), 35 deletions(-)
+
+-- 
+Thanks.
+-- Max
