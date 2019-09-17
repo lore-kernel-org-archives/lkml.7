@@ -2,131 +2,89 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.3 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FF2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BF6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B068A206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:17:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F32206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:21:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QLYvEZO4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOlgfWqQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbfIQQRH (ORCPT
+        id S1726738AbfIQQVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:17:07 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:54722 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfIQQRG (ORCPT
+        Tue, 17 Sep 2019 12:21:08 -0400
+Received: from mail-pg1-f172.google.com ([209.85.215.172]:41097 "EHLO
+        mail-pg1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726059AbfIQQVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:17:06 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH5m5051925;
-        Tue, 17 Sep 2019 11:17:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568737025;
-        bh=WbAHk/bYtnH2mwW0/tGEvTI0+nk2woFFg905dMFbxXE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=QLYvEZO4gYfDUfS0YykpBlhIjQ/Je2AHOxa/eS+/XRlWAkedI59uvgKHg/LiNNNaC
-         iaNr/3ibbEIz1/hlyhPeytd515EANhhfBVeRlOvZvbWO29ztciQsROGJzJ7cSZp9uU
-         7ADruy6SkYPp3719J9qh9xedG2mlX9PVUzaYZbjw=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH5G8068621;
-        Tue, 17 Sep 2019 11:17:05 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
- Sep 2019 11:17:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 17 Sep 2019 11:17:02 -0500
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH4Sq084606;
-        Tue, 17 Sep 2019 11:17:04 -0500
-Date:   Tue, 17 Sep 2019 11:19:11 -0500
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch 07/13] media: am437x-vpfe: Use a per instance format
- array instead of a static one
-Message-ID: <20190917161911.tldspiynarmxd4ky@ti.com>
-References: <20190909162743.30114-1-bparrot@ti.com>
- <20190909162743.30114-8-bparrot@ti.com>
- <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
+        Tue, 17 Sep 2019 12:21:07 -0400
+Received: by mail-pg1-f172.google.com with SMTP id x15so2278132pgg.8;
+        Tue, 17 Sep 2019 09:21:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=NCOl4aNg2JXCgak1io+lJcKczvWl3tjttSd25dm7D0A=;
+        b=oOlgfWqQ4IYViSiWiefP0ouH7rCalamb6bQFiuOqq2EoB//enTmMmqKRxDSExIiHBX
+         hcn1YAyBATeZwp9lphdEHPV8i7V4vaIUrpELr123xp/X+WH69MLb5e33mJ2vopa7RudS
+         6uaxotpV9J3nBtUouEt3thGlsIQVburEk8avlTJGq7vKgl21+TJbf0IkAVOsjh2nucWQ
+         zO7IHsTnSRzBIHwv/ab48p24oeeM6KFjfTxtwpJQ8AzkfcugeSOhOUkXTGfwXzhxbrd2
+         TJec+DwJFAHhRcgakT+kX+BgdBjH+5m/9Kt4opLdRJQEzJtjl7cS8FKJ6D6QvgYQS979
+         IjVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=NCOl4aNg2JXCgak1io+lJcKczvWl3tjttSd25dm7D0A=;
+        b=uWD2+7Ui5EEiVaX5cWjqKdxS64GJwQkXVbkTuie5BKcrmN1kn0QSe3jdA2yPSv1pl3
+         DQtz3V+pH/z5IEGhYVvT1Q7I7NseMLuoNd3Aw2hwjItmK9nnepx4zKLvKfXxON+Bk4xH
+         RbeIZ/2rU7ZAdLvzz7E5VbtuMP1VOpIUBPwFs4zMI96YyQS6ZF8I/8iL7vjFth6zmbao
+         xnkTD3Ms9AUpeLYWwXZn13uxP4G/7+28bVFRUaHzw4J1tId3yc23VMGdML/OrY5LjBXv
+         X4KXA2VNfkVlmieOQgRcYcd2pSyEFGQ1UEg70I6Fd5v0nCCiy4f1cumkdVpFDpBlS7KZ
+         HV0g==
+X-Gm-Message-State: APjAAAWt6GrkfQZGn9MoQntDF9hun2CQthO3QGhenPvGC56/WN+hxVnC
+        1xTES5/ioVJtNH0esTKwPVc=
+X-Google-Smtp-Source: APXvYqz+Yigq2Mnhew0hEmbFGlslf4RIt+lyh8bqnqLC6d8CpbsVFRHiPV3am+SGiWapkUTwxKHLhg==
+X-Received: by 2002:a17:90a:7782:: with SMTP id v2mr5582891pjk.3.1568737266388;
+        Tue, 17 Sep 2019 09:21:06 -0700 (PDT)
+Received: from SD ([106.222.12.103])
+        by smtp.gmail.com with ESMTPSA id l7sm7975529pga.92.2019.09.17.09.21.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 09:21:05 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 21:50:46 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [1/3] i2c: qup: remove explicit conversion to boolean
+Message-ID: <20190917162046.GA5388@SD>
+References: <20190916185738.GA14035@SD>
+ <b5f63a71-6f6f-eea5-2283-6b5df22b267a@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <b5f63a71-6f6f-eea5-2283-6b5df22b267a@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:07:29 +0200]:
-> On 9/9/19 6:27 PM, Benoit Parrot wrote:
-> > +/*
-> > + * This value needs to be at least as large as the number of entry in
-> > + * formats[].
-> > + * When formats[] is modified make sure to adjust this value also.
-> > + */
-> > +#define VPFE_MAX_ACTIVE_FMT	10
+On Tue, Sep 17, 2019 at 05:07:29PM +0200, Markus Elfring wrote:
+> > Found using - Coccinelle (http://coccinelle.lip6.fr)
 > 
-> I recommend adding something like:
-> 
-> #if ARRAY_SIZE(formats) > VPFE_MAX_ACTIVE_FMT
-> 	#error must update VPFE_MAX_ACTIVE_FMT
-> #endif
-> 
-> to am437x-vpfe.c.
-> 
-> Or something along those lines. Don't rely on just the comment :-)
+> Can a tag like “Generated by: scripts/coccinelle/misc/boolconv.cocci”
+> be more helpful for this change description?
 
-I remeber doing this a while back for another driver.
-Not sure if you ever treid this or not but "#if ARRAY_SIZE()" construct
-does not work because the ARRAY_SIZE() macro which needs to evaluate
-sizeof() generates the following compiler error:
+Yes, will do.
 
-In file included from ../include/linux/delay.h:22,
-                 from ../drivers/media/platform/am437x/am437x-vpfe.c:23:
-../include/linux/kernel.h:47:26: warning: "sizeof" is not defined,
-evaluates to 0 [-Wundef]
- #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) +
-                          __must_be_array(arr))
-
-So no luck there. But I remembered also how I previously fixed it.
-In this case if instead of leaving the formats[] definition with empty
-brackets you actually used the same defined value like
-formats[VPFE_MAX_ACTIVE_FMT] then if you inadvertantly add more enties in
-the table then the value of VPFE_MAX_ACTIVE_FMT then you'll get series of
-compile time warnings like this:
-
-drivers/media/platform/am437x/am437x-vpfe.c:108:5: warning: excess elements
-in array initializer
-  }, {
-     ^
-drivers/media/platform/am437x/am437x-vpfe.c:108:5: note: (near initialization
-for ‘formats’)
-drivers/media/platform/am437x/am437x-vpfe.c:115:5: warning: excess elements
-in array initializer
-  }, {
-
-etc...
-
-So this is how I will address this.
-
-Benoit
-
-> 
-> Regards,
-> 
-> 	Hans
-> 
+-Saiyam
