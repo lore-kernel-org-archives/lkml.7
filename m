@@ -2,104 +2,89 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C301C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C43C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEBF42171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:53:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1pFlI5o2"
+	by mail.kernel.org (Postfix) with ESMTP id 398282171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568728463;
+	bh=Zy1gyPFQR5tH17NOVpzMpdx44iyBjVu4jKrnFZKxcoQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lmgEhKbzEBTTvY8Tb3xzetNCohzMsWyKTp0SM0tp5wib/S/n06jsXNa8uByamyN7M
+	 sP/UYmg59LCcUElrzGVAbpda+9B+wC79pP/wiyP1KJCvSVNVrKD0SVvZMG0quTZHPJ
+	 AW4+pYyxZRGq4cuN4yOIzkZ25DFUNPt52OyEDGS4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726151AbfIQNwq (ORCPT
+        id S1726234AbfIQNxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:52:46 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39176 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725773AbfIQNwR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:52:17 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HDfoKU019778;
-        Tue, 17 Sep 2019 15:52:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=aUuRSQwIFPiGfsmi4Vym/gWuxjE0wuSWUtUhECjq8Vc=;
- b=1pFlI5o2/+K+HEBbhT3MPTQXm7yxt3Gzo2eBe5uTkx372Kt7/Laxyj3Vtx+Gmx5fNMaY
- qloenvWqU1Z3UVZ6ob5J6SZGGLqzSFIEukHcJBFJDDgE6v7YkbEtGXsLmEsYc7CNERVZ
- oT52XBQFinU0phxaysyMRatRlMtYQluA14BOOpCfFdLgx0tRFA/o30A2zrnZ3IoZksSZ
- HvpJe2tLblTVSGlFARLU6FnIeFdgMiXsZN13jX37BGVkT5t+rqZfSPkt2C1mRwmhkn1t
- FN6KiqjXiAlHy01FMmU07yaqY5/IPOS0CTTzQa9WHDo5txYNt4tJw2rZJa18Bgu4XuIL pQ== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v0q3fspqm-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 17 Sep 2019 15:52:08 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9777D4D;
-        Tue, 17 Sep 2019 13:52:05 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068FE2C2B9A;
-        Tue, 17 Sep 2019 15:52:05 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
- 2019 15:52:04 +0200
-Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep 2019 15:52:04 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <thierry.reding@gmail.com>
-CC:     <fabrice.gasnier@st.com>, <alexandre.torgue@st.com>,
-        <mcoquelin.stm32@gmail.com>, <linux-pwm@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] pwm: stm32-lp: add check in case requested period cannot be achieved
-Date:   Tue, 17 Sep 2019 15:51:50 +0200
-Message-ID: <1568728310-20948-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 17 Sep 2019 09:53:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42846 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfIQNx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:53:27 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90A86218AE;
+        Tue, 17 Sep 2019 13:53:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568728406;
+        bh=Zy1gyPFQR5tH17NOVpzMpdx44iyBjVu4jKrnFZKxcoQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EVqkVWHzmcxNiZfo0XgNASF1UniwBql3I+w9ZLEZ4BOZjU/G47S1dDn1Cz+a737GH
+         1WPCg2Xv7XvaO+UGDZg7wqvOSHHJyZM6x8nn34J8nAHb93br7ct3Owa/vrqspo6EvK
+         KMYTsgSQATfNxge6HfnclNVUyeZUCcGbvI6ECRaA=
+Received: by mail-qt1-f176.google.com with SMTP id d2so4496548qtr.4;
+        Tue, 17 Sep 2019 06:53:26 -0700 (PDT)
+X-Gm-Message-State: APjAAAUKqTyfZhyUHZ0ChRoYn056xPRLDyGhDM3P+yfP2L5ji0NEsL30
+        ZyulM/lAdFs/aTlcAGoImXDDZYKCYMc3gn7liA==
+X-Google-Smtp-Source: APXvYqzb6iLIui+fyGRxfioNL0UXi8H6SwK7I3RIJUPjuGGMjLfR7E45y2vRuFrjDr9kSUtNUFl7rmjN32fi7d/wqWI=
+X-Received: by 2002:ac8:100d:: with SMTP id z13mr3773831qti.224.1568728405752;
+ Tue, 17 Sep 2019 06:53:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.1.232]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-17_06:2019-09-17,2019-09-17 signatures=0
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 17 Sep 2019 08:53:14 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ8fE4xH0DdtextdJ-+DftC2jDGg6GHbDJ+viCnhO2faw@mail.gmail.com>
+Message-ID: <CAL_JsqJ8fE4xH0DdtextdJ-+DftC2jDGg6GHbDJ+viCnhO2faw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-LPTimer can use a 32KHz clock for counting. It depends on clock tree
-configuration. In such a case, PWM output frequency range is limited.
-Although unlikely, nothing prevents user from requesting a PWM frequency
-above counting clock (32KHz for instance):
-- This causes (prd - 1) = 0xffff to be written in ARR register later in
-the apply() routine.
-This results in badly configured PWM period (and also duty_cycle).
-Add a check to report an error is such a case.
+On Tue, Sep 17, 2019 at 2:31 AM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-type',
+> which are enums of mode strings.
+>
+> The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+> enum (except for 1 or 2). But in general, there may be a case where
+> 'mac-mode' becomes more generic and is moved as part of phylib or netdev.
+>
+> In any case, the 'mac-mode' field should be made an enum, and it also makes
+> sense to just reference the 'phy-connection-type' from
+> 'ethernet-controller.yaml'. That will also make it more future-proof for new
+> modes.
+>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>  Documentation/devicetree/bindings/net/snps,dwmac.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/pwm/pwm-stm32-lp.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-index 2211a64..5c2c728 100644
---- a/drivers/pwm/pwm-stm32-lp.c
-+++ b/drivers/pwm/pwm-stm32-lp.c
-@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	/* Calculate the period and prescaler value */
- 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
- 	do_div(div, NSEC_PER_SEC);
-+	if (!div) {
-+		/* Fall here in case source clock < period */
-+		dev_err(priv->chip.dev, "Can't reach expected period\n");
-+		return -EINVAL;
-+	}
-+
- 	prd = div;
- 	while (div > STM32_LPTIM_MAX_ARR) {
- 		presc++;
--- 
-2.7.4
-
+Reviewed-by: Rob Herring <robh@kernel.org>
