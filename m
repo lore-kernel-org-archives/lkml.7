@@ -2,106 +2,120 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B7C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B62AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E192F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5F22214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:59:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="h7fwfvpv"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="0BZLzROz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbfIQJ6Z (ORCPT
+        id S1726553AbfIQJ7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:58:25 -0400
-Received: from mail-40132.protonmail.ch ([185.70.40.132]:47085 "EHLO
-        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726141AbfIQJ6X (ORCPT
+        Tue, 17 Sep 2019 05:59:22 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34110 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfIQJ7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:58:23 -0400
-Date:   Tue, 17 Sep 2019 09:58:13 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
-        s=protonmail; t=1568714301;
-        bh=ftJdTOKlBr/AG20OwG1MTUH8i2f7oG0aNtJYOC26Q5I=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=h7fwfvpvSgI4B6Q40CBaRg5cnJ0/Iz3EmB2KLqRa5RVwn3/TtbQTzhBzyGAQnNZEk
-         NvzxRMs6HVFIIwV5sDuXUPIaB4Ra+CzcDL/4rqAROsAUEleubQTba+ogOA93AeTyuK
-         SeZLT6owgA+nCuFWJwobVVA0qDDrI1ln6SMk7XRI=
-To:     Baolin Wang <baolin.wang@linaro.org>
-From:   Aurabindo Jayamohanan <mail@aurabindo.in>
-Cc:     Mark Brown <broonie@kernel.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
-Subject: Re: [PATCH] spi: sifive: check return value for platform_get_resource()
-Message-ID: <7kLa83nF-ufh-AGA_LpBQ6M-ErUf-LEVXANxL2LmirJAh-snvVtJLTVFkBKFxaHvIH9Vi1E3iXDmxW6Ijktoo6k1S7pyFrwmVVLkhKr4Q_Q=@aurabindo.in>
-In-Reply-To: <CAMz4kuJczzjTPSohQ=kbZ0Pr7U_9-hzXk-jPgKk79PENOM1-dA@mail.gmail.com>
-References: <20190917085627.4562-1-mail@aurabindo.in>
- <CAMz4kuJczzjTPSohQ=kbZ0Pr7U_9-hzXk-jPgKk79PENOM1-dA@mail.gmail.com>
-Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
+        Tue, 17 Sep 2019 05:59:20 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h2so2860481ljk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:59:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=gXQeuDzZv0W01zkJmKOuEfyUQZW+5cCZ42SQRk6FQac=;
+        b=0BZLzROz8+m2zvK2Kd27n+bBCnOLnQFF60agazzOe80f6F6zyldeeDV8c+3LEvzFFe
+         JMTmy3ANskSVi7ohfXAdjMAoqnP8/73s6I1rm8WFcR0FnpeqZsTkiya5wozOYJ3MSa2q
+         6TBpqt5NF6Rzx8uzs4mIYxtTrgQbEo1SXtyI0rPUSW9cW6zp14wNznjjT51mPyHzSSGH
+         87brNOcPH5qK8tnLTUXqDEykmZ1u13n2SPdHN2fQwMU5SA7v8p06u46cV4xg4SsK0Ofp
+         HlmJ4T34+yf+N/wocSx5b84rNpnqJOoDH5RiNEu1iabLYLo3fOxWsUAGEBNTCqyTKKp6
+         wntQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gXQeuDzZv0W01zkJmKOuEfyUQZW+5cCZ42SQRk6FQac=;
+        b=pSgX8/elUVzQEUiJMrOMOxJRkD1W0mc7I/UlrbRlZ6RroHuKFD10yc9UMngYOweabl
+         /Y0yqSIdfNkqLpWObMQ1ZABCNJ8qjVM0zUqQrLlmGRo6gXEc0ilK0jY1ViVpI3CNZA45
+         PdTOUBjOx16BBc10/1JOEt8KZ5J8ogMUFhzA5dHZKMlJE1NjYeHgYrSPGG7Z0eVZQxb+
+         o06gNCgHKmF7BUb8/myJtPh8Oku8PLMa2Y9umrmVAXKXxhL5SrW9bxt1WGmOBjPH8Jz3
+         F47sUaA5TBxB/Y83PooFmx5yKTIJgSLBZWTyYfF5iCELnRFi1wD5EzAxYwbxNR2wSSyG
+         JyRA==
+X-Gm-Message-State: APjAAAUCck8ZS4fn020mrmCpOAAbaDcmxOzRkz8bidlW4wCFfZgXkNOJ
+        /8fd0gaeMyk6oXpC9k5c0pYHj6dwlSQ=
+X-Google-Smtp-Source: APXvYqy7oz2EQV3cbvoPWszregBHfGY5VkPbbYu4JC2WcrPbNJVxdO3DGpRqvXegzozFu0EstQ6wlA==
+X-Received: by 2002:a2e:8744:: with SMTP id q4mr1358935ljj.77.1568714358524;
+        Tue, 17 Sep 2019 02:59:18 -0700 (PDT)
+Received: from ?IPv6:2a00:1fa0:6e6:a4e9:5101:fe11:ada5:769e? ([2a00:1fa0:6e6:a4e9:5101:fe11:ada5:769e])
+        by smtp.gmail.com with ESMTPSA id z8sm393968lfg.18.2019.09.17.02.59.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 02:59:17 -0700 (PDT)
+Subject: Re: [PATCH v2] ixgbe: Use memset_explicit directly in crypto cases
+To:     zhong jiang <zhongjiang@huawei.com>, jakub.kicinski@netronome.com,
+        davem@davemloft.net
+Cc:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1568691910-21442-1-git-send-email-zhongjiang@huawei.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <98a942fb-0c47-ffa6-4c9c-f30b5d6f750e@cogentembedded.com>
+Date:   Tue, 17 Sep 2019 12:59:13 +0300
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1568691910-21442-1-git-send-email-zhongjiang@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello!
 
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Tuesday, September 17, 2019 2:53 PM, Baolin Wang <baolin.wang@linaro.org=
-> wrote:
+On 17.09.2019 6:45, zhong jiang wrote:
 
-> On Tue, 17 Sep 2019 at 17:12, Aurabindo Jayamohanan mail@aurabindo.in wro=
-te:
->
-> > platform_get_resource() may return NULL. If it is so, return -ENXIO
-> >
-> > Signed-off-by: Aurabindo Jayamohanan mail@aurabindo.in
-> >
-> > -------------------------------------------------------
-> >
-> > drivers/spi/spi-sifive.c | 6 ++++++
-> > 1 file changed, 6 insertions(+)
-> > diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
-> > index 93ec2c6cdbfd..67485067a694 100644
-> > --- a/drivers/spi/spi-sifive.c
-> > +++ b/drivers/spi/spi-sifive.c
-> > @@ -308,6 +308,12 @@ static int sifive_spi_probe(struct platform_device=
- *pdev)
-> > platform_set_drvdata(pdev, master);
-> >
-> >         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >
-> >
-> > -         if (!res) {
-> >
-> >
-> > -                 dev_err(&pdev->dev, "no IOMEM resource found\\n");
-> >
-> >
-> > -                 ret =3D -ENXIO;
-> >
-> >
-> > -                 goto put_master;
-> >
-> >
-> > -         }
-> >
-> >
->
-> Seems unnecessary, the devm_ioremap_resource() already validated if
-> the resource is available.
->
+> It's better to use memset_explicit() to replace memset() in crypto cases.
 
-Okay, thanks for the headsup
+    But you're using memzero_explicit() below?
 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>   drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> index 31629fc..7e4f32f 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> @@ -960,10 +960,10 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
+>   	return 0;
+>   
+>   err_aead:
+> -	memset(xs->aead, 0, sizeof(*xs->aead));
+> +	memzero_explicit(xs->aead, sizeof(*xs->aead));
+>   	kfree(xs->aead);
+>   err_xs:
+> -	memset(xs, 0, sizeof(*xs));
+> +	memzero_explicit(xs, sizeof(*xs));
+>   	kfree(xs);
+>   err_out:
+>   	msgbuf[1] = err;
+> @@ -1049,7 +1049,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
+>   	ixgbe_ipsec_del_sa(xs);
+>   
+>   	/* remove the xs that was made-up in the add request */
+> -	memset(xs, 0, sizeof(*xs));
+> +	memzero_explicit(xs, sizeof(*xs));
+>   	kfree(xs);
+>   
+>   	return 0;
+
+MBR, Sergei
