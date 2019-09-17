@@ -2,114 +2,112 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E82C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8C4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46A8A20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="jMhRGNsP"
+	by mail.kernel.org (Postfix) with ESMTP id A861520678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392002AbfIQCn0 (ORCPT
+        id S2392007AbfIQCnd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 22:43:26 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34242 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391292AbfIQCnY (ORCPT
+        Mon, 16 Sep 2019 22:43:33 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:55623 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391292AbfIQCnb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 22:43:24 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b128so1230452pfa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=aQrXVTNYPD93A+dr3PQzbCJpCjMJXTuJQlMV8r8hKjE=;
-        b=jMhRGNsPq4gN9mlEaZ/AEVKbtiBbP49Nk000CTIHRAT7Qw5Sm5KXl30UtOnKNEXgJG
-         BBcf0/EzePXZhMAXA1Ed+Hu3czD1Ka2KVhgyxemKS+eS5LZobAJ4B50wLjVdUSE8YD2L
-         puiSTTu61AVk3VP0aa7iYu1y1ask/Hk4D577HbXvPrxwqtz/ggUfUxHMnx56eZlbifHi
-         n3SLjkQco+K4dPH01qWh3ysbYuyTdJeI/9PwYRJwxPeSs+LnLSGR+qfHqzVXm86KQ7Mc
-         3SbrrAQoBk+vCulD8t3H4OO+kGMpKJOJRPWi9tpwOTB56Lp1/SaPjcaAtLoBuSDZ8/X2
-         4AWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=aQrXVTNYPD93A+dr3PQzbCJpCjMJXTuJQlMV8r8hKjE=;
-        b=O3I9EeTZE1kflXhs8SjGleUr539j4vG49DwjkPWC2bYnru8VMA1FQO2uuUS3qeREtk
-         8xbxxTwhn5FqoexMIP+kc+exRyuI7UvxgMtcw5BKUhSiw27IG+qE+Z73VPmqckg4dBTM
-         Y0njqxEPWRqTfG0ZmkOOodweNMZ2KpZkqno5hf0hQ5CLYHyoofuXsd7n/M3mfLwq/Xqu
-         ynEYnd805NqgYTYB/EICtckDf8Sa4JqmbE0rr+FgJKgQyLKiK/+nHVDbe1HA+GQPgeMg
-         7QFONE+csQ/Gsku6I080of/bq3M3GMKYDEsuOVXa7s15vW2tYuW8iw3QAVRR6SEX5jkv
-         +V6w==
-X-Gm-Message-State: APjAAAXqNu7El+bpwLC8vmTtDIoMMzDtR8+2/fjDxWuLOze63MNse9MK
-        G+CzcYHM19U4qv05y3/iMH1j7ZESIpg=
-X-Google-Smtp-Source: APXvYqzJsHSwaJsn5L+NBbiv4QM7roesrFufWYU2XCHXrcTHzejh6DulwYsZREZeSRQpa4cfz+9Jdw==
-X-Received: by 2002:a17:90a:e290:: with SMTP id d16mr2606067pjz.86.1568688203384;
-        Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
-Received: from cakuba.netronome.com ([2601:646:8e00:e18::2])
-        by smtp.gmail.com with ESMTPSA id x72sm450247pfc.89.2019.09.16.19.43.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 19:43:19 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <anna.schumaker@netapp.com>,
-        <trond.myklebust@hammerspace.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] ixgbe: Use kzfree() rather than its implementation.
-Message-ID: <20190916194319.712d81cc@cakuba.netronome.com>
-In-Reply-To: <1567564752-6430-2-git-send-email-zhongjiang@huawei.com>
-References: <1567564752-6430-1-git-send-email-zhongjiang@huawei.com>
-        <1567564752-6430-2-git-send-email-zhongjiang@huawei.com>
-Organization: Netronome Systems, Ltd.
+        Mon, 16 Sep 2019 22:43:31 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8H2h6li025318
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 17 Sep 2019 11:43:06 +0900
+Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H2h6wQ022753;
+        Tue, 17 Sep 2019 11:43:06 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H2eBCX014414;
+        Tue, 17 Sep 2019 11:43:06 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-1148208; Tue, 17 Sep 2019 11:34:44 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Tue,
+ 17 Sep 2019 11:34:43 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMAgAAgogCADDvdgA==
+Date:   Tue, 17 Sep 2019 02:34:43 +0000
+Message-ID: <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+ <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+ <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+ <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+ <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
+ <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
+In-Reply-To: <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <E6C6D8924A90DA4C8038847B427D5E31@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Sep 2019 10:39:10 +0800, zhong jiang wrote:
-> Use kzfree() instead of memset() + kfree().
+On 2019/09/09 16:46, David Hildenbrand wrote:
+> Let's take a step back here to understand the issues I am aware of. I
+> think we should solve this for good now:
 > 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
+> A PFN walker takes a look at a random PFN at a random point in time. It
+> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
+> options are:
 > 
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> index 31629fc..113f608 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> @@ -960,11 +960,9 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->  	return 0;
->  
->  err_aead:
-> -	memset(xs->aead, 0, sizeof(*xs->aead));
-> -	kfree(xs->aead);
-> +	kzfree(xs->aead);
->  err_xs:
-> -	memset(xs, 0, sizeof(*xs));
-> -	kfree(xs);
-> +	kzfree(xs);
->  err_out:
->  	msgbuf[1] = err;
->  	return err;
-> @@ -1049,8 +1047,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->  	ixgbe_ipsec_del_sa(xs);
->  
->  	/* remove the xs that was made-up in the add request */
-> -	memset(xs, 0, sizeof(*xs));
-> -	kfree(xs);
-> +	kzfree(xs);
->  
->  	return 0;
->  }
+> 1. It is buddy memory (add_memory()) that has not been online yet. The
+> memmap contains garbage. Don't access.
+> 
+> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
+> 
+> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
+> is only partially present: E.g., device starts at offset 64MB within a
+> section or the device ends at offset 64MB within a section. Don't access it.
 
-All the crypto cases should really be converted to memzero_explicit().
+I don't agree with case #3. In the case, struct page area is not allocated on
+ZONE_DEVICE, but is allocated on system memory. So I think we can access the
+struct pages. What do you mean "invalid memmap"?
+
+> 
+> 4. It is ZONE_DEVICE memory with an invalid memmap, because the memmap
+> was not initialized yet. memmap_init_zone_device() did not yet succeed
+> after dropping the mem_hotplug lock in mm/memremap.c. Don't access it.
+> 
+> 5. It is reserved ZONE_DEVICE memory ("pages mapped, but reserved for
+> driver") with an invalid memmap. Don't access it.
+> 
+> I can see that your patch tries to make #5 vanish by initializing the
+> memmap, fair enough. #3 and #4 can't be detected. The PFN walker could
+> still stumble over uninitialized memmaps.
+> 
