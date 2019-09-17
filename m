@@ -2,75 +2,110 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED779C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA91C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49DD20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA8B620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392712AbfIQHn2 (ORCPT
+        id S2404464AbfIQHpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:43:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57880 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727509AbfIQHn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:43:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 12BB9AD3A;
-        Tue, 17 Sep 2019 07:43:26 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Palmer Dabbelt <palmer@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH] serial/sifive: select SERIAL_EARLYCON
-References: <mhng-5091669f-461c-4e62-a71c-e16957801fad@palmer-si-x1c4>
-X-Yow:  Wait..  is this a FUN THING or the END of LIFE in Petticoat Junction??
-Date:   Tue, 17 Sep 2019 09:43:25 +0200
-In-Reply-To: <mhng-5091669f-461c-4e62-a71c-e16957801fad@palmer-si-x1c4>
-        (Palmer Dabbelt's message of "Mon, 16 Sep 2019 14:38:39 -0700 (PDT)")
-Message-ID: <mvma7b3e5b6.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        Tue, 17 Sep 2019 03:45:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40832 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfIQHpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:45:01 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iA8AT-0005bn-3S; Tue, 17 Sep 2019 09:44:57 +0200
+Date:   Tue, 17 Sep 2019 09:44:57 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-2-swood@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190911165729.11178-2-swood@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sep 16 2019, Palmer Dabbelt <palmer@sifive.com> wrote:
+On 2019-09-11 17:57:25 [+0100], Scott Wood wrote:
+> index 388ace315f32..9ce7c5006a5e 100644
+> --- a/include/linux/rcupdate.h
+> +++ b/include/linux/rcupdate.h
+> @@ -600,6 +600,36 @@ static inline void rcu_read_unlock(void)
+>  	rcu_lock_release(&rcu_lock_map); /* Keep acq info for rls diags. */
+>  }
+>  
+> +#ifdef CONFIG_PREEMPT_RT_FULL
+> +/*
+> + * On RT, local_bh_disable() calls rcu_read_lock() -- no need to
+> + * track it twice.
+> + */
+> +static inline void rcu_bh_lock_acquire(void)
+> +{
+> +}
+> +
+> +static inline void rcu_bh_lock_release(void)
+> +{
+> +}
+> +#else
+> +static inline void rcu_bh_lock_acquire(void)
+> +{
+> +	__acquire(RCU_BH);
+> +	rcu_lock_acquire(&rcu_bh_lock_map);
+> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> +			 "rcu_read_lock_bh() used illegally while idle");
+> +}
+> +
+> +static inline void rcu_bh_lock_release(void)
+> +{
+> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> +			 "rcu_read_unlock_bh() used illegally while idle");
+> +	rcu_lock_release(&rcu_bh_lock_map);
+> +	__release(RCU_BH);
+> +}
+> +#endif
+> +
+>  /**
+>   * rcu_read_lock_bh() - mark the beginning of an RCU-bh critical section
+>   *
+> @@ -615,10 +645,7 @@ static inline void rcu_read_unlock(void)
+>  static inline void rcu_read_lock_bh(void)
+>  {
+>  	local_bh_disable();
+> -	__acquire(RCU_BH);
+> -	rcu_lock_acquire(&rcu_bh_lock_map);
+> -	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> -			 "rcu_read_lock_bh() used illegally while idle");
+> +	rcu_bh_lock_acquire();
+>  }
+>  
+>  /*
 
-> but we don't set it for the HiFive Unleashed.  I'd call that a bug,
-> something like this
->
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> index 93d68cbd64fe..6d0ec76d93fe 100644
-> --- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
-> @@ -13,6 +13,7 @@
->        compatible = "sifive,hifive-unleashed-a00", "sifive,fu540-c000";
->
->        chosen {
-> +               stdout-path = &uart0;
->        };
->
->        cpus {
->
-> should fix it.  LMK if I've misunderstood something.
+I asked previously why do you need to change rcu_read_lock_bh() and you
+replied that you don't remember:
+   https://lore.kernel.org/linux-rt-users/b948ec6cccda31925ed8dc123bd0f55423fff3d4.camel@redhat.com/
 
-If that's how it's supposed to work, ok.  Other platforms add it in
-u-boot.
+Did this change?
 
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
+Sebastian
