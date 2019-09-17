@@ -2,67 +2,54 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3397AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559FEC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA582067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:14:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=scylladb-com.20150623.gappssmtp.com header.i=@scylladb-com.20150623.gappssmtp.com header.b="J2og3Dg/"
+	by mail.kernel.org (Postfix) with ESMTP id 2109421852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:17:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568711876;
+	bh=TzeDHdXpfNzA1DH1fYaV3kmEGYt6Kzvz35Bh/08YUVI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Yg6ZxNRiYxj2cIyjbatkufxLhDQS8wCIcXi8dQhXq6gJv5u2ZKexfbRZoNfg9sfU2
+	 N47oyJ88MYLBXqhee29LoUxGBwkbe04H+kpl+u8GVTvm9HXrmGqKlQ9NxUqSrfUUx7
+	 rEZOsEoauViUJ9WnfZzUU8qQI9efS3wnxxWbsNvo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbfIQJOE (ORCPT
+        id S1726934AbfIQJRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:14:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37696 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726720AbfIQJOD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:14:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r195so2192495wme.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=scylladb-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J3q851HjNurFsQDQC3tlZxSdaojcsq3jsQ2H8LllUYY=;
-        b=J2og3Dg/qod5VtnEytySsQ8YyEbwaSgVGfq5v5BN26gyXBCn0RlD22jQkf+Jw9baQb
-         643ndS25feWaoLtud/m27G4C853nV0HPTo6sVPwsMbu7iT76JTFMHTlONkj1/mYqsvcR
-         1S65Is3DymHewzhUFIfrV5wy2EyjUqmncS08e5uiV/3OW0gvivggxW7acmHG6o+2iZnQ
-         iRrE2b698SDcj6INGpjtDc516y2lbKUCZ8UJ179GWEHOpvre9DR2/EoRxQP99znszoJJ
-         B6bvQB21W0R8hGuRxbaL+gg47Fc/HqhP5zW0lpNKrai0JTo7IEQGwC2hpQUyujCKoHzq
-         zvdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J3q851HjNurFsQDQC3tlZxSdaojcsq3jsQ2H8LllUYY=;
-        b=UhdFa5tY2KVlEJ8UY2rT4xv6qOi0keP5QYACdXKS4ktSyCsk2suWMPKn69bGukqOOd
-         m5LSYZY41kB2+5If5el/OHK+4GWswsp+N9uBB49RLOy11W6wi0GDnhOLicTWrnqghpLF
-         jHcn3eAA/xrXWPPJ//G0Kmm3gcupam/moQk8RJitSCZfIQXz63Jn1HW6TOS6lpafQS/Z
-         QCDRs3SvZUAGaVPdVDIfhn2EzPU4RjcgGMsKeH/FErsPWZQbucI1b7kvgZdRttuRJi9j
-         DlUqQplYW11vglr7pUf9yUV2p5d/Fe40bzjrMlmqi/zIgSt9KyPP8ZANXJ2/El6EjeHH
-         OS5Q==
-X-Gm-Message-State: APjAAAXNAPX2ED5vc434W8u3mAYzmxdbxDygv2hVzUoZ29K8rnYJtK2z
-        AXrJ0doZ7CSO05QquXaZebVpfw==
-X-Google-Smtp-Source: APXvYqxcQxDJL4hgNO1Obo5uli3NofxH4vnmuWQtbR0GVq3vtdmlYpXAaQGx7TfY5ZFxQoXnXb9c/g==
-X-Received: by 2002:a7b:c401:: with SMTP id k1mr2555955wmi.62.1568711641291;
-        Tue, 17 Sep 2019 02:14:01 -0700 (PDT)
-Received: from avi.cloudius-systems.com (system.cloudius-systems.com. [199.203.229.89])
-        by smtp.gmail.com with ESMTPSA id y13sm4183768wrg.8.2019.09.17.02.13.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 02:14:00 -0700 (PDT)
-From:   Avi Kivity <avi@scylladb.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
-Subject: [PATCH v1] io_uring: reserve word at cqring tail+4 for the user
-Date:   Tue, 17 Sep 2019 12:13:58 +0300
-Message-Id: <20190917091358.3652-1-avi@scylladb.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 17 Sep 2019 05:17:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726250AbfIQJRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 05:17:55 -0400
+Received: from localhost.localdomain (unknown [122.167.81.185])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7062D21852;
+        Tue, 17 Sep 2019 09:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568711873;
+        bh=TzeDHdXpfNzA1DH1fYaV3kmEGYt6Kzvz35Bh/08YUVI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=sxlXPTBSiDnmx2EAe59lE88FhzbgSz61F3hvX32m2utBlGOcyFOHTzGgfpuP9S+CR
+         yHTCdL0rrF0QJwbJgI+JF6MzfN7eHHjwRzjKksQbSYmJz26fbI2BHG/uwlY9AwkaW6
+         vOtgTj5OHG79e+0G964FKdeUgR6hCd70Ei41QGQQ=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: qcom: gcc: Add missing clocks in SM8150
+Date:   Tue, 17 Sep 2019 14:46:23 +0530
+Message-Id: <20190917091623.3453-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,87 +57,270 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some applications, a thread waits for I/O events generated by
-the kernel, and also events generated by other threads in the same
-application. Typically events from other threads are passed using
-in-memory queues that are not known to the kernel. As long as the
-threads is active, it polls for both kernel completions and
-inter-thread completions; when it is idle, it tells the other threads
-to use an I/O event to wait it up (e.g. an eventfd or a pipe) and
-then enters the kernel, waiting for such an event or an ordinary
-I/O completion.
+The initial upstreaming of SM8150 GCC driver missed few clock so add
+them up now.
 
-When such a thread goes idle, it typically spins for a while to
-avoid the kernel entry/exit cost in case an event is forthcoming
-shortly. While it spins it polls both I/O completions and
-inter-thread queues.
-
-The x86 instruction pair UMONITOR/UMWAIT allows waiting for a cache
-line to be written to. This can be used with io_uring to wait for a
-wakeup without spinning (and wasting power and slowing down the other
-hyperthread). Other threads can also wake up the waiter by doing a
-safe write to the tail word (which triggers the wakeup), but safe
-writes are slow as they require an atomic instruction. To speed up
-those wakeups, reserve a word after the tail for user writes.
-
-A thread consuming an io_uring completion queue can then use the
-following sequences:
-
-  - while busy:
-    - pick up work from the completion queue and from other threads,
-      and process it
-
-  - while idle:
-    - use UMONITOR/UMWAIT to wait on completions and notifications
-      from other threads for a short period
-    - if no work is picked up, let other threads know you will need
-      a kernel wakeup, and use io_uring_enter to wait indefinitely
-
-Signed-off-by: Avi Kivity <avi@scylladb.com>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- fs/io_uring.c                 | 5 +++--
- include/uapi/linux/io_uring.h | 4 ++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ drivers/clk/qcom/gcc-sm8150.c | 172 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 172 insertions(+)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index cfb48bd088e1..4bd7905cee1d 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -77,12 +77,13 @@
- 
- #define IORING_MAX_ENTRIES	4096
- #define IORING_MAX_FIXED_FILES	1024
- 
- struct io_uring {
--	u32 head ____cacheline_aligned_in_smp;
--	u32 tail ____cacheline_aligned_in_smp;
-+	u32 head ____cacheline_aligned;
-+	u32 tail ____cacheline_aligned;
-+	u32 reserved_for_user; // for cq ring and UMONITOR/UMWAIT (or similar) wakeups
+diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+index 12ca2d14797f..13d4d14a5744 100644
+--- a/drivers/clk/qcom/gcc-sm8150.c
++++ b/drivers/clk/qcom/gcc-sm8150.c
+@@ -1616,6 +1616,38 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk = {
+ 	},
  };
  
- /*
-  * This data is shared with the application through the mmap at offset
-  * IORING_OFF_SQ_RING.
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 1e1652f25cc1..1a6a826a66f3 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -103,10 +103,14 @@ struct io_sqring_offsets {
-  */
- #define IORING_SQ_NEED_WAKEUP	(1U << 0) /* needs io_uring_enter wakeup */
++static struct clk_branch gcc_gpu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(15),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_gpu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(16),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_gpu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_gpu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_gpu_iref_clk = {
+ 	.halt_reg = 0x8c010,
+ 	.halt_check = BRANCH_HALT,
+@@ -1698,6 +1730,38 @@ static struct clk_branch gcc_npu_cfg_ahb_clk = {
+ 	},
+ };
  
- struct io_cqring_offsets {
- 	__u32 head;
-+	// tail is guaranteed to be aligned on a cache line, and to have the
-+	// following __u32 free for user use. This allows using e.g.
-+	// UMONITOR/UMWAIT to wait on both writes to head and writes from
-+	// other threads to the following word.
- 	__u32 tail;
- 	__u32 ring_mask;
- 	__u32 ring_entries;
- 	__u32 overflow;
- 	__u32 cqes;
++static struct clk_branch gcc_npu_gpll0_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(18),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gpll0.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_npu_gpll0_div_clk_src = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x52004,
++		.enable_mask = BIT(19),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_npu_gpll0_div_clk_src",
++			.parent_hws = (const struct clk_hw *[]){
++				&gcc_npu_gpll0_clk_src.clkr.hw },
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_npu_trig_clk = {
+ 	.halt_reg = 0x4d00c,
+ 	.halt_check = BRANCH_VOTED,
+@@ -2812,6 +2876,42 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_ctl_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_ufs_card_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7501c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_card_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x750ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_card_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x75018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_card_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_card_unipro_core_clk = {
+ 	.halt_reg = 0x75058,
+ 	.halt_check = BRANCH_HALT,
+@@ -2992,6 +3092,42 @@ static struct clk_branch gcc_ufs_phy_phy_aux_hw_ctl_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_ufs_phy_rx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x7701c,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_phy_rx_symbol_1_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x770ac,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_rx_symbol_1_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gcc_ufs_phy_tx_symbol_0_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x77018,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_ufs_phy_tx_symbol_0_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_ufs_phy_unipro_core_clk = {
+ 	.halt_reg = 0x77058,
+ 	.halt_check = BRANCH_HALT,
+@@ -3171,6 +3307,18 @@ static struct clk_branch gcc_usb3_prim_phy_com_aux_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_usb3_prim_phy_pipe_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0xf058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_usb3_prim_phy_pipe_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb3_sec_clkref_clk = {
+ 	.halt_reg = 0x8c028,
+ 	.halt_check = BRANCH_HALT,
+@@ -3201,6 +3349,18 @@ static struct clk_branch gcc_usb3_sec_phy_aux_clk = {
+ 	},
+ };
+ 
++static struct clk_branch gcc_usb3_sec_phy_pipe_clk = {
++	.halt_check = BRANCH_HALT_SKIP,
++	.clkr = {
++		.enable_reg = 0x10058,
++		.enable_mask = BIT(0),
++		.hw.init = &(struct clk_init_data){
++			.name = "gcc_usb3_sec_phy_pipe_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
+ static struct clk_branch gcc_usb3_sec_phy_com_aux_clk = {
+ 	.halt_reg = 0x10054,
+ 	.halt_check = BRANCH_HALT,
+@@ -3332,12 +3492,16 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
+ 	[GCC_GP3_CLK_SRC] = &gcc_gp3_clk_src.clkr,
+ 	[GCC_GPU_CFG_AHB_CLK] = &gcc_gpu_cfg_ahb_clk.clkr,
++	[GCC_GPU_GPLL0_CLK_SRC] = &gcc_gpu_gpll0_clk_src.clkr,
++	[GCC_GPU_GPLL0_DIV_CLK_SRC] = &gcc_gpu_gpll0_div_clk_src.clkr,
+ 	[GCC_GPU_IREF_CLK] = &gcc_gpu_iref_clk.clkr,
+ 	[GCC_GPU_MEMNOC_GFX_CLK] = &gcc_gpu_memnoc_gfx_clk.clkr,
+ 	[GCC_GPU_SNOC_DVM_GFX_CLK] = &gcc_gpu_snoc_dvm_gfx_clk.clkr,
+ 	[GCC_NPU_AT_CLK] = &gcc_npu_at_clk.clkr,
+ 	[GCC_NPU_AXI_CLK] = &gcc_npu_axi_clk.clkr,
+ 	[GCC_NPU_CFG_AHB_CLK] = &gcc_npu_cfg_ahb_clk.clkr,
++	[GCC_NPU_GPLL0_CLK_SRC] = &gcc_npu_gpll0_clk_src.clkr,
++	[GCC_NPU_GPLL0_DIV_CLK_SRC] = &gcc_npu_gpll0_div_clk_src.clkr,
+ 	[GCC_NPU_TRIG_CLK] = &gcc_npu_trig_clk.clkr,
+ 	[GCC_PCIE0_PHY_REFGEN_CLK] = &gcc_pcie0_phy_refgen_clk.clkr,
+ 	[GCC_PCIE1_PHY_REFGEN_CLK] = &gcc_pcie1_phy_refgen_clk.clkr,
+@@ -3442,6 +3606,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_UFS_CARD_PHY_AUX_CLK_SRC] = &gcc_ufs_card_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_CARD_PHY_AUX_HW_CTL_CLK] =
+ 		&gcc_ufs_card_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_0_CLK] = &gcc_ufs_card_rx_symbol_0_clk.clkr,
++	[GCC_UFS_CARD_RX_SYMBOL_1_CLK] = &gcc_ufs_card_rx_symbol_1_clk.clkr,
++	[GCC_UFS_CARD_TX_SYMBOL_0_CLK] = &gcc_ufs_card_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK] = &gcc_ufs_card_unipro_core_clk.clkr,
+ 	[GCC_UFS_CARD_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_card_unipro_core_clk_src.clkr,
+@@ -3459,6 +3626,9 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_UFS_PHY_PHY_AUX_CLK] = &gcc_ufs_phy_phy_aux_clk.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_CLK_SRC] = &gcc_ufs_phy_phy_aux_clk_src.clkr,
+ 	[GCC_UFS_PHY_PHY_AUX_HW_CTL_CLK] = &gcc_ufs_phy_phy_aux_hw_ctl_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_0_CLK] = &gcc_ufs_phy_rx_symbol_0_clk.clkr,
++	[GCC_UFS_PHY_RX_SYMBOL_1_CLK] = &gcc_ufs_phy_rx_symbol_1_clk.clkr,
++	[GCC_UFS_PHY_TX_SYMBOL_0_CLK] = &gcc_ufs_phy_tx_symbol_0_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK] = &gcc_ufs_phy_unipro_core_clk.clkr,
+ 	[GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC] =
+ 		&gcc_ufs_phy_unipro_core_clk_src.clkr,
+@@ -3480,10 +3650,12 @@ static struct clk_regmap *gcc_sm8150_clocks[] = {
+ 	[GCC_USB3_PRIM_PHY_AUX_CLK] = &gcc_usb3_prim_phy_aux_clk.clkr,
+ 	[GCC_USB3_PRIM_PHY_AUX_CLK_SRC] = &gcc_usb3_prim_phy_aux_clk_src.clkr,
+ 	[GCC_USB3_PRIM_PHY_COM_AUX_CLK] = &gcc_usb3_prim_phy_com_aux_clk.clkr,
++	[GCC_USB3_PRIM_PHY_PIPE_CLK] = &gcc_usb3_prim_phy_pipe_clk.clkr,
+ 	[GCC_USB3_SEC_CLKREF_CLK] = &gcc_usb3_sec_clkref_clk.clkr,
+ 	[GCC_USB3_SEC_PHY_AUX_CLK] = &gcc_usb3_sec_phy_aux_clk.clkr,
+ 	[GCC_USB3_SEC_PHY_AUX_CLK_SRC] = &gcc_usb3_sec_phy_aux_clk_src.clkr,
+ 	[GCC_USB3_SEC_PHY_COM_AUX_CLK] = &gcc_usb3_sec_phy_com_aux_clk.clkr,
++	[GCC_USB3_SEC_PHY_PIPE_CLK] = &gcc_usb3_sec_phy_pipe_clk.clkr,
+ 	[GCC_VIDEO_AHB_CLK] = &gcc_video_ahb_clk.clkr,
+ 	[GCC_VIDEO_AXI0_CLK] = &gcc_video_axi0_clk.clkr,
+ 	[GCC_VIDEO_AXI1_CLK] = &gcc_video_axi1_clk.clkr,
 -- 
-2.21.0
+2.20.1
 
