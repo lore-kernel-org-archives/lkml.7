@@ -2,140 +2,132 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB19DC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D574AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A29120640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5AC1214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:17:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4esKwUj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F/I6TnZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfIQAJh (ORCPT
+        id S1731223AbfIQARD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 20:09:37 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41569 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIQAJh (ORCPT
+        Mon, 16 Sep 2019 20:17:03 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39179 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfIQARD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 20:09:37 -0400
-Received: by mail-pg1-f196.google.com with SMTP id x15so938015pgg.8;
-        Mon, 16 Sep 2019 17:09:37 -0700 (PDT)
+        Mon, 16 Sep 2019 20:17:03 -0400
+Received: by mail-ot1-f65.google.com with SMTP id s22so1472451otr.6
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 17:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=RzqSTaMjoEGVXqONuLwzF8zYDDGD7d9ggRyLV1X2Sfg=;
-        b=P4esKwUjjgl4iD1cEHunNuEnMBpZl8oKKo5CBnJ1fUSl/EOGfz9dodPcLPJ9yt/gjs
-         RbL/YRkhAaTQxPwrqQp1X/OGYTWmTbakU4nB4JzbrgtrjJBbnBINlKGxCZJgs/o6FReI
-         AjA54ato32tZbRsVv034lrjiTJemxNt7/IewGbeNUfhzR+HpP0XLA6YqERkdlD9LZWyM
-         TkP5haCPTK8jLHsF3nzidqFHzskvr+1HngGbqj6+N6uvxltNEmvhjmSNeMlsDPUf5G3r
-         fkAeKfShd47+v+4vBWU8u1APldk9K0shQSHxzEGOKUyGNVeJhLv6OguNBX0VEUTGQF3K
-         llQA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xwaobm4013s4vZ793e0Q0coPvAuNlCS4dwgLxU/kSl8=;
+        b=F/I6TnZ3a/2TPfGZhern/iGJOdxbIc8gdVk2J27bGA+ISJy9VBdWmRi/9yn3DOn6VW
+         ueVInKZpZQ6Th2gqgIomkq8HiE05ZYrYCFXRq5acaeyDFi0jWAeHR/DqdB8DJLHJx6T7
+         187NW7MNd2EhrgL1VwJGFfC5tdeqPOa3sVp8l/NGmtIK+ps7hGTD6csmOudD28L3Ln5T
+         PMS16xJzq0Aa70OQuk+mYwnDKYRPSSmSTRpKor6fyulK0D2KYh3w4QLJ3gHzu+SSRuck
+         AbDXs8t2um5i1TFD+5dLCPQp64a0KtSpx7Tev4EQIrVrLYKQ41aHT4WWIQpMhS//rNHZ
+         NkVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=RzqSTaMjoEGVXqONuLwzF8zYDDGD7d9ggRyLV1X2Sfg=;
-        b=cs4y9M2Tweyl14BG9s1rtT8b+Cnbwh+AxcMC6UkAv8k6+MZgU9RVn4lUPzWfnyjHqe
-         v2pCDpOqrArrziH+kgRvnijACm46XrH+kwHb8ARs7HKepWTj5aEnsHH7heI7s4R0stBZ
-         rJAN4vuukoTMZ1ikNicxBc+lqd3EAFA3OyjGuZ2G54NXcMQZCQ4JdO/e1ebzWqAjkS18
-         Uym0lvLbbn74Zfm+eujWnlCD/TwYyt/Px6lIMz+fhkIrkgx1XpYXCL8YfqzkutLe89AE
-         +e4tkdQo1uKbjhINLnPiVo/PdQWHqmcE5mqjKkw/xkfWlPAZ8pUqF1bz7SxYD+R0lOrh
-         5cgw==
-X-Gm-Message-State: APjAAAW7M8jTqhOCLk0wDJ9ojDqLazAfSGGE/6ux9Z49H8158y0o7bzm
-        /tI1PSSHGxogIOzDj1Y3Hgo=
-X-Google-Smtp-Source: APXvYqzPthbiAUYrJXXb3tDB/2Cya3rDyMlBXEL/QfUSUf7e1+sTagOFx/RS2zBXuFtHg+77N5cMUA==
-X-Received: by 2002:a62:7710:: with SMTP id s16mr1114555pfc.139.1568678976410;
-        Mon, 16 Sep 2019 17:09:36 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id x20sm278752pfp.120.2019.09.16.17.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 17:09:35 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 17:09:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] net: mdio: switch to using gpiod_get_optional()
-Message-ID: <20190917000933.GA254663@dtor-ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xwaobm4013s4vZ793e0Q0coPvAuNlCS4dwgLxU/kSl8=;
+        b=L9SVEaHW908IJZy4nFcXkoveOMgoJR4kqy2YwF9PdpNyT6rtYw9KkvrQiQOalcwvQH
+         9UkWW8hPgeikhyrv/vruVBopp+CIQZJwL+jobCcaZ6oXUhso9tS2J7zxCeWk1ZB7R7BN
+         mcIXsAy7E3PSc5mH+V/LR6w24EvcoWJHlLbKy5ZeEHG7Ft15t9MnhBfMnNb0JiZZctQl
+         oDNSzy5Bv0GIUD0IwXvgeJk/A8zniobIBYm2gpWiGVjUxZ7BN4MaVzNRebd43y3tpQBj
+         yCpLjOVYRIOviFgJE6oLc1Riwiy5wLu8iowUPSaWUFQ1VWaeVs8n8CEQwvKDctUuAEz/
+         TfQQ==
+X-Gm-Message-State: APjAAAV1lZa+Mn4rw9hrFpA81X9rjI6CY4k4O3PIDoHtNWNeJ5ZIotAX
+        9upr3uVQwfM1zlYe8JIHSSTue7lHSy4NkyA0JwJQSg==
+X-Google-Smtp-Source: APXvYqzZSsfpjpMTadPZhZb7SUTwDEQvBgSQESfurSBFz47FNKKrb813cd51n4secgL4dxWAccV7dqf6q2NqTtIJFxc=
+X-Received: by 2002:a9d:441:: with SMTP id 59mr708184otc.355.1568679421652;
+ Mon, 16 Sep 2019 17:17:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190910233146.206080-1-almasrymina@google.com>
+ <20190910233146.206080-7-almasrymina@google.com> <abe11781-7267-e54e-0b81-46dc4ea6d5a4@oracle.com>
+In-Reply-To: <abe11781-7267-e54e-0b81-46dc4ea6d5a4@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 16 Sep 2019 17:16:50 -0700
+Message-ID: <CAHS8izMTdq0L8QNLE+QVKhJDHEDjGraZFGCX57BqcpTTOP0KWw@mail.gmail.com>
+Subject: Re: [PATCH v4 6/9] hugetlb: disable region_add file_region coalescing
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        khalid.aziz@oracle.com, open list <linux-kernel@vger.kernel.org>,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MDIO device reset line is optional and now that gpiod_get_optional()
-returns proper value when GPIO support is compiled out, there is no
-reason to use fwnode_get_named_gpiod() that I plan to hide away.
+On Mon, Sep 16, 2019 at 4:57 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> On 9/10/19 4:31 PM, Mina Almasry wrote:
+> > A follow up patch in this series adds hugetlb cgroup uncharge info the
+> > file_region entries in resv->regions. The cgroup uncharge info may
+> > differ for different regions, so they can no longer be coalesced at
+> > region_add time. So, disable region coalescing in region_add in this
+> > patch.
+> >
+> > Behavior change:
+> >
+> > Say a resv_map exists like this [0->1], [2->3], and [5->6].
+> >
+> > Then a region_chg/add call comes in region_chg/add(f=0, t=5).
+> >
+> > Old code would generate resv->regions: [0->5], [5->6].
+> > New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
+> > [5->6].
+> >
+> > Special care needs to be taken to handle the resv->adds_in_progress
+> > variable correctly. In the past, only 1 region would be added for every
+> > region_chg and region_add call. But now, each call may add multiple
+> > regions, so we can no longer increment adds_in_progress by 1 in region_chg,
+> > or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
+> > region_chg calls add_reservation_in_range() to count the number of regions
+> > needed and allocates those, and that info is passed to region_add and
+> > region_abort to decrement adds_in_progress correctly.
+>
+> Hate to throw more theoretical examples at you but ...
+>
+> Consider an existing reserv_map like [3-10]
+> Then a region_chg/add call comes in region_chg/add(f=0, t=10).
+> The region_chg is going to return 3 (additional reservations needed), and
+> also out_regions_needed = 1 as it would want to create a region [0-3].
+> Correct?
+> But, there is nothing to prevent another thread from doing a region_del [5-7]
+> after the region_chg and before region_add.  Correct?
+> If so, it seems the region_add would need to create two regions, but there
+> is only one in the cache and we would BUG in get_file_region_entry_from_cache.
+> Am I reading the code correctly?
+>
+> The existing code wants to make sure region_add called after region_chg will
+> never return error.  This is why all needed allocations were done in the
+> region_chg call, and it was relatively easy to do in existing code when
+> region_chg would only need one additional region at most.
+>
+> I'm thinking that we may have to make region_chg allocate the worst case
+> number of regions (t - f)/2, OR change to the code such that region_add
+> could return an error.
 
-Let's switch to using more standard gpiod_get_optional() and
-gpiod_set_consumer_name() to keep the nice "PHY reset" label.
+Yep you are right, I missed reasoning about the region_del punch hole
+into the reservations case. Let me consider these 2 options.
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
----
-
-v2 -> v3:
-
-- no longer check for NULL before calling gpiod_set_consumer_name()
-  as it handles NULL descriptors
-- added Andy S's reviewed-by
-- did NOT add Andrew's reviewed-by as I am unsure if he's OK with the
-  latest iteration.
-
- drivers/net/phy/mdio_bus.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
-index ce940871331e..88c6ef7c7b13 100644
---- a/drivers/net/phy/mdio_bus.c
-+++ b/drivers/net/phy/mdio_bus.c
-@@ -42,22 +42,16 @@
- 
- static int mdiobus_register_gpiod(struct mdio_device *mdiodev)
- {
--	struct gpio_desc *gpiod = NULL;
-+	int error;
- 
- 	/* Deassert the optional reset signal */
--	if (mdiodev->dev.of_node)
--		gpiod = fwnode_get_named_gpiod(&mdiodev->dev.of_node->fwnode,
--					       "reset-gpios", 0, GPIOD_OUT_LOW,
--					       "PHY reset");
--	if (IS_ERR(gpiod)) {
--		if (PTR_ERR(gpiod) == -ENOENT || PTR_ERR(gpiod) == -ENOSYS)
--			gpiod = NULL;
--		else
--			return PTR_ERR(gpiod);
--	}
--
--	mdiodev->reset_gpio = gpiod;
-+	mdiodev->reset_gpio = gpiod_get_optional(&mdiodev->dev,
-+						 "reset", GPIOD_OUT_LOW);
-+	error = PTR_ERR_OR_ZERO(mdiodev->reset_gpio);
-+	if (error)
-+		return error;
- 
-+	gpiod_set_consumer_name(mdiodev->reset_gpio, "PHY reset");
- 	return 0;
- }
- 
--- 
-2.23.0.237.gc6a4ce50a0-goog
-
-
--- 
-Dmitry
+> --
+> Mike Kravetz
