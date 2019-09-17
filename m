@@ -2,112 +2,131 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD8C4C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2610EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A861520678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0476214D9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuA6rqyv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392007AbfIQCnd convert rfc822-to-8bit (ORCPT
+        id S2392024AbfIQCno (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 22:43:33 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:55623 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391292AbfIQCnb (ORCPT
+        Mon, 16 Sep 2019 22:43:44 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43627 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729141AbfIQCno (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 22:43:31 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8H2h6li025318
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 17 Sep 2019 11:43:06 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H2h6wQ022753;
-        Tue, 17 Sep 2019 11:43:06 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H2eBCX014414;
-        Tue, 17 Sep 2019 11:43:06 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.147] [10.38.151.147]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-1148208; Tue, 17 Sep 2019 11:34:44 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC19GP.gisp.nec.co.jp ([10.38.151.147]) with mapi id 14.03.0439.000; Tue,
- 17 Sep 2019 11:34:43 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMAgAAgogCADDvdgA==
-Date:   Tue, 17 Sep 2019 02:34:43 +0000
-Message-ID: <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
-References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
- <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
- <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
- <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
- <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
- <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
-In-Reply-To: <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <E6C6D8924A90DA4C8038847B427D5E31@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Mon, 16 Sep 2019 22:43:44 -0400
+Received: by mail-io1-f66.google.com with SMTP id v2so3884644iob.10;
+        Mon, 16 Sep 2019 19:43:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8i6y9BcswUwxDG8PRuSI4um6ADi5O8L1cEP8Y4YnQbM=;
+        b=CuA6rqyv0kHYgLtz1aSpPSoR7yFN4Eza0QUI6d1In3kgKq15yj+7RO4K6Ow4DyWyg/
+         945CDD8FjbZlskpwVxaj2g2KdG0DhzsPCvbnwVe605mcLMVt9KOS1ok/xoRE6LO0CvKR
+         shqWF25DsggrCMKpzFOUjWQyW51QMa8n6uAebwgZ6ta4HtPryiXJ4bMEepplWhr99COe
+         jNw70hW2Is30/OUAEuOPub7AYYNtpYHMRGTMyWFt9wRKAIN5SDelH0grgitCTMkkKg4+
+         i23wAAc0W60MS8j3HzuPqL8Wy45ZeFschcc++5hls0dgX8JGmlISGyCoaCr8Py/J0aRs
+         l5QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8i6y9BcswUwxDG8PRuSI4um6ADi5O8L1cEP8Y4YnQbM=;
+        b=Zn7HhcTo1/+/OTFO5n4IeywfzmgUzv+DTFKKoqUyBLRoxKrisJ2nZYGp+b8QaG8gG/
+         Cy+mLa1BFAzVdNnpfHe5XuX0FWdTZHcnBNLNfP9KA+GnF2rz6lJimLZhA2xEgR9AVs+J
+         nzVwAdqH+B9F+NXKyyW2tY/KmClqMBjEdeKEpWKbHoDDEqyeqsP3Z7nUeCAUse8Osw+u
+         vKgRW5vKP0BKuOHioVfLTcVsAk7QtwAitizn9tzi6lBjtRpnLgNEh+m6yZZAGiL6t5Pm
+         plAGjnQjCoW3akRGkg5avXB9EXCThc34OkZlYH7LkZIwxKfPpZF/h+wV0yPYQGguwHc3
+         1CFw==
+X-Gm-Message-State: APjAAAVg2ZkrcqQfIVuPTSjKZ9azjhvvPyzTXAoRz1mOyDVUVoWaONJJ
+        2GDZj6O23Kl82kuxtBgGpYjSyBW/U8mzcZCWOdY=
+X-Google-Smtp-Source: APXvYqzeJ+TNQWUjrodNrq8QcCsOV7BTjocJNcMZELwoxBqqTm0m2jUCi4tBN4jl2viWNfUXSX12dO5NB6pU9tUsgg0=
+X-Received: by 2002:a5d:9b02:: with SMTP id y2mr1207664ion.146.1568688223539;
+ Mon, 16 Sep 2019 19:43:43 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+References: <20190915211818.GH4352@sirena.co.uk> <CA+E=qVfm78f+2a2s=8Q7tL-fP7xCEj0v=_JXD_XbaR-2dfXmCA@mail.gmail.com>
+In-Reply-To: <CA+E=qVfm78f+2a2s=8Q7tL-fP7xCEj0v=_JXD_XbaR-2dfXmCA@mail.gmail.com>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Tue, 17 Sep 2019 10:43:32 +0800
+Message-ID: <CAKGbVbvXD1XatAbC=yMO4X3usQSXMqHXCXhycU8afiKez_CHmA@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the drm tree with the drm-misc-fixes tree
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/09 16:46, David Hildenbrand wrote:
-> Let's take a step back here to understand the issues I am aware of. I
-> think we should solve this for good now:
-> 
-> A PFN walker takes a look at a random PFN at a random point in time. It
-> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
-> options are:
-> 
-> 1. It is buddy memory (add_memory()) that has not been online yet. The
-> memmap contains garbage. Don't access.
-> 
-> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
-> 
-> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
-> is only partially present: E.g., device starts at offset 64MB within a
-> section or the device ends at offset 64MB within a section. Don't access it.
+On Mon, Sep 16, 2019 at 1:30 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> On Sun, Sep 15, 2019 at 2:18 PM Mark Brown <broonie@kernel.org> wrote:
+> >
+> > Hi all,
+>
+> Hi Mark,
+>
+> > Today's linux-next merge of the drm tree got a conflict in:
+> >
+> >   drivers/gpu/drm/lima/lima_gem.c
+> >
+> > between commit:
+> >
+> >   21670bd78a25001cf8e ("drm/lima: fix lima_gem_wait() return value")
+> >
+> > from the drm-misc-fixes tree and commit:
+> >
+> >   52791eeec1d9f4a7e7f ("dma-buf: rename reservation_object to dma_resv")
+> >
+> > from the drm tree.
+> >
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your tree
+> > is submitted for merging.  You may also want to consider cooperating
+> > with the maintainer of the conflicting tree to minimise any particularly
+> > complex conflicts.
+>
+> Fix looks correct to me. Sorry for not testing my patch with
+> linux-next, I'll make sure it at least compiles next time.
 
-I don't agree with case #3. In the case, struct page area is not allocated on
-ZONE_DEVICE, but is allocated on system memory. So I think we can access the
-struct pages. What do you mean "invalid memmap"?
+This is merge conflict, not compile fail, because linux-next and drm-misc-fixes
+are based on different code base, so drm-misc-fixes do not contain latest drm
+commits.
 
-> 
-> 4. It is ZONE_DEVICE memory with an invalid memmap, because the memmap
-> was not initialized yet. memmap_init_zone_device() did not yet succeed
-> after dropping the mem_hotplug lock in mm/memremap.c. Don't access it.
-> 
-> 5. It is reserved ZONE_DEVICE memory ("pages mapped, but reserved for
-> driver") with an invalid memmap. Don't access it.
-> 
-> I can see that your patch tries to make #5 vanish by initializing the
-> memmap, fair enough. #3 and #4 can't be detected. The PFN walker could
-> still stumble over uninitialized memmaps.
-> 
+This conflict solve change is also OK for me.
+
+Thanks,
+Qiang
+
+>
+> > diff --cc drivers/gpu/drm/lima/lima_gem.c
+> > index b609dc030d6ca,ff3d9acc24fcf..0000000000000
+> > --- a/drivers/gpu/drm/lima/lima_gem.c
+> > +++ b/drivers/gpu/drm/lima/lima_gem.c
+> > @@@ -341,8 -341,8 +341,8 @@@ int lima_gem_wait(struct drm_file *file
+> >
+> >         timeout = drm_timeout_abs_to_jiffies(timeout_ns);
+> >
+> > -       ret = drm_gem_reservation_object_wait(file, handle, write, timeout);
+> > +       ret = drm_gem_dma_resv_wait(file, handle, write, timeout);
+> >  -      if (ret == 0)
+> >  +      if (ret == -ETIME)
+> >                 ret = timeout ? -ETIMEDOUT : -EBUSY;
+> >
+> >         return ret;
