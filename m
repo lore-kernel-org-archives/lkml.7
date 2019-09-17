@@ -2,72 +2,85 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56935C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F8DB20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:23:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568740997;
-	bh=1nkPyDmw3M1xYDQWHb5QNUaZfBwrP0Luz7WD0s9GULA=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=ecib8afdfEQvdNSaLHH2qvd9ktysHe6VkHoXId1Xp0KTdqlTCd6Egvd4N0+1nHC79
-	 h9EDBhBAzS9sTmhzs8ej+bWi35dymmKkGmX9kzQOwQGdpSBJiJJWpb02r+9ST+tXQt
-	 bWpAkK5VIrixjvU6ckL33XEqHQHcn0emF9gPZ0yc=
+	by mail.kernel.org (Postfix) with ESMTP id 6008420640
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="GXmeeArS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbfIQRXQ (ORCPT
+        id S1731046AbfIQRYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727112AbfIQRXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:23:15 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2765214AF;
-        Tue, 17 Sep 2019 17:23:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568740994;
-        bh=1nkPyDmw3M1xYDQWHb5QNUaZfBwrP0Luz7WD0s9GULA=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=bDAnYw3nkBrEZndtfMdLUcO2bf5o52dcBnEkQxZ5Pv1zGEEPPbLK9R6d7RnCzb39U
-         c7gPNh5gBUV4tTajhym0rdxLnJ/F3FReZ3ScYeekkHyTl7lkO33qof8aPtXC76Lugv
-         c1gKIbd6ysUW+B+32ZWATm6nO5Q2908ffjcuk0sQ=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 13:24:00 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:55383 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfIQRYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:24:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=p/Q+CvkxpgWzkqU37khmk1tk72V2Nto6pk9CsPwb4UY=; b=GXmeeArS+BiPbi2Txo5Xa9Y+e
+        4DvOdWGNN40zMpf4xxy8Lbbnc7pe34/tkUKFiXgiwa4CHa3UW6oc7xrYHflVTBTg6AavgztyQXzkV
+        EkanaHSCckybc/eFh/YUuIEqj64lg7KNzAYDVoGBUNvhRJrfwU+EpZYM6D9x3QpCklvX4=;
+Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
+        (envelope-from <mjg59@cavan.codon.org.uk>)
+        id 1iAHCW-0002XQ-8p; Tue, 17 Sep 2019 18:23:40 +0100
+Date:   Tue, 17 Sep 2019 18:23:40 +0100
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Martin Steigerwald <martin@lichtvoll.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190917172340.e5u7lz74rnnrlpoc@srcf.ucam.org>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu>
+ <2508489.jOnZlRuxVn@merkaba>
+ <CAHk-=wiGg-G8JFJ=R7qf0B+UtqA_Weouk6v+McmfsLJLRq6AKA@mail.gmail.com>
+ <20190917163456.alzodstm3hd4yrni@srcf.ucam.org>
+ <20190917171641.GC27999@1wt.eu>
+ <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1567414859-3244-3-git-send-email-weiyi.lu@mediatek.com>
-References: <1567414859-3244-1-git-send-email-weiyi.lu@mediatek.com> <1567414859-3244-3-git-send-email-weiyi.lu@mediatek.com>
-Cc:     James Liao <jamesjj.liao@mediatek.com>,
-        Fan Chen <fan.chen@mediatek.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org,
-        srv_heupstream@mediatek.com, CK Hu <ck.hu@mediatek.com>,
-        Weiyi Lu <weiyi.lu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Rob Herring <robh@kernel.org>, Weiyi Lu <weiyi.lu@mediatek.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [RESEND PATCH v1 2/3] clk: mediatek: Runtime PM support for MT8183 mcucfg clock provider
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 10:23:14 -0700
-Message-Id: <20190917172314.D2765214AF@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Weiyi Lu (2019-09-02 02:00:58)
-> Enable the runtime PM support and forward the struct device pointer for
-> registration of MT8183 mcucfg clocks.
->=20
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
-> ---
+On Tue, Sep 17, 2019 at 06:20:02PM +0100, Matthew Garrett wrote:
 
-Applied to clk-next
+> AES keys are used for a variety of long-lived purposes (eg, disk 
+> encryption).
 
+And as an example of when we'd want to do that during early boot - swap 
+is frequently encrypted with a random key generated on each boot, but 
+it's still important for that key to be strong in order to avoid someone 
+being able to recover the contents of swap.
+
+-- 
+Matthew Garrett | mjg59@srcf.ucam.org
