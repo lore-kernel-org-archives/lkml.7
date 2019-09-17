@@ -2,146 +2,315 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15002C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C36B7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7D99218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:30:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="yziF85tL"
+	by mail.kernel.org (Postfix) with ESMTP id 83C912054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfIQWaY (ORCPT
+        id S1727770AbfIQWgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 18:30:24 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:47820 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIQWaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 18:30:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=7E8TY9IOMtHlimu8VQQqtBqTR4S50nlqHCZq4/faMgg=; b=yziF85tLvTQAFWtmG8zZgrfVd
-        GCyxn44HGFXKp42cfoQtUY/mE84iW0gtJSv57DSSfD6YKsCJEOBaKp65r67T9ro2Qg3d+qOEjryhX
-        aiPBWuMp7jwdAoRA82l2FtIVd5X3ikt0q85A4ZXA7T5uvOkQiQL0yfhnCbV9eLN3wU3BJxbYj492t
-        U5cleBfPLgKmQv9TMdtJdsZakqm5P0opsPSj1Y28nnshEyklrXBlFDc5gSL0SSiPFXiAvo/4ktTxm
-        YL4fO9L64SYeLqo+Ur9SeRl/skvrYyCOeYYsi4wZjKBlLCz5VikjRDadMnDnUAMSVOp/sq20mnHhG
-        8U1pmRqdQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:40810)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iALzD-0004UN-JE; Tue, 17 Sep 2019 23:30:15 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iALzB-0001ek-Jg; Tue, 17 Sep 2019 23:30:13 +0100
-Date:   Tue, 17 Sep 2019 23:30:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     tinywrkb <tinywrkb@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190917223013.GC25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
- <20190917133253.GA1210141@arch-dsk-01>
+        Tue, 17 Sep 2019 18:36:20 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50116 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbfIQWgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 18:36:20 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 15:36:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,518,1559545200"; 
+   d="gz'50?scan'50,208,50";a="191533770"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 17 Sep 2019 15:36:16 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iAM52-000AH7-3f; Wed, 18 Sep 2019 06:36:16 +0800
+Date:   Wed, 18 Sep 2019 06:36:13 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     kbuild-all@01.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 1/2] powerpc/irq: bring back ksp_limit management in C
+ functions.
+Message-ID: <201909180600.orPJmOD8%lkp@intel.com>
+References: <512ec59433470a2dfb0d1168e0c660b843fe92d5.1568751807.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/mixed; boundary="ce2mztgf5ijlvwdd"
 Content-Disposition: inline
-In-Reply-To: <20190917133253.GA1210141@arch-dsk-01>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <512ec59433470a2dfb0d1168e0c660b843fe92d5.1568751807.git.christophe.leroy@c-s.fr>
+X-Patchwork-Hint: ignore
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
-> Here's the output of # mii-tool -v -v eth0 
-> 
-> * linux-test-5.1rc1-a2703de70942-without_bad_commit
-> 
-> Using SIOCGMIIPHY=0x8947
-> eth0: negotiated 100baseTx-FD flow-control, link ok
->   registers for MII PHY 0:
->     3100 796d 004d d072 15e1 c5e1 000f 0000
->     0000 0000 0800 0000 0000 0000 0000 a000
->     0000 0000 0000 f420 082c 0000 04e8 0000
->     3200 3000 0000 063d 0000 0000 0000 0000
 
-I'll also mention some other discrepencies that I've just spotted in
-this register set.
+--ce2mztgf5ijlvwdd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The BMSR is 0x796d.  Bit 2 is the link status, which is indicating
-that link is up.  Bit 5 indicates negotiation complete, which it
-claims it is.
+Hi Christophe,
 
-The PHY has a second status register at 0x11 which gives real time
-information.  That is 0x0000.  Bit 10 indicates link up, and is
-indicating that the link is down.  Bit 11 is saying that the speed
-and duplex is not resolved either.
+Thank you for the patch! Yet something to improve:
 
-So, there's contradictory information being reported by this PHY.
+[auto build test ERROR on linus/master]
+[cannot apply to v5.3 next-20190916]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-This brings up several questions:
-1. what is the _true_ state of the link?  Is the link up or down?
+url:    https://github.com/0day-ci/linux/commits/Christophe-Leroy/powerpc-irq-bring-back-ksp_limit-management-in-C-functions/20190918-042716
+config: powerpc-iss476-smp_defconfig (attached as .config)
+compiler: powerpc-linux-gcc (GCC) 7.4.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.4.0 make.cross ARCH=powerpc 
 
-2. what does the link partner think is the current link state and
-   results of negotiation?
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-3. should we be reading the register at 0x11 to determine the
-   negotiation results and link state (maybe logically anding the
-   present state with the BMSR link state)?
+All errors (new ones prefixed by >>):
 
+   In file included from arch/powerpc/include/asm/prom.h:15:0,
+                    from arch/powerpc/sysdev/dcr.c:11:
+   arch/powerpc/include/asm/irq.h: In function 'get_ksp_limit':
+>> arch/powerpc/include/asm/irq.h:70:12: error: dereferencing pointer to incomplete type 'struct task_struct'
+     return tsk->thread.ksp_limit;
+               ^~
 
-Compare that to a correctly functioning AR8035 such as I have in my
-cubox-i4 connected to a Netgear GS116 switch:
+vim +70 arch/powerpc/include/asm/irq.h
 
-   3100 796d 004d d072 15e1 c5e1 000d 2001
-   0000 0200 3c00 0000 0000 4007 b29a a000
-   0862 bc1c 0000 0000 082c 0000 07e8 0000
-   3200 3000 0000 063e 0000 0005 2d47 8100.
+    66	
+    67	#ifdef CONFIG_PPC32
+    68	static inline unsigned long get_ksp_limit(struct task_struct *tsk)
+    69	{
+  > 70		return tsk->thread.ksp_limit;
+    71	}
+    72	
 
-BMSR is again 0x796d.  The PHY specific status register this time
-is 0xbc1c, which indicates 1G, full duplex, resolved, link up, no
-smartspeed downgrade, tx/rx pause.
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-The register at 0x10 is a control register, which is strangely also
-different between our two.  Apparently in your PHY configuration,
-auto-MDI crossover mode is disabled, you are forced to MDI mode.
-On hardware reset, this register contains 0x0862, as per my
-example above, but yours is zero.
+--ce2mztgf5ijlvwdd
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
-I don't think the difference in register 0x10 can be explained away
-by operation of the smartspeed feature - so maybe my theory about
-the advertisement registers being cleared by the PHY is wrong.  The
-question is: how is 0x10 getting reset to zero in your setup?  Maybe
-something has corrupted the configuration of the PHY in ways that
-Linux doesn't know how to reprogram?
+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
+rg0ftKBs7CPM9JEX5qf/BypTVx2dpgAA
 
-Have you tried power-cycling the cubox-i?
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+--ce2mztgf5ijlvwdd--
