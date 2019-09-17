@@ -2,357 +2,214 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB542C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E08EFC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78FBA20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSWHjWk4"
+	by mail.kernel.org (Postfix) with ESMTP id AAD6020665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568738120;
+	bh=xqgQAmqWioRGpydmRJU5+PB+geEDLot7J66/rxJ54Ls=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=TyhMrfV2Hlk4ID31uHBvp5kuBDCro66pzfYA8K1vzDaNTyixikpv6vRhU9htZL9J1
+	 K73YvAWmRNH0lYsop74VyIjjpkRHMD08aeNoUW/PggnMgrmMe6xp/cdAy+j7IU7dXT
+	 dfE2EXknRsfHYR+4+nB0CUj1vABq7D5sPI0zNXsk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfIQQei (ORCPT
+        id S1730467AbfIQQfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:34:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38616 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730414AbfIQQeh (ORCPT
+        Tue, 17 Sep 2019 12:35:20 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33657 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730445AbfIQQfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:34:37 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so3937727wme.3;
-        Tue, 17 Sep 2019 09:34:34 -0700 (PDT)
+        Tue, 17 Sep 2019 12:35:18 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so9221066ioo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:35:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gOZrduvsuQOsT0TtQtTVHVnUf+qBWPsQWX6DxDL8ehI=;
-        b=DSWHjWk4LTCQkzSntmDLQ3LCjNU4ntZKV3RdMTdrT7XHPJo1TcIt0V7xu6HQuC6xVO
-         Ph3wlo0SBDZB1nqJuLgHunwwL4cckE+1EP8aJ4bZc3xK1zrpElRK0D1zdNgf52+ZH4Ru
-         i80oyNeDsy6c0SoYKT6DloEBWQudfwY8j5Fx8dYJVoS1pDBfyrZmF6Myz3rQFouiPU6J
-         h+TCrMcDrGase/DDj7fTsxGewipXyygUGwNM0n8AC0o510MCRDSfePJZzS7XRCqNeoU+
-         JLZLnLoT/ZYbWtbrK2WdRvEO+ldjSxliwrsTKxj92MYWiXG5phephX6XwBciU//qatpu
-         jqoA==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R6WuAQYqzuDG/O4h+vMzz9oDXBPPbve7hMAWfggywJE=;
+        b=F2rtRdVt78LbzH85Cc9dQbb91WInZ5QPhPHAbQmekQmlptyovSDimBiCeoXzOE+BiX
+         9+n1hLxmAHmK1CuqPCHfy3bAgpSfT81PwjOGLlmkfbmB/QVsBxMMYInknMAUeLSeRdQr
+         s6wR64EvLap4uXkf0tOd82wsLk8rCnE3Hf5i4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gOZrduvsuQOsT0TtQtTVHVnUf+qBWPsQWX6DxDL8ehI=;
-        b=KHUZ0FGqnmSljJMTKXR4tj0VeVD2l76fuHrtdcmJwosFQvCYwz796tehlI5//33eyo
-         y1zDktz4fkqsqjmHXU6WOD8llE3CG2qoDNZzza5NdyP5hLni3LtAJPO/cWJLexb3104H
-         8IUbZiAGeFyM71OBqhhlEjX9Of4ZqjSzQUZAB7R+T8jK8bgkgiX3q0lLvZDnmGw8ur8D
-         reHUXCBpqQhFS146vbitutiGmycETZ7hplrazfz/697b7pxZMGiqDEg8UE6ob/qNisyi
-         VqskGJu9vdLxu9EtXrSVlJhHGiqoi1jDGbTzBpCazxD2Kg9nutF3wa6UJX86LBrFIEm4
-         A9PA==
-X-Gm-Message-State: APjAAAUIqNszbhwIMsn+wpe2fTLK2nDAYJikVA9+LmPCN7IBeTbdUWu7
-        fOlK4Mulmx0bzWn4kvFDTcg=
-X-Google-Smtp-Source: APXvYqwR3D8IWm0Ut83B2G+YXsfjrcpLjCYzGzcwbYrl4Gpwi58UDBoN+gfS0TOglzRXhOamPs1aog==
-X-Received: by 2002:a1c:540c:: with SMTP id i12mr4628519wmb.90.1568738073603;
-        Tue, 17 Sep 2019 09:34:33 -0700 (PDT)
-Received: from arch-dsk-01 ([77.126.41.65])
-        by smtp.gmail.com with ESMTPSA id d9sm5015630wrc.44.2019.09.17.09.34.31
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=R6WuAQYqzuDG/O4h+vMzz9oDXBPPbve7hMAWfggywJE=;
+        b=bDXAIfgmqbH1I4dF8u21EyBUFFEDFHV/dRHPfx4FlPxVTI09YATvOHp+/CThzGX1xR
+         3MEau8PnkwoFI8S55iXaBfEYakc4a0SXn0eUupVjgMVlXTCvNZNrGk9UESagoYgWyIRW
+         ELFgcyS65CTu0IT/Qx7GaAy84lN1itDea1g9yFYwK9Z+VmByA9GfrhieT0RQnCeRc2Fe
+         fUfY3r7RC32lzJnmvGitROTBnNpKTGKRpsX2ngWp7fqoWcH6tH73ZDRFbqnJGE4alViX
+         5OJl1GrK7MrttdGhY6sgMQb2GOeuQn/IOIR4TT+RWX7hGWv183LKpx7R2mEcC3eSYEk7
+         b6qw==
+X-Gm-Message-State: APjAAAWxKbVRjEXpRwg+R6aiJ52k8EkMpmMGmZrlF27evdw9eZ7Z2FC+
+        CF/JAiij3KLGfHu7/pCz+IGetA==
+X-Google-Smtp-Source: APXvYqz2Dplu1nesxQbr44EF/OQRHMvqhOVpR7flUVdI5T7hgMr8LUcEqRAx25bntrc2Ys4zivJVvA==
+X-Received: by 2002:a5d:9a0a:: with SMTP id s10mr1500281iol.288.1568738117180;
+        Tue, 17 Sep 2019 09:35:17 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id v3sm2593781ioh.51.2019.09.17.09.35.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 09:34:32 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 19:34:27 +0300
-From:   tinywrkb <tinywrkb@gmail.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
-        Baruch Siach <baruch@tkos.co.il>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190917163427.GA1475935@arch-dsk-01>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
- <20190917133253.GA1210141@arch-dsk-01>
- <20190917133942.GR25745@shell.armlinux.org.uk>
- <20190917151707.GV25745@shell.armlinux.org.uk>
- <20190917153027.GW25745@shell.armlinux.org.uk>
+        Tue, 17 Sep 2019 09:35:16 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     mchehab@kernel.org, helen.koike@collabora.com,
+        skhan@linuxfoundation.org, andrealmeid@collabora.com,
+        dafna.hirschfeld@collabora.com, hverkuil-cisco@xs4all.nl,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        nicolas.ferre@microchip.com
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/5] Collapse vimc into single monolithic driver
+Date:   Tue, 17 Sep 2019 10:35:07 -0600
+Message-Id: <cover.1568689325.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917153027.GW25745@shell.armlinux.org.uk>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 04:30:27PM +0100, Russell King - ARM Linux admin wrote:
-> On Tue, Sep 17, 2019 at 04:17:07PM +0100, Russell King - ARM Linux admin wrote:
-> > On Tue, Sep 17, 2019 at 02:39:43PM +0100, Russell King - ARM Linux admin wrote:
-> > > On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
-> > > > On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
-> > > > > On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
-> > > > > > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > > > > > > Tinywrkb confirmed to me in private communication that revert of
-> > > > > > > > 5502b218e001 fixes Ethernet for him on effected system.
-> > > > > > > > 
-> > > > > > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > > > > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > > > > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > > > > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > > > > > > AR8035 PHY that supports 1Gb.
-> > > > > > > > 
-> > > > > > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > > > > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > > > > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > > > > > > the moment.
-> > > > > > > 
-> > > > > > > Could somebody with an affected device show us the output of ethtool
-> > > > > > > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > > > > > > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > > > > > > without that patch? We are missing a piece of the puzzle.
-> > > > > > > 
-> > > > > > > 	Andrew
-> > > > > > 
-> > > > > > linux-test-5.1rc1-a2703de70942-without_bad_commit
-> > > > > > 
-> > > > > > Settings for eth0:
-> > > > > > 	Supported ports: [ TP MII ]
-> > > > > > 	Supported link modes:   10baseT/Half 10baseT/Full
-> > > > > > 	                        100baseT/Half 100baseT/Full
-> > > > > > 	                        1000baseT/Full
-> > > > > 
-> > > > > So this means the local device says it can do 1000Mbps.
-> > > > > 
-> > > > > 
-> > > > > > 	Supported pause frame use: Symmetric
-> > > > > > 	Supports auto-negotiation: Yes
-> > > > > > 	Supported FEC modes: Not reported
-> > > > > > 	Advertised link modes:  10baseT/Half 10baseT/Full
-> > > > > > 	                        100baseT/Half 100baseT/Full
-> > > > > > 	                        1000baseT/Full
-> > > > > 
-> > > > > The link peer can also do 1000Mbps.
-> > > > > 
-> > > > > 
-> > > > > > 	Advertised pause frame use: Symmetric
-> > > > > > 	Advertised auto-negotiation: Yes
-> > > > > > 	Advertised FEC modes: Not reported
-> > > > > > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > > > > > 	                                     100baseT/Half 100baseT/Full
-> > > > > > 	                                     1000baseT/Full
-> > > > > > 	Link partner advertised pause frame use: Symmetric
-> > > > > > 	Link partner advertised auto-negotiation: Yes
-> > > > > > 	Link partner advertised FEC modes: Not reported
-> > > > > > 	Speed: 100Mb/s
-> > > > > 
-> > > > > Yet they have decided to do 100Mbps. 
-> > > > > 
-> > > > > We need to understand Why? The generic PHY driver would not do this on
-> > > > > its own. So i'm thinking something has poked a PHY register with some
-> > > > > value, and this patch is causing it to be over written.
-> > > > > 
-> > > > > Please can you use mii-tool -v -v to dump the PHY registers in each
-> > > > > case.
-> > > > > 
-> > > > > Thanks
-> > > > > 	Andrew
-> > > > 
-> > > > Here's the output of # mii-tool -v -v eth0 
-> > > > 
-> > > > * linux-test-5.1rc1-a2703de70942-without_bad_commit
-> > > > 
-> > > > Using SIOCGMIIPHY=0x8947
-> > > > eth0: negotiated 100baseTx-FD flow-control, link ok
-> > > >   registers for MII PHY 0:
-> > > >     3100 796d 004d d072 15e1 c5e1 000f 0000
-> > > >     0000 0000 0800 0000 0000 0000 0000 a000
-> > > >     0000 0000 0000 f420 082c 0000 04e8 0000
-> > > >     3200 3000 0000 063d 0000 0000 0000 0000
-> > > >   product info: vendor 00:13:74, model 7 rev 2
-> > > >   basic mode:   autonegotiation enabled
-> > > >   basic status: autonegotiation complete, link ok
-> > > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> > > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> > > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> > > 
-> > > This is *not* advertising 1000baseT modes (register 9).
-> > > 
-> > > > 
-> > > > 
-> > > > * linux-test-5.1rc1-5502b218e001-with_bad_commit
-> > > > 
-> > > > Using SIOCGMIIPHY=0x8947
-> > > > eth0: negotiated 100baseTx-FD flow-control, link ok
-> > > >   registers for MII PHY 0:
-> > > >     3100 796d 004d d072 15e1 c5e1 000d 0000
-> > > >     0000 0000 0800 0000 0000 0000 0000 a000
-> > > >     0000 0000 0000 0000 082c 0000 04e8 0000
-> > > >     3200 3000 0000 063d 0000 0000 0000 0000
-> > > >   product info: vendor 00:13:74, model 7 rev 2
-> > > >   basic mode:   autonegotiation enabled
-> > > >   basic status: autonegotiation complete, link ok
-> > > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> > > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> > > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> > > 
-> > > Neither is this.
-> > > 
-> > > However, the kernel and phylib _thinks_ that it is.  My guess is
-> > > something has rewritten the PHY registers from userspace, rather
-> > > than using ethtool to change the advertisment.  The MAC is still
-> > > trying to operate at 1000Mbps (since that is what phylib resolved)
-> > > yet the link might be actually operating at 100Mbps - but for that
-> > > to happen, we should've seen the link go down and up again.
-> > > 
-> > > Odd.
-> > 
-> > For reference, here I see:
-> > 
-> > Using SIOCGMIIPHY=0x8947
-> > eth0: negotiated 1000baseT-FD flow-control, link ok
-> >   registers for MII PHY 0:
-> >     3100 796d 004d d072 15e1 c1e1 000d 0000
-> >     0000 0200 3800 0000 0000 0000 0000 a000
-> >     0000 0000 0000 0000 082c 0000 04e8 0000
-> >     3200 3000 0000 060e 0000 0000 0000 0000
-> >   product info: vendor 00:13:74, model 7 rev 2
-> >   basic mode:   autonegotiation enabled
-> >   basic status: autonegotiation complete, link ok
-> >   capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> >   advertising:  1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-> >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-> > 
-> > Note that userspace writing to register 9 (1G settings) will update
-> > the physical PHY's advertisment for 1G speeds, but the kernel's idea
-> > will not be updated, so things will become de-sync'd, and the kernel
-> > _will_ incorrectly determine the speed.
-> > 
-> > So, are you using mii-tool or mii-diag to change the negotiation
-> > settings, rather than using ethtool?
-> > 
-> > This is likely the case, as prior to 5502b218e001, we used to read
-> > the advertisment registers afresh each time we evaluate the resulting
-> > link mode.  After 5502b218e001, we use the advertisment mask cached
-> > in phydev->advertising, which, looking at phy_mii_ioctl(), will not
-> > be updated if register 9 is written.
-> 
-> Please try this patch - I haven't written a commit message for it yet,
-> it's just to prove the above point.
-> 
-> Thanks.
-> 
->  drivers/net/phy/phy.c | 5 +++++
->  include/linux/mii.h   | 9 +++++++++
->  2 files changed, 14 insertions(+)
-> 
-> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
-> index 7af390d8bbdb..068a08a50064 100644
-> --- a/drivers/net/phy/phy.c
-> +++ b/drivers/net/phy/phy.c
-> @@ -458,6 +458,11 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
->  							   val);
->  				change_autoneg = true;
->  				break;
-> +			case MII_CTRL1000:
-> +				mii_ctrl1000_mod_linkmode_adv_t(phydev->advertising,
-> +							        val);
-> +				change_autoneg = true;
-> +				break;
->  			default:
->  				/* do nothing */
->  				break;
-> diff --git a/include/linux/mii.h b/include/linux/mii.h
-> index 5cd824c1c0ca..1249d32dbd63 100644
-> --- a/include/linux/mii.h
-> +++ b/include/linux/mii.h
-> @@ -455,6 +455,15 @@ static inline void mii_lpa_mod_linkmode_lpa_t(unsigned long *lp_advertising,
->  			 lp_advertising, lpa & LPA_LPACK);
->  }
->  
-> +static inline void mii_ctrl1000_mod_linkmode_adv_t(unsigned long *advertising,
-> +						   u32 ctrl1000)
-> +{
-> +	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, advertising,
-> +			 ctrl1000 & ADVERTISE_1000HALF);
-> +	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, advertising,
-> +			 ctrl1000 & ADVERTISE_1000FULL);
-> +}
-> +
->  /**
->   * linkmode_adv_to_lcl_adv_t
->   * @advertising:pointer to linkmode advertising
-> 
-> -- 
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-> According to speedtest.net: 11.9Mbps down 500kbps up
+imc uses Component API to split the driver into functional components.
+The real hardware resembles a monolith structure than component and
+component structure added a level of complexity making it hard to
+maintain without adding any real benefit.
 
-The patch didn't fix the issue.
+The sensor is one vimc component that would makes sense to be a separate
+module to closely align with the real hardware. It would be easier to
+collapse vimc into single monolithic driver first and then split the
+sensor off as a separate module.
 
-# ethtool eth0
+This patch series removes the component API and makes minimal changes to
+the code base preserving the functional division of the code structure.
+Preserving the functional structure allows us to split the sensor off
+as a separate module in the future.
 
-Settings for eth0:
-	Supported ports: [ TP MII ]
-	Supported link modes:   10baseT/Half 10baseT/Full
-	                        100baseT/Half 100baseT/Full
-	                        1000baseT/Full
-	Supported pause frame use: Symmetric
-	Supports auto-negotiation: Yes
-	Supported FEC modes: Not reported
-	Advertised link modes:  10baseT/Half 10baseT/Full
-	                        100baseT/Half 100baseT/Full
-	                        1000baseT/Full
-	Advertised pause frame use: Symmetric
-	Advertised auto-negotiation: Yes
-	Advertised FEC modes: Not reported
-	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-	                                     100baseT/Half 100baseT/Full
-	                                     1000baseT/Full
-	Link partner advertised pause frame use: Symmetric
-	Link partner advertised auto-negotiation: Yes
-	Link partner advertised FEC modes: Not reported
-	Speed: 1000Mb/s
-	Duplex: Full
-	Port: MII
-	PHYAD: 0
-	Transceiver: internal
-	Auto-negotiation: on
-	Supports Wake-on: d
-	Wake-on: d
-	Link detected: yes
+The following configure and stream test works on all devices.
 
-# mii-tool -v -v eth0
+    media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
+    media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
 
-Using SIOCGMIIPHY=0x8947
-eth0: negotiated 100baseTx-FD flow-control, link ok
-  registers for MII PHY 0:
-    3100 796d 004d d072 15e1 c5e1 000f 0000
-    0000 0000 0800 0000 0000 0000 0000 a000
-    0000 0000 0000 f420 082c 0000 04e8 0000
-    3200 3000 0000 063d 0000 0000 0000 0000
-  product info: vendor 00:13:74, model 7 rev 2
-  basic mode:   autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+    v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
+    v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
+    v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
 
-# journalctl -b | egrep -i 'phy|eth|fec'|grep -v usb
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video1
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video2
+    v4l2-ctl --stream-mmap --stream-count=100 -d /dev/video3
 
-kernel: Booting Linux on physical CPU 0x0
-kernel: libphy: Fixed MDIO Bus: probed
-kernel: libphy: fec_enet_mii_bus: probed
-kernel: fec 2188000.ethernet eth0: registered PHC device 0
-kernel: dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.31a with HDCP (DWC HDMI 3D TX PHY)
-kernel: Generic PHY 2188000.ethernet-1:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=2188000.ethernet-1:00, irq=POLL)
-kernel: fec 2188000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
-kernel: IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
-systemd-networkd[242]: eth0: Gained carrier
+The second patch in the series fixes a general protection fault found
+when rmmod is done while stream is active.
+
+- rmmod while streaming returns vimc is in use
+- rmmod without active stream works correctly
+
+Changes since v4:
+- Comments from Helen on Patch 1/5. Removed includes that are no longer
+  needed. Added linux/moduleparam.h to vimc-debayer.c and vimc-scaler.c
+  for module_param().
+- Returm value and spelling errors fixed.
+
+Changes since v3: (5 patches)
+Patch 1:
+- Main change is adding an array of struct vimc_ent_device(s) to save
+  vimc_ent_device(s), subdevs create in their "add" hooks. These
+  get used to create links and removing the subdevs. vimc-core allocates
+  this array which sized to number of entries in the topology defined in
+  the vimc_pipeline_config structure.
+- Remove links when register fails before registering the media device.
+  In this case, entity links need to be removed from error paths.
+Patch 2: no change.
+New patch 3:
+- Cleaning up duplicated IS_SRC and IS_SINK defines and moving them to
+  common header.
+New patch 4:
+- Documentation module parameter usage updates.
+New patch 5:
+- Lastly adding myself as a reviewers to MAINTAINERS file for vimc
+
+Changes since v2:
+- Rebase to media master on top of vimc reverts
+- Rename "vent" variable to "vcfg" to reflect config and standout
+  from "ved"
+- Error handling when adding subdevs fails to remove already added
+  subdevs, do other clean-up and bail out.
+
+Changes since v1:
+Patch 1 & 2: (patch 1 in this series)
+- Collapsed the two patches into one
+- Added common defines (vimc_device and vimc_ent_config) to vimc-common.h
+  based on our discussion.
+- Addressed review comments from Helen and Laurent
+- Use vimc-common.h instead of creating a new file.
+- Other minor comments from Helen on int vs. unsigned int and
+  not needing to initialize ret in vimc_add_subdevs()
+Patch 3 (patch 2 in this series):
+- The second patch is the fix for gpf. Updated the patch after looking
+  at the test results from Andre and Helen. This problem is in a common
+  code and impacts all subdevs. The fix addresses the core problem and
+  fixes it. Fix removes pads release from v4l2_device_unregister_subdev()
+  and pads are now released from the sd release handler with all other
+  resources.
+
+Outstanding:
+- Update documentation with the correct topology.
+- There is one outstanding gpf remaining in the unbind path. I will
+  fix that in a separate patch. This is an existing problem and will
+  be easier to fix on top of this patch series.
+
+vimc_print_dot (--print-dot) topology after this change: (no change
+compared to media master)
+digraph board {
+        rankdir=TB
+        n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000001:port0 -> n00000005:port0 [style=bold]
+        n00000001:port0 -> n0000000b [style=bold]
+        n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000003:port0 -> n00000008:port0 [style=bold]
+        n00000003:port0 -> n0000000f [style=bold]
+        n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000005:port1 -> n00000015:port0
+        n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000008:port1 -> n00000015:port0 [style=dashed]
+        n0000000b [label="Raw Capture 0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
+        n0000000f [label="Raw Capture 1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
+        n00000013 [label="{{} | RGB/YUV Input\n/dev/v4l-subdev4 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000013:port0 -> n00000015:port0 [style=dashed]
+        n00000015 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
+        n00000015:port1 -> n00000018 [style=bold]
+        n00000018 [label="RGB/YUV Capture\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
+}
+
+Shuah Khan (5):
+  media: vimc: Collapse component structure into a single monolithic
+    driver
+  media: vimc: Fix gpf in rmmod path when stream is active
+  vimc: move duplicated IS_SRC and IS_SINK to common header
+  doc: media: vimc: Update module parameter usage information
+  MAINTAINERS: Add reviewer to vimc driver
+
+ Documentation/media/v4l-drivers/vimc.rst    |  12 +-
+ MAINTAINERS                                 |   1 +
+ drivers/media/platform/vimc/Makefile        |   7 +-
+ drivers/media/platform/vimc/vimc-capture.c  |  81 ++------
+ drivers/media/platform/vimc/vimc-common.c   |   3 +-
+ drivers/media/platform/vimc/vimc-common.h   |  58 ++++++
+ drivers/media/platform/vimc/vimc-core.c     | 216 ++++++++------------
+ drivers/media/platform/vimc/vimc-debayer.c  |  85 ++------
+ drivers/media/platform/vimc/vimc-scaler.c   |  84 ++------
+ drivers/media/platform/vimc/vimc-sensor.c   |  74 ++-----
+ drivers/media/platform/vimc/vimc-streamer.c |   1 -
+ 11 files changed, 217 insertions(+), 405 deletions(-)
+
+-- 
+2.20.1
+
