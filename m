@@ -2,179 +2,112 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA456C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A13C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:27:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA4021924
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C99821852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:27:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbfIQJYk (ORCPT
+        id S1727487AbfIQJ1N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:24:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48952 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 05:27:13 -0400
+Received: from mga11.intel.com ([192.55.52.93]:6874 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727229AbfIQJYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:24:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E56363082B3F;
-        Tue, 17 Sep 2019 09:24:11 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3FB785C21E;
-        Tue, 17 Sep 2019 09:24:07 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B16399D31; Tue, 17 Sep 2019 11:24:05 +0200 (CEST)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Eric Anholt <eric@anholt.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
-        QEMU'S CIRRUS DEVICE), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 05/11] drm/shmem: drop DEFINE_DRM_GEM_SHMEM_FOPS
-Date:   Tue, 17 Sep 2019 11:23:58 +0200
-Message-Id: <20190917092404.9982-6-kraxel@redhat.com>
-In-Reply-To: <20190917092404.9982-1-kraxel@redhat.com>
-References: <20190917092404.9982-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 17 Sep 2019 09:24:12 +0000 (UTC)
+        id S1727447AbfIQJ1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 05:27:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 02:27:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
+   d="scan'208";a="270483217"
+Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
+  by orsmga001.jf.intel.com with ESMTP; 17 Sep 2019 02:27:11 -0700
+Received: from FMSMSX109.amr.corp.intel.com (10.18.116.9) by
+ fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 17 Sep 2019 02:27:11 -0700
+Received: from shsmsx154.ccr.corp.intel.com (10.239.6.54) by
+ fmsmsx109.amr.corp.intel.com (10.18.116.9) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 17 Sep 2019 02:27:10 -0700
+Received: from shsmsx101.ccr.corp.intel.com ([169.254.1.92]) by
+ SHSMSX154.ccr.corp.intel.com ([169.254.7.195]) with mapi id 14.03.0439.000;
+ Tue, 17 Sep 2019 17:27:08 +0800
+From:   "Zhang, Tina" <tina.zhang@intel.com>
+To:     "kraxel@redhat.com" <kraxel@redhat.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Yuan, Hang" <hang.yuan@intel.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "Lv, Zhiyuan" <zhiyuan.lv@intel.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>
+Subject: RE: [PATCH v5 0/6] Deliver vGPU display refresh event to userspace
+Thread-Topic: [PATCH v5 0/6] Deliver vGPU display refresh event to userspace
+Thread-Index: AQHVU9tUM+mrk1EK3UW2FOPyJRIR1KcZNxaggAMX1YCAE3M5kA==
+Date:   Tue, 17 Sep 2019 09:27:08 +0000
+Message-ID: <237F54289DF84E4997F34151298ABEBC87734BB6@SHSMSX101.ccr.corp.intel.com>
+References: <20190816023528.30210-1-tina.zhang@intel.com>
+ <237F54289DF84E4997F34151298ABEBC8771E7AE@SHSMSX101.ccr.corp.intel.com>
+ <20190905074857.n3akutnoarnfvg4y@sirius.home.kraxel.org>
+In-Reply-To: <20190905074857.n3akutnoarnfvg4y@sirius.home.kraxel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmNhNzQ0MTctZjBjNy00ZmI3LThiMzItYTg0MTBiNDJkN2U3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoibmc3aVwvMmlTQnVoYkwwVzRseHlpd3pEUFZcLzh1VHlzcEk0ZlRPMEl3UCtQZ08xYlhQejQ0ejZ6WHdcL3lENWtWeCJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DEFINE_DRM_GEM_SHMEM_FOPS is identical
-to DEFINE_DRM_GEM_FOPS now, drop it.
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- include/drm/drm_gem_shmem_helper.h      | 26 -------------------------
- drivers/gpu/drm/cirrus/cirrus.c         |  2 +-
- drivers/gpu/drm/panfrost/panfrost_drv.c |  2 +-
- drivers/gpu/drm/tiny/gm12u320.c         |  2 +-
- drivers/gpu/drm/v3d/v3d_drv.c           |  2 +-
- drivers/gpu/drm/virtio/virtgpu_drv.c    |  2 +-
- 6 files changed, 5 insertions(+), 31 deletions(-)
-
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index d89f2116c8ab..6748379a0b44 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -88,32 +88,6 @@ struct drm_gem_shmem_object {
- #define to_drm_gem_shmem_obj(obj) \
- 	container_of(obj, struct drm_gem_shmem_object, base)
- 
--/**
-- * DEFINE_DRM_GEM_SHMEM_FOPS() - Macro to generate file operations for shmem drivers
-- * @name: name for the generated structure
-- *
-- * This macro autogenerates a suitable &struct file_operations for shmem based
-- * drivers, which can be assigned to &drm_driver.fops. Note that this structure
-- * cannot be shared between drivers, because it contains a reference to the
-- * current module using THIS_MODULE.
-- *
-- * Note that the declaration is already marked as static - if you need a
-- * non-static version of this you're probably doing it wrong and will break the
-- * THIS_MODULE reference by accident.
-- */
--#define DEFINE_DRM_GEM_SHMEM_FOPS(name) \
--	static const struct file_operations name = {\
--		.owner		= THIS_MODULE,\
--		.open		= drm_open,\
--		.release	= drm_release,\
--		.unlocked_ioctl	= drm_ioctl,\
--		.compat_ioctl	= drm_compat_ioctl,\
--		.poll		= drm_poll,\
--		.read		= drm_read,\
--		.llseek		= noop_llseek,\
--		.mmap		= drm_gem_mmap, \
--	}
--
- struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t size);
- void drm_gem_shmem_free_object(struct drm_gem_object *obj);
- 
-diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/cirrus.c
-index 89d9e6fdeb8c..7d08d067e1a4 100644
---- a/drivers/gpu/drm/cirrus/cirrus.c
-+++ b/drivers/gpu/drm/cirrus/cirrus.c
-@@ -510,7 +510,7 @@ static void cirrus_mode_config_init(struct cirrus_device *cirrus)
- 
- /* ------------------------------------------------------------------ */
- 
--DEFINE_DRM_GEM_SHMEM_FOPS(cirrus_fops);
-+DEFINE_DRM_GEM_FOPS(cirrus_fops);
- 
- static struct drm_driver cirrus_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-index d74442d71048..a78ce21594d7 100644
---- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-+++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-@@ -470,7 +470,7 @@ static const struct drm_ioctl_desc panfrost_drm_driver_ioctls[] = {
- 	PANFROST_IOCTL(MADVISE,		madvise,	DRM_RENDER_ALLOW),
- };
- 
--DEFINE_DRM_GEM_SHMEM_FOPS(panfrost_drm_driver_fops);
-+DEFINE_DRM_GEM_FOPS(panfrost_drm_driver_fops);
- 
- /*
-  * Panfrost driver version:
-diff --git a/drivers/gpu/drm/tiny/gm12u320.c b/drivers/gpu/drm/tiny/gm12u320.c
-index 03d0e2df6774..94fb1f593564 100644
---- a/drivers/gpu/drm/tiny/gm12u320.c
-+++ b/drivers/gpu/drm/tiny/gm12u320.c
-@@ -649,7 +649,7 @@ static void gm12u320_driver_release(struct drm_device *dev)
- 	kfree(gm12u320);
- }
- 
--DEFINE_DRM_GEM_SHMEM_FOPS(gm12u320_fops);
-+DEFINE_DRM_GEM_FOPS(gm12u320_fops);
- 
- static struct drm_driver gm12u320_drm_driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_ATOMIC,
-diff --git a/drivers/gpu/drm/v3d/v3d_drv.c b/drivers/gpu/drm/v3d/v3d_drv.c
-index 3506ae2723ae..03e4fbe1b92b 100644
---- a/drivers/gpu/drm/v3d/v3d_drv.c
-+++ b/drivers/gpu/drm/v3d/v3d_drv.c
-@@ -169,7 +169,7 @@ v3d_postclose(struct drm_device *dev, struct drm_file *file)
- 	kfree(v3d_priv);
- }
- 
--DEFINE_DRM_GEM_SHMEM_FOPS(v3d_drm_fops);
-+DEFINE_DRM_GEM_FOPS(v3d_drm_fops);
- 
- /* DRM_AUTH is required on SUBMIT_CL for now, while we don't have GMP
-  * protection between clients.  Note that render nodes would be be
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index a5cb58754f7d..8dee698c90ff 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -184,7 +184,7 @@ MODULE_AUTHOR("Dave Airlie <airlied@redhat.com>");
- MODULE_AUTHOR("Gerd Hoffmann <kraxel@redhat.com>");
- MODULE_AUTHOR("Alon Levy");
- 
--DEFINE_DRM_GEM_SHMEM_FOPS(virtio_gpu_driver_fops);
-+DEFINE_DRM_GEM_FOPS(virtio_gpu_driver_fops);
- 
- static struct drm_driver driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_RENDER | DRIVER_ATOMIC,
--- 
-2.18.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogaW50ZWwtZ3Z0LWRldiBb
+bWFpbHRvOmludGVsLWd2dC1kZXYtYm91bmNlc0BsaXN0cy5mcmVlZGVza3RvcC5vcmddIE9uDQo+
+IEJlaGFsZiBPZiBrcmF4ZWxAcmVkaGF0LmNvbQ0KPiBTZW50OiBUaHVyc2RheSwgU2VwdGVtYmVy
+IDUsIDIwMTkgMzo0OSBQTQ0KPiBUbzogWmhhbmcsIFRpbmEgPHRpbmEuemhhbmdAaW50ZWwuY29t
+Pg0KPiBDYzoga3ZtQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsgWXVhbiwgSGFuZw0KPiA8aGFuZy55dWFuQGludGVsLmNvbT47IGFsZXgud2lsbGlhbXNvbkBy
+ZWRoYXQuY29tOyBMdiwgWmhpeXVhbg0KPiA8emhpeXVhbi5sdkBpbnRlbC5jb20+OyBpbnRlbC1n
+dnQtZGV2QGxpc3RzLmZyZWVkZXNrdG9wLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDAv
+Nl0gRGVsaXZlciB2R1BVIGRpc3BsYXkgcmVmcmVzaCBldmVudCB0byB1c2Vyc3BhY2UNCj4gDQo+
+ICAgSGksDQo+IA0KPiA+IE9wdGlvbiAyOiBRRU1VIHByb3ZpZGVzIHRoZSBlbXVsYXRlZCBkaXNw
+bGF5IHJlZnJlc2ggZXZlbnQgdG8gdGhlDQo+ID4gdmdwdXMgcHJvdmlkZWQgYnkgdmVuZG9yIGRy
+aXZlci4gRm9yIHZncHVzLCB0aGUgZGlzcGxheSByZWZyZXNoIGV2ZW50DQo+ID4gY2FuIGJlIGNv
+bnNpZGVyZWQgYXMgdGhlIHZibGFuayBldmVudCB3aGljaCBpcyBsZXZlcmFnZWQgYnkgZ3Vlc3QN
+Cj4gPiB3aW5kb3cgbWFuYWdlciB0byBkbyB0aGUgcGxhbmUgdXBkYXRlIG9yIG1vZGUtc2V0dGlu
+Zy4NCj4gDQo+ID4gUGVvcGxlIGFyZSBhc2tpbmcgaWYgb3B0aW9uIDIgY291bGQgYmUgYSBiZXR0
+ZXIgY2hvaWNlLg0KPiANCj4gQ2VydGFpbmx5IHdvcnRoIHRyeWluZywgbWF5YmUgaXQgZXZlbiBt
+YWtlcyBzZW5zZSB0byBpbXBsZW1lbnQgYm90aCBhbmQNCj4gbGV0IHFlbXUgcGljayBvbmUsIHBv
+c3NpYmx5IGV2ZW4gc3dpdGNoIHRoZW0gYXQgcnVudGltZS4NCj4gDQo+IHFlbXUgY2FuIGNoYW5n
+ZSB0aGUgcmVmcmVzaCByYXRlLiAgdm5jIGFuZCBzZGwgdXNlIHRoYXQgdG8gcmVkdWNlIHRoZQ0K
+PiByZWZyZXNoIHJhdGUgaW4gY2FzZSBub2JvZHkgaXMgbG9va2luZyAobm8gdm5jIGNsaWVudCBj
+b25uZWN0ZWQsIHNkbCB3aW5kb3cNCj4gbWluaW1pemVkKS4gIEl0IHN1cmVseSBtYWtlcyBzZW5z
+ZSB0byBtYWtlIHRoYXQgdmlzaWJsZSB0byB0aGUgZ3Vlc3Qgc28gaXQgY2FuDQo+IHRocm90dGxl
+IGRpc3BsYXkgdXBkYXRlcyB0b28uICBJJ20gbm90IHN1cmUgdmJsYW5rIGlzIHRoZSB3YXkgdG8g
+Z28gdGhvdWdoLA0KPiBndWVzdHMgbWlnaHQgcnVuIGludG8gdmJsYW5rIGlycSB0aW1lb3V0cyBp
+biBjYXNlIHRoZSByZWZyZXNoIHJhdGUgaXMgdmVyeQ0KPiBsb3cgLi4uDQoNCkluZGVlZCwgbG93
+IHZibGFuayByYXRlIGlzbid0IGV4cGVjdGVkIGJ5IGd1ZXN0IGdmeCBkcml2ZXIuIEl0IGNvbXBs
+YWlucyBhYm91dCB0aGUgdGltZW91dCBlcnJvciBhbGwgdGhlIHRpbWUsIHdoZW4gdGhlIHZibGFu
+ayBpcyBsb3cuIA0KDQpDdXJyZW50bHksIGd2dC1nIHByb3ZpZGVzIGZ1bGwgdmlydHVhbGl6ZWQg
+ZGlzcGxheSBtb2RlbCAoYS5rLmEuIG5vdCBwdikuIEFuZCB0aGUgb3B0aW9uIDIgaXMgbW9yZSBs
+aWtlIGEgcHYgc29sdXRpb24gZm9yIHBlcmZvcm1hbmNlIG9wdGltaXphdGlvbiwgd2hpY2ggaXMg
+b2YgY291cnNlIGEgdmVyeSBnb29kIHByb3Bvc2FsLiBTaW5jZSB0aGUgdHdvIG9wdGlvbnMgaGF2
+ZSBubyBkZXBlbmRlbmN5LCB0aGlzIHBhdGNoLXNldCBsaW1pdHMgaXRzIHNjb3BlIHRvIG9ubHkg
+aW5jbHVkZSBvcHRpb24gMS4gVGhhbmtzLg0KDQoNCkJSLA0KVGluYQ0KDQo+IA0KPiBjaGVlcnMs
+DQo+ICAgR2VyZA0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18NCj4gaW50ZWwtZ3Z0LWRldiBtYWlsaW5nIGxpc3QNCj4gaW50ZWwtZ3Z0LWRldkBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcNCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9pbnRlbC1ndnQtZGV2DQo=
