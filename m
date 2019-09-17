@@ -2,112 +2,128 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5899AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4792C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35C1A21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C0E21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfIQMND (ORCPT
+        id S1727724AbfIQMNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:13:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54918 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725270AbfIQMNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:13:02 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 459AF10CC1EB;
-        Tue, 17 Sep 2019 12:13:02 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1A4455C1D8;
-        Tue, 17 Sep 2019 12:12:57 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 17 Sep 2019 14:13:02 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 14:12:56 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     Jan Kratochvil <jan.kratochvil@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH?] powerpc: Hard wire PT_SOFTE value to 1 in gpr_get() too
-Message-ID: <20190917121256.GA8659@redhat.com>
+        Tue, 17 Sep 2019 08:13:37 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:45621 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725270AbfIQMNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:13:36 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8HCBvaY011073
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 08:11:58 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id DC55C420811; Tue, 17 Sep 2019 08:11:56 -0400 (EDT)
+Date:   Tue, 17 Sep 2019 08:11:56 -0400
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Martin Steigerwald <martin@lichtvoll.de>
+Cc:     Willy Tarreau <w@1wt.eu>, Matthew Garrett <mjg59@srcf.ucam.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190917121156.GC6762@mit.edu>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu>
+ <2508489.jOnZlRuxVn@merkaba>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 17 Sep 2019 12:13:02 +0000 (UTC)
+In-Reply-To: <2508489.jOnZlRuxVn@merkaba>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't have a ppc machine, this patch wasn't even compile tested,
-could you please review?
+On Tue, Sep 17, 2019 at 09:33:40AM +0200, Martin Steigerwald wrote:
+> Willy Tarreau - 17.09.19, 07:24:38 CEST:
+> > On Mon, Sep 16, 2019 at 06:46:07PM -0700, Matthew Garrett wrote:
+> > > >Well, the patch actually made getrandom() return en error too, but
+> > > >you seem more interested in the hypotheticals than in arguing
+> > > >actualities.> 
+> > > If you want to be safe, terminate the process.
+> > 
+> > This is an interesting approach. At least it will cause bug reports in
+> > application using getrandom() in an unreliable way and they will
+> > check for other options. Because one of the issues with systems that
+> > do not finish to boot is that usually the user doesn't know what
+> > process is hanging.
+> 
 
-The commit a8a4b03ab95f ("powerpc: Hard wire PT_SOFTE value to 1 in
-ptrace & signals") changed ptrace_get_reg(PT_SOFTE) to report 0x1,
-but PTRACE_GETREGS still copies pt_regs->softe as is.
+I would be happy with a change which changes getrandom(0) to send a
+kill -9 to the process if it is called too early, with a new flag,
+getrandom(GRND_BLOCK) which blocks until entropy is available.  That
+leaves it up to the application developer to decide what behavior they
+want.
 
-This is not consistent and this breaks
-http://sourceware.org/systemtap/wiki/utrace/tests/user-regs-peekpoke
+Userspace applications which want to do something more sophisticated
+could set a timer which will cause getrandom(GRND_BLOCK) to return
+with EINTR (or the signal handler could use longjmp; whatever) to
+abort and do something else, like calling random_r if it's for some
+pathetic use of random numbers like MIT-MAGIC-COOKIE.
 
-Reported-by: Jan Kratochvil <jan.kratochvil@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- arch/powerpc/kernel/ptrace.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+> A userspace process could just poll on the kernel by forking a process 
+> to use getrandom() and waiting until it does not get terminated anymore. 
+> And then it would still hang.
 
-diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-index 8c92feb..9e9342c 100644
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -363,11 +363,36 @@ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
- 	BUILD_BUG_ON(offsetof(struct pt_regs, orig_gpr3) !=
- 		     offsetof(struct pt_regs, msr) + sizeof(long));
- 
-+#ifdef CONFIG_PPC64
-+	if (!ret)
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &target->thread.regs->orig_gpr3,
-+					  offsetof(struct pt_regs, orig_gpr3),
-+					  offsetof(struct pt_regs, softe));
-+
-+	if (!ret) {
-+		unsigned long softe = 0x1;
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &msr,
-+					  offsetof(struct pt_regs, softe),
-+					  offsetof(struct pt_regs, softe) +
-+					  sizeof(softe));
-+	}
-+
-+	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
-+		     offsetof(struct pt_regs, softe) + sizeof(long));
-+
-+	if (!ret)
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &target->thread.regs->trap,
-+					  offsetof(struct pt_regs, trap),
-+					  sizeof(struct user_pt_regs));
-+#else
- 	if (!ret)
- 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
- 					  &target->thread.regs->orig_gpr3,
- 					  offsetof(struct pt_regs, orig_gpr3),
- 					  sizeof(struct user_pt_regs));
-+#endif
- 	if (!ret)
- 		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
- 					       sizeof(struct user_pt_regs), -1);
--- 
-2.5.0
+So.... I'm not too worried about that, because if a process is
+determined to do something stupid, they can always do something
+stupid.
 
+This could potentially be a problem, as would GRND_BLOCK, in that if
+an application author decides to use to do something to wait for real
+randomness, because in the good judgement of the application author,
+it d*mned needs real security because otherwise an attacker could,
+say, force a launch of nuclear weapons and cause world war III, and
+then some small 3rd-tier distro decides to repurpose that application
+for some other use, and puts it in early boot, it's possible that a
+user will report it as a "regression", and we'll be back to the
+question of whether we revert a performance optimization patch.
 
+There are only two ways out of this mess.  The first option is we take
+functionality away from a userspace author who Really Wants A Secure
+Random Number Generator.  And there are an awful lot of programs who
+really want secure crypto, becuase this is not a hypothetical.  The
+result in "Mining your P's and Q's" did happen before.  If we forget
+the history, we are doomed to repeat it.
+
+The only other way is that we need to try to get the CRNG initialized
+securely in early boot, before we let userspace start.  If we do it
+early enough, we can also make the kernel facilities like KASLR and
+Stack Canaries more secure.  And this is *doable*, at least for most
+common platforms.  We can leverage UEFI; we cn try to use the TPM's
+random number generator, etc.  It won't help so much for certain
+brain-dead architectures, like MIPS and ARM, but if they are used for
+embedded use cases, it will be caught before the product is released
+for consumer use.  And this is where blocking is *way* better than a
+big fat warning, or sleeping for 15 seconds, both of which can easily
+get missed in the embedded case.  If we can fix this for traditional
+servers/desktops/laptops, then users won't be complaining to Linus,
+and I think we can all be happy.
+
+Regards,
+
+					- Ted
