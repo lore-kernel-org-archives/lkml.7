@@ -2,74 +2,101 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2832AC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0147C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0425F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:01:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A73F520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:07:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="xHErRN1q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391950AbfIQCBI (ORCPT
+        id S2391960AbfIQCHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 22:01:08 -0400
-Received: from mga11.intel.com ([192.55.52.93]:43627 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbfIQCBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 22:01:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 19:01:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
-   d="scan'208";a="186014744"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga008.fm.intel.com with ESMTP; 16 Sep 2019 19:01:06 -0700
-Date:   Tue, 17 Sep 2019 10:00:46 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Wei Yang <richard.weiyang@gmail.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        willy@infradead.org, peterz@infradead.org
-Subject: Re: [PATCH] mm: remove redundant assignment of entry
-Message-ID: <20190917020046.GA8609@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20190708082740.21111-1-richardw.yang@linux.intel.com>
- <20190914000326.h4ruqmyvo3yisf52@master>
- <20190916211516.znruqltoqdeq7pml@willie-the-truck>
+        Mon, 16 Sep 2019 22:07:15 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:48057 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbfIQCHP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 22:07:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=Subject:Message-ID:From:CC:To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
+        Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=vVkn2O/9lGVNrbPzlDo6XOPFmZ8O6RHYGV95uzIF1K4=; b=xHErRN1qIc/xI/5awjhwSFsV39
+        Jd9w5VmsEBkVcocyN4+byYKC0GvQw6HOLfxqIGFvGkmhMLkHpkK7APEYxO1WvsGH0CUhzKlGGbygr
+        RAUxRzG0L+yl27dmbBDl2HOHvXNGY76txjx0WFC6l+aRu4i59Oek1fIlAqQE5MpUQLhE=;
+Received: from 199-83-223-235.public.monkeybrains.net ([199.83.223.235] helo=[192.168.1.141])
+        by cavan.codon.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <mjg59@srcf.ucam.org>)
+        id 1iA2tG-000305-SF; Tue, 17 Sep 2019 03:06:53 +0100
+Date:   Mon, 16 Sep 2019 18:46:07 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=whfPwei+yf9vBgfSuG5HDtiYmt3nOu9Js+vkTYSrMf2ow@mail.gmail.com>
+References: <20190916042952.GB23719@1wt.eu> <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com> <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com> <20190916172117.GB15263@mit.edu> <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com> <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org> <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com> <20190916232922.GA7880@darwi-home-pc> <CAHk-=wh2PuYtuUVt523j20cTceN+ps8UNJY=uRWQuRaDeDyLQw@mail.gmail.com> <BEF07E89-E36D-480F-AB1E-25C80C9DABE7@srcf.ucam.org> <CAHk-=whfPwei+yf9vBgfSuG5HDtiYmt3nOu9Js+vkTYSrMf2ow@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916211516.znruqltoqdeq7pml@willie-the-truck>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+Message-ID: <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+X-SA-Do-Not-Run: Yes
+X-SA-Exim-Connect-IP: 199.83.223.235
+X-SA-Exim-Mail-From: mjg59@srcf.ucam.org
+Subject: Re: Linux 5.3-rc8
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); Unknown failure
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:15:16PM +0100, Will Deacon wrote:
->On Sat, Sep 14, 2019 at 12:03:26AM +0000, Wei Yang wrote:
->> On Mon, Jul 08, 2019 at 04:27:40PM +0800, Wei Yang wrote:
->> >Since ptent will not be changed after previous assignment of entry, it
->> >is not necessary to do the assignment again.
->> >
->> 
->> Sounds this one is lost in the time line :-)
+On 16 September 2019 18:41:36 GMT-07:00, Linus Torvalds <torvalds@linux-fou=
+ndation=2Eorg> wrote:
+>On Mon, Sep 16, 2019 at 6:24 PM Matthew Garrett <mjg59@srcf=2Eucam=2Eorg>
+>wrote:
+>>
+>> Exactly the scenario where you want getrandom() to block, yes=2E
 >
->Don't think so -- looks like it's in linux-next [1] via akpm to me.
+>It *would* block=2E Just not forever=2E
+
+It's already not forever - there's enough running in the background of tha=
+t system that it'll unblock eventually=2E=20
+
+>And btw, the whole "generate key at boot when nothing else is going
+>on" is already broken, so presumably nobody actually does it=2E
+
+If nothing ever did this, why was getrandom() designed in a way to protect=
+ against this situation?=20
+
+>See why I'm saying "hypothetical"? You're doing it again=2E
 >
-
-Ah, thanks. I may miss some message.
-
->Will
+>> >Then you have to ignore the big warning too=2E
+>>
+>> The big warning that's only printed in dmesg?
 >
->[1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=b47011719e5c05aa9dc78fe76a7e46075f422a45
+>Well, the patch actually made getrandom() return en error too, but you
+>seem more interested in the hypotheticals than in arguing actualities=2E
 
--- 
-Wei Yang
-Help you, Help me
+If you want to be safe, terminate the process=2E
+
+
+--=20
+Matthew Garrett | mjg59@srcf=2Eucam=2Eorg
