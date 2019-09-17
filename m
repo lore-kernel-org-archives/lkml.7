@@ -2,87 +2,102 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07B2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E51C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C397E2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dgmHFsLV"
+	by mail.kernel.org (Postfix) with ESMTP id 8644320665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730360AbfIQQdI (ORCPT
+        id S1730377AbfIQQdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:33:08 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36351 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfIQQdI (ORCPT
+        Tue, 17 Sep 2019 12:33:53 -0400
+Received: from mx01.bbu.dsd.mx.bitdefender.com ([91.199.104.161]:46504 "EHLO
+        mx01.bbu.dsd.mx.bitdefender.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730330AbfIQQdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:33:08 -0400
-Received: by mail-lj1-f195.google.com with SMTP id v24so4239050ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:33:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iQDRRInEfkOmolUWUlkWs8+kiucdxwd5FC1fGShr5c4=;
-        b=dgmHFsLVgUDYlzKnx2AI9EBhRyfdronIQPVc9nmshBfpBav41pgLiKHS47u1qbTMRV
-         /OwRABb4gyj/8eMrwgTXTZKo1ZEr3OZ650q9RGo2V85QlQDznn7pVQpcjv7vyWQko1kV
-         m46DsLgVSgceBujZfIRs97mCBeZ7wHovtGGcM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iQDRRInEfkOmolUWUlkWs8+kiucdxwd5FC1fGShr5c4=;
-        b=pEszR0euksRdrX2AzxkVIyBjOgl44cmWy0hv7pUxBVGOUjWnA04x9ncbtOgcMkSVok
-         hxJu5+YRZkV6WfZjOR1/HEKugfHJ4IicR94kWvHwwOOykk+mQklPFLkNk09+Rwhkav3F
-         P4EO41BrvNnL63iqVV9mUKmssHvWw6MaLYm9L4ZRbxV9cGZumoEIMH709JVDB9dCERA+
-         7rXLS0H7WX7Mm9Cz5NSf7zuXNEn2Q3YeU+bf0pOVbah2krbCtjWg3gXLsOBLPfer64A1
-         qIc7BqAHanDwkLrlHlQcYZwEg9O0Tq6UXdRO/ItNixRfCWJ5FynOOenzolvykv3URqqv
-         JkNA==
-X-Gm-Message-State: APjAAAXGi48bSijBIxGJfKbGUUWvvE1pD1ggUT8DDCsfA1YVlhtcz/z3
-        WdxQOjqKTYc9BZbG0yoGnphIY2L6/4A=
-X-Google-Smtp-Source: APXvYqwsLVTEUTVJADorN7WH2RNDTzJaYlm5HyeJ8F3Mn52TKzfj3MBv4EXE8L9x3hjfYyYhhow0XQ==
-X-Received: by 2002:a2e:95cf:: with SMTP id y15mr2402988ljh.27.1568737985658;
-        Tue, 17 Sep 2019 09:33:05 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id w30sm511488lfn.82.2019.09.17.09.33.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 09:33:05 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id e17so4153618ljf.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:33:04 -0700 (PDT)
-X-Received: by 2002:a2e:8592:: with SMTP id b18mr2284561lji.18.1568737984442;
- Tue, 17 Sep 2019 09:33:04 -0700 (PDT)
+        Tue, 17 Sep 2019 12:33:53 -0400
+X-Greylist: delayed 603 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 12:33:52 EDT
+Received: from smtp.bitdefender.com (smtp01.buh.bitdefender.com [10.17.80.75])
+        by mx01.bbu.dsd.mx.bitdefender.com (Postfix) with ESMTPS id B7930307489B;
+        Tue, 17 Sep 2019 19:23:48 +0300 (EEST)
+Received: from localhost (unknown [195.210.4.22])
+        by smtp.bitdefender.com (Postfix) with ESMTPSA id 9F14130BC822;
+        Tue, 17 Sep 2019 19:23:48 +0300 (EEST)
+From:   Adalbert =?iso-8859-2?b?TGF643I=?= <alazar@bitdefender.com>
+Subject: Re: [PATCH v5 0/9] Enable Sub-page Write Protection Support
+To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com
+In-Reply-To: <20190917125904.GB22162@char.us.oracle.com>
+References: <20190917085304.16987-1-weijiang.yang@intel.com>
+        <20190917125904.GB22162@char.us.oracle.com>
+Date:   Tue, 17 Sep 2019 19:24:15 +0300
+Message-ID: <15687374550.b5d3c.30742@host>
+User-agent: void
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org> <20181114225910.GA220599@google.com>
-In-Reply-To: <20181114225910.GA220599@google.com>
-From:   Brian Norris <briannorris@chromium.org>
-Date:   Tue, 17 Sep 2019 09:32:52 -0700
-X-Gmail-Original-Message-ID: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
-Message-ID: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
-Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-To:     Wen Gong <wgong@codeaurora.org>
-Cc:     ath10k@lists.infradead.org,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since Wen has once again suggested I use this patch in other forums,
-I'll ping here to note:
+On Tue, 17 Sep 2019 08:59:04 -0400, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> wrote:
+> On Tue, Sep 17, 2019 at 04:52:55PM +0800, Yang Weijiang wrote:
+> > EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
+> > Virtual Machine Monitor(VMM) to specify write-permission for guest
+> > physical memory at a sub-page(128 byte) granularity. When this
+> > capability is enabled, the CPU enforces write-access check for sub-pages
+> > within a 4KB page.
+> > 
+> > The feature is targeted to provide fine-grained memory protection for
+> > usages such as device virtualization, memory check-point and VM
+> > introspection etc.
+> > 
+> > SPP is active when the "sub-page write protection" (bit 23) is 1 in
+> > Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+> > Permission Table(SPPT), SPPT is referenced via a 64-bit control field
+> > called Sub-Page Permission Table Pointer (SPPTP) which contains a
+> > 4K-aligned physical address.
+> > 
+> > To enable SPP for certain physical page, the gfn should be first mapped
+> > to a 4KB entry, then set bit 61 of the corresponding EPT leaf entry. 
+> > While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
+> > physical address to find out the sub-page permissions at the leaf entry.
+> > If the corresponding bit is set, write to sub-page is permitted,
+> > otherwise, SPP induced EPT violation is generated.
+> > 
+> > This patch serial passed SPP function test and selftest on Ice-Lake platform.
+> > 
+> > Please refer to the SPP introduction document in this patch set and
+> > Intel SDM for details:
+> > 
+> > Intel SDM:
+> > https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+> > 
+> > SPP selftest patch:
+> > https://lkml.org/lkml/2019/6/18/1197
+> > 
+> > Previous patch:
+> > https://lkml.org/lkml/2019/8/14/97
+> 
+> I saw the patches as part of the introspection patch-set.
+> Are you all working together on this?
 
-On Wed, Nov 14, 2018 at 2:59 PM Brian Norris <briannorris@chromium.org> wrote:
-> You've introduced a regression in 4.20-rc1:
+Weijiang helped us to start using the SPP feature with the introspection
+API and tested the integration when we didn't had the hardware
+available. I've included the SPP patches in the introspection patch
+series in order to "show the full picture".
 
-This regression still survives in the latest tree. Is it fair to just
-submit a revert?
+> Would it be possible for some of the bitdefender folks who depend on this
+> to provide Tested-by adn could they also take the time to review this patch-set?
 
-Brian
+Sure. Once we rebase the introspection patches on 5.3, we'll replace
+the previous version this new one in our tree and test it.
