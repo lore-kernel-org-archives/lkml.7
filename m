@@ -2,129 +2,146 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B699AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFC4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85FD0218AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E372171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:08:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BmRuGOPf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G65NQHYd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbfIQPHq (ORCPT
+        id S1729103AbfIQPI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:07:46 -0400
-Received: from mout.web.de ([212.227.15.3]:59779 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729011AbfIQPHp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:07:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568732860;
-        bh=9nkGNOo/KpXHV2YblbVOWFzKHiHBVa4lZQAp4v0VDUs=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=BmRuGOPfTtnJtOqH4ZBOJRS38/86q5SDI4E6yADduvDfON0hM8v0IJDdAPkVgWlVY
-         UfKVIQBpDaallqwuNk++EP26XlgYeu1LTIQ6XdsguCUPD9Kcxi5yKobcN0BeRNRUOL
-         kJ5UkLaz7NEgcQMbFIqHlgAi4qaObHMCS7/frmq8=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.93.51]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LiCXL-1hosTn0iOp-00nQX8; Tue, 17
- Sep 2019 17:07:40 +0200
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190916185738.GA14035@SD>
-Subject: Re: [1/3] i2c: qup: remove explicit conversion to boolean
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <b5f63a71-6f6f-eea5-2283-6b5df22b267a@web.de>
-Date:   Tue, 17 Sep 2019 17:07:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 17 Sep 2019 11:08:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33151 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbfIQPI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:08:57 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n190so2200036pgn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:08:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FvJRZOlflFh4TJScWA7lYT+/i19+jIlE3HGx7alBIXE=;
+        b=G65NQHYdCECVTd0x9VIJzQTjw2KqmYIWBn7+An4y1UPzgIzmQ8Y4nlkpFIYStsbnLt
+         xDkeYCnPJ+ujbekSHHXrWpiHzbr5ScCM7Uz9BZWQWwOglB8CA0linoG31N6N4UT19l68
+         BwXfTZvcnPtQA5HC/0nXcFJ+rkjWRnCGdJBMxouYtCXDJFJBEmWatu0M6yyiguKbn1fh
+         A31G48Z679kzjBzndRPOsMdCQuEysaAheUhctb6sfAoAQQpxTn5I5ea0vbNCYzPH4QYg
+         fQaxzF2WCMC7Ys+1NVdKshcWGLxni8nAlKzOAaNJbPNr5uDOH/pKQovRvSjV2NPO1THX
+         rp0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FvJRZOlflFh4TJScWA7lYT+/i19+jIlE3HGx7alBIXE=;
+        b=UngFXrbZOwFHUWc0wYqb50GxiNSt/Lz26iCroD0x141+O/gE1laLkpcmT5I92qdcrx
+         GceKcG366buGyt7YrqWN1A4OItG5JsXbRsIv4it92UbyjAPtVPLa120Trh7+rRBu7ffV
+         JiygoB2VmtIyrLYucadvbcXDfjc8EwnNxRlNnnd3byOc68W9EOj+Z9ujjyDcQ6i/VdcG
+         9z7mpBhRqKdiLC71nxVvCNnTU3t5G1ZXRmx9Z0i0G2hvunf+AA3EJcwl+LKiiBBzwpEm
+         3HeNAbLUeTCDPAsvrhOxbQi/OYJa+MBUE/lTTEc54SP8p98i3sHzDhIUloKR3uNWD5ME
+         zkuQ==
+X-Gm-Message-State: APjAAAVdAGUiTTB+n7yqZq7BqRJsqjEC69/hB3gMBX/z60WSEvAmDXFg
+        aCp2k1JGXQ9jzV9NHPAZNr39EUHG77cHqg016kbMMA==
+X-Google-Smtp-Source: APXvYqxhpqi9eQR2bJtpkRfvA5e7ZKPfpFMkfbbU5q1y1BKPZz9G+abARwk5PUTDJL2yvyG1vFFXDsv2+elgeKIm90s=
+X-Received: by 2002:a63:3006:: with SMTP id w6mr3780886pgw.440.1568732934576;
+ Tue, 17 Sep 2019 08:08:54 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190916185738.GA14035@SD>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Iiu9r1Bx3VzZaKzVwy0Ru2zadSTLvVnru3gv+4JduUCjetA7ysE
- +WpxizUi0Kp3e2HpGQ0OEE9DwFDNO4FAJszSNUdpJf7HAL01C/o856cSpHe37W16GX864Dt
- UIZSEsDMGe1k1zk0uwu3qBsTygxI2VmdPn3akXTdDHJz1G+9p1GpwM9a1of2x6DkorsK/5+
- 1k2H1DRVUzjJq3Aw7UsVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W28F4qYcXQ0=:wmsexZirT2sH1Ixo3VejM/
- dhikDHgq04/nNDoxQJJFjwuaDOyf8zNSz4UBl4h538OC75c1PImlw/xmaIxL+XM5AwGKrfFZG
- pxTpSpYBx2wdg2WId2gPySUP1WCnYG2So5II9sK8XKlQPsOr9cdRpyKvcjDeU+Fe+K+8avkf4
- w8X7FjAwfIiiyCp8UVXc+R4i5a5nAUiSOKdL99m6lamj3md3UUd5m3U8D5u5fpyrk2at4B6pE
- 0/yOLMG98nVwnnQuRcjrhLCRX+Wrhtpbs10MbuC42qk0zBLpddB3cx6HYu8PrZWIk2OM2xoCT
- sUF7CVOIHMwSbCvfMRV5gntpbwzg2fS5B7DnTtWIN9eunYdRBPdFWmdYInJSRStb465CbvFhR
- 3SaNjFK2bfWfZBFZpqdK9sZ7n0ObIbNU31yH+zpxopjoN18bkYGkJnbQY6PuXijWxTsnqKid/
- Aad6Nk4lHCkjIHpe1ogQ9anroGnsu2VsLBINrd+CKQZl8uiH6Xro51akMaSZ8KsVGSPidf4vh
- e+2ExWTvVxLkCMrm275QuiwRX8cmJv/WMyXg4Dxzwdwi8Mu6T/jIhLHsdIQ7g8RrTQzNXjqK7
- 9cmGXM2yszv6HwnbvzBKOyKW2hjjcVujuIOZpJxPggIcc4PlSWdFBob9ujXBytF6zSKKQ6ogn
- FI5l8BEuPdicXSvGrcY0S4hXU6yIR8yeWL7dDB6njxE8pNFcwWMGfwK/9D0RFvdYmOfTQ4+O7
- hsuWIBkiOSRaqypBV+tFgDkDs8lKub7368suJrCQ1ree2TXoCxsmIbe3fZdHDBHcb7kBSpz2w
- RfaHXC/6cIIT7ABsdIvWSdE2Xeb03HIFWFKgy6i3z2uC7x6WbVXokhqMbFGg5nsASPkA+ni5Y
- wyHil0a71V3OCaBk62QU/ZFj6YkXSPVqUaFYCWQzlltfUYuQtCdfCRxd8/RecGXGXR3r+XuRu
- Ubs2swdpSyCynr9+6ElYMOD6Jewhkk0tJkujsY+RbcVrNImENHLh4b2J1er54RxM9/ZW0m7/2
- AmRj03mwUHCFMFARcxtMFmcc4C2eB6eDuphLiayvydfurM/BcEKlgKb+ReopL+2dGKvgk3IQi
- q8g3Tn5VwU/2qG6oxwEgMaUUXzBE6Mg4AWdzwpUEB6PZqoQBHaQ3zTyuPo3Cwpb0KhUVuCweP
- RTVFE3YtWh2jK6m8ZO7Hml3gsXzGUX946CuLFe2T1h/AO0Eo33e0amG6jj9kaq3yf5wJv2QeF
- 6IOgdSkSQEisJumF4uTvq9M7GxuoJKpBz3P4+jTrnXaOCaOf19zmZF7rq0bA=
+References: <CACT4Y+YzO9H3Ge9uEnMcK215DvTW-9fYrS7gYAOV62ssdyp42w@mail.gmail.com>
+ <Pine.LNX.4.44L0.1909171040180.1590-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909171040180.1590-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 17 Sep 2019 17:08:43 +0200
+Message-ID: <CAAeHK+yMaX7LUUXbGj3RDDChdCDp+U_4ePt5PjDWWsrJUk04uw@mail.gmail.com>
+Subject: Re: KMSAN: uninit-value in usb_autopm_put_interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        syzbot <syzbot+e1d1a6e595adbd2458f1@syzkaller.appspotmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kai heng feng <kai.heng.feng@canonical.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuehaibing@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Found using - Coccinelle (http://coccinelle.lip6.fr)
+On Tue, Sep 17, 2019 at 4:51 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Tue, 17 Sep 2019, Dmitry Vyukov wrote:
+>
+> > On Mon, Sep 16, 2019 at 10:31 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Mon, 16 Sep 2019, syzbot wrote:
+> > >
+> > > > Hello,
+> > > >
+> > > > syzbot found the following crash on:
+> > > >
+> > > > HEAD commit:    014077b5 DO-NOT-SUBMIT: usb-fuzzer: main usb gadget fuzzer..
+> > > > git tree:       https://github.com/google/kmsan.git master
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=16a7dde1600000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=e1d1a6e595adbd2458f1
+> > > > compiler:       clang version 9.0.0 (/home/glider/llvm/clang
+> > > > 80fee25776c2fb61e74c1ecb1a523375c2500b69)
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=176303e1600000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10e8f23e600000
+>
+> > > This is probably the same problem that was fixed in the Logitech driver
+> > > earlier.  The fix still appears to be in linux-next (commit
+> > > 5f9242775bb6).
+> > >
+> > > Shouldn't syzbot wait until after the merge window before running tests
+> > > like this?
+> >
+> >
+> > Merge window is a weak notion and may be not enough either (all trees
+> > do not necessary update at that point and syzbot does not necessary
+> > rebuild all of them successfully). syzbot uses another criteria: if
+> > you say a bug is fixed by commit X, it will wait until commit X
+> > reaches all of tested trees and will report the same crash signature
+> > again only after that. This procedure was specifically designed to not
+> > produce duplicate reports about the same bug.
+> > So either the bug wasn't really fixed, or this is another bug, or
+> > syzbot was given a wrong commit.
+>
+> Hmmm.  Which are the "tested trees"?
+>
+> This bug (e1d1a6e595adbd2458f1) is marked as a duplicate of
+> 3cbe5cd105d2ad56a1df.  The dashboard link says that bug was fixed by
+> commit "HID: logitech: Fix general protection fault caused by Logitech
+> driver" -- which is correct, as far as I know.
+>
+> That commit is present in linux-next, as mentioned above.  As of 10:44
+> EDT today, it is not present in Linus's tree, according to
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/drivers/hid/hid-lg.c
+>
+> (in fact, no commits affecting drivers/hid/hid-lg.c in that tree are
+> dated after 2019-07-10).
+>
+> Furthermore, according to
+>
+> https://github.com/google/kmsan/blob/master/drivers/hid/hid-lg.c?h=014077b5
+>
+> the source code actually used by syzbot for this test doesn't have that
+> commit either.  (BTW, is there any way to get a git log out of github?
+> It would be nice not to have to download the whole source file -- and
+> I'm not certain that this URL really does point to the version of the
+> file that syzbot used.)
+>
+> So what's really going on?
 
-Can a tag like =E2=80=9CGenerated by: scripts/coccinelle/misc/boolconv.coc=
-ci=E2=80=9D
-be more helpful for this change description?
-
-Regards,
-Markus
+Please see my response. This report is a different manifestation of
+the same Logitech bug.
