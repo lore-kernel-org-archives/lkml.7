@@ -6,84 +6,76 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D95C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DD5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5B42067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E264520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730594AbfIQQhH (ORCPT
+        id S1728504AbfIQQhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:37:07 -0400
-Received: from mga18.intel.com ([134.134.136.126]:4489 "EHLO mga18.intel.com"
+        Tue, 17 Sep 2019 12:37:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:58686 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726794AbfIQQhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:37:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 09:37:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,517,1559545200"; 
-   d="scan'208";a="201866500"
-Received: from agluck-desk2.sc.intel.com (HELO agluck-desk2.amr.corp.intel.com) ([10.3.52.68])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Sep 2019 09:37:05 -0700
-Date:   Tue, 17 Sep 2019 09:37:05 -0700
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-Cc:     "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
-        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
-        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
-        David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: Re: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
-Message-ID: <20190917163704.GA1922@agluck-desk2.amr.corp.intel.com>
-References: <1da27840413348febf301ef39305de12@zhaoxin.com>
+        id S1727632AbfIQQhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:37:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4802828;
+        Tue, 17 Sep 2019 09:37:34 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7977A3F575;
+        Tue, 17 Sep 2019 09:37:33 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 17:37:24 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
+Message-ID: <20190917163716.GA9715@e121166-lin.cambridge.arm.com>
+References: <20190916135435.5017-1-jonathan.derrick@intel.com>
+ <20190916135435.5017-3-jonathan.derrick@intel.com>
+ <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
+ <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+ <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
+ <087e23dc3bb7b94bb96c33b380732ebd1285e467.camel@intel.com>
+ <20190917151523.GA7948@e121166-lin.cambridge.arm.com>
+ <ec24dc3d6f6f962a9f96ab1bab8c9cf4e138d61a.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1da27840413348febf301ef39305de12@zhaoxin.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <ec24dc3d6f6f962a9f96ab1bab8c9cf4e138d61a.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 06:54:05AM +0000, Tony W Wang-oc wrote:
-> But have a question about below codes:
-> 	if (mcgstatus & MCG_STATUS_RIPV) {
-> 		mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-> 		return true;
-> 	}
-> These seems require all #MC exception errors set MCG_STATUS_RIPV = 1
-> in order to skip synchronize which "return true;" actually does for this.
+On Tue, Sep 17, 2019 at 03:51:39PM +0000, Derrick, Jonathan wrote:
+
+[...]
+
+> Sorry for the confusion.
 > 
-> As Intel SDM show, "Recoverable-not-continuable SRAR Type" errors may
-> set MCG_STATUS_RIPV = 0, PCC = 0. When these #MC errors broadcast
-> to offline CPU, may cause kernel panic with synchronize timeout (offline
-> CPU can't skip synchronize in this case).
+> These changes only affect systems with VMD devices with 8086:28C0
+> device IDs, but these won't be production hardware for some time.
 > 
-> Could "return true;" outside the if-case?
-> 	if (mcgstatus & MCG_STATUS_RIPV) {
-> 		mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
-> 	} 
-> 	return true; 
+> Systems with VMD devices exist in the wild with 8086:201D device IDs.
+> These don't support the guest passthrough mode and this code won't
+> break anything with them. Additionally, patch 1/2 (bus numbering) only
+> affects 8086:28C0.
+> 
+> So on existing HW, these patches won't affect anything
 
-If RIPV bit is not set in mcgstatus, then where will the CPU return
-to if you simply return from the #MC handler? RIPV=1 means that the
-CPU pushed a valid return instruction pointer onto the stack.
+It is me who created confusion, apologies. I read the code properly and
+I understand that both patches are fixes for HW that is still not
+available (and they can't create an issue with current kernel because
+HAS_MEMBAR_SHADOW and HAS_BUS_RESTRICTIONS features are not implemented
+on 8086:201D), we should take these patches and trickle them to stable
+kernels as soon as possible so that when HW _is_ available mainline and
+stable kernels are fixed.
 
-E.g. in the not-continuable case you mention above? The CPU
-will likely do something undefined if you try to continue a
-not-continuable instruction.
+Correct ?
 
--Tony
+Lorenzo
