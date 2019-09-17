@@ -2,157 +2,189 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DCFC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC91BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DBD21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568716049;
-	bh=u4JMlOxIbjk3b6DQhgtiS+FX716yAxOjAS+DjQAI4fM=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=nNxTSBN4nh3Fc9RX7n8WxHBKX+Rsqb90buKoiVZfpiDIERVMh9KU3GbyFPLeHTqZt
-	 OmIVah5W6Xexri4s0XUsDfoBRdbVmgrHj/DXViby0R1U8gcXr7jV99La6kskX/Qfuc
-	 /46ZnUU8WLqGu8dYZNp79O+otDsBrbldWbhsztf0=
+	by mail.kernel.org (Postfix) with ESMTP id AABF6214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727908AbfIQK12 (ORCPT
+        id S1727930AbfIQK2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:27:28 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44314 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbfIQK12 (ORCPT
+        Tue, 17 Sep 2019 06:28:30 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:47095 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726756AbfIQK23 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:27:28 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w6so2335168oie.11;
-        Tue, 17 Sep 2019 03:27:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Jw020uvO5W1dQB83HITZVbJ4+r2ZGjWj7Xyy0Bpkz/A=;
-        b=pWZdQumj+lQlUIBL5TQRsUiyyQpOByhRs4rxcfAijA18wPGiXvWDe2JKAg1FRpRWs3
-         JNM13bGpRc/PVk5SvU1/p2C8rm9OMSeOMOxh474S//52FfFB0Qa5vzKj6RguCqSWipFm
-         /2WX6ghVOkZVwzZ23Knm8pIi+81NpYpjDwciV4MB0ZyxZ902ZOQhlaHSG1F6OmehmR4y
-         c57cJxI4TdjcHoiNuUbD+/NcvMyobe+/nNBiM+aOdl/2fBMmTVYYHhUkXVgjK4Ul8Bbr
-         zTSCrA31ZaH36dvN9rK3ospDwZzSfGxTZWoycIHO6USwP5zoHweKpPNAqAI5soV3ki8J
-         e10A==
-X-Gm-Message-State: APjAAAVeYt6q/Ae3Tt1r4KhwEkkbqwT1CHTD51snsiIKLOo8+pmdjW62
-        ty0E/WQTGB90gMQujMI6ag+wUq5TtKavmPzEwoX9ZEtx
-X-Google-Smtp-Source: APXvYqwazB3v6V1RsjC4YgX0kgioA/H9C3tRozSeoJq3Agt6TGjJtqCyKk1J+MAOyvJmC4bNzH/00mI+LIRfkSZw7Nw=
-X-Received: by 2002:aca:ab84:: with SMTP id u126mr2824699oie.115.1568716047201;
- Tue, 17 Sep 2019 03:27:27 -0700 (PDT)
+        Tue, 17 Sep 2019 06:28:29 -0400
+Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 17 Sep
+ 2019 18:29:23 +0800
+Subject: Re: [PATCH 1/3] pinctrl: add compatible for Amlogic Meson A1 pin
+ controller
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
+References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
+ <1568700442-18540-2-git-send-email-qianggui.song@amlogic.com>
+ <131cf06f-2530-4524-9f86-3c07641bb460@baylibre.com>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <3a4bdcbf-883a-cf31-6af1-a692a10cb9a5@amlogic.com>
+Date:   Tue, 17 Sep 2019 18:29:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 17 Sep 2019 12:27:16 +0200
-Message-ID: <CAJZ5v0iJupxXBYRDeV4_V14je-uZYRf7d_CZ7WRUw7++n_575Q@mail.gmail.com>
-Subject: [GIT PULL] Device properties framework updates for v5.4-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux USB <linux-usb@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <131cf06f-2530-4524-9f86-3c07641bb460@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.18.45]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hi, Neil
+	Thanks for your review
 
-Please pull from the tag
-
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- devprop-5.4-rc1
-
-with top-most commit 016049a816774edc9c3cd81afa7724d7ab001585
-
- software node: Initialize the return value in software_node_find_by_name()
-
-on top of commit a55aa89aab90fae7c815b0551b07be37db359d76
-
- Linux 5.3-rc6
-
-to receive device properties framework updates for 5.4-rc1.
-
-These include software node support improvements (Heikki Krogerus)
-and two assorted cleanups (Andy Shevchenko, Geert Uytterhoeven).
-
-There was a conflict between this and the USB tree in linux-next
-which was resolved by Stephen by applying the appended diff.
-
-Thanks!
-
-
----------------
-
-Andy Shevchenko (1):
-      device property: Remove duplicate test for NULL
-
-Geert Uytterhoeven (1):
-      ACPI / property: Fix acpi_graph_get_remote_endpoint() name in kerneldoc
-
-Heikki Krogerus (5):
-      software node: Add software_node_find_by_name()
-      usb: roles: intel_xhci: Supplying software node for the role mux
-      platform/x86: intel_cht_int33fe: Use new API to gain access to
-the role switch
-      software node: Initialize the return value in software_node_to_swnode()
-      software node: Initialize the return value in software_node_find_by_name()
-
----------------
-
- drivers/acpi/property.c                        |  2 +-
- drivers/base/swnode.c                          | 39 +++++++++++++++++-
- drivers/platform/x86/intel_cht_int33fe.c       | 57 +++++---------------------
- drivers/usb/roles/intel-xhci-usb-role-switch.c | 27 ++++++++----
- include/linux/fwnode.h                         |  9 ++--
- include/linux/property.h                       |  4 ++
- 6 files changed, 78 insertions(+), 60 deletions(-)
-
----------------
-
-diff --cc drivers/usb/roles/intel-xhci-usb-role-switch.c
-index 7325a84dd1c8,88d041601c51..000000000000
---- a/drivers/usb/roles/intel-xhci-usb-role-switch.c
-+++ b/drivers/usb/roles/intel-xhci-usb-role-switch.c
-@@@ -37,12 -44,9 +44,13 @@@
-  struct intel_xhci_usb_data {
-      struct usb_role_switch *role_sw;
-      void __iomem *base;
-+     bool enable_sw_switch;
-  };
-
- +static const struct software_node intel_xhci_usb_node = {
- +    "intel-xhci-usb-sw",
- +};
- +
-  static int intel_xhci_usb_set_role(struct device *dev, enum usb_role role)
-  {
-      struct intel_xhci_usb_data *data = dev_get_drvdata(dev);
-@@@ -147,20 -167,12 +167,22 @@@ static int intel_xhci_usb_probe(struct
-
-      platform_set_drvdata(pdev, data);
-
-+     data->enable_sw_switch = !device_property_read_bool(dev,
-+                         "sw_switch_disable");
- +    ret = software_node_register(&intel_xhci_usb_node);
- +    if (ret)
- +        return ret;
- +
- +    sw_desc.set = intel_xhci_usb_set_role,
- +    sw_desc.get = intel_xhci_usb_get_role,
- +    sw_desc.allow_userspace_control = true,
- +    sw_desc.fwnode = software_node_fwnode(&intel_xhci_usb_node);
-
-      data->role_sw = usb_role_switch_register(dev, &sw_desc);
- -    if (IS_ERR(data->role_sw))
- +    if (IS_ERR(data->role_sw)) {
- +        fwnode_handle_put(sw_desc.fwnode);
-          return PTR_ERR(data->role_sw);
- +    }
-
-      pm_runtime_set_active(dev);
-      pm_runtime_enable(dev);
+On 2019/9/17 15:18, Neil Armstrong wrote:
+> Hi,
+> 
+> On 17/09/2019 08:07, Qianggui Song wrote:
+>> Add new compatible name for Amlogic's Meson-A1 pin controller
+>> add a dt-binding header file which document the detail pin names.
+> 
+> Please add in the commit log that A1 doesn't need the DS bank reg,
+> so when we will convert these bindings to yaml we will be aware of it.
+> 
+OK, will add it in the next patch
+>>
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |  1 +
+>>  include/dt-bindings/gpio/meson-a1-gpio.h           | 73 ++++++++++++++++++++++
+>>  2 files changed, 74 insertions(+)
+>>  create mode 100644 include/dt-bindings/gpio/meson-a1-gpio.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> index 10dc4f7..0aff1f2 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+>> @@ -15,6 +15,7 @@ Required properties for the root node:
+>>  		      "amlogic,meson-axg-aobus-pinctrl"
+>>  		      "amlogic,meson-g12a-periphs-pinctrl"
+>>  		      "amlogic,meson-g12a-aobus-pinctrl"
+>> +		      "amlogic,meson-a1-periphs-pinctrl"
+>>   - reg: address and size of registers controlling irq functionality
+>>  
+>>  === GPIO sub-nodes ===
+>> diff --git a/include/dt-bindings/gpio/meson-a1-gpio.h b/include/dt-bindings/gpio/meson-a1-gpio.h
+>> new file mode 100644
+>> index 0000000..40e57a5
+>> --- /dev/null
+>> +++ b/include/dt-bindings/gpio/meson-a1-gpio.h
+>> @@ -0,0 +1,73 @@
+>> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT) */
+>> +/*
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + * Author: Qianggui Song <qianggui.song@amlogic.com>
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_MESON_A1_GPIO_H
+>> +#define _DT_BINDINGS_MESON_A1_GPIO_H
+>> +
+>> +#define GPIOP_0		0
+>> +#define GPIOP_1		1
+>> +#define GPIOP_2		2
+>> +#define GPIOP_3		3
+>> +#define GPIOP_4		4
+>> +#define GPIOP_5		5
+>> +#define GPIOP_6		6
+>> +#define GPIOP_7		7
+>> +#define GPIOP_8		8
+>> +#define GPIOP_9		9
+>> +#define GPIOP_10	10
+>> +#define GPIOP_11	11
+>> +#define GPIOP_12	12
+>> +#define GPIOB_0		13
+>> +#define GPIOB_1		14
+>> +#define GPIOB_2		15
+>> +#define GPIOB_3		16
+>> +#define GPIOB_4		17
+>> +#define GPIOB_5		18
+>> +#define GPIOB_6		19
+>> +#define GPIOX_0		20
+>> +#define GPIOX_1		21
+>> +#define GPIOX_2		22
+>> +#define GPIOX_3		23
+>> +#define GPIOX_4		24
+>> +#define GPIOX_5		25
+>> +#define GPIOX_6		26
+>> +#define GPIOX_7		27
+>> +#define GPIOX_8		28
+>> +#define GPIOX_9		29
+>> +#define GPIOX_10	30
+>> +#define GPIOX_11	31
+>> +#define GPIOX_12	32
+>> +#define GPIOX_13	33
+>> +#define GPIOX_14	34
+>> +#define GPIOX_15	35
+>> +#define GPIOX_16	36
+>> +#define GPIOF_0		37
+>> +#define GPIOF_1		38
+>> +#define GPIOF_2		39
+>> +#define GPIOF_3		40
+>> +#define GPIOF_4		41
+>> +#define GPIOF_5		42
+>> +#define GPIOF_6		43
+>> +#define GPIOF_7		44
+>> +#define GPIOF_8		45
+>> +#define GPIOF_9		46
+>> +#define GPIOF_10	47
+>> +#define GPIOF_11	48
+>> +#define GPIOF_12	49
+>> +#define GPIOA_0		50
+>> +#define GPIOA_1		51
+>> +#define GPIOA_2		52
+>> +#define GPIOA_3		53
+>> +#define GPIOA_4		54
+>> +#define GPIOA_5		55
+>> +#define GPIOA_6		56
+>> +#define GPIOA_7		57
+>> +#define GPIOA_8		58
+>> +#define GPIOA_9		59
+>> +#define GPIOA_10	60
+>> +#define GPIOA_11	61
+>> +
+>> +#endif /* _DT_BINDINGS_MESON_A1_GPIO_H */
+>>
+> 
+> 
+> With that fixed,
+> 
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> 
+> Neil
+> 
+> .
+> 
