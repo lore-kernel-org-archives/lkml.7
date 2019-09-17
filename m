@@ -2,137 +2,357 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D49C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB542C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E4A2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FBA20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DSWHjWk4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfIQQeX (ORCPT
+        id S1730431AbfIQQei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:34:23 -0400
-Received: from mail.thelounge.net ([91.118.73.15]:59717 "EHLO
-        mail.thelounge.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730330AbfIQQeU (ORCPT
+        Tue, 17 Sep 2019 12:34:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38616 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730414AbfIQQeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:34:20 -0400
-Received: from srv-rhsoft.rhsoft.net  (Authenticated sender: h.reindl@thelounge.net) by mail.thelounge.net (THELOUNGE MTA) with ESMTPSA id 46XpbM6mf4zXqv;
-        Tue, 17 Sep 2019 18:34:02 +0200 (CEST)
-Subject: Re: Linux 5.3-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
- <20190917160844.GC31567@gardel-login>
- <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
-From:   Reindl Harald <h.reindl@thelounge.net>
-Organization: the lounge interactive design
-Message-ID: <75708f8d-b70e-a60e-15ce-faf02b47b3cd@thelounge.net>
-Date:   Tue, 17 Sep 2019 18:34:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 17 Sep 2019 12:34:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id o184so3937727wme.3;
+        Tue, 17 Sep 2019 09:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gOZrduvsuQOsT0TtQtTVHVnUf+qBWPsQWX6DxDL8ehI=;
+        b=DSWHjWk4LTCQkzSntmDLQ3LCjNU4ntZKV3RdMTdrT7XHPJo1TcIt0V7xu6HQuC6xVO
+         Ph3wlo0SBDZB1nqJuLgHunwwL4cckE+1EP8aJ4bZc3xK1zrpElRK0D1zdNgf52+ZH4Ru
+         i80oyNeDsy6c0SoYKT6DloEBWQudfwY8j5Fx8dYJVoS1pDBfyrZmF6Myz3rQFouiPU6J
+         h+TCrMcDrGase/DDj7fTsxGewipXyygUGwNM0n8AC0o510MCRDSfePJZzS7XRCqNeoU+
+         JLZLnLoT/ZYbWtbrK2WdRvEO+ldjSxliwrsTKxj92MYWiXG5phephX6XwBciU//qatpu
+         jqoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gOZrduvsuQOsT0TtQtTVHVnUf+qBWPsQWX6DxDL8ehI=;
+        b=KHUZ0FGqnmSljJMTKXR4tj0VeVD2l76fuHrtdcmJwosFQvCYwz796tehlI5//33eyo
+         y1zDktz4fkqsqjmHXU6WOD8llE3CG2qoDNZzza5NdyP5hLni3LtAJPO/cWJLexb3104H
+         8IUbZiAGeFyM71OBqhhlEjX9Of4ZqjSzQUZAB7R+T8jK8bgkgiX3q0lLvZDnmGw8ur8D
+         reHUXCBpqQhFS146vbitutiGmycETZ7hplrazfz/697b7pxZMGiqDEg8UE6ob/qNisyi
+         VqskGJu9vdLxu9EtXrSVlJhHGiqoi1jDGbTzBpCazxD2Kg9nutF3wa6UJX86LBrFIEm4
+         A9PA==
+X-Gm-Message-State: APjAAAUIqNszbhwIMsn+wpe2fTLK2nDAYJikVA9+LmPCN7IBeTbdUWu7
+        fOlK4Mulmx0bzWn4kvFDTcg=
+X-Google-Smtp-Source: APXvYqwR3D8IWm0Ut83B2G+YXsfjrcpLjCYzGzcwbYrl4Gpwi58UDBoN+gfS0TOglzRXhOamPs1aog==
+X-Received: by 2002:a1c:540c:: with SMTP id i12mr4628519wmb.90.1568738073603;
+        Tue, 17 Sep 2019 09:34:33 -0700 (PDT)
+Received: from arch-dsk-01 ([77.126.41.65])
+        by smtp.gmail.com with ESMTPSA id d9sm5015630wrc.44.2019.09.17.09.34.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 09:34:32 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 19:34:27 +0300
+From:   tinywrkb <tinywrkb@gmail.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Baruch Siach <baruch@tkos.co.il>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190917163427.GA1475935@arch-dsk-01>
+References: <20190910155507.491230-1-tinywrkb@gmail.com>
+ <20190910185033.GD9761@lunn.ch>
+ <87muf6oyvr.fsf@tarshish>
+ <20190915135652.GC3427@lunn.ch>
+ <20190917124101.GA1200564@arch-dsk-01>
+ <20190917125434.GH20778@lunn.ch>
+ <20190917133253.GA1210141@arch-dsk-01>
+ <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917153027.GW25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 04:30:27PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 17, 2019 at 04:17:07PM +0100, Russell King - ARM Linux admin wrote:
+> > On Tue, Sep 17, 2019 at 02:39:43PM +0100, Russell King - ARM Linux admin wrote:
+> > > On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
+> > > > On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
+> > > > > On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
+> > > > > > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
+> > > > > > > > Tinywrkb confirmed to me in private communication that revert of
+> > > > > > > > 5502b218e001 fixes Ethernet for him on effected system.
+> > > > > > > > 
+> > > > > > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
+> > > > > > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
+> > > > > > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
+> > > > > > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
+> > > > > > > > AR8035 PHY that supports 1Gb.
+> > > > > > > > 
+> > > > > > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
+> > > > > > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
+> > > > > > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
+> > > > > > > > the moment.
+> > > > > > > 
+> > > > > > > Could somebody with an affected device show us the output of ethtool
+> > > > > > > with and without 5502b218e001. Does one show 1G has been negotiated,
+> > > > > > > and the other 100Mbps? If this is true, how does it get 100Mbps
+> > > > > > > without that patch? We are missing a piece of the puzzle.
+> > > > > > > 
+> > > > > > > 	Andrew
+> > > > > > 
+> > > > > > linux-test-5.1rc1-a2703de70942-without_bad_commit
+> > > > > > 
+> > > > > > Settings for eth0:
+> > > > > > 	Supported ports: [ TP MII ]
+> > > > > > 	Supported link modes:   10baseT/Half 10baseT/Full
+> > > > > > 	                        100baseT/Half 100baseT/Full
+> > > > > > 	                        1000baseT/Full
+> > > > > 
+> > > > > So this means the local device says it can do 1000Mbps.
+> > > > > 
+> > > > > 
+> > > > > > 	Supported pause frame use: Symmetric
+> > > > > > 	Supports auto-negotiation: Yes
+> > > > > > 	Supported FEC modes: Not reported
+> > > > > > 	Advertised link modes:  10baseT/Half 10baseT/Full
+> > > > > > 	                        100baseT/Half 100baseT/Full
+> > > > > > 	                        1000baseT/Full
+> > > > > 
+> > > > > The link peer can also do 1000Mbps.
+> > > > > 
+> > > > > 
+> > > > > > 	Advertised pause frame use: Symmetric
+> > > > > > 	Advertised auto-negotiation: Yes
+> > > > > > 	Advertised FEC modes: Not reported
+> > > > > > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> > > > > > 	                                     100baseT/Half 100baseT/Full
+> > > > > > 	                                     1000baseT/Full
+> > > > > > 	Link partner advertised pause frame use: Symmetric
+> > > > > > 	Link partner advertised auto-negotiation: Yes
+> > > > > > 	Link partner advertised FEC modes: Not reported
+> > > > > > 	Speed: 100Mb/s
+> > > > > 
+> > > > > Yet they have decided to do 100Mbps. 
+> > > > > 
+> > > > > We need to understand Why? The generic PHY driver would not do this on
+> > > > > its own. So i'm thinking something has poked a PHY register with some
+> > > > > value, and this patch is causing it to be over written.
+> > > > > 
+> > > > > Please can you use mii-tool -v -v to dump the PHY registers in each
+> > > > > case.
+> > > > > 
+> > > > > Thanks
+> > > > > 	Andrew
+> > > > 
+> > > > Here's the output of # mii-tool -v -v eth0 
+> > > > 
+> > > > * linux-test-5.1rc1-a2703de70942-without_bad_commit
+> > > > 
+> > > > Using SIOCGMIIPHY=0x8947
+> > > > eth0: negotiated 100baseTx-FD flow-control, link ok
+> > > >   registers for MII PHY 0:
+> > > >     3100 796d 004d d072 15e1 c5e1 000f 0000
+> > > >     0000 0000 0800 0000 0000 0000 0000 a000
+> > > >     0000 0000 0000 f420 082c 0000 04e8 0000
+> > > >     3200 3000 0000 063d 0000 0000 0000 0000
+> > > >   product info: vendor 00:13:74, model 7 rev 2
+> > > >   basic mode:   autonegotiation enabled
+> > > >   basic status: autonegotiation complete, link ok
+> > > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> > > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > > 
+> > > This is *not* advertising 1000baseT modes (register 9).
+> > > 
+> > > > 
+> > > > 
+> > > > * linux-test-5.1rc1-5502b218e001-with_bad_commit
+> > > > 
+> > > > Using SIOCGMIIPHY=0x8947
+> > > > eth0: negotiated 100baseTx-FD flow-control, link ok
+> > > >   registers for MII PHY 0:
+> > > >     3100 796d 004d d072 15e1 c5e1 000d 0000
+> > > >     0000 0000 0800 0000 0000 0000 0000 a000
+> > > >     0000 0000 0000 0000 082c 0000 04e8 0000
+> > > >     3200 3000 0000 063d 0000 0000 0000 0000
+> > > >   product info: vendor 00:13:74, model 7 rev 2
+> > > >   basic mode:   autonegotiation enabled
+> > > >   basic status: autonegotiation complete, link ok
+> > > >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> > > >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > > >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > > 
+> > > Neither is this.
+> > > 
+> > > However, the kernel and phylib _thinks_ that it is.  My guess is
+> > > something has rewritten the PHY registers from userspace, rather
+> > > than using ethtool to change the advertisment.  The MAC is still
+> > > trying to operate at 1000Mbps (since that is what phylib resolved)
+> > > yet the link might be actually operating at 100Mbps - but for that
+> > > to happen, we should've seen the link go down and up again.
+> > > 
+> > > Odd.
+> > 
+> > For reference, here I see:
+> > 
+> > Using SIOCGMIIPHY=0x8947
+> > eth0: negotiated 1000baseT-FD flow-control, link ok
+> >   registers for MII PHY 0:
+> >     3100 796d 004d d072 15e1 c1e1 000d 0000
+> >     0000 0200 3800 0000 0000 0000 0000 a000
+> >     0000 0000 0000 0000 082c 0000 04e8 0000
+> >     3200 3000 0000 060e 0000 0000 0000 0000
+> >   product info: vendor 00:13:74, model 7 rev 2
+> >   basic mode:   autonegotiation enabled
+> >   basic status: autonegotiation complete, link ok
+> >   capabilities: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> >   advertising:  1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> > 
+> > Note that userspace writing to register 9 (1G settings) will update
+> > the physical PHY's advertisment for 1G speeds, but the kernel's idea
+> > will not be updated, so things will become de-sync'd, and the kernel
+> > _will_ incorrectly determine the speed.
+> > 
+> > So, are you using mii-tool or mii-diag to change the negotiation
+> > settings, rather than using ethtool?
+> > 
+> > This is likely the case, as prior to 5502b218e001, we used to read
+> > the advertisment registers afresh each time we evaluate the resulting
+> > link mode.  After 5502b218e001, we use the advertisment mask cached
+> > in phydev->advertising, which, looking at phy_mii_ioctl(), will not
+> > be updated if register 9 is written.
+> 
+> Please try this patch - I haven't written a commit message for it yet,
+> it's just to prove the above point.
+> 
+> Thanks.
+> 
+>  drivers/net/phy/phy.c | 5 +++++
+>  include/linux/mii.h   | 9 +++++++++
+>  2 files changed, 14 insertions(+)
+> 
+> diff --git a/drivers/net/phy/phy.c b/drivers/net/phy/phy.c
+> index 7af390d8bbdb..068a08a50064 100644
+> --- a/drivers/net/phy/phy.c
+> +++ b/drivers/net/phy/phy.c
+> @@ -458,6 +458,11 @@ int phy_mii_ioctl(struct phy_device *phydev, struct ifreq *ifr, int cmd)
+>  							   val);
+>  				change_autoneg = true;
+>  				break;
+> +			case MII_CTRL1000:
+> +				mii_ctrl1000_mod_linkmode_adv_t(phydev->advertising,
+> +							        val);
+> +				change_autoneg = true;
+> +				break;
+>  			default:
+>  				/* do nothing */
+>  				break;
+> diff --git a/include/linux/mii.h b/include/linux/mii.h
+> index 5cd824c1c0ca..1249d32dbd63 100644
+> --- a/include/linux/mii.h
+> +++ b/include/linux/mii.h
+> @@ -455,6 +455,15 @@ static inline void mii_lpa_mod_linkmode_lpa_t(unsigned long *lp_advertising,
+>  			 lp_advertising, lpa & LPA_LPACK);
+>  }
+>  
+> +static inline void mii_ctrl1000_mod_linkmode_adv_t(unsigned long *advertising,
+> +						   u32 ctrl1000)
+> +{
+> +	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT, advertising,
+> +			 ctrl1000 & ADVERTISE_1000HALF);
+> +	linkmode_mod_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT, advertising,
+> +			 ctrl1000 & ADVERTISE_1000FULL);
+> +}
+> +
+>  /**
+>   * linkmode_adv_to_lcl_adv_t
+>   * @advertising:pointer to linkmode advertising
+> 
+> -- 
+> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+> FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+> According to speedtest.net: 11.9Mbps down 500kbps up
 
+The patch didn't fix the issue.
 
-Am 17.09.19 um 18:23 schrieb Linus Torvalds:
-> I do agree that a message is a good idea regardless, but I don't think
-> it necessarily solves the problems except for developers
+# ethtool eth0
 
-sadly in our current world dvelopers and maintainers don't read any logs
-and as long it compiles and boots it works and can be pushed :-(
+Settings for eth0:
+	Supported ports: [ TP MII ]
+	Supported link modes:   10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Full
+	Supported pause frame use: Symmetric
+	Supports auto-negotiation: Yes
+	Supported FEC modes: Not reported
+	Advertised link modes:  10baseT/Half 10baseT/Full
+	                        100baseT/Half 100baseT/Full
+	                        1000baseT/Full
+	Advertised pause frame use: Symmetric
+	Advertised auto-negotiation: Yes
+	Advertised FEC modes: Not reported
+	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+	                                     100baseT/Half 100baseT/Full
+	                                     1000baseT/Full
+	Link partner advertised pause frame use: Symmetric
+	Link partner advertised auto-negotiation: Yes
+	Link partner advertised FEC modes: Not reported
+	Speed: 1000Mb/s
+	Duplex: Full
+	Port: MII
+	PHYAD: 0
+	Transceiver: internal
+	Auto-negotiation: on
+	Supports Wake-on: d
+	Wake-on: d
+	Link detected: yes
 
-they even argue instead fix a dmaned line in a textfile which could have
-been fixed 8 years in advance and i have written a ton of such reports
-for F30 not talking about 15 others where software spits warnings with
-the source file and line into the syslog and nobody out there gives a
-damn about it
+# mii-tool -v -v eth0
 
-one example of many
-https://bugzilla.redhat.com/show_bug.cgi?id=1748322
+Using SIOCGMIIPHY=0x8947
+eth0: negotiated 100baseTx-FD flow-control, link ok
+  registers for MII PHY 0:
+    3100 796d 004d d072 15e1 c5e1 000f 0000
+    0000 0000 0800 0000 0000 0000 0000 a000
+    0000 0000 0000 f420 082c 0000 04e8 0000
+    3200 3000 0000 063d 0000 0000 0000 0000
+  product info: vendor 00:13:74, model 7 rev 2
+  basic mode:   autonegotiation enabled
+  basic status: autonegotiation complete, link ok
+  capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+  advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
 
-the only way you can get developers to clean up their mess these days is
-to spit it straight into their face in modal window everytime they login
-but how to exclude innocent endusers.....
+# journalctl -b | egrep -i 'phy|eth|fec'|grep -v usb
 
-half of my "rsyslog.conf" is to filter out stuff i can't fix anyways to
-have my peace when call the script below every time i reboot whatever
-linux machine
-
-the 'usb_serial_init - returning with error' is BTW Linux when you boot
-with 'nousb usbcore.nousb'
-
-------------------
-
-[root@srv-rhsoft:~]$ cat /scripts/system-errors.sh
-#!/usr/bin/dash
-dmesg -T | grep --color -i warn | grep -v 'Perf event create on CPU' |
-grep -v 'Hardware RNG Device' | grep -v 'TPM RNG Device' | grep -v
-'Correctable Errors collector initialized' | grep -v
-'error=format-security' | grep -v 'MHD_USE_THREAD_PER_CONNECTION' | grep
--v 'usb_serial_init - returning with error' | grep -v
-'systemd-journald.service' | grep -v 'usb_serial_init - registering
-generic driver failed'
-grep --color -i warn /var/log/messages | grep -v 'Perf event create on
-CPU' | grep -v 'Hardware RNG Device' | grep -v 'TPM RNG Device' | grep
--v 'Correctable Errors collector initialized' | grep -v
-'error=format-security' | grep -v 'MHD_USE_THREAD_PER_CONNECTION' | grep
--v 'usb_serial_init - returning with error' | grep -v
-'systemd-journald.service' | grep -v 'usb_serial_init - registering
-generic driver failed'
-dmesg -T | grep --color -i fail | grep -v 'BAR 13' | grep -v 'Perf event
-create on CPU' | grep -v 'Hardware RNG Device' | grep -v 'TPM RNG
-Device' | grep -v 'Correctable Errors collector initialized' | grep -v
-'error=format-security' | grep -v 'MHD_USE_THREAD_PER_CONNECTION' | grep
--v 'usb_serial_init - returning with error' | grep -v
-'systemd-journald.service' | grep -v 'usb_serial_init - registering
-generic driver failed'
-grep --color -i fail /var/log/messages | grep -v 'BAR 13' | grep -v
-'Perf event create on CPU' | grep -v 'Hardware RNG Device' | grep -v
-'TPM RNG Device' | grep -v 'Correctable Errors collector initialized' |
-grep -v 'error=format-security' | grep -v
-'MHD_USE_THREAD_PER_CONNECTION' | grep -v 'usb_serial_init - returning
-with error' | grep -v 'systemd-journald.service' | grep -v
-'usb_serial_init - registering generic driver failed'
-dmesg -T | grep --color -i error | grep -v 'Perf event create on CPU' |
-grep -v 'Hardware RNG Device' | grep -v 'TPM RNG Device' | grep -v
-'Correctable Errors collector initialized' | grep -v
-'error=format-security' | grep -v 'MHD_USE_THREAD_PER_CONNECTION' | grep
--v 'usb_serial_init - returning with error' | grep -v
-'systemd-journald.service' | grep -v 'usb_serial_init - registering
-generic driver failed'
-grep --color -i error /var/log/messages | grep -v 'Perf event create on
-CPU' | grep -v 'Hardware RNG Device' | grep -v 'TPM RNG Device' | grep
--v 'Correctable Errors collector initialized' | grep -v
-'error=format-security' | grep -v 'MHD_USE_THREAD_PER_CONNECTION' | grep
--v 'usb_serial_init - returning with error' | grep -v
-'systemd-journald.service' | grep -v 'usb_serial_init - registering
-generic driver failed'
-grep --color -i "scheduling restart" /var/log/messages | grep -v
-'systemd-journald.service'
-[root@srv-rhsoft:~]$
+kernel: Booting Linux on physical CPU 0x0
+kernel: libphy: Fixed MDIO Bus: probed
+kernel: libphy: fec_enet_mii_bus: probed
+kernel: fec 2188000.ethernet eth0: registered PHC device 0
+kernel: dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.31a with HDCP (DWC HDMI 3D TX PHY)
+kernel: Generic PHY 2188000.ethernet-1:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=2188000.ethernet-1:00, irq=POLL)
+kernel: fec 2188000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
+kernel: IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+systemd-networkd[242]: eth0: Gained carrier
