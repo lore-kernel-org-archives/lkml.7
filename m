@@ -2,296 +2,211 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DE0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA41C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1CC206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188E921852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ReypTjVo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MrmTC/Dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfIQMrC (ORCPT
+        id S1728290AbfIQMr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:47:02 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43988 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQMrC (ORCPT
+        Tue, 17 Sep 2019 08:47:28 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40579 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfIQMr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:47:02 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u3so2743009lfl.10;
-        Tue, 17 Sep 2019 05:47:00 -0700 (PDT)
+        Tue, 17 Sep 2019 08:47:27 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l3so3004778wru.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:47:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=Y2m0sHF7mgAZAJd/cOqVpD/LZcY5Tm+V3uvi7F+Pvxg=;
-        b=ReypTjVoF5R9KlXn4TTM98RWvSwx91zCSl6EPy1aAfE1AN9mGRlaMQATRhCKWTvzmT
-         TkAF2w+moZnsbzBjJLa5Kmaqtr2rLrMGGIS6RX+tg3cYSpKfeqfeQsb/nrbyRE7GL5G4
-         XOey4rYyfCS9za8p4Gi7GhiZYqT1n3/iEXAiVWD7EKl5tvBzygAnGe442COvSDjF1Iy0
-         Yj6Vm35xqRA494uaDyf48WyVuUuV0yBpU0uSk2aYedD5vACnl9M7UbFVrzwjRZLIClqh
-         CECdRfojJjQn97JKRNZIZzr/y6zkDcUx8pH5ibB/DoflFHXlseZXAUfOxFT4TPjDGDkI
-         yqnw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MDOQM/tpi1Ry3JjZKAOYrYm3dlLQ0VMLRb7G7NjhmtE=;
+        b=MrmTC/Dy8xxx9fTlhGF8YdIUEFYnNYvnsYbxc4bMvJjpjRcsemrRoOH3uhxelihW20
+         gonhqs9pz2RPlt0+SJdKLCbuYiRr3Ylz9K0wuyQf0ZuVWfAeE/aITFNgJCsm5onIcGMG
+         R4DIqIqgAUoI66Ao3aADcqsZr4H8ErslwmCG2sMj3MwfrEWrjlTg9BjCedYxfIzLQJBd
+         y9zVByb6aRqUYxOlPuOh7AaI2fP/qeyzUUiaGyNjC1yYyUgvBea/VNOXA8D2VIDe90Lj
+         8qDdqFWIAwJvjWv8XqP4UgXJ0VewLoYyvYXrDdw82kevHxkdkacOlRO08B0MSu8AShsF
+         b4cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=Y2m0sHF7mgAZAJd/cOqVpD/LZcY5Tm+V3uvi7F+Pvxg=;
-        b=DteoXq8HwDqmQwEG6APbSxV0idDB0xJvCFXmdDXt0dIdkYCiv79uV35bPk/KXMiXvg
-         WItLmiAEdt++TytW4bcCgABCilk4KFGNg07Zzx572uPqDAc12yz7GIpC0v+vWZ8sEMXn
-         M7hxg0DZxVJ7ik2VR08qnYGZjA/nDBcmfNkaNgTqggxaZk3Jia0ZovfwQP9WugPlChm3
-         hufXoYbaLglIof0X0DruzelxlJgfyXmKDuA2LO55aEUb4eBg6kfPkU4Uj8V2x3nETs5H
-         WicDRd6zYf4tqgh3xCEaRONhI8CJm1dAVadLpTjr493PXLRWU1v3CKsO1IrCt2KZpow7
-         5dlA==
-X-Gm-Message-State: APjAAAXASl51AzFGT7DplaS6mAv4xgCDc3cD0KZMI6UhB8Z0Jd/0kza5
-        JgXP7kCTYXvn0J603aIPKNX0ADNnUnh6Rw==
-X-Google-Smtp-Source: APXvYqwFOwZA5jRS4ZOMZcLa09vFKI5S2CpWin0iglW2Plnu7IugTo7a2LNrk73aJ95kCqtlvbElfg==
-X-Received: by 2002:ac2:418c:: with SMTP id z12mr2100360lfh.183.1568724418995;
-        Tue, 17 Sep 2019 05:46:58 -0700 (PDT)
-Received: from ?IPv6:2a02:17d0:4a6:5700::72c? ([2a02:17d0:4a6:5700::72c])
-        by smtp.googlemail.com with ESMTPSA id u8sm485984lfb.36.2019.09.17.05.46.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 05:46:58 -0700 (PDT)
-Subject: Re: Linux 5.3-rc8
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Martin Steigerwald <martin@lichtvoll.de>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
-From:   "Alexander E. Patrakov" <patrakov@gmail.com>
-Message-ID: <871a40ac-2e69-a0db-39a3-4f17abbd8b6b@gmail.com>
-Date:   Tue, 17 Sep 2019 17:46:56 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MDOQM/tpi1Ry3JjZKAOYrYm3dlLQ0VMLRb7G7NjhmtE=;
+        b=qbSLVl4gjmfwaaViWwoartQkKV95a8LF5pWfloYdkOYJR4rmjRl0EyiQMFKuPGz3UN
+         dEISbXrBrAc90B3uZTYA5FcYB6H0SF44hG2BX7Ah6ymFwQbgeIBIZiAdNFLo/XjlmPO7
+         oG9slpO2EvfO5zv/vE+sXDnHnas2WiaQGKT++GYnwmao9pLoPnZfvzNJe0N56o+XKoWX
+         UKr8EfnkJF2vPk2VBa46YPS33aKLs5idk6ewtI/WT8PwoFHwmha/sDxfpkU1tOIAhwN0
+         8X4zS+cSHnhvHsvsNDe1G2Tc+4ajYBN5rWp43NkbUS/BVI/azQiNEop9t4P1jZwhHHdV
+         wK8Q==
+X-Gm-Message-State: APjAAAWxwIUE0jRFHi98K/Tp5YoGfnWc4zLZgk8zFiI1R4jzjvmU9BTn
+        NJgFSACK06xLaqdgBDVNT3yqaw==
+X-Google-Smtp-Source: APXvYqz0GKPaFAWUy3n9gNkJMzrPUuiN6/k83uygdJo1RlO0RSg0OF817+J58QQG4SJ2D7cExhHWpQ==
+X-Received: by 2002:adf:e292:: with SMTP id v18mr2710535wri.232.1568724444517;
+        Tue, 17 Sep 2019 05:47:24 -0700 (PDT)
+Received: from ?IPv6:2a01:e34:ed2f:f020:58da:8830:e8b1:f180? ([2a01:e34:ed2f:f020:58da:8830:e8b1:f180])
+        by smtp.googlemail.com with ESMTPSA id a10sm2680205wrm.52.2019.09.17.05.47.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 05:47:23 -0700 (PDT)
+Subject: Re: [PATCH 5/5] cpufreq: qcom-hw: Move driver initialisation earlier
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+References: <cover.1568240476.git.amit.kucheria@linaro.org>
+ <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
+ <20190917093412.GA24757@bogus>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <58e60ca4-9615-bbdf-5fe7-2a0e1d7f48d8@linaro.org>
+Date:   Tue, 17 Sep 2019 14:47:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms050106000302080105070402"
+In-Reply-To: <20190917093412.GA24757@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
 
---------------ms050106000302080105070402
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-PH
-Content-Transfer-Encoding: quoted-printable
+Hi Sudeep,
 
-17.09.2019 17:30, Ahmed S. Darwish =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> On Tue, Sep 17, 2019 at 08:11:56AM -0400, Theodore Y. Ts'o wrote:
->> On Tue, Sep 17, 2019 at 09:33:40AM +0200, Martin Steigerwald wrote:
->>> Willy Tarreau - 17.09.19, 07:24:38 CEST:
->>>> On Mon, Sep 16, 2019 at 06:46:07PM -0700, Matthew Garrett wrote:
->>>>>> Well, the patch actually made getrandom() return en error too, but=
-
->>>>>> you seem more interested in the hypotheticals than in arguing
->>>>>> actualities.>
->>>>> If you want to be safe, terminate the process.
->>>>
->>>> This is an interesting approach. At least it will cause bug reports =
-in
->>>> application using getrandom() in an unreliable way and they will
->>>> check for other options. Because one of the issues with systems that=
-
->>>> do not finish to boot is that usually the user doesn't know what
->>>> process is hanging.
->>>
+On 17/09/2019 11:34, Sudeep Holla wrote:
+> On Thu, Sep 12, 2019 at 04:02:34AM +0530, Amit Kucheria wrote:
+>> Allow qcom-hw driver to initialise right after the cpufreq and thermal
+>> subsystems are initialised in core_initcall so we get earlier access to
+>> thermal mitigation.
 >>
->> I would be happy with a change which changes getrandom(0) to send a
->> kill -9 to the process if it is called too early, with a new flag,
->> getrandom(GRND_BLOCK) which blocks until entropy is available.  That
->> leaves it up to the application developer to decide what behavior they=
-
->> want.
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> ---
+>>  drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->=20
-> Yup, I'm convinced that's the sanest option too. I'll send a final RFC
-> patch tonight implementing the following:
->=20
-> config GETRANDOM_CRNG_ENTROPY_MAX_WAIT_MS
-> 	int
-> 	default 3000
-> 	help
-> 	  Default max wait in milliseconds, for the getrandom(2) system
-> 	  call when asking for entropy from the urandom source, until
-> 	  the Cryptographic Random Number Generator (CRNG) gets
-> 	  initialized.  Any process exceeding this duration for entropy
-> 	  wait will get killed by kernel. The maximum wait can be
-> 	  overriden through the "random.getrandom_max_wait_ms" kernel
-> 	  boot parameter. Rationale follows.
->=20
-> 	  When the getrandom(2) system call was created, it came with
-> 	  the clear warning: "Any userspace program which uses this new
-> 	  functionality must take care to assure that if it is used
-> 	  during the boot process, that it will not cause the init
-> 	  scripts or other portions of the system startup to hang
-> 	  indefinitely.
->=20
-> 	  Unfortunately, due to multiple factors, including not having
-> 	  this warning written in a scary enough language in the
-> 	  manpages, and due to glibc since v2.25 implementing a BSD-like
-> 	  getentropy(3) in terms of getrandom(2), modern user-space is
-> 	  calling getrandom(2) in the boot path everywhere.
->=20
-> 	  Embedded Linux systems were first hit by this, and reports of
-> 	  embedded system "getting stuck at boot" began to be
-> 	  common. Over time, the issue began to even creep into consumer
-> 	  level x86 laptops: mainstream distributions, like Debian
-> 	  Buster, began to recommend installing haveged as a workaround,
-> 	  just to let the system boot.
->=20
-> 	  Filesystem optimizations in EXT4 and XFS exagerated the
-> 	  problem, due to aggressive batching of IO requests, and thus
-> 	  minimizing sources of entropy at boot. This led to large
-> 	  delays until the kernel's Cryptographic Random Number
-> 	  Generator (CRNG) got initialized, and thus having reports of
-> 	  getrandom(2) inidifinitely stuck at boot.
->=20
-> 	  Solve this problem by setting a conservative upper bound for
-> 	  getrandom(2) wait. Kill the process, instead of returning an
-> 	  error code, because otherwise crypto-sensitive applications
-> 	  may revert to less secure mechanisms (e.g. /dev/urandom). We
-> 	  __deeply encourage__ system integrators and distribution
-> 	  builders not to considerably increase this value: during
-> 	  system boot, you either have entropy, or you don't. And if you
-> 	  didn't have entropy, it will stay like this forever, because
-> 	  if you had, you wouldn't have blocked in the first place. It's
-> 	  an atomic "either/or" situation, with no middle ground. Please
-> 	  think twice.
->=20
-> 	  Ideally, systems would be configured with hardware random
-> 	  number generators, and/or configured to trust the CPU-provided
-> 	  RNG's (CONFIG_RANDOM_TRUST_CPU) or boot-loader provided ones
-> 	  (CONFIG_RANDOM_TRUST_BOOTLOADER).  In addition, userspace
-> 	  should generate cryptographic keys only as late as possible,
-> 	  when they are needed, instead of during early boot.  (For
-> 	  non-cryptographic use cases, such as dictionary seeds or MIT
-> 	  Magic Cookies, other mechanisms such as /dev/urandom or
-> 	  random(3) may be more appropropriate.)
->=20
-> Sounds good?
->=20
-> thanks,
->=20
-> --
-> Ahmed Darwish
-> http://darwish.chasingpointers.com
->=20
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> index 4b0b50403901..04676cc82ba6 100644
+>> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -327,7 +327,7 @@ static int __init qcom_cpufreq_hw_init(void)
+>>  {
+>>  	return platform_driver_register(&qcom_cpufreq_hw_driver);
+>>  }
+>> -device_initcall(qcom_cpufreq_hw_init);
+>> +postcore_initcall(qcom_cpufreq_hw_init);
+> 
+> I am fine with core framework initcall pushed to earlier initcall levels
+> if required, but for individual/platform specific drivers I am not so
+> happy to see that.
+> 
+> This goes against the grand plan of single common kernel strategy by
+> Android moving all drivers as modules. We might decide to make this
+> a module. 
 
-This would fail the litmus test that started this thread, re-explained=20
-below.
+module = mounted file system = very late initialization
 
-0. Linus applies your patch.
-1. A kernel release happens, and it boots fine.
-2. Ted Ts'o invents yet another brilliant ext4 optimization, and it gets =
+Is that the plan? Force every driver to load too late?
 
-merged.
-3. Somebody discovers that the new kernel kills all his processes, up to =
+There are core drivers which must be loaded as soon as possible. If the
+qcom driver is one of them, then what is the problem?
 
-and including gnome-session, and that's obviously a regression.
-4. Linus is forced to revert (2), nobody wins.
+"The grand plan" will have to solve this first before doing the module
+move.
 
---=20
-Alexander E. Patrakov
+> Also there are few cpufreq drivers that are modules. Will
+> they have issues ? If not, why do we need this change at all.
+
+Because some boards don't have thermal issues with the cpufreq drivers
+as module, other boards have.
+
+> Needing
+> thermal mitigation during boot this earlier is still too much of
+> expectation, I would rather boot slowly than relying on this feature.
+
+And what if we want to boot faster? The boot time is one of a key point
+of benchmark.
 
 
---------------ms050106000302080105070402
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: Криптографическая подпись S/MIME
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C5wwggVNMIIENaADAgECAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA2MDYwODAxMzVaFw0yMDA2MDYwODAxMzVaMB0x
-GzAZBgNVBAMMEnBhdHJha292QGdtYWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAOA0sb1ubDnIK32rbgW3BnjBcx1pYuEFOCU6aPVJ2gU+wtKJgAo9IdVUXG6kC1fF
-hXjIcZHOgbEqzFjHK1yXlHIUWEv+N8KdmBDOK1UdKQj58d9A4hnH62iEiwQsOR5YT1UyHX4A
-pfMjsBja7254cixR4jOPzfA4YUD6JTTPioyjDwuYQlhweVyXziKswLtGWfKeDcm3fOlKYxGy
-hxjWJRamGTreNBVC9uMkF4DHszpUm07agR2U4mnWy7FsjBuRJ++iX0SvuxKWf19HQWgmgIys
-jBVrArhVzgjOOnbvlklW849wIARF4Y0WAf91DsqPtuR8hu7+9KIVj2qk9BeNXXUCAwEAAaOC
-AiEwggIdMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfmD8+GynPT3XrpOheQKPs3QpO/Uw
-SwYIKwYBBQUHAQEEPzA9MDsGCCsGAQUFBzAChi9odHRwOi8vY2FjZXJ0LmFjdGFsaXMuaXQv
-Y2VydHMvYWN0YWxpcy1hdXRjbGlnMTAdBgNVHREEFjAUgRJwYXRyYWtvdkBnbWFpbC5jb20w
-RwYDVR0gBEAwPjA8BgYrgR8BGAEwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cuYWN0YWxp
-cy5pdC9hcmVhLWRvd25sb2FkMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCB6AYD
-VR0fBIHgMIHdMIGboIGYoIGVhoGSbGRhcDovL2xkYXAwNS5hY3RhbGlzLml0L2NuJTNkQWN0
-YWxpcyUyMENsaWVudCUyMEF1dGhlbnRpY2F0aW9uJTIwQ0ElMjBHMSxvJTNkQWN0YWxpcyUy
-MFMucC5BLi8wMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDti
-aW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSENM
-LUcxL2dldExhc3RDUkwwHQYDVR0OBBYEFEhX9pz3jwI3+erfsAVB2b4xSsM8MA4GA1UdDwEB
-/wQEAwIFoDANBgkqhkiG9w0BAQsFAAOCAQEAVbKht9PGiUsUaqiyzJb6blSMNaLwopQr3AsI
-FvthyqnSqxmSNYDeZsQYPgBnXvMCvHCn07pm1b96Y3XstBt2FWb9dpDr7y+ec3vxFHb3lKGb
-3WREB1kEATnBu2++dPcILG58gdzgYde3RAJC3/OyOZhDqKwQA5CnXTHigTzw75iezdLne5pU
-MjEQoxdqC+sgbrAueaEpMmRsGSKzgIX8eQ3DWwyIL56fYPJP3u4WZmBUKTFhhUWowG62QLtt
-ZjkiX/j+vjcSRd2app8lYDwQRornZAqrDxy+c4qQJ5FN234p36opwespDCwLN3Z6wPzLvzS+
-jAlmV3DF2xuZGMoebzCCBkcwggQvoAMCAQICCCzUitOxHg+JMA0GCSqGSIb3DQEBCwUAMGsx
-CzAJBgNVBAYTAklUMQ4wDAYDVQQHDAVNaWxhbjEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxJzAlBgNVBAMMHkFjdGFsaXMgQXV0aGVudGljYXRpb24gUm9vdCBDQTAe
-Fw0xNTA1MTQwNzE0MTVaFw0zMDA1MTQwNzE0MTVaMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UE
-CAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAz
-MzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
-MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMD8wYlW2Yji9ARlv80JNasoKTD+
-DMr3J6scEe6GPV3k9WxEtgxXM5WX3oiKjS2p25Mqk8cnV2fpMaEvdO9alrGes0vqcUqly7Pk
-U753RGlseYXR2XCjVhs4cuRYjuBmbxpRSJxRImmPnThKY41r0nl6b3A6Z2MOjPQF7h6OCYYw
-tz/ziv/+UBV587U2uIlOukaS7Xjk4ArYkQsGTSsfBBXqqn06WL3xG+B/dRO5/mOtY5tHdhPH
-ydsBk2kksI3PJ0yNgKV7o6HM7pG9pB6sGhj96uVLnnVnJ0WXOuV1ISv2eit9ir60LjT99hf+
-TMZLxA5yaVJ57fYjBMbxM599cw0CAwEAAaOCAdUwggHRMEEGCCsGAQUFBwEBBDUwMzAxBggr
-BgEFBQcwAYYlaHR0cDovL29jc3AwNS5hY3RhbGlzLml0L1ZBL0FVVEgtUk9PVDAdBgNVHQ4E
-FgQUfmD8+GynPT3XrpOheQKPs3QpO/UwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRS
-2Ig6yJ94Zu2J83s4cJTJAgI20DBFBgNVHSAEPjA8MDoGBFUdIAAwMjAwBggrBgEFBQcCARYk
-aHR0cHM6Ly93d3cuYWN0YWxpcy5pdC9hcmVhLWRvd25sb2FkMIHjBgNVHR8EgdswgdgwgZag
-gZOggZCGgY1sZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVu
-dGljYXRpb24lMjBSb290JTIwQ0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2
-NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6
-Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwDgYD
-VR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4ICAQBNk87VJL5BG0oWWHNfZYny2Xo+WIy8
-y8QP5VsWZ7LBS6Qz8kn8zJp3c9xdOkudZbcA3vm5U8HKXc1JdzNmpSh92zq/OeZLvUa+rnnc
-mvhxkFE9Doag6NitggBPZwXHwDcYn430/F8wqAt3LX/bsd6INVrhPFk3C2SoAjLjUQZibXvQ
-uFINMN4l6j86vCrkUaGzSqnXT45NxIivkAPhBQgpGtcTi4f+3DxkyTDbWtf9LuaC4l2jgB3g
-C7f56nmdpGfpYsyvKE7+Ip+WryH93pWt6C+r68KU3Gu02cU1/dHvNOXWUDeKkVT3T26wZVrT
-aMx+0nS3i63KDfJdhFzutfdBgCWHcp03NhOhMqy1RnAylF/dVZgkka6hKaWe1tOU21kS4uvs
-D4wM5k6tl0pin2o6u47kyoJJMOxRSQcosWtDXUmaLHUG91ZC6hvBDmDmpmS6h/r+7mtPrpYO
-xTr4hW3me2EfXkTvNTvBQtbi4LrZchg9vhi44EJ7L53g7GzQFn5KK8vqqgMb1c1+T0mkKdqS
-edgGiB9TDdYtv4HkUj/N00TKxZMLiDMw4V8ShUL6bKTXNfb3E68s47cD+MatFjUuGFj0uFPv
-ZlvlNAoJ7IMfXzIiTWy35X+akm+d49wBh54yv6icz2t/cBU1y1weuPBd8NUH/Ue3mXk0SXwk
-GP3yVDGCA/YwggPyAgEBMIGXMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8w
-DQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSww
-KgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4r
-qg9tGyNesDANBglghkgBZQMEAgEFAKCCAi8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAc
-BgkqhkiG9w0BCQUxDxcNMTkwOTE3MTI0NjU2WjAvBgkqhkiG9w0BCQQxIgQga8y8Mn82UFT/
-sj1JYkoaG1aX79XTVermW/RyVS97YoswbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASow
-CwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIB
-QDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBqAYJKwYBBAGCNxAEMYGaMIGXMIGCMQswCQYD
-VQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFj
-dGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4rqg9tGyNesDCBqgYLKoZIhvcNAQkQAgsxgZqg
-gZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEj
-MCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3
-DQEBAQUABIIBANbIEFhU+IUyk+ChR5NhSDZwLGqq4WVDc4xL7DfaMSV5aWLlp8qwPLvt/oss
-nMzoQVSaQ8GtTuFiPSSCg3u/OtXmXZ+9yuL1hn45UVM80K20qt4S2Mz8DpWpIyD7g2HfyJgx
-OQm5UoR1UykB4+dFKY74WfGQQLQV5fe5qCjY46G0UZlHC4u37JXZpOa21ZL8c0yhXlkCqfwZ
-znOTF+oAVyA+tQbs0hhmvkY0Pc60s/SK8cOdeeUTpE42jRqYbcepVOoBtkl5SnIac1vdacVy
-4UIGi02VlhP1WQ4AOMWe1aq6e35zIpAh5slXTtLMPMiw/0fy66kyS48hw6sa1mjgR10AAAAA
-AAA=
---------------ms050106000302080105070402--
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
