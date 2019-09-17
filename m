@@ -2,257 +2,130 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598D6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B11C9C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23AF620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884372171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="a9ElEh+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392270AbfIQEgF (ORCPT
+        id S2392282AbfIQEjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:36:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:50788 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390876AbfIQEgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:36:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC23F28;
-        Mon, 16 Sep 2019 21:36:03 -0700 (PDT)
-Received: from [10.162.40.131] (p8cg001049571a15.blr.arm.com [10.162.40.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BC5D63F575;
-        Mon, 16 Sep 2019 21:35:57 -0700 (PDT)
-Subject: Re: [PATCH V7 3/3] arm64/mm: Enable memory hot remove
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, mhocko@suse.com,
-        ira.weiny@intel.com, david@redhat.com, cai@lca.pw,
-        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
-References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
- <1567503958-25831-4-git-send-email-anshuman.khandual@arm.com>
- <20190912201517.GB1068@C02TF0J2HF1T.local>
- <ce127798-3863-0f28-de04-84b177418310@arm.com>
- <20190913100955.GB55043@arrakis.emea.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <a1962cde-b4df-e4a0-de61-252c0d0a25b2@arm.com>
-Date:   Tue, 17 Sep 2019 10:06:11 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 17 Sep 2019 00:39:02 -0400
+Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:27555
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726191AbfIQEjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 00:39:02 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CtMKnseAepIPPBk14nlSE0dH6lnpul7BZtbtcN8I83C/spSOGsE5/OrpZPsycuDMZhrHUpNRtRNFe1SPbiePJKCmtxuFKXxxlm+RPxxPQBpz6Wtc4okui7+Rruo8Xq1u0/A2R67OIOB0l5VTQpAiqZCoFzy/2YclM15xswEDPg5g5NgP2ee2Tv0vmOHNDHLS5r7SV/+y1exduvVyzWcXzl+jhkYCPl1VDI6VTgP20fNpzd/tVr8ncKG8Tqsn1ZkGLftbbMC0jZjfxE8qMvr91dnzzCWh5/WMvcpGflaWtXUv0psa8gC9/7h5K6u6dUGY21XJGdTmXy1upNdidmezYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbWTECiLrgqYHKyN/CetsK3wUFojhIJV6AZwfpVE/Fo=;
+ b=JnzqqszeY8j31SmrsrcRvksmNATEMUdOUqlvayMKSmbg4j20U4hsdCD8rTtj/2x+FRRvOpO1qQ1zft6YdaS5tev1iqKG9pgxV+eQzJzTzp9vMHYRdm9hzHczXsGxdnbUDJtCk43prVyzo4Q8xquKw+/QWgxtkyUdZrpTQ+QgogBi1yN7DggIlMIOMoQZjqUjmzg6R4kApBQA9pphLqMgCi2hoWU9OL4Woy0zJLpeZxGDtvppRq5Q8g3hJOZfZsTMtOQlyJcqEtkE0xrccRdXklSEuIOZ20WAFA1bwO0tc71Sz8PWtaD9+Sz3w836EYCWPkn0Ldn/zFTsFKnb6vjBzQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rbWTECiLrgqYHKyN/CetsK3wUFojhIJV6AZwfpVE/Fo=;
+ b=a9ElEh+TuzrJp15EqJAe8QnTf6xBeOH3cYcmAEif3mid0us4QB1B9Qz/SeopSarnQiwMwHEbc6esDFSjkmbGSsXzicx8dDHzlx1PUTsHsdFR+3My5gNhlHM0U1ro75o4JGTX78YXgrTiE1PB9WUWpIueFMhvNCDpF+9Zc07UzPA=
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
+ TYAPR01MB4415.jpnprd01.prod.outlook.com (20.179.173.208) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.26; Tue, 17 Sep 2019 04:38:58 +0000
+Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::7da1:bfc1:6c7f:8977]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
+ ([fe80::7da1:bfc1:6c7f:8977%7]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 04:38:58 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        "laurent.pinchart@ideasonboard.com" 
+        <laurent.pinchart@ideasonboard.com>,
+        "kieran.bingham+renesas@ideasonboard.com" 
+        <kieran.bingham+renesas@ideasonboard.com>
+Subject: RE: DRM Driver implementation question
+Thread-Topic: DRM Driver implementation question
+Thread-Index: AdVslX1ZBzegHzojRVS64lgG04s8jgAenS2A
+Date:   Tue, 17 Sep 2019 04:38:58 +0000
+Message-ID: <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
+References: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
+x-originating-ip: [150.249.235.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a6f16fad-c1ba-44eb-27b7-08d73b28f4bf
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TYAPR01MB4415;
+x-ms-traffictypediagnostic: TYAPR01MB4415:|TYAPR01MB4415:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TYAPR01MB44155E797DDDB4BDADA6D8DDD88F0@TYAPR01MB4415.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(189003)(51444003)(199004)(81166006)(6246003)(3846002)(66066001)(8676002)(86362001)(4744005)(4326008)(71200400001)(3480700005)(256004)(478600001)(25786009)(14454004)(486006)(6862004)(81156014)(5660300002)(476003)(9686003)(33656002)(55016002)(6116002)(229853002)(54906003)(2906002)(446003)(305945005)(71190400001)(8936002)(6636002)(64756008)(76116006)(66556008)(6506007)(66946007)(76176011)(7736002)(316002)(26005)(74316002)(66476007)(66446008)(102836004)(6436002)(11346002)(186003)(99286004)(52536014)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4415;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: renesas.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: s9zZ46vhRg+t9z4vW6ZQesABXJCvsu1AxhwD3vJP4Dl5dY8RQMnEjEHX5gNBwk/X5mFer58yAAfVgHFWEhDgBXbbAGxA8PEO5goZ27kXBVF/3TV0LwgFHQg0i62T4E1pVkBjhXdlzUdVW8jkmPU9mVKVOzCBaIEWcZsDx2Fa5L+GUUJxLMbsYoTcEjqTlQGRa/zglpR+Ve06/ARuRu/o4jNCyVS1bqNtWhFc/xl9SC9mDuLyav+dSaB5rcGT5ueikXGEnbemwMHBtK61uijJzF2rWiRAvif2WyznEMraPusl2Zmz/LoOMJqEGIsOXPv9UrVze5FIVvHaMkSBum8gU1NfjYOqtF65134lyaJ0HGSJR65xf0Xn+Uct21gV9kBZvxXBZJbzQBdEEYMT/oQSyL7hC/wsDN2A8+/Et1cuwgA=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190913100955.GB55043@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6f16fad-c1ba-44eb-27b7-08d73b28f4bf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 04:38:58.5764
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7ve2+nwRpxYi/sbVDsUY8qEwbKqb8B+L20G/ZBc9wjRgePQXVb3eZB3nXXCy97fHZyYsM5q2dgKqzNQ403EWm7GyFyXJPPqk02oV2KpNxGta0QXwKFsFHDPPv6g+JQ5v
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4415
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Gareth,
 
+> From: Gareth Williams, Sent: Monday, September 16, 2019 10:56 PM
+>=20
+> Hi Laurent/Kieran,
+>=20
+> I need to upstream a driver for a display controller that within its regi=
+sters memory region contains registers related
+> to a PWM device. The PWM device is for controlling the backlight of the d=
+isplay.
+> Ideally, I would like to create a separated driver for the PWM, so that I=
+ can re-use "pwm-backlight", but since the registers
+> for the PWM are right in the middle of the registers for the display cont=
+roller I would need to ioremap the memory region
+> for the PWM registers region twice, once from the display controller driv=
+er, and once from the PWM driver.
+> Do you think that the double ioremap would be acceptable upstream?
 
-On 09/13/2019 03:39 PM, Catalin Marinas wrote:
-> On Fri, Sep 13, 2019 at 11:28:01AM +0530, Anshuman Khandual wrote:
->> On 09/13/2019 01:45 AM, Catalin Marinas wrote:
->>> On Tue, Sep 03, 2019 at 03:15:58PM +0530, Anshuman Khandual wrote:
->>>> @@ -770,6 +1022,28 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->>>>  void vmemmap_free(unsigned long start, unsigned long end,
->>>>  		struct vmem_altmap *altmap)
->>>>  {
->>>> +#ifdef CONFIG_MEMORY_HOTPLUG
->>>> +	/*
->>>> +	 * FIXME: We should have called remove_pagetable(start, end, true).
->>>> +	 * vmemmap and vmalloc virtual range might share intermediate kernel
->>>> +	 * page table entries. Removing vmemmap range page table pages here
->>>> +	 * can potentially conflict with a concurrent vmalloc() allocation.
->>>> +	 *
->>>> +	 * This is primarily because vmalloc() does not take init_mm ptl for
->>>> +	 * the entire page table walk and it's modification. Instead it just
->>>> +	 * takes the lock while allocating and installing page table pages
->>>> +	 * via [p4d|pud|pmd|pte]_alloc(). A concurrently vanishing page table
->>>> +	 * entry via memory hot remove can cause vmalloc() kernel page table
->>>> +	 * walk pointers to be invalid on the fly which can cause corruption
->>>> +	 * or worst, a crash.
->>>> +	 *
->>>> +	 * So free_empty_tables() gets called where vmalloc and vmemmap range
->>>> +	 * do not overlap at any intermediate level kernel page table entry.
->>>> +	 */
->>>> +	unmap_hotplug_range(start, end, true);
->>>> +	if (!vmalloc_vmemmap_overlap)
->>>> +		free_empty_tables(start, end);
->>>> +#endif
->>>>  }
->>>
->>> So, I see the risk with overlapping and I guess for some kernel
->>> configurations (PAGE_SIZE == 64K) we may not be able to avoid it. If we
->>
->> Did not see 64K config options to have overlap, do you suspect they might ?
->> After the 52 bit KVA series has been merged, following configurations have
->> the vmalloc-vmemmap range overlap problem.
->>
->> - 4K  page size with 48 bit VA space
->> - 16K page size with 48 bit VA space
-> 
-> OK. I haven't checked, so it was just a guess that 64K has this problem
-> since the pgd entry coverage is fairly large.
-> 
->>> can, that's great, otherwise could we rewrite the above functions to
->>> handle floor and ceiling similar to free_pgd_range()? (I wonder how this
->>> function works if you called it on init_mm and kernel address range). By
->>
->> Hmm, never tried that. Are you wondering if this can be used directly ?
->> There are two distinct elements which make it very specific to user page
->> tables, mmu_gather based TLB tracking and mm->pgtable_bytes accounting
->> with mm_dec_nr_pxx().
-> 
-> Ah, I missed the mm_dec_nr_*(). So I don't think it would work directly.
-> We could, however, use the same approach for kernel page tables.
+I think that an MFD driver can support such hardware. I checked Documentati=
+on/devicetree/bindings/mfd roughly,
+and then atmel-hlcdc.txt seems to have a display controller and a PWM devic=
+e.
 
-Right.
+Best regards,
+Yoshihiro Shimoda
 
-> 
->>> having the vmemmap start/end information it avoids freeing partially
->>> filled page table pages.
->>
->> Did you mean page table pages which can partially overlap with vmalloc ?
-> 
-> Overlapping with the vmalloc range, not necessarily with a mapped
-> vmalloc area.
-> 
->> The problem (race) is not because of the inability to deal with partially
->> filled table. We can handle that correctly as explained below [1]. The
->> problem is with inadequate kernel page table locking during vmalloc()
->> which might be accessing intermediate kernel page table pointers which is
->> being freed with free_empty_tables() concurrently. Hence we cannot free
->> any page table page which can ever have entries from vmalloc() range.
-> 
-> The way you deal with the partially filled table in this patch is to
-> avoid freeing if there is a non-empty entry (!p*d_none()). This is what
-> causes the race with vmalloc. If you simply avoid freeing a pmd page,
-> for example, if the range floor/ceiling is not aligned to PUD_SIZE,
-> irrespective of whether the other entries are empty or not, you
-> shouldn't have this problem. You do free the pte page if the range is
-
-Right, the floor/ceiling alignment check should abort the process before
-scanning for non-empty entries.
-
-> aligned to PMD_SIZE but in this case it wouldn't overlap with the
-> vmalloc space. That's how free_pgd_range() works.
-
-Like free_pgd_range(), page table pages can be freed at lower levels when
-they have the right alignment wrt floor/ceiling. I will change all existing
-free_pxx_table() functions to accommodate floor/ceiling alignment checks to
-achieve this.
-
-> 
-> We may have some pgtable pages not freed at both ends of the range
-> (maximum 6 in total) but I don't really see this an issue. They could be
-> reused if something else gets mapped in that range.
-
-I assume that the number 6 for maximum page possibility came from
-
-(floor edge + ceiling edge) * (PTE table + PMD table + PUD table)
-
-
-> 
->> Though not completely sure, whether I really understood the suggestion above
->> with respect to the floor-ceiling mechanism as in free_pgd_range(). Are you
->> suggesting that we should only attempt to free up those vmemmap range page
->> table pages which *definitely* could never overlap with vmalloc by working
->> on a modified (i.e cut down with floor-ceiling while avoiding vmalloc range
->> at each level) vmemmap range instead ?
-> 
-> You can ignore the overlap check altogether, only free the page tables
-> with floor/ceiling set to the start/size passed to arch_remove_memory()
-> and vmemmap_free().
-
-Wondering if it will be better to use [VMEMMAP_START - VMEMMAP_END] and
-[PAGE_OFFSET - PAGE_END] as floor/ceiling respectively with vmemmap_free()
-and arch_remove_memory(). Not only it is safe to free all page table pages
-which span over these maximum possible mapping range but also it reduces
-the risk for alignment related wastage.
-
-> 
->> This can be one restrictive version of the function
->> free_empty_tables() called in case there is an overlap. So we will
->> maintain two versions for free_empty_tables(). Please correct me if
->> any the above assumptions or understanding is wrong.
-> 
-> I'd rather have a single version of free_empty_tables(). As I said
-> above, the only downside is that a partially filled pgtable page would
-> not be freed even though the other entries are empty.
-
-Sure. Also practically the limitation will be applicable only for vmemmap
-mapping but not for linear mappings where the chances of overlap might be
-negligible as it covers half kernel virtual address space.
-
-> 
->> But yes, with this we should be able to free up some possible empty page
->> table pages which were being left out in the current proposal when overlap
->> happens.
->>
->> [1] Skipping partially filled page tables
->>
->> All free_pXX_table() functions take care in avoiding freeing partially filled
->> page table pages whether they represent or ever represented linear or vmemmap
->> or vmalloc mapping in init_mm. They go over each individual entry in a given
->> page table making sure that each of them checks as pXX_none() before freeing
->> the entire page table page.
-> 
-> Yes but that's what's causing the race with a vmalloc trying to create
-> such entries.
-
-free_pxx_table() needs to check for both floor-ceiling alignment before
-making sure that the page table page is completely empty before freeing.
-
-> 
->>> Another question: could we do the page table and the actual vmemmap
->>> pages freeing in a single pass (sorry if this has been discussed
->>> before)?
->>
->> We could and some initial versions (till V5) of the series had that in fact.
->> Initially Mark Rutland had suggested to do this in two passes. Some extracts
->> from the previous discussion.
->>
->> https://lkml.org/lkml/2019/5/30/1159
->>
->> -----------------------
->> Looking at this some more, I don't think this is quite right, and tI
->> think that structure of the free_*() and remove_*() functions makes this
->> unnecessarily hard to follow. We should aim for this to be obviously
->> correct.
->>
->> The x86 code is the best template to follow here. As mentioned
->> previously, I'm fairly certain it's not entirely correct (e.g. due to
->> missing TLB maintenance), and we've already diverged a fair amount in
->> fixing up obvious issues, so we shouldn't aim to mirror it.
->>
->> I think that the structure of unmap_region() is closer to what we want
->> here -- do one pass to unmap leaf entries (and freeing the associated
->> memory if unmapping the vmemmap), then do a second pass cleaning up any
->> empty tables.
->> ----------------------
->>
->> Apart from the fact that two passes over the page table is cleaner and gives
->> us more granular and modular infrastructure to use for later purposes, it is
->> also a necessity in dealing with vmalloc-vmemmap overlap. free_empty_tables()
->> which is the second pass, can be skipped cleanly when overlap is detected.
-> 
-> I'm fine with two passes for unmap and pgtable free for the time being
-> and if they look fairly similar in a feature version, we can think of
-> merging them. But for now, stick with two passes. The unmapping one in
-> this patchset I think seems fine (though I haven't looked in detail).
-
-Sure.
-
-> 
-> There is also a race with ptdump that I haven't looked into.
-
-The second patch in the series deals with that.
