@@ -2,87 +2,102 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D091C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F44EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61145214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE9892189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568738353;
-	bh=CJxuDIir/Q8qXCQsVobRaYKJz6i9TOdPwNr3MjspfMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tjBvOnPpYihdHj9vRfyLPo6KU8hSiSuAZE6wQWsjzi/ge3WDjA80N8emOJSKetZjm
-	 6vnO/wbh5UTJkK70edpR/uLW8cXUqTeSlXEkE5MyUsWHen/HcGyH6afGD2iSDxozWy
-	 PLL2yeqDxgiJzY6ZGen8kw4VXciLZFkIZFPWCBPM=
+	s=default; t=1568738585;
+	bh=wc6lF05lSmV7CZjhYqDiRofI9ULWkRojtrGgtVqBsDs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=B1OoWhe9JeqmfKzQs00++bML9jOGA6x2rZP/sfwCuITV6qMWQVs+IgSbfWQ0Jr9Ua
+	 wxyc9AQP0E+BvBNas1nS31kr2Ep1Cg6aeZraorFAypYo3u4kh7LekMqRmW9GkSjsIV
+	 1jCy7R4kpXEvR5bJ0bw7Ys/gJ9N3R+PUDY16kTLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfIQQjM (ORCPT
+        id S1728934AbfIQQnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35016 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfIQQjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:39:12 -0400
-Received: from C02WT3WMHTD6.wdl.wdc.com (unknown [199.255.45.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFFC3206C2;
-        Tue, 17 Sep 2019 16:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568738351;
-        bh=CJxuDIir/Q8qXCQsVobRaYKJz6i9TOdPwNr3MjspfMg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yQUKQKjV9hD3GAAYiBCBQC5OaXd06dpPbVwPiNd179rfVNFSA/T+nndAMhG+CmRYz
-         PtPN80U8+yBQeRv1/AXBF18O2gbnYnQRNW00W/IwftXCYLr4XfGS3h6NtvJMC1HYNe
-         OOGO6MqOIQ0T0OF033dOsYWy0Qk/kZBnLliND/0Y=
-Date:   Tue, 17 Sep 2019 10:39:09 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     "Baldyga, Robert" <robert.baldyga@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>, "axboe@fb.com" <axboe@fb.com>,
-        "sagi@grimberg.me" <sagi@grimberg.me>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Rakowski, Michal" <michal.rakowski@intel.com>
-Subject: Re: [PATCH 0/2] nvme: Add kernel API for admin command
-Message-ID: <20190917163909.GB34045@C02WT3WMHTD6.wdl.wdc.com>
-References: <20190913111610.9958-1-robert.baldyga@intel.com>
- <20190913143709.GA8525@lst.de>
- <850977D77E4B5C41926C0A7E2DAC5E234F2C9C09@IRSMSX104.ger.corp.intel.com>
- <20190916073455.GA25515@lst.de>
- <850977D77E4B5C41926C0A7E2DAC5E234F2C9D03@IRSMSX104.ger.corp.intel.com>
+        Tue, 17 Sep 2019 12:43:05 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55877 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfIQQnE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:43:04 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g207so4297590wmg.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:43:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=yhTmZINtjNfdp4gy1K5HLazPZjxpYm/RmtHx4P4J7gY=;
+        b=PWVPVn3VE37rm5VJuvT6zs5SFlmQsxfQq9dzO5BDmtNCkSdrQmQ5XLD5ordLBKslRs
+         w6es5BFxMvAh0cS4GPmw/RcKde/+Oa2GSgFyFAvWgdQGHFufgD0933kklrd4pS6wG+oM
+         p0YsLEUWNfj9r2qq2VSoNGL3DIlJPGeiaIUTMqJ6bqmSZ1ogv48zXcqb31yLz0isn1JU
+         FTLA7Zss8cGdmQCbCB5NXFB1ix3RHCbh94sZTsEGJ+arTlwQp14d9bwXoj4RzlBWq0nC
+         Wv49g4fZsQzRgJsR/Qw2cdthpmjFhrMH7zQyDxeOmzN/YBdu8OS7I3KNLLjkfaCvBa2l
+         li8A==
+X-Gm-Message-State: APjAAAUDEj3ajtxCpQrzr2pQxtpqnefjSYv2wwl8csLY6Qc8qVGsqa01
+        c8OZIgJMaSVs5ad4dpfE9oQ=
+X-Google-Smtp-Source: APXvYqxo7+Dhbm2ARLzfR1YcZoqWrp4JTcUZckLYvieruU64IlfJhLMXkN1r2iECDr4iJFLWN5CcqQ==
+X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr4729974wmk.150.1568738582617;
+        Tue, 17 Sep 2019 09:43:02 -0700 (PDT)
+Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c092:200::1:b644])
+        by smtp.gmail.com with ESMTPSA id e30sm4936977wra.48.2019.09.17.09.43.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 09:43:01 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 17:43:00 +0100
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] percpu changes for v5.4-rc1
+Message-ID: <20190917164300.GA77280@dennisz-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <850977D77E4B5C41926C0A7E2DAC5E234F2C9D03@IRSMSX104.ger.corp.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 12:13:24PM +0000, Baldyga, Robert wrote:
-> Ok, fair enough. We want to keep things hidden behind certain layers,
-> and that's definitely a good thing. But there is a problem with these
-> layers - they do not expose all the features. For example AFAIK there
-> is no clear way to use 512+8 format via block layer (nor even a way 
-> to get know that bdev is formatted to particular lbaf). It's impossible
-> to use it without layering violations, which nobody sees as a perfect
-> solution, but it is the only one that works.
+Hi Linus,
 
-I think your quickest path to supporting such a format is to consider
-each part separately, then bounce and interleave/unmix the data +
-metadata at another layer that understands how the data needs to be laid
-out in host memory. Something like this RFC here:
+This pull request has a couple updates to clean up the code with no
+change in behavior.
 
-  http://lists.infradead.org/pipermail/linux-nvme/2018-February/015844.html
+Thanks,
+Dennis
 
-It appears connecting to infradead lists is a bit flaky at the moment,
-so not sure if you'll be able to read the above link right now.
+The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
 
-Anyway, the RFC would have needed a bit of work to be considered, like
-using a mempool for the purpose, but it does generically make such
-formats usable through the block stack so maybe try flushing out that
-idea.
+  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.4
+
+for you to fetch changes up to 14d3761245551bdfc516abd8214a9f76bfd51435:
+
+  percpu: Use struct_size() helper (2019-09-04 13:40:49 -0700)
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      percpu: fix typo in pcpu_setup_first_chunk() comment
+
+Gustavo A. R. Silva (1):
+      percpu: Use struct_size() helper
+
+Kefeng Wang (1):
+      percpu: Make pcpu_setup_first_chunk() void function
+
+ arch/ia64/mm/contig.c    |  5 +----
+ arch/ia64/mm/discontig.c |  5 +----
+ include/linux/percpu.h   |  2 +-
+ mm/percpu.c              | 23 +++++++++--------------
+ 4 files changed, 12 insertions(+), 23 deletions(-)
