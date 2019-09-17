@@ -2,77 +2,107 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A516AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43835C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73D6120640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568740871;
-	bh=ydTUCdJAPGYhabNpZ66dL0ndFxJMVe5sulmz4uh2qJM=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=z6Plj/cx19RavhTmP9YwmcXe1e7rKLcpAtQvzCIWLXE9PS/LkteU7gBvExmKTD1LE
-	 kobYo0v4+JLgNqjd2xUUKmeOL+F6Ajj/JonwXht22GfzKP690RNSbPvgUxJNx/Wa9e
-	 hGjf4A4Q34JspAFS864j8GIvai00pj5lYmQSsUhg=
+	by mail.kernel.org (Postfix) with ESMTP id 1CD522171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ra2F+YVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730951AbfIQRVK (ORCPT
+        id S1730964AbfIQRVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:21:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36358 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726744AbfIQRVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:21:09 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB65E20640;
-        Tue, 17 Sep 2019 17:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568740869;
-        bh=ydTUCdJAPGYhabNpZ66dL0ndFxJMVe5sulmz4uh2qJM=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=AJfmEDdwEAlzgHOPus89Nua4kSlGVHzLRwMB1032GSSlTMmduuiN+0qjPoBVygNyM
-         fY8QpSfU1cx3xTWmF56Gfe4l8FsQVM7OZWHyeY6+jhADteguoS4noqDG6CPMLZtoz+
-         3eDY4DKU/6iwersL3tKWWjlthrvWgnxuwX0VPcqA=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 13:21:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42800 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbfIQRVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:21:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id z12so2357099pgp.9;
+        Tue, 17 Sep 2019 10:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=XP3nl6czy0Go84+GXhP6xekWe3lUeVW+0ACtxPkNsuU=;
+        b=ra2F+YVLYvZr1nAkWH0/Wv1eCDF8R5O0xDtT3wLIHtB0NEovuDhYBLvmw5yKAr9dFc
+         H5aPYrv2116jWoh7+mTpiVamxPdlD11YiaW1LQwPuMtNRAnt23CKa0S5ZyEoRY05Ul3L
+         TZRWwjueLtoPq4vykQs18KjMAt8WeKE/9eJbguHdHJ8ORG1E7YVcPNEqjoqYJrsotMdp
+         onjHvr14tX/TQQ2MRQ6U/YmynXB9Grm8p2cOec86NFrnwEdi4vQ7l5gHoZBhuuB/ssHE
+         zJPYHx8/CRc7vLYaA++VFnSxbiCOJ2DEjjrJ/lL8WJK3ESj3vl2NYBXrO6fu9lFY0O+i
+         HVGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=XP3nl6czy0Go84+GXhP6xekWe3lUeVW+0ACtxPkNsuU=;
+        b=qXfLsX4142OhASzxaor7Z+dURuHKsHgwkkKvqQkQwHaKAh3N3jI+AufAs2xOgfAo2x
+         tgVrDv9Mzif5dxOyxvdIelGyuSkJy5ihtwN7699Sus76q/fxxAznHh2IB9l4kWJ8Vv3E
+         BTlxA8F5wMAIFf2AUNuU+nmFcvmy8OA4eIClUM2b1SCBsdLEZiNgYF/4fwxt/yVGLaTW
+         Xakb/rk2lFoZBbjcMQmKBjxN8GoHrJB73JN8dacU8tX3EO0oxjadHZngUKmc9W172p4P
+         GwkMdwmY64fDuQRfe2e17uvHbEVH1boV3ERLuv1fK21dAtXZYwskDSQn28mRsR62hCob
+         kTPQ==
+X-Gm-Message-State: APjAAAVL21qIe9dMrf7viGnrpyFqBZNIyMBRmwq54Z6zGbOzLY+h14LQ
+        ZphiB8y4xiiv2JotE0xX4UI=
+X-Google-Smtp-Source: APXvYqy9+ZSC73Ve3Dqf5eomIyJYUjt2b9pP6rdhOaaLMMGlu5/7bJTtbLOpJVlM1c73KZW6WZxyJg==
+X-Received: by 2002:a62:7d8c:: with SMTP id y134mr5459148pfc.257.1568740892878;
+        Tue, 17 Sep 2019 10:21:32 -0700 (PDT)
+Received: from SD ([106.222.12.103])
+        by smtp.gmail.com with ESMTPSA id g1sm2714459pgg.27.2019.09.17.10.21.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 10:21:31 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 22:51:20 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, markus.elfring@web.de
+Subject: [PATCH v2 2/3] i2c: qup: Remove dev_err() log after
+ platform_get_irq*() failure
+Message-ID: <20190917172120.GA11581@SD>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1566980533-28282-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1566980533-28282-1-git-send-email-chunfeng.yun@mediatek.com> <1566980533-28282-2-git-send-email-chunfeng.yun@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Weiyi Lu <weiyi.lu@mediatek.com>,
-        Erin Lo <erin.lo@mediatek.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Rob Herring <robh+dt@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 2/2] clk: mediatek: add pericfg clocks for MT8183
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 10:21:08 -0700
-Message-Id: <20190917172108.EB65E20640@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Chunfeng Yun (2019-08-28 01:22:13)
-> Add pericfg clocks for MT8183, it's used when support USB
-> remote wakeup
->=20
-> Cc: Weiyi Lu <weiyi.lu@mediatek.com>
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
+The debug message after platform_get_irq() failure is redundant
+because platform_get_irq() already prints an error. Thus remove it.
 
-Applied to clk-next
+Generated by: scripts/coccinelle/api/platform_get_irq.cocci
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+Changes in v2:
+Updated changelog and removed unnecessary braces after if condition.
+
+ drivers/i2c/busses/i2c-qup.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+index 5519c19bfd9c..ed09a59066b2 100644
+--- a/drivers/i2c/busses/i2c-qup.c
++++ b/drivers/i2c/busses/i2c-qup.c
+@@ -1766,10 +1766,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 		return PTR_ERR(qup->base);
+
+ 	qup->irq = platform_get_irq(pdev, 0);
+-	if (qup->irq < 0) {
+-		dev_err(qup->dev, "No IRQ defined\n");
++	if (qup->irq < 0)
+ 		return qup->irq;
+-	}
+
+ 	if (has_acpi_companion(qup->dev)) {
+ 		ret = device_property_read_u32(qup->dev,
+--
+2.20.1
 
