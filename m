@@ -2,69 +2,92 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02256C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED8EC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1E0721670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F7220650
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EKBUzXLj"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="OddDl5cW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731827AbfIQAcK (ORCPT
+        id S1732031AbfIQAey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 20:32:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50436 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIQAcK (ORCPT
+        Mon, 16 Sep 2019 20:34:54 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:47627 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfIQAey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 20:32:10 -0400
+        Mon, 16 Sep 2019 20:34:54 -0400
+X-Greylist: delayed 1828 seconds by postgrey-1.27 at vger.kernel.org; Mon, 16 Sep 2019 20:34:53 EDT
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1PxCHCzaKSbBf9rQHzOPWiqgMBxIvS6Iq4POGaifyXQ=; b=EKBUzXLj3MJGCQpH2J47/ny/v
-        Y+v6GWj6Khs7GfhrmTvRgzHpJUBQoXd/IN9sLAgOp4Okd2T3aGduXKIFl6m/zGr3zl1lE7wZV/t00
-        c7d7mSWs/Gt5HfHT8MTkGWrQSano25MQu+53hbzIfR7c3fMfWf1S8pPGuui0uXdDjYUfUWnHCqLJ+
-        AfVR0hiTEk43CILYHGcn42rGHF1f+QPyuEQ9+IcgozZVCLqm6x2uTCAe8fATmJlStTlTlvpIgQW7Y
-        FHiBr3G/Yud478ZDsrWglXj4sw5S2lf5ETD6nkLt1YdkoWjF71I1G6QXg6pc93tTLSM0wfKNej1gs
-        nx5l3NK7Q==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iA1Pd-0002oB-Hk; Tue, 17 Sep 2019 00:32:09 +0000
-Date:   Mon, 16 Sep 2019 17:32:09 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] usercopy: Skip HIGHMEM page checking
-Message-ID: <20190917003209.GS29434@bombadil.infradead.org>
-References: <201909161431.E69B29A0@keescook>
+        d=codon.org.uk; s=63138784; h=Subject:Message-ID:From:CC:To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
+        Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=l3IKMcFp3pF8Yj9IbZO95fl3sTGVdQA6I+JoxhN1omQ=; b=OddDl5cWFC2aHqjj+QoVHM8VXp
+        Ef6xGczkV0PZk0RwJ7ksQGn8r8hf9CkBoEie/n30/9xFrc4qQ97aZZ7qZRI6e3G5NyTQmRTJl+Koj
+        znz1kFFLLDAaMJ4N3kyvB8Fa80oAeDk1x3wAqrxGy+2e5wOvkl2ipX5rDKasCPeeV2FI=;
+Received: from [2607:fb90:27d6:137c:ca37:9d20:ab62:c332]
+        by cavan.codon.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <mjg59@srcf.ucam.org>)
+        id 1iA0yL-00026n-Al; Tue, 17 Sep 2019 01:03:59 +0100
+Date:   Mon, 16 Sep 2019 17:03:42 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com>
+References: <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com> <20190916024904.GA22035@mit.edu> <20190916042952.GB23719@1wt.eu> <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com> <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com> <20190916172117.GB15263@mit.edu> <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com> <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org> <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909161431.E69B29A0@keescook>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+Message-ID: <ADFD1BDA-E512-42B8-8D03-E5894ACD7951@srcf.ucam.org>
+X-SA-Do-Not-Run: Yes
+X-SA-Exim-Connect-IP: 2607:fb90:27d6:137c:ca37:9d20:ab62:c332
+X-SA-Exim-Mail-From: mjg59@srcf.ucam.org
+Subject: Re: Linux 5.3-rc8
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); Unknown failure
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:32:56PM -0700, Kees Cook wrote:
-> When running on a system with >512MB RAM with a 32-bit kernel built with:
-> 
-> 	CONFIG_DEBUG_VIRTUAL=y
-> 	CONFIG_HIGHMEM=y
-> 	CONFIG_HARDENED_USERCOPY=y
-> 
-> all execve()s will fail due to argv copying into kmap()ed pages, and on
-> usercopy checking the calls ultimately of virt_to_page() will be looking
-> for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
+On 16 September 2019 16:18:00 GMT-07:00, Linus Torvalds <torvalds@linux-fou=
+ndation=2Eorg> wrote:
+>On Mon, Sep 16, 2019 at 4:11 PM Matthew Garrett <mjg59@srcf=2Eucam=2Eorg>
+>wrote:
+>>
+>> In one case we have "Systems don't boot, but you can downgrade your
+>> kernel" and in the other case we have "Your cryptographic keys are
+>weak
+>> and you have no way of knowing unless you read dmesg", and I think
+>> causing boot problems is the better outcome here=2E
+>
+>Or: In one case you have a real and present problem=2E In the other
+>case, people are talking hypotheticals=2E
 
-I don't understand why you want to skip the check.  We must not cross a
-page boundary of a kmapped page.
+We've been recommending that people use getrandom() for key generation sin=
+ce it was first added to the kernel=2E Github suggests there are users in t=
+he wild - there's almost certainly more cases where internal code depends o=
+n the existing semantics=2E
 
+
+--=20
+Matthew Garrett | mjg59@srcf=2Eucam=2Eorg
