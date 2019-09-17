@@ -2,102 +2,137 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23193C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3572C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC0C0214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF93A214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568740065;
-	bh=Cx46LOGv4BNjTSei9LWwlF4X6Up/WnaZBoHwti+KXHA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=t8HB5c1QbioIH6Pn+zAB+NJ1m81zMnkN2AKDmc+Xm59MbkbjU91IkOoAkyPuRHIoI
-	 Rsh9ceuEvTeQULcIAV9KXkoJOROm1joGog8VVEZ73+ADLWuShq0Msegk1kXRH4V2QQ
-	 oOsWGs6+rQnhsiRTwInBPQ/IrhjEY61+JE5VUscQ=
+	s=default; t=1568740231;
+	bh=ocxnVjcPJtjnZ9vupxOgSmNpnZd8pTHz6J/W+xLzurU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rDRCVL5HtiF7kNy6TatF446DoAX07z88TMcnup8JkqBZB4Y5xJQGAY9LYuvjaJnxx
+	 8xvBAMVtZ5+sgjV2PBcr+y5mJ2rwUJJbZlYQGWBklm1gf9W+Am00+75i2JUjtPj6qh
+	 5Z8aC4yk92PdMx4UBowrjpCr62Qyl9KPRt5JzWHk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730790AbfIQRHo (ORCPT
+        id S1730730AbfIQRKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
+        Tue, 17 Sep 2019 13:10:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:59086 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727398AbfIQRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:07:44 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539862067B;
-        Tue, 17 Sep 2019 17:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568740063;
-        bh=Cx46LOGv4BNjTSei9LWwlF4X6Up/WnaZBoHwti+KXHA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EHXpHfISM0cj8rSRrHKB9Ji1mZQyNgSpSoRF3W/iJc8AKBXvEAi9fg+vhWIqc101g
-         KmEe0D0zX4/kwUr2ppTKtYRksZTNnNJ7nnQJA1s2nPV5DGOyuoE8ov2JC93TUCrmr4
-         KsIKiK4o/MwvTJJmVVwhKmOm+brcwDK/nQOv+u5o=
-Date:   Tue, 17 Sep 2019 18:07:38 +0100
-From:   Will Deacon <will@kernel.org>
-To:     KeMeng Shi <shikemeng@huawei.com>
-Cc:     akpm@linux-foundation.org, james.morris@microsoft.com,
-        gregkh@linuxfoundation.org, mortonm@chromium.org,
-        will.deacon@arm.com, kristina.martsenko@arm.com,
-        yuehaibing@huawei.com, malat@debian.org, j.neuschaefer@gmx.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: Re: [PATCH] connector: report comm change event when modifying
- /proc/pid/task/tid/comm
-Message-ID: <20190917170737.dpchgliux4qi2qef@willie-the-truck>
-References: <20190916211008.ipqe3j7s22aannta@willie-the-truck>
- <20190917135628.3054-1-shikemeng@huawei.com>
+        id S1725811AbfIQRKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:10:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8468328;
+        Tue, 17 Sep 2019 10:10:29 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D136B3F575;
+        Tue, 17 Sep 2019 10:10:27 -0700 (PDT)
+Subject: Re: [PATCH 3/6] Timer: expose monotonic clock and counter value
+To:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com,
+        richardcochran@gmail.com, Mark.Rutland@arm.com,
+        Will.Deacon@arm.com, suzuki.poulose@arm.com
+Cc:     linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
+        Kaly.Xin@arm.com, justin.he@arm.com, nd@arm.com,
+        linux-arm-kernel@lists.infradead.org
+References: <20190917112430.45680-1-jianyong.wu@arm.com>
+ <20190917112430.45680-4-jianyong.wu@arm.com>
+From:   Marc Zyngier <maz@kernel.org>
+Organization: Approximate
+Message-ID: <ad38f692-a7c4-34e0-8236-ebd2d237bd93@kernel.org>
+Date:   Tue, 17 Sep 2019 18:10:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917135628.3054-1-shikemeng@huawei.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190917112430.45680-4-jianyong.wu@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 09:56:28AM -0400, KeMeng Shi wrote:
-> on 2019/9/17 at 5:10, Will Deacon wrote:
-> >The rough idea looks ok to me but I have two concerns:
-> >
-> >  (1) This looks like it will be visible to userspace, and this changes
-> >      the behaviour after ~8 years of not reporting this event.
-> This do bother for users who only care the comm change via prctl, but it
-> also benefits users who want all comm changes. Maybe the best way is add
-> something like config or switch to meet the both conditions above. In my
-> opinion, users cares comm change event rather than how it change.
+On 17/09/2019 12:24, Jianyong Wu wrote:
+> A number of PTP drivers (such as ptp-kvm) are assuming what the
+> current clock source is, which could lead to interesting effects on
+> systems where the clocksource can change depending on external events.
+> 
+> For this purpose, add a new API that retrives both the current
+> monotonic clock as well as its counter value.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
 
-I was really just looking for some intuition as to how this event is
-currently used and why extending it like this is unlikely to break those
-existing users.
+There must be something wrong with the way you've taken this patch in
+your tree. My authorship is gone (not that I deeply care about it, but
+it is good practice to keep attributions), and the subject line has been
+rewritten.
 
-> >(2) What prevents proc_comm_connector(p) running concurrently with itself
-> > via the prctl()? The locking seems to be confined to set_task_comm().
-> To be honest, I did not consider the concurrence problem at beginning. And
-> some comm change events may lost or are reported repeatly as follows:
-> set name via procfs	set name via prctl
-> set_task_comm
-> 			set_task_comm
-> proc_comm_connector
-> 			proc_comm_connector
-> Comm change event belong to procfs losts and the fresh comm change belong
-> to prctl is reported twice. Actually, there is also concurrence problem
-> without this update as follows:
-> set name via procfs	set name via prctl
-> 			set_task_comm
-> set_task_comm
-> 			proc_comm_connector
-> Comm change event from procfs is reported instead of prctl, this may
-> bothers user who only care the comm change via prctl.
+I'd appreciate it if you could fix this in a future revision of this
+series. For reference, the original patch is here[1].
 
-Perhaps, although given that proc_comm_connector() is currently only called
-on the prctl() path, then it does at least provide the comm from the most
-recent prctl() invocation. With your path, the calls can go out of order,
-so I think that probably needs fixing.
+> ---
+>  include/linux/timekeeping.h |  3 +++
+>  kernel/time/timekeeping.c   | 13 +++++++++++++
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
+> index a8ab0f143ac4..a5389adaa8bc 100644
+> --- a/include/linux/timekeeping.h
+> +++ b/include/linux/timekeeping.h
+> @@ -247,6 +247,9 @@ extern int get_device_system_crosststamp(
+>  			struct system_time_snapshot *history,
+>  			struct system_device_crosststamp *xtstamp);
+>  
+> +/* Obtain current monotonic clock and its counter value  */
+> +extern void get_current_counterval(struct system_counterval_t *sc);
+> +
+>  /*
+>   * Simultaneously snapshot realtime and monotonic raw clocks
+>   */
+> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> index 44b726bab4bd..07a0969625b1 100644
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -1098,6 +1098,19 @@ static bool cycle_between(u64 before, u64 test, u64 after)
+>  	return false;
+>  }
+>  
+> +/**
+> + * get_current_counterval - Snapshot the current clocksource and counter value
+> + * @sc:	Pointer to a struct containing the current clocksource and its value
+> + */
+> +void get_current_counterval(struct system_counterval_t *sc)
+> +{
+> +	struct timekeeper *tk = &tk_core.timekeeper;
+> +
+> +	sc->cs = READ_ONCE(tk->tkr_mono.clock);
+> +	sc->cycles = sc->cs->read(sc->cs);
+> +}
+> +EXPORT_SYMBOL_GPL(get_current_counterval);
 
-Will
+This export wasn't in my original patch. I guess you need it because
+your ptp driver builds as a module? It'd be good to mention it in the
+commit log.
+
+> +
+>  /**
+>   * get_device_system_crosststamp - Synchronously capture system/device timestamp
+>   * @get_time_fn:	Callback to get simultaneous device time and
+> 
+
+Thanks,
+
+	M.
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=timer/counterval&id=a6e8abce025691b6a55e1c195878d7f76bfeb9d1
+-- 
+Jazz is not dead, it just smells funny...
