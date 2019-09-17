@@ -2,85 +2,95 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF19C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E28C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6EC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96E7206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfIQPc4 (ORCPT
+        id S1729671AbfIQPe2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:32:56 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:40460 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726724AbfIQPcz (ORCPT
+        Tue, 17 Sep 2019 11:34:28 -0400
+Received: from mail-io1-f46.google.com ([209.85.166.46]:44663 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726724AbfIQPe1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:32:55 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id 4E947E80FFC;
-        Tue, 17 Sep 2019 17:32:53 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id C7EDE160ADC; Tue, 17 Sep 2019 17:32:52 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 17:32:52 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Willy Tarreau <w@1wt.eu>, Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190917153252.GA31567@gardel-login>
-References: <20190915065142.GA29681@gardel-login>
- <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com>
- <20190916014050.GA7002@darwi-home-pc>
- <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com>
- <20190916024904.GA22035@mit.edu>
- <20190916042952.GB23719@1wt.eu>
- <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu>
- <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
- <20190916172117.GB15263@mit.edu>
+        Tue, 17 Sep 2019 11:34:27 -0400
+Received: by mail-io1-f46.google.com with SMTP id j4so8546343iog.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:34:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=b5eESMD28qPgijAAjYQFFcmvEqcWiLEcXpX+fUcktPY=;
+        b=r2y2VFV0m14neszvQuXTArTCnjnT1sEm/UKkBSTlgO5iYzNww7EoqhVOjjuCFI4ZhZ
+         fN4ZF4aFHoHcP3GznQUrU64YgHcjIEID8sv0c+XcXn204OQwe0qkI/PQf5mo3WJ4CJcV
+         PZg9ilLEe0Rgj2uuSjK/sZoLsJsK5ew7ssJQ3/5ztkF0k7l22fJ/NXglNeS6SfU84Nru
+         Hcg1Hk1BZ7GehGPgcm5rWmPu1d25LEdql7ea69z8KaOX0XizEXqf72QlHgv1zZskdxDp
+         qFxWbZLPT35Re49ATJLOAe20pEKIZG9kD040emHskdGry9LibDttujO/Gg4Y9M1exDLo
+         c/VQ==
+X-Gm-Message-State: APjAAAV0CHBAR+6g1bT7FxNidAjzyHxVja8h98HlJQTd774/cOB2dn5T
+        lZ71EdkscwzT8/fpO1SzmQZfoQ==
+X-Google-Smtp-Source: APXvYqxPWSxk0QiDZucIgQV74YO0vltXHIK9raR1c0yDGCwIJyW9xu9hnN02QKJ2g6jbj+82Tj3aaQ==
+X-Received: by 2002:a02:9182:: with SMTP id p2mr4407846jag.43.1568734464780;
+        Tue, 17 Sep 2019 08:34:24 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id u11sm3569716iof.22.2019.09.17.08.34.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 08:34:23 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 09:34:19 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Rob Clark <robclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: Re: [RFC] clk: Remove cached cores in parent map during unregister
+Message-ID: <20190917153419.GA258455@google.com>
+References: <20190723051446.20013-1-bjorn.andersson@linaro.org>
+ <20190729224652.17291206E0@mail.kernel.org>
+ <20190821181009.00D6322D6D@mail.kernel.org>
+ <20190826212415.ABD3521848@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190916172117.GB15263@mit.edu>
+In-Reply-To: <20190826212415.ABD3521848@mail.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mo, 16.09.19 13:21, Theodore Y. Ts'o (tytso@mit.edu) wrote:
+On Mon, Aug 26, 2019 at 02:24:14PM -0700, Stephen Boyd wrote:
+> > 
+> > ---8<---
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index c0990703ce54..f42a803fb11a 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -3737,6 +3737,37 @@ static const struct clk_ops clk_nodrv_ops = {
+> >         .set_parent     = clk_nodrv_set_parent,
+> >  };
+> >  
+> > +static void clk_core_evict_parent_cache_subtree(struct clk_core *root,
+> > +                                               struct clk_core *target)
+> > +{
+> > +       int i;
+> > +       struct clk_core *child;
+> > +
+> > +       if (!root)
+> > +               return;
+> 
+> I don't think we need this part. Child is always a valid pointer.
+> 
 
-> We could create a new flag, GRND_INSECURE, which never blocks.  And
-> that that allows us to solve the problem for silly applications that
-> are using getrandom(2) for non-cryptographic use cases.  Use cases
-> might include Python dictionary seeds, gdm for MIT Magic Cookie, UUID
-> generation where best efforts probably is good enough, etc.  The
-> answer today is they should just use /dev/urandom, since that exists
-> today, and we have to support it for backwards compatibility anyway.
-> It sounds like gdm recently switched to getrandom(2), and I suspect
-> that it's going to get caught on some hardware configs anyway, even
-> without the ext4 optimization patch.  So I suspect gdm will switch
-> back to /dev/urandom, and this particular pain point will probably go
-> away.
+Bjorn or Saiprakash
+Are there any plans to send out Stephen's proposed patch?
 
-The problem is that reading from /dev/urandom at a point where it's
-not initialized yet results in noisy kernel logging on current
-kernels. If you want people to use /dev/urandom then the logging needs
-to go away, because it scares people, makes them file bug reports and
-so on, even though there isn't actually any problem for these specific
-purposes.
-
-For that reason I'd prefer GRND_INSECURE I must say, because it
-indicates people grokked "I know I might get questionnable entropy".
-
-Lennart
+Thanks
