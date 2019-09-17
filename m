@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FEAC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD1BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27B821881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26C6B2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="btfPXCIR"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="kOocle93"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfIQSaM (ORCPT
+        id S1729361AbfIQSaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:30:12 -0400
-Received: from mail.efficios.com ([167.114.142.138]:37456 "EHLO
+        Tue, 17 Sep 2019 14:30:15 -0400
+Received: from mail.efficios.com ([167.114.142.138]:37512 "EHLO
         mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728343AbfIQSaL (ORCPT
+        with ESMTP id S1729277AbfIQSaM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:30:11 -0400
+        Tue, 17 Sep 2019 14:30:12 -0400
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 88B3A1D4DEC;
-        Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTP id 6E67B1D4E13;
+        Tue, 17 Sep 2019 14:30:11 -0400 (EDT)
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id la2lHpKLUR6o; Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
+        with ESMTP id cC-ngBrkweCl; Tue, 17 Sep 2019 14:30:11 -0400 (EDT)
 Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 1DE6C1D4DDD;
-        Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 1DE6C1D4DDD
+        by mail.efficios.com (Postfix) with ESMTP id 0AE0B1D4E0F;
+        Tue, 17 Sep 2019 14:30:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 0AE0B1D4E0F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1568745010;
-        bh=XtEH5PGXdU9J9Un0UKLWRvsMum7tk4G/OgscPixXs5o=;
+        s=default; t=1568745011;
+        bh=bsQbUCGG+66P6uaoaenq7Ys0bJ2R9XxktPLL9tZTcj4=;
         h=From:To:Date:Message-Id;
-        b=btfPXCIRQaFL847enyvmvgIW6/6ZUz4Ke6LDqi2QpLmAYnH8uG2c9HmlNliNCG/1F
-         doeZQCQi60iYVV8yFIf2BrU3E2BpUQQQsGMHyPw6VpeIaICvUvGCzYx80oNasdtxWm
-         7VRqQWiQcMDJXKr3Rcc56TkkphKO/cTDm5YGwU/RojFM3bJbGSe5Rer0L9fsNGaag9
-         uvUwTpwCv3JVyhUjhBZnevpf2U8R9HRgW/vKKwZfLWHwlS1xvFl1XUr/R6Gn3JqjfC
-         A4kUj5Kf5uTWj9w0ukL01IuuRyfQFk7N6Z7da4TtSwUHc2DM6ekEqw2qz+1dYYAoao
-         UJ6GBXdsOPAbw==
+        b=kOocle93YMUW6RJIUFX50Gb33i9DsLfrZo0YA2TKHKcmS2wpAn0NzVmvMa5mMVCTQ
+         5CxU5jGnn8XQjRYqCqPebd7UdVvxLrbF0SonvnePRwi7E9IAaMwECq0pF8ZpONqOhh
+         /48LVnj8LeG8gaNOBicOdf9Gg/RFcHnTDPtwRG110e3vF+YwEsDS7RwFuUarrIGplY
+         MaihncqTqKSPWsjCsks/57+wrGntUZsYXQT2BH4FgMeU5tCYpGrEHAJ0Ku7mNkK7KL
+         bHIZ/8D+punyNkHbc83c0cMNmntY3biax/YDAzAU1zF7BJIl/vwPqXgskKWXxK6IwB
+         DF1mv0scILPMQ==
 X-Virus-Scanned: amavisd-new at efficios.com
 Received: from mail.efficios.com ([IPv6:::1])
         by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id n7jYPQ8DKpBF; Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
+        with ESMTP id 3720i6ynFqVc; Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
 Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
-        by mail.efficios.com (Postfix) with ESMTPSA id B0FD91D4DC9;
-        Tue, 17 Sep 2019 14:30:09 -0400 (EDT)
+        by mail.efficios.com (Postfix) with ESMTPSA id 80ED11D4DE6;
+        Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
 From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     linux-kernel@vger.kernel.org,
@@ -58,10 +58,13 @@ Cc:     linux-kernel@vger.kernel.org,
         Boqun Feng <boqun.feng@gmail.com>,
         "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
         linux-api@vger.kernel.org, stable@vger.kernel.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH for 5.4 1/3] rseq: Fix: Reject unknown flags on rseq unregister
-Date:   Tue, 17 Sep 2019 14:29:57 -0400
-Message-Id: <20190917182959.16333-2-mathieu.desnoyers@efficios.com>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "Tommi T . Rantala" <tommi.t.rantala@nokia.com>,
+        Dmitry Vyukov <dvyukov@google.com>
+Subject: [PATCH for 5.4 3/3] rseq/selftests: Fix: Namespace gettid() for compatibility with glibc 2.30
+Date:   Tue, 17 Sep 2019 14:29:59 -0400
+Message-Id: <20190917182959.16333-4-mathieu.desnoyers@efficios.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
 References: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
@@ -70,36 +73,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is preferrable to reject unknown flags within rseq unregistration
-rather than to ignore them. It is an oversight caused by the fact that
-the check for unknown flags is after the rseq unregister flag check.
+glibc 2.30 introduces gettid() in public headers, which clashes with
+the internal static definition within rseq selftests.
 
+Rename gettid() to rseq_gettid() to eliminate this symbol name clash.
+
+Reported-by: Tommi T. Rantala <tommi.t.rantala@nokia.com>
 Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Tommi T. Rantala <tommi.t.rantala@nokia.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: "Paul E. McKenney" <paulmck@linux.ibm.com>
 Cc: Boqun Feng <boqun.feng@gmail.com>
 Cc: "H . Peter Anvin" <hpa@zytor.com>
 Cc: Paul Turner <pjt@google.com>
-Cc: linux-api@vger.kernel.org
+Cc: Dmitry Vyukov <dvyukov@google.com>
 Cc: <stable@vger.kernel.org>	# v4.18+
 ---
- kernel/rseq.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/rseq/param_test.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/rseq.c b/kernel/rseq.c
-index 27c48eb7de40..a4f86a9d6937 100644
---- a/kernel/rseq.c
-+++ b/kernel/rseq.c
-@@ -310,6 +310,8 @@ SYSCALL_DEFINE4(rseq, struct rseq __user *, rseq, u32, rseq_len,
- 	int ret;
+diff --git a/tools/testing/selftests/rseq/param_test.c b/tools/testing/selftests/rseq/param_test.c
+index eec2663261f2..e8a657a5f48a 100644
+--- a/tools/testing/selftests/rseq/param_test.c
++++ b/tools/testing/selftests/rseq/param_test.c
+@@ -15,7 +15,7 @@
+ #include <errno.h>
+ #include <stddef.h>
  
- 	if (flags & RSEQ_FLAG_UNREGISTER) {
-+		if (flags & ~RSEQ_FLAG_UNREGISTER)
-+			return -EINVAL;
- 		/* Unregister rseq for current thread. */
- 		if (current->rseq != rseq || !current->rseq)
- 			return -EINVAL;
+-static inline pid_t gettid(void)
++static inline pid_t rseq_gettid(void)
+ {
+ 	return syscall(__NR_gettid);
+ }
+@@ -373,11 +373,12 @@ void *test_percpu_spinlock_thread(void *arg)
+ 		rseq_percpu_unlock(&data->lock, cpu);
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -454,11 +455,12 @@ void *test_percpu_inc_thread(void *arg)
+ 		} while (rseq_unlikely(ret));
+ #ifndef BENCHMARK
+ 		if (i != 0 && !(i % (reps / 10)))
+-			printf_verbose("tid %d: count %lld\n", (int) gettid(), i);
++			printf_verbose("tid %d: count %lld\n",
++				       (int) rseq_gettid(), i);
+ #endif
+ 	}
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && thread_data->reg &&
+ 	    rseq_unregister_current_thread())
+ 		abort();
+@@ -605,7 +607,7 @@ void *test_percpu_list_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -796,7 +798,7 @@ void *test_percpu_buffer_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
+@@ -1011,7 +1013,7 @@ void *test_percpu_memcpy_buffer_thread(void *arg)
+ 	}
+ 
+ 	printf_verbose("tid %d: number of rseq abort: %d, signals delivered: %u\n",
+-		       (int) gettid(), nr_abort, signals_delivered);
++		       (int) rseq_gettid(), nr_abort, signals_delivered);
+ 	if (!opt_disable_rseq && rseq_unregister_current_thread())
+ 		abort();
+ 
 -- 
 2.17.1
 
