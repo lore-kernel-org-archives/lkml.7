@@ -2,106 +2,187 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4940C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB890C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39D6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9867720862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbfIQRG1 (ORCPT
+        id S1730762AbfIQRHT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:06:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57223 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 13:07:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35652 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIQRG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:06:26 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728507AbfIQRHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:07:19 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 05D29C08E2A2;
-        Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B189A5D9D5;
-        Tue, 17 Sep 2019 17:06:08 +0000 (UTC)
-Message-ID: <0af37d2ec77e3a3c2d8ba5adbe9aab4170dc13e4.camel@redhat.com>
-Subject: Re: [PATCH RT 8/8] sched: Lazy migrate_disable processing
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Tue, 17 Sep 2019 12:06:08 -0500
-In-Reply-To: <20190917165026.pv3neijrpxrszdzo@linutronix.de>
-References: <20190727055638.20443-1-swood@redhat.com>
-         <20190727055638.20443-9-swood@redhat.com>
-         <20190917165026.pv3neijrpxrszdzo@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        by mx1.redhat.com (Postfix) with ESMTPS id 9A38237E80
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 17:07:18 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id h6so1506325wmb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:07:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1ruT4jB1gaysYVDNCjFP18hxGY2r2nsdaAmRUQTyfVE=;
+        b=hEacvuYmBNGY2Qqd+j+novwQIFdyyI8S6O4UqbEa6pGpKfVgOnMDnYWWXSC7ZqLEmk
+         iks3kzLtzy7K5IPsPQRYOtii2mxRgsq3ZYu38CG8aCWfsMONpJKikhR3nzsjnIKXNAE3
+         /Ne39oGvDviPswE6SdAq7bZ9nR9+QjnfnqStMyZXR8eEKZJBpOmN94Lddh1ML81eFO2B
+         l1kNHaXxwzIaFC9inz5E51kG74iYiZyziglBdJHQodTvfR8cGA7mYI0rPXcSIHyi7lGr
+         ftSqyCX4sCi6azyJFmSGajCoj6XphkkKAZZUmNyNm8wSPsJFK6EOdBG3C+RbqhDIgCwX
+         lsSg==
+X-Gm-Message-State: APjAAAUSp2rZvphk51u/wNqqiSDGUb0LeZIYUftqeJsi+jK+5EC2Nt9w
+        muTVQAQMcabK6lA4trEPdy7qMaADmdVE735GutWRg+Uz/5S72c4mRv4kJIzHg44Jl1V49ypbOJl
+        oQe5tpCZfRTZ5VBtZJbkee9Zx
+X-Received: by 2002:a1c:6143:: with SMTP id v64mr4423954wmb.79.1568740037110;
+        Tue, 17 Sep 2019 10:07:17 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwIbFrwvol5OymNPikmzOF8yYlM2jDAoFYT60aSA6jpyo8zcnIn7QqaDqNF8TOdzR1saASRcw==
+X-Received: by 2002:a1c:6143:: with SMTP id v64mr4423932wmb.79.1568740036822;
+        Tue, 17 Sep 2019 10:07:16 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id d12sm3670731wme.33.2019.09.17.10.07.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 10:07:16 -0700 (PDT)
+Subject: Re: [PATCH v5 3/3] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
+ <1568708186-20260-3-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <879b1950-3ca7-0a53-9e4f-508fd5db4bd4@redhat.com>
+Date:   Tue, 17 Sep 2019 19:07:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <1568708186-20260-3-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 18:50 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-07-27 00:56:38 [-0500], Scott Wood wrote:
-> > diff --git a/kernel/cpu.c b/kernel/cpu.c
-> > index 885a195dfbe0..0096acf1a692 100644
-> > --- a/kernel/cpu.c
-> > +++ b/kernel/cpu.c
-> > @@ -939,17 +893,34 @@ static int takedown_cpu(unsigned int cpu)
-> >  	 */
-> >  	irq_lock_sparse();
-> >  
-> > -#ifdef CONFIG_PREEMPT_RT_FULL
-> > -	__write_rt_lock(cpuhp_pin);
-> > +#ifdef CONFIG_PREEMPT_RT_BASE
-> > +	WARN_ON_ONCE(takedown_cpu_task);
-> > +	takedown_cpu_task = current;
-> > +
-> > +again:
-> > +	for (;;) {
-> > +		int nr_pinned;
-> > +
-> > +		set_current_state(TASK_UNINTERRUPTIBLE);
-> > +		nr_pinned = cpu_nr_pinned(cpu);
-> > +		if (nr_pinned == 0)
-> > +			break;
-> > +		schedule();
-> > +	}
+On 17/09/19 10:16, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> we used to have cpuhp_pin which ensured that once we own the write lock
-> there will be no more tasks that can enter a migrate_disable() section
-> on this CPU. It has been placed fairly late to ensure that nothing new
-> comes in as part of the shutdown process and that it flushes everything
-> out that is still in a migrate_disable() section.
-> Now you claim that once the counter reached zero it never increments
-> again. I would be happier if there was an explicit check for that :)
+> Filter out drastic fluctuation and random fluctuation, remove
+> timer_advance_adjust_done altogether, the adjustment would be
+> continuous.
+> 
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
 
-I don't claim that.  A check is added in take_cpu_down() to see whether it
-went back up, and if so, exit with EAGAIN.  If *that* check succeeds, it
-can't go back up because it's in stop machine, and any tasks will get
-migrated to another CPU before they can run again.  There's also a WARN in
-migrate_tasks() if somehow a migrate-disabled task does get encountered.
+Queued, thanks (I renamed the new variable to lapic_timer_advance_dynamic).
 
-> There is no back off and flush mechanism which means on a busy CPU (as
-> in heavily lock contended by multiple tasks) this will wait until the
-> CPU gets idle again.
+Thanks,
 
-Not really any different from the reader-biased rwlock that this replaces...
+Paolo
 
--Scott
-
+> ---
+>  arch/x86/kvm/lapic.c | 28 ++++++++++++++--------------
+>  arch/x86/kvm/lapic.h |  1 -
+>  2 files changed, 14 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index dbbe478..323bdca 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -65,7 +65,9 @@
+>  #define APIC_BROADCAST			0xFF
+>  #define X2APIC_BROADCAST		0xFFFFFFFFul
+>  
+> -#define LAPIC_TIMER_ADVANCE_ADJUST_DONE 100
+> +static bool dynamically_adjust_timer_advance __read_mostly;
+> +#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
+> +#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+>  /* step-by-step approximation to mitigate fluctuation */
+>  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+> @@ -1485,26 +1487,25 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+>  	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+>  	u64 ns;
+>  
+> +	/* Do not adjust for tiny fluctuations or large random spikes. */
+> +	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUST_MAX ||
+> +	    abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_MIN)
+> +		return;
+> +
+>  	/* too early */
+>  	if (advance_expire_delta < 0) {
+>  		ns = -advance_expire_delta * 1000000ULL;
+>  		do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -		timer_advance_ns -= min((u32)ns,
+> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +		timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>  	} else {
+>  	/* too late */
+>  		ns = advance_expire_delta * 1000000ULL;
+>  		do_div(ns, vcpu->arch.virtual_tsc_khz);
+> -		timer_advance_ns += min((u32)ns,
+> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> +		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+>  	}
+>  
+> -	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> -		apic->lapic_timer.timer_advance_adjust_done = true;
+> -	if (unlikely(timer_advance_ns > 5000)) {
+> +	if (unlikely(timer_advance_ns > LAPIC_TIMER_ADVANCE_ADJUST_MAX))
+>  		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -		apic->lapic_timer.timer_advance_adjust_done = false;
+> -	}
+>  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+>  }
+>  
+> @@ -1524,7 +1525,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+>  	if (guest_tsc < tsc_deadline)
+>  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+>  
+> -	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> +	if (dynamically_adjust_timer_advance)
+>  		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+>  }
+>  
+> @@ -2302,13 +2303,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  	apic->lapic_timer.timer.function = apic_timer_fn;
+>  	if (timer_advance_ns == -1) {
+>  		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> -		apic->lapic_timer.timer_advance_adjust_done = false;
+> +		dynamically_adjust_timer_advance = true;
+>  	} else {
+>  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> -		apic->lapic_timer.timer_advance_adjust_done = true;
+> +		dynamically_adjust_timer_advance = false;
+>  	}
+>  
+> -
+>  	/*
+>  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
+>  	 * thinking that APIC state has changed.
+> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
+> index 50053d2..2aad7e2 100644
+> --- a/arch/x86/kvm/lapic.h
+> +++ b/arch/x86/kvm/lapic.h
+> @@ -35,7 +35,6 @@ struct kvm_timer {
+>  	s64 advance_expire_delta;
+>  	atomic_t pending;			/* accumulated triggered timers */
+>  	bool hv_timer_in_use;
+> -	bool timer_advance_adjust_done;
+>  };
+>  
+>  struct kvm_lapic {
+> 
 
