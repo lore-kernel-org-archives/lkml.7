@@ -2,236 +2,250 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32256C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C2CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:11:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F128521881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D03121881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:11:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="MWDcXo4T"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxGcdkyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfIQMIy (ORCPT
+        id S1727481AbfIQMLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:08:54 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36490 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfIQMIx (ORCPT
+        Tue, 17 Sep 2019 08:11:37 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44167 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIQMLh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:08:53 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f2so3109514edw.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:08:52 -0700 (PDT)
+        Tue, 17 Sep 2019 08:11:37 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q21so2036676pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:11:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZeQ/1nXTTrle8KmSh5j6zE8zudmgS+wCxY0/be2bjcg=;
-        b=MWDcXo4T7JxMWIkBCc8lU+Ny/cxvG9pyCUHx1cl+8D+TIWgDxdmdynGoWQOtHnYTHS
-         xWI+FZrl7UixBxU1PizQee/JkI6OHyRWf64Zl4maQ+OD6Z+uknbMnjL1rr4FHUE71Dgb
-         D/5pCKiq+d9KzcyiHwFelYySGlA/UEVWBy8jElpgwoQv8Tna6ArQ8uciVzEhHhhqMRUg
-         HQ42+P74bhTLOIoBrC8/HZI1jzHfTNiEzktjuH4UtdLSyFyQ9DfZjo0POvAm9/fwld54
-         Cfpo5k2cX8LRl4cuXPb+T4i5vSeoPb/0goLuMLXAD7mCYR5z9bZAU90tuWrh0UEw9aL2
-         2tHQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z8TjCL1+7c4nptumYKjTLyXcnc06lqVokGDWWx4FuTc=;
+        b=kxGcdkyfa9pJ6i00CWCbKfQ+iUoRTz9yl2uzAzw2yhMV+s8lRavPbgX7Ssx0+f3sXl
+         tm0F1BXW5y/SV3l0LDC5X7w2ZNhlluNHsozFq/BZ2TKeFlRosFZoxOFQlUB1qvrvvGid
+         B9+JQ7ZnIXq96VvWWJ6wW4yhq67XKVC6qMKMUM+Ca2QEGGrJfaSVk8DB31WJ80XS0Nqu
+         5c8zm6A8a4vx+ujZ3pqjBzEHFvqqS5j4C6yaS/wOwwzPkxZTTqS7N2Ps0UGfeThE1Q1k
+         BDseFhm6LwHBId7sdgQbyyX6eI3g4vGdQ2NXS+sFBCK+IW6dhhLdbZirP4k6mcyCkTZP
+         TdCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZeQ/1nXTTrle8KmSh5j6zE8zudmgS+wCxY0/be2bjcg=;
-        b=pocqnlwJgmDm/6S/8z1reFV7Sus0Jk6QYRFHBD4F6gVaWluJK6XFlyEm//xBeh2GuS
-         QW6756WpdhoK37r/rU5iSXMuCmZsfelBPsqq+018Y9v3Et3oJNi5nyqxcXCLtLYdZvqv
-         89y1bKGHpu+VXkYYrFcRuU0Uk75CS6Ib4yMDcAi4GotEa8wWOg4Xz+e856lW9lkY+per
-         85mNn4nTh8bF9uUJo8Nbt+4RM27UGW6IB4llxtga7G70jzACz8xrmL/gfZKj9WDn/JUS
-         QY+xwKG5b0dctZPR1QpDemkMG8w5YaRPaoMWZqpiQ2rDSy3Dwy8gnjd8d5d/a/FEQgTf
-         OK3g==
-X-Gm-Message-State: APjAAAUGECc5nmKlnqG6ooWahT1XxuVcg/AsURRWAzF3qua777SUIxvY
-        zFBluWpkfdTILeya5slj1GYSiQ==
-X-Google-Smtp-Source: APXvYqzmu0Kl2boVfXe9EcmtKusJSgFe0nuy9Lo88Wd9TFkOaWGoi9DYOpTYSJCBlM1xc61DdHEsbA==
-X-Received: by 2002:a17:906:60d0:: with SMTP id f16mr4362508ejk.267.1568722131705;
-        Tue, 17 Sep 2019 05:08:51 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f21sm181972edt.52.2019.09.17.05.08.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 05:08:50 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 326F9101C0B; Tue, 17 Sep 2019 15:08:53 +0300 (+03)
-Date:   Tue, 17 Sep 2019 15:08:53 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+03ee87124ee05af991bd@syzkaller.appspotmail.com>,
-        hughd@google.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in shmem_fault (2)
-Message-ID: <20190917120852.x6x3aypwvh573kfa@box>
-References: <20190831045826.748-1-hdanton@sina.com>
- <20190902135254.GC2431@bombadil.infradead.org>
- <20190902142029.fyq3dwn72pqqlzul@box>
- <20190909135521.GD29434@bombadil.infradead.org>
- <20190909150412.ut6fbshii4sohwag@box>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z8TjCL1+7c4nptumYKjTLyXcnc06lqVokGDWWx4FuTc=;
+        b=tZzOTCI5tVe4b/G5VB39H9voTpnqp1bu8KgVlxRh1NaLOfPJh5a2PpelirpOHmbvVB
+         VQbTJPmEN37XnjNtGCkFpVD+S3toZFkMXRUrSpPYQtUc6V3j7ncGXWvTMgi2GtstuC/u
+         dTv09HkHn45NBa1hXMsNlBOA1JHi1TmDCkf4HU2swijFOFhg/Y2AlXCGy4Fgif/rQ4Wf
+         ITmSs6IOBw0iS8YrYShOzZNv5iFBqgNYYA6ub+iPWhJx0D6B8ySzbzedJV+XytClzoTF
+         JlCka9kU4gan8hYG8jNjkxiJ/W3jjDeZNA7eYqPaTU6/mmd0pYvDCKTgQegHLUQ4cU5E
+         pdVg==
+X-Gm-Message-State: APjAAAXV3x6cPUJMzNK8wOMi7hNOoJ34FBsyccR+DB0/Ocqg/GLtjIfA
+        A7HS1zdpG9cwOZ3gJktT3wFlAO704eCISCdsqGru5A==
+X-Google-Smtp-Source: APXvYqxBtAxhijTOtmMwDsA8B+ivm542BhmhQIhD1aAFYaQEW5BEm7Hki9NcxBslwR+glp3lXh06vc7o3lJbavBAtwQ=
+X-Received: by 2002:a62:1cd2:: with SMTP id c201mr3906410pfc.51.1568722296210;
+ Tue, 17 Sep 2019 05:11:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190909150412.ut6fbshii4sohwag@box>
-User-Agent: NeoMutt/20180716
+References: <000000000000b1f1050592ab96ee@google.com> <Pine.LNX.4.44L0.1909161236580.1489-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909161236580.1489-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Tue, 17 Sep 2019 14:11:25 +0200
+Message-ID: <CAAeHK+zOtyFvbQRuaAf7EAsqm=cQP2NY8uSEczL_BEbw-xZvwg@mail.gmail.com>
+Subject: Re: possible deadlock in open_rio (2)
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     syzbot <syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Cesar Miquel <miquel@df.uba.ar>,
+        rio500-users@lists.sourceforge.net,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 06:04:12PM +0300, Kirill A. Shutemov wrote:
-> On Mon, Sep 09, 2019 at 06:55:21AM -0700, Matthew Wilcox wrote:
-> > On Mon, Sep 02, 2019 at 05:20:30PM +0300, Kirill A. Shutemov wrote:
-> > > On Mon, Sep 02, 2019 at 06:52:54AM -0700, Matthew Wilcox wrote:
-> > > > On Sat, Aug 31, 2019 at 12:58:26PM +0800, Hillf Danton wrote:
-> > > > > On Fri, 30 Aug 2019 12:40:06 -0700
-> > > > > > syzbot found the following crash on:
-> > > > > > 
-> > > > > > HEAD commit:    a55aa89a Linux 5.3-rc6
-> > > > > > git tree:       upstream
-> > > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=12f4beb6600000
-> > > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6a2b9826fdadf9
-> > > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=03ee87124ee05af991bd
-> > > > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > > > 
-> > > > > > ==================================================================
-> > > > > > BUG: KASAN: use-after-free in perf_trace_lock_acquire+0x401/0x530  
-> > > > > > include/trace/events/lock.h:13
-> > > > > > Read of size 8 at addr ffff8880a5cf2c50 by task syz-executor.0/26173
-> > > > > 
-> > > > > --- a/mm/shmem.c
-> > > > > +++ b/mm/shmem.c
-> > > > > @@ -2021,6 +2021,12 @@ static vm_fault_t shmem_fault(struct vm_
-> > > > >  			shmem_falloc_waitq = shmem_falloc->waitq;
-> > > > >  			prepare_to_wait(shmem_falloc_waitq, &shmem_fault_wait,
-> > > > >  					TASK_UNINTERRUPTIBLE);
-> > > > > +			/*
-> > > > > +			 * it is not trivial to see what will take place after
-> > > > > +			 * releasing i_lock and taking a nap, so hold inode to
-> > > > > +			 * be on the safe side.
-> > > > 
-> > > > I think the comment could be improved.  How about:
-> > > > 
-> > > > 			 * The file could be unmapped by another thread after
-> > > > 			 * releasing i_lock, and the inode then freed.  Hold
-> > > > 			 * a reference to the inode to prevent this.
-> > > 
-> > > It only can happen if mmap_sem was released, so it's better to put
-> > > __iget() to the branch above next to up_read(). I've got confused at first
-> > > how it is possible from ->fault().
-> > > 
-> > > This way iput() below should only be called for ret == VM_FAULT_RETRY.
-> > 
-> > Looking at the rather similar construct in filemap.c, should we solve
-> > it the same way, where we inc the refcount on the struct file instead
-> > of the inode before releasing the mmap_sem?
-> 
-> Are you talking about maybe_unlock_mmap_for_io()? Yeah, worth moving it to
-> mm/internal.h and reuse.
-> 
-> Care to prepare the patch? :P
+On Mon, Sep 16, 2019 at 6:40 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 16 Sep 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=11512cd1600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=19cf612d23f66bc19f22
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f92c6e600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b9b85e600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com
+> >
+> > ======================================================
+> > WARNING: possible circular locking dependency detected
+> > 5.3.0-rc7+ #0 Not tainted
+> > ------------------------------------------------------
+> > syz-executor071/1724 is trying to acquire lock:
+> > 00000000f749c934 (rio500_mutex){+.+.}, at: open_rio+0x16/0xe0
+> > drivers/usb/misc/rio500.c:65
+> >
+> > but task is already holding lock:
+> > 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
+> > drivers/usb/core/file.c:39
+> >
+> > which lock already depends on the new lock.
+> >
+> >
+> > the existing dependency chain (in reverse order) is:
+> >
+> > -> #1 (minor_rwsem){++++}:
+> >         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+> >         usb_register_dev drivers/usb/core/file.c:187 [inline]
+> >         usb_register_dev+0x131/0x670 drivers/usb/core/file.c:156
+> >         probe_rio.cold+0x53/0x237 drivers/usb/misc/rio500.c:474
+> >         usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+> >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+> >         __device_attach+0x217/0x360 drivers/base/dd.c:894
+> >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
+> >         usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> >         generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> >         usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+> >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+> >         __device_attach+0x217/0x360 drivers/base/dd.c:894
+> >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
+> >         usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> >         hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> >         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> >         port_event drivers/usb/core/hub.c:5359 [inline]
+> >         hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> >         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> >         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> >         kthread+0x318/0x420 kernel/kthread.c:255
+> >         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> >
+> > -> #0 (rio500_mutex){+.+.}:
+> >         check_prev_add kernel/locking/lockdep.c:2405 [inline]
+> >         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+> >         validate_chain kernel/locking/lockdep.c:2897 [inline]
+> >         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+> >         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+> >         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+> >         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+> >         open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
+> >         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+> >         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> >         do_dentry_open+0x494/0x1120 fs/open.c:797
+> >         do_last fs/namei.c:3416 [inline]
+> >         path_openat+0x1430/0x3f50 fs/namei.c:3533
+> >         do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> >         do_sys_open+0x3c0/0x580 fs/open.c:1089
+> >         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+> >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> > other info that might help us debug this:
+> >
+> >   Possible unsafe locking scenario:
+> >
+> >         CPU0                    CPU1
+> >         ----                    ----
+> >    lock(minor_rwsem);
+> >                                 lock(rio500_mutex);
+> >                                 lock(minor_rwsem);
+> >    lock(rio500_mutex);
+> >
+> >   *** DEADLOCK ***
+> >
+> > 1 lock held by syz-executor071/1724:
+> >   #0: 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
+> > drivers/usb/core/file.c:39
+> >
+> > stack backtrace:
+> > CPU: 0 PID: 1724 Comm: syz-executor071 Not tainted 5.3.0-rc7+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
+> >   check_prev_add kernel/locking/lockdep.c:2405 [inline]
+> >   check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+> >   validate_chain kernel/locking/lockdep.c:2897 [inline]
+> >   __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+> >   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+> >   __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+> >   __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+> >   open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
+> >   usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+> >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> >   do_dentry_open+0x494/0x1120 fs/open.c:797
+> >   do_last fs/namei.c:3416 [inline]
+> >   path_openat+0x1430/0x3f50 fs/namei.c:3533
+> >   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> >   do_sys_open+0x3c0/0x580 fs/open.c:1089
+> >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > RIP: 0033:0x401130
+> > Code: 01 f0 ff ff 0f 83 00 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
+> > 44 00 00 83 3d 5d 0c 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff
+> > ff 0f 83 d4 0a 00 00 c3 48 83 ec 08 e8 3a 00 00 00
+> > RSP: 002b:00007ffca0216788 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+> > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000401130
+> > RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00007ffca02167a0
+> > RBP: 00000000006cb018 R08: 0000000000000000 R09: 000000000000000f
+> > R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000402090
+> > R13: 0000000000402120 R14: 0000000000000000 R15: 00
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+>
+> This is undoubted the same as the previous bug report.  It should be
+> fixed by commit 9472aff16ca0 in Greg KH's usb-next branch, but the
+> fix is not yet in Linus's tree.
+>
+> #syz dup: possible deadlock in open_rio
 
-Something like this? Untested.
+Yeah, this one is confusing. If we look at the dashboard [1] we see
+that the fixing commit for the original bug is "Revert "USB: rio500:
+simplify locking"", which is in the usb-testing tree (btw, I've
+switched syzbot from usb-next to usb-testing, as it looked more
+relevant). So syzbot saw the Reported-by tag on that commit, and
+decided that the fix is applied, so if another bug with the same
+manifestation happens, it must be a different bug and should be
+reported. Syzbot has no way to know that commit 9472aff16ca0 (with the
+same Reported-by tag as "Revert "USB: rio500: simplify locking") is
+the proper fix for this issue.
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index d0cf700bf201..a542f72f57cc 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2349,26 +2349,6 @@ EXPORT_SYMBOL(generic_file_read_iter);
- 
- #ifdef CONFIG_MMU
- #define MMAP_LOTSAMISS  (100)
--static struct file *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
--					     struct file *fpin)
--{
--	int flags = vmf->flags;
--
--	if (fpin)
--		return fpin;
--
--	/*
--	 * FAULT_FLAG_RETRY_NOWAIT means we don't want to wait on page locks or
--	 * anything, so we only pin the file and drop the mmap_sem if only
--	 * FAULT_FLAG_ALLOW_RETRY is set.
--	 */
--	if ((flags & (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
--	    FAULT_FLAG_ALLOW_RETRY) {
--		fpin = get_file(vmf->vma->vm_file);
--		up_read(&vmf->vma->vm_mm->mmap_sem);
--	}
--	return fpin;
--}
- 
- /*
-  * lock_page_maybe_drop_mmap - lock the page, possibly dropping the mmap_sem
-diff --git a/mm/internal.h b/mm/internal.h
-index e32390802fd3..75ffa646de82 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -362,6 +362,27 @@ vma_address(struct page *page, struct vm_area_struct *vma)
- 	return max(start, vma->vm_start);
- }
- 
-+static inline struct file *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
-+					     struct file *fpin)
-+{
-+	int flags = vmf->flags;
-+
-+	if (fpin)
-+		return fpin;
-+
-+	/*
-+	 * FAULT_FLAG_RETRY_NOWAIT means we don't want to wait on page locks or
-+	 * anything, so we only pin the file and drop the mmap_sem if only
-+	 * FAULT_FLAG_ALLOW_RETRY is set.
-+	 */
-+	if ((flags & (FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT)) ==
-+	    FAULT_FLAG_ALLOW_RETRY) {
-+		fpin = get_file(vmf->vma->vm_file);
-+		up_read(&vmf->vma->vm_mm->mmap_sem);
-+	}
-+	return fpin;
-+}
-+
- #else /* !CONFIG_MMU */
- static inline void clear_page_mlock(struct page *page) { }
- static inline void mlock_vma_page(struct page *page) { }
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 2bed4761f279..551fa49eb7f6 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -2007,16 +2007,14 @@ static vm_fault_t shmem_fault(struct vm_fault *vmf)
- 		    shmem_falloc->waitq &&
- 		    vmf->pgoff >= shmem_falloc->start &&
- 		    vmf->pgoff < shmem_falloc->next) {
-+			struct file *fpin = NULL;
- 			wait_queue_head_t *shmem_falloc_waitq;
- 			DEFINE_WAIT_FUNC(shmem_fault_wait, synchronous_wake_function);
- 
- 			ret = VM_FAULT_NOPAGE;
--			if ((vmf->flags & FAULT_FLAG_ALLOW_RETRY) &&
--			   !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT)) {
--				/* It's polite to up mmap_sem if we can */
--				up_read(&vma->vm_mm->mmap_sem);
-+			fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-+			if (fpin)
- 				ret = VM_FAULT_RETRY;
--			}
- 
- 			shmem_falloc_waitq = shmem_falloc->waitq;
- 			prepare_to_wait(shmem_falloc_waitq, &shmem_fault_wait,
-@@ -2034,6 +2032,9 @@ static vm_fault_t shmem_fault(struct vm_fault *vmf)
- 			spin_lock(&inode->i_lock);
- 			finish_wait(shmem_falloc_waitq, &shmem_fault_wait);
- 			spin_unlock(&inode->i_lock);
-+
-+			if (fpin)
-+				fput(fpin);
- 			return ret;
- 		}
- 		spin_unlock(&inode->i_lock);
--- 
- Kirill A. Shutemov
+Since you've marked this bug as a dup of a fixed bug with the fix
+applied to syzbot's tree, syzbot reported another one named "possible
+deadlock in open_rio (3)". I'm going to manually mark that one as
+fixed by commit 9472aff16ca0.
+
+https://syzkaller.appspot.com/bug?id=5b6785f7f0febf30e2133fa6e6dab81683ffa1b5
