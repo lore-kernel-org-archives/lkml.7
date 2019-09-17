@@ -2,111 +2,124 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F099BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF7C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2060214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WR7W/y/V"
+	by mail.kernel.org (Postfix) with ESMTP id 3A7A0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:44:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfIQUmq (ORCPT
+        id S1729915AbfIQUo3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:42:46 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33773 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfIQUmq (ORCPT
+        Tue, 17 Sep 2019 16:44:29 -0400
+Received: from luna.lichtvoll.de ([194.150.191.11]:37695 "EHLO
+        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726668AbfIQUo3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:42:46 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n190so2635777pgn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:42:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YFdHh2t2oGEv2BeyA21GE0G/WyCi2XemObkdcdHKmyU=;
-        b=WR7W/y/Vd3KVexCUb7hWKcXKdGo9sUyUYVu2m0c5AY8jg79ByRv3GU7hHtb9LbDWYB
-         mZw5PChdZK7E/Dh+ouP8eUL030tx59XaE0u6AYcloT9aT1UpB8uiEb0gpUb9/mrtBw2y
-         xASL8xfI9EMEr5x2EGq6/2aIOlrsPqBG7vmspnrVu6CYSlOr8SFjDbeKr/iVCCAS/L6U
-         x/mza+bV99BHofVppiVRCy1wRLZG4JfkSSsRW2PBO9nil6mRs65aZ7RVwcUd7G0YWR/M
-         WiwVBjcZZlk1zcITfQ60FVLP2fh0SZayUZR983vRsdU5j75DidPYRsV9JVkDbHh5WJC6
-         WiYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YFdHh2t2oGEv2BeyA21GE0G/WyCi2XemObkdcdHKmyU=;
-        b=K6xmiY0RiB+zN/sh6jDXlH5odoTyLFbggziGXkpKzZm3tr0U8PDTAbiVSHAXHphYds
-         nspRckrcL7eRpTtuT2v8ypdQnaM2p5UZUxbn2fDPqUtvPqn/V7e8fVUjDpq6nb0LoIj1
-         vIH75pGGenM4+h6Z63DYmCxDs++4jtQl57L79GWA4jiUuLE5Z0pJolwKhYu7NiAOfsYe
-         EFOBKpM8Ai+GuR226k3GpdTANSb0w8IM9ZErr8PinfcPWCgn/WMAu9XBEet/Wu4ICwfK
-         Z34u3ILp9ogQ6J0I5c7w5gMF5xUnUwVufUXHvxB/WVsDFqNtyYqBK3eeyHQ3pgRlLDM7
-         DnSQ==
-X-Gm-Message-State: APjAAAVkZXvoTg6I0DAIbTXMHHREhwbiHr87LF2LV8BPqquGPwMmdaHX
-        7ifoDThCNs21s/JRFTzcH5D+mA==
-X-Google-Smtp-Source: APXvYqwiZx8dQNbqg0BmyaATr5iobMO3ZNDI3QuNtw/DOBStKSp3I8AmEvwYrUDxTWiIFPZukQRJgg==
-X-Received: by 2002:a63:ca06:: with SMTP id n6mr673892pgi.17.1568752965572;
-        Tue, 17 Sep 2019 13:42:45 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id e192sm5960215pfh.83.2019.09.17.13.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 13:42:44 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 13:42:42 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Dong Aisheng <aisheng.dong@nxp.com>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH] clk: Make clk_bulk_get_all() return a valid "id"
-Message-ID: <20190917204242.GB6167@minitux>
-References: <20190913024029.2640-1-bjorn.andersson@linaro.org>
- <20190917203347.04BE32054F@mail.kernel.org>
+        Tue, 17 Sep 2019 16:44:29 -0400
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.lichtvoll.de (Postfix) with ESMTPSA id AAB4C776E2;
+        Tue, 17 Sep 2019 22:44:25 +0200 (CEST)
+From:   Martin Steigerwald <martin@lichtvoll.de>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Date:   Tue, 17 Sep 2019 22:42:57 +0200
+Message-ID: <2119167.1ishuQyBJ6@merkaba>
+In-Reply-To: <20190917172929.GD27999@1wt.eu>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190917171328.GA31798@gardel-login> <20190917172929.GD27999@1wt.eu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917203347.04BE32054F@mail.kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: mail.lichtvoll.de;
+        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17 Sep 13:33 PDT 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-09-12 19:40:29)
-> > The adreno driver expects the "id" field of the returned clk_bulk_data
-> > to be filled in with strings from the clock-names property.
+Willy Tarreau - 17.09.19, 19:29:29 CEST:
+> On Tue, Sep 17, 2019 at 07:13:28PM +0200, Lennart Poettering wrote:
+> > On Di, 17.09.19 18:21, Willy Tarreau (w@1wt.eu) wrote:
+> > > On Tue, Sep 17, 2019 at 05:57:43PM +0200, Lennart Poettering 
+> > > wrote:
+> > > > Note that calling getrandom(0) "too early" is not something
+> > > > people do
+> > > > on purpose. It happens by accident, i.e. because we live in a
+> > > > world
+> > > > where SSH or HTTPS or so is run in the initrd already, and in a
+> > > > world
+> > > > where booting sometimes can be very very fast.
+> > > 
+> > > It's not an accident, it's a lack of understanding of the impacts
+> > > from the people who package the systems. Generating an SSH key
+> > > from
+> > > an initramfs without thinking where the randomness used for this
+> > > could come from is not accidental, it's a lack of experience that
+> > > will be fixed once they start to collect such reports. And those
+> > > who absolutely need their SSH daemon or HTTPS server for a
+> > > recovery image in initramfs can very well feed fake entropy by
+> > > dumping whatever they want into /dev/random to make it possible
+> > > to build temporary keys for use within this single session. At
+> > > least all supposedly incorrect use will be made *on purpose* and
+> > > will still be possible to match what users need.> 
+> > What do you expect these systems to do though?
 > > 
-> > But due to the use of kmalloc_array() in of_clk_bulk_get_all() it
-> > receives a list of bogus pointers instead.
-> > 
-> > Zero-initialize the "id" field and attempt to populate with strings from
-> > the clock-names property to resolve both these issues.
-> > 
-> > Fixes: 616e45df7c4a ("clk: add new APIs to operate on all available clocks")
-> > Fixes: 8e3e791d20d2 ("drm/msm: Use generic bulk clock function")
-> > Cc: Dong Aisheng <aisheng.dong@nxp.com>
-> > Cc: Jordan Crouse <jcrouse@codeaurora.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
+> > I mean, think about general purpose distros: they put together live
+> > images that are supposed to work on a myriad of similar (as in: same
+> > arch) but otherwise very different systems (i.e. VMs that might lack
+> > any form of RNG source the same as beefy servers with muliple
+> > sources
+> > the same as older netbooks with few and crappy sources, ...). They
+> > can't know what the specific hw will provide or won't. It's not
+> > their incompetence that they build the image like that. It's a
+> > common, very common usecase to install a system via SSH, and it's
+> > also very common to have very generic images for a large number
+> > varied systems to run on.
 > 
-> Applied to clk-next
-> 
+> I'm totally file with installing the system via SSH, using a temporary
+> SSH key. I do make a strong distinction between the installation
+> phase and the final deployment. The SSH key used *for installation*
+> doesn't need to the be same as the final one. And very often at the
+> end of the installation we'll have produced enough entropy to produce
+> a correct key.
 
-Thanks
+Well… systems cloud-init adapts may come from the same template. Cloud 
+Init thus replaces the key that has been there before on their first 
+boot. There is no "installation".
 
-> And now I see that this whole thing needs to be inlined to the one call
-> site and should use the struct device instead of calling of_clk_get()...
-> I'll have to fix it later.
-> 
+Cloud Init could replace the key in the background… and restart SSH 
+then… but that will give those big fat man in the middle warnings and 
+all systems would use the same SSH host key initially. I just don't see 
+a good way at the moment how to handle this. Introducing an SSH mode for 
+this is still a temporary not so random key with proper warnings might 
+be challenging to get right from both a security and usability point of 
+view. And it would add complexity.
 
-I concluded the same, sorry for not mentioning it.
+That said with Proxmox VE on Fujitsu S8 or Intel NUCs I have never seen 
+this issue even when starting 50 VMs in a row, however, with large cloud 
+providers starting 50 VMs in a row does not sound like all that much. 
+And I bet with Proxmox VE virtio rng is easily available cause it uses 
+KVM.
 
-Regards,
-Bjorn
+-- 
+Martin
+
+
