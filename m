@@ -2,125 +2,118 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F53C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:24:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5373C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11DBA20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7939B21897
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:26:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="EjnzOXYH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbfIQOYt (ORCPT
+        id S1727898AbfIQO0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:24:49 -0400
-Received: from 11.mo1.mail-out.ovh.net ([188.165.48.29]:34419 "EHLO
-        11.mo1.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfIQOYt (ORCPT
+        Tue, 17 Sep 2019 10:26:34 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:25713 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfIQO0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:24:49 -0400
-X-Greylist: delayed 4198 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 10:24:48 EDT
-Received: from player699.ha.ovh.net (unknown [10.109.143.24])
-        by mo1.mail-out.ovh.net (Postfix) with ESMTP id B1F7018FC20
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 15:05:42 +0200 (CEST)
-Received: from qperret.net (115.ip-51-255-42.eu [51.255.42.115])
-        (Authenticated sender: qperret@qperret.net)
-        by player699.ha.ovh.net (Postfix) with ESMTPSA id 73C3D9E63A6C;
-        Tue, 17 Sep 2019 13:05:27 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 15:05:22 +0200
-From:   Quentin Perret <qperret@qperret.net>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
-        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 5/5] cpufreq: qcom-hw: Move driver initialisation earlier
-Message-ID: <20190917130522.GA31601@qperret.net>
-References: <cover.1568240476.git.amit.kucheria@linaro.org>
- <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
- <20190917093412.GA24757@bogus>
- <58e60ca4-9615-bbdf-5fe7-2a0e1d7f48d8@linaro.org>
-MIME-Version: 1.0
+        Tue, 17 Sep 2019 10:26:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568730389;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=8Hka5X/r+hzmoKvFtI6p5MPdNGRJa/0fGujvCNAxwys=;
+        b=EjnzOXYHs3M+uQk0XR6CqMf12OLdDlPWur/87/urZNp/L79XTkZT8uqBjvrosN/SDK
+        TAAc9fwlZh9wHwyNCRy5v8EbKAmD3bgIFGGJ3Dw/sYkvB2oXZq+OiIk6u56fpKlxagRc
+        WvLzhuFI/PqGA4l1+kxviWAxkMCKIi7CMk0OBbDmh38md4bXhUfJ132jmMHO8ALzih6f
+        iPtm+qNTugoa69Ht8AqqtdrL9n0SSmdsiZT/k9efP25e2gzmBx9d63u0d7gZDoitmCFX
+        6kTsBs/ER8rV5r2wOVEuXbhAj3DVyhdpPnqBAttTSkq/v7Kw5m267TgiElx0SwP14Onc
+        F9Lw==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCyjDPUnsm74p9Jk5n8FSUKszBBBGbD3SfhNo/8="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:266f:d200:a80b:f72:f57a:c422]
+        by smtp.strato.de (RZmta 44.27.0 AUTH)
+        with ESMTPSA id u036f9v8HEQGXMX
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 17 Sep 2019 16:26:16 +0200 (CEST)
+Subject: Re: [Letux-kernel] [PATCH 2/2] DTS: ARM: gta04: introduce legacy spi-cs-high to make display work again
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58e60ca4-9615-bbdf-5fe7-2a0e1d7f48d8@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Ovh-Tracer-Id: 15719251551264529282
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrudeigdefgecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com>
+Date:   Tue, 17 Sep 2019 16:26:15 +0200
+Cc:     Discussions about the Letux Kernel <letux-kernel@openphoenux.org>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        Tony Lindgren <tony@atomide.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1624298A-C51B-418A-96C3-EA09367A010D@goldelico.com>
+References: <cover.1562597164.git.hns@goldelico.com> <8ae7cf816b22ef9cecee0d789fcf9e8a06495c39.1562597164.git.hns@goldelico.com> <20190724194259.GA25847@bogus> <2EA06398-E45B-481B-9A26-4DD2E043BF9C@goldelico.com> <CAL_JsqLe_Y9Z6MRt7ojgSVKAb9n95S8j=eGidSVNz2T83j-zPQ@mail.gmail.com> <CACRpkdY0AVnkRa8sV_Z54qfX9SYufvaYYhU0k2+LitXo0sLx2w@mail.gmail.com> <20190831084852.5e726cfa@aktux> <ED6A6797-D1F9-473B-ABFF-B6951A924BC1@goldelico.com> <CACRpkdZQgPVvB=78vOFsHe5n45Vwe4N6JJOcm1_vz5FbAw9CYA@mail.gmail.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel
+Hi Lunus,
 
-On Tuesday 17 Sep 2019 at 14:47:22 (+0200), Daniel Lezcano wrote:
-> 
-> Hi Sudeep,
-> 
-> On 17/09/2019 11:34, Sudeep Holla wrote:
-> > On Thu, Sep 12, 2019 at 04:02:34AM +0530, Amit Kucheria wrote:
-> >> Allow qcom-hw driver to initialise right after the cpufreq and thermal
-> >> subsystems are initialised in core_initcall so we get earlier access to
-> >> thermal mitigation.
-> >>
-> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> >> ---
-> >>  drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> >> index 4b0b50403901..04676cc82ba6 100644
-> >> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> >> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> >> @@ -327,7 +327,7 @@ static int __init qcom_cpufreq_hw_init(void)
-> >>  {
-> >>  	return platform_driver_register(&qcom_cpufreq_hw_driver);
-> >>  }
-> >> -device_initcall(qcom_cpufreq_hw_init);
-> >> +postcore_initcall(qcom_cpufreq_hw_init);
-> > 
-> > I am fine with core framework initcall pushed to earlier initcall levels
-> > if required, but for individual/platform specific drivers I am not so
-> > happy to see that.
-> > 
-> > This goes against the grand plan of single common kernel strategy by
-> > Android moving all drivers as modules. We might decide to make this
-> > a module. 
-> 
-> module = mounted file system = very late initialization
-> 
-> Is that the plan? Force every driver to load too late?
-> 
-> There are core drivers which must be loaded as soon as possible. If the
-> qcom driver is one of them, then what is the problem?
-> 
-> "The grand plan" will have to solve this first before doing the module
-> move.
-> 
-> > Also there are few cpufreq drivers that are modules. Will
-> > they have issues ? If not, why do we need this change at all.
-> 
-> Because some boards don't have thermal issues with the cpufreq drivers
-> as module, other boards have.
-> 
-> > Needing
-> > thermal mitigation during boot this earlier is still too much of
-> > expectation, I would rather boot slowly than relying on this feature.
-> 
-> And what if we want to boot faster? The boot time is one of a key point
-> of benchmark.
+> Am 17.09.2019 um 00:52 schrieb Linus Walleij =
+<linus.walleij@linaro.org>:
+>=20
+> On Mon, Sep 16, 2019 at 12:59 PM H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>=20
+>> ping.
+>>=20
+>> Device omap3-gta04 is neither working with v5.3 nor linux-next quite =
+a while and we need a solution.
+>=20
+> Can't we just apply the last part of the patch in this thread:
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi
+> b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index 9a9a29fe88ec..47bab8e1040e 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -124,6 +124,7 @@
+>                        spi-max-frequency =3D <100000>;
+>                        spi-cpol;
+>                        spi-cpha;
+> +                       spi-cs-high;
+>=20
+>                        backlight=3D <&backlight>;
+>                        label =3D "lcd";
+>=20
+>=20
+> Surely this fixes the problem?
 
-Could you share test results for this ? It'd be nice to see what if
-the gains in boot time outweight the additional pain for android folks
-...
+yes, it is a workaround, but appears to violate some policies.
+E.g. the spi-cs-high; is undocumented but DT bindings maintainer
+seems to be against documenting it as I had proposed in my
+other patch.
 
-Thanks,
-Quentin
+Rather he seems to have proposed a white-list in the driver code.
+So that the legacy mode is only becoming active for those systems
+which really need the legacy mode instead of everyone.
+
+Then, we do not need this patch for GTA04.
+
+So its up to you to decide which way to go. We are happy with
+any one that makes mainline work again asap...
+
+BR and thanks,
+Nikolaus
+
