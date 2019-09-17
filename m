@@ -2,111 +2,88 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DD5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4E25C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D24121881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67572189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:22:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GO9b8s86"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gN7Bf0zD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730980AbfIQRWb (ORCPT
+        id S1730996AbfIQRWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:22:31 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34778 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727112AbfIQRWb (ORCPT
+        Tue, 17 Sep 2019 13:22:44 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44542 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728136AbfIQRWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:22:31 -0400
-Received: by mail-pl1-f193.google.com with SMTP id d3so1826642plr.1;
-        Tue, 17 Sep 2019 10:22:30 -0700 (PDT)
+        Tue, 17 Sep 2019 13:22:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id k24so981880pll.11;
+        Tue, 17 Sep 2019 10:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=o0LaOrUJw9U8Z2eNdeJ3da2UYwU8tP+swoc6QJzczfc=;
-        b=GO9b8s86YzMd9CJsXnsM5NBWpStpUduvNa5Jkw+9IKCPh6K2l/rYIih02wD5ysEg+D
-         sM0W4GM5rc3fOHFD3IOnJIUBMlV/lREMK5gYImV8HpWNML0SMhGBGYYH3yEAA+P2hqAc
-         UrJMYPsByTMcNw2ff7lcYqbldpm4crvOZtGof4rydstvxkNNnP/1uq4SRAQMY2+3U0yJ
-         BkNMjE0GR8FJpVShIGJiKJzCrnif8YfkCpjxLURISOJB1n16CdgSNfZsah/xQ+jyXA4c
-         U6QeNsts0jUiyS5c1EDqbnlxwjJFXSvXp2q2pcIAvh6iZ6fvhN8Wdkd+YJq52IHEDs+m
-         r4xg==
+        h=from:to:subject:date:message-id:in-reply-to:references;
+        bh=3jwMWA6cEaxv9WIpjetOwYYBqadUeJXhUuLUJM/0FHI=;
+        b=gN7Bf0zDEeQB9AtiCpbYNI6a0kYmT1TLFzKVBdvqKMHXuhy+sUkc0t14PlE5PZG5TI
+         909fvmF0W0i6l33AcNKC2HC5jVVQYRWuVjyfkGiT8bdAw6Q0w2AQuvfQTmJ2YnnIVvnM
+         O1AMqy+MZiI4fwk/ALRM/9+P3Z0xalM0gA0cOBwDqHaYqwf8Eg65ZbaACpPFOea+TNDN
+         wlULQEw7c4a8T5BgfHa9/YC3+ftyVbS8B1Pl3tBpPZ5KzudZAVT2jL4PtDtfagvX0CrO
+         s0oNrtarWKVA9VIr61nSto+VjLNgGSP4WlbCZnigXqTiGvs1UuQRjGH+HzKdt0jPDcCc
+         0Aog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=o0LaOrUJw9U8Z2eNdeJ3da2UYwU8tP+swoc6QJzczfc=;
-        b=j3nUPbSrQZwugAR931pm4hJN4VSK/QbuNeJyMFkal451U2RAMi7323DiXFDbczyOKb
-         AkmuQw6qdg0t5lSAgKojz6mmqaLyW7ewq68k9ijF5gaNQ+6f8ubhKjFDq69Q6fozohYJ
-         uulTe4GA8QarSapHQTU5HFJVwZMOppFgw7QTfIzxosdrQ2JB6lMMDhsThK5T5cfi5Ngf
-         pMJCHIABRJl6mXFiRotR8E1CHrzqEjPY0llihbnwKmtiNVwkTP0jR6MvK4mQ3AUKkHPa
-         rq9PvW6yhUREn9jKua6wqx7k+w6DoqbnMFkks0tERSZcl+AAjaQL1wICiaGU860FwW7v
-         BSLg==
-X-Gm-Message-State: APjAAAU3C5G9RFyR2LNPvDWpXd7qPu9Jlk4I8WWchMfvcwCJrcIFLghC
-        /kH1rlES97spL6BbQLFjIFU=
-X-Google-Smtp-Source: APXvYqy7rQNQ3sCyATlwlX5P/VxuAokpQVQqUiyz2cStrilET3RW6Cd9BZ/rNFoPIzqVvUBlah+zhA==
-X-Received: by 2002:a17:902:ba89:: with SMTP id k9mr5013459pls.44.1568740950436;
-        Tue, 17 Sep 2019 10:22:30 -0700 (PDT)
-Received: from SD ([106.222.12.103])
-        by smtp.gmail.com with ESMTPSA id d76sm3488179pfd.185.2019.09.17.10.22.27
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references;
+        bh=3jwMWA6cEaxv9WIpjetOwYYBqadUeJXhUuLUJM/0FHI=;
+        b=CAciPGOQUFOQRCN3OP5wXvyuyOM+NoLDdnsR0ZFYOWYDp+H56HqU27uWsnb2RIM2FE
+         vgI8PY3DDp36mbp+0EJQUcS+0v9UQc9XVl4p5bXJyiBcV/dvdndu4Z6Zts40yJsUjmfe
+         9chL+caZhuX9vQiIhxpQ+sTFEnYfcHJT8BmuTNcttVDjYhqfoc8t6tlUh7R3YVwe1ZfY
+         NtYMBIYy9YEMg7WXPhKr82FXTsnaKwmeTUOEVClR93XkKuB8ZATlCrE3jHKuBmU/drME
+         y4N5hgbz74Xo/N0owyQUTsrKfMDoqIvWyPfLJwO706HdA22pqqHREI/V4PfBGVAsDcKT
+         yHmg==
+X-Gm-Message-State: APjAAAUsOBthc0UswvfQUoBOGtQTSvckaQlt6X/onIzLSBTniSs/GQTd
+        ziEAXLRvuNU6VyvRVoYW6rI=
+X-Google-Smtp-Source: APXvYqxhCVkyATlZAfZye8nSnYnaGdsS+VtADLd9a4rTVNBS9yExFmRhXXgjTinxQ7i6hLDaB3sqIw==
+X-Received: by 2002:a17:902:8ec3:: with SMTP id x3mr1463796plo.103.1568740962871;
+        Tue, 17 Sep 2019 10:22:42 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id z3sm3253427pjd.25.2019.09.17.10.22.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 10:22:30 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 22:52:20 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, markus.elfring@web.de
-Subject: [PATCH v2 3/3] i2c: qup: Use devm_platform_ioremap_resource helper
-Message-ID: <20190917172220.GA11681@SD>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Sep 2019 10:22:42 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] arm64: dts: Fix gpio to pinmux mapping
+Date:   Tue, 17 Sep 2019 10:22:41 -0700
+Message-Id: <20190917172241.31726-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <1568018127-26730-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+References: <1568018127-26730-1-git-send-email-rayagonda.kokatanur@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify the implementation by using a known wrapper function.
+On Mon,  9 Sep 2019 14:05:27 +0530, Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com> wrote:
+> There are total of 151 non-secure gpio (0-150) and four
+> pins of pinmux (91, 92, 93 and 94) are not mapped to any
+> gpio pin, hence update same in DT.
+> 
+> Fixes: 8aa428cc1e2e ("arm64: dts: Add pinctrl DT nodes for Stingray SOC")
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> ---
 
-Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci
-
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
-Changes in v2:
-* Updated changelog.
-
- drivers/i2c/busses/i2c-qup.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index ed09a59066b2..2c43ae22162c 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -1663,7 +1663,6 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 	static const int blk_sizes[] = {4, 16, 32};
- 	struct qup_i2c_dev *qup;
- 	unsigned long one_bit_t;
--	struct resource *res;
- 	u32 io_mode, hw_ver, size;
- 	int ret, fs_div, hs_div;
- 	u32 src_clk_freq = DEFAULT_SRC_CLK;
-@@ -1760,8 +1759,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
-
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	qup->base = devm_ioremap_resource(qup->dev, res);
-+	qup->base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(qup->base))
- 		return PTR_ERR(qup->base);
-
+Applied to devicetree-arm64/fixes, thanks!
 --
-2.20.1
-
+Florian
