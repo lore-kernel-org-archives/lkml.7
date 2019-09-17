@@ -2,166 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71773C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187E5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E2F92067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D80BC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568739986;
+	bh=2GzNt1P+iqY/06t/D5kCmnG+P1fIONIj1Ts/1jyDsRA=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=UTs6GTCy5ls4b2w+dBmcNisKUVS2fbs6rkwHP3L2bfi6CSIcEw/Axq7Jc66PZk5Xp
+	 W1zn1VunCihGU5dcOnXnUZQKlha52bn9GEL0lR98O0GazbVDuvpkkxY3Ez3aFrrlBE
+	 nMdKw2+TkSAMXJ9hXdeBpzXA4nDoGVHKWgyodoq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbfIQRFW (ORCPT
+        id S1730719AbfIQRGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:05:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36718 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 13:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728245AbfIQRFW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:05:22 -0400
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728507AbfIQRGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:06:24 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [50.237.200.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6A4866412B
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 17:05:21 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id z1so1531749wrw.21
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:05:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=t6xejXDOMQ6KuyMfFm1U1GgbUuSpZUSZNER6+lLzGmc=;
-        b=RcKo5ftzJkIugOn5f0in0Ntaav3PQhDVzH16U1tmu5Wl44o9g5N90iSWayluMH81wE
-         m7sfBwvaloDRyQIMU1oAIm2mK/lz1KBbZZ0wEvpJSOrXdq9EuFO3gCWD4emenB/+rk4e
-         eKQbF4D5gEp8auITvdBR1AZulu6tBimNfnieZwFUWTUcWV+y2HyLm7fVNGNn3sTZmrH6
-         E++mhoWafwgB15U9kKYQUCwjSNVb8+CaMqSzWz78zB07vzH1N7XKuEDwSA1MA39FwU2u
-         oif6UAYMd/le24n3+mf0f6x1cQshAj66IDK8gPrR0YAuLtV0Rww3jEgNI5wxzApQktKQ
-         UwXA==
-X-Gm-Message-State: APjAAAVy6G5OodWYbeV3KzK9wdP8d7K/hqLh1swFxxGmeDVpEmtSIfE7
-        8sUeWQAj9VZpWDbsBJ7y/6ouLFIr2PbR76uDqHdp6pxOzgDtE52JdYnSPQ4Bp1SuSuLPZ24XkVg
-        sHuGQDndLWHXIhArImJMLzb5q
-X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr3653223wru.198.1568739920066;
-        Tue, 17 Sep 2019 10:05:20 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxJ0DbeEHzBFaKEv6qVKXKe/VqIgn8HZlgAzW1WduAOnlbb2RWLukrZ6EHzIuJagKt0d7rRtA==
-X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr3653188wru.198.1568739919677;
-        Tue, 17 Sep 2019 10:05:19 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id c6sm4140610wrb.60.2019.09.17.10.05.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 10:05:19 -0700 (PDT)
-Subject: Re: [PATCH v8 0/3] KVM: x86: Enable user wait instructions
-To:     Tao Xu <tao3.xu@intel.com>, rkrcmar@redhat.com,
-        sean.j.christopherson@intel.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingqi.liu@intel.com
-References: <20190716065551.27264-1-tao3.xu@intel.com>
- <d01e6b8b-279c-84da-1f08-7b01baf9fdbf@intel.com>
- <ad687740-1525-f9c2-b441-63613b7dd93e@redhat.com>
- <ca969df2-a42a-3e7c-f49c-6b59d097b3de@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <a4bbc34c-9a0a-1bfb-2d56-c71a8d9a52c9@redhat.com>
-Date:   Tue, 17 Sep 2019 19:05:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id E20E62067B;
+        Tue, 17 Sep 2019 17:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568739984;
+        bh=2GzNt1P+iqY/06t/D5kCmnG+P1fIONIj1Ts/1jyDsRA=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=xZ0/InWY37pRBWkJRyhn7y07poVMPUU3OnqDU2tNYBCoU6rP22nkOEJqRfrfL9beU
+         izDrC8g9OPcWKcNYX480XSgF785jXpu06tVL6ZNJPeqta9ZFV4uSW+Sw1VJOHxRbXx
+         WZVwTFQDqcD316NGjcUFYh+OxjoD8AYepj0NKz+I=
+Date:   Tue, 17 Sep 2019 10:06:20 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
+Message-ID: <20190917170620.GC30224@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20190916145404.bukcmlliequu77wk@linutronix.de>
+ <20190917071614.kcmux562y6wbskj5@linux-p48b>
 MIME-Version: 1.0
-In-Reply-To: <ca969df2-a42a-3e7c-f49c-6b59d097b3de@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917071614.kcmux562y6wbskj5@linux-p48b>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/09/19 03:28, Tao Xu wrote:
-> On 7/20/2019 1:18 AM, Paolo Bonzini wrote:
->> On 19/07/19 08:31, Tao Xu wrote:
->>> Ping for comments :)
->>
->> Hi, I'll look at it for 5.4, right after the merge window.
->>
->> Paolo
->>
-> Hi paolo,
+On Tue, Sep 17, 2019 at 12:16:14AM -0700, Davidlohr Bueso wrote:
+> On Mon, 16 Sep 2019, Sebastian Andrzej Siewior wrote:
 > 
-> Linux 5.3 has released, could you review these patches. Thank you very
-> much!
+> > From: Wolfgang M. Reimer <linuxball@gmail.com>
+> > 
+> > Including rwlock.h directly will cause kernel builds to fail
+> > if CONFIG_PREEMPT_RT is defined. The correct header file
+> > (rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
+> > is included by locktorture.c anyway.
+> > 
+> > Remove the include of linux/rwlock.h.
+> > 
 > 
-> Tao
->>> On 7/16/2019 2:55 PM, Tao Xu wrote:
->>>> UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
->>>>
->>>> UMONITOR arms address monitoring hardware using an address. A store
->>>> to an address within the specified address range triggers the
->>>> monitoring hardware to wake up the processor waiting in umwait.
->>>>
->>>> UMWAIT instructs the processor to enter an implementation-dependent
->>>> optimized state while monitoring a range of addresses. The optimized
->>>> state may be either a light-weight power/performance optimized state
->>>> (c0.1 state) or an improved power/performance optimized state
->>>> (c0.2 state).
->>>>
->>>> TPAUSE instructs the processor to enter an implementation-dependent
->>>> optimized state c0.1 or c0.2 state and wake up when time-stamp counter
->>>> reaches specified timeout.
->>>>
->>>> Availability of the user wait instructions is indicated by the presence
->>>> of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
->>>>
->>>> The patches enable the umonitor, umwait and tpause features in KVM.
->>>> Because umwait and tpause can put a (psysical) CPU into a power saving
->>>> state, by default we dont't expose it to kvm and enable it only when
->>>> guest CPUID has it. If the instruction causes a delay, the amount
->>>> of time delayed is called here the physical delay. The physical
->>>> delay is
->>>> first computed by determining the virtual delay (the time to delay
->>>> relative to the VM’s timestamp counter).
->>>>
->>>> The release document ref below link:
->>>> Intel 64 and IA-32 Architectures Software Developer's Manual,
->>>> https://software.intel.com/sites/default/files/\
->>>> managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
->>>>
->>>> Changelog:
->>>> v8:
->>>>      Add vmx_waitpkg_supported() helper (Sean)
->>>>      Add an accessor to expose umwait_control_cached (Sean)
->>>>      Set msr_ia32_umwait_control in vcpu_vmx u32 and raise #GP when
->>>>      [63:32] is set when rdmsr. (Sean)
->>>>      Introduce a common exit helper handle_unexpected_vmexit (Sean)
->>>> v7:
->>>>      Add nested support for user wait instructions (Paolo)
->>>>      Use the test on vmx->secondary_exec_control to replace
->>>>      guest_cpuid_has (Paolo)
->>>> v6:
->>>>      add check msr_info->host_initiated in get/set msr(Xiaoyao)
->>>>      restore the atomic_switch_umwait_control_msr()(Xiaoyao)
->>>>
->>>> Tao Xu (3):
->>>>     KVM: x86: Add support for user wait instructions
->>>>     KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
->>>>     KVM: vmx: Introduce handle_unexpected_vmexit and handle WAITPKG
->>>> vmexit
->>>>
->>>>    arch/x86/include/asm/vmx.h      |  1 +
->>>>    arch/x86/include/uapi/asm/vmx.h |  6 ++-
->>>>    arch/x86/kernel/cpu/umwait.c    |  6 +++
->>>>    arch/x86/kvm/cpuid.c            |  2 +-
->>>>    arch/x86/kvm/vmx/capabilities.h |  6 +++
->>>>    arch/x86/kvm/vmx/nested.c       |  5 ++
->>>>    arch/x86/kvm/vmx/vmx.c          | 83
->>>> ++++++++++++++++++++++++++-------
->>>>    arch/x86/kvm/vmx/vmx.h          |  9 ++++
->>>>    arch/x86/kvm/x86.c              |  1 +
->>>>    9 files changed, 101 insertions(+), 18 deletions(-)
->>>>
->>>
->>
-> 
+> Acked-by: Davidlohr Bueso <dbueso@suse.de>
 
-Queued, thanks.
+Applied, thank you!
 
-Paolo
+But does anyone actually run locktorture?
+
+							Thanx, Paul
+
+> > Signed-off-by: Wolfgang M. Reimer <linuxball@gmail.com>
+> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > ---
+> > kernel/locking/locktorture.c | 1 -
+> > 1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+> > index c513031cd7e33..9fb042d610d23 100644
+> > --- a/kernel/locking/locktorture.c
+> > +++ b/kernel/locking/locktorture.c
+> > @@ -16,7 +16,6 @@
+> > #include <linux/kthread.h>
+> > #include <linux/sched/rt.h>
+> > #include <linux/spinlock.h>
+> > -#include <linux/rwlock.h>
+> > #include <linux/mutex.h>
+> > #include <linux/rwsem.h>
+> > #include <linux/smp.h>
+> > -- 
+> > 2.23.0
+> > 
