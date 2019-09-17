@@ -2,68 +2,279 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CB5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9867A21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A224B21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbfIQKMF (ORCPT
+        id S1726948AbfIQKMU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:12:05 -0400
-Received: from mx2.suse.de ([195.135.220.15]:35216 "EHLO mx1.suse.de"
+        Tue, 17 Sep 2019 06:12:20 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2285 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbfIQKME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:12:04 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DBCD8AD88;
-        Tue, 17 Sep 2019 10:12:02 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 5E3E3DA889; Tue, 17 Sep 2019 12:12:23 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 12:12:23 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Austin Kim <austindh.kim@gmail.com>
-Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: fix Wmaybe-uninitialized warning
-Message-ID: <20190917101223.GQ2850@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Austin Kim <austindh.kim@gmail.com>,
-        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190903033019.GA149622@LGEARND20B15>
+        id S1726250AbfIQKMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:12:20 -0400
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4281380F730F3DD69CC1;
+        Tue, 17 Sep 2019 18:12:18 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
+ 18:12:14 +0800
+Date:   Tue, 17 Sep 2019 11:11:59 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+CC:     Jonathan Cameron <jic23@kernel.org>, <lars@metafoo.de>,
+        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
+        <pmeerw@pmeerw.net>, <linux-kernel@vger.kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <knaack.h@gmx.de>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] iio: adc: stm32-adc: fix a race when using several adcs
+ with dma and irq
+Message-ID: <20190917111159.00001e9f@huawei.com>
+In-Reply-To: <6c330b1f-ef95-d9bd-3c8b-ccda03148561@st.com>
+References: <1568380890-313-1-git-send-email-fabrice.gasnier@st.com>
+        <20190915110524.2ec1b41d@archlinux>
+        <6c330b1f-ef95-d9bd-3c8b-ccda03148561@st.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190903033019.GA149622@LGEARND20B15>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 03, 2019 at 12:30:19PM +0900, Austin Kim wrote:
-> gcc throws warning message as below:
+On Mon, 16 Sep 2019 13:47:34 +0200
+Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 
-What version of gcc reports that? 9.2.1 does not.
+> On 9/15/19 12:05 PM, Jonathan Cameron wrote:
+> > On Fri, 13 Sep 2019 15:21:30 +0200
+> > Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> >   
+> >> End of conversion may be handled by using IRQ or DMA. There may be a
+> >> race when two conversions complete at the same time on several ADCs.
+> >> EOC can be read as 'set' for several ADCs, with:
+> >> - an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
+> >>   called in this case.
+> >> - an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
+> >>   request instead. It's then automatically cleared by DMA read. But the
+> >>   handler gets called due to status bit is temporarily set (IRQ triggered
+> >>   by the other ADC).
+> >> So both EOC status bit in CSR and EOCIE control bit must be checked
+> >> before invoking the interrupt handler (e.g. call ISR only for
+> >> IRQ-enabled ADCs).
+> >>
+> >> Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+> >>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>  
+> > Fix looks fine to me, but I'm not keen on splitting out individual bits from
+> > register defines.  That's a long term readability nightmare.
+> > 
+> > See below,
+> > 
+> > Jonathan
+> >   
+> >> ---
+> >>  drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++++++++++---
+> >>  drivers/iio/adc/stm32-adc-core.h | 13 ++++++++++++
+> >>  drivers/iio/adc/stm32-adc.c      |  6 ------
+> >>  3 files changed, 53 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> >> index 9b85fef..7297396 100644
+> >> --- a/drivers/iio/adc/stm32-adc-core.c
+> >> +++ b/drivers/iio/adc/stm32-adc-core.c
+> >> @@ -71,6 +71,8 @@
+> >>   * @eoc1:	adc1 end of conversion flag in @csr
+> >>   * @eoc2:	adc2 end of conversion flag in @csr
+> >>   * @eoc3:	adc3 end of conversion flag in @csr
+> >> + * @ier:	interrupt enable register offset for each adc
+> >> + * @eocie_msk:	end of conversion interrupt enable mask in @ier
+> >>   */
+> >>  struct stm32_adc_common_regs {
+> >>  	u32 csr;
+> >> @@ -78,6 +80,8 @@ struct stm32_adc_common_regs {
+> >>  	u32 eoc1_msk;
+> >>  	u32 eoc2_msk;
+> >>  	u32 eoc3_msk;
+> >> +	u32 ier;
+> >> +	u32 eocie_msk;
+> >>  };
+> >>  
+> >>  struct stm32_adc_priv;
+> >> @@ -303,6 +307,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
+> >>  	.eoc1_msk = STM32F4_EOC1,
+> >>  	.eoc2_msk = STM32F4_EOC2,
+> >>  	.eoc3_msk = STM32F4_EOC3,
+> >> +	.ier = STM32F4_ADC_CR1,
+> >> +	.eocie_msk = STM32F4_EOCIE,
+> >>  };
+> >>  
+> >>  /* STM32H7 common registers definitions */
+> >> @@ -311,8 +317,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
+> >>  	.ccr = STM32H7_ADC_CCR,
+> >>  	.eoc1_msk = STM32H7_EOC_MST,
+> >>  	.eoc2_msk = STM32H7_EOC_SLV,
+> >> +	.ier = STM32H7_ADC_IER,
+> >> +	.eocie_msk = STM32H7_EOCIE,
+> >>  };
+> >>  
+> >> +static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
+> >> +	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
+> >> +};
+> >> +
+> >> +static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
+> >> +					  unsigned int adc)
+> >> +{
+> >> +	u32 ier, offset = stm32_adc_offset[adc];
+> >> +
+> >> +	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
+> >> +
+> >> +	return ier & priv->cfg->regs->eocie_msk;
+> >> +}
+> >> +
+> >>  /* ADC common interrupt for all instances */
+> >>  static void stm32_adc_irq_handler(struct irq_desc *desc)
+> >>  {
+> >> @@ -323,13 +345,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
+> >>  	chained_irq_enter(chip, desc);
+> >>  	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
+> >>  
+> >> -	if (status & priv->cfg->regs->eoc1_msk)
+> >> +	/*
+> >> +	 * End of conversion may be handled by using IRQ or DMA. There may be a
+> >> +	 * race here when two conversions complete at the same time on several
+> >> +	 * ADCs. EOC may be read 'set' for several ADCs, with:
+> >> +	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
+> >> +	 *   is then automatically cleared by DR read in hardware)
+> >> +	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
+> >> +	 *   be called in this case)
+> >> +	 * So both EOC status bit in CSR and EOCIE control bit must be checked
+> >> +	 * before invoking the interrupt handler (e.g. call ISR only for
+> >> +	 * IRQ-enabled ADCs).
+> >> +	 */
+> >> +	if (status & priv->cfg->regs->eoc1_msk &&
+> >> +	    stm32_adc_eoc_enabled(priv, 0))
+> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+> >>  
+> >> -	if (status & priv->cfg->regs->eoc2_msk)
+> >> +	if (status & priv->cfg->regs->eoc2_msk &&
+> >> +	    stm32_adc_eoc_enabled(priv, 1))
+> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+> >>  
+> >> -	if (status & priv->cfg->regs->eoc3_msk)
+> >> +	if (status & priv->cfg->regs->eoc3_msk &&
+> >> +	    stm32_adc_eoc_enabled(priv, 2))
+> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 2));
+> >>  
+> >>  	chained_irq_exit(chip, desc);
+> >> diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
+> >> index 8af507b..8dc936b 100644
+> >> --- a/drivers/iio/adc/stm32-adc-core.h
+> >> +++ b/drivers/iio/adc/stm32-adc-core.h
+> >> @@ -25,8 +25,21 @@
+> >>   * --------------------------------------------------------
+> >>   */
+> >>  #define STM32_ADC_MAX_ADCS		3
+> >> +#define STM32_ADC_OFFSET		0x100
+> >>  #define STM32_ADCX_COMN_OFFSET		0x300
+> >>  
+> >> +/* STM32F4 - registers for each ADC instance */
+> >> +#define STM32F4_ADC_CR1			0x04
+> >> +
+> >> +/* STM32F4_ADC_CR1 - bit fields */
+> >> +#define STM32F4_EOCIE			BIT(5)
+> >> +
+> >> +/* STM32H7 - registers for each instance */
+> >> +#define STM32H7_ADC_IER			0x04
+> >> +
+> >> +/* STM32H7_ADC_IER - bit fields */
+> >> +#define STM32H7_EOCIE			BIT(2)
+> >> +
+> >>  /**
+> >>   * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
+> >>   * @base:		control registers base cpu addr
+> >> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+> >> index 6a7dd08..3c9f456 100644
+> >> --- a/drivers/iio/adc/stm32-adc.c
+> >> +++ b/drivers/iio/adc/stm32-adc.c
+> >> @@ -30,7 +30,6 @@
+> >>  
+> >>  /* STM32F4 - Registers for each ADC instance */
+> >>  #define STM32F4_ADC_SR			0x00
+> >> -#define STM32F4_ADC_CR1			0x04
+> >>  #define STM32F4_ADC_CR2			0x08
+> >>  #define STM32F4_ADC_SMPR1		0x0C
+> >>  #define STM32F4_ADC_SMPR2		0x10
+> >> @@ -54,7 +53,6 @@
+> >>  #define STM32F4_RES_SHIFT		24
+> >>  #define STM32F4_RES_MASK		GENMASK(25, 24)
+> >>  #define STM32F4_SCAN			BIT(8)
+> >> -#define STM32F4_EOCIE			BIT(5)  
+> > Hmm. This is breaking up the definitions of bits in a single register.
+> > That is rather nasty from a code readability point of view.  
+> > 
+> > I am as keen as the next person on only exposing definitions where
+> > we need to, but in this case we either need to provide an access path
+> > to it here, or we need to move the whole block to the header.  
+> 
+> Hi Jonathan,
+> 
+> I think I'll add a precursor patch in v2 to move the whole block to the
+> header file. This way, the access path is easy (e.g. readl).
+> I'm only wondering about the Fixes tag... this will probably not be
+> straight forward to apply the fix on the maintenance releases ?
+> Or do I need to add it to the precursor patch as well ?
+The precursor is a simple move of definitions. Even if it's large, I don't
+think it will be a problem applying it to stable.
+Just make it clear in the patch description why it is needed for the fix.
 
-> ‘clone_src_i_size’ may be used uninitialized in this function
-> [-Wmaybe-uninitialized]
->  #define IS_ALIGNED(x, a)  (((x) & ((typeof(x))(a) - 1)) == 0)
->                        ^
-> fs/btrfs/send.c:5088:6: note: ‘clone_src_i_size’ was declared here
->  u64 clone_src_i_size;
->    ^
-> The clone_src_i_size is only used as call-by-reference
-> in a call to get_inode_info().
+Thanks,
 
-The reference is passed to a static function, so the compiler has enough
-information to determine if it's unused. By inspection I don't see a
-problem with the uninitalized variable: if __get_inode_info succeeds,
-there's a valid value, in error case it's not used at all.
+Jonathan
+
+> 
+> Thanks for reviewing,
+> Best regards,
+> Fabrice
+> 
+> >   
+> >>  
+> >>  /* STM32F4_ADC_CR2 - bit fields */
+> >>  #define STM32F4_SWSTART			BIT(30)
+> >> @@ -69,7 +67,6 @@
+> >>  
+> >>  /* STM32H7 - Registers for each ADC instance */
+> >>  #define STM32H7_ADC_ISR			0x00
+> >> -#define STM32H7_ADC_IER			0x04
+> >>  #define STM32H7_ADC_CR			0x08
+> >>  #define STM32H7_ADC_CFGR		0x0C
+> >>  #define STM32H7_ADC_SMPR1		0x14
+> >> @@ -89,9 +86,6 @@
+> >>  #define STM32H7_EOC			BIT(2)
+> >>  #define STM32H7_ADRDY			BIT(0)
+> >>  
+> >> -/* STM32H7_ADC_IER - bit fields */
+> >> -#define STM32H7_EOCIE			STM32H7_EOC
+> >> -
+> >>  /* STM32H7_ADC_CR - bit fields */
+> >>  #define STM32H7_ADCAL			BIT(31)
+> >>  #define STM32H7_ADCALDIF		BIT(30)  
+> >   
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
