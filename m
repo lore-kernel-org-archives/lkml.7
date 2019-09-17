@@ -2,80 +2,98 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DD5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30227C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E264520665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0188820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:38:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jXjlzNBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfIQQhf (ORCPT
+        id S1729211AbfIQQiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:37:35 -0400
-Received: from foss.arm.com ([217.140.110.172]:58686 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfIQQhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:37:34 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4802828;
-        Tue, 17 Sep 2019 09:37:34 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7977A3F575;
-        Tue, 17 Sep 2019 09:37:33 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 17:37:24 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
-Message-ID: <20190917163716.GA9715@e121166-lin.cambridge.arm.com>
-References: <20190916135435.5017-1-jonathan.derrick@intel.com>
- <20190916135435.5017-3-jonathan.derrick@intel.com>
- <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
- <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
- <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
- <087e23dc3bb7b94bb96c33b380732ebd1285e467.camel@intel.com>
- <20190917151523.GA7948@e121166-lin.cambridge.arm.com>
- <ec24dc3d6f6f962a9f96ab1bab8c9cf4e138d61a.camel@intel.com>
+        Tue, 17 Sep 2019 12:38:11 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:45196 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727632AbfIQQiL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:38:11 -0400
+Received: by mail-pf1-f194.google.com with SMTP id y72so2464728pfb.12;
+        Tue, 17 Sep 2019 09:38:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=M+C/fxYyUGZMHeSdVODDGx5ShuHSCst9DvpbxsNqER0=;
+        b=jXjlzNBOcQH8Eu+3Z2zTQJsUcxnZg6x90wnFCjdL7W7Rjb12GkKu5rBwajTF9Haf1P
+         KF2ABsE/9p0C0oK/C291voDVlfVEDYM8NnEikE+U/haxu2GLJ3CG7vzCfo6LCZK3ZyJg
+         8nbLfGl1dMNkfxpfd7IqOmqt37/M5B0PF78dtFJHHnfsqR7pfyJhQry1XXVmFYtenQmK
+         qaoi+1GJwQzEo5PlPr7Bmfv8XFJsyZs1E1+NjNG8STvp9knD2gHihgAl8LpdOajLFz9B
+         upMuz+PKjwQPnWBAEIDI2WbkFFBrfLemMj+POdfyc9VKZn/lZrDlAxKR5N4hDTjujMJt
+         UJ1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=M+C/fxYyUGZMHeSdVODDGx5ShuHSCst9DvpbxsNqER0=;
+        b=WYqIh+iC3aZPH/GX3LmChPQhbBanU1aRdPDAUi9M5nBGRioUsD4H3cacayHR1Qbhvr
+         qaP8h/iA/50ZXlKxcqTy5vqUDY6oxjPWUqDpPxm7ph4M7y1hAl+J+N+Gbnn4aWfEr3a8
+         o7XAXkJqGMQCRib1nmbYoXF0ZupnR6qhsJt6FFrPJxIsFmdEPvdo4cUPiu4Vf+RYnRYQ
+         ob0uY352fJJpBD6VPgDjQYWhjFug1d2tg47CVEGLHef8ByHThe3GaohMseCVc0h6jM/2
+         6XtJ7/GxCd0rbUMbMlJtgUoq8YkkSJY7WQVkHMPTBQdWVAxU0mb8NL51ksB6nXOripbQ
+         wZUQ==
+X-Gm-Message-State: APjAAAWAZeXXrL/2/Tx8lUYe9aCLjhhEDrquzDBdGs6IvVfyZq4Ghxz2
+        DgXUz8uOjWWOEID+MoVQtKk=
+X-Google-Smtp-Source: APXvYqyAU13q2kH5ppA37f+1DD2gPRmjj9r+uktMGJ6vw5VwzCfvD7TyOhfijEit3/VQ/g8RoE7r6g==
+X-Received: by 2002:a17:90a:8e84:: with SMTP id f4mr5950212pjo.122.1568738290209;
+        Tue, 17 Sep 2019 09:38:10 -0700 (PDT)
+Received: from SD ([106.222.12.103])
+        by smtp.gmail.com with ESMTPSA id w7sm2906714pjn.1.2019.09.17.09.38.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 09:38:09 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 22:08:03 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [3/3] i2c: qup: Use devm_platform_ioremap_resource helper
+Message-ID: <20190917163803.GC5388@SD>
+References: <20190916190254.GA14207@SD>
+ <c24065f1-2692-9529-d505-ae639ce5d271@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ec24dc3d6f6f962a9f96ab1bab8c9cf4e138d61a.camel@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c24065f1-2692-9529-d505-ae639ce5d271@web.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:51:39PM +0000, Derrick, Jonathan wrote:
-
-[...]
-
-> Sorry for the confusion.
+On Tue, Sep 17, 2019 at 05:40:14PM +0200, Markus Elfring wrote:
+> > Use devm_platform_ioremap_resource helper which wraps
+> > platform_get_resource() and devm_ioremap_resource() together.
 > 
-> These changes only affect systems with VMD devices with 8086:28C0
-> device IDs, but these won't be production hardware for some time.
+> Can a wording like “Simplify this function implementation by using
+> a known wrapper function.” be nicer for this change description?
+Okay. I will change as actual change and changelog is almost similar :)
+
+> > The semantic patch that makes this report is available
+> > in scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
+> >
+> > Found using - http://coccinelle.lip6.fr/
 > 
-> Systems with VMD devices exist in the wild with 8086:201D device IDs.
-> These don't support the guest passthrough mode and this code won't
-> break anything with them. Additionally, patch 1/2 (bus numbering) only
-> affects 8086:28C0.
-> 
-> So on existing HW, these patches won't affect anything
+> Can a tag like “Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci”
+> be more helpful than the other description variant?
+will update this in changelog and resend this series.
 
-It is me who created confusion, apologies. I read the code properly and
-I understand that both patches are fixes for HW that is still not
-available (and they can't create an issue with current kernel because
-HAS_MEMBAR_SHADOW and HAS_BUS_RESTRICTIONS features are not implemented
-on 8086:201D), we should take these patches and trickle them to stable
-kernels as soon as possible so that when HW _is_ available mainline and
-stable kernels are fixed.
-
-Correct ?
-
-Lorenzo
+-Saiyam
