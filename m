@@ -2,663 +2,1193 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0771C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105BBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55DCD21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF53521927
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbfIQK5O (ORCPT
+        id S1726801AbfIQK7B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:57:14 -0400
-Received: from mga05.intel.com ([192.55.52.43]:12303 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfIQK5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:57:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 03:57:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,516,1559545200"; 
-   d="gz'50?scan'50,208,50";a="198655606"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 17 Sep 2019 03:57:07 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iABAR-0001b2-49; Tue, 17 Sep 2019 18:57:07 +0800
-Date:   Tue, 17 Sep 2019 18:56:06 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kbuild-all@01.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, mst@redhat.com,
-        rkrcmar@redhat.com, jmattson@google.com, yu.c.zhang@intel.com,
-        alazar@bitdefender.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v5 7/9] vmx: spp: Set up SPP paging table at vm-entry/exit
-Message-ID: <201909171828.cW797nIZ%lkp@intel.com>
-References: <20190917085304.16987-8-weijiang.yang@intel.com>
+        Tue, 17 Sep 2019 06:59:01 -0400
+Received: from mail-sz.amlogic.com ([211.162.65.117]:6292 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726106AbfIQK7A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:59:00 -0400
+Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 17 Sep
+ 2019 18:59:43 +0800
+Subject: Re: [PATCH 2/3] pinctrl: meson-a1: add pinctrl driver for Meson A1
+ Soc
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
+ <1568700442-18540-3-git-send-email-qianggui.song@amlogic.com>
+ <ffd2aa02-5269-9c7a-149e-99bda3439457@baylibre.com>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <816b471f-22e4-f1c3-1404-eca53a0743ff@amlogic.com>
+Date:   Tue, 17 Sep 2019 18:59:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="wuqgud5sfrwni3qb"
-Content-Disposition: inline
-In-Reply-To: <20190917085304.16987-8-weijiang.yang@intel.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <ffd2aa02-5269-9c7a-149e-99bda3439457@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.18.45]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---wuqgud5sfrwni3qb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2019/9/17 15:15, Neil Armstrong wrote:
+> Hi,
+> 
+> On 17/09/2019 08:07, Qianggui Song wrote:
+>> Add pinctrl driver for Meson A1 Soc which share the same register layout of
+>> pinmux with previous Meson-G12A, however there is difference for gpio
+>> and pin config register in A1. The register layout is as below:
+>>
+>> /* first bank */	      /* addr */
+>> - P_PADCTRL_GPIOP_I         base + 0x00 << 2
+>> - P_PADCTRL_GPIOP_O         base + 0x01 << 2
+>> - P_PADCTRL_GPIOP_OEN       base + 0x02 << 2
+>> - P_PADCTRL_GPIOP_PULL_EN   base + 0x03 << 2
+>> - P_PADCTRL_GPIOP_PULL_UP   base + 0x04 << 2
+>> - P_PADCTRL_GPIOP_DS        base + 0x05 << 2
+>>
+>> /* second bank */
+>> - P_PADCTRL_GPIOB_I         base + 0x10 << 2
+>> - P_PADCTRL_GPIOB_O         base + 0x11 << 2
+>> - P_PADCTRL_GPIOB_OEN       base + 0x12 << 2
+>> - P_PADCTRL_GPIOB_PULL_EN   base + 0x13 << 2
+>> - P_PADCTRL_GPIOB_PULL_UP   base + 0x14 << 2
+>> - P_PADCTRL_GPIOB_DS        base + 0x15 << 2
+>>
+>> Each bank contains at least 6 registers to be configured, if one bank has
+>> more than 16 gpios, an extra P_PADCTRL_GPIO[X]_DS_EXT is included. Between
+>> two adjacent P_PADCTRL_GPIO[X]_I, there is an offset 0x10, that is to say,
+>> for third bank, the offsets will be 0x20,0x21,0x22,0x23,0x24,0x25 according
+>> to above register layout.
+> 
+> Sorry but the explanation is not very clear, could you show the G12A mapping
+> in comparison to explain your point and how reg_ds = reg_pullen solves the issue
+> here ?
+> 
+For G12A EE groups, register layout is like:
+- PREG_PAD_GPIO[N]_EN_N
+- PREG_PAD_GPIO[N]_O
+- PREG_PAD_GPIO[N]_I
+ ------address not continue----
+- PAD_PULL_UP_REG[N]
+		...
+ ------address not continue----
+- PAD_PULL_UP_EN_REG[N]
+		...
+ ------address not continue----
+- PAD_DS_REG[N][M]
 
-Hi Yang,
+where N=0~5, M=A or B
 
-Thank you for the patch! Yet something to improve:
+So for G12A EE groups , to calculate other register, we have five
+register bases in dts:
+"gpio"(reg_gpio), "mux"(reg_mux), "pull(reg_pull)",
+"pull_enable(reg_pull)", "ds(reg_ds)",
 
-[auto build test ERROR on linus/master]
-[cannot apply to v5.3 next-20190916]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+For G12A AO groups
+- AO_PAD_DS_A
+- AO_PAD_DS_B
+- AO_GPIO_O_EN_N
+- AO_GPIO_I
+- AO_RTI_PULL_UP_REG
+- AO_RTI_PULL_UP_EN_REG
+- AO_GPIO_O
 
-url:    https://github.com/0day-ci/linux/commits/Yang-Weijiang/Enable-Sub-page-Write-Protection-Support/20190917-165718
-config: x86_64-lkp (attached as .config)
-compiler: gcc-7 (Debian 7.4.0-11) 7.4.0
-reproduce:
-        # save the attached .config to linux build tree
-        make ARCH=x86_64 
+we only need three register bases in dts: "mux"(reg_mux), "ds"(reg_ds),
+"gpio"(reg_gpio).
+To do that "reg_pull = reg_gpio",  "reg_pullen = reg_pull" have done by
+previous work.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+In A1, there are no EE and AO groups, register layout depicted in commit
+log shows that we just use one register base (for A1 here is
+P_PADCTRL_GPIOP_I), other register bases can be easily calculated for
+simple rule. Since we just use one register base,reg_ds should be
+equaled to reg_pullen.
 
-All errors (new ones prefixed by >>):
+G12A gpio and pin config registers is grouped according to function,
+while A1 is according to bank.
 
-   arch/x86/kvm/vmx/vmx.c: In function 'handle_spp':
-   arch/x86/kvm/vmx/vmx.c:5389:9: error: implicit declaration of function 'kvm_spp_get_permission'; did you mean 'kvm_apic_set_version'? [-Werror=implicit-function-declaration]
-      ret = kvm_spp_get_permission(vcpu->kvm, &spp_info);
-            ^~~~~~~~~~~~~~~~~~~~~~
-            kvm_apic_set_version
-   In file included from arch/x86/kvm/vmx/vmx.c:63:0:
-   arch/x86/kvm/vmx/vmx.c: In function 'vmx_set_cr3':
->> arch/x86/kvm/vmx/spp.h:10:12: error: inlining failed in call to always_inline 'construct_spptp': function body not available
-    inline u64 construct_spptp(unsigned long root_hpa);
-               ^~~~~~~~~~~~~~~
-   arch/x86/kvm/vmx/vmx.c:2918:9: note: called from here
-      spptp = construct_spptp(vcpu->arch.mmu->sppt_root);
-      ~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-
-vim +/construct_spptp +10 arch/x86/kvm/vmx/spp.h
-
-ded814173c867b Yang Weijiang 2019-09-17   6  
-d8d20dcdd099e5 Yang Weijiang 2019-09-17   7  bool is_spp_spte(struct kvm_mmu_page *sp);
-45c11debf177b5 Yang Weijiang 2019-09-17   8  void restore_spp_bit(u64 *spte);
-45c11debf177b5 Yang Weijiang 2019-09-17   9  bool was_spp_armed(u64 spte);
-d8d20dcdd099e5 Yang Weijiang 2019-09-17 @10  inline u64 construct_spptp(unsigned long root_hpa);
-5b98f4f41c5e1f Yang Weijiang 2019-09-17  11  int kvm_vm_ioctl_get_subpages(struct kvm *kvm,
-5b98f4f41c5e1f Yang Weijiang 2019-09-17  12  		     struct kvm_subpage *spp_info);
-5b98f4f41c5e1f Yang Weijiang 2019-09-17  13  int kvm_vm_ioctl_set_subpages(struct kvm *kvm,
-5b98f4f41c5e1f Yang Weijiang 2019-09-17  14  		     struct kvm_subpage *spp_info);
-5b98f4f41c5e1f Yang Weijiang 2019-09-17  15  int kvm_vm_ioctl_init_spp(struct kvm *kvm);
-d8d20dcdd099e5 Yang Weijiang 2019-09-17  16  int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
-d8d20dcdd099e5 Yang Weijiang 2019-09-17  17  				u32 access_map, gfn_t gfn);
-ded814173c867b Yang Weijiang 2019-09-17  18  int vmx_spp_flush_sppt(struct kvm *kvm, struct kvm_subpage *spp_info);
-ded814173c867b Yang Weijiang 2019-09-17  19  void kvm_spp_free_memslot(struct kvm_memory_slot *free,
-ded814173c867b Yang Weijiang 2019-09-17  20  			  struct kvm_memory_slot *dont);
-ded814173c867b Yang Weijiang 2019-09-17  21  int vmx_spp_init(struct kvm *kvm);
-d8d20dcdd099e5 Yang Weijiang 2019-09-17  22  
-
-:::::: The code at line 10 was first introduced by commit
-:::::: d8d20dcdd099e58254195f4b083a76c3e39331de mmu: spp: Add SPP Table setup functions
-
-:::::: TO: Yang Weijiang <weijiang.yang@intel.com>
-:::::: CC: 0day robot <lkp@intel.com>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-
---wuqgud5sfrwni3qb
-Content-Type: application/gzip
-Content-Disposition: attachment; filename=".config.gz"
-Content-Transfer-Encoding: base64
-
-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
-m5dAPtv/D2cXdwUW0wEA
-
---wuqgud5sfrwni3qb--
+>>
+>> Current Meson pinctrl driver can cover such change by using base address of
+>> GPIO as that of drive-strength. While simply giving reg_ds = reg_pullen
+>> make wrong value to reg_ds for Soc that not support drive-strength like AXG
+>> . Here a private data used to identify register layout is introduced.
+> 
+> Could you also precise there is no AO pinctrl bank on A1.
+> 
+will add description in the next patch
+>>
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> ---
+>>  drivers/pinctrl/meson/Kconfig            |   6 +
+>>  drivers/pinctrl/meson/Makefile           |   1 +
+>>  drivers/pinctrl/meson/pinctrl-meson-a1.c | 942 +++++++++++++++++++++++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson.c    |   8 +-
+>>  drivers/pinctrl/meson/pinctrl-meson.h    |   9 +
+>>  5 files changed, 964 insertions(+), 2 deletions(-)
+>>  create mode 100644 drivers/pinctrl/meson/pinctrl-meson-a1.c
+>>
+>> diff --git a/drivers/pinctrl/meson/Kconfig b/drivers/pinctrl/meson/Kconfig
+>> index df55f61..3cb1191 100644
+>> --- a/drivers/pinctrl/meson/Kconfig
+>> +++ b/drivers/pinctrl/meson/Kconfig
+>> @@ -54,4 +54,10 @@ config PINCTRL_MESON_G12A
+>>  	select PINCTRL_MESON_AXG_PMX
+>>  	default y
+>>  
+>> +config PINCTRL_MESON_A1
+>> +	bool "Meson a1 Soc pinctrl driver"
+>> +	depends on ARM64
+>> +	select PINCTRL_MESON_AXG_PMX
+>> +	default y
+>> +
+>>  endif
+>> diff --git a/drivers/pinctrl/meson/Makefile b/drivers/pinctrl/meson/Makefile
+>> index a69c565..1a5bffe 100644
+>> --- a/drivers/pinctrl/meson/Makefile
+>> +++ b/drivers/pinctrl/meson/Makefile
+>> @@ -8,3 +8,4 @@ obj-$(CONFIG_PINCTRL_MESON_GXL) += pinctrl-meson-gxl.o
+>>  obj-$(CONFIG_PINCTRL_MESON_AXG_PMX) += pinctrl-meson-axg-pmx.o
+>>  obj-$(CONFIG_PINCTRL_MESON_AXG) += pinctrl-meson-axg.o
+>>  obj-$(CONFIG_PINCTRL_MESON_G12A) += pinctrl-meson-g12a.o
+>> +obj-$(CONFIG_PINCTRL_MESON_A1) += pinctrl-meson-a1.o
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-a1.c b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+>> new file mode 100644
+>> index 0000000..f3a88f1
+>> --- /dev/null
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+>> @@ -0,0 +1,942 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Pin controller and GPIO driver for Amlogic Meson A1 SoC.
+>> + *
+>> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
+>> + * Author: Qianggui Song <qianggui.song@amlogic.com>
+>> + */
+>> +
+>> +#include <dt-bindings/gpio/meson-a1-gpio.h>
+>> +#include "pinctrl-meson.h"
+>> +#include "pinctrl-meson-axg-pmx.h"
+>> +
+>> +static const struct pinctrl_pin_desc meson_a1_periphs_pins[] = {
+>> +	MESON_PIN(GPIOP_0),
+>> +	MESON_PIN(GPIOP_1),
+>> +	MESON_PIN(GPIOP_2),
+>> +	MESON_PIN(GPIOP_3),
+>> +	MESON_PIN(GPIOP_4),
+>> +	MESON_PIN(GPIOP_5),
+>> +	MESON_PIN(GPIOP_6),
+>> +	MESON_PIN(GPIOP_7),
+>> +	MESON_PIN(GPIOP_8),
+>> +	MESON_PIN(GPIOP_9),
+>> +	MESON_PIN(GPIOP_10),
+>> +	MESON_PIN(GPIOP_11),
+>> +	MESON_PIN(GPIOP_12),
+>> +	MESON_PIN(GPIOB_0),
+>> +	MESON_PIN(GPIOB_1),
+>> +	MESON_PIN(GPIOB_2),
+>> +	MESON_PIN(GPIOB_3),
+>> +	MESON_PIN(GPIOB_4),
+>> +	MESON_PIN(GPIOB_5),
+>> +	MESON_PIN(GPIOB_6),
+>> +	MESON_PIN(GPIOX_0),
+>> +	MESON_PIN(GPIOX_1),
+>> +	MESON_PIN(GPIOX_2),
+>> +	MESON_PIN(GPIOX_3),
+>> +	MESON_PIN(GPIOX_4),
+>> +	MESON_PIN(GPIOX_5),
+>> +	MESON_PIN(GPIOX_6),
+>> +	MESON_PIN(GPIOX_7),
+>> +	MESON_PIN(GPIOX_8),
+>> +	MESON_PIN(GPIOX_9),
+>> +	MESON_PIN(GPIOX_10),
+>> +	MESON_PIN(GPIOX_11),
+>> +	MESON_PIN(GPIOX_12),
+>> +	MESON_PIN(GPIOX_13),
+>> +	MESON_PIN(GPIOX_14),
+>> +	MESON_PIN(GPIOX_15),
+>> +	MESON_PIN(GPIOX_16),
+>> +	MESON_PIN(GPIOF_0),
+>> +	MESON_PIN(GPIOF_1),
+>> +	MESON_PIN(GPIOF_2),
+>> +	MESON_PIN(GPIOF_3),
+>> +	MESON_PIN(GPIOF_4),
+>> +	MESON_PIN(GPIOF_5),
+>> +	MESON_PIN(GPIOF_6),
+>> +	MESON_PIN(GPIOF_7),
+>> +	MESON_PIN(GPIOF_8),
+>> +	MESON_PIN(GPIOF_9),
+>> +	MESON_PIN(GPIOF_10),
+>> +	MESON_PIN(GPIOF_11),
+>> +	MESON_PIN(GPIOF_12),
+>> +	MESON_PIN(GPIOA_0),
+>> +	MESON_PIN(GPIOA_1),
+>> +	MESON_PIN(GPIOA_2),
+>> +	MESON_PIN(GPIOA_3),
+>> +	MESON_PIN(GPIOA_4),
+>> +	MESON_PIN(GPIOA_5),
+>> +	MESON_PIN(GPIOA_6),
+>> +	MESON_PIN(GPIOA_7),
+>> +	MESON_PIN(GPIOA_8),
+>> +	MESON_PIN(GPIOA_9),
+>> +	MESON_PIN(GPIOA_10),
+>> +	MESON_PIN(GPIOA_11),
+>> +};
+>> +
+>> +/* psram */
+>> +static const unsigned int psram_clkn_pins[]		= { GPIOP_0 };
+>> +static const unsigned int psram_clkp_pins[]		= { GPIOP_1 };
+>> +static const unsigned int psram_ce_n_pins[]		= { GPIOP_2 };
+>> +static const unsigned int psram_rst_n_pins[]		= { GPIOP_3 };
+>> +static const unsigned int psram_adq0_pins[]		= { GPIOP_4 };
+>> +static const unsigned int psram_adq1_pins[]		= { GPIOP_5 };
+>> +static const unsigned int psram_adq2_pins[]		= { GPIOP_6 };
+>> +static const unsigned int psram_adq3_pins[]		= { GPIOP_7 };
+>> +static const unsigned int psram_adq4_pins[]		= { GPIOP_8 };
+>> +static const unsigned int psram_adq5_pins[]		= { GPIOP_9 };
+>> +static const unsigned int psram_adq6_pins[]		= { GPIOP_10 };
+>> +static const unsigned int psram_adq7_pins[]		= { GPIOP_11 };
+>> +static const unsigned int psram_dqs_dm_pins[]		= { GPIOP_12 };
+>> +
+>> +/* sdcard */
+>> +static const unsigned int sdcard_d0_b_pins[]		= { GPIOB_0 };
+>> +static const unsigned int sdcard_d1_b_pins[]		= { GPIOB_1 };
+>> +static const unsigned int sdcard_d2_b_pins[]		= { GPIOB_2 };
+>> +static const unsigned int sdcard_d3_b_pins[]		= { GPIOB_3 };
+>> +static const unsigned int sdcard_clk_b_pins[]		= { GPIOB_4 };
+>> +static const unsigned int sdcard_cmd_b_pins[]		= { GPIOB_5 };
+>> +
+>> +static const unsigned int sdcard_d0_x_pins[]		= { GPIOX_0 };
+>> +static const unsigned int sdcard_d1_x_pins[]		= { GPIOX_1 };
+>> +static const unsigned int sdcard_d2_x_pins[]		= { GPIOX_2 };
+>> +static const unsigned int sdcard_d3_x_pins[]		= { GPIOX_3 };
+>> +static const unsigned int sdcard_clk_x_pins[]		= { GPIOX_4 };
+>> +static const unsigned int sdcard_cmd_x_pins[]		= { GPIOX_5 };
+>> +
+>> +/* spif */
+>> +static const unsigned int spif_mo_pins[]		= { GPIOB_0 };
+>> +static const unsigned int spif_mi_pins[]		= { GPIOB_1 };
+>> +static const unsigned int spif_wp_n_pins[]		= { GPIOB_2 };
+>> +static const unsigned int spif_hold_n_pins[]		= { GPIOB_3 };
+>> +static const unsigned int spif_clk_pins[]		= { GPIOB_4 };
+>> +static const unsigned int spif_cs_pins[]		= { GPIOB_5 };
+>> +
+>> +/* i2c0 */
+>> +static const unsigned int i2c0_sck_f9_pins[]		= { GPIOF_9 };
+>> +static const unsigned int i2c0_sda_f10_pins[]		= { GPIOF_10 };
+>> +static const unsigned int i2c0_sck_f11_pins[]		= { GPIOF_11 };
+>> +static const unsigned int i2c0_sda_f12_pins[]		= { GPIOF_12 };
+>> +
+>> +/* i2c1 */
+>> +static const unsigned int i2c1_sda_x_pins[]		= { GPIOX_9 };
+>> +static const unsigned int i2c1_sck_x_pins[]		= { GPIOX_10 };
+>> +static const unsigned int i2c1_sda_a_pins[]		= { GPIOA_10 };
+>> +static const unsigned int i2c1_sck_a_pins[]		= { GPIOA_11 };
+>> +
+>> +/* i2c2 */
+>> +static const unsigned int i2c2_sck_x0_pins[]		= { GPIOX_0 };
+>> +static const unsigned int i2c2_sda_x1_pins[]		= { GPIOX_1 };
+>> +static const unsigned int i2c2_sck_x15_pins[]		= { GPIOX_15 };
+>> +static const unsigned int i2c2_sda_x16_pins[]		= { GPIOX_16 };
+>> +static const unsigned int i2c2_sck_a4_pins[]		= { GPIOA_4 };
+>> +static const unsigned int i2c2_sda_a5_pins[]		= { GPIOA_5 };
+>> +static const unsigned int i2c2_sck_a8_pins[]		= { GPIOA_8 };
+>> +static const unsigned int i2c2_sda_a9_pins[]		= { GPIOA_9 };
+>> +
+>> +/* i2c3 */
+>> +static const unsigned int i2c3_sck_f_pins[]		= { GPIOF_4 };
+>> +static const unsigned int i2c3_sda_f_pins[]		= { GPIOF_5 };
+>> +static const unsigned int i2c3_sck_x_pins[]		= { GPIOX_11 };
+>> +static const unsigned int i2c3_sda_x_pins[]		= { GPIOX_12 };
+>> +
+>> +/* i2c slave */
+>> +static const unsigned int i2c_slave_sck_a_pins[]	= { GPIOA_10 };
+>> +static const unsigned int i2c_slave_sda_a_pins[]	= { GPIOA_11 };
+>> +static const unsigned int i2c_slave_sck_f_pins[]	= { GPIOF_11 };
+>> +static const unsigned int i2c_slave_sda_f_pins[]	= { GPIOF_12 };
+>> +
+>> +/* uart_a */
+>> +static const unsigned int uart_a_tx_pins[]		= { GPIOX_11 };
+>> +static const unsigned int uart_a_rx_pins[]		= { GPIOX_12 };
+>> +static const unsigned int uart_a_cts_pins[]		= { GPIOX_13 };
+>> +static const unsigned int uart_a_rts_pins[]		= { GPIOX_14 };
+>> +
+>> +/* uart_b */
+>> +static const unsigned int uart_b_tx_x_pins[]		= { GPIOX_7 };
+>> +static const unsigned int uart_b_rx_x_pins[]		= { GPIOX_8 };
+>> +static const unsigned int uart_b_tx_f_pins[]		= { GPIOF_0 };
+>> +static const unsigned int uart_b_rx_f_pins[]		= { GPIOF_1 };
+>> +
+>> +/* uart_c */
+>> +static const unsigned int uart_c_tx_x0_pins[]		= { GPIOX_0 };
+>> +static const unsigned int uart_c_rx_x1_pins[]		= { GPIOX_1 };
+>> +static const unsigned int uart_c_cts_pins[]		= { GPIOX_2 };
+>> +static const unsigned int uart_c_rts_pins[]		= { GPIOX_3 };
+>> +static const unsigned int uart_c_tx_x15_pins[]		= { GPIOX_15 };
+>> +static const unsigned int uart_c_rx_x16_pins[]		= { GPIOX_16 };
+>> +
+>> +/* pmw_a */
+>> +static const unsigned int pwm_a_x6_pins[]		= { GPIOX_6 };
+>> +static const unsigned int pwm_a_x7_pins[]		= { GPIOX_7 };
+>> +static const unsigned int pwm_a_f6_pins[]		= { GPIOF_6 };
+>> +static const unsigned int pwm_a_f10_pins[]		= { GPIOF_10 };
+>> +static const unsigned int pwm_a_a_pins[]		= { GPIOA_5 };
+>> +
+>> +/* pmw_b */
+>> +static const unsigned int pwm_b_x_pins[]		= { GPIOX_8 };
+>> +static const unsigned int pwm_b_f_pins[]		= { GPIOF_7 };
+>> +static const unsigned int pwm_b_a_pins[]		= { GPIOA_11 };
+>> +
+>> +/* pmw_c */
+>> +static const unsigned int pwm_c_x_pins[]		= { GPIOX_9 };
+>> +static const unsigned int pwm_c_f3_pins[]		= { GPIOF_3 };
+>> +static const unsigned int pwm_c_f8_pins[]		= { GPIOF_8 };
+>> +static const unsigned int pwm_c_a_pins[]		= { GPIOA_10 };
+>> +
+>> +/* pwm_d */
+>> +static const unsigned int pwm_d_x10_pins[]		= { GPIOX_10 };
+>> +static const unsigned int pwm_d_x13_pins[]		= { GPIOX_13 };
+>> +static const unsigned int pwm_d_x15_pins[]		= { GPIOX_15 };
+>> +static const unsigned int pwm_d_f_pins[]		= { GPIOF_11 };
+>> +
+>> +/* pwm_e */
+>> +static const unsigned int pwm_e_p_pins[]		= { GPIOP_3 };
+>> +static const unsigned int pwm_e_x2_pins[]		= { GPIOX_2 };
+>> +static const unsigned int pwm_e_x14_pins[]		= { GPIOX_14 };
+>> +static const unsigned int pwm_e_x16_pins[]		= { GPIOX_16 };
+>> +static const unsigned int pwm_e_f_pins[]		= { GPIOF_3 };
+>> +static const unsigned int pwm_e_a_pins[]		= { GPIOA_0 };
+>> +
+>> +/* pwm_f */
+>> +static const unsigned int pwm_f_b_pins[]		= { GPIOB_6 };
+>> +static const unsigned int pwm_f_x_pins[]		= { GPIOX_3 };
+>> +static const unsigned int pwm_f_f4_pins[]		= { GPIOF_4 };
+>> +static const unsigned int pwm_f_f12_pins[]		= { GPIOF_12 };
+>> +
+>> +/* pwm_a_hiz */
+>> +static const unsigned int pwm_a_hiz_f8_pins[]		= { GPIOF_8 };
+>> +static const unsigned int pwm_a_hiz_f10_pins[]		= { GPIOF_10 };
+>> +static const unsigned int pmw_a_hiz_f6_pins[]		= { GPIOF_6 };
+>> +
+>> +/* pwm_b_hiz */
+>> +static const unsigned int pwm_b_hiz_pins[]		= { GPIOF_7 };
+>> +
+>> +/* pmw_c_hiz */
+>> +static const unsigned int pwm_c_hiz_pins[]		= { GPIOF_8 };
+>> +
+>> +/* tdm_a */
+>> +static const unsigned int tdm_a_dout1_pins[]		= { GPIOX_7 };
+>> +static const unsigned int tdm_a_dout0_pins[]		= { GPIOX_8 };
+>> +static const unsigned int tdm_a_fs_pins[]		= { GPIOX_9 };
+>> +static const unsigned int tdm_a_sclk_pins[]		= { GPIOX_10 };
+>> +static const unsigned int tdm_a_din1_pins[]		= { GPIOX_7 };
+>> +static const unsigned int tdm_a_din0_pins[]		= { GPIOX_8 };
+>> +static const unsigned int tdm_a_slv_fs_pins[]		= { GPIOX_9 };
+>> +static const unsigned int tdm_a_slv_sclk_pins[]		= { GPIOX_10 };
+>> +
+>> +/* spi_a */
+>> +static const unsigned int spi_a_mosi_x2_pins[]		= { GPIOX_2 };
+>> +static const unsigned int spi_a_ss0_x3_pins[]		= { GPIOX_3 };
+>> +static const unsigned int spi_a_sclk_x4_pins[]		= { GPIOX_4 };
+>> +static const unsigned int spi_a_miso_x5_pins[]		= { GPIOX_5 };
+>> +static const unsigned int spi_a_mosi_x7_pins[]		= { GPIOX_7 };
+>> +static const unsigned int spi_a_miso_x8_pins[]		= { GPIOX_8 };
+>> +static const unsigned int spi_a_ss0_x9_pins[]		= { GPIOX_9 };
+>> +static const unsigned int spi_a_sclk_x10_pins[]		= { GPIOX_10 };
+>> +
+>> +static const unsigned int spi_a_mosi_a_pins[]		= { GPIOA_6 };
+>> +static const unsigned int spi_a_miso_a_pins[]		= { GPIOA_7 };
+>> +static const unsigned int spi_a_ss0_a_pins[]		= { GPIOA_8 };
+>> +static const unsigned int spi_a_sclk_a_pins[]		= { GPIOA_9 };
+>> +
+>> +/* pdm */
+>> +static const unsigned int pdm_din0_x_pins[]		= { GPIOX_7 };
+>> +static const unsigned int pdm_din1_x_pins[]		= { GPIOX_8 };
+>> +static const unsigned int pdm_din2_x_pins[]		= { GPIOX_9 };
+>> +static const unsigned int pdm_dclk_x_pins[]		= { GPIOX_10 };
+>> +
+>> +static const unsigned int pdm_din2_a_pins[]		= { GPIOA_6 };
+>> +static const unsigned int pdm_din1_a_pins[]		= { GPIOA_7 };
+>> +static const unsigned int pdm_din0_a_pins[]		= { GPIOA_8 };
+>> +static const unsigned int pdm_dclk_pins[]		= { GPIOA_9 };
+>> +
+>> +/* gen_clk */
+>> +static const unsigned int gen_clk_x_pins[]		= { GPIOX_7 };
+>> +static const unsigned int gen_clk_f8_pins[]		= { GPIOF_8 };
+>> +static const unsigned int gen_clk_f10_pins[]		= { GPIOF_10 };
+>> +static const unsigned int gen_clk_a_pins[]		= { GPIOA_11 };
+>> +
+>> +/* jtag_a */
+>> +static const unsigned int jtag_a_clk_pins[]		= { GPIOF_4 };
+>> +static const unsigned int jtag_a_tms_pins[]		= { GPIOF_5 };
+>> +static const unsigned int jtag_a_tdi_pins[]		= { GPIOF_6 };
+>> +static const unsigned int jtag_a_tdo_pins[]		= { GPIOF_7 };
+>> +
+>> +/* clk_32_in */
+>> +static const unsigned int clk_32k_in_pins[]		= { GPIOF_2 };
+>> +
+>> +/* ir in */
+>> +static const unsigned int remote_input_f_pins[]		= { GPIOF_3 };
+>> +static const unsigned int remote_input_a_pins[]		= { GPIOA_11 };
+>> +
+>> +/* ir out */
+>> +static const unsigned int remote_out_pins[]		= { GPIOF_5 };
+>> +
+>> +/* spdif */
+>> +static const unsigned int spdif_in_f6_pins[]		= { GPIOF_6 };
+>> +static const unsigned int spdif_in_f7_pins[]		= { GPIOF_7 };
+>> +
+>> +/* sw */
+>> +static const unsigned int swclk_pins[]			= { GPIOF_4 };
+>> +static const unsigned int swdio_pins[]			= { GPIOF_5 };
+>> +
+>> +/* clk_25 */
+>> +static const unsigned int clk25_pins[]			= { GPIOF_10 };
+>> +
+>> +/* cec_a */
+>> +static const unsigned int cec_a_pins[]			= { GPIOF_2 };
+>> +
+>> +/* cec_b */
+>> +static const unsigned int cec_b_pins[]			= { GPIOF_2 };
+>> +
+>> +/* clk12_24 */
+>> +static const unsigned int clk12_24_pins[]		= { GPIOF_10 };
+>> +
+>> +/* mclk_0 */
+>> +static const unsigned int mclk_0_pins[]			= { GPIOA_0 };
+>> +
+>> +/* tdm_b */
+>> +static const unsigned int tdm_b_sclk_pins[]		= { GPIOA_1 };
+>> +static const unsigned int tdm_b_fs_pins[]		= { GPIOA_2 };
+>> +static const unsigned int tdm_b_dout0_pins[]		= { GPIOA_3 };
+>> +static const unsigned int tdm_b_dout1_pins[]		= { GPIOA_4 };
+>> +static const unsigned int tdm_b_dout2_pins[]		= { GPIOA_5 };
+>> +static const unsigned int tdm_b_dout3_pins[]		= { GPIOA_6 };
+>> +static const unsigned int tdm_b_dout4_pins[]		= { GPIOA_7 };
+>> +static const unsigned int tdm_b_dout5_pins[]		= { GPIOA_8 };
+>> +static const unsigned int tdm_b_slv_sclk_pins[]		= { GPIOA_5 };
+>> +static const unsigned int tdm_b_slv_fs_pins[]		= { GPIOA_6 };
+>> +static const unsigned int tdm_b_din0_pins[]		= { GPIOA_7 };
+>> +static const unsigned int tdm_b_din1_pins[]		= { GPIOA_8 };
+>> +static const unsigned int tdm_b_din2_pins[]		= { GPIOA_9 };
+>> +
+>> +/* mclk_vad */
+>> +static const unsigned int mclk_vad_pins[]		= { GPIOA_0 };
+>> +
+>> +/* tdm_vad */
+>> +static const unsigned int tdm_vad_sclk_a1_pins[]	= { GPIOA_1 };
+>> +static const unsigned int tdm_vad_fs_a2_pins[]		= { GPIOA_2 };
+>> +static const unsigned int tdm_vad_sclk_a5_pins[]	= { GPIOA_5 };
+>> +static const unsigned int tdm_vad_fs_a6_pins[]		= { GPIOA_6 };
+>> +
+>> +/* tst_out */
+>> +static const unsigned int tst_out0_pins[]		= { GPIOA_0 };
+>> +static const unsigned int tst_out1_pins[]		= { GPIOA_1 };
+>> +static const unsigned int tst_out2_pins[]		= { GPIOA_2 };
+>> +static const unsigned int tst_out3_pins[]		= { GPIOA_3 };
+>> +static const unsigned int tst_out4_pins[]		= { GPIOA_4 };
+>> +static const unsigned int tst_out5_pins[]		= { GPIOA_5 };
+>> +static const unsigned int tst_out6_pins[]		= { GPIOA_6 };
+>> +static const unsigned int tst_out7_pins[]		= { GPIOA_7 };
+>> +static const unsigned int tst_out8_pins[]		= { GPIOA_8 };
+>> +static const unsigned int tst_out9_pins[]		= { GPIOA_9 };
+>> +static const unsigned int tst_out10_pins[]		= { GPIOA_10 };
+>> +static const unsigned int tst_out11_pins[]		= { GPIOA_11 };
+>> +
+>> +/* mute */
+>> +static const unsigned int mute_key_pins[]		= { GPIOA_4 };
+>> +static const unsigned int mute_en_pins[]		= { GPIOA_5 };
+>> +
+>> +static struct meson_pmx_group meson_a1_periphs_groups[] = {
+>> +	GPIO_GROUP(GPIOP_0),
+>> +	GPIO_GROUP(GPIOP_1),
+>> +	GPIO_GROUP(GPIOP_2),
+>> +	GPIO_GROUP(GPIOP_3),
+>> +	GPIO_GROUP(GPIOP_4),
+>> +	GPIO_GROUP(GPIOP_5),
+>> +	GPIO_GROUP(GPIOP_6),
+>> +	GPIO_GROUP(GPIOP_7),
+>> +	GPIO_GROUP(GPIOP_8),
+>> +	GPIO_GROUP(GPIOP_9),
+>> +	GPIO_GROUP(GPIOP_10),
+>> +	GPIO_GROUP(GPIOP_11),
+>> +	GPIO_GROUP(GPIOP_12),
+>> +	GPIO_GROUP(GPIOB_0),
+>> +	GPIO_GROUP(GPIOB_1),
+>> +	GPIO_GROUP(GPIOB_2),
+>> +	GPIO_GROUP(GPIOB_3),
+>> +	GPIO_GROUP(GPIOB_4),
+>> +	GPIO_GROUP(GPIOB_5),
+>> +	GPIO_GROUP(GPIOB_6),
+>> +	GPIO_GROUP(GPIOX_0),
+>> +	GPIO_GROUP(GPIOX_1),
+>> +	GPIO_GROUP(GPIOX_2),
+>> +	GPIO_GROUP(GPIOX_3),
+>> +	GPIO_GROUP(GPIOX_4),
+>> +	GPIO_GROUP(GPIOX_5),
+>> +	GPIO_GROUP(GPIOX_6),
+>> +	GPIO_GROUP(GPIOX_7),
+>> +	GPIO_GROUP(GPIOX_8),
+>> +	GPIO_GROUP(GPIOX_9),
+>> +	GPIO_GROUP(GPIOX_10),
+>> +	GPIO_GROUP(GPIOX_11),
+>> +	GPIO_GROUP(GPIOX_12),
+>> +	GPIO_GROUP(GPIOX_13),
+>> +	GPIO_GROUP(GPIOX_14),
+>> +	GPIO_GROUP(GPIOX_15),
+>> +	GPIO_GROUP(GPIOX_16),
+>> +	GPIO_GROUP(GPIOF_0),
+>> +	GPIO_GROUP(GPIOF_1),
+>> +	GPIO_GROUP(GPIOF_2),
+>> +	GPIO_GROUP(GPIOF_3),
+>> +	GPIO_GROUP(GPIOF_4),
+>> +	GPIO_GROUP(GPIOF_5),
+>> +	GPIO_GROUP(GPIOF_6),
+>> +	GPIO_GROUP(GPIOF_7),
+>> +	GPIO_GROUP(GPIOF_8),
+>> +	GPIO_GROUP(GPIOF_9),
+>> +	GPIO_GROUP(GPIOF_10),
+>> +	GPIO_GROUP(GPIOF_11),
+>> +	GPIO_GROUP(GPIOF_12),
+>> +	GPIO_GROUP(GPIOA_0),
+>> +	GPIO_GROUP(GPIOA_1),
+>> +	GPIO_GROUP(GPIOA_2),
+>> +	GPIO_GROUP(GPIOA_3),
+>> +	GPIO_GROUP(GPIOA_4),
+>> +	GPIO_GROUP(GPIOA_5),
+>> +	GPIO_GROUP(GPIOA_6),
+>> +	GPIO_GROUP(GPIOA_7),
+>> +	GPIO_GROUP(GPIOA_8),
+>> +	GPIO_GROUP(GPIOA_9),
+>> +	GPIO_GROUP(GPIOA_10),
+>> +	GPIO_GROUP(GPIOA_11),
+>> +
+>> +	/* bank P func1 */
+>> +	GROUP(psram_clkn,		1),
+>> +	GROUP(psram_clkp,		1),
+>> +	GROUP(psram_ce_n,		1),
+>> +	GROUP(psram_rst_n,		1),
+>> +	GROUP(psram_adq0,		1),
+>> +	GROUP(psram_adq1,		1),
+>> +	GROUP(psram_adq2,		1),
+>> +	GROUP(psram_adq3,		1),
+>> +	GROUP(psram_adq4,		1),
+>> +	GROUP(psram_adq5,		1),
+>> +	GROUP(psram_adq6,		1),
+>> +	GROUP(psram_adq7,		1),
+>> +	GROUP(psram_dqs_dm,		1),
+>> +
+>> +	/*bank P func2 */
+>> +	GROUP(pwm_e_p,			2),
+>> +
+>> +	/*bank B func1 */
+>> +	GROUP(spif_mo,			1),
+>> +	GROUP(spif_mi,			1),
+>> +	GROUP(spif_wp_n,		1),
+>> +	GROUP(spif_hold_n,		1),
+>> +	GROUP(spif_clk,			1),
+>> +	GROUP(spif_cs,			1),
+>> +	GROUP(pwm_f_b,			1),
+>> +
+>> +	/*bank B func2 */
+>> +	GROUP(sdcard_d0_b,		2),
+>> +	GROUP(sdcard_d1_b,		2),
+>> +	GROUP(sdcard_d2_b,		2),
+>> +	GROUP(sdcard_d3_b,		2),
+>> +	GROUP(sdcard_clk_b,		2),
+>> +	GROUP(sdcard_cmd_b,		2),
+>> +
+>> +	/*bank X func1 */
+>> +	GROUP(sdcard_d0_x,		1),
+>> +	GROUP(sdcard_d1_x,		1),
+>> +	GROUP(sdcard_d2_x,		1),
+>> +	GROUP(sdcard_d3_x,		1),
+>> +	GROUP(sdcard_clk_x,		1),
+>> +	GROUP(sdcard_cmd_x,		1),
+>> +	GROUP(pwm_a_x6,			1),
+>> +	GROUP(tdm_a_dout1,		1),
+>> +	GROUP(tdm_a_dout0,		1),
+>> +	GROUP(tdm_a_fs,			1),
+>> +	GROUP(tdm_a_sclk,		1),
+>> +	GROUP(uart_a_tx,		1),
+>> +	GROUP(uart_a_rx,		1),
+>> +	GROUP(uart_a_cts,		1),
+>> +	GROUP(uart_a_rts,		1),
+>> +	GROUP(pwm_d_x15,		1),
+>> +	GROUP(pwm_e_x16,		1),
+>> +
+>> +	/*bank X func2 */
+>> +	GROUP(i2c2_sck_x0,		2),
+>> +	GROUP(i2c2_sda_x1,		2),
+>> +	GROUP(spi_a_mosi_x2,		2),
+>> +	GROUP(spi_a_ss0_x3,		2),
+>> +	GROUP(spi_a_sclk_x4,		2),
+>> +	GROUP(spi_a_miso_x5,		2),
+>> +	GROUP(tdm_a_din1,		2),
+>> +	GROUP(tdm_a_din0,		2),
+>> +	GROUP(tdm_a_slv_fs,		2),
+>> +	GROUP(tdm_a_slv_sclk,		2),
+>> +	GROUP(i2c3_sck_x,		2),
+>> +	GROUP(i2c3_sda_x,		2),
+>> +	GROUP(pwm_d_x13,		2),
+>> +	GROUP(pwm_e_x14,		2),
+>> +	GROUP(i2c2_sck_x15,		2),
+>> +	GROUP(i2c2_sda_x16,		2),
+>> +
+>> +	/*bank X func3 */
+>> +	GROUP(uart_c_tx_x0,		3),
+>> +	GROUP(uart_c_rx_x1,		3),
+>> +	GROUP(uart_c_cts,		3),
+>> +	GROUP(uart_c_rts,		3),
+>> +	GROUP(pdm_din0_x,		3),
+>> +	GROUP(pdm_din1_x,		3),
+>> +	GROUP(pdm_din2_x,		3),
+>> +	GROUP(pdm_dclk_x,		3),
+>> +	GROUP(uart_c_tx_x15,		3),
+>> +	GROUP(uart_c_rx_x16,		3),
+>> +
+>> +	/*bank X func4 */
+>> +	GROUP(pwm_e_x2,			4),
+>> +	GROUP(pwm_f_x,			4),
+>> +	GROUP(spi_a_mosi_x7,		4),
+>> +	GROUP(spi_a_miso_x8,		4),
+>> +	GROUP(spi_a_ss0_x9,		4),
+>> +	GROUP(spi_a_sclk_x10,		4),
+>> +
+>> +	/*bank X func5 */
+>> +	GROUP(uart_b_tx_x,		5),
+>> +	GROUP(uart_b_rx_x,		5),
+>> +	GROUP(i2c1_sda_x,		5),
+>> +	GROUP(i2c1_sck_x,		5),
+>> +
+>> +	/*bank X func6 */
+>> +	GROUP(pwm_a_x7,			6),
+>> +	GROUP(pwm_b_x,			6),
+>> +	GROUP(pwm_c_x,			6),
+>> +	GROUP(pwm_d_x10,		6),
+>> +
+>> +	/*bank X func7 */
+>> +	GROUP(gen_clk_x,		7),
+>> +
+>> +	/*bank F func1 */
+>> +	GROUP(uart_b_tx_f,		1),
+>> +	GROUP(uart_b_rx_f,		1),
+>> +	GROUP(remote_input_f,		1),
+>> +	GROUP(jtag_a_clk,		1),
+>> +	GROUP(jtag_a_tms,		1),
+>> +	GROUP(jtag_a_tdi,		1),
+>> +	GROUP(jtag_a_tdo,		1),
+>> +	GROUP(gen_clk_f8,		1),
+>> +	GROUP(pwm_a_f10,		1),
+>> +	GROUP(i2c0_sck_f11,		1),
+>> +	GROUP(i2c0_sda_f12,		1),
+>> +
+>> +	/*bank F func2 */
+>> +	GROUP(clk_32k_in,		2),
+>> +	GROUP(pwm_e_f,			2),
+>> +	GROUP(pwm_f_f4,			2),
+>> +	GROUP(remote_out,		2),
+>> +	GROUP(spdif_in_f6,		2),
+>> +	GROUP(spdif_in_f7,		2),
+>> +	GROUP(pwm_a_hiz_f8,		2),
+>> +	GROUP(pwm_a_hiz_f10,		2),
+>> +	GROUP(pwm_d_f,			2),
+>> +	GROUP(pwm_f_f12,		2),
+>> +
+>> +	/*bank F func3 */
+>> +	GROUP(pwm_c_f3,			3),
+>> +	GROUP(swclk,			3),
+>> +	GROUP(swdio,			3),
+>> +	GROUP(pwm_a_f6,			3),
+>> +	GROUP(pwm_b_f,			3),
+>> +	GROUP(pwm_c_f8,			3),
+>> +	GROUP(clk25,			3),
+>> +	GROUP(i2c_slave_sck_f,		3),
+>> +	GROUP(i2c_slave_sda_f,		3),
+>> +
+>> +	/*bank F func4 */
+>> +	GROUP(cec_a,			4),
+>> +	GROUP(i2c3_sck_f,		4),
+>> +	GROUP(i2c3_sda_f,		4),
+>> +	GROUP(pmw_a_hiz_f6,		4),
+>> +	GROUP(pwm_b_hiz,		4),
+>> +	GROUP(pwm_c_hiz,		4),
+>> +	GROUP(i2c0_sck_f9,		4),
+>> +	GROUP(i2c0_sda_f10,		4),
+>> +
+>> +	/*bank F func5 */
+>> +	GROUP(cec_b,			5),
+>> +	GROUP(clk12_24,			5),
+>> +
+>> +	/*bank F func7 */
+>> +	GROUP(gen_clk_f10,		7),
+>> +
+>> +	/*bank A func1 */
+>> +	GROUP(mclk_0,			1),
+>> +	GROUP(tdm_b_sclk,		1),
+>> +	GROUP(tdm_b_fs,			1),
+>> +	GROUP(tdm_b_dout0,		1),
+>> +	GROUP(tdm_b_dout1,		1),
+>> +	GROUP(tdm_b_dout2,		1),
+>> +	GROUP(tdm_b_dout3,		1),
+>> +	GROUP(tdm_b_dout4,		1),
+>> +	GROUP(tdm_b_dout5,		1),
+>> +	GROUP(remote_input_a,		1),
+>> +
+>> +	/*bank A func2 */
+>> +	GROUP(pwm_e_a,			2),
+>> +	GROUP(tdm_b_slv_sclk,		2),
+>> +	GROUP(tdm_b_slv_fs,		2),
+>> +	GROUP(tdm_b_din0,		2),
+>> +	GROUP(tdm_b_din1,		2),
+>> +	GROUP(tdm_b_din2,		2),
+>> +	GROUP(i2c1_sda_a,		2),
+>> +	GROUP(i2c1_sck_a,		2),
+>> +
+>> +	/*bank A func3 */
+>> +	GROUP(i2c2_sck_a4,		3),
+>> +	GROUP(i2c2_sda_a5,		3),
+>> +	GROUP(pdm_din2_a,		3),
+>> +	GROUP(pdm_din1_a,		3),
+>> +	GROUP(pdm_din0_a,		3),
+>> +	GROUP(pdm_dclk,			3),
+>> +	GROUP(pwm_c_a,			3),
+>> +	GROUP(pwm_b_a,			3),
+>> +
+>> +	/*bank A func4 */
+>> +	GROUP(pwm_a_a,			4),
+>> +	GROUP(spi_a_mosi_a,		4),
+>> +	GROUP(spi_a_miso_a,		4),
+>> +	GROUP(spi_a_ss0_a,		4),
+>> +	GROUP(spi_a_sclk_a,		4),
+>> +	GROUP(i2c_slave_sck_a,		4),
+>> +	GROUP(i2c_slave_sda_a,		4),
+>> +
+>> +	/*bank A func5 */
+>> +	GROUP(mclk_vad,			5),
+>> +	GROUP(tdm_vad_sclk_a1,		5),
+>> +	GROUP(tdm_vad_fs_a2,		5),
+>> +	GROUP(tdm_vad_sclk_a5,		5),
+>> +	GROUP(tdm_vad_fs_a6,		5),
+>> +	GROUP(i2c2_sck_a8,		5),
+>> +	GROUP(i2c2_sda_a9,		5),
+>> +
+>> +	/*bank A func6 */
+>> +	GROUP(tst_out0,			6),
+>> +	GROUP(tst_out1,			6),
+>> +	GROUP(tst_out2,			6),
+>> +	GROUP(tst_out3,			6),
+>> +	GROUP(tst_out4,			6),
+>> +	GROUP(tst_out5,			6),
+>> +	GROUP(tst_out6,			6),
+>> +	GROUP(tst_out7,			6),
+>> +	GROUP(tst_out8,			6),
+>> +	GROUP(tst_out9,			6),
+>> +	GROUP(tst_out10,		6),
+>> +	GROUP(tst_out11,		6),
+>> +
+>> +	/*bank A func7 */
+>> +	GROUP(mute_key,			7),
+>> +	GROUP(mute_en,			7),
+>> +	GROUP(gen_clk_a,		7),
+>> +};
+>> +
+>> +static const char * const gpio_periphs_groups[] = {
+>> +	"GPIOP_0", "GPIOP_1", "GPIOP_2", "GPIOP_3", "GPIOP_4",
+>> +	"GPIOP_5", "GPIOP_6", "GPIOP_7", "GPIOP_8", "GPIOP_9",
+>> +	"GPIOP_10", "GPIOP_11", "GPIOP_12",
+>> +
+>> +	"GPIOB_0", "GPIOB_1", "GPIOB_2", "GPIOB_3", "GPIOB_4",
+>> +	"GPIOB_5", "GPIOB_6",
+>> +
+>> +	"GPIOX_0", "GPIOX_1", "GPIOX_2", "GPIOX_3", "GPIOX_4",
+>> +	"GPIOX_5", "GPIOX_6", "GPIOX_7", "GPIOX_8", "GPIOX_9",
+>> +	"GPIOX_10", "GPIOX_11", "GPIOX_12", "GPIOX_13", "GPIOX_14",
+>> +	"GPIOX_15", "GPIOX_16",
+>> +
+>> +	"GPIOF_0", "GPIOF_1", "GPIOF_2", "GPIOF_3", "GPIOF_4",
+>> +	"GPIOF_5", "GPIOF_6", "GPIOF_7", "GPIOF_8", "GPIOF_9",
+>> +	"GPIOF_10", "GPIOF_11", "GPIOF_12",
+>> +
+>> +	"GPIOA_0", "GPIOA_1", "GPIOA_2", "GPIOA_3", "GPIOA_4",
+>> +	"GPIOA_5", "GPIOA_6", "GPIOA_7", "GPIOA_8", "GPIOA_9",
+>> +	"GPIOA_10", "GPIOA_11",
+>> +};
+>> +
+>> +static const char * const psram_groups[] = {
+>> +	"psram_clkn", "psram_clkp", "psram_ce_n", "psram_rst_n", "psram_adq0",
+>> +	"psram_adq1", "psram_adq2", "psram_adq3", "psram_adq4", "psram_adq5",
+>> +	"psram_adq6", "psram_adq7", "psram_dqs_dm",
+>> +};
+>> +
+>> +static const char * const pwm_a_groups[] = {
+>> +	"pwm_a_x6", "pwm_a_x7", "pwm_a_f10", "pwm_a_f6", "pwm_a_a",
+>> +};
+>> +
+>> +static const char * const pwm_b_groups[] = {
+>> +	"pwm_b_x", "pwm_b_f", "pwm_b_a",
+>> +};
+>> +
+>> +static const char * const pwm_c_groups[] = {
+>> +	"pwm_c_x", "pwm_c_f3", "pwm_c_f8", "pwm_c_a",
+>> +};
+>> +
+>> +static const char * const pwm_d_groups[] = {
+>> +	"pwm_d_x15", "pwm_d_x13", "pwm_d_x10", "pwm_d_f",
+>> +};
+>> +
+>> +static const char * const pwm_e_groups[] = {
+>> +	"pwm_e_p", "pwm_e_x16", "pwm_e_x14", "pwm_e_x2", "pwm_e_f",
+>> +	"pwm_e_a",
+>> +};
+>> +
+>> +static const char * const pwm_f_groups[] = {
+>> +	"pwm_f_b", "pwm_f_x", "pwm_f_f4", "pwm_f_f12",
+>> +};
+>> +
+>> +static const char * const pwm_a_hiz_groups[] = {
+>> +	"pwm_a_hiz_f8", "pwm_a_hiz_f10", "pwm_a_hiz_f6",
+>> +};
+>> +
+>> +static const char * const pwm_b_hiz_groups[] = {
+>> +	"pwm_b_hiz",
+>> +};
+>> +
+>> +static const char * const pwm_c_hiz_groups[] = {
+>> +	"pwm_c_hiz",
+>> +};
+>> +
+>> +static const char * const spif_groups[] = {
+>> +	"spif_mo", "spif_mi", "spif_wp_n", "spif_hold_n", "spif_clk",
+>> +	"spif_cs",
+>> +};
+>> +
+>> +static const char * const sdcard_groups[] = {
+>> +	"sdcard_d0_b", "sdcard_d1_b", "sdcard_d2_b", "sdcard_d3_b",
+>> +	"sdcard_clk_b", "sdcard_cmd_b",
+>> +
+>> +	"sdcard_d0_x", "sdcard_d1_x", "sdcard_d2_x", "sdcard_d3_x",
+>> +	"sdcard_clk_x", "sdcard_cmd_x",
+>> +};
+>> +
+>> +static const char * const tdm_a_groups[] = {
+>> +	"tdm_a_din0", "tdm_a_din1",  "tdm_a_fs", "tdm_a_sclk",
+>> +	"tdm_a_slv_fs", "tdm_a_slv_sclk", "tdm_a_dout0", "tdm_a_dout1",
+>> +};
+>> +
+>> +static const char * const uart_a_groups[] = {
+>> +	"uart_a_tx", "uart_a_rx", "uart_a_cts", "uart_a_rts",
+>> +};
+>> +
+>> +static const char * const uart_b_groups[] = {
+>> +	"uart_b_tx_x", "uart_b_rx_x", "uart_b_tx_f", "uart_b_rx_f",
+>> +};
+>> +
+>> +static const char * const uart_c_groups[] = {
+>> +	"uart_c_tx_x0", "uart_c_rx_x1", "uart_c_cts", "uart_c_rts",
+>> +	"uart_c_tx_x15", "uart_c_rx_x16",
+>> +};
+>> +
+>> +static const char * const i2c0_groups[] = {
+>> +	"i2c0_sck_f11", "i2c0_sda_f12", "i2c0_sck_f9", "i2c0_sda_f10",
+>> +};
+>> +
+>> +static const char * const i2c1_groups[] = {
+>> +	"i2c1_sda_x", "i2c1_sck_x", "i2c1_sda_a", "i2c1_sck_a",
+>> +};
+>> +
+>> +static const char * const i2c2_groups[] = {
+>> +	"i2c2_sck_x0", "i2c2_sda_x1", "i2c2_sck_x15", "i2c2_sda_x16",
+>> +	"i2c2_sck_a4", "i2c2_sda_a5", "i2c2_sck_a8", "i2c2_sda_a9",
+>> +};
+>> +
+>> +static const char * const i2c3_groups[] = {
+>> +	"i2c3_sck_x", "i2c3_sda_x", "i2c3_sck_f", "i2c3_sda_f",
+>> +};
+>> +
+>> +static const char * const i2c_slave_groups[] = {
+>> +	"i2c_slave_sda_a", "i2c_slave_sck_a",
+>> +	"i2c_slave_sda_f", "i2c_slave_sck_f",
+>> +};
+>> +
+>> +static const char * const spi_a_groups[] = {
+>> +	"spi_a_mosi_x2", "spi_a_ss0_x3", "spi_a_sclk_x4", "spi_a_miso_x5",
+>> +	"spi_a_mosi_x7", "spi_a_miso_x8", "spi_a_ss0_x9", "spi_a_sclk_x10",
+>> +
+>> +	"spi_a_mosi_a", "spi_a_miso_a", "spi_a_ss0_a", "spi_a_sclk_a",
+>> +};
+>> +
+>> +static const char * const pdm_groups[] = {
+>> +	"pdm_din0_x", "pdm_din1_x", "pdm_din2_x", "pdm_dclk_x", "pdm_din2_a",
+>> +	"pdm_din1_a", "pdm_din0_a", "pdm_dclk",
+>> +};
+>> +
+>> +static const char * const gen_clk_groups[] = {
+>> +	"gen_clk_x", "gen_clk_f8", "gen_clk_f10", "gen_clk_a",
+>> +};
+>> +
+>> +static const char * const remote_input_groups[] = {
+>> +	"remote_input_f",
+>> +	"remote_input_a",
+>> +};
+>> +
+>> +static const char * const jtag_a_groups[] = {
+>> +	"jtag_a_clk", "jtag_a_tms", "jtag_a_tdi", "jtag_a_tdo",
+>> +};
+>> +
+>> +static const char * const clk_32k_in_groups[] = {
+>> +	"clk_32k_in",
+>> +};
+>> +
+>> +static const char * const remote_out_groups[] = {
+>> +	"remote_out",
+>> +};
+>> +
+>> +static const char * const spdif_in_groups[] = {
+>> +	"spdif_in_f6", "spdif_in_f7",
+>> +};
+>> +
+>> +static const char * const sw_groups[] = {
+>> +	"swclk", "swdio",
+>> +};
+>> +
+>> +static const char * const clk25_groups[] = {
+>> +	"clk_25",
+>> +};
+>> +
+>> +static const char * const cec_a_groups[] = {
+>> +	"cec_a",
+>> +};
+>> +
+>> +static const char * const cec_b_groups[] = {
+>> +	"cec_b",
+>> +};
+>> +
+>> +static const char * const clk12_24_groups[] = {
+>> +	"clk12_24",
+>> +};
+>> +
+>> +static const char * const mclk_0_groups[] = {
+>> +	"mclk_0",
+>> +};
+>> +
+>> +static const char * const tdm_b_groups[] = {
+>> +	"tdm_b_din0", "tdm_b_din1", "tdm_b_din2",
+>> +	"tdm_b_sclk", "tdm_b_fs", "tdm_b_dout0", "tdm_b_dout1",
+>> +	"tdm_b_dout2", "tdm_b_dout3", "tdm_b_dout4", "tdm_b_dout5",
+>> +	"tdm_b_slv_sclk", "tdm_b_slv_fs",
+>> +};
+>> +
+>> +static const char * const mclk_vad_groups[] = {
+>> +	"mclk_vad",
+>> +};
+>> +
+>> +static const char * const tdm_vad_groups[] = {
+>> +	"tdm_vad_sclk_a1", "tdm_vad_fs_a2", "tdm_vad_sclk_a5", "tdm_vad_fs_a6",
+>> +};
+>> +
+>> +static const char * const tst_out_groups[] = {
+>> +	"tst_out0", "tst_out1", "tst_out2", "tst_out3",
+>> +	"tst_out4", "tst_out5", "tst_out6", "tst_out7",
+>> +	"tst_out8", "tst_out9", "tst_out10", "tst_out11",
+>> +};
+>> +
+>> +static const char * const mute_groups[] = {
+>> +	"mute_key", "mute_en",
+>> +};
+>> +
+>> +static struct meson_pmx_func meson_a1_periphs_functions[] = {
+>> +	FUNCTION(gpio_periphs),
+>> +	FUNCTION(psram),
+>> +	FUNCTION(pwm_a),
+>> +	FUNCTION(pwm_b),
+>> +	FUNCTION(pwm_c),
+>> +	FUNCTION(pwm_d),
+>> +	FUNCTION(pwm_e),
+>> +	FUNCTION(pwm_f),
+>> +	FUNCTION(pwm_a_hiz),
+>> +	FUNCTION(pwm_b_hiz),
+>> +	FUNCTION(pwm_c_hiz),
+>> +	FUNCTION(spif),
+>> +	FUNCTION(sdcard),
+>> +	FUNCTION(tdm_a),
+>> +	FUNCTION(uart_a),
+>> +	FUNCTION(uart_b),
+>> +	FUNCTION(uart_c),
+>> +	FUNCTION(i2c0),
+>> +	FUNCTION(i2c1),
+>> +	FUNCTION(i2c2),
+>> +	FUNCTION(i2c3),
+>> +	FUNCTION(spi_a),
+>> +	FUNCTION(pdm),
+>> +	FUNCTION(gen_clk),
+>> +	FUNCTION(remote_input),
+>> +	FUNCTION(jtag_a),
+>> +	FUNCTION(clk_32k_in),
+>> +	FUNCTION(remote_out),
+>> +	FUNCTION(spdif_in),
+>> +	FUNCTION(sw),
+>> +	FUNCTION(clk25),
+>> +	FUNCTION(cec_a),
+>> +	FUNCTION(cec_b),
+>> +	FUNCTION(clk12_24),
+>> +	FUNCTION(mclk_0),
+>> +	FUNCTION(tdm_b),
+>> +	FUNCTION(mclk_vad),
+>> +	FUNCTION(tdm_vad),
+>> +	FUNCTION(tst_out),
+>> +	FUNCTION(mute),
+>> +};
+>> +
+>> +static struct meson_bank meson_a1_periphs_banks[] = {
+>> +	/* name  first  last  irq  pullen  pull  dir  out  in  ds*/
+>> +	BANK_DS("P",  GPIOP_0,  GPIOP_12,  0,  12, 0x3,  0,  0x4,  0,
+>> +		0x2,  0,  0x1,  0,  0x0,  0,  0x5,  0),
+>> +	BANK_DS("B",  GPIOB_0,    GPIOB_6,   13,  19,  0x13,  0,  0x14,  0,
+>> +		0x12,  0,  0x11,  0,  0x10,  0,  0x15,  0),
+>> +	BANK_DS("X",  GPIOX_0,    GPIOX_16,  20,  36,  0x23,  0,  0x24,  0,
+>> +		0x22,  0,  0x21,  0,  0x20,  0,  0x25,  0),
+>> +	BANK_DS("F",  GPIOF_0,    GPIOF_12,  37,  49,  0x33,  0,  0x34,  0,
+>> +		0x32,  0,  0x31,  0,  0x30,  0,  0x35,  0),
+>> +	BANK_DS("A",  GPIOA_0,    GPIOA_11,  50,  61,  0x43,  0,  0x44,  0,
+>> +		0x42,  0,  0x41,  0,  0x40,  0,  0x45,  0),
+>> +};
+>> +
+>> +static struct meson_pmx_bank meson_a1_periphs_pmx_banks[] = {
+>> +	/*  name	 first	    lask    reg	offset  */
+>> +	BANK_PMX("P",    GPIOP_0, GPIOP_12, 0x0, 0),
+>> +	BANK_PMX("B",    GPIOB_0, GPIOB_6,  0x2, 0),
+>> +	BANK_PMX("X",    GPIOX_0, GPIOX_16, 0x3, 0),
+>> +	BANK_PMX("F",    GPIOF_0, GPIOF_12, 0x6, 0),
+>> +	BANK_PMX("A",    GPIOA_0, GPIOA_11, 0x8, 0),
+>> +};
+>> +
+>> +static struct meson_axg_pmx_data meson_a1_periphs_pmx_banks_data = {
+>> +	.pmx_banks	= meson_a1_periphs_pmx_banks,
+>> +	.num_pmx_banks	= ARRAY_SIZE(meson_a1_periphs_pmx_banks),
+>> +};
+>> +
+>> +static struct meson_pinctrl_data meson_a1_periphs_pinctrl_data = {
+>> +	.name		= "periphs-banks",
+>> +	.pins		= meson_a1_periphs_pins,
+>> +	.groups		= meson_a1_periphs_groups,
+>> +	.funcs		= meson_a1_periphs_functions,
+>> +	.banks		= meson_a1_periphs_banks,
+>> +	.num_pins	= ARRAY_SIZE(meson_a1_periphs_pins),
+>> +	.num_groups	= ARRAY_SIZE(meson_a1_periphs_groups),
+>> +	.num_funcs	= ARRAY_SIZE(meson_a1_periphs_functions),
+>> +	.num_banks	= ARRAY_SIZE(meson_a1_periphs_banks),
+>> +	.pmx_ops	= &meson_axg_pmx_ops,
+>> +	.pmx_data	= &meson_a1_periphs_pmx_banks_data,
+>> +	.reg_layout	= A1_LAYOUT,
+>> +};
+>> +
+>> +static const struct of_device_id meson_a1_pinctrl_dt_match[] = {
+>> +	{
+>> +		.compatible = "amlogic,meson-a1-periphs-pinctrl",
+>> +		.data = &meson_a1_periphs_pinctrl_data,
+>> +	},
+>> +	{ },
+>> +};
+>> +
+>> +static struct platform_driver meson_a1_pinctrl_driver = {
+>> +	.probe  = meson_pinctrl_probe,
+>> +	.driver = {
+>> +		.name	= "meson-a1-pinctrl",
+>> +		.of_match_table = meson_a1_pinctrl_dt_match,
+>> +	},
+>> +};
+>> +
+>> +builtin_platform_driver(meson_a1_pinctrl_driver);
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> index 8bba9d0..885b89d 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> @@ -688,8 +688,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  
+>>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
+>>  	if (IS_ERR(pc->reg_ds)) {
+>> -		dev_dbg(pc->dev, "ds registers not found - skipping\n");
+>> -		pc->reg_ds = NULL;
+>> +		if (pc->data->reg_layout == A1_LAYOUT) {
+> 
+> If the ds_reg is not used in A1_LAYOUT, simply avoid mapping it and mark
+> it unneeded for A1 SoCs in the bindings instead.
+> 
+>> +			pc->reg_ds = pc->reg_pullen;
+>> +		} else {
+>> +			dev_dbg(pc->dev, "ds registers not found - skipping\n");
+>> +			pc->reg_ds = NULL;
+>> +		}
+>>  	}
+>>  
+>>  	return 0;
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+>> index c696f32..3d0c58d 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+>> @@ -80,6 +80,14 @@ enum meson_pinconf_drv {
+>>  };
+>>  
+>>  /**
+>> + * enum meson_reg_layout - identify two types of reg layout
+>> + */
+>> +enum meson_reg_layout {
+>> +	LEGACY_LAYOUT,
+>> +	A1_LAYOUT,
+>> +};
+>> +
+>> +/**
+>>   * struct meson bank
+>>   *
+>>   * @name:	bank name
+>> @@ -114,6 +122,7 @@ struct meson_pinctrl_data {
+>>  	unsigned int num_banks;
+>>  	const struct pinmux_ops *pmx_ops;
+>>  	void *pmx_data;
+>> +	unsigned int reg_layout;
+>>  };
+>>  
+>>  struct meson_pinctrl {
+>>
+> 
+> Apart that look good to me,
+> 
+> Neil
+> 
+> .
+> 
