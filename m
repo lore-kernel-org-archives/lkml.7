@@ -2,199 +2,281 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB63C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B004C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9BF62053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DF22189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="tzWGR7ST"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mf3ylWv/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfIQNkA (ORCPT
+        id S1728843AbfIQNkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:40:00 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:41488 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728095AbfIQNkA (ORCPT
+        Tue, 17 Sep 2019 09:40:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34924 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfIQNkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:40:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ELl1NsfX5Fc5G0TSWnTjkQIkDmrHqxQp19xYdCPSi/Q=; b=tzWGR7STXwrLQfe2EyTw0l/2j
-        XblxtpPO8359nqUIHTJl9Ns/wjUzdk6PDEBHt++J82SS7VbwwMxj0sl753i2QwCKTumYfOgP4gbE8
-        blPn1xyB8h4MrHxPeiuV8cHn60aR/mkZ0WSPe/H7KtFJcr+Pb2ghJvj40PXjadkw3htfIzpGFdGaQ
-        lBppuwEq6ADgADOoNFt/SoDgqhJR14eixo4otjcLC3Snsls1jFNIxmpMHIk5/q70Q1QVGcvAZbw9O
-        onlOebpntKn2sUip2UURck/WpCBYyZV1J9Y40bQW4MpMdjxrHr9QkjYVOWBBeaYOpaX9xM4qKhqUL
-        VBjHS8Z6w==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44786)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iADhu-00028T-Ba; Tue, 17 Sep 2019 14:39:50 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iADhn-0001Ks-4N; Tue, 17 Sep 2019 14:39:43 +0100
-Date:   Tue, 17 Sep 2019 14:39:43 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     tinywrkb <tinywrkb@gmail.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>, Baruch Siach <baruch@tkos.co.il>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190917133942.GR25745@shell.armlinux.org.uk>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
- <20190917133253.GA1210141@arch-dsk-01>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917133253.GA1210141@arch-dsk-01>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Sep 2019 09:40:05 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m15so4448929qtq.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:40:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Q2t22cvAHte1ch8tj9lxq14REfgJnpMH2IQOWoISxZk=;
+        b=mf3ylWv/P6KKZLCmcDbvPDClWNE/yl8qC43ao/9coxSAnnpECS5gdQYATZ9ERdVNkB
+         OL9mHdvCjmD9rGlwANsJBNE/jw2OzUoUb7qV/fKDihddwKuKM26xSdlNHtop8eImzCyl
+         G6PepKApbQ49kcSkiWCsKs9i9wCgpwb5Wr6HmfmtdnTNL9l0Is7gR1vAnZOh6L7Zl6Vm
+         21973yXAlXWUmsEscaUdyc116p1CaPqquPXgNHAwxjX4fKkgqAY+hhjJaK4A8Ehv2G+K
+         HGfhabv1vu7ynxaRSu25/vJm7jRaTvhJmfJl490tK+iFsWZjIYVTO3oSgkmKqBrxdmrc
+         FP+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Q2t22cvAHte1ch8tj9lxq14REfgJnpMH2IQOWoISxZk=;
+        b=HUl9xSGeShFhznonxgyPt163SHRcKoSF7db5Os1CYtCsikt82ScBgeswrsuT+q+DLk
+         HsgIoPM3olvCNH3UrxqHqai0TDbkzlu/KuivMRhxIdSqO8YNw/NQ1az9/kzEPrIFm2TD
+         //H1WXI9rsJZQ5kRhm0E25dBID8UgmcoUh62WZTBRxttxYNKAETkMFvWVQWzNlhudPTy
+         mzyu169zsoXrSVQiEurArAQLUUi/OmuCLHVDtC1TONZIFoVKRN6/Am9e3WeUWn14wImM
+         MKAkGuzoq5jt3EQC0VkOwA2AMt3md0Mxb2Vrm89OW6uG3QhrGMZrTMgasZXXLKWhkuxB
+         vxkA==
+X-Gm-Message-State: APjAAAV5Pl2XvXxwVrg2pJs/050P1kfLdBZNIlqoBGoPSYGA1NuM/7Dt
+        J2kABQRirdrvG/mY/VTNb3EqkA==
+X-Google-Smtp-Source: APXvYqxxE1JteTH87odhllssonVdekVi7hpPC+xb0XTDUBCG6B+wXwcAmYOqAGEvGpKicctPFHY+rg==
+X-Received: by 2002:ac8:75cd:: with SMTP id z13mr3591864qtq.87.1568727603712;
+        Tue, 17 Sep 2019 06:40:03 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 131sm1141820qkg.1.2019.09.17.06.40.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 06:40:03 -0700 (PDT)
+Message-ID: <1568727601.5576.160.camel@lca.pw>
+Subject: Re: [RFC PATCH] mm/slub: remove left-over debugging code
+From:   Qian Cai <cai@lca.pw>
+To:     David Rientjes <rientjes@google.com>,
+        Pengfei Li <lpf.vector@gmail.com>
+Cc:     cl@linux.com, penberg@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 17 Sep 2019 09:40:01 -0400
+In-Reply-To: <alpine.DEB.2.21.1909161128480.105847@chino.kir.corp.google.com>
+References: <1568650294-8579-1-git-send-email-cai@lca.pw>
+         <alpine.DEB.2.21.1909161128480.105847@chino.kir.corp.google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 04:32:53PM +0300, tinywrkb wrote:
-> On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
-> > On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
-> > > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > > > Tinywrkb confirmed to me in private communication that revert of
-> > > > > 5502b218e001 fixes Ethernet for him on effected system.
-> > > > > 
-> > > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > > > AR8035 PHY that supports 1Gb.
-> > > > > 
-> > > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > > > the moment.
-> > > > 
-> > > > Could somebody with an affected device show us the output of ethtool
-> > > > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > > > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > > > without that patch? We are missing a piece of the puzzle.
-> > > > 
-> > > > 	Andrew
-> > > 
-> > > linux-test-5.1rc1-a2703de70942-without_bad_commit
-> > > 
-> > > Settings for eth0:
-> > > 	Supported ports: [ TP MII ]
-> > > 	Supported link modes:   10baseT/Half 10baseT/Full
-> > > 	                        100baseT/Half 100baseT/Full
-> > > 	                        1000baseT/Full
-> > 
-> > So this means the local device says it can do 1000Mbps.
-> > 
-> > 
-> > > 	Supported pause frame use: Symmetric
-> > > 	Supports auto-negotiation: Yes
-> > > 	Supported FEC modes: Not reported
-> > > 	Advertised link modes:  10baseT/Half 10baseT/Full
-> > > 	                        100baseT/Half 100baseT/Full
-> > > 	                        1000baseT/Full
-> > 
-> > The link peer can also do 1000Mbps.
-> > 
-> > 
-> > > 	Advertised pause frame use: Symmetric
-> > > 	Advertised auto-negotiation: Yes
-> > > 	Advertised FEC modes: Not reported
-> > > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > > 	                                     100baseT/Half 100baseT/Full
-> > > 	                                     1000baseT/Full
-> > > 	Link partner advertised pause frame use: Symmetric
-> > > 	Link partner advertised auto-negotiation: Yes
-> > > 	Link partner advertised FEC modes: Not reported
-> > > 	Speed: 100Mb/s
-> > 
-> > Yet they have decided to do 100Mbps. 
-> > 
-> > We need to understand Why? The generic PHY driver would not do this on
-> > its own. So i'm thinking something has poked a PHY register with some
-> > value, and this patch is causing it to be over written.
-> > 
-> > Please can you use mii-tool -v -v to dump the PHY registers in each
-> > case.
-> > 
-> > Thanks
-> > 	Andrew
+On Mon, 2019-09-16 at 11:32 -0700, David Rientjes wrote:
+> On Mon, 16 Sep 2019, Qian Cai wrote:
 > 
-> Here's the output of # mii-tool -v -v eth0 
+> > SLUB_RESILIENCY_TEST and SLUB_DEBUG_CMPXCHG look like some left-over
+> > debugging code during the internal development that probably nobody uses
+> > it anymore. Remove them to make the world greener.
 > 
-> * linux-test-5.1rc1-a2703de70942-without_bad_commit
+> Adding Pengfei Li who has been working on a patchset for modified handling 
+> of kmalloc cache initialization and touches the resiliency test.
 > 
-> Using SIOCGMIIPHY=0x8947
-> eth0: negotiated 100baseTx-FD flow-control, link ok
->   registers for MII PHY 0:
->     3100 796d 004d d072 15e1 c5e1 000f 0000
->     0000 0000 0800 0000 0000 0000 0000 a000
->     0000 0000 0000 f420 082c 0000 04e8 0000
->     3200 3000 0000 063d 0000 0000 0000 0000
->   product info: vendor 00:13:74, model 7 rev 2
->   basic mode:   autonegotiation enabled
->   basic status: autonegotiation complete, link ok
->   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
->   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
->   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> I still find the resiliency test to be helpful/instructional for handling 
+> unexpected conditions in these caches, so I'd suggest against removing it: 
+> the only downside is that it's additional source code.  But it's helpful 
+> source code for reference.
+> 
+> The cmpxchg failures could likely be more generalized beyond SLUB since 
+> there will be other dependencies in the kernel than just this allocator.
 
-This is *not* advertising 1000baseT modes (register 9).
+OK, SLUB_RESILIENCY_TEST is fine to keep around and maybe be turned into a
+Kconfig option to make it more visible.
+
+Is it fine to remove SLUB_DEBUG_CMPXCHG? If somebody later want to generalize it
+beyond SLUB, he/she can always find the old code somewhere anyway.
 
 > 
+> (I assume you didn't send a Signed-off-by line because this is an RFC.)
 > 
-> * linux-test-5.1rc1-5502b218e001-with_bad_commit
-> 
-> Using SIOCGMIIPHY=0x8947
-> eth0: negotiated 100baseTx-FD flow-control, link ok
->   registers for MII PHY 0:
->     3100 796d 004d d072 15e1 c5e1 000d 0000
->     0000 0000 0800 0000 0000 0000 0000 a000
->     0000 0000 0000 0000 082c 0000 04e8 0000
->     3200 3000 0000 063d 0000 0000 0000 0000
->   product info: vendor 00:13:74, model 7 rev 2
->   basic mode:   autonegotiation enabled
->   basic status: autonegotiation complete, link ok
->   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
->   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
->   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-
-Neither is this.
-
-However, the kernel and phylib _thinks_ that it is.  My guess is
-something has rewritten the PHY registers from userspace, rather
-than using ethtool to change the advertisment.  The MAC is still
-trying to operate at 1000Mbps (since that is what phylib resolved)
-yet the link might be actually operating at 100Mbps - but for that
-to happen, we should've seen the link go down and up again.
-
-Odd.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> > ---
+> >  mm/slub.c | 110 --------------------------------------------------------------
+> >  1 file changed, 110 deletions(-)
+> > 
+> > diff --git a/mm/slub.c b/mm/slub.c
+> > index 8834563cdb4b..f97155ba097d 100644
+> > --- a/mm/slub.c
+> > +++ b/mm/slub.c
+> > @@ -150,12 +150,6 @@ static inline bool kmem_cache_has_cpu_partial(struct kmem_cache *s)
+> >   * - Variable sizing of the per node arrays
+> >   */
+> >  
+> > -/* Enable to test recovery from slab corruption on boot */
+> > -#undef SLUB_RESILIENCY_TEST
+> > -
+> > -/* Enable to log cmpxchg failures */
+> > -#undef SLUB_DEBUG_CMPXCHG
+> > -
+> >  /*
+> >   * Mininum number of partial slabs. These will be left on the partial
+> >   * lists even if they are empty. kmem_cache_shrink may reclaim them.
+> > @@ -392,10 +386,6 @@ static inline bool __cmpxchg_double_slab(struct kmem_cache *s, struct page *page
+> >  	cpu_relax();
+> >  	stat(s, CMPXCHG_DOUBLE_FAIL);
+> >  
+> > -#ifdef SLUB_DEBUG_CMPXCHG
+> > -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
+> > -#endif
+> > -
+> >  	return false;
+> >  }
+> >  
+> > @@ -433,10 +423,6 @@ static inline bool cmpxchg_double_slab(struct kmem_cache *s, struct page *page,
+> >  	cpu_relax();
+> >  	stat(s, CMPXCHG_DOUBLE_FAIL);
+> >  
+> > -#ifdef SLUB_DEBUG_CMPXCHG
+> > -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
+> > -#endif
+> > -
+> >  	return false;
+> >  }
+> >  
+> > @@ -2004,45 +1990,11 @@ static inline unsigned long next_tid(unsigned long tid)
+> >  	return tid + TID_STEP;
+> >  }
+> >  
+> > -static inline unsigned int tid_to_cpu(unsigned long tid)
+> > -{
+> > -	return tid % TID_STEP;
+> > -}
+> > -
+> > -static inline unsigned long tid_to_event(unsigned long tid)
+> > -{
+> > -	return tid / TID_STEP;
+> > -}
+> > -
+> >  static inline unsigned int init_tid(int cpu)
+> >  {
+> >  	return cpu;
+> >  }
+> >  
+> > -static inline void note_cmpxchg_failure(const char *n,
+> > -		const struct kmem_cache *s, unsigned long tid)
+> > -{
+> > -#ifdef SLUB_DEBUG_CMPXCHG
+> > -	unsigned long actual_tid = __this_cpu_read(s->cpu_slab->tid);
+> > -
+> > -	pr_info("%s %s: cmpxchg redo ", n, s->name);
+> > -
+> > -#ifdef CONFIG_PREEMPT
+> > -	if (tid_to_cpu(tid) != tid_to_cpu(actual_tid))
+> > -		pr_warn("due to cpu change %d -> %d\n",
+> > -			tid_to_cpu(tid), tid_to_cpu(actual_tid));
+> > -	else
+> > -#endif
+> > -	if (tid_to_event(tid) != tid_to_event(actual_tid))
+> > -		pr_warn("due to cpu running other code. Event %ld->%ld\n",
+> > -			tid_to_event(tid), tid_to_event(actual_tid));
+> > -	else
+> > -		pr_warn("for unknown reason: actual=%lx was=%lx target=%lx\n",
+> > -			actual_tid, tid, next_tid(tid));
+> > -#endif
+> > -	stat(s, CMPXCHG_DOUBLE_CPU_FAIL);
+> > -}
+> > -
+> >  static void init_kmem_cache_cpus(struct kmem_cache *s)
+> >  {
+> >  	int cpu;
+> > @@ -2751,7 +2703,6 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
+> >  				object, tid,
+> >  				next_object, next_tid(tid)))) {
+> >  
+> > -			note_cmpxchg_failure("slab_alloc", s, tid);
+> >  			goto redo;
+> >  		}
+> >  		prefetch_freepointer(s, next_object);
+> > @@ -4694,66 +4645,6 @@ static int list_locations(struct kmem_cache *s, char *buf,
+> >  }
+> >  #endif	/* CONFIG_SLUB_DEBUG */
+> >  
+> > -#ifdef SLUB_RESILIENCY_TEST
+> > -static void __init resiliency_test(void)
+> > -{
+> > -	u8 *p;
+> > -	int type = KMALLOC_NORMAL;
+> > -
+> > -	BUILD_BUG_ON(KMALLOC_MIN_SIZE > 16 || KMALLOC_SHIFT_HIGH < 10);
+> > -
+> > -	pr_err("SLUB resiliency testing\n");
+> > -	pr_err("-----------------------\n");
+> > -	pr_err("A. Corruption after allocation\n");
+> > -
+> > -	p = kzalloc(16, GFP_KERNEL);
+> > -	p[16] = 0x12;
+> > -	pr_err("\n1. kmalloc-16: Clobber Redzone/next pointer 0x12->0x%p\n\n",
+> > -	       p + 16);
+> > -
+> > -	validate_slab_cache(kmalloc_caches[type][4]);
+> > -
+> > -	/* Hmmm... The next two are dangerous */
+> > -	p = kzalloc(32, GFP_KERNEL);
+> > -	p[32 + sizeof(void *)] = 0x34;
+> > -	pr_err("\n2. kmalloc-32: Clobber next pointer/next slab 0x34 -> -0x%p\n",
+> > -	       p);
+> > -	pr_err("If allocated object is overwritten then not detectable\n\n");
+> > -
+> > -	validate_slab_cache(kmalloc_caches[type][5]);
+> > -	p = kzalloc(64, GFP_KERNEL);
+> > -	p += 64 + (get_cycles() & 0xff) * sizeof(void *);
+> > -	*p = 0x56;
+> > -	pr_err("\n3. kmalloc-64: corrupting random byte 0x56->0x%p\n",
+> > -	       p);
+> > -	pr_err("If allocated object is overwritten then not detectable\n\n");
+> > -	validate_slab_cache(kmalloc_caches[type][6]);
+> > -
+> > -	pr_err("\nB. Corruption after free\n");
+> > -	p = kzalloc(128, GFP_KERNEL);
+> > -	kfree(p);
+> > -	*p = 0x78;
+> > -	pr_err("1. kmalloc-128: Clobber first word 0x78->0x%p\n\n", p);
+> > -	validate_slab_cache(kmalloc_caches[type][7]);
+> > -
+> > -	p = kzalloc(256, GFP_KERNEL);
+> > -	kfree(p);
+> > -	p[50] = 0x9a;
+> > -	pr_err("\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%p\n\n", p);
+> > -	validate_slab_cache(kmalloc_caches[type][8]);
+> > -
+> > -	p = kzalloc(512, GFP_KERNEL);
+> > -	kfree(p);
+> > -	p[512] = 0xab;
+> > -	pr_err("\n3. kmalloc-512: Clobber redzone 0xab->0x%p\n\n", p);
+> > -	validate_slab_cache(kmalloc_caches[type][9]);
+> > -}
+> > -#else
+> > -#ifdef CONFIG_SYSFS
+> > -static void resiliency_test(void) {};
+> > -#endif
+> > -#endif	/* SLUB_RESILIENCY_TEST */
+> > -
+> >  #ifdef CONFIG_SYSFS
+> >  enum slab_stat_type {
+> >  	SL_ALL,			/* All slabs */
+> > @@ -5875,7 +5766,6 @@ static int __init slab_sysfs_init(void)
+> >  	}
+> >  
+> >  	mutex_unlock(&slab_mutex);
+> > -	resiliency_test();
+> >  	return 0;
+> >  }
+> >  
+> > -- 
+> > 1.8.3.1
+> > 
+> > 
