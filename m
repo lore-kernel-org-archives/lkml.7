@@ -2,107 +2,147 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDC6C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03A6C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23F4216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:54:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXL7i/wN"
+	by mail.kernel.org (Postfix) with ESMTP id 8FA582171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568753704;
+	bh=CpxsDxUjfYJQ4KuEuGgfHSNgs7HIa645JgYtKRt6fxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dcqS4+aO9o1S6sDMp0421d2cCQ2JWi8XrmEj6gorPikFE+dl8ky9oSaP+jA4TXX+f
+	 jKrWCo9SGH7lUE6FxNNM8YoaU2s1aWDU40uZgdfn2w1qN7RkH8ztBA1rLhbVXgtSY3
+	 ILcQGmBu5hlClKQP47Kshr7Ij9vKAFIoqX5e0ph0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbfIQUyS (ORCPT
+        id S1730050AbfIQUzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:54:18 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:39149 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfIQUyR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:54:17 -0400
-Received: by mail-ed1-f66.google.com with SMTP id g12so4602463eds.6;
-        Tue, 17 Sep 2019 13:54:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TB55ogVb7L8Rnu3J7GOd1CTL9DFPAcCA1b2WA++LLLI=;
-        b=eXL7i/wN7GH6Vg8CmKxQzNRZqwTGKPKReKUXNjbUDxJBsbaoKuTv2WhQj5LHhHJpXm
-         oautn+efA3gz0kSro5bUCcJVZQVBLUyLxb4YCuWmAzRzrnBA5MJZsem6hlUSZVWup6a/
-         Xvf+SgcqbOGD2PwUX6hzZN80jtJYz35lyc6BeP/7YTPTcRoJ888Y6II9fuYR+tj+KonK
-         C2uTpTrcHKeOpqpjfWBqbzbnGojiJdArPYR41YbhBDpXniyg7vdT3iuaMzjOsf1hsvlb
-         mlojdKbD+hLueWkALJGurBh6/X17j9NQAxEpUCYwgTZIHI2G1N9CsY55cso3hXb7ttqf
-         hZqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TB55ogVb7L8Rnu3J7GOd1CTL9DFPAcCA1b2WA++LLLI=;
-        b=LSkG27rZWs3XlZG6Y9pgkusPkvgFY+MgN76BgD8I6tw/ULA4Fjgep7N9lDSu4MRXoO
-         N+bENX+vGvgIeHd62RSyvj8dJsBJSbJqaGM/qyVV8hjmvs9xsSQeSfeEGV7alz3+1xau
-         5IQYV/OhnSH2tCNZ0LP1jC6g4QEuvpGT78jCRI7ZYhzItUqecDTb1jB5vWdpjV/L/zH5
-         Y9oRD+Xs1WXAW5N0CdJDnSf3Ul4jX8aPk/hM6n+RQB9yAnyU+E6Ko0NBdrs0t+PEbpAU
-         2Y1Yp9c4fDGH62Vhd+4XCwP1/ziltR6lLLzH+7e6ezTBj0jsiFd6CI1Ky60DHbPx0EEv
-         jIOQ==
-X-Gm-Message-State: APjAAAWSN0ycK/CxWW0bWqv8VKs5IZusLRIS1pD5CuaAj6rnuwqxo9TW
-        FKmE0/5XEm571qGe79d4/Z8=
-X-Google-Smtp-Source: APXvYqwvE6X1EVnGhC9HVkhxDzcqBzkxXBlXuu8iArgUgF2V6xspFM36gdqHu0QLdhUXF8/RxV0Wsg==
-X-Received: by 2002:a17:906:6dd4:: with SMTP id j20mr6585951ejt.173.1568753656032;
-        Tue, 17 Sep 2019 13:54:16 -0700 (PDT)
-Received: from hv-1.home ([5.3.191.207])
-        by smtp.gmail.com with ESMTPSA id h3sm407037ejp.77.2019.09.17.13.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 13:54:15 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 23:54:03 +0300
-From:   Vanya Lazeev <ivan.lazeev@gmail.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
-Message-ID: <20190917205402.GA2500@hv-1.home>
-References: <20190914171743.22786-1-ivan.lazeev@gmail.com>
- <20190916055130.GA7925@linux.intel.com>
- <20190916200029.GA27567@hv-1.home>
- <20190917190950.GG10244@linux.intel.com>
+        Tue, 17 Sep 2019 16:55:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54016 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728203AbfIQUzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 16:55:03 -0400
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61CFD214AF;
+        Tue, 17 Sep 2019 20:55:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568753702;
+        bh=CpxsDxUjfYJQ4KuEuGgfHSNgs7HIa645JgYtKRt6fxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tyxlsROx96EDroZ6JcZfRUqu8CMa8eEa8qHeXLMo17uCk/I05UWRhR98tbMQk7bx0
+         9oD8VzulHRg2o5/4u/x65fGB00cZdbU1TIp8OmLZh61fOdhw73oUyPG4D+Fw1PLEQv
+         XOG+7hvJ6u9Lzc5CWqjvHYVBvGxanHl3MgheVdX4=
+Date:   Tue, 17 Sep 2019 13:55:01 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
+ again
+Message-ID: <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
+ <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
+ <20190909120443.GA31108@jaegeuk-macbookpro.roam.corp.google.com>
+ <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
+ <20190916153736.GA2493@jaegeuk-macbookpro.roam.corp.google.com>
+ <ab9561c9-db27-2967-e6fc-accd9bc58747@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190917190950.GG10244@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ab9561c9-db27-2967-e6fc-accd9bc58747@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:10:13PM +0300, Jarkko Sakkinen wrote:
-> On Mon, Sep 16, 2019 at 11:00:30PM +0300, Vanya Lazeev wrote:
-> > On Mon, Sep 16, 2019 at 08:51:30AM +0300, Jarkko Sakkinen wrote:
-> > > On Sat, Sep 14, 2019 at 08:17:44PM +0300, ivan.lazeev@gmail.com wrote:
-> > > > +	struct list_head acpi_resources, crb_resources;
-> > > 
-> > > Please do not create crb_resources. I said this already last time.
+On 09/17, Chao Yu wrote:
+> On 2019/9/16 23:37, Jaegeuk Kim wrote:
+> > On 09/16, Chao Yu wrote:
+> >> On 2019/9/9 20:04, Jaegeuk Kim wrote:
+> >>> On 09/09, Chao Yu wrote:
+> >>>> On 2019/9/9 16:06, Jaegeuk Kim wrote:
+> >>>>> On 09/09, Chao Yu wrote:
+> >>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+> >>>>>>> GC must avoid select the same victim again.
+> >>>>>>
+> >>>>>> Blocks in previous victim will occupy addition free segment, I doubt after this
+> >>>>>> change, FGGC may encounter out-of-free space issue more frequently.
+> >>>>>
+> >>>>> Hmm, actually this change seems wrong by sec_usage_check().
+> >>>>> We may be able to avoid this only in the suspicious loop?
+> >>>>>
+> >>>>> ---
+> >>>>>  fs/f2fs/gc.c | 2 +-
+> >>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>>>>
+> >>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+> >>>>> index e88f98ddf396..5877bd729689 100644
+> >>>>> --- a/fs/f2fs/gc.c
+> >>>>> +++ b/fs/f2fs/gc.c
+> >>>>> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+> >>>>>  		round++;
+> >>>>>  	}
+> >>>>>  
+> >>>>> -	if (gc_type == FG_GC)
+> >>>>> +	if (gc_type == FG_GC && seg_freed)
+> >>>>
+> >>>> That's original solution Sahitya provided to avoid infinite loop of GC, but I
+> >>>> suggest to find the root cause first, then we added .invalid_segmap for that
+> >>>> purpose.
+> >>>
+> >>> I've checked the Sahitya's patch. So, it seems the problem can happen due to
+> >>> is_alive or atomic_file.
+> >>
+> >> For some conditions, this doesn't help, for example, two sections contain the
+> >> same fewest valid blocks, it will cause to loop selecting them if it fails to
+> >> migrate blocks.
+> >>
+> >> How about keeping it as it is to find potential bug.
 > > 
-> > But then, if I'm not mistaken, it will be impossible to track pointers
-> > to multiple remaped regions. In this particular case, it
-> > doesn't matter, because both buffers are in different ACPI regions,
-> > and using acpi_resources only to fix buffer will be enough.
-> > However, this creates incosistency between single- and
-> > multiple-region cases: in the latter iobase field of struct crb_priv
-> > doesn't make any difference. Am I understanding the situation correctly?
-> > Will such fix be ok?
+> > I think it'd be fine to merge this. Could you check the above scenario in more
+> > detail?
 > 
-> So why you need to track pointers other than in initialization as devm
-> will take care of freeing them. Just trying to understand the problem.
->
+> I haven't saw this in real scenario yet.
+> 
+> What I mean is if there is a bug (maybe in is_alive()) failing us to GC on one
+> section, when that bug happens in two candidates, there could be the same
+> condition that GC will run into loop (select A, fail to migrate; select B, fail
+> to migrate, select A...).
+> 
+> But I guess the benefit of this change is, if FGGC fails to migrate block due to
+> i_gc_rwsem race, selecting another section and later retrying previous one may
+> avoid lock race, right?
 
-We need to know, which ioremap'ed address assign to control area, command
-and response buffer, based on which ACPI region contains each of them.
-Is there any method of getting remapped address for the raw one after
-resouce containing it has been allocated?
-And what do you mean by initialization? crb_resources lives only in
-crb_map_io, which seems to run only once.
+In any case, I think this can avoid potenial GC loop. At least to me, it'd be
+quite risky, if we remain this just for debugging purpose only.
+
+> 
+> Thanks,
+> 
+> > 
+> > Thanks,
+> > 
+> >>
+> >> Thanks,
+> >>
+> >>>
+> >>>>
+> >>>> Thanks,
+> >>>>
+> >>>>>  		sbi->cur_victim_sec = NULL_SEGNO;
+> >>>>>  
+> >>>>>  	if (sync)
+> >>>>>
+> >>> .
+> >>>
+> > .
+> > 
