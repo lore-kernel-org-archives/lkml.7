@@ -4,107 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B9FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B36C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 180BE21897
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CB7A21897
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:25:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568733935;
-	bh=lQSXCnZ640THBX9rsAXRexki343qzvOe6cZrKb10Y+I=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=stnbwxZKomUspUc9iN/rubQkQC8tVIsOv7L+BOLbAt/MqMA7PeAFmybSKdgXwiXyR
-	 qEnsXIbuLgXFa4nVoLKz0xjdEPaWCVC84rfsixKVYkF8YZ2g2HtJo9imII6Ket1+i8
-	 CkGhpPg7M/AOqCY/MjkV2GO5lP5C063ZNOyvdEbA=
+	s=default; t=1568733949;
+	bh=9aceo0Anie752AIkNdojyEJNazjo82l3clGTmvUt8Xc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FZHhv7EYqEVAzZvuex6Op6719MwW/7Yimc7AyN7RHyooSfm5K0DfgztUO+kN05GuW
+	 4OEuW1NR9qWuTVpPQiN/l+awvEXVVYhDq4Dc3EJ+G7sxV70Ry5Xdi/NXPpFDKs8G1s
+	 HjNRNFEjTo6nauEYhP1uAJipkb29wrKbjza1BIGY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfIQPZe (ORCPT
+        id S1729494AbfIQPZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:25:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfIQPZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:25:34 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B73214AF;
-        Tue, 17 Sep 2019 15:25:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568733933;
-        bh=lQSXCnZ640THBX9rsAXRexki343qzvOe6cZrKb10Y+I=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ab1F31rotgAqLYpOsIMQE1reY4N2E1K4zMLIE/Fe/QConGl9hbRUyQNKnZJLD2JCh
-         1Kjb3HPOQwipABIvv5l6jfwVMkseigXE2Z/ktACXQ9QARtWo4xjWlifKFUzwdMFmyU
-         JjmaxETqpa0VTUe7Ke3tLsp0V5r/nCDWllFq0WFE=
-Subject: Re: [PATCH v2] selftests: watchdog: Validate optional file argument
-To:     Eugeniu Rosca <erosca@de.adit-jv.com>
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
- <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
- <20190917145400.GA14341@vmlxhi-102.adit-jv.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <73bab70b-e22c-42b4-cfca-b4e33431b423@kernel.org>
-Date:   Tue, 17 Sep 2019 09:25:31 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 17 Sep 2019 11:25:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50476 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfIQPZs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:25:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=w1lHkbH9kv09VzHXijbBjTNbooEI3xUl9aA5NSAqzDI=; b=nTd8Siyp8W+8Ovt/eLwZ7ZrMx
+        JOY+/L6wCRl4gyzQJQ0su/txjIIJd17JspK5sQwcOUl3dXlMCprfu1lfvSjIs+Dm2PqXU2SjAyWJS
+        Rbz7ybc79k/G/z1pQdgBwTc/I8/2h8UkPxwvSQHn0YKChZPxIpAqrnZLT6wTIDIrMyryk=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAFMN-0008Ja-Gq; Tue, 17 Sep 2019 15:25:43 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3DE8527428EA; Tue, 17 Sep 2019 16:25:42 +0100 (BST)
+Date:   Tue, 17 Sep 2019 16:25:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Martijn Coenen <maco@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the modules tree with the
+ compiler-attributes tree
+Message-ID: <20190917152541.GE3524@sirena.co.uk>
+References: <20190915222720.GL4352@sirena.co.uk>
+ <20190916155927.GI4352@sirena.co.uk>
+ <20190917151721.GB4116@linux-8ccs>
 MIME-Version: 1.0
-In-Reply-To: <20190917145400.GA14341@vmlxhi-102.adit-jv.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="cHMo6Wbp1wrKhbfi"
+Content-Disposition: inline
+In-Reply-To: <20190917151721.GB4116@linux-8ccs>
+X-Cookie: Know Thy User.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/17/19 8:54 AM, Eugeniu Rosca wrote:
-> Shuah,
-> 
-> On Mon, Sep 16, 2019 at 07:19:35PM -0600, shuah wrote:
->> On 9/16/19 12:49 PM, George G. Davis wrote:
->>> As reported by Eugeniu Rosca, a side of affect of commit c3f2490d6e92
->>> ("selftests: watchdog: Add optional file argument") is that arbitrary files
->>> may be opened for watchdog testing, e.g.
->>>
->>
->> You don't need to say this here since you are already have a
->> Reported-by tag.
-> 
-> This looks like asking people to stick to your personal taste which
-> BTW doesn't really match the patterns established in Linux community.
-> 
-> With a bit of scripting, I am able to find around 4600 vanilla commits
-> which happen to mention the name of the reporter in addition to
-> Reported-by: https://paste.ubuntu.com/p/wNXfdGCJbX/ .
-> 
-> I really don't care if my name is mentioned once or twice, but I do
-> believe that requesting a new patch revision just based on this criteria
-> is nonsense. Can you please revise your review criteria?
 
-I already said what I want. I want two patches and the first one with
-Fixes tag. The reason for that is that the first patch fixes a problem
-in patch that is already in my tree which is fixes a problem.
+--cHMo6Wbp1wrKhbfi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I am going to mark the patch for stables and the first patch in this
-series.
+On Tue, Sep 17, 2019 at 05:17:22PM +0200, Jessica Yu wrote:
+> +++ Mark Brown [16/09/19 16:59 +0100]:
 
-I would like the commit log written clearly. Having a clear commit log
-is a critical review comment. It is important for any change to have
-clear commit logs for clarity and maintainability.
+> > I had another look but I'm still not comfortable doing this merge in a
+> > sensible timeframe so I punted again, sorry.  I'll probably carry on
+> > doing this.
 
-So please send me two patches one with Fixes tag and second that has
-the -i support.
+> Sorry for the trouble. We are currently working out a resolution
+> (https://lore.kernel.org/lkml/20190917150902.GA4116@linux-8ccs/).
+> Feel free to leave it at 3b5be16c7e90a69c until this gets resolved in
+> the next day or two..
 
-thanks,
--- Shuah
+OK, that's easier for me so I'll do that!
 
+--cHMo6Wbp1wrKhbfi
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2A+vUACgkQJNaLcl1U
+h9AkFgf+PNEVYNRWS2HUUzVCvyNb8YyCEUtEo89aGiPqgLPSzAFA0Ho88NZWW19/
+MX/F0NIiPZ/1niqbd5VoHNThcrJjogG3qN5Vd3gKh4iDdW9P5C11SeDOXVSfQPxl
+/Ku7tXQ8Q6+p/lWsmLxaShhO/8akdi+BdaSyAXAguR6W4ZPILZO7v9AmRzAirWJL
+rPf08yBzxk2H3Pf+ZVPp+87CO4KMs07+qswVs6dByLtKgklipsznB5OVdMRy/Qvm
+QzdkhLT42ci1Qtk5tTqnpAO3A+7L0mFjh+wFbI5lJxiT6w5nH28lLaf9FKg9ffPR
+n3wLM5MJXjvdWuvPyrKs0nGl48QsUg==
+=6NLd
+-----END PGP SIGNATURE-----
+
+--cHMo6Wbp1wrKhbfi--
