@@ -2,112 +2,93 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41375C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D07A1C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DB62053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CFF12053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:33:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568745190;
+	bh=kgn5T01X6D21l8dAwzHM+Jy0FXHyQu+fNwZunP5TWuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jB0pvcsandQDnOSZ4VL+z5N9Lz84lmwztJYm94VaHut7B7v3JAoShRNCCeGE8hfF8
+	 1fApLnBXkr9idR8z0u8qb9HowCkf0gHLFUTpp2Zae7Ce3VxCFMS98cNq2btHTHtBYr
+	 7Dy7Mr08Fr4ruWW8FP9/q8Jj+PbjBuLYtk/ew9T0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfIQScx (ORCPT
+        id S1729409AbfIQSdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:32:53 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:26589 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbfIQScw (ORCPT
+        Tue, 17 Sep 2019 14:33:10 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36543 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726256AbfIQSdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:32:52 -0400
-IronPort-SDR: fo2tBWupeJ1358pLhuf1Uq9jiDlTX/ZwbVx1w7EWKXSGNABBbIT24OrhP4rvPGyw7HZZAb8Eq1
- BND0FX/5WSeihyp9VPHC1boSQg9moPrA4K1/vVKmcMsBSXFM7lIzPD6d19aao44GMZPmFHNIDa
- 6+0E1d/mWahOB9QBP+GKbVy1nMah144JZZNheC8wkdT0gUXe1HF7T6d67xEUsmNEotQPV4Kxwt
- 3FwfXbwyuiTR+Y03UKXwoMHjubVSHAhic7p6HwNAC5ONxytMLRFScZrm383nik1asZf06ZxL2s
- ZNE=
-X-IronPort-AV: E=Sophos;i="5.64,517,1559548800"; 
-   d="scan'208";a="43244354"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 17 Sep 2019 10:32:50 -0800
-IronPort-SDR: 2LXmIcWQgDFW845Q6YPBGMkuk9fl6htXrlBKexNeFo9VUhq6ua1tzpJfGh2M9o5EpisZdMBxlp
- JyfD74Cb/3mdKMq87ktahwmCTLglPwkR72zdcwD4xTYfpuNWiEO3MxJaFZOX0YipdhqC/4LEyf
- OlHtB7MJzp8R1bWSqBXk2rC2a4t/8D+gx0OjlEQWkT/4XQ9EhcmcrG6VFxOT8M2zLW3aHCWY88
- 9zfH14srd4KdP4lfcaNmD7fOxuLDcIPA81Ge9dwqGyzv8L6Ezoe4spTLg8Y+NZI9dEFJ04rSg8
- Aeo=
-Date:   Tue, 17 Sep 2019 14:32:47 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     shuah <shuah@kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] selftests: watchdog: Validate optional file argument
-Message-ID: <20190917183246.GB15686@mam-gdavis-lt>
-References: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
- <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
- <20190917145400.GA14341@vmlxhi-102.adit-jv.com>
- <73bab70b-e22c-42b4-cfca-b4e33431b423@kernel.org>
- <20190917165418.GA21010@vmlxhi-102.adit-jv.com>
- <374127ff-d06f-fcc3-d317-5614dfdc5a71@kernel.org>
- <20190917175056.GA24224@vmlxhi-102.adit-jv.com>
- <2ede1d4d-fa52-2100-2725-1ae32e62a5b6@kernel.org>
+        Tue, 17 Sep 2019 14:33:09 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k20so3788613oih.3;
+        Tue, 17 Sep 2019 11:33:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iReD5mJ0Uir23drUba5qv+wNUfTA9iGbAoW+oBdI4B0=;
+        b=o9/Zc4F2rqwbH6Qfl/Avq/mVRqx5TsVm84vfOXooD1sXd1FunzsupyeZw3se5h/idl
+         zBFPCySl/PI13QxUxPnLVINNrUZTvEyp4vQ5p9AQJk7Xkwl6wDh7wnXLuCZ8MBaXlfAj
+         M9CDHLoqgg5+x7ZuyzHm9Q3WOrpMykK+5FIQOX1hTqW/VOmeV+UXSp2j9PMxciCKTRZA
+         RppJCMe7II8+J601HALIawG3FSHgsLTHhvhDglLNJlbsO0XdrZuyRRyjZVt3K/PJ8Cvr
+         sdHHNcdk1iqsGuTEJLCt6gcRyRSD+AQDK9x4da3LAsLoV0MENjY81acL6LR3bRr7W9Pd
+         KnuA==
+X-Gm-Message-State: APjAAAXyrUkUF2+3X5eaygek5p6+IXdL2KFBqcJPldHAmgpCyvc+NoIg
+        LXxj6gwioRklnkZ21IOjxA==
+X-Google-Smtp-Source: APXvYqxF73vwBXOpDaa7aqGMYHwP4mdbPwabeO3dt9jcjKYG/4N/9T5DLOW9zoNxvRUubgyYhF6OxQ==
+X-Received: by 2002:a54:4392:: with SMTP id u18mr5037847oiv.103.1568745188498;
+        Tue, 17 Sep 2019 11:33:08 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id a4sm959095otp.72.2019.09.17.11.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 11:33:07 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 13:33:06 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dilip Kota <eswara.kota@linux.intel.com>, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+Message-ID: <20190917183306.GA24684@bogus>
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
+ <20190906091950.GJ2680@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2ede1d4d-fa52-2100-2725-1ae32e62a5b6@kernel.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+In-Reply-To: <20190906091950.GJ2680@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Shuah,
-
-On Tue, Sep 17, 2019 at 12:05:06PM -0600, shuah wrote:
-> On 9/17/19 11:50 AM, Eugeniu Rosca wrote:
-> >On Tue, Sep 17, 2019 at 11:44:45AM -0600, shuah wrote:
-> >>On 9/17/19 10:54 AM, Eugeniu Rosca wrote:
-> >>>Shuah,
-> >>>
-> >>>On Tue, Sep 17, 2019 at 09:25:31AM -0600, shuah wrote:
-> >>>
-> >>>[..]
-> >>>
-> >>>>I want two patches and the first one with
-> >>>>Fixes tag.
-> >>>
-> >>
-> >>These two patches need to be separate. The first one is a fix and
-> >>the second is an enhancement.
-> >
-> >That was exactly the idea of v1.
-> >
-> >>
-> >>Please send two patches - the first one with Fixes tag.
-> >
-> >Can you please pick [v1] series from below:
-> >  - https://patchwork.kernel.org/patch/11136283/
-> >  - https://patchwork.kernel.org/patch/11136285/
-> >
-> >with adding a one-liner Fixes tag to the first patch?
-> >
+On Fri, Sep 06, 2019 at 12:19:50PM +0300, Andy Shevchenko wrote:
+> On Thu, Sep 05, 2019 at 10:31:29PM +0200, Martin Blumenstingl wrote:
+> > On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
 > 
-> Please send v2 with Fixes tag on the first one and making the changes
-> I suggested on that v1 series.
-
-I'll submit v3 series with the requested changes.
-
-Thanks!
-
+> > > +  phy-names:
+> > > +    const: pciephy
+> > the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
+> > if Rob is happy with "pciephy" (which is already part of two other
+> > bindings) then I'm happy with "pciephy" as well
 > 
-> thanks,
-> -- Shuah
+> I'm not Rob, though I consider more practical to have a hyphenated variant.
 
--- 
-Regards,
-George
+*-names is kind of pointless when there is only one entry and 'foo' in 
+the values of 'foo-names' is redundant.
+
+Rob
