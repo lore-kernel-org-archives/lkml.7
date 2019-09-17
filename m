@@ -2,215 +2,107 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E740C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A78BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFCF2196E
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:32:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D869A21924
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404459AbfIQHcc (ORCPT
+        id S2404478AbfIQHdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:32:32 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:59286 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392639AbfIQHcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:32:32 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 74BF8200676;
-        Tue, 17 Sep 2019 09:32:29 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 05C9A200672;
-        Tue, 17 Sep 2019 09:32:25 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 830C2402E6;
-        Tue, 17 Sep 2019 15:32:19 +0800 (SGT)
-From:   Ran Wang <ran.wang_1@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
-Subject: [PATCH] arm64: dts: lx2160a: Correct CPU core idle state name
-Date:   Tue, 17 Sep 2019 15:33:56 +0800
-Message-Id: <20190917073357.5895-1-ran.wang_1@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Tue, 17 Sep 2019 03:33:44 -0400
+Received: from luna.lichtvoll.de ([194.150.191.11]:48487 "EHLO
+        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404465AbfIQHdn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:33:43 -0400
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.lichtvoll.de (Postfix) with ESMTPSA id BA1FB772DF;
+        Tue, 17 Sep 2019 09:33:40 +0200 (CEST)
+From:   Martin Steigerwald <martin@lichtvoll.de>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Date:   Tue, 17 Sep 2019 09:33:40 +0200
+Message-ID: <2508489.jOnZlRuxVn@merkaba>
+In-Reply-To: <20190917052438.GA26923@1wt.eu>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org> <20190917052438.GA26923@1wt.eu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+Authentication-Results: mail.lichtvoll.de;
+        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-lx2160a support PW15 but not PW20, correct name to avoid confusing.
+Willy Tarreau - 17.09.19, 07:24:38 CEST:
+> On Mon, Sep 16, 2019 at 06:46:07PM -0700, Matthew Garrett wrote:
+> > >Well, the patch actually made getrandom() return en error too, but
+> > >you seem more interested in the hypotheticals than in arguing
+> > >actualities.> 
+> > If you want to be safe, terminate the process.
+> 
+> This is an interesting approach. At least it will cause bug reports in
+> application using getrandom() in an unreliable way and they will
+> check for other options. Because one of the issues with systems that
+> do not finish to boot is that usually the user doesn't know what
+> process is hanging.
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 36 +++++++++++++-------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+A userspace process could just poll on the kernel by forking a process 
+to use getrandom() and waiting until it does not get terminated anymore. 
+And then it would still hang.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index 408e0ec..b032f38 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -33,7 +33,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster0_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@1 {
-@@ -49,7 +49,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster0_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@100 {
-@@ -65,7 +65,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster1_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@101 {
-@@ -81,7 +81,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster1_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@200 {
-@@ -97,7 +97,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster2_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@201 {
-@@ -113,7 +113,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster2_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@300 {
-@@ -129,7 +129,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster3_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@301 {
-@@ -145,7 +145,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster3_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@400 {
-@@ -161,7 +161,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster4_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@401 {
-@@ -177,7 +177,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster4_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@500 {
-@@ -193,7 +193,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster5_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@501 {
-@@ -209,7 +209,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster5_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@600 {
-@@ -225,7 +225,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster6_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@601 {
-@@ -241,7 +241,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster6_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@700 {
-@@ -257,7 +257,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster7_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cpu@701 {
-@@ -273,7 +273,7 @@
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <192>;
- 			next-level-cache = <&cluster7_l2>;
--			cpu-idle-states = <&cpu_pw20>;
-+			cpu-idle-states = <&cpu_pw15>;
- 		};
- 
- 		cluster0_l2: l2-cache0 {
-@@ -340,9 +340,9 @@
- 			cache-level = <2>;
- 		};
- 
--		cpu_pw20: cpu-pw20 {
-+		cpu_pw15: cpu-pw15 {
- 			compatible = "arm,idle-state";
--			idle-state-name = "PW20";
-+			idle-state-name = "PW15";
- 			arm,psci-suspend-param = <0x0>;
- 			entry-latency-us = <2000>;
- 			exit-latency-us = <2000>;
+So yes, that would it make it harder to abuse the API, but not 
+impossible. Which may still be good, I don't know.
+
+Either the kernel does not reveal at all whether it has seeded CRNG and 
+leaves GnuPG, OpenSSH and others in the dark, or it does and risk that 
+userspace does stupid things whether it prints a big fat warning or not.
+
+Of course the warning could be worded like:
+
+process blocking on entropy too early on boot without giving the kernel 
+much chance to gather entropy. this is not a kernel issue, report to 
+userspace developers
+
+And probably then kill the process, so at least users will know.
+
+However this again would be burdening users with an issue they should 
+not have to care about. Unless userspace developers care enough and 
+manage to take time to fix the issue before updated kernels come to their 
+systems. Cause again it would be users systems that would not be 
+working. Just cause kernel and userspace developers did not agree and 
+chose to fight with each other instead of talking *with* each other.
+
+At least with killing gdm Systemd may restart it if configured to do so. 
+But if it doesn't, the user is again stuck with a non working system 
+until restarting gdm themselves.
+
+It may still make sense to make the API harder to use, but it does not 
+replace talking with userspace developers and it would need some time to 
+allow for adapting userspace applications and services.
+
 -- 
-2.7.4
+Martin
+
 
