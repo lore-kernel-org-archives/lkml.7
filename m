@@ -2,97 +2,67 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1342CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C3CC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:28:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7B262171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:28:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRDafeie"
+	by mail.kernel.org (Postfix) with ESMTP id 6121821848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:28:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568741306;
+	bh=i6cu//8UqqnO+AXA2MTlSGElpD6de5WiTt762/oa82w=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=2fVVxeFSK1K3zi4jKhfYscrGfVv84kD2HCD+b3LJiW4b3cGbWWDJpBmdLqB0ZtcuC
+	 +PQt2dJtZhdeYdSNg3d+QxtG7yBDR3o1A1smWh96dE7an9qwPpECoFekissnH7oq5O
+	 oDU/ZJlblzUieXrZP2PgG3DHlhzCm/zH8LoEu6XY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731148AbfIQR2L (ORCPT
+        id S1731165AbfIQR20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:28:11 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39818 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727682AbfIQR2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:28:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i1so2553463pfa.6;
-        Tue, 17 Sep 2019 10:28:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=P2Um7Rko8n1alK6M3LQKKtwQ/oX8IiJYk8IZAkTV2KA=;
-        b=ZRDafeier/fqo2Am0rGV8S0jbv08pyPI1aa4XbSfTKFdVpjunlgy96Hrap+UBdypoE
-         VGDB4v99we0Oc4zvHwK/XhmtwN6EnfND3K9HkbQceX5Gw2Q/0LUkl6xOyoRwST7VgY0e
-         PY+qBkFzlQtYfTfSXIPd808LQNDi3OUWCpLC3dIp3J84IOCp52uqRxgH63O47ZtccXeu
-         GA/Am6IKKVl7ciM+fvvPGpWb4ar+j/Oy+zcgY/tvYzoAIvKp15m+tfyM0FkRe5+F+b/I
-         n4EZh/ZkTH0T8bfW5giZ6NPY0/233fEVOVuzlhW3kVxQMIYs16SdcNxvTXNEB8iA85/L
-         Dylg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=P2Um7Rko8n1alK6M3LQKKtwQ/oX8IiJYk8IZAkTV2KA=;
-        b=lsm+FQnI/itLQ5zuomU2YgWSwujrf6s/R++YutXoe0fVj3QAxyaWNyjZkuk25NPw6q
-         DBtYa1cp3CKoEo1kYRncYu7UKh27kwRCYkytANSNzwrfeqiM0092040UxcR1eGTkv0Et
-         vWhvFEvpsYrrrIACcQdw1vVSlR+RPLArhtTPCcpolK18L3i+ikAKX2b6NoiUUl6nOPbb
-         c1AhbdiXonsVhRhqgOhejlRistPhuY+GCibsCuy/mk4wniT1EUdSUho5wAKz0e2UnVbf
-         Atsy5hHlAu17yzKoV1p4yn6bS+5SgexquksFu1Hqxb3jbA/r8vbAt9IfYd/K7st9vRec
-         AYYQ==
-X-Gm-Message-State: APjAAAVuQndbC/wh6cGqBjANqYbEqveDl7tq5HdHJaEiePCJiGLOvitE
-        zNWZn+hzXzSm+8HDavBnNtQCPJWB
-X-Google-Smtp-Source: APXvYqxye4YNwKugrQYoyoTIv0SZ05YUURZ8hGUwtAIC07qnUQ8Nd6+FgWvoOGtUYJPxp7NSFIGnrA==
-X-Received: by 2002:a65:5043:: with SMTP id k3mr3675956pgo.406.1568741290169;
-        Tue, 17 Sep 2019 10:28:10 -0700 (PDT)
-Received: from SD ([106.222.12.103])
-        by smtp.gmail.com with ESMTPSA id ck13sm2806307pjb.29.2019.09.17.10.28.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 10:28:09 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 22:57:58 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org, markus.elfring@web.de
-Subject: [PATCH v2 0/3] Fix issues reported by Coccinelle
-Message-ID: <20190917172758.GA11926@SD>
+        Tue, 17 Sep 2019 13:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731152AbfIQR2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:28:25 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1760C2171F;
+        Tue, 17 Sep 2019 17:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568741305;
+        bh=i6cu//8UqqnO+AXA2MTlSGElpD6de5WiTt762/oa82w=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=0tMCD6z73L9+9dQNwM1b+ZADypT22NiA64cLairhrh0p0O4PYjpxQ0uqjnqYxM53T
+         nRoQ1DC2HoFni38vzHwBxHOw97Pq8edm9msUqyeIVctZvwYP3MnkiASSJqvUUQ+h+R
+         FXAl8qvFKyOF0IQVB5d3uhq6qHXYIzkSH4xKcI2c=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190822093126.594013-1-lkundrak@v3.sk>
+References: <20190822093126.594013-1-lkundrak@v3.sk>
+Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lubomir Rintel <lkundrak@v3.sk>
+To:     Lubomir Rintel <lkundrak@v3.sk>,
+        Michael Turquette <mturquette@baylibre.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: remove extra ---help--- tags in Kconfig
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 10:28:24 -0700
+Message-Id: <20190917172825.1760C2171F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using cocciecheck to ensure there are no semantic issues in
-i2c-qup driver.
+Quoting Lubomir Rintel (2019-08-22 02:31:26)
+> Sometimes an extraneous "---help---" follows "help". That is probably a
+> copy&paste error stemming from their inconsistent use. Remove those.
+>=20
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
 
-Refer below links for more information.
-http://coccinelle.lip6.fr
-https://bottest.wiki.kernel.org/coccicheck
-
-Changes in v2:
-* Updated changelog as suggested by Markus Elfring.
-
-v1:
-https://patchwork.ozlabs.org/cover/1163043/
-
-Saiyam Doshi (3):
-  i2c: qup: remove explicit conversion to boolean
-  i2c: qup: Remove dev_err() log after platform_get_irq*() failure
-  i2c: qup: Use devm_platform_ioremap_resource helper
-
- drivers/i2c/busses/i2c-qup.c | 22 ++++++++--------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
-
---
-2.20.1
+Applied to clk-next
 
