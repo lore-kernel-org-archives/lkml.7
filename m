@@ -6,61 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10727C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACFB3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A0B21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D9A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568763628;
-	bh=hFYP8EJtwe16c36k4u99PYlRVzD6x74QSGwfs+1Ll/k=;
+	s=default; t=1568763631;
+	bh=0dQ3Mxckole0QFeSqkKZX4qoGTtor3aebYbLFiLtiIs=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=n/AsOAX8vh8sxYz+6gjFmevW4+i+yL/ANzT8TqRqGXT3TL1WnT1yLaqhHV64zgATU
-	 TjxF3hV6RF1pAlfe8dTuJRtWOJYJLRW8a/Fw127Q0JsI5DNE0CQlhvtBpVwCh3B41w
-	 6CGklx65QEDN/TkarRppJtBpzYJ1nN0TZxhp443s=
+	b=KSEDgRljWZh8/ut8DHo1pFML0BRt7ESAN218sB5vt/0HWh3fYsUhSqof1sOeXIgua
+	 C3+fW5nixgCN8LXAan6JWcbZJdPI5nTvdW1CFq60EXhO2zZ5aZXZL8xC6UQQNTAw+0
+	 BhRLQm+1v8vaZlaO7jPXlsbUgM0hpXDqIl+LLtLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbfIQXk2 (ORCPT
+        id S1728642AbfIQXka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 19:40:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
+        Tue, 17 Sep 2019 19:40:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727554AbfIQXkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 19:40:20 -0400
-Subject: Re: [GIT PULL] cgroup changes for v5.4-rc1
+        id S1728709AbfIQXk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 19:40:26 -0400
+Subject: Re: [PULL 0/4] xtensa updates for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568763620;
-        bh=hFYP8EJtwe16c36k4u99PYlRVzD6x74QSGwfs+1Ll/k=;
+        s=default; t=1568763625;
+        bh=0dQ3Mxckole0QFeSqkKZX4qoGTtor3aebYbLFiLtiIs=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=P7A6hV5iVakTVoixHqpwwiKWGaPdiJ42FsLsT2DEigj307LSi6d7vM41pVu07RTQN
-         RvCjRQZX/3kHzI1hI2aYMKIidW0bZWEDbblySXs3z9LhrH1F6Wmz4YGeimngZpu5St
-         H3UGdmPg6KFjnr9IOQRrwOOG3lf2g7JzBBNBCpMk=
+        b=i9JBhpFlirC69+tL+FdIvdEdKlOc7a7ozmKBP4nfGWnFd1MgCJTjjrPqhySNwvByW
+         uTRyIri6kKrs50I7DBnJYzDSdvK0jt9YFbP6vQsyK9wxcS36+P9TgG5aCc4lx8F9JI
+         cI1/k4K70bwyBNOIu8tYvQrdvzLsjebHegkoHJ/g=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190916152947.GE3084169@devbig004.ftw2.facebook.com>
-References: <20190916152947.GE3084169@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190917185905.2761-1-jcmvbkbc@gmail.com>
+References: <20190917185905.2761-1-jcmvbkbc@gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190916152947.GE3084169@devbig004.ftw2.facebook.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.4
-X-PR-Tracked-Commit-Id: 653a23ca7e1e1ae907654e91d028bc6dfc7fce0c
+X-PR-Tracked-Message-Id: <20190917185905.2761-1-jcmvbkbc@gmail.com>
+X-PR-Tracked-Remote: git://github.com/jcmvbkbc/linux-xtensa.git
+ tags/xtensa-20190917
+X-PR-Tracked-Commit-Id: 982792f45894878b9ec13df81e6e02209b34cb11
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3ee8d6c592dc7fb240574b84e9f9a7f9db4d4b42
-Message-Id: <156876362013.26432.7518495199009027982.pr-tracker-bot@kernel.org>
-Date:   Tue, 17 Sep 2019 23:40:20 +0000
-To:     Tejun Heo <tj@kernel.org>
+X-PR-Merge-Commit-Id: 6dec8c15e5faa2a3c02d2e1d1b03b926b545ec0a
+Message-Id: <156876362567.26432.6236780901231216387.pr-tracker-bot@kernel.org>
+Date:   Tue, 17 Sep 2019 23:40:25 +0000
+To:     Max Filippov <jcmvbkbc@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+        linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 16 Sep 2019 08:29:47 -0700:
+The pull request you sent on Tue, 17 Sep 2019 11:59:05 -0700:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.4
+> git://github.com/jcmvbkbc/linux-xtensa.git tags/xtensa-20190917
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3ee8d6c592dc7fb240574b84e9f9a7f9db4d4b42
+https://git.kernel.org/torvalds/c/6dec8c15e5faa2a3c02d2e1d1b03b926b545ec0a
 
 Thank you!
 
