@@ -2,103 +2,114 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C7B1C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBE4214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:37:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568731039;
-	bh=z3tFbVh+57cH5AHhbSUf98WNo4U7gTNKNmY5A1tC+UQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UXcbbVQL9bEyPUwA3X5lrBEnausewiXs50uh7CKwKrtxbCMdM9VzYtnYstI8B/R+E
-	 5j2NEy7PNr3bN1s0CTmoDQMARVsjNSFRVJZVOh/nDYmWBC0THBr7ZTqMAZvaRgWMft
-	 BURdrG3+RBosn+dhuqDe5cFZ/JHu/Wy1jni2xR80=
+	by mail.kernel.org (Postfix) with ESMTP id 443862171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbfIQOhS (ORCPT
+        id S1728488AbfIQOiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:37:18 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35723 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfIQOhS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:37:18 -0400
-Received: by mail-oi1-f195.google.com with SMTP id x3so1579824oig.2;
-        Tue, 17 Sep 2019 07:37:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BigMPexxOngg61i5wfyf2Qw8qA3RwUd/7pmyWTeWTRk=;
-        b=r8VogfcZ/a+QEZAGcRd0yxrkbPwxoUHcKZdM/fTXd29tj9HD0cd7CRGcRF2DH850dz
-         HgrkD1yE6jWJw+88JRaTiIiEjcHbgBMR31k3fCoVKxwrefA6fjWKUGRva9eKb4HzZ849
-         bkSoHD8caCutgekruxmEU23GJYOa6CmuWlXSMGcOzflepad8UPMeGcdg3NO0udMnTLvY
-         YS3OUsogc4WeQUxJPmPPgyla42EagaVvt+Rmt2bmiXo0T2pAgI7y0JyVSIFHYyzXnnkG
-         qztsp+oAZfzG/lndLGtQF8JkAm3OOKPTKDDPN2Bgjtw6IFFW6zySH7LDKT2QXJtYu0rY
-         TG7A==
-X-Gm-Message-State: APjAAAVFEZPjt83E2MiLj2o6vwDBAwujLiOIyLLAj1CETr4Nod99m7qg
-        dPC2l1G4IEWFiQPgD7pdog==
-X-Google-Smtp-Source: APXvYqyrZdwgk1e0LtNYLYAkGvhS8of2AI4Dnqt2nTvScQNTn7frbrk6hp6W5qCg80z0n/wV5AcQ1A==
-X-Received: by 2002:aca:4fc7:: with SMTP id d190mr3871430oib.25.1568731037314;
-        Tue, 17 Sep 2019 07:37:17 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a21sm673465oia.27.2019.09.17.07.37.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 07:37:16 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 09:37:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        catalin.marinas@arm.com, will@kernel.org,
-        dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
-        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
-        leonard.crestez@nxp.com, daniel.baluta@nxp.com, olof@lixom.net,
-        mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com,
-        dinguyen@kernel.org, bjorn.andersson@linaro.org,
-        marcin.juszkiewicz@linaro.org, andriy.shevchenko@linux.intel.com,
-        yuehaibing@huawei.com, cw00.choi@samsung.com,
-        enric.balletbo@collabora.com, m.felsch@pengutronix.de,
-        ping.bai@nxp.com, ronald@innovation.ch, stefan@agner.ch,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH RESEND V5 1/5] dt-bindings: fsl: scu: add scu key binding
-Message-ID: <20190917143716.GA23562@bogus>
-References: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
+        Tue, 17 Sep 2019 10:38:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:26541 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728187AbfIQOiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:38:00 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8F7CB8980EF;
+        Tue, 17 Sep 2019 14:37:59 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 4A7FF5DC18;
+        Tue, 17 Sep 2019 14:37:54 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 17 Sep 2019 16:37:59 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 16:37:53 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     Jan Kratochvil <jan.kratochvil@redhat.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH? v2] powerpc: Hard wire PT_SOFTE value to 1 in gpr_get() too
+Message-ID: <20190917143753.GA12300@redhat.com>
+References: <20190917121256.GA8659@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190917121256.GA8659@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 17 Sep 2019 14:37:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 11:12:15 +0800, Anson Huang wrote:
-> NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-> system controller, the system controller is in charge of system
-> power, clock and scu key event etc. management, Linux kernel has
-> to communicate with system controller via MU (message unit) IPC
-> to get scu key event, add binding doc for i.MX system controller
-> key driver.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
-> No changes.
-> ---
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
+I don't have a ppc machine, this patch wasn't even compile tested,
+could you please review?
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+The commit a8a4b03ab95f ("powerpc: Hard wire PT_SOFTE value to 1 in
+ptrace & signals") changed ptrace_get_reg(PT_SOFTE) to report 0x1,
+but PTRACE_GETREGS still copies pt_regs->softe as is.
 
-If a tag was not added on purpose, please state why and what changed.
+This is not consistent and this breaks
+http://sourceware.org/systemtap/wiki/utrace/tests/user-regs-peekpoke
+
+Reported-by: Jan Kratochvil <jan.kratochvil@redhat.com>
+Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+---
+ arch/powerpc/kernel/ptrace.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
+index 8c92feb..291acfb 100644
+--- a/arch/powerpc/kernel/ptrace.c
++++ b/arch/powerpc/kernel/ptrace.c
+@@ -363,11 +363,36 @@ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
+ 	BUILD_BUG_ON(offsetof(struct pt_regs, orig_gpr3) !=
+ 		     offsetof(struct pt_regs, msr) + sizeof(long));
+ 
++#ifdef CONFIG_PPC64
++	if (!ret)
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++					  &target->thread.regs->orig_gpr3,
++					  offsetof(struct pt_regs, orig_gpr3),
++					  offsetof(struct pt_regs, softe));
++
++	if (!ret) {
++		unsigned long softe = 0x1;
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &softe,
++					  offsetof(struct pt_regs, softe),
++					  offsetof(struct pt_regs, softe) +
++					  sizeof(softe));
++	}
++
++	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
++		     offsetof(struct pt_regs, softe) + sizeof(long));
++
++	if (!ret)
++		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
++					  &target->thread.regs->trap,
++					  offsetof(struct pt_regs, trap),
++					  sizeof(struct user_pt_regs));
++#else
+ 	if (!ret)
+ 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+ 					  &target->thread.regs->orig_gpr3,
+ 					  offsetof(struct pt_regs, orig_gpr3),
+ 					  sizeof(struct user_pt_regs));
++#endif
+ 	if (!ret)
+ 		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+ 					       sizeof(struct user_pt_regs), -1);
+-- 
+2.5.0
+
+
