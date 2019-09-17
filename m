@@ -2,76 +2,91 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C885C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC89C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73A7021670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6CE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728890AbfIQSOW (ORCPT
+        id S1728192AbfIQSO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:14:22 -0400
-Received: from mga09.intel.com ([134.134.136.24]:25286 "EHLO mga09.intel.com"
+        Tue, 17 Sep 2019 14:14:26 -0400
+Received: from sauhun.de ([88.99.104.3]:55588 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfIQSOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:14:22 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 11:14:21 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,517,1559545200"; 
-   d="scan'208";a="270611291"
-Received: from vcazacux-wtg.ger.corp.intel.com (HELO localhost) ([10.252.38.72])
-  by orsmga001.jf.intel.com with ESMTP; 17 Sep 2019 11:14:16 -0700
-Date:   Tue, 17 Sep 2019 21:14:15 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-security-module@vger.kernel.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, jgg@ziepe.ca, arnd@arndb.de,
-        gregkh@linuxfoundation.org, jejb@linux.ibm.com,
-        zohar@linux.ibm.com, jmorris@namei.org, serge@hallyn.com,
-        jsnitsel@redhat.com, linux-kernel@vger.kernel.org,
-        daniel.thompson@linaro.org
-Subject: Re: [Patch v6 4/4] KEYS: trusted: Move TPM2 trusted keys code
-Message-ID: <20190917181415.GA8472@linux.intel.com>
-References: <1568630064-14887-1-git-send-email-sumit.garg@linaro.org>
- <1568630064-14887-5-git-send-email-sumit.garg@linaro.org>
+        id S1726604AbfIQSOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:14:25 -0400
+Received: from localhost (p54B331E4.dip0.t-ipconnect.de [84.179.49.228])
+        by pokefinder.org (Postfix) with ESMTPSA id 9D6F52C0489;
+        Tue, 17 Sep 2019 20:14:23 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 20:14:23 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
+Message-ID: <20190917181423.GB28182@ninjato>
+References: <20190917172758.GA11926@SD>
+ <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
 Content-Disposition: inline
-In-Reply-To: <1568630064-14887-5-git-send-email-sumit.garg@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 04:04:24PM +0530, Sumit Garg wrote:
-> Move TPM2 trusted keys code to trusted keys subsystem. The reason
-> being it's better to consolidate all the trusted keys code to a single
-> location so that it can be maintained sanely.
-> 
-> Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
-This commit has couple of issues that I only noticed when looking into
-bug reported by Mimi.
+--tsOsTdHNUZQcU9Ye
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right now tpm_send() is the exported function that is used by other
-subsystems. tpm_transmit_cmd() is an internal function. This commit adds
-two unrelated code paths to send TPM commands, which is unacceptable.
+On Tue, Sep 17, 2019 at 08:10:45PM +0200, Markus Elfring wrote:
+> > Using cocciecheck to ensure there are no semantic issues in
+> > i2c-qup driver.
+>=20
+> * This wording contains a typo.
 
-You should make tpm2 functionality to use tpm_send() instead and remove
-tpm_seal_trusted() and tpm_unseal_trusted() completely in this commit.
+Doesn't matter to me for a cover letter as long as we can understand it.
 
-/Jarkko
+> * I would prefer to refer to a desired reduction of a few
+>   source code quality concerns.
+
+Not needed. I understand what is going on here.
+
+> > Changes in =E2=80=A6
+>=20
+> Can such a prefix be omitted?
+
+Why? I think it makes sense?
+
+
+--tsOsTdHNUZQcU9Ye
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2BIn4ACgkQFA3kzBSg
+KbYSiA/8Ctn+loUGOKb8bL3M+OGopn2EaUhafoln2xcFttrCpjcSHKHLAbgPiDEl
+YVWtsZhrp/eJ+ESZidZ8GctwSfW1SajtUagsEFCc/4B8LR0ODYHNE84AAbDmOdAT
+SX6s+qjqTyy7UATwt9zk8PcpdvjYf+arPVBI2DZjX5OTBT4kTWTPLEm1Z3abm6xT
+rwo10dScXa5TAI2ZGAAzVf2m8qiucTgjkc5MNzGs5xTy5R/PI0icnMidZ0lfok93
+kASEUujmjHJsDt9trymNHocGj9wTo23eukZxqrB6aCdG24KLDNuncc+bRW6mFlXp
+927BffKNDz1/EgcwnxxtzWeA3T5JQ4i21ylXHQIRrollLU2fGOO7RapNOoWu/bir
+yQlpx4gmbpcFA2bnzw8v/ramycR4NmGw9kwYOQxKG/3o9T4HbEZHCgnqy3ZVZpvo
+AHaPzNXjW2Y0jAS2UxLCMdmLQyjgNaEoZbX+2f5lbDieDooYCmSqo8BNrh3VJmEE
+sr2WDV8n5rc5l41MkdVKpx/ahXhPEJxZTPKNlEzClPH7humapeviR02SQMuPZ6Vp
+9bfLJUPBiQ5ilS1kc+tuAP3rrMVK+1VbpsNxu2iVhVjbSGqqrHCyP93WYdSVXCG+
+5WP44ByXDziBzqPktnANbr9+pCQ6nndWv1pjDlariaxs1JOcaVA=
+=ZF09
+-----END PGP SIGNATURE-----
+
+--tsOsTdHNUZQcU9Ye--
