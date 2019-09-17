@@ -2,311 +2,134 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155C8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8749EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D650321897
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577F220644
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:21:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hqtP5Y5Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404136AbfIQGUU (ORCPT
+        id S2404171AbfIQGVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:20:20 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2230 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733162AbfIQGUU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:20:20 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 843776B7F0E73A559E86;
-        Tue, 17 Sep 2019 14:20:15 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
- 14:20:11 +0800
-Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michael Ellerman <mpe@ellerman.id.au>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <heiko.carstens@de.ibm.com>,
-        <gor@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
- <87pnjzsd8f.fsf@mpe.ellerman.id.au>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
-Date:   Tue, 17 Sep 2019 14:20:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
-MIME-Version: 1.0
-In-Reply-To: <87pnjzsd8f.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+        Tue, 17 Sep 2019 02:21:52 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38185 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733169AbfIQGVw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:21:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x10so1427401pgi.5
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 23:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TEwv74xGLonyUSKE60jjZa5xk8QOk2YknSg9pzIDLUg=;
+        b=hqtP5Y5Yq0jTC+rzc24KLymUET1TvjR5Y0h0InG8LyO11aFL6tcFT4iNkH7I8UE0cG
+         BkL+UFsADnhEeTHQVVAFR/CIbBedh/b99DDqdbtI95cPJFVOg52P+hHJ5fttXtZMAV47
+         Bg2l9DukDANYWyHYtsQ+dhUxhshOXh8Ovl9FufVg6Xwzh/Q/mI9wNqhwApTqY2yTvuUm
+         pV1Lnm0ODH7TzRPdyw7wz8WEvymt0Y/5SnZR7ZNHZ64hkwUux3oVuUDYtLLfeHq4akZ2
+         1vko4JDd//qfnAiZNtrQ12E2waVNv7BvHpJNqf6m1yVqOiufEw+fkvPJaaBHIo6pH17M
+         oa2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TEwv74xGLonyUSKE60jjZa5xk8QOk2YknSg9pzIDLUg=;
+        b=Ar7R/IBJrkNL2Q4BDI4piHyiFxYV2XH1XKtW45ssE+PHglwcVzOpZKANSK7hzhohLW
+         rPmuQt3ae8UO1MibRSnjVXCbrByFkOl5w4NA131WGYz/UQGGWg3mIxp4ZT5lPkQ8Mzzi
+         +sPLlwA/hn2X2B2sxx5rVopSXNYzuReX3QF3MKxpidLEQTiF5Q1QCksjK3jEySfOMMWx
+         xCldUR7KnjfrMKPcoiReqWuKufAqtmwSmqC/6lWwBG0FmGLsFJjLf4nNYLjyTFr0kMyb
+         SU824jKixCeiZ1UH/yusJwKcTAyvtUkXEmBACM+KwClNT16arbvenIAtsL5qs+lY8uvT
+         tp/A==
+X-Gm-Message-State: APjAAAVKL7GW8S38SyVQRHpycSsfcM3AZcfDjymLqBB2hIEYH7gwPAVc
+        0H0HfRiyuvooj30ldlwzjbaDog==
+X-Google-Smtp-Source: APXvYqwNofpu/24HvPIr7zem7L9ISS92QBaKN3qeRCbMyGyJm5Y2QMYLHzoNduJ2Ml4wyt2+Tr/SoQ==
+X-Received: by 2002:a65:6802:: with SMTP id l2mr1831103pgt.33.1568701311473;
+        Mon, 16 Sep 2019 23:21:51 -0700 (PDT)
+Received: from localhost.localdomain (111-241-124-228.dynamic-ip.hinet.net. [111.241.124.228])
+        by smtp.gmail.com with ESMTPSA id 127sm931089pgi.46.2019.09.16.23.21.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 23:21:49 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3]  dmaengine: sf-pdma: Add platform dma driver
+Date:   Tue, 17 Sep 2019 14:20:46 +0800
+Message-Id: <20190917062119.693-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/17 13:28, Michael Ellerman wrote:
-> Yunsheng Lin <linyunsheng@huawei.com> writes:
->> When passing the return value of dev_to_node() to cpumask_of_node()
->> without checking if the device's node id is NUMA_NO_NODE, there is
->> global-out-of-bounds detected by KASAN.
->>
->> From the discussion [1], NUMA_NO_NODE really means no node affinity,
->> which also means all cpus should be usable. So the cpumask_of_node()
->> should always return all cpus online when user passes the node id as
->> NUMA_NO_NODE, just like similar semantic that page allocator handles
->> NUMA_NO_NODE.
->>
->> But we cannot really copy the page allocator logic. Simply because the
->> page allocator doesn't enforce the near node affinity. It just picks it
->> up as a preferred node but then it is free to fallback to any other numa
->> node. This is not the case here and node_to_cpumask_map will only restrict
->> to the particular node's cpus which would have really non deterministic
->> behavior depending on where the code is executed. So in fact we really
->> want to return cpu_online_mask for NUMA_NO_NODE.
->>
->> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
->> which should be identical with cpu_online_mask when those arches do not
->> support cpu hotplug, this patch also changes them to return cpu_online_mask
->> in order to be consistent and use NUMA_NO_NODE instead of "-1".
-> 
-> Except some of those arches *do* support CPU hotplug, powerpc and sparc
-> at least. So switching from cpu_all_mask to cpu_online_mask is a
-> meaningful change.
+Add PDMA driver support for SiFive HiFive Unleashed RevA00 board. Mainly follows
+DMAengine controller doc[1] to implement and take other DMA drivers as reference.
+Such as
 
-Yes, thanks for pointing out.
+  - drivers/dma/fsl-edma.c
+  - drivers/dma/dw-edma/
+  - drivers/dma/pxa-dma.c
 
-> 
-> That doesn't mean it's wrong, but you need to explain why it's the right
-> change.
+Using DMA test client[2] to test. Detailed datasheet is doc[3]. Driver supports:
 
-How about adding the below to the commit log:
-Even if some of the arches do support CPU hotplug, it does not make sense
-to return the cpu that has been hotplugged.
+ - 4 physical DMA channels, share same DONE and error interrupt handler. 
+ - Support MEM_TO_MEM
+ - Tested by DMA test client
+ - patches include DT Bindgins document and dts for fu450-c000 SoC. Separate dts
+   patch for easier review and apply to different branch or SoC platform.
+ - retry 1 time if DMA error occurs.
 
-Any suggestion?
+[Reference Doc]
+ [1] ./Documentation/driver-api/dmaengine/provider.rst
+ [2] ./Documentation/driver-api/dmaengine/dmatest.rst
+ [3] https://static.dev.sifive.com/FU540-C000-v1.0.pdf 
 
-> 
-> 
->> Also there is a debugging version of node_to_cpumask_map() for x86 and
->> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
->> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
->>
->> [1] https://lore.kernel.org/patchwork/patch/1125789/
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Suggested-by: Michal Hocko <mhocko@kernel.org>
->> Acked-by: Michal Hocko <mhocko@suse.com>
->> ---
->> V5: Drop unsigned "fix" change for x86/arm64, and change comment log
->>     according to Michal's comment.
->> V4: Have all these changes in a single patch.
-> 
-> This makes it much harder to get the patch merged, you basically have to
-> get Andrew Morton to merge it now. Sending individual patches for each
-> arch means each arch maintainer can merge them separately.
+[Simple steps to test of DMA Test client]
+ $ echo 1 > /sys/module/dmatest/parameters/iterations
+ $ echo dma0chan0 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan1 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan2 > /sys/module/dmatest/parameters/channel
+ $ echo dma0chan3 > /sys/module/dmatest/parameters/channel
+ $ echo 1 > /sys/module/dmatest/parameters/run
 
-I am new to the arch change here, and not sure which is the best way to get
-the multi-arches change merged.
+Green Wan (3):
+  dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+  riscv: dts: add support for PDMA device of HiFive Unleashed Rev A00
+  dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00
 
-Do you think it is better to resend this as individual patches for each arch
-after megre window?
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  63 ++
+ MAINTAINERS                                   |   6 +
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |   7 +
+ drivers/dma/Kconfig                           |   2 +
+ drivers/dma/Makefile                          |   1 +
+ drivers/dma/sf-pdma/Kconfig                   |   6 +
+ drivers/dma/sf-pdma/Makefile                  |   1 +
+ drivers/dma/sf-pdma/sf-pdma.c                 | 609 ++++++++++++++++++
+ drivers/dma/sf-pdma/sf-pdma.h                 | 124 ++++
+ 9 files changed, 819 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+ create mode 100644 drivers/dma/sf-pdma/Kconfig
+ create mode 100644 drivers/dma/sf-pdma/Makefile
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.c
+ create mode 100644 drivers/dma/sf-pdma/sf-pdma.h
 
-thanks for reviewing.
-
-> 
-> cheers
-> 
->> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
->>     for NUMA_NO_NODE case, and change the commit log to better justify
->>     the change.
->> V2: make the node id checking change to other arches too.
->> ---
->>  arch/alpha/include/asm/topology.h                | 2 +-
->>  arch/arm64/include/asm/numa.h                    | 3 +++
->>  arch/arm64/mm/numa.c                             | 3 +++
->>  arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
->>  arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
->>  arch/powerpc/include/asm/topology.h              | 6 +++---
->>  arch/s390/include/asm/topology.h                 | 3 +++
->>  arch/sparc/include/asm/topology_64.h             | 6 +++---
->>  arch/x86/include/asm/topology.h                  | 3 +++
->>  arch/x86/mm/numa.c                               | 3 +++
->>  10 files changed, 27 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
->> index 5a77a40..836c9e2 100644
->> --- a/arch/alpha/include/asm/topology.h
->> +++ b/arch/alpha/include/asm/topology.h
->> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
->>  	int cpu;
->>  
->>  	if (node == NUMA_NO_NODE)
->> -		return cpu_all_mask;
->> +		return cpu_online_mask;
->>  
->>  	cpumask_clear(&node_to_cpumask_map[node]);
->>  
->> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
->> index 626ad01..c8a4b31 100644
->> --- a/arch/arm64/include/asm/numa.h
->> +++ b/arch/arm64/include/asm/numa.h
->> @@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
->>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->>  static inline const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->>  	return node_to_cpumask_map[node];
->>  }
->>  #endif
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> index 4f241cc..f57202d 100644
->> --- a/arch/arm64/mm/numa.c
->> +++ b/arch/arm64/mm/numa.c
->> @@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
->>   */
->>  const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->>  	if (WARN_ON(node >= nr_node_ids))
->>  		return cpu_none_mask;
->>  
->> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
->> index 965f079..04505e6 100644
->> --- a/arch/mips/include/asm/mach-ip27/topology.h
->> +++ b/arch/mips/include/asm/mach-ip27/topology.h
->> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
->>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
->>  
->>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
->> -#define cpumask_of_node(node)	((node) == -1 ?				\
->> -				 cpu_all_mask :				\
->> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->> +				 cpu_online_mask :			\
->>  				 &hub_data(node)->h_cpus)
->>  struct pci_bus;
->>  extern int pcibus_to_node(struct pci_bus *);
->> diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
->> index 7ff819a..e78daa6 100644
->> --- a/arch/mips/include/asm/mach-loongson64/topology.h
->> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
->> @@ -5,7 +5,9 @@
->>  #ifdef CONFIG_NUMA
->>  
->>  #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
->> -#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
->> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->> +				 cpu_online_mask :			\
->> +				 &__node_data[(node)]->cpumask)
->>  
->>  struct pci_bus;
->>  extern int pcibus_to_node(struct pci_bus *);
->> diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
->> index 2f7e1ea..309f847 100644
->> --- a/arch/powerpc/include/asm/topology.h
->> +++ b/arch/powerpc/include/asm/topology.h
->> @@ -17,9 +17,9 @@ struct device_node;
->>  
->>  #include <asm/mmzone.h>
->>  
->> -#define cpumask_of_node(node) ((node) == -1 ?				\
->> -			       cpu_all_mask :				\
->> -			       node_to_cpumask_map[node])
->> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->> +				 cpu_online_mask :			\
->> +				 node_to_cpumask_map[node])
->>  
->>  struct pci_bus;
->>  #ifdef CONFIG_PCI
->> diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
->> index cca406f..1bd2e73 100644
->> --- a/arch/s390/include/asm/topology.h
->> +++ b/arch/s390/include/asm/topology.h
->> @@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
->>  #define cpumask_of_node cpumask_of_node
->>  static inline const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->>  	return &node_to_cpumask_map[node];
->>  }
->>  
->> diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
->> index 34c628a..8c29357 100644
->> --- a/arch/sparc/include/asm/topology_64.h
->> +++ b/arch/sparc/include/asm/topology_64.h
->> @@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
->>  	return numa_cpu_lookup_table[cpu];
->>  }
->>  
->> -#define cpumask_of_node(node) ((node) == -1 ?				\
->> -			       cpu_all_mask :				\
->> -			       &numa_cpumask_lookup_table[node])
->> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
->> +				 cpu_online_mask :			\
->> +				 &numa_cpumask_lookup_table[node])
->>  
->>  struct pci_bus;
->>  #ifdef CONFIG_PCI
->> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
->> index 4b14d23..7fa82e1 100644
->> --- a/arch/x86/include/asm/topology.h
->> +++ b/arch/x86/include/asm/topology.h
->> @@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
->>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->>  static inline const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->>  	return node_to_cpumask_map[node];
->>  }
->>  #endif
->> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
->> index e6dad60..84b28ef 100644
->> --- a/arch/x86/mm/numa.c
->> +++ b/arch/x86/mm/numa.c
->> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
->>   */
->>  const struct cpumask *cpumask_of_node(int node)
->>  {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->>  	if (node >= nr_node_ids) {
->>  		printk(KERN_WARNING
->>  			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
->> -- 
->> 2.8.1
-> 
-> .
-> 
+-- 
+2.17.1
 
