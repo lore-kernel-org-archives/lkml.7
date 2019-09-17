@@ -2,180 +2,108 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E40C4CED0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DDAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5973521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B84920678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY+iFmHY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TlQkcOwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388047AbfIQIQm (ORCPT
+        id S1729110AbfIQIRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:16:42 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:44219 "EHLO
+        Tue, 17 Sep 2019 04:17:46 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34415 "EHLO
         mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfIQIQk (ORCPT
+        with ESMTP id S1725798AbfIQIRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:16:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id k24so347723pll.11;
-        Tue, 17 Sep 2019 01:16:39 -0700 (PDT)
+        Tue, 17 Sep 2019 04:17:46 -0400
+Received: by mail-pl1-f193.google.com with SMTP id d3so1189435plr.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mgukzCtnclCW/hH0uFMjnqXIijt7Mvy5DsHXeaPWECE=;
-        b=aY+iFmHYIF6t7XIv33dW0IGxufDOC4JFNAtk94pzw3JQrwBFs9vJdyD6pJjIBE2LKR
-         O1EecKgPXResbqetQCjLqch20H+MWmr+FYQHtg1NAC9/jOi6902463MXTIqk822fwbHd
-         xbYLoDlLJdKCiFb3Zndd60LWYkFgf8IfTWkqxPR05TDyExYQJ2wxTncnHEZDsZz301oY
-         z8SlDDsZFLBSEMQIYHj8Zlos6PYzC6UcDlAbYC8tzSt23STldWChc27x5yZAJPL9fbpI
-         RK82f14lTEwSfz1jhcSv7I+uJUMB9xVc4P3ApKhnOp0d7MKrPpFpPfkLrnmn8MkTGaNL
-         ABAg==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=F3boCEtfwUpsy+Na7nfCDYv10SwPrOANTgsbZ4pSMzw=;
+        b=TlQkcOwi2+E1c+r1OTWiG7zaOtqqzZVufSex8xZHdMLjcFNzuaW4lsje52kYV6qIMN
+         9gEK8DHoldXJl/rgBAy4hG53QlG0R1QMuWga/x/bK9NMAhJsPohFPA1hPZbytSUgCNyG
+         NSS0P+JEWJyG9WbY/5bHTg0bl0pv2qUImVpDu7uzKGGD3AQT6tKWx+xnloG5ThMrRpS1
+         GSJuzzJXjnbr8iRbjD52JSfyZrM89keJv3jaQwrzYHEENG4Dyedjv/s7qJXkDu/BGiSD
+         sdVdy1eagfTScozKu0veaB/E8YNnfgEYLLvXiXvyWiFxp/vPAoytN6LQNU+ZGzHv2UsA
+         mVew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mgukzCtnclCW/hH0uFMjnqXIijt7Mvy5DsHXeaPWECE=;
-        b=kyDojjPeZVmDH1HWh2r/PZ6eKjy/6RGA+wdyGvApCTquGivRFB0L5/1lLHGz44REH0
-         8ignW2OI/IlpXn053kTFVtV6ewhpVl1OfoYJ9iFL8YuzBwbIWQ88tQx0PIUgEOAxRqoC
-         xfcVfy1dj5yaHhzgQfjlVmCgsr81aZ3KGRaTzy90kEMawIOFUvBGZFRJFDPAIOdfJDGX
-         cSFaupI2RNRPJhxUTNTK/j0d3bugsyPg+3Pq8HTaAio5zIIoRvjVjEus+XKQBVQLTygT
-         Jw1WJ0GSsRkn7dwzEhcOma2vhh2muiPViguv4eFbfHx+SKEapbBZGDHoWkkrSxha+qSA
-         dfjg==
-X-Gm-Message-State: APjAAAVqpJg1hJlMmw4ic6+FpHEEStyKp28+tuehGlcp8VxOTDoxUczS
-        w/4bciDWePZORX6yGjPtiK4oW1Ti
-X-Google-Smtp-Source: APXvYqzGqOXY+sIUFWupOkrIA0xrZ4XOZ746IgCkW0V7c3zoO9XbpqMSLA+PA/hpRbm2meAV2xArtw==
-X-Received: by 2002:a17:902:9a92:: with SMTP id w18mr2345703plp.255.1568708199199;
-        Tue, 17 Sep 2019 01:16:39 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id j10sm1924142pfh.137.2019.09.17.01.16.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Sep 2019 01:16:38 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH v5 3/3] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
-Date:   Tue, 17 Sep 2019 16:16:26 +0800
-Message-Id: <1568708186-20260-3-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
-References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=F3boCEtfwUpsy+Na7nfCDYv10SwPrOANTgsbZ4pSMzw=;
+        b=ZL5jnOeJqoxHcK/awevKhYjeZp2tPSbq+SgZ32rUeT3p/wVKD7ILELMIwHReFjk4jo
+         KhKwR0/eZ4SIJwnRFaYmtmcn/jBn8PtbJfs4HnnTWTmEfozEVNElxpME5vCHYC+eg/Yn
+         W6zMA/D4MNTwczErcERbTE3A+djNYmogEHv/92kQd+zih/CmrVsV2++xk0yK7beKs9p6
+         nR7PS2SbVe5jU/Uzmd6k5XUZP0+cEjxIjSSRUYwro6ts1Mt0Y13gqTwrVFCq/oVuHYUA
+         k5ZivxwapKpf4HXRRbyAUL/g1LAEqvsUGj+EzC3lgZNr396gg5xMwDhqa9fc+7InKrft
+         kfaQ==
+X-Gm-Message-State: APjAAAWSxccSgRPfcYYA3X6SbIUteA4jxIAn3vkSXIaQv6Kg51KwZOAG
+        86XIhr8gYmQl9hYEjdoCkZXOOw==
+X-Google-Smtp-Source: APXvYqwNaqny1OEDhX1NcIm1yReLAq5ctcXj8dcflq9EEMy5Ef0nOc5/fpAELtYRznjciNeXmlD/dw==
+X-Received: by 2002:a17:902:9001:: with SMTP id a1mr2450812plp.148.1568708265107;
+        Tue, 17 Sep 2019 01:17:45 -0700 (PDT)
+Received: from localhost ([122.172.73.172])
+        by smtp.gmail.com with ESMTPSA id f12sm1428941pfn.73.2019.09.17.01.17.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Sep 2019 01:17:44 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 09:17:42 +0100
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 5/5] cpufreq: qcom-hw: Move driver initialisation earlier
+Message-ID: <20190917081742.fwoytnx4mzslcan7@vireshk-mac-ubuntu>
+References: <cover.1568240476.git.amit.kucheria@linaro.org>
+ <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On 12-09-19, 04:02, Amit Kucheria wrote:
+> Allow qcom-hw driver to initialise right after the cpufreq and thermal
+> subsystems are initialised in core_initcall so we get earlier access to
+> thermal mitigation.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index 4b0b50403901..04676cc82ba6 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -327,7 +327,7 @@ static int __init qcom_cpufreq_hw_init(void)
+>  {
+>  	return platform_driver_register(&qcom_cpufreq_hw_driver);
+>  }
+> -device_initcall(qcom_cpufreq_hw_init);
+> +postcore_initcall(qcom_cpufreq_hw_init);
 
-Filter out drastic fluctuation and random fluctuation, remove
-timer_advance_adjust_done altogether, the adjustment would be
-continuous.
+Even core_initcall should work just fine because of the ordering in
+the Makefile in cpufreq directory.
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 28 ++++++++++++++--------------
- arch/x86/kvm/lapic.h |  1 -
- 2 files changed, 14 insertions(+), 15 deletions(-)
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index dbbe478..323bdca 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -65,7 +65,9 @@
- #define APIC_BROADCAST			0xFF
- #define X2APIC_BROADCAST		0xFFFFFFFFul
- 
--#define LAPIC_TIMER_ADVANCE_ADJUST_DONE 100
-+static bool dynamically_adjust_timer_advance __read_mostly;
-+#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
-+#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
- #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
- /* step-by-step approximation to mitigate fluctuation */
- #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
-@@ -1485,26 +1487,25 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- 	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
- 	u64 ns;
- 
-+	/* Do not adjust for tiny fluctuations or large random spikes. */
-+	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUST_MAX ||
-+	    abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_MIN)
-+		return;
-+
- 	/* too early */
- 	if (advance_expire_delta < 0) {
- 		ns = -advance_expire_delta * 1000000ULL;
- 		do_div(ns, vcpu->arch.virtual_tsc_khz);
--		timer_advance_ns -= min((u32)ns,
--			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+		timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
- 	} else {
- 	/* too late */
- 		ns = advance_expire_delta * 1000000ULL;
- 		do_div(ns, vcpu->arch.virtual_tsc_khz);
--		timer_advance_ns += min((u32)ns,
--			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-+		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
- 	}
- 
--	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
--		apic->lapic_timer.timer_advance_adjust_done = true;
--	if (unlikely(timer_advance_ns > 5000)) {
-+	if (unlikely(timer_advance_ns > LAPIC_TIMER_ADVANCE_ADJUST_MAX))
- 		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
--		apic->lapic_timer.timer_advance_adjust_done = false;
--	}
- 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- }
- 
-@@ -1524,7 +1525,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	if (guest_tsc < tsc_deadline)
- 		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
- 
--	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-+	if (dynamically_adjust_timer_advance)
- 		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
- }
- 
-@@ -2302,13 +2303,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
- 	apic->lapic_timer.timer.function = apic_timer_fn;
- 	if (timer_advance_ns == -1) {
- 		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
--		apic->lapic_timer.timer_advance_adjust_done = false;
-+		dynamically_adjust_timer_advance = true;
- 	} else {
- 		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
--		apic->lapic_timer.timer_advance_adjust_done = true;
-+		dynamically_adjust_timer_advance = false;
- 	}
- 
--
- 	/*
- 	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
- 	 * thinking that APIC state has changed.
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 50053d2..2aad7e2 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -35,7 +35,6 @@ struct kvm_timer {
- 	s64 advance_expire_delta;
- 	atomic_t pending;			/* accumulated triggered timers */
- 	bool hv_timer_in_use;
--	bool timer_advance_adjust_done;
- };
- 
- struct kvm_lapic {
 -- 
-2.7.4
-
+viresh
