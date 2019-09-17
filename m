@@ -2,116 +2,139 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EEAC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E091C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76F5D20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343DD21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:16:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ObGxVqBT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMfUu4yb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfIQIQA (ORCPT
+        id S1731034AbfIQIQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:16:00 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:45098 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfIQIQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:16:00 -0400
-Received: from nazgul.tnic (unknown [193.86.95.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E1BCF1EC0C1A;
-        Tue, 17 Sep 2019 10:15:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568708155;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RrtNIUMohCox+BYKXI+e26vky+21ewyw44X+ixcBCsY=;
-        b=ObGxVqBTR4bHZeDtH2hxlu4CfRnKND+hG1Mv8X0k1YnQ/fIFsolnTuVDnmwWxcv+SPIswz
-        F+VnE+hAa6lHi8caBRAzzdletHRDF93eCmjoVxW5oR0GT77v6qOHUxLqiN6XkJVM4zFeSX
-        csvrxCk2vZ6/nsbDFHhaRvuWBUvAq0g=
-Date:   Tue, 17 Sep 2019 10:15:49 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Rasmus Villemoes <mail@rasmusvillemoes.dk>,
-        x86-ml <x86@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Improve memset
-Message-ID: <20190917081549.GB12174@nazgul.tnic>
-References: <20190913072237.GA12381@zn.tnic>
- <CAHk-=wismo3SQvvKXg8j0W-eC+5Q-ctcYfr1QV3K-i90w5caBA@mail.gmail.com>
- <9dc9f1e6-5d19-167c-793d-2f4a5ebee097@rasmusvillemoes.dk>
- <20190913104232.GA4190@zn.tnic>
- <20190913163645.GC4190@zn.tnic>
- <3fc31917-9452-3a10-d11d-056bf2d8b97d@rasmusvillemoes.dk>
- <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wjdpJ+VapXfoZE8JRUfvMb8JrVTZe0=TDFYZ-ke+uqBOA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Sep 2019 04:16:34 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40142 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725798AbfIQIQe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:16:34 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d22so1178444pll.7;
+        Tue, 17 Sep 2019 01:16:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lZpOV5nkYn4l+QDXD4wMM0QQ6pVGsg20H5ZmBWn5rFY=;
+        b=XMfUu4ybyUbjaSQkc+G9xwv+FR7+SYPvEL9Au1fqvVxr5h+D75ZPor60PYddm3kRFN
+         Nl17VEv+RnGNOjmQGn2murgOaEzjIqEAPfvyQIwJLfb7UKfl75QEET7wnkAsxhXl5reZ
+         0dcBq4BSZBzBOm5xAZkv4cPm+qZBbc3G2f0zm/g4NCObOOIZTXCeHOaTXEkdY2twPdKb
+         gagOsiBm0jYDskJ59NLZDdbeq/ZzDedazC90wFT+oFEHxo8V0cj3zwm7jD4GYXChgCB3
+         flHvSawC/l/Qv9DvXaRm0Prx4z/qvrA5CZwTO3amxCGo/fekS2MpplfH1kyQAo2HL0g+
+         YeHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lZpOV5nkYn4l+QDXD4wMM0QQ6pVGsg20H5ZmBWn5rFY=;
+        b=ccy85uHNQ/ZSrKqkJKMCGBj22fUjnqHUiT7Rz9SEqDtN3EZJEpBfBM58dmNMkp8YKF
+         a10ATPiRQ5hU6juW6pAqBjTdNrtEzTysagWwd6eL3pySN/Qh9Bf8ADoFWMvcpAYhsH2E
+         gEmBt4bpCq4ymVJH5vt5PBoQwRboHMBu6/XrZ99OAB8oxlN1okPvh+9jp8WJPkxIy9PA
+         svjUmAFrVyinz6eKKMbX53BB1lu81ubimKP78BCTLSaRBHs4tO5IaENkvRiDDDoB2Srw
+         pJrSokpGuTnIkRq3oYweePdwTLoUoyBzDpBItXGos0cR2F4VO9UvjXdhFNuPH8kjCVkG
+         zY8Q==
+X-Gm-Message-State: APjAAAXARhfHbawggQW+8foBaVNlf/5ZYu3GntSipnffpR0QU+66+jbR
+        IhX7xaOzKxWEFhgm7SHrnXQY577p
+X-Google-Smtp-Source: APXvYqzNMalAy4NbEJMNfObcCqA9c0UoX5pztAHwrAbtwPMPP4mPFTKD26DkYq65IQVyqtWa82QGOQ==
+X-Received: by 2002:a17:902:8546:: with SMTP id d6mr2429121plo.170.1568708193274;
+        Tue, 17 Sep 2019 01:16:33 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id j10sm1924142pfh.137.2019.09.17.01.16.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Sep 2019 01:16:32 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org
+Subject: [PATCH 1/3] KVM: Fix coalesced mmio ring buffer out-of-bounds access
+Date:   Tue, 17 Sep 2019 16:16:24 +0800
+Message-Id: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:25:25AM -0700, Linus Torvalds wrote:
-> So the "inline constant sizes" case has advantages over and beyond the
-> obvious ones. I suspect that a reasonable cut-off point is somethinig
-> like "8*sizeof(long)". But look at things like "struct kstat" uses
-> etc, the limit might actually be even higher than that.
+From: Wanpeng Li <wanpengli@tencent.com>
 
-Ok, sounds to me like we want to leave the small and build-time known
-sizes to gcc to optimize. Especially if you want to clear only a subset
-of the struct members and set the rest.
+Reported by syzkaller:
 
-> Also note that while "rep stosb" is _reasonably_ good with current
-> CPU's (ie roughly gen 8+), it's not so great a few generations ago
-> (gen 6ish), and it can be absolutely horrid on older cores and/or
-> atom. The limit for when it is a win ends up depending on whether I$
-> footprint is an issue too, of course, but some of the bigger wins tend
-> to happen when you have sizes >= 128.
+	#PF: supervisor write access in kernel mode
+	#PF: error_code(0x0002) - not-present page
+	PGD 403c01067 P4D 403c01067 PUD 0
+	Oops: 0002 [#1] SMP PTI
+	CPU: 1 PID: 12564 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
+	RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
+	Call Trace:
+	 __kvm_io_bus_write+0x91/0xe0 [kvm]
+	 kvm_io_bus_write+0x79/0xf0 [kvm]
+	 write_mmio+0xae/0x170 [kvm]
+	 emulator_read_write_onepage+0x252/0x430 [kvm]
+	 emulator_read_write+0xcd/0x180 [kvm]
+	 emulator_write_emulated+0x15/0x20 [kvm]
+	 segmented_write+0x59/0x80 [kvm]
+	 writeback+0x113/0x250 [kvm]
+	 x86_emulate_insn+0x78c/0xd80 [kvm]
+	 x86_emulate_instruction+0x386/0x7c0 [kvm]
+	 kvm_mmu_page_fault+0xf9/0x9e0 [kvm]
+	 handle_ept_violation+0x10a/0x220 [kvm_intel]
+	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
+	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
+	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
+	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
+	 do_vfs_ioctl+0xa2/0x690
+	 ksys_ioctl+0x6d/0x80
+	 __x64_sys_ioctl+0x1a/0x20
+	 do_syscall_64+0x74/0x720
+	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
+	RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
 
-Ok, so I have X86_FEATURE_ERMS set on this old IVB laptop so if gen8 and
-newer do perform better, then we need to change our feature detection to
-clear ERMS on those older generations and really leave it set only on
-gen8+.
+Both the coalesced_mmio ring buffer indexs ring->first and ring->last are 
+bigger than KVM_COALESCED_MMIO_MAX from the testcase, array out-of-bounds 
+access triggers by ring->coalesced_mmio[ring->last].phys_addr = addr; 
+assignment. This patch fixes it by mod indexs by KVM_COALESCED_MMIO_MAX.
 
-I'll change my benchmark to do explicit small-sized moves (instead of
-using __builtin_memset) to see whether I can compare performance better.
+syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=134b2826a00000
 
-Which also begs the question do we do __builtin_memset() at all or we
-code those small-sized moves ourselves? We'll lose the advantage of the
-partial struct members clearing but then we avoid the differences the
-different compiler versions would introduce when the builtin is used.
+Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
+Cc: stable@vger.kernel.org
+Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+---
+ virt/kvm/coalesced_mmio.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-And last but not least we should not leave readability somewhere along
-the way: I'd prefer good performance and maintainable code than some
-hypothetical max perf on some uarch but ugly and unreadable macro
-mess...
-
-> You can basically always beat "rep movs/stos" with hand-tuned AVX2/512
-> code for specific cases if you don't look at I$ footprint and the cost
-> of the AVX setup (and the cost of frequency changes, which often go
-> hand-in-hand with the AVX use). So "rep movs/stos" is seldom
-> _optimal_, but it tends to be "quite good" for modern CPU's with
-> variable sizes that are in the 100+ byte range.
-
-Right. If we did this, it would be a conditional in front of the REP;
-STOS but that ain't worse than our current CALL+JMP.
-
-Thx.
-
+diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+index 5294abb..cff1ec9 100644
+--- a/virt/kvm/coalesced_mmio.c
++++ b/virt/kvm/coalesced_mmio.c
+@@ -73,6 +73,8 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
+ 
+ 	spin_lock(&dev->kvm->ring_lock);
+ 
++	ring->first = ring->first % KVM_COALESCED_MMIO_MAX;
++	ring->last = ring->last % KVM_COALESCED_MMIO_MAX;
+ 	if (!coalesced_mmio_has_room(dev)) {
+ 		spin_unlock(&dev->kvm->ring_lock);
+ 		return -EOPNOTSUPP;
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-ECO tip #101: Trim your mails when you reply.
---
