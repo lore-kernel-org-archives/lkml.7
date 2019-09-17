@@ -2,99 +2,144 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8ACC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D450DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CEC21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:06:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568732771;
-	bh=SDG5YpF85LDl7cxtILkzcLro5V+SIvuaeeWO/xetNPc=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kHCof4g4vZcAKyWroUvXbdMaF6H1Xuv2Fz0Dw8COGLAGEYxHkD5aJgxQ+M144Y1FJ
-	 txvL31vtLklwAfSK+bJaz2Hh9hTnl8xt2jxtvT5iTylwrKgpWUXZqA8qJtfFBGESv2
-	 ydJNFUjTVabPNRCPIsnTeLtNbjJlI9+KZH3XI1ko=
+	by mail.kernel.org (Postfix) with ESMTP id B4B9D21897
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbfIQPGK (ORCPT
+        id S1729010AbfIQPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:06:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
+        Tue, 17 Sep 2019 11:07:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42242 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbfIQPGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:06:10 -0400
-Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728922AbfIQPHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:07:23 -0400
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA7D20665;
-        Tue, 17 Sep 2019 15:06:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568732769;
-        bh=SDG5YpF85LDl7cxtILkzcLro5V+SIvuaeeWO/xetNPc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=L4MGQ8vdegQAMJWZvefCan9LNmZ58YKbkSOalMHxvO0HWyV0pmFh1Ux7JqwFOW68O
-         mCGBhYjjy1+ryMK52xSHfJQua12b18hMCxbKZNbPuOyslbAj0VL4Avpn+vFS73QMQF
-         zChusAZY9pyCaARcI1IJL6QMmjaAJ3A8JgTG6/KI=
-Date:   Tue, 17 Sep 2019 08:06:09 -0700
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        hch@infradead.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        linux-mm@kvack.org, Theodore Ts'o <tytso@mit.edu>
-Subject: [GIT PULL] vfs: prohibit writes to active swap devices
-Message-ID: <20190917150608.GT2229799@magnolia>
+        by mx1.redhat.com (Postfix) with ESMTPS id 1735681F10
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 15:07:22 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id n11so1370499wmc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:07:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=M2ROnRjQ6XpEbY6C1uWSxsB5sbZASsuQ60ehBi16Vdg=;
+        b=mv4kpuFS9SQf0NzE1F9GXZ0ftTgJMf6mXsGFb5CIdrbNQwE/QFFvFJrGWGVS/2lFTl
+         HK1AH7/OGBeYsbVFnp3z0S7z+Nq1l+pXFYCnj48MVNGwf8VEC6pqeVE6Q7NSAFxATuJl
+         A+/p1ks8ZaERKS+mmi08xA4w6LFbatpmXnHf3p8qTQRmUqbr9lSEtXwrvNVJZmKQgYs8
+         dqxAQ16YEYRrJueLSexXrhAYCnb5C32M4WF6l6wuXnfB+uyacM0c0U8TjEaUB+jfdW1G
+         B6gA/k90JfOLCG2TNNwfz9ChyD6vk9+1DMhxeTBilqrZ0DAL6e7TO5dAYbjXD07Nbvl2
+         rcAw==
+X-Gm-Message-State: APjAAAVfKzSMvOVA1aYOXOY0PZsWvYMjz8slUUMozxzc0oIj4SUucTzD
+        8m2KJ6vFrOiBNMl6D02JLBoEZ9sg8Sf9AumWQUBnj3qy50vOLNrCzQ5unCU3aMOGYZ6vl4/W/Qd
+        R+y9dK98JMNAM3vnfqJ+4xECz
+X-Received: by 2002:a1c:4945:: with SMTP id w66mr3879988wma.40.1568732840419;
+        Tue, 17 Sep 2019 08:07:20 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzfBL68muJMrD+6aSC2mEoAARgymHATsfuDq2EeQrj/3TNTzPyXY2MqroywfTD46hCjM2QDFA==
+X-Received: by 2002:a1c:4945:: with SMTP id w66mr3879960wma.40.1568732840153;
+        Tue, 17 Sep 2019 08:07:20 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id h17sm4388192wme.6.2019.09.17.08.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 08:07:19 -0700 (PDT)
+Subject: Re: [PATCH v2 03/14] KVM: x86: Refactor kvm_vcpu_do_singlestep() to
+ remove out param
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
+References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
+ <20190827214040.18710-4-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <4a49e819-08bf-7824-f6e1-2f37f2b1a4a4@redhat.com>
+Date:   Tue, 17 Sep 2019 17:07:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190827214040.18710-4-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 27/08/19 23:40, Sean Christopherson wrote:
+> Return the single-step emulation result directly instead of via an out
+> param.  Presumably at some point in the past kvm_vcpu_do_singlestep()
+> could be called with *r==EMULATE_USER_EXIT, but that is no longer the
+> case, i.e. all callers are happy to overwrite their own return variable.
 
-Please pull this short series that prevents writes to active swap files
-and swap devices.  There's no non-malicious use case for allowing
-userspace to scribble on storage that the kernel thinks it owns.
+It was actually done for consistency with kvm_vcpu_check_breakpoint.
+It's okay to change it.
 
-The branch merges cleanly against this morning's HEAD and survived an
-overnight run of xfstests.  The merge was completely straightforward, so
-please let me know if you run into anything weird.
+Paolo
 
---D
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Reviewed-by: Liran Alon <liran.alon@oracle.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/x86.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index c6de5bc4fa5e..fe847f8eb947 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6377,7 +6377,7 @@ static int kvm_vcpu_check_hw_bp(unsigned long addr, u32 type, u32 dr7,
+>  	return dr6;
+>  }
+>  
+> -static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+> +static int kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu)
+>  {
+>  	struct kvm_run *kvm_run = vcpu->run;
+>  
+> @@ -6386,10 +6386,10 @@ static void kvm_vcpu_do_singlestep(struct kvm_vcpu *vcpu, int *r)
+>  		kvm_run->debug.arch.pc = vcpu->arch.singlestep_rip;
+>  		kvm_run->debug.arch.exception = DB_VECTOR;
+>  		kvm_run->exit_reason = KVM_EXIT_DEBUG;
+> -		*r = EMULATE_USER_EXIT;
+> -	} else {
+> -		kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +		return EMULATE_USER_EXIT;
+>  	}
+> +	kvm_queue_exception_p(vcpu, DB_VECTOR, DR6_BS);
+> +	return EMULATE_DONE;
+>  }
+>  
+>  int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> @@ -6410,7 +6410,7 @@ int kvm_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+>  	 * that sets the TF flag".
+>  	 */
+>  	if (unlikely(rflags & X86_EFLAGS_TF))
+> -		kvm_vcpu_do_singlestep(vcpu, &r);
+> +		r = kvm_vcpu_do_singlestep(vcpu);
+>  	return r == EMULATE_DONE;
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_skip_emulated_instruction);
+> @@ -6613,7 +6613,7 @@ int x86_emulate_instruction(struct kvm_vcpu *vcpu,
+>  		vcpu->arch.emulate_regs_need_sync_to_vcpu = false;
+>  		kvm_rip_write(vcpu, ctxt->eip);
+>  		if (r == EMULATE_DONE && ctxt->tf)
+> -			kvm_vcpu_do_singlestep(vcpu, &r);
+> +			r = kvm_vcpu_do_singlestep(vcpu);
+>  		if (!ctxt->have_exception ||
+>  		    exception_type(ctxt->exception.vector) == EXCPT_TRAP)
+>  			__kvm_set_rflags(vcpu, ctxt->eflags);
+> 
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
-
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/vfs-5.4-merge-1
-
-for you to fetch changes up to dc617f29dbe5ef0c8ced65ce62c464af1daaab3d:
-
-  vfs: don't allow writes to swap files (2019-08-20 07:55:16 -0700)
-
-----------------------------------------------------------------
-Changes for 5.4:
-- Prohibit writing to active swap files and swap partitions.
-
-----------------------------------------------------------------
-Darrick J. Wong (2):
-      mm: set S_SWAPFILE on blockdev swap devices
-      vfs: don't allow writes to swap files
-
- fs/block_dev.c     |  3 +++
- include/linux/fs.h | 11 +++++++++++
- mm/filemap.c       |  3 +++
- mm/memory.c        |  4 ++++
- mm/mmap.c          |  8 ++++++--
- mm/swapfile.c      | 41 +++++++++++++++++++++++++----------------
- 6 files changed, 52 insertions(+), 18 deletions(-)
