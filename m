@@ -2,80 +2,89 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05A3C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB56AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1CC6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964BC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfIQOrt (ORCPT
+        id S1728670AbfIQOuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:47:49 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2669 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727708AbfIQOrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:47:48 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 02CCF7BD55C2B671137A;
-        Tue, 17 Sep 2019 22:47:41 +0800 (CST)
-Received: from linux-ibm.site (10.175.102.37) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 17 Sep 2019 22:47:31 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-To:     <jakub.kicinski@netronome.com>, <davem@davemloft.net>
-CC:     <anna.schumaker@netapp.com>, <trond.myklebust@hammerspace.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhongjiang@huawei.com>
-Subject: [RESENT PATCH v2] ixgbe: Use memzero_explicit directly in crypto cases
-Date:   Tue, 17 Sep 2019 22:44:22 +0800
-Message-ID: <1568731462-46758-1-git-send-email-zhongjiang@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Tue, 17 Sep 2019 10:50:39 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42118 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727708AbfIQOuj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:50:39 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iAEoN-0008Sa-Pj; Tue, 17 Sep 2019 16:50:35 +0200
+Date:   Tue, 17 Sep 2019 16:50:35 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 5/5] rcutorture: Avoid problematic critical section
+ nesting on RT
+Message-ID: <20190917145035.l6egzthsdzp7aipe@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-6-swood@redhat.com>
+ <20190912221706.GC150506@google.com>
+ <500cabaa80f250b974409ee4a4fca59bf2e24564.camel@redhat.com>
+ <20190917100728.wnhdvmbbzzxolef4@linutronix.de>
+ <26dbecfee2c02456ddfda3647df1bcd56d9cc520.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.102.37]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <26dbecfee2c02456ddfda3647df1bcd56d9cc520.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's better to use memzero_explicit() to replace memset() in crypto cases.
+On 2019-09-17 09:36:22 [-0500], Scott Wood wrote:
+> > On non-RT you can (but should not) use the counter part of the function
+> > in random order like:
+> > 	local_bh_disable();
+> > 	local_irq_disable();
+> > 	local_bh_enable();
+> > 	local_irq_enable();
+> 
+> Actually even non-RT will assert if you do local_bh_enable() with IRQs
+> disabled -- but the other combinations do work, and are used some places via
+> spinlocks.  If they are used via direct calls to preempt_disable() or
+> local_irq_disable() (or via raw spinlocks), then that will not go away on RT
+> and we'll have a problem.
 
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+lockdep_assert_irqs_enabled() is a nop with CONFIG_PROVE_LOCKING=N and
+RT breaks either way. 
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-index 31629fc..7e4f32f 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-@@ -960,10 +960,10 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
- 	return 0;
- 
- err_aead:
--	memset(xs->aead, 0, sizeof(*xs->aead));
-+	memzero_explicit(xs->aead, sizeof(*xs->aead));
- 	kfree(xs->aead);
- err_xs:
--	memset(xs, 0, sizeof(*xs));
-+	memzero_explicit(xs, sizeof(*xs));
- 	kfree(xs);
- err_out:
- 	msgbuf[1] = err;
-@@ -1049,7 +1049,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
- 	ixgbe_ipsec_del_sa(xs);
- 
- 	/* remove the xs that was made-up in the add request */
--	memset(xs, 0, sizeof(*xs));
-+	memzero_explicit(xs, sizeof(*xs));
- 	kfree(xs);
- 
- 	return 0;
--- 
-1.7.12.4
+> > Since you _can_ use it in random order Paul wants to test that the
+> > random use of those function does not break RCU in any way. Since they
+> > can not be used on RT in random order it has been agreed that we keep
+> > the test for !RT but disable it on RT.
+> 
+> For now, yes.  Long term it would be good to keep track of when
+> preemption/irqs would be disabled on RT, even when running a non-RT debug
+> kernel, and assert when bad things are done with it (assuming an RT-capable
+> arch).  Besides detecting these fairly unusual patterns, it could also
+> detect earlier the much more common problem of nesting a non-raw spinlock
+> inside a raw spinlock or other RT-atomic context.
 
+you will be surprised but we have patches for that. We need first get
+rid of other "false positives" before plugging this in.
+
+> -Scott
+
+Sebastian
