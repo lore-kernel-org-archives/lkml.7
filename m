@@ -2,213 +2,344 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6C6C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5716C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 757B0214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3A6214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sk5LOn4t"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="D0VsMS0V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbfIQL6w (ORCPT
+        id S1727308AbfIQMFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 07:58:52 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46094 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQL6w (ORCPT
+        Tue, 17 Sep 2019 08:05:22 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59435 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726954AbfIQMFW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 07:58:52 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a3so1884786pgm.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 04:58:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9+3/vjaV0IWTxBoNe94DezuOhB6FcrK/HEtk3iyE7N0=;
-        b=Sk5LOn4tPNUQTCYrLnF9Zwie2r98LDzj+cOTTsmD5iwDYicXunnON8V6/Lf0wB1x7U
-         ekQJEjwb7XL4AlLAn1z+meS/nWZE0EwxIgU0GDKH0CoiNRavcO603ra2wuLe15C4mPr3
-         Q5w+2CrmXCRErL6F95M/1rR6G/zttfeBl4BkJXFi4ncg2T//aiAKIO3GXbQeS8gEIy2H
-         FfqyFHOvNR30fICmWcaznBKiE9lUbr0xnW7udTovETVztTeIltjTwCS9ZD5Bibb9mwuQ
-         qDMjrw8IZcwUUl8XFWUne5K9HEVB9bjvEMPg8zRf3BLnGDNfQ2CXTODdtNnWQWumgUBq
-         POsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9+3/vjaV0IWTxBoNe94DezuOhB6FcrK/HEtk3iyE7N0=;
-        b=OQvFLzIVY406DSrP88enuSxFZKFseaK8Mv1GrEa8Z7zZ0vFAHcg68X2rU1sAC83xM8
-         fH4uwLFOuq0JX//R2Iz+LfCSIXRDfuG6+wYjUB87tVKKY2Ov4FlnqBFZlQu72mO6nQDc
-         +R79nRdPA9rdBnLoiuTeWyaDi8ZCx7fUEziJgM+faz1x1T8c7nAqJOC8tXVPuXt/byEn
-         zFF2h2PX7Yyakf8c+j9GpCp+kAE8BM5oh9V1VDHR3pO7HJckJQ6qkobfvV3dQz/4C2Gm
-         Sq47WsjBDNdNH+qd55Ndl82XQdBWMEuHIzv3KeIhU2O6RmH2iGn+aMkQBvY2sIa6v3mo
-         /6cA==
-X-Gm-Message-State: APjAAAU2cTm9Q1x7G7KqsQR6oTrSF0pPloMfvRfBKRFLFGqwcIlehlyR
-        JqyFAvGWXZPalFI6Sj3LYBgO9gIe1a/ya7dCWfVu6WZeL2uW3Q==
-X-Google-Smtp-Source: APXvYqxF3ZfYV0cXjxOZ8tHr0RWrIO+lH6gpMI9XRwlY5xwQOrV1WMoqXmNrUv778OvcHTM4NSIUGCXnFMaCvxcc4nM=
-X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr4405409pjb.123.1568721531234;
- Tue, 17 Sep 2019 04:58:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <000000000000d58eb90592add24e@google.com> <20190917080119.3940-1-hdanton@sina.com>
-In-Reply-To: <20190917080119.3940-1-hdanton@sina.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 17 Sep 2019 13:58:40 +0200
-Message-ID: <CAAeHK+xgZ0=Y32NAjGfGnXpZh=832opkRnmiq2_nZO5dgMNLSw@mail.gmail.com>
-Subject: Re: possible deadlock in usb_deregister_dev (2)
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 17 Sep 2019 08:05:22 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190917120519euoutp01ad2d0d77ba2b5d552867c9352dc2c98b~FOEZBuhMi3088130881euoutp01c
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 12:05:19 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190917120519euoutp01ad2d0d77ba2b5d552867c9352dc2c98b~FOEZBuhMi3088130881euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568721919;
+        bh=y4ZmDUm+bZwwm0HD0MSPy7z7w+r1qg+vl9fIhezgRHE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D0VsMS0VkEppsNF1mSYLJe7vcy6iD70nXrj61BT7yu2lYdcSBhcBLpNmad4LYsezI
+         kvLHH5/NY9ypSmtwn8xy6VZyxX50bUQbHN3BwQdQgbssuvuAs/AQJi/ZDFzirZZe0u
+         NiQpSPZoZP2/dv7iHH4Hk1vBKIcLeSwioeXAZ9TA=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190917120518eucas1p1c5d478fa7565415b6cfe89d435bf4fc6~FOEYKr6Sd1203712037eucas1p1w;
+        Tue, 17 Sep 2019 12:05:18 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3F.88.04374.EFBC08D5; Tue, 17
+        Sep 2019 13:05:18 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d~FOEXXWCBw1184811848eucas1p18;
+        Tue, 17 Sep 2019 12:05:17 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190917120517eusmtrp25d22099ece0b279a2a2d576d8540ea3a~FOEXJHC690474004740eusmtrp2C;
+        Tue, 17 Sep 2019 12:05:17 +0000 (GMT)
+X-AuditID: cbfec7f5-4ddff70000001116-36-5d80cbfec979
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 16.E3.04166.DFBC08D5; Tue, 17
+        Sep 2019 13:05:17 +0100 (BST)
+Received: from AMDC2459.digital.local (unknown [106.120.51.95]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190917120516eusmtip22d2b97db6ed6bed0d1866d7d2da64efc~FOEWb2zks1881518815eusmtip2J;
+        Tue, 17 Sep 2019 12:05:16 +0000 (GMT)
+From:   Maciej Falkowski <m.falkowski@samsung.com>
+To:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     krzk@kernel.org, sbkim73@samsung.com, s.nawrocki@samsung.com,
+        lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, a.hajda@samsung.com,
+        m.szyprowski@samsung.com, m.falkowski@samsung.com
+Subject: [PATCH v2 1/2] dt-bindings: sound: Convert Samsung I2S controller
+ to dt-schema
+Date:   Tue, 17 Sep 2019 14:04:52 +0200
+Message-Id: <20190917120452.28135-1-m.falkowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190917111413.22711-1-m.falkowski@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEKsWRmVeSWpSXmKPExsWy7djP87r/TjfEGpw7LWlxa905VosrFw8x
+        WUx9+ITNYv4RIPf8+Q3sFt+udDBZXN41h81ixvl9TBYPmtexWaw9cpfdYun1i0wWrXuPsFsc
+        ftPOanFxxRcmBz6PDZ+b2DzWzFvD6LFz1l12j02rOtk8+rasYvT4vEkugC2KyyYlNSezLLVI
+        3y6BK+Pex2vsBaedK07u/MTcwHjPpIuRk0NCwERi0snn7F2MXBxCAisYJRacncQG4XxhlPg9
+        +xhU5jOjxOyN+xlhWqZua2eBSCxnlOjftw2h5VJnO1gVm4CBRP+bvSwgtohAncTEafOYQYqY
+        BR4yStzZ+5kdJCEsECmxZd0usAYWAVWJlz/nsnYxcnDwCthI9OzihdgmL7F6wwFmEJtTwFZi
+        7q2/rCBzJATWsUts3HmSHaLIReJq22oWCFtY4tXxLVBxGYn/O+czgcyUEKiWuPZNFqK3hVHi
+        +rS3bBA11hJ/Vk1kA6lhFtCUWL9LHyLsKLHsxXeoVj6JG28FQcLMQOakbdOZIcK8Eh1tQhCm
+        qsSbCbEQjdISrWtgQeUh8evWUWhQTWCUONSxlG0Co/wshF0LGBlXMYqnlhbnpqcWG+ellusV
+        J+YWl+al6yXn525iBKac0/+Of93BuO9P0iFGAQ5GJR7eG5vrY4VYE8uKK3MPMUpwMCuJ8AbU
+        AoV4UxIrq1KL8uOLSnNSiw8xSnOwKInzVjM8iBYSSE8sSc1OTS1ILYLJMnFwSjUwhj115pyZ
+        u+mbs58Q44JzB+IzVjwR17x5IE24vXnuGq9rMjHVXGZn8253Ty/0mfFLcLGI4KYGXrtj1kvU
+        vnx4/5a3KvZLFJNWnb/TUu0/2340vyhavlTxv+A+lkOKvBc91bQXu6ZzirZcXh1/fN4jFc1U
+        LqtnmkuMdFdu50mbKc5RdpNHeIWZEktxRqKhFnNRcSIAC70CdjUDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmplkeLIzCtJLcpLzFFi42I5/e/4Pd2/pxtiDW7fkrO4te4cq8WVi4eY
+        LKY+fMJmMf8IkHv+/AZ2i29XOpgsLu+aw2Yx4/w+JosHzevYLNYeuctusfT6RSaL1r1H2C0O
+        v2lntbi44guTA5/Hhs9NbB5r5q1h9Ng56y67x6ZVnWwefVtWMXp83iQXwBalZ1OUX1qSqpCR
+        X1xiqxRtaGGkZ2hpoWdkYqlnaGwea2VkqqRvZ5OSmpNZllqkb5egl3Hv4zX2gtPOFSd3fmJu
+        YLxn0sXIySEhYCIxdVs7SxcjF4eQwFJGiTnzrzJCJKQl9l/7yA5hC0v8udbFBlH0iVFi1olV
+        YAk2AQOJ/jd7wbpFBJoYJebf/AnmMAu8ZZRo2XGIqYuRg0NYIFzi8ipjkAYWAVWJlz/nsoKE
+        eQVsJHp28UIskJdYveEAM4jNKWArMffWX1YQWwioZOmTM+wTGPkWMDKsYhRJLS3OTc8tNtQr
+        TswtLs1L10vOz93ECIyCbcd+bt7BeGlj8CFGAQ5GJR7eA6caYoVYE8uKK3MPMUpwMCuJ8AbU
+        1scK8aYkVlalFuXHF5XmpBYfYjQFumkis5Rocj4wQvNK4g1NDc0tLA3Njc2NzSyUxHk7BA7G
+        CAmkJ5akZqemFqQWwfQxcXBKNTBa7irM1pJRvMDrZrVp103+k3LVDDduVL95ph1+Z5Py5HPP
+        /3o7Fq4NyV5+e1VTZ+LV+MTWTUsFbz3S2LMgZfb3bSEN3/lf6Tsujtw+6WO267bCt+atlRfq
+        lEU6S5L2rwuq4eDuUH8wTS1+74TiT2LcPdtPyCjdKQvJ1C9fkNQ7Z1nlZd/O+YlKLMUZiYZa
+        zEXFiQDUpY1amAIAAA==
+X-CMS-MailID: 20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d
+References: <20190917111413.22711-1-m.falkowski@samsung.com>
+        <CGME20190917120517eucas1p1188d244fac2d10d7990363ff25ffb70d@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:01 AM Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Mon, 16 Sep 2019 14:42:06 -0700
-> >
-> > syzbot has found a reproducer for the following crash on:
-> >
-> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=175cdb95600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=f9549f5ee8a5416f0b95
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13961369600000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139c811d600000
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
-> >
-> > ======================================================
-> > WARNING: possible circular locking dependency detected
-> > 5.3.0-rc7+ #0 Not tainted
-> > ------------------------------------------------------
-> > kworker/0:1/12 is trying to acquire lock:
-> > 0000000098630ee4 (minor_rwsem){++++}, at: usb_deregister_dev+0x95/0x230
-> > drivers/usb/core/file.c:239
-> >
-> > but task is already holding lock:
-> > 00000000d9ad5b6f (open_disc_mutex){+.+.}, at: tower_disconnect+0x45/0x300
-> > drivers/usb/misc/legousbtower.c:945
-> >
-> > which lock already depends on the new lock.
-> >
-> >
-> > the existing dependency chain (in reverse order) is:
-> >
-> > -> #1 (open_disc_mutex){+.+.}:
-> >         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-> >         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-> >         tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
-> >         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-> >         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> >         do_dentry_open+0x494/0x1120 fs/open.c:797
-> >         do_last fs/namei.c:3416 [inline]
-> >         path_openat+0x1430/0x3f50 fs/namei.c:3533
-> >         do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> >         do_sys_open+0x3c0/0x580 fs/open.c:1089
-> >         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-> >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > -> #0 (minor_rwsem){++++}:
-> >         check_prev_add kernel/locking/lockdep.c:2405 [inline]
-> >         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-> >         validate_chain kernel/locking/lockdep.c:2897 [inline]
-> >         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-> >         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-> >         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-> >         usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
-> >         tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
-> >         usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
-> >         __device_release_driver drivers/base/dd.c:1134 [inline]
-> >         device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
-> >         bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
-> >         device_del+0x420/0xb10 drivers/base/core.c:2339
-> >         usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
-> >         usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
-> >         hub_port_connect drivers/usb/core/hub.c:4949 [inline]
-> >         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-> >         port_event drivers/usb/core/hub.c:5359 [inline]
-> >         hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
-> >         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-> >         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-> >         kthread+0x318/0x420 kernel/kthread.c:255
-> >         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > other info that might help us debug this:
-> >
-> >   Possible unsafe locking scenario:
-> >
-> >         CPU0                    CPU1
-> >         ----                    ----
-> >    lock(open_disc_mutex);
-> >                                 lock(minor_rwsem);
-> >                                 lock(open_disc_mutex);
-> >    lock(minor_rwsem);
-> >
-> >   *** DEADLOCK ***
->
-> Fix 78663ecc344b
+Convert Samsung I2S controller to newer dt-schema format.
 
-Hi Hillf,
+Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+v2:
+- Added missing Signed-off-by certificate
+---
+ .../devicetree/bindings/sound/samsung-i2s.txt |  84 -------------
+ .../bindings/sound/samsung-i2s.yaml           | 119 ++++++++++++++++++
+ 2 files changed, 119 insertions(+), 84 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.yaml
 
-Thanks for looking at these bugs. This bug has a reproducer, so you
-can ask syzbot to test the fix by issuing a syz test command as
-described here:
+diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+deleted file mode 100644
+index a88cb00fa096..000000000000
+--- a/Documentation/devicetree/bindings/sound/samsung-i2s.txt
++++ /dev/null
+@@ -1,84 +0,0 @@
+-* Samsung I2S controller
+-
+-Required SoC Specific Properties:
+-
+-- compatible : should be one of the following.
+-   - samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
+-   - samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
+-     secondary fifo, s/w reset control and internal mux for root clk src.
+-   - samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
+-     playback, stereo channel capture, secondary fifo using internal
+-     or external dma, s/w reset control, internal mux for root clk src
+-     and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
+-     is to allow transfer of multiple channel audio data on single data line.
+-   - samsung,exynos7-i2s: with all the available features of exynos5 i2s,
+-     exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
+-     with only external dma and more no.of root clk sampling frequencies.
+-   - samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
+-     stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
+-     slightly modified bit offsets.
+-
+-- reg: physical base address of the controller and length of memory mapped
+-  region.
+-- dmas: list of DMA controller phandle and DMA request line ordered pairs.
+-- dma-names: identifier string for each DMA request line in the dmas property.
+-  These strings correspond 1:1 with the ordered pairs in dmas.
+-- clocks: Handle to iis clock and RCLK source clk.
+-- clock-names:
+-  i2s0 uses some base clocks from CMU and some are from audio subsystem internal
+-  clock controller. The clock names for i2s0 should be "iis", "i2s_opclk0" and
+-  "i2s_opclk1" as shown in the example below.
+-  i2s1 and i2s2 uses clocks from CMU. The clock names for i2s1 and i2s2 should
+-  be "iis" and "i2s_opclk0".
+-  "iis" is the i2s bus clock and i2s_opclk0, i2s_opclk1 are sources of the root
+-  clk. i2s0 has internal mux to select the source of root clk and i2s1 and i2s2
+-  doesn't have any such mux.
+-- #clock-cells: should be 1, this property must be present if the I2S device
+-  is a clock provider in terms of the common clock bindings, described in
+-  ../clock/clock-bindings.txt.
+-- clock-output-names (deprecated): from the common clock bindings, names of
+-  the CDCLK I2S output clocks, suggested values are "i2s_cdclk0", "i2s_cdclk1",
+-  "i2s_cdclk3" for the I2S0, I2S1, I2S2 devices respectively.
+-
+-There are following clocks available at the I2S device nodes:
+- CLK_I2S_CDCLK    - the CDCLK (CODECLKO) gate clock,
+- CLK_I2S_RCLK_PSR - the RCLK prescaler divider clock (corresponding to the
+-		    IISPSR register),
+- CLK_I2S_RCLK_SRC - the RCLKSRC mux clock (corresponding to RCLKSRC bit in
+-		    IISMOD register).
+-
+-Refer to the SoC datasheet for availability of the above clocks.
+-The CLK_I2S_RCLK_PSR and CLK_I2S_RCLK_SRC clocks are usually only available
+-in the IIS Multi Audio Interface.
+-
+-Note: Old DTs may not have the #clock-cells property and then not use the I2S
+-node as a clock supplier.
+-
+-Optional SoC Specific Properties:
+-
+-- samsung,idma-addr: Internal DMA register base address of the audio
+-  sub system(used in secondary sound source).
+-- pinctrl-0: Should specify pin control groups used for this controller.
+-- pinctrl-names: Should contain only one value - "default".
+-- #sound-dai-cells: should be 1.
+-
+-
+-Example:
+-
+-i2s0: i2s@3830000 {
+-	compatible = "samsung,s5pv210-i2s";
+-	reg = <0x03830000 0x100>;
+-	dmas = <&pdma0 10
+-		&pdma0 9
+-		&pdma0 8>;
+-	dma-names = "tx", "rx", "tx-sec";
+-	clocks = <&clock_audss EXYNOS_I2S_BUS>,
+-		<&clock_audss EXYNOS_I2S_BUS>,
+-		<&clock_audss EXYNOS_SCLK_I2S>;
+-	clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
+-	#clock-cells = <1>;
+-	samsung,idma-addr = <0x03000000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&i2s0_bus>;
+-	#sound-dai-cells = <1>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.yaml b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+new file mode 100644
+index 000000000000..59dc76035cb4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/samsung-i2s.yaml
+@@ -0,0 +1,119 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/sound/samsung-i2s.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC I2S controller
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++  - Sangbeom Kim <sbkim73@samsung.com>
++  - Sylwester Nawrocki <s.nawrocki@samsung.com>
++
++properties:
++  compatible:
++    description: |
++      samsung,s3c6410-i2s: for 8/16/24bit stereo I2S.
++
++      samsung,s5pv210-i2s: for 8/16/24bit multichannel(5.1) I2S with
++      secondary fifo, s/w reset control and internal mux for root clk src.
++
++      samsung,exynos5420-i2s: for 8/16/24bit multichannel(5.1) I2S for
++      playback, stereo channel capture, secondary fifo using internal
++      or external dma, s/w reset control, internal mux for root clk src
++      and 7.1 channel TDM support for playback. TDM (Time division multiplexing)
++      is to allow transfer of multiple channel audio data on single data line.
++
++      samsung,exynos7-i2s: with all the available features of exynos5 i2s.
++
++      exynos7 I2S has 7.1 channel TDM support for capture, secondary fifo
++      with only external dma and more no.of root clk sampling frequencies.
++
++      samsung,exynos7-i2s1: I2S1 on previous samsung platforms supports
++      stereo channels. exynos7 i2s1 upgraded to 5.1 multichannel with
++      slightly modified bit offsets.
++    enum:
++      - "samsung,s3c6410-i2s"
++      - "samsung,s5pv210-i2s"
++      - "samsung,exynos5420-i2s"
++      - "samsung,exynos7-i2s"
++      - "samsung,exynos7-i2s1"
++
++  reg:
++    maxItems: 1
++
++  dmas:
++    description: list of DMA controller phandle and DMA request line ordered pairs.
++
++  dma-names:
++    description: |
++      identifier string for each DMA request line in the dmas property.
++      These strings correspond 1:1 with the ordered pairs in dmas.
++
++  clocks:
++    minItems: 1
++    maxItems: 3
++
++  clock-names:
++    oneOf:
++      - items:
++          - const: iis
++      - items:
++          - const: iis
++          - const: i2s_opclk0
++      - items:
++          - const: iis
++          - const: i2s_opclk0
++          - const: i2s_opclk1
++    description: |
++      "iis" is the i2s bus clock.
++      For i2s1 and i2s2 - "iis", "i2s_opclk0"
++      For i2s0 - "iis", "i2s_opclk0", "i2s_opclk1"
++
++  "#clock-cells":
++    const: 1
++
++  samsung,idma-addr:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Internal DMA register base address of the audio
++      sub system(used in secondary sound source).
++
++  pinctrl-0:
++    description: Should specify pin control groups used for this controller.
++
++  pinctrl-names:
++    const: default
++
++  "#sound-dai-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - dmas
++  - dma-names
++  - clocks
++  - clock-names
++
++examples:
++  - |
++    i2s0: i2s@3830000 {
++        compatible = "samsung,s5pv210-i2s";
++        reg = <0x03830000 0x100>;
++        dmas = <&pdma0 10
++                &pdma0 9
++                &pdma0 8>;
++        dma-names = "tx", "rx", "tx-sec";
++        clocks = <&clock_audss 0>, // EXYNOS_I2S_BUS
++                <&clock_audss 0>, // EXYNOS_I2S_BUS
++                <&clock_audss 0>; // EXYNOS_SCLK_I2S
++        clock-names = "iis", "i2s_opclk0", "i2s_opclk1";
++        #clock-cells = <1>;
++        samsung,idma-addr = <0x03000000>;
++        pinctrl-names = "default";
++        pinctrl-0 = <&i2s0_bus>;
++        #sound-dai-cells = <1>;
++    };
++
+-- 
+2.17.1
 
-https://github.com/google/syzkaller/blob/master/docs/syzbot.md#usb-bugs
-
-Thanks!
-
->
-> --- a/drivers/usb/misc/legousbtower.c
-> +++ b/drivers/usb/misc/legousbtower.c
-> @@ -941,17 +941,31 @@ static void tower_disconnect (struct usb
->         struct lego_usb_tower *dev;
->         int minor;
->
-> -       dev = usb_get_intfdata (interface);
->         mutex_lock(&open_disc_mutex);
-> +       dev = usb_get_intfdata (interface);
->         usb_set_intfdata (interface, NULL);
->
->         minor = dev->minor;
->
-> -       /* give back our minor */
-> -       usb_deregister_dev (interface, &tower_class);
-> -
->         mutex_lock(&dev->lock);
->         mutex_unlock(&open_disc_mutex);
-> +       /*
-> +        * give back our minor out of open_disc_mutex to shun deadlock like
-> +
-> +               Possible unsafe locking scenario:
-> +
-> +               CPU0                    CPU1
-> +               ----                    ----
-> +               disconnect path         open path
-> +
-> +               lock(open_disc_mutex);
-> +                                       lock(minor_rwsem);
-> +                                       lock(open_disc_mutex);
-> +               lock(minor_rwsem);
-> +
-> +        * and we can do this since intfdata is reset with lock held.
-> +        */
-> +       usb_deregister_dev (interface, &tower_class);
->
->         /* if the device is not opened, then we clean up right now */
->         if (!dev->open_count) {
->
