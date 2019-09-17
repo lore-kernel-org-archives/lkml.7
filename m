@@ -2,119 +2,117 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2641CC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27083C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80DE20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568682380;
-	bh=+W2xNDy0Vbt8Lksh920WgCCAU4Gd2hGQK1PfRhxFWPc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1DGNcZjcg2yyU+uXJxS1wAZS5KJeRDt/kxGJzyEkxckExvC9fo1e4ukcanSusi49K
-	 zrHTu1l5sUiP7gHrUwfG1EDd4qpLEX9tZrvIfDn0sJD1zkCmZSfQsUA5IQbmq/LRJT
-	 RsGE6gpIkt3pu75eMchv7yic3KR4vnAnojU3qKQk=
+	by mail.kernel.org (Postfix) with ESMTP id 04C29216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390853AbfIQBGT (ORCPT
+        id S2390818AbfIQBIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 21:06:19 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:45028 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390818AbfIQBGS (ORCPT
+        Mon, 16 Sep 2019 21:08:35 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728127AbfIQBIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:06:18 -0400
-Received: by mail-lj1-f194.google.com with SMTP id m13so1662023ljj.11
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 18:06:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lT8XkUtBx2w2E6v7+dJIyb5eDtdCj9FGQxpWjTooN2w=;
-        b=X3PnxylOAF4xYIhV73JftJsYPExC+6nWRgaCoIehOZ0lRHM8e0vtC4kIiCZ0RfabNQ
-         8bMWtZXCNM/jwB6Es3t2aKnvKb1glk5Zq0J4hLHBdUeNxhEvZaoOd3eWC3odXZrrnc7k
-         FwH8vqjVTIT59p8Zc+gKYzRmiJqlQqh9ZX6P4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lT8XkUtBx2w2E6v7+dJIyb5eDtdCj9FGQxpWjTooN2w=;
-        b=Fr6tpR9ayseFojLdomB3lsaLy6X11GvVdoD9l1wNIPck7SbQJOMbhaHKbYh3yjQ9mi
-         KZSJCj/+MaBfoOyIhOb1JP4LYh1cdqgME7qDV8Gj+apQAHiy7qF3JccooucNPQpWWa/Q
-         TrfTI+0Wv3/AzyRWVcE8ve5wG+kjd3ulq1z/3P6qnw+eHEC4iZ0poidIl+kBgeqcB2hX
-         CT7eyoXtfK5sMGVKz068pneb7fvfHhHhxzG+6tT7TVRyaj1zQ/0A128271VX9ejjRSGB
-         pAhJDbs+0ki2eqZdLiLxwatX+1CCSX5miQ4LDA0Nx6gqSAm9wOQk7ZUFI5ucmv7ja+ye
-         hMxw==
-X-Gm-Message-State: APjAAAVJ71xCJkYvAQVlJW5APdj0GT3AVmV77Z3Ulj6qppsyJ93s2pm4
-        SVEA5LmUGcc6jNEsTJvWcwyexPxWU1w=
-X-Google-Smtp-Source: APXvYqyZenC+bNNOfVR8pY3Qv7WcM+1Ch4Lg2QRN/JQppk9c0X2qht3MBM3364HHAXt8yFf2esaQbA==
-X-Received: by 2002:a2e:504f:: with SMTP id v15mr344885ljd.67.1568682376390;
-        Mon, 16 Sep 2019 18:06:16 -0700 (PDT)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id u26sm87189lfd.19.2019.09.16.18.06.13
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 18:06:14 -0700 (PDT)
-Received: by mail-lf1-f47.google.com with SMTP id w6so1458347lfl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 18:06:13 -0700 (PDT)
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr535207lfm.170.1568682373612;
- Mon, 16 Sep 2019 18:06:13 -0700 (PDT)
+        Mon, 16 Sep 2019 21:08:34 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8H17cfU013794
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 21:08:33 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2kfeu8br-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 21:08:33 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Tue, 17 Sep 2019 02:08:29 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 17 Sep 2019 02:08:26 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8H18PQ246858652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 01:08:25 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D915511C050;
+        Tue, 17 Sep 2019 01:08:24 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DEFE11C05B;
+        Tue, 17 Sep 2019 01:08:24 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Sep 2019 01:08:24 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 3467FA019A;
+        Tue, 17 Sep 2019 11:08:23 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Add bounds check for Hotplugged memory
+Date:   Tue, 17 Sep 2019 11:07:46 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190916042952.GB23719@1wt.eu> <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com>
- <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com>
- <20190916172117.GB15263@mit.edu> <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com>
- <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org> <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com>
- <20190916232922.GA7880@darwi-home-pc>
-In-Reply-To: <20190916232922.GA7880@darwi-home-pc>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 16 Sep 2019 18:05:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh2PuYtuUVt523j20cTceN+ps8UNJY=uRWQuRaDeDyLQw@mail.gmail.com>
-Message-ID: <CAHk-=wh2PuYtuUVt523j20cTceN+ps8UNJY=uRWQuRaDeDyLQw@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091701-0008-0000-0000-000003173CB5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091701-0009-0000-0000-00004A35B80A
+Message-Id: <20190917010752.28395-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=606 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909170011
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 4:29 PM Ahmed S. Darwish <darwish.07@gmail.com> wrote:
->
-> Linus, in all honesty, the other case is _not_ a hypothetical .
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Oh yes it is.
+This series adds bounds checks for hotplugged memory, ensuring that
+it is within the physically addressable range (for platforms that
+define MAX_(POSSIBLE_)PHYSMEM_BITS.
 
-You're confusing "use" with "breakage".
+This allows for early failure, rather than attempting to access
+bogus section numbers.
 
-The _use_ of getrandom(0) for key generation isn't hypothetical.
+Changelog:
+ V3:
+   - Perform the addressable check before we take the hotplug lock
+ V2:
+   - Don't use MAX_POSSIBLE_PHYSMEM_BITS as it's wider that what
+     may be available
 
-But the _breakage_ from the suggested patch that makes it time out is.
+Alastair D'Silva (2):
+  memory_hotplug: Add a bounds check to check_hotplug_memory_range()
+  mm: Add a bounds check in devm_memremap_pages()
 
-See the difference?
+ include/linux/memory_hotplug.h |  1 +
+ mm/memory_hotplug.c            | 13 ++++++++++++-
+ mm/memremap.c                  |  5 +++++
+ 3 files changed, 18 insertions(+), 1 deletion(-)
 
-The thing is, to break, you have to
+-- 
+2.21.0
 
- (a) do that key generation at boot time
-
- (b) do it on an idle machine that doesn't have entropy
-
-in order to basically reproduce the current boot-time hang situation
-with the broken gdm, except with an actual "generate key".
-
-Then you have to ignore the big warning too.
-
-              Linus
