@@ -2,238 +2,150 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907CAC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8976FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E73F2196F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC7C20644
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fKLIEs8G"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="YVIc29a0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392638AbfIQH25 (ORCPT
+        id S2392648AbfIQHbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:28:57 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:34039 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbfIQH25 (ORCPT
+        Tue, 17 Sep 2019 03:31:09 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:58098 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727509AbfIQHbJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:28:57 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190917072854euoutp01c8ee590627df968b1ef599696dac8128~FKTDPfEPz1202612026euoutp01J
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 07:28:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190917072854euoutp01c8ee590627df968b1ef599696dac8128~FKTDPfEPz1202612026euoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568705334;
-        bh=QezmaJ9hcOGstagnwCUhReu3Niczm5FH8zPmTJiYE9c=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=fKLIEs8Gmx7hhErUMx1Gqak8zCvN3K9nVHT+DJzzDf065rC/zsRZazWMYXOE9B9pp
-         M6QaspGPjAnj4PPIAFgDbvAgrwxX3yI9Mv2d8wFVn154TDnksKjKspRJ/fOCP9fF0w
-         jihntaZX9j8qsttQsEP8NloAOQ75oVI5eYzkRepo=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190917072853eucas1p2d6396e914d979d35b45f7dbdef5557e9~FKTCTdLcH2324823248eucas1p2S;
-        Tue, 17 Sep 2019 07:28:53 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id CA.CE.04469.53B808D5; Tue, 17
-        Sep 2019 08:28:53 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190917072852eucas1p20e5a9c06f747c4ce755f2baede1dada5~FKTBeFKMY0371003710eucas1p2q;
-        Tue, 17 Sep 2019 07:28:52 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190917072852eusmtrp15554c0aa853594e8bf1f76ab7b72481f~FKTBPSqE62506625066eusmtrp1C;
-        Tue, 17 Sep 2019 07:28:52 +0000 (GMT)
-X-AuditID: cbfec7f2-569ff70000001175-50-5d808b35753f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id C9.9F.04117.43B808D5; Tue, 17
-        Sep 2019 08:28:52 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190917072851eusmtip2c086910acabb8262b34313f864868953~FKTAFe5ib1669916699eusmtip2H;
-        Tue, 17 Sep 2019 07:28:51 +0000 (GMT)
-Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
- TX_P0
-To:     Brian Masney <masneyb@onstation.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
-        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
-        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        freedreno@lists.freedesktop.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <356d645a-1c88-8f34-5acb-0803cf2712d2@samsung.com>
-Date:   Tue, 17 Sep 2019 09:28:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Tue, 17 Sep 2019 03:31:09 -0400
+Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8H7RfG7010430;
+        Tue, 17 Sep 2019 03:31:01 -0400
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2059.outbound.protection.outlook.com [104.47.32.59])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2v0sy95mrb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 03:31:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Omek4pjJkN2Xh4rrmiAn52SRGRS18Y+lHYq9iv4Dc9XHcPS+J+Ea3skYjnPgbWVRvhg6W0UO3kY+6Ym7eFQW+XGtlf7TA+KgGm77tY/AD2TWSoEHa9ILtSMTiLT9LQ5Mptwi6LT6cEAJDrXb1IkYI4Q6BHCWGne2AaerV9PvWqufTLqvp33DJICrMapCNK5upiYHbvLqIZ2MMrwhNT/Zaxm0XySkO77A65gisUl7ihCGsR7RHJcnnXqR2nH6SYZfXnj1apwDTgxSo1KJjYI3XFQyIkWk5EwGBmR8wnbZzVSCbwfeaYFXJa97stipExCrrC34Xw40U76C0kOx8eFhHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rGPDIOtBYykbMvDDHcKlWWl00GgfWM3oJ9aVBbaSZR8=;
+ b=A+BiK4Hsls12tKM5FwnEVjMlRYlUsoZVVOcqThKPJVp5JCCea8OvWXQFfl6ZNR6NlPVDNSnArFNwZao/CbksVBuvDZxnbXx12bcepEesM5baJbZA6xKvcfMoZo7HRVdrd1oVyZbgV5a1WFsSvCV46u2LPkG+M8tQg7TtPLHy8RKsBIie/RZqUwY1isL57UjXu4RMFMBLE8IQ/7znsiZA1Of1dmGa8/xFUBwT3wJMh3O+PgCkTOVO1YKQUH2d2xh4v0jZusExE3l08h3T8ccQyHNeX/rmiqHLj/wiXZkXekB7xd8sG1eJrAn+cpGDgBGD2lXzJH4BJgUsaAPYTr13eg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=davemloft.net smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rGPDIOtBYykbMvDDHcKlWWl00GgfWM3oJ9aVBbaSZR8=;
+ b=YVIc29a0s+kB78z5Ce8efVEcVrZuZp1nRdU2plpmylsCFWzXqD/MYngPYrGapRN48F51OQVnHTOVQmzdMrIZ7Dk25zfOgWPX7JCNepvVOcXuog2qTsdh+yVmrkvlDxO7nJ606Z0WgqTqI1uAxaFPTgYIYNPInEmJNdnkT0a6GRw=
+Received: from DM5PR03CA0051.namprd03.prod.outlook.com (2603:10b6:4:3b::40) by
+ DM6PR03MB3420.namprd03.prod.outlook.com (2603:10b6:5:ac::31) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Tue, 17 Sep 2019 07:30:59 +0000
+Received: from SN1NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::203) by DM5PR03CA0051.outlook.office365.com
+ (2603:10b6:4:3b::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2157.16 via Frontend
+ Transport; Tue, 17 Sep 2019 07:30:59 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT061.mail.protection.outlook.com (10.152.72.196) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
+ via Frontend Transport; Tue, 17 Sep 2019 07:30:59 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x8H7UqI7031654
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Tue, 17 Sep 2019 00:30:52 -0700
+Received: from saturn.ad.analog.com (10.48.65.123) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Tue, 17 Sep 2019 03:30:56 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
+        <peppe.cavallaro@st.com>, <alexandre.torgue@st.com>,
+        <andrew@lunn.ch>, <f.fainelli@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Date:   Tue, 17 Sep 2019 13:30:52 +0300
+Message-ID: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190916120228.GA3045@onstation.org>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0yTVxj29Lv0o7HkWDC8wwW1iRpJLLJsyXE2hiUzOfvnLVFpFKp+AyNU
-        1g/wNgLqZCjCuHhrgdFtJZIKoiBYOgUtZJV0dINNqQppF1yMUzGhgpsXHO2HkX/PeZ73fd7n
-        SY7AaOx8vLDblCuaTcYsLa9iO375z7fik9KibSstUwnEN/qKJWW+PgXxdo+x5G1HJUPqe30c
-        +XPiGU+a7rsRqX3Yj8jtF48Y0vfkNkuOV9qV5NTr8wrSOnqHI5Xd/Uryh6uWJw1DAwryXc1j
-        jrjLDeThD/8y5Nj1XiUZqe5FKfNp0/dNiD7zH1NS54gd0euTNpZ2WkeUtKbEwtFWx3Ge3qoY
-        VNDhO9d4enUyyNFAqUdB2+yFtMEfQz2ue0p6o6yapaHWhHU4VaXfJWbtzhfNSWvSVZnXgk18
-        zuDS/WO2x8oi9O2iEyhKAPwxtPxUxp9AKkGDGxGUPnqB5MdzBDaLbUYJIRjvmlC+W2mcPMPJ
-        wnkEo2+H2LCgwU8R+IO5YRyD18OvVh8fxrHYCKNdTyK2DC5mofLHqogTj5fDm7a7kSE1XgPN
-        Q6EIz+IlUO1wREzn4y0wHuzh5Jl50Gd5MM0LQhT+CAJHIzSDF8LR9hpGxnFw70G9InwL8LAA
-        VYG/GTn15zDVdZGXcQz847ky0+ZD8FafZGVcCIHGbxh5uQRB+6XOmeXV0OMZ4MKHmenQLa4k
-        mf4MKrwDkTyAo8H/dJ6cIRqqOs4yMq2GkmKNPL0YAv3tM4Zx0PD7BF+BtNZZxayz2lhntbG+
-        v2tDrAPFiXlSdoYoJZvEfTrJmC3lmTJ0O/dmt6Lpv+ud8ow70cTgDjfCAtLOVfvbCrdpOGO+
-        dCDbjUBgtLHqdQXTlHqX8cBB0bw3zZyXJUputEBgtXHqQ3OCBg3OMOaKe0QxRzS/UxVCVHwR
-        +mqJruzlRtXNl2kJR3LqCjbpVt1P1kfR7TsdFzI1Id8y+9bE+A21O+z1zhvRwgXI19d1biZ0
-        /GSdfe0pfXnP4BdeZ8urr6Xh9AxPSlLiuZ8NqzxLXZcvrlwwadCl/GYqPXRaf3jxUGpacZoz
-        frXLMrZB1fxp41+akMVwK1T+wZcFWlbKNCYnMmbJ+D9vF6rjtwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXcuO1qD06b5Il3GwO7Ntql7VyZ9fL9ERR+KTGzYQS23xc6M
-        jELDTHN0GUbOTXKCy5AVNdN0adayvKWgpallFlkWppLiMjJrlwK//fg//x88DzwMIX5ARTOZ
-        ehNn1GuzZHQ42bXY9m5rnDkvZVvjc4h6Pv4i0aWeDgHqapki0Z96C4EqWnso9GpumkauN16A
-        yse7Aer/8ZVAHd/6SXTRUiVE1xaqBcj9cYBClpZuIXrpKaeR83WvAF2xT1DIezkZjVfOE6ig
-        uVWIRkpawa5I7LrhAnh6sECIG0aqAG72OUjcaBsRYntRGYXdNRdp3H61T4DfDjTR+IHvPYVH
-        zW0CXFuVi52DEtzmGRbix5dKSDzrXrOXPSRPNBqyTZw0w8CbdsqSFUgpV2iQXBmnkStU6pTt
-        ynhZbFLiUS4r8yRnjE06Is9oeu+iT/StOzXlmBDmgUJpMQhjIBsHb/muUwEWs04A57+AUB4F
-        H1ZMEiGWwIWBYroYhPs7EwAOt7mDAwm7D76w9dABjmC1sOvXzWCJYC+QsPFOMxUy7hKwf+4e
-        GWjR7Eb4u3YoaIjYJHj79awwwCQbA0tqaoKdSPYgfNpgA6HOCthRNubPGSaMVcLR/OCmBLse
-        LtzoI0K8FubX2f9xFBweqxBcBWLbEtu2RLEtUWxLFAcga0AEl83r0nW8Us5rdXy2Pl2eZtC5
-        gf9p6p//vN8Aiqf2ewHLANly0WBtboqY0p7kc3ReABlCFiHae9YfiY5qc05zRkOqMTuL470g
-        3n+bhYiOTDP4X1BvSlXEK9RIo1Cr1KoEJIsSFbFPDovZdK2JO85xJzjjf0/AhEXngZw4Zrqj
-        QArFDdLPnpXJE2R3r/30sdihe98rzUMrHedXW4tiFup2DyxGt3jXVGONw1J1d8ebxPvWx+ZC
-        U25juNo5s5PaY31Wt6zz3BV95maFqjP8UfmZD59G21dt0kxK5ySlcyr45/JYpH7LjNWzof3Y
-        nZnBHUW+wgOluYuuBJWM5DO0ik2Ekdf+BRkdBOpKAwAA
-X-CMS-MailID: 20190917072852eucas1p20e5a9c06f747c4ce755f2baede1dada5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
-References: <20190815004854.19860-1-masneyb@onstation.org>
-        <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
-        <20190815004854.19860-6-masneyb@onstation.org>
-        <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
-        <20190916103614.GA1644@onstation.org>
-        <20190916104907.GB4734@pendragon.ideasonboard.com>
-        <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
-        <20190916120228.GA3045@onstation.org>
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(189003)(199004)(4326008)(5660300002)(44832011)(50226002)(2616005)(2906002)(486006)(476003)(1076003)(51416003)(70586007)(70206006)(8676002)(356004)(2201001)(336012)(7696005)(50466002)(48376002)(478600001)(86362001)(246002)(6666004)(426003)(2870700001)(8936002)(36756003)(107886003)(126002)(14444005)(54906003)(110136005)(47776003)(316002)(26005)(7636002)(186003)(305945005)(106002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3420;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 59592852-2cc6-42f3-7f50-08d73b40fc36
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM6PR03MB3420;
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3420:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB3420EC27CA4FB1EF6FA1B461F98F0@DM6PR03MB3420.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 01630974C0
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: h495/GfwrWaucOzXqDc2sGpaIFnDp7wTet0GJvZtWFfHHtB0qSnhWulRRv7yTio7VZw1Ywk+etbAi1ZF9xYnp0/Y5gfWQvwfHNu8uq+7EJmKSEtMpSJUPpZY5CcVzNMust2DmN0m3e4J99W25MFYDQv3xrcZTPFsZ6vtBPvxN6OoXhSWcyCR40csl8O/WhAFsYxNlgXc+UA4b3GqnehVFbA7obKZBmsxdjcsQrAccAyhlEE+bP3iYWTRYeqCQbFA/V28Wg1XV7Lylmf8Bf+y7ANwtabW9kHjSuccZPTD0AjQ1IEuaMEPvksXRWCC2gaLKz4iBmfhAQPIPHquy7iXQr57ijxWaBpGCBpAt9bv4suvSxLd6RcvIf5AcpNtwB1ZS8lhH87GN8VaxzuZ+gh/43Wag2rkCIz4kwwFC3Vlzhw=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2019 07:30:59.0399
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59592852-2cc6-42f3-7f50-08d73b40fc36
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3420
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-17_04:2019-09-11,2019-09-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 suspectscore=0 mlxlogscore=930 bulkscore=0
+ mlxscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909170082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.09.2019 14:02, Brian Masney wrote:
-> On Mon, Sep 16, 2019 at 01:32:58PM +0200, Enric Balletbo i Serra wrote:
->> Hi,
->>
->> On 16/9/19 12:49, Laurent Pinchart wrote:
->>> Hi Brian,
->>>
->>> On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
->>>> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
->>>>> On 15.08.2019 02:48, Brian Masney wrote:
->>>>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
->>>>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
->>>>>> error. The downstream MSM kernel sources [1] shows that the proper value
->>>>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
->>>>>> probing to succeed.
->>>>>>
->>>>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
->>>>>>
->>>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
->>>>>> ---
->>>>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> index 25e063bcecbc..bc511fc605c9 100644
->>>>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
->>>>>> @@ -6,7 +6,7 @@
->>>>>>  #ifndef __ANX78xx_H
->>>>>>  #define __ANX78xx_H
->>>>>>  
->>>>>> -#define TX_P0				0x70
->>>>>> +#define TX_P0				0x78
->>>>>
->>>>> This bothers me little. There are no upstream users, grepping android
->>>>> sources suggests that both values can be used [1][2]  (grep for "#define
->>>>> TX_P0"), moreover there is code suggesting both values can be valid [3].
->>>>>
->>>>> Could you verify datasheet which i2c slave addresses are valid for this
->>>>> chip, if both I guess this patch should be reworked.
->>>>>
->>>>>
->>>>> [1]:
->>>>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
->>>>>
->>>>> [2]:
->>>>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
->>>>>
->>>>> [3]:
->>>>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
->>>> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
->>>> need to support both addresses. What do you think about moving these
->>>> addresses into device tree?
->>> Assuming that the device supports different addresses (I can't validate
->>> that as I don't have access to the datasheet), and different addresses
->>> need to be used on different systems, then the address to be used needs
->>> to be provided by the firmware (DT in this case). Two options are
->>> possible, either specifying the address explicitly in the device's DT
->>> node, or specifying free addresses (in the form of a white list or black
->>> list) and allocating an address from that pool. The latter has been
->>> discussed in a BoF at the Linux Plumbers Conference last week,
->>> https://linuxplumbersconf.org/event/4/contributions/542/.
->>>
->>>> The downstream and upstream kernel sources divide these addresses by two
->>>> to get the i2c address. Here's the code in upstream:
->>>>
->>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
->>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
->>>>
->>>> I'm not sure why the actual i2c address isn't used in this code.
->> The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
->> or control the chip from the AP. The I2C slave addresses used to control the
->> ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
->> access to different registers of the chip and AFAICS is not configurable.
->>
->> I don't think these addresses should be configured via DT but for the driver itself.
->>
->> My wild guess is that the ANX7808 has different addresses, but I don't have the
->> datasheet of this version.
-> I'm able to communicate with the 7808 on my Nexus 5 using the 0x78
-> address. Given that the addresses appear to be fixed per model, maybe it
-> makes sense to drop the address #defines and add the addresses to the
-> data pointer in the driver's of_match_table like so:
->
-> static const struct of_device_id anx78xx_match_table[] = {
->         { .compatible = "analogix,anx7808", .data = PTR_TO_7808_ADDRS },
->         { .compatible = "analogix,anx7812", .data = PTR_TO_781X_ADDRS },
->         { .compatible = "analogix,anx7814", .data = PTR_TO_781X_ADDRS },
->         { .compatible = "analogix,anx7818", .data = PTR_TO_781X_ADDRS },
->         { /* sentinel */ },
-> };
+The 'mac-mode' property is similar to 'phy-mode' and 'phy-connection-type',
+which are enums of mode strings.
 
+The 'dwmac' driver supports almost all modes declared in the 'phy-mode'
+enum (except for 1 or 2). But in general, there may be a case where
+'mac-mode' becomes more generic and is moved as part of phylib or netdev.
 
-With given feedback from other users and lack of datasheets for chips
-(except anx7814) we can try this approach.
+In any case, the 'mac-mode' field should be made an enum, and it also makes
+sense to just reference the 'phy-connection-type' from
+'ethernet-controller.yaml'. That will also make it more future-proof for new
+modes.
 
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ Documentation/devicetree/bindings/net/snps,dwmac.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards
-
-Andrzej
-
-
->
-> Brian
->
->
+diff --git a/Documentation/devicetree/bindings/net/snps,dwmac.yaml b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+index ebe4537a7cce..4845e29411e4 100644
+--- a/Documentation/devicetree/bindings/net/snps,dwmac.yaml
++++ b/Documentation/devicetree/bindings/net/snps,dwmac.yaml
+@@ -113,7 +113,7 @@ properties:
+     const: stmmaceth
+ 
+   mac-mode:
+-    maxItems: 1
++    $ref: ethernet-controller.yaml#/properties/phy-connection-type
+     description:
+       The property is identical to 'phy-mode', and assumes that there is mode
+       converter in-between the MAC & PHY (e.g. GMII-to-RGMII). This converter
+-- 
+2.20.1
 
