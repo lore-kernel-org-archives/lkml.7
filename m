@@ -2,102 +2,83 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E51C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556D8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8644320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F9921881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:34:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568738061;
+	bh=UccYSWgV+EB3bM6XTwr+8sqMg+4V15D2FrObBy4Jqf0=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=KeeEt+hBNlm90LkTDHFfWEZiAmMfMxXC3Vy1Lad7DyAGrrARh1oYKi8m+M+O0cNke
+	 pFbZlbrSX+SUB3ZKsh/XH50YDO3vb6CNiw9/yXNs/FSfklS3dDU/ex/QNwccotO1M1
+	 D3cL2jKrJnIWI7U7A0lLbmq+sCHJYDD/E2XzVaVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbfIQQdx (ORCPT
+        id S1730396AbfIQQeU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:33:53 -0400
-Received: from mx01.bbu.dsd.mx.bitdefender.com ([91.199.104.161]:46504 "EHLO
-        mx01.bbu.dsd.mx.bitdefender.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730330AbfIQQdx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:33:53 -0400
-X-Greylist: delayed 603 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 12:33:52 EDT
-Received: from smtp.bitdefender.com (smtp01.buh.bitdefender.com [10.17.80.75])
-        by mx01.bbu.dsd.mx.bitdefender.com (Postfix) with ESMTPS id B7930307489B;
-        Tue, 17 Sep 2019 19:23:48 +0300 (EEST)
-Received: from localhost (unknown [195.210.4.22])
-        by smtp.bitdefender.com (Postfix) with ESMTPSA id 9F14130BC822;
-        Tue, 17 Sep 2019 19:23:48 +0300 (EEST)
-From:   Adalbert =?iso-8859-2?b?TGF643I=?= <alazar@bitdefender.com>
-Subject: Re: [PATCH v5 0/9] Enable Sub-page Write Protection Support
-To:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com
-In-Reply-To: <20190917125904.GB22162@char.us.oracle.com>
-References: <20190917085304.16987-1-weijiang.yang@intel.com>
-        <20190917125904.GB22162@char.us.oracle.com>
-Date:   Tue, 17 Sep 2019 19:24:15 +0300
-Message-ID: <15687374550.b5d3c.30742@host>
-User-agent: void
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Sep 2019 12:34:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730379AbfIQQeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:34:20 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C4DD20665;
+        Tue, 17 Sep 2019 16:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568738059;
+        bh=UccYSWgV+EB3bM6XTwr+8sqMg+4V15D2FrObBy4Jqf0=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=G8f/QoEfCFyJYP0rMyNO0NsV9zjqmp0Bj9ovh7ZZ6U7yY8iIFa6bU4ij/WD8BbXJ7
+         +TUe+BzFlQgi1X4YY/ELSBUnhpZVqADsnJNyXfSOKpm7wfhkcLo7Acg3dK3cFTv0XH
+         Iq7YZkYoY76xPPAGqy7CiF1QxfHe3UM93dRh/2AY=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190916154546.24982-2-manivannan.sadhasivam@linaro.org>
+References: <20190916154546.24982-1-manivannan.sadhasivam@linaro.org> <20190916154546.24982-2-manivannan.sadhasivam@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        thomas.liau@actions-semi.com, linux-actions@lists.infradead.org,
+        linus.walleij@linaro.org, linux-clk@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        afaerber@suse.de, robh+dt@kernel.org, ulf.hansson@linaro.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v4 1/7] clk: actions: Fix factor clk struct member access
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 09:34:18 -0700
+Message-Id: <20190917163419.4C4DD20665@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 08:59:04 -0400, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> wrote:
-> On Tue, Sep 17, 2019 at 04:52:55PM +0800, Yang Weijiang wrote:
-> > EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
-> > Virtual Machine Monitor(VMM) to specify write-permission for guest
-> > physical memory at a sub-page(128 byte) granularity. When this
-> > capability is enabled, the CPU enforces write-access check for sub-pages
-> > within a 4KB page.
-> > 
-> > The feature is targeted to provide fine-grained memory protection for
-> > usages such as device virtualization, memory check-point and VM
-> > introspection etc.
-> > 
-> > SPP is active when the "sub-page write protection" (bit 23) is 1 in
-> > Secondary VM-Execution Controls. The feature is backed with a Sub-Page
-> > Permission Table(SPPT), SPPT is referenced via a 64-bit control field
-> > called Sub-Page Permission Table Pointer (SPPTP) which contains a
-> > 4K-aligned physical address.
-> > 
-> > To enable SPP for certain physical page, the gfn should be first mapped
-> > to a 4KB entry, then set bit 61 of the corresponding EPT leaf entry. 
-> > While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
-> > physical address to find out the sub-page permissions at the leaf entry.
-> > If the corresponding bit is set, write to sub-page is permitted,
-> > otherwise, SPP induced EPT violation is generated.
-> > 
-> > This patch serial passed SPP function test and selftest on Ice-Lake platform.
-> > 
-> > Please refer to the SPP introduction document in this patch set and
-> > Intel SDM for details:
-> > 
-> > Intel SDM:
-> > https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
-> > 
-> > SPP selftest patch:
-> > https://lkml.org/lkml/2019/6/18/1197
-> > 
-> > Previous patch:
-> > https://lkml.org/lkml/2019/8/14/97
-> 
-> I saw the patches as part of the introspection patch-set.
-> Are you all working together on this?
+Quoting Manivannan Sadhasivam (2019-09-16 08:45:40)
+> Since the helper "owl_factor_helper_round_rate" is shared between factor
+> and composite clocks, using the factor clk specific helper function
+> like "hw_to_owl_factor" to access its members will create issues when
+> called from composite clk specific code. Hence, pass the "factor_hw"
+> struct pointer directly instead of fetching it using factor clk specific
+> helpers.
+>=20
+> This issue has been observed when a composite clock like "sd0_clk" tried
+> to call "owl_factor_helper_round_rate" resulting in pointer dereferencing
+> error.
+>=20
+> While we are at it, let's rename the "clk_val_best" function to
+> "owl_clk_val_best" since this is an owl SoCs specific helper.
+>=20
+> Fixes: 4bb78fc9744a ("clk: actions: Add factor clock support")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-Weijiang helped us to start using the SPP feature with the introspection
-API and tested the integration when we didn't had the hardware
-available. I've included the SPP patches in the introspection patch
-series in order to "show the full picture".
+I can apply this to clk-next?
 
-> Would it be possible for some of the bitdefender folks who depend on this
-> to provide Tested-by adn could they also take the time to review this patch-set?
-
-Sure. Once we rebase the introspection patches on 5.3, we'll replace
-the previous version this new one in our tree and test it.
