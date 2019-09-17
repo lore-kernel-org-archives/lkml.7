@@ -2,106 +2,108 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F357EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59040C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09E22189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 314DB20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfIQJjI (ORCPT
+        id S1728547AbfIQJj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:39:08 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:59351 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbfIQJjF (ORCPT
+        Tue, 17 Sep 2019 05:39:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:41107 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfIQJjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:39:05 -0400
-IronPort-SDR: /+XDldrwZK1RVt2U20CTYZLEM+oVy8eAq/caijhHeq5DTlBoawQRxl/Ozc24Hb0l5mmKiblJdR
- 4KFctO07X1dIQ79YrLMlS7F0aMAf4OqHagYOx+7LAN7wtwR7AwX8xyrgBEp0hPOf768zDKUV2U
- aGHgM9EW/Zvd1RVYRXsM6CaoFgeBRXQ0YrSlk1ADMj1iQ+4VJTPjwz38Cxlllnj4LAozR6lvoV
- NgnFie+6eKfS7JfgIfjwdYBDBvcAmMsfiYdcyI8KCbc2Mi4QkCw2ug/VFRuJpZREQRzmJY79ZE
- RHs=
-X-IronPort-AV: E=Sophos;i="5.64,515,1559548800"; 
-   d="scan'208";a="43223077"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa1.mentor.iphmx.com with ESMTP; 17 Sep 2019 01:39:04 -0800
-IronPort-SDR: 4fzFS0XbHp5G00Lmy9BfjSjOiGQ9SpFgsLYHI17m6lEWNM65EDZfni4NpyQGisu3AwFYlr2qIL
- rTJLwoaHpBfvLkGSverp3B179NGHJgt11A3z0yKwe9lVNgT5QCHc564ykXmq1bG5rpLeYtO9eK
- 3d0OdD0U9dqh1VBn7aw6x2Sut9dr+Ebc5sx9JTpVVMY59bRLWjRYDyQ/ePj8zchZ2Ph1dPXDfe
- 8VNT6Rq0X5fGK9BcX3SpErp8eCJSrTc2zAMCVZyxNHADWfPe0gWylWYnQDuFlcxK7BzoVVWDp0
- Wr4=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v3 19/49] Input: atmel_mxt_ts - add config checksum attribute to sysfs
-Date:   Tue, 17 Sep 2019 18:37:36 +0900
-Message-ID: <20190917093806.18538-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190917093806.18538-1-jiada_wang@mentor.com>
-References: <20190917093806.18538-1-jiada_wang@mentor.com>
+        Tue, 17 Sep 2019 05:39:25 -0400
+Received: from [5.158.153.52] (helo=linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <kurt.kanzenbach@linutronix.de>)
+        id 1iA9x9-0000M8-FJ; Tue, 17 Sep 2019 11:39:19 +0200
+Date:   Tue, 17 Sep 2019 11:39:19 +0200
+From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Andy Tang <andy.tang@nxp.com>,
+        Alexander Stein <alexander.stein@systec-electronic.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] irqchip: add support for Layerscape external
+ interrupt lines
+Message-ID: <20190917093918.GA8901@linutronix.de>
+References: <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
+ <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
+ <20180223210901.23480-2-rasmus.villemoes@prevas.dk>
+ <alpine.DEB.2.21.1803011308440.1396@nanos.tec.linutronix.de>
+ <4684c3ce-b56a-334d-f556-6e8524d8126c@prevas.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+Content-Disposition: inline
+In-Reply-To: <4684c3ce-b56a-334d-f556-6e8524d8126c@prevas.dk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: karl tsou <karl.funlab@gmail.com>
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 03477477ddbe5dcad42853ab3f84166a8f807acf)
-[gdavis: Forward port and fix conflicts.]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+--AhhlLboLdkugWU4S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index f0522f4416dc..69e34294688c 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -3128,6 +3128,15 @@ static int mxt_configure_objects(struct mxt_data *data,
- 	return error;
- }
- 
-+/* Configuration crc check sum is returned as hex xxxxxx */
-+static ssize_t mxt_config_crc_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct mxt_data *data = dev_get_drvdata(dev);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%06x\n", data->config_crc);
-+}
-+
- /* Firmware Version is returned as Major.Minor.Build */
- static ssize_t mxt_fw_version_show(struct device *dev,
- 				   struct device_attribute *attr, char *buf)
-@@ -3481,12 +3490,14 @@ static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
- static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
- static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
- static DEVICE_ATTR(update_cfg, S_IWUSR, NULL, mxt_update_cfg_store);
-+static DEVICE_ATTR(config_crc, S_IRUGO, mxt_config_crc_show, NULL);
- 
- static struct attribute *mxt_attrs[] = {
- 	&dev_attr_fw_version.attr,
- 	&dev_attr_hw_version.attr,
- 	&dev_attr_object.attr,
- 	&dev_attr_update_cfg.attr,
-+	&dev_attr_config_crc.attr,
- 	NULL
- };
- 
--- 
-2.19.2
+Hi,
 
+On Fri, May 04, 2018 at 09:44:25AM +0200, Rasmus Villemoes wrote:
+> >> +static int
+> >> +ls_extirq_set_type(struct irq_data *data, unsigned int type)
+> >> +{
+> >> +	irq_hw_number_t hwirq = data->hwirq;
+> >> +	struct extirq_chip_data *chip_data = data->chip_data;
+> >> +	u32 value, mask;
+> >
+> > Please order local variables in reverse fir tree fashion whenever
+> > possible. That's way simpler to read:
+> >
+> > 	struct extirq_chip_data *chip_data = data->chip_data;
+> > 	irq_hw_number_t hwirq = data->hwirq;
+> > 	u32 value, mask;
+>
+> Fixed, thanks.
+
+Did you send a sixth version of this patch set? It seems like the code
+hasn't been merged, yet. I also need support for the external interrupt
+lines on a different Layerscape.
+
+Thanks,
+Kurt
+
+--AhhlLboLdkugWU4S
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl2AqcYACgkQeSpbgcuY
+8KbC2hAAoCZDi2xaYd2gH9b02qjCYtAn1mJu+ibwMc+1BYoHks2kUX/F3iB/ev/Z
+X2dsFpF5fQaE1vBnKpSn8P8qCv+eQzfwWqJlt/RIqE2hFBK+1NChQk/oRIycC6Pj
+xyi38aHLrisB9W7LM+rXsBdlxb0Dzz4L+5TJaGS92gXoNwVpJlwPiBe/kirtWCKc
+cISaUjbjcY0fBVZwQ62QBiIWnXoXENFomtwzxzhesPkCNurbU67NfDEEF1mh56Oy
+x0IawGVtnOxMYEewZa/ybGAAtICC2n/58CyOFi6pDB65QTjxwYypzO3nwV8Wfaps
+XdhBM+mN7PAhBB4TVzEgiqUFJU/Lqh+9Cc6c/rZHynlxYiSCXwHOex4CIWd1UYcG
+JCJFO6KFTWviPzU3eai9DROwpuIgy12Eo+C3X6II8I/jQxWkj54TTNR/LQ0ghcYl
+06cOQlm86BAfqrY+6iTC3kSZ6EWCEys/kRplajDPeNHDaKuGoREFyNcmpa70hCfz
+KNzOTqOfJd3lsrOIx8kbXOZ01h/4+BRcHKEhIME/LRz8o7UBAnavxy29BTEPKHXz
+qyoAoIljxwUwTsk74mLvUZzoXNEQ95NpC7Z/bq+WAEgh8vdgMDKHsUn42Sa4hMnq
+czD9MAPGcsP5TzpVoWmSZY4ZrG3FiPeqJvbpEzrU67Ltdeq+9t4=
+=rHJv
+-----END PGP SIGNATURE-----
+
+--AhhlLboLdkugWU4S--
