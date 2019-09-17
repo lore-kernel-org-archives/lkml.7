@@ -1,139 +1,141 @@
-Return-Path: <SRS0=w+Kb=XL=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07114C4CECE
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CEBAC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC650206A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 16 Sep 2019 23:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C9920578
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Tl3ojxBS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDkTBI8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfIPX5k (ORCPT
+        id S1730237AbfIQAF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 19:57:40 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:43754 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728891AbfIPX5j (ORCPT
+        Mon, 16 Sep 2019 20:05:56 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42595 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727912AbfIQAFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 19:57:39 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GNnx84096081;
-        Mon, 16 Sep 2019 23:57:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=IuSLh0fb/BvGl8pVix7sy0MqWGyNSfMj/T9waRFCoi8=;
- b=Tl3ojxBSLNTUyPlp46F0uqZ9+/J9tk6YWvuggRkE92WBOn3WxBpiam3c9Z1CvBLiV1pt
- r4GLLmcvDbTKOvsl9CphukxDVJCHsFkY0V8F7IkXWmAS0joTBNXJWCPwH07xRCRqgvU+
- 9ac1clwPeFGamvbU1FKqYV8dPEArhoQuD9z9HST34oU4i6COHUwmF2fEfJMxbwv/ujid
- bW5jXOXoTaI6wLbG1Vr3UwqZd3GUxWMdhxeBDBicSYxqhekT1N3XkXuvwhyFHNDsSpnU
- Vev/1ep5bPue2h9jdCJ7Y06i/J/ZHcp1GDtGAxemTiAOJE/SGtHj/jENTVkorZWGQ1KH /g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2v0r5pamr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 23:57:07 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8GNrlI0014393;
-        Mon, 16 Sep 2019 23:57:07 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2v0p8vakx1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 23:57:07 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8GNv6Cb025921;
-        Mon, 16 Sep 2019 23:57:06 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 16 Sep 2019 16:57:06 -0700
-Subject: Re: [PATCH v4 6/9] hugetlb: disable region_add file_region coalescing
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
-        gthelen@google.com, akpm@linux-foundation.org,
-        khalid.aziz@oracle.com, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        cgroups@vger.kernel.org, aneesh.kumar@linux.vnet.ibm.com,
-        mkoutny@suse.com
-References: <20190910233146.206080-1-almasrymina@google.com>
- <20190910233146.206080-7-almasrymina@google.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <abe11781-7267-e54e-0b81-46dc4ea6d5a4@oracle.com>
-Date:   Mon, 16 Sep 2019 16:57:04 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 16 Sep 2019 20:05:55 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q12so952154pff.9;
+        Mon, 16 Sep 2019 17:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=baniowhMYStzAeCarx/sh1i/50jPhkdSEMhte1BfHf4=;
+        b=QDkTBI8OkV9+U41zSTFDRaG+W3egIuzxRz5itZnmQdqrzqvVJ8Xtln9xvMRJtZZjAK
+         Tf56eIYGeByJ/f9FMO1zhyFYtwHRPXBRkTWMbmQGlqq3G3yU9pHj+uSYli5/GZ2nleUy
+         i/3w9QBIgH5LhrPkNazF09K1o3/kld6DobWO9umsAeSvaC87oMZySdj5KuagsyM648lf
+         OubKTWGcOBcWG6V+aDyDnxDiiJxNQFzItsHH/ObXq/tFCEeB/ETPIn4kxoWfIPMMCsCL
+         pctGdCVVklBnwf7LWRT18d0e/QIKy88Af+qvGjHVxB4EFtB+asGhCDW9cYjes0Ty4p9q
+         SaDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=baniowhMYStzAeCarx/sh1i/50jPhkdSEMhte1BfHf4=;
+        b=YwFxF9HwVG4J4TNnQQSN/jgbEVglpJ3W6N1wZlStYyHCXVrxLKM6VuhQkpBL23AVCy
+         evSzWluHzJ3Ivar7ftvrH4bJnThD5MsbiO+YJMYq7JulB9mFpmreIj+eLrdWf0f+pS1a
+         NQMaVwOMY3i10oq0JHTfpV0nijZw0d9kOXThpWu3ej9OCF7KFdnvEErObf5INrCu/1c2
+         CpP01cmDXvj1uPajAr97NmiR3nUAAXi3lGBTcIV6+vOGnBOb0sIJxbYp/PTj2kA2EKYT
+         QG02eYR7UEc4aLFWd0sZcq5WxSCXFyPgEuYu3RA9byvPzaDU2ZXcjtw3wUInOh70yBlT
+         haAg==
+X-Gm-Message-State: APjAAAWm20vVSb8ctFL7r7OKqHuzo0ZzPqgTnK/uvRWBAaweCK1gYuIS
+        nTZ5AkmOWDk6qy8f/0T4/I6cXgpXP90=
+X-Google-Smtp-Source: APXvYqz0PeZSDBSC5l5eljSy7AY5XnFCmp2VRvGuofWHCSx/srcu18Ht5AdkvIVeGwgA6Y5TqKZvzQ==
+X-Received: by 2002:aa7:9835:: with SMTP id q21mr570191pfl.122.1568678755003;
+        Mon, 16 Sep 2019 17:05:55 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id h18sm266844pfn.53.2019.09.16.17.05.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 16 Sep 2019 17:05:54 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 17:05:36 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Shengjiu Wang <shengjiu.wang@nxp.com>
+Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
+        lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V2 1/2] ASoC: fsl_mqs: add DT binding documentation
+Message-ID: <20190917000535.GE12789@Asurada-Nvidia.nvidia.com>
+References: <65e1f035aea2951aacda54aa3a751bc244f72f6a.1568367274.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190910233146.206080-7-almasrymina@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909160227
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909160227
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65e1f035aea2951aacda54aa3a751bc244f72f6a.1568367274.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/10/19 4:31 PM, Mina Almasry wrote:
-> A follow up patch in this series adds hugetlb cgroup uncharge info the
-> file_region entries in resv->regions. The cgroup uncharge info may
-> differ for different regions, so they can no longer be coalesced at
-> region_add time. So, disable region coalescing in region_add in this
-> patch.
+On Fri, Sep 13, 2019 at 05:42:13PM +0800, Shengjiu Wang wrote:
+> Add the DT binding documentation for NXP MQS driver
 > 
-> Behavior change:
-> 
-> Say a resv_map exists like this [0->1], [2->3], and [5->6].
-> 
-> Then a region_chg/add call comes in region_chg/add(f=0, t=5).
-> 
-> Old code would generate resv->regions: [0->5], [5->6].
-> New code would generate resv->regions: [0->1], [1->2], [2->3], [3->5],
-> [5->6].
-> 
-> Special care needs to be taken to handle the resv->adds_in_progress
-> variable correctly. In the past, only 1 region would be added for every
-> region_chg and region_add call. But now, each call may add multiple
-> regions, so we can no longer increment adds_in_progress by 1 in region_chg,
-> or decrement adds_in_progress by 1 after region_add or region_abort. Instead,
-> region_chg calls add_reservation_in_range() to count the number of regions
-> needed and allocates those, and that info is passed to region_add and
-> region_abort to decrement adds_in_progress correctly.
+> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-Hate to throw more theoretical examples at you but ...
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
-Consider an existing reserv_map like [3-10]
-Then a region_chg/add call comes in region_chg/add(f=0, t=10).
-The region_chg is going to return 3 (additional reservations needed), and
-also out_regions_needed = 1 as it would want to create a region [0-3].
-Correct?
-But, there is nothing to prevent another thread from doing a region_del [5-7]
-after the region_chg and before region_add.  Correct?
-If so, it seems the region_add would need to create two regions, but there
-is only one in the cache and we would BUG in get_file_region_entry_from_cache.
-Am I reading the code correctly?
-
-The existing code wants to make sure region_add called after region_chg will
-never return error.  This is why all needed allocations were done in the
-region_chg call, and it was relatively easy to do in existing code when
-region_chg would only need one additional region at most.
-
-I'm thinking that we may have to make region_chg allocate the worst case
-number of regions (t - f)/2, OR change to the code such that region_add
-could return an error.
--- 
-Mike Kravetz
+> ---
+> Changes in v2
+> -refine the comments for properties
+> 
+>  .../devicetree/bindings/sound/fsl,mqs.txt     | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,mqs.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,mqs.txt b/Documentation/devicetree/bindings/sound/fsl,mqs.txt
+> new file mode 100644
+> index 000000000000..40353fc30255
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,mqs.txt
+> @@ -0,0 +1,36 @@
+> +fsl,mqs audio CODEC
+> +
+> +Required properties:
+> +  - compatible : Must contain one of "fsl,imx6sx-mqs", "fsl,codec-mqs"
+> +		"fsl,imx8qm-mqs", "fsl,imx8qxp-mqs".
+> +  - clocks : A list of phandles + clock-specifiers, one for each entry in
+> +	     clock-names
+> +  - clock-names : "mclk" - must required.
+> +		  "core" - required if compatible is "fsl,imx8qm-mqs", it
+> +		           is for register access.
+> +  - gpr : A phandle of General Purpose Registers in IOMUX Controller.
+> +	  Required if compatible is "fsl,imx6sx-mqs".
+> +
+> +Required if compatible is "fsl,imx8qm-mqs":
+> +  - power-domains: A phandle of PM domain provider node.
+> +  - reg: Offset and length of the register set for the device.
+> +
+> +Example:
+> +
+> +mqs: mqs {
+> +	compatible = "fsl,imx6sx-mqs";
+> +	gpr = <&gpr>;
+> +	clocks = <&clks IMX6SX_CLK_SAI1>;
+> +	clock-names = "mclk";
+> +	status = "disabled";
+> +};
+> +
+> +mqs: mqs@59850000 {
+> +	compatible = "fsl,imx8qm-mqs";
+> +	reg = <0x59850000 0x10000>;
+> +	clocks = <&clk IMX8QM_AUD_MQS_IPG>,
+> +		 <&clk IMX8QM_AUD_MQS_HMCLK>;
+> +	clock-names = "core", "mclk";
+> +	power-domains = <&pd_mqs0>;
+> +	status = "disabled";
+> +};
+> -- 
+> 2.21.0
+> 
