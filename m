@@ -2,80 +2,83 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D65C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C604DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605912171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ADE02171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:46:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="dqx9U4lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbfIQPk3 (ORCPT
+        id S1729787AbfIQPq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:40:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42415 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbfIQPk2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:40:28 -0400
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iAFaZ-0003ZY-HW; Tue, 17 Sep 2019 17:40:23 +0200
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iAFaY-0003yZ-Ex; Tue, 17 Sep 2019 17:40:22 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     zhang.chunyan@linaro.org, dianders@chromium.org,
-        lgirdwood@gmail.com, broonie@kernel.org,
-        ckeepax@opensource.cirrus.com
-Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 0/3] Regulator core fixes
-Date:   Tue, 17 Sep 2019 17:40:18 +0200
-Message-Id: <20190917154021.14693-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Sep 2019 11:46:29 -0400
+Received: from canardo.mork.no ([148.122.252.1]:40655 "EHLO canardo.mork.no"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728003AbfIQPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:46:29 -0400
+Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x8HFkLQV019542
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 17 Sep 2019 17:46:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1568735182; bh=01F0+hoCVuL91LPexeI+J5fAbsP/o62EI5xZw9DZwNA=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=dqx9U4lJuXVqWbWCKQEHhYcuwa4PNOEQN8whjxPCB6mDbVCL+uDM+6mdOa/D+Xkss
+         9EbJpT1xgDN9R8k9dwCPSjjnPTAh77gaeI4y4yJc91lQBrU0p5PAtwyycNBT3I5Kwe
+         Ew1VVgTsrxUO3AJFbcK9oJ1rzR505tiNLzZDEV70=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1iAFgL-0007xx-10; Tue, 17 Sep 2019 17:46:21 +0200
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     syzbot <syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, davem@davemloft.net,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, oliver@neukum.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: divide error in cdc_ncm_update_rxtx_max
+Organization: m
+References: <00000000000018e4250592c043c3@google.com>
+Date:   Tue, 17 Sep 2019 17:46:20 +0200
+In-Reply-To: <00000000000018e4250592c043c3@google.com> (syzbot's message of
+        "Tue, 17 Sep 2019 07:09:00 -0700")
+Message-ID: <87d0fzlycz.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.101.4 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+syzbot <syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com> writes:
 
-this series address several improvements I found during devel a
-battery-powered device.
+> syzbot has tested the proposed patch but the reproducer still
+> triggered crash:
+> divide error in usbnet_update_max_qlen
+>
+> cdc_ncm 5-1:1.0: setting tx_max =3D 16384
+> divide error: 0000 [#1] SMP KASAN
+> CPU: 1 PID: 1737 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine,
+> BIOS Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:usbnet_update_max_qlen drivers/net/usb/usbnet.c:344 [inline]
+> RIP: 0010:usbnet_update_max_qlen+0x231/0x370 drivers/net/usb/usbnet.c:338
 
-The first one address the usage count. IMHO it should be possible to
-disable a boot-on marked regulator because the regulator can be left on
-by the fw but it isn't forbidden to disable it.
+Sure, but that's another error already fixed by Oliver..
 
-The 2nd address a probe failure. I found that the only dts using
-regulator-suspend-min/max-microvolt is the at91-sama5d2_xplained.dts and
-this dt use the binding as described in the documentation.
-Unfortunately the doc and the implementation are different.
+I guess this fix worked.  But I believe we should see if this is a more
+generic issue than just this single driver/bug.  I fear it is...
 
-The 3rd adds the support for EPROBE_DEFER.
 
-Regards,
-  Marco
 
-Marco Felsch (3):
-  regulator: core: fix boot-on regulators use_count usage
-  regulator: of: fix suspend-min/max-voltage parsing
-  regulator: core: make regulator_register() EPROBE_DEFER aware
-
- drivers/regulator/core.c         | 18 ++++++++++++++++++
- drivers/regulator/of_regulator.c | 27 ++++++++++++++++++---------
- 2 files changed, 36 insertions(+), 9 deletions(-)
-
--- 
-2.20.1
-
+Bj=C3=B8rn
