@@ -2,95 +2,115 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F049C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74C1620678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:44:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHgLFOns"
+	by mail.kernel.org (Postfix) with ESMTP id D17A121848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:47:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568699250;
+	bh=AVcvkAscp3almTt+ZEb5Om2XnT1GXYzgOvOjeTLhP5Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ci6gtXSw7k7J/N7Iexfw6mzxbpmuq87AbVnTb026uBIZn7sryAJqAfFIrCLevj5aq
+	 eYq8l4lELeKjcYEq4vANGO/EDdfpDVELf7nhoKUVnog020nv423AbkOwuGOzpoPNDC
+	 WRNWqtxpsPeo3O6U/xWHagtCQKnwPs9E4rb4H7L8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392423AbfIQFof (ORCPT
+        id S2392430AbfIQFra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 01:44:35 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:33308 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfIQFof (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 01:44:35 -0400
-Received: by mail-ua1-f65.google.com with SMTP id u31so711727uah.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 22:44:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aWLbKiwRlS208Z3+3AMSNgvhyJJKUZ0x7Hzk0zm86yg=;
-        b=mHgLFOns1Q8pXhphDAfob5kfnh4UcmO03EkmEF12HNV6uR4Qno8zQEPxHXzhgHUrcr
-         kewUlr7NxVnQ4PnWNzV8t88xJLA3EKmTZUxISQDqOotlVDFgEd7zAQ/uPjFpd7Hldor3
-         d9oBHQku82cjL3DWPdKTo2lBdvoYiUd6yB1XHD8EXnHAbSwbugEAF7vPCB7W+hcHHICC
-         4XMgP+jZQENSLrAeTm/uNbxHaA0YjpvBJTs2fxmDN51BvYHMmzyk/2QYv9K2Vii18Xk+
-         MsJRPeayYD3HVFu2SvFWk6qswSvGngTNlz2DrWjU6LOkjOQy1g2Osvw1nC+/G7RsHuC8
-         Terw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aWLbKiwRlS208Z3+3AMSNgvhyJJKUZ0x7Hzk0zm86yg=;
-        b=M1A3lPhRXkHZAH6oOzbF3K2KGT/vSzpJcZwmTpAEcjT4D+50Nch3bHmlCrCcYz2udq
-         tYwVopn44buB0Aj1zkdlIxclhfaurkcXSXA0zcUVu68tPEdZpOJag/GRSIUWhw+SGZBR
-         zwBmPPOZ7LE/YkTwYuhVfCa4rj9X66lSnRv/3yug1rilY5I/zdEU+gnVby923iM6jRlt
-         1sTLepy3NlqU+i1wVTItCR/XDLXeqvebfOyYWjuMeHKCeek6EiU/+htRPWbso3NG4jjG
-         /9Vf44AL/X7rlh2UvXsQLfF1BC+HWwFWsyyQKwUK21YW9GqCtn3RzK2jaBBtEAQqMPqd
-         gyMQ==
-X-Gm-Message-State: APjAAAWl5UJxBxXUPj7ItES6On1FnN68HwYDQRsdnS98pb2VEsuG/JFd
-        AYjOgTdvziub9MfEKxirblOdhR0Von3mAhTL5gqUCA==
-X-Google-Smtp-Source: APXvYqykoJrSGi+xeUz/j8IFT5604ond2RCO1ES3sXqJPjir0wt/iu+bHY6zaeJiBuBtp/FFUSbJNrd1ImAhCmm6N9E=
-X-Received: by 2002:ab0:539d:: with SMTP id k29mr612429uaa.67.1568699073725;
- Mon, 16 Sep 2019 22:44:33 -0700 (PDT)
+        Tue, 17 Sep 2019 01:47:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725922AbfIQFr3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 01:47:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77F6521670;
+        Tue, 17 Sep 2019 05:47:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568699249;
+        bh=AVcvkAscp3almTt+ZEb5Om2XnT1GXYzgOvOjeTLhP5Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=v9wfoakWHsdeotJc5pXYISTjrwqZexbCiTIuhdOrQtvMNg4XTUMr/k3LcnJeVOupj
+         Sv6ly9dTXs3uYL37+wVwcYdQj+o+SXRS+8t82/j2zAdCGkTYbpp8qg7anTE1ivyEMr
+         pRnEYQ/X09TIK+rzlkpGmQhl0VCYl0XrXoscPzgs=
+Date:   Tue, 17 Sep 2019 07:47:26 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Park Ju Hyung <qkrwngud825@gmail.com>
+Cc:     valdis.kletnieks@vt.edu, namjae.jeon@samsung.com,
+        devel@driverdev.osuosl.org, linkinjeon@gmail.com,
+        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
+        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190917054726.GA2058532@kroah.com>
+References: <8998.1568693976@turing-police>
+ <20190917053134.27926-1-qkrwngud825@gmail.com>
 MIME-Version: 1.0
-References: <cover.1568240476.git.amit.kucheria@linaro.org>
- <c88947d18c65a692a8f314e4ad996d9d2a997997.1568240476.git.amit.kucheria@linaro.org>
- <5d7fe862.1c69fb81.8e5e3.2325@mx.google.com>
-In-Reply-To: <5d7fe862.1c69fb81.8e5e3.2325@mx.google.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 17 Sep 2019 11:14:22 +0530
-Message-ID: <CAHLCerMnFvMvAYOnJHoHwkMNhn1n=vpT1TL9nuGM8tBc0sDDRg@mail.gmail.com>
-Subject: Re: [PATCH 4/5] clk: qcom: Initialise clock drivers earlier
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Eduardo Valentin <edubezval@gmail.com>, ilina@codeaurora.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Taniya Das <tdas@codeaurora.org>,
-        linux-clk <linux-clk@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190917053134.27926-1-qkrwngud825@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:24 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-09-11 15:32:33)
-> > Initialise the clock drivers on sdm845 and qcs404 in core_initcall so we
-> > can have earlier access to cpufreq during booting.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
->
-> Did you want this patch to go through clk tree?
+On Tue, Sep 17, 2019 at 02:31:34PM +0900, Park Ju Hyung wrote:
+> On Tue, 17 Sep 2019 00:19:36 -0400, "Valdis Klētnieks" said:
+> > I'm working off a somewhat cleaned up copy of Samsung's original driver,
+> > because that's what I had knowledge of.  If the sdfat driver is closer to being
+> > mergeable, I'd not object if that got merged instead.
+> 
+> Greg, as Valdis mentioned here, the staging tree driver is just another exFAT fork
+> from Samsung.
+> What's the point of using a much older driver?
 
-Yes, This patch can go in via the clk tree regardless of the rest of the series.
+It's the fact that it actually was in a form that could be merged, no
+one has done that with the sdfat code :)
 
-Regards,
-Amit
+> sdFAT is clearly more matured and been put into more recent production softwares.
+> And as I wrote in previous email, it does include some real fixes.
+
+What fixes?  That's what I'm asking here.
+
+How do we "know" that this is better than what we currently have today?
+We don't, so it's a bit hard to tell someone, "delete the work you did
+and replace it with this other random chunk of code, causing you a bunch
+more work in the process for no specific reason other than it looks
+'newer'." :(
+
+> As Namjae said too, Samsung would be more interested in merging sdFAT to upstream.
+> If we diverge, Samsung will have less reasons to contribute their patches to upstream.
+
+Are they going to do this if we do take the sdfat code?  If so, great,
+but I need to get someone to agree that this will happen.
+
+> Also, I think it makes much more sense to make Samsung the maintainer of this driver
+> (if they're willing to put in the manpower to do so). Asking them would be the first
+> step in doing so.
+
+They are more than willing to start contributing and being a
+co-maintainer of it, it needs all the help it can get.
+
+But "someone" from samsung, or anywhere else, has to be willing to step
+up here and do this work.  Without that happening, I don't see a reason
+to change at this point in time.
+
+Rembember, kernel development happens because people do the work, which
+Valdis did, and continues to do.  Throwing that away because of the
+thought that someone else might do some work in the future is not how we
+work.
+
+I recommend looking at what we have in the tree now, and seeing what is
+missing compared to "sdfat".  I know a lot of places in the exfat code
+that needs to be fixed up, odds are they are the same stuff that needs
+to be resolved in sdfat as well.
+
+thanks,
+
+greg k-h
