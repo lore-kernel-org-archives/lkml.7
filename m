@@ -2,247 +2,209 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB0DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51710C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5FD21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B7121852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:05:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="lO5mfUjM";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="lO5mfUjM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfIQPDC (ORCPT
+        id S1728960AbfIQPFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:03:02 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:38638 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727820AbfIQPDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:03:02 -0400
-Received: (qmail 4019 invoked by uid 2102); 17 Sep 2019 11:03:01 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Sep 2019 11:03:01 -0400
-Date:   Tue, 17 Sep 2019 11:03:01 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Dmitry Vyukov <dvyukov@google.com>
-cc:     syzbot <syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, <miquel@df.uba.ar>,
-        <rio500-users@lists.sourceforge.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: possible deadlock in open_rio (2)
-In-Reply-To: <CACT4Y+bRKjVG7iUZnEXsec_29wMzncvtwAo7cnDNj+17mqL0SA@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.1909171051580.1590-100000@iolanthe.rowland.org>
+        Tue, 17 Sep 2019 11:05:33 -0400
+Received: from mail-eopbgr00081.outbound.protection.outlook.com ([40.107.0.81]:21338
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727962AbfIQPFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:05:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oP9iFk7RX6CHTWY3hcW0MLMGf4HZxKv5hIJghkf5lb0=;
+ b=lO5mfUjMENiAVpZYKYVDkKlhMctE//6G/Mwl4SG7l+yUDh4lLW6D3XkPzCSV/jQ2xgGZEAXCEmgReUvswyG7Ni5aq0Yt77lpYPaSU8KvMGg8kjmz1Nx4JuE60k9k56d8bFuxY+o2fE/+sgcUjZY2pZgZgtoqPMKsrZmIJdmJc0Q=
+Received: from VI1PR08CA0217.eurprd08.prod.outlook.com (2603:10a6:802:15::26)
+ by AM5PR0801MB1972.eurprd08.prod.outlook.com (2603:10a6:203:4b::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.23; Tue, 17 Sep
+ 2019 15:05:26 +0000
+Received: from AM5EUR03FT056.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::205) by VI1PR08CA0217.outlook.office365.com
+ (2603:10a6:802:15::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2284.18 via Frontend
+ Transport; Tue, 17 Sep 2019 15:05:26 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT056.mail.protection.outlook.com (10.152.17.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2263.14 via Frontend Transport; Tue, 17 Sep 2019 15:05:24 +0000
+Received: ("Tessian outbound 968ab6b62146:v31"); Tue, 17 Sep 2019 15:05:18 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 605c4ed9ea2b9c5e
+X-CR-MTA-TID: 64aa7808
+Received: from 00f66f62f898.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.0.53])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 77454D2F-25C9-46C5-BE17-7F5D27DF74E4.1;
+        Tue, 17 Sep 2019 15:05:13 +0000
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2053.outbound.protection.outlook.com [104.47.0.53])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 00f66f62f898.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 17 Sep 2019 15:05:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UbR17fV/c8knnTGUNym2d+dVeJhcyCagQdg2eYrCIIQ9KK3vhPt1FcCIequvlQGS8dibEfzkzqheSWFpiVav5cXR3iHbe5VuVxLDTRsjch5/duiG015/HM9u2PvFvgQqGJikNS1djVXJoSez2H3h5bmCbJsRrPz0fGY3T221yYO/xIuQCICyPU+KW0OUJ/jMUsB+nb6Bv7On/k94nL9P3iZzxqoa9n+MMQiz8OACOp21HSUIKEo+qx9S6RnVF1w958Aflkruxi6PGuvzJWzPlyIs3GkGlmb28Jk+QscwgOM43AOgVAqiyYgCCySCkMjqJ3/IMRKm24Rsv8zPDHgI2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oP9iFk7RX6CHTWY3hcW0MLMGf4HZxKv5hIJghkf5lb0=;
+ b=hqIEawCAkC3gWl1OCW2mlq5AMvmW3wqzGUjnQMEg5KtZJSghIEn8gaM5RRmnBFMPwYqZgg4a7ic6r7ukbHBp0RX4K1rU4+Qc0F8uaIkkjSGh3SjK17+LKFWOsgB+1RvKch9OAp2pJM0G0QQwakb6K2qVShb7gOzxqjKn0qYQ7tPGTz9oixRG7ocOmdn+0rZC1P5DZ+/VT07i+uzZTDFKqM/Nmik4Jm52jLetik3zPn2c1KCF6t8n7JHGJ5wJiGnaiJcOHPXu1vGPueVqqthToCuUedXKsvT6nK24BzaZ6n0GYuxwFiUtVRsSJxDboIHqJpOvzEBszklTdCoFM6ElbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oP9iFk7RX6CHTWY3hcW0MLMGf4HZxKv5hIJghkf5lb0=;
+ b=lO5mfUjMENiAVpZYKYVDkKlhMctE//6G/Mwl4SG7l+yUDh4lLW6D3XkPzCSV/jQ2xgGZEAXCEmgReUvswyG7Ni5aq0Yt77lpYPaSU8KvMGg8kjmz1Nx4JuE60k9k56d8bFuxY+o2fE/+sgcUjZY2pZgZgtoqPMKsrZmIJdmJc0Q=
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com (20.178.127.92) by
+ VI1PR08MB3247.eurprd08.prod.outlook.com (52.134.30.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.21; Tue, 17 Sep 2019 15:05:09 +0000
+Received: from VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f]) by VI1PR08MB4078.eurprd08.prod.outlook.com
+ ([fe80::f164:4d79:79f:dc6f%7]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 15:05:09 +0000
+From:   Mihail Atanassov <Mihail.Atanassov@arm.com>
+To:     Daniel Vetter <daniel@ffwll.ch>
+CC:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/komeda: Remove in-code use of ifdef
+Thread-Topic: [PATCH] drm/komeda: Remove in-code use of ifdef
+Thread-Index: AQHVbWlL0OWI56HteESDsGRUxRcZfQ==
+Date:   Tue, 17 Sep 2019 15:05:08 +0000
+Message-ID: <20190917150314.20892-1-mihail.atanassov@arm.com>
+References: <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
+In-Reply-To: <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [217.140.106.55]
+x-clientproxiedby: LO2P265CA0194.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:9e::14) To VI1PR08MB4078.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::28)
+x-mailer: git-send-email 2.23.0
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 07a205c4-b640-4229-a239-08d73b8077d7
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR08MB3247;
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3247:|VI1PR08MB3247:|AM5PR0801MB1972:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <AM5PR0801MB1972D8263A2F67E2F7F196058F8F0@AM5PR0801MB1972.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:3173;OLM:3173;
+x-forefront-prvs: 01630974C0
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(39860400002)(346002)(136003)(366004)(189003)(199004)(71190400001)(52116002)(6512007)(2616005)(25786009)(476003)(86362001)(66066001)(81156014)(11346002)(102836004)(316002)(26005)(66556008)(64756008)(66446008)(6436002)(6486002)(446003)(54906003)(50226002)(8936002)(6916009)(81166006)(2906002)(66476007)(6116002)(3846002)(4326008)(99286004)(7736002)(256004)(305945005)(36756003)(186003)(5660300002)(6506007)(66946007)(386003)(76176011)(8676002)(478600001)(71200400001)(14454004)(486006)(44832011)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3247;H:VI1PR08MB4078.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: 71zfecJ59+DfTVyD06TL1uQ+MlxnmDli6F+/uBIpKGmmWx1SDP4NtVXFv2MHl4nVhFkdOT5dQNAVbbikpkIceWBtMTb5jIh8yNtbUyPkXDKlqqzYZL2o62hDtEPpORHFfnVPxhw+Asz7XbaFhK9F0l2PM5rvmUrsV2oCiSKkW9B/amj5nvdQNVanbAR385swpy7dpOefBoMax9VO4gT5LqTSfFKM5AhBZDXqjJrPbEyCyYrZzB0R9g0Ug6wPAlM6fY+vPl7zxweBv65PD350IM6wV3kFkHT8RZcHX70hAqfr4Xsg+epdoZG4kX6ENrlfsPeBz/uCEhsYGVk1FfVOK+aFLVT2OGVAHVDAaOsL+TxgL/Z/tWMnxkggBN6AGp0GaGJ0Tc8A224srVD/1HXfuaUUYR5c1BTCnFv7fZaMHLU=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3247
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Mihail.Atanassov@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT056.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(39860400002)(199004)(189003)(2906002)(86362001)(99286004)(356004)(23756003)(6512007)(1076003)(47776003)(186003)(4326008)(76130400001)(305945005)(486006)(102836004)(70586007)(36906005)(6862004)(70206006)(50466002)(14454004)(26005)(478600001)(316002)(63350400001)(54906003)(6116002)(66066001)(25786009)(36756003)(50226002)(8936002)(3846002)(7736002)(22756006)(5660300002)(476003)(126002)(26826003)(6506007)(336012)(76176011)(81156014)(446003)(2616005)(8746002)(8676002)(6486002)(11346002)(81166006)(386003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0801MB1972;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: af7ce52e-666b-44c6-c4c6-08d73b806e0e
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM5PR0801MB1972;
+NoDisclaimer: True
+X-Forefront-PRVS: 01630974C0
+X-Microsoft-Antispam-Message-Info: Eck5njgEGhWqr7cok1kEKQ4ndr/3smgVw7Ql1ohlMUjJWxq5VQcH/soaxgoiQkC343kLHqI/9TfYKVhV1qY/lxa8jmR5RhFGhewX8J4HZ2AAwz6aHr+IT7MfOrJ5CgAyW8LsIcRrSkO3Fn4E6yY3gAaSPUocaEyJHbeYJEY9RFMHEbYLkeN+T5dDbUoajt4Jm7p7lBUEyt+qvWu+nPaUaleJZ6q2QC93SyFMCSvNvde9tbIqPi3ZT4OyQxHnWpX55Ks6gV2zeUdasP2+QuA/IhqM/fmGwhbR/eV7wR7b+KOfYoZNGf7SbLyEo4RAgyqzrS6Sj0+Coz/2vVP1Zbvt+xWQgNKprzxDDn3il6XToOl42Y32+CkM38/8og5eRFU8o2yWte9lCbV3PPjb0Foac3Un1rq0BaU38wdyqMDMsFc=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2019 15:05:24.8137
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07a205c4-b640-4229-a239-08d73b8077d7
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1972
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, Dmitry Vyukov wrote:
+Provide a dummy static inline function in the header instead.
 
-> On Mon, Sep 16, 2019 at 6:40 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Mon, 16 Sep 2019, syzbot wrote:
-> >
-> > > Hello,
-> > >
-> > > syzbot found the following crash on:
-> > >
-> > > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11512cd1600000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=19cf612d23f66bc19f22
-> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f92c6e600000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b9b85e600000
-> > >
-> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > Reported-by: syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com
-> > >
-> > > ======================================================
-> > > WARNING: possible circular locking dependency detected
-> > > 5.3.0-rc7+ #0 Not tainted
-> > > ------------------------------------------------------
-> > > syz-executor071/1724 is trying to acquire lock:
-> > > 00000000f749c934 (rio500_mutex){+.+.}, at: open_rio+0x16/0xe0
-> > > drivers/usb/misc/rio500.c:65
-> > >
-> > > but task is already holding lock:
-> > > 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
-> > > drivers/usb/core/file.c:39
-> > >
-> > > which lock already depends on the new lock.
-> > >
-> > >
-> > > the existing dependency chain (in reverse order) is:
-> > >
-> > > -> #1 (minor_rwsem){++++}:
-> > >         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-> > >         usb_register_dev drivers/usb/core/file.c:187 [inline]
-> > >         usb_register_dev+0x131/0x670 drivers/usb/core/file.c:156
-> > >         probe_rio.cold+0x53/0x237 drivers/usb/misc/rio500.c:474
-> > >         usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-> > >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
-> > >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-> > >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-> > >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-> > >         __device_attach+0x217/0x360 drivers/base/dd.c:894
-> > >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> > >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
-> > >         usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-> > >         generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-> > >         usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-> > >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
-> > >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-> > >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-> > >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-> > >         __device_attach+0x217/0x360 drivers/base/dd.c:894
-> > >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-> > >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
-> > >         usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-> > >         hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-> > >         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-> > >         port_event drivers/usb/core/hub.c:5359 [inline]
-> > >         hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-> > >         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-> > >         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-> > >         kthread+0x318/0x420 kernel/kthread.c:255
-> > >         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> > >
-> > > -> #0 (rio500_mutex){+.+.}:
-> > >         check_prev_add kernel/locking/lockdep.c:2405 [inline]
-> > >         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-> > >         validate_chain kernel/locking/lockdep.c:2897 [inline]
-> > >         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-> > >         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-> > >         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-> > >         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-> > >         open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
-> > >         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-> > >         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> > >         do_dentry_open+0x494/0x1120 fs/open.c:797
-> > >         do_last fs/namei.c:3416 [inline]
-> > >         path_openat+0x1430/0x3f50 fs/namei.c:3533
-> > >         do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> > >         do_sys_open+0x3c0/0x580 fs/open.c:1089
-> > >         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-> > >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > >
-> > > other info that might help us debug this:
-> > >
-> > >   Possible unsafe locking scenario:
-> > >
-> > >         CPU0                    CPU1
-> > >         ----                    ----
-> > >    lock(minor_rwsem);
-> > >                                 lock(rio500_mutex);
-> > >                                 lock(minor_rwsem);
-> > >    lock(rio500_mutex);
-> > >
-> > >   *** DEADLOCK ***
-> > >
-> > > 1 lock held by syz-executor071/1724:
-> > >   #0: 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
-> > > drivers/usb/core/file.c:39
-> > >
-> > > stack backtrace:
-> > > CPU: 0 PID: 1724 Comm: syz-executor071 Not tainted 5.3.0-rc7+ #0
-> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > > Google 01/01/2011
-> > > Call Trace:
-> > >   __dump_stack lib/dump_stack.c:77 [inline]
-> > >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> > >   check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
-> > >   check_prev_add kernel/locking/lockdep.c:2405 [inline]
-> > >   check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-> > >   validate_chain kernel/locking/lockdep.c:2897 [inline]
-> > >   __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-> > >   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-> > >   __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-> > >   __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-> > >   open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
-> > >   usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-> > >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> > >   do_dentry_open+0x494/0x1120 fs/open.c:797
-> > >   do_last fs/namei.c:3416 [inline]
-> > >   path_openat+0x1430/0x3f50 fs/namei.c:3533
-> > >   do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> > >   do_sys_open+0x3c0/0x580 fs/open.c:1089
-> > >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-> > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > > RIP: 0033:0x401130
-> > > Code: 01 f0 ff ff 0f 83 00 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
-> > > 44 00 00 83 3d 5d 0c 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff
-> > > ff 0f 83 d4 0a 00 00 c3 48 83 ec 08 e8 3a 00 00 00
-> > > RSP: 002b:00007ffca0216788 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-> > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000401130
-> > > RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00007ffca02167a0
-> > > RBP: 00000000006cb018 R08: 0000000000000000 R09: 000000000000000f
-> > > R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000402090
-> > > R13: 0000000000402120 R14: 0000000000000000 R15: 00
-> > >
-> > >
-> > > ---
-> > > This bug is generated by a bot. It may contain errors.
-> > > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> > >
-> > > syzbot will keep track of this bug report. See:
-> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> > > syzbot can test patches for this bug, for details see:
-> > > https://goo.gl/tpsmEJ#testing-patches
-> >
-> > This is undoubted the same as the previous bug report.  It should be
-> > fixed by commit 9472aff16ca0 in Greg KH's usb-next branch, but the
-> > fix is not yet in Linus's tree.
-> >
-> > #syz dup: possible deadlock in open_rio
-> 
-> Are you ready to bet money that this is undoubtedly the same as the
-> previous one? ;)
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+Cc: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+Fixes: 4d74b25ee395 ("drm/komeda: Adds error event print functionality")
+Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+---
+ drivers/gpu/drm/arm/display/komeda/komeda_dev.h | 2 ++
+ drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Yes.  Although perhaps it depends on your criteria for deciding whether 
-two bug reports are caused by the same bug...
-
-> syzbot never reports the same bug until the previous is completely
-> fixed. I see the commit in Linus tree.
-
-Which commit do you see?  The one that may have originally been 
-reported as fixing the bug probably was not the right one.
-
-> We will get version (3) of this bug soon.
-
-
-On Tue, 17 Sep 2019, Andrey Konovalov wrote:
-
-> Yeah, this one is confusing. If we look at the dashboard [1] we see
-> that the fixing commit for the original bug is "Revert "USB: rio500:
-> simplify locking"", which is in the usb-testing tree (btw, I've
-> switched syzbot from usb-next to usb-testing, as it looked more
-> relevant). So syzbot saw the Reported-by tag on that commit, and
-> decided that the fix is applied, so if another bug with the same
-> manifestation happens, it must be a different bug and should be
-> reported. Syzbot has no way to know that commit 9472aff16ca0 (with the
-> same Reported-by tag as "Revert "USB: rio500: simplify locking") is
-> the proper fix for this issue.
-> 
-> Since you've marked this bug as a dup of a fixed bug with the fix
-> applied to syzbot's tree, syzbot reported another one named "possible
-> deadlock in open_rio (3)". I'm going to manually mark that one as
-> fixed by commit 9472aff16ca0.
-> 
-> https://syzkaller.appspot.com/bug?id=5b6785f7f0febf30e2133fa6e6dab81683ffa1b5
-
-Yes, that's right; 9472aff16ca0 is the correct fix -- and it isn't in
-Linus's tree yet.  I don't even want to think about the state of the
-driver after the "Revert "USB: rio500:  simplify locking" commit...
-
-Alan Stern
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/=
+drm/arm/display/komeda/komeda_dev.h
+index e28e7e6563ab..8acf8c0601cc 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+@@ -220,6 +220,8 @@ struct komeda_dev *dev_to_mdev(struct device *dev);
+=20
+ #ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+ void komeda_print_events(struct komeda_events *evts);
++#else
++static inline void komeda_print_events(struct komeda_events *evts) {}
+ #endif
+=20
+ #endif /*_KOMEDA_DEV_H_*/
+diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/=
+drm/arm/display/komeda/komeda_kms.c
+index 18d7e2520225..dc85c08e614d 100644
+--- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
++++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+@@ -47,9 +47,7 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *=
+data)
+ 	memset(&evts, 0, sizeof(evts));
+ 	status =3D mdev->funcs->irq_handler(mdev, &evts);
+=20
+-#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+ 	komeda_print_events(&evts);
+-#endif
+=20
+ 	/* Notify the crtc to handle the events */
+ 	for (i =3D 0; i < kms->n_crtcs; i++)
+--=20
+2.23.0
 
