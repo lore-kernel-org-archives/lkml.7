@@ -2,95 +2,139 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5435C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A82C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFF92171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nV2umR6R";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="HXDHo5T2"
+	by mail.kernel.org (Postfix) with ESMTP id B88EA2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:05:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726665AbfIQOEr (ORCPT
+        id S1726692AbfIQOFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:04:47 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46396 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726467AbfIQOEq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:04:46 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 702E36021C; Tue, 17 Sep 2019 14:04:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568729085;
-        bh=rAaMYvqbeLheWv8CIxiDyX/e12oeMdBVoUmnUwywv5Q=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=nV2umR6R289up963IQf51z4elD/8hSfUfS7xrdnSVc8eic0ZFzWYNRHiHiC1zVyno
-         i9iXTtZEOsP45lU5RnXEhyhq5pMNIIW/uxBtWWNvzoqsomYIkZVxX6d1Fvfa8bqOaR
-         LHBMs0BVnAgGxRARt6Vdh4c53Jwxm30DPn/hdccc=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 24BF36016D;
-        Tue, 17 Sep 2019 14:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568729084;
-        bh=rAaMYvqbeLheWv8CIxiDyX/e12oeMdBVoUmnUwywv5Q=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=HXDHo5T2HJtx2ogcRKuCOwqk+wlVKzcov6Qhn/RIBADhCetuRZIt2f8kOYCBGWsFy
-         FhKPiZcsSsRMJTti+2r6vWZYRkLOGYHiK03XQvksaTVvclmN2vxtjTncFjF2jCoj71
-         qYCeRk2Wcljgm7Pyx2QtZq1kBDDoZJRAsbD8ckvI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 24BF36016D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 10:05:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:56556 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725773AbfIQOFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:05:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E72028;
+        Tue, 17 Sep 2019 07:05:43 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70FEA3F575;
+        Tue, 17 Sep 2019 07:05:42 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 15:05:33 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
+Message-ID: <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
+References: <20190916135435.5017-1-jonathan.derrick@intel.com>
+ <20190916135435.5017-3-jonathan.derrick@intel.com>
+ <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
+ <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 1/3] ath10k: snoc: skip regulator operations
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20190725174755.23432-2-bjorn.andersson@linaro.org>
-References: <20190725174755.23432-2-bjorn.andersson@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Govind Singh <govinds@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190917140445.702E36021C@smtp.codeaurora.org>
-Date:   Tue, 17 Sep 2019 14:04:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn Andersson <bjorn.andersson@linaro.org> wrote:
+On Tue, Sep 17, 2019 at 01:55:59PM +0000, Derrick, Jonathan wrote:
+> On Tue, 2019-09-17 at 11:41 +0100, Lorenzo Pieralisi wrote:
+> > On Mon, Sep 16, 2019 at 07:54:35AM -0600, Jon Derrick wrote:
+> > > The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
+> > > location to get the correct shadow offset.
+> > 
+> > Hi Jon,
+> > 
+> > what does "was moved" mean ? Would this code still work on previous HW ?
+> > 
+> The previous code won't work on (not yet released) hw. Guests using the
+> domain will see the wrong offset and enumerate the domain incorrectly.
 
-> The regulator operations is trying to set a voltage to a fixed value, by
-> giving some wiggle room. But some board designs specifies regulator
-> voltages outside this limited range. One such example is the Lenovo Yoga
-> C630, with vdd-3.3-ch0 in particular specified at 3.1V.
-> 
-> But consumers with fixed voltage requirements should just rely on the
-> board configuration to provide the power at the required level, so this
-> code should be removed.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+That's true also for new kernels on _current_ hardware, isn't it ?
 
-3 patches applied to ath-next branch of ath.git, thanks.
+What I am saying is that there must be a way to detect the right
+offset from HW probing or firmware otherwise things will break
+one way of another.
 
-b003e7f1974e ath10k: snoc: skip regulator operations
-c56c7f24d7f8 ath10k: Use standard regulator bulk API in snoc
-f93bcf0ce6a1 ath10k: Use standard bulk clock API in snoc
+> > We must make sure that the address move is managed seamlessly by the
+> > kernel.
+> If we need to avoid changing addressing within stable, then that's
+> fine. But otherwise is there an issue merging with 5.4?
 
--- 
-https://patchwork.kernel.org/patch/11059507/
+See above. Would 5.4 with this patch applied work on systems where
+the offset is the same as the _current_ one without this patch
+applied ?
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> > For the time being I have to drop this fix and it is extremely
+> > tight to get it in v5.4, I can't send stable changes that we may
+> > have to revert.
+> Aren't we in the beginning of the merge window?
 
+Yes and that's the problem, patches for v5.4 should have already
+being queued a while ago, I do not know when Bjorn will send the
+PR for v5.4 but that's going to happen shortly, I am making an
+exception to squeeze these patches in since it is vmd only code
+but still it is very very tight.
+
+Thanks,
+Lorenzo
+
+> > Thanks,
+> > Lorenzo
+> > 
+> > > Cc: stable@vger.kernel.org # v5.2+
+> > > Fixes: 6788958e ("PCI: vmd: Assign membar addresses from shadow registers")
+> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+> > > ---
+> > >  drivers/pci/controller/vmd.c | 9 ++++++---
+> > >  1 file changed, 6 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > > index 2e4da3f51d6b..a35d3f3996d7 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -31,6 +31,9 @@
+> > >  #define PCI_REG_VMLOCK		0x70
+> > >  #define MB2_SHADOW_EN(vmlock)	(vmlock & 0x2)
+> > >  
+> > > +#define MB2_SHADOW_OFFSET	0x2000
+> > > +#define MB2_SHADOW_SIZE		16
+> > > +
+> > >  enum vmd_features {
+> > >  	/*
+> > >  	 * Device may contain registers which hint the physical location of the
+> > > @@ -578,7 +581,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  		u32 vmlock;
+> > >  		int ret;
+> > >  
+> > > -		membar2_offset = 0x2018;
+> > > +		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
+> > >  		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
+> > >  		if (ret || vmlock == ~0)
+> > >  			return -ENODEV;
+> > > @@ -590,9 +593,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> > >  			if (!membar2)
+> > >  				return -ENOMEM;
+> > >  			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
+> > > -						readq(membar2 + 0x2008);
+> > > +					readq(membar2 + MB2_SHADOW_OFFSET);
+> > >  			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
+> > > -						readq(membar2 + 0x2010);
+> > > +					readq(membar2 + MB2_SHADOW_OFFSET + 8);
+> > >  			pci_iounmap(vmd->dev, membar2);
+> > >  		}
+> > >  	}
+> > > -- 
+> > > 2.20.1
+> > > 
