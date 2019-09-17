@@ -4,161 +4,100 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCEAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23193C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3CEC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC0C0214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568740043;
-	bh=+ubCWqZlPU1XeGPUgnyumUqfKdtQbouqijwBVicHlxw=;
+	s=default; t=1568740065;
+	bh=Cx46LOGv4BNjTSei9LWwlF4X6Up/WnaZBoHwti+KXHA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=X+hkqudgPa7mtVWSFeSn0dro8NF6RPs0W+36eT1oni2YrR3Wb/lwO7duyqehP1VS8
-	 GN+wOrFedCLU7ElRP1l//SVF34/rVG5J0y7NVPuH0SkuLIShT49nZvgs25+7/bc1hh
-	 py6KNzlxgHexdXSd1a5JKZZi9O1MhBCCwsww5RMI=
+	b=t8HB5c1QbioIH6Pn+zAB+NJ1m81zMnkN2AKDmc+Xm59MbkbjU91IkOoAkyPuRHIoI
+	 Rsh9ceuEvTeQULcIAV9KXkoJOROm1joGog8VVEZ73+ADLWuShq0Msegk1kXRH4V2QQ
+	 oOsWGs6+rQnhsiRTwInBPQ/IrhjEY61+JE5VUscQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfIQRHX (ORCPT
+        id S1730790AbfIQRHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:07:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
+        Tue, 17 Sep 2019 13:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIQRHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:07:21 -0400
+        id S1727398AbfIQRHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:07:44 -0400
 Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF5222067B;
-        Tue, 17 Sep 2019 17:07:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 539862067B;
+        Tue, 17 Sep 2019 17:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568740040;
-        bh=+ubCWqZlPU1XeGPUgnyumUqfKdtQbouqijwBVicHlxw=;
+        s=default; t=1568740063;
+        bh=Cx46LOGv4BNjTSei9LWwlF4X6Up/WnaZBoHwti+KXHA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a0kFSS9ymJn81IkSf9ANdxCDtykIrw7fHnmw7PFNTDwCG0IwzfBlHvg2JDJlork8+
-         3cIUDtH9Oq+Ay3alcft/3VTmVpwCn95YG16VYNZCaqwuwlhuhhLbA/DOkVt3++++8/
-         EeF3p2xnDX3ssnolXC/Zw7GNL+Y6AXLogY9Kb2Mw=
-Date:   Tue, 17 Sep 2019 18:07:16 +0100
+        b=EHXpHfISM0cj8rSRrHKB9Ji1mZQyNgSpSoRF3W/iJc8AKBXvEAi9fg+vhWIqc101g
+         KmEe0D0zX4/kwUr2ppTKtYRksZTNnNJ7nnQJA1s2nPV5DGOyuoE8ov2JC93TUCrmr4
+         KsIKiK4o/MwvTJJmVVwhKmOm+brcwDK/nQOv+u5o=
+Date:   Tue, 17 Sep 2019 18:07:38 +0100
 From:   Will Deacon <will@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, peterz@infradead.org
-Subject: Re: [RFC][PATCH] pipe: Convert ring to head/tail
-Message-ID: <20190917170716.ud457wladfhhjd6h@willie-the-truck>
-References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
- <25289.1568379639@warthog.procyon.org.uk>
- <28447.1568728295@warthog.procyon.org.uk>
+To:     KeMeng Shi <shikemeng@huawei.com>
+Cc:     akpm@linux-foundation.org, james.morris@microsoft.com,
+        gregkh@linuxfoundation.org, mortonm@chromium.org,
+        will.deacon@arm.com, kristina.martsenko@arm.com,
+        yuehaibing@huawei.com, malat@debian.org, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org
+Subject: Re: Re: [PATCH] connector: report comm change event when modifying
+ /proc/pid/task/tid/comm
+Message-ID: <20190917170737.dpchgliux4qi2qef@willie-the-truck>
+References: <20190916211008.ipqe3j7s22aannta@willie-the-truck>
+ <20190917135628.3054-1-shikemeng@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28447.1568728295@warthog.procyon.org.uk>
+In-Reply-To: <20190917135628.3054-1-shikemeng@huawei.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+On Tue, Sep 17, 2019 at 09:56:28AM -0400, KeMeng Shi wrote:
+> on 2019/9/17 at 5:10, Will Deacon wrote:
+> >The rough idea looks ok to me but I have two concerns:
+> >
+> >  (1) This looks like it will be visible to userspace, and this changes
+> >      the behaviour after ~8 years of not reporting this event.
+> This do bother for users who only care the comm change via prctl, but it
+> also benefits users who want all comm changes. Maybe the best way is add
+> something like config or switch to meet the both conditions above. In my
+> opinion, users cares comm change event rather than how it change.
 
-On Tue, Sep 17, 2019 at 02:51:35PM +0100, David Howells wrote:
-> Will Deacon <will@kernel.org> wrote:
-> 
-> > > +		/* Barrier: head belongs to the write side, so order reading
-> > > +		 * the data after reading the head pointer.
-> > > +		 */
-> > > +		unsigned int head = READ_ONCE(pipe->head);
-> > 
-> > Hmm, I don't understand this. Since READ_ONCE() doesn't imply a barrier,
-> > how are you enforcing the read-read ordering in the CPU?
-> 
-> It does imply a barrier: smp_read_barrier_depends().  I believe that's
+I was really just looking for some intuition as to how this event is
+currently used and why extending it like this is unlikely to break those
+existing users.
 
-I fed your incomplete sentence to https://talktotransformer.com/ :
+> >(2) What prevents proc_comm_connector(p) running concurrently with itself
+> > via the prctl()? The locking seems to be confined to set_task_comm().
+> To be honest, I did not consider the concurrence problem at beginning. And
+> some comm change events may lost or are reported repeatly as follows:
+> set name via procfs	set name via prctl
+> set_task_comm
+> 			set_task_comm
+> proc_comm_connector
+> 			proc_comm_connector
+> Comm change event belong to procfs losts and the fresh comm change belong
+> to prctl is reported twice. Actually, there is also concurrence problem
+> without this update as follows:
+> set name via procfs	set name via prctl
+> 			set_task_comm
+> set_task_comm
+> 			proc_comm_connector
+> Comm change event from procfs is reported instead of prctl, this may
+> bothers user who only care the comm change via prctl.
 
-  It does imply a barrier: smp_read_barrier_depends(). I believe that's
-  correct. (I'm not a coder so I assume it just means it's a dependency. Maybe
-  this works for other languages too.)
-
-but I have a feeling that's not what you meant. I guess AI isn't quite
-ready to rule the world.
-
-> > What is the purpose of saying "This may need to insert a barrier"? Can this
-> > function be overridden or something?
-> 
-> I mean it's arch-dependent whether READ_ONCE() inserts a barrier or not.
-
-Ok, but why would the caller care?
-
-> > Saying that "This inserts a barrier" feels misleading, because READ_ONCE()
-> > doesn't do that.
-> 
-> Yes it does - on the Alpha:
-> 
-> [arch/alpha/include/asm/barrier.h]
-> #define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
-> 
-> [include/asm-generic/barrier.h]
-> #ifndef __smp_read_barrier_depends
-> #define __smp_read_barrier_depends()	read_barrier_depends()
-> #endif
-> ...
-> #ifndef smp_read_barrier_depends
-> #define smp_read_barrier_depends()	__smp_read_barrier_depends()
-> #endif
-> 
-> [include/linux/compiler.h]
-> #define __READ_ONCE(x, check)						\
-> ({									\
-> 	union { typeof(x) __val; char __c[1]; } __u;			\
-> 	if (check)							\
-> 		__read_once_size(&(x), __u.__c, sizeof(x));		\
-> 	else								\
-> 		__read_once_size_nocheck(&(x), __u.__c, sizeof(x));	\
-> 	smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
-> 	__u.__val;							\
-> })
-> #define READ_ONCE(x) __READ_ONCE(x, 1)
-> 
-> See:
-> 
->     commit 76ebbe78f7390aee075a7f3768af197ded1bdfbb
->     Author: Will Deacon <will.deacon@arm.com>
->     Date:   Tue Oct 24 11:22:47 2017 +0100
->     locking/barriers: Add implicit smp_read_barrier_depends() to READ_ONCE()
-
-Ah, that guy. I tried emailing him but he didn't reply.
-
-Seriously though, READ_ONCE() implies a barrier on Alpha, but its portable
-barrier semantics are only that it can be used to head an address
-dependency, a bit like rcu_dereference(). You shouldn't be relying on the
-stronger ordering provided by Alpha, and I doubt that you really are.
-
-If I'm understanding your code correctly (big 'if'), then you have things
-like this in pipe_read():
-
-
-	unsigned int head = READ_ONCE(pipe->head);
-	unsigned int tail = pipe->tail;
-	unsigned int mask = pipe->buffers - 1;
-
-	if (tail != head) {
-		struct pipe_buffer *buf = &pipe->bufs[tail & mask];
-
-		[...]
-
-		written = copy_page_to_iter(buf->page, buf->offset, chars, to);
-
-
-where you want to make sure you don't read from 'buf->page' until after
-you've read the updated head index. Is that right? If so, then READ_ONCE()
-will not give you that guarantee on architectures such as Power and Arm,
-because the 'if (tail != head)' branch can be speculated and the buffer
-can be read before we've got around to looking at the head index.
-
-So I reckon you need smp_load_acquire() in this case. pipe_write() might be ok
-with the control dependency because CPUs don't tend to make speculative writes
-visible, but I didn't check it carefully and the compiler can do crazy stuff in
-this area, so I'd be inclined to use smp_load_acquire() here too unless you
-really need the last ounce of performance.
+Perhaps, although given that proc_comm_connector() is currently only called
+on the prctl() path, then it does at least provide the comm from the most
+recent prctl() invocation. With your path, the calls can go out of order,
+so I think that probably needs fixing.
 
 Will
