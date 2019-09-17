@@ -2,91 +2,90 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC89C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0854C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6CE21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4A7821670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568744088;
+	bh=sJ7iEhGBqo6ysjzP/hZRb0OXJcmfxWlto/4BVH8/tCM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mQNLTeaTNg6wFFCks0/nYIu3gT55qEbM1x08y1I6SiS53e/ZpYUqgGf1QpfgqfVSs
+	 1TTgZuXMPyk01JbNKwyeC6CC5iY/oNYd/4qlYEJT+Sj2l9lHs2UpLCuIbCsa0fAnUo
+	 PZbE/26O8LPldf5KmVeViCi76zXnFDIomzKq5sbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfIQSO0 (ORCPT
+        id S1728921AbfIQSOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:14:26 -0400
-Received: from sauhun.de ([88.99.104.3]:55588 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726604AbfIQSOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:14:25 -0400
-Received: from localhost (p54B331E4.dip0.t-ipconnect.de [84.179.49.228])
-        by pokefinder.org (Postfix) with ESMTPSA id 9D6F52C0489;
-        Tue, 17 Sep 2019 20:14:23 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 20:14:23 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
-Message-ID: <20190917181423.GB28182@ninjato>
-References: <20190917172758.GA11926@SD>
- <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
+        Tue, 17 Sep 2019 14:14:48 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:46279 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726604AbfIQSOr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:14:47 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f21so762582otl.13;
+        Tue, 17 Sep 2019 11:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XSRRd5vWW2vpEVhgOqafpOwtu1MzJvFddnvMtX5f1Nk=;
+        b=YGYRsvRECX4im0TMlrTFUKpxHgE+YOYpFjFHBgVpTXzze1rVNuku3sCG+F4Yr0qksB
+         gRfVD509XdNjgpj9xoF8gTgite9srynTWd+EiYdQquZw9Oy+ETbWKy2kMHAW1215Crtl
+         vO3yNRuKZKGg7K/TeaA3K7A/GaDHMkaS9fss7rS0phQXwbTBU0Ghzaev2X/6qJEMLFaj
+         oe1l7dQsGe0U/xPq9Hv3m4R4tTMj8yXHDeQQXNtAAKjkEB3qDbq01jwAswEtSyT8oMgd
+         OK3LhG7XGspJz7d816MtZCbRHoObzvpZJ6dTbMwbjF8L4x6H9+aOFu5jq7HvpOOm9o1/
+         ep4Q==
+X-Gm-Message-State: APjAAAU+Z7xn7tqE3+QL2iL6rdp9ycsysxHZ3F2L4O/XV96vW7eVpU6m
+        p1VIwEacfZbtxHntN+Ipxw==
+X-Google-Smtp-Source: APXvYqww8yJFPN4q1LhdZYjt+nN+vXnbu55jZRHBuSazrmBQs+/z3xJkghpDdj5UB0GrxG9TOlHVUQ==
+X-Received: by 2002:a9d:d28:: with SMTP id 37mr110445oti.279.1568744086440;
+        Tue, 17 Sep 2019 11:14:46 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 60sm347183oto.27.2019.09.17.11.14.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 11:14:45 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 13:14:45 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     lee.jones@linaro.org, daniel.thompson@linaro.org,
+        jingoohan1@gmail.com, jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        dmurphy@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v4 1/2] dt-bindings: backlight: lm3630a: add enable_gpios
+Message-ID: <20190917181445.GA2875@bogus>
+References: <20190912213257.24147-1-andreas@kemnade.info>
+ <20190912213257.24147-2-andreas@kemnade.info>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
+In-Reply-To: <20190912213257.24147-2-andreas@kemnade.info>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 12 Sep 2019 23:32:56 +0200, Andreas Kemnade wrote:
+> add enable-gpios to describe HWEN pin
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> Acked-by: Daniel Thompson <daniel.thompson@linaro.org>
+> ---
+> changes in v2: added example
+> changes in v3: added Acked-by
+> changes in v4: moved enable-gpios to the right position
+>   in the example
+>  .../bindings/leds/backlight/lm3630a-backlight.yaml           | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
 
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 17, 2019 at 08:10:45PM +0200, Markus Elfring wrote:
-> > Using cocciecheck to ensure there are no semantic issues in
-> > i2c-qup driver.
->=20
-> * This wording contains a typo.
-
-Doesn't matter to me for a cover letter as long as we can understand it.
-
-> * I would prefer to refer to a desired reduction of a few
->   source code quality concerns.
-
-Not needed. I understand what is going on here.
-
-> > Changes in =E2=80=A6
->=20
-> Can such a prefix be omitted?
-
-Why? I think it makes sense?
-
-
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl2BIn4ACgkQFA3kzBSg
-KbYSiA/8Ctn+loUGOKb8bL3M+OGopn2EaUhafoln2xcFttrCpjcSHKHLAbgPiDEl
-YVWtsZhrp/eJ+ESZidZ8GctwSfW1SajtUagsEFCc/4B8LR0ODYHNE84AAbDmOdAT
-SX6s+qjqTyy7UATwt9zk8PcpdvjYf+arPVBI2DZjX5OTBT4kTWTPLEm1Z3abm6xT
-rwo10dScXa5TAI2ZGAAzVf2m8qiucTgjkc5MNzGs5xTy5R/PI0icnMidZ0lfok93
-kASEUujmjHJsDt9trymNHocGj9wTo23eukZxqrB6aCdG24KLDNuncc+bRW6mFlXp
-927BffKNDz1/EgcwnxxtzWeA3T5JQ4i21ylXHQIRrollLU2fGOO7RapNOoWu/bir
-yQlpx4gmbpcFA2bnzw8v/ramycR4NmGw9kwYOQxKG/3o9T4HbEZHCgnqy3ZVZpvo
-AHaPzNXjW2Y0jAS2UxLCMdmLQyjgNaEoZbX+2f5lbDieDooYCmSqo8BNrh3VJmEE
-sr2WDV8n5rc5l41MkdVKpx/ahXhPEJxZTPKNlEzClPH7humapeviR02SQMuPZ6Vp
-9bfLJUPBiQ5ilS1kc+tuAP3rrMVK+1VbpsNxu2iVhVjbSGqqrHCyP93WYdSVXCG+
-5WP44ByXDziBzqPktnANbr9+pCQ6nndWv1pjDlariaxs1JOcaVA=
-=ZF09
------END PGP SIGNATURE-----
-
---tsOsTdHNUZQcU9Ye--
+Reviewed-by: Rob Herring <robh@kernel.org>
