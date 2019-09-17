@@ -2,77 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA5CC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:43:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDC4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9EB12067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8F72067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:45:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGq6Anxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfIQTnI (ORCPT
+        id S1728495AbfIQTpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 15:43:08 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:44008 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfIQTnG (ORCPT
+        Tue, 17 Sep 2019 15:45:19 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39711 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726475AbfIQTpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 15:43:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 8F21C28DE06
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, kernel@collabora.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH 2/2] kernel-doc: add support for ____cacheline_aligned_in_smp attribute
-Date:   Tue, 17 Sep 2019 16:41:46 -0300
-Message-Id: <20190917194146.35642-3-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190917194146.35642-1-andrealmeid@collabora.com>
-References: <20190917194146.35642-1-andrealmeid@collabora.com>
+        Tue, 17 Sep 2019 15:45:19 -0400
+Received: by mail-lj1-f195.google.com with SMTP id s19so4805620lji.6;
+        Tue, 17 Sep 2019 12:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=glAfUtGhy1cDDW4ClQs75Rd7BWqQGXGFYsoau+F0hKg=;
+        b=dGq6AnxvlR0IfzSEL4Av8sUx/aIEfI9ZGPm/D5Ch1fqHUxZ6evZLRF+RlrWA7Z3+HG
+         kUN0w+be+ThLC+YXchNLFITpZwJkKpmHxdx0+jFTUX48C/SZDYF6eZOL52DizPI8XHnh
+         SpSZ2fQ6+iLAmli0VC8oZmNpfi9CduR6I116Avzn4ScSJBpS2h1hSXWvIPweWVk72coq
+         tj5Z6k8Dk5q0KY/LOZ+CboORC5DdnxGX5bEsQCCxu+Slo7oW/+iR8nVdZ7OvIoEMe5Of
+         cvZLn04eD52hAomQ0K1nS6yp4OVx3xH1qdpD8lkhVsyLIpNV5GZqjV/NnfA/ixMi5mpO
+         AvaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=glAfUtGhy1cDDW4ClQs75Rd7BWqQGXGFYsoau+F0hKg=;
+        b=AobkAente8Kyxf797A5yeqPatvMKomPfCxUkh4kYfAuRSpYCIpOQlMYKPVGeQEf0eH
+         DxlNflrYEftzx30D9IerqVH1G+8tiqgAAf5hDFiAvS98/gAyCyKhLt33fICNBAuX7t3y
+         o1loXuLJaoEaPrwRCYnZ0qS9mmankA/eQUdFl7pYfyAOQHsR5pIZeq6aPXZpESW8POSb
+         ijZ4pULVj4O9OV/afjQno3YAkxSp6dmilwGCoMfrC3cFDjUkHPh2Ml9jwudOqI4dnGRF
+         hmavmBfrLB+wvMKT63zYRrbNXePziDy53IDC6HN1Ilfl+l1jZiG+i0EQcp5Yufp/nOtz
+         u/+A==
+X-Gm-Message-State: APjAAAUJ25aPdkqNw5B5hZvdID+XLD0dnMLmTqD07mPv1Aq1YEBsYtrb
+        /QIrFtw4/XcnrpsCBXhlgMk=
+X-Google-Smtp-Source: APXvYqxVcOSeb4ui/whdivvWhL+7M+NWziGV2eJ528z2ZwwTcTTsTCMUSn91JEZYMvB1nRHGYM8gKw==
+X-Received: by 2002:a2e:810e:: with SMTP id d14mr39911ljg.160.1568749515241;
+        Tue, 17 Sep 2019 12:45:15 -0700 (PDT)
+Received: from localhost.localdomain ([46.216.138.44])
+        by smtp.gmail.com with ESMTPSA id k15sm614547ljg.65.2019.09.17.12.45.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 12:45:14 -0700 (PDT)
+Received: from jek by localhost.localdomain with local (Exim 4.92.1)
+        (envelope-from <jekhor@gmail.com>)
+        id 1iAJPW-0003qz-UI; Tue, 17 Sep 2019 22:45:14 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH v2 0/1] intel_cht_int33fe: Split code to USB TypeB and TypeC variants
+Date:   Tue, 17 Sep 2019 22:45:06 +0300
+Message-Id: <20190917194507.14771-1-jekhor@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subroutine dump_struct uses type attributes to check if the struct
-syntax is valid. Then, it removes all attributes before using it for
-output. `____cacheline_aligned_in_smp` is an attribute that is
-not included in both steps. Add it, since it is used by kernel structs.
+Patch to support INT33FE ACPI pseudo-device on hardware with USB Type B
+connector.
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- scripts/kernel-doc | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v2:
+Instead of defining two separated modules with two separated config
+options, compile {common,typeb,typec} sources into one .ko module.
+Call needed variant-specific probe function based after of hardware type
+detection in common code.
 
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index f1faa036ee59..5505750261d7 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -1062,7 +1062,7 @@ sub dump_struct($$) {
-     my $x = shift;
-     my $file = shift;
- 
--    if ($x =~ /(struct|union)\s+(\w+)\s*\{(.*)\}(\s*(__packed|__aligned|__attribute__\s*\(\([a-z0-9,_\s\(\)]*\)\)))*/) {
-+    if ($x =~ /(struct|union)\s+(\w+)\s*\{(.*)\}(\s*(__packed|__aligned|____cacheline_aligned_in_smp|__attribute__\s*\(\([a-z0-9,_\s\(\)]*\)\)))*/) {
- 	my $decl_type = $1;
- 	$declaration_name = $2;
- 	my $members = $3;
-@@ -1077,6 +1077,7 @@ sub dump_struct($$) {
- 	$members =~ s/\s*__aligned\s*\([^;]*\)/ /gos;
- 	$members =~ s/\s*__packed\s*/ /gos;
- 	$members =~ s/\s*CRYPTO_MINALIGN_ATTR/ /gos;
-+	$members =~ s/\s*____cacheline_aligned_in_smp/ /gos;
- 	# replace DECLARE_BITMAP
- 	$members =~ s/DECLARE_BITMAP\s*\(([^,)]+),\s*([^,)]+)\)/unsigned long $1\[BITS_TO_LONGS($2)\]/gos;
- 	# replace DECLARE_HASHTABLE
+Yauhen Kharuzhy (1):
+  platform/x86/intel_cht_int33fe: Split code to USB TypeB and TypeC
+    variants
+
+ drivers/platform/x86/Kconfig                  |  14 +-
+ drivers/platform/x86/Makefile                 |   4 +
+ .../platform/x86/intel_cht_int33fe_common.c   | 148 ++++++++++++++++++
+ .../platform/x86/intel_cht_int33fe_common.h   |  44 ++++++
+ .../platform/x86/intel_cht_int33fe_typeb.c    |  64 ++++++++
+ ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  79 +---------
+ 6 files changed, 278 insertions(+), 75 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_typeb.c
+ rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (83%)
+
 -- 
-2.23.0
+2.20.1
 
