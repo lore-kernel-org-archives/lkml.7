@@ -2,66 +2,106 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B43C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C2BC4CED0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D57A214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BE4218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:56:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568746587;
+	bh=mbODalGRNQoWNnowm2tS1pcY2EbwBFAWll84phPGxbA=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=uKZPesjjq9CfldNQ5PH9F+X4FxM40fkVVtlupLKQ+pIIJvypTjz80g1PVv6WF2VGk
+	 m6xUNaw6ytoyO5qbbzDBNjJoyBQb+4YqjuiBhnrqY2oQn7Ryrf//fc3PIXgHQKal28
+	 BOYjpDk01JAquDe4Z0MkvxtqFDN0VRNwdmkvO+ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfIQSzz (ORCPT
+        id S1729710AbfIQS40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:55:55 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:45654 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726169AbfIQSzz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:55:55 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id CF7063C04C0;
-        Tue, 17 Sep 2019 20:55:52 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vqZ65qPc6gsS; Tue, 17 Sep 2019 20:55:46 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Tue, 17 Sep 2019 14:56:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37646 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725927AbfIQS40 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:56:26 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id C7D7D3C00C4;
-        Tue, 17 Sep 2019 20:55:46 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Sep
- 2019 20:55:46 +0200
-Date:   Tue, 17 Sep 2019 20:55:46 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     shuah <shuah@kernel.org>, Eugeniu Rosca <erosca@de.adit-jv.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH 1/2] selftests: watchdog: Validate optional file argument
-Message-ID: <20190917185546.GC16818@vmlxhi-102.adit-jv.com>
-References: <20190907085833.21167-1-erosca@de.adit-jv.com>
- <20190916120816.GA30453@vmlxhi-102.adit-jv.com>
- <f07c0dac-4d01-f661-25ea-9d077e96e9e7@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A4A8214AF;
+        Tue, 17 Sep 2019 18:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568746585;
+        bh=mbODalGRNQoWNnowm2tS1pcY2EbwBFAWll84phPGxbA=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=X2afMEBspYqrVXT0KNPzGo8hs6SqE7bnObaYtDnvMs7z38QOJlK4gbKabuaAqCbOP
+         ECW6wcm77plYCjJXgCBwwyyI+0OSQOARJZVVveEUXUP3MPVeTbryP4q99Pt9Jmw6Ld
+         HKuDFOJ+H+7HjkuwaGkz3B4DI6P4W2cia6BT6KaQ=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <f07c0dac-4d01-f661-25ea-9d077e96e9e7@kernel.org>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
+References: <1566327992-362-1-git-send-email-jcrouse@codeaurora.org> <1566327992-362-3-git-send-email-jcrouse@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Joerg Roedel <joro@8bytes.org>
+To:     Jordan Crouse <jcrouse@codeaurora.org>,
+        freedreno@lists.freedesktop.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/7] dt-bindings: arm-smmu: Add Adreno GPU variant
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 11:56:24 -0700
+Message-Id: <20190917185625.8A4A8214AF@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(For LKML readability) Superseded by:
- - https://patchwork.kernel.org/patch/11149287/
-   ("[v3,1/2] selftests: watchdog: Validate optional file argument")
+Quoting Jordan Crouse (2019-08-20 12:06:27)
+> Add a compatible string to identify SMMUs that are attached
+> to Adreno GPU devices that wish to support split pagetables.
+>=20
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>=20
+>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Docum=
+entation/devicetree/bindings/iommu/arm,smmu.txt
+> index 3133f3b..3b07896 100644
+> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> @@ -18,6 +18,7 @@ conditions.
+>                          "arm,mmu-500"
+>                          "cavium,smmu-v2"
+>                          "qcom,smmu-v2"
+> +                       "qcom,adreno-smmu-v2"
 
--- 
-Best Regards,
-Eugeniu.
+Is the tabbing weird here or just my MUA is failing?
+
+> =20
+>                    depending on the particular implementation and/or the
+>                    version of the architecture implemented.
+> @@ -31,6 +32,12 @@ conditions.
+>                    as below, SoC-specific compatibles:
+>                    "qcom,sdm845-smmu-500", "arm,mmu-500"
+> =20
+> +                 "qcom,adreno-smmu-v2" is a special implementation for
+
+Heh, special.
+
+> +                 SMMU devices attached to the Adreno GPU on Qcom devices.
+> +                 If selected, this will enable split pagetable (TTBR1)
+
+Is this selected? Sounds like Kconfig here.
+
+> +                 support. Only use this if the GPU target is capable of
+> +                 supporting 64 bit addresses.
+> +
+>  - reg           : Base address and size of the SMMU.
+> =20
