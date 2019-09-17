@@ -2,91 +2,139 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022CCC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691252189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="TEA2P3pd"
+	by mail.kernel.org (Postfix) with ESMTP id CFB92214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbfIQOf1 (ORCPT
+        id S1728430AbfIQOgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:35:27 -0400
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:33219 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728128AbfIQOf1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:35:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568730925;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=aDkxVMbY8vRvqozEwY9dfWbrp1yfXlJPYl/GV2fom4s=;
-        b=TEA2P3pdTKwtdTJbORsNcJvcpWV+xP3Cn45HdtSkp5vdIgFyvrkVum+t2l+QQ+yhHf
-        6DvmGvykcNsS+QIfYnoAWtnqROv6k22YHLzUroaUNAqbLMFmTHPBOeYiiq+LgBPHgYsO
-        Yfk8SdGSmMrkzszN1LOhp/JIgjMsb4C2DV5TfCDhV4Q/OkYBW2ltOl8WlqmzgawF629O
-        VsRLLFZfXizeshXSciPKUPgtIvvhaL8HfmQi9sJzjsZweYtL5wOrdEk2Z7pNKRy6Kt2i
-        VnYgKUJiqZpp+Ur3vVLhVZH6zG0obe2yzRJSe4x3k5GNQ5u7ksXbjZhl/dEsjNakPuf0
-        NjfQ==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCyjDPUnsm74p9bR0nKSw0V7uzbYrtFUHmEd2msW"
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2001:16b8:266f:d200:e9b9:e9c0:8734:b26d]
-        by smtp.strato.de (RZmta 44.27.0 AUTH)
-        with ESMTPSA id u036f9v8HEZ6XP4
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Tue, 17 Sep 2019 16:35:06 +0200 (CEST)
-Content-Type: text/plain; charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed binned / 720MHz grade bits
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20190916162816.GF52127@atomide.com>
-Date:   Tue, 17 Sep 2019 16:35:22 +0200
-Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Adam Ford <aford173@gmail.com>,
-        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <eballetbo@gmail.com>,
-        Javier Martinez Canillas <javier@dowhile0.org>,
-        Roger Quadros <rogerq@ti.com>,
-        Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+        Tue, 17 Sep 2019 10:36:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46440 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727202AbfIQOgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:36:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 283433B46C;
+        Tue, 17 Sep 2019 14:36:24 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2821E19C4F;
+        Tue, 17 Sep 2019 14:36:23 +0000 (UTC)
+Message-ID: <26dbecfee2c02456ddfda3647df1bcd56d9cc520.camel@redhat.com>
+Subject: Re: [PATCH RT v3 5/5] rcutorture: Avoid problematic critical
+ section nesting on RT
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Date:   Tue, 17 Sep 2019 09:36:22 -0500
+In-Reply-To: <20190917100728.wnhdvmbbzzxolef4@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+         <20190911165729.11178-6-swood@redhat.com>
+         <20190912221706.GC150506@google.com>
+         <500cabaa80f250b974409ee4a4fca59bf2e24564.camel@redhat.com>
+         <20190917100728.wnhdvmbbzzxolef4@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
-References: <cover.1568224032.git.hns@goldelico.com> <20190916162816.GF52127@atomide.com>
-To:     Tony Lindgren <tony@atomide.com>
-X-Mailer: Apple Mail (2.3124)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 17 Sep 2019 14:36:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
-
-> Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
+On Tue, 2019-09-17 at 12:07 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-16 11:55:57 [-0500], Scott Wood wrote:
+> > On Thu, 2019-09-12 at 18:17 -0400, Joel Fernandes wrote:
+> > > On Wed, Sep 11, 2019 at 05:57:29PM +0100, Scott Wood wrote:
+> > > > rcutorture was generating some nesting scenarios that are not
+> > > > reasonable.  Constrain the state selection to avoid them.
+> > > > 
+> > > > Example #1:
+> > > > 
+> > > > 1. preempt_disable()
+> > > > 2. local_bh_disable()
+> > > > 3. preempt_enable()
+> > > > 4. local_bh_enable()
+> > > > 
+> > > > On PREEMPT_RT, BH disabling takes a local lock only when called in
+> > > > non-atomic context.  Thus, atomic context must be retained until
+> > > > after
+> > > > BH
+> > > > is re-enabled.  Likewise, if BH is initially disabled in non-atomic
+> > > > context, it cannot be re-enabled in atomic context.
+> > > > 
+> > > > Example #2:
+> > > > 
+> > > > 1. rcu_read_lock()
+> > > > 2. local_irq_disable()
+> > > > 3. rcu_read_unlock()
+> > > > 4. local_irq_enable()
+> > > 
+> > > If I understand correctly, these examples are not unrealistic in the
+> > > real
+> > > world unless RCU is used in the scheduler.
+> > 
+> > I hope you mean "not realistic", at least when it comes to explicit
+> > preempt/irq disabling rather than spinlock variants that don't disable
+> > preempt/irqs on PREEMPT_RT.
 > 
-> * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
->> CHANGES V3:
->> * make omap36xx control the abb-ldo and properly switch mode
->>  (suggested by Adam Ford <aford173@gmail.com>)
->> * add a note about enabling the turbo-mode OPPs
+> We have:
+> - local_irq_disable() (+save)
+> - spin_lock()
+> - local_bh_disable()
+> - preempt_disable()
 > 
-> Looks good to me, when applying, please provide a
-> minimal immutable branch maybe against v5.3 or v5.4-rc1,
-> that I can also merge in if needed for the dts changes.
+> On non-RT you can (but should not) use the counter part of the function
+> in random order like:
+> 	local_bh_disable();
+> 	local_irq_disable();
+> 	local_bh_enable();
+> 	local_irq_enable();
 
-Should I resend a v4 with your Acked-By added?
+Actually even non-RT will assert if you do local_bh_enable() with IRQs
+disabled -- but the other combinations do work, and are used some places via
+spinlocks.  If they are used via direct calls to preempt_disable() or
+local_irq_disable() (or via raw spinlocks), then that will not go away on RT
+and we'll have a problem.
 
-BR and thanks,
-Nikolaus
+> The non-RT will survive this. On RT the counterpart functions have to be
+> used in reverse order:
+> 	local_bh_disable();
+> 	local_irq_disable();
+> 	local_irq_enable();
+> 	local_bh_enable();
+> 
+> or the kernel will fall apart.
+> 
+> Since you _can_ use it in random order Paul wants to test that the
+> random use of those function does not break RCU in any way. Since they
+> can not be used on RT in random order it has been agreed that we keep
+> the test for !RT but disable it on RT.
+
+For now, yes.  Long term it would be good to keep track of when
+preemption/irqs would be disabled on RT, even when running a non-RT debug
+kernel, and assert when bad things are done with it (assuming an RT-capable
+arch).  Besides detecting these fairly unusual patterns, it could also
+detect earlier the much more common problem of nesting a non-raw spinlock
+inside a raw spinlock or other RT-atomic context.
+
+-Scott
+
 
