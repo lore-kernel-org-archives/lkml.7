@@ -2,52 +2,54 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC12C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E88C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3EF22067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B388421852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hs8Q69x5"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ft6l6A+L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfIQMjV (ORCPT
+        id S1728063AbfIQMjX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:39:21 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:20734 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727112AbfIQMjV (ORCPT
+        Tue, 17 Sep 2019 08:39:23 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34266 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726946AbfIQMjV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Sep 2019 08:39:21 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HCVred000451;
-        Tue, 17 Sep 2019 14:38:42 +0200
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HCUsGj028794;
+        Tue, 17 Sep 2019 14:38:44 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=cOyzcoGBpVBGscxdizJshAfCpisInpaxvUv0kh4n7UA=;
- b=hs8Q69x5uVUWDQzS2+p3YDWMe3MHcsv37AZeQ3/0xoguP34cw7Za/Do82lGa69wlPong
- X8Spmagds8nN6KBS31/XpP1tvHJK6x+gGpB3fOtQw20MFfwiJloVOZrxG5ykp4NoOfS8
- /le8tsuXyZhJXCptBSWxeYMui10Wgpufzu9EtEdqlXDLFrxGt9Gyi0GrgqVisvDIxsOS
- jtm71AHG6V1jp3snHSjYWxyg19leJI/8yKsbnPNBIifPWYmNdwYMOfQGdbMQA9gQmAs4
- RoD5bv5Rqg0HESvBG5rafAEhSb35U+wgxG6Y4Y0VkB5xcIUNb+hAiEmVpbrGITiJ+smP lA== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=QkRCYsDXVXhFgyT8aCcIU1yLANBURobzqeomhnBIHLE=;
+ b=Ft6l6A+LX9udX9LGWjbwgFpHqZt7GblezpZjY42GBsw2xvwZG5DRQElZBGoPgm8WTkQW
+ 8U2GNIZXHblsCHQsVlYRrrwz+V/39Ckst8fK+B3A5BryLfcm2doS2BNl0c3e/WzumTyP
+ slb9JEj/1RzKZgHo8jWEEf6gikv9KbgnHWpu9Vv5wevzvWABxQrHXhVw22xKRZVoYdwV
+ es8La7+RYl5ARoMaTusjibJ4/yfswYsJxDyBUuuE7sk3hqgKvlk2xxW4Qhhhzt+BvKWt
+ 9/3pmYWeSeMlZRreA/tzLur7mv8Vw8HKks3VcoTSBVIYYw5zF7yuIC/XcEKlA4Tq7WCC qQ== 
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v0nb9hpgw-1
+        by mx07-00178001.pphosted.com with ESMTP id 2v0np11k7a-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 17 Sep 2019 14:38:42 +0200
+        Tue, 17 Sep 2019 14:38:44 +0200
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 5491C23;
-        Tue, 17 Sep 2019 12:38:34 +0000 (GMT)
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1444D52;
+        Tue, 17 Sep 2019 12:38:36 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A1C7C2BDA7E;
-        Tue, 17 Sep 2019 14:38:33 +0200 (CEST)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C166E2BCDD9;
+        Tue, 17 Sep 2019 14:38:35 +0200 (CEST)
 Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by Safex1hubcas24.st.com
  (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
- 2019 14:38:33 +0200
+ 2019 14:38:35 +0200
 Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep 2019 14:38:33 +0200
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep 2019 14:38:35 +0200
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <jic23@kernel.org>
 CC:     <linux-arm-kernel@lists.infradead.org>,
@@ -55,10 +57,12 @@ CC:     <linux-arm-kernel@lists.infradead.org>,
         <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
         <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
         <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 0/2] iio: stm32-adc: fix a race with dma and irq
-Date:   Tue, 17 Sep 2019 14:38:14 +0200
-Message-ID: <1568723896-19063-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 2/2] iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
+Date:   Tue, 17 Sep 2019 14:38:16 +0200
+Message-ID: <1568723896-19063-3-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568723896-19063-1-git-send-email-fabrice.gasnier@st.com>
+References: <1568723896-19063-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.48.1.232]
@@ -69,26 +73,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series fixes a race condition observed when using several ADCs with DMA
-and irq.
-There's a precusor patch to the fix. It keeps registers definitions as a whole
-block, to ease readability and allow simple (readl) access path to EOC bits in
-stm32-adc-core driver.
+End of conversion may be handled by using IRQ or DMA. There may be a
+race when two conversions complete at the same time on several ADCs.
+EOC can be read as 'set' for several ADCs, with:
+- an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
+  called in this case.
+- an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
+  request instead. It's then automatically cleared by DMA read. But the
+  handler gets called due to status bit is temporarily set (IRQ triggered
+  by the other ADC).
+So both EOC status bit in CSR and EOCIE control bit must be checked
+before invoking the interrupt handler (e.g. call ISR only for
+IRQ-enabled ADCs).
 
+Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
 Changes in v2:
-- Add a precursor patch to follow Jonathan's comment on readability
+- Keep registers definitions as a whole block to ease readability (add
+  a precursor patch to move them to header file)
+---
+ drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++++++++++---
+ drivers/iio/adc/stm32-adc-core.h |  1 +
+ 2 files changed, 41 insertions(+), 3 deletions(-)
 
-Fabrice Gasnier (2):
-  iio: adc: stm32-adc: move registers definitions
-  iio: adc: stm32-adc: fix a race when using several adcs with dma and
-    irq
-
- drivers/iio/adc/stm32-adc-core.c |  70 +++++++++++---------
- drivers/iio/adc/stm32-adc-core.h | 137 +++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/stm32-adc.c      | 109 -------------------------------
- 3 files changed, 177 insertions(+), 139 deletions(-)
-
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index 84ac326..93a096a 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -44,6 +44,8 @@
+  * @eoc1:	adc1 end of conversion flag in @csr
+  * @eoc2:	adc2 end of conversion flag in @csr
+  * @eoc3:	adc3 end of conversion flag in @csr
++ * @ier:	interrupt enable register offset for each adc
++ * @eocie_msk:	end of conversion interrupt enable mask in @ier
+  */
+ struct stm32_adc_common_regs {
+ 	u32 csr;
+@@ -51,6 +53,8 @@ struct stm32_adc_common_regs {
+ 	u32 eoc1_msk;
+ 	u32 eoc2_msk;
+ 	u32 eoc3_msk;
++	u32 ier;
++	u32 eocie_msk;
+ };
+ 
+ struct stm32_adc_priv;
+@@ -276,6 +280,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
+ 	.eoc1_msk = STM32F4_EOC1,
+ 	.eoc2_msk = STM32F4_EOC2,
+ 	.eoc3_msk = STM32F4_EOC3,
++	.ier = STM32F4_ADC_CR1,
++	.eocie_msk = STM32F4_EOCIE,
+ };
+ 
+ /* STM32H7 common registers definitions */
+@@ -284,8 +290,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
+ 	.ccr = STM32H7_ADC_CCR,
+ 	.eoc1_msk = STM32H7_EOC_MST,
+ 	.eoc2_msk = STM32H7_EOC_SLV,
++	.ier = STM32H7_ADC_IER,
++	.eocie_msk = STM32H7_EOCIE,
+ };
+ 
++static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
++	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
++};
++
++static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
++					  unsigned int adc)
++{
++	u32 ier, offset = stm32_adc_offset[adc];
++
++	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
++
++	return ier & priv->cfg->regs->eocie_msk;
++}
++
+ /* ADC common interrupt for all instances */
+ static void stm32_adc_irq_handler(struct irq_desc *desc)
+ {
+@@ -296,13 +318,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
+ 	chained_irq_enter(chip, desc);
+ 	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
+ 
+-	if (status & priv->cfg->regs->eoc1_msk)
++	/*
++	 * End of conversion may be handled by using IRQ or DMA. There may be a
++	 * race here when two conversions complete at the same time on several
++	 * ADCs. EOC may be read 'set' for several ADCs, with:
++	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
++	 *   is then automatically cleared by DR read in hardware)
++	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
++	 *   be called in this case)
++	 * So both EOC status bit in CSR and EOCIE control bit must be checked
++	 * before invoking the interrupt handler (e.g. call ISR only for
++	 * IRQ-enabled ADCs).
++	 */
++	if (status & priv->cfg->regs->eoc1_msk &&
++	    stm32_adc_eoc_enabled(priv, 0))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 0));
+ 
+-	if (status & priv->cfg->regs->eoc2_msk)
++	if (status & priv->cfg->regs->eoc2_msk &&
++	    stm32_adc_eoc_enabled(priv, 1))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 1));
+ 
+-	if (status & priv->cfg->regs->eoc3_msk)
++	if (status & priv->cfg->regs->eoc3_msk &&
++	    stm32_adc_eoc_enabled(priv, 2))
+ 		generic_handle_irq(irq_find_mapping(priv->domain, 2));
+ 
+ 	chained_irq_exit(chip, desc);
+diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
+index 94aa2d2..2579d51 100644
+--- a/drivers/iio/adc/stm32-adc-core.h
++++ b/drivers/iio/adc/stm32-adc-core.h
+@@ -25,6 +25,7 @@
+  * --------------------------------------------------------
+  */
+ #define STM32_ADC_MAX_ADCS		3
++#define STM32_ADC_OFFSET		0x100
+ #define STM32_ADCX_COMN_OFFSET		0x300
+ 
+ /* STM32F4 - Registers for each ADC instance */
 -- 
 2.7.4
 
