@@ -2,121 +2,277 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE843C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8B4EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F2A20640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94F3220678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloud.ionos.com header.i=@cloud.ionos.com header.b="NQI/irYO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dz8P1GHa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfIQJGW (ORCPT
+        id S1726718AbfIQJJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:06:22 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38700 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725601AbfIQJGV (ORCPT
+        Tue, 17 Sep 2019 05:09:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33566 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfIQJJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:06:21 -0400
-Received: by mail-wm1-f67.google.com with SMTP id o184so2155923wme.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:06:18 -0700 (PDT)
+        Tue, 17 Sep 2019 05:09:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id a22so2711097ljd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:09:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloud.ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nFF/4XckwgtJQC2Enr9cy65XMeRaKHCD6+b4rJzMQBQ=;
-        b=NQI/irYOEC0oW/wTvSbDnELKuUZeOpofWBHyAhmiMiiCEhNSbh4NplUrKqmII7kbWC
-         Q4G0P/l5i1MupUFwmcu5DFteIib7wU9MgNHMUaJNFixmlxPAuWXylmdDQaCiOe+sUrE5
-         3QiGm0Cb9e3q9ReqXGQfHfbfieGrxLaGWXul+xuyxl3/GHazE3oNK4MuKLHF/yl7sIRb
-         cNmsdVTLAKDGWytATZvP9VG1BS/7B2/RW4Kpxf0PJlzq/qask3x/4+rfYwpeNktmfig9
-         7vGPKDGgIRohp3hTtYv4y31AnvclEPpAmC3ZSAP+4t7z7IMHQl3Ddb8iyh9/KTiaJSpR
-         OXvw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqR6fz18v1v6o9dV/amwWZ0UvT5Pbraa10pfG1hgHBs=;
+        b=dz8P1GHagBa5s+SRn6/J86IRYLX9+8crfswpitjnxRwLT1rTw8F03QCK7REavcJxTY
+         PBNfhaaGmrpBlTdpCEdos7vrC5E+K62FlDSogp6mTmLPRGi70PiEDxtnPOhAcTeOAk9G
+         rbj5Btpga5uYzPz4ZkqHq98+siS/Hr4oi7Um+2DOytSFm8SZnPmb5HdlOKWGKdLGcm+L
+         bS1bEwrz4GODCjX6uGmK8afvaDvCeJApsOxSP+7NidNzjjqDFvus2d2g4akeS2UG9jg9
+         ygoLXo4a+qCwKqY1abl6Xx44KAt9QJS9Fv03duk2Tr8J2AVXDBdZsoz+ckMw9dY0UQ4C
+         de4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nFF/4XckwgtJQC2Enr9cy65XMeRaKHCD6+b4rJzMQBQ=;
-        b=RoosrVzhtWqV7C6qp475Pyw/jOwZuo991qQl7SqOhS+hkUlnyW/s9SdM5JlZU2e5rY
-         RkSXSNfSlgLo+0F3D4XJucbwlN07EqZl9JALExmmgLKAh0lwAYFZhaKxR0P91vWxgjxM
-         aLOxhbi/05dqmzuVlBkACPWHUAPXzWM2cQva72ENZZxrNss4s36IUezuIs+70rWu9i3C
-         cE2bsz0QQ+X8iH3d0b1+zn6UbtNaWkGIJctE+KHFGWElSbj5ZQgDSCimVNdrz2OAqN+U
-         cnY4Zi+dd0ZnWEnEpBVOLd11apw4sNsbmiVIEoGCS7BPyPKxj8qVUTxHYFjVQxaHa1NX
-         nBGg==
-X-Gm-Message-State: APjAAAWr2sjeEtu7UwMuKwkuoWFGDF0fCS9JMUzqWaGad3/u9v0rK89m
-        Hp4+kriIT9No3XBEy5KYo2JD7+YBSiW7VctGLYhvAA==
-X-Google-Smtp-Source: APXvYqy2Qpxco8CrOgIuQYRcL2hUkHM8zw0gIl2jvM254AOtptuMeubrSXnRgxqPY7xMUBI6qgrs+ImepthxQ7sZ4Us=
-X-Received: by 2002:a1c:4384:: with SMTP id q126mr2837215wma.153.1568711177926;
- Tue, 17 Sep 2019 02:06:17 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=nqR6fz18v1v6o9dV/amwWZ0UvT5Pbraa10pfG1hgHBs=;
+        b=n2YxRe1uT9ohV/k7ySeX8V42MzcSFxd0bQ49+2QoUc50EZQzgJoVSRhu+/jLs6sN5f
+         De0CdSNMD09MaV48yF8+PX5iEMdHcK5UxlrYKn4FVnb5akD9Gt7LAEE/8C3EeHhY2G9Q
+         HwXWvsK7Uft+UM5B2TAcZizb8gNymUguceUejRYb1zvDc4NZjynr0p6C+S8457VHq0CK
+         1W4F4ITblg0+sNqkt91kDQ/Zm350gmAFQuLKsKjG266SrbcoT1zfvV8mt3UBLhGCBDO3
+         rkbkzx6cPbmHV+Mc2K33p4rJ9yoR++d33JUJopLhGT7/K9feh/XTJwLZvTEKR21skkFm
+         Y1oA==
+X-Gm-Message-State: APjAAAVe3h0vVmRhX2p9Jz2bplP3PHg7ORbvXlGy7rQUKYH+VFAw9E7t
+        Cvi94ZaYY6Tf8l9qZWY9kerCGw==
+X-Google-Smtp-Source: APXvYqwxsA+u5UMUASj/lKslybOQL+s8doJN6HpBMNFtc+9S43mIitRm1GQ0OmykkxA4qBQKOz4q2Q==
+X-Received: by 2002:a2e:808d:: with SMTP id i13mr1237180ljg.73.1568711354658;
+        Tue, 17 Sep 2019 02:09:14 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id u8sm365468lfb.36.2019.09.17.02.09.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 02:09:13 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC and MEMSTICK updates for v5.4
+Date:   Tue, 17 Sep 2019 11:09:12 +0200
+Message-Id: <20190917090912.6758-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190916204158.6889-1-efremov@linux.com> <20190916204158.6889-19-efremov@linux.com>
-In-Reply-To: <20190916204158.6889-19-efremov@linux.com>
-From:   Jinpu Wang <jinpu.wang@cloud.ionos.com>
-Date:   Tue, 17 Sep 2019 11:06:06 +0200
-Message-ID: <CAMGffEk6=EoJTHKgsJzNs27mUdSj2zin5N8MsdtOK5rZh17JeQ@mail.gmail.com>
-Subject: Re: [PATCH v3 18/26] scsi: pm80xx: Use PCI_STD_NUM_BARS
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        Linux SCSI Mailinglist <linux-scsi@vger.kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:47 PM Denis Efremov <efremov@linux.com> wrote:
->
-> Replace the magic constant (6) with define PCI_STD_NUM_BARS representing
-> the number of PCI BARs.
->
-> Cc: Jack Wang <jinpu.wang@cloud.ionos.com>
-> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-Looks fine, thanks!
-Acked-by: Jack Wang <jinpu.wang@cloud.ionos.com>
-> ---
->  drivers/scsi/pm8001/pm8001_hwi.c  | 2 +-
->  drivers/scsi/pm8001/pm8001_init.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/scsi/pm8001/pm8001_hwi.c b/drivers/scsi/pm8001/pm8001_hwi.c
-> index 68a8217032d0..1a3661d6be06 100644
-> --- a/drivers/scsi/pm8001/pm8001_hwi.c
-> +++ b/drivers/scsi/pm8001/pm8001_hwi.c
-> @@ -1186,7 +1186,7 @@ static void pm8001_hw_chip_rst(struct pm8001_hba_info *pm8001_ha)
->  void pm8001_chip_iounmap(struct pm8001_hba_info *pm8001_ha)
->  {
->         s8 bar, logical = 0;
-> -       for (bar = 0; bar < 6; bar++) {
-> +       for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->                 /*
->                 ** logical BARs for SPC:
->                 ** bar 0 and 1 - logical BAR0
-> diff --git a/drivers/scsi/pm8001/pm8001_init.c b/drivers/scsi/pm8001/pm8001_init.c
-> index 3374f553c617..aca913490eb5 100644
-> --- a/drivers/scsi/pm8001/pm8001_init.c
-> +++ b/drivers/scsi/pm8001/pm8001_init.c
-> @@ -401,7 +401,7 @@ static int pm8001_ioremap(struct pm8001_hba_info *pm8001_ha)
->
->         pdev = pm8001_ha->pdev;
->         /* map pci mem (PMC pci base 0-3)*/
-> -       for (bar = 0; bar < 6; bar++) {
-> +       for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->                 /*
->                 ** logical BARs for SPC:
->                 ** bar 0 and 1 - logical BAR0
-> --
-> 2.21.0
->
+Hi Linus,
+
+Here's the PR with updates for MMC and MEMSTICK for v5.4. Details about the
+highlights are as usual found in the signed tag.
+
+Please pull this in!
+
+Kind regards
+Ulf Hansson
 
 
--- 
-Jack Wang
-Linux Kernel Developer
-Platform Engineering Compute (IONOS Cloud)
+The following changes since commit 87b5d602a1cc76169b8d81ec2c74c8d95d9350dc:
+
+  mmc: tmio: Fixup runtime PM management during remove (2019-09-13 13:49:09 +0200)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.4
+
+for you to fetch changes up to b46119796721301e410a357b91195eed46980ea6:
+
+  Merge branch 'fixes' into next (2019-09-13 13:57:37 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - Fixup processing of SDIO IRQs during system suspend/resume
+ - Add helper function to indicate if SDIO IRQs is enabled
+
+MMC host:
+ - bcm2835: Take SWIOTLB memory size limitation into account
+ - dw_mmc: Improve SDIO IRQs support
+ - mtk-sd: Various improvements
+ - mtk-sd: Improve SDIO IRQs support
+ - sdhci-iproc: Add support for emmc2 of the BCM2711
+ - sdhci-of-arasan: Add Support for Intel LGM eMMC
+ - sdhci-of-aspeed: Add support for the ASPEED SD controller
+ - sdhci-of-esdhc: Deal with erratum A011334 support in ls1028a 1.0 SoC
+ - sdhci-pci: Prepare to add support of Genesys Logic GL975x
+ - sdhci-pci: Add another Id for Intel CML
+ - sdhci-pci-o2micro: Fix O2 Host data read/write DLL Lock phase shift issue
+ - sunxi: Add support for H5 compatibles
+
+----------------------------------------------------------------
+Adrian Hunter (1):
+      mmc: sdhci-pci: Add another Id for Intel CML
+
+Al Cooper (1):
+      mmc: sdhci: Fix incorrect switch to HS mode
+
+Andrew Jeffery (7):
+      dt-bindings: mmc: sdhci-of-aspeed: Document Aspeed SD controller
+      mmc: sdhci-of-aspeed: Add support for the ASPEED SD controller
+      dt-bindings: mmc: sdhci-of-aspeed: Update example ranges property
+      mmc: sdhci-of-aspeed: Drop redundant assignment to host->clock
+      mmc: sdhci-of-aspeed: Uphold clocks-on post-condition of set_clock()
+      mmc: sdhci-of-aspeed: Allow max-frequency limitation of SDCLK
+      mmc: sdhci-of-aspeed: Depend on CONFIG_OF_ADDRESS
+
+Andy Shevchenko (1):
+      mmc: mmc_spi: Convert to use for_each_sg()
+
+Anson Huang (1):
+      mmc: mxs: use devm_platform_ioremap_resource() to simplify code
+
+Ben Chuang (4):
+      mmc: sdhci: Change timeout of loop for checking internal clock stable
+      mmc: sdhci: Add PLL Enable support to internal clock setup
+      PCI: Add Genesys Logic, Inc. Vendor ID
+      mmc: sdhci: Export sdhci_abort_tuning function symbol
+
+Chaotian Jing (2):
+      mmc: mediatek: fix controller busy when plug out SD
+      mmc: mediatek: support 24bits segment size
+
+Chuhong Yuan (2):
+      mmc: sdhci-pci: Use dev_get_drvdata
+      memstick: r592: Use dev_get_drvdata
+
+Colin Ian King (2):
+      mmc: dw_mmc: hi3798cv200: make array degrees static const, makes object smaller
+      ms_block: fix spelling mistake "randomally" -> "randomly"
+
+Gustavo A. R. Silva (3):
+      mmc: atmel-mci: Mark expected switch fall-throughs
+      mmc: sdhci-s3c: Mark expected switch fall-through
+      mmc: sdhci-cadence: use struct_size() helper
+
+Jisheng Zhang (1):
+      mmc: sdhci-pltfm: Use devm_platform_ioremap_resource() to simplify code
+
+Lars Persson (1):
+      mmc: usdhi6rol0: Add maintainers
+
+Masahiro Yamada (3):
+      mmc: sdhci: constify references of parameters to __sdhci_read_caps()
+      mmc: sdhci-cadence: override spec version
+      mmc: sdhci: use lower/upper_32_bits() macros for DMA addresses
+
+Matthias Kaehlcke (1):
+      mmc: core: Move code to get pending SDIO IRQs to a function
+
+Maxime Ripard (2):
+      dt-bindings: mmc: sunxi: reorder MMC compatibles
+      dt-bindings: mmc: sunxi: Add H5 compatibles
+
+Paul Cercueil (2):
+      mmc: jz4740: Code cleanup
+      mmc: jz4740: Drop dependency on arch header
+
+Ramuthevar Vadivel Murugan (1):
+      dt-bindings: mmc: sdhci-of-arasan: Add new compatible for Intel LGM eMMC
+
+Ramuthevar Vadivel Muruganx (1):
+      mmc: sdhci-of-arasan: Add Support for Intel LGM eMMC
+
+Shirley Her (SC) (3):
+      mmc: sdhci-pci-o2micro: Change O2 Host PLL and DLL register name
+      mmc: sdhci-pci-o2micro: Move functions in preparation to fix DLL lock phase shift issue
+      mmc: sdhci-pci-o2micro: Fix O2 Host data read/write DLL Lock phase shift issue
+
+Stefan Wahren (3):
+      dt-bindings: mmc: sdhci-iproc: Add brcm,bcm2711-emmc2
+      mmc: sdhci-iproc: Add support for emmc2 of the BCM2711
+      mmc: bcm2835: Take SWIOTLB memory size limitation into account
+
+Stephen Boyd (1):
+      mmc: Remove dev_err() usage after platform_get_irq()
+
+Tamás Szűcs (1):
+      mmc: sdhi: fill in actual_clock
+
+Ulf Hansson (13):
+      mmc: mmci: Clarify comments and some code for busy detection
+      Merge branch 'fixes' into next
+      mmc: core: Add helper function to indicate if SDIO IRQs is enabled
+      mmc: dw_mmc: Re-store SDIO IRQs mask at system resume
+      mmc: mtk-sd: Re-store SDIO IRQs mask at system resume
+      mmc: core: Clarify sdio_irq_pending flag for MMC_CAP2_SDIO_IRQ_NOTHREAD
+      mmc: core: Clarify that the ->ack_sdio_irq() callback is mandatory
+      mmc: core: WARN if SDIO IRQs are enabled for non-powered card in suspend
+      mmc: core: Fixup processing of SDIO IRQs during system suspend/resume
+      mmc: sdhci: Drop redundant check in sdhci_ack_sdio_irq()
+      mmc: sdhci: Drop redundant code for SDIO IRQs
+      mmc: sdhci: Convert to use sdio_irq_claimed()
+      Merge branch 'fixes' into next
+
+Wei Yongjun (1):
+      mmc: sdhci-of-aspeed: Fix return value check in aspeed_sdc_probe()
+
+Yinbo Zhu (1):
+      mmc: sdhci-of-esdhc: add erratum A011334 support in ls1028a 1.0 SoC
+
+Yoshihiro Shimoda (1):
+      mmc: renesas_sdhi_sys_dmac: Remove all R-Car Gen3 SoCs
+
+yong mao (1):
+      mmc: mediatek: enable SDIO IRQ low level trigger function
+
+ .../bindings/mmc/allwinner,sun4i-a10-mmc.yaml      |  14 +-
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |  17 +
+ .../devicetree/bindings/mmc/aspeed,sdhci.yaml      | 106 +++++++
+ .../devicetree/bindings/mmc/brcm,sdhci-iproc.txt   |   4 +-
+ MAINTAINERS                                        |   1 +
+ drivers/memstick/core/ms_block.c                   |   2 +-
+ drivers/memstick/host/r592.c                       |   6 +-
+ drivers/mmc/core/sdio.c                            |   4 +-
+ drivers/mmc/core/sdio_irq.c                        |  57 ++--
+ drivers/mmc/host/Kconfig                           |  12 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/atmel-mci.c                       |   4 +
+ drivers/mmc/host/bcm2835.c                         |   3 +-
+ drivers/mmc/host/dw_mmc-hi3798cv200.c              |   2 +-
+ drivers/mmc/host/dw_mmc.c                          |   4 +
+ drivers/mmc/host/jz4740_mmc.c                      |  19 +-
+ drivers/mmc/host/meson-gx-mmc.c                    |   1 -
+ drivers/mmc/host/mmc_spi.c                         |   2 +-
+ drivers/mmc/host/mmci.c                            |  69 +++--
+ drivers/mmc/host/mtk-sd.c                          |  29 +-
+ drivers/mmc/host/mxcmmc.c                          |   4 +-
+ drivers/mmc/host/mxs-mmc.c                         |   4 +-
+ drivers/mmc/host/renesas_sdhi_core.c               |  13 +-
+ drivers/mmc/host/renesas_sdhi_sys_dmac.c           |  36 ---
+ drivers/mmc/host/s3cmci.c                          |   1 -
+ drivers/mmc/host/sdhci-cadence.c                   |   7 +-
+ drivers/mmc/host/sdhci-esdhc-imx.c                 |  34 +-
+ drivers/mmc/host/sdhci-iproc.c                     |   9 +
+ drivers/mmc/host/sdhci-msm.c                       |   2 -
+ drivers/mmc/host/sdhci-of-arasan.c                 |  15 +
+ drivers/mmc/host/sdhci-of-aspeed.c                 | 342 +++++++++++++++++++++
+ drivers/mmc/host/sdhci-of-esdhc.c                  |   1 +
+ drivers/mmc/host/sdhci-pci-core.c                  |  13 +-
+ drivers/mmc/host/sdhci-pci-o2micro.c               | 311 +++++++++++++------
+ drivers/mmc/host/sdhci-pci.h                       |   1 +
+ drivers/mmc/host/sdhci-pltfm.c                     |   5 +-
+ drivers/mmc/host/sdhci-s3c.c                       |   5 +-
+ drivers/mmc/host/sdhci.c                           |  76 +++--
+ drivers/mmc/host/sdhci.h                           |  12 +-
+ drivers/mmc/host/sdhci_f_sdh30.c                   |   4 +-
+ drivers/mmc/host/uniphier-sd.c                     |   4 +-
+ include/linux/mmc/host.h                           |  10 +
+ include/linux/pci_ids.h                            |   2 +
+ 43 files changed, 958 insertions(+), 310 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/aspeed,sdhci.yaml
+ create mode 100644 drivers/mmc/host/sdhci-of-aspeed.c
