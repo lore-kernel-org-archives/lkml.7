@@ -2,281 +2,279 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B004C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65CE3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DF22189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FA452053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:40:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mf3ylWv/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CKdareAb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbfIQNkF (ORCPT
+        id S1728873AbfIQNkM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:40:05 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34924 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbfIQNkF (ORCPT
+        Tue, 17 Sep 2019 09:40:12 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36257 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbfIQNkL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:40:05 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m15so4448929qtq.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:40:04 -0700 (PDT)
+        Tue, 17 Sep 2019 09:40:11 -0400
+Received: by mail-qk1-f196.google.com with SMTP id s18so4033945qkj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:40:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Q2t22cvAHte1ch8tj9lxq14REfgJnpMH2IQOWoISxZk=;
-        b=mf3ylWv/P6KKZLCmcDbvPDClWNE/yl8qC43ao/9coxSAnnpECS5gdQYATZ9ERdVNkB
-         OL9mHdvCjmD9rGlwANsJBNE/jw2OzUoUb7qV/fKDihddwKuKM26xSdlNHtop8eImzCyl
-         G6PepKApbQ49kcSkiWCsKs9i9wCgpwb5Wr6HmfmtdnTNL9l0Is7gR1vAnZOh6L7Zl6Vm
-         21973yXAlXWUmsEscaUdyc116p1CaPqquPXgNHAwxjX4fKkgqAY+hhjJaK4A8Ehv2G+K
-         HGfhabv1vu7ynxaRSu25/vJm7jRaTvhJmfJl490tK+iFsWZjIYVTO3oSgkmKqBrxdmrc
-         FP+g==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gEp7v+IEAeUw4ENumd+jAyajjwsnDTsNl8LGsvDG8aQ=;
+        b=CKdareAbPW9bc8X0O+sslRutcue85fbStFriyrHbP3s0fau0dg56HR1NL46RWkbngV
+         bPPJ6zQs0MomuKiXq8BNF8pjR7DpvVFRo9gOS8IUtfIe8ztWUsd42li4ltLbV1v6fYjw
+         V350KybUpuofUM0oJkcxP0GHpcls78Ed9DmmASJgpyeCMl9HCZb9wtVeJUxnDxcwqz0R
+         HObkcSyEPiEpPMfFAZYhC6zvstgKAFCeRkOFqFUDwhc4l4zynnr9qGuIROeGlSAIsrtf
+         7l2+khBk2BL2jNvRZ4B7NXVHm2L3rYUCTWJ/QdaGPtw6dU9miT4Ohm9AXL8zAD/OUgUd
+         1TlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q2t22cvAHte1ch8tj9lxq14REfgJnpMH2IQOWoISxZk=;
-        b=HUl9xSGeShFhznonxgyPt163SHRcKoSF7db5Os1CYtCsikt82ScBgeswrsuT+q+DLk
-         HsgIoPM3olvCNH3UrxqHqai0TDbkzlu/KuivMRhxIdSqO8YNw/NQ1az9/kzEPrIFm2TD
-         //H1WXI9rsJZQ5kRhm0E25dBID8UgmcoUh62WZTBRxttxYNKAETkMFvWVQWzNlhudPTy
-         mzyu169zsoXrSVQiEurArAQLUUi/OmuCLHVDtC1TONZIFoVKRN6/Am9e3WeUWn14wImM
-         MKAkGuzoq5jt3EQC0VkOwA2AMt3md0Mxb2Vrm89OW6uG3QhrGMZrTMgasZXXLKWhkuxB
-         vxkA==
-X-Gm-Message-State: APjAAAV5Pl2XvXxwVrg2pJs/050P1kfLdBZNIlqoBGoPSYGA1NuM/7Dt
-        J2kABQRirdrvG/mY/VTNb3EqkA==
-X-Google-Smtp-Source: APXvYqxxE1JteTH87odhllssonVdekVi7hpPC+xb0XTDUBCG6B+wXwcAmYOqAGEvGpKicctPFHY+rg==
-X-Received: by 2002:ac8:75cd:: with SMTP id z13mr3591864qtq.87.1568727603712;
-        Tue, 17 Sep 2019 06:40:03 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 131sm1141820qkg.1.2019.09.17.06.40.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 06:40:03 -0700 (PDT)
-Message-ID: <1568727601.5576.160.camel@lca.pw>
-Subject: Re: [RFC PATCH] mm/slub: remove left-over debugging code
-From:   Qian Cai <cai@lca.pw>
-To:     David Rientjes <rientjes@google.com>,
-        Pengfei Li <lpf.vector@gmail.com>
-Cc:     cl@linux.com, penberg@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 17 Sep 2019 09:40:01 -0400
-In-Reply-To: <alpine.DEB.2.21.1909161128480.105847@chino.kir.corp.google.com>
-References: <1568650294-8579-1-git-send-email-cai@lca.pw>
-         <alpine.DEB.2.21.1909161128480.105847@chino.kir.corp.google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gEp7v+IEAeUw4ENumd+jAyajjwsnDTsNl8LGsvDG8aQ=;
+        b=IeSVNT6uF4jKNvpPyj/bI8SlJRaYykqHaZfj15YpFZzpVvYtiTLXHPFtTSq9QFFDLw
+         ZFq5WREuxFGZgp78YTC3upacy4WaQQDy/b1+BFrbeV9ZS0URrfSBf8mlqjbZkqXk4YpU
+         TKPOzzDsMXThbWbgTE4guDuHppHrrSf9jxPDHJW+AmlN7K/hmouR6vnFoPPld4ZHb7Az
+         cx2VkpgwHzvcJcEuPVOjKa2Ik0YroShI6xkQ2zS84zHYu8on5r17QrB6x1xQOBDBCLIl
+         aUnpDosLoCy70FSGhlhyxfjfbBayhTA38sjx9Csln9MibUPzr6LRwzOMdQULQhd3+Ej0
+         Y+MQ==
+X-Gm-Message-State: APjAAAU9st6jFwW9PnT0fB0qz8n9tmicpschQR0BBeR4BRKobSFmD8L0
+        IArl6Q+5jLZvBHz74YOCESQ6emCGMOwKsMTnOYlmiYcK
+X-Google-Smtp-Source: APXvYqzH83bV69DjxvPpqR88qUPcNAXnoxg3rSOL0GKSs19CJm4Bk+DE6apuwnzKC/GrompeagMjsTnIcbN3M3YHnRU=
+X-Received: by 2002:a37:8547:: with SMTP id h68mr3690991qkd.219.1568727609207;
+ Tue, 17 Sep 2019 06:40:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190909101254.24191-1-benjamin.gaignard@st.com>
+ <CA+M3ks7XUt5co5HHBv1LPNB8CAPqDnrn4wr-oQeKOHnGj4Pyjg@mail.gmail.com> <20190917124635.GP3958@phenom.ffwll.local>
+In-Reply-To: <20190917124635.GP3958@phenom.ffwll.local>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Tue, 17 Sep 2019 15:39:58 +0200
+Message-ID: <CA+M3ks4y5jLM_NsSUfPO1KR5r8=xB23=nd43jwjLhixBYV0pbg@mail.gmail.com>
+Subject: Re: [PATCH] drm: sti: fix W=1 warnings
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     Dave Airlie <airlied@gmail.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <sean@poorly.run>,
+        Maxime Ripard <mripard@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        David Airlie <airlied@linux.ie>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-09-16 at 11:32 -0700, David Rientjes wrote:
-> On Mon, 16 Sep 2019, Qian Cai wrote:
-> 
-> > SLUB_RESILIENCY_TEST and SLUB_DEBUG_CMPXCHG look like some left-over
-> > debugging code during the internal development that probably nobody uses
-> > it anymore. Remove them to make the world greener.
-> 
-> Adding Pengfei Li who has been working on a patchset for modified handling 
-> of kmalloc cache initialization and touches the resiliency test.
-> 
-> I still find the resiliency test to be helpful/instructional for handling 
-> unexpected conditions in these caches, so I'd suggest against removing it: 
-> the only downside is that it's additional source code.  But it's helpful 
-> source code for reference.
-> 
-> The cmpxchg failures could likely be more generalized beyond SLUB since 
-> there will be other dependencies in the kernel than just this allocator.
+Le mar. 17 sept. 2019 =C3=A0 14:46, Daniel Vetter <daniel@ffwll.ch> a =C3=
+=A9crit :
+>
+> On Mon, Sep 16, 2019 at 03:16:49PM +0200, Benjamin Gaignard wrote:
+> > Le lun. 9 sept. 2019 =C3=A0 12:29, Benjamin Gaignard
+> > <benjamin.gaignard@st.com> a =C3=A9crit :
+> > >
+> > > Fix warnings when W=3D1.
+> > > No code changes, only clean up in sti internal structures and functio=
+ns
+> > > descriptions.
+> > >
+> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >
+> > For my own reference, applied on drm-misc-next
+>
+> Dude seriously no:
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Reviewed-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Link: https://patchwork.freedesktop.org/patch/msgid/20190909101254.24191-=
+1-benjamin.gaignard@st.com
+>
+> Self-review ain't ok in drm-misc, you need someone to
+> ack/double-check/have a look. And given that you had to fabricate your
+> self-review yourself somehow (the tools really don't do that for you) thi=
+s
+> doesn't look like an accident.
+>
+> Adding other maintainers.
+> -Daniel
+>
 
-OK, SLUB_RESILIENCY_TEST is fine to keep around and maybe be turned into a
-Kconfig option to make it more visible.
+All my apologies, I have taken a shortcut for this STI patch...
+I will ask to Philippe or Yannick to formally review STI related
+patches on mailing and not only on internal one.
 
-Is it fine to remove SLUB_DEBUG_CMPXCHG? If somebody later want to generalize it
-beyond SLUB, he/she can always find the old code somewhere anyway.
+Benjamin
 
-> 
-> (I assume you didn't send a Signed-off-by line because this is an RFC.)
-> 
-> > ---
-> >  mm/slub.c | 110 --------------------------------------------------------------
-> >  1 file changed, 110 deletions(-)
-> > 
-> > diff --git a/mm/slub.c b/mm/slub.c
-> > index 8834563cdb4b..f97155ba097d 100644
-> > --- a/mm/slub.c
-> > +++ b/mm/slub.c
-> > @@ -150,12 +150,6 @@ static inline bool kmem_cache_has_cpu_partial(struct kmem_cache *s)
-> >   * - Variable sizing of the per node arrays
-> >   */
-> >  
-> > -/* Enable to test recovery from slab corruption on boot */
-> > -#undef SLUB_RESILIENCY_TEST
-> > -
-> > -/* Enable to log cmpxchg failures */
-> > -#undef SLUB_DEBUG_CMPXCHG
-> > -
-> >  /*
-> >   * Mininum number of partial slabs. These will be left on the partial
-> >   * lists even if they are empty. kmem_cache_shrink may reclaim them.
-> > @@ -392,10 +386,6 @@ static inline bool __cmpxchg_double_slab(struct kmem_cache *s, struct page *page
-> >  	cpu_relax();
-> >  	stat(s, CMPXCHG_DOUBLE_FAIL);
-> >  
-> > -#ifdef SLUB_DEBUG_CMPXCHG
-> > -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
-> > -#endif
-> > -
-> >  	return false;
-> >  }
-> >  
-> > @@ -433,10 +423,6 @@ static inline bool cmpxchg_double_slab(struct kmem_cache *s, struct page *page,
-> >  	cpu_relax();
-> >  	stat(s, CMPXCHG_DOUBLE_FAIL);
-> >  
-> > -#ifdef SLUB_DEBUG_CMPXCHG
-> > -	pr_info("%s %s: cmpxchg double redo ", n, s->name);
-> > -#endif
-> > -
-> >  	return false;
-> >  }
-> >  
-> > @@ -2004,45 +1990,11 @@ static inline unsigned long next_tid(unsigned long tid)
-> >  	return tid + TID_STEP;
-> >  }
-> >  
-> > -static inline unsigned int tid_to_cpu(unsigned long tid)
-> > -{
-> > -	return tid % TID_STEP;
-> > -}
-> > -
-> > -static inline unsigned long tid_to_event(unsigned long tid)
-> > -{
-> > -	return tid / TID_STEP;
-> > -}
-> > -
-> >  static inline unsigned int init_tid(int cpu)
-> >  {
-> >  	return cpu;
-> >  }
-> >  
-> > -static inline void note_cmpxchg_failure(const char *n,
-> > -		const struct kmem_cache *s, unsigned long tid)
-> > -{
-> > -#ifdef SLUB_DEBUG_CMPXCHG
-> > -	unsigned long actual_tid = __this_cpu_read(s->cpu_slab->tid);
-> > -
-> > -	pr_info("%s %s: cmpxchg redo ", n, s->name);
-> > -
-> > -#ifdef CONFIG_PREEMPT
-> > -	if (tid_to_cpu(tid) != tid_to_cpu(actual_tid))
-> > -		pr_warn("due to cpu change %d -> %d\n",
-> > -			tid_to_cpu(tid), tid_to_cpu(actual_tid));
-> > -	else
-> > -#endif
-> > -	if (tid_to_event(tid) != tid_to_event(actual_tid))
-> > -		pr_warn("due to cpu running other code. Event %ld->%ld\n",
-> > -			tid_to_event(tid), tid_to_event(actual_tid));
-> > -	else
-> > -		pr_warn("for unknown reason: actual=%lx was=%lx target=%lx\n",
-> > -			actual_tid, tid, next_tid(tid));
-> > -#endif
-> > -	stat(s, CMPXCHG_DOUBLE_CPU_FAIL);
-> > -}
-> > -
-> >  static void init_kmem_cache_cpus(struct kmem_cache *s)
-> >  {
-> >  	int cpu;
-> > @@ -2751,7 +2703,6 @@ static __always_inline void *slab_alloc_node(struct kmem_cache *s,
-> >  				object, tid,
-> >  				next_object, next_tid(tid)))) {
-> >  
-> > -			note_cmpxchg_failure("slab_alloc", s, tid);
-> >  			goto redo;
-> >  		}
-> >  		prefetch_freepointer(s, next_object);
-> > @@ -4694,66 +4645,6 @@ static int list_locations(struct kmem_cache *s, char *buf,
-> >  }
-> >  #endif	/* CONFIG_SLUB_DEBUG */
-> >  
-> > -#ifdef SLUB_RESILIENCY_TEST
-> > -static void __init resiliency_test(void)
-> > -{
-> > -	u8 *p;
-> > -	int type = KMALLOC_NORMAL;
-> > -
-> > -	BUILD_BUG_ON(KMALLOC_MIN_SIZE > 16 || KMALLOC_SHIFT_HIGH < 10);
-> > -
-> > -	pr_err("SLUB resiliency testing\n");
-> > -	pr_err("-----------------------\n");
-> > -	pr_err("A. Corruption after allocation\n");
-> > -
-> > -	p = kzalloc(16, GFP_KERNEL);
-> > -	p[16] = 0x12;
-> > -	pr_err("\n1. kmalloc-16: Clobber Redzone/next pointer 0x12->0x%p\n\n",
-> > -	       p + 16);
-> > -
-> > -	validate_slab_cache(kmalloc_caches[type][4]);
-> > -
-> > -	/* Hmmm... The next two are dangerous */
-> > -	p = kzalloc(32, GFP_KERNEL);
-> > -	p[32 + sizeof(void *)] = 0x34;
-> > -	pr_err("\n2. kmalloc-32: Clobber next pointer/next slab 0x34 -> -0x%p\n",
-> > -	       p);
-> > -	pr_err("If allocated object is overwritten then not detectable\n\n");
-> > -
-> > -	validate_slab_cache(kmalloc_caches[type][5]);
-> > -	p = kzalloc(64, GFP_KERNEL);
-> > -	p += 64 + (get_cycles() & 0xff) * sizeof(void *);
-> > -	*p = 0x56;
-> > -	pr_err("\n3. kmalloc-64: corrupting random byte 0x56->0x%p\n",
-> > -	       p);
-> > -	pr_err("If allocated object is overwritten then not detectable\n\n");
-> > -	validate_slab_cache(kmalloc_caches[type][6]);
-> > -
-> > -	pr_err("\nB. Corruption after free\n");
-> > -	p = kzalloc(128, GFP_KERNEL);
-> > -	kfree(p);
-> > -	*p = 0x78;
-> > -	pr_err("1. kmalloc-128: Clobber first word 0x78->0x%p\n\n", p);
-> > -	validate_slab_cache(kmalloc_caches[type][7]);
-> > -
-> > -	p = kzalloc(256, GFP_KERNEL);
-> > -	kfree(p);
-> > -	p[50] = 0x9a;
-> > -	pr_err("\n2. kmalloc-256: Clobber 50th byte 0x9a->0x%p\n\n", p);
-> > -	validate_slab_cache(kmalloc_caches[type][8]);
-> > -
-> > -	p = kzalloc(512, GFP_KERNEL);
-> > -	kfree(p);
-> > -	p[512] = 0xab;
-> > -	pr_err("\n3. kmalloc-512: Clobber redzone 0xab->0x%p\n\n", p);
-> > -	validate_slab_cache(kmalloc_caches[type][9]);
-> > -}
-> > -#else
-> > -#ifdef CONFIG_SYSFS
-> > -static void resiliency_test(void) {};
-> > -#endif
-> > -#endif	/* SLUB_RESILIENCY_TEST */
-> > -
-> >  #ifdef CONFIG_SYSFS
-> >  enum slab_stat_type {
-> >  	SL_ALL,			/* All slabs */
-> > @@ -5875,7 +5766,6 @@ static int __init slab_sysfs_init(void)
-> >  	}
-> >  
-> >  	mutex_unlock(&slab_mutex);
-> > -	resiliency_test();
-> >  	return 0;
-> >  }
-> >  
-> > -- 
-> > 1.8.3.1
-> > 
-> > 
+> >
+> > > ---
+> > >  drivers/gpu/drm/sti/sti_cursor.c |  2 +-
+> > >  drivers/gpu/drm/sti/sti_dvo.c    |  2 +-
+> > >  drivers/gpu/drm/sti/sti_gdp.c    |  2 +-
+> > >  drivers/gpu/drm/sti/sti_hda.c    |  2 +-
+> > >  drivers/gpu/drm/sti/sti_hdmi.c   |  4 ++--
+> > >  drivers/gpu/drm/sti/sti_tvout.c  | 10 +++++-----
+> > >  drivers/gpu/drm/sti/sti_vtg.c    |  2 +-
+> > >  7 files changed, 12 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sti/sti_cursor.c b/drivers/gpu/drm/sti/s=
+ti_cursor.c
+> > > index 0bf7c332cf0b..ea64c1dcaf63 100644
+> > > --- a/drivers/gpu/drm/sti/sti_cursor.c
+> > > +++ b/drivers/gpu/drm/sti/sti_cursor.c
+> > > @@ -47,7 +47,7 @@ struct dma_pixmap {
+> > >         void *base;
+> > >  };
+> > >
+> > > -/**
+> > > +/*
+> > >   * STI Cursor structure
+> > >   *
+> > >   * @sti_plane:    sti_plane structure
+> > > diff --git a/drivers/gpu/drm/sti/sti_dvo.c b/drivers/gpu/drm/sti/sti_=
+dvo.c
+> > > index 9e6d5d8b7030..c33d0aaee82b 100644
+> > > --- a/drivers/gpu/drm/sti/sti_dvo.c
+> > > +++ b/drivers/gpu/drm/sti/sti_dvo.c
+> > > @@ -65,7 +65,7 @@ static struct dvo_config rgb_24bit_de_cfg =3D {
+> > >         .awg_fwgen_fct =3D sti_awg_generate_code_data_enable_mode,
+> > >  };
+> > >
+> > > -/**
+> > > +/*
+> > >   * STI digital video output structure
+> > >   *
+> > >   * @dev: driver device
+> > > diff --git a/drivers/gpu/drm/sti/sti_gdp.c b/drivers/gpu/drm/sti/sti_=
+gdp.c
+> > > index 8e926cd6a1c8..11595c748844 100644
+> > > --- a/drivers/gpu/drm/sti/sti_gdp.c
+> > > +++ b/drivers/gpu/drm/sti/sti_gdp.c
+> > > @@ -103,7 +103,7 @@ struct sti_gdp_node_list {
+> > >         dma_addr_t btm_field_paddr;
+> > >  };
+> > >
+> > > -/**
+> > > +/*
+> > >   * STI GDP structure
+> > >   *
+> > >   * @sti_plane:          sti_plane structure
+> > > diff --git a/drivers/gpu/drm/sti/sti_hda.c b/drivers/gpu/drm/sti/sti_=
+hda.c
+> > > index 94e404f13234..3512a94a0fca 100644
+> > > --- a/drivers/gpu/drm/sti/sti_hda.c
+> > > +++ b/drivers/gpu/drm/sti/sti_hda.c
+> > > @@ -230,7 +230,7 @@ static const struct sti_hda_video_config hda_supp=
+orted_modes[] =3D {
+> > >          AWGi_720x480p_60, NN_720x480p_60, VID_ED}
+> > >  };
+> > >
+> > > -/**
+> > > +/*
+> > >   * STI hd analog structure
+> > >   *
+> > >   * @dev: driver device
+> > > diff --git a/drivers/gpu/drm/sti/sti_hdmi.c b/drivers/gpu/drm/sti/sti=
+_hdmi.c
+> > > index f03d617edc4c..87e34f7a6cfe 100644
+> > > --- a/drivers/gpu/drm/sti/sti_hdmi.c
+> > > +++ b/drivers/gpu/drm/sti/sti_hdmi.c
+> > > @@ -333,7 +333,6 @@ static void hdmi_infoframe_reset(struct sti_hdmi =
+*hdmi,
+> > >   * Helper to concatenate infoframe in 32 bits word
+> > >   *
+> > >   * @ptr: pointer on the hdmi internal structure
+> > > - * @data: infoframe to write
+> > >   * @size: size to write
+> > >   */
+> > >  static inline unsigned int hdmi_infoframe_subpack(const u8 *ptr, siz=
+e_t size)
+> > > @@ -543,13 +542,14 @@ static int hdmi_vendor_infoframe_config(struct =
+sti_hdmi *hdmi)
+> > >         return 0;
+> > >  }
+> > >
+> > > +#define HDMI_TIMEOUT_SWRESET  100   /*milliseconds */
+> > > +
+> > >  /**
+> > >   * Software reset of the hdmi subsystem
+> > >   *
+> > >   * @hdmi: pointer on the hdmi internal structure
+> > >   *
+> > >   */
+> > > -#define HDMI_TIMEOUT_SWRESET  100   /*milliseconds */
+> > >  static void hdmi_swreset(struct sti_hdmi *hdmi)
+> > >  {
+> > >         u32 val;
+> > > diff --git a/drivers/gpu/drm/sti/sti_tvout.c b/drivers/gpu/drm/sti/st=
+i_tvout.c
+> > > index e1b3c8cb7287..b1fc77b150da 100644
+> > > --- a/drivers/gpu/drm/sti/sti_tvout.c
+> > > +++ b/drivers/gpu/drm/sti/sti_tvout.c
+> > > @@ -157,9 +157,9 @@ static void tvout_write(struct sti_tvout *tvout, =
+u32 val, int offset)
+> > >   *
+> > >   * @tvout: tvout structure
+> > >   * @reg: register to set
+> > > - * @cr_r:
+> > > - * @y_g:
+> > > - * @cb_b:
+> > > + * @cr_r: red chroma or red order
+> > > + * @y_g: y or green order
+> > > + * @cb_b: blue chroma or blue order
+> > >   */
+> > >  static void tvout_vip_set_color_order(struct sti_tvout *tvout, int r=
+eg,
+> > >                                       u32 cr_r, u32 y_g, u32 cb_b)
+> > > @@ -214,7 +214,7 @@ static void tvout_vip_set_rnd(struct sti_tvout *t=
+vout, int reg, u32 rnd)
+> > >   * @tvout: tvout structure
+> > >   * @reg: register to set
+> > >   * @main_path: main or auxiliary path
+> > > - * @sel_input: selected_input (main/aux + conv)
+> > > + * @video_out: selected_input (main/aux + conv)
+> > >   */
+> > >  static void tvout_vip_set_sel_input(struct sti_tvout *tvout,
+> > >                                     int reg,
+> > > @@ -251,7 +251,7 @@ static void tvout_vip_set_sel_input(struct sti_tv=
+out *tvout,
+> > >   *
+> > >   * @tvout: tvout structure
+> > >   * @reg: register to set
+> > > - * @in_vid_signed: used video input format
+> > > + * @in_vid_fmt: used video input format
+> > >   */
+> > >  static void tvout_vip_set_in_vid_fmt(struct sti_tvout *tvout,
+> > >                 int reg, u32 in_vid_fmt)
+> > > diff --git a/drivers/gpu/drm/sti/sti_vtg.c b/drivers/gpu/drm/sti/sti_=
+vtg.c
+> > > index ef4009f11396..0b17ac8a3faa 100644
+> > > --- a/drivers/gpu/drm/sti/sti_vtg.c
+> > > +++ b/drivers/gpu/drm/sti/sti_vtg.c
+> > > @@ -121,7 +121,7 @@ struct sti_vtg_sync_params {
+> > >         u32 vsync_off_bot;
+> > >  };
+> > >
+> > > -/**
+> > > +/*
+> > >   * STI VTG structure
+> > >   *
+> > >   * @regs: register mapping
+> > > --
+> > > 2.15.0
+> > >
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
