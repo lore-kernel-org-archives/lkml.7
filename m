@@ -2,129 +2,104 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DC9C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABD6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EE5F20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972F520678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392145AbfIQDJx (ORCPT
+        id S1731234AbfIQDOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:09:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:50416 "EHLO foss.arm.com"
+        Mon, 16 Sep 2019 23:14:03 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:39828 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728037AbfIQDJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:09:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02989337;
-        Mon, 16 Sep 2019 20:09:52 -0700 (PDT)
-Received: from [10.162.40.131] (p8cg001049571a15.blr.arm.com [10.162.40.131])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E5E53F575;
-        Mon, 16 Sep 2019 20:09:49 -0700 (PDT)
-Subject: Re: [PATCH] mm/hotplug: Reorder memblock_[free|remove]() calls in
- try_remove_memory()
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <1568612857-10395-1-git-send-email-anshuman.khandual@arm.com>
- <20190916063612.GA1502@linux.ibm.com>
- <987dfde7-53f9-b013-5841-2c27c03d62d6@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <cc4193ec-a760-539b-099e-4aa1816dcea6@arm.com>
-Date:   Tue, 17 Sep 2019 08:40:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <987dfde7-53f9-b013-5841-2c27c03d62d6@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728874AbfIQDOC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:14:02 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 56B5E200640;
+        Tue, 17 Sep 2019 05:14:00 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5A62820063C;
+        Tue, 17 Sep 2019 05:13:39 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 76F84402E6;
+        Tue, 17 Sep 2019 11:13:25 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        catalin.marinas@arm.com, will@kernel.org,
+        dmitry.torokhov@gmail.com, aisheng.dong@nxp.com,
+        ulf.hansson@linaro.org, fugang.duan@nxp.com, peng.fan@nxp.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, olof@lixom.net,
+        mripard@kernel.org, arnd@arndb.de, jagan@amarulasolutions.com,
+        dinguyen@kernel.org, bjorn.andersson@linaro.org,
+        marcin.juszkiewicz@linaro.org, andriy.shevchenko@linux.intel.com,
+        yuehaibing@huawei.com, cw00.choi@samsung.com,
+        enric.balletbo@collabora.com, m.felsch@pengutronix.de,
+        ping.bai@nxp.com, ronald@innovation.ch, stefan@agner.ch,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH RESEND V5 1/5] dt-bindings: fsl: scu: add scu key binding
+Date:   Tue, 17 Sep 2019 11:12:15 +0800
+Message-Id: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and scu key event etc. management, Linux kernel has
+to communicate with system controller via MU (message unit) IPC
+to get scu key event, add binding doc for i.MX system controller
+key driver.
 
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+No changes.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt          | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-On 09/16/2019 02:20 PM, Anshuman Khandual wrote:
-> 
-> 
-> On 09/16/2019 12:06 PM, Mike Rapoport wrote:
->> On Mon, Sep 16, 2019 at 11:17:37AM +0530, Anshuman Khandual wrote:
->>> In add_memory_resource() the memory range to be hot added first gets into
->>> the memblock via memblock_add() before arch_add_memory() is called on it.
->>> Reverse sequence should be followed during memory hot removal which already
->>> is being followed in add_memory_resource() error path. This now ensures
->>> required re-order between memblock_[free|remove]() and arch_remove_memory()
->>> during memory hot-remove.
->>>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: Oscar Salvador <osalvador@suse.de>
->>> Cc: Michal Hocko <mhocko@suse.com>
->>> Cc: David Hildenbrand <david@redhat.com>
->>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->>> Cc: Dan Williams <dan.j.williams@intel.com>
->>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>> ---
->>> Original patch https://lkml.org/lkml/2019/9/3/327
->>>
->>> Memory hot remove now works on arm64 without this because a recent commit
->>> 60bb462fc7ad ("drivers/base/node.c: simplify unregister_memory_block_under_nodes()").
->>>
->>> David mentioned that re-ordering should still make sense for consistency
->>> purpose (removing stuff in the reverse order they were added). This patch
->>> is now detached from arm64 hot-remove series.
->>>
->>> https://lkml.org/lkml/2019/9/3/326
->>>
->>>  mm/memory_hotplug.c | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->>> index c73f09913165..355c466e0621 100644
->>> --- a/mm/memory_hotplug.c
->>> +++ b/mm/memory_hotplug.c
->>> @@ -1770,13 +1770,13 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
->>>
->>>  	/* remove memmap entry */
->>>  	firmware_map_remove(start, start + size, "System RAM");
->>> -	memblock_free(start, size);
->>> -	memblock_remove(start, size);
->>>
->>>  	/* remove memory block devices before removing memory */
->>>  	remove_memory_block_devices(start, size);
->>>
->>>  	arch_remove_memory(nid, start, size, NULL);
->>> +	memblock_free(start, size);
->>
->> I don't see memblock_reserve() anywhere in memory_hotplug.c, so the
->> memblock_free() call here seems superfluous. I think it can be simply
->> dropped.
-> 
-> I had observed that previously but was not sure whether or not there are
-> still scenarios where it might be true. Error path in add_memory_resource()
-> even just calls memblock_remove() not memblock_free(). Unless there is any
-> objection, can just drop it.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index c149fad..5eab7d0 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -157,6 +157,15 @@ Required properties:
+ Optional properties:
+ - timeout-sec: contains the watchdog timeout in seconds.
+ 
++SCU key bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible: should be:
++              "fsl,imx8qxp-sc-key"
++              followed by "fsl,imx-sc-key";
++- linux,keycodes: See Documentation/devicetree/bindings/input/keys.txt
++
+ Example (imx8qxp):
+ -------------
+ aliases {
+@@ -220,6 +229,11 @@ firmware {
+ 			compatible = "fsl,imx8qxp-sc-rtc";
+ 		};
+ 
++		scu_key: scu-key {
++			compatible = "fsl,imx8qxp-sc-key", "fsl,imx-sc-key";
++			linux,keycode = <KEY_POWER>;
++		};
++
+ 		watchdog {
+ 			compatible = "fsl,imx8qxp-sc-wdt", "fsl,imx-sc-wdt";
+ 			timeout-sec = <60>;
+-- 
+2.7.4
 
-Hello Mike,
-
-Looks like we might need memblock_free() here as well. As you mentioned
-before there might not be any memblock_reserve() in mm/memory_hotplug.c
-but that does not guarantee that there could not have been a previous
-memblock_reserve() or memblock_alloc_XXX() allocation which came from
-the current hot remove range.
-
-memblock_free() followed by memblock_remove() on the entire hot-remove
-range ensures that memblock.memory and memblock.reserve are in sync and
-the entire range is guaranteed to be removed from both the memory types.
-Or am I missing something here.
-
-- Anshuman
