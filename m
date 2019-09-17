@@ -2,64 +2,68 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1198C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC84321881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9867A21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbfIQKKN (ORCPT
+        id S1727179AbfIQKMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:10:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60394 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726250AbfIQKKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:10:13 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6E4B98666C;
-        Tue, 17 Sep 2019 10:10:13 +0000 (UTC)
-Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9929460BEC;
-        Tue, 17 Sep 2019 10:10:09 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 12:10:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 4/5] mdev: Introduce an API mdev_alias
-Message-ID: <20190917121007.31a7817c.cohuck@redhat.com>
-In-Reply-To: <20190902042436.23294-5-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190902042436.23294-1-parav@mellanox.com>
-        <20190902042436.23294-5-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Tue, 17 Sep 2019 06:12:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35216 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726250AbfIQKME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:12:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DBCD8AD88;
+        Tue, 17 Sep 2019 10:12:02 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 5E3E3DA889; Tue, 17 Sep 2019 12:12:23 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 12:12:23 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Austin Kim <austindh.kim@gmail.com>
+Cc:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: fix Wmaybe-uninitialized warning
+Message-ID: <20190917101223.GQ2850@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Austin Kim <austindh.kim@gmail.com>,
+        clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190903033019.GA149622@LGEARND20B15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 17 Sep 2019 10:10:13 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190903033019.GA149622@LGEARND20B15>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Sep 2019 23:24:35 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+On Tue, Sep 03, 2019 at 12:30:19PM +0900, Austin Kim wrote:
+> gcc throws warning message as below:
 
-> Introduce an API mdev_alias() to provide access to optionally generated
-> alias.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c | 12 ++++++++++++
->  include/linux/mdev.h          |  1 +
->  2 files changed, 13 insertions(+)
+What version of gcc reports that? 9.2.1 does not.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ‘clone_src_i_size’ may be used uninitialized in this function
+> [-Wmaybe-uninitialized]
+>  #define IS_ALIGNED(x, a)  (((x) & ((typeof(x))(a) - 1)) == 0)
+>                        ^
+> fs/btrfs/send.c:5088:6: note: ‘clone_src_i_size’ was declared here
+>  u64 clone_src_i_size;
+>    ^
+> The clone_src_i_size is only used as call-by-reference
+> in a call to get_inode_info().
+
+The reference is passed to a static function, so the compiler has enough
+information to determine if it's unused. By inspection I don't see a
+problem with the uninitalized variable: if __get_inode_info succeeds,
+there's a valid value, in error case it's not used at all.
