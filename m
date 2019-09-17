@@ -2,73 +2,88 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1A5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E82FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9676420862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1EA2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568750240;
+	bh=DNnw9TY+cVk/mxNQN7BJwyfl4hOHKnPyhZGsBagknLE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gj4h5sAvA9DwWp65Via+ilm8z0PZ7gg6ms+ZeEGzwbw7jOmNXj+iek5WQPxZtvgGY
+	 E3tL5RMHp/bd4DTQtNbNd/yBG93ZBfDK1HjFTGvAuoMfVCYyCjf1ZGyeHJU2bsJffg
+	 03hk35aZBBDUtTKPYQjhkxUB3w1VhU0VXBOhBHYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfIQTwb (ORCPT
+        id S1727109AbfIQT5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 15:52:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54838 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfIQTwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 15:52:31 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 542A0301E11C;
-        Tue, 17 Sep 2019 19:52:31 +0000 (UTC)
-Received: from builder (ovpn-120-110.rdu2.redhat.com [10.10.120.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 317DD608A5;
-        Tue, 17 Sep 2019 19:52:31 +0000 (UTC)
-Received: from builder.jcline.org.com (localhost [IPv6:::1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by builder (Postfix) with ESMTPS id 4B2A9FA9663;
-        Tue, 17 Sep 2019 19:52:30 +0000 (UTC)
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jeremy Cline <jcline@redhat.com>
-Subject: [PATCH] arm64: Fix reference to docs for ARM64_TAGGED_ADDR_ABI
-Date:   Tue, 17 Sep 2019 19:52:27 +0000
-Message-Id: <20190917195227.9061-1-jcline@redhat.com>
+        Tue, 17 Sep 2019 15:57:19 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44045 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfIQT5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 15:57:19 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w6so3947665oie.11;
+        Tue, 17 Sep 2019 12:57:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8OJcLjUpBrW1/qbYAiu6WuFYEuH8ShVscvI6okWWXn8=;
+        b=NBKLjCzBX+ploTfH4gb6j9J2DVp0W13GY+lpEeehz2Eimy8Y7/Xho4G2r1eqvw+ST5
+         qhaK7xY/XylrkwXD1f3gwbeHcEq+AjMo3K9HVWWRoO9Pn9pXjCITusMRVT7KrKgaYa/o
+         xSXJ34WwiUyi4mk3BFJKjzxc8syedn4g+7wz3xbhDSATjr9RHxf/lIGsNe+ljeQ7iqPj
+         3asMHy1PF4Pi9BUpvzDpYdv5+W15mB4/NyGUF0qOIPxFMmMJGCk/sSbk0w6YCqWU8+Jo
+         DF+bTOLDF8V5agyl0y4D+9Sg9CIqV267QGZE/fdSKmPGIMVDIqRgEw/HuOusHH5lCAI0
+         gdGA==
+X-Gm-Message-State: APjAAAWGTSJR4JOOboUl8rZ1F+lPGwQtMkkA1KciEuf1fsXYGZpyh3zM
+        UkE4bXfHxmVIP5B3ThYzhw==
+X-Google-Smtp-Source: APXvYqyZSU4eFtO2Ik2YQkAoBuTSYow+Kn3ZPm23D3N/+ENyPy94zmiHTTWDOHk5oVigXiOADvOO7w==
+X-Received: by 2002:aca:4c84:: with SMTP id z126mr5362414oia.86.1568750238166;
+        Tue, 17 Sep 2019 12:57:18 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y137sm1092025oie.53.2019.09.17.12.57.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 12:57:17 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 14:57:16 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
+        gregkh@linuxfoundation.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, sumit.garg@linaro.org,
+        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
+        joel@jms.id.au, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-binding: hwrng: add NPCM RNG documentation
+Message-ID: <20190917195716.GA25687@bogus>
+References: <20190912090149.7521-1-tmaimon77@gmail.com>
+ <20190912090149.7521-2-tmaimon77@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 17 Sep 2019 19:52:31 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190912090149.7521-2-tmaimon77@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The referenced file does not exist, but tagged-address-abi.rst does.
+On Thu, 12 Sep 2019 12:01:48 +0300, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Random Number Generator (RNG).
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../devicetree/bindings/rng/nuvoton,npcm-rng.txt     | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
+> 
 
-Signed-off-by: Jeremy Cline <jcline@redhat.com>
----
- arch/arm64/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6ae6ad8a4db0..8960310b4f64 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1135,7 +1135,7 @@ config ARM64_TAGGED_ADDR_ABI
- 	  When this option is enabled, user applications can opt in to a
- 	  relaxed ABI via prctl() allowing tagged addresses to be passed
- 	  to system calls as pointer arguments. For details, see
--	  Documentation/arm64/tagged-address-abi.txt.
-+	  Documentation/arm64/tagged-address-abi.rst.
- 
- menuconfig COMPAT
- 	bool "Kernel support for 32-bit EL0"
--- 
-2.21.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
