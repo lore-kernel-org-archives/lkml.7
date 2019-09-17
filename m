@@ -2,149 +2,235 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7364BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBCFC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4595521848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E9ED21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:15:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZXA2l76s";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="efjS0cR0"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="doCGybcd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392339AbfIQFLq (ORCPT
+        id S2392360AbfIQFP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 01:11:46 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:46644 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391009AbfIQFLp (ORCPT
+        Tue, 17 Sep 2019 01:15:28 -0400
+Received: from sonic301-20.consmr.mail.gq1.yahoo.com ([98.137.64.146]:34884
+        "EHLO sonic301-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390985AbfIQFP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 01:11:45 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7953D6122D; Tue, 17 Sep 2019 05:11:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568697104;
-        bh=PTpNNr9vCZKBb1PrXQnp9HGdb+U59T2W9Ge1jwsrEts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZXA2l76sSyUfiPOQw8BajIYhbYjp7Gr9AotyWHJyxUY32vjq9bP1Hh04NKyfL7AE3
-         rPTvzc4XUOW7EppiOajzgnR/sWsPKmpgIkqxwTFC6nauMW8a0eIJvpf5wfengeYpDd
-         7pm8tI5kKA4oAoMAV5hJ+cGTX+BRC22HeSLk0/dc=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pkondeti@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 97B51611BF;
-        Tue, 17 Sep 2019 05:11:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568697103;
-        bh=PTpNNr9vCZKBb1PrXQnp9HGdb+U59T2W9Ge1jwsrEts=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=efjS0cR08PeQa8dpw/eFA+nRVsiDlbQYgYNxS757tcUBmlKk/XrYuhXsb1ZCMl94+
-         E+U41Cno9e8MLtvNPu5b8vcbFHkDBYR9+7f9qvqx4xXHuHLFez1Rny3S7Pk9bDxdz+
-         IyO1E6qkM49u+mAHycvjJu6hsvtS4xdJsITqCLqA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 97B51611BF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=pkondeti@codeaurora.org
-Date:   Tue, 17 Sep 2019 10:41:35 +0530
-From:   Pavan Kondeti <pkondeti@codeaurora.org>
-To:     KeMeng Shi <shikemeng@huawei.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, valentin.schneider@arm.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: fix migration to invalid cpu in
- __set_cpus_allowed_ptr
-Message-ID: <20190917051134.GA23924@codeaurora.org>
-References: <1568616808-16808-1-git-send-email-shikemeng@huawei.com>
+        Tue, 17 Sep 2019 01:15:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568697326; bh=AhwlOckvccyE4ysmUMD5BMK/gwbKT5/hEQb6y+cMRsY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=doCGybcdMUHL4nqHBB//ks8M0OG08uDUHfElj/xYQPCoROM0iy5ee3zmF8iUqyETv0ZAo2ou0ojaVJJQAcwi0AviI7XR+immJkdWXcu6l6hB+7DT/yeuOF4AK4G1wxKD1E7Gnz9HvBNlXJQwIhqwtSrWgBUqEdf1W1EO0c+kILu8MW4SQ3NzYpmD/dnTNukqp6UKbGjdLFPW9Dw9UOBABvFKEE3DY6tPYNYu8NedmXX3Kh2DYiAyxYPMuX7NUatFHYCrSkt5Rta/ho/6LmZz3bhpssmGLb5WaeIQGFS7wQpPYaeD6HLeT23dtUZwlmrdqAKNEurC0Y6OoAongs2RcA==
+X-YMail-OSG: GxorC3EVM1nHmDVxUdfLQlpFhahMbf_7tT23iP7NgeCDiuXTyF9f8pZ5HSC1.xN
+ gdHvQRdKK7kCEaIreg9_KhtRHesRMXHrm8YNJK3PL2_Zy0ufZlHm3tkUt30BSEsv9yINSIDBdCZn
+ 9EwGrFBnT106nEEdpH8vvtLpVhd3ET5yt6.aJbDQoMhlTbBZB2ETxcbyf4cQpO_n099_mFvZggqk
+ 4ytnmtcU.sBcY10bZGc3Y338GuImDwAkGyPmQqgLgOh7vzNJPC4FIjdKTW4FOhr2Unm7pZ85ZF5E
+ hZhMeLJXgNn9lx9RepSili.L.2aNCODwIsERJp_5jE4SR13kPjZRQ2joXanyCbH8tTcw3jYuym4s
+ RrZYIMLc09oqO9yv5n9CEOQjGTZZStlxXjMxNqpYZbSyp6W1D.ZFP_xImEPHE.iA0dLEiRBGX6a_
+ tAsEAeDXcd_HKhi4C41BwlV9bDpHxxkHHHHeZgBGmwPp8JJpWLtgUZkCF4oKXgARxNi7pBUpXnEw
+ lG0FF7NJ8clVJun.lFdtAvwnecqFtZx4f65u2yMUsP4.apd8PiT1nrYfRS73M0UY3pYjAV2Mot82
+ E83rGo8yBU8wkwZG0APbB8.uDDj88.7JNm_mKsQFn6qmOdYfVnbkOy9OHjszmjNFXREa8EKrGXIV
+ ByZHt3ePjBY3jncIWnMAOaf2o.QWPdNZGsb77WQGdvYLxvj3aRDP2aW_Is3wfgOCj_z.Q4oQ7vR3
+ OA6sJXU2yLx3GbJS_mWheW5TmBWCd...iZMzgL7TIgjPmLN3Ve5YgEMddLhMXn.2UYBEAUyjVF.t
+ fzK98ndiMAKdzIIAD5UM_CRS9mYZqsOXehl9_3cqly1bHaqqb2UysgDHbgLUoLLz4toDcBvguLn2
+ Iox5eWfTmoW3H7.DCxdHSWx9DooL_8Ij6y_R9kGvUtlzTjkIJtNzK0p567NkTjwm5vE._OLJJIGV
+ McPpTHZ8DtCiD2ALEtHDYm2qx6xBflaIpxv.3twuKvy9eu1k1zQd3ZPlOCMOItNu.URYPXpzRgSQ
+ 7fW3aLoBjspLl2tkA5mjrGtTr3jtkUxXCS6nEsHhrWZzr.B6njPiZRm2mCzd1cp8XW9YPjbt_ZX0
+ 8O9mxnd.shlapPDJsVS2jw4THp6lAeWhE6lTRz8AjMP5wq.ywEsjMvC1BvNNRYpJnlgmLQNNwtjs
+ H3zrHEhdLYlSdiF4x3AZvvwVDguro3Us9FVnkmdW5xR00fxg2XznYrbrD6djxargI8YMnArS.u4X
+ eapxsIbCE272sbMkyZON6l4I4XGcvPFrZ1_inJRV02GqZCL1O3Fq._hyoQ7fxOZFL8v6Iv2yg8wL
+ e3y.zgenDvwhbggKUENe0FDnqIeSm69pdIarjhg--
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Tue, 17 Sep 2019 05:15:26 +0000
+Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 426117e608ffd8534b66767bfb4416c3;
+          Tue, 17 Sep 2019 05:15:22 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 13:15:15 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     'Greg KH' <gregkh@linuxfoundation.org>,
+        alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        'Valdis Kletnieks' <valdis.kletnieks@vt.edu>,
+        sergey.senozhatsky@gmail.com, Namjae Jeon <linkinjeon@gmail.com>
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190917051510.GA22891@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <CGME20190917025738epcas1p1f1dd21ca50df2392b0f84f0340d82bcd@epcas1p1.samsung.com>
+ <003601d56d03$aa04fa00$fe0eee00$@samsung.com>
+ <003701d56d04$470def50$d529cdf0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1568616808-16808-1-git-send-email-shikemeng@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <003701d56d04$470def50$d529cdf0$@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 06:53:28AM +0000, KeMeng Shi wrote:
-> Oops occur when running qemu on arm64:
->  Unable to handle kernel paging request at virtual address ffff000008effe40
->  Internal error: Oops: 96000007 [#1] SMP
->  Process migration/0 (pid: 12, stack limit = 0x00000000084e3736)
->  pstate: 20000085 (nzCv daIf -PAN -UAO)
->  pc : __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->  lr : move_queued_task.isra.21+0x124/0x298
->  ...
->  Call trace:
->   __ll_sc___cmpxchg_case_acq_4+0x4/0x20
->   __migrate_task+0xc8/0xe0
->   migration_cpu_stop+0x170/0x180
->   cpu_stopper_thread+0xec/0x178
->   smpboot_thread_fn+0x1ac/0x1e8
->   kthread+0x134/0x138
->   ret_from_fork+0x10/0x18
-> 
-> __set_cpus_allowed_ptr will choose an active dest_cpu in affinity mask to
-> migrage the process if process is not currently running on any one of the
-> CPUs specified in affinity mask. __set_cpus_allowed_ptr will choose an
-> invalid dest_cpu (dest_cpu >= nr_cpu_ids, 1024 in my virtual machine) if 
-> CPUS in an affinity mask are deactived by cpu_down after cpumask_intersects
-> check. cpumask_test_cpu of dest_cpu afterwards is overflow and may pass if
-> corresponding bit is coincidentally set. As a consequence, kernel will
-> access an invalid rq address associate with the invalid cpu in
-> migration_cpu_stop->__migrate_task->move_queued_task and the Oops occurs.
-> 
-> Process as follows may trigger the Oops:
-> 1) A process repeatedly binds itself to cpu0 and cpu1 in turn by calling
-> sched_setaffinity.
-> 2) A shell script repeatedly "echo 0 > /sys/devices/system/cpu/cpu1/online"
-> and "echo 1 > /sys/devices/system/cpu/cpu1/online" in turn.
-> 3) Oops appears if the invalid cpu is set in memory after tested cpumask.
-> 
-> Signed-off-by: KeMeng Shi <shikemeng@huawei.com>
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-> ---
-> Changes in v2:
-> -solve format problems in log
-> 
->  kernel/sched/core.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 3c7b90bcbe4e..087f4ac30b60 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1656,7 +1656,8 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->  	if (cpumask_equal(p->cpus_ptr, new_mask))
->  		goto out;
->  
-> -	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
-> +	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
-> +	if (dest_cpu >= nr_cpu_ids) {
->  		ret = -EINVAL;
->  		goto out;
->  	}
-> @@ -1677,7 +1678,6 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
->  	if (cpumask_test_cpu(task_cpu(p), new_mask))
->  		goto out;
->  
-> -	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
->  	if (task_running(rq, p) || p->state == TASK_WAKING) {
->  		struct migration_arg arg = { p, dest_cpu };
->  		/* Need help from migration thread: drop lock and wait. */
-> -- 
-> 2.19.1
-> 
-> 
+Hi,
 
-The cpu_active_mask might have changed in between. Your fix looks good to me.
+On Tue, Sep 17, 2019 at 12:02:01PM +0900, Namjae Jeon wrote:
+> We are excited to see this happening and would like to state that we appreciate
+> time and
+> effort which people put into upstreaming exfat. Thank you!
+> 
+> However, if possible, can we step back a little bit and re-consider it? We
+> would prefer to
+> see upstream the code which we are currently using in our products - sdfat - as
+> this can
+> be mutually benefitial from various points of view.
+
+(Only represent my personal views)
+
+I'd like to know the detailed commit history as an individual Android hobbyist.
+
+I noticed sdfat years ago and there is a difference from the previous exfat driver.
+
+I have no idea it's a good way to blindly keep the code from some opensource tar
+on some website. and so many forks on github (hard to know which one is more stable,
+cleaner or latest)... someone could take more time and play a role in that actively
+in the community and maybe draw a roadmap of this so I could study more and maybe
+contribute a little in my spare time.
+
+And I think if it permits, development on multiple branches could be avoided...
+If I am wrong, please ignore me...
 
 Thanks,
-Pavan
+Gao Xiang
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
-
+> 
+> Thanks!
+> 
+> > ---------- Forwarded message ---------
+> > ????????: Ju Hyung Park <qkrwngud825@gmail.com>
+> > Date: 2019?? 9?? 16?? (??) ???? 3:49
+> > Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+> > To: Greg KH <gregkh@linuxfoundation.org>
+> > Cc: <alexander.levin@microsoft.com>, <devel@driverdev.osuosl.org>, <linux-
+> > fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Valdis Kletnieks
+> > <valdis.kletnieks@vt.edu>
+> > 
+> > 
+> > Hi Greg,
+> > 
+> > On Sun, Sep 15, 2019 at 10:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > Note, this just showed up publically on August 12, where were you with
+> > > all of this new code before then?  :)
+> > 
+> > My sdFAT port, exfat-nofuse and the one on the staging tree, were all
+> > made by Samsung.
+> > And unless you guys had a chance to talk to Samsung developers
+> > directly, those all share the same faith of lacking proper development
+> > history.
+> > 
+> > The source I used was from http://opensource.samsung.com, which
+> > provides kernel sources as tar.gz files.
+> > There is no code history available.
+> > 
+> > > For the in-kernel code, we would have to rip out all of the work you did
+> > > for all older kernels, so that's a non-starter right there.
+> > 
+> > I'm aware.
+> > I'm just letting mainline know that there is potentially another (much
+> > better) base that could be upstreamed.
+> > 
+> > If you want me to rip out older kernel support for upstreaming, I'm
+> > more than happy to do so.
+> > 
+> > > As for what codebase to work off of, I don't want to say it is too late,
+> > > but really, this shows up from nowhere and we had to pick something so
+> > > we found the best we could at that point in time.
+> > 
+> > To be honest, whole public exFAT sources are all from nowhere unless
+> > you had internal access to Samsung's development archive.
+> > The one in the current staging tree isn't any better.
+> > 
+> > I'm not even sure where the staging driver is from, actually.
+> > 
+> > Samsung used the 1.2.x versioning until they switched to a new code
+> > base - sdFAT.
+> > The one in the staging tree is marked version 1.3.0(exfat_super.c).
+> > I failed to find anything 1.3.x from Samsung's public kernel sources.
+> > 
+> > The last time exFAT 1.2.x was used was in Galaxy S7(released in 2016).
+> > Mine was originally based on sdFAT 2.1.10, used in Galaxy S10(released
+> > in March 2019) and it just got updated to 2.2.0, used in Galaxy
+> > Note10(released in August 2019).
+> > 
+> > > Is there anything specific in the codebase you have now, that is lacking
+> > > in the in-kernel code?  Old-kernel-support doesn't count here, as we
+> > > don't care about that as it is not applicable.  But functionality does
+> > > matter, what has been added here that we can make use of?
+> > 
+> > This is more of a suggestion of
+> > "Let's base on a *much more recent* snapshot for the community to work on",
+> > since the current one on the staging tree also lacks development history.
+> > 
+> > The diff is way too big to even start understanding the difference.
+> > 
+> > 
+> > With that said though, I do have some vague but real reason as to why
+> > sdFAT base is better.
+> > 
+> > With some major Android vendors showing interests in supporting exFAT,
+> > Motorola notably published their work on public Git repository with
+> > full development history(the only vendor to do this that I'm aware
+> > of).
+> > Commits like this:
+> > https://github.com/MotorolaMobilityLLC/kernel-msm/commit/7ab1657 is
+> > not merged to exFAT(including the current staging tree one) while it
+> > did for sdFAT.
+> > 
+> > 
+> > The only thing I regret is not working on porting sdFAT sooner.
+> > I definitely didn't anticipate Microsoft to suddenly lift legal issues
+> > on upstreaming exFAT just around when I happen to gain interest in
+> > porting sdFAT.
+> > 
+> > If my port happened sooner, it would have been a no-brainer for it to
+> > be considered as a top candidate for upstreaming.
+> > 
+> > > And do you have any "real" development history to look at instead of the
+> > > "one giant commit" of the initial code drop?  That is where we could
+> > > actually learn what has changed over time.  Your repo as-is shows none
+> > > of the interesting bits :(
+> > 
+> > As I mentioned, development history is unobtainable, even for the
+> > current staging tree or exfat-nofuse.
+> > (If you guys took exfat-nofuse, you can also see that there's barely
+> > any real exFAT-related development done in that tree. Everything is
+> > basically fixes for newer kernel versions.)
+> > 
+> > The best I could do, if someone's interested, is to diff all versions
+> > of exFAT/sdFAT throughout the Samsung's kernel versions, but that
+> > still won't give us reasons as to why the changes were made.
+> > 
+> > TL;DR
+> > My suggestion - Let's base on a much newer driver that's matured more,
+> > contains more fixes, gives (slightly?) better performance and
+> > hopefully has better code quality.
+> > 
+> > Both drivers are horrible.
+> > You said it yourself(for the current staging one), and even for my new
+> > sdFAT-base proposal, I'm definitely not comfortable seeing this kind
+> > of crap in mainline:
+> > https://github.com/arter97/exfat-linux/commit/0f1ddde
+> > 
+> > However, it's clear to me that the sdFAT base is less-horrible.
+> > 
+> > Please let me know what you think.
+> > 
+> > > thanks,
+> > >
+> > > greg kh
+> > 
+> > Thanks.
+> > 
+> 
+> 
+> 
