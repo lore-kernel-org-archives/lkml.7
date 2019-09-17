@@ -2,87 +2,129 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BODY_QUOTE_MALF_MSGID,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F9EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DB1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1634421881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:21:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="NIs3zdhO"
+	by mail.kernel.org (Postfix) with ESMTP id C86F621852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:21:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568733702;
+	bh=wpzbNHazTaZFk4ufsoQVUeBGVtbQGktyi+fGFo9LDxA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=1be9lSeSs7W8qxI8XQAXZsFzxQrFkl9UI4PA62OLRFj4Mdc9eo8lGL7I+E6OvAPlx
+	 f1pROeyd6BI3q8YkZ4HJJ7yRLgoon2P9UGvQIv8tgSRJPM+1bOYQZOrQulb51l8fM3
+	 immUGjmg9bSCOVNniv6KHuZlmF23XOEQOOPW9Iqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfIQPVM (ORCPT
+        id S1729404AbfIQPVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:21:12 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50997 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727899AbfIQPVL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:21:11 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 5so3989434wmg.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:21:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=OjulAGrUuGemM9gSZfSlGAauZMenX7YjWl3lxcSoow0=;
-        b=NIs3zdhOCngBnuBHO1LbLej0XYA0fx3pJvBb5LAq9irsW8UeUktgNHXZMnDZxyaaOr
-         2k+bvHUE/fHLZ7lf9Kul73T/QwVd+bmEflgxCK0SnHStHOhQnALmk8nuUmXyAzCWPul6
-         tMU6PN1gvdxlyq/5hh21ijiyxq8ZglCxZeGrVjRnZhCGhY5VeaZ2hh7BtJOh1HISOtA8
-         1CVnUwBkgaQ0rUpkQ3ZI8DTPHPTiJ4vJpGCsUBPhH185EKUvoa7BkmeUtt0yYJ9bTDs6
-         u780dgRKf+UcHeceEUe9nq90hYS03wwSc0u8KF7NyWXCV7loB9k1CStMmQLhcJ1cU7zh
-         34og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=OjulAGrUuGemM9gSZfSlGAauZMenX7YjWl3lxcSoow0=;
-        b=KxGpXS3ezEzJMzvBStzwspptY2xHaKe5SahhSDQWIDVOdWAMMfUtXO9XS7lJVNPXNi
-         rUB6S6N/6vyVQzjdqCFPAHOH14UYnWuUTgFmG8NgUtPCojQUV7dAqW4GHTVeXR4etkDv
-         pxR/yFNCvujPZIk/u4cTkUbT+tcjD2DW0hJqYRZIWRmy8sPScwJFkhy6KrdsDJYFJjrC
-         uY1FBtkJVu1Dz+D5C4CI/Kw8tgI3nacwC+m5v1ZMd5fglpsv4w+7muEYIrgwV/4sqnbI
-         WSVWyW61O4fokiSHJQIBwBykrs2FhcfamnZntyl5vVnhzW2Jx29bgb0wY2NouHVYwHVp
-         3+Sg==
-X-Gm-Message-State: APjAAAVK0IjRA+mfH5lVElKZDpNblcRu/NA2ha7bsOB4WDX5IKhpxZk3
-        J57UHwO/gCBX/joKUYW07kwNng==
-X-Google-Smtp-Source: APXvYqwbUAYfuqjAyAa/Lkp2LToXiaq5d9pX178q4XtabOWrIVPxdsT1Xyr0gfOYq00MaiHPBKzAoA==
-X-Received: by 2002:a1c:9988:: with SMTP id b130mr4310361wme.164.1568733668324;
-        Tue, 17 Sep 2019 08:21:08 -0700 (PDT)
-Received: from localhost ([195.200.173.126])
-        by smtp.gmail.com with ESMTPSA id v8sm3712084wra.79.2019.09.17.08.21.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 08:21:07 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 08:21:06 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Aurabindo Jayamohanan <mail@aurabindo.in>
-cc:     Baolin Wang <baolin.wang@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] spi: sifive: check return value for
- platform_get_resource()
-In-Reply-To: <alpine.DEB.2.21.9999.1909170709070.8198@viisi.sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1909170820470.21451@viisi.sifive.com>
-References: <20190917085627.4562-1-mail@aurabindo.in> <CAMz4kuJczzjTPSohQ=kbZ0Pr7U_9-hzXk-jPgKk79PENOM1-dA@mail.gmail.com> <alpine.DEB.2.21.9999.1909170514130.11980@viisi.sifive.com> <ij_UksEXUomr_L7KQam02lHBryAppgwKDjG90VbVcRRUeXlKU8TAiBWc3aU8vt20Wvlwt_6NDgz5fuMSwwP1mm-1eP6GYWoR1Kbr0y0ElRk=@aurabindo.in>
- <alpine.DEB.2.21.9999.1909170709070.8198@viisi.sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Tue, 17 Sep 2019 11:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727899AbfIQPVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:21:41 -0400
+Received: from localhost (c-67-169-218-210.hsd1.or.comcast.net [67.169.218.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53E1F2171F;
+        Tue, 17 Sep 2019 15:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568733700;
+        bh=wpzbNHazTaZFk4ufsoQVUeBGVtbQGktyi+fGFo9LDxA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qW9mDyWYB7KlMPnnl9SXmaxZt+brxj9yMmZlQ4Z/tI5Iu6ef8vDTZQ+ODciGSUjod
+         KZ14r4+/i7BBWrf1z3Qj/stOyAgESheg3g3r5aUUc3Cp3t7myWQkxGXL9ic8ltszss
+         6QRSa1d8z+PpJKaE6g40sTOzggjwYJYUzHbf5pvA=
+Date:   Tue, 17 Sep 2019 08:21:40 -0700
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        david@fromorbit.com, linux-kernel@vger.kernel.org,
+        sandeen@sandeen.net, hch@lst.de, agruenba@redhat.com,
+        rpeterso@redhat.com, cluster-devel@redhat.com
+Subject: [GIT PULL] iomap: new code for 5.4
+Message-ID: <20190917152140.GU2229799@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Linus,
 
-I just recalled that YueHaibing already posted a patch to do this:
+Please pull this series containing all the new iomap code for 5.4.  The
+biggest change here is porting some of XFS' writeback code to iomap so
+that we can share it with other filesystems; and making some adjustments
+to the iomap directio code in preparation for other filesystems starting
+to use it.  In 5.5 we hope to finish converting XFS to iomap and to
+start converting a few other filesystems.
 
-https://lore.kernel.org/linux-riscv/alpine.DEB.2.21.9999.1909041520130.13502@viisi.sifive.com/
+The branch merges cleanly against this morning's HEAD and survived a
+couple of weeks' worth of xfstests.  The merge was completely
+straightforward, so please let me know if you run into anything weird.
 
+--D
 
-- Paul
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git tags/iomap-5.4-merge-4
+
+for you to fetch changes up to 68494b8e248fe8a7b6e9f88edd9a87661760ddb9:
+
+  iomap: move the iomap_dio_rw ->end_io callback into a structure (2019-09-03 08:28:22 -0700)
+
+----------------------------------------------------------------
+New code for 5.4:
+- Port the XFS writeback code to iomap with the eventual goal of
+  converting XFS to use it.
+- Clean up a few odds and ends in xfs writeback and convert the xfs
+  ioend code to use list_pop and friends.
+- Report both io errors and short io results to the directio endio
+  handler.
+- Allow directio callers to pass an ops structure to iomap_dio_rw.
+
+----------------------------------------------------------------
+Andreas Gruenbacher (1):
+      iomap: Fix trivial typo
+
+Christoph Hellwig (9):
+      list.h: add list_pop and list_pop_entry helpers
+      iomap: copy the xfs writeback code to iomap.c
+      iomap: add tracing for the address space operations
+      iomap: warn on inline maps in iomap_writepage_map
+      xfs: set IOMAP_F_NEW more carefully
+      iomap: zero newly allocated mapped blocks
+      xfs: initialize iomap->flags in xfs_bmbt_to_iomap
+      xfs: refactor the ioend merging code
+      iomap: move the iomap_dio_rw ->end_io callback into a structure
+
+Matthew Bobrowski (1):
+      iomap: split size and error for iomap_dio_rw ->end_io
+
+Randy Dunlap (1):
+      tracing: fix iomap.h build warnings
+
+ fs/iomap/buffered-io.c       | 575 ++++++++++++++++++++++++++++++++++++++++++-
+ fs/iomap/direct-io.c         |  24 +-
+ fs/xfs/xfs_aops.c            |  70 +++---
+ fs/xfs/xfs_file.c            |  14 +-
+ fs/xfs/xfs_iomap.c           |  35 ++-
+ fs/xfs/xfs_iomap.h           |   2 +-
+ fs/xfs/xfs_pnfs.c            |   2 +-
+ include/linux/iomap.h        |  53 +++-
+ include/linux/list.h         |  33 +++
+ include/trace/events/iomap.h |  87 +++++++
+ 10 files changed, 824 insertions(+), 71 deletions(-)
+ create mode 100644 include/trace/events/iomap.h
