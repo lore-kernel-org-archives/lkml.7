@@ -2,124 +2,191 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D162C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C939DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CBDF206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925552186A
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568682800;
+	bh=0Jj0ktCFmYGyjaVUlwUqQ0RP1WWgHi1nZHfaZalsFFM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Vr4Jlp4zXiSltG0TP9haeA1eQj8Owy4g8nzwlYTYValbQAbTWblDhmdYhyrLhSN1S
+	 uBTSvgD0wH4K7AAUgsMqqinp+/d6eyx5MOyzO+uGy3C7iB0RW1w2ylbtMKnS8JBsvO
+	 QgpK5Nh6ma3iPk05Laxtc0g5fZ4vkXu4McfP4AhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390912AbfIQBIn (ORCPT
+        id S2391013AbfIQBNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 21:08:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2188 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728842AbfIQBIm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:08:42 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8H171Wg001985
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 21:08:41 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v2eer5mpm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 21:08:40 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 17 Sep 2019 02:08:39 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Sep 2019 02:08:33 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8H18WR663176780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Sep 2019 01:08:33 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D31F1A404D;
-        Tue, 17 Sep 2019 01:08:32 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F785A4053;
-        Tue, 17 Sep 2019 01:08:32 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Sep 2019 01:08:32 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 16 Sep 2019 21:13:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390703AbfIQBNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 21:13:19 -0400
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 336A7A019A;
-        Tue, 17 Sep 2019 11:08:31 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 2/2] mm: Add a bounds check in devm_memremap_pages()
-Date:   Tue, 17 Sep 2019 11:07:48 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190917010752.28395-1-alastair@au1.ibm.com>
-References: <20190917010752.28395-1-alastair@au1.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0497C214D9;
+        Tue, 17 Sep 2019 01:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568682798;
+        bh=0Jj0ktCFmYGyjaVUlwUqQ0RP1WWgHi1nZHfaZalsFFM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FMmkBmxC3EA5LqT65REpwgkPz7s0+QqiQ/TxvARVos0Yy1DLiMKIgifI+3O6POG3U
+         8VakYmZrGheycO9jVFO9Pukp4TEga1USGqocsEDE/hfexrYIMMJ9tOA1x+9MhtxQY8
+         QZ++CWByN9OMjaVWwNP2xia7PrHXr00ShaDYQYus=
+Received: by mail-qk1-f176.google.com with SMTP id q203so2123951qke.1;
+        Mon, 16 Sep 2019 18:13:17 -0700 (PDT)
+X-Gm-Message-State: APjAAAXR/k/lxVtNchTYgWeb72SWVW+uHZ1qDcnFQfQZzCqkiJVh9k1A
+        Ic9EcxyTefUDm/rvm2zR9kIFXbz4lYxpgnE7QQ==
+X-Google-Smtp-Source: APXvYqxh/EHVJtafQ7KBx5QHUfJw1ZTMbha75iR+Ijrlr48Fb1OqPt/etc8xe0M738IC1XA80mf/hiZEFWMElayn3fg=
+X-Received: by 2002:a37:be87:: with SMTP id o129mr1294180qkf.254.1568682797178;
+ Mon, 16 Sep 2019 18:13:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091701-0012-0000-0000-0000034CE080
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091701-0013-0000-0000-00002187584B
-Message-Id: <20190917010752.28395-3-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909170011
+References: <20190910104247.13142-1-biwen.li@nxp.com>
+In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 16 Sep 2019 20:13:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL=37HL3BnxZTxJXQTBaKoFs1_=vt4hfLqkxXkWedmPYA@mail.gmail.com>
+Message-ID: <CAL_JsqL=37HL3BnxZTxJXQTBaKoFs1_=vt4hfLqkxXkWedmPYA@mail.gmail.com>
+Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Yang-Leo Li <leoyang.li@nxp.com>,
+        "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" 
+        <linux-rtc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Martin Fuzzey <mfuzzey@parkeon.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Tue, Sep 10, 2019 at 5:53 AM Biwen Li <biwen.li@nxp.com> wrote:
+>
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - nxp,quartz-drive-strength: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
+>
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v4:
+>         - Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+>         - Add nxp,rtc-interrupt-type property
+>         - Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
+>
+> Change in v3:
+>         - None
+>
+> Change in v2:
+>         - Replace properties name
+>           quartz-load-capacitance -> quartz-load-femtofarads
+>           quartz-drive-strength -> nxp,quartz-drive-strength
+>           quartz-low-jitter -> nxp,quartz-low-jitter
+>         - Replace drive strength name
+>           PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+>           PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+>           PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+>         - Set default interrupt-output-pin as "INTA"
+>
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+>
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..fc1579463657 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,52 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>
+> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
+> +  type. Valid values are
+> +  INT_PIE(periodic interrupt enable),
+> +  INT_OIE(offset correction interrupt enable),
+> +  INT_A1IE(alarm1 interrupt enable),
+> +  INT_A2IE(alarm2 interrupt enable),
+> +  INT_TSRIE(timestamp register interrupt enable)
+> +  INT_BSIE(battery switch interrupt enable),
+> +  INT_WDIE(WatchDog interrupt enable,and
+> +  compose these values such as: INT_A1IE | INT_A2IE,
+> +  but currently only support INT_A1IE, default value is INT_A1IE.
+> +  The property and property nxp,rtc-interrupt-output-pin
+> +  work together to generate some interrupts on some pins.
+> +
+> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA". The property and property
+> +  nxp,rtc-interrupt-type work together to generate some interrupts on
+> +  some pins.
+> +
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
+> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
+> +  Default value is 12500fF.
+> +
+> +- nxp,quartz-drive-strength: Drive strength for the quartz,
+> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
+> +  Default value is 100kOhm.
 
-The call to check_hotplug_memory_addressable() validates that the memory
-is fully addressable.
+This needs a unit as defined in property-units.txt.
 
-Without this call, it is possible that we may remap pages that is
-not physically addressable, resulting in bogus section numbers
-being returned from __section_nr().
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- mm/memremap.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/mm/memremap.c b/mm/memremap.c
-index 86432650f829..de2b67586401 100644
---- a/mm/memremap.c
-+++ b/mm/memremap.c
-@@ -175,6 +175,11 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
- 	int error, nid, is_ram;
- 	bool need_devmap_managed = true;
- 
-+	error = check_hotplug_memory_addressable(res->start,
-+						 resource_size(res));
-+	if (error)
-+		return ERR_PTR(error);
-+
- 	switch (pgmap->type) {
- 	case MEMORY_DEVICE_PRIVATE:
- 		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
--- 
-2.21.0
-
+> +
+> +- nxp,quartz-low-jitter: Boolean property, if present enables low jitter mode
+> +  which reduces jitter at the cost of increased power consumption.
+> +
+> +- wakeup-source: Boolean property, Please refer to
+> +  Documentation/devicetree/bindings/power/wakeup-source.txt
+> +
+>  Example:
+>
+>  pcf85363: pcf85363@51 {
+>         compatible = "nxp,pcf85363";
+>         reg = <0x51>;
+> -};
+>
+> +       interrupt-parent = <&gpio1>;
+> +       interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+> +
+> +       wakeup-source;
+> +       nxp,rtc-interrupt-output-pin = "INTA";
+> +       nxp,rtc-interrupt-type = <INT_A1IE>;
+> +       quartz-load-femtofarads = <12500>;
+> +       nxp,quartz-drive-strength = <60>;
+> +       nxp,quartz-low-jitter;
+> +};
+> diff --git a/include/dt-bindings/rtc/pcf85363.h b/include/dt-bindings/rtc/pcf85363.h
+> new file mode 100644
+> index 000000000000..6340bf2da8f5
+> --- /dev/null
+> +++ b/include/dt-bindings/rtc/pcf85363.h
+> @@ -0,0 +1,14 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _DT_BINDINGS_RTC_PCF85363_H
+> +#define _DT_BINDINGS_RTC_PCF85363_H
+> +
+> +/* Interrupt type */
+> +#define INT_WDIE       (1 << 0)
+> +#define INT_BSIE       (1 << 1)
+> +#define INT_TSRIE      (1 << 2)
+> +#define INT_A2IE       (1 << 3)
+> +#define INT_A1IE       (1 << 4)
+> +#define INT_OIE                (1 << 5)
+> +#define INT_PIE                (1 << 6)
+> +
+> +#endif /* _DT_BINDINGS_RTC_PCF85363_H */
+> --
+> 2.17.1
+>
