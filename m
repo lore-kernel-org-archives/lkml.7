@@ -2,108 +2,100 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F001C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88868C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0DB20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC6B20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rGHRRJc6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392208AbfIQDbK (ORCPT
+        id S2392222AbfIQDbo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:31:10 -0400
-Received: from mga02.intel.com ([134.134.136.20]:11244 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbfIQDbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:31:09 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 20:31:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
-   d="scan'208";a="216426849"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga002.fm.intel.com with ESMTP; 16 Sep 2019 20:31:06 -0700
-Received: from [10.226.38.19] (unknown [10.226.38.19])
-        by linux.intel.com (Postfix) with ESMTP id 8BBFA5803A5;
-        Mon, 16 Sep 2019 20:31:04 -0700 (PDT)
-Subject: Re: [PATCH v1 0/2] spi: cadence-qspi: Add cadence-qspi support for
- Intel LGM SoC
-To:     Vignesh Raghavendra <vigneshr@ti.com>, broonie@kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-From:   "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Message-ID: <371e0d6f-6d2b-78aa-1ece-19cb4356faf4@linux.intel.com>
-Date:   Tue, 17 Sep 2019 11:31:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <c4555df5-89d5-e8a6-bed4-887c23ac4f0f@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Mon, 16 Sep 2019 23:31:44 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:43574 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730000AbfIQDbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:31:44 -0400
+Received: by mail-io1-f65.google.com with SMTP id v2so4080968iob.10;
+        Mon, 16 Sep 2019 20:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AZbBTIbQbqXwZoo2mD7WVQh8P9va3DGLxdwCMpbqykM=;
+        b=rGHRRJc6cmlQU6fzDipZt7KO5qJAWDWcnNDKSmndXpk0ewSLW23M8z7MSAS//IRj1l
+         tALlRIDw+7SUzX5oZBm7estXiqj5CDURnMfZuF79BxBQ+zBn15C215GlFtTeHRuG5oJR
+         v35CbGdsHyQUlJbZwndh7jhpbviDigFIUwvtN87/RcR1LLkquGA24oKzOknAIZzGKLxO
+         7oJx7GgYMDJcZTaQBiy1SXTwC0dRQjDNmtdSjt40yzfROfi7nvGYsEyGo683REJTh3cr
+         Csz+zl2qSybIJaFl1b9JqdfU0fZdWLhwBvZAW6VFTo1GDKCalj3bu56OLWpXe5/2EyHe
+         k8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AZbBTIbQbqXwZoo2mD7WVQh8P9va3DGLxdwCMpbqykM=;
+        b=H0T7GzjEzd76Q4M+fZ0zeWuyI2xvoQ6DwrCEEZr3Gb78xewtcJrJ2Uoy02HqXTY7Wh
+         wPXhKdlNpvGEAr5jCqHSqAO97xEf0q8Uo+5PTpbIePdn6AUBy+oZq95pT7ugT55Lw+X4
+         0q/Ef6854dvkM3Z9cjers0ia9MTaDYv1Ipn5SZ0gb87EvuZ9iQxfcNxpiqrAR3DfEGIH
+         LTwDRowj4YD0b9QqzpEyDlqbsMWY2241Yfj+awLnJ0gOSCTnAhE/BlgB2BrraWvCYfFH
+         t7thN0U6VI7faKxaP/Q1pUMeJ3tIcq+5lXfEzZecdIBxHFvS5W4u4eULnDUKhaa/jk4u
+         SLbQ==
+X-Gm-Message-State: APjAAAVgR6KWN4oOwYJYA/Y6CJAcZxUfM16AUVfuG/Yx618weACP4BC4
+        YV7/xT1rb1pLuAt/gojQxXgdV4jgRos=
+X-Google-Smtp-Source: APXvYqx4BGYBTXWug5NY3wJbo99uGA8r8HQaH6QnaLuCl7KSJytf2lAhCbNRWnl2/4bx5Sw7OH9Ksg==
+X-Received: by 2002:a6b:c7c2:: with SMTP id x185mr1469065iof.224.1568691103125;
+        Mon, 16 Sep 2019 20:31:43 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id i26sm1134258ion.40.2019.09.16.20.31.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 20:31:42 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] rpmsg: char: release allocated memory
+Date:   Mon, 16 Sep 2019 22:31:23 -0500
+Message-Id: <20190917033124.1077-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vignesh,
+In rpmsg_eptdev_write_iter, if copy_from_iter_full fails the allocated
+buffer needs to be released.
 
-    Thank you for the review comments and suggestions.
-
-On 17/9/2019 12:50 AM, Vignesh Raghavendra wrote:
-> Hi,
->
-> On 16/09/19 1:08 PM, Ramuthevar,Vadivel MuruganX wrote:
->> patch 1: Add YAML for cadence-qspi devicetree cdocumentation.
->> patch 2: cadence-qspi controller driver to support QSPI-NAND flash
->> using existing spi-nand framework with legacy spi protocol.
-> Nope, you cannot have two drivers for the same IP (i.e Cadence QSPI)
-> just to support to different types of SPI memories. This is the reason
-> why spi_mem_ops was introduced.
->
-> Please rewrite this driver over to use spi_mem_ops (instead of using
-> generic SPI xfers) so that same driver supports both SPI-NOR and
-> SPI-NAND flashes. Once that's done drivers/mtd/spi-nor/cadence-quadspi.c
-> can be deleted.
->
-> There are few existing examples of spi_mem_ops users in drivers/spi/
-> (git grep spi_mem_ops) and materials here on how to write such a driver:
->
-> [1]
-> https://bootlin.com/blog/spi-mem-bringing-some-consistency-to-the-spi-memory-ecosystem/
-> [2] https://www.youtube.com/watch?v=PkWbuLM_gmU
-Agreed!, Surely let me go through the above link and put my effort to 
-rewrite the drivers as per your suggestions.
-
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
-With Best Regards
-Vadivel Murugan R
+ drivers/rpmsg/rpmsg_char.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->> Ramuthevar Vadivel Murugan (2):
->>    dt-bindings: spi: Add support for cadence-qspi IP Intel LGM SoC
->>    spi: cadence-qspi: Add QSPI support for Intel LGM SoC
->>
->>   .../devicetree/bindings/spi/cadence,qspi-nand.yaml |  84 +++
->>   drivers/spi/Kconfig                                |   9 +
->>   drivers/spi/Makefile                               |   1 +
->>   drivers/spi/spi-cadence-qspi-apb.c                 | 644 +++++++++++++++++++++
->>   drivers/spi/spi-cadence-qspi-apb.h                 | 174 ++++++
->>   drivers/spi/spi-cadence-qspi.c                     | 461 +++++++++++++++
->>   drivers/spi/spi-cadence-qspi.h                     |  73 +++
->>   7 files changed, 1446 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi-nand.yaml
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi-apb.h
->>   create mode 100644 drivers/spi/spi-cadence-qspi.c
->>   create mode 100644 drivers/spi/spi-cadence-qspi.h
->>
+diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+index eea5ebbb5119..c655074c07c2 100644
+--- a/drivers/rpmsg/rpmsg_char.c
++++ b/drivers/rpmsg/rpmsg_char.c
+@@ -227,8 +227,10 @@ static ssize_t rpmsg_eptdev_write_iter(struct kiocb *iocb,
+ 	if (!kbuf)
+ 		return -ENOMEM;
+ 
+-	if (!copy_from_iter_full(kbuf, len, from))
+-		return -EFAULT;
++	if (!copy_from_iter_full(kbuf, len, from)) {
++		ret = -EFAULT;
++		goto free_kbuf;
++	}
+ 
+ 	if (mutex_lock_interruptible(&eptdev->ept_lock)) {
+ 		ret = -ERESTARTSYS;
+-- 
+2.17.1
+
