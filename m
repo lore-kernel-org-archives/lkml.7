@@ -2,109 +2,114 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A912C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16447C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66716216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:45:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568753144;
-	bh=sN16v5aE9f1en31OdtpF6sxJr9PK5t1WeiNsz4wlq24=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xo0nUlpDxRzrBhBmcyr239tOncKso1FD8OdYQXrrpSQrKqPAqBkhpB9pbGYOrGStD
-	 POY4XlhN0EX8ZcVPTxcaOQ8vcWbqFLFhR4NngHjFTdNkpB0q06b631SZVdcL7vGGIz
-	 NPmKdFo7Wkzg9iAI9dx31Ws3XlZr/wB5Hqnw656I=
+	by mail.kernel.org (Postfix) with ESMTP id DD823216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cw4D9QTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfIQUpn (ORCPT
+        id S1729917AbfIQUwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:45:43 -0400
-Received: from mail-lj1-f172.google.com ([209.85.208.172]:34732 "EHLO
-        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfIQUpn (ORCPT
+        Tue, 17 Sep 2019 16:52:44 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40829 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfIQUwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:45:43 -0400
-Received: by mail-lj1-f172.google.com with SMTP id h2so5006621ljk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:45:40 -0700 (PDT)
+        Tue, 17 Sep 2019 16:52:43 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b24so22071wmj.5;
+        Tue, 17 Sep 2019 13:52:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UTaApOHQWYgneuGzZ7YNtvEevdvs1utVLoBKbHK1gYc=;
-        b=dJLYKuAkBH0gzZVZ5XUTjdiwI6yU/P2WChCP/N72EQ2Jjw/TxbYhFEMt3oMsLrmAsQ
-         sO9ViXYnECjpjc2F/0uAhTdcUXwf//dQw+raN4fOY8re5ShVjoy3PG1vK0CYyIyluosO
-         q0/CbwDt7HWX9fUrgappPxJpagzsKuCP75+uY=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ApT0kSwd0qDPrpu8YD2GohWeJamU26dBJ+jJSNS2N/w=;
+        b=Cw4D9QTM40QeSn5ag5Fy7naFWlT8CuE4Jc/VpV9ujyw+3wxs7IFqglZv4uqz6yJqKm
+         6ivRok4vGvWJWcKJpZM1ivrr33Pec+rCj0so6jzFdaVyD4Cax89Iv+Xt/91shEaJ1em5
+         jcCKhzicru/qAfkEN4GSeVGEO4hmgot0g2dt4xdTQwpZxfFEUgmGFh1BfkBG9Sc1Mk+0
+         GMLBMW2RmDs1S+Hr6z5v49Jy49YlrzqanorxZFwdsrAqSFvGGm7Xcn1kVozVWRDO1/zd
+         wVeKfHfGDLfKDQShYHG5XVVivYtqBa/C6af5JDz8B5zh9vGE+Ju7pQsLL3rwFQZblCsB
+         ylAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UTaApOHQWYgneuGzZ7YNtvEevdvs1utVLoBKbHK1gYc=;
-        b=CSJlvZxvF85Lm//Wy6864Qg2S0pn9n7IXvmJa0rQtqLb/OE6Onh1U9Ujm/noy3lhci
-         Wanuc3M43PWavq0dOVOJ4DwSllWw6jACScAehbYdVQBwtn/5GYpL9AtE/6Vpb3YzxNi2
-         NkAKpj5eEFVmbZcFXrH/HvmD6KTSEam9iZbWSToNAC5Q7scHmRppn/W/EJgpW8xwYnyp
-         ItiPVJ2+0gdPTSyP4lgFEYe+otd0Ex/mH69S+iNPKutB0ea7BoxzdUP3WBAIIFVWEWzv
-         QdhpvQBO48nbrBYD3RmV61vBdKiM0t9A3/7rNmq9cuAFx3evrg/6yvg1uyAs2nXfJWPV
-         BBlQ==
-X-Gm-Message-State: APjAAAXU7N9MQ1vEcv5LuNTUMk5ZuS6DOYGE95zMNRS3G5eGakiGORlX
-        Md+Z+7Yl2jg2cEYu0kBAWdatieKWN4g=
-X-Google-Smtp-Source: APXvYqy+Bi8BZqDt1AdAABsxu0uP7ZGXYiT9vFh9u//Orld57MuDiKNUQNvIjnSgjzQgk01zE+tR5A==
-X-Received: by 2002:a2e:9a03:: with SMTP id o3mr155002lji.51.1568753138926;
-        Tue, 17 Sep 2019 13:45:38 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id k13sm629827ljc.96.2019.09.17.13.45.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id u28so3951114lfc.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr128474lfp.134.1568753137199;
- Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190913072237.GA12381@zn.tnic> <20190917201021.evoxxj7vkcb45rpg@treble>
-In-Reply-To: <20190917201021.evoxxj7vkcb45rpg@treble>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 17 Sep 2019 13:45:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
-Message-ID: <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
-Subject: Re: [RFC] Improve memset
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, x86-ml <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ApT0kSwd0qDPrpu8YD2GohWeJamU26dBJ+jJSNS2N/w=;
+        b=EqzqVRfPlSisxo1tc7arKeagaX5gxCW9HBr9m8IrrH1Kx9R7oNYP6RXsU3YrRkhSRQ
+         Gr5MxrxNzA79Ioqq1Nfs+YtaGHOFIuCPgKrHaXOmJiYLCHRjJhjyne0uuD0jVWpYib40
+         q6iCw3TTBodn1IDDET34qetKI+4K1qNhZIqP4AKI8NMCuzYE7w5OgVdcuDliJy2BnjVs
+         04fBMnWrPVZo6VaOJUVc7sR7CM+lPJv+xeA/9y8iuW06XPdvQSMWTassfjRnUYMbP797
+         IGr+uaXTDJ8/ZL3+tN5sdi+wZXD9tAZe/cZjUYU11Jl6/AjZffJ31G401LmCZ5dRLvPX
+         7rZw==
+X-Gm-Message-State: APjAAAVMoya+/PD3H3AKoNPftdoXGaYYYX7DwXrv6fRo/5TBjcaMauVe
+        O8M7Ub9ZYKg2pVaAYIdIcEc=
+X-Google-Smtp-Source: APXvYqyFO//Zh6kStyRWZE1zRsXqFhQBmSoIvCWsjebAToll90pLtRXxEqs6I7c7Z0FUscm7OwWz1g==
+X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr18289wmd.7.1568753561336;
+        Tue, 17 Sep 2019 13:52:41 -0700 (PDT)
+Received: from darwi-home-pc (p200300D06F2D143EC08AA0470B895785.dip0.t-ipconnect.de. [2003:d0:6f2d:143e:c08a:a047:b89:5785])
+        by smtp.gmail.com with ESMTPSA id j1sm5256090wrg.24.2019.09.17.13.52.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 13:52:40 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 22:52:34 +0200
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     Martin Steigerwald <martin@lichtvoll.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
         lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190917205234.GA1765@darwi-home-pc>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <20190917174219.GD31798@gardel-login>
+ <CAHk-=wjABG3+daJFr4w3a+OWuraVcZpi=SMUg=pnZ+7+O0E2FA@mail.gmail.com>
+ <2658007.Cequ2ms4lF@merkaba>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2658007.Cequ2ms4lF@merkaba>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Tue, Sep 17, 2019 at 10:28:47PM +0200, Martin Steigerwald wrote:
+[...]
+> 
+> I don't have any kernel logs old enough to see whether whether crng init
+> times have been different with Systemd due to asking for randomness for
+> UUID/hashmaps.
 >
-> Could it instead do this?
->
->         ALTERNATIVE_2("call memset_orig",
->                       "call memset_rep",        X86_FEATURE_REP_GOOD,
->                       "rep; stosb",             X86_FEATURE_ERMS)
->
-> Then the "reverse alternatives" feature wouldn't be needed anyway.
 
-That sounds better, but I'm a bit nervous about the whole thing
-because who knows when the alternatives code itself internally uses
-memset() and then we have a nasty little chicken-and-egg problem.
+Please stop claiming this. It has been pointed out to you, __multiple
+times__, that this makes no difference. For example:
 
-Also, for it to make sense to inline rep stosb, I think we also need
-to just make the calling conventions for the alternative calls be that
-they _don't_ clobber other registers than the usual rep ones
-(cx/di/si). Otherwise one big code generation advantage of inlining
-the thing just goes away.
+    https://lkml.kernel.org/r/20190916024904.GA22035@mit.edu
+    
+    No. getrandom(2) uses the new CRNG, which is either initialized,
+    or it's not ... So to the extent that systemd has made systems
+    boot faster, you could call that systemd's "fault".
 
-On the whole I get the feeling that this is all painful complexity and
-we shouldn't do it. At least not without some hard performance numbers
-for some huge improvement, which I don't think we've seen.
+You've claimed this like 3 times before in this thread already, and
+multiple people replied with the same response. If you don't get the
+paragraph above, then please don't continue replying further on this
+thread.
 
-Because I find the thing fascinating conceptually, but am not at all
-convinced I want to deal with the pain in practice ;)
+thanks,
 
-              Linus
+-- 
+Ahmed Darwish
+http://darwish.chasingpointers.com
