@@ -2,85 +2,128 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1D8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44381C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49A5C2067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183C22067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NtTZWOJ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UE7uJ0z3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731315AbfIQRjx (ORCPT
+        id S1731323AbfIQRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:39:53 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39197 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbfIQRjx (ORCPT
+        Tue, 17 Sep 2019 13:41:40 -0400
+Received: from mail-lf1-f53.google.com ([209.85.167.53]:35370 "EHLO
+        mail-lf1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfIQRlk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:39:53 -0400
-Received: by mail-pg1-f195.google.com with SMTP id u17so2384128pgi.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:39:52 -0700 (PDT)
+        Tue, 17 Sep 2019 13:41:40 -0400
+Received: by mail-lf1-f53.google.com with SMTP id w6so3591457lfl.2;
+        Tue, 17 Sep 2019 10:41:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yQGk0/8lgiYPogMBH7GGBJWsq/bIXk08DULJA4Ggl0k=;
-        b=NtTZWOJ6sZPprJOVH0W4hwFThisJKK+mS/VHocfVHVb2P9H2l9T5aHpChwouDxkwmE
-         P49mEJJBAVVcwAOr9zUQvc3TY6g7qH1YnPBmLL6C8kaZ+bVjQzQTzqDTut2MaiTkY9wl
-         QF6VMIptGZdvKaN6CHCHDorvDVZ2wL8ePNFV0=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fx+sdLrbbMO3EWgs8sTQWDVcw7BxviYLKx2x+SxaOiQ=;
+        b=UE7uJ0z3dchGQ5s2pw5h8c5mOBn3HzdG/7+5VHOfgUWXBZKF8c/3EMk5ve0IR5foXS
+         LtYt39+luyTdw1z+xN8Ew/oqH9NS1n8JzUByPe9t4CPPfLC93kHIIilrKh0ZDcNTIOjH
+         PzcGZ9ZXHoIGTdxZPvr8Xqe7zIjQ99pfDXfAZvUBoGfAkC7nXha2hvZ0M3E2OUU3+hQi
+         QMuEWWuhhP/5qYkE3iZfGX0zYPV3td6Pv45OMVhKC6USE7FfEftA+TRntaJVYXM7DsR1
+         TIfJb1pUMuAzayWJUfHZXGxS3FpbGZArIM13W0WpG82HulfZBCMC9jiINBD69WrKHdq6
+         tfkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yQGk0/8lgiYPogMBH7GGBJWsq/bIXk08DULJA4Ggl0k=;
-        b=KjkuauF9glcrZMM/DD5wpBrsXSXKekU226s3FLryycbkh+Zxm0NCHNFK3WzI7S2Dzh
-         00dtNEAmToDQX9xte14Dh/+3v50oBWSbI3BiElezz2dt44q+HF+h+O4spEwn+4ifFHEO
-         lGxEGabMUdyW/UMpK4RxDU+A1tl3qN0tw/EovajnXCIkLSrtf+vuRm4uL166KtgMn2Iw
-         StDkq9bcyaXqij/sx+VK+XmHYEsCOjtNIrOJZVpPPQ+Jn1JHLOOBS71y3yUWRo7fX05U
-         HsVqBXsNw5Sw0oPoHxfWvTbZuZsWqUWcWzS22A2fmqGX3mZcHA937IXyeocCHKFl50P6
-         kZdA==
-X-Gm-Message-State: APjAAAVx6+i01T2xzsBeh+ajXV4bun42KBqTh3m1EM9sPcafKvgJqgZL
-        QTUOmq3uWB8s3iGIZqJ1byscvA==
-X-Google-Smtp-Source: APXvYqy6+hMb62AAD7PQRSOuTFktsmPGOjE+m8dJyhXRgqu8ZVw0TdiA88ecI5b6khAzl2L7X7g00w==
-X-Received: by 2002:a63:3585:: with SMTP id c127mr8016pga.93.1568741992410;
-        Tue, 17 Sep 2019 10:39:52 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id w7sm3008939pjn.1.2019.09.17.10.39.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 10:39:51 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 10:39:50 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH] usercopy: Skip HIGHMEM page checking
-Message-ID: <201909171039.09E75C2@keescook>
-References: <201909161431.E69B29A0@keescook>
- <20190917003209.GS29434@bombadil.infradead.org>
- <201909162003.FEEAC65@keescook>
- <20190917163606.GU29434@bombadil.infradead.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fx+sdLrbbMO3EWgs8sTQWDVcw7BxviYLKx2x+SxaOiQ=;
+        b=oYdZ78YVZkd2n3va//+magcfeN684aT6z9eZgkH/WIuGbxEaOH2HGn4NZBFCHTpKwo
+         +i5dpbRYr/JEQIrtIEyXMrf/yuhpYZzkbp81L1bQ9JAnXaXlKEnZqq/BMq20ct43NgLV
+         281UGKDvrNwKSEcZmfmqIfK7pDupzIeKPoIIk878pCA1ARNE85fbKfDEeWJTaumWfXFA
+         evYtV4sIm6HRCPWeFqCB5GzhAcGg9rCJvRkP+hwoECY4rr6+3MmlpdV7PSFx0NOdTjcv
+         /CFP3P0H61PPTS8HHUbyVxlDIxQ1fJPrWlSov8SMjCTvcxluMMHCqX+A0ymnDq3ss8GS
+         bung==
+X-Gm-Message-State: APjAAAUT6dJttGOh2XEMKlHtTuU5GisUYsKpHV2kx6DHr+2o/dqyE6mo
+        +uzQMNWJuoKzKJXVjJ0fqzkR/NmRfUSZTQ==
+X-Google-Smtp-Source: APXvYqySL4ftj8UHOFNjKvTL8adHecoW4HTmjHrzY0Ar4gDc87QZ8jiSrMjmOh4inm0eUBrMMvx4JA==
+X-Received: by 2002:a19:f11c:: with SMTP id p28mr2714006lfh.44.1568742096338;
+        Tue, 17 Sep 2019 10:41:36 -0700 (PDT)
+Received: from ?IPv6:2a02:17d0:4a6:5700::72c? ([2a02:17d0:4a6:5700::72c])
+        by smtp.googlemail.com with ESMTPSA id w13sm549636lfk.47.2019.09.17.10.41.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 10:41:35 -0700 (PDT)
+Subject: Re: Linux 5.3-rc8
+To:     Willy Tarreau <w@1wt.eu>, Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
+ <CAHk-=wiGg-G8JFJ=R7qf0B+UtqA_Weouk6v+McmfsLJLRq6AKA@mail.gmail.com>
+ <6ae36cda-5045-6873-9727-1d36bf45b84e@gmail.com>
+ <20190917173036.GC31798@gardel-login> <20190917173225.GE27999@1wt.eu>
+From:   "Alexander E. Patrakov" <patrakov@gmail.com>
+Message-ID: <69d8cabe-9285-a01e-ae78-57838e886c9a@gmail.com>
+Date:   Tue, 17 Sep 2019 22:41:33 +0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917163606.GU29434@bombadil.infradead.org>
+In-Reply-To: <20190917173225.GE27999@1wt.eu>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-PH
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 09:36:06AM -0700, Matthew Wilcox wrote:
-> If the copy has the correct bounds, the 'wholly within one base page'
-> check will pass and it'll return.  If the copy does span a page,
-> the virt_to_head_page(end) call will return something bogus, then the
-> PageReserved and CMA test will cause the usercopy_abort() test to fail.
+17.09.2019 22:32, Willy Tarreau пишет:
+> On Tue, Sep 17, 2019 at 07:30:36PM +0200, Lennart Poettering wrote:
+>> On Di, 17.09.19 21:58, Alexander E. Patrakov (patrakov@gmail.com) wrote:
+>>
+>>> I am worried that the getrandom delays will be serialized, because processes
+>>> sometimes run one after another. If there are enough chained/dependent
+>>> processes that ask for randomness before it is ready, the end result is
+>>> still a too-big delay, essentially a failed boot.
+>>>
+>>> In other words: your approach of adding delays only makes sense for heavily
+>>> parallelized boot, which may not be the case, especially for embedded
+>>> systems that don't like systemd.
+>>
+>> As mentioned elsewhere: once the pool is initialized it's
+>> initialized. This means any pending getrandom() on the whole system
+>> will unblock at the same time, and from the on all getrandom()s will
+>> be non-blocking.
 > 
-> So I think your first patch is the right patch.
+> He means that all process will experience this delay until there's enough
+> entropy.
+> 
+> Willy
 
-Okay, good points. I'll respin...
+Indeed, my wording was not clear enough. Linus' patch has a 5-second 
+timeout for small entropy requests, after which they get converted to 
+the equivalent of urandom. However, in the following shell script:
+
+#!/bin/sh
+p1
+p2
+
+if both p1 and p2 ask for a small amount of entropy before crng is fully 
+initialized, and do nothing that produces more entropy, the total delay 
+will be 10 seconds.
 
 -- 
-Kees Cook
+Alexander E. Patrakov
