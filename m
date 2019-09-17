@@ -2,120 +2,111 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B62AC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F44AC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F22214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2623021881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:02:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="0BZLzROz"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="q/Lr9BOq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbfIQJ7W (ORCPT
+        id S1726442AbfIQKCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:59:22 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34110 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfIQJ7U (ORCPT
+        Tue, 17 Sep 2019 06:02:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42222 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfIQKCu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:59:20 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h2so2860481ljk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:59:19 -0700 (PDT)
+        Tue, 17 Sep 2019 06:02:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so1567344wrw.9
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 03:02:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gXQeuDzZv0W01zkJmKOuEfyUQZW+5cCZ42SQRk6FQac=;
-        b=0BZLzROz8+m2zvK2Kd27n+bBCnOLnQFF60agazzOe80f6F6zyldeeDV8c+3LEvzFFe
-         JMTmy3ANskSVi7ohfXAdjMAoqnP8/73s6I1rm8WFcR0FnpeqZsTkiya5wozOYJ3MSa2q
-         6TBpqt5NF6Rzx8uzs4mIYxtTrgQbEo1SXtyI0rPUSW9cW6zp14wNznjjT51mPyHzSSGH
-         87brNOcPH5qK8tnLTUXqDEykmZ1u13n2SPdHN2fQwMU5SA7v8p06u46cV4xg4SsK0Ofp
-         HlmJ4T34+yf+N/wocSx5b84rNpnqJOoDH5RiNEu1iabLYLo3fOxWsUAGEBNTCqyTKKp6
-         wntQ==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=JugQhyARoBEh6axn1GkenUD1F8NS4zAnUz5g+2UjW9Y=;
+        b=q/Lr9BOq/L69g4WCoKZCQ9TczATMdKu2UawnxeFAE+hhNHZC76GVOZJCaSxtRLRMi4
+         hkww4gqPUO130c9uk0yzzLEpRWXquoI4YYvL1Z8XV4HfAgn45Zjk2Yb+ogUj2fbaj4js
+         BtYrJMb6vHZyh/cZTduvyN8X2er9+XHOVcfOg+z/VJMtfts6WzKUdX5FPAvNW3OATEFU
+         Yt5ad+VCWxlEuhQRRKjESvaqIOFBGf1TI1VfoMA9PBmo9Q6INw9uFPjKAv98Gclwv0IB
+         Q6G3JXvEiT8BaNzZBYDDifwAndqQ4Fz7SMDkuA+DbQ2glFx7Aag70O2VNnVHdkA1ib+6
+         RmwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gXQeuDzZv0W01zkJmKOuEfyUQZW+5cCZ42SQRk6FQac=;
-        b=pSgX8/elUVzQEUiJMrOMOxJRkD1W0mc7I/UlrbRlZ6RroHuKFD10yc9UMngYOweabl
-         /Y0yqSIdfNkqLpWObMQ1ZABCNJ8qjVM0zUqQrLlmGRo6gXEc0ilK0jY1ViVpI3CNZA45
-         PdTOUBjOx16BBc10/1JOEt8KZ5J8ogMUFhzA5dHZKMlJE1NjYeHgYrSPGG7Z0eVZQxb+
-         o06gNCgHKmF7BUb8/myJtPh8Oku8PLMa2Y9umrmVAXKXxhL5SrW9bxt1WGmOBjPH8Jz3
-         F47sUaA5TBxB/Y83PooFmx5yKTIJgSLBZWTyYfF5iCELnRFi1wD5EzAxYwbxNR2wSSyG
-         JyRA==
-X-Gm-Message-State: APjAAAUCck8ZS4fn020mrmCpOAAbaDcmxOzRkz8bidlW4wCFfZgXkNOJ
-        /8fd0gaeMyk6oXpC9k5c0pYHj6dwlSQ=
-X-Google-Smtp-Source: APXvYqy7oz2EQV3cbvoPWszregBHfGY5VkPbbYu4JC2WcrPbNJVxdO3DGpRqvXegzozFu0EstQ6wlA==
-X-Received: by 2002:a2e:8744:: with SMTP id q4mr1358935ljj.77.1568714358524;
-        Tue, 17 Sep 2019 02:59:18 -0700 (PDT)
-Received: from ?IPv6:2a00:1fa0:6e6:a4e9:5101:fe11:ada5:769e? ([2a00:1fa0:6e6:a4e9:5101:fe11:ada5:769e])
-        by smtp.gmail.com with ESMTPSA id z8sm393968lfg.18.2019.09.17.02.59.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 02:59:17 -0700 (PDT)
-Subject: Re: [PATCH v2] ixgbe: Use memset_explicit directly in crypto cases
-To:     zhong jiang <zhongjiang@huawei.com>, jakub.kicinski@netronome.com,
-        davem@davemloft.net
-Cc:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1568691910-21442-1-git-send-email-zhongjiang@huawei.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <98a942fb-0c47-ffa6-4c9c-f30b5d6f750e@cogentembedded.com>
-Date:   Tue, 17 Sep 2019 12:59:13 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <1568691910-21442-1-git-send-email-zhongjiang@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=JugQhyARoBEh6axn1GkenUD1F8NS4zAnUz5g+2UjW9Y=;
+        b=qFlP8clDH+eKfm276vdYy1aE4sPCRNJHA36H8kT628Z6O8WbmKW7C7NRsvIMzpZP27
+         Rjvu4cfFrTut1DY5NZQQ0dCgdUngRRyQmwlwbNYNcorsmSil4WZ4EUei+OGOdMHPR0+Q
+         muGV/KVKlsFoNzYcSAsfC7Fv2o1ZjNaIJIwtHI8ByAfNkroSlvH2OJVjEb4XOY1aA2Ie
+         coXmzWoDyY3pIMBaK0cHp6OzDOu+3kwBawJoJ5YI19MT7+dumewwQ4LRT2QImUZF++Zi
+         cTzGWuT4jvnHGcioGya+1OD5L03RTg7q5O3viORChu6BIk4MwxrCl4yenYgbISWT5RiU
+         55rg==
+X-Gm-Message-State: APjAAAXZGxbtQjlpynlgZIZlRnGwxh2zSkws3QLW/AlC8PszrETYAgfG
+        o4R2zXkXd1emcZrVnOGBDdICNg==
+X-Google-Smtp-Source: APXvYqzvMSwZS6tqlEUY4Ih4eSot5R1sNRe66bMyvpYWdYsCrq4qlgih6+Z/KU8adcjHmpU7LoqqgQ==
+X-Received: by 2002:a5d:6951:: with SMTP id r17mr2232769wrw.208.1568714567756;
+        Tue, 17 Sep 2019 03:02:47 -0700 (PDT)
+Received: from loys-ubuntu-BY1835A49200471.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.googlemail.com with ESMTPSA id x129sm1606696wmg.8.2019.09.17.03.02.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Sep 2019 03:02:46 -0700 (PDT)
+From:   Loys Ollivier <lollivier@baylibre.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     Loys Ollivier <lollivier@baylibre.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: stmmac: Fix ASSERT_RTNL() warning on suspend/resume
+Date:   Tue, 17 Sep 2019 12:02:36 +0200
+Message-Id: <1568714556-25024-1-git-send-email-lollivier@baylibre.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+rtnl_lock needs to be taken before calling phylink_start/stop to lock the
+network stack.
+Fix ASSERT_RTNL() warnings by protecting such calls with lock/unlock.
 
-On 17.09.2019 6:45, zhong jiang wrote:
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-> It's better to use memset_explicit() to replace memset() in crypto cases.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index fd54c7c87485..485f33f57b43 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4451,7 +4451,9 @@ int stmmac_suspend(struct device *dev)
+ 	if (!ndev || !netif_running(ndev))
+ 		return 0;
+ 
++	rtnl_lock();
+ 	phylink_stop(priv->phylink);
++	rtnl_unlock();
+ 
+ 	mutex_lock(&priv->lock);
+ 
+@@ -4560,7 +4562,9 @@ int stmmac_resume(struct device *dev)
+ 
+ 	mutex_unlock(&priv->lock);
+ 
++	rtnl_lock();
+ 	phylink_start(priv->phylink);
++	rtnl_unlock();
+ 
+ 	return 0;
+ }
+-- 
+2.7.4
 
-    But you're using memzero_explicit() below?
-
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> ---
->   drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> index 31629fc..7e4f32f 100644
-> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
-> @@ -960,10 +960,10 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->   	return 0;
->   
->   err_aead:
-> -	memset(xs->aead, 0, sizeof(*xs->aead));
-> +	memzero_explicit(xs->aead, sizeof(*xs->aead));
->   	kfree(xs->aead);
->   err_xs:
-> -	memset(xs, 0, sizeof(*xs));
-> +	memzero_explicit(xs, sizeof(*xs));
->   	kfree(xs);
->   err_out:
->   	msgbuf[1] = err;
-> @@ -1049,7 +1049,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->   	ixgbe_ipsec_del_sa(xs);
->   
->   	/* remove the xs that was made-up in the add request */
-> -	memset(xs, 0, sizeof(*xs));
-> +	memzero_explicit(xs, sizeof(*xs));
->   	kfree(xs);
->   
->   	return 0;
-
-MBR, Sergei
