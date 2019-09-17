@@ -2,86 +2,79 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96480C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CECC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6669E21897
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:16:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IOP0Azwi";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nTIpmkiW"
+	by mail.kernel.org (Postfix) with ESMTP id EB11521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392516AbfIQHQd (ORCPT
+        id S2392527AbfIQHQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:16:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58364 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727126AbfIQHQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:16:33 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1BAF96016D; Tue, 17 Sep 2019 07:16:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568704592;
-        bh=GZZTS5JwXBklyWYN0ChgnYdm/WVY6X3Z75O2fGgHcPY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=IOP0AzwiWqB9Mtz2BrXRrc2WVU2k136JFRamBfmUyznbHTxHVo6mb12LuH6WZ7OwS
-         UjbhOSmn+kU/2K7EE9NCMylc9ZvQQC3L/J9ad3xoiOZtRlfZ2jewZem451ROkZzSrG
-         w+WQokvqX3zyXlGJSxkh+jMccv2scxg/cjhpdaQo=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7FD2061528;
-        Tue, 17 Sep 2019 07:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568704591;
-        bh=GZZTS5JwXBklyWYN0ChgnYdm/WVY6X3Z75O2fGgHcPY=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=nTIpmkiW0DG6OSrf5w0qyOszg7275rTei1E0UhXDgjZr061oGKA3Xjt0+29qubP0P
-         8df+N9z6tNnYataWv5KHc7DCn3ZJJs1XCqI5+JJeC8aZrPt0fNSxz/4O0QAHietuEd
-         wTxxZUVljrHn1BNNyUxbBtvWTquoZ/em852YM46w=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7FD2061528
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 03:16:35 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40252 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730666AbfIQHQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:16:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7437DB116;
+        Tue, 17 Sep 2019 07:16:32 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 00:16:14 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
+Message-ID: <20190917071614.kcmux562y6wbskj5@linux-p48b>
+References: <20190916145404.bukcmlliequu77wk@linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath10k: Use ARRAY_SIZE instead of dividing sizeof array
- with sizeof an element
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1567582878-18739-1-git-send-email-zhongjiang@huawei.com>
-References: <1567582878-18739-1-git-send-email-zhongjiang@huawei.com>
-To:     zhong jiang <zhongjiang@huawei.com>
-Cc:     <davem@davemloft.net>, <ath10k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <zhongjiang@huawei.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190917071632.1BAF96016D@smtp.codeaurora.org>
-Date:   Tue, 17 Sep 2019 07:16:32 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190916145404.bukcmlliequu77wk@linutronix.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-zhong jiang <zhongjiang@huawei.com> wrote:
+On Mon, 16 Sep 2019, Sebastian Andrzej Siewior wrote:
 
-> With the help of Coccinelle, ARRAY_SIZE can be replaced in ath10k_snoc_wlan_enable.
-> 
-> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>From: Wolfgang M. Reimer <linuxball@gmail.com>
+>
+>Including rwlock.h directly will cause kernel builds to fail
+>if CONFIG_PREEMPT_RT is defined. The correct header file
+>(rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
+>is included by locktorture.c anyway.
+>
+>Remove the include of linux/rwlock.h.
+>
 
-I already got an identical patch so dropping this one.
+Acked-by: Davidlohr Bueso <dbueso@suse.de>
 
-error: patch failed: drivers/net/wireless/ath/ath10k/snoc.c:976
-error: drivers/net/wireless/ath/ath10k/snoc.c: patch does not apply
-stg import: Diff does not apply cleanly
-
--- 
-https://patchwork.kernel.org/patch/11129531/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+>Signed-off-by: Wolfgang M. Reimer <linuxball@gmail.com>
+>Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+>---
+> kernel/locking/locktorture.c | 1 -
+> 1 file changed, 1 deletion(-)
+>
+>diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+>index c513031cd7e33..9fb042d610d23 100644
+>--- a/kernel/locking/locktorture.c
+>+++ b/kernel/locking/locktorture.c
+>@@ -16,7 +16,6 @@
+> #include <linux/kthread.h>
+> #include <linux/sched/rt.h>
+> #include <linux/spinlock.h>
+>-#include <linux/rwlock.h>
+> #include <linux/mutex.h>
+> #include <linux/rwsem.h>
+> #include <linux/smp.h>
+>-- 
+>2.23.0
+>
