@@ -2,127 +2,167 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860F5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2777C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5282C21E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E9A21E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:22:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vSF/uH2H"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="MvlDKhRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392590AbfIQHVi (ORCPT
+        id S2392575AbfIQHWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:21:38 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:40816 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727635AbfIQHVi (ORCPT
+        Tue, 17 Sep 2019 03:22:08 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:59828 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727635AbfIQHWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:21:38 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8H7LUSd076245;
-        Tue, 17 Sep 2019 02:21:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568704890;
-        bh=RAkpzZsEDglibwdEPo3aXr82N6h6m4WxV5LdwMT3tDg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vSF/uH2HJmxWPAdhsiTMNCbwSA02mNRXIKlej8yUg+9MlQP3rjzZehkOjmBXCOMnc
-         sfZYAiNtuK/svlYTf2jH+jtZhjzN4/IbNVRzPWAG9ko4Gvdu1x2R+eDKjlsK69tT7Q
-         WtXpkhbGqcpQ6TDcRoSBWmtr1ArkzSNF3itNIQi4=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8H7LUAH093699
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Sep 2019 02:21:30 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
- Sep 2019 02:21:27 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 17 Sep 2019 02:21:27 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8H7LQZi109183;
-        Tue, 17 Sep 2019 02:21:26 -0500
-Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
- to 8
-To:     Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>
-CC:     <linux-omap@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190723112811.44381-1-tony@atomide.com>
- <20190723112811.44381-6-tony@atomide.com>
- <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
- <20190724064758.GU5447@atomide.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <931eb0e1-8024-3003-1fb3-6f6ad8b74bf9@ti.com>
-Date:   Tue, 17 Sep 2019 10:21:25 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190724064758.GU5447@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 17 Sep 2019 03:22:08 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8H7IGvI010887;
+        Tue, 17 Sep 2019 03:21:56 -0400
+Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2052.outbound.protection.outlook.com [104.47.34.52])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2v0vu6dau8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 03:21:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FE/IDE1PoOZhBsaYuLEIa8yBSsl9KSa0+DBpqGSPCC4/IWRGrwwWs6De/QCJ/ohziyX3fju5lQOMOi5Ku9t4UL4/+K0C1VVUfHxeS9vJheO9pFDVc0Fu0DSxbDkTSHVW+rw/L8/7c5BE5rNX/PMW3TIFkNY3eLWEug8xugJAyiIaMCCMUBwSOi3M9v8T/zthizJFQktBIIwZOamyemtrTx/9fAQNWXe3IKqe97uaNiNi/EUTUh/VI8ZAjWuBfEyxijUAQbw8Uhklbnp0MXROY8hQgb2YNFMpj4xo8+2o1IKEQk11zVoWQRFtWk2fzR8K4OLUC23xN6XpSLV0I+Hw4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MmXattSp8dkaum2TbKUvepfubY5QpuNi7jy+j4+SaK8=;
+ b=bzhRo+5vxv251Gv7REbhTw0LiD/7txYt+beLJIUCasu18xKkU+0zZAs/Fn0Ta4NZpQ+gf8scrK1Gd6cRfBK2+iOl1HIYn4g80blpT1u8LhEl7YHqryueyKlS/VAd4Qqhf5Kf7yymGHX33y+dNkrU8MvY2UvJ382GL+M8KsTkzrWtpibI6azko2zkgbty/CyBuMeG90/lrgkMfI3VNbNXuBM/sRrj09NTM+7lFBcV8h9aFuBTX0JLuCBp4/uhXX6N2TyERfuKSWZo9z2KY8sGHqpxCT3AFUy/ixrLf94UXHr4/waa/6lwyXl/wkuG5n5OQgfabbPYgMTkRUphaoaoxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MmXattSp8dkaum2TbKUvepfubY5QpuNi7jy+j4+SaK8=;
+ b=MvlDKhRx6qRHsZHl1hjA2mduUvXbYkcKGpOlTanN3NNFxe9F/vREGvIhkhAHstL7ok2m1ju50v009OKNOaewQyspC589gUMCys7cpps0T6NUmMOKo52by2VYlmBtvrW6TJx41qNmj1JN1CsL15BoT0DQ6lZ2aoiMn43hxqPQ82Q=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5350.namprd03.prod.outlook.com (20.180.14.199) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Tue, 17 Sep 2019 07:21:54 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2284.009; Tue, 17 Sep 2019
+ 07:21:54 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode' property
+Thread-Topic: [PATCH 2/2] dt-bindings: net: dwmac: document 'mac-mode'
+ property
+Thread-Index: AQHVZLNvGuXe180aF020AC4Y2jYaYacpt8iAgARm6YCAAZtZAA==
+Date:   Tue, 17 Sep 2019 07:21:54 +0000
+Message-ID: <dd3877616b2dee81cf35cfc9f53bbbb47335a357.camel@analog.com>
+References: <20190906130256.10321-1-alexandru.ardelean@analog.com>
+         <20190906130256.10321-2-alexandru.ardelean@analog.com>
+         <5d7ba95d.1c69fb81.dabe4.8057@mx.google.com>
+         <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
+In-Reply-To: <b5065fcfaaf8bcb7bc532a8eb9f54949da838965.camel@analog.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ac14f77d-e3d2-4d37-1041-08d73b3fb78a
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR03MB5350;
+x-ms-traffictypediagnostic: CH2PR03MB5350:
+x-microsoft-antispam-prvs: <CH2PR03MB53508E5D670E09EE399EEDAAF98F0@CH2PR03MB5350.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(396003)(346002)(366004)(136003)(199004)(189003)(26005)(316002)(14454004)(8936002)(2351001)(305945005)(14444005)(7736002)(256004)(476003)(2501003)(446003)(2616005)(11346002)(3846002)(2906002)(86362001)(6116002)(99286004)(5660300002)(186003)(36756003)(71200400001)(54906003)(66066001)(6506007)(486006)(478600001)(76176011)(25786009)(6916009)(6246003)(6436002)(6486002)(102836004)(66556008)(229853002)(6512007)(76116006)(64756008)(8676002)(81156014)(1730700003)(81166006)(66946007)(118296001)(4326008)(66446008)(66476007)(5640700003)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5350;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: VjSJc6JUjSpSwNTtwGyOyWTfiyC3brUzt9R+ixlWra9pJimF1D+fgSj7AmAS6DPMShWPSphtKALh2CfQmKbGHpM+nIRLMFjlYeKE9Ro0EQkIsVV55IP3F9ML5z+fG5lotS0xkQ0IMiztW2JlznBPDXA+TdhEX5SEiUFQGbCxRpyHQgG6Vm7FoHiyIEUq32ojLKhUtMGKa/KBzW57A2bImxgP3b3fKfylLlG1jafRklqhBo9Q/Jf19r9gpB+7Rp9wQ5p4s7URTnTrnjwRSqKu5sSp1rewAz1MC9qJBr2k+3+rmQtY+7973aY/WdAn/TbYiiGSnb+OVCHjPUm1dBRcef5Ajo3xKZIzO/0CEXoSlSBakIA1dUdDKLFf2Avignvq2aRA/kS9IACwfcJCGj9dOo4gkDGV1SHqCdj17lIie3U=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <EE6442B622A669409D675BBBF5ABEFA5@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ac14f77d-e3d2-4d37-1041-08d73b3fb78a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 07:21:54.2850
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 66Wjx8JAEnMg0cibgohYRA7zA9zKVNI4wC0S0IcWCBiUEvryDP1WtF+0wowjLdUWZr3FMfyuOyumb1zSBF8LXtTtVygqEalpa4d1a6YW7b4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5350
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-17_04:2019-09-11,2019-09-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ spamscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 malwarescore=0
+ suspectscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909170080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/07/2019 09:47, Tony Lindgren wrote:
-> * Suman Anna <s-anna@ti.com> [190723 21:02]:
->> Hi Tony,
->>
->> On 7/23/19 6:28 AM, Tony Lindgren wrote:
->>> The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
->>> Otherwise we get the following warning on beagle-x15:
-> ...
->>> @@ -2962,9 +2958,8 @@
->>>   					<SYSC_IDLE_SMART>;
->>>   			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
->>>   			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
->>> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
->>> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
->>> -			clock-names = "fck", "ahclkx", "ahclkr";
->>> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
->>> +			clock-names = "fck", "ahclkx";
->>
->> The equivalent change to MCASP8 is missing.
-> 
-> Thanks for spotting it, probably should be set up the same way as
-> MCASP4 too looking at the TRM.
-> 
-> Tero, care to check the dra7 mcasp clocks we have defined?
-
-Sorry, missed this earlier.
-
-> 
-> $ grep MCASP drivers/clk/ti/clk-7xx.c
->          { DRA7_IPU_MCASP1_CLKCTRL, dra7_mcasp1_bit_data, CLKF_SW_SUP, "ipu-clkctrl:0000:22" },
->          { DRA7_L4PER2_MCASP2_CLKCTRL, dra7_mcasp2_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0154:22" },
->          { DRA7_L4PER2_MCASP3_CLKCTRL, dra7_mcasp3_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:015c:22" },
->          { DRA7_L4PER2_MCASP5_CLKCTRL, dra7_mcasp5_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:016c:22" },
->          { DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:24" },
->          { DRA7_L4PER2_MCASP4_CLKCTRL, dra7_mcasp4_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:018c:22" },
->          { DRA7_L4PER2_MCASP6_CLKCTRL, dra7_mcasp6_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01f8:22" },
->          { DRA7_L4PER2_MCASP7_CLKCTRL, dra7_mcasp7_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01fc:22" },
-> 
-> Is bit 24 above correct for MCASP8 or should it too be 22 like
-> adjacent MCASP4 in the TRM?
-
-So yeah, mcasp8 is wrong here, should be 22 as rest of them. I did fix 
-mcasp8 clocks partially when doing the conversion but missed the 
-parenting here; it was completely broken before.
-
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gTW9uLCAyMDE5LTA5LTE2IGF0IDEyOjQ5ICswMzAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
+dGU6DQo+IE9uIEZyaSwgMjAxOS0wOS0xMyBhdCAxNTozNiArMDEwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6DQo+ID4gW0V4dGVybmFsXQ0KPiA+IA0KPiA+IE9uIEZyaSwgU2VwIDA2LCAyMDE5IGF0IDA0
+OjAyOjU2UE0gKzAzMDAsIEFsZXhhbmRydSBBcmRlbGVhbiB3cm90ZToNCj4gPiA+IFRoaXMgY2hh
+bmdlIGRvY3VtZW50cyB0aGUgJ21hYy1tb2RlJyBwcm9wZXJ0eSB0aGF0IHdhcyBpbnRyb2R1Y2Vk
+IGluDQo+ID4gPiB0aGUNCj4gPiA+ICdzdG1tYWMnIGRyaXZlciB0byBzdXBwb3J0IHBhc3NpdmUg
+bW9kZSBjb252ZXJ0ZXJzIHRoYXQgY2FuIHNpdCBpbi0NCj4gPiA+IGJldHdlZW4NCj4gPiA+IHRo
+ZSBNQUMgJiBQSFkuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IEFsZXhhbmRydSBBcmRl
+bGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+DQo+ID4gPiAtLS0NCj4gPiA+ICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3NucHMsZHdtYWMueWFtbCB8IDgg
+KysrKysrKysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspDQo+ID4gPiAN
+Cj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0
+L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gaW5kZXggYzc4YmUxNTcwNGI5Li5lYmU0NTM3
+YTdjY2UgMTAwNjQ0DQo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbmV0L3NucHMsZHdtYWMueWFtbA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL25ldC9zbnBzLGR3bWFjLnlhbWwNCj4gPiA+IEBAIC0xMTIsNiArMTEyLDE0
+IEBAIHByb3BlcnRpZXM6DQo+ID4gPiAgICByZXNldC1uYW1lczoNCj4gPiA+ICAgICAgY29uc3Q6
+IHN0bW1hY2V0aA0KPiA+ID4gIA0KPiA+ID4gKyAgbWFjLW1vZGU6DQo+ID4gPiArICAgIG1heEl0
+ZW1zOiAxDQo+ID4gDQo+ID4gSXMgdGhpcyBhbiBhcnJheSBiZWNhdXNlIHttaW4sbWF4fUl0ZW1z
+IGlzIGZvciBhcnJheXM/IEl0IHNob3VsZCBiZSANCj4gPiBkZWZpbmVkIGFzIGEgc3RyaW5nIHdp
+dGggcG9zc2libGUgdmFsdWVzLg0KPiA+IA0KPiA+IEFzIHRoaXMgcHJvcGVydHkgaXMgdGhlIHNh
+bWUgYXMgYW5vdGhlciwgeW91IGNhbiBkbyB0aGlzOg0KPiA+IA0KPiA+ICRyZWY6IGV0aGVybmV0
+LWNvbnRyb2xsZXIueWFtbCMvcHJvcGVydGllcy9waHktY29ubmVjdGlvbi10eXBlDQo+ID4gDQo+
+ID4gVW5sZXNzIG9ubHkgYSBzbWFsbCBzdWJzZXQgb2YgdGhvc2UgdmFsdWVzIGFyZSB2YWxpZCBo
+ZXJlLCB0aGVuIHlvdQ0KPiA+IG1heSANCj4gPiB3YW50IHRvIGxpc3QgdGhlbSBoZXJlLg0KPiA+
+IA0KPiANCj4gQWNrLg0KPiBUaGFuayB5b3UuDQo+IA0KPiBXaWxsIGludmVzdGlnYXRlIGFuZCBy
+ZS1zcGluLg0KDQpMb29raW5nIGF0ICckcmVmOiBldGhlcm5ldC1jb250cm9sbGVyLnlhbWwjL3By
+b3BlcnRpZXMvcGh5LWNvbm5lY3Rpb24tdHlwZScNCml0IGxvb2tzIGxpa2UgJ21hYy1tb2RlJyBj
+b3VsZCBjb3ZlciBhbG1vc3QgYWxsICdwaHktY29ubmVjdGlvbi10eXBlJw0KZXhjZXB0IGZvciBh
+IGZldyAoMSBvciAyKS4gVGhlICdkd21hYycgZHJpdmVyIGlzIHByZXR0eSBjb21wbGV4L2JpZy4N
+Cg0KVGhlcmUgd2FzIGEgbm90ZSB0aGF0IEFuZHJldyBtYWRlIG9uIGEgcHJldmlvdXMgY2hhbmdl
+LCB0aGF0IHdlIGNvdWxkIGhhdmUNCmEgJ21hYy1tb2RlJyAoc2ltaWxhciB0byAncGh5LW1vZGUn
+KSBhbmQgdGhhdCBjb3VsZCBiZWNvbWUgZ2VuZXJpYyAoZWl0aGVyDQppbiBwaHlsaWIgb3IgbWF5
+YmUgc29tZXdoZXJlIGVsc2UgaW4gbmV0ZGV2KS4NCg0KSW4gYW55IGNhc2UsIHRoZSBjb25jbHVz
+aW9uIFtmcm9tIG15IHNpZGVdIHdvdWxkIGJlIHRoYXQNCickcmVmOiBldGhlcm5ldC1jb250cm9s
+bGVyLnlhbWwjL3Byb3BlcnRpZXMvcGh5LWNvbm5lY3Rpb24tdHlwZScNCmNvdWxkIHdvcmssIGFu
+ZCBiZSBzdWZmaWNpZW50bHkgZnV0dXJlLXByb29mLg0KDQpUaGFua3MNCkFsZXgNCg0KPiANCj4g
+DQo+ID4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gKyAgICAgIFRoZSBwcm9wZXJ0eSBpcyBp
+ZGVudGljYWwgdG8gJ3BoeS1tb2RlJywgYW5kIGFzc3VtZXMgdGhhdA0KPiA+ID4gdGhlcmUgaXMg
+bW9kZQ0KPiA+ID4gKyAgICAgIGNvbnZlcnRlciBpbi1iZXR3ZWVuIHRoZSBNQUMgJiBQSFkgKGUu
+Zy4gR01JSS10by1SR01JSSkuIFRoaXMNCj4gPiA+IGNvbnZlcnRlcg0KPiA+ID4gKyAgICAgIGNh
+biBiZSBwYXNzaXZlIChubyBTVyByZXF1aXJlbWVudCksIGFuZCByZXF1aXJlcyB0aGF0IHRoZSBN
+QUMNCj4gPiA+IG9wZXJhdGUNCj4gPiA+ICsgICAgICBpbiBhIGRpZmZlcmVudCBtb2RlIHRoYW4g
+dGhlIFBIWSBpbiBvcmRlciB0byBmdW5jdGlvbi4NCj4gPiA+ICsNCj4gPiA+ICAgIHNucHMsYXhp
+LWNvbmZpZzoNCj4gPiA+ICAgICAgJHJlZjogL3NjaGVtYXMvdHlwZXMueWFtbCNkZWZpbml0aW9u
+cy9waGFuZGxlDQo+ID4gPiAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ID4gLS0gDQo+ID4gPiAyLjIw
+LjENCj4gPiA+IA0K
