@@ -2,121 +2,102 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415E9C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4374DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243E72171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A23D2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="jmcYKNMn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbfIQRhb (ORCPT
+        id S1731287AbfIQRhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:37:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32424 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbfIQRha (ORCPT
+        Tue, 17 Sep 2019 13:37:40 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:44576 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbfIQRhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:37:30 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8HHWFWU095180
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:37:29 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v32ccv32b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:37:28 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Tue, 17 Sep 2019 18:37:21 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Sep 2019 18:37:17 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8HHapkK38732062
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Sep 2019 17:36:51 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4C8752052;
-        Tue, 17 Sep 2019 17:37:16 +0000 (GMT)
-Received: from ram.ibm.com (unknown [9.80.213.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 70BAC5204E;
-        Tue, 17 Sep 2019 17:37:15 +0000 (GMT)
-Date:   Tue, 17 Sep 2019 10:37:12 -0700
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1568733750-14580-1-git-send-email-cai@lca.pw>
+        Tue, 17 Sep 2019 13:37:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=omsIg2rbbwmNo2zYjbESoX4pKX0DYuCZ/SV7w4KEtXM=; b=jmcYKNMnfrqw4snJOPuurmbry
+        M5Ipeu3Ciu8WoGdLAHoA6AsF6je/AC1WpcMtMjFgFlJsMCxuMO03ros7qr0a/jscdqXmf2PsSufbt
+        gAsOWFS/thqGPbNuCHK8y6lkI32pa6BRGFcpW/mxSppHmsOMQbADhJn7VdceECzxAxNr+8MW+135o
+        udIDoiJfvTFMjmZuIeIGGDjoGWZdp4I5ViHLjjRFfb89jkRFMiXI02BarEPCSbIRMDX9ZF7XN/5nZ
+        tZlJF7Ee0ktZ21l915NuQI2yfEAhCJDE2vIVtUMPxfBd1zAxWF0TmzDP1D9zDP5mLdF3SolqBCTRE
+        gAjzRj6PQ==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:40720)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iAHPw-0003Fo-13; Tue, 17 Sep 2019 18:37:32 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iAHPs-0001To-Gj; Tue, 17 Sep 2019 18:37:28 +0100
+Date:   Tue, 17 Sep 2019 18:37:28 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     tinywrkb <tinywrkb@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190917173728.GZ25745@shell.armlinux.org.uk>
+References: <20190917124101.GA1200564@arch-dsk-01>
+ <20190917125434.GH20778@lunn.ch>
+ <20190917133253.GA1210141@arch-dsk-01>
+ <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
+ <20190917163427.GA1475935@arch-dsk-01>
+ <20190917170419.GX25745@shell.armlinux.org.uk>
+ <20190917171913.GY25745@shell.armlinux.org.uk>
+ <20190917172658.GB9591@lunn.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568733750-14580-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19091717-0008-0000-0000-000003179135
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091717-0009-0000-0000-00004A36101A
-Message-Id: <20190917173712.GA5176@ram.ibm.com>
-Subject: Re:  [PATCH] powerpc/pkeys: remove unused pkey_allows_readwrite
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=976 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909170168
+In-Reply-To: <20190917172658.GB9591@lunn.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:22:30AM -0400, Qian Cai wrote:
-> pkey_allows_readwrite() was first introduced in the commit 5586cf61e108
-> ("powerpc: introduce execute-only pkey"), but the usage was removed
-> entirely in the commit a4fcc877d4e1 ("powerpc/pkeys: Preallocate
-> execute-only key").
+On Tue, Sep 17, 2019 at 07:26:58PM +0200, Andrew Lunn wrote:
+> > diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> > index b3893347804d..85cf4a4a5e81 100644
+> > --- a/drivers/net/phy/at803x.c
+> > +++ b/drivers/net/phy/at803x.c
 > 
-> Found by the "-Wunused-function" compiler warning flag.
+> Hi Russell
 > 
-> Fixes: a4fcc877d4e1 ("powerpc/pkeys: Preallocate execute-only key")
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  arch/powerpc/mm/book3s64/pkeys.c | 10 ----------
->  1 file changed, 10 deletions(-)
+> This won't work. In the kernel logs, you see 
 > 
-> diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
-> index ae7fca40e5b3..59e0ebbd8036 100644
-> --- a/arch/powerpc/mm/book3s64/pkeys.c
-> +++ b/arch/powerpc/mm/book3s64/pkeys.c
-> @@ -307,16 +307,6 @@ void thread_pkey_regs_init(struct thread_struct *thread)
->  	write_iamr(pkey_iamr_mask);
->  }
+> kernel: Generic PHY 2188000.ethernet-1:00: attached PHY driver [Generic PHY]
 > 
-> -static inline bool pkey_allows_readwrite(int pkey)
-> -{
-> -	int pkey_shift = pkeyshift(pkey);
-> -
-> -	if (!is_pkey_enabled(pkey))
-> -		return true;
-> -
-> -	return !(read_amr() & ((AMR_RD_BIT|AMR_WR_BIT) << pkey_shift));
-> -}
-> -
->  int __execute_only_pkey(struct mm_struct *mm)
->  {
->  	return mm->context.execute_only_pkey;
+> The generic PHY driver is being used, not the at803x driver.
 
-The function was initially used by __execute_only_pkey(), but ones we
-changed the implementation of __execute_only_pkey(), the need for 
-pkey_allows_readwrite() disappeared.
-
-Acked-by: Ram Pai <linuxram@us.ibm.com>
+Well, the _correct_ driver needs to be used for the PHY specific
+features to be properly controlled.  Using the generic driver
+in this situation will not be guaranteed to work.
 
 -- 
-Ram Pai
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
