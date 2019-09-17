@@ -2,79 +2,112 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9917AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB4CAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 647BC2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:32:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rGBdWLZb"
+	by mail.kernel.org (Postfix) with ESMTP id B2D5E214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728495AbfIQVcV (ORCPT
+        id S1728550AbfIQVfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 17:32:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60340 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfIQVcV (ORCPT
+        Tue, 17 Sep 2019 17:35:51 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60356 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfIQVfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 17:32:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CNs6p3CN2rZixC1bXHXk6bkwsrcCvyP5gXyakxApfJE=; b=rGBdWLZbq5+gzJ+jj3XIjjqSn
-        GmVIL/s4VgFbdaGepjYSl5ywB6tY9FFcTfM+9QfsRNM+pJtU4+rS0h81SxCEf10skCQ/G7d/bM9Ah
-        Moa96U22+2max/iAs7IlP2xMYYKy/7LaF6rFqkg7hBJomVsC3x+l15nq/QABKGQ6j2VoiVltclVQ/
-        EWEjyd+fU4wxle7cAfJAAt9SAH7m2xLtxwyi8r0kuGiCfxQ37NEN7wTZqBxyoo/TgzwJ0GzRPnAyb
-        QRsxasaJW56EUBXjlLHpgYVfRH1af2oBntCWx9y1UQhGOjAX873ZaGrJnM6/KmEP7vBSrTYtvKMtW
-        vV/AKRtwg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iAL5A-0005kc-IT; Tue, 17 Sep 2019 21:32:20 +0000
-Date:   Tue, 17 Sep 2019 14:32:20 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v2] usercopy: Avoid HIGHMEM pfn warning
-Message-ID: <20190917213220.GV29434@bombadil.infradead.org>
-References: <201909171056.7F2FFD17@keescook>
+        Tue, 17 Sep 2019 17:35:50 -0400
+Received: from 79.184.255.25.ipv4.supernova.orange.pl (79.184.255.25) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 087d2a68ac549b78; Tue, 17 Sep 2019 23:35:48 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Mario Limonciello <mario.limonciello@dell.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        sjg@google.com, Jared Dominguez <jared.dominguez@dell.com>
+Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into deepest state
+Date:   Tue, 17 Sep 2019 23:35:47 +0200
+Message-ID: <10773060.Xg13aEV830@kreacher>
+In-Reply-To: <20190917212414.GB39848@C02WT3WMHTD6.wdl.wdc.com>
+References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com> <20190917212414.GB39848@C02WT3WMHTD6.wdl.wdc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909171056.7F2FFD17@keescook>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:00:25AM -0700, Kees Cook wrote:
-> When running on a system with >512MB RAM with a 32-bit kernel built with:
+On Tuesday, September 17, 2019 11:24:14 PM CEST Keith Busch wrote:
+> On Wed, Sep 11, 2019 at 06:42:33PM -0500, Mario Limonciello wrote:
+> > The action of saving the PCI state will cause numerous PCI configuration
+> > space reads which depending upon the vendor implementation may cause
+> > the drive to exit the deepest NVMe state.
+> > 
+> > In these cases ASPM will typically resolve the PCIe link state and APST
+> > may resolve the NVMe power state.  However it has also been observed
+> > that this register access after quiesced will cause PC10 failure
+> > on some device combinations.
+> > 
+> > To resolve this, move the PCI state saving to before SetFeatures has been
+> > called.  This has been proven to resolve the issue across a 5000 sample
+> > test on previously failing disk/system combinations.
+> >
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > ---
+> >  drivers/nvme/host/pci.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > index 732d5b6..9b3fed4 100644
+> > --- a/drivers/nvme/host/pci.c
+> > +++ b/drivers/nvme/host/pci.c
+> > @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
+> >  	if (ret < 0)
+> >  		goto unfreeze;
+> >  
+> > +	/*
+> > +	 * A saved state prevents pci pm from generically controlling the
+> > +	 * device's power. If we're using protocol specific settings, we don't
+> > +	 * want pci interfering.
+> > +	 */
+> > +	pci_save_state(pdev);
+> > +
+> >  	ret = nvme_set_power_state(ctrl, ctrl->npss);
+> >  	if (ret < 0)
+> >  		goto unfreeze;
+> > @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
+> >  		ret = 0;
+> >  		goto unfreeze;
+> >  	}
+> > -	/*
+> > -	 * A saved state prevents pci pm from generically controlling the
+> > -	 * device's power. If we're using protocol specific settings, we don't
+> > -	 * want pci interfering.
+> > -	 */
+> > -	pci_save_state(pdev);
+> >  unfreeze:
+> >  	nvme_unfreeze(ctrl);
+> >  	return ret;
 > 
-> 	CONFIG_DEBUG_VIRTUAL=y
-> 	CONFIG_HIGHMEM=y
-> 	CONFIG_HARDENED_USERCOPY=y
-> 
-> all execve()s will fail due to argv copying into kmap()ed pages, and on
-> usercopy checking the calls ultimately of virt_to_page() will be looking
-> for "bad" kmap (highmem) pointers due to CONFIG_DEBUG_VIRTUAL=y:
-> 
-> Now we can fetch the correct page to avoid the pfn check. In both cases,
-> hardened usercopy will need to walk the page-span checker (if enabled)
-> to do sanity checking.
-> 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: f5509cc18daa ("mm: Hardened usercopy")
-> Cc: Matthew Wilcox <willy@infradead.org>
+> In the event that something else fails after the point you've saved
+> the state, we need to fallback to the behavior for when the driver
+> doesn't save the state, right?
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Depending on whether or not an error is going to be returned.
 
-I want to make virt_to_page() do the right thing for kmapped pages,
-but that is completely outside the scope of this patch.
+When returning an error, it is not necessary to worry about the saved state,
+because that will cause the entire system-wide suspend to be aborted.
+
+Otherwise it is sufficient to clear the state_saved flag of the PCI device
+before returning 0 to make the PCI layer take over.
+
+
+
