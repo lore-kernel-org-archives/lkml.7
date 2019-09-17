@@ -2,324 +2,136 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB24C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B06C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9A4206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CF53218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZPEVLQWh"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="Z212gLcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfIQNXK (ORCPT
+        id S1728081AbfIQNYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:23:10 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35186 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbfIQNXK (ORCPT
+        Tue, 17 Sep 2019 09:24:39 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:46094 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727875AbfIQNYj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:23:10 -0400
-Received: by mail-ed1-f67.google.com with SMTP id v8so3333840eds.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:23:08 -0700 (PDT)
+        Tue, 17 Sep 2019 09:24:39 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HDHilF029688;
+        Tue, 17 Sep 2019 09:24:28 -0400
+Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2054.outbound.protection.outlook.com [104.47.42.54])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2v0w47ngfp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 09:24:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dvM03NGJ9sITPtzGv6p9DC3CVCVlj3bpKP56Qik6qR7FkeXpedCeaTeJ90KDdGsTH16ajvl5sAZ4ODrWkiIk3CVBuOg8G8OYo4AodYQNj6mtlyyyzgXkEuYoMBDGWY3XxPa2nC1WIWNmA/PAEpEWdjHrWQwmeqfbr5GFKmhkqOrksC3iBvH72XmCffbptXSvk1W9SWk8xGlsRa0hv65HzgrxyeZk3CReUA/fWo6ytv35MBr+b3q6SpBLmETKbWLdRUeBVzmCYGgIgvRgMgWexIUCfxlaBjkQKTj9xmnTOpwZHY5M8wGB0YM5EIdJ+hMKAi5pKV6ulPoasAfVAZUXCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BOMtSM7BqPhmf1hVqHLxqlulfY6ipM2rRT1wT8LHBCI=;
+ b=WahWvxZSf1E098i2Wfr4wNRsQmD14LUiwT8oqdTjSEKN9gN+qRUrxDSurnvJXpFpp1VVylL4Xl1vFvVkWOEvTYSxu0V1IplAUz6Bv1TShpBS6pNedt5Zr/VL/g+Mw4qf92OzBjL9ZvgpORpR+nbcXKz6kN4vXfYD3eLEdi9aH6kJMQjacbHXtvHUtSus6oTJJTkhewROK9BH3tVyM7bu7HzxlK29qCgHhQgz9Bq61MUGTzAeWyt+VHAI3XdEh+XWzbQCi2pJ5ojmRqt6qMDS/QVZrUMCMR1ayiGKQPKnftbgAEoZ7nmA9oQnxb6zeBLJNGHZ4IWYUmCYSOIQJjdInQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1SWRftNvzxWOKqVnmLJOgwarluQctTJe9TpYjYM6L1A=;
-        b=ZPEVLQWhUlTBW0nB55ahotiqBPB+FgyfBilgSwzVG85vW/xu+mkehr2ZEpPQwEVxi9
-         M5rzP3sPHQj1DOAEPj32rPebczosoVfAsUgUePocjzLYtjxztpenohIJXQVkKj9pvLys
-         PzOcIQjCrAFIasBqbv0OFUHgEzFBSyIOS5Wa0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=1SWRftNvzxWOKqVnmLJOgwarluQctTJe9TpYjYM6L1A=;
-        b=ZuSeQ2uMVE6HUkdKdZ2eFw9DIp9mesTFk8e0HCVRVAk2T5Ms/CC5xd7A6tgQSrNwwg
-         6DKkLPm6YfK/gVYzAHD4KZF/2064cd49f0hvSLMx/v+FhfxB1Q/fnIAJVhWDVQR+qVxb
-         QnO6ewcleIwYmYbyuDqKMHNgAcKZGKbuEGwmq6qtqL8om9dSoazIfkprgs9T/7gr/nN6
-         qOZaJPSzr+Z2yT4RqpRrbK9Q7TKdqzhVw0ZmhiZpVv7hVhfqFOZskpUtaKyekmVER5pi
-         W+UJZsNqcLNqWeCVi0VVCUeHWwNsvEZlKirRWRUew0a9IC2JX3QVllS3NLeTuVQ0ofyq
-         mS2Q==
-X-Gm-Message-State: APjAAAUh0A4vkJUE183h2muvpCOFMtGKR8tixtq36hF4HP3//uF3jEeX
-        PudH5mEIloWWCmsvtsmr/qiFOQ==
-X-Google-Smtp-Source: APXvYqzeXgZKLYose3Ug8/PgepGFRWs0DLYGdo48jxuYITXu325okDnpdIkY2tTOdj7awDsOSqPKGA==
-X-Received: by 2002:a17:906:2542:: with SMTP id j2mr4877303ejb.278.1568726587875;
-        Tue, 17 Sep 2019 06:23:07 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id h3sm278607ejp.77.2019.09.17.06.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 06:23:07 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 15:23:05 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, stevensd@chromium.org,
-        marcheu@chromium.org, zachr@chromium.org, keiichiw@chromium.org,
-        posciak@chromium.org
-Subject: Re: [RFC PATCH] drm/virtio: Export resource handles via DMA-buf API
-Message-ID: <20190917132305.GV3958@phenom.ffwll.local>
-Mail-Followup-To: Tomasz Figa <tfiga@chromium.org>,
-        David Airlie <airlied@linux.ie>, Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, stevensd@chromium.org,
-        marcheu@chromium.org, zachr@chromium.org, keiichiw@chromium.org,
-        posciak@chromium.org
-References: <20190912094121.228435-1-tfiga@chromium.org>
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BOMtSM7BqPhmf1hVqHLxqlulfY6ipM2rRT1wT8LHBCI=;
+ b=Z212gLcUCLTS0zr9LJb4qEYWKay4lnCbVh+ilu6U4QYV7cipt+3JKPYok7l8LKPhlqAAjezfQyjXtPYwmAixhuSPFIGfOM8hb9gCeAqwQeuC/ImLZSV49RJxc/wx4jPY+QyIZtSjmG7sCQG2mgD4T9fO1qTU1qOl7bYgUdh+rW8=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
+ CH2PR03MB5253.namprd03.prod.outlook.com (20.180.14.71) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Tue, 17 Sep 2019 13:24:27 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2284.009; Tue, 17 Sep 2019
+ 13:24:27 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "andrew@lunn.ch" <andrew@lunn.ch>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Subject: Re: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Thread-Topic: [PATCH] dt-bindings: net: dwmac: fix 'mac-mode' type
+Thread-Index: AQHVbSndCzmJmrw9p02q7VSxl3N9q6cv0CMAgAA+RoA=
+Date:   Tue, 17 Sep 2019 13:24:27 +0000
+Message-ID: <ecb8d9183ebe666c92480dd37ddc21709dd14f76.camel@analog.com>
+References: <20190917103052.13456-1-alexandru.ardelean@analog.com>
+         <20190917124132.GG20778@lunn.ch>
+In-Reply-To: <20190917124132.GG20778@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 55af11d1-997c-4cbb-79f4-08d73b725d40
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR03MB5253;
+x-ms-traffictypediagnostic: CH2PR03MB5253:
+x-microsoft-antispam-prvs: <CH2PR03MB5253298B6C1BE88E091E35E1F98F0@CH2PR03MB5253.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39860400002)(376002)(346002)(136003)(51914003)(189003)(199004)(6246003)(2906002)(26005)(86362001)(229853002)(8936002)(6436002)(8676002)(1730700003)(81156014)(81166006)(5640700003)(6486002)(486006)(476003)(2501003)(6116002)(2616005)(71200400001)(3846002)(66066001)(6506007)(71190400001)(36756003)(76176011)(446003)(99286004)(11346002)(2351001)(14454004)(478600001)(5660300002)(6512007)(118296001)(316002)(54906003)(4326008)(102836004)(186003)(25786009)(66946007)(64756008)(66556008)(305945005)(6916009)(7736002)(256004)(66446008)(66476007)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5253;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ugGgFI5fvCVgleruWYPDUZI/3qsbisXIKeVvLqmqo5yx90wLwdVatIHgGnYGSU3lGkwcoB4ylyBN5baTubWQUQT6pr7W0Wm4CE7iEow0k4UGeQv6Pi2eG90bCwH6zXEatxWtbpIpPlinTwZWkRiZoH8dMYld/ihZ/tF6xzv93KzD0WkEermi0yhooFK8qun6Oc2igAvcJGHqRzni7J/d/nkLI7mbN4sne6miTWPXhSNI+jIY7oyIcgiIr6kAo9Oj+5g5NPRTm1ZIRr+TJiaLwmNGFV0HWFCOAqtBlFUM3ifjWrSz5/Ey8tVpYqDJuJPpw2hKNtGEJ/ezJXh6dMbHBbUh1p475T8wdEwqq78JLd/vxIeWPxF6p1I68FttLJi2bilBuoE5dUWEUzRsgA5Jw0GRBTkQSVJKvQyj+W0M+og=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F5020DEEC3875546A466CEB1E350F39D@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912094121.228435-1-tfiga@chromium.org>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55af11d1-997c-4cbb-79f4-08d73b725d40
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 13:24:27.1760
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xoeXqeFvQnVFnmpQCYLPANWU3iUYqWi4uEyQAs6Mk2s/6H3x0fJM1baq7MGIn+jFxrzg4ChEq1EOsnEkXYZPP+oSUeMJFx2JFNB7LLbTOw4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5253
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-17_06:2019-09-17,2019-09-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 impostorscore=0 mlxscore=0 mlxlogscore=692
+ malwarescore=0 bulkscore=0 priorityscore=1501 suspectscore=0 spamscore=0
+ phishscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909170131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 06:41:21PM +0900, Tomasz Figa wrote:
-> This patch is an early RFC to judge the direction we are following in
-> our virtualization efforts in Chrome OS. The purpose is to start a
-> discussion on how to handle buffer sharing between multiple virtio
-> devices.
-> 
-> On a side note, we are also working on a virtio video decoder interface
-> and implementation, with a V4L2 driver for Linux. Those will be posted
-> for review in the near future as well.
-> 
-> Any feedback will be appreciated! Thanks in advance.
-> 
-> ===
-> 
-> With the range of use cases for virtualization expanding, there is going
-> to be more virtio devices added to the ecosystem. Devices such as video
-> decoders, encoders, cameras, etc. typically work together with the
-> display and GPU in a pipeline manner, which can only be implemented
-> efficiently by sharing the buffers between producers and consumers.
-> 
-> Existing buffer management framework in Linux, such as the videobuf2
-> framework in V4L2, implements all the DMA-buf handling inside generic
-> code and do not expose any low level information about the buffers to
-> the drivers.
-> 
-> To seamlessly enable buffer sharing with drivers using such frameworks,
-> make the virtio-gpu driver expose the resource handle as the DMA address
-> of the buffer returned from the DMA-buf mapping operation. Arguably, the
-> resource handle is a kind of DMA address already, as it is the buffer
-> identifier that the device needs to access the backing memory, which is
-> exactly the same role a DMA address provides for native devices.
-> 
-> A virtio driver that does memory management fully on its own would have
-> code similar to following. The code is identical to what a regular
-> driver for real hardware would do to import a DMA-buf.
-> 
-> static int virtio_foo_get_resource_handle(struct virtio_foo *foo,
-> 					  struct dma_buf *dma_buf, u32 *id)
-> {
-> 	struct dma_buf_attachment *attach;
-> 	struct sg_table *sgt;
-> 	int ret = 0;
-> 
-> 	attach = dma_buf_attach(dma_buf, foo->dev);
-> 	if (IS_ERR(attach))
-> 		return PTR_ERR(attach);
-> 
-> 	sgt = dma_buf_map_attachment(attach, DMA_BIDIRECTIONAL);
-> 	if (IS_ERR(sgt)) {
-> 		ret = PTR_ERR(sgt);
-> 		goto err_detach;
-> 	}
-> 
-> 	if (sgt->nents != 1) {
-> 		ret = -EINVAL;
-> 		goto err_unmap;
-> 	}
-> 
-> 	*id = sg_dma_address(sgt->sgl);
-
-I agree with Gerd, this looks pretty horrible to me.
-
-The usual way we've done these kind of special dma-bufs is:
-
-- They all get allocated at the same place, through some library or
-  whatever.
-
-- You add a dma_buf_is_virtio(dma_buf) function, or maybe something that
-  also upcasts or returns NULL, which checks for dma_buf->ops.
-
-- Once you've upcasted at runtime by checking for ->ops, you can add
-  whatever fancy interfaces you want. Including a real&proper interface to
-  get at whatever underlying id you need to for real buffer sharing
-  between virtio devices.
-
-In a way virtio buffer/memory ids are a kind of private bus, entirely
-distinct from the dma_addr_t bus. So can't really stuff them under this
-same thing like we e.g. do with pci peer2peer.
--Daniel
-
-> 
-> err_unmap:
-> 	dma_buf_unmap_attachment(attach, sgt, DMA_BIDIRECTIONAL);
-> err_detach:
-> 	dma_buf_detach(dma_buf, attach);
-> 
-> 	return ret;
-> }
-> 
-> On the other hand, a virtio driver that uses an existing kernel
-> framework to manage buffers would not need to explicitly handle anything
-> at all, as the framework part responsible for importing DMA-bufs would
-> already do the work. For example, a V4L2 driver using the videobuf2
-> framework would just call thee vb2_dma_contig_plane_dma_addr() function
-> to get what the above open-coded function would return.
-> 
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.c   |  2 +
->  drivers/gpu/drm/virtio/virtgpu_drv.h   |  4 ++
->  drivers/gpu/drm/virtio/virtgpu_prime.c | 81 ++++++++++++++++++++++++++
->  3 files changed, 87 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> index 0fc32fa0b3c0..ac095f813134 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-> @@ -210,6 +210,8 @@ static struct drm_driver driver = {
->  #endif
->  	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
->  	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-> +	.gem_prime_export = virtgpu_gem_prime_export,
-> +	.gem_prime_import = virtgpu_gem_prime_import,
->  	.gem_prime_get_sg_table = virtgpu_gem_prime_get_sg_table,
->  	.gem_prime_import_sg_table = virtgpu_gem_prime_import_sg_table,
->  	.gem_prime_vmap = virtgpu_gem_prime_vmap,
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index e28829661724..687cfce91885 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -367,6 +367,10 @@ void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo);
->  int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait);
->  
->  /* virtgpu_prime.c */
-> +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-> +					 int flags);
-> +struct drm_gem_object *virtgpu_gem_prime_import(struct drm_device *dev,
-> +						struct dma_buf *buf);
->  struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
->  struct drm_gem_object *virtgpu_gem_prime_import_sg_table(
->  	struct drm_device *dev, struct dma_buf_attachment *attach,
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
-> index dc642a884b88..562eb1a2ed5b 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_prime.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
-> @@ -22,6 +22,9 @@
->   * Authors: Andreas Pokorny
->   */
->  
-> +#include <linux/dma-buf.h>
-> +#include <linux/dma-direction.h>
-> +
->  #include <drm/drm_prime.h>
->  
->  #include "virtgpu_drv.h"
-> @@ -30,6 +33,84 @@
->   * device that might share buffers with virtgpu
->   */
->  
-> +static struct sg_table *
-> +virtgpu_gem_map_dma_buf(struct dma_buf_attachment *attach,
-> +			enum dma_data_direction dir)
-> +{
-> +	struct drm_gem_object *obj = attach->dmabuf->priv;
-> +	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> +	struct sg_table *sgt;
-> +	int ret;
-> +
-> +	sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
-> +	if (!sgt)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-> +	if (ret) {
-> +		kfree(sgt);
-> +		return ERR_PTR(-ENOMEM);
-> +	}
-> +
-> +	sg_dma_address(sgt->sgl) = bo->hw_res_handle;
-> +	sg_dma_len(sgt->sgl) = obj->size;
-> +	sgt->nents = 1;
-> +
-> +	return sgt;
-> +}
-> +
-> +static void virtgpu_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
-> +				      struct sg_table *sgt,
-> +				      enum dma_data_direction dir)
-> +{
-> +	sg_free_table(sgt);
-> +	kfree(sgt);
-> +}
-> +
-> +static const struct dma_buf_ops virtgpu_dmabuf_ops =  {
-> +	.cache_sgt_mapping = true,
-> +	.attach = drm_gem_map_attach,
-> +	.detach = drm_gem_map_detach,
-> +	.map_dma_buf = virtgpu_gem_map_dma_buf,
-> +	.unmap_dma_buf = virtgpu_gem_unmap_dma_buf,
-> +	.release = drm_gem_dmabuf_release,
-> +	.mmap = drm_gem_dmabuf_mmap,
-> +	.vmap = drm_gem_dmabuf_vmap,
-> +	.vunmap = drm_gem_dmabuf_vunmap,
-> +};
-> +
-> +struct dma_buf *virtgpu_gem_prime_export(struct drm_gem_object *obj,
-> +					 int flags)
-> +{
-> +	struct dma_buf *buf;
-> +
-> +	buf = drm_gem_prime_export(obj, flags);
-> +	if (!IS_ERR(buf))
-> +		buf->ops = &virtgpu_dmabuf_ops;
-> +
-> +	return buf;
-> +}
-> +
-> +struct drm_gem_object *virtgpu_gem_prime_import(struct drm_device *dev,
-> +						struct dma_buf *buf)
-> +{
-> +	struct drm_gem_object *obj;
-> +
-> +	if (buf->ops == &virtgpu_dmabuf_ops) {
-> +		obj = buf->priv;
-> +		if (obj->dev == dev) {
-> +			/*
-> +			 * Importing dmabuf exported from our own gem increases
-> +			 * refcount on gem itself instead of f_count of dmabuf.
-> +			 */
-> +			drm_gem_object_get(obj);
-> +			return obj;
-> +		}
-> +	}
-> +
-> +	return drm_gem_prime_import(dev, buf);
-> +}
-> +
->  struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj)
->  {
->  	struct virtio_gpu_object *bo = gem_to_virtio_gpu_obj(obj);
-> -- 
-> 2.23.0.237.gc6a4ce50a0-goog
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+T24gVHVlLCAyMDE5LTA5LTE3IGF0IDE0OjQxICswMjAwLCBBbmRyZXcgTHVubiB3cm90ZToNCj4g
+W0V4dGVybmFsXQ0KPiANCj4gT24gVHVlLCBTZXAgMTcsIDIwMTkgYXQgMDE6MzA6NTJQTSArMDMw
+MCwgQWxleGFuZHJ1IEFyZGVsZWFuIHdyb3RlOg0KPiA+IFRoZSAnbWFjLW1vZGUnIHByb3BlcnR5
+IGlzIHNpbWlsYXIgdG8gJ3BoeS1tb2RlJyBhbmQgJ3BoeS1jb25uZWN0aW9uLXR5cGUnLA0KPiA+
+IHdoaWNoIGFyZSBlbnVtcyBvZiBtb2RlIHN0cmluZ3MuDQo+ID4gDQo+ID4gVGhlICdkd21hYycg
+ZHJpdmVyIHN1cHBvcnRzIGFsbW9zdCBhbGwgbW9kZXMgZGVjbGFyZWQgaW4gdGhlICdwaHktbW9k
+ZScNCj4gPiBlbnVtIChleGNlcHQgZm9yIDEgb3IgMikuIEJ1dCBpbiBnZW5lcmFsLCB0aGVyZSBt
+YXkgYmUgYSBjYXNlIHdoZXJlDQo+ID4gJ21hYy1tb2RlJyBiZWNvbWVzIG1vcmUgZ2VuZXJpYyBh
+bmQgaXMgbW92ZWQgYXMgcGFydCBvZiBwaHlsaWIgb3IgbmV0ZGV2Lg0KPiA+IA0KPiA+IEluIGFu
+eSBjYXNlLCB0aGUgJ21hYy1tb2RlJyBmaWVsZCBzaG91bGQgYmUgbWFkZSBhbiBlbnVtLCBhbmQg
+aXQgYWxzbyBtYWtlcw0KPiA+IHNlbnNlIHRvIGp1c3QgcmVmZXJlbmNlIHRoZSAncGh5LWNvbm5l
+Y3Rpb24tdHlwZScgZnJvbQ0KPiA+ICdldGhlcm5ldC1jb250cm9sbGVyLnlhbWwnLiBUaGF0IHdp
+bGwgYWxzbyBtYWtlIGl0IG1vcmUgZnV0dXJlLXByb29mIGZvciBuZXcNCj4gPiBtb2Rlcy4NCj4g
+PiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kcnUgQXJkZWxlYW4gPGFsZXhhbmRydS5hcmRl
+bGVhbkBhbmFsb2cuY29tPg0KPiANCj4gSGkgQWxleGFuZHJ1DQo+IA0KPiBBZGRpbmcgYSBGaXhl
+czogdGFnIHdvdWxkIGJlIGdvb2QuIEp1c3QgcmVwbHkgaW4gdGhpcyB0aHJlYWQsIGFuZA0KPiBw
+YXRjaHdvcmsgd2lsbCBkbyBtYWdpYyB0byBhcHBlbmQgaXQgdG8gdGhlIHBhdGNoLg0KPiANCg0K
+T29wcy4gR29vZCBwb2ludC4NClRoYW5rcyBmb3IgdGhlIHRpcC4NCg0KTGV0J3Mgc2VlIGlmIFJv
+YiBhZ3JlZXMgYXMgd2VsbC4NCg0KRml4ZXM6IDljMTVkMzU5N2M2MiAoImR0LWJpbmRpbmdzOiBu
+ZXQ6IGR3bWFjOiBkb2N1bWVudCAnbWFjLW1vZGUnIHByb3BlcnR5IikNCg0KPiBSZXZpZXdlZC1i
+eTogQW5kcmV3IEx1bm4gPGFuZHJld0BsdW5uLmNoPg0KPiANCj4gICAgIEFuZHJldw0K
