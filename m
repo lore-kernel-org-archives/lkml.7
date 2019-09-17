@@ -2,149 +2,186 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B2AC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E29218AC
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DDWYxX6h"
+	by mail.kernel.org (Postfix) with ESMTP id 9338521670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfIQIXC (ORCPT
+        id S1730191AbfIQIXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:23:02 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40789 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728123AbfIQIXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:23:01 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y39so2264856ota.7;
-        Tue, 17 Sep 2019 01:23:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pAhRX1Y8hlT53IJmsS9eKDWXvMfY7PiqTbL9YMzPsQY=;
-        b=DDWYxX6hEtoMmfBPsku/8mPtsbFfVqOuH6B5K6Rf5504uIFWUvA4nKyX7p9UOK5QL9
-         x00eSKjYfX43V6lfKBKhbU6aD4TiaoRI8Bf195GYRbRSYcqm1AAyTMa5Wc/qzWj/GevV
-         D28/qLQapOc2Bs9o/O7CMpq5wkgSVuklj54vaUnWaer7QFf+EAIxYyhJYizmV1dTIsRx
-         FI8pmaCUWrzXu5/4stOiThInpHgBqPjL3Tc64msxMkJ6PjLhP75UZJHMxivCJJpLJUNL
-         CbPZId75PgVF6hRNBAr3XiwFyiu6p++OiFjWFIXl2hri56vGBMQVfz4ALicIdbSvkvOB
-         rn9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pAhRX1Y8hlT53IJmsS9eKDWXvMfY7PiqTbL9YMzPsQY=;
-        b=U6mkni8gqVFHfKlIoZWtMJ1iHwJEXH1jXrn4noJCUyAJ/ofoVXn9sdoxr7716udtpy
-         0WK7daAhF/cCxH4oZReKIUAR+tIhfUELTCdwXdUcRh4Jm+lFM+EeH8r2nK6qIh+awyl8
-         r9hQx3gqG3aswc2oKfW+R4ejhUUW6VafVhfwA+nc8p48ZhmK5LO9+LxabcnqcgTUDjYz
-         SLdc4Ls3Khiazclsb8keRJQIpMygF78gYEI9nyQpg8bO7TYZCJsLIMFLzydnIIe64nkD
-         2QKHq6Eh7UO1f+UOI2l7tZt+fBa/KXJ7F+bFjjY+sQisqoo5agSL8UH56dkS/tmNE21w
-         Wi+Q==
-X-Gm-Message-State: APjAAAXxEZG2oFiMt9umDZsIFYrR0n34kB6e759gYRE9P0EZCd/zaSbe
-        IdqESy/w/m/vJqKW0znmcOOROgXCy6RQ03vmhVY=
-X-Google-Smtp-Source: APXvYqzVVj6XLIRKAQFw0YAZbGXg8avRlJ7jD1nt0GvxOdj6vD309EupfSe3MyuCDlpLhg5U72LmlbjcnSDQAz+lgp4=
-X-Received: by 2002:a9d:aa8:: with SMTP id 37mr1771178otq.56.1568708580413;
- Tue, 17 Sep 2019 01:23:00 -0700 (PDT)
+        Tue, 17 Sep 2019 04:23:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728364AbfIQIXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:23:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2049BAE84;
+        Tue, 17 Sep 2019 08:23:12 +0000 (UTC)
+Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
+To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>
+Cc:     Qian Cai <cai@lca.pw>, Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
+References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
+ <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
+ <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
+ <1568297308.19040.5.camel@mtksdccf07>
+ <613f9f23-c7f0-871f-fe13-930c35ef3105@suse.cz>
+ <79fede05-735b-8477-c273-f34db93fd72b@virtuozzo.com>
+ <6d58ce86-b2a4-40af-bf40-c604b457d086@suse.cz>
+ <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a5103bf0-245e-5894-0486-3e92fa830e41@suse.cz>
+Date:   Tue, 17 Sep 2019 10:19:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1568617969-6934-1-git-send-email-wanpengli@tencent.com> <20190916191218.GM18871@linux.intel.com>
-In-Reply-To: <20190916191218.GM18871@linux.intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 17 Sep 2019 16:22:48 +0800
-Message-ID: <CANRm+CwhFAU6PaVYF=uBhHfQpQT0N7iJ+QvKyojOHzcsVjsfzQ@mail.gmail.com>
-Subject: Re: [PATCH] KVM: X86: Fix warning in handle_desc
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "# v3 . 10+" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019 at 03:12, Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Mon, Sep 16, 2019 at 03:12:49PM +0800, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Reported by syzkaller:
-> >
-> >       WARNING: CPU: 0 PID: 6544 at /home/kernel/data/kvm/arch/x86/kvm//vmx/vmx.c:4689 handle_desc+0x37/0x40 [kvm_intel]
-> >       CPU: 0 PID: 6544 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
-> >       RIP: 0010:handle_desc+0x37/0x40 [kvm_intel]
-> >       Call Trace:
-> >        vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
-> >        vcpu_enter_guest+0x4dc/0x18d0 [kvm]
-> >        kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
-> >        kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
-> >        do_vfs_ioctl+0xa2/0x690
-> >        ksys_ioctl+0x6d/0x80
-> >        __x64_sys_ioctl+0x1a/0x20
-> >        do_syscall_64+0x74/0x720
-> >        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > When CR4.UMIP is set, guest should have UMIP cpuid flag. Current
-> > kvm set_sregs function doesn't have such check when userspace inputs
-> > sregs values. SECONDARY_EXEC_DESC is enabled on writes to CR4.UMIP in
-> > vmx_set_cr4 though guest doesn't have UMIP cpuid flag. The testcast
-> > triggers handle_desc warning when executing ltr instruction since guest
-> > architectural CR4 doesn't set UMIP. This patch fixes it by adding check
-> > for guest UMIP cpuid flag when get sreg inputs from userspace.
-> >
-> > Reported-by: syzbot+0f1819555fbdce992df9@syzkaller.appspotmail.com
-> > Fixes: 0367f205a3b7 ("KVM: vmx: add support for emulating UMIP")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > ---
-> > Note: syzbot report link https://lkml.org/lkml/2019/9/11/799
-> >
-> >  arch/x86/kvm/x86.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index f7cfd8e..83288ba 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -8645,6 +8645,10 @@ static int kvm_valid_sregs(struct kvm_vcpu *vcpu, struct kvm_sregs *sregs)
-> >                       (sregs->cr4 & X86_CR4_OSXSAVE))
-> >               return  -EINVAL;
-> >
-> > +     if (!guest_cpuid_has(vcpu, X86_FEATURE_UMIP) &&
-> > +                     (sregs->cr4 & X86_CR4_UMIP))
->
-> Assuming vmx_set_cr4() fails because nested_cr4_valid() fails, isn't this
-> a generic problem with nested VMX that just happens to be visible because
-> of the WARN_ON() in handle_desc()?
->
-> In general, KVM lets userspace set broken combinations of CPUID vs. CRx so
-> that it doesn't dictate ordering, e.g. __set_sregs() intentionally calls
-> kvm_x86_ops->set_cr4() instead of kvm_set_cr4(), which has all the CPUID
-> checks.
->
-> The existing OSXSAVE check in kvm_valid_sregs() is more about ensuring
-> host support (see commit 6d1068b3a985, "KVM: x86: invalid opcode oops on
-> SET_SREGS with OSXSAVE bit set (CVE-2012-4461)").
->
-> Given that both vmx_set_cr4() and svm_set_cr4() can return failure and
-> cause __set_sregs() to silently fail, what about adding a new x86 ops to
-> pre-check cr4, e.g. vm_x86_ops->is_valid_cr4(), and then WARN if set_cr4()
-> fails during __set_sregs()?
+On 9/16/19 5:57 PM, Andrey Ryabinin wrote:
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -710,8 +710,12 @@ static int __init early_debug_pagealloc(char *buf)
+>>  	if (kstrtobool(buf, &enable))
+>>  		return -EINVAL;
+>>  
+>> -	if (enable)
+>> +	if (enable) {
+>>  		static_branch_enable(&_debug_pagealloc_enabled);
+>> +#ifdef CONFIG_PAGE_OWNER
+>> +		page_owner_free_stack_disabled = false;
+> 
+> I think this won't work with CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y
 
-I'm a little lazy, just extract CPUID and CR4 combination checking and
-add it to __set_sregs() in new version.
+Good point, thanks.
 
-    Wanpeng
+>> +#endif
+>> +	}
+>>  
+>>  	return 0;
+>>  }
+>> diff --git a/mm/page_owner.c b/mm/page_owner.c
+>> index dee931184788..b589bfbc4795 100644
+>> --- a/mm/page_owner.c
+>> +++ b/mm/page_owner.c
+>> @@ -24,13 +24,15 @@ struct page_owner {
+>>  	short last_migrate_reason;
+>>  	gfp_t gfp_mask;
+>>  	depot_stack_handle_t handle;
+>> -#ifdef CONFIG_DEBUG_PAGEALLOC
+>> +#ifdef CONFIG_PAGE_OWNER_FREE_STACK
+>>  	depot_stack_handle_t free_handle;
+>>  #endif
+>>  };
+>>  
+>>  static bool page_owner_disabled = true;
+>> +bool page_owner_free_stack_disabled = true;
+>>  DEFINE_STATIC_KEY_FALSE(page_owner_inited);
+>> +static DEFINE_STATIC_KEY_FALSE(page_owner_free_stack);
+>>  
+>>  static depot_stack_handle_t dummy_handle;
+>>  static depot_stack_handle_t failure_handle;
+>> @@ -46,6 +48,9 @@ static int __init early_page_owner_param(char *buf)
+>>  	if (strcmp(buf, "on") == 0)
+>>  		page_owner_disabled = false;
+>>  
+>> +	if (!page_owner_disabled && IS_ENABLED(CONFIG_KASAN))
+> 
+> I'd rather keep all logic in one place, i.e. "if (!page_owner_disabled && (IS_ENABLED(CONFIG_KASAN) || debug_pagealloc_enabled())"
+> With this no changes in early_debug_pagealloc() required and CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y should also work correctly.
+
+In this function it would not work if the debug_pagealloc param gets
+processed later than page_owner, but should be doable in
+init_page_owner(), I'll try, thanks.
+
+> 
+>> +		page_owner_free_stack_disabled = false;
+>> +
+>>  	return 0;
+>>  }
+>>  early_param("page_owner", early_page_owner_param);
+>  
+> 
+
