@@ -2,92 +2,81 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB77C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5702EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28FDD216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EB6921848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568696207;
+	bh=Deta3mLDOjrS9MA60qe/1+TynhvYp3GzPvxWWxB81ZY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0H50BHjcVHRQO0eHjAbBbc+dP1AZUE6c2ga1746VfwlwqRBhXt1buAM/kpfnBYkdb
+	 HoXaPLf430fYwLnrBYI4OHrCOWfqfs/sc5NAAglqDxLPRJvzZS9WQUzAFcUcLK3rwQ
+	 ZzlkQElRpjF02xS7VRmmKUpHcNTHleD1VLYYTrws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392330AbfIQEvw (ORCPT
+        id S2388269AbfIQE4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:51:52 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36368 "EHLO inva021.nxp.com"
+        Tue, 17 Sep 2019 00:56:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392296AbfIQEvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:51:51 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B13920064A;
-        Tue, 17 Sep 2019 06:51:49 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A64CE20065F;
-        Tue, 17 Sep 2019 06:51:44 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B5EDD402C4;
-        Tue, 17 Sep 2019 12:51:38 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v2,3/3] Documentation: dt: binding: fsl: Add 'fsl,rcpm-scfg' property
-Date:   Tue, 17 Sep 2019 12:41:19 +0800
-Message-Id: <20190917044119.21895-3-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20190917044119.21895-1-biwen.li@nxp.com>
-References: <20190917044119.21895-1-biwen.li@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727234AbfIQE4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 00:56:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F490216C8;
+        Tue, 17 Sep 2019 04:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568696204;
+        bh=Deta3mLDOjrS9MA60qe/1+TynhvYp3GzPvxWWxB81ZY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BrxoadVByuVpgM40BAinFxCJkZ6eNEBhWtJ1X/FBcFtfRuOaHFxqD8UOlzzsySvee
+         Ur++qDaVoLWg9Rv/AzTPiXIKDmmtFzs44ba/4vGgYgYkNPEXPUFOt1tk1wp+jIZjHm
+         o762u14M0QLQ19CCnKYc3R7QGjXqqHJu3I4elIn0=
+Date:   Tue, 17 Sep 2019 06:56:40 +0200
+From:   'Greg KH' <gregkh@linuxfoundation.org>
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     devel@driverdev.osuosl.org, Namjae Jeon <linkinjeon@gmail.com>,
+        'Valdis Kletnieks' <valdis.kletnieks@vt.edu>,
+        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
+        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190917045640.GA2055638@kroah.com>
+References: <CGME20190917025738epcas1p1f1dd21ca50df2392b0f84f0340d82bcd@epcas1p1.samsung.com>
+ <003601d56d03$aa04fa00$fe0eee00$@samsung.com>
+ <003701d56d04$470def50$d529cdf0$@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <003701d56d04$470def50$d529cdf0$@samsung.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'fsl,rcpm-scfg' property is used to fix a bug
-that FlexTimer cannot wakeup system in deep sleep on LS1021A
+On Tue, Sep 17, 2019 at 12:02:01PM +0900, Namjae Jeon wrote:
+> We are excited to see this happening and would like to state that we appreciate
+> time and
+> effort which people put into upstreaming exfat. Thank you!
+> 
+> However, if possible, can we step back a little bit and re-consider it? We
+> would prefer to see upstream the code which we are currently using in
+> our products - sdfat - as this can be mutually benefitial from various
+> points of view.
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
-Change in v2:
-	- update desc of the property 'fsl,rcpm-scfg'
+What is "different" in it from the code that is currently in linux-next?
+What is supported "better"?  The code we have today seems to work for
+people, so what are we missing here?
 
- Documentation/devicetree/bindings/soc/fsl/rcpm.txt | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Also, submitting patches for this codebase to bring it up to the level
+of functionality you need would be wonderful, can you do that?
 
-diff --git a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-index 5a33619d881d..f8dce247357a 100644
---- a/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-+++ b/Documentation/devicetree/bindings/soc/fsl/rcpm.txt
-@@ -34,6 +34,11 @@ Chassis Version		Example Chips
- Optional properties:
-  - little-endian : RCPM register block is Little Endian. Without it RCPM
-    will be Big Endian (default case).
-+ - fsl,rcpm-scfg : LS1021A has defect of failing to get data when
-+   reading ippdexpcr. So add this property to help store one
-+   copy to specified scfg_scrachpad_addr register for others
-+   (such as U-Boot) reference. The first entry must be a link to the
-+   SCFG device node, then followed by the offset of registers of SCFG.
- 
- Example:
- The RCPM node for T4240:
-@@ -43,6 +48,14 @@ The RCPM node for T4240:
- 		#fsl,rcpm-wakeup-cells = <2>;
- 	};
- 
-+The RCPM node for LS1021A:
-+	rcpm: rcpm@1ee2140 {
-+		compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
-+		reg = <0x0 0x1ee2140 0x0 0x8>;
-+		#fsl,rcpm-wakeup-cells = <2>;
-+		fsl,rcpm-scfg = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
-+	};
-+
- * Freescale RCPM Wakeup Source Device Tree Bindings
- -------------------------------------------
- Required fsl,rcpm-wakeup property should be added to a device node if the device
--- 
-2.17.1
+thanks,
 
+greg k-h
