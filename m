@@ -2,173 +2,221 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4729CC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA30DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259CD2053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73DAC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="dw1Ynj6y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfIQRSh (ORCPT
+        id S1730887AbfIQRTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:18:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45570 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726616AbfIQRSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:18:37 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 536293680A
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 17:18:36 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id f10so1124332wmh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:18:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CzdzjDs1PS5s1r26tWjnHvjUliGuiGe3yhX4kLQL7+c=;
-        b=n8a+Xi5Nxrun1KF+AtgWuNI5plc+1rJzo7dea5z+HhLXeMOye6iOQMd9I9IL4pWurh
-         7cimocsaYZwRrPJQrRhYnqNrRipcrAdgWGcXvnZzMbicubtpcfHeg+uMN1HZqfjFhkk0
-         mVpuwZPbLTXeZkJZEzrgguId7CtV4MsRvpbj4GUKqZCbpbVy2JdxYFnmMFlmzwigm7WT
-         fDlSKYy/NldYFHLjxlS+sUevYqtxR+D5Oo+ZdcAUGwUwZ+6T6CHiolhJegeztuyXzqRh
-         ETD+l82085TBxs6AbYhFmGHluSjK/EhwUC802O+JFQAT+fu3QjWL4uEpcf0qGpsOmAfD
-         MGMA==
-X-Gm-Message-State: APjAAAWnr1H/NLPT5Ue/SCrdPwfaOefrr6i1U1oNLktywwWH8grIgB3R
-        gYU1hYXNVn9+//xYCCWN/1ZkQRb8mQmv5/3Cq/myoRXE3NYFPAUpkhdSUFYkcn4gOmpgT6q3Y79
-        6Y1W7Bihufm0j7wEUup75Q25V
-X-Received: by 2002:a05:600c:2052:: with SMTP id p18mr4341224wmg.13.1568740714968;
-        Tue, 17 Sep 2019 10:18:34 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyZJ8SQPxCUeDeSltgjjv/+2lWN6pyzNKs4z2B/WxLTQIkeThwpFZrZjf+Y9TYVkv4mFihBKg==
-X-Received: by 2002:a05:600c:2052:: with SMTP id p18mr4341206wmg.13.1568740714697;
-        Tue, 17 Sep 2019 10:18:34 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id s12sm4981466wra.82.2019.09.17.10.18.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 10:18:34 -0700 (PDT)
-Subject: Re: [PATCH] kvm: x86: Use DEFINE_DEBUGFS_ATTRIBUTE for debugfs files
-To:     Yi Wang <wang.yi59@zte.com.cn>
-Cc:     rkrcmar@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, hpa@zytor.com, x86@kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        up2wing@gmail.com, wang.liang82@zte.com.cn,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <1563780839-14739-1-git-send-email-wang.yi59@zte.com.cn>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <31eec57f-2bc8-0ea0-e5fb-6b21ce902aae@redhat.com>
-Date:   Tue, 17 Sep 2019 19:18:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 17 Sep 2019 13:19:22 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:44304 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfIQRTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:19:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=o09IJPFom4bA0IbsaraWZgb9r5yRyE3Qt6Bk2EdwWb8=; b=dw1Ynj6y/LKN5rrBNbZtIjKCK
+        9eVTSd2XRe+Zqh8caSAZlFd6EBG1X2ssHlksjGHfDE2XmRJmm2M09K6ht37qFlKkvlAO6esN1Tm77
+        A+L8P71ULx0HRllNqWoMZjWEfpgjRbEAdLVNM4Ee2Z2XmWy8LS1nAU3n+wurSAutM0/HVIUjvks09
+        YgYfJnpSmrPw5SkaJ6//DWgEOQNl7JfMEOQBGoN3uFpLDynlIuEX2e99jgFZzXU8+3T2BjSj38EK5
+        +4/CH9SHbQ9v3XQxWPu6nezl6vEcMbJFcIK+snstv8Isn9AXsK3sP4sRpUGDkkV6h7i//Ke5LjObE
+        xuF9NVGUQ==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:33196)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iAH8E-0003Ad-71; Tue, 17 Sep 2019 18:19:14 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iAH8D-0001TX-7E; Tue, 17 Sep 2019 18:19:13 +0100
+Date:   Tue, 17 Sep 2019 18:19:13 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     tinywrkb <tinywrkb@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Baruch Siach <baruch@tkos.co.il>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190917171913.GY25745@shell.armlinux.org.uk>
+References: <87muf6oyvr.fsf@tarshish>
+ <20190915135652.GC3427@lunn.ch>
+ <20190917124101.GA1200564@arch-dsk-01>
+ <20190917125434.GH20778@lunn.ch>
+ <20190917133253.GA1210141@arch-dsk-01>
+ <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
+ <20190917163427.GA1475935@arch-dsk-01>
+ <20190917170419.GX25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <1563780839-14739-1-git-send-email-wang.yi59@zte.com.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917170419.GX25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/07/19 09:33, Yi Wang wrote:
-> We got these coccinelle warning:
-> ./arch/x86/kvm/debugfs.c:23:0-23: WARNING: vcpu_timer_advance_ns_fops
-> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> ./arch/x86/kvm/debugfs.c:32:0-23: WARNING: vcpu_tsc_offset_fops should
-> be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> ./arch/x86/kvm/debugfs.c:41:0-23: WARNING: vcpu_tsc_scaling_fops should
-> be defined with DEFINE_DEBUGFS_ATTRIBUTE
-> ./arch/x86/kvm/debugfs.c:49:0-23: WARNING: vcpu_tsc_scaling_frac_fops
-> should be defined with DEFINE_DEBUGFS_ATTRIBUTE
+On Tue, Sep 17, 2019 at 06:04:19PM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 17, 2019 at 07:34:27PM +0300, tinywrkb wrote:
+> > The patch didn't fix the issue.
+> > 
+> > # ethtool eth0
+> > 
+> > Settings for eth0:
+> > 	Supported ports: [ TP MII ]
+> > 	Supported link modes:   10baseT/Half 10baseT/Full
+> > 	                        100baseT/Half 100baseT/Full
+> > 	                        1000baseT/Full
+> > 	Supported pause frame use: Symmetric
+> > 	Supports auto-negotiation: Yes
+> > 	Supported FEC modes: Not reported
+> > 	Advertised link modes:  10baseT/Half 10baseT/Full
+> > 	                        100baseT/Half 100baseT/Full
+> > 	                        1000baseT/Full
+> > 	Advertised pause frame use: Symmetric
+> > 	Advertised auto-negotiation: Yes
+> > 	Advertised FEC modes: Not reported
+> > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
+> > 	                                     100baseT/Half 100baseT/Full
+> > 	                                     1000baseT/Full
+> > 	Link partner advertised pause frame use: Symmetric
+> > 	Link partner advertised auto-negotiation: Yes
+> > 	Link partner advertised FEC modes: Not reported
+> > 	Speed: 1000Mb/s
+> > 	Duplex: Full
+> > 	Port: MII
+> > 	PHYAD: 0
+> > 	Transceiver: internal
+> > 	Auto-negotiation: on
+> > 	Supports Wake-on: d
+> > 	Wake-on: d
+> > 	Link detected: yes
+> > 
+> > # mii-tool -v -v eth0
+> > 
+> > Using SIOCGMIIPHY=0x8947
+> > eth0: negotiated 100baseTx-FD flow-control, link ok
+> >   registers for MII PHY 0:
+> >     3100 796d 004d d072 15e1 c5e1 000f 0000
+> >     0000 0000 0800 0000 0000 0000 0000 a000
+> >     0000 0000 0000 f420 082c 0000 04e8 0000
+> >     3200 3000 0000 063d 0000 0000 0000 0000
+> >   product info: vendor 00:13:74, model 7 rev 2
+> >   basic mode:   autonegotiation enabled
+> >   basic status: autonegotiation complete, link ok
+> >   capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
+> >   advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> >   link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
+> > 
+> > # journalctl -b | egrep -i 'phy|eth|fec'|grep -v usb
+> > 
+> > kernel: Booting Linux on physical CPU 0x0
+> > kernel: libphy: Fixed MDIO Bus: probed
+> > kernel: libphy: fec_enet_mii_bus: probed
+> > kernel: fec 2188000.ethernet eth0: registered PHC device 0
+> > kernel: dwhdmi-imx 120000.hdmi: Detected HDMI TX controller v1.31a with HDCP (DWC HDMI 3D TX PHY)
+> > kernel: Generic PHY 2188000.ethernet-1:00: attached PHY driver [Generic PHY] (mii_bus:phy_addr=2188000.ethernet-1:00, irq=POLL)
+> > kernel: fec 2188000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
+> > kernel: IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+> > systemd-networkd[242]: eth0: Gained carrier
 > 
-> Use DEFINE_DEBUGFS_ATTRIBUTE() rather than DEFINE_SIMPLE_ATTRIBUTE()
-> to fix this.
+> Okay, so this is getting weird.
 > 
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-
-It sucks though that you have to use a function with "unsafe" in the name.
-
-Greg, is the patch doing the right thing?
-
-Paolo
-
-> ---
->  arch/x86/kvm/debugfs.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> ethtool still shows that 1000baseT/Full is being advertised, yet the
+> PHY disagrees:
 > 
-> diff --git a/arch/x86/kvm/debugfs.c b/arch/x86/kvm/debugfs.c
-> index 329361b..24016fb 100644
-> --- a/arch/x86/kvm/debugfs.c
-> +++ b/arch/x86/kvm/debugfs.c
-> @@ -20,7 +20,7 @@ static int vcpu_get_timer_advance_ns(void *data, u64 *val)
->  	return 0;
->  }
->  
-> -DEFINE_SIMPLE_ATTRIBUTE(vcpu_timer_advance_ns_fops, vcpu_get_timer_advance_ns, NULL, "%llu\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(vcpu_timer_advance_ns_fops, vcpu_get_timer_advance_ns, NULL, "%llu\n");
->  
->  static int vcpu_get_tsc_offset(void *data, u64 *val)
->  {
-> @@ -29,7 +29,7 @@ static int vcpu_get_tsc_offset(void *data, u64 *val)
->  	return 0;
->  }
->  
-> -DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_offset_fops, vcpu_get_tsc_offset, NULL, "%lld\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(vcpu_tsc_offset_fops, vcpu_get_tsc_offset, NULL, "%lld\n");
->  
->  static int vcpu_get_tsc_scaling_ratio(void *data, u64 *val)
->  {
-> @@ -38,7 +38,7 @@ static int vcpu_get_tsc_scaling_ratio(void *data, u64 *val)
->  	return 0;
->  }
->  
-> -DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_scaling_fops, vcpu_get_tsc_scaling_ratio, NULL, "%llu\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(vcpu_tsc_scaling_fops, vcpu_get_tsc_scaling_ratio, NULL, "%llu\n");
->  
->  static int vcpu_get_tsc_scaling_frac_bits(void *data, u64 *val)
->  {
-> @@ -46,20 +46,20 @@ static int vcpu_get_tsc_scaling_frac_bits(void *data, u64 *val)
->  	return 0;
->  }
->  
-> -DEFINE_SIMPLE_ATTRIBUTE(vcpu_tsc_scaling_frac_fops, vcpu_get_tsc_scaling_frac_bits, NULL, "%llu\n");
-> +DEFINE_DEBUGFS_ATTRIBUTE(vcpu_tsc_scaling_frac_fops, vcpu_get_tsc_scaling_frac_bits, NULL, "%llu\n");
->  
->  int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
->  {
->  	struct dentry *ret;
->  
-> -	ret = debugfs_create_file("tsc-offset", 0444,
-> +	ret = debugfs_create_file_unsafe("tsc-offset", 0444,
->  							vcpu->debugfs_dentry,
->  							vcpu, &vcpu_tsc_offset_fops);
->  	if (!ret)
->  		return -ENOMEM;
->  
->  	if (lapic_in_kernel(vcpu)) {
-> -		ret = debugfs_create_file("lapic_timer_advance_ns", 0444,
-> +		ret = debugfs_create_file_unsafe("lapic_timer_advance_ns", 0444,
->  								vcpu->debugfs_dentry,
->  								vcpu, &vcpu_timer_advance_ns_fops);
->  		if (!ret)
-> @@ -67,12 +67,12 @@ int kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu)
->  	}
->  
->  	if (kvm_has_tsc_control) {
-> -		ret = debugfs_create_file("tsc-scaling-ratio", 0444,
-> +		ret = debugfs_create_file_unsafe("tsc-scaling-ratio", 0444,
->  							vcpu->debugfs_dentry,
->  							vcpu, &vcpu_tsc_scaling_fops);
->  		if (!ret)
->  			return -ENOMEM;
-> -		ret = debugfs_create_file("tsc-scaling-ratio-frac-bits", 0444,
-> +		ret = debugfs_create_file_unsafe("tsc-scaling-ratio-frac-bits", 0444,
->  							vcpu->debugfs_dentry,
->  							vcpu, &vcpu_tsc_scaling_frac_fops);
->  		if (!ret)
+>      3100 796d 004d d072 15e1 c5e1 000f 0000
+>      0000 0000 0800 0000 0000 0000 0000 a000
+>           ^^^^
+> Gigabit control register, bits 9 should be set, but it's clear.
 > 
+> Looking at the following registers, brings up another possibility what
+> is going on:
+> 
+>      0000 0000 0000 f420 082c 0000 04e8 0000
+>                     ^^^^ ^^^^
+> 
+> These two registers may provide a hint.  Of the first register, which
+> is the interrupt status register, bit 5 is set, indicating that a
+> "smartspeed downgrade occurred".  The second register is the smartspeed
+> configuration, which basically says that the feature is enabled.
+> 
+> Smartspeed is designed to allow the link to come up if two-pair CAT5
+> cable is used (are you using a 4-pair or 2-pair cable?) by making the
+> link fall back to 100mbit, or with CAT3 cable, 10mbit speeds.  What
+> isn't specified is whether it does this by clearing bits in the various
+> advertisement registers.
+> 
+> Given what you've said so far, I'd suggest that this is indeed the
+> case - when smartspeed is triggered, advertisement bits are cleared by
+> the PHY without the kernel's knowledge, leading to the kernel getting
+> the speed resolution incorrect after 5502b218e001.
+> 
+> There's another issue here - if smartspeed clears advertisement bits,
+> then if you connect a 4-pair cable after having used a 2-pair cable,
+> you'd still be limited to 100mbit.  The ethtool output will be just
+> as confusing.
+> 
+> The only thing I can think we should do is to read-back the
+> advertisement from the PHY whenever we read the rest of the status
+> and update the phy->advertising mask, just like we do with the link
+> partner advertisement.
 
+This patch will disable smartspeed - could you see what happens, and
+whether you can get the link to come up at all.  You might need to see
+whether wiggling the RJ45 helps (I've had that sort of thing with some
+cables.)
+
+You might also need "ethtool -s eth0 advertise ffcf" after trying that
+if it doesn't work to take the gigabit speeds out of the advertisement.
+
+Thanks.
+
+ drivers/net/phy/at803x.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index b3893347804d..85cf4a4a5e81 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -296,6 +296,11 @@ static int at803x_config_init(struct phy_device *phydev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Disable smartspeed */
++	ret = phy_modify(phydev, 0x14, BIT(5), 0);
++	if (ret < 0)
++		return ret;
++
+ 	/* The RX and TX delay default is:
+ 	 *   after HW reset: RX delay enabled and TX delay disabled
+ 	 *   after SW reset: RX delay enabled, while TX delay retains the
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
