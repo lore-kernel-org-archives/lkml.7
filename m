@@ -2,100 +2,182 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E47C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE7EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74487214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8180D214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:30:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hIFydeMf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E25WSBhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbfIQM0l (ORCPT
+        id S1727481AbfIQMa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:26:41 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54111 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQM0l (ORCPT
+        Tue, 17 Sep 2019 08:30:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40357 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIQMa0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:26:41 -0400
-Received: by mail-wm1-f65.google.com with SMTP id i16so1011513wmd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:26:40 -0700 (PDT)
+        Tue, 17 Sep 2019 08:30:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id b24so2942658wmj.5;
+        Tue, 17 Sep 2019 05:30:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=8G6S3cshgPA48meEAaZ6NSKpV8wAh+/bom1QFfZg+RA=;
-        b=hIFydeMfygJz22yMIDmH7G/SPEFOrklOxvSQP+jo+P+A5kKrlT5Ivuh8ziytJqooaI
-         K16M1vOzyhLPD5Te49Wtkb9gOE5fyiM1cGm3zVyRurlIXT38Mk8At7KKhxand9TKUYU+
-         06fiAW1Ag3Hu5bvd97nkhjfsp1OVxgZw6j66lL6i1IxzE/xr3b29eq0cks3t4suWayH8
-         toDRbMNtDpcesjYIVFVijqkIGTX/WXpWlw/tr/vlUAEJwBZDfz4PIXdX8xIbJnHoXKZE
-         LpI3oPCV0DQLE7Ky1iMmX84A26KjwV4AZmHDTnqr3p78joplgBcXP2kQfu5a/idl9wW9
-         I0ow==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YBp2v8vFDNAxFhqQgdr+u9iIeUOhuwZckRnxJj0Jxrs=;
+        b=E25WSBhPPxHHjzHODS1R3+6Ld++kisQJorRGGHXnMT9BXrzL3H+rV3QSGF8eH79WBk
+         nWS3FlJdQoElriRYPYYSi5aWgF/HkTrB7v6/j/YPmt1CpyIDkJi9HRBlYga+LbDq1Q4i
+         TsPRxAwdZg7Z6qiNohxiEkWvE6HPgbn+FYMEVVb2UWtCjBTDF+Ka/++DIaBRAY+oqS6E
+         CTCmpVLFcDSCqgq7saquKkyzNN9BxipHvKzIC/nXF6GNsbcqHkGK+Z2E+yTrHGl3s3IN
+         ftaNjO9xGypzoLxTJznF7K1l55m19XXTz8N7MzV1lm5t04GerAJ4cTghglLxG6jE6WsT
+         1piQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=8G6S3cshgPA48meEAaZ6NSKpV8wAh+/bom1QFfZg+RA=;
-        b=QeWWig+hKstmWegHO3OFrf6qAXwKmCur/Hiw6Z7qEB5O9VYR1SqVWRIwFaC7t/VhEg
-         jtQRwFgjMD+jKNGLiyKz1UP0FU4hWHzBX02W2JCti5g3XU3uKyQC1yKxhiYoIosE7p4W
-         /65+/DhHzi2PlFCHKubORTzb7UpAvrCyV12ZJ2aUiZ1Lx0nMyfnAqWU7oyd7b3hFmS5b
-         HdRqbXREyyW2cGXg+DXSPxtYRMHAod2QerheqrShvmlXygIMH7+d4zgBl2qNQRZKyaML
-         Ju9AiD0I3cjBQUpS9+uZfRDYLRRhNcKkm8Ko91ep0RAzPVV7jebt03WCW4mD+bWUSFWT
-         AEhA==
-X-Gm-Message-State: APjAAAXMSONnxwxfbLmilJKAgtICYEqFxUPoEJqTum2vrZbUHK5nEAWX
-        QJUyPSE39cwBOlD6khr00OKLoL80Uqc=
-X-Google-Smtp-Source: APXvYqwjU1Ui1UMRe9RLZl8pcHFR82mLoJ27NKFfFLY/3m80s2ombZrFfKK0FAQu/FR/MBeFpnLGEQ==
-X-Received: by 2002:a1c:dd0a:: with SMTP id u10mr3289081wmg.100.1568723199690;
-        Tue, 17 Sep 2019 05:26:39 -0700 (PDT)
-Received: from localhost ([195.200.173.126])
-        by smtp.gmail.com with ESMTPSA id w12sm3314438wrg.47.2019.09.17.05.26.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 05:26:39 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 05:26:38 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Marc Zyngier <maz@kernel.org>
-cc:     Palmer Dabbelt <palmer@sifive.com>,
-        Darius Rad <darius@bluespec.com>,
-        David Abdurachmanov <david.abdurachmanov@sifive.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
-In-Reply-To: <20190916223323.07664bc2@why>
-Message-ID: <alpine.DEB.2.21.9999.1909170525170.30255@viisi.sifive.com>
-References: <3c0eb4e9-ee21-d07b-ad16-735b7dc06051@bluespec.com> <mhng-df6c7aad-d4fd-4c44-96c8-bf63465e0c97@palmer-si-x1c4> <20190916223323.07664bc2@why>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YBp2v8vFDNAxFhqQgdr+u9iIeUOhuwZckRnxJj0Jxrs=;
+        b=C0m/u0HKcBDW0nxfJ5LXct5JGDF9g2xPvvznIRHaOH40D/OTdayUfCJSdNadYId0Vi
+         swaOyeIbxuyHdkdsBdz0H8U6SI+SNe+cr5Yt4ixEqH8JbpGzwD2yHhLDJtZ6YmvIHuAt
+         AkzhuiIGVLhmWyuXMp9Dga9L418KBHATJU12ISopE+JoU8l7giUntzMJAePeNsUiQNV2
+         rkGNW4STPFggWQlRqRGJfrhFXwIVEwM7OUye9KlCU2vFC9jFZvgnuZ5KudPCsPXJ2O1b
+         Bch7db/06eCFLwATLM2ZppJltOmMS1oK4pLrzd/UoqttxvoNkOLFnmINPvXulxE9G3rP
+         wW7g==
+X-Gm-Message-State: APjAAAWxzKogTai9eH/Bl0kmBGY4xeaIv/7fiVMP5CiroHxNZa0Kj/cn
+        pP5EpiikabkT9E9MllnHUpdqzPnLP/k=
+X-Google-Smtp-Source: APXvYqzQ3PVSAhsuMvzKRoZPeZQdZ/5cLfN+W6bP1BTcEBhiwq5pK91AO7KyXf4CO+VydsZPPZI9jg==
+X-Received: by 2002:a1c:1f47:: with SMTP id f68mr3646457wmf.78.1568723423295;
+        Tue, 17 Sep 2019 05:30:23 -0700 (PDT)
+Received: from debian-stretch-darwi.lab.linutronix.de ([5.158.153.53])
+        by smtp.gmail.com with ESMTPSA id a10sm3160082wrv.64.2019.09.17.05.30.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 17 Sep 2019 05:30:22 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 12:30:15 +0000
+From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Martin Steigerwald <martin@lichtvoll.de>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu>
+ <2508489.jOnZlRuxVn@merkaba>
+ <20190917121156.GC6762@mit.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917121156.GC6762@mit.edu>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 08:11:56AM -0400, Theodore Y. Ts'o wrote:
+> On Tue, Sep 17, 2019 at 09:33:40AM +0200, Martin Steigerwald wrote:
+> > Willy Tarreau - 17.09.19, 07:24:38 CEST:
+> > > On Mon, Sep 16, 2019 at 06:46:07PM -0700, Matthew Garrett wrote:
+> > > > >Well, the patch actually made getrandom() return en error too, but
+> > > > >you seem more interested in the hypotheticals than in arguing
+> > > > >actualities.>
+> > > > If you want to be safe, terminate the process.
+> > >
+> > > This is an interesting approach. At least it will cause bug reports in
+> > > application using getrandom() in an unreliable way and they will
+> > > check for other options. Because one of the issues with systems that
+> > > do not finish to boot is that usually the user doesn't know what
+> > > process is hanging.
+> >
+>
+> I would be happy with a change which changes getrandom(0) to send a
+> kill -9 to the process if it is called too early, with a new flag,
+> getrandom(GRND_BLOCK) which blocks until entropy is available.  That
+> leaves it up to the application developer to decide what behavior they
+> want.
+>
 
-Just tested this on the SiFive HiFive Unleashed.  Seems to work OK; 
-however I did not stress-test it.
+Yup, I'm convinced that's the sanest option too. I'll send a final RFC
+patch tonight implementing the following:
 
-Tested-by: Paul Walmsley <paul.walmsley@sifive.com> # HiFive Unleashed
+config GETRANDOM_CRNG_ENTROPY_MAX_WAIT_MS
+	int
+	default 3000
+	help
+	  Default max wait in milliseconds, for the getrandom(2) system
+	  call when asking for entropy from the urandom source, until
+	  the Cryptographic Random Number Generator (CRNG) gets
+	  initialized.  Any process exceeding this duration for entropy
+	  wait will get killed by kernel. The maximum wait can be
+	  overriden through the "random.getrandom_max_wait_ms" kernel
+	  boot parameter. Rationale follows.
 
+	  When the getrandom(2) system call was created, it came with
+	  the clear warning: "Any userspace program which uses this new
+	  functionality must take care to assure that if it is used
+	  during the boot process, that it will not cause the init
+	  scripts or other portions of the system startup to hang
+	  indefinitely.
 
-- Paul
+	  Unfortunately, due to multiple factors, including not having
+	  this warning written in a scary enough language in the
+	  manpages, and due to glibc since v2.25 implementing a BSD-like
+	  getentropy(3) in terms of getrandom(2), modern user-space is
+	  calling getrandom(2) in the boot path everywhere.
 
+	  Embedded Linux systems were first hit by this, and reports of
+	  embedded system "getting stuck at boot" began to be
+	  common. Over time, the issue began to even creep into consumer
+	  level x86 laptops: mainstream distributions, like Debian
+	  Buster, began to recommend installing haveged as a workaround,
+	  just to let the system boot.
 
-# !cat
-cat /proc/interrupts 
-           CPU0       CPU1       CPU2       CPU3       
-  1:          0          0          0          0  SiFive PLIC   5  10011000.serial
-  3:          0          0          0          0  SiFive PLIC  51  10040000.spi
-  4:       6266          0          0          0  SiFive PLIC   4  10010000.serial
-  5:        102          0          0          0  SiFive PLIC   6  10050000.spi
-  6:         37          0          0          0  SiFive PLIC  53  eth0
-IPI0:      1134      21128       9024     220261  Rescheduling interrupts
-IPI1:        10        143         18          7  Function call interrupts
-IPI2:         0          0          0          0  CPU stop interrupts
-#
+	  Filesystem optimizations in EXT4 and XFS exagerated the
+	  problem, due to aggressive batching of IO requests, and thus
+	  minimizing sources of entropy at boot. This led to large
+	  delays until the kernel's Cryptographic Random Number
+	  Generator (CRNG) got initialized, and thus having reports of
+	  getrandom(2) inidifinitely stuck at boot.
+
+	  Solve this problem by setting a conservative upper bound for
+	  getrandom(2) wait. Kill the process, instead of returning an
+	  error code, because otherwise crypto-sensitive applications
+	  may revert to less secure mechanisms (e.g. /dev/urandom). We
+	  __deeply encourage__ system integrators and distribution
+	  builders not to considerably increase this value: during
+	  system boot, you either have entropy, or you don't. And if you
+	  didn't have entropy, it will stay like this forever, because
+	  if you had, you wouldn't have blocked in the first place. It's
+	  an atomic "either/or" situation, with no middle ground. Please
+	  think twice.
+
+	  Ideally, systems would be configured with hardware random
+	  number generators, and/or configured to trust the CPU-provided
+	  RNG's (CONFIG_RANDOM_TRUST_CPU) or boot-loader provided ones
+	  (CONFIG_RANDOM_TRUST_BOOTLOADER).  In addition, userspace
+	  should generate cryptographic keys only as late as possible,
+	  when they are needed, instead of during early boot.  (For
+	  non-cryptographic use cases, such as dictionary seeds or MIT
+	  Magic Cookies, other mechanisms such as /dev/urandom or
+	  random(3) may be more appropropriate.)
+
+Sounds good?
+
+thanks,
+
+--
+Ahmed Darwish
+http://darwish.chasingpointers.com
