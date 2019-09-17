@@ -2,214 +2,119 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C78C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A903DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1CD21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 897E921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404373AbfIQGyI (ORCPT
+        id S2404382AbfIQGyN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:54:08 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:46588 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728003AbfIQGyI (ORCPT
+        Tue, 17 Sep 2019 02:54:13 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:17740 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2404356AbfIQGyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:54:08 -0400
-Received: by mail-io1-f72.google.com with SMTP id t11so4292064ioc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 23:54:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VGlXazl6lAUsA74p+9UDJGuHwr/2WJzknMCYuhIFpJc=;
-        b=Kz+C1G3Br5Eyu8TTATCP9Q6ZFu++UaXyw9fA6wsKzU2tirNNNi6/jrH9MItY4zZ+HG
-         j12l3J82N9vnNtQcbza0lVIm9Mp09Blh6dwZT0aJan9JuboOEx4oJrR2fbCuS15etKqC
-         m0+kJwf38cPrUY+vpp55IMKiPSb7JAeBV9kIIp7eqc8HEEbRrFajp0VenojBbe7VrorB
-         rzTTO0XzO24zSOO8yrZt8KEhH4RY6N34APH6dXyZMbF/mNKoBapdYc1JxS6vOVJOVLWL
-         4o7ScFngaaPf6KlktBDhZ4C9Hrd78B312ZUBoaxSO50dE+VGwTDVdhPpY1iFBFbQ6QyB
-         RGIg==
-X-Gm-Message-State: APjAAAU0vb58gp7hZEtPymOADRWfgCT4BG3eSD96dBUSWEmEMqdTgJjO
-        x/UnVuWKdDVFHO22kyAxKrJYHKZeYg/bJ8au4eLAZAuvk6MY
-X-Google-Smtp-Source: APXvYqz4qDU2fXVsRAeclAT1Y1glYY4qn1fPxGcWPi89FjZNEiEpZhFQR1XtEAv/yCLkU65ExCVsen8zAie/Fxs3t7AwHMSVZE7O
+        Tue, 17 Sep 2019 02:54:11 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 17 Sep
+ 2019 14:54:06 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 17 Sep
+ 2019 14:54:05 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Tue, 17 Sep 2019 14:54:05 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+CC:     "Borislav Petkov (bp@alien8.de)" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yazen.ghannam@amd.com" <yazen.ghannam@amd.com>,
+        "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+        "qiuxu.zhuo@intel.com" <qiuxu.zhuo@intel.com>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
+Thread-Topic: [PATCH v3 4/4] x86/mce: Add Zhaoxin LMCE support
+Thread-Index: AdVtHDOle8Db4pQYQzu7i2JkrbUxgA==
+Date:   Tue, 17 Sep 2019 06:54:05 +0000
+Message-ID: <1da27840413348febf301ef39305de12@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Received: by 2002:a5e:9616:: with SMTP id a22mr1578110ioq.46.1568703246978;
- Mon, 16 Sep 2019 23:54:06 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 23:54:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000cb58a00592ba2f6f@google.com>
-Subject: INFO: task hung in ovs_dp_cmd_new
-From:   syzbot <syzbot+a9d62dbe662772066f3c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dev@openvswitch.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pshelar@ovn.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Sep 16, 2019, Luck, Tony wrote:
+>On Mon, Sep 16, 2019 at 11:37:18AM +0000, Tony W Wang-oc wrote:
+>> Zhaoxin newer CPUs support LMCE that compatible with Intel's
+>> "Machine-Check Architecture", so add support for Zhaoxin LMCE
+>> in mce/core.c.
+>>
+>> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+>> ---
+>>  arch/x86/kernel/cpu/mce/core.c | 35
+>+++++++++++++++++++++++++++++++++--
+>>  1 file changed, 33 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+>> index 65c5a1f..acdd76b 100644
+>> --- a/arch/x86/kernel/cpu/mce/core.c
+>> +++ b/arch/x86/kernel/cpu/mce/core.c
+>> @@ -1132,6 +1132,27 @@ static bool __mc_check_crashing_cpu(int cpu)
+>>  		u64 mcgstatus;
+>>
+>>  		mcgstatus = mce_rdmsrl(MSR_IA32_MCG_STATUS);
+>> +
+>> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN) {
+>> +			if (mcgstatus & MCG_STATUS_LMCES)
+>> +				return false;
+>> +
+>> +			if (!(mcgstatus & MCG_STATUS_LMCES)) {
+>
+>Don't really need this test ... you already did "return false" if
+>the LMCES bit was set ... so this test is redundant (and you can avoid
+>indenting the next dozen lines.
 
-syzbot found the following crash on:
+Got it, Thank you.
 
-HEAD commit:    2339cd6c bpf: fix precision tracking of stack slots
-git tree:       bpf
-console output: https://syzkaller.appspot.com/x/log.txt?x=14707b01600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=b89bb446a3faaba4
-dashboard link: https://syzkaller.appspot.com/bug?extid=a9d62dbe662772066f3c
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+But have a question about below codes:
+	if (mcgstatus & MCG_STATUS_RIPV) {
+		mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+		return true;
+	}
+These seems require all #MC exception errors set MCG_STATUS_RIPV = 1
+in order to skip synchronize which "return true;" actually does for this.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+As Intel SDM show, "Recoverable-not-continuable SRAR Type" errors may
+set MCG_STATUS_RIPV = 0, PCC = 0. When these #MC errors broadcast
+to offline CPU, may cause kernel panic with synchronize timeout (offline
+CPU can't skip synchronize in this case).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a9d62dbe662772066f3c@syzkaller.appspotmail.com
+Could "return true;" outside the if-case?
+	if (mcgstatus & MCG_STATUS_RIPV) {
+		mce_wrmsrl(MSR_IA32_MCG_STATUS, 0);
+	} 
+	return true; 
 
-INFO: task syz-executor.0:3410 blocked for more than 143 seconds.
-       Not tainted 5.3.0-rc7+ #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D26056  3410  18433 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4006
-  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
-  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
-  ovs_lock net/openvswitch/datapath.c:105 [inline]
-  ovs_dp_cmd_new+0x579/0xea0 net/openvswitch/datapath.c:1613
-  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
-  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: Bad RIP value.
-RSP: 002b:00007fa2501cdc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa2501ce6d4
-R13: 00000000004c7777 R14: 00000000004dcfd8 R15: 00000000ffffffff
-INFO: task syz-executor.0:3414 blocked for more than 143 seconds.
-       Not tainted 5.3.0-rc7+ #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D26136  3414  18433 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4006
-  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
-  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
-  ovs_lock net/openvswitch/datapath.c:105 [inline]
-  ovs_dp_cmd_new+0x579/0xea0 net/openvswitch/datapath.c:1613
-  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
-  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: Bad RIP value.
-RSP: 002b:00007fa2501acc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000006
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa2501ad6d4
-R13: 00000000004c7777 R14: 00000000004dcfd8 R15: 00000000ffffffff
-INFO: task syz-executor.0:3416 blocked for more than 144 seconds.
-       Not tainted 5.3.0-rc7+ #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor.0  D25968  3416  18433 0x00000004
-Call Trace:
-  context_switch kernel/sched/core.c:3254 [inline]
-  __schedule+0x755/0x1580 kernel/sched/core.c:3880
-  schedule+0xd9/0x260 kernel/sched/core.c:3947
-  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4006
-  __mutex_lock_common kernel/locking/mutex.c:1007 [inline]
-  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1077
-  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1092
-  ovs_lock net/openvswitch/datapath.c:105 [inline]
-  ovs_dp_cmd_new+0x579/0xea0 net/openvswitch/datapath.c:1613
-  genl_family_rcv_msg+0x74b/0xf90 net/netlink/genetlink.c:629
-  genl_rcv_msg+0xca/0x170 net/netlink/genetlink.c:654
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  genl_rcv+0x29/0x40 net/netlink/genetlink.c:665
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: 24 18 0f b6 05 2f d1 3b 01 3c 01 76 0a 48 8b 6c 24 18 48 83 c4 20 c3  
-75 07 e8 63 08 fd ff 0f 0b c6 05 11 d1 3b 01 01 48 b8 00 <00> 00 00 00 00  
-f0 7f 48 89 04 24 e8 a7 dd fa ff f2 0f 10 44 24 08
-RSP: 002b:00007fa25018bc78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 0000000000000000 RSI: 0000000020000240 RDI: 0000000000000007
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fa25018c6d4
-R13: 00000000004c7777 R14: 00000000004dcfd8 R15: 00000000ffffffff
-INFO: lockdep is turned off.
-NMI backtrace for cpu 1
-CPU: 1 PID: 1057 Comm: khungtaskd Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
-  check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
-  watchdog+0x9d0/0xef0 kernel/hung_task.c:289
-  kthread+0x361/0x430 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0 skipped: idling at native_safe_halt+0xe/0x10  
-arch/x86/include/asm/irqflags.h:60
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Sincerely
+TonyWWang-oc
