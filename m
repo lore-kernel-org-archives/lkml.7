@@ -2,240 +2,121 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE4DCC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415E9C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C0B2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="UIBgNPUk"
+	by mail.kernel.org (Postfix) with ESMTP id 243E72171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbfIQRhA (ORCPT
+        id S1731274AbfIQRhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:37:00 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33361 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbfIQRhA (ORCPT
+        Tue, 17 Sep 2019 13:37:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32424 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726188AbfIQRha (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:37:00 -0400
-Received: by mail-ot1-f66.google.com with SMTP id g25so3866297otl.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=myeTOn4EKbWCeWZItyJ7dMix4az19A16YH/1zXwAx38=;
-        b=UIBgNPUkxeU/nT/tdJm8N1s4KusyfUdYDd1AG6sO6n+eMl46OgijLNddXwcY+dbYN8
-         TTFvJ+3+HriNWqTy7pY+7kVuYVGcdqtz8zUvZ9jVga+VdAKWCP4AvkRAbQQGVR2Ffskc
-         0nNxCLIQDRd8ZKSf9XfUNd4tnjKDRaBfVQSwo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=myeTOn4EKbWCeWZItyJ7dMix4az19A16YH/1zXwAx38=;
-        b=LUJ/rv2i4QlpPkMMnN3GdzBwvUQY/WE8Eswl6O2wpSBgHo3ecSv/GTzGpQojbyVqs4
-         LOncY4Obz3BbLGnvmskvghhZ/zYZV+TTUVtp7bp+6XQUj8DWkOdSvXiTngs5ExlXlPRN
-         MF4kMVjPXdrDOolQr1iJYb8/TKwVDgYCqC6tzhXw+t3sspWGIylpzqrLn3PB4ZL82jzQ
-         iaFxOHhbNVOo78DoFyIjoHdBJ9ajhkYsO+PwnCpWcH0kXi0ItqQtQ5c2DRnQfuxVI8s5
-         Abv8Gk7xLE/zGuL4JQypbDONPOoEqnWRwQv6nf3jCtQHt82K0BYAgn8lVh1lIhu3sgEb
-         A6cA==
-X-Gm-Message-State: APjAAAVGoZcI7wq7N5pyqHaEYge2yiFAsHUbSIsVwNNjEWiCkmLLyXOK
-        tULcZ5I8AEce3H13sVQR6v6qEsCcxlK2h/EIK73kNA==
-X-Google-Smtp-Source: APXvYqzXvwT/07N+UI1uozfGGA8k2QE35LBv2qMI6EgYgPOhZ/9rrwHrX11ivt0KfMDbFoYAHjvEHYpG/cCuGZrhrzQ=
-X-Received: by 2002:a9d:404:: with SMTP id 4mr29166otc.204.1568741817335; Tue,
- 17 Sep 2019 10:36:57 -0700 (PDT)
+        Tue, 17 Sep 2019 13:37:30 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8HHWFWU095180
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:37:29 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v32ccv32b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:37:28 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Tue, 17 Sep 2019 18:37:21 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 17 Sep 2019 18:37:17 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8HHapkK38732062
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 17:36:51 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4C8752052;
+        Tue, 17 Sep 2019 17:37:16 +0000 (GMT)
+Received: from ram.ibm.com (unknown [9.80.213.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 70BAC5204E;
+        Tue, 17 Sep 2019 17:37:15 +0000 (GMT)
+Date:   Tue, 17 Sep 2019 10:37:12 -0700
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1568733750-14580-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-References: <20190909134241.23297-1-ayan.halder@arm.com> <20190917125301.GQ3958@phenom.ffwll.local>
- <20190917160730.hutzlbuqtpmmtdz3@e110455-lin.cambridge.arm.com> <11689dc3-6c3e-084b-b66d-e6ccf75cb8fb@baylibre.com>
-In-Reply-To: <11689dc3-6c3e-084b-b66d-e6ccf75cb8fb@baylibre.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 17 Sep 2019 19:36:45 +0200
-Message-ID: <CAKMK7uF7oKV4609Ca4mLj7gYC1rkWnWAV7_hM5Z48Ez1cBoMqA@mail.gmail.com>
-Subject: Re: [RFC PATCH] drm:- Add a modifier to denote 'protected' framebuffer
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568733750-14580-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19091717-0008-0000-0000-000003179135
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091717-0009-0000-0000-00004A36101A
+Message-Id: <20190917173712.GA5176@ram.ibm.com>
+Subject: Re:  [PATCH] powerpc/pkeys: remove unused pkey_allows_readwrite
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=976 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909170168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 6:15 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> Hi,
->
-> On 17/09/2019 18:07, Liviu Dudau wrote:
-> > On Tue, Sep 17, 2019 at 02:53:01PM +0200, Daniel Vetter wrote:
-> >> On Mon, Sep 09, 2019 at 01:42:53PM +0000, Ayan Halder wrote:
-> >>> Add a modifier 'DRM_FORMAT_MOD_ARM_PROTECTED' which denotes that the framebuffer
-> >>> is allocated in a protected system memory.
-> >>> Essentially, we want to support EGL_EXT_protected_content in our komeda driver.
-> >>>
-> >>> Signed-off-by: Ayan Kumar Halder <ayan.halder@arm.com>
-> >>>
-> >>> /-- Note to reviewer
-> >>> Komeda driver is capable of rendering DRM (Digital Rights Management) protected
-> >>> content. The DRM content is stored in a framebuffer allocated in system memory
-> >>> (which needs some special hardware signals for access).
-> >>>
-> >>> Let us ignore how the protected system memory is allocated and for the scope of
-> >>> this discussion, we want to figure out the best way possible for the userspace
-> >>> to communicate to the drm driver to turn the protected mode on (for accessing the
-> >>> framebuffer with the DRM content) or off.
-> >>>
-> >>> The possible ways by which the userspace could achieve this is via:-
-> >>>
-> >>> 1. Modifiers :- This looks to me the best way by which the userspace can
-> >>> communicate to the kernel to turn the protected mode on for the komeda driver
-> >>> as it is going to access one of the protected framebuffers. The only problem is
-> >>> that the current modifiers describe the tiling/compression format. However, it
-> >>> does not hurt to extend the meaning of modifiers to denote other attributes of
-> >>> the framebuffer as well.
-> >>>
-> >>> The other reason is that on Android, we get an info from Gralloc
-> >>> (GRALLOC_USAGE_PROTECTED) which tells us that the buffer is protected. This can
-> >>> be used to set up the modifier/s (AddFB2) during framebuffer creation.
-> >>
-> >> How does this mesh with other modifiers, like AFBC? That's where I see the
-> >> issue here.
-> >
-> > AFBC modifiers are currently under Arm's namespace, the thought behind the DRM
-> > modifiers would be to have it as a "generic" modifier.
+On Tue, Sep 17, 2019 at 11:22:30AM -0400, Qian Cai wrote:
+> pkey_allows_readwrite() was first introduced in the commit 5586cf61e108
+> ("powerpc: introduce execute-only pkey"), but the usage was removed
+> entirely in the commit a4fcc877d4e1 ("powerpc/pkeys: Preallocate
+> execute-only key").
+> 
+> Found by the "-Wunused-function" compiler warning flag.
+> 
+> Fixes: a4fcc877d4e1 ("powerpc/pkeys: Preallocate execute-only key")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  arch/powerpc/mm/book3s64/pkeys.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
+> index ae7fca40e5b3..59e0ebbd8036 100644
+> --- a/arch/powerpc/mm/book3s64/pkeys.c
+> +++ b/arch/powerpc/mm/book3s64/pkeys.c
+> @@ -307,16 +307,6 @@ void thread_pkey_regs_init(struct thread_struct *thread)
+>  	write_iamr(pkey_iamr_mask);
+>  }
+> 
+> -static inline bool pkey_allows_readwrite(int pkey)
+> -{
+> -	int pkey_shift = pkeyshift(pkey);
+> -
+> -	if (!is_pkey_enabled(pkey))
+> -		return true;
+> -
+> -	return !(read_amr() & ((AMR_RD_BIT|AMR_WR_BIT) << pkey_shift));
+> -}
+> -
+>  int __execute_only_pkey(struct mm_struct *mm)
+>  {
+>  	return mm->context.execute_only_pkey;
 
-But if it's a generic flag, how do you combine that with other
-modifiers? Like if you have a tiled buffer, but also encrypted? Or
-afbc compressed, or whatever else. I'd expect for your hw encryption
-is orthogonal to the buffer/tiling/compression format used?
+The function was initially used by __execute_only_pkey(), but ones we
+changed the implementation of __execute_only_pkey(), the need for 
+pkey_allows_readwrite() disappeared.
 
-> >>> 2. Framebuffer flags :- As of today, this can be one of the two values
-> >>> ie (DRM_MODE_FB_INTERLACED/DRM_MODE_FB_MODIFIERS). Unlike modifiers, the drm
-> >>> framebuffer flags are generic to the drm subsystem and ideally we should not
-> >>> introduce any driver specific constraint/feature.
-> >>>
-> >>> 3. Connector property:- I could see the following properties used for DRM
-> >>> protected content:-
-> >>> DRM_MODE_CONTENT_PROTECTION_DESIRED / ENABLED :- "This property is used by
-> >>> userspace to request the kernel protect future content communicated over
-> >>> the link". Clearly, we are not concerned with the protection attributes of the
-> >>> transmitter. So, we cannot use this property for our case.
-> >>>
-> >>> 4. DRM plane property:- Again, we want to communicate that the framebuffer(which
-> >>> can be attached to any plane) is protected. So introducing a new plane property
-> >>> does not help.
-> >>>
-> >>> 5. DRM crtc property:- For the same reason as above, introducing a new crtc
-> >>> property does not help.
-> >>
-> >> 6. Just track this as part of buffer allocation, i.e. I think it does
-> >> matter how you allocate these protected buffers. We could add a "is
-> >> protected buffer" flag at the dma_buf level for this.
-> >>
-> >> So yeah for this stuff here I think we do want the full userspace side,
-> >> from allocator to rendering something into this protected buffers (no need
-> >> to also have the entire "decode a protected bitstream part" imo, since
-> >> that will freak people out). Unfortunately, in my experience, that kills
-> >> it for upstream :-/ But also in my experience of looking into this for
-> >> other gpu's, we really need to have the full picture here to make sure
-> >> we're not screwing this up.
-> >
-> > Maybe Ayan could've been a bit clearer in his message, but the ask here is for ideas
-> > on how userspace "communicates" (stores?) the fact that the buffers are protected to
-> > the kernel driver. In our display processor we need to the the hardware that the
-> > buffers are protected before it tries to fetch them so that it can 1) enable the
-> > additional hardware signaling that sets the protection around the stream; and 2) read
-> > the protected buffers in a special mode where there the magic happens.
-
-That was clear, but for the full picture we also need to know how
-these buffers are produced and where they are allocated. One approach
-would be to have a dma-buf heap that gives you encrypted buffers back.
-With that we need to make sure that only encryption-aware drivers
-allow such buffers to be imported, and the entire problem becomes a
-kernel-internal one - aside from allocating the right kind of buffer
-at the right place.
-
-> > So yeah, we know we do want full userspace support, we're prodding the community on
-> > answers on how to best let the kernel side know what userspace has done.
->
-> Actually this is interesting for other multimedia SoCs implementing secure video decode
-> paths where video buffers are allocated and managed by a trusted app.
-
-Yeah I expect there's more than just arm wanting this. I also wonder
-how that interacts with the secure memory allocator that was bobbing
-around on dri-devel for a while, but seems to not have gone anywhere.
-That thing implemented my idea of "secure memory is only allocated by
-a special entity".
--Daniel
-
->
-> Neil
->
-> >
-> > Best regards,
-> > Liviu
-> >
-> >
-> >> -Daniel
-> >>
-> >>>
-> >>> --/
-> >>>
-> >>> ---
-> >>>  include/uapi/drm/drm_fourcc.h | 9 +++++++++
-> >>>  1 file changed, 9 insertions(+)
-> >>>
-> >>> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
-> >>> index 3feeaa3f987a..38e5e81d11fe 100644
-> >>> --- a/include/uapi/drm/drm_fourcc.h
-> >>> +++ b/include/uapi/drm/drm_fourcc.h
-> >>> @@ -742,6 +742,15 @@ extern "C" {
-> >>>   */
-> >>>  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
-> >>>
-> >>> +/*
-> >>> + * Protected framebuffer
-> >>> + *
-> >>> + * The framebuffer is allocated in a protected system memory which can be accessed
-> >>> + * via some special hardware signals from the dpu. This is used to support
-> >>> + * 'GRALLOC_USAGE_PROTECTED' in our framebuffer for EGL_EXT_protected_content.
-> >>> + */
-> >>> +#define DRM_FORMAT_MOD_ARM_PROTECTED       fourcc_mod_code(ARM, (1ULL << 55))
-> >>> +
-> >>>  /*
-> >>>   * Allwinner tiled modifier
-> >>>   *
-> >>> --
-> >>> 2.23.0
-> >>>
-> >>
-> >> --
-> >> Daniel Vetter
-> >> Software Engineer, Intel Corporation
-> >> http://blog.ffwll.ch
-> >
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
-
+Acked-by: Ram Pai <linuxram@us.ibm.com>
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+Ram Pai
+
