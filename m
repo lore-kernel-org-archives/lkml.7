@@ -2,99 +2,112 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C84C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76233C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CFF72171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559A821848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568744007;
-	bh=YFd9E63V05URV/QiOvM9TylFr470b8AyRk4TlaSRnck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rfV1ekqYh+XSKa7BBxA7+HSJxX2n0tTbGWu6fxuzOu0SOJuuTUCGLiAxMBuJ3ZeLI
-	 IN1y0bo3Dln0eLDzs0vgVu938F0Z2rtkiVfb6Zzjnj9Kr433j8Zhpz/Bu7+mtMC3Tp
-	 XPfK6NXCoj/kp1KeID0sQS2LR+1uWo+h471FjdnI=
+	s=default; t=1568744022;
+	bh=Sb7COfNfJpxJkUSHRJ1guEJgVsL2/84sGgi4Wp0MnW8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bfLSJk6Rn0qCcnbqcLk07a01x2xoHqT5FVdF9ZMxu9YxBY3fZXvXbWZGJR7hW+yUA
+	 EApmrVDxixuOnW3pCIq/iZMS4dnnMenKkuBg83ClI/foTjSDR31pgBmw4qT+oDvChH
+	 GnuRpsUYVjYFoIU9/KJiONicXMXWkjax7fREkSQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbfIQSN0 (ORCPT
+        id S1728823AbfIQSNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:13:26 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39812 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbfIQSN0 (ORCPT
+        Tue, 17 Sep 2019 14:13:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:36232 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728764AbfIQSNl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:13:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id s22so3919179otr.6;
-        Tue, 17 Sep 2019 11:13:24 -0700 (PDT)
+        Tue, 17 Sep 2019 14:13:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so4566872ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 11:13:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X8qAugY0cWb/Nh5PiOGvYcjpfPizYQ3b0rrAHVS81LI=;
+        b=C9s5lYXXnHH4d+z/+qNm0BLqoth+3NHKNzuo1ZEI/HAzdKsJ9mbYCKk1HyB2MXQWc4
+         g7DESB29IDpwLwXUyLD2QMRJW0dTAGzD36P5AoUFEoBKpasOJi1gUIzqaIujz90uWdov
+         G6KhlJOJryZ9dQ3M2tUWgN7mJypOZpW/64GDk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KQ6OBeDuode2twYSlA9ipYN3w4W7GeO3ocNtg3ta1d0=;
-        b=gkng6OzNloX47S9V78qyUaQcmdIMR1mPZtnUt0kQa6Bd6Dr0+VLWee3sUR5hfCMoDZ
-         iswt0Z2WCc8fpm/G01+nzBh7zqAAZzTi9mllZyTK0eD0ogePxhs0w0R9V245ZxKY7pjB
-         jGtf3oSlHA6sW63oag+CUyD51BAdiEtb/l1YRKnms9mH8raNL4JWCuOFmzYBY3b0xzKE
-         K10ywFxNZEaHWO4La+qSvl4ZPug3ZMFDEIkuBL3VQuKhRSUGmiZmZnCXW2vgJb0ZCQNI
-         gLEJrThEDUeVsxn+b4R0UqIMFRPX7YiIGvfRqfKz6JXoa8c74OslyJeJpBRnob0DGG2u
-         o7lQ==
-X-Gm-Message-State: APjAAAX49mniqTkPL/SpnA7NvhBDYvRO+wRqZkUABEbmPxTHG9ndp8W4
-        3m/3HEQJ6e/GO3mQVU/XiA==
-X-Google-Smtp-Source: APXvYqzapDf3fokSpvCVuLAz5B7sSKanwGbCWsfa7ySh7AxQQjSWEWwVf940e/gnVHbg7SCtd6pd/g==
-X-Received: by 2002:a9d:3f26:: with SMTP id m35mr168799otc.66.1568744004009;
-        Tue, 17 Sep 2019 11:13:24 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e18sm982788oib.57.2019.09.17.11.13.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 11:13:22 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 13:13:22 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     krzk@kernel.org, vireshk@kernel.org, robh+dt@kernel.org,
-        kgene@kernel.org, devicetree@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com, m.szyprowski@samsung.com,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: samsung: Update the CHIP ID binding
-  documentation
-Message-ID: <20190917181322.GA683@bogus>
-References: <20190910123618.27985-1-s.nawrocki@samsung.com>
- <CGME20190910123637eucas1p26d2051f9bdd1bdf4510f1908ea98f641@eucas1p2.samsung.com>
- <20190910123618.27985-3-s.nawrocki@samsung.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8qAugY0cWb/Nh5PiOGvYcjpfPizYQ3b0rrAHVS81LI=;
+        b=Y6jy6NtYFuJSQ2PgnZTWG30PPgJcnKYhNy2M+RE3ZQ9sIAy+9gR2mkLs3vTGvwxF8f
+         uqn6/oDJVFwl8+SBUI8Gj1LR95GFuKe3T+aSfehxDuKfFFWc+9Qy8H70tBmO5k7H7bp5
+         sTidQ0xc5ykwOshd0mxjRAjBQ6vLYm3nLRHtXXyBpwMDnY07hw3KKZ/e4nttLkfhr4wx
+         W45VAPpZ2NyBW02wSLv/Yey8oVxnuVWhEEdEYKGsthKGJXw5Tan93zP2Cq66pka5iick
+         GrMfo+Tjy1xIS5ilwSm/T4CsJ2XSwWyYdAPQft/4dWs1eJKag1pAraxmhGyMk2/ukPqA
+         1W8Q==
+X-Gm-Message-State: APjAAAUx6ufZYIyCqjLnXNQVOxGP+hcxFIXN1XMwy8kUt1qk6xOcsyY4
+        vWTWSUHejYhiAYEg9fN9jXQfuiFwGa4=
+X-Google-Smtp-Source: APXvYqyKSfao28YAltPfyl7eNTvbgk/V2sIJKKiEnLGVj4IDBE+SNI8u2GQkyhGFLmSPTOTD8Qi9ag==
+X-Received: by 2002:a2e:974c:: with SMTP id f12mr2638505ljj.15.1568744017275;
+        Tue, 17 Sep 2019 11:13:37 -0700 (PDT)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com. [209.85.167.54])
+        by smtp.gmail.com with ESMTPSA id n3sm564411lfl.62.2019.09.17.11.13.36
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 11:13:36 -0700 (PDT)
+Received: by mail-lf1-f54.google.com with SMTP id 72so3643945lfh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 11:13:36 -0700 (PDT)
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr2838284lfp.61.1568744015985;
+ Tue, 17 Sep 2019 11:13:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910123618.27985-3-s.nawrocki@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <156864062018.3407.16580572772546914005.tglx@nanos.tec.linutronix.de>
+ <156864062019.3407.14798418565580024723.tglx@nanos.tec.linutronix.de>
+In-Reply-To: <156864062019.3407.14798418565580024723.tglx@nanos.tec.linutronix.de>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 17 Sep 2019 11:13:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjQJaNbQe3fmFU19_wawkx-WT9Sv=h5mWCA9=LL34g_3Q@mail.gmail.com>
+Message-ID: <CAHk-=wjQJaNbQe3fmFU19_wawkx-WT9Sv=h5mWCA9=LL34g_3Q@mail.gmail.com>
+Subject: Re: [GIT pull] x86/pti for 5.4-rc1
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Song Liu <songliubraving@fb.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Sep 2019 14:36:14 +0200, Sylwester Nawrocki wrote:
-> This patch adds documentation of a new optional "samsung,asv-bin"
-> property in the chipid device node and documents requirement of
-> "syscon" compatible string.  These additions are needed to support
-> Exynos ASV (Adaptive Supply Voltage) feature.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> ---
-> Changes since v3:
->  - none
-> 
-> Changes since v2:
->  - corrected patch summary line prefix, the patch moved in the
->    sequence
-> 
-> Changes since v1 (RFC):
->  - new patch
-> ---
->  .../devicetree/bindings/arm/samsung/exynos-chipid.txt  | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
+On Mon, Sep 16, 2019 at 6:38 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+>   - Handle unaligned addresses gracefully in pti_clone_pagetable(). Not an
+>     issue with current callers, but a correctness problem. Adds a warning
+>     so any caller which hands in an unaligned address gets pointed out
+>     clearly.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hmm. I actually thing this one is incomplete.
+
+Yes, it does it correctly now for the "those addresses are missing" cases.
+
+But if somebody passes in an unaligned address, it still does the
+wrong thing for the
+
+                if (pmd_large(*pmd) || level == PTI_CLONE_PMD) {
+
+case. No?
+
+I've pulled this, since the change is not _wrong_, but it does look
+incomplete to me. Am I missing something?
+
+Also, it would have been lovely to have some background on how this
+was even noticed. The link in the commit message goes to the
+development thread, but that one doesn't have the original report from
+Song either.
+
+                Linus
