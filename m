@@ -2,78 +2,139 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B88C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73F22C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218B621881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45574216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:06:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k3tUrERo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404432AbfIQHCD (ORCPT
+        id S2404373AbfIQHGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:02:03 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35395 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404346AbfIQHCC (ORCPT
+        Tue, 17 Sep 2019 03:06:30 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42342 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbfIQHGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:02:02 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w2so2831560qkf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 00:02:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=niI5rGV7hd+/rStnFxoqE7zna/O+5A1gNRAdX+dkuEI=;
-        b=GmbHHW6vBg/GyjKQf1QmDlO7VBggMVTZNM1L8IwXt3dz8eyYaEqjFj5RG336bY4W5G
-         40UinYweycEFh1GTaXpgzSlG+iuFdN7iemgj8YygI52HOHXO0HDQd4gQe/Adhewg/LA3
-         XM94xx0bWks2l8+l8ZrdPCVOmW7kNWmZwcbvke00tMZzEKd49pqku8FfUSzfNGQ/Sog3
-         i7iph81gt/OrdCV+2aAtj9BgRTeH7XfTyQEcGn+H9eMD6SFQJNT8oWaaT4/A+UsWP9Ns
-         RTfyL41YUDc77hyDNbXnnIqR5x5nytMPVYFYy3U8YtM/2vBfha/vcAA6S9JQPqqey5Jk
-         QR/g==
-X-Gm-Message-State: APjAAAVj7p9GGMm3YTisUkfKugRWfDRSHwFzVG7TA1XKvk7QkjWgITtA
-        H6YanCnpwIH/4fNswbbqHQ03sSFBVKyGMwCaSzc=
-X-Google-Smtp-Source: APXvYqwCpAgxstZacTY/C5r2SVq4FmEMh41CnGtMqiYcBLMuHpx2Hx4DwiKBP/dMIra8V6/8QLulZJQtupnAIk7+CkI=
-X-Received: by 2002:ae9:f503:: with SMTP id o3mr2143255qkg.3.1568703721534;
- Tue, 17 Sep 2019 00:02:01 -0700 (PDT)
+        Tue, 17 Sep 2019 03:06:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8H73aOt035717;
+        Tue, 17 Sep 2019 07:06:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=7QhAkMI4cl6/WKzcvw9yI0WzPjEboA+uQ/aBhBvqx74=;
+ b=k3tUrERoWFBT7q1Z0EVM7kLDCi2XWumayWbg3bDHA1YCdwaDWiMgp+iRHH6qBp0sM8TB
+ rhC5do/CzgSkcdMvu0tZGOkkgY/Zej8q/L6QK1npHem5YQaaX1dabfeL9kI2lGCZqFZC
+ 9j1CGS9WmJw/zCF1wOV+eIj4mIdOZEMhkg6pTk6Wt7ZG3GbjCshcICVNh6/RGipA0Or0
+ RSiLFvArosDc3Cqafd/2TDaSBkc9ttM0GgyLZjDVITDgzYXyFWMYthNj/U1Ys134HYIv
+ we/eV5AJBIakccAxyJmNiJzZKGC1hJd3oai8YaseaS4blAi4jSfKlKMzUKW6DUMs3/GV Pg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2v0r5pc5pd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 07:06:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8H734qo125154;
+        Tue, 17 Sep 2019 07:06:25 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2v2tms8kta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 07:06:25 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8H76Nas016426;
+        Tue, 17 Sep 2019 07:06:23 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Sep 2019 00:06:22 -0700
+Date:   Tue, 17 Sep 2019 10:06:13 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Maxime Ripard <mripard@kernel.org>, mchehab@kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] media: v4l: cadence: Fix how unsued lanes are handled in
+ 'csi2rx_start()'
+Message-ID: <20190917070613.GA2959@kadam>
+References: <20190912204450.17625-1-christophe.jaillet@wanadoo.fr>
+ <20190913075709.t35ggip624tybd6l@localhost.localdomain>
+ <20190916062846.GD18977@kadam>
+ <f67787da-dc1c-3e05-c1e2-e8737641dfd0@wanadoo.fr>
 MIME-Version: 1.0
-References: <20170130110512.6943-1-thierry.reding@gmail.com>
- <20190914152544.GA17499@roeck-us.net> <CAK8P3a3G_9EeK-Xp7ZeA0EN7WNzrL7AxoQcNZ8z-oe5NsTYW6g@mail.gmail.com>
- <056ccf5c-6c6c-090b-6ca1-ab666021db48@roeck-us.net> <20190916134920.GA18267@ulmo>
- <20190916154336.GA6628@roeck-us.net> <20190916155031.GE7488@ulmo>
- <CAK8P3a1EZi5apOm90B6YW2GzFXsirz5wk-D66daR20oj_TLXNg@mail.gmail.com> <20190916202809.GA42800@mithrandir>
-In-Reply-To: <20190916202809.GA42800@mithrandir>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 17 Sep 2019 09:01:45 +0200
-Message-ID: <CAK8P3a2y9OYL-pm38rcGvgzvjgErCUC1ckjVXhd3mb=YEXiD_g@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ARM, arm64: Remove arm_pm_restart()
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <f67787da-dc1c-3e05-c1e2-e8737641dfd0@wanadoo.fr>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=872
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909170077
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9382 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=942 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909170077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 10:28 PM Thierry Reding
-<thierry.reding@gmail.com> wrote:
->
-> All of the patches beyond the 6 in this set rely on the system reset and
-> power "framework". I don't think there was broad concensus on that idea
-> yet.
+On Mon, Sep 16, 2019 at 09:24:26PM +0200, Christophe JAILLET wrote:
+> Le 16/09/2019 à 08:28, Dan Carpenter a écrit :
+> > On Fri, Sep 13, 2019 at 09:57:09AM +0200, Maxime Ripard wrote:
+> > > Hi Christophe,
+> > > 
+> > > On Thu, Sep 12, 2019 at 10:44:50PM +0200, Christophe JAILLET wrote:
+> > > > The 2nd parameter of 'find_first_zero_bit()' is a number of bits, not of
+> > > > bytes. So use 'BITS_PER_LONG' instead of 'sizeof(lanes_used)'.
+> > > > 
+> > > > Fixes: 1fc3b37f34f6 ("media: v4l: cadence: Add Cadence MIPI-CSI2 RX driver")
+> > > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > > ---
+> > > > This patch is purely speculative. Using BITS_PER_LONG looks logical to me,
+> > > > but I'm not 100% sure that it is what is expected here. 'csi2rx->max_lanes'
+> > > > could also be a good candidate.
+> > > Yeah, csi2rx->max_lanes would make more sense in that context. Could
+> > > you resend a new version?
+> > This is sort of unrelated, but for Smatch purposes the csi2rx->max_lanes
+> > comes from the firmware in csi2rx_parse_dt() and it could be any u8
+> > value.
+> 
+> Hi Dan,
+> 
+> not sure to follow you.
+> 
+> csi2rx_probe()
+>   --> csi2rx_get_resources()
+>      -->  ...
+>           dev_cfg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
+>           ...
+>           csi2rx->max_lanes = dev_cfg & 7;
+>           if (csi2rx->max_lanes > CSI2RX_LANES_MAX) {
+>              dev_err(&pdev->dev, "Invalid number of lanes: %u\n",
+>                      csi2rx->max_lanes);
+>              return -EINVAL;
+>           }
+> 
+> So I guess, that we can trust max_lanes because of the 'if (... >
+> CSI2RX_LANES_MAX)' check.
+> 
+> Did I miss something?
 
-Ok, I see.
+Ugh...  I was looking at ->num_lanes and I was also just totally wrong.
+Smatch parses that badly.  Smatch actually parses ->max_lanes correctly
+though so that's ok.
 
-> If you think it's worth another try I'm happy to send the patches
-> out again.
+Sorry for the noise on this.
 
-Maybe do that after we pull the first set into arm-soc then. If
-we can reach consensus, I can merge them as a follow-up,
-either through the soc tree as a new subsystem or through
-the asm-generic tree as cross-architecture work.
+regards,
+dan carpenter
 
-      Arnd
