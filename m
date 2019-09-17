@@ -2,97 +2,100 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00443C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99693C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5F3621852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7B321852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfIQPyB (ORCPT
+        id S1729878AbfIQPyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:54:01 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:63660 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729848AbfIQPx7 (ORCPT
+        Tue, 17 Sep 2019 11:54:02 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:38770 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729860AbfIQPyB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:53:59 -0400
-IronPort-SDR: 7on06mcRA9trxE8BmbsaOJb8DCf1NRg2zy/EOAi+G0XUmg7wbWOyyv55RQNDwFxIvA3rwT2Ye7
- a1H1QjrYUSp6tiTkTtcdv3r//iNYrw2fJ5iat5LSvFFG2+3km6hiFgwfm951RbbiJEQu1XZWtD
- fNdxETQyb/PE3k/l1kpIhtvCuEMJpokPyRrrP3hxiUB8dBfDVyP9BK58VM9pWYpYctNBpdUlwK
- 90ZwtNKogssSQiuPbkqAqFQbyRuez3SUjVpyEwx2ZqMnRHJuzXMsGFIdN0wc/zBRSLKF7bMmLt
- mUw=
-X-IronPort-AV: E=Sophos;i="5.64,517,1559548800"; 
-   d="scan'208";a="41431874"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 17 Sep 2019 07:53:58 -0800
-IronPort-SDR: AfJPn/LnTl0pF0pn72vZpwKKlQMxJ3INwLj0DYLkHjfGZd6VIXIm8SDQVlh5KRxazcoft2SdJc
- iMuMgufH5yqwI/a9wagFvWmqeUwA22vCbUcGI7hvK/NVzzRc9fVBkY4bd3CpxaLSZmQ95E56yE
- 4QuZDkGXAAk0ZcGZTEZMec+iWNzc/MOasanYRaam+cTULScOQ7j57FwllFNo9hgQX8I22+9n4G
- 3wUsiQ5F7iBeP9G62X5Q5+Td/eisL5je8E4MdP6h9GR85Lf76AVRCNFBpTcYUo1lpyC0e04nES
- DGY=
-Date:   Tue, 17 Sep 2019 11:53:54 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     David Miller <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
-Message-ID: <20190917155354.GA15686@mam-gdavis-lt>
-References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
- <20190516.142744.1107545161556108780.davem@davemloft.net>
- <20190517144345.GA16926@mam-gdavis-lt>
- <20190708224732.GA8009@mam-gdavis-lt>
+        Tue, 17 Sep 2019 11:54:01 -0400
+Received: (qmail 5167 invoked by uid 2102); 17 Sep 2019 11:53:59 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Sep 2019 11:53:59 -0400
+Date:   Tue, 17 Sep 2019 11:53:59 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
+cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
+        <kai.heng.feng@canonical.com>, <linux-kernel@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>, <mans@mansr.com>, <oneukum@suse.com>,
+        <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in usb_set_interface
+In-Reply-To: <000000000000a9f2870592c15dd3@google.com>
+Message-ID: <Pine.LNX.4.44L0.1909171152520.1590-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190708224732.GA8009@mam-gdavis-lt>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+On Tue, 17 Sep 2019, syzbot wrote:
 
-On Mon, Jul 08, 2019 at 06:47:32PM -0400, George G. Davis wrote:
-> Hello David,
+> Hello,
 > 
-> On Fri, May 17, 2019 at 10:43:45AM -0400, George G. Davis wrote:
-> > Hello David,
-> > 
-> > On Thu, May 16, 2019 at 02:27:44PM -0700, David Miller wrote:
-> > > From: "George G. Davis" <george_davis@mentor.com>
-> > > Date: Thu, 16 May 2019 11:23:08 -0400
-> > > 
-> > > > Unwind net_sysctl_init error exit goto spaghetti code
-> > > > 
-> > > > Suggested-by: Joshua Frkuska <joshua_frkuska@mentor.com>
-> > > > Signed-off-by: George G. Davis <george_davis@mentor.com>
-> > > 
-> > > Cleanups are not appropriate until the net-next tree opens back up.
-> > > 
-> > > So please resubmit at that time.
-> > 
-> > I fear that I may be distracted by other shiny objects by then but
-> > I'll make a reminder and try to resubmit during the next merge window.
+> syzbot has tested the proposed patch but the reproducer still triggered  
+> crash:
+> possible deadlock in vidioc_querycap
 > 
-> Since the "Linux 5.2" kernel has been released [1], I'm guessing that the
-> net-next merge window is open now? If yes, the patch remains unchanged
-> since my initial post. Please consider applying or let me know when to
-> resubmit when the net-next merge window is again open.
+> ============================================
+> WARNING: possible recursive locking detected
+> 5.3.0-rc7+ #0 Not tainted
+> --------------------------------------------
+> v4l_id/3016 is trying to acquire lock:
+> 0000000069c3004e (&usbvision->v4l2_lock){+.+.}, at:  
+> vidioc_querycap+0x62/0x3b0 drivers/media/usb/usbvision/usbvision-video.c:456
+> 
+> but task is already holding lock:
+> 0000000069c3004e (&usbvision->v4l2_lock){+.+.}, at:  
+> __video_do_ioctl+0x3ba/0xba0 drivers/media/v4l2-core/v4l2-ioctl.c:2846
 
-Ping, "Linux 5.3" kernel has been released [1] and it appears that the
-5.4 merge window is open. The patch [2] remains unchanged since my initial
-post. Please consider applying it.
+Heh.  That's what comes of trying to patch a driver when you aren't an 
+expert on it already.
 
-Thanks!
+Okay, the lock is already held at this point so we don't need to 
+acquire it.
 
--- 
-Regards,
-George
-[1] https://lwn.net/Articles/799250/
-[2] https://lore.kernel.org/patchwork/patch/1074969/
+Alan Stern
+
+#syz test: https://github.com/google/kasan.git f0df5c1b
+
+ drivers/media/usb/usbvision/usbvision-video.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+===================================================================
+--- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
++++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
+@@ -453,6 +453,9 @@ static int vidioc_querycap(struct file *
+ {
+ 	struct usb_usbvision *usbvision = video_drvdata(file);
+ 
++	if (!usbvision->dev)
++		return -ENODEV;
++
+ 	strscpy(vc->driver, "USBVision", sizeof(vc->driver));
+ 	strscpy(vc->card,
+ 		usbvision_device_data[usbvision->dev_model].model_string,
+@@ -1111,7 +1114,8 @@ static int usbvision_radio_close(struct
+ 	mutex_lock(&usbvision->v4l2_lock);
+ 	/* Set packet size to 0 */
+ 	usbvision->iface_alt = 0;
+-	usb_set_interface(usbvision->dev, usbvision->iface,
++	if (usbvision->dev)
++		usb_set_interface(usbvision->dev, usbvision->iface,
+ 				    usbvision->iface_alt);
+ 
+ 	usbvision_audio_off(usbvision);
+
