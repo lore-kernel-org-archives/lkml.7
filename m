@@ -2,166 +2,116 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D968C4CED6
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3038AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDCD121A49
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9CD21907
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="oK3yDNb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfIQIw5 (ORCPT
+        id S1726744AbfIQIxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:52:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:37165 "EHLO mga18.intel.com"
+        Tue, 17 Sep 2019 04:53:32 -0400
+Received: from onstation.org ([52.200.56.107]:44042 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfIQIwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:52:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 01:52:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
-   d="scan'208";a="193695513"
-Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 01:52:32 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com
-Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
-        yu.c.zhang@intel.com, alazar@bitdefender.com,
-        Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v5 4/9] mmu: spp: Add functions to create/destroy SPP bitmap block
-Date:   Tue, 17 Sep 2019 16:52:59 +0800
-Message-Id: <20190917085304.16987-5-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190917085304.16987-1-weijiang.yang@intel.com>
-References: <20190917085304.16987-1-weijiang.yang@intel.com>
+        id S1726081AbfIQIxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:53:04 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id DA1BE3E8F9;
+        Tue, 17 Sep 2019 08:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1568710383;
+        bh=2HMavock2J7luitQTyCe5GChLkLSOfRJQfHJjeQ+TKQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oK3yDNb/VYtWl61yqH5ibXTJy7RISyU5MYHHrFqXVvJ9GeKmY32L/AYCZN1PpldmZ
+         hJzg9r9AD1G1HfkzPouGbNdn9IbFtIZetWWiz1MEQdVT46CdsrEReVoBxjQTBva4Q/
+         dNmG8ID0rju4bR9Lg4Ht6undDVCSJogtMryD4oFI=
+Date:   Tue, 17 Sep 2019 04:53:02 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@01.org, linus.walleij@linaro.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] qcom: ssbi-gpio: convert to hierarchical IRQ helpers in
+ gpio core
+Message-ID: <20190917085302.GA8661@onstation.org>
+References: <20190914111010.24384-1-masneyb@onstation.org>
+ <201909161958.U9H97q1E%lkp@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201909161958.U9H97q1E%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create access bitmap for SPP subpages, the bitmap can
-be accessed with a gfn. The initial access bitmap for each
-physical page is 0xFFFFFFFF, meaning SPP is not enabled for the
-subpages.
+On Mon, Sep 16, 2019 at 07:31:33PM +0800, kbuild test robot wrote:
+> Hi Brian,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3 next-20190915]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Brian-Masney/qcom-ssbi-gpio-convert-to-hierarchical-IRQ-helpers-in-gpio-core/20190916-134112
+> config: arm-allmodconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=arm 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c: In function 'pm8xxx_gpio_probe':
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:794:6: error: 'struct gpio_irq_chip' has no member named 'fwnode'
+>      girq->fwnode = of_node_to_fwnode(pctrl->dev->of_node);
+>          ^~
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:795:8: error: 'struct gpio_irq_chip' has no member named 'parent_domain'; did you mean 'parent_handler'?
+>      girq->parent_domain = parent_domain;
+>            ^~~~~~~~~~~~~
+>            parent_handler
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:796:6: error: 'struct gpio_irq_chip' has no member named 'child_to_parent_hwirq'
+>      girq->child_to_parent_hwirq = pm8xxx_child_to_parent_hwirq;
+>          ^~
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:797:6: error: 'struct gpio_irq_chip' has no member named 'populate_parent_fwspec'
+>      girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
+>          ^~
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:797:33: error: 'gpiochip_populate_parent_fwspec_fourcell' undeclared (first use in this function); did you mean 'gpiochip_line_is_open_source'?
+>      girq->populate_parent_fwspec = gpiochip_populate_parent_fwspec_fourcell;
+>                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>                                     gpiochip_line_is_open_source
+>    drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:797:33: note: each undeclared identifier is reported only once for each function it appears in
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:798:6: error: 'struct gpio_irq_chip' has no member named 'child_offset_to_irq'
+>      girq->child_offset_to_irq = pm8xxx_child_offset_to_irq;
+>          ^~
+> >> drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c:799:8: error: 'struct gpio_irq_chip' has no member named 'child_irq_domain_ops'; did you mean 'domain_ops'?
+>      girq->child_irq_domain_ops.translate = pm8xxx_domain_translate;
+>            ^~~~~~~~~~~~~~~~~~~~
+>            domain_ops
 
-Co-developed-by: He Chen <he.chen@linux.intel.com>
-Signed-off-by: He Chen <he.chen@linux.intel.com>
-Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/spp.c          | 59 +++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/spp.h          |  1 +
- 3 files changed, 61 insertions(+)
+This patch applies fine and builds cleanly on linux-next-20190916 and
+linux-next-20190915 as well. The patch this depends on landed upstream
+yesterday:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fdd61a013a24f2699aec1a446f0168682b6f9ec4
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index eb18f4dd993d..fe6417756983 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -799,6 +799,7 @@ struct kvm_lpage_info {
- 
- struct kvm_arch_memory_slot {
- 	struct kvm_rmap_head *rmap[KVM_NR_PAGE_SIZES];
-+	u32 *subpage_wp_info;
- 	struct kvm_lpage_info *lpage_info[KVM_NR_PAGE_SIZES - 1];
- 	unsigned short *gfn_track[KVM_PAGE_TRACK_MAX];
- };
-diff --git a/arch/x86/kvm/vmx/spp.c b/arch/x86/kvm/vmx/spp.c
-index 1b33cd39108b..7e66d87186a2 100644
---- a/arch/x86/kvm/vmx/spp.c
-+++ b/arch/x86/kvm/vmx/spp.c
-@@ -22,6 +22,14 @@ static int is_spp_shadow_present(u64 pte)
- 	return pte & PT_PRESENT_MASK;
- }
- 
-+static u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn)
-+{
-+	unsigned long idx;
-+
-+	idx = gfn_to_index(gfn, slot->base_gfn, PT_PAGE_TABLE_LEVEL);
-+	return &slot->arch.subpage_wp_info[idx];
-+}
-+
- static bool __rmap_open_subpage_bit(struct kvm *kvm,
- 				    struct kvm_rmap_head *rmap_head)
- {
-@@ -228,6 +236,57 @@ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
- }
- EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
- 
-+static int kvm_spp_create_bitmaps(struct kvm *kvm)
-+{
-+	struct kvm_memslots *slots;
-+	struct kvm_memory_slot *memslot;
-+	int i, j, ret;
-+	u32 *buff;
-+
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		slots = __kvm_memslots(kvm, i);
-+		kvm_for_each_memslot(memslot, slots) {
-+			buff = kvzalloc(memslot->npages*
-+				sizeof(*memslot->arch.subpage_wp_info),
-+				GFP_KERNEL);
-+
-+			if (!buff) {
-+			      ret = -ENOMEM;
-+			      goto out_free;
-+			}
-+			memslot->arch.subpage_wp_info = buff;
-+
-+			for(j = 0; j< memslot->npages; j++)
-+			      buff[j] = FULL_SPP_ACCESS;
-+		}
-+	}
-+
-+	return 0;
-+out_free:
-+	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-+		slots = __kvm_memslots(kvm, i);
-+		kvm_for_each_memslot(memslot, slots) {
-+			if (memslot->arch.subpage_wp_info) {
-+				kvfree(memslot->arch.subpage_wp_info);
-+				memslot->arch.subpage_wp_info = NULL;
-+			}
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+
-+void kvm_spp_free_memslot(struct kvm_memory_slot *free,
-+			      struct kvm_memory_slot *dont)
-+{
-+	if (!dont || free->arch.subpage_wp_info !=
-+	    dont->arch.subpage_wp_info) {
-+		kvfree(free->arch.subpage_wp_info);
-+		free->arch.subpage_wp_info = NULL;
-+	}
-+}
-+
- inline u64 construct_spptp(unsigned long root_hpa)
- {
- 	return root_hpa & PAGE_MASK;
-diff --git a/arch/x86/kvm/vmx/spp.h b/arch/x86/kvm/vmx/spp.h
-index 2b8f4e8d2267..94f6e39b30ed 100644
---- a/arch/x86/kvm/vmx/spp.h
-+++ b/arch/x86/kvm/vmx/spp.h
-@@ -2,6 +2,7 @@
- #ifndef __KVM_X86_VMX_SPP_H
- #define __KVM_X86_VMX_SPP_H
- 
-+#define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
- bool is_spp_spte(struct kvm_mmu_page *sp);
- inline u64 construct_spptp(unsigned long root_hpa);
- int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
--- 
-2.17.2
+The compiler errors shown above came from kernel 5.3, which is missing
+the dependent patch from above:
+https://github.com/0day-ci/linux/commits/Brian-Masney/qcom-ssbi-gpio-convert-to-hierarchical-IRQ-helpers-in-gpio-core/20190916-134112
 
+Brian
