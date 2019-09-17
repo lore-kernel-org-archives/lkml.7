@@ -2,171 +2,100 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE6D8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:16:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11081C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A72A6214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:16:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RyHwwSQv"
+	by mail.kernel.org (Postfix) with ESMTP id DB405214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfIQMQj (ORCPT
+        id S1727698AbfIQMSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:16:39 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42104 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIQMQj (ORCPT
+        Tue, 17 Sep 2019 08:18:37 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40114 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbfIQMSg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:16:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q12so2053146pff.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bzl9kq0Jg8oIIzeiJQPPdQDGdBllChqs2f3RNfDgHM4=;
-        b=RyHwwSQvM5j2nfzMB4TkeFWQlXdtArAZnqGOKdB1Hk9cHbjh9r0prknnJYvHeWVj0A
-         j3JH7zVuxn1M5W3snVeZwCETZslRNYSkp4Klkm7mnM5xkgjp1xo+HKsoXAJjALWX/rgZ
-         J4BUVHC48TeRj4BU1LLZzVBRhKEO5NOdlwBRFkOSCQQwZG/VUMKBZpUx5mzg6bRdBdu0
-         krNc3j+NKhDTsLLG4RR82opNa3yEbtlG0DJ7pGMkKf5S/6liHObd0ZWVp63IlkrUMx7b
-         Wa8tbscoLV7KK4/d7BtbhvKTYTusJOWdbuYDvI03l9xPWJDANNH2Y2lr7FLxSDDH/OI/
-         e+8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bzl9kq0Jg8oIIzeiJQPPdQDGdBllChqs2f3RNfDgHM4=;
-        b=bRyNoCPi2hJKcLgSDr4o/ZpcXHzRLrtyjNVXQpZhUt7O44gxp4IDAFPubRGTVea9pV
-         Xp/tsPs2CySE3/XeKbTcUXWivkTxStNgPpi7BZixjrVdLK3B9awWbN+ZlNUuOEwdHx1X
-         p+RrSK36+QvgtGum+mskl3xXOYH7TzbFhaAYy7FSPCAtdUPLUtstwx1JoRYTDvw1HIBr
-         FVeKXTSiDEzUKaFrYoWqFSO7q6Ak2gXx33AHTpVXqRY/22FbrdQNQ71H0HMrRytE1CJE
-         O7Wku4s4lhs163+mSkj7yvLVhAnzdXridvEdxqiKGeDb/YdQElrsexHVI+MgLefwpw49
-         BvJA==
-X-Gm-Message-State: APjAAAW7jTGYlldbtw8ETgeyUnKk4OftQhJ6qC3NIrehbQR9g5+rN0hK
-        AAo77oe5y08gvxwNgGHBQa0OrddrhZBEt9QavKG4iA==
-X-Google-Smtp-Source: APXvYqw34zxeyZVB8IxSDBtV0JJsv/E50HjmxxOj9RT3xFgczdQntX8qeztkfu1Q96DLic6LttpDyWIDFxILXYP+J+Y=
-X-Received: by 2002:a63:5c26:: with SMTP id q38mr3007407pgb.130.1568722598099;
- Tue, 17 Sep 2019 05:16:38 -0700 (PDT)
+        Tue, 17 Sep 2019 08:18:36 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: alyssa)
+        with ESMTPSA id E035E27FF58
+Date:   Tue, 17 Sep 2019 08:18:27 -0400
+From:   Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Steven Price <steven.price@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/panfrost: Simplify devfreq utilisation tracking
+Message-ID: <20190917121827.GA2974@kevin>
+References: <20190912112804.10104-1-steven.price@arm.com>
+ <20190912112804.10104-3-steven.price@arm.com>
+ <20190913174343.GB5387@kevin>
+ <CAL_JsqJHqvwJrO2jocoMx38z8rMtVrK+PcMRHO13Y7EQaQK+DQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <00000000000048baec0592b00f00@google.com>
-In-Reply-To: <00000000000048baec0592b00f00@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 17 Sep 2019 14:16:26 +0200
-Message-ID: <CAAeHK+xePBQbGCHgxh9tVrqQ_HLezHrUFuiO-S8zWTkxTWs2Wg@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in usbhid_probe
-To:     syzbot <syzbot+d534bb48eb6d94062cfa@syzkaller.appspotmail.com>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJHqvwJrO2jocoMx38z8rMtVrK+PcMRHO13Y7EQaQK+DQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 8:49 PM syzbot
-<syzbot+d534bb48eb6d94062cfa@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14982e6e600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=d534bb48eb6d94062cfa
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
-> Unfortunately, I don't have any reproducer for this crash yet.
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+d534bb48eb6d94062cfa@syzkaller.appspotmail.com
->
-> usbhid 5-1:1.0: can't add hid device: -71
-> ------------[ cut here ]------------
-> ODEBUG: free active (active state 0) object type: timer_list hint:
-> hid_retry_timeout+0x0/0xd0 drivers/hid/usbhid/hid-core.c:712
-> WARNING: CPU: 0 PID: 12 at lib/debugobjects.c:481
-> debug_print_object+0x160/0x250 lib/debugobjects.c:481
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> RIP: 0010:debug_print_object+0x160/0x250 lib/debugobjects.c:481
-> Code: dd 40 f6 da 85 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 bf 00 00 00 48
-> 8b 14 dd 40 f6 da 85 48 c7 c7 80 eb da 85 e8 25 c5 31 ff <0f> 0b 83 05 0b
-> fc a7 05 01 48 83 c4 20 5b 5d 41 5c 41 5d c3 48 89
-> RSP: 0018:ffff8881da20f178 EFLAGS: 00010282
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-> RDX: 0000000000040000 RSI: ffffffff81288ddd RDI: ffffed103b441e21
-> RBP: 0000000000000001 R08: ffff8881da1f9800 R09: ffffed103b645d58
-> R10: ffffed103b645d57 R11: ffff8881db22eabf R12: ffffffff86d0dd60
-> R13: ffffffff812e7c20 R14: ffff8881cfebe8c8 R15: ffff8881d412fa80
->   __debug_check_no_obj_freed lib/debugobjects.c:963 [inline]
->   debug_check_no_obj_freed+0x2df/0x443 lib/debugobjects.c:994
->   free_pages_prepare mm/page_alloc.c:1174 [inline]
->   __free_pages_ok+0x222/0x1d70 mm/page_alloc.c:1420
->   usbhid_probe+0xcd1/0xfa0 drivers/hid/usbhid/hid-core.c:1395
->   usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2165
->   usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
->   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
->   usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
->   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
->   __device_attach+0x217/0x360 drivers/base/dd.c:894
->   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
->   device_add+0xae6/0x16f0 drivers/base/core.c:2165
->   usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
->   process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->   process_scheduled_works kernel/workqueue.c:2331 [inline]
->   worker_thread+0x7ab/0xe20 kernel/workqueue.c:2417
->   kthread+0x318/0x420 kernel/kthread.c:255
->   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-#syz dup: WARNING: ODEBUG bug in usbhid_disconnect (2)
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://syzkaller.appspot.com/bug?id=5e81f32e8180bafcf73dd3f41197283d275eb9e3
+Alright; I'm not familiar with patchwork but sounds good.
+
+On Mon, Sep 16, 2019 at 05:36:24PM -0500, Rob Herring wrote:
+> On Fri, Sep 13, 2019 at 12:43 PM Alyssa Rosenzweig
+> <alyssa.rosenzweig@collabora.com> wrote:
+> >
+> > Patch 1 is:
+> >
+> >         Acked-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+> >
+> > Patch 2 is:
+> >
+> >         Reviewed-by: Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+>=20
+> In the future, please reply to each patch with your tag. The reason
+> being is patchwork will automatically add them instead of me doing it
+> manually. For a tag on a whole series, replying to patch #0 is fine.
+> Patchwork doesn't handle that, but I view that as a patchwork
+> limitation.
+>=20
+> Rob
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEQ17gm7CvANAdqvY4/v5QWgr1WA0FAl2Azw0ACgkQ/v5QWgr1
+WA2KMA/+KVj7jhNMdRi2MPjUXgPHmAfKnSSyNcaAZd+ZBQyR/xgJeOPVFfPUAspT
+i9DVkssAxdbeZ+3TSMYPQxDCjUkwiOPVrmm1lRWTYTNsgS1X/X16vbp1IhSWKtw2
+TQ+aJtS2aKKw+8XPJxg8vblCSVXm45UsDC4T7Zgq5CUeTmopxRvMxZ5kOgCJlsD3
+s5lRYZwZa1KKVlus98ClsQ19GbvdFkLzQiPkXPXBRoiBDsWngB+9uVZeX1n+9F1B
+H8N9OEJ7NLfuRa6mC6NHBw+bMeM1ugiFz6vpQIcqHVoyBpXLioXk2hrD3PuoFzh/
+wIl0SLe5BfHBFRH1KgmIUmjqhRZs8eNO5opKHJmFxPvPf/0nvJMAcRJWVXgXu0q2
+sAvjlUBRdFCvND9ULR8k0ocxIYmmfbVZWON9JHyCjR9gBbiujAVhgP7SEUotkFDJ
+cz9AUSwzjkl0LIBaEUX7heC70YjST/T+wNoDuVcy2VnQYaOcXN/wkKiwxolKrA7H
+peSTpqNVIfi08eOs0uuHyueoY0uuoXOPzOs9LO89LbAkBUW9p/GQMnGyhStRlnFD
+gbo5qEu+bkIzVJ2Ybx/hXDqz40MATbqRq0ddBb+sCra6PUyNe1Ub5T/75Ypbq2Uu
+5RgWj5R9e9OI6RQpwKGi+jOEd7OYNZwqi7wN8uiDLW5o+wAHL54=
+=qsDL
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
