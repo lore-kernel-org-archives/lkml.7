@@ -2,107 +2,102 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD27C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A3FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D237121852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:28:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="M4iA4bP6"
+	by mail.kernel.org (Postfix) with ESMTP id AC86C21907
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbfIQN2g (ORCPT
+        id S1728316AbfIQN3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:28:36 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41743 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfIQN2f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:28:35 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f20so880405edv.8
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:28:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x6hViGClTEGUi9Ex3nINQANElPUDTXWEwnFA8ofdZpo=;
-        b=M4iA4bP6kQzHF9qOiyhOOh05qxeTDc57m5lbx/Rfq6wJvYqAPFtN67Uoqw06xEQ2vt
-         tu7PNtr7LKSmXPMaHSeqI3uFzUmNtb2tm85BL7hk/D5wuYSvyP3Jp+ZYIn79y3/POUzZ
-         SptNxV7TNxyphW4K+gw5bs20Azj5T24F0r9cI=
+        Tue, 17 Sep 2019 09:29:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51910 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbfIQN3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:29:08 -0400
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2EEF9C0546FB
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:29:08 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id c1so1314269wrb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:29:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=x6hViGClTEGUi9Ex3nINQANElPUDTXWEwnFA8ofdZpo=;
-        b=W9B6gQaLepJgxMQTwlIwaYhRfZYu2Uc5sxtTQuWlSt5QmUBA8t4Di3yLRYMmttK3me
-         A7K4R544mX3cOTLLXaTuVvJQIi4WgH33GPLP5Ztc7dEOdDBLRLw8N0iqVgCXSkqK/FJM
-         griESNlKpNRo0PIcCz6GuSFAFrmmaWI4BU8JwdIdh62+GJG68XxLp+7QJjydSP/oduuB
-         qvWslQsIBCB3h7aYm2EIhsoJ/l5QtBvX0c5N83mQDWdGnyZt+QwDeIYHeeJg/VyCykwG
-         ELbFG9ocjK9IIYh8NCc2QHkeMw/Kv/XkGHXyV2AsIekMc0fuSojUQcYH5DIslDUhlY4+
-         uaOA==
-X-Gm-Message-State: APjAAAUDAE+VUtscAP0vqHOzX2wdwMtCRqIls9NJMVHcQgq6YyqoUqpq
-        gfk6wtJtv0lHilTZ0faNAqH7EA==
-X-Google-Smtp-Source: APXvYqyrvVIHXDa3hY45ZcpbXd34FoVb3RaZYU57yddrYt7B1TVmPRVFX27kqnE0TAkx8P1s2sT9Jw==
-X-Received: by 2002:a50:f00c:: with SMTP id r12mr4688681edl.274.1568726912952;
-        Tue, 17 Sep 2019 06:28:32 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j10sm438549ede.59.2019.09.17.06.28.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 06:28:32 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 15:28:30 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Maxime Ripard <mripard@kernel.org>
-Subject: Re: [PATCH 0/3] drm/encoder: Various doc fixes
-Message-ID: <20190917132830.GX3958@phenom.ffwll.local>
-Mail-Followup-To: Lyude Paul <lyude@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Maxime Ripard <mripard@kernel.org>
-References: <20190913222704.8241-1-lyude@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zXZxLZytW+Ec/U9NfhKAd9rWSe67nelrhj6Ad5wzBvs=;
+        b=ojwo29XWCv2GtpRchFPpeeTT1USV4Pgs4c7W716cyQMazIHo6+8vhP/0IPFXLhoynU
+         PmcsjWmErfaJFXC06DMSZZH0EBEEfV8csLChRnRuIl5YTBTAiTIfx5lOtV9IdjmM5+S8
+         vzJ761yzuO9LK1UzoNhInvMhieC/fWFvWACyiGcwI/oMid25tsdJjPgAroMusyIlCOv+
+         6UHxPgSwKUpFtEU0O3QRDVqBAOWB2U+Df23IPMjhwq5vSkkFjzxNxBk+k3liGOYn15wa
+         yf26op+Ct9OMlKbY9oX1GyB27rXDk/wYmqCS7cCb7fHGdODM7wm8ktjAoA8Ck1UKMiR0
+         fbxg==
+X-Gm-Message-State: APjAAAWH5BZJ3gBcz3G9QOLG86BYobT4zzLBzlZFSh1yY4BwzmMHMVjG
+        RwtQB7cGKxfHKLlN9g1tDZIiG9WrJyDDz6UWL1UoScEBiQwxYycL/8ncAIO/Ee2HH8e+GwVqVLF
+        rRStFKkHcre/WTuAnmbjPD2Op
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr3573289wma.131.1568726946867;
+        Tue, 17 Sep 2019 06:29:06 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqyIy0o7GrSTEkbKwkS26Ko7u9M1cTVfp1PjWUa88+L9asfsPPlC0NJZ3Q0qF7wNbJLTo5g/Ug==
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr3573269wma.131.1568726946641;
+        Tue, 17 Sep 2019 06:29:06 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id y186sm4478852wmb.41.2019.09.17.06.29.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 06:29:05 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] KVM: x86: don't announce
+ KVM_CAP_HYPERV_ENLIGHTENED_VMCS when it is unavailable
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Roman Kagan <rkagan@virtuozzo.com>
+References: <20190828075905.24744-1-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <0f3650ef-6a64-b6ab-5370-92e7c4d6cce1@redhat.com>
+Date:   Tue, 17 Sep 2019 15:29:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190913222704.8241-1-lyude@redhat.com>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190828075905.24744-1-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 13, 2019 at 06:27:00PM -0400, Lyude Paul wrote:
-> Some random issues with documentation that I noticed while working on
-> nouveau the other day. There are no functional changes in this series.
-
-Nice! On all three:
-
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
+On 28/08/19 09:59, Vitaly Kuznetsov wrote:
+> It was discovered that hyperv_cpuid test now fails on AMD as it tries to
+> enable KVM_CAP_HYPERV_ENLIGHTENED_VMCS which is (wrongfully) reported as
+> available.
+> 
+> Changes since v1:
+> - This is a v2 for '[PATCH 0/3] KVM: x86: fix a couple of issues with
+>  Enlightened VMCS enablement' renamed as the first patch of the series
+>  was already merged.
+> - Added Jim's Reviewed-by: to PATCH1
+> - Added missing break in PATCH2 [Jim Mattson, Sean Christopherson] 
+> 
+> Vitaly Kuznetsov (2):
+>   KVM: x86: svm: remove unneeded nested_enable_evmcs() hook
+>   KVM: x86: announce KVM_CAP_HYPERV_ENLIGHTENED_VMCS support only when
+>     it is available
+> 
+>  arch/x86/kvm/svm.c | 9 +--------
+>  arch/x86/kvm/x86.c | 4 +++-
+>  2 files changed, 4 insertions(+), 9 deletions(-)
 > 
 
-> Lyude Paul (3):
->   drm/encoder: Fix possible_clones documentation
->   drm/encoder: Fix possible_crtcs documentation
->   drm/encoder: Don't raise voice in drm_encoder_mask() documentation
-> 
->  include/drm/drm_encoder.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+Queued, thanks.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Paolo
