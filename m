@@ -2,93 +2,79 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B59D6C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA84DC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A6BA20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:41:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="KCiJ49Bm"
+	by mail.kernel.org (Postfix) with ESMTP id 861CB20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 00:41:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732365AbfIQAlA (ORCPT
+        id S1732635AbfIQAlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 20:41:00 -0400
-Received: from cavan.codon.org.uk ([93.93.128.6]:47668 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbfIQAlA (ORCPT
+        Mon, 16 Sep 2019 20:41:16 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:59259 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfIQAlQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 20:41:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=Subject:Message-ID:From:CC:To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
-        Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=dihqQD7YyeCHFuSd2ZY63lRCa0biQHHFoiX32AJkQOc=; b=KCiJ49BmtRanlAbRnpCcqbvlih
-        tTFRLeONi8xeN/BdrtcelDsnfJByQwGor1b9F4xEPrwBsYBp5kRIebGADikf/tnqWf+ehtLQFMOd8
-        FKhgyXfZ8K07TpBW4ZqN2QVQPHN6WFt50d5UjDA72AdHoEzACsjK7IQbW07pnNvvisIU=;
-Received: from [216.9.110.8] (helo=[172.31.95.26])
-        by cavan.codon.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <mjg59@srcf.ucam.org>)
-        id 1iA1Xo-0002KW-64; Tue, 17 Sep 2019 01:40:38 +0100
-Date:   Mon, 16 Sep 2019 17:40:23 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com>
-References: <20190916014833.cbetw4sqm3lq4x6m@shells.gnugeneration.com> <20190916024904.GA22035@mit.edu> <20190916042952.GB23719@1wt.eu> <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com> <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com> <20190916172117.GB15263@mit.edu> <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com> <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org> <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com>
+        Mon, 16 Sep 2019 20:41:16 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 3659060002;
+        Tue, 17 Sep 2019 00:41:14 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 02:41:13 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 0/6] ARM, arm64: Remove arm_pm_restart()
+Message-ID: <20190917004113.GC21254@piout.net>
+References: <20170130110512.6943-1-thierry.reding@gmail.com>
+ <20190914152544.GA17499@roeck-us.net>
+ <CAK8P3a3G_9EeK-Xp7ZeA0EN7WNzrL7AxoQcNZ8z-oe5NsTYW6g@mail.gmail.com>
+ <056ccf5c-6c6c-090b-6ca1-ab666021db48@roeck-us.net>
+ <20190916134920.GA18267@ulmo>
+ <20190916154336.GA6628@roeck-us.net>
+ <20190916155031.GE7488@ulmo>
+ <CAK8P3a1EZi5apOm90B6YW2GzFXsirz5wk-D66daR20oj_TLXNg@mail.gmail.com>
+ <20190916202809.GA42800@mithrandir>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-Message-ID: <2BEA80F6-6EF5-42D8-8AAA-91D4FD545241@srcf.ucam.org>
-X-cavan-blacklisted-at: zen.spamhaus.org
-X-SA-Do-Not-Run: Yes
-X-SA-Exim-Connect-IP: 216.9.110.8
-X-SA-Exim-Mail-From: mjg59@srcf.ucam.org
-Subject: Re: Linux 5.3-rc8
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); Unknown failure
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916202809.GA42800@mithrandir>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16 September 2019 16:18:00 GMT-07:00, Linus Torvalds <torvalds@linux-fou=
-ndation=2Eorg> wrote:
->On Mon, Sep 16, 2019 at 4:11 PM Matthew Garrett <mjg59@srcf=2Eucam=2Eorg>
->wrote:
->>
->> In one case we have "Systems don't boot, but you can downgrade your
->> kernel" and in the other case we have "Your cryptographic keys are
->weak
->> and you have no way of knowing unless you read dmesg", and I think
->> causing boot problems is the better outcome here=2E
->
->Or: In one case you have a real and present problem=2E In the other
->case, people are talking hypotheticals=2E
+Hi Thierry,
 
-(resending because accidental HTML, sorry about that)=20
+On 16/09/2019 22:28:09+0200, Thierry Reding wrote:
+> > > Yeah, I can just send the pull request for the 6 patches after -rc1.
+> > 
+> > Ok, sounds good. I'm also happy to take the remaining patches
+> > in that branch, for the other architectures.
+> 
+> All of the patches beyond the 6 in this set rely on the system reset and
+> power "framework". I don't think there was broad concensus on that idea
+> yet. If you think it's worth another try I'm happy to send the patches
+> out again.
+> 
 
-We've been recommending that people use the default getrandom() behaviour =
-for key generation since it was merged=2E Github shows users, and it's like=
-ly there's cases in internal code as well=2E=20
+Could you consider converting the RTC drivers too? The ones used for
+poweroff are:
 
+drivers/rtc/rtc-ds1685.c
+drivers/rtc/rtc-jz4740.c
+drivers/rtc/rtc-omap.c
 
---=20
-Matthew Garrett | mjg59@srcf=2Eucam=2Eorg
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
