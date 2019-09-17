@@ -2,102 +2,208 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D67BC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC40C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9E3214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C595B21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568736602;
+	bh=nAN0n7FNPLtue0I3YwzCKEoDfO6TOrlN0tJC0LD47mc=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=LRy+s7SjLleN/P8Rz+x8KUJ+H8qSSzBkeMd3iIrQ0j109fRXVVNCVQ2x/3zJfU6eL
+	 QD/GToY9Hg2PfWzsclMbre1I8gC8lrwX3BQi0Ewk3XMIJLEwmPbfgDEHxRf1pv//b9
+	 rQC1CPhtAtbInuXiMoh4NGp4u+WpKNUGHcr75NBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfIQQIq (ORCPT
+        id S1729255AbfIQQKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:08:46 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:40620 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfIQQIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:08:46 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [IPv6:2a01:238:43ed:c300:10c3:bcf3:3266:da74])
-        by gardel.0pointer.net (Postfix) with ESMTP id B3788E80FFC;
-        Tue, 17 Sep 2019 18:08:44 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 6D90D160ADC; Tue, 17 Sep 2019 18:08:44 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 18:08:44 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190917160844.GC31567@gardel-login>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+        Tue, 17 Sep 2019 12:10:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727845AbfIQQKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:10:01 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAFF3206C2;
+        Tue, 17 Sep 2019 16:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568736601;
+        bh=nAN0n7FNPLtue0I3YwzCKEoDfO6TOrlN0tJC0LD47mc=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=iZjJ8PRODuFF5bQCssu/hVtDsJt7QwjSBt4kNvNneXOX6wGA6Zlkb4QU2gzWezJP6
+         6MUE9CaTWyKxZTSJCPpIE8H7eaG1gxm+FxLAL1bQ2nFg4/1dVucQCVNgFDkl9z9tzX
+         okCisscpM4ABBs+pESlO8FG1++bfZoKlkah9nxSM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190917091623.3453-1-vkoul@kernel.org>
+References: <20190917091623.3453-1-vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Vinod Koul <vkoul@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] clk: qcom: gcc: Add missing clocks in SM8150
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 09:09:59 -0700
+Message-Id: <20190917161000.DAFF3206C2@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Di, 17.09.19 12:30, Ahmed S. Darwish (darwish.07@gmail.com) wrote:
+Quoting Vinod Koul (2019-09-17 02:16:23)
+> The initial upstreaming of SM8150 GCC driver missed few clock so add
+> them up now.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
 
-> 	  Ideally, systems would be configured with hardware random
-> 	  number generators, and/or configured to trust the CPU-provided
-> 	  RNG's (CONFIG_RANDOM_TRUST_CPU) or boot-loader provided ones
-> 	  (CONFIG_RANDOM_TRUST_BOOTLOADER).  In addition, userspace
-> 	  should generate cryptographic keys only as late as possible,
-> 	  when they are needed, instead of during early boot.  (For
-> 	  non-cryptographic use cases, such as dictionary seeds or MIT
-> 	  Magic Cookies, other mechanisms such as /dev/urandom or
-> 	  random(3) may be more appropropriate.)
->
-> Sounds good?
+Should have some sort of fixes tag?
 
-This sounds mean. You make apps pay for something they aren't really
-at fault for.
+>  drivers/clk/qcom/gcc-sm8150.c | 172 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 172 insertions(+)
+>=20
+> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
+> index 12ca2d14797f..13d4d14a5744 100644
+> --- a/drivers/clk/qcom/gcc-sm8150.c
+> +++ b/drivers/clk/qcom/gcc-sm8150.c
+> @@ -1616,6 +1616,38 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk =3D {
+>         },
+>  };
+> =20
+> +static struct clk_branch gcc_gpu_gpll0_clk_src =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
 
-I mean, in the cloud people typically put together images that are
-replicated to many systems, and as first thing generate an SSH key, on
-the individual system. In fact, most big distros tend to ship SSH that
-is precisely set up this way: on first boot the SSH key is
-generated. They tend to call getrandom(0) for this right now, and
-rightfully so. Now suddenly you kill them because they are doing
-everything correctly? Those systems aren't going to be more useful if
-they have no SSH key at all than they would be if they would hang at
-boot: either way you can't log in.
+Why skip?
 
-Here's what I'd propose:
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x52004,
+> +               .enable_mask =3D BIT(15),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_gpu_gpll0_clk_src",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &gpll0.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_gpu_gpll0_div_clk_src =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
 
-1) Add GRND_INSECURE to get those users of getrandom() who do not need
-   high quality entropy off its use (systemd has uses for this, for
-   seeding hash tables for example), thus reducing the places where
-   things might block.
+Why skip?
 
-2) Add a kernel log message if a getrandom(0) client hung for 15s or
-   more, explaining the situation briefly, but not otherwise changing
-   behaviour.
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x52004,
+> +               .enable_mask =3D BIT(16),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_gpu_gpll0_div_clk_src",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &gcc_gpu_gpll0_clk_src.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+>  static struct clk_branch gcc_gpu_iref_clk =3D {
+>         .halt_reg =3D 0x8c010,
+>         .halt_check =3D BRANCH_HALT,
+> @@ -1698,6 +1730,38 @@ static struct clk_branch gcc_npu_cfg_ahb_clk =3D {
+>         },
+>  };
+> =20
+> +static struct clk_branch gcc_npu_gpll0_clk_src =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x52004,
+> +               .enable_mask =3D BIT(18),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_npu_gpll0_clk_src",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &gpll0.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_npu_gpll0_div_clk_src =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x52004,
+> +               .enable_mask =3D BIT(19),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_npu_gpll0_div_clk_src",
+> +                       .parent_hws =3D (const struct clk_hw *[]){
+> +                               &gcc_npu_gpll0_clk_src.clkr.hw },
+> +                       .num_parents =3D 1,
+> +                       .flags =3D CLK_SET_RATE_PARENT,
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+>  static struct clk_branch gcc_npu_trig_clk =3D {
+>         .halt_reg =3D 0x4d00c,
+>         .halt_check =3D BRANCH_VOTED,
+> @@ -2812,6 +2876,42 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_c=
+tl_clk =3D {
+>         },
+>  };
+> =20
+> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
 
-3) Change systemd-random-seed.service to log to console in the same
-   case, blocking boot cleanly and discoverably.
+Can't we fix the UFS driver to not require this anymore? This is the
+fourth or fifth time I've asked for this.
 
-I am not a fan of randomly killing userspace processes that just
-happened to be the unlucky ones, to call this first... I see no
-benefit in killing stuff over letting boot hang in a discoverable way.
-
-Lennart
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x7501c,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_ufs_card_rx_symbol_0_clk",
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_ufs_card_rx_symbol_1_clk =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x750ac,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_ufs_card_rx_symbol_1_clk",
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static struct clk_branch gcc_ufs_card_tx_symbol_0_clk =3D {
+> +       .halt_check =3D BRANCH_HALT_SKIP,
+> +       .clkr =3D {
+> +               .enable_reg =3D 0x75018,
+> +               .enable_mask =3D BIT(0),
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gcc_ufs_card_tx_symbol_0_clk",
+> +                       .ops =3D &clk_branch2_ops,
+> +               },
+> +       },
+> +};
+> +
+>  static struct clk_branch gcc_ufs_card_unipro_core_clk =3D {
+>         .halt_reg =3D 0x75058,
+>         .halt_check =3D BRANCH_HALT,
