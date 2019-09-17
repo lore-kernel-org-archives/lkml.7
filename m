@@ -2,103 +2,91 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB6F2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D86DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F022214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691252189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:35:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rgH/6eCY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="TEA2P3pd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728295AbfIQOfM (ORCPT
+        id S1728368AbfIQOf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:35:12 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:34129 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728196AbfIQOfM (ORCPT
+        Tue, 17 Sep 2019 10:35:27 -0400
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.169]:33219 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728128AbfIQOf1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:35:12 -0400
-Received: by mail-qt1-f195.google.com with SMTP id j1so4728366qth.1
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 07:35:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=w1n37j4W3WBasnt2XIfLYiJPlLaXIhc4CUnkt5PWajA=;
-        b=rgH/6eCY+b/er+zh8gkhbaB/5JPfPp9/mmEJZckL5J98G151Yqc6wqaI4kUD1JRQod
-         SJcA7ksRNHRgFm+KdKTJM3+J7E1I74PmW5XgDaMv2FRrrBj9qr97g58GdMzpziF06aa8
-         ydYgkh0TkQeKAQbMhVx5CcuwvDROa2KkNLI4xa+3wCM8EcD6QeSEgHzPE3fpnIRrd8Nw
-         rfQxHfz4BT4UDaPr/2HjZgA68l8Tvv1cRYpeWNO+Zj9VxS6BOc3/DcfS5BLb/tA59RPF
-         aP3ojEVCDnwYU4YWX9gwbHdnxuyqnDqfw7ikIWkoJpXGqIE6Ynrtdrx3vQw5K26ru4B6
-         DMBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=w1n37j4W3WBasnt2XIfLYiJPlLaXIhc4CUnkt5PWajA=;
-        b=B3wk9ZPffG1u2rqAH2JGnproZ4lK4gZcAUVO8hk1PHJXXAQFS086HamLTo7iNd0NdX
-         b/j5RQiA2PVcKL56JPs2XAVZEOOofUDCXHB83/KZEZMZtMSzWGjY6bzWApURH1lD4wAo
-         EGfKFaxkne0WLdLXSj0RsQRUxDfw409pNB+uaJxUXTDRadSk5BICU/TYw39WX9vdqJgY
-         subCxtKP7ZQbZhh+c/fGxe8Ia43c1l184KtzUuAuWG4orlVp9mWTjPWmO4UJ5geLKP+v
-         gVUIBEbFiTol889aqm7wMiQgvBZxBTTUU1Qh8zdbLnAX2yqh+SEjgM/67vkohCuC8bo7
-         aYWA==
-X-Gm-Message-State: APjAAAXhgOxstGkVOfTd0eI/Wp43+2AsXgmFomAmZnKQz1T1zricZ85D
-        j2CsGERb/CxMA/Gm29XkObanmA==
-X-Google-Smtp-Source: APXvYqwcaKUYrjpnB+WlcTjBqlkAUrODWyXnraVpWmsn3tSTofdYFgs0clXEhFjENsxJ6M6sAPK9Hg==
-X-Received: by 2002:ac8:7b2e:: with SMTP id l14mr4000591qtu.11.1568730910911;
-        Tue, 17 Sep 2019 07:35:10 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v12sm1641563qtb.5.2019.09.17.07.35.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 07:35:10 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mingo@redhat.com, peterz@infradead.org
-Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched: fix an unused function "node_cpu" warning
-Date:   Tue, 17 Sep 2019 10:34:54 -0400
-Message-Id: <1568730894-10483-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 17 Sep 2019 10:35:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1568730925;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=aDkxVMbY8vRvqozEwY9dfWbrp1yfXlJPYl/GV2fom4s=;
+        b=TEA2P3pdTKwtdTJbORsNcJvcpWV+xP3Cn45HdtSkp5vdIgFyvrkVum+t2l+QQ+yhHf
+        6DvmGvykcNsS+QIfYnoAWtnqROv6k22YHLzUroaUNAqbLMFmTHPBOeYiiq+LgBPHgYsO
+        Yfk8SdGSmMrkzszN1LOhp/JIgjMsb4C2DV5TfCDhV4Q/OkYBW2ltOl8WlqmzgawF629O
+        VsRLLFZfXizeshXSciPKUPgtIvvhaL8HfmQi9sJzjsZweYtL5wOrdEk2Z7pNKRy6Kt2i
+        VnYgKUJiqZpp+Ur3vVLhVZH6zG0obe2yzRJSe4x3k5GNQ5u7ksXbjZhl/dEsjNakPuf0
+        NjfQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qOxWRk4dCyjDPUnsm74p9bR0nKSw0V7uzbYrtFUHmEd2msW"
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2001:16b8:266f:d200:e9b9:e9c0:8734:b26d]
+        by smtp.strato.de (RZmta 44.27.0 AUTH)
+        with ESMTPSA id u036f9v8HEZ6XP4
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 17 Sep 2019 16:35:06 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v3 0/8] OMAP3: convert opp-v1 to opp-v2 and read speed binned / 720MHz grade bits
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190916162816.GF52127@atomide.com>
+Date:   Tue, 17 Sep 2019 16:35:22 +0200
+Cc:     =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Adam Ford <aford173@gmail.com>,
+        =?utf-8?Q?Andr=C3=A9_Roth?= <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>, linux-omap@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <DAF6ACB4-AD7E-4528-9F4B-C54104B5E260@goldelico.com>
+References: <cover.1568224032.git.hns@goldelico.com> <20190916162816.GF52127@atomide.com>
+To:     Tony Lindgren <tony@atomide.com>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang reports a warning,
+Hi Tony,
 
-kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
-[-Wunused-function]
+> Am 16.09.2019 um 18:28 schrieb Tony Lindgren <tony@atomide.com>:
+> 
+> * H. Nikolaus Schaller <hns@goldelico.com> [190911 17:48]:
+>> CHANGES V3:
+>> * make omap36xx control the abb-ldo and properly switch mode
+>>  (suggested by Adam Ford <aford173@gmail.com>)
+>> * add a note about enabling the turbo-mode OPPs
+> 
+> Looks good to me, when applying, please provide a
+> minimal immutable branch maybe against v5.3 or v5.4-rc1,
+> that I can also merge in if needed for the dts changes.
 
-due to osq_lock() calls vcpu_is_preempted(node_cpu(node->prev))), but
-vcpu_is_preempted() is compiled away. Fix it by converting the dummy
-vcpu_is_preempted() from a macro to a proper static inline function.
+Should I resend a v4 with your Acked-By added?
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/linux/sched.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index f0edee94834a..e2e91960d79f 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1856,7 +1856,10 @@ static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
-  * running or not.
-  */
- #ifndef vcpu_is_preempted
--# define vcpu_is_preempted(cpu)	false
-+static inline bool vcpu_is_preempted(int cpu)
-+{
-+	return false;
-+}
- #endif
- 
- extern long sched_setaffinity(pid_t pid, const struct cpumask *new_mask);
--- 
-1.8.3.1
+BR and thanks,
+Nikolaus
 
