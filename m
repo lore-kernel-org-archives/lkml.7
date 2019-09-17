@@ -2,83 +2,127 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331CBC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 860F5C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E0B21E6F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5282C21E6F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:21:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vSF/uH2H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392560AbfIQHUp (ORCPT
+        id S2392590AbfIQHVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:20:45 -0400
-Received: from mxhk.zte.com.cn ([63.217.80.70]:64644 "EHLO mxhk.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729915AbfIQHUp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:20:45 -0400
-Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
-        by Forcepoint Email with ESMTPS id 91CB34ED71A3E664AA02;
-        Tue, 17 Sep 2019 15:20:40 +0800 (CST)
-Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
-        by mse-fl1.zte.com.cn with ESMTP id x8H7Ine1018416;
-        Tue, 17 Sep 2019 15:18:49 +0800 (GMT-8)
-        (envelope-from zhang.lin16@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019091715190161-3647147 ;
-          Tue, 17 Sep 2019 15:19:01 +0800 
-From:   zhanglin <zhang.lin16@zte.com.cn>
-To:     paul@paul-moore.com
-Cc:     sds@tycho.nsa.gov, eparis@parisplace.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
-        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
-        zhanglin <zhang.lin16@zte.com.cn>
-Subject: [PATCH] selinux: improve performance of sel_write_load()
-Date:   Tue, 17 Sep 2019 15:20:36 +0800
-Message-Id: <1568704836-14357-1-git-send-email-zhang.lin16@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-09-17 15:19:01,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-09-17 15:18:51,
-        Serialize complete at 2019-09-17 15:18:51
-X-MAIL: mse-fl1.zte.com.cn x8H7Ine1018416
+        Tue, 17 Sep 2019 03:21:38 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40816 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727635AbfIQHVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:21:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8H7LUSd076245;
+        Tue, 17 Sep 2019 02:21:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568704890;
+        bh=RAkpzZsEDglibwdEPo3aXr82N6h6m4WxV5LdwMT3tDg=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vSF/uH2HJmxWPAdhsiTMNCbwSA02mNRXIKlej8yUg+9MlQP3rjzZehkOjmBXCOMnc
+         sfZYAiNtuK/svlYTf2jH+jtZhjzN4/IbNVRzPWAG9ko4Gvdu1x2R+eDKjlsK69tT7Q
+         WtXpkhbGqcpQ6TDcRoSBWmtr1ArkzSNF3itNIQi4=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8H7LUAH093699
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Sep 2019 02:21:30 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
+ Sep 2019 02:21:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 17 Sep 2019 02:21:27 -0500
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8H7LQZi109183;
+        Tue, 17 Sep 2019 02:21:26 -0500
+Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
+ to 8
+To:     Tony Lindgren <tony@atomide.com>, Suman Anna <s-anna@ti.com>
+CC:     <linux-omap@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190723112811.44381-1-tony@atomide.com>
+ <20190723112811.44381-6-tony@atomide.com>
+ <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
+ <20190724064758.GU5447@atomide.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <931eb0e1-8024-3003-1fb3-6f6ad8b74bf9@ti.com>
+Date:   Tue, 17 Sep 2019 10:21:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190724064758.GU5447@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-remove unecessary multiplications of sel_write_load().
+On 24/07/2019 09:47, Tony Lindgren wrote:
+> * Suman Anna <s-anna@ti.com> [190723 21:02]:
+>> Hi Tony,
+>>
+>> On 7/23/19 6:28 AM, Tony Lindgren wrote:
+>>> The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
+>>> Otherwise we get the following warning on beagle-x15:
+> ...
+>>> @@ -2962,9 +2958,8 @@
+>>>   					<SYSC_IDLE_SMART>;
+>>>   			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
+>>>   			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
+>>> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
+>>> -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
+>>> -			clock-names = "fck", "ahclkx", "ahclkr";
+>>> +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
+>>> +			clock-names = "fck", "ahclkx";
+>>
+>> The equivalent change to MCASP8 is missing.
+> 
+> Thanks for spotting it, probably should be set up the same way as
+> MCASP4 too looking at the TRM.
+> 
+> Tero, care to check the dra7 mcasp clocks we have defined?
 
-Signed-off-by: zhanglin <zhang.lin16@zte.com.cn>
----
- security/selinux/selinuxfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Sorry, missed this earlier.
 
-diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
-index f3a5a138a096..4b2d87b6fcf9 100644
---- a/security/selinux/selinuxfs.c
-+++ b/security/selinux/selinuxfs.c
-@@ -117,6 +117,7 @@ static void selinux_fs_info_free(struct super_block *sb)
- #define SEL_CLASS_INO_OFFSET		0x04000000
- #define SEL_POLICYCAP_INO_OFFSET	0x08000000
- #define SEL_INO_MASK			0x00ffffff
-+#define SEL_LOAD_MAX			0x04000000
- 
- #define TMPBUFLEN	12
- static ssize_t sel_read_enforce(struct file *filp, char __user *buf,
-@@ -550,7 +551,7 @@ static ssize_t sel_write_load(struct file *file, const char __user *buf,
- 		goto out;
- 
- 	length = -EFBIG;
--	if (count > 64 * 1024 * 1024)
-+	if (count > SEL_LOAD_MAX)
- 		goto out;
- 
- 	length = -ENOMEM;
--- 
-2.17.1
+> 
+> $ grep MCASP drivers/clk/ti/clk-7xx.c
+>          { DRA7_IPU_MCASP1_CLKCTRL, dra7_mcasp1_bit_data, CLKF_SW_SUP, "ipu-clkctrl:0000:22" },
+>          { DRA7_L4PER2_MCASP2_CLKCTRL, dra7_mcasp2_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0154:22" },
+>          { DRA7_L4PER2_MCASP3_CLKCTRL, dra7_mcasp3_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:015c:22" },
+>          { DRA7_L4PER2_MCASP5_CLKCTRL, dra7_mcasp5_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:016c:22" },
+>          { DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:24" },
+>          { DRA7_L4PER2_MCASP4_CLKCTRL, dra7_mcasp4_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:018c:22" },
+>          { DRA7_L4PER2_MCASP6_CLKCTRL, dra7_mcasp6_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01f8:22" },
+>          { DRA7_L4PER2_MCASP7_CLKCTRL, dra7_mcasp7_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01fc:22" },
+> 
+> Is bit 24 above correct for MCASP8 or should it too be 22 like
+> adjacent MCASP4 in the TRM?
 
+So yeah, mcasp8 is wrong here, should be 22 as rest of them. I did fix 
+mcasp8 clocks partially when doing the conversion but missed the 
+parenting here; it was completely broken before.
+
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
