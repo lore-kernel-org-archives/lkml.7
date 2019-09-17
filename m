@@ -2,177 +2,142 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA09C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB651C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC719216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:58:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BA1B216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:59:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dcNIgu5x"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="b/X/epPQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfIQV6M (ORCPT
+        id S1727716AbfIQV7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 17:58:12 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46124 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726916AbfIQV6L (ORCPT
+        Tue, 17 Sep 2019 17:59:24 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45726 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726548AbfIQV7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 17:58:11 -0400
-Received: by mail-io1-f65.google.com with SMTP id d17so11231036ios.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 14:58:11 -0700 (PDT)
+        Tue, 17 Sep 2019 17:59:24 -0400
+Received: by mail-oi1-f195.google.com with SMTP id o205so4216802oib.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 14:59:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AxX/zwaBjlGD4EBBXdUpYuZJNp14w4mDoEUeeP5ZijY=;
-        b=dcNIgu5x9wmQdheVTIPUciETkPNJh4ntZuXpR1erK+REUuvYgET56FXk9FrVZlAF4Y
-         mHGCye1jbIyPsLmp/qJ91xJ5z/BahiTODzD/+2CmtiWWzEkWGxo1+eayrVcS8SXOHxBu
-         /BKqmneFA7lmsyz/42mB+TMeoSzWM3/V4h75A=
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EW2X0pQcIs7IJCWHWbHBXgfW46P4WEaokqNG2sfuxAw=;
+        b=b/X/epPQZvb6OMWkt3514aW9hqQaZrBWb5oRo9t5edo0vozE7mTuXDkbTXriqLoDW/
+         7Lpvi/9JIpTNEoEaggzKS3c9BnQE/bWnb654MfzXAJiqtGubvaYUNoeRQY5b0fpbxhcD
+         FTdD9L29UX/qm8jcbV9FJoD37EPZivjfBJJ4vawRi5z28eD2KZR6xqWnVyQPBTyuPwm4
+         57f5Fk4dstqlRQm2abRzRFEVRoccjyPyyr1CAFZ3Umi45T5j+YTVY3kiUmY2xOx7v0QB
+         NVpC00klzKEkF/2JKk87Y1cjVR5AdEYKn3OYS7BunXeat8pzVAqYYlu1dzWT6FLQo/pa
+         tSHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AxX/zwaBjlGD4EBBXdUpYuZJNp14w4mDoEUeeP5ZijY=;
-        b=rXQMN3Chb3XnxDgZzkw60XElFQBq9uAHgMjM5+suddvmxYVMNQvJWDBAV+oJsI4wxz
-         bwYCb384HrUAb52cvRg5xWRgvBTw/C+TWN9VatawKn7/rw27KaHrfZ77LR+sxhQ3TOxS
-         pvQA3DIHnNULrD2HMQlO6BCnzd3x0LQKYtdGjY/thxeu+gsYutqGNTRyolFra4n5+bex
-         +lZO90jfUF8wBtiSjUvrBWnpc55INYoWWy3iOUbitCSkdGb1SeFvyQQ8s+FgIl2qc65T
-         a9Fw+NFGBbN0oNzwJm2OB48L/1t4gd2eytENsWdhANuPjFx+u6E3x/4nsaC+nYIMeHex
-         VpuA==
-X-Gm-Message-State: APjAAAWQfQlimOkNzBBCNifrZOQgP0crBaNjQTCZIA2oG784azgSKIxm
-        97VaDS666G6xrt77fce/eDoI5q5eRY8=
-X-Google-Smtp-Source: APXvYqzNh6hw8Ul2LlHDqPZlx26ZvgF1QJmTAKDHmwb0HW+pO24qd28iJuU053DNzPPVrLKxJVCqQA==
-X-Received: by 2002:a6b:b78b:: with SMTP id h133mr1271952iof.276.1568757490173;
-        Tue, 17 Sep 2019 14:58:10 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:798c:e494:921c:d544])
-        by smtp.gmail.com with ESMTPSA id 197sm4561618ioc.78.2019.09.17.14.58.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 14:58:09 -0700 (PDT)
-From:   Daniel Campello <campello@chromium.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Daniel Campello <campello@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Nick Crews <ncrews@chromium.org>
-Subject: [PATCH v2] platform/chrome: wilco_ec: Add debugfs test_event file
-Date:   Tue, 17 Sep 2019 15:57:52 -0600
-Message-Id: <20190917215752.67391-1-campello@chromium.org>
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EW2X0pQcIs7IJCWHWbHBXgfW46P4WEaokqNG2sfuxAw=;
+        b=pd9UI2vEJJaRqdLQJXp99r0mPwnBwO1JjUr/tsLUSB5S7lkkM+RqgzwvOWDo4YtLoW
+         hVF4nzkgnGKMyQoh86Cwj+q035H0WLdQc15BCurzZOKbmDg12Nmr+fz3pT3yQv88RDIj
+         ZbWjbc9yi4WBiXUW0UsfVTFPC8jj9UJr3Re2oHwbk6brzr1+qkj7hEJWSiLw90DA8BKr
+         30yFp8z7ZQM2CdVwVsGet+/eIlBocUrKTUD8MOQCiOfFCYYhTtfrFLd1EWf839Gi4p6m
+         1O3T/VhbJHXz0bqb83+a44eX5I7GemLwHrUZN2P4o/d6nn9y0/ysAgrUFIIUAW/LLcoV
+         Dm+A==
+X-Gm-Message-State: APjAAAVpHCyxsLdDwmlesbwepCbBFsX+RFo5HO0eZ/+8z3kvZ1Ew5raI
+        aiXEHQ6y+S7WbwfWQv2AaK2xSTJmXh/wrIY6WqyZqOTp
+X-Google-Smtp-Source: APXvYqzQPYBb+qMxeV1bDUw+oSHDBJ2boy2cSrkRRU5vlbjTkrG6EugFukBx4w0hTijgZ77pPvyEDk3fuZbESEyn/gI=
+X-Received: by 2002:aca:eb09:: with SMTP id j9mr212586oih.105.1568757563411;
+ Tue, 17 Sep 2019 14:59:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <156821692280.2951081.18036584954940423225.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156821693963.2951081.11214256396118531359.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190911184332.GL20699@kadam> <9132e214-9b57-07dc-7ee2-f6bc52e960c5@kernel.dk>
+ <20190913010937.7fc20d93@lwn.net> <20190913114849.GP20699@kadam> <20190917161608.GA12866@ziepe.ca>
+In-Reply-To: <20190917161608.GA12866@ziepe.ca>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 17 Sep 2019 14:59:11 -0700
+Message-ID: <CAPcyv4jR9ufeXyXOwnnPBC2kbHNfamZu93s4hM371=j-sACAjA@mail.gmail.com>
+Subject: Re: [Ksummit-discuss] [PATCH v2 3/3] libnvdimm, MAINTAINERS:
+ Maintainer Entry Profile
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Dave Jiang <dave.jiang@intel.com>,
+        ksummit <ksummit-discuss@lists.linuxfoundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change introduces a new debugfs file 'test_event' that when written
-to causes the EC to generate a test event.
+On Tue, Sep 17, 2019 at 9:16 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Fri, Sep 13, 2019 at 02:48:50PM +0300, Dan Carpenter wrote:
+>
+> > It used to be that infiniband used "sizeof foo" instead of sizeof(foo)
+> > but now there is a new maintainer.
+>
+> These days I run everything through checkpatch and generally don't
+> want to see much deviation from the 'normal' style, a few minor
+> clang-format quibbles and other check patch positives excluded.
+>
+> This means when people touch lines they have to adjust minor things
+> like the odd 'sizeof foo' to make it conforming.
+>
+> Like others there is a big historical mismatch and the best I hope for
+> is that new stuff follow the cannonical style. Trying to guess what
+> some appropriate mongral style is for each patch is just a waste of my
+> time.
+>
+> I also hold drivers/infiniband as an example of why the column
+> alignment style is harmful. That has not aged well and is the cause of
+> a lot of ugly things.
+>
+> > There is one subsystem where the maintainer is super strict rules that
+> > you can't use "I" or "we" in the commit message.  So you can't say "I
+> > noticed a bug while reviewing", you have to say "The code has a bug".
+>
+> Ah, the imperative mood nitpick. This one is very exciting to explain
+> to non-native speakers. With many regular submitters I'm still at the
+> "I wish you would use proper grammer and sentence structure" phase..
+>
+> These days I just end up copy editing most of the commit messages :(
+>
+> > I don't think it's shaming, I think it's validating.  Everyone just
+> > insists that since it's written in the Book of Rules then it's our fault
+> > for not reading it.  It's like those EULA things where there is more
+> > text than anyone can physically read in a life time.
+>
+> Yeah, I tend to agree.
+>
+> The big special cases with high patch volumes (net being the classic
+> example) should remain special.
+>
+> But everyone else is not special, and shouldn't act the same.
+>
+> The work people like DanC do with static analysis is valuable, and we
+> should not be insisting that those contributors have to jump through a
+> thousand special hoops.
+>
+> I have simply viewed it as the job of the maintainer to run the
+> process and deal with minor nit picks on the fly.
+>
+> Maybe that is what we should be documenting?
 
-Signed-off-by: Daniel Campello <campello@chromium.org>
----
-Changes for v2:
-  - Cleaned up and added comments.
-  - Renamed and updated function signature from write_to_mailbox to
-    send_ec_cmd.
+In theory, yes, in practice, as long as there is an exception to the
+rule, it comes down to a question of "is this case special like net or
+not?". I'd rather not waste time debating that on a per-subsystem
+basis vs just getting it all documented for contributors.
 
- drivers/platform/chrome/wilco_ec/debugfs.c | 46 +++++++++++++++++-----
- 1 file changed, 37 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
-index 8d65a1e2f1a3..f27e67f057fe 100644
---- a/drivers/platform/chrome/wilco_ec/debugfs.c
-+++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-@@ -160,29 +160,29 @@ static const struct file_operations fops_raw = {
-
- #define CMD_KB_CHROME		0x88
- #define SUB_CMD_H1_GPIO		0x0A
-+#define SUB_CMD_TEST_EVENT	0x0B
-
--struct h1_gpio_status_request {
-+struct ec_request {
- 	u8 cmd;		/* Always CMD_KB_CHROME */
- 	u8 reserved;
--	u8 sub_cmd;	/* Always SUB_CMD_H1_GPIO */
-+	u8 sub_cmd;
- } __packed;
-
--struct hi_gpio_status_response {
-+struct ec_response {
- 	u8 status;	/* 0 if allowed */
--	u8 val;		/* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
-+	u8 val;
- } __packed;
-
--static int h1_gpio_get(void *arg, u64 *val)
-+static int send_ec_cmd(struct wilco_ec_device *ec, u8 sub_cmd, u8 *val)
- {
--	struct wilco_ec_device *ec = arg;
--	struct h1_gpio_status_request rq;
--	struct hi_gpio_status_response rs;
-+	struct ec_request rq;
-+	struct ec_response rs;
- 	struct wilco_ec_message msg;
- 	int ret;
-
- 	memset(&rq, 0, sizeof(rq));
- 	rq.cmd = CMD_KB_CHROME;
--	rq.sub_cmd = SUB_CMD_H1_GPIO;
-+	rq.sub_cmd = sub_cmd;
-
- 	memset(&msg, 0, sizeof(msg));
- 	msg.type = WILCO_EC_MSG_LEGACY;
-@@ -200,9 +200,35 @@ static int h1_gpio_get(void *arg, u64 *val)
-
- 	return 0;
- }
-+/**
-+ * h1_gpio_get() - Gets h1 gpio status.
-+ * @arg: The wilco EC device.
-+ * @val: BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL
-+ */
-+static int h1_gpio_get(void *arg, u64 *val)
-+{
-+	return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
-+}
-
- DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
-
-+/**
-+ * test_event_set() - Sends command to EC to cause an EC test event.
-+ * @arg: The wilco EC device.
-+ * @val: unused.
-+ */
-+static int test_event_set(void *arg, u64 val)
-+{
-+	u8 ret;
-+
-+	return send_ec_cmd(arg, SUB_CMD_TEST_EVENT, &ret);
-+}
-+
-+/* Format set to NULL since it is only used on read operations which are
-+ * forbidden by file permissions.
-+ */
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_test_event, NULL, test_event_set, NULL);
-+
- /**
-  * wilco_ec_debugfs_probe() - Create the debugfs node
-  * @pdev: The platform device, probably created in core.c
-@@ -226,6 +252,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
- 	debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
- 	debugfs_create_file("h1_gpio", 0444, debug_info->dir, ec,
- 			    &fops_h1_gpio);
-+	debugfs_create_file("test_event", 0200, debug_info->dir, ec,
-+			    &fops_test_event);
-
- 	return 0;
- }
---
-2.23.0.237.gc6a4ce50a0-goog
-
+I do think it is worth clarifying in the guidelines of writing a
+profile to make an effort to not be special, and that odd looking
+rules will be questioned (like libnvdimm statement continuation), but
+lets not fight the new standards fight until it becomes apparent where
+the outliers lie.
