@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A6A0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D92AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ABC520678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E313121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmYA7sgG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Os/OjkFd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfIQIR5 (ORCPT
+        id S1732072AbfIQISO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:17:57 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36812 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbfIQIR5 (ORCPT
+        Tue, 17 Sep 2019 04:18:14 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44169 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730143AbfIQISN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:17:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f19so1183121plr.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:17:56 -0700 (PDT)
+        Tue, 17 Sep 2019 04:18:13 -0400
+Received: by mail-pg1-f194.google.com with SMTP id i18so1571888pgl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:18:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=9/DW6g+3IE/yyFuOvSrn5fLFzPH6bb0i0Y6gcBVBAds=;
-        b=AmYA7sgGtBXo3HXA6Oaq46Vw7COra6dAPpgXuBsbFtWfIN/wBCE0KcfO2elqptvqGq
-         EgVwqvqC7sMlDb0dedinqFLdc/KZ0NWafoxjaRBJdqzRhWp897F4MG2Zyjr8Y2CO3xbv
-         cX6+/dUqeCOJhWiU9z7NqWaC+Mz6fDwmh4ITIvyYroIXne3fNbcZ+DbH7qiQk7xWe7RH
-         726VldWLzisQK/8LvqwxYEHaJ/ktJ2u9ecM1ulYFJOm1O5oZ04zk8uvMtYofw4Ze9D0x
-         YPppmgtzmBG+C+PHLZw6PhpwtebtFoKLwL0mq34MriooGlWjINfOVGyLzEXvi4u6sJ9x
-         Lzkw==
+        bh=ccksZ0DIr5YuOlmKQ56MKQuO6sfHn4/cYWLl1y6ZJss=;
+        b=Os/OjkFdbkxbCMGYZNy/HnlfvRLdNhVDvO3OQ3Tjqp9ysoWyo0oM4s2SSDCAzouHsz
+         gkjFk4cddTJ2rUMcXLsrmoS14Xcns241t9TBp2xl4Ltya+LciRWtEQ58XqrCB+viuEx7
+         Xghm6/lG8f6ZFz2ZU4/8yigRh6Xo6AZmD5tcBL7R/PVjNIiv+hOwCPRttq4vURDrB2U9
+         vVogGNoMgz30xlAJB7P7ThuBYG3OVdHfPB9AqNgQHkt62TSyfWxjkstqzWvMH0v+KetM
+         TDXnzs7rLDW60zjQDKVvTA0qCV9uV+ENswqS425WgupE4mmBCfMyiGcnJRNzzZkvqwea
+         1Xaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9/DW6g+3IE/yyFuOvSrn5fLFzPH6bb0i0Y6gcBVBAds=;
-        b=Hwq0QNmltu30M5MrOISSmUy6oo1uS67WG7jjPjXQmy9IApvUumnB+EwmoggaaM2CCC
-         OP1oFq7HpBc3rGXAcPAvMN4UGTNie1XjyD1K67F4bvUCRpSC3IBYs+TZp0WJmjMbdX7A
-         kjSF0nhFnI5DGdHdtNJCtfTZs3AijvPRHI+4L76B7EVZd4zSzgijJjWtRpWjwz/M01bB
-         P0/93mnx0Pi0iUuASgxKL9vDUjaXe8ok8d0ewbmqsfv/d7GRUzz8uUdqO/lK0Xn6zWld
-         HqktPB2KbCnFEi5Rd3CSNpTNwwa5FxsQAwspGlbPjPeFg/lRtoG/78u7+jenHxt3e5l9
-         IBog==
-X-Gm-Message-State: APjAAAXDP8Ei9SRYEqn51A0Z3kmTPFR/4zUV5bq2vkS3+yxA5IZfMaIe
-        UCyH3urT4I1JAEVCZTvhuq+Wrw==
-X-Google-Smtp-Source: APXvYqyRI8nkDySYpiYXHcJJkhuEXz+qWr4f+DIU2GB/BH5ywA3QvtlckSgoTkdi8kbdT3OxMBeikw==
-X-Received: by 2002:a17:902:5a89:: with SMTP id r9mr2309457pli.206.1568708276547;
-        Tue, 17 Sep 2019 01:17:56 -0700 (PDT)
+        bh=ccksZ0DIr5YuOlmKQ56MKQuO6sfHn4/cYWLl1y6ZJss=;
+        b=LS5YwVI7kVwTU6sNQKym6bYUDVsEQzSyF6G+Vw64wWaEDqsDB2U2tRwVM4w+s8xrmg
+         Km+NJq2KwXSiySUKxN/egKPJS9y/ot29pJH0jngmrusIu6tJzLUdH3ATehraj+k3vSC7
+         tU7kvCGISuxM0VzmDpjJGVU/M99YAe+zzQZrVbRfIdfWsPyo7hFg+MYBEd5Y3R/a1fiv
+         xkMpytdYKIyf6TOKsaHcWjM33Nr9yxi294likz48pXDF1QmBTW7XEFSr89buCq8Pays6
+         n16Y7Ojlwhy3dg0Nu7sJmdMn6cBlcOjYgCBdPILV3vnrvjciY2DgbEN83185w4RrtjqA
+         +ZSw==
+X-Gm-Message-State: APjAAAUQOpuGy8RcsxM7V4qWh+GpALc7+R7b/UGoeTEzup3y7oofAEe9
+        INj0V2EMeP8KSIkpKxGPivXcQw==
+X-Google-Smtp-Source: APXvYqwpy0WS+QkLpZKa7+H9dnq/Maul15NnA8yNy5WichOtA6IyRwXpsp5wW9igskBRzYgp3hRJ5g==
+X-Received: by 2002:a62:1955:: with SMTP id 82mr2836635pfz.256.1568708292663;
+        Tue, 17 Sep 2019 01:18:12 -0700 (PDT)
 Received: from localhost ([122.172.73.172])
-        by smtp.gmail.com with ESMTPSA id m9sm1570681pjf.11.2019.09.17.01.17.55
+        by smtp.gmail.com with ESMTPSA id v44sm4392124pgn.17.2019.09.17.01.18.11
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Sep 2019 01:17:55 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 09:17:54 +0100
+        Tue, 17 Sep 2019 01:18:12 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 09:18:05 +0100
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -65,14 +65,14 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         "Rafael J. Wysocki" <rjw@rjwysocki.net>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 2/5] cpufreq: Initialise the governors in core_initcall
-Message-ID: <20190917081754.pjmgolgdtz2jcp76@vireshk-mac-ubuntu>
+Subject: Re: [PATCH 3/5] cpufreq: Initialize cpufreq-dt driver earlier
+Message-ID: <20190917081805.kmhu6zcdo6akbqe3@vireshk-mac-ubuntu>
 References: <cover.1568240476.git.amit.kucheria@linaro.org>
- <6ac50a647b8b9ee4af70a33fab10bb5df4a6b5ff.1568240476.git.amit.kucheria@linaro.org>
+ <23d3ed7edc8b859da8e7640f77cf3028ad5804f3.1568240476.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6ac50a647b8b9ee4af70a33fab10bb5df4a6b5ff.1568240476.git.amit.kucheria@linaro.org>
+In-Reply-To: <23d3ed7edc8b859da8e7640f77cf3028ad5804f3.1568240476.git.amit.kucheria@linaro.org>
 User-Agent: NeoMutt/20170609 (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,17 +80,12 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 12-09-19, 04:02, Amit Kucheria wrote:
-> Initialise the cpufreq governors earlier to allow for earlier
-> performance control during the boot process.
+> This allows HW drivers that depend on cpufreq-dt to initialise earlier.
 > 
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  drivers/cpufreq/cpufreq_conservative.c | 2 +-
->  drivers/cpufreq/cpufreq_ondemand.c     | 2 +-
->  drivers/cpufreq/cpufreq_performance.c  | 2 +-
->  drivers/cpufreq/cpufreq_powersave.c    | 2 +-
->  drivers/cpufreq/cpufreq_userspace.c    | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
