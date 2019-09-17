@@ -2,292 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C58C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071D3C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F0B21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:00:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE79E21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568718308;
+	bh=YBiYlpMCxYMuHq/R/A6MyZ56tJz7oTvUkA/g5FHifvk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PUIg3scn8wHSFm3YJsxhJC+QAaaCIriQZkBq8SO8LgZA1G87E0+4oaUaZTLs92W9b
+	 qP375mYvoNpL734rYnoxrfZWHJDexpeh5ooa/TMnLQBiRy9t4ZUXQSkEoSxLrMOJky
+	 fRvT0DW91iel82QUlVEx8HJk7zD7Is3YiBiQChUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727025AbfIQLAs (ORCPT
+        id S1726679AbfIQLFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 07:00:48 -0400
-Received: from mga03.intel.com ([134.134.136.65]:44039 "EHLO mga03.intel.com"
+        Tue, 17 Sep 2019 07:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726243AbfIQLAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 07:00:48 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 04:00:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,516,1559545200"; 
-   d="scan'208";a="193720429"
-Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 04:00:44 -0700
-Date:   Tue, 17 Sep 2019 18:58:02 +0800
-From:   Tiwei Bie <tiwei.bie@intel.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-Message-ID: <20190917105801.GA24855@___>
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
+        id S1725270AbfIQLFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 07:05:07 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57BEE21670;
+        Tue, 17 Sep 2019 11:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568718307;
+        bh=YBiYlpMCxYMuHq/R/A6MyZ56tJz7oTvUkA/g5FHifvk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=h/t6x4MZVclF1qc13dvlETRk8rWsKca3PT9MWMby9Jn7u+15NTu1q9q7f/MwSIit7
+         ouZnRgiVBK+hHYBBGj9VjQdec897yJQrj9naMmV4nVgelj2WzlrCjTTxfCk4n0uPiM
+         iiMU9DqD4YBW0YoBU/9liW7c59tGV8wluGfPwnDo=
+Date:   Tue, 17 Sep 2019 12:05:02 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Xogium <contact@xogium.me>, linux-arm-kernel@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        gregkh@linuxfoundation.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [breakage] panic() does not halt arm64 systems under certain
+ conditions
+Message-ID: <20190917110501.jquezxppeg35i7ce@willie-the-truck>
+References: <BX1W47JXPMR8.58IYW53H6M5N@dragonstone>
+ <20190917104518.ovg6ivadyst7h76o@willie-the-truck>
+ <20190917105136.GK25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190917105136.GK25745@shell.armlinux.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:32:03AM +0800, Jason Wang wrote:
-> On 2019/9/17 上午9:02, Tiwei Bie wrote:
-> > This RFC is to demonstrate below ideas,
+On Tue, Sep 17, 2019 at 11:51:36AM +0100, Russell King - ARM Linux admin wrote:
+> On Tue, Sep 17, 2019 at 11:45:19AM +0100, Will Deacon wrote:
+> > [Expanding CC list; original message is here:
+> >  https://lore.kernel.org/linux-arm-kernel/BX1W47JXPMR8.58IYW53H6M5N@dragonstone/]
 > > 
-> > a) Build vhost-mdev on top of the same abstraction defined in
-> >     the virtio-mdev series [1];
+> > On Mon, Sep 16, 2019 at 09:35:36PM -0400, Xogium wrote:
+> > > On arm64 in some situations userspace will continue running even after a
+> > > panic. This means any userspace watchdog daemon will continue pinging,
+> > > that service managers will keep running and displaying messages in certain
+> > > cases, and that it is possible to enter via ssh in the now unstable system
+> > > and to do almost anything except reboot/power off and etc. If
+> > > CONFIG_PREEMPT=n is set in the kernel's configuration, the issue is fixed.
+> > > I have reproduced the very same behavior with linux 4.19, 5.2 and 5.3. On
+> > > x86/x86_64 the issue does not seem to be present at all.
 > > 
-> > b) Introduce /dev/vhost-mdev to do vhost ioctls and support
-> >     setting mdev device as backend;
+> > I've managed to reproduce this under both 32-bit and 64-bit ARM kernels.
+> > The issue is that the infinite loop at the end of panic() can run with
+> > preemption enabled (particularly when invoking by echoing 'c' to
+> > /proc/sysrq-trigger), so we end up rescheduling user tasks. On x86, this
+> > doesn't happen because smp_send_stop() disables the local APIC in
+> > native_stop_other_cpus() and so interrupts are effectively masked while
+> > spinning.
 > > 
-> > Now the userspace API looks like this:
-> > 
-> > - Userspace generates a compatible mdev device;
-> > 
-> > - Userspace opens this mdev device with VFIO API (including
-> >    doing IOMMU programming for this mdev device with VFIO's
-> >    container/group based interface);
-> > 
-> > - Userspace opens /dev/vhost-mdev and gets vhost fd;
-> > 
-> > - Userspace uses vhost ioctls to setup vhost (userspace should
-> >    do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
-> >    fd first before doing other vhost ioctls);
-> > 
-> > Only compile test has been done for this series for now.
+> > A straightforward fix is to disable preemption explicitly on the panic()
+> > path (diff below), but I've expanded the cc list to see both what others
+> > think,
 > 
+> Yep, and it looks like this bug goes back into the dim and distant past.
+> At least to the start of modern git history, 2.6.12-rc2.
 > 
-> Have a hard thought on the architecture:
-
-Thanks a lot! Do appreciate it!
-
+> > but also in case smp_send_stop() is supposed to have the side-effect
+> > of disabling interrupt delivery for the local CPU.
 > 
-> 1) Create a vhost char device and pass vfio mdev device fd to it as a
-> backend and translate vhost-mdev ioctl to virtio mdev transport (e.g
-> read/write). DMA was done through the VFIO DMA mapping on the container that
-> is attached.
-
-Yeah, that's what we are doing in this series.
-
+> That can't fix it.  Consider a preemptive non-SMP kernel.
+> smp_send_stop() becomes a no-op there.
 > 
-> We have two more choices:
-> 
-> 2) Use vfio-mdev but do not create vhost-mdev device, instead, just
-> implement vhost ioctl on vfio_device_ops, and translate them into
-> virtio-mdev transport or just pass ioctl to parent.
+> I'd suggest that a preemptive UP kernel on x86 hardware will suffer
+> this same issue - it will be able to preempt out of this loop and
+> continue running userspace.
 
-Yeah. Instead of introducing /dev/vhost-mdev char device, do
-vhost ioctls on VFIO device fd directly. That's what we did
-in RFC v3.
+You're right; I managed to reproduce this locally on my xeon box.
 
-> 
-> 3) Don't use vfio-mdev, create a new vhost-mdev driver, during probe still
-> try to add dev to vfio group and talk to parent with device specific ops
-
-If my understanding is correct, this means we need to introduce
-a new VFIO device driver to replace the existing vfio-mdev driver
-in our case. Below is a quick draft just to show my understanding:
-
-#include <linux/init.h>
-#include <linux/module.h>
-#include <linux/device.h>
-#include <linux/kernel.h>
-#include <linux/slab.h>
-#include <linux/vfio.h>
-#include <linux/mdev.h>
-
-#include "mdev_private.h"
-
-/* XXX: we need a proper way to include below vhost header. */
-#include "../../vhost/vhost.h"
-
-static int vfio_vhost_mdev_open(void *device_data)
-{
-	if (!try_module_get(THIS_MODULE))
-		return -ENODEV;
-
-	/* ... */
-	vhost_dev_init(...);
-
-	return 0;
-}
-
-static void vfio_vhost_mdev_release(void *device_data)
-{
-	/* ... */
-	module_put(THIS_MODULE);
-}
-
-static long vfio_vhost_mdev_unlocked_ioctl(void *device_data,
-					   unsigned int cmd, unsigned long arg)
-{
-	struct mdev_device *mdev = device_data;
-	struct mdev_parent *parent = mdev->parent;
-
-	/*
-	 * Use vhost ioctls.
-	 *
-	 * We will have a different parent_ops design.
-	 * And potentially, we can share the same parent_ops
-	 * with virtio_mdev.
-	 */
-	switch (cmd) {
-	case VHOST_GET_FEATURES:
-		parent->ops->get_features(mdev, ...);
-		break;
-	/* ... */
-	}
-
-	return 0;
-}
-
-static ssize_t vfio_vhost_mdev_read(void *device_data, char __user *buf,
-				    size_t count, loff_t *ppos)
-{
-	/* ... */
-	return 0;
-}
-
-static ssize_t vfio_vhost_mdev_write(void *device_data, const char __user *buf,
-				     size_t count, loff_t *ppos)
-{
-	/* ... */
-	return 0;
-}
-
-static int vfio_vhost_mdev_mmap(void *device_data, struct vm_area_struct *vma)
-{
-	/* ... */
-	return 0;
-}
-
-static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
-	.name		= "vfio-vhost-mdev",
-	.open		= vfio_vhost_mdev_open,
-	.release	= vfio_vhost_mdev_release,
-	.ioctl		= vfio_vhost_mdev_unlocked_ioctl,
-	.read		= vfio_vhost_mdev_read,
-	.write		= vfio_vhost_mdev_write,
-	.mmap		= vfio_vhost_mdev_mmap,
-};
-
-static int vfio_vhost_mdev_probe(struct device *dev)
-{
-	struct mdev_device *mdev = to_mdev_device(dev);
-
-	/* ... */
-	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
-}
-
-static void vfio_vhost_mdev_remove(struct device *dev)
-{
-	/* ... */
-	vfio_del_group_dev(dev);
-}
-
-static struct mdev_driver vfio_vhost_mdev_driver = {
-	.name	= "vfio_vhost_mdev",
-	.probe	= vfio_vhost_mdev_probe,
-	.remove	= vfio_vhost_mdev_remove,
-};
-
-static int __init vfio_vhost_mdev_init(void)
-{
-	return mdev_register_driver(&vfio_vhost_mdev_driver, THIS_MODULE);
-}
-module_init(vfio_vhost_mdev_init)
-
-static void __exit vfio_vhost_mdev_exit(void)
-{
-	mdev_unregister_driver(&vfio_vhost_mdev_driver);
-}
-module_exit(vfio_vhost_mdev_exit)
-
-> 
-> So I have some questions:
-> 
-> 1) Compared to method 2, what's the advantage of creating a new vhost char
-> device? I guess it's for keep the API compatibility?
-
-One benefit is that we can avoid doing vhost ioctls on
-VFIO device fd.
-
-> 
-> 2) For method 2, is there any easy way for user/admin to distinguish e.g
-> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
-
-I think device-api could be a choice.
-
-> I saw you introduce
-> ops matching helper but it's not friendly to management.
-
-The ops matching helper is just to check whether a given
-vfio-device is based on a mdev device.
-
-> 
-> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
-> assumes the parameter comes from userspace, it prevents support kernel
-> virtio drivers.
-> 
-> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
-> we can use device specific ops instead of VFIO ones, then we can have a
-> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
-
-As the above draft shows, this requires introducing a new
-VFIO device driver. I think Alex's opinion matters here.
-
-Thanks,
-Tiwei
-
-> 
-> What's your thoughts?
-> 
-> Thanks
-> 
-> 
-> > 
-> > RFCv3: https://patchwork.kernel.org/patch/11117785/
-> > 
-> > [1] https://lkml.org/lkml/2019/9/10/135
-> > 
-> > Tiwei Bie (3):
-> >    vfio: support getting vfio device from device fd
-> >    vfio: support checking vfio driver by device ops
-> >    vhost: introduce mdev based hardware backend
-> > 
-> >   drivers/vfio/mdev/vfio_mdev.c    |   3 +-
-> >   drivers/vfio/vfio.c              |  32 +++
-> >   drivers/vhost/Kconfig            |   9 +
-> >   drivers/vhost/Makefile           |   3 +
-> >   drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
-> >   drivers/vhost/vhost.c            |  39 ++-
-> >   drivers/vhost/vhost.h            |   6 +
-> >   include/linux/vfio.h             |  11 +
-> >   include/uapi/linux/vhost.h       |  10 +
-> >   include/uapi/linux/vhost_types.h |   5 +
-> >   10 files changed, 573 insertions(+), 7 deletions(-)
-> >   create mode 100644 drivers/vhost/mdev.c
-> > 
+Will
