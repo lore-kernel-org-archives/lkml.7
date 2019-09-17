@@ -2,260 +2,136 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA01C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18288C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A5D206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EABD82171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:11:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="YdzhHD7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbfIQSIK (ORCPT
+        id S1728530AbfIQSLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:08:10 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39180 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726883AbfIQSIJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:08:09 -0400
-Received: (qmail 6625 invoked by uid 2102); 17 Sep 2019 14:08:08 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Sep 2019 14:08:08 -0400
-Date:   Tue, 17 Sep 2019 14:08:08 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <kai.heng.feng@canonical.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <mans@mansr.com>, <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in usb_set_interface
-In-Reply-To: <Pine.LNX.4.44L0.1909171323180.1590-100000@iolanthe.rowland.org>
-Message-ID: <Pine.LNX.4.44L0.1909171405350.1590-100000@iolanthe.rowland.org>
+        Tue, 17 Sep 2019 14:11:02 -0400
+Received: from mout.web.de ([212.227.17.11]:54461 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726883AbfIQSLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:11:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568743856;
+        bh=d9TW36q57TtUhaDqRDnDUDN9MbferJkF9Berl7AxpXQ=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=YdzhHD7/jnILKo49qeykDgMoU2hGjeGFbAn3W1kg1IrA2L0xkmp1JZuCSBZnd+Y4L
+         srTBhhaZOVU6erJnaucEe6yRLciYFqw4/CfPCUixM+ZWrrYZssY3bT689VwFmvy8r9
+         baPq9xXw4AkFp+mPR4orQwTcdLsUNn0T0CI+jhbc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.93.51]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0LoHTx-1hhZpO3qrB-00gJla; Tue, 17
+ Sep 2019 20:10:56 +0200
+Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
+        Andy Gross <agross@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190917172758.GA11926@SD>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
+Date:   Tue, 17 Sep 2019 20:10:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20190917172758.GA11926@SD>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:8iF/rVcBhpF/5hzQPOepRHdnbxTMksQyZZQoForHX9BV+XO2NxY
+ LY8yc9PY3SdWmWCT7esS6jB+iiX23BPp5WUgz+Te4BfafnhU1LiG0XFFYGHFeoEqcu07c4f
+ kpCBWtNn0Qt6AGqt/n7qHJYLBfCkmPP13OLbuNJ+kEXRdrayAeL/2ZNSAqMWExXji6hg1Dz
+ vULKXRqjHvzRMy4uZMCTg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nBQyYiLcrTY=:dKrENFSDBqcF+q6heRPfZe
+ vIb7OX7MZu/XaJL0yhSRXmDFl02SU3zuT4woki/+FCKV3BaeoyCX5gogRf3DLGpVM6DWazt3P
+ nJhxbSHg4cb6B1DQTkV0dSNOu52akRXO6dM+2GJvkQrSyeztQzOSMpTUxHHhXuPl+J4oEVGf6
+ 9+EdY/+s6CNf59xrF3Ws9rw1qvMsizSVVr9uZlikcBpP7hFVSkYk4ipTLpRcc9kfAK8aEjdx2
+ RL0gxhEf1iR5BM5RQrDcZZsIXstvfiPhgFH9megn7J20gAG4C8RpSYnE5sKtHdIbWrp4afqiS
+ nH5am3PoF1da3k/MOqldJYUg865yDEIXSP74fcue2YVX8j3yyRX7xrZikGYS+NCBFwa5BmWES
+ CaZKfWj5uIrKrC21ffdQjX3sQS2wpoR/O7QKJ09Wj37IGs5Uba5fb43QqEFD1ylYEDBGQ1vWN
+ YfECCRNE+q9Bi+uQbnzXEi+0wI7WGwsVPgSWNyrTyQLsL/SBZLL65HugTN9l7ZckCMK58M+gL
+ 35uRtjBDZCR+BTpf8hpy0B1RdJwibFBpRAm3lMjEtt3CHoqt0ASHuUP5TTLoclpJg9xxLSUnh
+ UcWRhWGVouawg62E/CGxqirA5oCFJdsQw0o977y21BUgwEbK3somXMWO4TNDrCREtiNAxbKsf
+ GYgSoaKk8YCb4mWh05CuyjUL9WGfUKVVCakG5vR8Rx/NYrMQIsHBUp4NXBJvP25skPGeYhglJ
+ ZzZGnl9Xc6UgouKz+pf6J0Svxlpf/Sw0EiYc98Bjesg+GB97a70BFI4scYlNsWL2WRBRtd/Am
+ 1GVj7JBF6E9kQNsgzn2ZMNezzU04QO6YxUjEghirt7PyW1bvRqnVbzc9dyUXUcqLp5248+jVG
+ z/3tEXv9lVp97+NhW9PAsnq3eWkGMiOhDVUWVdxcROzAV0JA61gdIrfYYf/5htx4jk5T27S/N
+ 5ZjZGhoG4O0CQqlofcLnIq7Cif78mEtlvomhFSKLTv7lqlnK0DSUysdjePy46PlQkNxdxsHL5
+ L5+4prOA/ZNaAwmZt9brRYC8FfFZN8fPCeNJM/FE5fUZmeHPYlFKIgl7oA+az3M+JQ6WNexgx
+ wCK2W2gh4KZsTzLDfKuLYrQonKaRhcmJm5nLNuR0+ZvXpXgzjViSdjxTI9P7HsZwhl14LHzbA
+ mzrPQJecDkEt6UBWEY5JYL79JlnJTlJ/DfHkrsM6Vj+XJAgNum9VasxtIB5sx+UA19rngO2fp
+ lo9rjDUfuMDclMBBqN/izdqrNNr4hW7YpXSwq3Vc9kAEHF62BAo9LxPkKsKA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, Alan Stern wrote:
+> Using cocciecheck to ensure there are no semantic issues in
+> i2c-qup driver.
 
-> On Tue, 17 Sep 2019, syzbot wrote:
-> 
-> > Hello,
-> > 
-> > syzbot has tested the proposed patch but the reproducer still triggered  
-> > crash:
-> > WARNING in sysfs_remove_group
-> > 
-> > ------------[ cut here ]------------
-> > sysfs group 'power' not found for kobject 'radio3'
-> > WARNING: CPU: 1 PID: 2883 at fs/sysfs/group.c:278 sysfs_remove_group  
-> > fs/sysfs/group.c:278 [inline]
-> > WARNING: CPU: 1 PID: 2883 at fs/sysfs/group.c:278  
-> > sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:269
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 2883 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   panic+0x2a3/0x6da kernel/panic.c:219
-> >   __warn.cold+0x20/0x4a kernel/panic.c:576
-> >   report_bug+0x262/0x2a0 lib/bug.c:186
-> >   fixup_bug arch/x86/kernel/traps.c:179 [inline]
-> >   fixup_bug arch/x86/kernel/traps.c:174 [inline]
-> >   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-> >   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-> >   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> > RIP: 0010:sysfs_remove_group fs/sysfs/group.c:278 [inline]
-> > RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:269
-> > Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c  
-> > 01 00 75 41 48 8b 33 48 c7 c7 e0 c8 d0 85 e8 a0 0e 8b ff <0f> 0b eb 95 e8  
-> > e2 d1 db ff e9 d2 fe ff ff 48 89 df e8 d5 d1 db ff
-> > RSP: 0018:ffff8881c6d17c50 EFLAGS: 00010286
-> > RAX: 0000000000000000 RBX: ffffffff85f2d700 RCX: 0000000000000000
-> > RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed1038da2f7c
-> > RBP: 0000000000000000 R08: ffff8881d6243000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881cf014cd8
-> > R13: ffffffff85f2dca0 R14: 0000000000000000 R15: ffff8881cf015178
-> >   dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:735
-> >   device_del+0x12a/0xb10 drivers/base/core.c:2316
-> >   device_unregister+0x11/0x30 drivers/base/core.c:2371
-> >   video_unregister_device+0xa2/0xc0 drivers/media/v4l2-core/v4l2-dev.c:1051
-> >   usbvision_unregister_video+0x83/0x120  
-> > drivers/media/usb/usbvision/usbvision-video.c:1243
-> >   usbvision_release+0x10d/0x1c0  
-> > drivers/media/usb/usbvision/usbvision-video.c:1356
-> >   usbvision_radio_close.cold+0x2b/0x74  
-> > drivers/media/usb/usbvision/usbvision-video.c:1129
-> >   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
-> >   __fput+0x2d7/0x840 fs/file_table.c:280
-> >   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
-> >   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-> >   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
-> >   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-> >   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-> >   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x7f4fde8992b0
-> > Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
-> > 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-> > ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-> > RSP: 002b:00007ffcce3d65f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-> > RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f4fde8992b0
-> > RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
-> > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-> > R13: 00007ffcce3d6750 R14: 0000000000000000 R15: 0000000000000000
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> > 
-> > 
-> > Tested on:
-> > 
-> > commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=178ba88d600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > patch:          https://syzkaller.appspot.com/x/patch.diff?x=14ce1b59600000
-> 
-> This is more than I can fix.  The whole way the v4l2 layer handles
-> reference counting seems suspicious and I don't understand it.  (Does
-> the code assume that the only reference holders are initial
-> registration and open files?)
-> 
-> In this case it looks like the device may be unregistered twice.  It's
-> hard to tell exactly what's going wrong without knowing more about how
-> this is supposed to work.  It wouldn't hurt, for example, to use 
-> dev_info() instead of printk(KERN_INFO) in places like 
-> usbvision_disconnect().
-> 
-> I'm going to step back and let the maintainers deal with the rest of
-> this.
+* This wording contains a typo.
 
-Changed my mind.  There are some obvious races between the open, close, 
-and disconnect routines.  Maybe fixing them will help.
+* I would prefer to refer to a desired reduction of a few
+  source code quality concerns.
 
-Alan Stern
 
-#syz test: https://github.com/google/kasan.git f0df5c1b
+> Changes in =E2=80=A6
 
- drivers/media/usb/usbvision/usbvision-video.c |   27 ++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+Can such a prefix be omitted?
 
-Index: usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-===================================================================
---- usb-devel.orig/drivers/media/usb/usbvision/usbvision-video.c
-+++ usb-devel/drivers/media/usb/usbvision/usbvision-video.c
-@@ -314,6 +314,10 @@ static int usbvision_v4l2_open(struct fi
- 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
- 		return -ERESTARTSYS;
- 
-+	if (usbvision->remove_pending) {
-+		err_code = -ENODEV;
-+		goto unlock;
-+	}
- 	if (usbvision->user) {
- 		err_code = -EBUSY;
- 	} else {
-@@ -377,6 +381,7 @@ unlock:
- static int usbvision_v4l2_close(struct file *file)
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
-+	int r;
- 
- 	PDEBUG(DBG_IO, "close");
- 
-@@ -391,9 +396,10 @@ static int usbvision_v4l2_close(struct f
- 	usbvision_scratch_free(usbvision);
- 
- 	usbvision->user--;
-+	r = usbvision->remove_pending;
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->remove_pending) {
-+	if (r) {
- 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
- 		usbvision_release(usbvision);
- 		return 0;
-@@ -453,6 +459,9 @@ static int vidioc_querycap(struct file *
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
- 
-+	if (!usbvision->dev)
-+		return -ENODEV;
-+
- 	strscpy(vc->driver, "USBVision", sizeof(vc->driver));
- 	strscpy(vc->card,
- 		usbvision_device_data[usbvision->dev_model].model_string,
-@@ -1073,6 +1082,11 @@ static int usbvision_radio_open(struct f
- 
- 	if (mutex_lock_interruptible(&usbvision->v4l2_lock))
- 		return -ERESTARTSYS;
-+
-+	if (usbvision->remove_pending) {
-+		err_code = -ENODEV;
-+		goto out;
-+	}
- 	err_code = v4l2_fh_open(file);
- 	if (err_code)
- 		goto out;
-@@ -1105,21 +1119,24 @@ out:
- static int usbvision_radio_close(struct file *file)
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
-+	int r;
- 
- 	PDEBUG(DBG_IO, "");
- 
- 	mutex_lock(&usbvision->v4l2_lock);
- 	/* Set packet size to 0 */
- 	usbvision->iface_alt = 0;
--	usb_set_interface(usbvision->dev, usbvision->iface,
-+	if (usbvision->dev)
-+		usb_set_interface(usbvision->dev, usbvision->iface,
- 				    usbvision->iface_alt);
- 
- 	usbvision_audio_off(usbvision);
- 	usbvision->radio = 0;
- 	usbvision->user--;
-+	r = usbvision->remove_pending;
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->remove_pending) {
-+	if (r) {
- 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
- 		v4l2_fh_release(file);
- 		usbvision_release(usbvision);
-@@ -1551,6 +1568,7 @@ err_usb:
- static void usbvision_disconnect(struct usb_interface *intf)
- {
- 	struct usb_usbvision *usbvision = to_usbvision(usb_get_intfdata(intf));
-+	int u;
- 
- 	PDEBUG(DBG_PROBE, "");
- 
-@@ -1567,13 +1585,14 @@ static void usbvision_disconnect(struct
- 	v4l2_device_disconnect(&usbvision->v4l2_dev);
- 	usbvision_i2c_unregister(usbvision);
- 	usbvision->remove_pending = 1;	/* Now all ISO data will be ignored */
-+	u = usbvision_user;
- 
- 	usb_put_dev(usbvision->dev);
- 	usbvision->dev = NULL;	/* USB device is no more */
- 
- 	mutex_unlock(&usbvision->v4l2_lock);
- 
--	if (usbvision->user) {
-+	if (u) {
- 		printk(KERN_INFO "%s: In use, disconnect pending\n",
- 		       __func__);
- 		wake_up_interruptible(&usbvision->wait_frame);
-
+Regards,
+Markus
