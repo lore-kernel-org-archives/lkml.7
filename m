@@ -2,189 +2,84 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2D1C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0BAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:43:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900B521881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CBF21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:43:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfIQMm5 (ORCPT
+        id S1728665AbfIQMnH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:42:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52494 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfIQMm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:42:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C6F54E83C;
-        Tue, 17 Sep 2019 12:42:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CEC546012E;
-        Tue, 17 Sep 2019 12:42:42 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 14:42:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com
-Subject: Re: [RFC PATCH 2/2] mdev: introduce device specific ops
-Message-ID: <20190917144240.6a59b65f.cohuck@redhat.com>
-In-Reply-To: <20190912094012.29653-3-jasowang@redhat.com>
-References: <20190912094012.29653-1-jasowang@redhat.com>
-        <20190912094012.29653-3-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 17 Sep 2019 08:43:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:49519 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbfIQMnG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:43:06 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iACow-0000dH-07; Tue, 17 Sep 2019 14:43:02 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iACov-000394-FP; Tue, 17 Sep 2019 14:43:01 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, lee.jones@linaro.org,
+        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        stwiss.opensource@diasemi.com
+Cc:     kernel@pengutronix.de, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] dt-bindings: mfd: da9062: add regulator voltage selection documentation
+Date:   Tue, 17 Sep 2019 14:42:43 +0200
+Message-Id: <20190917124246.11732-3-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190917124246.11732-1-m.felsch@pengutronix.de>
+References: <20190917124246.11732-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 17 Sep 2019 12:42:56 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 17:40:12 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Add the documentation which describe the voltage selection gpio support.
+This property can be applied to each subnode within the 'regulators'
+node so each regulator can be configured differently.
 
-> Currently, except for the crate and remove. The rest fields of
-> mdev_parent_ops is just designed for vfio-mdev driver and may not help
-> for kernel mdev driver. So follow the device id support by previous
-> patch, this patch introduces device specific ops which points to
-> device specific ops (e.g vfio ops). This allows the future drivers
-> like virtio-mdev to implement its own device specific ops.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/gpu/drm/i915/gvt/kvmgt.c  | 14 +++---
->  drivers/s390/cio/vfio_ccw_ops.c   | 14 +++---
->  drivers/s390/crypto/vfio_ap_ops.c | 10 +++--
->  drivers/vfio/mdev/vfio_mdev.c     | 30 +++++++------
->  include/linux/mdev.h              | 72 ++++++++++++++++++-------------
->  samples/vfio-mdev/mbochs.c        | 16 ++++---
->  samples/vfio-mdev/mdpy.c          | 16 ++++---
->  samples/vfio-mdev/mtty.c          | 14 +++---
->  8 files changed, 113 insertions(+), 73 deletions(-)
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ Documentation/devicetree/bindings/mfd/da9062.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index f85045392120..3b8a76bc69cf 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -27,27 +27,9 @@ int mdev_set_iommu_device(struct device *dev, struct device *iommu_device);
->  struct device *mdev_get_iommu_device(struct device *dev);
->  
->  /**
-> - * struct mdev_parent_ops - Structure to be registered for each parent device to
-> - * register the device to mdev module.
-> + * struct vfio_mdev_parent_ops - Structure to be registered for each
-> + * parent device to register the device to vfio-mdev module.
->   *
-> - * @owner:		The module owner.
-> - * @dev_attr_groups:	Attributes of the parent device.
-> - * @mdev_attr_groups:	Attributes of the mediated device.
-> - * @supported_type_groups: Attributes to define supported types. It is mandatory
-> - *			to provide supported types.
-> - * @create:		Called to allocate basic resources in parent device's
-> - *			driver for a particular mediated device. It is
-> - *			mandatory to provide create ops.
-> - *			@kobj: kobject of type for which 'create' is called.
-> - *			@mdev: mdev_device structure on of mediated device
-> - *			      that is being created
-> - *			Returns integer: success (0) or error (< 0)
-> - * @remove:		Called to free resources in parent device's driver for a
-> - *			a mediated device. It is mandatory to provide 'remove'
-> - *			ops.
-> - *			@mdev: mdev_device device structure which is being
-> - *			       destroyed
-> - *			Returns integer: success (0) or error (< 0)
->   * @open:		Open mediated device.
->   *			@mdev: mediated device.
->   *			Returns integer: success (0) or error (< 0)
-> @@ -72,6 +54,43 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + */
-> +struct vfio_mdev_parent_ops {
-> +	int     (*open)(struct mdev_device *mdev);
-> +	void    (*release)(struct mdev_device *mdev);
-> +	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> +			size_t count, loff_t *ppos);
-> +	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> +			 size_t count, loff_t *ppos);
-> +	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> +			 unsigned long arg);
-> +	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +};
-> +
-> +/**
-> + * struct mdev_parent_ops - Structure to be registered for each parent device to
-> + * register the device to mdev module.
-> + *
-> + * @owner:		The module owner.
-> + * @dev_attr_groups:	Attributes of the parent device.
-> + * @mdev_attr_groups:	Attributes of the mediated device.
-> + * @supported_type_groups: Attributes to define supported types. It is mandatory
-> + *			to provide supported types.
-> + * @create:		Called to allocate basic resources in parent device's
-> + *			driver for a particular mediated device. It is
-> + *			mandatory to provide create ops.
-> + *			@kobj: kobject of type for which 'create' is called.
-> + *			@mdev: mdev_device structure on of mediated device
-> + *			      that is being created
-> + *			Returns integer: success (0) or error (< 0)
-> + * @remove:		Called to free resources in parent device's driver for a
-> + *			a mediated device. It is mandatory to provide 'remove'
-> + *			ops.
-> + *			@mdev: mdev_device device structure which is being
-> + *			       destroyed
-> + *			Returns integer: success (0) or error (< 0)
-> + * @device_ops:         Device specific emulation callback.
-> + *
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -83,15 +102,7 @@ struct mdev_parent_ops {
->  
->  	int     (*create)(struct kobject *kobj, struct mdev_device *mdev);
->  	int     (*remove)(struct mdev_device *mdev);
-> -	int     (*open)(struct mdev_device *mdev);
-> -	void    (*release)(struct mdev_device *mdev);
-> -	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> -			size_t count, loff_t *ppos);
-> -	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> -			 size_t count, loff_t *ppos);
-> -	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> -			 unsigned long arg);
-> -	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	const void *device_ops;
->  };
->  
->  /* interface for exporting mdev supported type attributes */
+diff --git a/Documentation/devicetree/bindings/mfd/da9062.txt b/Documentation/devicetree/bindings/mfd/da9062.txt
+index edca653a5777..9d9820d8177d 100644
+--- a/Documentation/devicetree/bindings/mfd/da9062.txt
++++ b/Documentation/devicetree/bindings/mfd/da9062.txt
+@@ -66,6 +66,15 @@ Sub-nodes:
+   details of individual regulator device can be found in:
+   Documentation/devicetree/bindings/regulator/regulator.txt
+ 
++  Optional regulator device-specific properties:
++  - dlg,vsel-sense-gpios : The GPIO reference which should be used by the
++    regulator to switch the voltage between active/suspend voltage settings. If
++    the signal is active the active-settings are applied else the suspend
++    settings are applied. Attention: Sharing the same gpio for other purposes
++    or across multiple regulators is possible but the gpio settings must be the
++    same. Also the gpio phandle must refer to to the dlg,da9062-gpio device
++    other gpios are not allowed and make no sense.
++
+ - rtc : This node defines settings required for the Real-Time Clock associated
+   with the DA9062. There are currently no entries in this binding, however
+   compatible = "dlg,da9062-rtc" should be added if a node is created.
+-- 
+2.20.1
 
-This basically looks like a split between stuff that is always
-triggered from userspace (create and the like) and stuff that is
-triggered from userspace for vfio mdevs, but not necessarily for other
-mdevs. Seems reasonable at a glance.
-
-If we decide to go forward with this, we should also update the
-documentation (split out stuff from driver-api/vfio-mediated-device.rst
-etc.)
