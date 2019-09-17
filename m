@@ -2,143 +2,126 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C403C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 159F9C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F91321881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E322171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:23:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="BC0PmQd5"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DjzbQywx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbfIQSWb (ORCPT
+        id S1729128AbfIQSXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:22:31 -0400
-Received: from mout.web.de ([212.227.17.12]:53957 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbfIQSWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:22:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568744543;
-        bh=3KtLuje3xRwF06zwMpWBQiuvQ1uXOQaTbtUWTa09JWM=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=BC0PmQd5iyH4TsziCe41FK7sOl6Iy/e5ui1bfOvkXabsd4dPUOnosuFJKl2NzrSEY
-         KBMsaK2g8dWEPqBkEGrFpLF2Unaj1520HMFZWns0c0Lsa/D7AiseQT6rse3ioETELY
-         YtN09BiKEwAO8Bwyryy9B/XRgjg7nMpvKX4EmgaY=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.93.51]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MTPn1-1ic66y2NGx-00SLoa; Tue, 17
- Sep 2019 20:22:23 +0200
-Subject: Re: [v2 0/3] Fix issues reported by Coccinelle
-To:     Wolfram Sang <wsa@the-dreams.de>,
-        Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190917172758.GA11926@SD>
- <76e99512-8818-cec2-9e77-799e4c8481ab@web.de>
- <20190917181423.GB28182@ninjato>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0f2c34f5-7656-9a6f-7f86-6dd58c8f6ef7@web.de>
-Date:   Tue, 17 Sep 2019 20:22:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 17 Sep 2019 14:23:15 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42950 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727746AbfIQSXO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:23:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q12so2624678pff.9
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 11:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=N+ZvW5XGZPlKGoWdD6lQLoORQOVvTeBoK7Mquxm8Mos=;
+        b=DjzbQywxFH7fD+3bt5IqiSsQVUCbjqXB+I60sfjSk/EfG9e3ii1X1mx/WPlGJa5p7a
+         4cLinS9ljquEiFVPO9VHp6n2HEbyMHVfactLBezhvUtTsTs2m4eO9BhahGuVt6D0i2U7
+         dv/n92xSw2SsI2qt8jgaJ/F39/7kPn+9KPaAulNegpOwgtAjurrSGB9b3M9ZXj5XXUn6
+         ioVkxAD54oYmSnxuB0E4ZEB8/JXeTe8hDpgDtd7iEQx9XfZunGXkRlK5SJxwJDj10cuy
+         lJyAbtoLBV6gzip4nzF49wOwL63nDnj16cJErgUFx2iCNevjldP4YHXHc8fRMQNb2DZw
+         KPVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=N+ZvW5XGZPlKGoWdD6lQLoORQOVvTeBoK7Mquxm8Mos=;
+        b=dPigVftXbkj/iwuRNQ9pFsOKdNKz1J5afEYCwM1rG78isaDcp/aQJVZqHaKoD9IZcS
+         frpAncahFBOetExbYv44I8WBnXlJP4kOGdz+hxoAB4JqJGjc1qC7alquOZSGehDiBh/n
+         XOuGF/GOpC+ZxO8UGTveP0y469KGW0nZklJ/QOQjF87NyeSoVUblym/SSd/s8+FY76aS
+         gJEItSp3NhsgYCuROQx49OE0+fdQwnaLKuHvem97ZBKCKS2rl06u84b7AIaxYoMeRhGX
+         oJFYg9yiRV4xv/Ev5gicMA2IfdeF8+MZKD5AwQCdv3SM4FAAkAKvh64h+5EXDDMTqkZn
+         6PXw==
+X-Gm-Message-State: APjAAAWxhacEukvv528W1Q+mAXLGzByXmcCAWFqKJweViWJF8LKjAibo
+        fTB2mQWSnO4G6NcG9RfR/JS/Jg==
+X-Google-Smtp-Source: APXvYqx2KDzDaitTwku3JFa1UCEMfkpT0dPM41Q9FIaSsoOK23XkEzPeudmDOZYYF8r5xDdrW60fJA==
+X-Received: by 2002:a65:5cc8:: with SMTP id b8mr212852pgt.30.1568744592123;
+        Tue, 17 Sep 2019 11:23:12 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id e21sm3021514pgr.43.2019.09.17.11.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 11:23:11 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 11:23:10 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>
+cc:     Tom Lendacky <thomas.lendacky@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>,
+        Ming Lei <ming.lei@redhat.com>,
+        Peter Gonda <pgonda@google.com>,
+        Jianxiong Gao <jxgao@google.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [bug] __blk_mq_run_hw_queue suspicious rcu usage
+In-Reply-To: <alpine.DEB.2.21.1909161641320.9200@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.1909171121300.151243@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1909041434580.160038@chino.kir.corp.google.com> <20190905060627.GA1753@lst.de> <alpine.DEB.2.21.1909051534050.245316@chino.kir.corp.google.com> <alpine.DEB.2.21.1909161641320.9200@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190917181423.GB28182@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:EW/XeY9KIbIqyxrM+kVd1BlWAb5Mq4VpZ6y1diuUXVf04g43xRx
- bZPYwmVyhMaGi6aaHRQn+9LtLsVnLb7SRUSJKAn+4Piugp+TS2Tw8BfsYzx+2JT6+rwtJE5
- Bfa7GJlOlsrzJvb2bAaVn0eS1j+PyafXgkrm8QO/hepj1BxxlZNMsE5cb1u8bPdV2yuztbp
- U0al0CrLpB926QfWEa2FQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IKfYRuz/csE=:6VIqOxo1Aj2kuTHxERxUVT
- krOZlhLDjzE8r1EM9c+ObpHkjl6jRBmqoOwPyyshySazkrHjNsQmKq+QmWKvz/Db52WzUIo4e
- A5WIk6IML65+GFx9/UWIT8qufApfi52KOqIva79pCGSpHcbp9FcGGx0M7uk3EbFI4A74t7H9l
- vK+fYeu64TozwqaPWjgkIGvVDOUpP77B+dx/nlyqFC5gUQdR7gEJqoQCScRtHYaEVhrtR/4K/
- uy4yPCSQORqA0bDtMlnCeQvwqDUb/6NzZpONjxXO0jTDdNdYxU7icuDEgdKSAy65wFmJCjthd
- S9hPMAJZJlEF+OAQCAxI7X/QsBRzj2Mk17yolt+sXKajc2OtxMT3H4stMlGICqgAAJ+jy2FH9
- bp+Na5tpjwm3KXIxOEC6dmN+qu2G+0w+IjR79JzOMNun9pV9sSICbygelLZGNdZBEHB7DQznY
- /JZYnt+oo9JPZ6jXbO7JDJnrV6BE2hx0ZQK3/zg7rjbdh7aETUbwyOST4DbkJM11UEGNeOm3u
- sHj5HFkD0K97xDDsa3tuvysqGQsQOZw/qQ64o8MYwR4jAjMTGVVbVhYKjSs4dbe2CKykXePc7
- kUKKxFysAsf7LXZYCTS9kQWpeo0LFnZ53Fa6p0C57zi8CUl2JzOw4GKTbhHImSn8emAL6TrTK
- 2JUZNQ9VXVP2FfxHEoTQyhhQLmsULfGmy7gBfbOFl8+R7+zQkSBzfYEjQwXKjS1nrfd+Wrows
- 64Mb13sSviFgiosHxqkYQM9K1wsWOdPKmgpdAnawR51FUQwUafRmDpT71B3wJ7ZcncX7a45vI
- NJRZLINrpCEh09UvbHnCEOYvG9E32iOJwV7gyUpBXYExcTGoZkn9GP3Nqu1hFgeKZN9aW9xg6
- u+TGREbpX7DSZVNZnKQ9uUBmG1v2I8NWiuEEhjJjqCukXYhyd/VaIUgY50e4NJ7fWu89zko8g
- FjtR9WFew1hPZ7NRyvyRqfhGKD8+kzqBBDCjmRoPCFk6UfB0coCcVSW+bnv1K3LXulvgtmjQV
- zf+w6Q3DubJ3FZxwyu1szm3txNnHDQvuTYp+PvDb/lAVwa4L0yq/7FfDF/lXjGK242GYu5MFB
- +3zhohLilo4CbF+8b49likry6dAgyY06kh9UkLxXsrS3VaIaxz70IPXSLpKM1n7vm5iVJE+ZE
- JTOjm05ing7gttogNmjyZMlg1Bj+Ca47EZP/7HyQQb288pZqcW7IkpR8Hm073wpdl6Sgb+RFU
- hvoL69FT9kTffRMghA8Ix7O7ItlimRQHlfLwvTeNgt4vMI7A5Os9Z+oU3Rdw=
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> * I would prefer to refer to a desired reduction of a few
->>   source code quality concerns.
->
-> Not needed. I understand what is going on here.
+On Mon, 16 Sep 2019, David Rientjes wrote:
 
-I suggest to reconsider the interpretation of =E2=80=9Censurance=E2=80=9D
-after only a few source code places were adjusted.
+> Brijesh and Tom, we currently hit this any time we boot an SEV enabled 
+> Ubuntu 18.04 guest; I assume that guest kernels, especially those of such 
+> major distributions, are expected to work with warnings and BUGs when 
+> certain drivers are enabled.
+> 
+> If the vmap purge lock is to remain a mutex (any other reason that 
+> unmapping aliases can block?) then it appears that allocating a dmapool 
+> is the only alternative.  Is this something that you'll be addressing 
+> generically or do we need to get buy-in from the maintainers of this 
+> specific driver?
+> 
+
+We've found that the following applied on top of 5.2.14 suppresses the 
+warnings.
+
+Christoph, Keith, Jens, is this something that we could do for the nvme 
+driver?  I'll happily propose it formally if it would be acceptable.
+
+Thanks!
 
 
->>> Changes in =E2=80=A6
->>
->> Can such a prefix be omitted?
->
-> Why? I think it makes sense?
-
-Can the specification of a version identifier be occasionally
-sufficient already?
-
-Regards,
-Markus
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1613,7 +1613,8 @@ static int nvme_alloc_admin_tags(struct nvme_dev *dev)
+ 		dev->admin_tagset.timeout = ADMIN_TIMEOUT;
+ 		dev->admin_tagset.numa_node = dev_to_node(dev->dev);
+ 		dev->admin_tagset.cmd_size = sizeof(struct nvme_iod);
+-		dev->admin_tagset.flags = BLK_MQ_F_NO_SCHED;
++		dev->admin_tagset.flags = BLK_MQ_F_NO_SCHED |
++					  BLK_MQ_F_BLOCKING;
+ 		dev->admin_tagset.driver_data = dev;
+ 
+ 		if (blk_mq_alloc_tag_set(&dev->admin_tagset))
+@@ -2262,7 +2263,8 @@ static int nvme_dev_add(struct nvme_dev *dev)
+ 		dev->tagset.queue_depth =
+ 				min_t(int, dev->q_depth, BLK_MQ_MAX_DEPTH) - 1;
+ 		dev->tagset.cmd_size = sizeof(struct nvme_iod);
+-		dev->tagset.flags = BLK_MQ_F_SHOULD_MERGE;
++		dev->tagset.flags = BLK_MQ_F_SHOULD_MERGE |
++				    BLK_MQ_F_BLOCKING;
+ 		dev->tagset.driver_data = dev;
+ 
+ 		ret = blk_mq_alloc_tag_set(&dev->tagset);
