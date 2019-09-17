@@ -2,112 +2,129 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB0BC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A992321852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53BFE21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730255AbfIQIon convert rfc822-to-8bit (ORCPT
+        id S1732465AbfIQIpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:44:43 -0400
-Received: from luna.lichtvoll.de ([194.150.191.11]:47305 "EHLO
-        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726564AbfIQIon (ORCPT
+        Tue, 17 Sep 2019 04:45:10 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:39495 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726564AbfIQIpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:44:43 -0400
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.lichtvoll.de (Postfix) with ESMTPSA id 5618877320;
-        Tue, 17 Sep 2019 10:44:40 +0200 (CEST)
-From:   Martin Steigerwald <martin@lichtvoll.de>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Date:   Tue, 17 Sep 2019 10:44:40 +0200
-Message-ID: <16898130.scaMKaIPcm@merkaba>
-In-Reply-To: <20190917083516.GA27098@1wt.eu>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <2508489.jOnZlRuxVn@merkaba> <20190917083516.GA27098@1wt.eu>
+        Tue, 17 Sep 2019 04:45:09 -0400
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2351324000A;
+        Tue, 17 Sep 2019 08:45:05 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 10:45:04 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Biwen Li <biwen.li@nxp.com>
+Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
+        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Martin Fuzzey <mfuzzey@parkeon.com>
+Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
+Message-ID: <20190917084504.GD21254@piout.net>
+References: <20190910104247.13142-1-biwen.li@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
-Authentication-Results: mail.lichtvoll.de;
-        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willy Tarreau - 17.09.19, 10:35:16 CEST:
-> On Tue, Sep 17, 2019 at 09:33:40AM +0200, Martin Steigerwald wrote:
-> > However this again would be burdening users with an issue they
-> > should
-> > not have to care about. Unless userspace developers care enough and
-> > manage to take time to fix the issue before updated kernels come to
-> > their systems. Cause again it would be users systems that would not
-> > be working. Just cause kernel and userspace developers did not
-> > agree and chose to fight with each other instead of talking *with*
-> > each other.
-> It has nothing to do with fighting at all, it has to do with offering
-> what applications *need* without breaking existing assumptions that
-> make most applications work. And more importantly it involves not
-[…]
-
-Well I got the impression or interpretation that it would be about 
-fighting… if it is not, all the better!
-
-> > At least with killing gdm Systemd may restart it if configured to do
-> > so. But if it doesn't, the user is again stuck with a non working
-> > system until restarting gdm themselves.
-> > 
-> > It may still make sense to make the API harder to use,
+On 10/09/2019 18:42:46+0800, Biwen Li wrote:
+> Add some properties for pcf85263/pcf85363 as follows:
+>   - nxp,rtc-interrupt-type: integer type
+>   - nxp,rtc-interrupt-output-pin: string type
+>   - quartz-load-femtofarads: integer type
+>   - nxp,quartz-drive-strength: integer type
+>   - nxp,quartz-low-jitter: bool type
+>   - wakeup-source: bool type
 > 
-> No. What is hard to use is often misused. It must be harder to misuse
-> it, which means it should be easier to correctly use it. The choice of
-> flag names and the emission of warnings definitely helps during the
-> development stage.
-
-Sorry, this was a typo of mine. I actually meant harder to abuse. 
-Anything else would not make sense in the context of what I have 
-written.
-
-Make it easier to use properly and harder to abuse.
-
-> > but it does not
-> > replace talking with userspace developers and it would need some
-> > time to allow for adapting userspace applications and services.
+> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v4:
+> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
+> 	- Add nxp,rtc-interrupt-type property
+> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
 > 
-> Which is how adding new flags can definitely help even if adoption
-> takes time. By the way in this discussion I am a userspace developer
-> and have been hit several times by libraries switching to getrandom()
-> that silently failed to respond in field. As a userspace developer, I
-> really want to see a solution to this problem. And I'm fine if the
-> kernel decides to kill haproxy for using getrandom() with the old
-> settings, at least users will notice, will complain to me and will
-> update.
+> Change in v3:
+> 	- None
+> 
+> Change in v2:
+> 	- Replace properties name
+> 	  quartz-load-capacitance -> quartz-load-femtofarads
+> 	  quartz-drive-strength -> nxp,quartz-drive-strength
+> 	  quartz-low-jitter -> nxp,quartz-low-jitter
+> 	- Replace drive strength name
+> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
+> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
+> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
+> 	- Set default interrupt-output-pin as "INTA"
+> 
+>  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
+>  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
+>  2 files changed, 57 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/rtc/pcf85363.h
+> 
+> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> index 94adc1cf93d9..fc1579463657 100644
+> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
+> @@ -8,10 +8,52 @@ Required properties:
+>  Optional properties:
+>  - interrupts: IRQ line for the RTC (not implemented).
+>  
+> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
+> +  type. Valid values are
+> +  INT_PIE(periodic interrupt enable),
+> +  INT_OIE(offset correction interrupt enable),
+> +  INT_A1IE(alarm1 interrupt enable),
+> +  INT_A2IE(alarm2 interrupt enable),
+> +  INT_TSRIE(timestamp register interrupt enable)
+> +  INT_BSIE(battery switch interrupt enable),
+> +  INT_WDIE(WatchDog interrupt enable,and
+> +  compose these values such as: INT_A1IE | INT_A2IE,
+> +  but currently only support INT_A1IE, default value is INT_A1IE.
+> +  The property and property nxp,rtc-interrupt-output-pin
+> +  work together to generate some interrupts on some pins.
+> +
+> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
+> +  "INTA" or "INTB", default value is "INTA". The property and property
+> +  nxp,rtc-interrupt-type work together to generate some interrupts on
+> +  some pins.
+> +
 
-Good to see that you are also engaging as a userspace developer in the 
-discussion.
+This binding still doesn't work because there may be any combination of
+interrupts on any of the two pins that this binding doesn't allow.
 
-Thanks,
+> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
+> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
+> +  Default value is 12500fF.
+> +
+> +- nxp,quartz-drive-strength: Drive strength for the quartz,
+> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
+> +  Default value is 100kOhm.
+> +
+
+It makes more sense to have quartz-drive-strength-ohms as a generic
+property.
+
+
 -- 
-Martin
-
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
