@@ -2,122 +2,62 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EB4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B55FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BFE2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:03:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63DD21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:03:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568714637;
+	bh=raF3m7RsQSf+ERxtv4KxiA2UQ2mBAxKtPRp2HuXfwC0=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HyE6z/T4x+hwMM60pgfF+jj26kI9mVQofyLfwGei1l0utQNwH1M0Ja+STKeiHFtYQ
+	 uN+dKnMz1XyJLkheJvkU5bUN58RR85nh2HcbiX3EduTfNqNOufE2Gxh/BEoj9+EMwY
+	 Vc4P4Yyfw2SMyUE4oIM+O//I5MPKqyOk5J3qwTmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfIQKDk (ORCPT
+        id S1726805AbfIQKD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:03:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42418 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfIQKDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:03:40 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 71B2583F3C;
-        Tue, 17 Sep 2019 10:03:39 +0000 (UTC)
-Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 77FB660923;
-        Tue, 17 Sep 2019 10:03:35 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 12:03:33 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Parav Pandit <parav@mellanox.com>
-Cc:     alex.williamson@redhat.com, jiri@mellanox.com,
-        kwankhede@nvidia.com, davem@davemloft.net, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH v3 1/5] mdev: Introduce sha1 based mdev alias
-Message-ID: <20190917120333.3449f62e.cohuck@redhat.com>
-In-Reply-To: <20190902042436.23294-2-parav@mellanox.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190902042436.23294-1-parav@mellanox.com>
-        <20190902042436.23294-2-parav@mellanox.com>
-Organization: Red Hat GmbH
+        Tue, 17 Sep 2019 06:03:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58322 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726688AbfIQKD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:03:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 68372B634;
+        Tue, 17 Sep 2019 10:03:55 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 12:03:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: threads-max observe limits
+Message-ID: <20190917100350.GB1872@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 17 Sep 2019 10:03:39 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun,  1 Sep 2019 23:24:32 -0500
-Parav Pandit <parav@mellanox.com> wrote:
+Hi,
+I have just stmbled over 16db3d3f1170 ("kernel/sysctl.c: threads-max
+observe limits") and I am really wondering what is the motivation behind
+the patch. We've had a customer noticing the threads_max autoscaling
+differences btween 3.12 and 4.4 kernels and wanted to override the auto
+tuning from the userspace, just to find out that this is not possible.
 
-> Some vendor drivers want an identifier for an mdev device that is
-> shorter than the UUID, due to length restrictions in the consumers of
-> that identifier.
-> 
-> Add a callback that allows a vendor driver to request an alias of a
-> specified length to be generated for an mdev device. If generated,
-> that alias is checked for collisions.
-> 
-> It is an optional attribute.
-> mdev alias is generated using sha1 from the mdev name.
-> 
-> Signed-off-by: Parav Pandit <parav@mellanox.com>
-> 
-> ---
-> Changelog:
-> v1->v2:
->  - Kept mdev_device naturally aligned
->  - Added error checking for crypt_*() calls
->  - Corrected a typo from 'and' to 'an'
->  - Changed return type of generate_alias() from int to char*
-> v0->v1:
->  - Moved alias length check outside of the parent lock
->  - Moved alias and digest allocation from kvzalloc to kzalloc
->  - &alias[0] changed to alias
->  - alias_length check is nested under get_alias_length callback check
->  - Changed comments to start with an empty line
->  - Fixed cleaunup of hash if mdev_bus_register() fails
->  - Added comment where alias memory ownership is handed over to mdev device
->  - Updated commit log to indicate motivation for this feature
-> ---
->  drivers/vfio/mdev/mdev_core.c    | 123 ++++++++++++++++++++++++++++++-
->  drivers/vfio/mdev/mdev_private.h |   5 +-
->  drivers/vfio/mdev/mdev_sysfs.c   |  13 ++--
->  include/linux/mdev.h             |   4 +
->  4 files changed, 135 insertions(+), 10 deletions(-)
+Why do we override user admin like that? I find it quite dubious to be
+honest. Especially when the auto-tunning is just a very rough estimation
+and it seems quite arbitrary.
 
-(...)
-
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 0ce30ca78db0..f036fe9854ee 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -72,6 +72,9 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + * @get_alias_length:	Generate alias for the mdevs of this parent based on the
-> + *			mdev device name when it returns non zero alias length.
-
-"Optional: If a non-zero alias length is returned, generate an alias
-for this parent's mdevs based upon the mdev device name."
-
-?
-
-> + *			It is optional.
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -92,6 +95,7 @@ struct mdev_parent_ops {
->  	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
->  			 unsigned long arg);
->  	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	unsigned int (*get_alias_length)(void);
->  };
->  
->  /* interface for exporting mdev supported type attributes */
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Thanks
+-- 
+Michal Hocko
+SUSE Labs
