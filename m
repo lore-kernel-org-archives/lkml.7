@@ -2,141 +2,131 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ED1C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C857EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22BAD20578
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:36:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC19B2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfIQRgC (ORCPT
+        id S1731255AbfIQRg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:36:02 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39112 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726387AbfIQRgC (ORCPT
+        Tue, 17 Sep 2019 13:36:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53074 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726188AbfIQRgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:36:02 -0400
-Received: (qmail 6295 invoked by uid 2102); 17 Sep 2019 13:36:01 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Sep 2019 13:36:01 -0400
-Date:   Tue, 17 Sep 2019 13:36:01 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <kai.heng.feng@canonical.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <mans@mansr.com>, <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in usb_set_interface
-In-Reply-To: <0000000000008ad92e0592c1e58f@google.com>
-Message-ID: <Pine.LNX.4.44L0.1909171323180.1590-100000@iolanthe.rowland.org>
+        Tue, 17 Sep 2019 13:36:55 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8HHWF4d095188;
+        Tue, 17 Sep 2019 13:36:43 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v32ccv21d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 13:36:42 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8HHWVnO095770;
+        Tue, 17 Sep 2019 13:36:41 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v32ccv1xw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 13:36:40 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8HHZblL023544;
+        Tue, 17 Sep 2019 17:36:38 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma03dal.us.ibm.com with ESMTP id 2v0svqs7bq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 17:36:38 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8HHaZAM67043770
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 17:36:36 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A413EBE05F;
+        Tue, 17 Sep 2019 17:36:35 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C0FEBE054;
+        Tue, 17 Sep 2019 17:36:35 +0000 (GMT)
+Received: from localhost (unknown [9.41.179.186])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Sep 2019 17:36:35 +0000 (GMT)
+From:   Nathan Lynch <nathanl@linux.ibm.com>
+To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
+        Kamalesh Babulal <kamaleshb@in.ibm.com>,
+        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of cede_offline
+In-Reply-To: <20190915074217.GA943@in.ibm.com>
+References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com> <87impxr0am.fsf@linux.ibm.com> <20190915074217.GA943@in.ibm.com>
+Date:   Tue, 17 Sep 2019 12:36:35 -0500
+Message-ID: <87a7b2rfj0.fsf@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=892 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909170168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, syzbot wrote:
+Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
+> On Thu, Sep 12, 2019 at 10:39:45AM -0500, Nathan Lynch wrote:
+>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+>> > The patchset also defines a new sysfs attribute
+>> > "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
+>> > to allow userspace programs to change the state into which the
+>> > offlined CPU need to be put to at runtime.
+>> 
+>> A boolean sysfs interface will become awkward if we need to add another
+>> mode in the future.
+>> 
+>> What do you think about naming the attribute something like
+>> 'offline_mode', with the possible values 'extended-cede' and
+>> 'rtas-stopped'?
+>
+> We can do that. However, IMHO in the longer term, on PSeries guests,
+> we should have only one offline state - rtas-stopped.  The reason for
+> this being, that on Linux, SMT switch is brought into effect through
+> the CPU Hotplug interface. The only state in which the SMT switch will
+> recognized by the hypervisors such as PHYP is rtas-stopped.
 
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> WARNING in sysfs_remove_group
-> 
-> ------------[ cut here ]------------
-> sysfs group 'power' not found for kobject 'radio3'
-> WARNING: CPU: 1 PID: 2883 at fs/sysfs/group.c:278 sysfs_remove_group  
-> fs/sysfs/group.c:278 [inline]
-> WARNING: CPU: 1 PID: 2883 at fs/sysfs/group.c:278  
-> sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:269
-> Kernel panic - not syncing: panic_on_warn set ...
-> CPU: 1 PID: 2883 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   panic+0x2a3/0x6da kernel/panic.c:219
->   __warn.cold+0x20/0x4a kernel/panic.c:576
->   report_bug+0x262/0x2a0 lib/bug.c:186
->   fixup_bug arch/x86/kernel/traps.c:179 [inline]
->   fixup_bug arch/x86/kernel/traps.c:174 [inline]
->   do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
->   do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
->   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-> RIP: 0010:sysfs_remove_group fs/sysfs/group.c:278 [inline]
-> RIP: 0010:sysfs_remove_group+0x155/0x1b0 fs/sysfs/group.c:269
-> Code: 48 89 d9 49 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 e9 03 80 3c  
-> 01 00 75 41 48 8b 33 48 c7 c7 e0 c8 d0 85 e8 a0 0e 8b ff <0f> 0b eb 95 e8  
-> e2 d1 db ff e9 d2 fe ff ff 48 89 df e8 d5 d1 db ff
-> RSP: 0018:ffff8881c6d17c50 EFLAGS: 00010286
-> RAX: 0000000000000000 RBX: ffffffff85f2d700 RCX: 0000000000000000
-> RDX: 0000000000000000 RSI: ffffffff81288ddd RDI: ffffed1038da2f7c
-> RBP: 0000000000000000 R08: ffff8881d6243000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000000 R12: ffff8881cf014cd8
-> R13: ffffffff85f2dca0 R14: 0000000000000000 R15: ffff8881cf015178
->   dpm_sysfs_remove+0x97/0xb0 drivers/base/power/sysfs.c:735
->   device_del+0x12a/0xb10 drivers/base/core.c:2316
->   device_unregister+0x11/0x30 drivers/base/core.c:2371
->   video_unregister_device+0xa2/0xc0 drivers/media/v4l2-core/v4l2-dev.c:1051
->   usbvision_unregister_video+0x83/0x120  
-> drivers/media/usb/usbvision/usbvision-video.c:1243
->   usbvision_release+0x10d/0x1c0  
-> drivers/media/usb/usbvision/usbvision-video.c:1356
->   usbvision_radio_close.cold+0x2b/0x74  
-> drivers/media/usb/usbvision/usbvision-video.c:1129
->   v4l2_release+0x2e7/0x390 drivers/media/v4l2-core/v4l2-dev.c:455
->   __fput+0x2d7/0x840 fs/file_table.c:280
->   task_work_run+0x13f/0x1c0 kernel/task_work.c:113
->   tracehook_notify_resume include/linux/tracehook.h:188 [inline]
->   exit_to_usermode_loop+0x1d2/0x200 arch/x86/entry/common.c:163
->   prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
->   syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
->   do_syscall_64+0x45f/0x580 arch/x86/entry/common.c:299
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x7f4fde8992b0
-> Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
-> 07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-> ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-> RSP: 002b:00007ffcce3d65f8 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-> RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007f4fde8992b0
-> RDX: 0000000000000013 RSI: 0000000080685600 RDI: 0000000000000003
-> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-> R13: 00007ffcce3d6750 R14: 0000000000000000 R15: 0000000000000000
-> Kernel Offset: disabled
-> Rebooting in 86400 seconds..
-> 
-> 
-> Tested on:
-> 
-> commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git
-> console output: https://syzkaller.appspot.com/x/log.txt?x=178ba88d600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=14ce1b59600000
+OK. Why "longer term" though, instead of doing it now?
 
-This is more than I can fix.  The whole way the v4l2 layer handles
-reference counting seems suspicious and I don't understand it.  (Does
-the code assume that the only reference holders are initial
-registration and open files?)
 
-In this case it looks like the device may be unregistered twice.  It's
-hard to tell exactly what's going wrong without knowing more about how
-this is supposed to work.  It wouldn't hurt, for example, to use 
-dev_info() instead of printk(KERN_INFO) in places like 
-usbvision_disconnect().
+> All other states (such as extended-cede) should in the long-term be
+> exposed via the cpuidle interface.
+>
+> With this in mind, I made the sysfs interface boolean to mirror the
+> current "cede_offline" commandline parameter. Eventually when we have
+> only one offline-state, we can deprecate the commandline parameter as
+> well as the sysfs interface.
 
-I'm going to step back and let the maintainers deal with the rest of
-this.
+I don't care for adding a sysfs interface that is intended from the
+beginning to become vestigial...
 
-Alan Stern
+This strikes me as unnecessarily incremental if you're changing the
+default offline state. Any user space programs depending on the current
+behavior will have to change anyway (and why is it OK to break them?)
 
+Why isn't the plan:
+
+  1. Add extended cede support to the pseries cpuidle driver
+  2. Make stop-self the only cpu offline state for pseries (no sysfs
+     interface necessary)
+
+?
