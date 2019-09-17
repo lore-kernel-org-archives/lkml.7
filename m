@@ -2,126 +2,129 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2935FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1E9C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E6E21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="e4vIQB3/"
+	by mail.kernel.org (Postfix) with ESMTP id CC3B220862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:36:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbfIQJfW (ORCPT
+        id S1727918AbfIQJgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:35:22 -0400
-Received: from mail-40132.protonmail.ch ([185.70.40.132]:51051 "EHLO
-        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727170AbfIQJfV (ORCPT
+        Tue, 17 Sep 2019 05:36:05 -0400
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:21929 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfIQJgE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:35:21 -0400
-Date:   Tue, 17 Sep 2019 09:35:10 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
-        s=protonmail; t=1568712918;
-        bh=7al/T7V+BY7NjSZ3yvHA/yYuZG9e2Bk22StX9CKMVk4=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
-         Feedback-ID:From;
-        b=e4vIQB3/ek87t2wke2ANUNusBnbTVWIcoFZ38xRO+RsNAgqHQ68bwGUxW3I0+pC1U
-         SMgWFisYL4+sGAEvTxGuN9NccZR0KxyyuH8QeIMgofR2/BbX3YYcCIcq9IF9iDTf6p
-         kXNBD093B6RmoIhtrR97jSvg6zLsYtVf8moUxBNM=
-To:     Palmer Dabbelt <palmer@sifive.com>
-From:   Aurabindo Jayamohanan <mail@aurabindo.in>
-Cc:     Anup Patel <Anup.Patel@wdc.com>,
-        Troy Benjegerdes <troy.benjegerdes@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
-Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
-Subject: RE: [RFC] buildtar: add case for riscv architecture
-Message-ID: <lMUhcsewB9GAKeZH2cH-zl3vFME8u2z5IzCqDBFhtT2IbG71vhHnjrlHKbhyxFee5XFe1X1gRllNJBR9e9dQlC0vbIpSffL_y0pLb46VddQ=@aurabindo.in>
-In-Reply-To: <mhng-4e30fb12-057c-425c-a867-ecf93e080ed9@palmer-si-x1e>
-References: <mhng-4e30fb12-057c-425c-a867-ecf93e080ed9@palmer-si-x1e>
-Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
+        Tue, 17 Sep 2019 05:36:04 -0400
+IronPort-SDR: jeDmZW6D5hd/0g2X1V+NmTzqx0+VURaycNPkQiBBCJCneFqXZ4D/2GcKLwZkQIacnq3mppvtcT
+ dC3k2DdHyvY4y0oA2UpkY1sS2ufQKNB9Tjp7JGJQolufuIpaxLPoGGXfUnya6/8RmYvrIsRWH6
+ SPOTJbyvNhfzplkqhosV2kcWzkauAafpSqNvPjNDT3vUk4c4+Ar7aX1IzXWgF0ANb45rp6DOKb
+ KZFQCSE3gI3B6jiZHR8kd3+nIB6wCXjcpOPsVbpTCgqO1VmhL9ipt8ARKhsAJWH7wk0Tlm32UU
+ fSY=
+X-IronPort-AV: E=Sophos;i="5.64,515,1559548800"; 
+   d="scan'208";a="41422994"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa4.mentor.iphmx.com with ESMTP; 17 Sep 2019 01:36:04 -0800
+IronPort-SDR: fJ+orLfWgXKWZChBMpfWJb5UbNBCO7pHugKrCBXTs4DyucCdS5a5iDGFxwuWT4eqv2MyvOB5+Z
+ yTQQGyivf3w2eq5URj/jCp8ZCNmn7vum0EdelcYPcMJjRJq0SN1gZFcbLTo22Q3NF3vFolGkZG
+ hd8A5XHFlIECkULZFzbsa47q3RjFiEmeIcJc9gsqO03zwfeCta5m22bslERIVnp34/aVarsp8I
+ TJJfX3/Uw4rcpAKaDkznd/1xChZxFtHqdmLhIN1D6vnIZK9WA5uDXY+uRTvFNjcTOwF3b94rCk
+ +WE=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v3 05/49] Input: atmel_mxt_ts - split large i2c transfers into blocks
+Date:   Tue, 17 Sep 2019 18:35:06 +0900
+Message-ID: <20190917093550.18335-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
-ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
-On Sunday, September 15, 2019 12:57 AM, Palmer Dabbelt <palmer@sifive.com> =
-wrote:
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-> On Sat, 14 Sep 2019 06:05:59 PDT (-0700), Anup Patel wrote:
->
-> > > -----Original Message-----
-> > > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> > > owner@vger.kernel.org> On Behalf Of Palmer Dabbelt
-> > > Sent: Saturday, September 14, 2019 6:30 PM
-> > > To: mail@aurabindo.in
-> > > Cc: Troy Benjegerdes troy.benjegerdes@sifive.com; Paul Walmsley
-> > > paul.walmsley@sifive.com; aou@eecs.berkeley.edu; linux-
-> > > riscv@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
-> > > kbuild@vger.kernel.org
-> > > Subject: Re: [RFC] buildtar: add case for riscv architecture
-> > > On Wed, 11 Sep 2019 05:54:07 PDT (-0700), mail@aurabindo.in wrote:
-> > >
-> > > > > None of the available RiscV platforms that I=E2=80=99m aware of u=
-se compressed
-> > > > > images, unless there are some new bootloaders I haven=E2=80=99t s=
-een yet.
-> > > >
-> > > > >
-> > > >
-> > > > I noticed that default build image is Image.gz, which is why I thou=
-ght its a
-> > > > good idea to copy it into the tarball. Does such a copy not make se=
-nse at this
-> > > > point ?
-> > >
-> > > Image.gz can't be booted directly: it's just Image that's been compre=
-ssed
-> > > with the standard gzip command. A bootloader would have to decompress
-> > > that image before loading it into memory, which requires extra bootlo=
-ader
-> > > support.
-> > > Contrast that with the zImage style images (which are vmlinuz on x86)=
-, which
-> > > are self-extracting and therefor require no bootloader support. The
-> > > examples for u-boot all use the "booti" command, which expects
-> > > uncompressed images.
-> > > Poking around I couldn't figure out a way to have u-boot decompress t=
-he
-> > > images, but that applies to arm64 as well so I'm not sure if I'm miss=
-ing
-> > > something.
-> > > If I was doing this, I'd copy over arch/riscv/boot/Image and call it
-> > > "/boot/image-${KERNELRELEASE}", as calling it vmlinuz is a bit confus=
-ing to
-> > > me because I'd expect vmlinuz to be a self-extracting compressed
-> > > executable and not a raw gzip file.
-> >
-> > On the contrary, it is indeed possible to boot Image.gz directly using
-> > U-Boot booti command so this patch would be useful.
-> > Atish had got it working on U-Boot but he has deferred booti Image.gz
-> > support due to few more dependent changes. May be he can share
-> > more info.
->
-> Oh, great. I guess it makes sense to just put both in the tarball, then, =
-as
-> users will still need to use the Image format for now.
->
+On some firmware variants, the size of the info block exceeds what can
+be read in a single transfer.
 
-Uncompressed vmlinux is already copied by default. This patch just adds the
-Image.gz into the archive as vmlinuz. But as you said, since the name vmlin=
-uz is
-reserved for self extracting archives, should I keep the original name Imag=
-e.gz ?
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 74c4f5277cfa403d43fafc404119dc57a08677db)
+[gdavis: Forward port and fix conflicts due to v4.14.51 commit
+	 960fe000b1d3 ("Input: atmel_mxt_ts - fix the firmware
+	 update").]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+[jiada: Change mxt_read_blks() to __mxt_read_reg(), original __mxt_read_reg() to
+	__mxt_read_chunk()]
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 28 +++++++++++++++++++++---
+ 1 file changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 35cbe60094ab..45bab5253775 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -40,7 +40,7 @@
+ #define MXT_OBJECT_START	0x07
+ #define MXT_OBJECT_SIZE		6
+ #define MXT_INFO_CHECKSUM_SIZE	3
+-#define MXT_MAX_BLOCK_WRITE	256
++#define MXT_MAX_BLOCK_WRITE	255
+ 
+ /* Object types */
+ #define MXT_DEBUG_DIAGNOSTIC_T37	37
+@@ -624,8 +624,8 @@ static int mxt_send_bootloader_cmd(struct mxt_data *data, bool unlock)
+ 	return 0;
+ }
+ 
+-static int __mxt_read_reg(struct i2c_client *client,
+-			       u16 reg, u16 len, void *val)
++static int __mxt_read_chunk(struct i2c_client *client,
++			    u16 reg, u16 len, void *val)
+ {
+ 	struct i2c_msg xfer[2];
+ 	u8 buf[2];
+@@ -659,6 +659,28 @@ static int __mxt_read_reg(struct i2c_client *client,
+ 	return ret;
+ }
+ 
++static int __mxt_read_reg(struct i2c_client *client,
++			  u16 reg, u16 len, void *buf)
++{
++	u16 offset = 0;
++	int error;
++	u16 size;
++
++	while (offset < len) {
++		size = min(MXT_MAX_BLOCK_WRITE, len - offset);
++
++		error = __mxt_read_chunk(client,
++					 reg + offset,
++					 size, buf + offset);
++		if (error)
++			return error;
++
++		offset += size;
++	}
++
++	return 0;
++}
++
+ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 			   const void *val)
+ {
+-- 
+2.19.2
 
