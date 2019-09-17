@@ -2,139 +2,142 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73656C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FBC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9D5206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:27:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="P1Citctr"
+	by mail.kernel.org (Postfix) with ESMTP id 50824206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729504AbfIQP1l (ORCPT
+        id S1729521AbfIQP2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:27:41 -0400
-Received: from mail-eopbgr1310091.outbound.protection.outlook.com ([40.107.131.91]:52325
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfIQP1k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:27:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EFMH0Pf674JwqGWcx4vfQ3A6qR5DKKbNII2rwV8lahhid4D9XYrb6DeBaMcjZV4hJZUWeCytyQxA61ucrtpZocHtiabx5pJCqI/YNtm8ajdDoN9DqnVWuaHdoIVyWsILL0Je9Ctygv8Q/c1jAVsSvxcKR9WRK4sDVmDX1w+Ei8u67Pxi/dWUF0aVq156UJCJz6DSFSlp+ntsrWRL6cZ8XQKR5nZivlbnPIQoC9kA5CzUafpLXQsn+M1NQT+Twx4SrA1tnSqi4ivXiyDlfGfY9UH7Jgld+GFBzMPhjazgHqFXxqsUpINCmokF1v9NwRCuv7UZXpHxcmHgm/S21naY8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kFjXcB3661EPhKfJjK3ZiQu8zLfnoOpVEvZUb8+1U6w=;
- b=ki6rbbqtH3PAQMUYcybm8h4Padn97aKtDKeKDFciyvtEkEK/LwnuYn9n2ERnlVCbKyzbupO46pJpBgKkeOFl5tm6d+9IKBl/YBmGf0QROZFZo5YXV8+BOtDrawM4ZVPwjjGyNQeB9dqFMHjsUNjRGv48FgNODmHcFZQ2kcZ57BCiU1+ceckefnbYP/Hhse8NUip7J93wPMpEjRCTWmscXeol9Eg+72YlFJ3F0ToEEEII5EKKZPt1qL+wKff3Oont225O4jZs8gd8BxZRQy/7rZqbFZ6OhpTH+UAzcw3TK8ZvR2xRu59EBSg66O1ZhGgp8w8APDnHZqvAlh1wcqkXRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kFjXcB3661EPhKfJjK3ZiQu8zLfnoOpVEvZUb8+1U6w=;
- b=P1CitctruDNVphngf0spj19r+m2Ioc8xixbE7PYA7oj8rJn0ix+T1SaovZG1gfIZ8FRQCENh7F6zUBAnu+SA3T+E8Dc909lipO5kXMgaYRXi/hwRpYNxq+gKojdVAKwTAdqVzQNQU6uyDJoC1WQF7sbac5MrEUk/OslNdSzbbys=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
- TY2PR01MB3916.jpnprd01.prod.outlook.com (20.178.133.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.20; Tue, 17 Sep 2019 15:27:34 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a%7]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
- 15:27:34 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>
-Subject: RE: DRM Driver implementation question
-Thread-Topic: DRM Driver implementation question
-Thread-Index: AdVslX1ZBzegHzojRVS64lgG04s8jgAenS2AABbmTEA=
-Date:   Tue, 17 Sep 2019 15:27:34 +0000
-Message-ID: <TY2PR01MB292423C617848A66F61B1027DF8F0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
- <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gareth.williams.jx@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1b30422-70c5-4c9a-4721-08d73b83906b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY2PR01MB3916;
-x-ms-traffictypediagnostic: TY2PR01MB3916:|TY2PR01MB3916:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB3916558A9A81E6432C7DD8E6DF8F0@TY2PR01MB3916.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 01630974C0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(136003)(39860400002)(396003)(51444003)(199004)(189003)(6636002)(6246003)(55016002)(74316002)(86362001)(7736002)(33656002)(446003)(25786009)(54906003)(66066001)(99286004)(5660300002)(6506007)(11346002)(9686003)(26005)(76176011)(4326008)(6862004)(316002)(7696005)(256004)(81166006)(66946007)(8676002)(186003)(6116002)(3846002)(76116006)(66446008)(66556008)(66476007)(64756008)(305945005)(486006)(81156014)(229853002)(71200400001)(2906002)(71190400001)(476003)(3480700005)(8936002)(6436002)(478600001)(102836004)(52536014)(14454004);DIR:OUT;SFP:1102;SCL:1;SRVR:TY2PR01MB3916;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: USC6RO7cXyQvl51euqQ1OU30wbdVyY2EOmt7WUKA9nCkUQoaDOFlDeSb5L0i3ZcRyKVYflYmMF3DnSPvnx1TlXjyaFTRMe6Cywdv76VP0xLh/LhPePlDxHKojFmP8H1wKpc/GZ6dHD69Kcx8ToEiFJdU+y76CDTg6ziN5Lx5ftRcd4YdfdaBlm17zR6Wh59wHoWsAd7up4qT+mioijwIsBY1Pq7oRok+d5Ot+alKXWefh55ib5iDSqMVaKtMZrgXmJnhtmMs7mR5S2nYp5RrR5iGaevn9Yx+I2zwGOvOC6tmBcgqQh1UJ7wVsUU+mIldyD4Uhlocqwg47yOOaz0oHxU7IALaxdJrRskCpMF7s7zCzJ1gUYr9T6puTigixh7nsNV8O5pRYnQyX1xGyLO6UU19NW9Dkx7mcpGC5fDKe7U=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Sep 2019 11:28:02 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36429 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726305AbfIQP2C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:28:02 -0400
+Received: by mail-io1-f70.google.com with SMTP id g126so6316243iof.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:28:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=Lzofq4xPIQXczbIqDkIH6JArDXWhDuAAg+Z/kAV0sq8=;
+        b=Wsc8t9NdAhe8SHnV/o7713JL9X72aZjUQE1NI9I8i+v7oR9pxVoSjkYaPESR+Jy1b4
+         JWQ7BAfIodpAmabJ84VphrHQJPFfl8iT0zwqDVRX8PZm4t4+A/mRjToYoHcU4MDAt7tr
+         5tKTyy7hZ2AZbe/7Vcm4aORf8dS/Vi5lEDlwXCVqs9lV4c1eYeURQd/9Kt+/xCZuL2+s
+         veJy2Ym2/OOkt7KII/EED5wxS4/o2G2vThvLsRHXZZcLozh4Ji/vx1f48ulKGr7CH1wK
+         jMLmW0ElhOlrroODUKC0QVP484OMWRPtQaecXdaliowDbhM5P3WkwiIM1CR7OtBLqHGC
+         T6XQ==
+X-Gm-Message-State: APjAAAXeZLHzzYQ+Ql8HdHeIA5RgR+6jnNnjTdoBDPNJN0ETmihwo2MM
+        pqJw4yowU+WsncZSQzoMN5LyCyA0WCjpYe65tInXqeRO5zxi
+X-Google-Smtp-Source: APXvYqyLTV8elUmeAG7div/A5qaTCYovaMk++Q3Zd5quAbkt6djbFw0SFfwznCg3hU9dmByT/aZyJZgd6WlTdihkVvQEL3N97D7P
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1b30422-70c5-4c9a-4721-08d73b83906b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 15:27:34.2720
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4bRpjsXLmE6KLuUyVI+6lL8LOPVfSnfU8r1eOFuCs/fWbb7nJl4LfvOQk6bPoxy7nX0UzjNy3O149UTYjame7Qb3rgyAh+5plfGlVGHuyz0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB3916
+X-Received: by 2002:a5d:9dd4:: with SMTP id 20mr4217338ioo.1.1568734081310;
+ Tue, 17 Sep 2019 08:28:01 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 08:28:01 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1909171115310.1590-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a9f2870592c15dd3@google.com>
+Subject: Re: general protection fault in usb_set_interface
+From:   syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        kai.heng.feng@canonical.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, mans@mansr.com, oneukum@suse.com,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yoshihiro,
+Hello,
 
-This looks like an elegant solution that I can implement.
-Many thanks for pointing me in a good direction.
+syzbot has tested the proposed patch but the reproducer still triggered  
+crash:
+possible deadlock in vidioc_querycap
 
-> From: Yoshihiro Shimoda, Sent: Tuesday, September 17, 2019 05:39 PM
->=20
-> Hi Gareth,
->=20
-> > From: Gareth Williams, Sent: Monday, September 16, 2019 10:56 PM
-> >
-> > Hi Laurent/Kieran,
-> >
-> > I need to upstream a driver for a display controller that within its
-> > registers memory region contains registers related to a PWM device. The
-> PWM device is for controlling the backlight of the display.
-> > Ideally, I would like to create a separated driver for the PWM, so
-> > that I can re-use "pwm-backlight", but since the registers for the PWM
-> > are right in the middle of the registers for the display controller I w=
-ould
-> need to ioremap the memory region for the PWM registers region twice,
-> once from the display controller driver, and once from the PWM driver.
-> > Do you think that the double ioremap would be acceptable upstream?
->=20
-> I think that an MFD driver can support such hardware. I checked
-> Documentation/devicetree/bindings/mfd roughly, and then atmel-hlcdc.txt
-> seems to have a display controller and a PWM device.
->=20
-> Best regards,
-> Yoshihiro Shimoda
+============================================
+WARNING: possible recursive locking detected
+5.3.0-rc7+ #0 Not tainted
+--------------------------------------------
+v4l_id/3016 is trying to acquire lock:
+0000000069c3004e (&usbvision->v4l2_lock){+.+.}, at:  
+vidioc_querycap+0x62/0x3b0 drivers/media/usb/usbvision/usbvision-video.c:456
 
-Best Regards,
+but task is already holding lock:
+0000000069c3004e (&usbvision->v4l2_lock){+.+.}, at:  
+__video_do_ioctl+0x3ba/0xba0 drivers/media/v4l2-core/v4l2-ioctl.c:2846
 
-Gareth Williams
+other info that might help us debug this:
+  Possible unsafe locking scenario:
+
+        CPU0
+        ----
+   lock(&usbvision->v4l2_lock);
+   lock(&usbvision->v4l2_lock);
+
+  *** DEADLOCK ***
+
+  May be due to missing lock nesting notation
+
+1 lock held by v4l_id/3016:
+  #0: 0000000069c3004e (&usbvision->v4l2_lock){+.+.}, at:  
+__video_do_ioctl+0x3ba/0xba0 drivers/media/v4l2-core/v4l2-ioctl.c:2846
+
+stack backtrace:
+CPU: 0 PID: 3016 Comm: v4l_id Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  print_deadlock_bug kernel/locking/lockdep.c:2301 [inline]
+  check_deadlock kernel/locking/lockdep.c:2342 [inline]
+  validate_chain kernel/locking/lockdep.c:2881 [inline]
+  __lock_acquire.cold+0x148/0x29b kernel/locking/lockdep.c:3880
+  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+  __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+  __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+  vidioc_querycap+0x62/0x3b0  
+drivers/media/usb/usbvision/usbvision-video.c:456
+  v4l_querycap+0x121/0x340 drivers/media/v4l2-core/v4l2-ioctl.c:1058
+  __video_do_ioctl+0x969/0xba0 drivers/media/v4l2-core/v4l2-ioctl.c:2878
+  video_usercopy+0x446/0xf40 drivers/media/v4l2-core/v4l2-ioctl.c:3060
+  v4l2_ioctl+0x1a2/0x220 drivers/media/v4l2-core/v4l2-dev.c:360
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
+  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x7f642b0b9347
+Code: 90 90 90 48 8b 05 f1 fa 2a 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff  
+ff c3 90 90 90 90 90 90 90 90 90 90 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 73 01 c3 48 8b 0d c1 fa 2a 00 31 d2 48 29 c2 64
+RSP: 002b:00007ffc2fc62b28 EFLAGS: 00000206 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f642b0b9347
+RDX: 00007ffc2fc62b30 RSI: 0000000080685600 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000400884
+R13: 00007ffc2fc62c80 R14: 0000000000000000 R15: 0000000000000000
+
+
+Tested on:
+
+commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=160d95c3600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+dashboard link: https://syzkaller.appspot.com/bug?extid=7fa38a608b1075dfd634
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=125290b1600000
+
