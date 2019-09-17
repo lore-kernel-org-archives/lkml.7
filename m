@@ -2,110 +2,75 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA91C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B06FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA8B620678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C54206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="d69BRr0x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404464AbfIQHpB (ORCPT
+        id S2404495AbfIQHqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:45:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40832 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728561AbfIQHpB (ORCPT
+        Tue, 17 Sep 2019 03:46:32 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41012 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728561AbfIQHqb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:45:01 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iA8AT-0005bn-3S; Tue, 17 Sep 2019 09:44:57 +0200
-Date:   Tue, 17 Sep 2019 09:44:57 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
-Message-ID: <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
-References: <20190911165729.11178-1-swood@redhat.com>
- <20190911165729.11178-2-swood@redhat.com>
+        Tue, 17 Sep 2019 03:46:31 -0400
+Received: by mail-io1-f67.google.com with SMTP id r26so5265898ioh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 00:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r390VayBj/3xi39RJHDAEzLS1ApSogHRMpyEDeFIW8U=;
+        b=d69BRr0xyCV3c6m95lJoLGl50d5Ex2yqBOKw46rMtzmuV+Rwa2hW6rI6MP3zGZWCPJ
+         PqIuE8ISWyF/nAilyQbnrrZCdoF2Wp/tzdsqdPKrpeMPGuLtcmuDTUONwR1pCJh5iggB
+         P4e+ZNnTSwRYWzLJdcoe3g7iiH8ekCwtPMrto=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r390VayBj/3xi39RJHDAEzLS1ApSogHRMpyEDeFIW8U=;
+        b=mtir4dy57OBFoGKRtCnSwFKIOlPkDXgVgAMTTWWxirzSFgTly0xlYbduHB2t9/DpS2
+         Ok/XqLwn2oHQISKjXXLj+CwsrAJ3hhCqODjHtmgJ6rQMxtL1+h4H2ztrGBRrGlQwd29e
+         bW01O4DZtDprcGyYHQ8cxuB3GY/cZk5s1FmTA5HG+ApjZUUeFOCLmud2OOdd+CwAW19p
+         ux8laWoMm+1mBb98GcM1V7Hzf64XURP9b2JKK8PsMxKf5fWZJ5l8wVdWWPPhSDMkbCOb
+         Y9Gpr6INyLHbnexx3QWiR7v3r2tZ+N5DuWNv51uiWBXJZanjISxZQlTIWLBaIV13pqwK
+         ztTQ==
+X-Gm-Message-State: APjAAAVh+IL2f+scvaSjMntEmcVpt0LGHiM6Q3nS8g+ziXYbsUHXzed8
+        9APgAefqHf1K3bEX562Stw00UY4VZsVOXcyly7VuzA==
+X-Google-Smtp-Source: APXvYqzThDNp3uLhZD6yQ/WCujicMU9B0P8cMPS1zdRMUKzEUMRMi+zP6x28grxRopNvWCakybIIt5ptAYCVqLRZcYg=
+X-Received: by 2002:a02:b388:: with SMTP id p8mr2684640jan.77.1568706390957;
+ Tue, 17 Sep 2019 00:46:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190911165729.11178-2-swood@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <20190916235642.167583-1-khazhy@google.com>
+In-Reply-To: <20190916235642.167583-1-khazhy@google.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 17 Sep 2019 09:46:19 +0200
+Message-ID: <CAJfpeguRPTRyb9eaEsKXmv2xsfJfy4vrNp05RNiL8AuqbDwkcg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] fuse: on 64-bit store time in d_fsdata directly
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel B <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-11 17:57:25 [+0100], Scott Wood wrote:
-> index 388ace315f32..9ce7c5006a5e 100644
-> --- a/include/linux/rcupdate.h
-> +++ b/include/linux/rcupdate.h
-> @@ -600,6 +600,36 @@ static inline void rcu_read_unlock(void)
->  	rcu_lock_release(&rcu_lock_map); /* Keep acq info for rls diags. */
->  }
->  
-> +#ifdef CONFIG_PREEMPT_RT_FULL
-> +/*
-> + * On RT, local_bh_disable() calls rcu_read_lock() -- no need to
-> + * track it twice.
-> + */
-> +static inline void rcu_bh_lock_acquire(void)
-> +{
-> +}
-> +
-> +static inline void rcu_bh_lock_release(void)
-> +{
-> +}
-> +#else
-> +static inline void rcu_bh_lock_acquire(void)
-> +{
-> +	__acquire(RCU_BH);
-> +	rcu_lock_acquire(&rcu_bh_lock_map);
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> +			 "rcu_read_lock_bh() used illegally while idle");
-> +}
-> +
-> +static inline void rcu_bh_lock_release(void)
-> +{
-> +	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> +			 "rcu_read_unlock_bh() used illegally while idle");
-> +	rcu_lock_release(&rcu_bh_lock_map);
-> +	__release(RCU_BH);
-> +}
-> +#endif
-> +
->  /**
->   * rcu_read_lock_bh() - mark the beginning of an RCU-bh critical section
->   *
-> @@ -615,10 +645,7 @@ static inline void rcu_read_unlock(void)
->  static inline void rcu_read_lock_bh(void)
->  {
->  	local_bh_disable();
-> -	__acquire(RCU_BH);
-> -	rcu_lock_acquire(&rcu_bh_lock_map);
-> -	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> -			 "rcu_read_lock_bh() used illegally while idle");
-> +	rcu_bh_lock_acquire();
->  }
->  
->  /*
+On Tue, Sep 17, 2019 at 1:56 AM Khazhismel Kumykov <khazhy@google.com> wrote:
+>
+> Implements the optimization noted in f75fdf22b0a8 ("fuse: don't use
+> ->d_time"), as the additional memory can be significant. (In particular,
+> on SLAB configurations this 8-byte alloc becomes 32 bytes). Per-dentry,
+> this can consume significant memory.
 
-I asked previously why do you need to change rcu_read_lock_bh() and you
-replied that you don't remember:
-   https://lore.kernel.org/linux-rt-users/b948ec6cccda31925ed8dc123bd0f55423fff3d4.camel@redhat.com/
+Applied, thanks.
 
-Did this change?
-
-Sebastian
+Miklos
