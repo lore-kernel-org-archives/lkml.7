@@ -2,174 +2,506 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8CCC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04686C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01449214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:20:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB6F121906
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568715809;
+	bh=ACrd8vKtoX2ZG5yEQPckUPaDWGCsZNRpc7HZTrkfZV8=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=MDhJ8KILZmn4FlXQWHBSt++Llmb7gYMCEhFz2Rn5UzqdQS0y57qyXJ+zr9XumfQ0n
+	 icXwhbzXxJvE+66Ntp1beruGnU30I7xAbNdLeLSIpTkA6IK8eKvx/ymWAohXuQSmr+
+	 mq/RC4KbveJ+W2ZRhXn+iM/CxQKIB4MiS/2BMHyI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfIQKUu (ORCPT
+        id S1727815AbfIQKX3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:20:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39110 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726688AbfIQKUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:20:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1507381F11;
-        Tue, 17 Sep 2019 10:20:49 +0000 (UTC)
-Received: from [10.36.117.113] (ovpn-117-113.ams2.redhat.com [10.36.117.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EBDA76012E;
-        Tue, 17 Sep 2019 10:20:40 +0000 (UTC)
-Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-To:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
- <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
- <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
- <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
- <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
- <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
- <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
- <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
- <3d27953a-88b8-5a7c-de3c-041f8b4436f6@vx.jp.nec.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <ab946240-d335-b803-2f70-d255abd30b43@redhat.com>
-Date:   Tue, 17 Sep 2019 12:20:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 17 Sep 2019 06:23:29 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39922 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfIQKX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:23:28 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w144so2367206oia.6;
+        Tue, 17 Sep 2019 03:23:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
+         :content-transfer-encoding;
+        bh=bLh8uClUJZa0np6pYEs3eXBA4w9UfeDgXQeEz78I6ds=;
+        b=n24DO2z6AWK67/ln330hurePL01JcrmMfnTriMogdC99giZ8Smqtth7B70C55f6hKg
+         +U5DETAgGf0bwgPgtnj6LYfQ70gzkVRQmtkIBsJE4YU22uVdZ8foM6qWUNkaKgCfIkxO
+         MwkpubZaKRDni4K9UITpcHXVYIca0A0kfhY7FIU+cN5zo1Vc7jqdC885ow7Yw5C9tip0
+         YWgeaJVqo7Ow34TUvPRGLSYIW0B3CS4Fg7jNLdtZnoUICGcsfoIj3WXpIS5hnJ5SAc1l
+         Wj5EhrKD/a21OHn9fkENEIrPjirNku83437y2f+uiIc2RtXAp1Ein0PoAnojClj/UJou
+         YQ/w==
+X-Gm-Message-State: APjAAAWwcLeibz/tRody9s7Ou2zVEEZYzG+RoIrm3UPOWacyTLQRKyDb
+        7DGTBX1rabNTpH8lzS/lomLlC66c0k7etBmT5UwgAPjf
+X-Google-Smtp-Source: APXvYqz6swm+PfWxfc0zXHhWEROoMSpqrjer2W+58qk283+vWpx52dXhN0cH67CJyc/pfvotGU5Rr8TZ3zD61AR3Ncw=
+X-Received: by 2002:aca:db44:: with SMTP id s65mr171160oig.103.1568715806304;
+ Tue, 17 Sep 2019 03:23:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <3d27953a-88b8-5a7c-de3c-041f8b4436f6@vx.jp.nec.com>
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Tue, 17 Sep 2019 10:20:49 +0000 (UTC)
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 17 Sep 2019 12:23:15 +0200
+Message-ID: <CAJZ5v0jrNv=V2oVCNu5HO5akRW1m5Z9tbuW3GxL6H61vqxP7ng@mail.gmail.com>
+Subject: [GIT PULL] Power management updates for v5.4-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.09.19 11:32, Toshiki Fukasawa wrote:
-> On 2019/09/17 16:13, David Hildenbrand wrote:
->> On 17.09.19 04:34, Toshiki Fukasawa wrote:
->>> On 2019/09/09 16:46, David Hildenbrand wrote:
->>>> Let's take a step back here to understand the issues I am aware of. I
->>>> think we should solve this for good now:
->>>>
->>>> A PFN walker takes a look at a random PFN at a random point in time. It
->>>> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
->>>> options are:
->>>>
->>>> 1. It is buddy memory (add_memory()) that has not been online yet. The
->>>> memmap contains garbage. Don't access.
->>>>
->>>> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
->>>>
->>>> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
->>>> is only partially present: E.g., device starts at offset 64MB within a
->>>> section or the device ends at offset 64MB within a section. Don't access it.
->>>
->>> I don't agree with case #3. In the case, struct page area is not allocated on
->>> ZONE_DEVICE, but is allocated on system memory. So I think we can access the
->>> struct pages. What do you mean "invalid memmap"?
->> No, that's not the case. There is no memory, especially not system
->> memory. We only allow partially present sections (sub-section memory
->> hotplug) for ZONE_DEVICE.
-> 
-> Let me clear my thoughts. If I read correctly, the struct pages for sections
-> (including partially present sections) on ZONE_DEVICE are allocated by
-> vmemmap_populate(). And all the struct pages except (altmap->base_pfn) to
-> (altmap->base_pfn + altmap->reserve) are initialized by memmap_init_zone()
-> and memmap_init_zone_device().
-> 
-> Do struct pages for partially present sections go through a different process?
+Hi Linus,
 
-No. However, the memmap is initialized via move_pfn_range_to_zone(). So
-partially present sections will have partially uninitialized memmaps.
+Please pull from the tag
 
-But I get your point. I just saw that pfn_valid() does take care of the
-subsection map via pfn_section_valid(). - pfn_present() does not, which
-is weird, but ok.
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ pm-5.4-rc1
 
-So I agree, in case #3 might have a partially uninitialized memmap, but
-we can test via pfn_valid() if the memory is at least valid. So there is
-some way to test. Then we're back to the race between adding the memory
-and initializing the memmap.
+with top-most commit fc6763a2d7e0a7f49ccec97a46e92e9fb1f3f9dd
+
+ Merge branches 'pm-opp', 'pm-qos', 'acpi-pm', 'pm-domains' and 'pm-tools'
+
+on top of commit 089cf7f6ecb266b6a4164919a2e69bd2f938374a
+
+ Linux 5.3-rc7
+
+to receive power management updates for 5.4-rc1.
+
+These include a rework of the main suspend-to-idle code flow (related
+to the handling of spurious wakeups), a switch over of several users
+of cpufreq notifiers to QoS-based limits, a new devfreq driver for
+Tegra20, a new cpuidle driver and governor for virtualized guests,
+an extension of the wakeup sources framework to expose wakeup sources
+as device objects in sysfs, and more.
+
+Specifics:
+
+ - Rework the main suspend-to-idle control flow to avoid repeating
+   "noirq" device resume and suspend operations in case of spurious
+   wakeups from the ACPI EC and decouple the ACPI EC wakeups support
+   from the LPS0 _DSM support (Rafael Wysocki).
+
+ - Extend the wakeup sources framework to expose wakeup sources as
+   device objects in sysfs (Tri Vo, Stephen Boyd).
+
+ - Expose system suspend statistics in sysfs (Kalesh Singh).
+
+ - Introduce a new haltpoll cpuidle driver and a new matching
+   governor for virtualized guests wanting to do guest-side polling
+   in the idle loop (Marcelo Tosatti, Joao Martins, Wanpeng Li,
+   Stephen Rothwell).
+
+ - Fix the menu and teo cpuidle governors to allow the scheduler tick
+   to be stopped if PM QoS is used to limit the CPU idle state exit
+   latency in some cases (Rafael Wysocki).
+
+ - Increase the resolution of the play_idle() argument to microseconds
+   for more fine-grained injection of CPU idle cycles (Daniel Lezcano).
+
+ - Switch over some users of cpuidle notifiers to the new QoS-based
+   frequency limits and drop the CPUFREQ_ADJUST and CPUFREQ_NOTIFY
+   policy notifier events (Viresh Kumar).
+
+ - Add new cpufreq driver based on nvmem for sun50i (Yangtao Li).
+
+ - Add support for MT8183 and MT8516 to the mediatek cpufreq driver
+   (Andrew-sh.Cheng, Fabien Parent).
+
+ - Add i.MX8MN support to the imx-cpufreq-dt cpufreq driver (Anson
+   Huang).
+
+ - Add qcs404 to cpufreq-dt-platdev blacklist (Jorge Ramirez-Ortiz).
+
+ - Update the qcom cpufreq driver (among other things, to make it
+   easier to extend and to use kryo cpufreq for other nvmem-based
+   SoCs) and add qcs404 support to it  (Niklas Cassel, Douglas
+   RAILLARD, Sibi Sankar, Sricharan R).
+
+ - Fix assorted issues and make assorted minor improvements in the
+   cpufreq code (Colin Ian King, Douglas RAILLARD, Florian Fainelli,
+   Gustavo Silva, Hariprasad Kelam).
+
+ - Add new devfreq driver for NVidia Tegra20 (Dmitry Osipenko, Arnd
+   Bergmann).
+
+ - Add new Exynos PPMU events to devfreq events and extend that
+   mechanism (Lukasz Luba).
+
+ - Fix and clean up the exynos-bus devfreq driver (Kamil Konieczny).
+
+ - Improve devfreq documentation and governor code, fix spelling
+   typos in devfreq (Ezequiel Garcia, Krzysztof Kozlowski, Leonard
+   Crestez, MyungJoo Ham, Gaël PORTAY).
+
+ - Add regulators enable and disable to the OPP (operating performance
+   points) framework (Kamil Konieczny).
+
+ - Update the OPP framework to support multiple opp-suspend properties
+   (Anson Huang).
+
+ - Fix assorted issues and make assorted minor improvements in the OPP
+   code (Niklas Cassel, Viresh Kumar, Yue Hu).
+
+ - Clean up the generic power domains (genpd) framework (Ulf Hansson).
+
+ - Clean up assorted pieces of power management code and documentation
+   (Akinobu Mita, Amit Kucheria, Chuhong Yuan).
+
+ - Update the pm-graph tool to version 5.5 including multiple fixes
+   and improvements (Todd Brandt).
+
+ - Update the cpupower utility (Benjamin Weis, Geert Uytterhoeven,
+   Sébastien Szymanski).
 
 Thanks!
 
-> 
-> Thanks,
-> Toshiki Fukasawa
->>
 
+---------------
 
--- 
+Akinobu Mita (1):
+      PM: runtime: Documentation: add runtime_status ABI document
 
-Thanks,
+Amit Kucheria (1):
+      PM: QoS: Get rid of unused flags
 
-David / dhildenb
+Andrew-sh.Cheng (2):
+      cpufreq: mediatek: change to regulator_get_optional
+      cpufreq: mediatek: Add support for mt8183
+
+Anson Huang (4):
+      dt-bindings: opp: Support multiple opp-suspend properties
+      opp: of: Support multiple suspend OPPs defined in DT
+      cpufreq: Use imx-cpufreq-dt for i.MX8MN's speed grading
+      cpufreq: imx-cpufreq-dt: Add i.MX8MN support
+
+Arnd Bergmann (1):
+      PM / devfreq: tegra20: add COMMON_CLK dependency
+
+Benjamin Weis (1):
+      cpupower: update German translation
+
+Chuhong Yuan (1):
+      PM: sleep: Replace strncmp() with str_has_prefix()
+
+Colin Ian King (1):
+      cpufreq: remove redundant assignment to ret
+
+Daniel Lezcano (2):
+      cpuidle: play_idle: Increase the resolution to usec
+      powercap: idle_inject: Use higher resolution for idle injection
+
+Dmitry Osipenko (16):
+      PM / devfreq: tegra: Fix kHz to Hz conversion
+      PM / devfreq: tegra: Replace readl-writel with relaxed versions
+      PM / devfreq: tegra: Replace write memory barrier with the read barrier
+      PM / devfreq: tegra: Don't ignore clk errors
+      PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
+      PM / devfreq: tegra: Drop primary interrupt handler
+      PM / devfreq: tegra: Properly disable interrupts
+      PM / devfreq: tegra: Clean up driver's probe / remove
+      PM / devfreq: tegra: Avoid inconsistency of current frequency value
+      PM / devfreq: tegra: Mark ACTMON's governor as immutable
+      PM / devfreq: tegra: Move governor registration to driver's probe
+      PM / devfreq: tegra: Reconfigure hardware on governor's restart
+      PM / devfreq: tegra: Support Tegra30
+      PM / devfreq: tegra: Enable COMPILE_TEST for the driver
+      PM / devfreq: tegra: Rename tegra-devfreq.c to tegra30-devfreq.c
+      PM / devfreq: Introduce driver for NVIDIA Tegra20
+
+Douglas RAILLARD (2):
+      cpufreq: qcom-hw: invoke frequency-invariance setter function
+      sched/cpufreq: Align trace event behavior of fast switching
+
+Ezequiel Garcia (1):
+      PM / devfreq: Fix kernel oops on governor module load
+
+Fabien Parent (1):
+      cpufreq: mediatek-cpufreq: Add compatible for MT8516
+
+Florian Fainelli (1):
+      cpufreq: Print driver name if cpufreq_suspend() fails
+
+Gaël PORTAY (2):
+      PM / devfreq: Fix spelling typo
+      PM / devfreq: rk3399_dmc: Fix spelling typo
+
+Geert Uytterhoeven (1):
+      cpupower: Add missing newline at end of file
+
+Gustavo A. R. Silva (1):
+      cpufreq: ti-cpufreq: Mark expected switch fall-through
+
+Hariprasad Kelam (1):
+      cpufreq: ap806: Add NULL check after kcalloc
+
+Joao Martins (5):
+      cpuidle-haltpoll: vcpu hotplug support
+      cpuidle: allow governor switch on cpuidle_register_driver()
+      cpuidle-haltpoll: set haltpoll as preferred governor
+      cpuidle-haltpoll: return -ENODEV on modinit failure
+      cpuidle-haltpoll: do not set an owner to allow modunload
+
+Jorge Ramirez-Ortiz (1):
+      cpufreq: Add qcs404 to cpufreq-dt-platdev blacklist
+
+Kalesh Singh (1):
+      PM/sleep: Expose suspend stats in sysfs
+
+Kamil Konieczny (2):
+      PM / devfreq: exynos-bus: Correct clock enable sequence
+      PM / devfreq: exynos-bus: Convert to use dev_pm_opp_set_rate()
+
+Krzysztof Kozlowski (1):
+      PM / devfreq: Correct devm_devfreq_remove_device() documentation
+
+Leonard Crestez (1):
+      PM / devfreq: passive: Use non-devm notifiers
+
+Lukasz Luba (3):
+      PM / devfreq: events: add Exynos PPMU new events
+      PM / devfreq: exynos-events: change matching code during probe
+      PM / devfreq: events: extend events by type of counted data
+
+Marcelo Tosatti (5):
+      add cpuidle-haltpoll driver
+      cpuidle: add poll_limit_ns to cpuidle_device structure
+      governors: unify last_state_idx
+      cpuidle: add haltpoll governor
+      cpuidle-haltpoll: disable host side polling when kvm virtualized
+
+MyungJoo Ham (1):
+      PM / devfreq: passive: fix compiler warning
+
+Niklas Cassel (6):
+      opp: Add dev_pm_opp_find_level_exact()
+      dt-bindings: opp: qcom-nvmem: Make speedbin related properties optional
+      dt-bindings: opp: qcom-nvmem: Support pstates provided by a power domain
+      dt-bindings: opp: Add qcom-opp bindings with properties needed for CPR
+      cpufreq: qcom: Refactor the driver to make it easier to extend
+      cpufreq: qcom: Add support for qcs404 on nvmem driver
+
+Rafael J. Wysocki (25):
+      PCI: irq: Introduce rearm_wake_irq()
+      ACPICA: Return u32 from acpi_dispatch_gpe()
+      ACPI: EC: Return bool from acpi_ec_dispatch_gpe()
+      PM: sleep: Fix possible overflow in pm_system_cancel_wakeup()
+      ACPI: PM: Set s2idle_wakeup earlier and clear it later
+      PM: sleep: Simplify suspend-to-idle control flow
+      PM: sleep: Integrate suspend-to-idle with generig suspend flow
+      PM: sleep: Drop dpm_noirq_begin() and dpm_noirq_end()
+      ACPI: PM: Set up EC GPE for system wakeup from drivers that need it
+      cpuidle: menu: Allow tick to be stopped if PM QoS is used
+      cpuidle: teo: Allow tick to be stopped if PM QoS is used
+      ACPI: PM: s2idle: Rearrange lps0_device_attach()
+      ACPI: PM: s2idle: Add acpi.sleep_no_lps0 module parameter
+      ACPI: PM: s2idle: Switch EC over to polling during "noirq" suspend
+      ACPI: PM: s2idle: Eliminate acpi_sleep_no_ec_events()
+      ACPI: EC: PM: Consolidate some code depending on PM_SLEEP
+      ACPI: EC: PM: Make acpi_ec_dispatch_gpe() print debug message
+      ACPI: PM: s2idle: Execute LPS0 _DSM functions with suspended devices
+      ACPI: PM: Print debug messages on device power state changes
+      intel-hid: intel-vbtn: Avoid leaking wakeup_mode set
+      intel-hid: Disable button array during suspend-to-idle
+      PM: suspend: Fix platform_suspend_prepare_noirq()
+      cpuidle: teo: Get rid of redundant check in teo_update()
+      ACPI: PM: s2idle: Avoid rearming SCI for wakeup unnecessarily
+      ACPI: PM: s2idle: Always set up EC GPE for system wakeup
+
+Sibi Sankar (1):
+      cpufreq: qcom-hw: Update logic to detect turbo frequency
+
+Sricharan R (2):
+      dt-bindings: opp: Re-organise kryo cpufreq to use it for other
+nvmem based qcom socs
+      cpufreq: qcom: Re-organise kryo cpufreq to use it for other
+nvmem based qcom socs
+
+Stephen Boyd (3):
+      PM / wakeup: Fix sysfs registration error path
+      PM / wakeup: Register wakeup class kobj after device is added
+      PM / wakeup: Unexport wakeup_source_sysfs_{add,remove}()
+
+Stephen Rothwell (1):
+      cpuidle: header file stubs must be "static inline"
+
+Sébastien Szymanski (1):
+      tools/power/cpupower: fix 64bit detection when cross-compiling
+
+Todd Brandt (2):
+      pm-graph v5.5
+      pm-graph: make setVal unbuffered again for python2 and python3
+
+Tri Vo (3):
+      PM / wakeup: Drop wakeup_source_init(), wakeup_source_prepare()
+      PM / wakeup: Use wakeup_source_register() in wakelock.c
+      PM / wakeup: Show wakeup sources stats in sysfs
+
+Ulf Hansson (3):
+      PM / Domains: Align in-parameter names for some genpd functions
+      PM / Domains: Simplify genpd_lookup_dev()
+      PM / Domains: Verify PM domain type in
+dev_pm_genpd_set_performance_state()
+
+Viresh Kumar (14):
+      opp: Not all power-domains are scalable
+      opp: Return genpd virtual devices from dev_pm_opp_attach_genpd()
+      opp: Don't decrement uninitialized list_kref
+      cpufreq: Add policy create/remove notifiers back
+      thermal: cpu_cooling: Switch to QoS requests for freq limits
+      cpufreq: intel_pstate: Implement QoS supported freq constraints
+      cpufreq: powerpc: macintosh: Switch to QoS requests for freq limits
+      cpufreq: powerpc_cbe: Switch to QoS requests for freq limits
+      arch_topology: Use CPUFREQ_CREATE_POLICY instead of CPUFREQ_NOTIFY
+      video: sa1100fb: Remove cpufreq policy notifier
+      video: pxafb: Remove cpufreq policy notifier
+      ACPI: cpufreq: Switch to QoS requests instead of cpufreq notifier
+      cpufreq: Remove CPUFREQ_ADJUST and CPUFREQ_NOTIFY policy notifier events
+      Documentation: cpufreq: Update policy notifier documentation
+
+Wanpeng Li (1):
+      cpuidle-haltpoll: Enable kvm guest polling when dedicated
+physical CPUs are available
+
+Yangtao Li (2):
+      cpufreq: Add sun50i nvmem based CPU scaling driver
+      dt-bindings: cpufreq: Document allwinner,sun50i-h6-operating-points
+
+Yue Hu (1):
+      PM / OPP: Correct Documentation about library location
+
+k.konieczny@partner.samsung.com (1):
+      opp: core: add regulators enable and disable
+
+---------------
+
+ Documentation/ABI/testing/sysfs-class-wakeup       |  76 +++
+ Documentation/ABI/testing/sysfs-devices-power      |   9 +
+ Documentation/ABI/testing/sysfs-power              | 106 ++++
+ Documentation/cpu-freq/core.txt                    |  16 +-
+ Documentation/devicetree/bindings/opp/opp.txt      |   4 +-
+ .../{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   | 127 ++++-
+ Documentation/devicetree/bindings/opp/qcom-opp.txt |  19 +
+ .../bindings/opp/sun50i-nvmem-cpufreq.txt          | 167 ++++++
+ Documentation/power/opp.rst                        |   2 +-
+ Documentation/power/pm_qos_interface.rst           |   5 +-
+ Documentation/virtual/guest-halt-polling.txt       |  78 +++
+ MAINTAINERS                                        |  11 +-
+ arch/x86/Kconfig                                   |   7 +
+ arch/x86/include/asm/cpuidle_haltpoll.h            |   8 +
+ arch/x86/kernel/kvm.c                              |  37 ++
+ arch/x86/kernel/process.c                          |   2 +-
+ drivers/acpi/acpica/evxfgpe.c                      |   6 +-
+ drivers/acpi/device_pm.c                           |   7 +-
+ drivers/acpi/ec.c                                  |  57 +-
+ drivers/acpi/internal.h                            |   6 +-
+ drivers/acpi/processor_driver.c                    |  39 +-
+ drivers/acpi/processor_perflib.c                   | 100 ++--
+ drivers/acpi/processor_thermal.c                   |  84 ++-
+ drivers/acpi/sleep.c                               | 165 +++---
+ drivers/base/arch_topology.c                       |   2 +-
+ drivers/base/power/Makefile                        |   2 +-
+ drivers/base/power/domain.c                        |  25 +-
+ drivers/base/power/main.c                          |  35 +-
+ drivers/base/power/power.h                         |  18 +
+ drivers/base/power/sysfs.c                         |   6 +
+ drivers/base/power/wakeup.c                        |  72 ++-
+ drivers/base/power/wakeup_stats.c                  | 214 +++++++
+ drivers/cpufreq/Kconfig.arm                        |  16 +-
+ drivers/cpufreq/Makefile                           |   3 +-
+ drivers/cpufreq/armada-8k-cpufreq.c                |   2 +
+ drivers/cpufreq/cpufreq-dt-platdev.c               |   5 +
+ drivers/cpufreq/cpufreq.c                          |  57 +-
+ drivers/cpufreq/imx-cpufreq-dt.c                   |   8 +-
+ drivers/cpufreq/intel_pstate.c                     | 120 +++-
+ drivers/cpufreq/mediatek-cpufreq.c                 |   4 +-
+ drivers/cpufreq/ppc_cbe_cpufreq.c                  |  19 +-
+ drivers/cpufreq/ppc_cbe_cpufreq.h                  |   8 +
+ drivers/cpufreq/ppc_cbe_cpufreq_pmi.c              |  96 ++--
+ drivers/cpufreq/qcom-cpufreq-hw.c                  |  23 +-
+ drivers/cpufreq/qcom-cpufreq-kryo.c                | 249 ---------
+ drivers/cpufreq/qcom-cpufreq-nvmem.c               | 352 ++++++++++++
+ drivers/cpufreq/sun50i-cpufreq-nvmem.c             | 226 ++++++++
+ drivers/cpufreq/ti-cpufreq.c                       |   1 +
+ drivers/cpuidle/Kconfig                            |  20 +
+ drivers/cpuidle/Makefile                           |   1 +
+ drivers/cpuidle/cpuidle-haltpoll.c                 | 134 +++++
+ drivers/cpuidle/cpuidle.c                          |  30 +
+ drivers/cpuidle/cpuidle.h                          |   2 +
+ drivers/cpuidle/driver.c                           |  25 +
+ drivers/cpuidle/governor.c                         |   7 +-
+ drivers/cpuidle/governors/Makefile                 |   1 +
+ drivers/cpuidle/governors/haltpoll.c               | 150 +++++
+ drivers/cpuidle/governors/ladder.c                 |  21 +-
+ drivers/cpuidle/governors/menu.c                   |  21 +-
+ drivers/cpuidle/governors/teo.c                    |  60 +-
+ drivers/cpuidle/poll_state.c                       |  11 +-
+ drivers/cpuidle/sysfs.c                            |   7 +
+ drivers/devfreq/Kconfig                            |  19 +-
+ drivers/devfreq/Makefile                           |   3 +-
+ drivers/devfreq/devfreq.c                          |  12 +-
+ drivers/devfreq/event/exynos-ppmu.c                | 104 ++--
+ drivers/devfreq/exynos-bus.c                       | 153 ++---
+ drivers/devfreq/governor_passive.c                 |   7 +-
+ drivers/devfreq/rk3399_dmc.c                       |   2 +-
+ drivers/devfreq/tegra20-devfreq.c                  | 212 +++++++
+ .../devfreq/{tegra-devfreq.c => tegra30-devfreq.c} | 315 +++++------
+ drivers/macintosh/windfarm_cpufreq_clamp.c         |  77 ++-
+ drivers/opp/core.c                                 |  85 ++-
+ drivers/opp/of.c                                   |  30 +-
+ drivers/platform/x86/intel-hid.c                   |  36 +-
+ drivers/platform/x86/intel-vbtn.c                  |  20 +-
+ drivers/powercap/idle_inject.c                     |  53 +-
+ drivers/thermal/cpu_cooling.c                      | 110 +---
+ drivers/thermal/intel/intel_powerclamp.c           |   2 +-
+ drivers/video/fbdev/pxafb.c                        |  21 -
+ drivers/video/fbdev/pxafb.h                        |   1 -
+ drivers/video/fbdev/sa1100fb.c                     |  27 -
+ drivers/video/fbdev/sa1100fb.h                     |   1 -
+ fs/eventpoll.c                                     |   4 +-
+ include/acpi/acpixf.h                              |   8 +-
+ include/acpi/processor.h                           |  26 +-
+ include/linux/acpi.h                               |   4 +
+ include/linux/cpu.h                                |   2 +-
+ include/linux/cpufreq.h                            |   4 +-
+ include/linux/cpuidle.h                            |  10 +
+ include/linux/cpuidle_haltpoll.h                   |  16 +
+ include/linux/devfreq-event.h                      |   6 +
+ include/linux/idle_inject.h                        |   8 +-
+ include/linux/interrupt.h                          |   1 +
+ include/linux/pm.h                                 |   4 -
+ include/linux/pm_domain.h                          |  16 +-
+ include/linux/pm_opp.h                             |  12 +-
+ include/linux/pm_qos.h                             |   6 -
+ include/linux/pm_wakeup.h                          |  21 +-
+ include/linux/suspend.h                            |   4 +-
+ include/trace/events/power.h                       |   8 +-
+ kernel/irq/pm.c                                    |  20 +
+ kernel/power/autosleep.c                           |   2 +-
+ kernel/power/main.c                                |  99 +++-
+ kernel/power/qos.c                                 |  48 --
+ kernel/power/suspend.c                             |  65 +--
+ kernel/power/wakelock.c                            |  32 +-
+ kernel/sched/cpufreq_schedutil.c                   |   7 +-
+ kernel/sched/idle.c                                |   7 +-
+ kernel/time/alarmtimer.c                           |   2 +-
+ tools/power/cpupower/Makefile                      |  14 +-
+ tools/power/cpupower/bench/cpufreq-bench_plot.sh   |   2 +-
+ tools/power/cpupower/bench/cpufreq-bench_script.sh |   2 +-
+ tools/power/cpupower/po/de.po                      | 344 ++++++------
+ tools/power/pm-graph/README                        |   6 +-
+ tools/power/pm-graph/bootgraph.py                  |  59 +-
+ tools/power/pm-graph/sleepgraph.8                  |   8 +-
+ tools/power/pm-graph/sleepgraph.py                 | 618 ++++++++++++---------
+ 118 files changed, 4052 insertions(+), 1924 deletions(-)
