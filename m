@@ -2,85 +2,96 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E43BC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C857BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6008420640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="GXmeeArS"
+	by mail.kernel.org (Postfix) with ESMTP id 9890D20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568741066;
+	bh=0Art3gK5c5hrrmdkefySZA9KIDlpcFErLejaCZZ3HNQ=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=GGA+gyzK39XpDbHpL0JLoLwqeqlZqvSQEww5seiFKgqRkRJXYb40SRT/w2Qu6o9pL
+	 1CGEU0OLD/GzumZlPb9ThTVh+hSNCriGkVPdf9XdVJw4hYGJ718Gvi5oNsboPchHuX
+	 F6qdygN6/KbyG5NfW1QMBzbv7xPZjXce8vG/VghY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731046AbfIQRYA (ORCPT
+        id S1731003AbfIQRY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:24:00 -0400
-Received: from cavan.codon.org.uk ([93.93.128.6]:55383 "EHLO
-        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726548AbfIQRYA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:24:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codon.org.uk; s=63138784; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p/Q+CvkxpgWzkqU37khmk1tk72V2Nto6pk9CsPwb4UY=; b=GXmeeArS+BiPbi2Txo5Xa9Y+e
-        4DvOdWGNN40zMpf4xxy8Lbbnc7pe34/tkUKFiXgiwa4CHa3UW6oc7xrYHflVTBTg6AavgztyQXzkV
-        EkanaHSCckybc/eFh/YUuIEqj64lg7KNzAYDVoGBUNvhRJrfwU+EpZYM6D9x3QpCklvX4=;
-Received: from mjg59 by cavan.codon.org.uk with local (Exim 4.89)
-        (envelope-from <mjg59@cavan.codon.org.uk>)
-        id 1iAHCW-0002XQ-8p; Tue, 17 Sep 2019 18:23:40 +0100
-Date:   Tue, 17 Sep 2019 18:23:40 +0100
-From:   Matthew Garrett <mjg59@srcf.ucam.org>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Steigerwald <martin@lichtvoll.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190917172340.e5u7lz74rnnrlpoc@srcf.ucam.org>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba>
- <CAHk-=wiGg-G8JFJ=R7qf0B+UtqA_Weouk6v+McmfsLJLRq6AKA@mail.gmail.com>
- <20190917163456.alzodstm3hd4yrni@srcf.ucam.org>
- <20190917171641.GC27999@1wt.eu>
- <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
+        Tue, 17 Sep 2019 13:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731017AbfIQRYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:24:25 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAF5C214AF;
+        Tue, 17 Sep 2019 17:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568741064;
+        bh=0Art3gK5c5hrrmdkefySZA9KIDlpcFErLejaCZZ3HNQ=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=em7sPNUKhN2YtBZAccWyaW84ugOmDBd44dgaqa3DPFMDDswhXf+jkie+X+DUwGeHn
+         7uZ7J4xpEJ8tMQWLoJhR2hyFJTo25beYciFNAzBcAKaJIRp9OXjmbEPARlQZ+ifCq7
+         9x/PaCVHDg5vmJcRQBsdrUESWoT4FbbUhnnX8wRg=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Mail-From: mjg59@cavan.codon.org.uk
-X-SA-Exim-Scanned: No (on cavan.codon.org.uk); SAEximRunCond expanded to false
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190828181959.204401-1-sboyd@kernel.org>
+References: <20190828181959.204401-1-sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2] clk: Evict unregistered clks from parent caches
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 10:24:23 -0700
+Message-Id: <20190917172424.AAF5C214AF@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 06:20:02PM +0100, Matthew Garrett wrote:
+Quoting Stephen Boyd (2019-08-28 11:19:59)
+> We leave a dangling pointer in each clk_core::parents array that has an
+> unregistered clk as a potential parent when that clk_core pointer is
+> freed by clk{_hw}_unregister(). It is impossible for the true parent of
+> a clk to be set with clk_set_parent() once the dangling pointer is left
+> in the cache because we compare parent pointers in
+> clk_fetch_parent_index() instead of checking for a matching clk name or
+> clk_hw pointer.
+>=20
+> Before commit ede77858473a ("clk: Remove global clk traversal on fetch
+> parent index"), we would check clk_hw pointers, which has a higher
+> chance of being the same between registration and unregistration, but it
+> can still be allocated and freed by the clk provider. In fact, this has
+> been a long standing problem since commit da0f0b2c3ad2 ("clk: Correct
+> lookup logic in clk_fetch_parent_index()") where we stopped trying to
+> compare clk names and skipped over entries in the cache that weren't
+> NULL.
+>=20
+> There are good (performance) reasons to not do the global tree lookup in
+> cases where the cache holds dangling pointers to parents that have been
+> unregistered. Let's take the performance hit on the uncommon
+> registration path instead. Loop through all the clk_core::parents arrays
+> when a clk is unregistered and set the entry to NULL when the parent
+> cache entry and clk being unregistered are the same pointer. This will
+> fix this problem and avoid the overhead for the "normal" case.
+>=20
+> Based on a patch by Bjorn Andersson.
+>=20
+> Fixes: da0f0b2c3ad2 ("clk: Correct lookup logic in clk_fetch_parent_index=
+()")
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-> AES keys are used for a variety of long-lived purposes (eg, disk 
-> encryption).
+Applied to clk-next
 
-And as an example of when we'd want to do that during early boot - swap 
-is frequently encrypted with a random key generated on each boot, but 
-it's still important for that key to be strong in order to avoid someone 
-being able to recover the contents of swap.
-
--- 
-Matthew Garrett | mjg59@srcf.ucam.org
