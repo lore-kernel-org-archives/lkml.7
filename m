@@ -2,102 +2,85 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050C7C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4947AC49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B87B320678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:07:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="REG49xGh"
+	by mail.kernel.org (Postfix) with ESMTP id 1C59E206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:08:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392051AbfIQDH6 (ORCPT
+        id S2404103AbfIQDIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:07:58 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:33306 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfIQDH6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:07:58 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n190so1194820pgn.0
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 20:07:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mC6reeLllG3tF2NGATVusvm3oTh/ZeLAirz0mAmwKGU=;
-        b=REG49xGhZhHYiGFM2hICQTZzW4lia4QX30FXYwvGuS401EBzo1mcKjiy2TWor2jIKA
-         qptnpbz5TtzQs1mW9OBjbysxGPUsSW/wUhrb+cMjWACtBZIeO+aLtsCDN3i0Q1AlgXh8
-         mlMBpSnASWmIP7pVhe2unH9IwaAB02rrhQLlE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mC6reeLllG3tF2NGATVusvm3oTh/ZeLAirz0mAmwKGU=;
-        b=WwT/5Fcw76+B44w+z4tBWjinQuwVDfre8d2an4Wneg1GRYNUYFpg60GDSsazY4ZEqq
-         v155ogk02XiyabefeYUyB3r8E4/w0lQkCdXgg0l6AI5MT49BUTdOKiC8vwbIcgaeSow0
-         fY4VTxXSaSN/uLtMpXn6ztNwUfrXbOpU9cYKhZ5tqBQPA5Yn8TygxgiDa/dPrlewK8bK
-         JAiqMnzJS45NjyJtoeRxXiDDQ9Ix8HWIVhZPN5uL4Fc4X00LpNq9jgiD+F0Q4xdRy4Tc
-         NPhGZeO75i/aIee4jvPTSP+4BI8FeUgCHiDcdHpqAMwNIIKP78ucBVRj+8uJiJUpkqsQ
-         C5PQ==
-X-Gm-Message-State: APjAAAWhFif5mTb7lnjF5Fw/h/4vjT8tyh/CqxwZJ2wBfo1EKDttfRKq
-        ikZTbP7wOUxQcNzFKEqO/Xe7jQ==
-X-Google-Smtp-Source: APXvYqwSSU6JluvKcdZk0NzjKCQ0GNYxqiYDtSxDE+xrHz+cECKkm4QKWmRnQHdFbogeGO5EhjkO6Q==
-X-Received: by 2002:a62:ed17:: with SMTP id u23mr1771458pfh.147.1568689677775;
-        Mon, 16 Sep 2019 20:07:57 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id g5sm558647pfh.133.2019.09.16.20.07.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 20:07:56 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 20:07:55 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] lockdep: Make print_lock() address visible
-Message-ID: <201909162006.3138C81AE0@keescook>
-References: <20190917013946.9EC51C60479@www.outflux.net>
+        Mon, 16 Sep 2019 23:08:04 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2277 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727097AbfIQDID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:08:03 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E698E82D8048DD8737DE;
+        Tue, 17 Sep 2019 11:08:01 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
+ 11:07:58 +0800
+Message-ID: <5D804E0D.2070707@huawei.com>
+Date:   Tue, 17 Sep 2019 11:07:57 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917013946.9EC51C60479@www.outflux.net>
+To:     Jakub Kicinski <jakub.kicinski@netronome.com>
+CC:     <davem@davemloft.net>, <kvalo@codeaurora.org>,
+        <pkshih@realtek.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] nfp: Drop unnecessary continue in nfp_net_pf_alloc_vnics
+References: <1567568784-9669-1-git-send-email-zhongjiang@huawei.com> <1567568784-9669-3-git-send-email-zhongjiang@huawei.com> <20190916194502.0c014667@cakuba.netronome.com>
+In-Reply-To: <20190916194502.0c014667@cakuba.netronome.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 06:39:46PM -0700, keescook@chromium.org wrote:
-> commit 519248f36d6f3c80e176f6fa844c10d94f1f5990
-> Author: Paul E. McKenney <paulmck@linux.ibm.com>
-> Date:   Thu May 30 05:39:25 2019 -0700
-> 
->     lockdep: Make print_lock() address visible
->     
->     Security is a wonderful thing, but so is the ability to debug based on
->     lockdep warnings.  This commit therefore makes lockdep lock addresses
->     visible in the clear.
->     
->     Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-> 
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 4861cf8e274b..4aca3f4379d2 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -620,7 +620,7 @@ static void print_lock(struct held_lock *hlock)
->  		return;
->  	}
->  
-> -	printk(KERN_CONT "%p", hlock->instance);
-> +	printk(KERN_CONT "%px", hlock->instance);
->  	print_lock_name(lock);
->  	printk(KERN_CONT ", at: %pS\n", (void *)hlock->acquire_ip);
->  }
+On 2019/9/17 10:45, Jakub Kicinski wrote:
+> On Wed, 4 Sep 2019 11:46:23 +0800, zhong jiang wrote:
+>> Continue is not needed at the bottom of a loop.
+>>
+>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+>> ---
+>>  drivers/net/ethernet/netronome/nfp/nfp_net_main.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_main.c b/drivers/net/ethernet/netronome/nfp/nfp_net_main.c
+>> index 986464d..68db47d 100644
+>> --- a/drivers/net/ethernet/netronome/nfp/nfp_net_main.c
+>> +++ b/drivers/net/ethernet/netronome/nfp/nfp_net_main.c
+>> @@ -205,10 +205,8 @@ static void nfp_net_pf_free_vnics(struct nfp_pf *pf)
+>>  		ctrl_bar += NFP_PF_CSR_SLICE_SIZE;
+>>  
+>>  		/* Kill the vNIC if app init marked it as invalid */
+>> -		if (nn->port && nn->port->type == NFP_PORT_INVALID) {
+>> +		if (nn->port && nn->port->type == NFP_PORT_INVALID)
+>>  			nfp_net_pf_free_vnic(pf, nn);
+>> -			continue;
+>> -		}
+> Ugh, I already nack at least one patch like this, this continue makes
+> the _intent_ of the code more clear, the compiler will ignore it anyway.
+Thanks,   I miss that information you object to above modification.  
 
-Just to clarify: this is only visible under CONFIG_LOCKDEP, yes? That's
-not a state anyone would run a production system under, I'd hope.
+Sincerely,
+zhong jiang
+> I guess there's no use in fighting the bots..
+>
+>>  	}
+>>  
+>>  	if (list_empty(&pf->vnics))
+>
+> .
+>
 
--- 
-Kees Cook
+
