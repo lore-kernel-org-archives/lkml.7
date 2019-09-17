@@ -2,96 +2,113 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0965C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E393EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781B5216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:49:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QhM2Jojk";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hSgSYEJz"
+	by mail.kernel.org (Postfix) with ESMTP id ACA832189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392293AbfIQEty (ORCPT
+        id S2392308AbfIQEvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:49:54 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40764 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbfIQEty (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:49:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1B0EC602F8; Tue, 17 Sep 2019 04:49:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568695793;
-        bh=9DAhlffFQLmyiQ/NBcdB+CPjXZvxyNPw99SVt6x2WNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QhM2JojkQfrWeNPMh1yBFMab870y0RI92asD564PBlf5BXDy91uU3A5HlT04w7spr
-         OD43qEvbA3KHi7nCTY14juqsjxqAEipjGCzVla9tS+meWujUkynjvOjN5J/RCe6sW0
-         0Vh65Gd/Rg+QLfARCCcpJljtz60msbyMHJGOjdU8=
-Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: stummala@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AD46607C3;
-        Tue, 17 Sep 2019 04:49:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568695792;
-        bh=9DAhlffFQLmyiQ/NBcdB+CPjXZvxyNPw99SVt6x2WNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=hSgSYEJzeXsrKDUNDKTmqyprObM9NX0u+TRioBXgAlgSauRz+qWM67cc3HWUpq+q/
-         nP1yc38DAsIlmltF4GoHU+FizSaSZS8prTDeMrsqMUCuvQ85CeaVXHtK6s8V8/vSjM
-         kxs6owP5qD/oNwm8dWCd1QX4E+e/WOS4NK48n4UE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AD46607C3
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
-From:   Sahitya Tummala <stummala@codeaurora.org>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        linux-f2fs-devel@lists.sourceforge.net
-Cc:     Sahitya Tummala <stummala@codeaurora.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] f2fs: add a condition to detect overflow in f2fs_ioc_gc_range()
-Date:   Tue, 17 Sep 2019 10:19:23 +0530
-Message-Id: <1568695763-29343-1-git-send-email-stummala@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Tue, 17 Sep 2019 00:51:49 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36260 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726191AbfIQEvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 00:51:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 59854200667;
+        Tue, 17 Sep 2019 06:51:47 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B242720064A;
+        Tue, 17 Sep 2019 06:51:42 +0200 (CEST)
+Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C036C402A6;
+        Tue, 17 Sep 2019 12:51:36 +0800 (SGT)
+From:   Biwen Li <biwen.li@nxp.com>
+To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
+Subject: [v2,1/3] soc: fsl: fix that flextimer cannot wakeup system in deep sleep on LS1021A
+Date:   Tue, 17 Sep 2019 12:41:17 +0800
+Message-Id: <20190917044119.21895-1-biwen.li@nxp.com>
+X-Mailer: git-send-email 2.9.5
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-end = range.start + range.len;
+Why:
+    - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
+      Register RCPM_IPPDEXPCR1's default value is zero.
+      So the register value that reading from register
+      RCPM_IPPDEXPCR1 is always zero.
 
-If the range.start/range.len is a very large value, then end can overflow
-in this operation. It results into a crash in get_valid_blocks() when
-accessing the invalid range.start segno.
+How:
+    - Save register RCPM_IPPDEXPCR1's value to
+      register SCFG_SPARECR8.(uboot's psci also
+      need reading value from the register SCFG_SPARECR8
+      to set register RCPM_IPPDEXPCR1)
 
-This issue is reported in ioctl fuzz testing.
-
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
- fs/f2fs/file.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Change in v2:
+	- fix stype problems
 
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 5474aaa..c2b4767 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -2123,9 +2123,8 @@ static int f2fs_ioc_gc_range(struct file *filp, unsigned long arg)
- 		return -EROFS;
+ drivers/soc/fsl/rcpm.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
+index 82c0ad5e663e..0b710c24999c 100644
+--- a/drivers/soc/fsl/rcpm.c
++++ b/drivers/soc/fsl/rcpm.c
+@@ -13,6 +13,8 @@
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
+ #include <linux/kernel.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
  
- 	end = range.start + range.len;
--	if (range.start < MAIN_BLKADDR(sbi) || end >= MAX_BLKADDR(sbi)) {
-+	if (end < range.start || range.start < MAIN_BLKADDR(sbi) || end >= MAX_BLKADDR(sbi))
- 		return -EINVAL;
--	}
+ #define RCPM_WAKEUP_CELL_MAX_SIZE	7
  
- 	ret = mnt_want_write_file(filp);
- 	if (ret)
+@@ -63,6 +65,31 @@ static int rcpm_pm_prepare(struct device *dev)
+ 					tmp |= value[i + 1];
+ 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+ 				}
++				#ifdef CONFIG_SOC_LS1021A
++				/* Workaround: There is a bug of register ippdexpcr1,
++				 * cannot write it but can read it.Tt's default value is zero,
++				 * then read it will always returns zero.
++				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
++				 * And the value of ippdexpcr1 will be read from SCFG_SPARECR8.
++				 */
++				{
++					struct regmap *rcpm_scfg_regmap = NULL;
++					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
++					u32 reg_value = 0;
++
++					rcpm_scfg_regmap = syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
++					if (rcpm_scfg_regmap) {
++						if (of_property_read_u32_array(dev->of_node,
++						    "fsl,rcpm-scfg", reg_offset, rcpm->wakeup_cells + 1)) {
++							rcpm_scfg_regmap = NULL;
++							continue;
++						}
++						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1], &reg_value);
++						/* Write value to register SCFG_SPARECR8 */
++						regmap_write(rcpm_scfg_regmap, reg_offset[i + 1], tmp | reg_value);
++					}
++				}
++				#endif //CONFIG_SOC_LS1021A
+ 			}
+ 		}
+ 	} while (ws = wakeup_source_get_next(ws));
 -- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.17.1
 
