@@ -2,83 +2,106 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C604DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1053AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8ADE02171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:46:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="dqx9U4lJ"
+	by mail.kernel.org (Postfix) with ESMTP id DBD352171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:49:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfIQPq3 (ORCPT
+        id S1729803AbfIQPtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:46:29 -0400
-Received: from canardo.mork.no ([148.122.252.1]:40655 "EHLO canardo.mork.no"
+        Tue, 17 Sep 2019 11:49:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46326 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728003AbfIQPq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:46:29 -0400
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id x8HFkLQV019542
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 17 Sep 2019 17:46:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1568735182; bh=01F0+hoCVuL91LPexeI+J5fAbsP/o62EI5xZw9DZwNA=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=dqx9U4lJuXVqWbWCKQEHhYcuwa4PNOEQN8whjxPCB6mDbVCL+uDM+6mdOa/D+Xkss
-         9EbJpT1xgDN9R8k9dwCPSjjnPTAh77gaeI4y4yJc91lQBrU0p5PAtwyycNBT3I5Kwe
-         Ew1VVgTsrxUO3AJFbcK9oJ1rzR505tiNLzZDEV70=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1iAFgL-0007xx-10; Tue, 17 Sep 2019 17:46:21 +0200
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     syzbot <syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, oliver@neukum.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: divide error in cdc_ncm_update_rxtx_max
-Organization: m
-References: <00000000000018e4250592c043c3@google.com>
-Date:   Tue, 17 Sep 2019 17:46:20 +0200
-In-Reply-To: <00000000000018e4250592c043c3@google.com> (syzbot's message of
-        "Tue, 17 Sep 2019 07:09:00 -0700")
-Message-ID: <87d0fzlycz.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        id S1727147AbfIQPtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:49:41 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 577B81895A51;
+        Tue, 17 Sep 2019 15:49:41 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-160.bos.redhat.com [10.18.17.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5EB101000343;
+        Tue, 17 Sep 2019 15:49:21 +0000 (UTC)
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+To:     David Hildenbrand <david@redhat.com>,
+        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+ <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+ <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+ <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+ <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
+ <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
+ <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
+ <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <59c946f8-843d-c017-f342-d007a5e14a85@redhat.com>
+Date:   Tue, 17 Sep 2019 11:49:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at canardo
-X-Virus-Status: Clean
+In-Reply-To: <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
+Content-Type: text/plain; charset=iso-2022-jp
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 17 Sep 2019 15:49:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+ce366e2b8296e25d84f5@syzkaller.appspotmail.com> writes:
-
-> syzbot has tested the proposed patch but the reproducer still
-> triggered crash:
-> divide error in usbnet_update_max_qlen
+On 9/17/19 3:13 AM, David Hildenbrand wrote:
+> On 17.09.19 04:34, Toshiki Fukasawa wrote:
+>> On 2019/09/09 16:46, David Hildenbrand wrote:
+>>> Let's take a step back here to understand the issues I am aware of. I
+>>> think we should solve this for good now:
+>>>
+>>> A PFN walker takes a look at a random PFN at a random point in time. It
+>>> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
+>>> options are:
+>>>
+>>> 1. It is buddy memory (add_memory()) that has not been online yet. The
+>>> memmap contains garbage. Don't access.
+>>>
+>>> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
+>>>
+>>> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
+>>> is only partially present: E.g., device starts at offset 64MB within a
+>>> section or the device ends at offset 64MB within a section. Don't access it.
+>> I don't agree with case #3. In the case, struct page area is not allocated on
+>> ZONE_DEVICE, but is allocated on system memory. So I think we can access the
+>> struct pages. What do you mean "invalid memmap"?
+> No, that's not the case. There is no memory, especially not system
+> memory. We only allow partially present sections (sub-section memory
+> hotplug) for ZONE_DEVICE.
 >
-> cdc_ncm 5-1:1.0: setting tx_max =3D 16384
-> divide error: 0000 [#1] SMP KASAN
-> CPU: 1 PID: 1737 Comm: kworker/1:2 Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> BIOS Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> RIP: 0010:usbnet_update_max_qlen drivers/net/usb/usbnet.c:344 [inline]
-> RIP: 0010:usbnet_update_max_qlen+0x231/0x370 drivers/net/usb/usbnet.c:338
+> invalid memmap == memmap was not initialized == struct pages contains
+> garbage. There is a memmap, but accessing it (e.g., pfn_to_nid()) will
+> trigger a BUG.
+>
+As long as the page structures exist, they should be initialized to some
+known state. We could set PagePoison for those invalid memmap. It is the
+garbage that are in those page structures that can cause problem if a
+struct page walker scan those pages and try to make sense of it.
 
-Sure, but that's another error already fixed by Oliver..
+Cheers,
+Longman
 
-I guess this fix worked.  But I believe we should see if this is a more
-generic issue than just this single driver/bug.  I fear it is...
-
-
-
-Bj=C3=B8rn
