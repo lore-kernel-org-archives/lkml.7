@@ -2,93 +2,103 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46498C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B7BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160CB2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:36:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6559D2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:38:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568752736;
+	bh=kVUefUbXR0mBH5Ui5KzFtZDJlyTMzgtjcJqAGMFeGQc=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=ZXY/WEh+c9dQgHcZPqcLDmghvN3omCG2omFV2O8RZEPxDKAfQW7igveG03UaNfGGM
+	 wKroIFGb44OKvfIG+jXSyIvshKl8Ht3KyLdzp/M5mMFzzYURwDHf3EKtw/WPuwFFm/
+	 tKZHk2YBz/EC7ax319GHqmUTiSvmLb0P2y6TAAMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728807AbfIQUgs convert rfc822-to-8bit (ORCPT
+        id S1729785AbfIQUiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:36:48 -0400
-Received: from luna.lichtvoll.de ([194.150.191.11]:48921 "EHLO
-        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726668AbfIQUgr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:36:47 -0400
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Tue, 17 Sep 2019 16:38:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725862AbfIQUiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 16:38:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.lichtvoll.de (Postfix) with ESMTPSA id 32FB5776DD;
-        Tue, 17 Sep 2019 22:36:45 +0200 (CEST)
-From:   Martin Steigerwald <martin@lichtvoll.de>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Date:   Tue, 17 Sep 2019 22:36:45 +0200
-Message-ID: <5330121.x9kUHU8cTX@merkaba>
-In-Reply-To: <20190917162137.GA27921@1wt.eu>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190917155743.GB31567@gardel-login> <20190917162137.GA27921@1wt.eu>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CF702054F;
+        Tue, 17 Sep 2019 20:38:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568752734;
+        bh=kVUefUbXR0mBH5Ui5KzFtZDJlyTMzgtjcJqAGMFeGQc=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=DqQiSuG8aBiB88+nJ8OiopeOGKmBr7luh2PMR/vvYacQpSyOGMkttJlq/epSiU9ML
+         Z7kCDaXWsgcZ5v+U/SpGFQgKncN1BZ0e1ajvmg3ZtM5x8dWtKKSlFLDUvhEuHrFMSF
+         79UguoiFq3rajxJtBDsAZoxbmPHKwTS9xAB/pQms=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
-Authentication-Results: mail.lichtvoll.de;
-        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190916161447.32715-3-manivannan.sadhasivam@linaro.org>
+References: <20190916161447.32715-1-manivannan.sadhasivam@linaro.org> <20190916161447.32715-3-manivannan.sadhasivam@linaro.org>
+Cc:     linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        haitao.suo@bitmain.com, darren.tsao@bitmain.com,
+        fisher.cheng@bitmain.com, alec.lin@bitmain.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        mturquette@baylibre.com, robh+dt@kernel.org
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 2/8] clk: Warn if clk_init_data is not zero initialized
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 13:38:53 -0700
+Message-Id: <20190917203854.8CF702054F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willy Tarreau - 17.09.19, 18:21:37 CEST:
-> On Tue, Sep 17, 2019 at 05:57:43PM +0200, Lennart Poettering wrote:
-> > Note that calling getrandom(0) "too early" is not something people
-> > do
-> > on purpose. It happens by accident, i.e. because we live in a world
-> > where SSH or HTTPS or so is run in the initrd already, and in a
-> > world
-> > where booting sometimes can be very very fast.
-> 
-> It's not an accident, it's a lack of understanding of the impacts
-> from the people who package the systems. Generating an SSH key from
-> an initramfs without thinking where the randomness used for this could
-> come from is not accidental, it's a lack of experience that will be
-> fixed once they start to collect such reports. And those who
-> absolutely need their SSH daemon or HTTPS server for a recovery image
-> in initramfs can very well feed fake entropy by dumping whatever they
-> want into /dev/random to make it possible to build temporary keys for
-> use within this single session. At least all supposedly incorrect use
-> will be made *on purpose* and will still be possible to match what
-> users need.
+Quoting Manivannan Sadhasivam (2019-09-16 09:14:41)
+> The new implementation for determining parent map uses multiple ways
+> to pass parent info. The order in which it gets processed depends on
+> the first available member. Hence, it is necessary to zero init the
+> clk_init_data struct so that the expected member gets processed correctly.
+> So, add a warning if multiple clk_init_data members are available during
+> clk registration.
+>=20
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  drivers/clk/clk.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> index c0990703ce54..7d6d6984c979 100644
+> --- a/drivers/clk/clk.c
+> +++ b/drivers/clk/clk.c
+> @@ -3497,6 +3497,14 @@ static int clk_core_populate_parent_map(struct clk=
+_core *core)
+>         if (!num_parents)
+>                 return 0;
+> =20
+> +       /*
+> +        * Check for non-zero initialized clk_init_data struct. This is
+> +        * required because, we only require one of the (parent_names/
+> +        * parent_data/parent_hws) to be set at a time. Otherwise, the
+> +        * current code would use first available member.
+> +        */
+> +       WARN_ON((parent_names && parent_data) || (parent_names && parent_=
+hws));
+> +
 
-Well I wondered before whether SSH key generation for cloud init or 
-other automatically individualized systems could happen in the 
-background. Replacing a key that would be there before it would be 
-replaced. So SSH would be available *before* the key is regenerated. But 
-then there are those big fast man in the middle warnings… and I have no 
-clear idea to handle this in a way that would both be secure and not 
-scare users off too much.
+This will warn for many drivers because they set clk_init_data on the
+stack and assign parent_names but let junk from the stack be assigned to
+parent_data. The code uses parent_names first and then looks for
+parent_data or parent_hws because of this fact of life that we've never
+required clk_init_data to be initialized to all zero.
 
-Well probably systems at some point better have good entropy very 
-quickly… and that is it. (And then quantum computers may crack those 
-good keys anyway in the future.)
-
--- 
-Martin
-
-
+>         /*
+>          * Avoid unnecessary string look-ups of clk_core's possible paren=
+ts by
+>          * having a cache of names/clk_hw pointers to clk_core pointers.
