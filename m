@@ -2,98 +2,127 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8313C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1863C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A882171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="OvjRjDwc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="MsQ+58It"
+	by mail.kernel.org (Postfix) with ESMTP id A1EEE2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729154AbfIQPPC (ORCPT
+        id S1729309AbfIQPPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:15:02 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:55861 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727437AbfIQPPC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:15:02 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 18F711E4F;
-        Tue, 17 Sep 2019 11:15:01 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 17 Sep 2019 11:15:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:date:from:to:cc:subject
-        :message-id; s=fm1; bh=obiRstHvVhOQWl+S1fahFk3c9lGmtlq3gpWfhkuZP
-        4A=; b=OvjRjDwcNAy5zVydT0Vu7hs90GroEHS1L09ShjMVerYe/oGrtntzGHXOs
-        N0RqIZBVLBUUKDDCR5ZL5n6RvWhMR1eDAA7uzrtGznZUU2nFhfF34zJvK/IVHQpk
-        PqYpl32ucp5AdFMi4SNk7jz2IqAnKJcCEg9dyLY0PlNGd6u64krhuXOdrxgQf+vF
-        Zfw1oq5jSi1Ed63F9thKHWs+0eIpWcCewqb7Jo2wYIiuMIt6jno8OgBys8BYxpjR
-        DEdEmobArRlJF64T+mwovAZhYGFVwWZCEeXPirZp/nhkVFShVfW4ne+90U8pjeDq
-        1EKxf2bR5UuZaF5UZamPuLgTXt3Lg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:message-id:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=obiRstHvVhOQWl+S1
-        fahFk3c9lGmtlq3gpWfhkuZP4A=; b=MsQ+58ItArbjMDjKnd9OQmJBh0DFBZ4mf
-        R2LcfCDmN5qSI9o1hSiI9yV6qugLwPvjYZyQBYMx0LsY29TC0wNslWTB4LWWxblw
-        seOChHFdHr7WLgXk8SG/UqZNzqWo01w3Or/iZLrPi46CwzyT8hSnSopPH3IiPRK6
-        C+gmxyc3fYfOcps6FOrdA+nktS+ELB6BvuMZUhmNZSibXDtmpLXxFEaO9gIDiRHL
-        tfdRHwRjXKQTL5ee9T1M9qzu/xvPhVUV3V1toHrZpVrG/7MDsBkJYJcho3IW1Poa
-        idry+lM39l5YRoaQ8jvAURoXqfbyyUH3hJCHXU6rb2VOJoFIJsZtQ==
-X-ME-Sender: <xms:c_iAXcKS-FRsC2NmKNT1aEOSrAzo11SBD5vQXuuuq6AHz89nd1Cu8g>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeigdehlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepgfgtff
-    fhvffukfesthhqredttddtjeenucfhrhhomhepfdffrghnihgvlhcuighufdcuoegugihu
-    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieeirddtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiinecuvehluhhsthgvrhfuihii
-    vgeptd
-X-ME-Proxy: <xmx:c_iAXRsoPLzGqx6-xPWx9ZtxzADCsnx-dn97oaEFutrW6TquYvEXow>
-    <xmx:c_iAXWTd2qh3cswSzDDQRkeL_T0m3Xhhkfi8TYFJ5lqL0waW2jnJ7w>
-    <xmx:c_iAXaRZzjc1dVfnMlrE8lLGxmHAAuLIDgYOOTy0srJzqYDtaDBsdQ>
-    <xmx:dfiAXYGCcfhsMS6sNSrBxHZaCu-bv2z98ChKqMQ-VJ8h0EtjgQ2GEzBVmLU>
-Received: from localhost (unknown [199.201.66.0])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 11CADD6005E;
-        Tue, 17 Sep 2019 11:14:57 -0400 (EDT)
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Tue, 17 Sep 2019 08:14:57 -0700
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "kbuild test robot" <lkp@intel.com>
-Cc:     <kbuild-all@01.org>, <bpf@vger.kernel.org>,
-        <songliubraving@fb.com>, <yhs@fb.com>, <andriin@fb.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        "Daniel Xu" <dxu@dxuuu.xyz>, <ast@fb.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <kernel-team@fb.com>
-Subject: Re: [PATCH bpf-next 1/5] perf/core: Add PERF_FORMAT_LOST
- read_format
-Message-Id: <BX2DJJRW6PA5.3GUFKIRSVLU15@dlxu-fedora-R90QNFJV>
+        Tue, 17 Sep 2019 11:15:30 -0400
+Received: from foss.arm.com ([217.140.110.172]:57340 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727437AbfIQPPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:15:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE68015A2;
+        Tue, 17 Sep 2019 08:15:29 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0D203F575;
+        Tue, 17 Sep 2019 08:15:28 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 16:15:23 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Busch, Keith" <keith.busch@intel.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
+Message-ID: <20190917151523.GA7948@e121166-lin.cambridge.arm.com>
+References: <20190916135435.5017-1-jonathan.derrick@intel.com>
+ <20190916135435.5017-3-jonathan.derrick@intel.com>
+ <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
+ <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+ <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
+ <087e23dc3bb7b94bb96c33b380732ebd1285e467.camel@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <087e23dc3bb7b94bb96c33b380732ebd1285e467.camel@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Sep 17, 2019 at 10:32 PM kbuild test robot wrote:
-> All errors (new ones prefixed by >>):
->=20
->    kernel/events/core.c: In function 'perf_event_lost':
-> >> kernel/events/core.c:4753:11: error: implicit declaration of function =
-'perf_kprobe_missed'; did you mean 'perf_release'? [-Werror=3Dimplicit-func=
-tion-declaration]
->       lost +=3D perf_kprobe_missed(event);
->               ^~~~~~~~~~~~~~~~~~
->               perf_release
->    cc1: some warnings being treated as errors
->=20
+On Tue, Sep 17, 2019 at 02:45:03PM +0000, Derrick, Jonathan wrote:
+> On Tue, 2019-09-17 at 15:05 +0100, Lorenzo Pieralisi wrote:
+> > On Tue, Sep 17, 2019 at 01:55:59PM +0000, Derrick, Jonathan wrote:
+> > > On Tue, 2019-09-17 at 11:41 +0100, Lorenzo Pieralisi wrote:
+> > > > On Mon, Sep 16, 2019 at 07:54:35AM -0600, Jon Derrick wrote:
+> > > > > The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
+> > > > > location to get the correct shadow offset.
+> > > > 
+> > > > Hi Jon,
+> > > > 
+> > > > what does "was moved" mean ? Would this code still work on previous HW ?
+> > > > 
+> > > The previous code won't work on (not yet released) hw. Guests using the
+> > > domain will see the wrong offset and enumerate the domain incorrectly.
+> > 
+> > That's true also for new kernels on _current_ hardware, isn't it ?
+> > 
+> > What I am saying is that there must be a way to detect the right
+> > offset from HW probing or firmware otherwise things will break
+> > one way of another.
+> > 
+> I think this is basically that, but the spec changed which register
+> addresses contained the offset. The offset was still discoverable
+> either way, but is now within 0x2000-0x2010, with 0x2010-0x2090 as oob
+> interface.
+> 
+> 
+> 
+> > > > We must make sure that the address move is managed seamlessly by the
+> > > > kernel.
+> > > If we need to avoid changing addressing within stable, then that's
+> > > fine. But otherwise is there an issue merging with 5.4?
+> > 
+> > See above. Would 5.4 with this patch applied work on systems where
+> > the offset is the same as the _current_ one without this patch
+> > applied ?
+> I understand your concern, but these systems with wrong addressing
+> won't exist because the hardware isn't released yet.
+> 
+> In the future, the hardware will be released and users will inevitably
+> load some unfixed kernel, and we would like to point to stable for the
+> fix.
 
-Ah forgot the #ifdef for CONFIG_KPROBE_EVENTS. I've applied the fix and
-will send it in the next version.
+I am sorry for being blunt but I need to understand. If we apply
+this patch, are you telling me that the _current_ HW would fail ?
+
+I assume the current HW+kernel set-up is working, maybe that's
+what I got wrong.
+
+Reworded: on existing HW, is this patch fixing anything ?
+
+This patch when it hits the mainline will trickle into stable
+kernel unchanged.
+
+> > > > For the time being I have to drop this fix and it is extremely
+> > > > tight to get it in v5.4, I can't send stable changes that we may
+> > > > have to revert.
+> > > Aren't we in the beginning of the merge window?
+> > 
+> > Yes and that's the problem, patches for v5.4 should have already
+> > being queued a while ago, I do not know when Bjorn will send the
+> > PR for v5.4 but that's going to happen shortly, I am making an
+> > exception to squeeze these patches in since it is vmd only code
+> > but still it is very very tight.
+> > 
+> If you feel there's a risk, then I think it can be staged for v5.5.
+> Hardware will not be available for some time.
+
+I do not feel it is risky, I feel it would be much better if the
+scratchpad address could be detected at runtime through versioning
+of sorts either HW or firmware based.
+
+If we can't probe it inevitably we will have systems where kernels
+would break and that's something we should avoid.
+
+Lorenzo
