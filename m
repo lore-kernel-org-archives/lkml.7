@@ -2,109 +2,87 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6672C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07B2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87CB320665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C397E2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:33:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dgmHFsLV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfIQQcN (ORCPT
+        id S1730360AbfIQQdI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:32:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:19362 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbfIQQcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:32:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E264169097;
-        Tue, 17 Sep 2019 16:32:12 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E797960923;
-        Tue, 17 Sep 2019 16:32:11 +0000 (UTC)
-Message-ID: <b6b87f7acde58fcf0c172622eb9acef43a113ec4.camel@redhat.com>
-Subject: Re: [PATCH RT v3 5/5] rcutorture: Avoid problematic critical
- section nesting on RT
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Date:   Tue, 17 Sep 2019 11:32:11 -0500
-In-Reply-To: <20190917145035.l6egzthsdzp7aipe@linutronix.de>
-References: <20190911165729.11178-1-swood@redhat.com>
-         <20190911165729.11178-6-swood@redhat.com>
-         <20190912221706.GC150506@google.com>
-         <500cabaa80f250b974409ee4a4fca59bf2e24564.camel@redhat.com>
-         <20190917100728.wnhdvmbbzzxolef4@linutronix.de>
-         <26dbecfee2c02456ddfda3647df1bcd56d9cc520.camel@redhat.com>
-         <20190917145035.l6egzthsdzp7aipe@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 17 Sep 2019 12:33:08 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36351 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfIQQdI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:33:08 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v24so4239050ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:33:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iQDRRInEfkOmolUWUlkWs8+kiucdxwd5FC1fGShr5c4=;
+        b=dgmHFsLVgUDYlzKnx2AI9EBhRyfdronIQPVc9nmshBfpBav41pgLiKHS47u1qbTMRV
+         /OwRABb4gyj/8eMrwgTXTZKo1ZEr3OZ650q9RGo2V85QlQDznn7pVQpcjv7vyWQko1kV
+         m46DsLgVSgceBujZfIRs97mCBeZ7wHovtGGcM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iQDRRInEfkOmolUWUlkWs8+kiucdxwd5FC1fGShr5c4=;
+        b=pEszR0euksRdrX2AzxkVIyBjOgl44cmWy0hv7pUxBVGOUjWnA04x9ncbtOgcMkSVok
+         hxJu5+YRZkV6WfZjOR1/HEKugfHJ4IicR94kWvHwwOOykk+mQklPFLkNk09+Rwhkav3F
+         P4EO41BrvNnL63iqVV9mUKmssHvWw6MaLYm9L4ZRbxV9cGZumoEIMH709JVDB9dCERA+
+         7rXLS0H7WX7Mm9Cz5NSf7zuXNEn2Q3YeU+bf0pOVbah2krbCtjWg3gXLsOBLPfer64A1
+         qIc7BqAHanDwkLrlHlQcYZwEg9O0Tq6UXdRO/ItNixRfCWJ5FynOOenzolvykv3URqqv
+         JkNA==
+X-Gm-Message-State: APjAAAXGi48bSijBIxGJfKbGUUWvvE1pD1ggUT8DDCsfA1YVlhtcz/z3
+        WdxQOjqKTYc9BZbG0yoGnphIY2L6/4A=
+X-Google-Smtp-Source: APXvYqwsLVTEUTVJADorN7WH2RNDTzJaYlm5HyeJ8F3Mn52TKzfj3MBv4EXE8L9x3hjfYyYhhow0XQ==
+X-Received: by 2002:a2e:95cf:: with SMTP id y15mr2402988ljh.27.1568737985658;
+        Tue, 17 Sep 2019 09:33:05 -0700 (PDT)
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
+        by smtp.gmail.com with ESMTPSA id w30sm511488lfn.82.2019.09.17.09.33.04
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 09:33:05 -0700 (PDT)
+Received: by mail-lj1-f174.google.com with SMTP id e17so4153618ljf.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:33:04 -0700 (PDT)
+X-Received: by 2002:a2e:8592:: with SMTP id b18mr2284561lji.18.1568737984442;
+ Tue, 17 Sep 2019 09:33:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 17 Sep 2019 16:32:13 +0000 (UTC)
+References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org> <20181114225910.GA220599@google.com>
+In-Reply-To: <20181114225910.GA220599@google.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Tue, 17 Sep 2019 09:32:52 -0700
+X-Gmail-Original-Message-ID: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+Message-ID: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+To:     Wen Gong <wgong@codeaurora.org>
+Cc:     ath10k@lists.infradead.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 16:50 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-09-17 09:36:22 [-0500], Scott Wood wrote:
-> > > On non-RT you can (but should not) use the counter part of the
-> > > function
-> > > in random order like:
-> > > 	local_bh_disable();
-> > > 	local_irq_disable();
-> > > 	local_bh_enable();
-> > > 	local_irq_enable();
-> > 
-> > Actually even non-RT will assert if you do local_bh_enable() with IRQs
-> > disabled -- but the other combinations do work, and are used some places
-> > via
-> > spinlocks.  If they are used via direct calls to preempt_disable() or
-> > local_irq_disable() (or via raw spinlocks), then that will not go away
-> > on RT
-> > and we'll have a problem.
-> 
-> lockdep_assert_irqs_enabled() is a nop with CONFIG_PROVE_LOCKING=N and
-> RT breaks either way. 
+Since Wen has once again suggested I use this patch in other forums,
+I'll ping here to note:
 
-Right, I meant a non-RT kernel with debug checks enabled.
+On Wed, Nov 14, 2018 at 2:59 PM Brian Norris <briannorris@chromium.org> wrote:
+> You've introduced a regression in 4.20-rc1:
 
-> > > Since you _can_ use it in random order Paul wants to test that the
-> > > random use of those function does not break RCU in any way. Since they
-> > > can not be used on RT in random order it has been agreed that we keep
-> > > the test for !RT but disable it on RT.
-> > 
-> > For now, yes.  Long term it would be good to keep track of when
-> > preemption/irqs would be disabled on RT, even when running a non-RT
-> > debug
-> > kernel, and assert when bad things are done with it (assuming an RT-
-> > capable
-> > arch).  Besides detecting these fairly unusual patterns, it could also
-> > detect earlier the much more common problem of nesting a non-raw
-> > spinlock
-> > inside a raw spinlock or other RT-atomic context.
-> 
-> you will be surprised but we have patches for that. We need first get
-> rid of other "false positives" before plugging this in.
+This regression still survives in the latest tree. Is it fair to just
+submit a revert?
 
-Nice!  Are the "false positives" real issues from components that are
-currently blacklisted on RT, or something different?
-
--Scott
-
-
+Brian
