@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AB3C49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107F3C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BB3720678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D1520678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:14:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392181AbfIQDOO (ORCPT
+        id S2392191AbfIQDOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:14:14 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:40178 "EHLO inva021.nxp.com"
+        Mon, 16 Sep 2019 23:14:17 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:60690 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728874AbfIQDOK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:14:10 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0E709200640;
-        Tue, 17 Sep 2019 05:14:09 +0200 (CEST)
+        id S2392171AbfIQDON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:14:13 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1B5B71A061D;
+        Tue, 17 Sep 2019 05:14:12 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 6A39420063D;
-        Tue, 17 Sep 2019 05:13:47 +0200 (CEST)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 249851A0029;
+        Tue, 17 Sep 2019 05:13:51 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id E922E40307;
-        Tue, 17 Sep 2019 11:13:33 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C53FB402CA;
+        Tue, 17 Sep 2019 11:13:36 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
@@ -44,9 +44,9 @@ To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH RESEND V5 4/5] arm64: dts: imx8qxp-mek: Enable scu key
-Date:   Tue, 17 Sep 2019 11:12:18 +0800
-Message-Id: <1568689939-8871-4-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH RESEND V5 5/5] arm64: defconfig: Enable CONFIG_KEYBOARD_IMX_SC_KEY as module
+Date:   Tue, 17 Sep 2019 11:12:19 +0800
+Message-Id: <1568689939-8871-5-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
 References: <1568689939-8871-1-git-send-email-Anson.Huang@nxp.com>
@@ -56,27 +56,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable scu key for i.MX8QXP MEK board.
+Select CONFIG_KEYBOARD_IMX_SC_KEY as module by default to
+support i.MX8QXP scu key driver.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No changes.
 ---
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-index 1946805..88dd9132 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp-mek.dts
-@@ -234,3 +234,7 @@
- &adma_dsp {
- 	status = "okay";
- };
-+
-+&scu_key {
-+	status = "okay";
-+};
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 0a70e10..9c83014 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -314,6 +314,7 @@ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_ADC=m
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_SNVS_PWRKEY=m
++CONFIG_KEYBOARD_IMX_SC_KEY=m
+ CONFIG_KEYBOARD_CROS_EC=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_TOUCHSCREEN_ATMEL_MXT=m
 -- 
 2.7.4
 
