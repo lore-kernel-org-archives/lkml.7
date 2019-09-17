@@ -2,179 +2,194 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2881C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10887C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF74421852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA0D2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:53:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VbqfDbhY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfIQMwo convert rfc822-to-8bit (ORCPT
+        id S1727908AbfIQMxI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:52:44 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38247 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQMwo (ORCPT
+        Tue, 17 Sep 2019 08:53:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:46964 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfIQMxI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:52:44 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e11so1761990otl.5;
-        Tue, 17 Sep 2019 05:52:43 -0700 (PDT)
+        Tue, 17 Sep 2019 08:53:08 -0400
+Received: by mail-ed1-f68.google.com with SMTP id t3so1003406edw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hO+S2hn6G7IY85utEMPYlFYUwK0C3wWS4/W0+cvkWvo=;
+        b=VbqfDbhYu5lY9hD/YtniwKxIj8byA+w6ZYv9TnFclvEWGntf4QTtQMKzIC6r9Q94UR
+         6wEfXIofBdkKXWmaOoguT6JyQX+Xm/5qgXuA3d9gXp8/ibLFeVgf9rDDs/28vhIs60Jp
+         G9rx1ZwPbHW0jnFONJB0tr8UUPb05EtgaBvIk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cGu+OKqa8P9FhmcrfusKIEOBVN7wjkZzGzIlcpxnAM4=;
-        b=YDGHOiH8Z2ke//JikJFiTQ4b+CXgil1DYPxcbgdq0fkW34HGDqEwrkiZJPiVsYWIHu
-         8/ss3Jmsnr3Et0gzx2GCOMuHXT5tPqjCyELSeuzuJ42j3HZuuO7Vi3nWowO7psxK5/oW
-         1GV73nRMwcjDbCj+7CPfIgTAwfLsGRtpCwTAAZvFbpkAcN0V+A2C82tZnAZ5dqQDHwdM
-         PngDPryYsnZLrqDXhS8iWYVLIvb7tOC1pTlXGe+0ovnOZrainDfkPCo2HdsGp6UnNwOi
-         /8z5ASbhbXjWXwO84ZSkROA+IrsAq4kph4eyb5pygXufmgfwb5pUyyll1KM/EoWRIU07
-         qMIw==
-X-Gm-Message-State: APjAAAUOIsG/ZD3xV9QLOI5PG26S7lQBnUeYNY0t1LXU+8T4AqXKUEQ6
-        bbilXmhC7wi36l4yQS8Llug0NK6t/430rUNQ9us=
-X-Google-Smtp-Source: APXvYqwF7djb29BU4JOekDq/w2ATaouFkjTZStu1zawPVEUhoivXp7Jzh/X/ybbkO0GGmU/IOqDimmtEJFBAiFablnE=
-X-Received: by 2002:a9d:5a06:: with SMTP id v6mr2514884oth.250.1568724762614;
- Tue, 17 Sep 2019 05:52:42 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=hO+S2hn6G7IY85utEMPYlFYUwK0C3wWS4/W0+cvkWvo=;
+        b=iaO+u0KY2aq58hge5GEE65w+0GlDPEiv8tngLM80F++KRozUCuOGTAw9yTwwU3G+Kx
+         8Bb0EAn5ZWGU+WehliU9Um9GzkWSYOmo+fwnhxUBJZSMpmKBiUiOxhz1lX0EAuZ3EvKy
+         pQZNvKxy3cLNhaEn8oIAsyVUPqrA4mhF2Ols4DHbyvZlCXrLDBwRGHo6zu86SnEArSrc
+         A3wkWIhtYCAVanC6XPlOM11xgIV1Y55K8hiFbntUCjSWqFFcYDWI1/+3KFp1uJLG61q1
+         I2RRiTjV0a4HyRTvRi3+VW8MUV6b2HSF7Ic6gDBXvW4B/zvOPn3LOm3NfXgOie256ja+
+         XjJw==
+X-Gm-Message-State: APjAAAXglUufs470non2+8H+afyz6HJfSNGhVc0Q2R9yMU25h1u59Yes
+        G2O9K3IeL80V1diyqPtFqR384Q==
+X-Google-Smtp-Source: APXvYqwMfjAvYVaFs8oW8jSgXu1sWU9T6LkhxnE/tQlcylPsSiT/jdUiW99WUngxF+LYi3GeN9sBeg==
+X-Received: by 2002:a17:906:1e0e:: with SMTP id g14mr4455036ejj.247.1568724784844;
+        Tue, 17 Sep 2019 05:53:04 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id e44sm422367ede.34.2019.09.17.05.53.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 05:53:04 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 14:53:01 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Ayan Halder <Ayan.Halder@arm.com>
+Cc:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [RFC PATCH] drm:- Add a modifier to denote 'protected'
+ framebuffer
+Message-ID: <20190917125301.GQ3958@phenom.ffwll.local>
+Mail-Followup-To: Ayan Halder <Ayan.Halder@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+References: <20190909134241.23297-1-ayan.halder@arm.com>
 MIME-Version: 1.0
-References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
- <20190824132846.8589-2-u.kleine-koenig@pengutronix.de> <20190913215809.GA11833@bogus>
- <CAMuHMdV+pwoAA0zH_vQf2nKqzrgHP8rcMStyJbnuu2qviFC_qg@mail.gmail.com>
- <20190917101303.t5otztdus7y3ayau@pengutronix.de> <489c90fb-a135-4fd8-ecb9-46404bd3c234@axentia.se>
- <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
-In-Reply-To: <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Sep 2019 14:52:31 +0200
-Message-ID: <CAMuHMdXk5uSk-v4vYVR1YO46gQd0mRYy5eEM6wOHqgkRTfyn-g@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] of: Let of_for_each_phandle fallback to
- non-negative cell_count
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Linux I2C <linux-i2c@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190909134241.23297-1-ayan.halder@arm.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+On Mon, Sep 09, 2019 at 01:42:53PM +0000, Ayan Halder wrote:
+> Add a modifier 'DRM_FORMAT_MOD_ARM_PROTECTED' which denotes that the framebuffer
+> is allocated in a protected system memory.
+> Essentially, we want to support EGL_EXT_protected_content in our komeda driver.
+> 
+> Signed-off-by: Ayan Kumar Halder <ayan.halder@arm.com>
+> 
+> /-- Note to reviewer
+> Komeda driver is capable of rendering DRM (Digital Rights Management) protected
+> content. The DRM content is stored in a framebuffer allocated in system memory
+> (which needs some special hardware signals for access).
+> 
+> Let us ignore how the protected system memory is allocated and for the scope of
+> this discussion, we want to figure out the best way possible for the userspace
+> to communicate to the drm driver to turn the protected mode on (for accessing the
+> framebuffer with the DRM content) or off.
+> 
+> The possible ways by which the userspace could achieve this is via:-
+> 
+> 1. Modifiers :- This looks to me the best way by which the userspace can
+> communicate to the kernel to turn the protected mode on for the komeda driver
+> as it is going to access one of the protected framebuffers. The only problem is
+> that the current modifiers describe the tiling/compression format. However, it
+> does not hurt to extend the meaning of modifiers to denote other attributes of
+> the framebuffer as well.
+> 
+> The other reason is that on Android, we get an info from Gralloc
+> (GRALLOC_USAGE_PROTECTED) which tells us that the buffer is protected. This can
+> be used to set up the modifier/s (AddFB2) during framebuffer creation.
 
-On Tue, Sep 17, 2019 at 2:25 PM Uwe Kleine-König
-<u.kleine-koenig@pengutronix.de> wrote:
-> On Tue, Sep 17, 2019 at 11:25:46AM +0000, Peter Rosin wrote:
-> > On 2019-09-17 12:13, Uwe Kleine-König wrote:
-> > > On Tue, Sep 17, 2019 at 11:40:25AM +0200, Geert Uytterhoeven wrote:
-> > >> On Fri, Sep 13, 2019 at 11:58 PM Rob Herring <robh@kernel.org> wrote:
-> > >>> On Sat, 24 Aug 2019 15:28:46 +0200, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=          wrote:
-> > >>>> Referencing device tree nodes from a property allows to pass arguments.
-> > >>>> This is for example used for referencing gpios. This looks as follows:
-> > >>>>
-> > >>>>       gpio_ctrl: gpio-controller {
-> > >>>>               #gpio-cells = <2>
-> > >>>>               ...
-> > >>>>       }
-> > >>>>
-> > >>>>       someothernode {
-> > >>>>               gpios = <&gpio_ctrl 5 0 &gpio_ctrl 3 0>;
-> > >>>>               ...
-> > >>>>       }
-> > >>>>
-> > >>>> To know the number of arguments this must be either fixed, or the
-> > >>>> referenced node is checked for a $cells_name (here: "#gpio-cells")
-> > >>>> property and with this information the start of the second reference can
-> > >>>> be determined.
-> > >>>>
-> > >>>> Currently regulators are referenced with no additional arguments. To
-> > >>>> allow some optional arguments without having to change all referenced
-> > >>>> nodes this change introduces a way to specify a default cell_count. So
-> > >>>> when a phandle is parsed we check for the $cells_name property and use
-> > >>>> it as before if present. If it is not present we fall back to
-> > >>>> cells_count if non-negative and only fail if cells_count is smaller than
-> > >>>> zero.
-> > >>>>
-> > >>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-> > >>
-> > >> This is now commit e42ee61017f58cd9 ("of: Let of_for_each_phandle fallback
-> > >> to non-negative cell_count") in robh/for-next, which causes a lock-up when
-> > >> booting a shmobile_defconfig kernel on r8a7791/koelsch:
-> > >>
-> > >> rcu: INFO: rcu_sched self-detected stall on CPU
+How does this mesh with other modifiers, like AFBC? That's where I see the
+issue here.
+> 
+> 2. Framebuffer flags :- As of today, this can be one of the two values
+> ie (DRM_MODE_FB_INTERLACED/DRM_MODE_FB_MODIFIERS). Unlike modifiers, the drm
+> framebuffer flags are generic to the drm subsystem and ideally we should not
+> introduce any driver specific constraint/feature.
+> 
+> 3. Connector property:- I could see the following properties used for DRM
+> protected content:-
+> DRM_MODE_CONTENT_PROTECTION_DESIRED / ENABLED :- "This property is used by
+> userspace to request the kernel protect future content communicated over
+> the link". Clearly, we are not concerned with the protection attributes of the
+> transmitter. So, we cannot use this property for our case.
+> 
+> 4. DRM plane property:- Again, we want to communicate that the framebuffer(which
+> can be attached to any plane) is protected. So introducing a new plane property
+> does not help.
+> 
+> 5. DRM crtc property:- For the same reason as above, introducing a new crtc
+> property does not help.
 
-> Oh yeah, you're right. I'm a bit disappointed that I didn't spot this
-> myself :-|
->
-> Untested patch to fix this problem:
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2f25d2dfecfa..26f7a21d7187 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1284,6 +1284,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
->         const __be32 *list;
->         int size;
->
-> +       /*
-> +        * one of cell_count or cells_name must be provided to determine the
-> +        * argument length.
-> +        */
-> +       if (cell_count < 0 && !cells_name)
-> +               return -EINVAL;
+6. Just track this as part of buffer allocation, i.e. I think it does
+matter how you allocate these protected buffers. We could add a "is
+protected buffer" flag at the dma_buf level for this.
+
+So yeah for this stuff here I think we do want the full userspace side,
+from allocator to rendering something into this protected buffers (no need
+to also have the entire "decode a protected bitstream part" imo, since
+that will freak people out). Unfortunately, in my experience, that kills
+it for upstream :-/ But also in my experience of looking into this for
+other gpu's, we really need to have the full picture here to make sure
+we're not screwing this up.
+-Daniel
+
+> 
+> --/
+> 
+> ---
+>  include/uapi/drm/drm_fourcc.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+> index 3feeaa3f987a..38e5e81d11fe 100644
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -742,6 +742,15 @@ extern "C" {
+>   */
+>  #define AFBC_FORMAT_MOD_BCH     (1ULL << 11)
+>  
+> +/*
+> + * Protected framebuffer
+> + *
+> + * The framebuffer is allocated in a protected system memory which can be accessed
+> + * via some special hardware signals from the dpu. This is used to support
+> + * 'GRALLOC_USAGE_PROTECTED' in our framebuffer for EGL_EXT_protected_content.
+> + */
+> +#define DRM_FORMAT_MOD_ARM_PROTECTED	fourcc_mod_code(ARM, (1ULL << 55))
 > +
->         memset(it, 0, sizeof(*it));
->
->         list = of_get_property(np, list_name, &size);
-> @@ -1765,6 +1772,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
->         struct of_phandle_iterator it;
->         int rc, cur_index = 0;
->
-> +       /* If cells_name is NULL we assume an cell_count of 0 */
-
-a cell count
-
-> +       if (cells_name == NULL) {
-> +               const __be32 *list;
-> +               int size;
-> +
-> +               list = of_get_property(np, list_name, &size);
-> +               if (!list)
-> +                       return -ENOENT;
-> +
-> +               return size / sizeof(*list);
-> +       }
-> +
->         rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
->         if (rc)
->                 return rc;
-
-Thanks, that fixes the boot for me!
-
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+>  /*
+>   * Allwinner tiled modifier
+>   *
+> -- 
+> 2.23.0
+> 
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
