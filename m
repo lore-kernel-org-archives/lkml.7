@@ -2,104 +2,160 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FF6C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF69C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0057821670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="gBGxvFFd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="E3LHzA9K"
+	by mail.kernel.org (Postfix) with ESMTP id 1275B206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391399AbfIQGlC (ORCPT
+        id S2404309AbfIQGlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:41:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44614 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729443AbfIQGlB (ORCPT
+        Tue, 17 Sep 2019 02:41:46 -0400
+Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:36765 "EHLO
+        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729443AbfIQGlq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:41:01 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E72E0613A8; Tue, 17 Sep 2019 06:41:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568702460;
-        bh=PsCESTKuaXVgX05Dw2TtqzRSs+kJpkOmCLBNa9gPZ/A=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=gBGxvFFdwMyz9SenL8v+jRpIhZs4yhoSIQDyP2FopVEb0teLoaN6zwMtLVy7cqjeE
-         D8p9I3RG11cFWfxX/gprvZGRHRJclyY0+8Gm8vEInlsQi6xgtzXh2vKzZi+k0inKUH
-         miwzF0LV3inSAu9U9xklGOSKO+zTmp5hKbfa1BuY=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E37316016D;
-        Tue, 17 Sep 2019 06:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568702458;
-        bh=PsCESTKuaXVgX05Dw2TtqzRSs+kJpkOmCLBNa9gPZ/A=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=E3LHzA9Kc4Fw8KCwHSIuM9cRLB+PqftD8jDQh5mbyX8ELcF2PwTX1F9o4ZWMnU0r1
-         EZej7yALG3ngrOnu4pSibrfTaIV5tghGg9WQGGpbBLb40G8jAh/ZMBu4Gk9z+X5e6T
-         jxLug6oIpzTyzx4hJi8Xeivm+K3IJCGC1B4XFb9I=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E37316016D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] ath9k: remove unneeded variable
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <1568109312-13175-1-git-send-email-dingxiang@cmss.chinamobile.com>
-References: <1568109312-13175-1-git-send-email-dingxiang@cmss.chinamobile.com>
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20190917064100.E72E0613A8@smtp.codeaurora.org>
-Date:   Tue, 17 Sep 2019 06:41:00 +0000 (UTC)
+        Tue, 17 Sep 2019 02:41:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TcaHJnG_1568702495;
+Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TcaHJnG_1568702495)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 17 Sep 2019 14:41:41 +0800
+From:   shile.zhang@linux.alibaba.com
+To:     linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH] mm/hugetlb: topdown mmap supports for hugepage
+Date:   Tue, 17 Sep 2019 14:41:35 +0800
+Message-Id: <1568702495-220091-1-git-send-email-shile.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <VI1PR0701MB2846C892037A515D0B3F4EF8A12B0@VI1PR0701MB2846.eurprd07.prod.outlook.com>
+References: <VI1PR0701MB2846C892037A515D0B3F4EF8A12B0@VI1PR0701MB2846.eurprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ding Xiang <dingxiang@cmss.chinamobile.com> wrote:
+From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-> "len" is unneeded,just return 0
-> 
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Similar to other arches, this adds topdown mmap support for hugepage
+in user process address space allocation. It allows mmap big size
+hugepage. This patch copied from the implementation in arch/x86.
 
-ALWAYS build check your patches! I admit that ATH_DUMP_BTCOEX() is an
-evil macro as it uses len variable in secret, but if you had compiled
-your patch you would have noticed this immeadiately.
+Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+---
+ arch/arm/include/asm/page.h |  1 +
+ arch/arm/mm/hugetlbpage.c   | 85 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+)
 
-In file included from drivers/net/wireless/ath/ath9k/gpio.c:17:
-drivers/net/wireless/ath/ath9k/gpio.c: In function 'ath9k_dump_legacy_btcoex':
-drivers/net/wireless/ath/ath9k/ath9k.h:763:3: error: 'len' undeclared (first use in this function); did you mean '_end'?
-   len += scnprintf(buf + len, size - len,  \
-   ^~~
-drivers/net/wireless/ath/ath9k/gpio.c:502:2: note: in expansion of macro 'ATH_DUMP_BTCOEX'
-  ATH_DUMP_BTCOEX("Stomp Type", btcoex->bt_stomp_type);
-  ^~~~~~~~~~~~~~~
-drivers/net/wireless/ath/ath9k/ath9k.h:763:3: note: each undeclared identifier is reported only once for each function it appears in
-   len += scnprintf(buf + len, size - len,  \
-   ^~~
-drivers/net/wireless/ath/ath9k/gpio.c:502:2: note: in expansion of macro 'ATH_DUMP_BTCOEX'
-  ATH_DUMP_BTCOEX("Stomp Type", btcoex->bt_stomp_type);
-  ^~~~~~~~~~~~~~~
-make[5]: *** [drivers/net/wireless/ath/ath9k/gpio.o] Error 1
-make[4]: *** [drivers/net/wireless/ath/ath9k] Error 2
-make[3]: *** [drivers/net/wireless/ath] Error 2
-make[2]: *** [drivers/net/wireless] Error 2
-make[1]: *** [drivers/net] Error 2
-make[1]: *** Waiting for unfinished jobs....
-make: *** [drivers] Error 2
-
+diff --git a/arch/arm/include/asm/page.h b/arch/arm/include/asm/page.h
+index c2b75cb..dcb4df5 100644
+--- a/arch/arm/include/asm/page.h
++++ b/arch/arm/include/asm/page.h
+@@ -141,6 +141,7 @@ extern void __cpu_copy_user_highpage(struct page *to, struct page *from,
+ 
+ #ifdef CONFIG_KUSER_HELPERS
+ #define __HAVE_ARCH_GATE_AREA 1
++#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
+ #endif
+ 
+ #ifdef CONFIG_ARM_LPAE
+diff --git a/arch/arm/mm/hugetlbpage.c b/arch/arm/mm/hugetlbpage.c
+index a1e5aac..ba9e151 100644
+--- a/arch/arm/mm/hugetlbpage.c
++++ b/arch/arm/mm/hugetlbpage.c
+@@ -33,3 +33,88 @@ int pmd_huge(pmd_t pmd)
+ {
+ 	return pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
+ }
++
++#ifdef CONFIG_HUGETLB_PAGE
++static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
++		unsigned long addr, unsigned long len,
++		unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++
++	info.flags = 0;
++	info.length = len;
++	info.low_limit = current->mm->mmap_legacy_base;
++	info.high_limit = TASK_SIZE;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	return vm_unmapped_area(&info);
++}
++
++static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
++		unsigned long addr0, unsigned long len,
++		unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct vm_unmapped_area_info info;
++	unsigned long addr;
++
++	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
++	info.length = len;
++	info.low_limit = PAGE_SIZE;
++	info.high_limit = current->mm->mmap_base;
++	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
++	info.align_offset = 0;
++	addr = vm_unmapped_area(&info);
++
++	/*
++	 * A failed mmap() very likely causes application failure,
++	 * so fall back to the bottom-up function here. This scenario
++	 * can happen with large stack limits and large mmap()
++	 * allocations.
++	 */
++	if (addr & ~PAGE_MASK) {
++		VM_BUG_ON(addr != -ENOMEM);
++		info.flags = 0;
++		info.low_limit = TASK_UNMAPPED_BASE;
++		info.high_limit = TASK_SIZE;
++		addr = vm_unmapped_area(&info);
++	}
++
++	return addr;
++}
++
++unsigned long
++hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
++		unsigned long len, unsigned long pgoff, unsigned long flags)
++{
++	struct hstate *h = hstate_file(file);
++	struct mm_struct *mm = current->mm;
++	struct vm_area_struct *vma;
++
++	if (len & ~huge_page_mask(h))
++		return -EINVAL;
++	if (len > TASK_SIZE)
++		return -ENOMEM;
++
++	if (flags & MAP_FIXED) {
++		if (prepare_hugepage_range(file, addr, len))
++			return -EINVAL;
++		return addr;
++	}
++
++	if (addr) {
++		addr = ALIGN(addr, huge_page_size(h));
++		vma = find_vma(mm, addr);
++		if (TASK_SIZE - len >= addr &&
++		    (!vma || addr + len <= vma->vm_start))
++			return addr;
++	}
++	if (mm->get_unmapped_area == arch_get_unmapped_area)
++		return hugetlb_get_unmapped_area_bottomup(file, addr, len,
++				pgoff, flags);
++	else
++		return hugetlb_get_unmapped_area_topdown(file, addr, len,
++				pgoff, flags);
++}
++#endif /* CONFIG_HUGETLB_PAGE */
 -- 
-https://patchwork.kernel.org/patch/11139147/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+1.8.3.1
 
