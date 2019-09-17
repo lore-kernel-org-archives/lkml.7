@@ -2,63 +2,109 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7743EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A2BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5904B21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA6C214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:37:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568734623;
+	bh=0Gx+/S3uVOn7Im6f26MF+ICMwWRzY8FKh9jpA0Ozl0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OU9IX7vKlZ7jNlFQFYOakeyn0Hg68NBEHxQat9X71Gdk4UyNVB6oZwGh8YRogWgP9
+	 tB104pK0XEtYxqfsiLmQ5Bl4J1DZg5GetKr6gUdkgBD+EZWabe6218f5pZosXFe+yd
+	 CV2yzANay4R6p3mCgJ/QP+na82uRAciusTCeNeWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729681AbfIQPg7 (ORCPT
+        id S1729701AbfIQPhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:36:59 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:33671 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728367AbfIQPg7 (ORCPT
+        Tue, 17 Sep 2019 11:37:03 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:41098 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728367AbfIQPhB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:36:59 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-98.corp.google.com [104.133.0.98] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x8HFaKmh023483
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Sep 2019 11:36:24 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 44B56420811; Tue, 17 Sep 2019 11:36:20 -0400 (EDT)
-Date:   Tue, 17 Sep 2019 11:36:20 -0400
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Laurent Vivier <lvivier@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Amit Shah <amit@kernel.org>,
-        linux-crypto@vger.kernel.org, Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH] hw_random: don't wait on add_early_randomness()
-Message-ID: <20190917153620.GG6762@mit.edu>
-References: <20190917095450.11625-1-lvivier@redhat.com>
+        Tue, 17 Sep 2019 11:37:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0Gx+/S3uVOn7Im6f26MF+ICMwWRzY8FKh9jpA0Ozl0s=; b=Vg3Sd5cDC8kRYjFmh6zJu/GK/
+        FiozRqiL8a7LEwEkeCy+HrFImEG+SCdURXm7CaEkJZRGQzxdhjnl8TGWjWXgNHpBw664E5IvM8qGH
+        1ED1TqnFXFTXZH7JEwbfGaKHydd63bwsQkjddDCJ8GooGl/ma/PBzfJ2fNmuhOF5Jlxh4=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAFX9-0008L4-Fd; Tue, 17 Sep 2019 15:36:51 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 844AC27428EA; Tue, 17 Sep 2019 16:36:50 +0100 (BST)
+Date:   Tue, 17 Sep 2019 16:36:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
+ SoC
+Message-ID: <20190917153650.GF3524@sirena.co.uk>
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916113255.GA4352@sirena.co.uk>
+ <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ryJZkp9/svQ58syV"
 Content-Disposition: inline
-In-Reply-To: <20190917095450.11625-1-lvivier@redhat.com>
+In-Reply-To: <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
+X-Cookie: Know Thy User.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:54:50AM +0200, Laurent Vivier wrote:
-> add_early_randomness() is called by hwrng_register() when the
-> hardware is added. If this hardware and its module are present
-> at boot, and if there is no data available the boot hangs until
-> data are available and can't be interrupted.
-> 
-> To avoid that, call rng_get_data() in non-blocking mode (wait=0)
-> from add_early_randomness().
-> 
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
 
-Looks good, you can add:
+--ryJZkp9/svQ58syV
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrot=
+e:
 
+> *=A0=A0=A0 spi-cadence.c* in *drivers/spi/*, which supports very old lega=
+cy
+> cadence-spi based devices(normal)
+> *=A0=A0=A0 cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to=
+ SPI-NOR
+> flash with new spi-nor layer.
+> =A0=A0=A0 all the API's in this driver purely on spi-nor specific, so cou=
+ldn't=A0
+> proceed to adapt.
+
+Are these completely separate IPs or are they just different versions of
+the same IP?
+
+--ryJZkp9/svQ58syV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2A/ZEACgkQJNaLcl1U
+h9CyIgf8CTzBHfnl6ab2KtgUkLdtcsjko33jDsWaIjRogAUFSRsdNX6r7vpmaPBO
+qfrx0rskry+jdBRHt5EYiTmvUIsxLeDzXz0WLtSawdjxG/mG1zKdM8sSk50eNdES
+8Abj/5z0s6xNx6gpE0Rb7X2Z/peg0msPqIaJDGrVUWEATB+qih7K/vMJUzvQ4snS
+zX+/SOl1PTFJl65fLm7H1DNurJTaokNrV1TNdSpzavnIWu2zaMfkPSTc8x+qIMOr
+M8ApiHjcmr8Fjdf4UrHA1msXxn98rQvemS9KBYgzWE3TgnTCg0/NfJs65W6WYAor
+XZljVmIteJ/4/Pk0nxzlmCgWd6UeoA==
+=v5W8
+-----END PGP SIGNATURE-----
+
+--ryJZkp9/svQ58syV--
