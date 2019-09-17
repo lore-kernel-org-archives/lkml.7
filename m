@@ -2,92 +2,137 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AE7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEFC5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8760E21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8BC21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbfIQQM6 (ORCPT
+        id S1730248AbfIQQNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:12:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:30167 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726965AbfIQQM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:12:58 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E9374302C08E;
-        Tue, 17 Sep 2019 16:12:57 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1811262660;
-        Tue, 17 Sep 2019 16:12:49 +0000 (UTC)
-Message-ID: <ad29574b34aca9ab61d310508f4f21a35cac406e.camel@redhat.com>
-Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>
-Date:   Tue, 17 Sep 2019 11:12:48 -0500
-In-Reply-To: <20190917144252.v34ina4z2ydchoit@linutronix.de>
-References: <20190911165729.11178-1-swood@redhat.com>
-         <20190911165729.11178-2-swood@redhat.com>
-         <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
-         <63b430ca2f067e61bef1c387fad782ab4a2c1ed3.camel@redhat.com>
-         <20190917144252.v34ina4z2ydchoit@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 17 Sep 2019 12:13:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726215AbfIQQNh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:13:37 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8HGCJC3064345;
+        Tue, 17 Sep 2019 12:13:03 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v327r9n33-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 12:13:02 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8HGCK2k064389;
+        Tue, 17 Sep 2019 12:13:02 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v327r9n2g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 12:13:02 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8HGAZsW013676;
+        Tue, 17 Sep 2019 16:13:01 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04wdc.us.ibm.com with ESMTP id 2v0t9asvr6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 17 Sep 2019 16:13:01 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8HGCx3p45154578
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Sep 2019 16:12:59 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 978C2136072;
+        Tue, 17 Sep 2019 16:12:59 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D0D513606E;
+        Tue, 17 Sep 2019 16:12:57 +0000 (GMT)
+Received: from [9.199.41.201] (unknown [9.199.41.201])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 17 Sep 2019 16:12:56 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] powerpc/mm: Conditionally call H_BLOCK_REMOVE
+To:     Laurent Dufour <ldufour@linux.ibm.com>, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <20190916095543.17496-1-ldufour@linux.ibm.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <1ba1bfc7-66c2-5298-2ef2-4117cb72ee13@linux.ibm.com>
+Date:   Tue, 17 Sep 2019 21:42:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190916095543.17496-1-ldufour@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 17 Sep 2019 16:12:58 +0000 (UTC)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909170154
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 16:42 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-09-17 09:06:28 [-0500], Scott Wood wrote:
-> > Sorry, I missed that you were asking about rcu_read_lock_bh() as
-> > well.  I
-> > did remove the change to rcu_read_lock_bh_held().
+On 9/16/19 3:25 PM, Laurent Dufour wrote:
+> Since the commit ba2dd8a26baa ("powerpc/pseries/mm: call H_BLOCK_REMOVE"),
+> the call to H_BLOCK_REMOVE is always done if the feature is exhibited.
 > 
-> Sorry for not being clear here.
+> However, the hypervisor may not support all the block size for the hcall
+> H_BLOCK_REMOVE depending on the segment base page size and actual page
+> size.
 > 
-> > With this patch, local_bh_disable() calls rcu_read_lock() on RT which
-> > handles this debug stuff.  Doing it twice shouldn't be explicitly
-> > harmful,
-> > but it's redundant, and debug kernels are slow enough as is.
+> When unsupported block size is used, the hcall H_BLOCK_REMOVE is returning
+> H_PARAM, which is triggering a BUG_ON check leading to a panic like this:
 > 
-> rcu_read_lock() does:
-> >         __rcu_read_lock();
-> >         __acquire(RCU);
-> >         rcu_lock_acquire(&rcu_lock_map);
-> >         RCU_LOCKDEP_WARN(!rcu_is_watching(),
-> >                          "rcu_read_lock() used illegally while idle");
+> The PAPR document specifies the TLB Block Invalidate Characteristics which
+> tells for each couple segment base page size, actual page size, the size of
+> the block the hcall H_BLOCK_REMOVE is supporting.
 > 
-> __acquire() is removed removed by cpp.
-> That RCU_LOCKDEP_WARN is doing the same thing as above and redundant.
-> Am I right to assume that you consider
-> 	rcu_lock_acquire(&rcu_bh_lock_map);
+> Supporting various block sizes doesn't seem needed at that time since all
+> systems I was able to play with was supporting an 8 addresses block size,
+> which is the maximum through the hcall, or none at all. Supporting various
+> size would complexify the algorithm in call_block_remove() so unless this
+> is required, this is not done.
 > 
-> redundant because the only user of that is also checking for
-> rcu_lock_map?
+> In the case of block size different from 8, a warning message is displayed
+> at boot time and that block size will be ignored checking for the
+> H_BLOCK_REMOVE support.
+> 
+> Due to the minimal amount of hardware showing a limited set of
+> H_BLOCK_REMOVE supported page size, I don't think there is a need to push
+> this series to the stable mailing list.
+> 
+> The first patch is reading the characteristic through the hcall
+> ibm,get-system-parameter and record the supported block size for each page
+> size.  The second patch is changing the check used to detect the
+> H_BLOCK_REMOVE availability to take care of the base page size and page
+> size couple.
+> 
+> Changes since V1:
+> 
+>   - Remove penc initialisation, this is already done in
+>     mmu_psize_set_default_penc()
+>   - Add details on the TLB Block Invalidate Characteristics's buffer format
+>   - Introduce #define instead of using direct numerical values
+>   - Function reading the characteristics is now directly called from
+>     pSeries_setup_arch()
+>   - The characteristics are now stored in a dedciated table static to lpar.c
+> 
 
-Yes.
+you can use
 
--Scott
+Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
+for the series.
 
+-aneesh
