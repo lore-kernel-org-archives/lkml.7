@@ -2,115 +2,184 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B1DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2410EC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EC5214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2BE2171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:03:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568736181;
+	bh=3X5ZjeOO1C1bcq2z1BMPTXQaL4HE6PHHkVBpaCMCei4=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=FfTzZPBPZ9kPwOk+k7LhGLqAitwS8N6YICCQ02LoZfzBrpBPi0TfJ6MPvD7TmAPek
+	 9tohVDaHdZUUXK+gMWnK6+j0Rkd9OwgduaMiWXDEsT26WoTi84wMgjMb1i4eibTX17
+	 OOHCuYHab58CbUS7GAQlE5ZamiHI0OLGAsOc2pyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727677AbfIQQAk (ORCPT
+        id S1727893AbfIQQDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:00:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:42604 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727203AbfIQQAj (ORCPT
+        Tue, 17 Sep 2019 12:03:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56508 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727779AbfIQQC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:00:39 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iAFu2-0002Qp-Ir; Tue, 17 Sep 2019 18:00:30 +0200
-Date:   Tue, 17 Sep 2019 18:00:30 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: Re: [PATCH RT 7/8] sched: migrate_enable: Use select_fallback_rq()
-Message-ID: <20190917160030.i24gvyye2bpdykfy@linutronix.de>
-References: <20190727055638.20443-1-swood@redhat.com>
- <20190727055638.20443-8-swood@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190727055638.20443-8-swood@redhat.com>
-User-Agent: NeoMutt/20180716
+        Tue, 17 Sep 2019 12:02:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=vaCvTr8Faen7PvXlxXOwvkyQjeDJvGKNYb4c/ee5Xm8=; b=Mz17ytn/Ahg6
+        Y/QaIOxdq3D2Nbni7N3IVAxkvZEguVp+G4zD/hI84aVgabyrm9tJToQNYLjyGW2TRQZJwuaHPRIXM
+        TXoWQHoDMfQJGxHzZpo6jC3IoBkY1JOR5u/gGx1zxxSnabRHWlYVLGVoWC+bMn8ibL2SwQi8STfEC
+        l+osY=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAFwH-0008O9-9x; Tue, 17 Sep 2019 16:02:49 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id B319D27428FE; Tue, 17 Sep 2019 17:02:48 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Mihai Serban <mihai.serban@nxp.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>, festevam@gmail.com,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, nicoleotsuka@gmail.com,
+        Nicolin Chen <nicoleotsuka@gmail.com>, perex@perex.cz,
+        timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
+Subject: Applied "ASoC: fsl_sai: Fix noise when using EDMA" to the asoc tree
+In-Reply-To: <20190913192807.8423-2-daniel.baluta@nxp.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190917160248.B319D27428FE@ypsilon.sirena.org.uk>
+Date:   Tue, 17 Sep 2019 17:02:48 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-07-27 00:56:37 [-0500], Scott Wood wrote:
-> migrate_enable() currently open-codes a variant of select_fallback_rq().
-> However, it does not have the "No more Mr. Nice Guy" fallback and thus
-> it will pass an invalid CPU to the migration thread if cpus_mask only
-> contains a CPU that is !active.
-> 
-> Signed-off-by: Scott Wood <swood@redhat.com>
-> ---
-> This scenario will be more likely after the next patch, since
-> the migrate_disable_update check goes away.  However, it could happen
-> anyway if cpus_mask was updated to a CPU other than the one we were
-> pinned to, and that CPU subsequently became inactive.
+The patch
 
-I'm unclear about the problem / side effect this has (before and after
-the change). It is possible (before and after that change) that a CPU is
-selected which is invalid / goes offline after the "preempt_enable()"
-statement and before stop_one_cpu() does its job, correct?
+   ASoC: fsl_sai: Fix noise when using EDMA
 
-> ---
->  kernel/sched/core.c | 25 ++++++++++---------------
->  1 file changed, 10 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index eb27a9bf70d7..3a2d8251a30c 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -7368,6 +7368,7 @@ void migrate_enable(void)
->  	if (p->migrate_disable_update) {
->  		struct rq *rq;
->  		struct rq_flags rf;
-> +		int cpu = task_cpu(p);
->  
->  		rq = task_rq_lock(p, &rf);
->  		update_rq_clock(rq);
-> @@ -7377,21 +7378,15 @@ void migrate_enable(void)
->  
->  		p->migrate_disable_update = 0;
->  
-> -		WARN_ON(smp_processor_id() != task_cpu(p));
-> -		if (!cpumask_test_cpu(task_cpu(p), &p->cpus_mask)) {
-> -			const struct cpumask *cpu_valid_mask = cpu_active_mask;
-> -			struct migration_arg arg;
-> -			unsigned int dest_cpu;
-> -
-> -			if (p->flags & PF_KTHREAD) {
-> -				/*
-> -				 * Kernel threads are allowed on online && !active CPUs
-> -				 */
-> -				cpu_valid_mask = cpu_online_mask;
-> -			}
-> -			dest_cpu = cpumask_any_and(cpu_valid_mask, &p->cpus_mask);
-> -			arg.task = p;
-> -			arg.dest_cpu = dest_cpu;
-> +		WARN_ON(smp_processor_id() != cpu);
-> +		if (!cpumask_test_cpu(cpu, &p->cpus_mask)) {
-> +			struct migration_arg arg = { p };
-> +			struct rq_flags rf;
-> +
-> +			rq = task_rq_lock(p, &rf);
-> +			update_rq_clock(rq);
-> +			arg.dest_cpu = select_fallback_rq(cpu, p);
-> +			task_rq_unlock(rq, p, &rf);
->  
->  			unpin_current_cpu();
->  			preempt_lazy_enable();
+has been applied to the asoc tree at
 
-Sebastian
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From e75f4940e8ad0dd76527302a10c06b58bf7eb590 Mon Sep 17 00:00:00 2001
+From: Mihai Serban <mihai.serban@nxp.com>
+Date: Fri, 13 Sep 2019 22:28:05 +0300
+Subject: [PATCH] ASoC: fsl_sai: Fix noise when using EDMA
+
+EDMA requires the period size to be multiple of maxburst. Otherwise the
+remaining bytes are not transferred and thus noise is produced.
+
+We can handle this issue by adding a constraint on
+SNDRV_PCM_HW_PARAM_PERIOD_SIZE to be multiple of tx/rx maxburst value.
+
+Signed-off-by: Mihai Serban <mihai.serban@nxp.com>
+Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/20190913192807.8423-2-daniel.baluta@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/fsl/fsl_sai.c | 15 +++++++++++++++
+ sound/soc/fsl/fsl_sai.h |  1 +
+ 2 files changed, 16 insertions(+)
+
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index ef0b74693093..b517e4bc1b87 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -628,6 +628,16 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ 			   FSL_SAI_CR3_TRCE_MASK,
+ 			   FSL_SAI_CR3_TRCE);
+ 
++	/*
++	 * EDMA controller needs period size to be a multiple of
++	 * tx/rx maxburst
++	 */
++	if (sai->soc_data->use_edma)
++		snd_pcm_hw_constraint_step(substream->runtime, 0,
++					   SNDRV_PCM_HW_PARAM_PERIOD_SIZE,
++					   tx ? sai->dma_params_tx.maxburst :
++					   sai->dma_params_rx.maxburst);
++
+ 	ret = snd_pcm_hw_constraint_list(substream->runtime, 0,
+ 			SNDRV_PCM_HW_PARAM_RATE, &fsl_sai_rate_constraints);
+ 
+@@ -1026,30 +1036,35 @@ static int fsl_sai_remove(struct platform_device *pdev)
+ 
+ static const struct fsl_sai_soc_data fsl_sai_vf610_data = {
+ 	.use_imx_pcm = false,
++	.use_edma = false,
+ 	.fifo_depth = 32,
+ 	.reg_offset = 0,
+ };
+ 
+ static const struct fsl_sai_soc_data fsl_sai_imx6sx_data = {
+ 	.use_imx_pcm = true,
++	.use_edma = false,
+ 	.fifo_depth = 32,
+ 	.reg_offset = 0,
+ };
+ 
+ static const struct fsl_sai_soc_data fsl_sai_imx7ulp_data = {
+ 	.use_imx_pcm = true,
++	.use_edma = false,
+ 	.fifo_depth = 16,
+ 	.reg_offset = 8,
+ };
+ 
+ static const struct fsl_sai_soc_data fsl_sai_imx8mq_data = {
+ 	.use_imx_pcm = true,
++	.use_edma = false,
+ 	.fifo_depth = 128,
+ 	.reg_offset = 8,
+ };
+ 
+ static const struct fsl_sai_soc_data fsl_sai_imx8qm_data = {
+ 	.use_imx_pcm = true,
++	.use_edma = true,
+ 	.fifo_depth = 64,
+ 	.reg_offset = 0,
+ };
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index b12cb578f6d0..76b15deea80c 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -157,6 +157,7 @@
+ 
+ struct fsl_sai_soc_data {
+ 	bool use_imx_pcm;
++	bool use_edma;
+ 	unsigned int fifo_depth;
+ 	unsigned int reg_offset;
+ };
+-- 
+2.20.1
+
