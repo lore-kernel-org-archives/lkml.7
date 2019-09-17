@@ -2,143 +2,81 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932E4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DF1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E55621670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2776020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:18:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388025AbfIQISV (ORCPT
+        id S2388777AbfIQISY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:18:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40982 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 04:18:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33112 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbfIQISU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732088AbfIQISU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Sep 2019 04:18:20 -0400
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7E395C057F23
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:18:19 +0000 (UTC)
-Received: by mail-wm1-f72.google.com with SMTP id f63so538422wma.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:18:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qRyrFKgOm48KkKg55Dl+vUukfxK99uW3Zie+F4GtPtQ=;
-        b=UbEM2tHXeliGNK//e9++66fCkX6j7fno/AxZ2guS3JFOjzrWmvQ1TQ+Uk56q7fhajq
-         6EQZX4Z61YBkelDc5cloLE2WftqeJj0mr4h8HmyHGl5iSCxSbp1Jff7+LRXhAWZ9CJgc
-         Or6y5WOrUsobSlyd+JFzMwtidKt+OTtoaOPTwT2ozyE+u6O+bCFfYnziCm977TsFvm3w
-         zqVlSOSfnSNxzRGaUKTzY5yiAsaPgmF9LAhGtdJ17IXs6MUpN5/vQnUvK8oFp84PBtb7
-         f3GwrUjAH9iP38RtBzBaEE+MKfLyqeW3ySHZzfAKd8STVN1m2RXWrk+gjQOB9bC+Dohr
-         VvvA==
-X-Gm-Message-State: APjAAAU+zKu/rMT0ai7MclkEHhDy1uyo8jiGO7w/Cpa/mdTTak+IEASA
-        MCAL/bYg3NkbQisyqtRQNqOR78gMC3U0sukeHmK+hAiL+DRvuL5qwoZqXuEa71SH+0hKz5Uj8yY
-        9wPN5HHa+dh1QAOV/PqeL/uM0
-X-Received: by 2002:adf:e548:: with SMTP id z8mr1879070wrm.324.1568708298092;
-        Tue, 17 Sep 2019 01:18:18 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwCfHMrixhy4NM9wsotuqqspSjFXXw/P/RLA2EqCwu+G5IRiXW42RqN3pEaaPcqbfI2jIW1UQ==
-X-Received: by 2002:adf:e548:: with SMTP id z8mr1879043wrm.324.1568708297784;
-        Tue, 17 Sep 2019 01:18:17 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id y186sm2997074wmb.41.2019.09.17.01.18.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 01:18:17 -0700 (PDT)
-Subject: Re: [PATCH 1/3] KVM: Fix coalesced mmio ring buffer out-of-bounds
- access
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     P J P <ppandit@redhat.com>, Jim Mattson <jmattson@google.com>
-References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <f4549d5a-d948-f1d1-2a29-8c4621dae1b0@redhat.com>
-Date:   Tue, 17 Sep 2019 10:18:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id D2391315C00D;
+        Tue, 17 Sep 2019 08:18:19 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C14D5D9DC;
+        Tue, 17 Sep 2019 08:18:19 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 9D29217444; Tue, 17 Sep 2019 10:18:18 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 10:18:18 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Eric Anholt <eric@anholt.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/8] drm/shmem: drop DEFINE_DRM_GEM_SHMEM_FOPS
+Message-ID: <20190917081818.4lumcpn4wf6jcuyt@sirius.home.kraxel.org>
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-4-kraxel@redhat.com>
+ <CAL_JsqJajCtM=vRgSDX2DQ6iJzDgMHicXgXgGqF7Bc-KdTUUQA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJajCtM=vRgSDX2DQ6iJzDgMHicXgXgGqF7Bc-KdTUUQA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 17 Sep 2019 08:18:20 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think we should consider the embargo for CVE-2019-14821 to be broken.
- Since your patch is better, I'll push that one instead as soon as I get
-confirmation.
+On Mon, Sep 16, 2019 at 05:07:14PM -0500, Rob Herring wrote:
+> On Fri, Sep 13, 2019 at 7:29 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> >
+> 
+> Version? Pretty sure this is not v1.
 
-Paolo
+Yep, was posted as part of a longer series before.
 
-On 17/09/19 10:16, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Reported by syzkaller:
-> 
-> 	#PF: supervisor write access in kernel mode
-> 	#PF: error_code(0x0002) - not-present page
-> 	PGD 403c01067 P4D 403c01067 PUD 0
-> 	Oops: 0002 [#1] SMP PTI
-> 	CPU: 1 PID: 12564 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
-> 	RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
-> 	Call Trace:
-> 	 __kvm_io_bus_write+0x91/0xe0 [kvm]
-> 	 kvm_io_bus_write+0x79/0xf0 [kvm]
-> 	 write_mmio+0xae/0x170 [kvm]
-> 	 emulator_read_write_onepage+0x252/0x430 [kvm]
-> 	 emulator_read_write+0xcd/0x180 [kvm]
-> 	 emulator_write_emulated+0x15/0x20 [kvm]
-> 	 segmented_write+0x59/0x80 [kvm]
-> 	 writeback+0x113/0x250 [kvm]
-> 	 x86_emulate_insn+0x78c/0xd80 [kvm]
-> 	 x86_emulate_instruction+0x386/0x7c0 [kvm]
-> 	 kvm_mmu_page_fault+0xf9/0x9e0 [kvm]
-> 	 handle_ept_violation+0x10a/0x220 [kvm_intel]
-> 	 vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
-> 	 vcpu_enter_guest+0x4dc/0x18d0 [kvm]
-> 	 kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
-> 	 kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
-> 	 do_vfs_ioctl+0xa2/0x690
-> 	 ksys_ioctl+0x6d/0x80
-> 	 __x64_sys_ioctl+0x1a/0x20
-> 	 do_syscall_64+0x74/0x720
-> 	 entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 	RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
-> 
-> Both the coalesced_mmio ring buffer indexs ring->first and ring->last are 
-> bigger than KVM_COALESCED_MMIO_MAX from the testcase, array out-of-bounds 
-> access triggers by ring->coalesced_mmio[ring->last].phys_addr = addr; 
-> assignment. This patch fixes it by mod indexs by KVM_COALESCED_MMIO_MAX.
-> 
-> syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=134b2826a00000
-> 
-> Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  virt/kvm/coalesced_mmio.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-> index 5294abb..cff1ec9 100644
-> --- a/virt/kvm/coalesced_mmio.c
-> +++ b/virt/kvm/coalesced_mmio.c
-> @@ -73,6 +73,8 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
->  
->  	spin_lock(&dev->kvm->ring_lock);
->  
-> +	ring->first = ring->first % KVM_COALESCED_MMIO_MAX;
-> +	ring->last = ring->last % KVM_COALESCED_MMIO_MAX;
->  	if (!coalesced_mmio_has_room(dev)) {
->  		spin_unlock(&dev->kvm->ring_lock);
->  		return -EOPNOTSUPP;
-> 
+Splitted the long series into multiple smaller ones by cherry-picking
+patches into new branches, which re-started the numbering.
+
+Sorry for the confusion,
+  Gerd
 
