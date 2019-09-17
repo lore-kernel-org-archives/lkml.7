@@ -2,141 +2,114 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07CCC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E82C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9334820678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:42:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568688164;
-	bh=7PC0ROFIspnUlScn9iTD2qwr7T1bcSE2ClTcHbX5Xjw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=d93YP5HZht7J8wI6yD7D9ZcVp8hjBRwrBgDiqUq7Abz3rZ+2lhag/YTcKSGcCcxL9
-	 m9kw1/NmfRwo9icydMKRZbAnrPiSlCoTWa3hqioVrNek82oYlJ3uqmwLX6Gg9LfPGK
-	 Cbd6YqIx6PKyv/04RsiR1UtibF7XHwY9emB0QiPM=
+	by mail.kernel.org (Postfix) with ESMTP id 46A8A20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 02:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="jMhRGNsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391985AbfIQCmn (ORCPT
+        id S2392002AbfIQCn0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 22:42:43 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35592 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729003AbfIQCmm (ORCPT
+        Mon, 16 Sep 2019 22:43:26 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34242 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391292AbfIQCnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 22:42:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id q10so4004769iop.2
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 19:42:42 -0700 (PDT)
+        Mon, 16 Sep 2019 22:43:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b128so1230452pfa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2Wl6obJ2QcdqwebrUsBa63QXWC5RCUfFV7IoOn2Y6ks=;
-        b=AVIBQ75Fe0Muk7Kro+HRBd9acd/TcmFSpKrAm21T7nRalgmecRgqOV098heI5zDGM3
-         dgnI3auvF0WjVYo0AF4/fojMIKm9+vJmCOFuPEkUojCxQnCXRtzPQ4f3GObDsqtAioMy
-         /WBKTY7tLL7CY5KMwQpOsRaQdPBN+RXxAuvlw=
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=aQrXVTNYPD93A+dr3PQzbCJpCjMJXTuJQlMV8r8hKjE=;
+        b=jMhRGNsPq4gN9mlEaZ/AEVKbtiBbP49Nk000CTIHRAT7Qw5Sm5KXl30UtOnKNEXgJG
+         BBcf0/EzePXZhMAXA1Ed+Hu3czD1Ka2KVhgyxemKS+eS5LZobAJ4B50wLjVdUSE8YD2L
+         puiSTTu61AVk3VP0aa7iYu1y1ask/Hk4D577HbXvPrxwqtz/ggUfUxHMnx56eZlbifHi
+         n3SLjkQco+K4dPH01qWh3ysbYuyTdJeI/9PwYRJwxPeSs+LnLSGR+qfHqzVXm86KQ7Mc
+         3SbrrAQoBk+vCulD8t3H4OO+kGMpKJOJRPWi9tpwOTB56Lp1/SaPjcaAtLoBuSDZ8/X2
+         4AWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2Wl6obJ2QcdqwebrUsBa63QXWC5RCUfFV7IoOn2Y6ks=;
-        b=qlo/ZLv7ecbzljMzeOeS0E12RjdXg+83OzjPygaDmqETrMqVxYgBwtCVm3IHpDa+zZ
-         vorsYin99c9j1B+cXycnagauGzcocx0PpFYnWXH+EphGTI9GMha/v5rlmHJtN9UsZZu9
-         4yaxWrwvz0rKHWD9eeGzBDejlEhgd83hmhePkncNgqP7hHxHcxnVc2xj9Wu/3OaeQZea
-         wRkPoHH6bC1TY/TCqzK51OWwnNd/fctoCLZYKCfGTjT3lRDt+jZlj+2EUF1eUc+J6L5R
-         6n4GKqT3IObT+LS43FnKNeBL86+E1WB4qqpBhWAIVx7fUrKt+kyC3gIzD8GP12dlUsAD
-         SUAw==
-X-Gm-Message-State: APjAAAVWqxAwl/aAapSyLXmPsmpN3+PJgyNgP6yYnlNJ/9SYMI6fwych
-        gamAryBMhAG0FdIBBOEid1Ut2A==
-X-Google-Smtp-Source: APXvYqyHJ+7FhSr+7dVYl/OVtVSZqbVBdlGqR0cFlnoQV8AMgCxphQ4oQyT8mUNq2wjv7GBivgJNyg==
-X-Received: by 2002:a6b:9107:: with SMTP id t7mr900685iod.150.1568688161845;
-        Mon, 16 Sep 2019 19:42:41 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id v13sm457996iot.50.2019.09.16.19.42.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 16 Sep 2019 19:42:41 -0700 (PDT)
-Subject: Re: [PATCH v4 3/5] vimc: move duplicated IS_SRC and IS_SINK to common
- header
-To:     Helen Koike <helen.koike@collabora.com>, mchehab@kernel.org,
-        andrealmeid@collabora.com, dafna.hirschfeld@collabora.com,
-        hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1567822792.git.skhan@linuxfoundation.org>
- <8dbc93c2a7291d942d2d37491833444d77316211.1567822793.git.skhan@linuxfoundation.org>
- <cac58f55-6d0f-d69f-6bba-474eedb0f80e@collabora.com>
- <124fe9af-5540-770e-d124-99e2b3b4e39a@linuxfoundation.org>
- <431c6d0a-724b-1b78-685c-95bfa8f5c39e@collabora.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <e74cdc8d-f138-0343-cc37-510404b497b9@linuxfoundation.org>
-Date:   Mon, 16 Sep 2019 20:42:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=aQrXVTNYPD93A+dr3PQzbCJpCjMJXTuJQlMV8r8hKjE=;
+        b=O3I9EeTZE1kflXhs8SjGleUr539j4vG49DwjkPWC2bYnru8VMA1FQO2uuUS3qeREtk
+         8xbxxTwhn5FqoexMIP+kc+exRyuI7UvxgMtcw5BKUhSiw27IG+qE+Z73VPmqckg4dBTM
+         Y0njqxEPWRqTfG0ZmkOOodweNMZ2KpZkqno5hf0hQ5CLYHyoofuXsd7n/M3mfLwq/Xqu
+         ynEYnd805NqgYTYB/EICtckDf8Sa4JqmbE0rr+FgJKgQyLKiK/+nHVDbe1HA+GQPgeMg
+         7QFONE+csQ/Gsku6I080of/bq3M3GMKYDEsuOVXa7s15vW2tYuW8iw3QAVRR6SEX5jkv
+         +V6w==
+X-Gm-Message-State: APjAAAXqNu7El+bpwLC8vmTtDIoMMzDtR8+2/fjDxWuLOze63MNse9MK
+        G+CzcYHM19U4qv05y3/iMH1j7ZESIpg=
+X-Google-Smtp-Source: APXvYqzJsHSwaJsn5L+NBbiv4QM7roesrFufWYU2XCHXrcTHzejh6DulwYsZREZeSRQpa4cfz+9Jdw==
+X-Received: by 2002:a17:90a:e290:: with SMTP id d16mr2606067pjz.86.1568688203384;
+        Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
+Received: from cakuba.netronome.com ([2601:646:8e00:e18::2])
+        by smtp.gmail.com with ESMTPSA id x72sm450247pfc.89.2019.09.16.19.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 19:43:23 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 19:43:19 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     zhong jiang <zhongjiang@huawei.com>
+Cc:     <davem@davemloft.net>, <anna.schumaker@netapp.com>,
+        <trond.myklebust@hammerspace.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/3] ixgbe: Use kzfree() rather than its implementation.
+Message-ID: <20190916194319.712d81cc@cakuba.netronome.com>
+In-Reply-To: <1567564752-6430-2-git-send-email-zhongjiang@huawei.com>
+References: <1567564752-6430-1-git-send-email-zhongjiang@huawei.com>
+        <1567564752-6430-2-git-send-email-zhongjiang@huawei.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <431c6d0a-724b-1b78-685c-95bfa8f5c39e@collabora.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 4:42 AM, Helen Koike wrote:
+On Wed, 4 Sep 2019 10:39:10 +0800, zhong jiang wrote:
+> Use kzfree() instead of memset() + kfree().
 > 
+> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
 > 
-> On 9/15/19 8:52 PM, Shuah Khan wrote:
->> On 9/15/19 1:25 PM, Helen Koike wrote:
->>> Hi Shuah,
->>>
->>> On 9/6/19 11:42 PM, Shuah Khan wrote:
->>>> Move duplicated IS_SRC and IS_SINK dfines to common header. Rename
->>>> them to VIMC_IS_SRC and VIM_IS_SINK.
->>>>
->>>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>>> ---
->>>>    drivers/media/platform/vimc/vimc-common.h  |  4 ++++
->>>>    drivers/media/platform/vimc/vimc-debayer.c | 11 ++++-------
->>>>    drivers/media/platform/vimc/vimc-scaler.c  |  8 +++-----
->>>>    3 files changed, 11 insertions(+), 12 deletions(-)
->>>>
->>>> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
->>>> index 87ee84f78322..236412ad7548 100644
->>>> --- a/drivers/media/platform/vimc/vimc-common.h
->>>> +++ b/drivers/media/platform/vimc/vimc-common.h
->>>> @@ -27,6 +27,10 @@
->>>>      #define VIMC_FRAME_INDEX(lin, col, width, bpp) ((lin * width + col) * bpp)
->>>>    +/* Source and sink pad checks */
->>>> +#define VIMC_IS_SRC(pad)    (pad)
->>>> +#define VIMC_IS_SINK(pad)    (!(pad))
->>>
->>> This is true now, but it might not be true in the future.
->>> In the output video device (that was sent by André but not yet upstream) for instance, only have a single
->>> source pad (which I suppose the index will be 0), and this macro won't be true.
->>>
->>
->>> Maybe we could check pad flags in sd->entity->pads[index].flags ?
->>>
->>
->> I think this change should be done in André's patch?
-> 
-> Could be yes, making it generic since the start would be nice,
-> but I don't mind updating this latter when needed.
+> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> index 31629fc..113f608 100644
+> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
+> @@ -960,11 +960,9 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
+>  	return 0;
+>  
+>  err_aead:
+> -	memset(xs->aead, 0, sizeof(*xs->aead));
+> -	kfree(xs->aead);
+> +	kzfree(xs->aead);
+>  err_xs:
+> -	memset(xs, 0, sizeof(*xs));
+> -	kfree(xs);
+> +	kzfree(xs);
+>  err_out:
+>  	msgbuf[1] = err;
+>  	return err;
+> @@ -1049,8 +1047,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
+>  	ixgbe_ipsec_del_sa(xs);
+>  
+>  	/* remove the xs that was made-up in the add request */
+> -	memset(xs, 0, sizeof(*xs));
+> -	kfree(xs);
+> +	kzfree(xs);
+>  
+>  	return 0;
+>  }
 
-Let's go with that then. This way we can get this series in and then
-we can clean this up in André's patch.
-
-> 
-> Then:
-> 
-> Acked-by: Helen Koike <helen.koike@collabora.com>
-> 
->>
-
-thanks,
--- Shuah
-
+All the crypto cases should really be converted to memzero_explicit().
