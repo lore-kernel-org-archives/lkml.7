@@ -2,115 +2,176 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8105C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57711C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1D882067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3458120640
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568742909;
+	bh=QXTxpWKekTiVxVw6fbgCDvZIsHFhrJiUqYKpA6xuCOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BQD0RBmpsRnLErg37t0+/lrdrn8kVBcx+qPQMGqWcycUP5mbzKuj5DImxRoJ+JsUu
+	 qL98LA1/t8WFNGGe3u+jZ8ZLHF/2JObctfYNhN7rxuyiml2nLCYlda9GBeFv6pW66Y
+	 72PL4XX1abxUOxj5Q4Vhb52s7VwDjGCqoI6f25/4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfIQRyM (ORCPT
+        id S1731374AbfIQRzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:54:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56604 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfIQRyL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:54:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F479882FB;
-        Tue, 17 Sep 2019 17:54:11 +0000 (UTC)
-Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4026519C70;
-        Tue, 17 Sep 2019 17:54:05 +0000 (UTC)
-Message-ID: <e7ffe570911adffcbc69c05a26e5b670c1dcc3f6.camel@redhat.com>
-Subject: Re: [PATCH RT 6/8] sched: migrate_enable: Set state to TASK_RUNNING
-From:   Scott Wood <swood@redhat.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Date:   Tue, 17 Sep 2019 12:54:04 -0500
-In-Reply-To: <20190917153110.fgi6ilb6mpfkcwbr@linutronix.de>
-References: <20190727055638.20443-1-swood@redhat.com>
-         <20190727055638.20443-7-swood@redhat.com>
-         <20190917153110.fgi6ilb6mpfkcwbr@linutronix.de>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 17 Sep 2019 13:55:08 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41279 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfIQRzI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:55:08 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w17so3644423oiw.8;
+        Tue, 17 Sep 2019 10:55:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=apP6EuGrN+2ThQnbuaWrR8NOtzPWwQdyNbUGXH4C9kY=;
+        b=eeoIZdWTQQs2G5KkJimNl0/32P8hYJoaCwOtNq/8uo8gh4J+71Ydh0ew+tDCEFoKXB
+         7Et6f1HFsbsVyqqUa1oklkrGd8W0XvaLOekQmnVLiJOrB1dt1XH/enk3ZdUfL/yziPKo
+         5nzJTAN2MZVnXBRb07y7xoutAQV9t6IG1YTHS9IxpJJWgEQJCfjnuqjU3sCS00GftAk0
+         eMSwtrydFMIuDHy18/gDW/704FJ3aeBObniyWHsRv/5LESFmn1H8bYIik2uyWVUUP3/+
+         ipTirvZ5nx3E/7mQefqbGNXXVyUhI7swAikyBb2LtPM6qjAkcSI71GmMo3lMLfb18Z7C
+         KrFw==
+X-Gm-Message-State: APjAAAUmKK1LISBciUrRp2QFWzJcGbt1Dvzr3XzQwbvRGUwsHWW8gRdl
+        3bwJ47FUtCNs4svdlW704Q==
+X-Google-Smtp-Source: APXvYqxroo1YBuMjGZ0BOe2e6ICZ0bADExyq7TNaM4+OK8EjcRVNatn2iNeE5lPJX0K6tHBwPgEUdQ==
+X-Received: by 2002:aca:c7d8:: with SMTP id x207mr4901443oif.99.1568742907207;
+        Tue, 17 Sep 2019 10:55:07 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id b4sm868738oiy.30.2019.09.17.10.55.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 10:55:06 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 12:55:05 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     laurent.pinchart@ideasonboard.com,
+        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM
+ documentation
+Message-ID: <20190917175505.GA29276@bogus>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-2-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 17 Sep 2019 17:54:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190906135436.10622-2-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 17:31 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-07-27 00:56:36 [-0500], Scott Wood wrote:
-> > If migrate_enable() is called while a task is preparing to sleep
-> > (state != TASK_RUNNING), that triggers a debug check in stop_one_cpu().
-> > Explicitly reset state to acknowledge that we're accepting the spurious
-> > wakeup.
-> > 
-> > Signed-off-by: Scott Wood <swood@redhat.com>
-> > ---
-> >  kernel/sched/core.c | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 38a9a9df5638..eb27a9bf70d7 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -7396,6 +7396,14 @@ void migrate_enable(void)
-> >  			unpin_current_cpu();
-> >  			preempt_lazy_enable();
-> >  			preempt_enable();
-> > +
-> > +			/*
-> > +			 * Avoid sleeping with an existing non-running
-> > +			 * state.  This will result in a spurious wakeup
-> > +			 * for the calling context.
-> > +			 */
-> > +			__set_current_state(TASK_RUNNING);
+On Fri, Sep 06, 2019 at 03:54:28PM +0200, Jacopo Mondi wrote:
+> Add device tree bindings documentation for the Renesas R-Car Display
+> Unit Color Management Module.
 > 
-> Do you have an example for this?
-
-Unfortunately I didn't save the traceback of where I originally saw it, but
-I ran it again and hit the warning in prepare_to_wait_event().
-
->  I'm not too sure if we are not using a
-> state by doing this. Actually we were losing it and get yelled at.  We do:
-> > rt_spin_unlock()
-> > {
-> >         rt_spin_lock_fastunlock();
-> >         migrate_enable();
-> > }
+> CMM is the image enhancement module available on each R-Car DU video
+> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
 > 
-> So save the state as part of the locking process and lose it as part of
-> migrate_enable() if the CPU mask was changed. I *think* we need to
-> preserve that state until after the migration to the other CPU.
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> new file mode 100644
+> index 000000000000..9e5922689cd7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
+> @@ -0,0 +1,64 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-Preserving the state would be ideal, though in most cases occasionally
-losing the state should be tolerable as long as it doesn't happen
-persistently.  TASK_DEAD is an exception but that doesn't do anything before
-schedule() that could end up here.  I suppose there could be some places
-that use TASK_UNINTERRUPTIBLE without checking the actual condition after
-schedule(), and which do something that can end up here before schedule()...
+For new bindings:
 
-We can't use saved_state here though, because we can get here inside the
-rtmutex code (e.g. from debug_rt_mutex_print_deadlock)... and besides, the
-waker won't have WF_LOCK_SLEEPER and so saved_state will get cleared.
+GPL-2.0-only OR BSD-2-Clause
 
--Scott
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Renesas R-Car Color Management Module (CMM)
+> +
+> +maintainers:
+> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
+> +
+> +description: |+
+> +  Renesas R-Car color management module connected to R-Car DU video channels.
+> +  It provides image enhancement functions such as 1-D look-up tables (LUT),
+> +  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
+> +  space conversion (CSC).
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - renesas,r8a7795-cmm
+> +        - renesas,r8a7796-cmm
+> +        - renesas,r8a77965-cmm
+> +        - renesas,r8a77990-cmm
+> +        - renesas,r8a77995-cmm
+> +      - enum:
+> +        - renesas,rcar-gen3-cmm
+> +        - renesas,rcar-gen2-cmm
 
+This allows 10 valid cases when I imagine there's only really 5. I'm 
+okay leaving it, but might be better to split into 2 under a 'oneOf'.
 
+I imagine there will be a lot of these for Renesas, so just be 
+consistent.
+
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  power-domains:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - resets
+> +  - power-domains
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
+> +    #include <dt-bindings/power/r8a7796-sysc.h>
+> +
+> +    cmm0: cmm@fea40000 {
+> +         compatible = "renesas,r8a7796-cmm";
+> +         reg = <0 0xfea40000 0 0x1000>;
+> +         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +         clocks = <&cpg CPG_MOD 711>;
+> +         resets = <&cpg 711>;
+> +    };
+> --
+> 2.23.0
+> 
