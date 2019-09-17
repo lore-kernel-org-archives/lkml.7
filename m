@@ -2,220 +2,523 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEF3C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E22C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:00:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DEA21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BAAE21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:00:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Nrte7E7a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391369AbfIQG5I (ORCPT
+        id S2404424AbfIQHAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:57:08 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:52813 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfIQG5H (ORCPT
+        Tue, 17 Sep 2019 03:00:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:37971 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404312AbfIQHAM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:57:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id g8so4270797iop.19
-        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 23:57:07 -0700 (PDT)
+        Tue, 17 Sep 2019 03:00:12 -0400
+Received: by mail-lj1-f195.google.com with SMTP id y23so2312324ljn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 00:00:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=p0XkG8nd7X2PnoIhGYnIdqQ4Ifm3karptgTvNoP3BIw=;
+        b=Nrte7E7aeOWTsPfoqkEWVKTFvCSe0MNIlmGiie5/2pmr5kw1c3sqTyWs92QunlYUU3
+         jhjvfrxsV7jeTwVjnO/7EY8SjmFMyUUJcPePSq4XR/43rY5+VqFG+yYKGjtNBSh0pmIc
+         cMQ6OGeEFeVEnPxsBHN4eMInxLZ/a965a7kR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5nT82DfPsZYCr7GAfl4lqF2EFv7abMND98js3V6UJ7M=;
-        b=ia23IWTrzA5WEvxMAK5FY7Gc1ROGUgv3xiD+ge8c7EZDO4lDrali4XcetVmDQ96Aw8
-         rt+XS1xJ3qSFfOFKj48TLRPZ6uhwqR3KaX0+FXrHVetkCGCultmxFH2idPIOanFw5LJS
-         GU+ibWu1RwFLjgXsI5H4N0XqBchOcYvEZVC/ib9WvbKrZlCcpsn8ZgGB/7uavGqBL/Eo
-         MIYMgqPvGhfDIfHQlyIB6WyQWiLMSD7m403zEBaSp7P7HPW2lavE/CkVfAmJ2Gs8vV4U
-         +/CsGabElJNx+xCRey4XtVK4J4vDSXWdJxYY+tr5e7KSEgVPbIU77+fN0sDLVsD+j1vU
-         IKjQ==
-X-Gm-Message-State: APjAAAU1LaTk1fRrvEYPPpfaCxHvpvd2xn9W13B9IudKVRCchijaW9lV
-        Gil4HSTeJiuPUUO9E0qofLhyAzN38qXE/uRxc9YXvbDTfohg
-X-Google-Smtp-Source: APXvYqyFd7LPo7ynEu8fuEiPMzC/ZAMRSyg1OLEfyGdL2CPIQMY6kLEYxlf0zHxolCVNGGCIgyHcjF2WrTnj6pgS5/hBCNwDEUYz
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=p0XkG8nd7X2PnoIhGYnIdqQ4Ifm3karptgTvNoP3BIw=;
+        b=IP64QshRkmY59Pba7QON878NGvrglyYGeXXHZrFIwlfLkn2dihKxtydaTtYgJJAaWV
+         FGA1ORpMy11e4MMzYUv2QWWOtSbYFPkyTJuFm7ATo8DmEbSofY85KmUmaNNnUut+tK5H
+         WLUcixDRapRN8jQg2es/q5v4r19MfvjHNHTiCfT5j0dZcNybNb6TjIgPCiChEBh9aEBb
+         vP6pec56B6c5z/GJ7rLcGisiU+Qu6ynv8pjUh9GJqAeqOr4lTA9MnofUGwZz2liMUOOq
+         bh0/L4XMpwU6wzGsx1FL/Yaw61yzvkPhxJPIplxI8IInxyDGX6QpCSUwEFjaq5t5nBb6
+         AnKw==
+X-Gm-Message-State: APjAAAWk360i9ibwIcqjoNb3sLlgc6q4bu5Rgehuqx7C6I4zLl1JzAsD
+        m8DHVgvBOrNEKVe1NqT8Zb7D6A==
+X-Google-Smtp-Source: APXvYqwk45/n6i9bkMvGS6Ca4dpGq/VzlAWl+9BMLki3wmfwo8xUHi+TkSnT9tQXCBxiDNrPuEDiJw==
+X-Received: by 2002:a2e:9241:: with SMTP id v1mr971976ljg.148.1568703608933;
+        Tue, 17 Sep 2019 00:00:08 -0700 (PDT)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id 6sm246719lfa.24.2019.09.17.00.00.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 00:00:08 -0700 (PDT)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        linux-doc@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: [PATCH v3] printf: add support for printing symbolic error codes
+Date:   Tue, 17 Sep 2019 08:59:59 +0200
+Message-Id: <20190917065959.5560-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190909203826.22263-1-linux@rasmusvillemoes.dk>
+References: 
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9859:: with SMTP id p25mr2083176ios.142.1568703426656;
- Mon, 16 Sep 2019 23:57:06 -0700 (PDT)
-Date:   Mon, 16 Sep 2019 23:57:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000810fdd0592ba3a42@google.com>
-Subject: KASAN: slab-out-of-bounds Read in fib6_nh_get_excptn_bucket
-From:   syzbot <syzbot+ce7be3d2a9d20f463b76@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+It has been suggested several times to extend vsnprintf() to be able
+to convert the numeric value of ENOSPC to print "ENOSPC". This is yet
+another attempt. Rather than adding another %p extension, simply teach
+plain %p to convert ERR_PTRs. While the primary use case is
 
-syzbot found the following crash on:
+  if (IS_ERR(foo)) {
+    pr_err("Sorry, can't do that: %p\n", foo);
+    return PTR_ERR(foo);
+  }
 
-HEAD commit:    505a8ec7 Revert "drm/i915/userptr: Acquire the page lock a..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=176a0831600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=861a6f31647968de
-dashboard link: https://syzkaller.appspot.com/bug?extid=ce7be3d2a9d20f463b76
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+it is also more helpful to get a symbolic error code (or, worst case,
+a decimal number) in case an ERR_PTR is accidentally passed to some
+%p<something>, rather than the (efault) that check_pointer() would
+result in.
 
-Unfortunately, I don't have any reproducer for this crash yet.
+With my embedded hat on, I've made it possible to remove this.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ce7be3d2a9d20f463b76@syzkaller.appspotmail.com
+I've tested that the #ifdeffery in errcode.c is sufficient to make
+this compile on arm, arm64, mips, powerpc, s390, x86 - I'm sure the
+0day bot will tell me which ones I've missed.
 
-==================================================================
-BUG: KASAN: slab-out-of-bounds in fib6_nh_get_excptn_bucket+0x198/0x1b0  
-net/ipv6/route.c:1591
-Read of size 8 at addr ffff8880a06dd6f8 by task syz-executor.2/11374
+The symbols to include have been found by massaging the output of
 
-CPU: 1 PID: 11374 Comm: syz-executor.2 Not tainted 5.3.0-rc8+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x17 mm/kasan/common.c:618
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  fib6_nh_get_excptn_bucket+0x198/0x1b0 net/ipv6/route.c:1591
-  fib6_nh_flush_exceptions+0x37/0x2d0 net/ipv6/route.c:1719
-  fib6_nh_release+0x84/0x3a0 net/ipv6/route.c:3503
-  fib6_info_destroy_rcu+0x11e/0x150 net/ipv6/ip6_fib.c:174
-  __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
-  rcu_core+0x67f/0x1580 kernel/rcu/tree.c:2314
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:537 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:768  
-[inline]
-RIP: 0010:lock_acquire+0x20b/0x410 kernel/locking/lockdep.c:4415
-Code: 8c 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 d3 01 00 00 48  
-83 3d a1 30 7a 07 00 0f 84 53 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00  
-48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
-RSP: 0018:ffff8880261ef638 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff11a5e8a RBX: ffff88800df3a500 RCX: 0000000000000002
-RDX: dffffc0000000000 RSI: 0000000000000000 RDI: 0000000000000286
-RBP: ffff8880261ef680 R08: 0000000000000000 R09: 0000000000000000
-R10: fffffbfff134afaf R11: ffff88800df3a500 R12: ffffffff88dac3c0
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000002
-  rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
-  rcu_read_lock include/linux/rcupdate.h:592 [inline]
-  lock_page_memcg+0x39/0x240 mm/memcontrol.c:2086
-  page_remove_file_rmap mm/rmap.c:1218 [inline]
-  page_remove_rmap+0x5d6/0x1190 mm/rmap.c:1303
-  zap_pte_range mm/memory.c:1059 [inline]
-  zap_pmd_range mm/memory.c:1161 [inline]
-  zap_pud_range mm/memory.c:1190 [inline]
-  zap_p4d_range mm/memory.c:1211 [inline]
-  unmap_page_range+0xd45/0x2170 mm/memory.c:1232
-  unmap_single_vma+0x19d/0x300 mm/memory.c:1277
-  unmap_vmas+0x135/0x280 mm/memory.c:1309
-  exit_mmap+0x2ba/0x530 mm/mmap.c:3145
-  __mmput kernel/fork.c:1064 [inline]
-  mmput+0x179/0x4d0 kernel/fork.c:1085
-  exit_mm kernel/exit.c:547 [inline]
-  do_exit+0x84e/0x2e50 kernel/exit.c:866
-  do_group_exit+0x135/0x360 kernel/exit.c:983
-  get_signal+0x47c/0x2500 kernel/signal.c:2734
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x5a9/0x6a0 arch/x86/entry/common.c:299
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4598e9
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fbaefd09c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: 000000000000004c RBX: 0000000000000003 RCX: 00000000004598e9
-RDX: 0000000000000000 RSI: 0000000020000380 RDI: 0000000000000004
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007fbaefd0a6d4
-R13: 00000000004c711b R14: 00000000004dc828 R15: 00000000ffffffff
+  find arch include -iname 'errno*.h' | xargs grep -E 'define\s*E'
 
-Allocated by task 11374:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc mm/kasan/common.c:493 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:466
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:507
-  kmem_cache_alloc_trace+0x158/0x790 mm/slab.c:3550
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:748 [inline]
-  fib6_info_alloc+0xb6/0x1b0 net/ipv6/ip6_fib.c:154
-  ip6_route_info_create+0x2fe/0x1530 net/ipv6/route.c:3605
-  ip6_route_add+0x27/0xc0 net/ipv6/route.c:3697
-  inet6_rtm_newroute+0x16c/0x180 net/ipv6/route.c:5261
-  rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5223
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5241
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8a5/0xd60 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:637 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:657
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2311
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2356
-  __do_sys_sendmsg net/socket.c:2365 [inline]
-  __se_sys_sendmsg net/socket.c:2363 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2363
-  do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+In the cases where some common aliasing exists
+(e.g. EAGAIN=EWOULDBLOCK on all platforms, EDEADLOCK=EDEADLK on most),
+I've moved the more popular one (in terms of 'git grep -w Efoo | wc)
+to the bottom so that one takes precedence.
 
-Freed by task 16:
-  save_stack+0x23/0x90 mm/kasan/common.c:69
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:455
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:463
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3756
-  __rcu_reclaim kernel/rcu/rcu.h:215 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2114 [inline]
-  rcu_core+0x7a3/0x1580 kernel/rcu/tree.c:2314
-  rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2323
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff8880a06dd600
-  which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 56 bytes to the right of
-  192-byte region [ffff8880a06dd600, ffff8880a06dd6c0)
-The buggy address belongs to the page:
-page:ffffea000281b740 refcount:1 mapcount:0 mapping:ffff8880aa400000  
-index:0x0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea00024f84c8 ffffea0002622288 ffff8880aa400000
-raw: 0000000000000000 ffff8880a06dd000 0000000100000010 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a06dd580: 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc
-  ffff8880a06dd600: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> ffff8880a06dd680: 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc fc
-                                                                 ^
-  ffff8880a06dd700: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffff8880a06dd780: 00 00 fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Acked-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Andrew: please consider picking this up, even if we're already in the
+merge window. Quite a few people have said they'd like to see
+something like this, it's a debug improvement in its own right (the
+"ERR_PTR accidentally passed to printf" case), the printf tests pass,
+and it's much easier to start adding (and testing) users around the
+tree once this is in master.
+
+v3:
+- only accept positive errno values in errcode()
+- change type of err variable in pointer() from long to int
+v2:
+- add #include <linux/stddef.h> to errcode.h (0day)
+- keep 'x' handling in switch() (Andy)
+- add paragraph to Documentation/core-api/printk-formats.rst
+- add ack from Uwe
+
+ Documentation/core-api/printk-formats.rst |   8 +
+ include/linux/errcode.h                   |  16 ++
+ lib/Kconfig.debug                         |   8 +
+ lib/Makefile                              |   1 +
+ lib/errcode.c                             | 212 ++++++++++++++++++++++
+ lib/test_printf.c                         |  14 ++
+ lib/vsprintf.c                            |  26 +++
+ 7 files changed, 285 insertions(+)
+ create mode 100644 include/linux/errcode.h
+ create mode 100644 lib/errcode.c
+
+diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
+index c6224d039bcb..7d3bf3cb207b 100644
+--- a/Documentation/core-api/printk-formats.rst
++++ b/Documentation/core-api/printk-formats.rst
+@@ -66,6 +66,14 @@ might be printed instead of the unreachable information::
+ 	(efault) data on invalid address
+ 	(einval) invalid data on a valid address
+ 
++Error pointers, i.e. pointers for which IS_ERR() is true, are handled
++as follows: If CONFIG_SYMBOLIC_ERRCODE is set, an appropriate symbolic
++constant is printed. For example, '"%p", PTR_ERR(-ENOSPC)' results in
++"ENOSPC", while '"%p", PTR_ERR(-EWOULDBLOCK)' results in "EAGAIN"
++(since EAGAIN == EWOULDBLOCK, and the former is the most common). If
++CONFIG_SYMBOLIC_ERRCODE is not set, ERR_PTRs are printed as their
++decimal representation ("-28" and "-11" for the two examples).
++
+ Plain Pointers
+ --------------
+ 
+diff --git a/include/linux/errcode.h b/include/linux/errcode.h
+new file mode 100644
+index 000000000000..c6a4c1b04f9c
+--- /dev/null
++++ b/include/linux/errcode.h
+@@ -0,0 +1,16 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_ERRCODE_H
++#define _LINUX_ERRCODE_H
++
++#include <linux/stddef.h>
++
++#ifdef CONFIG_SYMBOLIC_ERRCODE
++const char *errcode(int err);
++#else
++static inline const char *errcode(int err)
++{
++	return NULL;
++}
++#endif
++
++#endif /* _LINUX_ERRCODE_H */
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 5960e2980a8a..dc1b20872774 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -164,6 +164,14 @@ config DYNAMIC_DEBUG
+ 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
+ 	  information.
+ 
++config SYMBOLIC_ERRCODE
++	bool "Support symbolic error codes in printf"
++	help
++	  If you say Y here, the kernel's printf implementation will
++	  be able to print symbolic errors such as ENOSPC instead of
++	  the number 28. It makes the kernel image slightly larger
++	  (about 3KB), but can make the kernel logs easier to read.
++
+ endmenu # "printk and dmesg options"
+ 
+ menu "Compile-time checks and compiler options"
+diff --git a/lib/Makefile b/lib/Makefile
+index c5892807e06f..9f14edc7ef63 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -181,6 +181,7 @@ lib-$(CONFIG_GENERIC_BUG) += bug.o
+ obj-$(CONFIG_HAVE_ARCH_TRACEHOOK) += syscall.o
+ 
+ obj-$(CONFIG_DYNAMIC_DEBUG) += dynamic_debug.o
++obj-$(CONFIG_SYMBOLIC_ERRCODE) += errcode.o
+ 
+ obj-$(CONFIG_NLATTR) += nlattr.o
+ 
+diff --git a/lib/errcode.c b/lib/errcode.c
+new file mode 100644
+index 000000000000..3e519b13245e
+--- /dev/null
++++ b/lib/errcode.c
+@@ -0,0 +1,212 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/build_bug.h>
++#include <linux/errno.h>
++#include <linux/errcode.h>
++#include <linux/kernel.h>
++
++/*
++ * Ensure these tables to not accidentally become gigantic if some
++ * huge errno makes it in. On most architectures, the first table will
++ * only have about 140 entries, but mips and parisc have more sparsely
++ * allocated errnos (with EHWPOISON = 257 on parisc, and EDQUOT = 1133
++ * on mips), so this wastes a bit of space on those - though we
++ * special case the EDQUOT case.
++ */
++#define E(err) [err + BUILD_BUG_ON_ZERO(err <= 0 || err > 300)] = #err
++static const char *codes_0[] = {
++	E(E2BIG),
++	E(EACCES),
++	E(EADDRINUSE),
++	E(EADDRNOTAVAIL),
++	E(EADV),
++	E(EAFNOSUPPORT),
++	E(EALREADY),
++	E(EBADE),
++	E(EBADF),
++	E(EBADFD),
++	E(EBADMSG),
++	E(EBADR),
++	E(EBADRQC),
++	E(EBADSLT),
++	E(EBFONT),
++	E(EBUSY),
++#ifdef ECANCELLED
++	E(ECANCELLED),
++#endif
++	E(ECHILD),
++	E(ECHRNG),
++	E(ECOMM),
++	E(ECONNABORTED),
++	E(ECONNRESET),
++	E(EDEADLOCK),
++	E(EDESTADDRREQ),
++	E(EDOM),
++	E(EDOTDOT),
++#ifndef CONFIG_MIPS
++	E(EDQUOT),
++#endif
++	E(EEXIST),
++	E(EFAULT),
++	E(EFBIG),
++	E(EHOSTDOWN),
++	E(EHOSTUNREACH),
++	E(EHWPOISON),
++	E(EIDRM),
++	E(EILSEQ),
++#ifdef EINIT
++	E(EINIT),
++#endif
++	E(EINPROGRESS),
++	E(EINTR),
++	E(EINVAL),
++	E(EIO),
++	E(EISCONN),
++	E(EISDIR),
++	E(EISNAM),
++	E(EKEYEXPIRED),
++	E(EKEYREJECTED),
++	E(EKEYREVOKED),
++	E(EL2HLT),
++	E(EL2NSYNC),
++	E(EL3HLT),
++	E(EL3RST),
++	E(ELIBACC),
++	E(ELIBBAD),
++	E(ELIBEXEC),
++	E(ELIBMAX),
++	E(ELIBSCN),
++	E(ELNRNG),
++	E(ELOOP),
++	E(EMEDIUMTYPE),
++	E(EMFILE),
++	E(EMLINK),
++	E(EMSGSIZE),
++	E(EMULTIHOP),
++	E(ENAMETOOLONG),
++	E(ENAVAIL),
++	E(ENETDOWN),
++	E(ENETRESET),
++	E(ENETUNREACH),
++	E(ENFILE),
++	E(ENOANO),
++	E(ENOBUFS),
++	E(ENOCSI),
++	E(ENODATA),
++	E(ENODEV),
++	E(ENOENT),
++	E(ENOEXEC),
++	E(ENOKEY),
++	E(ENOLCK),
++	E(ENOLINK),
++	E(ENOMEDIUM),
++	E(ENOMEM),
++	E(ENOMSG),
++	E(ENONET),
++	E(ENOPKG),
++	E(ENOPROTOOPT),
++	E(ENOSPC),
++	E(ENOSR),
++	E(ENOSTR),
++#ifdef ENOSYM
++	E(ENOSYM),
++#endif
++	E(ENOSYS),
++	E(ENOTBLK),
++	E(ENOTCONN),
++	E(ENOTDIR),
++	E(ENOTEMPTY),
++	E(ENOTNAM),
++	E(ENOTRECOVERABLE),
++	E(ENOTSOCK),
++	E(ENOTTY),
++	E(ENOTUNIQ),
++	E(ENXIO),
++	E(EOPNOTSUPP),
++	E(EOVERFLOW),
++	E(EOWNERDEAD),
++	E(EPERM),
++	E(EPFNOSUPPORT),
++	E(EPIPE),
++#ifdef EPROCLIM
++	E(EPROCLIM),
++#endif
++	E(EPROTO),
++	E(EPROTONOSUPPORT),
++	E(EPROTOTYPE),
++	E(ERANGE),
++	E(EREMCHG),
++#ifdef EREMDEV
++	E(EREMDEV),
++#endif
++	E(EREMOTE),
++	E(EREMOTEIO),
++#ifdef EREMOTERELEASE
++	E(EREMOTERELEASE),
++#endif
++	E(ERESTART),
++	E(ERFKILL),
++	E(EROFS),
++#ifdef ERREMOTE
++	E(ERREMOTE),
++#endif
++	E(ESHUTDOWN),
++	E(ESOCKTNOSUPPORT),
++	E(ESPIPE),
++	E(ESRCH),
++	E(ESRMNT),
++	E(ESTALE),
++	E(ESTRPIPE),
++	E(ETIME),
++	E(ETIMEDOUT),
++	E(ETOOMANYREFS),
++	E(ETXTBSY),
++	E(EUCLEAN),
++	E(EUNATCH),
++	E(EUSERS),
++	E(EXDEV),
++	E(EXFULL),
++
++	E(ECANCELED),
++	E(EAGAIN), /* EWOULDBLOCK */
++	E(ECONNREFUSED), /* EREFUSED */
++	E(EDEADLK), /* EDEADLK */
++};
++#undef E
++
++#define E(err) [err - 512 + BUILD_BUG_ON_ZERO(err < 512 || err > 550)] = #err
++static const char *codes_512[] = {
++	E(ERESTARTSYS),
++	E(ERESTARTNOINTR),
++	E(ERESTARTNOHAND),
++	E(ENOIOCTLCMD),
++	E(ERESTART_RESTARTBLOCK),
++	E(EPROBE_DEFER),
++	E(EOPENSTALE),
++	E(ENOPARAM),
++
++	E(EBADHANDLE),
++	E(ENOTSYNC),
++	E(EBADCOOKIE),
++	E(ENOTSUPP),
++	E(ETOOSMALL),
++	E(ESERVERFAULT),
++	E(EBADTYPE),
++	E(EJUKEBOX),
++	E(EIOCBQUEUED),
++	E(ERECALLCONFLICT),
++};
++#undef E
++
++const char *errcode(int err)
++{
++	if (err <= 0)
++		return NULL;
++	if (err < ARRAY_SIZE(codes_0))
++		return codes_0[err];
++	if (err >= 512 && err - 512 < ARRAY_SIZE(codes_512))
++		return codes_512[err - 512];
++	/* But why? */
++	if (IS_ENABLED(CONFIG_MIPS) && err == EDQUOT) /* 1133 */
++		return "EDQUOT";
++	return NULL;
++}
+diff --git a/lib/test_printf.c b/lib/test_printf.c
+index 944eb50f3862..0401a2341245 100644
+--- a/lib/test_printf.c
++++ b/lib/test_printf.c
+@@ -212,6 +212,7 @@ test_string(void)
+ #define PTR_STR "ffff0123456789ab"
+ #define PTR_VAL_NO_CRNG "(____ptrval____)"
+ #define ZEROS "00000000"	/* hex 32 zero bits */
++#define FFFFS "ffffffff"
+ 
+ static int __init
+ plain_format(void)
+@@ -243,6 +244,7 @@ plain_format(void)
+ #define PTR_STR "456789ab"
+ #define PTR_VAL_NO_CRNG "(ptrval)"
+ #define ZEROS ""
++#define FFFFS ""
+ 
+ static int __init
+ plain_format(void)
+@@ -588,6 +590,17 @@ flags(void)
+ 	kfree(cmp_buffer);
+ }
+ 
++static void __init
++errptr(void)
++{
++	test("-1234", "%p", ERR_PTR(-1234));
++	test(FFFFS "ffffffff " FFFFS "ffffff00", "%px %px", ERR_PTR(-1), ERR_PTR(-256));
++#ifdef CONFIG_SYMBOLIC_ERRCODE
++	test("EIO EINVAL ENOSPC", "%p %p %p", ERR_PTR(-EIO), ERR_PTR(-EINVAL), ERR_PTR(-ENOSPC));
++	test("EAGAIN EAGAIN", "%p %p", ERR_PTR(-EAGAIN), ERR_PTR(-EWOULDBLOCK));
++#endif
++}
++
+ static void __init
+ test_pointer(void)
+ {
+@@ -610,6 +623,7 @@ test_pointer(void)
+ 	bitmap();
+ 	netdev_features();
+ 	flags();
++	errptr();
+ }
+ 
+ static void __init selftest(void)
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index b0967cf17137..299fce317eb3 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -21,6 +21,7 @@
+ #include <linux/build_bug.h>
+ #include <linux/clk.h>
+ #include <linux/clk-provider.h>
++#include <linux/errcode.h>
+ #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
+ #include <linux/types.h>
+ #include <linux/string.h>
+@@ -2111,6 +2112,31 @@ static noinline_for_stack
+ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+ 	      struct printf_spec spec)
+ {
++	/*
++	 * If it's an ERR_PTR, try to print its symbolic
++	 * representation, except for %px, where the user explicitly
++	 * wanted the pointer formatted as a hex value.
++	 */
++	if (IS_ERR(ptr) && *fmt != 'x') {
++		int err = PTR_ERR(ptr);
++		const char *sym = errcode(-err);
++		if (sym)
++			return string_nocheck(buf, end, sym, spec);
++		/*
++		 * Funky, somebody passed ERR_PTR(-1234) or some other
++		 * non-existing Efoo - or more likely
++		 * CONFIG_SYMBOLIC_ERRCODE=n. None of the
++		 * %p<something> extensions can make any sense of an
++		 * ERR_PTR(), and if this was just a plain %p, the
++		 * user is still better off getting the decimal
++		 * representation rather than the hash value that
++		 * ptr_to_id() would generate.
++		 */
++		spec.flags |= SIGN;
++		spec.base = 10;
++		return number(buf, end, err, spec);
++	}
++
+ 	switch (*fmt) {
+ 	case 'F':
+ 	case 'f':
+-- 
+2.20.1
+
