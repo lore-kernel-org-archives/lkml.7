@@ -2,144 +2,238 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCC2BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907CAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A8521920
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E73F2196F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:28:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fKLIEs8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392626AbfIQH1c (ORCPT
+        id S2392638AbfIQH25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:27:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35458 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732762AbfIQH1b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:27:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5CCB0191864C;
-        Tue, 17 Sep 2019 07:27:30 +0000 (UTC)
-Received: from [10.36.117.113] (ovpn-117-113.ams2.redhat.com [10.36.117.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 921335D6C8;
-        Tue, 17 Sep 2019 07:27:27 +0000 (UTC)
-Subject: Re: [PATCH v3 2/2] mm: Add a bounds check in devm_memremap_pages()
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>, Qian Cai <cai@lca.pw>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190917010752.28395-1-alastair@au1.ibm.com>
- <20190917010752.28395-3-alastair@au1.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <9208cdeb-6f14-6237-c919-a2d31e8d506a@redhat.com>
-Date:   Tue, 17 Sep 2019 09:27:26 +0200
+        Tue, 17 Sep 2019 03:28:57 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:34039 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbfIQH25 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:28:57 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190917072854euoutp01c8ee590627df968b1ef599696dac8128~FKTDPfEPz1202612026euoutp01J
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 07:28:54 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190917072854euoutp01c8ee590627df968b1ef599696dac8128~FKTDPfEPz1202612026euoutp01J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1568705334;
+        bh=QezmaJ9hcOGstagnwCUhReu3Niczm5FH8zPmTJiYE9c=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=fKLIEs8Gmx7hhErUMx1Gqak8zCvN3K9nVHT+DJzzDf065rC/zsRZazWMYXOE9B9pp
+         M6QaspGPjAnj4PPIAFgDbvAgrwxX3yI9Mv2d8wFVn154TDnksKjKspRJ/fOCP9fF0w
+         jihntaZX9j8qsttQsEP8NloAOQ75oVI5eYzkRepo=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190917072853eucas1p2d6396e914d979d35b45f7dbdef5557e9~FKTCTdLcH2324823248eucas1p2S;
+        Tue, 17 Sep 2019 07:28:53 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id CA.CE.04469.53B808D5; Tue, 17
+        Sep 2019 08:28:53 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190917072852eucas1p20e5a9c06f747c4ce755f2baede1dada5~FKTBeFKMY0371003710eucas1p2q;
+        Tue, 17 Sep 2019 07:28:52 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190917072852eusmtrp15554c0aa853594e8bf1f76ab7b72481f~FKTBPSqE62506625066eusmtrp1C;
+        Tue, 17 Sep 2019 07:28:52 +0000 (GMT)
+X-AuditID: cbfec7f2-569ff70000001175-50-5d808b35753f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id C9.9F.04117.43B808D5; Tue, 17
+        Sep 2019 08:28:52 +0100 (BST)
+Received: from [106.120.51.74] (unknown [106.120.51.74]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190917072851eusmtip2c086910acabb8262b34313f864868953~FKTAFe5ib1669916699eusmtip2H;
+        Tue, 17 Sep 2019 07:28:51 +0000 (GMT)
+Subject: Re: [PATCH 05/11] drm/bridge: analogix-anx78xx: correct value of
+ TX_P0
+To:     Brian Masney <masneyb@onstation.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org, agross@kernel.org,
+        narmstrong@baylibre.com, robdclark@gmail.com, sean@poorly.run,
+        airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net, linus.walleij@linaro.org,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        freedreno@lists.freedesktop.org
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <356d645a-1c88-8f34-5acb-0803cf2712d2@samsung.com>
+Date:   Tue, 17 Sep 2019 09:28:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190917010752.28395-3-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190916120228.GA3045@onstation.org>
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Tue, 17 Sep 2019 07:27:30 +0000 (UTC)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0yTVxj29Lv0o7HkWDC8wwW1iRpJLLJsyXE2hiUzOfvnLVFpFKp+AyNU
+        1g/wNgLqZCjCuHhrgdFtJZIKoiBYOgUtZJV0dINNqQppF1yMUzGhgpsXHO2HkX/PeZ73fd7n
+        SY7AaOx8vLDblCuaTcYsLa9iO375z7fik9KibSstUwnEN/qKJWW+PgXxdo+x5G1HJUPqe30c
+        +XPiGU+a7rsRqX3Yj8jtF48Y0vfkNkuOV9qV5NTr8wrSOnqHI5Xd/Uryh6uWJw1DAwryXc1j
+        jrjLDeThD/8y5Nj1XiUZqe5FKfNp0/dNiD7zH1NS54gd0euTNpZ2WkeUtKbEwtFWx3Ge3qoY
+        VNDhO9d4enUyyNFAqUdB2+yFtMEfQz2ue0p6o6yapaHWhHU4VaXfJWbtzhfNSWvSVZnXgk18
+        zuDS/WO2x8oi9O2iEyhKAPwxtPxUxp9AKkGDGxGUPnqB5MdzBDaLbUYJIRjvmlC+W2mcPMPJ
+        wnkEo2+H2LCgwU8R+IO5YRyD18OvVh8fxrHYCKNdTyK2DC5mofLHqogTj5fDm7a7kSE1XgPN
+        Q6EIz+IlUO1wREzn4y0wHuzh5Jl50Gd5MM0LQhT+CAJHIzSDF8LR9hpGxnFw70G9InwL8LAA
+        VYG/GTn15zDVdZGXcQz847ky0+ZD8FafZGVcCIHGbxh5uQRB+6XOmeXV0OMZ4MKHmenQLa4k
+        mf4MKrwDkTyAo8H/dJ6cIRqqOs4yMq2GkmKNPL0YAv3tM4Zx0PD7BF+BtNZZxayz2lhntbG+
+        v2tDrAPFiXlSdoYoJZvEfTrJmC3lmTJ0O/dmt6Lpv+ud8ow70cTgDjfCAtLOVfvbCrdpOGO+
+        dCDbjUBgtLHqdQXTlHqX8cBB0bw3zZyXJUputEBgtXHqQ3OCBg3OMOaKe0QxRzS/UxVCVHwR
+        +mqJruzlRtXNl2kJR3LqCjbpVt1P1kfR7TsdFzI1Id8y+9bE+A21O+z1zhvRwgXI19d1biZ0
+        /GSdfe0pfXnP4BdeZ8urr6Xh9AxPSlLiuZ8NqzxLXZcvrlwwadCl/GYqPXRaf3jxUGpacZoz
+        frXLMrZB1fxp41+akMVwK1T+wZcFWlbKNCYnMmbJ+D9vF6rjtwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHeXcuO1qD06b5Il3GwO7Ntql7VyZ9fL9ERR+KTGzYQS23xc6M
+        jELDTHN0GUbOTXKCy5AVNdN0adayvKWgpallFlkWppLiMjJrlwK//fg//x88DzwMIX5ARTOZ
+        ehNn1GuzZHQ42bXY9m5rnDkvZVvjc4h6Pv4i0aWeDgHqapki0Z96C4EqWnso9GpumkauN16A
+        yse7Aer/8ZVAHd/6SXTRUiVE1xaqBcj9cYBClpZuIXrpKaeR83WvAF2xT1DIezkZjVfOE6ig
+        uVWIRkpawa5I7LrhAnh6sECIG0aqAG72OUjcaBsRYntRGYXdNRdp3H61T4DfDjTR+IHvPYVH
+        zW0CXFuVi52DEtzmGRbix5dKSDzrXrOXPSRPNBqyTZw0w8CbdsqSFUgpV2iQXBmnkStU6pTt
+        ynhZbFLiUS4r8yRnjE06Is9oeu+iT/StOzXlmBDmgUJpMQhjIBsHb/muUwEWs04A57+AUB4F
+        H1ZMEiGWwIWBYroYhPs7EwAOt7mDAwm7D76w9dABjmC1sOvXzWCJYC+QsPFOMxUy7hKwf+4e
+        GWjR7Eb4u3YoaIjYJHj79awwwCQbA0tqaoKdSPYgfNpgA6HOCthRNubPGSaMVcLR/OCmBLse
+        LtzoI0K8FubX2f9xFBweqxBcBWLbEtu2RLEtUWxLFAcga0AEl83r0nW8Us5rdXy2Pl2eZtC5
+        gf9p6p//vN8Aiqf2ewHLANly0WBtboqY0p7kc3ReABlCFiHae9YfiY5qc05zRkOqMTuL470g
+        3n+bhYiOTDP4X1BvSlXEK9RIo1Cr1KoEJIsSFbFPDovZdK2JO85xJzjjf0/AhEXngZw4Zrqj
+        QArFDdLPnpXJE2R3r/30sdihe98rzUMrHedXW4tiFup2DyxGt3jXVGONw1J1d8ebxPvWx+ZC
+        U25juNo5s5PaY31Wt6zz3BV95maFqjP8UfmZD59G21dt0kxK5ySlcyr45/JYpH7LjNWzof3Y
+        nZnBHUW+wgOluYuuBJWM5DO0ik2Ekdf+BRkdBOpKAwAA
+X-CMS-MailID: 20190917072852eucas1p20e5a9c06f747c4ce755f2baede1dada5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97
+References: <20190815004854.19860-1-masneyb@onstation.org>
+        <CGME20190815004918epcas3p135042bc52c7e3c8b1aca7624d121af97@epcas3p1.samsung.com>
+        <20190815004854.19860-6-masneyb@onstation.org>
+        <dc10dd84-72e2-553e-669b-271b77b4a21a@samsung.com>
+        <20190916103614.GA1644@onstation.org>
+        <20190916104907.GB4734@pendragon.ideasonboard.com>
+        <3ec4f0bc-f3c5-aebf-8213-bc4f80915902@collabora.com>
+        <20190916120228.GA3045@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.09.19 03:07, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The call to check_hotplug_memory_addressable() validates that the memory
-> is fully addressable.
-> 
-> Without this call, it is possible that we may remap pages that is
-> not physically addressable, resulting in bogus section numbers
-> being returned from __section_nr().
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  mm/memremap.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/mm/memremap.c b/mm/memremap.c
-> index 86432650f829..de2b67586401 100644
-> --- a/mm/memremap.c
-> +++ b/mm/memremap.c
-> @@ -175,6 +175,11 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
->  	int error, nid, is_ram;
->  	bool need_devmap_managed = true;
->  
-> +	error = check_hotplug_memory_addressable(res->start,
-> +						 resource_size(res));
-> +	if (error)
-> +		return ERR_PTR(error);
-> +
->  	switch (pgmap->type) {
->  	case MEMORY_DEVICE_PRIVATE:
->  		if (!IS_ENABLED(CONFIG_DEVICE_PRIVATE)) {
-> 
+On 16.09.2019 14:02, Brian Masney wrote:
+> On Mon, Sep 16, 2019 at 01:32:58PM +0200, Enric Balletbo i Serra wrote:
+>> Hi,
+>>
+>> On 16/9/19 12:49, Laurent Pinchart wrote:
+>>> Hi Brian,
+>>>
+>>> On Mon, Sep 16, 2019 at 06:36:14AM -0400, Brian Masney wrote:
+>>>> On Mon, Sep 16, 2019 at 12:02:09PM +0200, Andrzej Hajda wrote:
+>>>>> On 15.08.2019 02:48, Brian Masney wrote:
+>>>>>> When attempting to configure this driver on a Nexus 5 phone (msm8974),
+>>>>>> setting up the dummy i2c bus for TX_P0 would fail due to an -EBUSY
+>>>>>> error. The downstream MSM kernel sources [1] shows that the proper value
+>>>>>> for TX_P0 is 0x78, not 0x70, so correct the value to allow device
+>>>>>> probing to succeed.
+>>>>>>
+>>>>>> [1] https://github.com/AICP/kernel_lge_hammerhead/blob/n7.1/drivers/video/slimport/slimport_tx_reg.h
+>>>>>>
+>>>>>> Signed-off-by: Brian Masney <masneyb@onstation.org>
+>>>>>> ---
+>>>>>>  drivers/gpu/drm/bridge/analogix-anx78xx.h | 2 +-
+>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/bridge/analogix-anx78xx.h b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>>>> index 25e063bcecbc..bc511fc605c9 100644
+>>>>>> --- a/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>>>> +++ b/drivers/gpu/drm/bridge/analogix-anx78xx.h
+>>>>>> @@ -6,7 +6,7 @@
+>>>>>>  #ifndef __ANX78xx_H
+>>>>>>  #define __ANX78xx_H
+>>>>>>  
+>>>>>> -#define TX_P0				0x70
+>>>>>> +#define TX_P0				0x78
+>>>>>
+>>>>> This bothers me little. There are no upstream users, grepping android
+>>>>> sources suggests that both values can be used [1][2]  (grep for "#define
+>>>>> TX_P0"), moreover there is code suggesting both values can be valid [3].
+>>>>>
+>>>>> Could you verify datasheet which i2c slave addresses are valid for this
+>>>>> chip, if both I guess this patch should be reworked.
+>>>>>
+>>>>>
+>>>>> [1]:
+>>>>> https://android.googlesource.com/kernel/msm/+/android-msm-flo-3.4-jb-mr2/drivers/misc/slimport_anx7808/slimport_tx_reg.h
+>>>>>
+>>>>> [2]:
+>>>>> https://github.com/AndroidGX/SimpleGX-MM-6.0_H815_20d/blob/master/drivers/video/slimport/anx7812/slimport7812_tx_reg.h
+>>>>>
+>>>>> [3]:
+>>>>> https://github.com/commaai/android_kernel_leeco_msm8996/blob/master/drivers/video/msm/mdss/dp/slimport_custom_declare.h#L73
+>>>> This address is 0x78 on my Nexus 5. Given [3] above it looks like we
+>>>> need to support both addresses. What do you think about moving these
+>>>> addresses into device tree?
+>>> Assuming that the device supports different addresses (I can't validate
+>>> that as I don't have access to the datasheet), and different addresses
+>>> need to be used on different systems, then the address to be used needs
+>>> to be provided by the firmware (DT in this case). Two options are
+>>> possible, either specifying the address explicitly in the device's DT
+>>> node, or specifying free addresses (in the form of a white list or black
+>>> list) and allocating an address from that pool. The latter has been
+>>> discussed in a BoF at the Linux Plumbers Conference last week,
+>>> https://linuxplumbersconf.org/event/4/contributions/542/.
+>>>
+>>>> The downstream and upstream kernel sources divide these addresses by two
+>>>> to get the i2c address. Here's the code in upstream:
+>>>>
+>>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L1353
+>>>> https://elixir.bootlin.com/linux/latest/source/drivers/gpu/drm/bridge/analogix-anx78xx.c#L41
+>>>>
+>>>> I'm not sure why the actual i2c address isn't used in this code.
+>> The ANX7802/12/14/16 has a slave I2C bus that provides the interface to access
+>> or control the chip from the AP. The I2C slave addresses used to control the
+>> ANX7802/12/14/16 are 70h, 72h, 7Ah, 7Eh and 80h. Every address allows you to
+>> access to different registers of the chip and AFAICS is not configurable.
+>>
+>> I don't think these addresses should be configured via DT but for the driver itself.
+>>
+>> My wild guess is that the ANX7808 has different addresses, but I don't have the
+>> datasheet of this version.
+> I'm able to communicate with the 7808 on my Nexus 5 using the 0x78
+> address. Given that the addresses appear to be fixed per model, maybe it
+> makes sense to drop the address #defines and add the addresses to the
+> data pointer in the driver's of_match_table like so:
+>
+> static const struct of_device_id anx78xx_match_table[] = {
+>         { .compatible = "analogix,anx7808", .data = PTR_TO_7808_ADDRS },
+>         { .compatible = "analogix,anx7812", .data = PTR_TO_781X_ADDRS },
+>         { .compatible = "analogix,anx7814", .data = PTR_TO_781X_ADDRS },
+>         { .compatible = "analogix,anx7818", .data = PTR_TO_781X_ADDRS },
+>         { /* sentinel */ },
+> };
 
-Acked-by: David Hildenbrand <david@redhat.com>
 
--- 
+With given feedback from other users and lack of datasheets for chips
+(except anx7814) we can try this approach.
 
-Thanks,
 
-David / dhildenb
+Regards
+
+Andrzej
+
+
+>
+> Brian
+>
+>
+
