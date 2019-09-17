@@ -2,368 +2,167 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D58C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7120BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6FB2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568732952;
-	bh=+ZhMOxmLVDi/08wYBPu3baEUXepkzm7b1+eUGjg6J7Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bzAN9Yts+PmF+bDhSnPdbNCNhBjDle7CUcys8PqDEosDVIUu/FVsOBRApd4cgeHdn
-	 qBEXdAijAusZdFPKvb7gr01q1QQInl/2x3fNcuUNmthYD5IT7rp5wXHUkWZ53XUaZ/
-	 xgz3Hq4TqYig500JiEynZosAb3aFnVZycZJ3H9IY=
+	by mail.kernel.org (Postfix) with ESMTP id 52ECA218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfIQPJL (ORCPT
+        id S1729155AbfIQPKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:09:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbfIQPJK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:09:10 -0400
-Received: from linux-8ccs (unknown [193.86.95.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 043392171F;
-        Tue, 17 Sep 2019 15:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568732948;
-        bh=+ZhMOxmLVDi/08wYBPu3baEUXepkzm7b1+eUGjg6J7Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fEEzJ0181fEeaqfzbp3olecy9F3O5Bi68CcyXW90m6znUHOqXlKK5pfRBPWABVitW
-         KvZPvGSnVQENue/y4+9jVPocFiwFOnDi6Kvf0KC2dMvv0UZTHudO3IhiE00MSFMVNZ
-         BkwXL61ca+/IV2vQcQyw/W1C9IaExYgVNSC/VdSo=
-Date:   Tue, 17 Sep 2019 17:09:03 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthias Maennich <maennich@google.com>,
-        Will Deacon <will@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        masahiroy@kernel.org
-Subject: Re: [GIT PULL] Kbuild updates for v5.4-rc1
-Message-ID: <20190917150902.GA4116@linux-8ccs>
-References: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
+        Tue, 17 Sep 2019 11:10:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42193 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728802AbfIQPKs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:10:48 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iAF7n-0000cH-La; Tue, 17 Sep 2019 17:10:39 +0200
+Date:   Tue, 17 Sep 2019 17:10:39 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH RT 5/8] sched/deadline: Reclaim cpuset bandwidth in
+ .migrate_task_rq()
+Message-ID: <20190917151039.ukplro66tzgxg6xt@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+ <20190727055638.20443-6-swood@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190727055638.20443-6-swood@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Masahiro Yamada [15/09/19 22:27 +0900]:
->Hi Linus,
->
->This is a Kbuild pull request for v5.4-rc1.
->I am sending this a bit earlier.
->Please pull it in when you open the merge window.
->
->Thanks.
+On 2019-07-27 00:56:35 [-0500], Scott Wood wrote:
+> With the changes to migrate disabling, ->set_cpus_allowed() no longer
+> gets deferred until migrate_enable().  To avoid releasing the bandwidth
+> while the task may still be executing on the old CPU, move the subtraction
+> to ->migrate_task_rq().
 
-Hi Masahiro, Linus,
+I assume this is still valid for the !RT case.
+Could someone from the scheduler/DL department please comment on this
+one?
 
-There is a merge conflict between the kbuild and modules-next tree.
+> Signed-off-by: Scott Wood <swood@redhat.com>
+> ---
+>  kernel/sched/deadline.c | 67 +++++++++++++++++++++++--------------------------
+>  1 file changed, 31 insertions(+), 36 deletions(-)
+> 
+> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+> index c18be51f7608..2f18d0cf1b56 100644
+> --- a/kernel/sched/deadline.c
+> +++ b/kernel/sched/deadline.c
+> @@ -1606,14 +1606,42 @@ static void yield_task_dl(struct rq *rq)
+>  	return cpu;
+>  }
+>  
+> +static void free_old_cpuset_bw_dl(struct rq *rq, struct task_struct *p)
+> +{
+> +	struct root_domain *src_rd = rq->rd;
+> +
+> +	/*
+> +	 * Migrating a SCHED_DEADLINE task between exclusive
+> +	 * cpusets (different root_domains) entails a bandwidth
+> +	 * update. We already made space for us in the destination
+> +	 * domain (see cpuset_can_attach()).
+> +	 */
+> +	if (!cpumask_intersects(src_rd->span, p->cpus_ptr)) {
+> +		struct dl_bw *src_dl_b;
+> +
+> +		src_dl_b = dl_bw_of(cpu_of(rq));
+> +		/*
+> +		 * We now free resources of the root_domain we are migrating
+> +		 * off. In the worst case, sched_setattr() may temporary fail
+> +		 * until we complete the update.
+> +		 */
+> +		raw_spin_lock(&src_dl_b->lock);
+> +		__dl_sub(src_dl_b, p->dl.dl_bw, dl_bw_cpus(task_cpu(p)));
+> +		raw_spin_unlock(&src_dl_b->lock);
+> +	}
+> +}
+> +
+>  static void migrate_task_rq_dl(struct task_struct *p, int new_cpu __maybe_unused)
+>  {
+>  	struct rq *rq;
+>  
+> -	if (p->state != TASK_WAKING)
+> +	rq = task_rq(p);
+> +
+> +	if (p->state != TASK_WAKING) {
+> +		free_old_cpuset_bw_dl(rq, p);
+>  		return;
+> +	}
+>  
+> -	rq = task_rq(p);
+>  	/*
+>  	 * Since p->state == TASK_WAKING, set_task_cpu() has been called
+>  	 * from try_to_wake_up(). Hence, p->pi_lock is locked, but
+> @@ -2220,39 +2248,6 @@ static void task_woken_dl(struct rq *rq, struct task_struct *p)
+>  	}
+>  }
+>  
+> -static void set_cpus_allowed_dl(struct task_struct *p,
+> -				const struct cpumask *new_mask)
+> -{
+> -	struct root_domain *src_rd;
+> -	struct rq *rq;
+> -
+> -	BUG_ON(!dl_task(p));
+> -
+> -	rq = task_rq(p);
+> -	src_rd = rq->rd;
+> -	/*
+> -	 * Migrating a SCHED_DEADLINE task between exclusive
+> -	 * cpusets (different root_domains) entails a bandwidth
+> -	 * update. We already made space for us in the destination
+> -	 * domain (see cpuset_can_attach()).
+> -	 */
+> -	if (!cpumask_intersects(src_rd->span, new_mask)) {
+> -		struct dl_bw *src_dl_b;
+> -
+> -		src_dl_b = dl_bw_of(cpu_of(rq));
+> -		/*
+> -		 * We now free resources of the root_domain we are migrating
+> -		 * off. In the worst case, sched_setattr() may temporary fail
+> -		 * until we complete the update.
+> -		 */
+> -		raw_spin_lock(&src_dl_b->lock);
+> -		__dl_sub(src_dl_b, p->dl.dl_bw, dl_bw_cpus(task_cpu(p)));
+> -		raw_spin_unlock(&src_dl_b->lock);
+> -	}
+> -
+> -	set_cpus_allowed_common(p, new_mask);
+> -}
+> -
+>  /* Assumes rq->lock is held */
+>  static void rq_online_dl(struct rq *rq)
+>  {
+> @@ -2407,7 +2402,7 @@ static void prio_changed_dl(struct rq *rq, struct task_struct *p,
+>  #ifdef CONFIG_SMP
+>  	.select_task_rq		= select_task_rq_dl,
+>  	.migrate_task_rq	= migrate_task_rq_dl,
+> -	.set_cpus_allowed       = set_cpus_allowed_dl,
+> +	.set_cpus_allowed       = set_cpus_allowed_common,
+>  	.rq_online              = rq_online_dl,
+>  	.rq_offline             = rq_offline_dl,
+>  	.task_woken		= task_woken_dl,
+> -- 
+> 1.8.3.1
+> 
 
-Specifically, commits
-
-    69a94abb82e ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
-
-and
-
-    9b9a3f20cbe ("kbuild: split final module linking out into Makefile.modfinal")
-
-from the kbuild tree caused some conflicts in modules-next in
-include/linux/export.h and scripts/Makefile.modpost. The conflict
-caused by 69a94abb82e in export.h is *non* trivial whereas the latter
-commit involving Makefile.modpost is trivial.
-
-So there are a few options here..
-
-Solution #1: Masahiro pops the topmost 4 commits (down to 69a94abb82e)
-from kbuild/for-next and I take them resolved through modules-next.
-This would only leave the trivial conflict in Makefile.modpost left.
-Send Linus the modules-next tree with a trivial resolution for
-Makefile.modpost.
-
-Solution #2: 
-Matthias Maennich staged a merge resolution from his tree
-(https://github.com/metti/linux/tree/modules-next_linux-kbuild) so
-another solution might be that I merge kbuild/for-next into
-modules-next, take Matthias' (CC'd) conflict resolution including his
-Signed-off-by, and then take that to Linus.
-
-What would be most preferrable for you guys?
-
-Thanks,
-
-Jessica
-
->The following changes since commit d45331b00ddb179e291766617259261c112db872:
->
->  Linux 5.3-rc4 (2019-08-11 13:26:41 -0700)
->
->are available in the Git repository at:
->
->  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
->tags/kbuild-v5.4
->
->for you to fetch changes up to 77564a4829ef6d309331d443ea6ceb065f3dc371:
->
->  genksyms: convert to SPDX License Identifier for lex.l and parse.y
->(2019-09-14 11:40:13 +0900)
->
->----------------------------------------------------------------
->Kbuild updates for v5.4
->
-> - add modpost warn exported symbols marked as 'static' because 'static'
->   and EXPORT_SYMBOL is an odd combination
->
-> - break the build early if gold linker is used
->
-> - optimize the Bison rule to produce .c and .h files by a single
->   pattern rule
->
-> - handle PREEMPT_RT in the module vermagic and UTS_VERSION
->
-> - warn CONFIG options leaked to the user-space except existing ones
->
-> - make single targets work properly
->
-> - rebuild modules when module linker scripts are updated
->
-> - split the module final link stage into scripts/Makefile.modfinal
->
-> - fix the missed error code in merge_config.sh
->
-> - improve the error message displayed on the attempt of the O= build
->   in unclean source tree
->
-> - remove 'clean-dirs' syntax
->
-> - disable -Wimplicit-fallthrough warning for Clang
->
-> - add CONFIG_CC_OPTIMIZE_FOR_SIZE_O3 for ARC
->
-> - remove ARCH_{CPP,A,C}FLAGS variables
->
-> - add $(BASH) to run bash scripts
->
-> - change *CFLAGS_<basetarget>.o to take the relative path to $(obj)
->   instead of the basename
->
-> - stop suppressing Clang's -Wunused-function warnings when W=1
->
-> - fix linux/export.h to avoid genksyms calculating CRC of trimmed
->   exported symbols
->
-> - misc cleanups
->
->----------------------------------------------------------------
->Denis Efremov (2):
->      modpost: check for static EXPORT_SYMBOL* functions
->      modpost: add NOFAIL to strndup
->
->Guillaume Tucker (1):
->      merge_config.sh: ignore unwanted grep errors
->
->Heikki Krogerus (1):
->      modpost: add guid_t type definition
->
->Kees Cook (1):
->      kbuild: Parameterize kallsyms generation and correct reporting
->
->Mark Brown (1):
->      merge_config.sh: Check error codes from make
->
->Masahiro Yamada (54):
->      kbuild: use $(basename ...) for cmd_asn1_compiler
->      kbuild: make bison create C file and header in a single pattern rule
->      kbuild: move flex and bison rules to Makefile.host
->      kbuild: add [M] marker for build log of *.mod.o
->      kbuild: treat an object as multi-used when $(foo-) is set
->      kbuild: move the Module.symvers check for external module build
->      kbuild: refactor part-of-module more
->      kbuild: fix modkern_aflags implementation
->      kbuild: remove 'make /' support
->      kbuild: remove meaningless 'targets' in ./Kbuild
->      kbuild: do not descend to ./Kbuild when cleaning
->      kbuild: unset variables in top Makefile instead of setting 0
->      kbuild: unify vmlinux-dirs and module-dirs rules
->      kbuild: unify clean-dirs rule for in-kernel and external module
->      kbuild: re-implement detection of CONFIG options leaked to user-space
->      kbuild: make single targets work more correctly
->      treewide: remove dummy Makefiles for single targets
->      kbuild: move KBUILD_LDS, KBUILD_VMLINUX_{OBJS,LIBS} to makefiles.rst
->      kbuild: rebuild modules when module linker scripts are updated
->      kbuild: split final module linking out into Makefile.modfinal
->      .gitignore: ignore modules.order explicitly
->      kbuild: add CONFIG_ASM_MODVERSIONS
->      kbuild: move modkern_{c,a}flags to Makefile.lib from Makefile.build
->      kbuild: pkg: clean up package files/dirs from the top Makefile
->      kbuild: pkg: add package targets to PHONY instead of FORCE
->      kbuild: pkg: rename scripts/package/Makefile to scripts/Makefile.package
->      kbuild: remove unneeded '+' marker from kselftest-merge
->      docs: kbuild: fix invalid ReST syntax
->      docs: kbuild: remove cc-ldoption from document again
->      init/Kconfig: rework help of CONFIG_CC_OPTIMIZE_FOR_SIZE
->      kbuild: remove unneeded comments and code from scripts/basic/Makefile
->      kbuild: remove unneeded dependency for $(DOC_TARGETS)
->      kbuild: get rid of $(realpath ...) from scripts/mkmakefile
->      kbuild: remove 'Using ... as source for kernel' message
->      kbuild: Inform user to pass ARCH= for make mrproper only when necessary
->      kbuild: clarify where to run make mrproper when out-of-tree fails
->      kbuild: move the clean srctree check to the outputmakefile target
->      kbuild: remove prepare3 target
->      kbuild: check clean srctree even earlier
->      kbuild: remove clean-dirs syntax
->      kbuild: remove unneeded '+' marker from cmd_clean
->      kbuild: clean up subdir-ymn calculation in Makefile.clean
->      kbuild,arc: add CONFIG_CC_OPTIMIZE_FOR_PERFORMANCE_O3 for ARC
->      kbuild: remove ARCH_{CPP,A,C}FLAGS
->      kbuild: add $(BASH) to run scripts with bash-extension
->      kbuild: change *FLAGS_<basetarget>.o to take the path relative to $(obj)
->      kbuild: refactor scripts/Makefile.extrawarn
->      kbuild: rename KBUILD_ENABLE_EXTRA_GCC_CHECKS to KBUILD_EXTRA_WARN
->      kbuild: allow Clang to find unused static inline functions for W=1 build
->      export.h: remove defined(__KERNEL__), which is no longer needed
->      export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols
->      modpost: use MODULE_INFO() for __module_depends
->      modpost: use __section in the output to *.mod.c
->      genksyms: convert to SPDX License Identifier for lex.l and parse.y
->
->Nathan Chancellor (1):
->      kbuild: Do not enable -Wimplicit-fallthrough for clang for now
->
->Thomas Gleixner (2):
->      kbuild: Fail if gold linker is detected
->      Kbuild: Handle PREEMPT_RT for version string and magic
->
-> .gitignore                                                  |   2 +-
-> Documentation/kbuild/kbuild.rst                             |  28 +--
-> Documentation/kbuild/makefiles.rst                          |  67 +++---
-> Kbuild                                                      |   7 -
-> Makefile                                                    | 296
->+++++++++++++-------------
-> arch/Kconfig                                                |   7 +
-> arch/alpha/Kconfig                                          |   1 +
-> arch/arc/Makefile                                           |   8 -
-> arch/arc/configs/axs101_defconfig                           |   1 +
-> arch/arc/configs/axs103_defconfig                           |   1 +
-> arch/arc/configs/axs103_smp_defconfig                       |   1 +
-> arch/arc/configs/haps_hs_defconfig                          |   1 +
-> arch/arc/configs/haps_hs_smp_defconfig                      |   1 +
-> arch/arc/configs/hsdk_defconfig                             |   1 +
-> arch/arc/configs/nps_defconfig                              |   1 +
-> arch/arc/configs/nsim_700_defconfig                         |   1 +
-> arch/arc/configs/nsim_hs_defconfig                          |   1 +
-> arch/arc/configs/nsim_hs_smp_defconfig                      |   1 +
-> arch/arc/configs/nsimosci_defconfig                         |   1 +
-> arch/arc/configs/nsimosci_hs_defconfig                      |   1 +
-> arch/arc/configs/nsimosci_hs_smp_defconfig                  |   1 +
-> arch/arc/configs/tb10x_defconfig                            |   1 +
-> arch/arc/configs/vdk_hs38_defconfig                         |   1 +
-> arch/arc/configs/vdk_hs38_smp_defconfig                     |   1 +
-> arch/arm/Makefile                                           |   2 +-
-> arch/arm/kvm/Makefile                                       |   5 +-
-> arch/arm64/Kconfig                                          |   1 +
-> arch/arm64/Makefile                                         |   2 +-
-> arch/ia64/Kconfig                                           |   1 +
-> arch/ia64/Makefile                                          |   2 +-
-> arch/m68k/Kconfig                                           |   1 +
-> arch/m68k/Makefile                                          |   2 +-
-> arch/mips/Kconfig                                           |   1 +
-> arch/mips/boot/Makefile                                     |   2 +-
-> arch/parisc/Makefile                                        |   2 +-
-> arch/powerpc/Kconfig                                        |   1 +
-> arch/powerpc/Makefile                                       |   2 +-
-> arch/powerpc/Makefile.postlink                              |   2 +-
-> arch/powerpc/kernel/prom_init_check.sh                      |   2 +-
-> arch/riscv/Kconfig                                          |   1 +
-> arch/riscv/Makefile                                         |   2 +-
-> arch/s390/Kconfig                                           |   1 +
-> arch/sparc/Kconfig                                          |   1 +
-> arch/um/Kconfig                                             |   1 +
-> arch/x86/Kconfig                                            |   1 +
-> arch/x86/entry/vdso/Makefile                                |   3 +-
-> drivers/gpu/drm/amd/display/dc/calcs/Makefile               |   6 +-
-> drivers/gpu/drm/amd/display/dc/dcn20/Makefile               |   2 +-
-> drivers/gpu/drm/amd/display/dc/dml/Makefile                 |  17 +-
-> drivers/gpu/drm/amd/display/dc/dsc/Makefile                 |   7 +-
-> drivers/gpu/drm/i915/Makefile                               |   2 +-
-> drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile      |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile      |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile       |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/en/Makefile         |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile     |   1 -
-> drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile   |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile       |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile      |   2 -
-> drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile        |   2 -
-> drivers/net/ethernet/netronome/nfp/bpf/Makefile             |   2 -
-> drivers/net/ethernet/netronome/nfp/flower/Makefile          |   2 -
-> drivers/net/ethernet/netronome/nfp/nfpcore/Makefile         |   2 -
-> drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile |   2 -
-> drivers/net/ethernet/netronome/nfp/nic/Makefile             |   2 -
-> include/linux/compiler_types.h                              |  20 +-
-> include/linux/export.h                                      |  42 ++--
-> include/linux/vermagic.h                                    |   2 +
-> init/Kconfig                                                |  26 ++-
-> init/Makefile                                               |   5 +-
-> kernel/Makefile                                             |   2 +-
-> scripts/Kconfig.include                                     |   3 +
-> scripts/Makefile                                            |   2 +-
-> scripts/Makefile.build                                      |  73 ++++---
-> scripts/Makefile.clean                                      |  31 +--
-> scripts/Makefile.extrawarn                                  | 121 ++++++-----
-> scripts/Makefile.host                                       |  39 +++-
-> scripts/Makefile.lib                                        |  63 +++---
-> scripts/Makefile.modfinal                                   |  60 ++++++
-> scripts/Makefile.modpost                                    |  80 ++-----
-> scripts/{package/Makefile => Makefile.package}              |  43 ++--
-> scripts/basic/Makefile                                      |  14 +-
-> scripts/genksyms/Makefile                                   |  11 +-
-> scripts/genksyms/keywords.c                                 |   6 +-
-> scripts/genksyms/lex.l                                      |  32 +--
-> scripts/genksyms/parse.y                                    |  32 +--
-> scripts/headers_install.sh                                  |  72 +++++++
-> scripts/kconfig/Makefile                                    |  10 +-
-> scripts/kconfig/merge_config.sh                             |  12 +-
-> scripts/link-vmlinux.sh                                     |  38 ++--
-> scripts/mkcompile_h                                         |   4 +-
-> scripts/mkmakefile                                          |   4 +-
-> scripts/mod/file2alias.c                                    |   5 +
-> scripts/mod/modpost.c                                       |  48 ++++-
-> usr/include/Makefile                                        |   4 +-
-> 95 files changed, 755 insertions(+), 680 deletions(-)
-> delete mode 100644 drivers/net/ethernet/aquantia/atlantic/hw_atl/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/accel/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/diag/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en/xsk/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/en_accel/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/fpga/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/ipoib/Makefile
-> delete mode 100644 drivers/net/ethernet/mellanox/mlx5/core/lib/Makefile
-> delete mode 100644 drivers/net/ethernet/netronome/nfp/bpf/Makefile
-> delete mode 100644 drivers/net/ethernet/netronome/nfp/flower/Makefile
-> delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/Makefile
-> delete mode 100644 drivers/net/ethernet/netronome/nfp/nfpcore/nfp6000/Makefile
-> delete mode 100644 drivers/net/ethernet/netronome/nfp/nic/Makefile
-> create mode 100644 scripts/Makefile.modfinal
-> rename scripts/{package/Makefile => Makefile.package} (92%)
->
->
->-- 
->Best Regards
->Masahiro Yamada
+Sebastian
