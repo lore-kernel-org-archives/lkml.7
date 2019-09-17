@@ -2,157 +2,166 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6AC4CEDF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D968C4CED6
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76AE3218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCD121A49
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725991AbfIQIw4 (ORCPT
+        id S1726406AbfIQIw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:52:56 -0400
+        Tue, 17 Sep 2019 04:52:57 -0400
 Received: from mga18.intel.com ([134.134.136.126]:37165 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725811AbfIQIw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:52:28 -0400
+        id S1725972AbfIQIwe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:52:34 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 01:52:27 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 01:52:34 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
-   d="scan'208";a="193695456"
+   d="scan'208";a="193695513"
 Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 01:52:25 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 01:52:32 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com
 Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
         yu.c.zhang@intel.com, alazar@bitdefender.com,
         Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v5 0/9] Enable Sub-page Write Protection Support
-Date:   Tue, 17 Sep 2019 16:52:55 +0800
-Message-Id: <20190917085304.16987-1-weijiang.yang@intel.com>
+Subject: [PATCH v5 4/9] mmu: spp: Add functions to create/destroy SPP bitmap block
+Date:   Tue, 17 Sep 2019 16:52:59 +0800
+Message-Id: <20190917085304.16987-5-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190917085304.16987-1-weijiang.yang@intel.com>
+References: <20190917085304.16987-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EPT-Based Sub-Page write Protection(SPP)is a HW capability which allows
-Virtual Machine Monitor(VMM) to specify write-permission for guest
-physical memory at a sub-page(128 byte) granularity. When this
-capability is enabled, the CPU enforces write-access check for sub-pages
-within a 4KB page.
+Create access bitmap for SPP subpages, the bitmap can
+be accessed with a gfn. The initial access bitmap for each
+physical page is 0xFFFFFFFF, meaning SPP is not enabled for the
+subpages.
 
-The feature is targeted to provide fine-grained memory protection for
-usages such as device virtualization, memory check-point and VM
-introspection etc.
+Co-developed-by: He Chen <he.chen@linux.intel.com>
+Signed-off-by: He Chen <he.chen@linux.intel.com>
+Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/vmx/spp.c          | 59 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/spp.h          |  1 +
+ 3 files changed, 61 insertions(+)
 
-SPP is active when the "sub-page write protection" (bit 23) is 1 in
-Secondary VM-Execution Controls. The feature is backed with a Sub-Page
-Permission Table(SPPT), SPPT is referenced via a 64-bit control field
-called Sub-Page Permission Table Pointer (SPPTP) which contains a
-4K-aligned physical address.
-
-To enable SPP for certain physical page, the gfn should be first mapped
-to a 4KB entry, then set bit 61 of the corresponding EPT leaf entry. 
-While HW walks EPT, if bit 61 is set, it traverses SPPT with the guset
-physical address to find out the sub-page permissions at the leaf entry.
-If the corresponding bit is set, write to sub-page is permitted,
-otherwise, SPP induced EPT violation is generated.
-
-This patch serial passed SPP function test and selftest on Ice-Lake platform.
-
-Please refer to the SPP introduction document in this patch set and
-Intel SDM for details:
-
-Intel SDM:
-https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
-
-SPP selftest patch:
-https://lkml.org/lkml/2019/6/18/1197
-
-Previous patch:
-https://lkml.org/lkml/2019/8/14/97
-
-Patch 1: Introduction to SPP.
-Patch 2: Add SPP related flags and control bits.
-Patch 3: Functions for SPPT setup.
-Patch 4: Add SPP access bitmaps for memslots.
-Patch 5: Introduce SPP {init,set,get} functions
-Patch 6: Implement User space access IOCTLs.
-Patch 7: Set up SPP paging table at vm-entry/exit.
-Patch 8: Enable lazy mode SPPT setup.
-Patch 9: Handle SPP protected pages when VM memory changes
-
-
-Change logs:
-
-V5 -> V4:
-  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
-  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
-  3. If SPP protected pages are access-tracked or dirty-page-tracked,
-     store SPP flag in reserved address bit, restore it in
-     fast_page_fault() handler.
-  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
-  5. Rebased code to kernel v5.3
-  6. Other change suggested by KVM community.
-  
-V3 -> V4:
-  1. Modified documentation to make it consistent with patches.
-  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
-     avoid SPPT miss error.
-  3. Added back co-developers and sign-offs.
-
-V2 -> V3:                                                                
-  1. Rebased patches to kernel 5.1 release                                
-  2. Deferred SPPT setup to EPT fault handler if the page is not
-     available while set_subpage() is being called.
-  3. Added init IOCTL to reduce extra cost if SPP is not used.
-  4. Refactored patch structure, cleaned up cross referenced functions.
-  5. Added code to deal with memory swapping/migration/shrinker cases.
-
-V2 -> V1:
-  1. Rebased to 4.20-rc1
-  2. Move VMCS change to a separated patch.
-  3. Code refine and Bug fix 
-
-
-Yang Weijiang (9):
-  Documentation: Introduce EPT based Subpage Protection
-  vmx: spp: Add control flags for Sub-Page Protection(SPP)
-  mmu: spp: Add SPP Table setup functions
-  mmu: spp: Add functions to create/destroy SPP bitmap block
-  mmu: spp: Introduce SPP {init,set,get} functions
-  x86: spp: Introduce user-space SPP IOCTLs
-  vmx: spp: Set up SPP paging table at vm-entry/exit
-  mmu: spp: Enable Lazy mode SPP protection
-  mmu: spp: Handle SPP protected pages when VM memory changes
-
- Documentation/virtual/kvm/spp_kvm.txt | 178 +++++++
- arch/x86/include/asm/cpufeatures.h    |   1 +
- arch/x86/include/asm/kvm_host.h       |  10 +-
- arch/x86/include/asm/vmx.h            |  10 +
- arch/x86/include/uapi/asm/vmx.h       |   2 +
- arch/x86/kernel/cpu/intel.c           |   4 +
- arch/x86/kvm/mmu.c                    |  78 ++-
- arch/x86/kvm/mmu.h                    |   2 +
- arch/x86/kvm/vmx/capabilities.h       |   5 +
- arch/x86/kvm/vmx/spp.c                | 651 ++++++++++++++++++++++++++
- arch/x86/kvm/vmx/spp.h                |  27 ++
- arch/x86/kvm/vmx/vmx.c                |  99 ++++
- arch/x86/kvm/x86.c                    |  51 ++
- include/uapi/linux/kvm.h              |  17 +
- 14 files changed, 1133 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
- create mode 100644 arch/x86/kvm/vmx/spp.c
- create mode 100644 arch/x86/kvm/vmx/spp.h
-
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index eb18f4dd993d..fe6417756983 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -799,6 +799,7 @@ struct kvm_lpage_info {
+ 
+ struct kvm_arch_memory_slot {
+ 	struct kvm_rmap_head *rmap[KVM_NR_PAGE_SIZES];
++	u32 *subpage_wp_info;
+ 	struct kvm_lpage_info *lpage_info[KVM_NR_PAGE_SIZES - 1];
+ 	unsigned short *gfn_track[KVM_PAGE_TRACK_MAX];
+ };
+diff --git a/arch/x86/kvm/vmx/spp.c b/arch/x86/kvm/vmx/spp.c
+index 1b33cd39108b..7e66d87186a2 100644
+--- a/arch/x86/kvm/vmx/spp.c
++++ b/arch/x86/kvm/vmx/spp.c
+@@ -22,6 +22,14 @@ static int is_spp_shadow_present(u64 pte)
+ 	return pte & PT_PRESENT_MASK;
+ }
+ 
++static u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn)
++{
++	unsigned long idx;
++
++	idx = gfn_to_index(gfn, slot->base_gfn, PT_PAGE_TABLE_LEVEL);
++	return &slot->arch.subpage_wp_info[idx];
++}
++
+ static bool __rmap_open_subpage_bit(struct kvm *kvm,
+ 				    struct kvm_rmap_head *rmap_head)
+ {
+@@ -228,6 +236,57 @@ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+ }
+ EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
+ 
++static int kvm_spp_create_bitmaps(struct kvm *kvm)
++{
++	struct kvm_memslots *slots;
++	struct kvm_memory_slot *memslot;
++	int i, j, ret;
++	u32 *buff;
++
++	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
++		slots = __kvm_memslots(kvm, i);
++		kvm_for_each_memslot(memslot, slots) {
++			buff = kvzalloc(memslot->npages*
++				sizeof(*memslot->arch.subpage_wp_info),
++				GFP_KERNEL);
++
++			if (!buff) {
++			      ret = -ENOMEM;
++			      goto out_free;
++			}
++			memslot->arch.subpage_wp_info = buff;
++
++			for(j = 0; j< memslot->npages; j++)
++			      buff[j] = FULL_SPP_ACCESS;
++		}
++	}
++
++	return 0;
++out_free:
++	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
++		slots = __kvm_memslots(kvm, i);
++		kvm_for_each_memslot(memslot, slots) {
++			if (memslot->arch.subpage_wp_info) {
++				kvfree(memslot->arch.subpage_wp_info);
++				memslot->arch.subpage_wp_info = NULL;
++			}
++		}
++	}
++
++	return ret;
++}
++
++
++void kvm_spp_free_memslot(struct kvm_memory_slot *free,
++			      struct kvm_memory_slot *dont)
++{
++	if (!dont || free->arch.subpage_wp_info !=
++	    dont->arch.subpage_wp_info) {
++		kvfree(free->arch.subpage_wp_info);
++		free->arch.subpage_wp_info = NULL;
++	}
++}
++
+ inline u64 construct_spptp(unsigned long root_hpa)
+ {
+ 	return root_hpa & PAGE_MASK;
+diff --git a/arch/x86/kvm/vmx/spp.h b/arch/x86/kvm/vmx/spp.h
+index 2b8f4e8d2267..94f6e39b30ed 100644
+--- a/arch/x86/kvm/vmx/spp.h
++++ b/arch/x86/kvm/vmx/spp.h
+@@ -2,6 +2,7 @@
+ #ifndef __KVM_X86_VMX_SPP_H
+ #define __KVM_X86_VMX_SPP_H
+ 
++#define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
+ bool is_spp_spte(struct kvm_mmu_page *sp);
+ inline u64 construct_spptp(unsigned long root_hpa);
+ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
 -- 
 2.17.2
 
