@@ -2,130 +2,96 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11C9C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:39:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0965C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884372171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781B5216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:49:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="a9ElEh+T"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QhM2Jojk";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hSgSYEJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392282AbfIQEjC (ORCPT
+        id S2392293AbfIQEty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:39:02 -0400
-Received: from mail-eopbgr1410090.outbound.protection.outlook.com ([40.107.141.90]:27555
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726191AbfIQEjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:39:02 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CtMKnseAepIPPBk14nlSE0dH6lnpul7BZtbtcN8I83C/spSOGsE5/OrpZPsycuDMZhrHUpNRtRNFe1SPbiePJKCmtxuFKXxxlm+RPxxPQBpz6Wtc4okui7+Rruo8Xq1u0/A2R67OIOB0l5VTQpAiqZCoFzy/2YclM15xswEDPg5g5NgP2ee2Tv0vmOHNDHLS5r7SV/+y1exduvVyzWcXzl+jhkYCPl1VDI6VTgP20fNpzd/tVr8ncKG8Tqsn1ZkGLftbbMC0jZjfxE8qMvr91dnzzCWh5/WMvcpGflaWtXUv0psa8gC9/7h5K6u6dUGY21XJGdTmXy1upNdidmezYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rbWTECiLrgqYHKyN/CetsK3wUFojhIJV6AZwfpVE/Fo=;
- b=JnzqqszeY8j31SmrsrcRvksmNATEMUdOUqlvayMKSmbg4j20U4hsdCD8rTtj/2x+FRRvOpO1qQ1zft6YdaS5tev1iqKG9pgxV+eQzJzTzp9vMHYRdm9hzHczXsGxdnbUDJtCk43prVyzo4Q8xquKw+/QWgxtkyUdZrpTQ+QgogBi1yN7DggIlMIOMoQZjqUjmzg6R4kApBQA9pphLqMgCi2hoWU9OL4Woy0zJLpeZxGDtvppRq5Q8g3hJOZfZsTMtOQlyJcqEtkE0xrccRdXklSEuIOZ20WAFA1bwO0tc71Sz8PWtaD9+Sz3w836EYCWPkn0Ldn/zFTsFKnb6vjBzQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rbWTECiLrgqYHKyN/CetsK3wUFojhIJV6AZwfpVE/Fo=;
- b=a9ElEh+TuzrJp15EqJAe8QnTf6xBeOH3cYcmAEif3mid0us4QB1B9Qz/SeopSarnQiwMwHEbc6esDFSjkmbGSsXzicx8dDHzlx1PUTsHsdFR+3My5gNhlHM0U1ro75o4JGTX78YXgrTiE1PB9WUWpIueFMhvNCDpF+9Zc07UzPA=
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com (20.179.175.203) by
- TYAPR01MB4415.jpnprd01.prod.outlook.com (20.179.173.208) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.26; Tue, 17 Sep 2019 04:38:58 +0000
-Received: from TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::7da1:bfc1:6c7f:8977]) by TYAPR01MB4544.jpnprd01.prod.outlook.com
- ([fe80::7da1:bfc1:6c7f:8977%7]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
- 04:38:58 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>
-Subject: RE: DRM Driver implementation question
-Thread-Topic: DRM Driver implementation question
-Thread-Index: AdVslX1ZBzegHzojRVS64lgG04s8jgAenS2A
-Date:   Tue, 17 Sep 2019 04:38:58 +0000
-Message-ID: <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
-References: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yoshihiro.shimoda.uh@renesas.com; 
-x-originating-ip: [150.249.235.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a6f16fad-c1ba-44eb-27b7-08d73b28f4bf
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TYAPR01MB4415;
-x-ms-traffictypediagnostic: TYAPR01MB4415:|TYAPR01MB4415:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TYAPR01MB44155E797DDDB4BDADA6D8DDD88F0@TYAPR01MB4415.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 01630974C0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(376002)(346002)(396003)(136003)(189003)(51444003)(199004)(81166006)(6246003)(3846002)(66066001)(8676002)(86362001)(4744005)(4326008)(71200400001)(3480700005)(256004)(478600001)(25786009)(14454004)(486006)(6862004)(81156014)(5660300002)(476003)(9686003)(33656002)(55016002)(6116002)(229853002)(54906003)(2906002)(446003)(305945005)(71190400001)(8936002)(6636002)(64756008)(76116006)(66556008)(6506007)(66946007)(76176011)(7736002)(316002)(26005)(74316002)(66476007)(66446008)(102836004)(6436002)(11346002)(186003)(99286004)(52536014)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:TYAPR01MB4415;H:TYAPR01MB4544.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: s9zZ46vhRg+t9z4vW6ZQesABXJCvsu1AxhwD3vJP4Dl5dY8RQMnEjEHX5gNBwk/X5mFer58yAAfVgHFWEhDgBXbbAGxA8PEO5goZ27kXBVF/3TV0LwgFHQg0i62T4E1pVkBjhXdlzUdVW8jkmPU9mVKVOzCBaIEWcZsDx2Fa5L+GUUJxLMbsYoTcEjqTlQGRa/zglpR+Ve06/ARuRu/o4jNCyVS1bqNtWhFc/xl9SC9mDuLyav+dSaB5rcGT5ueikXGEnbemwMHBtK61uijJzF2rWiRAvif2WyznEMraPusl2Zmz/LoOMJqEGIsOXPv9UrVze5FIVvHaMkSBum8gU1NfjYOqtF65134lyaJ0HGSJR65xf0Xn+Uct21gV9kBZvxXBZJbzQBdEEYMT/oQSyL7hC/wsDN2A8+/Et1cuwgA=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a6f16fad-c1ba-44eb-27b7-08d73b28f4bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 04:38:58.5764
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7ve2+nwRpxYi/sbVDsUY8qEwbKqb8B+L20G/ZBc9wjRgePQXVb3eZB3nXXCy97fHZyYsM5q2dgKqzNQ403EWm7GyFyXJPPqk02oV2KpNxGta0QXwKFsFHDPPv6g+JQ5v
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB4415
+        Tue, 17 Sep 2019 00:49:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40764 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbfIQEty (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 00:49:54 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1B0EC602F8; Tue, 17 Sep 2019 04:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568695793;
+        bh=9DAhlffFQLmyiQ/NBcdB+CPjXZvxyNPw99SVt6x2WNI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QhM2JojkQfrWeNPMh1yBFMab870y0RI92asD564PBlf5BXDy91uU3A5HlT04w7spr
+         OD43qEvbA3KHi7nCTY14juqsjxqAEipjGCzVla9tS+meWujUkynjvOjN5J/RCe6sW0
+         0Vh65Gd/Rg+QLfARCCcpJljtz60msbyMHJGOjdU8=
+Received: from codeaurora.org (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8AD46607C3;
+        Tue, 17 Sep 2019 04:49:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568695792;
+        bh=9DAhlffFQLmyiQ/NBcdB+CPjXZvxyNPw99SVt6x2WNI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=hSgSYEJzeXsrKDUNDKTmqyprObM9NX0u+TRioBXgAlgSauRz+qWM67cc3HWUpq+q/
+         nP1yc38DAsIlmltF4GoHU+FizSaSZS8prTDeMrsqMUCuvQ85CeaVXHtK6s8V8/vSjM
+         kxs6owP5qD/oNwm8dWCd1QX4E+e/WOS4NK48n4UE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8AD46607C3
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] f2fs: add a condition to detect overflow in f2fs_ioc_gc_range()
+Date:   Tue, 17 Sep 2019 10:19:23 +0530
+Message-Id: <1568695763-29343-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gareth,
+end = range.start + range.len;
 
-> From: Gareth Williams, Sent: Monday, September 16, 2019 10:56 PM
->=20
-> Hi Laurent/Kieran,
->=20
-> I need to upstream a driver for a display controller that within its regi=
-sters memory region contains registers related
-> to a PWM device. The PWM device is for controlling the backlight of the d=
-isplay.
-> Ideally, I would like to create a separated driver for the PWM, so that I=
- can re-use "pwm-backlight", but since the registers
-> for the PWM are right in the middle of the registers for the display cont=
-roller I would need to ioremap the memory region
-> for the PWM registers region twice, once from the display controller driv=
-er, and once from the PWM driver.
-> Do you think that the double ioremap would be acceptable upstream?
+If the range.start/range.len is a very large value, then end can overflow
+in this operation. It results into a crash in get_valid_blocks() when
+accessing the invalid range.start segno.
 
-I think that an MFD driver can support such hardware. I checked Documentati=
-on/devicetree/bindings/mfd roughly,
-and then atmel-hlcdc.txt seems to have a display controller and a PWM devic=
-e.
+This issue is reported in ioctl fuzz testing.
 
-Best regards,
-Yoshihiro Shimoda
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+ fs/f2fs/file.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 5474aaa..c2b4767 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -2123,9 +2123,8 @@ static int f2fs_ioc_gc_range(struct file *filp, unsigned long arg)
+ 		return -EROFS;
+ 
+ 	end = range.start + range.len;
+-	if (range.start < MAIN_BLKADDR(sbi) || end >= MAX_BLKADDR(sbi)) {
++	if (end < range.start || range.start < MAIN_BLKADDR(sbi) || end >= MAX_BLKADDR(sbi))
+ 		return -EINVAL;
+-	}
+ 
+ 	ret = mnt_want_write_file(filp);
+ 	if (ret)
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
