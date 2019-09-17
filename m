@@ -2,108 +2,195 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59040C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709A6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 314DB20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D08E20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728547AbfIQJj0 (ORCPT
+        id S1728582AbfIQJjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:39:26 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41107 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfIQJjZ (ORCPT
+        Tue, 17 Sep 2019 05:39:41 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:20501 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfIQJjl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:39:25 -0400
-Received: from [5.158.153.52] (helo=linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:RSA_AES_256_CBC_SHA1:256)
-        (Exim 4.80)
-        (envelope-from <kurt.kanzenbach@linutronix.de>)
-        id 1iA9x9-0000M8-FJ; Tue, 17 Sep 2019 11:39:19 +0200
-Date:   Tue, 17 Sep 2019 11:39:19 +0200
-From:   Kurt Kanzenbach <kurt.kanzenbach@linutronix.de>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Andy Tang <andy.tang@nxp.com>,
-        Alexander Stein <alexander.stein@systec-electronic.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 1/2] irqchip: add support for Layerscape external
- interrupt lines
-Message-ID: <20190917093918.GA8901@linutronix.de>
-References: <20180125150230.7234-1-rasmus.villemoes@prevas.dk>
- <20180223210901.23480-1-rasmus.villemoes@prevas.dk>
- <20180223210901.23480-2-rasmus.villemoes@prevas.dk>
- <alpine.DEB.2.21.1803011308440.1396@nanos.tec.linutronix.de>
- <4684c3ce-b56a-334d-f556-6e8524d8126c@prevas.dk>
+        Tue, 17 Sep 2019 05:39:41 -0400
+IronPort-SDR: Lni6NxtCmo3XUgNWu0s7s3K8WMUWbll/0+qxCpv22BuidX5/O7W+cLHyNAw7FK9wpF9SCAgKQv
+ ohZSZJZFojtjC/0/ZlnZhOeDI76LCuD2loRtUVXoc6sKqs94g3odCd2F44JezBFdHt2LGAMqOc
+ tfkRGA2880XsjodZmOIiqnle8CWdx4p6w7Pou4DLAa3FIItOoKM9SMRfBy5Qt0AFVSHNBQwEU2
+ NovLhmM69xjXhA3vZtpuY/TwvejCU7ALah24CX6ap4Y8wtwdPSEMS3E0Y+Ej8yxztxiZTB4pLP
+ AFM=
+X-IronPort-AV: E=Sophos;i="5.64,515,1559548800"; 
+   d="scan'208";a="41416503"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 17 Sep 2019 01:39:39 -0800
+IronPort-SDR: O6DOm3rwB3wfepOQeSrCnDEl28Fri9eLU6sWzk+Bp3L9ppkxy7mlcYQlUREBct0y+3jw5IcJxz
+ PYWu4mckamso+7CoScdNsUYvWtK/yg67hTIAbJo0plvGmWhZ7MDzv6M5CWMdQdiccV7YlFZfCe
+ +51TIyu/DcCl4d4CR59kUE1MYxkBpmtyBEbRbLml3qnalTM1WbG6sg8UIgtDE2y0SZRJlGmwu/
+ utupXLYWhBqm2/cxHnKzZW03vBDPDUmTBnY4E91poDAfU0b1UVk1vNtkQ+NrbX2sb1VvlWH0Sf
+ GPE=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
+        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>
+Subject: [PATCH v3 20/49] Input: atmel_mxt_ts - refactor firmware flash to extract context into struct
+Date:   Tue, 17 Sep 2019 18:38:46 +0900
+Message-ID: <20190917093915.18645-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
-Content-Disposition: inline
-In-Reply-To: <4684c3ce-b56a-334d-f556-6e8524d8126c@prevas.dk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
---AhhlLboLdkugWU4S
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+(cherry picked from ndyer/linux/for-upstream commit 1bbe20ff3dcd6612e7942c495929eae5c138ece2)
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 59 +++++++++++++++---------
+ 1 file changed, 36 insertions(+), 23 deletions(-)
 
-Hi,
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index 69e34294688c..711ce39f38ca 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -291,6 +291,22 @@ struct mxt_cfg {
+ 	struct mxt_info info;
+ };
+ 
++/* Firmware frame structure */
++struct mxt_fw_frame {
++	__be16 size;
++	u8 data[];
++};
++
++/* Firmware update context */
++struct mxt_flash {
++	const struct firmware *fw;
++	struct mxt_fw_frame *frame;
++	loff_t pos;
++	size_t frame_size;
++	unsigned int count;
++	unsigned int retry;
++};
++
+ /* Each client has this additional data */
+ struct mxt_data {
+ 	struct i2c_client *client;
+@@ -3244,21 +3260,17 @@ static int mxt_check_firmware_format(struct device *dev,
+ static int mxt_load_fw(struct device *dev)
+ {
+ 	struct mxt_data *data = dev_get_drvdata(dev);
+-	const struct firmware *fw = NULL;
+-	unsigned int frame_size;
+-	unsigned int pos = 0;
+-	unsigned int retry = 0;
+-	unsigned int frame = 0;
++	struct mxt_flash f = { 0, };
+ 	int ret;
+ 
+-	ret = request_firmware(&fw, data->fw_name, dev);
++	ret = request_firmware(&f.fw, data->fw_name, dev);
+ 	if (ret) {
+ 		dev_err(dev, "Unable to open firmware %s\n", data->fw_name);
+ 		return ret;
+ 	}
+ 
+ 	/* Check for incorrect enc file */
+-	ret = mxt_check_firmware_format(dev, fw);
++	ret = mxt_check_firmware_format(dev, f.fw);
+ 	if (ret)
+ 		goto release_firmware;
+ 
+@@ -3312,41 +3324,42 @@ static int mxt_load_fw(struct device *dev)
+ 			goto disable_irq;
+ 	}
+ 
+-	while (pos < fw->size) {
++	while (f.pos < f.fw->size) {
++		f.frame = (struct mxt_fw_frame *)(f.fw->data + f.pos);
++
+ 		ret = mxt_check_bootloader(data, MXT_WAITING_FRAME_DATA, true);
+ 		if (ret)
+ 			goto disable_irq;
+ 
+-		frame_size = ((*(fw->data + pos) << 8) | *(fw->data + pos + 1));
+-
+ 		/* Take account of CRC bytes */
+-		frame_size += 2;
++		f.frame_size = __be16_to_cpu(f.frame->size) + 2U;
+ 
+ 		/* Write one frame to device */
+-		ret = mxt_bootloader_write(data, fw->data + pos, frame_size);
++		ret = mxt_bootloader_write(data, f.fw->data + f.pos,
++					   f.frame_size);
+ 		if (ret)
+ 			goto disable_irq;
+ 
+ 		ret = mxt_check_bootloader(data, MXT_FRAME_CRC_PASS, true);
+ 		if (ret) {
+-			retry++;
++			f.retry++;
+ 
+ 			/* Back off by 20ms per retry */
+-			msleep(retry * 20);
++			msleep(f.retry * 20);
+ 
+-			if (retry > 20) {
++			if (f.retry > 20) {
+ 				dev_err(dev, "Retry count exceeded\n");
+ 				goto disable_irq;
+ 			}
+ 		} else {
+-			retry = 0;
+-			pos += frame_size;
+-			frame++;
++			f.retry = 0;
++			f.pos += f.frame_size;
++			f.count++;
+ 		}
+ 
+-		if (frame % 50 == 0)
+-			dev_dbg(dev, "Sent %d frames, %d/%zd bytes\n",
+-				frame, pos, fw->size);
++		if (f.count % 50 == 0)
++			dev_dbg(dev, "Sent %u frames, %lld/%zu bytes\n",
++				f.count, f.pos, f.fw->size);
+ 	}
+ 
+ 	/* Wait for flash. */
+@@ -3355,7 +3368,7 @@ static int mxt_load_fw(struct device *dev)
+ 	if (ret)
+ 		goto disable_irq;
+ 
+-	dev_dbg(dev, "Sent %d frames, %d bytes\n", frame, pos);
++	dev_dbg(dev, "Sent %u frames, %lld bytes\n", f.count, f.pos);
+ 
+ 	/*
+ 	 * Wait for device to reset. Some bootloader versions do not assert
+@@ -3369,7 +3382,7 @@ static int mxt_load_fw(struct device *dev)
+ disable_irq:
+ 	disable_irq(data->irq);
+ release_firmware:
+-	release_firmware(fw);
++	release_firmware(f.fw);
+ 	return ret;
+ }
+ 
+-- 
+2.19.2
 
-On Fri, May 04, 2018 at 09:44:25AM +0200, Rasmus Villemoes wrote:
-> >> +static int
-> >> +ls_extirq_set_type(struct irq_data *data, unsigned int type)
-> >> +{
-> >> +	irq_hw_number_t hwirq = data->hwirq;
-> >> +	struct extirq_chip_data *chip_data = data->chip_data;
-> >> +	u32 value, mask;
-> >
-> > Please order local variables in reverse fir tree fashion whenever
-> > possible. That's way simpler to read:
-> >
-> > 	struct extirq_chip_data *chip_data = data->chip_data;
-> > 	irq_hw_number_t hwirq = data->hwirq;
-> > 	u32 value, mask;
->
-> Fixed, thanks.
-
-Did you send a sixth version of this patch set? It seems like the code
-hasn't been merged, yet. I also need support for the external interrupt
-lines on a different Layerscape.
-
-Thanks,
-Kurt
-
---AhhlLboLdkugWU4S
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEooWgvezyxHPhdEojeSpbgcuY8KYFAl2AqcYACgkQeSpbgcuY
-8KbC2hAAoCZDi2xaYd2gH9b02qjCYtAn1mJu+ibwMc+1BYoHks2kUX/F3iB/ev/Z
-X2dsFpF5fQaE1vBnKpSn8P8qCv+eQzfwWqJlt/RIqE2hFBK+1NChQk/oRIycC6Pj
-xyi38aHLrisB9W7LM+rXsBdlxb0Dzz4L+5TJaGS92gXoNwVpJlwPiBe/kirtWCKc
-cISaUjbjcY0fBVZwQ62QBiIWnXoXENFomtwzxzhesPkCNurbU67NfDEEF1mh56Oy
-x0IawGVtnOxMYEewZa/ybGAAtICC2n/58CyOFi6pDB65QTjxwYypzO3nwV8Wfaps
-XdhBM+mN7PAhBB4TVzEgiqUFJU/Lqh+9Cc6c/rZHynlxYiSCXwHOex4CIWd1UYcG
-JCJFO6KFTWviPzU3eai9DROwpuIgy12Eo+C3X6II8I/jQxWkj54TTNR/LQ0ghcYl
-06cOQlm86BAfqrY+6iTC3kSZ6EWCEys/kRplajDPeNHDaKuGoREFyNcmpa70hCfz
-KNzOTqOfJd3lsrOIx8kbXOZ01h/4+BRcHKEhIME/LRz8o7UBAnavxy29BTEPKHXz
-qyoAoIljxwUwTsk74mLvUZzoXNEQ95NpC7Z/bq+WAEgh8vdgMDKHsUn42Sa4hMnq
-czD9MAPGcsP5TzpVoWmSZY4ZrG3FiPeqJvbpEzrU67Ltdeq+9t4=
-=rHJv
------END PGP SIGNATURE-----
-
---AhhlLboLdkugWU4S--
