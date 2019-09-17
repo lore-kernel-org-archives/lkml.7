@@ -2,123 +2,103 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC843C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8824C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8384A2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0574214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568746133;
+	bh=bNhraFRpJyiHFQp0JOLJ83CT9R3UVWD/HUhL/tUIzWc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TvEndzUbHYmH7DoA8CPFZHOsUdNdRiFgZuzx7E5FM3P/kNZKQ2CPoqvAPC/s9+QIO
+	 2vchfFUd+3cT5RRSB84iXgeeCwkmQoDyG/tcCoZOpXraY3bWXysjnj5vPHY/785REe
+	 PlIhD6MvSyPIIfGRQu+BjwdKB1nsFbOwlZ7vvSVg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbfIQSnw (ORCPT
+        id S1728236AbfIQSsx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:43:52 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:2259 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729422AbfIQSnv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:43:51 -0400
-IronPort-SDR: HpQp4kH+OrAJ8CmQ902m8pSvzuR+fbwgUXLHLsJV6DpttlWCpJWZlRpnJwpnwtvICr1plRRlAq
- lMYtyV7yGiHBPbcAemjWEEs/x+Kvx+S3tymTr7L9KwGX/JXSWyd01PISTQ17+Uq/Jw/oNI7vqG
- h6MpFj5ATglqVPUOM53v48tewCP2TYoEUMk9ijG4kO5A9RnNi3ncbQ66uPSPIdJ+cFRRj5DZhJ
- YtNLcYC8KyeYoJKQpwOyhTstmQ60rzA7a7v/72cItS1Z98PSAtRoQf4SpLVC/8BfVBgjlKjcAp
- rWI=
-X-IronPort-AV: E=Sophos;i="5.64,517,1559548800"; 
-   d="scan'208";a="41445973"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 17 Sep 2019 10:43:50 -0800
-IronPort-SDR: MBiaonLjv0RcrTAWRYQsw5i7MIRF0ReF2ZhHbczRbMjJxPlGsKbDpcDRlg7lXgWScIDkUPj0gZ
- 1s+cNG09n838e1BRcPWW4RbWQ+VJXfTQPuW+02XYUFKJ/9KNMTcew9uGLVK0+X6nZDIlmW94iV
- Axl6e8ULT48xq7AhFOJP/6IjKB1RKK4qu/sz3rMk9yB9wDDGVShdcaX1bC/5wWHJhf+33BMpXq
- TDTnpmSb4/5/sSwsi9P2N2QrCtsGL1PaqSflteaxnSSHCZ8DFrmeeBewMImP8rgskUrznSgIy5
- Trw=
-Date:   Tue, 17 Sep 2019 14:43:46 -0400
-From:   "George G. Davis" <george_davis@mentor.com>
-To:     shuah <shuah@kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] selftests: watchdog: Validate optional file argument
-Message-ID: <20190917184345.GC15686@mam-gdavis-lt>
-References: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
- <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
- <20190917145400.GA14341@vmlxhi-102.adit-jv.com>
- <73bab70b-e22c-42b4-cfca-b4e33431b423@kernel.org>
- <20190917165418.GA21010@vmlxhi-102.adit-jv.com>
- <374127ff-d06f-fcc3-d317-5614dfdc5a71@kernel.org>
- <20190917175056.GA24224@vmlxhi-102.adit-jv.com>
- <2ede1d4d-fa52-2100-2725-1ae32e62a5b6@kernel.org>
- <20190917183246.GB15686@mam-gdavis-lt>
+        Tue, 17 Sep 2019 14:48:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbfIQSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:48:52 -0400
+Received: from linux-8ccs (unknown [193.86.95.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B10E920578;
+        Tue, 17 Sep 2019 18:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568746131;
+        bh=bNhraFRpJyiHFQp0JOLJ83CT9R3UVWD/HUhL/tUIzWc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Dw1tt82qFDWdJRdFUKn2zjJVTzCZPxSkowNqN71cB0E8qBkynO4mwAqi2h6fB8y7S
+         3+RqeR0exvJQZt6gebzj3wEmNGcWuGj69zr/PDsW5nPMl/7csG6xtDwlq7qvhdsfI7
+         xOTyLshTk5gAXbLGV4BOL1/KcnIi6yoAGFJwhIF8=
+Date:   Tue, 17 Sep 2019 20:48:44 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthias Maennich <maennich@google.com>,
+        gregkh@linuxfoundation.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Kbuild updates for v5.4-rc1
+Message-ID: <20190917184844.GA15149@linux-8ccs>
+References: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
+ <20190917150902.GA4116@linux-8ccs>
+ <CAK7LNAR_8atC3M9gGQ=DBwzFG52PVuNaFVAzAr32TKxTwDCLug@mail.gmail.com>
+ <20190917180136.GA10376@linux-8ccs>
+ <20190917181636.7sngz5lrldx34rth@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190917183246.GB15686@mam-gdavis-lt>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: SVR-ORW-MBX-07.mgc.mentorg.com (147.34.90.207) To
- svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
+In-Reply-To: <20190917181636.7sngz5lrldx34rth@willie-the-truck>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 02:32:47PM -0400, George G. Davis wrote:
-> Hello Shuah,
-> 
-> On Tue, Sep 17, 2019 at 12:05:06PM -0600, shuah wrote:
-> > On 9/17/19 11:50 AM, Eugeniu Rosca wrote:
-> > >On Tue, Sep 17, 2019 at 11:44:45AM -0600, shuah wrote:
-> > >>On 9/17/19 10:54 AM, Eugeniu Rosca wrote:
-> > >>>Shuah,
-> > >>>
-> > >>>On Tue, Sep 17, 2019 at 09:25:31AM -0600, shuah wrote:
-> > >>>
-> > >>>[..]
-> > >>>
-> > >>>>I want two patches and the first one with
-> > >>>>Fixes tag.
-> > >>>
-> > >>
-> > >>These two patches need to be separate. The first one is a fix and
-> > >>the second is an enhancement.
-> > >
-> > >That was exactly the idea of v1.
-> > >
-> > >>
-> > >>Please send two patches - the first one with Fixes tag.
-> > >
-> > >Can you please pick [v1] series from below:
-> > >  - https://patchwork.kernel.org/patch/11136283/
-> > >  - https://patchwork.kernel.org/patch/11136285/
-> > >
-> > >with adding a one-liner Fixes tag to the first patch?
-> > >
-> > 
-> > Please send v2 with Fixes tag on the first one and making the changes
-> > I suggested on that v1 series.
-> 
-> I'll submit v3 series with the requested changes.
++++ Will Deacon [17/09/19 19:16 +0100]:
+>Hi Jessica,
+>
+>On Tue, Sep 17, 2019 at 08:01:36PM +0200, Jessica Yu wrote:
+>> Yikes, I did not catch Stephen Rothwell's email about pausing the
+>> linux-next releases from Sept 5 until Sept 30
+>> (https://lore.kernel.org/linux-next/20190904233443.3f73c46b@canb.auug.org.au/).
+>>
+>> The modules-next namespace patches have been in since last Tuesday,
+>> and my original plan was for them to catch at least a week of
+>> linux-next time before sending the pull request. :-/ But that did not
+>> happen due to the above.
+>>
+>> So Linus, in light of the above realization, I'd say at this time - I
+>> will still formally send a pull request with the merge conflicts
+>> resolved with either solution #2 or #3, but merge at your own
+>> discretion, it's fine to delay to the following release if you're
+>> uncomfortable.
+>
+>FWIW, when I've run into unexpected merge conflicts with other trees in the
+>past, I've found that it's usually sufficient just to include the resolution
+>as an inline diff in the pull request, rather than try to munge the tree
+>with merges or rebases.  Linus is pretty good at figuring it out, and with a
+>resolution to compare with, the damage is limited. The downside of the merge
+>is that it's fiddly to extract the changes and see what's actually being
+>pulled.
+>
+>Also, it's not like the kbuild stuff has been in -next for ages, so this
+>would've been a late and messy conflict regardless.
 
-Eugeniu has submitted v3 with requested changes.
+Hi Will!
 
-Thanks!
+Thanks a lot for the advice :-) The inline diff sounds like a good
+idea. This is I believe only the second tree conflict I've encountered
+so far so the tips are much appreciated.
 
-> 
-> Thanks!
-> 
-> > 
-> > thanks,
-> > -- Shuah
-> 
-> -- 
-> Regards,
-> George
-
--- 
-Regards,
-George
+Jessica
