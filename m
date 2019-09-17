@@ -2,254 +2,236 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55193C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0DDC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27FDF206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FCFC206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403947AbfIQGfT (ORCPT
+        id S2404262AbfIQGf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:35:19 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22992 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387513AbfIQGfT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:35:19 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8H6VpXZ071903
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:35:17 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2stvs389-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:35:17 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Tue, 17 Sep 2019 07:35:15 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Sep 2019 07:35:10 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8H6ZAUH48103650
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Sep 2019 06:35:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1E6FAE055;
-        Tue, 17 Sep 2019 06:35:09 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 48D79AE045;
-        Tue, 17 Sep 2019 06:35:09 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 17 Sep 2019 06:35:09 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id CE93DA019A;
-        Tue, 17 Sep 2019 16:35:04 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>
-Cc:     Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, Nicholas Piggin <npiggin@gmail.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        David Gibson <david@gibson.dropbear.id.au>
-Date:   Tue, 17 Sep 2019 16:35:04 +1000
-In-Reply-To: <20190917014307.30485-6-alastair@au1.ibm.com>
-References: <20190917014307.30485-1-alastair@au1.ibm.com>
-         <20190917014307.30485-6-alastair@au1.ibm.com>
-Organization: IBM Australia
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        Tue, 17 Sep 2019 02:35:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53962 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2404104AbfIQGf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:35:58 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6B0B68EA14269BD79CBB;
+        Tue, 17 Sep 2019 14:35:56 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
+ 2019 14:35:53 +0800
+Subject: Re: [f2fs-dev] [PATCH v4] f2fs: Fix indefinite loop in f2fs_gc()
+To:     Sahitya Tummala <stummala@codeaurora.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1565185232-11506-1-git-send-email-stummala@codeaurora.org>
+ <2b8f7a88-5204-a4ea-9f80-1056abb30d98@kernel.org>
+ <355d24c1-b07c-f8ff-1ab9-3f85653ced60@huawei.com>
+ <20190917053316.GB12730@codeaurora.org>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <447ade2b-0199-6b02-c1cf-8835851bbd00@huawei.com>
+Date:   Tue, 17 Sep 2019 14:35:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190917053316.GB12730@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091706-0012-0000-0000-0000034D01C2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091706-0013-0000-0000-000021877A4D
-Message-Id: <832772dd7c22e100bfa81f77993f6cda5e40bfc4.camel@au1.ibm.com>
-Subject: Re:  [PATCH 5/5] ocxl: Provide additional metadata to userspace
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=775 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909170071
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 11:43 +1000, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch exposes the OpenCAPI device serial number to
-> userspace.
-> 
-> It also includes placeholders for the LPC & special purpose
-> memory information (which will be populated in a subsequent patch)
-> to avoid creating excessive versions of the IOCTL.
-> 
+Hi Sahitya,
 
-I think it makes more sense to fold in the population of LPC & special
-purpose memory into this patch, I'll address this in the next spin.
-
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  drivers/misc/ocxl/config.c | 46
-> ++++++++++++++++++++++++++++++++++++++
->  drivers/misc/ocxl/file.c   |  3 ++-
->  include/misc/ocxl.h        |  1 +
->  include/uapi/misc/ocxl.h   |  9 +++++++-
->  4 files changed, 57 insertions(+), 2 deletions(-)
+On 2019/9/17 13:33, Sahitya Tummala wrote:
+> Hi Chao,
 > 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index fb0c3b6f8312..a9203c309365 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -71,6 +71,51 @@ static int find_dvsec_afu_ctrl(struct pci_dev
-> *dev, u8 afu_idx)
->  	return 0;
->  }
->  
-> +/**
-> + * Find a related PCI device (function 0)
-> + * @device: PCI device to match
-> + *
-> + * Returns a pointer to the related device, or null if not found
-> + */
-> +static struct pci_dev *get_function_0(struct pci_dev *dev)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(PCI_SLOT(dev->devfn), 0); //
-> Look for function 0
-> +
-> +	return pci_get_domain_bus_and_slot(pci_domain_nr(dev->bus),
-> +					dev->bus->number, devfn);
-> +}
-> +
-> +static void read_serial(struct pci_dev *dev, struct ocxl_fn_config
-> *fn)
-> +{
-> +	u32 low, high;
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
-> +	if (pos) {
-> +		pci_read_config_dword(dev, pos + 0x04, &low);
-> +		pci_read_config_dword(dev, pos + 0x08, &high);
-> +
-> +		fn->serial = low | ((u64)high) << 32;
-> +
-> +		return;
-> +	}
-> +
-> +	if (PCI_FUNC(dev->devfn) != 0) {
-> +		struct pci_dev *related = get_function_0(dev);
-> +
-> +		if (!related) {
-> +			fn->serial = 0;
-> +			return;
-> +		}
-> +
-> +		read_serial(related, fn);
-> +		pci_dev_put(related);
-> +		return;
-> +	}
-> +
-> +	fn->serial = 0;
-> +}
-> +
->  static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config
-> *fn)
->  {
->  	u16 val;
-> @@ -208,6 +253,7 @@ int ocxl_config_read_function(struct pci_dev
-> *dev, struct ocxl_fn_config *fn)
->  	int rc;
->  
->  	read_pasid(dev, fn);
-> +	read_serial(dev, fn);
->  
->  	rc = read_dvsec_tl(dev, fn);
->  	if (rc) {
-> diff --git a/drivers/misc/ocxl/file.c b/drivers/misc/ocxl/file.c
-> index 2870c25da166..08f6f594a11d 100644
-> --- a/drivers/misc/ocxl/file.c
-> +++ b/drivers/misc/ocxl/file.c
-> @@ -98,13 +98,14 @@ static long afu_ioctl_get_metadata(struct
-> ocxl_context *ctx,
->  
->  	memset(&arg, 0, sizeof(arg));
->  
-> -	arg.version = 0;
-> +	arg.version = 1;
->  
->  	arg.afu_version_major = ctx->afu->config.version_major;
->  	arg.afu_version_minor = ctx->afu->config.version_minor;
->  	arg.pasid = ctx->pasid;
->  	arg.pp_mmio_size = ctx->afu->config.pp_mmio_stride;
->  	arg.global_mmio_size = ctx->afu->config.global_mmio_size;
-> +	arg.serial = ctx->afu->fn->config.serial;
->  
->  	if (copy_to_user(uarg, &arg, sizeof(arg)))
->  		return -EFAULT;
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index a1897737908d..da75db149e6c 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -46,6 +46,7 @@ struct ocxl_fn_config {
->  	int dvsec_afu_info_pos; /* offset of the AFU information DVSEC
-> */
->  	s8 max_pasid_log;
->  	s8 max_afu_index;
-> +	u64 serial;
->  };
->  
->  enum ocxl_endian {
-> diff --git a/include/uapi/misc/ocxl.h b/include/uapi/misc/ocxl.h
-> index 6d29a60a896a..d4c6bf10580c 100644
-> --- a/include/uapi/misc/ocxl.h
-> +++ b/include/uapi/misc/ocxl.h
-> @@ -45,7 +45,14 @@ struct ocxl_ioctl_metadata {
->  
->  	/* End version 0 fields */
->  
-> -	__u64 reserved[13]; /* Total of 16*u64 */
-> +	// Version 1 fields
-> +	__u64 lpc_mem_size;
-> +	__u64 special_purpose_mem_size;
-> +	__u64 serial;		// Device serial number
-> +
-> +	// End version 1 fields
-> +
-> +	__u64 reserved[10]; // Total of 16*u64
->  };
->  
->  struct ocxl_ioctl_p9_wait {
-> -- 
-> 2.21.0
+> On Fri, Sep 06, 2019 at 07:00:32PM +0800, Chao Yu wrote:
+>> Hi Sahitya,
+>>
+>> Luckily, I can reproduce this issue with generic/269, and have sent another
+>> patch for the issue, could you please check that one?
+>>
+> 
+> Thanks for the fix. The issue could not get reproduced yet, so could not make
+> much progress on the customer case.
 
--- 
-Alastair D'Silva
-Open Source Developer
-Linux Technology Centre, IBM Australia
-mob: 0423 762 819
+Alright, let me know if you get any clue or make progress on this issue.
 
+Thanks,
+
+> 
+> thanks,
+> 
+>> Thanks,
+>>
+>> On 2019/8/7 22:06, Chao Yu wrote:
+>>> On 2019-8-7 21:40, Sahitya Tummala wrote:
+>>>> Policy - Foreground GC, LFS and greedy GC mode.
+>>>>
+>>>> Under this policy, f2fs_gc() loops forever to GC as it doesn't have
+>>>> enough free segements to proceed and thus it keeps calling gc_more
+>>>> for the same victim segment.  This can happen if the selected victim
+>>>> segment could not be GC'd due to failed blkaddr validity check i.e.
+>>>> is_alive() returns false for the blocks set in current validity map.
+>>>>
+>>>> Fix this by keeping track of such invalid segments and skip those
+>>>> segments for selection in get_victim_by_default() to avoid endless
+>>>> GC loop under such error scenarios. Currently, add this logic under
+>>>> CONFIG_F2FS_CHECK_FS to be able to root cause the issue in debug
+>>>> version.
+>>>>
+>>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+>>>> ---
+>>>> v4: Cover all logic with CONFIG_F2FS_CHECK_FS
+>>>>
+>>>>  fs/f2fs/gc.c      | 31 +++++++++++++++++++++++++++++--
+>>>>  fs/f2fs/segment.c | 14 +++++++++++++-
+>>>>  fs/f2fs/segment.h |  3 +++
+>>>>  3 files changed, 45 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>>>> index 8974672..cbcacbd 100644
+>>>> --- a/fs/f2fs/gc.c
+>>>> +++ b/fs/f2fs/gc.c
+>>>> @@ -382,6 +382,16 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
+>>>>  			nsearched++;
+>>>>  		}
+>>>>  
+>>>> +#ifdef CONFIG_F2FS_CHECK_FS
+>>>> +		/*
+>>>> +		 * skip selecting the invalid segno (that is failed due to block
+>>>> +		 * validity check failure during GC) to avoid endless GC loop in
+>>>> +		 * such cases.
+>>>> +		 */
+>>>> +		if (test_bit(segno, sm->invalid_segmap))
+>>>> +			goto next;
+>>>> +#endif
+>>>> +
+>>>>  		secno = GET_SEC_FROM_SEG(sbi, segno);
+>>>>  
+>>>>  		if (sec_usage_check(sbi, secno))
+>>>> @@ -602,8 +612,15 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>>>>  {
+>>>>  	struct page *node_page;
+>>>>  	nid_t nid;
+>>>> -	unsigned int ofs_in_node;
+>>>> +	unsigned int ofs_in_node, segno;
+>>>>  	block_t source_blkaddr;
+>>>> +	unsigned long offset;
+>>>> +#ifdef CONFIG_F2FS_CHECK_FS
+>>>> +	struct sit_info *sit_i = SIT_I(sbi);
+>>>> +#endif
+>>>> +
+>>>> +	segno = GET_SEGNO(sbi, blkaddr);
+>>>> +	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+>>>>  
+>>>>  	nid = le32_to_cpu(sum->nid);
+>>>>  	ofs_in_node = le16_to_cpu(sum->ofs_in_node);
+>>>> @@ -627,8 +644,18 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
+>>>>  	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
+>>>>  	f2fs_put_page(node_page, 1);
+>>>>  
+>>>> -	if (source_blkaddr != blkaddr)
+>>>> +	if (source_blkaddr != blkaddr) {
+>>>> +#ifdef CONFIG_F2FS_CHECK_FS
+>>>
+>>> 		unsigned int segno = GET_SEGNO(sbi, blkaddr);
+>>> 		unsigned int offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
+>>>
+>>> Should be local, otherwise it looks good to me, I think Jaegeuk can help to fix
+>>> this while merging.
+>>>
+>>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+>>>
+>>> Thanks,
+>>>
+>>>> +		if (unlikely(check_valid_map(sbi, segno, offset))) {
+>>>> +			if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
+>>>> +				f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
+>>>> +						blkaddr, source_blkaddr, segno);
+>>>> +				f2fs_bug_on(sbi, 1);
+>>>> +			}
+>>>> +		}
+>>>> +#endif
+>>>>  		return false;
+>>>> +	}
+>>>>  	return true;
+>>>>  }
+>>>>  
+>>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>>> index a661ac3..ee795b1 100644
+>>>> --- a/fs/f2fs/segment.c
+>>>> +++ b/fs/f2fs/segment.c
+>>>> @@ -806,6 +806,9 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
+>>>>  		enum dirty_type dirty_type)
+>>>>  {
+>>>>  	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
+>>>> +#ifdef CONFIG_F2FS_CHECK_FS
+>>>> +	struct sit_info *sit_i = SIT_I(sbi);
+>>>> +#endif
+>>>>  
+>>>>  	if (test_and_clear_bit(segno, dirty_i->dirty_segmap[dirty_type]))
+>>>>  		dirty_i->nr_dirty[dirty_type]--;
+>>>> @@ -817,9 +820,13 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
+>>>>  		if (test_and_clear_bit(segno, dirty_i->dirty_segmap[t]))
+>>>>  			dirty_i->nr_dirty[t]--;
+>>>>  
+>>>> -		if (get_valid_blocks(sbi, segno, true) == 0)
+>>>> +		if (get_valid_blocks(sbi, segno, true) == 0) {
+>>>>  			clear_bit(GET_SEC_FROM_SEG(sbi, segno),
+>>>>  						dirty_i->victim_secmap);
+>>>> +#ifdef CONFIG_F2FS_CHECK_FS
+>>>> +			clear_bit(segno, sit_i->invalid_segmap);
+>>>> +#endif
+>>>> +		}
+>>>>  	}
+>>>>  }
+>>>>  
+>>>> @@ -4015,6 +4022,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
+>>>>  	sit_i->sit_bitmap_mir = kmemdup(src_bitmap, bitmap_size, GFP_KERNEL);
+>>>>  	if (!sit_i->sit_bitmap_mir)
+>>>>  		return -ENOMEM;
+>>>> +
+>>>> +	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
+>>>> +	if (!sit_i->invalid_segmap)
+>>>> +		return -ENOMEM;
+>>>>  #endif
+>>>>  
+>>>>  	/* init SIT information */
+>>>> @@ -4517,6 +4528,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>>>>  	kvfree(sit_i->sit_bitmap);
+>>>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>>>  	kvfree(sit_i->sit_bitmap_mir);
+>>>> +	kvfree(sit_i->invalid_segmap);
+>>>>  #endif
+>>>>  	kvfree(sit_i);
+>>>>  }
+>>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>>>> index b746028..9370d53 100644
+>>>> --- a/fs/f2fs/segment.h
+>>>> +++ b/fs/f2fs/segment.h
+>>>> @@ -229,6 +229,9 @@ struct sit_info {
+>>>>  	char *sit_bitmap;		/* SIT bitmap pointer */
+>>>>  #ifdef CONFIG_F2FS_CHECK_FS
+>>>>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
+>>>> +
+>>>> +	/* bitmap of segments to be ignored by GC in case of errors */
+>>>> +	unsigned long *invalid_segmap;
+>>>>  #endif
+>>>>  	unsigned int bitmap_size;	/* SIT bitmap size */
+>>>>  
+>>>>
+>>> .
+>>>
+> 
