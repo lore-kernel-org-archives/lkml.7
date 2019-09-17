@@ -2,131 +2,97 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65F0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:53:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00443C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7573F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:53:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kAOn5Shr"
+	by mail.kernel.org (Postfix) with ESMTP id D5F3621852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:54:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfIQPx6 (ORCPT
+        id S1729865AbfIQPyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:53:58 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43871 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729363AbfIQPx5 (ORCPT
+        Tue, 17 Sep 2019 11:54:01 -0400
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:63660 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729848AbfIQPx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:53:57 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d5so4044727lja.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 08:53:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2YOj06cPPvgsZx9maFNFvfyY5twtTMJtLzahT6UKWkM=;
-        b=kAOn5ShrNvK4JRjqibsxIgC3tnVF3yLFi1pJnhx52obG35TjwggxRBvh7USQv2jDlh
-         SaXa5YI0QDhVDM0XOtk2uIbz6dnWhZwPCnKx7aj/1dv5EwEEJhm24G5CSugX93SklLME
-         6ClLDZZvexTAhqhrhsnupobLStLlEZEIn0lVbIjpFCQ+VTRgmAS1lf0XFPM2tscrZIWi
-         MUPhhPUnjkeAkQEzIvs8qXv9f+zwOWPRxKva89MthTxTIRNnnQvcXmOSlh0xq9pm+ysI
-         wVLuqnzz39t3+DrPVleBmISEaUxgBdqhprHTOH9K/NQ+ozoqAHxtEJQnXnZIMvvLDbEd
-         Ye2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2YOj06cPPvgsZx9maFNFvfyY5twtTMJtLzahT6UKWkM=;
-        b=A1ll4QaY/joLrRWvsJuW03bj0KBkBB8RCl1aM8DryRN23efkjpCMJjqE/S0n0X7m9D
-         /+g0rQuoh7BYTHoduOO1YB0tuZzK6r3LjV6l/49PsBXkab3SJQ1LYP2MmXvuK41/EroT
-         MDlnutG8rSwaOR6XoLla+zHmj4vLzQoZjJ8S9xn/BjNcv1pv+fqOsfxkZdNec+3Ic99d
-         TPMJgOXruhw6TpF4VxhJ5VraPV5UQuW0VEZJITl4WnMq/djngiP58A6mwYRA+dzNaDw+
-         S1E6obbOIA5dd7P72hILJ3qojTinC/BEVCa4g1TDEMw//KDtwKpZ8U/DRKgEAtOOkr/Q
-         NsUA==
-X-Gm-Message-State: APjAAAWwQnpdRbfej0ntSS4uBQPk4anz5wNBn9OtSfHLJebKSaMtFUty
-        +ZET4qNIZCRFmQow6f0XbHc=
-X-Google-Smtp-Source: APXvYqxInzgwwA/H7snjGtaKT2ZKQl55koT6+1i82eeg1Fid52kHKD8WfWEvLiVsSbaoNPgPXI6hVA==
-X-Received: by 2002:a2e:9d0d:: with SMTP id t13mr2297429lji.169.1568735634420;
-        Tue, 17 Sep 2019 08:53:54 -0700 (PDT)
-Received: from vitaly-Dell-System-XPS-L322X ([188.150.241.161])
-        by smtp.gmail.com with ESMTPSA id x76sm604083ljb.81.2019.09.17.08.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 08:53:53 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 18:53:52 +0300
-From:   Vitaly Wool <vitalywool@gmail.com>
-To:     Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Dan Streetman <ddstreet@ieee.org>,
-        Vlastimil Babka <vbabka@suse.cz>, markus.linnala@gmail.com
-Subject: [PATCH] z3fold: fix memory leak in kmem cache
-Message-Id: <20190917185352.44cf285d3ebd9e64548de5de@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Sep 2019 11:53:59 -0400
+IronPort-SDR: 7on06mcRA9trxE8BmbsaOJb8DCf1NRg2zy/EOAi+G0XUmg7wbWOyyv55RQNDwFxIvA3rwT2Ye7
+ a1H1QjrYUSp6tiTkTtcdv3r//iNYrw2fJ5iat5LSvFFG2+3km6hiFgwfm951RbbiJEQu1XZWtD
+ fNdxETQyb/PE3k/l1kpIhtvCuEMJpokPyRrrP3hxiUB8dBfDVyP9BK58VM9pWYpYctNBpdUlwK
+ 90ZwtNKogssSQiuPbkqAqFQbyRuez3SUjVpyEwx2ZqMnRHJuzXMsGFIdN0wc/zBRSLKF7bMmLt
+ mUw=
+X-IronPort-AV: E=Sophos;i="5.64,517,1559548800"; 
+   d="scan'208";a="41431874"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa3.mentor.iphmx.com with ESMTP; 17 Sep 2019 07:53:58 -0800
+IronPort-SDR: AfJPn/LnTl0pF0pn72vZpwKKlQMxJ3INwLj0DYLkHjfGZd6VIXIm8SDQVlh5KRxazcoft2SdJc
+ iMuMgufH5yqwI/a9wagFvWmqeUwA22vCbUcGI7hvK/NVzzRc9fVBkY4bd3CpxaLSZmQ95E56yE
+ 4QuZDkGXAAk0ZcGZTEZMec+iWNzc/MOasanYRaam+cTULScOQ7j57FwllFNo9hgQX8I22+9n4G
+ 3wUsiQ5F7iBeP9G62X5Q5+Td/eisL5je8E4MdP6h9GR85Lf76AVRCNFBpTcYUo1lpyC0e04nES
+ DGY=
+Date:   Tue, 17 Sep 2019 11:53:54 -0400
+From:   "George G. Davis" <george_davis@mentor.com>
+To:     David Miller <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
+Message-ID: <20190917155354.GA15686@mam-gdavis-lt>
+References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
+ <20190516.142744.1107545161556108780.davem@davemloft.net>
+ <20190517144345.GA16926@mam-gdavis-lt>
+ <20190708224732.GA8009@mam-gdavis-lt>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20190708224732.GA8009@mam-gdavis-lt>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: svr-orw-mbx-02.mgc.mentorg.com (147.34.90.202) To
+ svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there is a leak in init_z3fold_page() -- it allocates
-handles from kmem cache even for headless pages, but then they are
-never used and never freed, so eventually kmem cache may get
-exhausted. This patch provides a fix for that.
+Hello David,
 
-Reported-by: Markus Linnala <markus.linnala@gmail.com>
-Signed-off-by: Vitaly Wool <vitalywool@gmail.com>
----
- mm/z3fold.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+On Mon, Jul 08, 2019 at 06:47:32PM -0400, George G. Davis wrote:
+> Hello David,
+> 
+> On Fri, May 17, 2019 at 10:43:45AM -0400, George G. Davis wrote:
+> > Hello David,
+> > 
+> > On Thu, May 16, 2019 at 02:27:44PM -0700, David Miller wrote:
+> > > From: "George G. Davis" <george_davis@mentor.com>
+> > > Date: Thu, 16 May 2019 11:23:08 -0400
+> > > 
+> > > > Unwind net_sysctl_init error exit goto spaghetti code
+> > > > 
+> > > > Suggested-by: Joshua Frkuska <joshua_frkuska@mentor.com>
+> > > > Signed-off-by: George G. Davis <george_davis@mentor.com>
+> > > 
+> > > Cleanups are not appropriate until the net-next tree opens back up.
+> > > 
+> > > So please resubmit at that time.
+> > 
+> > I fear that I may be distracted by other shiny objects by then but
+> > I'll make a reminder and try to resubmit during the next merge window.
+> 
+> Since the "Linux 5.2" kernel has been released [1], I'm guessing that the
+> net-next merge window is open now? If yes, the patch remains unchanged
+> since my initial post. Please consider applying or let me know when to
+> resubmit when the net-next merge window is again open.
 
-diff --git a/mm/z3fold.c b/mm/z3fold.c
-index 6397725b5ec6..7dffef2599c3 100644
---- a/mm/z3fold.c
-+++ b/mm/z3fold.c
-@@ -301,14 +301,11 @@ static void z3fold_unregister_migration(struct z3fold_pool *pool)
-  }
- 
- /* Initializes the z3fold header of a newly allocated z3fold page */
--static struct z3fold_header *init_z3fold_page(struct page *page,
-+static struct z3fold_header *init_z3fold_page(struct page *page, bool headless,
- 					struct z3fold_pool *pool, gfp_t gfp)
- {
- 	struct z3fold_header *zhdr = page_address(page);
--	struct z3fold_buddy_slots *slots = alloc_slots(pool, gfp);
--
--	if (!slots)
--		return NULL;
-+	struct z3fold_buddy_slots *slots;
- 
- 	INIT_LIST_HEAD(&page->lru);
- 	clear_bit(PAGE_HEADLESS, &page->private);
-@@ -316,6 +313,12 @@ static struct z3fold_header *init_z3fold_page(struct page *page,
- 	clear_bit(NEEDS_COMPACTING, &page->private);
- 	clear_bit(PAGE_STALE, &page->private);
- 	clear_bit(PAGE_CLAIMED, &page->private);
-+	if (headless)
-+		return zhdr;
-+
-+	slots = alloc_slots(pool, gfp);
-+	if (!slots)
-+		return NULL;
- 
- 	spin_lock_init(&zhdr->page_lock);
- 	kref_init(&zhdr->refcount);
-@@ -962,7 +965,7 @@ static int z3fold_alloc(struct z3fold_pool *pool, size_t size, gfp_t gfp,
- 	if (!page)
- 		return -ENOMEM;
- 
--	zhdr = init_z3fold_page(page, pool, gfp);
-+	zhdr = init_z3fold_page(page, bud == HEADLESS, pool, gfp);
- 	if (!zhdr) {
- 		__free_page(page);
- 		return -ENOMEM;
+Ping, "Linux 5.3" kernel has been released [1] and it appears that the
+5.4 merge window is open. The patch [2] remains unchanged since my initial
+post. Please consider applying it.
+
+Thanks!
+
 -- 
-2.17.1
+Regards,
+George
+[1] https://lwn.net/Articles/799250/
+[2] https://lore.kernel.org/patchwork/patch/1074969/
