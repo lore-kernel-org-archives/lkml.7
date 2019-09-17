@@ -5,65 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE992C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED568C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89DA221852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:31:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05AF206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:31:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="d4Y1LE9+";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="xxhskt1q"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="nhdSIJ0B";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="uQIYOeZi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728525AbfIQNbj (ORCPT
+        id S1728613AbfIQNbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:31:39 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:57951 "EHLO
+        Tue, 17 Sep 2019 09:31:43 -0400
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:41901 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728372AbfIQNbg (ORCPT
+        by vger.kernel.org with ESMTP id S1728389AbfIQNbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:31:36 -0400
+        Tue, 17 Sep 2019 09:31:38 -0400
 Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id D45D939E6;
-        Tue, 17 Sep 2019 09:31:33 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id B201539D1;
+        Tue, 17 Sep 2019 09:31:36 -0400 (EDT)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Tue, 17 Sep 2019 09:31:33 -0400
+  by compute4.internal (MEProxy); Tue, 17 Sep 2019 09:31:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=ZwW7fkRd9gZh9
-        tDNNySIyBWq5uzvW1saTrgDMoAFOvk=; b=d4Y1LE9+5YPArtmdXmpgmcn92BecV
-        iW9bhbWlVueDg+ZpgLeZro1c+F60+qDGdiARBYl4u9S++9iJ8nU4Nqqq064Q0qHB
-        hzrb6hRtYV90cOrtmwLP0oEaObY6dJUjXvwoZV9qJ6OW8KD7IPUJFLDIKcYBWbGz
-        qS/nWVnaOHCXbNTLmY1HytRTPTVJWyebRrJeDlLbQRykpiLugaX/1c/ruE9tFzNU
-        cO1Axz9/EBE8xACXsjUCHdYXQFFf9per2bU+xgciEJA4ylLKRnGAvho+b0Pcfpe1
-        2jmZslJX3wEjLUziZaNwgB/i7D6ZiS5NEFmHBx5rzkNcW2jUzy5HTJn6g==
+        :mime-version:content-transfer-encoding; s=fm1; bh=dX7odFuYQlYRo
+        aazX3l6kQgfWSrUlRAtCfmm0Llb/vo=; b=nhdSIJ0BeLlEZ4IIlAAQjRPlf21HP
+        ZO+QN0BRkv/FA5Z/+tCwmE4nP5oNfJJ5P4S7tpQdbbU5BwItnwv807Y7cPaFb+yd
+        ceurAaROCn59+sG5mibqkxbYmwo1QKHbmExMbCBHXqTYDln2iT/oApReJWdWlJTR
+        RBZ04cZ2R0v+wPCdajvqbarV7nMzxPTXciKLEoLV0ap7QzbWcjY0wEckGJgZNbtK
+        GS9qAtZGfRdubQY9DlW09fle0oocDDKRi15LRE2RH1ixX1kL8VUO1i51UmLUHOk4
+        2/XtfxEOhLkt5OgFQkaneSz4dHUizP0heqNJvBu480izoGonOHLEnpYJQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=ZwW7fkRd9gZh9tDNNySIyBWq5uzvW1saTrgDMoAFOvk=; b=xxhskt1q
-        hKcaUOxS7BV7J52wmR/pHhQhsNFvOHH9f6MLetOtLWD4aAJ2428PS/CI0K3fo2aZ
-        MCobfzbCSmPOHcGE9v6Eo5236oqOYFIzFos87+TTp4nk3gWnjLX2gTseSGRL+R48
-        7MoOfMPP9rHrnv1TKZTn41MGsHd0t29YUa+MdbMJ7ZAYd8RcMEQXVpjKm1Fx14bY
-        gAltumB2wprDROmM69TF2ZNkanp/NELcVPdA8LtxZlcVLKiQ+jv0Pai5QlJd0vvK
-        8kyb8ZZyjDSjjd0vMfqBj9lxEBODaOjs/s1co9U5ZkwAi2P7BBQMRQwYdKu3cTTa
-        Ex2CLHooN9+kOQ==
-X-ME-Sender: <xms:NeCAXdpbreVkFXAerqoEj-FOe2YWO636Zopgl38gEeSEyegrUV3QNw>
+        fm3; bh=dX7odFuYQlYRoaazX3l6kQgfWSrUlRAtCfmm0Llb/vo=; b=uQIYOeZi
+        uh1IdMphoAoUceTANPz/IybEQhFKSFTxEXks46G5RhEts7Nk7loSMWEB7oKfsvG3
+        j5VSNdA++TSlHQk4sSyvMp9Hg+pBfZ79vFSVF9nMQMKm+QAXqbscpmmX9Dli6Sem
+        R5+edUug9h9u5sbdQz9kwIDPRi1w+A2ZK6beP5lHDMHBpQqjKMdS5v4aCxBUeIoa
+        EheK/EbdIYIVJxOqSqM01PamTst8SmrSwHakV6dWFGtLw0NDUJc5CvQpyK8cTeX3
+        2+Plc2D+b3qCsNoPpG54gNOl4HS+4RfunWuW4WAVM+PWg3wmBIKymjFjvNlep8XY
+        BkkQ2nCxaBWiYg==
+X-ME-Sender: <xms:OOCAXVy-_eRR0a_dt70IyIT9up3kDxlhG5aU-eAoMa1cEX4tLjpGOg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudeigdefkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdefhedmnecujfgurhephffvuf
+    uegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhephffvuf
     ffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeffrghnihgvlhcuighuuceougig
     uhesugiguhhuuhdrgiihiieqnecukfhppeduleelrddvtddurdeiiedrtdenucfrrghrrg
     hmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihiienucevlhhushhtvghrufhi
     iigvpedu
-X-ME-Proxy: <xmx:NeCAXVIX7Y5s-xzrzGPWDzZUBjyxRA679fSVE5YzKLrjEHbBITy4_Q>
-    <xmx:NeCAXSgxmds41XRXftuYkr_5C2Y9WeDI1YZr80al--kqOYVilqLXuA>
-    <xmx:NeCAXW-d-r7wq-m0ZuUZ164WJKF6YZzb6lC2SeUTwnBqolMax0kz7g>
-    <xmx:NeCAXUGNZ8bMhweRGEb93l3dl8H9MV1qh3xA-lhY9-rhd0l1d65uC9qvvDw>
+X-ME-Proxy: <xmx:OOCAXWzRp3-k-UJbJ98QSE3h6hsVHo46LRiIZRg3WM4cyvWdei4oXQ>
+    <xmx:OOCAXX_BQ4164hswctjllb2J1UhGsGs2Ys205hRwU6OujTVNUvDjtA>
+    <xmx:OOCAXZiPHs5gAUMdcK4-IMwVmO43t4kKjtymPeRnl3iOshLWRpl8_w>
+    <xmx:OOCAXTJ4lzw1WG5_G4mZhBifELbXGp-noBiTv_lVE_lGFBo-FA29zB8F0R8>
 Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.66.0])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 771A5D6005B;
-        Tue, 17 Sep 2019 09:31:32 -0400 (EDT)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 40AE4D6005A;
+        Tue, 17 Sep 2019 09:31:35 -0400 (EDT)
 From:   Daniel Xu <dxu@dxuuu.xyz>
 To:     bpf@vger.kernel.org, songliubraving@fb.com, yhs@fb.com,
         andriin@fb.com, peterz@infradead.org, mingo@redhat.com,
@@ -72,9 +72,9 @@ Cc:     Daniel Xu <dxu@dxuuu.xyz>, ast@fb.com,
         alexander.shishkin@linux.intel.com, jolsa@redhat.com,
         namhyung@kernel.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH bpf-next 3/5] libbpf: Add helpers to extract perf fd from bpf_link
-Date:   Tue, 17 Sep 2019 06:30:54 -0700
-Message-Id: <20190917133056.5545-4-dxu@dxuuu.xyz>
+Subject: [PATCH bpf-next 5/5] libbpf: Add selftest for PERF_FORMAT_LOST perf read_format
+Date:   Tue, 17 Sep 2019 06:30:56 -0700
+Message-Id: <20190917133056.5545-6-dxu@dxuuu.xyz>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190917133056.5545-1-dxu@dxuuu.xyz>
 References: <20190917133056.5545-1-dxu@dxuuu.xyz>
@@ -85,113 +85,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is sometimes necessary to perform operations on the underlying perf fd.
-There is not currently a way to extract the fd given a bpf_link, so add a
-a pair of casting and getting helpers.
-
-The casting and getting helpers are nice because they let us define
-broad categories of links that makes it clear to users what they can
-expect to extract from what type of link.
-
-Acked-by: Song Liu <songliubraving@fb.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
 Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
 ---
- tools/lib/bpf/libbpf.c   | 21 +++++++++++++++++++++
- tools/lib/bpf/libbpf.h   | 13 +++++++++++++
- tools/lib/bpf/libbpf.map |  3 +++
- 3 files changed, 37 insertions(+)
+ .../selftests/bpf/prog_tests/attach_probe.c   | 32 ++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e0276520171b..1ca0acd1d823 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -4875,6 +4875,7 @@ int bpf_prog_load_xattr(const struct bpf_prog_load_attr *attr,
+diff --git a/tools/testing/selftests/bpf/prog_tests/attach_probe.c b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+index 5ecc267d98b0..3d636cccb6dc 100644
+--- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
++++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+@@ -1,6 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <test_progs.h>
  
- struct bpf_link {
- 	int (*destroy)(struct bpf_link *link);
-+	enum bpf_link_type type;
- };
- 
- int bpf_link__destroy(struct bpf_link *link)
-@@ -4908,6 +4909,24 @@ static int bpf_link__destroy_perf_event(struct bpf_link *link)
- 	return err;
- }
- 
-+const struct bpf_link_fd *bpf_link__as_fd(const struct bpf_link *link)
-+{
-+	if (link->type != LIBBPF_LINK_FD)
-+		return NULL;
-+
-+	return (struct bpf_link_fd *)link;
-+}
-+
-+enum bpf_link_type bpf_link__type(const struct bpf_link *link)
-+{
-+	return link->type;
-+}
-+
-+int bpf_link_fd__fd(const struct bpf_link_fd *link)
-+{
-+	return link->fd;
-+}
-+
- struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
- 						int pfd)
- {
-@@ -4931,6 +4950,7 @@ struct bpf_link *bpf_program__attach_perf_event(struct bpf_program *prog,
- 	if (!link)
- 		return ERR_PTR(-ENOMEM);
- 	link->link.destroy = &bpf_link__destroy_perf_event;
-+	link->link.type = LIBBPF_LINK_FD;
- 	link->fd = pfd;
- 
- 	if (ioctl(pfd, PERF_EVENT_IOC_SET_BPF, prog_fd) < 0) {
-@@ -5224,6 +5244,7 @@ struct bpf_link *bpf_program__attach_raw_tracepoint(struct bpf_program *prog,
- 	link = malloc(sizeof(*link));
- 	if (!link)
- 		return ERR_PTR(-ENOMEM);
-+	link->link.type = LIBBPF_LINK_FD;
- 	link->link.destroy = &bpf_link__destroy_fd;
- 
- 	pfd = bpf_raw_tracepoint_open(tp_name, prog_fd);
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index e8f70977d137..2ddef5315ff9 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -166,7 +166,20 @@ LIBBPF_API int bpf_program__pin(struct bpf_program *prog, const char *path);
- LIBBPF_API int bpf_program__unpin(struct bpf_program *prog, const char *path);
- LIBBPF_API void bpf_program__unload(struct bpf_program *prog);
- 
-+enum bpf_link_type {
-+	LIBBPF_LINK_FD,
++struct perf_read_output {
++	u64 count;
++	u64 lost;
 +};
 +
- struct bpf_link;
-+struct bpf_link_fd;
-+
-+/* casting APIs */
-+LIBBPF_API const struct bpf_link_fd *
-+bpf_link__as_fd(const struct bpf_link *link);
-+
-+/* getters APIs */
-+LIBBPF_API enum bpf_link_type bpf_link__type(const struct bpf_link *link);
-+LIBBPF_API int bpf_link_fd__fd(const struct bpf_link_fd *link);
+ ssize_t get_base_addr() {
+ 	size_t start;
+ 	char buf[256];
+@@ -32,6 +37,8 @@ void test_attach_probe(void)
+ 	const char *file = "./test_attach_probe.o";
+ 	struct bpf_program *kprobe_prog, *kretprobe_prog;
+ 	struct bpf_program *uprobe_prog, *uretprobe_prog;
++	struct perf_read_output kprobe_read_output;
++	const struct bpf_link_fd *kprobe_fd_link;
+ 	struct bpf_object *obj;
+ 	int err, prog_fd, duration = 0, res;
+ 	struct bpf_link *kprobe_link = NULL;
+@@ -40,7 +47,8 @@ void test_attach_probe(void)
+ 	struct bpf_link *uretprobe_link = NULL;
+ 	int results_map_fd;
+ 	size_t uprobe_offset;
+-	ssize_t base_addr;
++	ssize_t base_addr, nread;
++	int kprobe_fd;
  
- LIBBPF_API int bpf_link__destroy(struct bpf_link *link);
+ 	base_addr = get_base_addr();
+ 	if (CHECK(base_addr < 0, "get_base_addr",
+@@ -116,6 +124,28 @@ void test_attach_probe(void)
+ 	/* trigger & validate kprobe && kretprobe */
+ 	usleep(1);
  
-diff --git a/tools/lib/bpf/libbpf.map b/tools/lib/bpf/libbpf.map
-index d04c7cb623ed..216713b9eef6 100644
---- a/tools/lib/bpf/libbpf.map
-+++ b/tools/lib/bpf/libbpf.map
-@@ -189,4 +189,7 @@ LIBBPF_0.0.4 {
- LIBBPF_0.0.5 {
- 	global:
- 		bpf_btf_get_next_id;
-+		bpf_link__type;
-+		bpf_link__as_fd;
-+		bpf_link_fd__fd;
- } LIBBPF_0.0.4;
++	kprobe_fd_link = bpf_link__as_fd(kprobe_link);
++	if (CHECK(!kprobe_fd_link, "kprobe_link_as_fd",
++		  "failed to cast link to fd link\n"))
++		goto cleanup;
++
++	kprobe_fd = bpf_link_fd__fd(kprobe_fd_link);
++	if (CHECK(kprobe_fd < 0, "kprobe_get_perf_fd",
++	    "failed to get perf fd from kprobe link\n"))
++		goto cleanup;
++
++	/* Set to unexpected value so we can check the read(2) did stuff */
++	kprobe_read_output.lost = 1;
++	nread = read(kprobe_fd, &kprobe_read_output,
++		     sizeof(kprobe_read_output));
++	if (CHECK(nread != sizeof(kprobe_read_output), "kprobe_perf_read",
++		  "failed to read from perf fd\n"))
++		goto cleanup;
++	if (CHECK(kprobe_read_output.lost != 0, "kprobe_lost",
++		  "read wrong value from perf fd: %lu\n",
++		  kprobe_read_output.lost))
++		goto cleanup;
++
+ 	err = bpf_map_lookup_elem(results_map_fd, &kprobe_idx, &res);
+ 	if (CHECK(err, "get_kprobe_res",
+ 		  "failed to get kprobe res: %d\n", err))
 -- 
 2.21.0
 
