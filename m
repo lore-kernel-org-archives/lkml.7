@@ -2,116 +2,100 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB79C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F3ADC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D52D20644
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BD4820644
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:29:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Al/xUkzY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Al/xUkzY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391598AbfIQGZ5 (ORCPT
+        id S2403903AbfIQG3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:25:57 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2231 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727801AbfIQGZ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:25:57 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 8630A4953779977C334E;
-        Tue, 17 Sep 2019 14:25:55 +0800 (CST)
-Received: from [127.0.0.1] (10.177.223.23) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
- 14:25:51 +0800
-Subject: Re: [PATCH v4 1/5] locking/qspinlock: Rename
- arch_mcs_spin_unlock_contended to arch_mcs_pass_lock and make it more generic
-To:     Alex Kogan <alex.kogan@oracle.com>, <linux@armlinux.org.uk>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <will.deacon@arm.com>,
-        <arnd@arndb.de>, <longman@redhat.com>,
-        <linux-arch@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <tglx@linutronix.de>,
-        <bp@alien8.de>, <hpa@zytor.com>, <x86@kernel.org>,
-        <jglauber@marvell.com>
-CC:     <steven.sistare@oracle.com>, <daniel.m.jordan@oracle.com>,
-        <dave.dice@oracle.com>, <rahul.x.yadav@oracle.com>
-References: <20190906142541.34061-1-alex.kogan@oracle.com>
- <20190906142541.34061-2-alex.kogan@oracle.com>
-From:   Hanjun Guo <guohanjun@huawei.com>
-Message-ID: <22a45ca4-fcae-c805-596e-67f1809eb1dd@huawei.com>
-Date:   Tue, 17 Sep 2019 14:25:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.5.0
+        Tue, 17 Sep 2019 02:29:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40544 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726953AbfIQG3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:29:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 95899607C3; Tue, 17 Sep 2019 06:28:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568701739;
+        bh=GVf/WW705jjMvbH9rH5ECMCN5gTCGj+tK6F//7PhjVQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Al/xUkzYoqyHHsIyb9hQl5CkPQFSWDVgCMSmhxp23TuIIUbMddqIKcta7ATjn+lyM
+         fVixEHrd5ERXKURQFd1gawH9N+wwti0ZPLWAlfRUy1/9ol/OcKKnwUXZ32A20JnOlk
+         mCwpgsvtLBABQ7cFEs29ROOCGGVVJ5cjIGo8f+gY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 569B86032C;
+        Tue, 17 Sep 2019 06:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568701739;
+        bh=GVf/WW705jjMvbH9rH5ECMCN5gTCGj+tK6F//7PhjVQ=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=Al/xUkzYoqyHHsIyb9hQl5CkPQFSWDVgCMSmhxp23TuIIUbMddqIKcta7ATjn+lyM
+         fVixEHrd5ERXKURQFd1gawH9N+wwti0ZPLWAlfRUy1/9ol/OcKKnwUXZ32A20JnOlk
+         mCwpgsvtLBABQ7cFEs29ROOCGGVVJ5cjIGo8f+gY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 569B86032C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Chris Chiu <chiu@endlessm.com>
+Cc:     Jes Sorensen <jes.sorensen@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>
+Subject: Re: [RFC PATCH v7] rtl8xxxu: Improve TX performance of RTL8723BU on rtl8xxxu driver
+References: <20190805131452.13257-1-chiu@endlessm.com>
+        <d0047834-957d-0cf3-5792-31faa5315ad1@gmail.com>
+        <87wofibgk7.fsf@kamboji.qca.qualcomm.com>
+        <a3ac212d-b976-fb16-227f-3246a317c4a2@gmail.com>
+        <CAB4CAweWoFuXPci5Re6sdN_kB0i4DkpsYxux+GAHyRHWhC+hhA@mail.gmail.com>
+Date:   Tue, 17 Sep 2019 09:28:54 +0300
+In-Reply-To: <CAB4CAweWoFuXPci5Re6sdN_kB0i4DkpsYxux+GAHyRHWhC+hhA@mail.gmail.com>
+        (Chris Chiu's message of "Tue, 17 Sep 2019 09:48:32 +0800")
+Message-ID: <87woe7bfmh.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190906142541.34061-2-alex.kogan@oracle.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.223.23]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+Chris Chiu <chiu@endlessm.com> writes:
 
-On 2019/9/6 22:25, Alex Kogan wrote:
-> The new macro should accept the value to be stored into the lock argument
-> as another argument. This allows using the same macro in cases where the
-> value to be stored when passing the lock is different from 1.
-> 
-> Signed-off-by: Alex Kogan <alex.kogan@oracle.com>
-> Reviewed-by: Steve Sistare <steven.sistare@oracle.com>
-> ---
->  arch/arm/include/asm/mcs_spinlock.h | 4 ++--
->  kernel/locking/mcs_spinlock.h       | 6 +++---
->  kernel/locking/qspinlock.c          | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/mcs_spinlock.h b/arch/arm/include/asm/mcs_spinlock.h
-> index 529d2cf4d06f..f3f9efdcd2ca 100644
-> --- a/arch/arm/include/asm/mcs_spinlock.h
-> +++ b/arch/arm/include/asm/mcs_spinlock.h
-> @@ -14,9 +14,9 @@ do {									\
->  		wfe();							\
->  } while (0)								\
->  
-> -#define arch_mcs_spin_unlock_contended(lock)				\
-> +#define arch_mcs_pass_lock(lock, val)					\
+> On Mon, Aug 12, 2019 at 11:21 PM Jes Sorensen <jes.sorensen@gmail.com> wrote:
+>>
+>> On 8/12/19 10:32 AM, Kalle Valo wrote:
+>> >> Signed-off-by: Jes Sorensen <Jes.Sorensen@gmail.com>
+>> >
+>> > This is marked as RFC so I'm not sure what's the plan. Should I apply
+>> > this?
+>>
+>> I think it's at a point where it's worth applying - I kinda wish I had
+>> had time to test it, but I won't be near my stash of USB dongles for a
+>> little while.
+>>
+>> Cheers,
+>> Jes
+>>
+>
+> Gentle ping. Any suggestions for the next step?
 
-arch_mcs_spin_unlock_contended() has a matching function arch_mcs_spin_lock_contended(),
-please see include/asm-generic/mcs_spinlock.h, so if we update this function name,
-should we update the matching one as well? and update the relevant comments as well?
+Please resubmit without the RFC label.
 
->  do {									\
-> -	smp_store_release(lock, 1);					\
-> +	smp_store_release((lock), (val));				\
->  	dsb_sev();							\
->  } while (0)
->  
-> diff --git a/kernel/locking/mcs_spinlock.h b/kernel/locking/mcs_spinlock.h
-> index 5e10153b4d3c..84327ca21650 100644
-> --- a/kernel/locking/mcs_spinlock.h
-> +++ b/kernel/locking/mcs_spinlock.h
-> @@ -41,8 +41,8 @@ do {									\
->   * operations in the critical section has been completed before
->   * unlocking.
->   */
-> -#define arch_mcs_spin_unlock_contended(l)				\
-
-Before this line of the code, there is:
-
-#ifndef arch_mcs_spin_lock_contended
-
-...
-
-#define arch_mcs_spin_lock_contended(l)                 \
-
-So #ifndef should be updated too.
-
-Thanks
-Hanjun
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
