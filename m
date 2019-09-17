@@ -2,120 +2,95 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 389CBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DC52C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC9F216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C1620678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:44:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rPP77/dr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mHgLFOns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390980AbfIQFlM (ORCPT
+        id S2392423AbfIQFof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 01:41:12 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37974 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725922AbfIQFlL (ORCPT
+        Tue, 17 Sep 2019 01:44:35 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:33308 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfIQFof (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 01:41:11 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8H5etax020871;
-        Tue, 17 Sep 2019 00:40:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568698855;
-        bh=KrUGt79L9HyCReyRHy+1q7weFGZYycU7t3SvXD8FMjo=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rPP77/drpjX80wevN/uf2h4aL9EqqnnWsRtm8KsqulnHb+cV5MXs2Uvn/1ROtP1p2
-         WwDwPYzkADTc7nj95BnK+fb4xuN4sl9AnLjIvT0NgsNUAjT+KAAbTsKFuIGFNVHAzv
-         7anpduu0AStmrvwfpZftm3YumoWYMc2Dq5lUzr7M=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8H5etfQ075764
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 17 Sep 2019 00:40:55 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
- Sep 2019 00:40:52 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 17 Sep 2019 00:40:52 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8H5ep9o094511;
-        Tue, 17 Sep 2019 00:40:52 -0500
-Subject: Re: pci: endpoint test BUG
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hillf Danton <hdanton@sina.com>
-CC:     Randy Dunlap <rdunlap@infradead.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190916020630.1584-1-hdanton@sina.com>
- <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <815ad936-8b98-0931-89f7-b97922a7c77d@ti.com>
-Date:   Tue, 17 Sep 2019 11:10:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 17 Sep 2019 01:44:35 -0400
+Received: by mail-ua1-f65.google.com with SMTP id u31so711727uah.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 22:44:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aWLbKiwRlS208Z3+3AMSNgvhyJJKUZ0x7Hzk0zm86yg=;
+        b=mHgLFOns1Q8pXhphDAfob5kfnh4UcmO03EkmEF12HNV6uR4Qno8zQEPxHXzhgHUrcr
+         kewUlr7NxVnQ4PnWNzV8t88xJLA3EKmTZUxISQDqOotlVDFgEd7zAQ/uPjFpd7Hldor3
+         d9oBHQku82cjL3DWPdKTo2lBdvoYiUd6yB1XHD8EXnHAbSwbugEAF7vPCB7W+hcHHICC
+         4XMgP+jZQENSLrAeTm/uNbxHaA0YjpvBJTs2fxmDN51BvYHMmzyk/2QYv9K2Vii18Xk+
+         MsJRPeayYD3HVFu2SvFWk6qswSvGngTNlz2DrWjU6LOkjOQy1g2Osvw1nC+/G7RsHuC8
+         Terw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aWLbKiwRlS208Z3+3AMSNgvhyJJKUZ0x7Hzk0zm86yg=;
+        b=M1A3lPhRXkHZAH6oOzbF3K2KGT/vSzpJcZwmTpAEcjT4D+50Nch3bHmlCrCcYz2udq
+         tYwVopn44buB0Aj1zkdlIxclhfaurkcXSXA0zcUVu68tPEdZpOJag/GRSIUWhw+SGZBR
+         zwBmPPOZ7LE/YkTwYuhVfCa4rj9X66lSnRv/3yug1rilY5I/zdEU+gnVby923iM6jRlt
+         1sTLepy3NlqU+i1wVTItCR/XDLXeqvebfOyYWjuMeHKCeek6EiU/+htRPWbso3NG4jjG
+         /9Vf44AL/X7rlh2UvXsQLfF1BC+HWwFWsyyQKwUK21YW9GqCtn3RzK2jaBBtEAQqMPqd
+         gyMQ==
+X-Gm-Message-State: APjAAAWl5UJxBxXUPj7ItES6On1FnN68HwYDQRsdnS98pb2VEsuG/JFd
+        AYjOgTdvziub9MfEKxirblOdhR0Von3mAhTL5gqUCA==
+X-Google-Smtp-Source: APXvYqykoJrSGi+xeUz/j8IFT5604ond2RCO1ES3sXqJPjir0wt/iu+bHY6zaeJiBuBtp/FFUSbJNrd1ImAhCmm6N9E=
+X-Received: by 2002:ab0:539d:: with SMTP id k29mr612429uaa.67.1568699073725;
+ Mon, 16 Sep 2019 22:44:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190916112246.GA6693@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1568240476.git.amit.kucheria@linaro.org>
+ <c88947d18c65a692a8f314e4ad996d9d2a997997.1568240476.git.amit.kucheria@linaro.org>
+ <5d7fe862.1c69fb81.8e5e3.2325@mx.google.com>
+In-Reply-To: <5d7fe862.1c69fb81.8e5e3.2325@mx.google.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 17 Sep 2019 11:14:22 +0530
+Message-ID: <CAHLCerMnFvMvAYOnJHoHwkMNhn1n=vpT1TL9nuGM8tBc0sDDRg@mail.gmail.com>
+Subject: Re: [PATCH 4/5] clk: qcom: Initialise clock drivers earlier
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>, ilina@codeaurora.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Taniya Das <tdas@codeaurora.org>,
+        linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 1:24 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-09-11 15:32:33)
+> > Initialise the clock drivers on sdm845 and qcs404 in core_initcall so we
+> > can have earlier access to cpufreq during booting.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+>
+> Did you want this patch to go through clk tree?
 
-On 16/09/19 4:52 PM, Lorenzo Pieralisi wrote:
-> On Mon, Sep 16, 2019 at 10:06:30AM +0800, Hillf Danton wrote:
->>
->> On Sun, 15 Sep 2019 09:34:37 -0700
->>>
->>> Kernel is 5.3-rc8 on x86_64.
->>>
->>> Loading and removing the pci-epf-test module causes a BUG.
->>>
->>>
->>> [40928.435755] calling  pci_epf_test_init+0x0/0x1000 [pci_epf_test] @ 12132
->>> [40928.436717] initcall pci_epf_test_init+0x0/0x1000 [pci_epf_test] returned 0 after 891 usecs
->>> [40936.996081] ==================================================================
->>> [40936.996125] BUG: KASAN: use-after-free in pci_epf_remove_cfs+0x1ae/0x1f0
->>> [40936.996153] Write of size 8 at addr ffff88810a22a068 by task rmmod/12139
->>
->> Fix fb0de5b8dcc6 and ef1433f717a2 if the current group::group_entry
->> used by pci epf does not break how configfs uses it.
->>
->> --- a/drivers/pci/endpoint/pci-epf-core.c
->> +++ b/drivers/pci/endpoint/pci-epf-core.c
->> @@ -153,9 +153,11 @@ static void pci_epf_remove_cfs(struct pc
->>  		return;
->>  
->>  	mutex_lock(&pci_epf_mutex);
->> -	list_for_each_entry_safe(group, tmp, &driver->epf_group, group_entry)
->> +	list_for_each_entry_safe(group, tmp, &driver->epf_group,
->> +							group_entry) {
->> +		list_del_init(&group->group_entry);
->>  		pci_ep_cfs_remove_epf_group(group);
->> -	list_del(&driver->epf_group);
->> +	}
->>  	mutex_unlock(&pci_epf_mutex);
->>  }
+Yes, This patch can go in via the clk tree regardless of the rest of the series.
 
-
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-> 
-> Thank you Hillf. Kishon, can you confirm that's the proper fix for
-> this bug please ? I would like to turn this into a patch and merge
-> it in the upcoming merge window PR so it ought to be fairly quick,
-> please let me know asap.
-> 
-> Lorenzo
-> 
+Regards,
+Amit
