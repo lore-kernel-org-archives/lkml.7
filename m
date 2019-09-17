@@ -2,338 +2,216 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D0C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD10DC4CED0
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F57216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:12:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568761956;
-	bh=9vdtRdhs1/jAWjS0Kms4vvz9bTAK74kuM+HY/7RQ3PU=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=AzHYbHyWsBC82V7t22dkTpHhV8tzIFlPHSNqfGRv05fBm9UyJrPBPjA/DOfJdQr0U
-	 G2px+JPTrFXne3USmYF2f0s7xdCz53w09pLF6VgSWX5v5vWNaICeDx/iGm0vOn0nIW
-	 kyXNpt6HSgvJ6FCgmxrz+1z0wxAUCEIaREc+Fk5s=
+	by mail.kernel.org (Postfix) with ESMTP id 7C03F2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:19:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCs6Vbxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbfIQXMf (ORCPT
+        id S1728691AbfIQXTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 19:12:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38444 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfIQXMf (ORCPT
+        Tue, 17 Sep 2019 19:19:54 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46156 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728593AbfIQXTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 19:12:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id k5so11714187iol.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 16:12:34 -0700 (PDT)
+        Tue, 17 Sep 2019 19:19:54 -0400
+Received: by mail-qk1-f194.google.com with SMTP id 201so5888252qkd.13;
+        Tue, 17 Sep 2019 16:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=yqGgBojIZyVHVy1krOvbhQKaEfiFOGw5rhz3fKPGEaA=;
-        b=OZZgJfUSr3+vfbhngvDVpU753l8In96gprFSlB6dqNTivYS/439DQlnVa8qjZ+Ls64
-         HaBo2fzH2lrKAuL0eAXDHknFX2TINolbzYVKxbuXzjXUxbCnANK4pE/YIDh19IK4/M7M
-         EkC76eTtz1HkpbZjCTlpR4Bsnts6f0gVrvIzg=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rW0fUUzyh5J4//FBaJRiFgdgywM+/ZSdY6ujE4+DAUk=;
+        b=lCs6VbxaKxAcvuw2itRNfnACUY+KBtbP/PA2lQCYDPK1Qqch4hCbKt0Fgzd1ONvV3+
+         FimQFOOM3mAqLKmB2aNVhOJGIHnRTpljEE9amCuPiKljm+LnLC6i7AeyOKQYKI9CHZoH
+         6D2bGca0Tl1I4F10dOUt2ARwHgKGGa2kZtR++DXCxQe0yNQ2iHOFvzcWFFaF7RZL+ZRD
+         eo1qVjORUf+KuGyKYzXsMLDdumRW5gkiD1jTjKzAElZKQ1Hs2nj5JZxrHFWFc0o5MObc
+         iYtgCf21N9yIQIi7FjISAmYevQ/pObU0lYa9fyXp/OUOlDrjC5nVkbbhkeHowVo7GN6K
+         UBEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yqGgBojIZyVHVy1krOvbhQKaEfiFOGw5rhz3fKPGEaA=;
-        b=AzjheuDRuLNg842pNaOJTy0bKdPrf9r3YT3LMn5s4XJJj+S47pvdFi6uDkg943pbRX
-         jmrhtObGo0j5wXdnhdFCoNJH0FV4lNdDQrq8u95vovuIb1x3kk0YonL9M6qud2EsJacQ
-         5mwMExv66KjytAw9ICQdcDh63VYRxb1MwAOd2vUWf0RqiBA2gzY9pi7RO2yiqXlYzhpo
-         rEzBFmWV/K7B8sujSjFldFVB1dPeoPIiZpWjgbY0g+JMquqa5w4ID0ZOjyUYjclidGRE
-         wY1VNFPsAT0/Yo6CA7F1YOz2zNrCHQvJ2/qSFb0dGIAQA4G7OulpIw6h8vVuOM8wKSEC
-         srzA==
-X-Gm-Message-State: APjAAAXug1zdbTCK0TeraEWm2qfdUt87Me9JUE1vSh9SJWsB2kGZbXKX
-        MQqa3WF25MJPeu2DEajY/WOZMg==
-X-Google-Smtp-Source: APXvYqwZqc4YmgGMXhuTArUpNJFTe5Nh6XUSxRt8U66ZmSINMRpYohUQ2oaktvY64awyt0Pbi1Tgmg==
-X-Received: by 2002:a6b:d208:: with SMTP id q8mr1694483iob.47.1568761953963;
-        Tue, 17 Sep 2019 16:12:33 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m67sm3241954iof.21.2019.09.17.16.12.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 16:12:33 -0700 (PDT)
-Subject: Re: [PATCH v2] media: vimc: Implement debayer control for mean window
- size
-To:     Arthur Moraes do Lago <arthurmoraeslago@gmail.com>,
-        mchehab@kernel.org, helen.koike@collabora.com,
-        hverkuil-cisco@xs4all.nl, andrealmeid@collabora.com,
-        laispc19@gmail.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20190917225317.5872-1-arthurmoraeslago@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <39078cb4-1ea5-e97e-0323-0318b42910c6@linuxfoundation.org>
-Date:   Tue, 17 Sep 2019 17:12:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rW0fUUzyh5J4//FBaJRiFgdgywM+/ZSdY6ujE4+DAUk=;
+        b=FF4q22tMDiiDt+Bthx0hOBElYpVJ2zmoKZZf/jBg4kb68qg15XYUZWwP2uxKVU/ASe
+         sakm3CsNSUjoh8KExActCnYnfihZggrk8bn1qAoU/IgIBGY/vPV/rYIzZ3RE8U5nqVhP
+         JbbwOu4g4sCz2D4vhd25EU00twPVcIdVl8iiDVhY8iaFCKUhhUJ2IyYf5N0SdqsI949b
+         EMmCum7ptZuSsU1UJAf6U0PPO8pCUex8OTZCaQDg7I7gIWXKr3ZfONohvj+LlZBn0YW5
+         YMnOQ34bhwdVnAfy3wtBwIztb/+erwNlePdAZlVs0tvl+rJga5JELvx51KlRXlSBlyip
+         zVUA==
+X-Gm-Message-State: APjAAAXAKaSVRxYtA5LKBLOyNSfYetKtifjPfPc6uFTIdiHUsl1jgCwZ
+        dRglrBypDecFUTvpTd5r5NtK9aQtLBiPtBfnoI8=
+X-Google-Smtp-Source: APXvYqw8N50R1EkGST4sURMrvsr2zGYEOgcUNG/iu4IF+XBMsJJxJ7g8waXOxXrpMDZStlLRdjpv9Yi1hiF693QWKWc=
+X-Received: by 2002:a05:620a:119a:: with SMTP id b26mr1147148qkk.39.1568762391880;
+ Tue, 17 Sep 2019 16:19:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190917225317.5872-1-arthurmoraeslago@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-8-ivan.khoronzhuk@linaro.org>
+In-Reply-To: <20190916105433.11404-8-ivan.khoronzhuk@linaro.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 17 Sep 2019 16:19:40 -0700
+Message-ID: <CAEf4Bzaidog3n0YP6F5dL2rCrHtKCOBXS0as7usymk8Twdro4w@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 07/14] samples: bpf: add makefile.target for
+ separate CC target build
+To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/17/19 4:53 PM, Arthur Moraes do Lago wrote:
-> Add mean window size parameter for debayer filter as a control in
-> vimc-debayer.
-> 
-> vimc-debayer was patched to allow changing mean windows parameter
-> of the filter without needing to reload the driver. The parameter
-> can now be set using a v4l2-ctl control(mean_window_size).
-> 
-> Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
-> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
-> 
-> Small fixes to vimc debayer mean window size patch
+On Mon, Sep 16, 2019 at 3:58 AM Ivan Khoronzhuk
+<ivan.khoronzhuk@linaro.org> wrote:
+>
+> The makefile.target is added only and will be used in
+
+typo: Makefile
+
+> sample/bpf/Makefile later in order to switch cross-compiling on CC
+
+on -> to
+
+> from HOSTCC environment.
+>
+> The HOSTCC is supposed to build binaries and tools running on the host
+> afterwards, in order to simplify build or so, like "fixdep" or else.
+> In case of cross compiling "fixdep" is executed on host when the rest
+> samples should run on target arch. In order to build binaries for
+> target arch with CC and tools running on host with HOSTCC, lets add
+> Makefile.target for simplicity, having definition and routines similar
+> to ones, used in script/Makefile.host. This allows later add
+> cross-compilation to samples/bpf with minimum changes.
+>
+> The tprog stands for target programs built with CC.
+
+Why tprog? Could we just use prog: hostprog vs prog.
+
+>
+> Makefile.target contains only stuff needed for samples/bpf, potentially
+> can be reused later and now needed only for unblocking tricky
+> samples/bpf cross compilation.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
 > ---
-> Changes in V2:
->   - Updated documentation
->   - Added v4l2_subev_core_ops to solve errors in v4l2-ctl compliance test
->   - Changed control naming to follow English capitalization rules
->   - Rebased to Shuah Khan's newest patch series 171283
->      ("Collapse vimc single monolithic driver")
->   - Change maximum value for mean window size
-> 
-> We did run streaming tests, the value of 1 for mean window size has a
-> nice side effect of not applying any filter, so we can see the original
-> pattern. The value of 99 for mean window size worked, but was very slow.
-> We wanted to find a way to show that higher values for mean window size
-> yielded very similar results to just blurring the image, but we could
-> not find any way to show this, so we just made the maximum value 25,
-> which runs faster, but is still probably a little high.
-> ---
->   Documentation/media/v4l-drivers/vimc.rst   | 10 +--
->   drivers/media/platform/vimc/vimc-common.h  |  1 +
->   drivers/media/platform/vimc/vimc-debayer.c | 89 +++++++++++++++++++---
->   3 files changed, 79 insertions(+), 21 deletions(-)
-> 
-> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-> index a582af0509ee..91c909904b87 100644
-> --- a/Documentation/media/v4l-drivers/vimc.rst
-> +++ b/Documentation/media/v4l-drivers/vimc.rst
-> @@ -80,9 +80,7 @@ vimc-capture:
->           Module options
->   ---------------
->   
-> -Vimc has a few module parameters to configure the driver.
-> -
-> -        param=value
-> +Vimc has a module parameters to configure the driver.
+>  samples/bpf/Makefile.target | 75 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 samples/bpf/Makefile.target
+>
+> diff --git a/samples/bpf/Makefile.target b/samples/bpf/Makefile.target
+> new file mode 100644
+> index 000000000000..fb6de63f7d2f
+> --- /dev/null
+> +++ b/samples/bpf/Makefile.target
+> @@ -0,0 +1,75 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# ==========================================================================
+> +# Building binaries on the host system
+> +# Binaries are not used during the compilation of the kernel, and intendent
 
-parameter
+typo: intended
 
->   
->   * ``sca_mult=<unsigned int>``
->   
-> @@ -91,12 +89,6 @@ Vimc has a few module parameters to configure the driver.
->           original one. Currently, only supports scaling up (the default value
->           is 3).
->   
-> -* ``deb_mean_win_size=<unsigned int>``
-> -
-> -        Window size to calculate the mean. Note: the window size needs to be an
-> -        odd number, as the main pixel stays in the center of the window,
-> -        otherwise the next odd number is considered (the default value is 3).
-> -
->   Source code documentation
->   -------------------------
->   
-> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
-> index 236412ad7548..3a5102ddf794 100644
-> --- a/drivers/media/platform/vimc/vimc-common.h
-> +++ b/drivers/media/platform/vimc/vimc-common.h
-> @@ -19,6 +19,7 @@
->   #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
->   #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
->   #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
-> +#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
->   
->   #define VIMC_FRAME_MAX_WIDTH 4096
->   #define VIMC_FRAME_MAX_HEIGHT 2160
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index 37f3767db469..76df2ac110c0 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -11,17 +11,12 @@
->   #include <linux/platform_device.h>
->   #include <linux/vmalloc.h>
->   #include <linux/v4l2-mediabus.h>
-> +#include <media/v4l2-ctrls.h>
-> +#include <media/v4l2-event.h>
->   #include <media/v4l2-subdev.h>
->   
->   #include "vimc-common.h"
->   
-> -static unsigned int deb_mean_win_size = 3;
-> -module_param(deb_mean_win_size, uint, 0000);
-> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
-> -	"NOTE: the window size needs to be an odd number, as the main pixel "
-> -	"stays in the center of the window, otherwise the next odd number "
-> -	"is considered");
-> -
->   enum vimc_deb_rgb_colors {
->   	VIMC_DEB_RED = 0,
->   	VIMC_DEB_GREEN = 1,
-> @@ -46,6 +41,8 @@ struct vimc_deb_device {
->   	u8 *src_frame;
->   	const struct vimc_deb_pix_map *sink_pix_map;
->   	unsigned int sink_bpp;
-> +	unsigned int mean_win_size;
-> +	struct v4l2_ctrl_handler hdl;
->   };
->   
->   static const struct v4l2_mbus_framefmt sink_fmt_default = {
-> @@ -346,11 +343,18 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
->   	return 0;
->   }
->   
-> +static const struct v4l2_subdev_core_ops vimc_deb_core_ops = {
-> +	.log_status = v4l2_ctrl_subdev_log_status,
-> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
-> +};
-> +
->   static const struct v4l2_subdev_video_ops vimc_deb_video_ops = {
->   	.s_stream = vimc_deb_s_stream,
->   };
->   
->   static const struct v4l2_subdev_ops vimc_deb_ops = {
-> +	.core = &vimc_deb_core_ops,
->   	.pad = &vimc_deb_pad_ops,
->   	.video = &vimc_deb_video_ops,
->   };
-> @@ -384,7 +388,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
->   	 * the top left corner of the mean window (considering the current
->   	 * pixel as the center)
->   	 */
-> -	seek = deb_mean_win_size / 2;
-> +	seek = vdeb->mean_win_size / 2;
->   
->   	/* Sum the values of the colors in the mean window */
->   
-> @@ -474,6 +478,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
->   
->   }
->   
-> +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
-> +					    unsigned int mean_win_size)
-> +{
-> +	if (vdeb->mean_win_size == mean_win_size)
-> +		return;
-> +	vdeb->mean_win_size = mean_win_size;
-> +}
-> +
-> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
-> +{
-> +	struct vimc_deb_device *vdeb =
-> +		container_of(ctrl->handler, struct vimc_deb_device, hdl);
-> +
-> +	switch (ctrl->id) {
-> +	case VIMC_CID_MEAN_WIN_SIZE:
-> +		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
-> +	.s_ctrl = vimc_deb_s_ctrl,
-> +};
-> +
->   static void vimc_deb_release(struct v4l2_subdev *sd)
->   {
->   	struct vimc_deb_device *vdeb =
-> @@ -495,6 +526,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
->   	vimc_ent_sd_unregister(ved, &vdeb->sd);
->   }
->   
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
-> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
-> +	.id = VIMC_CID_VIMC_CLASS,
-> +	.name = "VIMC Controls",
+> +# to be build for target board, target board can be host ofc. Added to build
 
-Make this VIMC Debayer Controls?
+What's ofc, is it "of course"?
 
-> +	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
-> +};
-> +
-> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
-> +	.ops = &vimc_deb_ctrl_ops,
-> +	.id = VIMC_CID_MEAN_WIN_SIZE,
-> +	.name = "Mean Window Size",
-> +	.type = V4L2_CTRL_TYPE_INTEGER,
-> +	.min = 1,
-> +	.max = 25,
-> +	.step = 2,
-> +	.def = 3,
-> +};
-> +
->   struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->   				     const char *vcfg_name)
->   {
-> @@ -507,6 +556,16 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->   	if (!vdeb)
->   		return NULL;
->   
-> +	/* Create controls: */
-> +	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
-> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
-> +	vdeb->sd.ctrl_handler = &vdeb->hdl;
-> +	if (vdeb->hdl.error) {
-> +		ret = vdeb->hdl.error;
-> +		goto err_free_vdeb;
-> +	}
-> +
->   	/* Initialize ved and sd */
->   	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
->   				   vcfg_name,
-> @@ -514,13 +573,12 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->   				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
->   				   MEDIA_PAD_FL_SOURCE},
->   				   &vimc_deb_int_ops, &vimc_deb_ops);
-> -	if (ret) {
-> -		kfree(vdeb);
-> -		return NULL;
-> -	}
-> +	if (ret)
-> +		goto err_free_hdl;
->   
->   	vdeb->ved.process_frame = vimc_deb_process_frame;
->   	vdeb->dev = &vimc->pdev.dev;
-> +	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
->   
->   	/* Initialize the frame format */
->   	vdeb->sink_fmt = sink_fmt_default;
-> @@ -534,4 +592,11 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
->   	vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
->   
->   	return &vdeb->ved;
-> +
-> +err_free_hdl:
-> +	v4l2_ctrl_handler_free(&vdeb->hdl);
+> +# binaries to run not on host system.
+> +#
+> +# Sample syntax (see Documentation/kbuild/makefiles.rst for reference)
+> +# tprogs-y := xsk_example
+> +# Will compile xdpsock_example.c and create an executable named xsk_example
 
-Free the handle from vimc_deb_release()
+You mix references to xsk_example and xdpsock_example, which is very
+confusing. I'm guessing you meant to use xdpsock_example consistently.
 
-> +err_free_vdeb:
-> +	kfree(vdeb);
+> +#
+> +# tprogs-y    := xdpsock
+> +# xdpsock-objs := xdpsock_1.o xdpsock_2.o
+> +# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
+> +# xdpsock, based on xdpsock_1.o and xdpsock_2.o
+> +#
+> +# Inherited from scripts/Makefile.host
+
+"Inspired by" or "Derived from" would be probably more appropriate term :)
+
+> +#
+> +__tprogs := $(sort $(tprogs-y))
 > +
-> +	return NULL;
->   }
-> 
+> +# C code
+> +# Executables compiled from a single .c file
+> +tprog-csingle  := $(foreach m,$(__tprogs), \
+> +                       $(if $($(m)-objs),,$(m)))
+> +
+> +# C executables linked based on several .o files
+> +tprog-cmulti   := $(foreach m,$(__tprogs),\
+> +                       $(if $($(m)-objs),$(m)))
+> +
+> +# Object (.o) files compiled from .c files
+> +tprog-cobjs    := $(sort $(foreach m,$(__tprogs),$($(m)-objs)))
+> +
+> +tprog-csingle  := $(addprefix $(obj)/,$(tprog-csingle))
+> +tprog-cmulti   := $(addprefix $(obj)/,$(tprog-cmulti))
+> +tprog-cobjs    := $(addprefix $(obj)/,$(tprog-cobjs))
+> +
+> +#####
+> +# Handle options to gcc. Support building with separate output directory
+> +
+> +_tprogc_flags   = $(TPROGS_CFLAGS) \
+> +                 $(TPROGCFLAGS_$(basetarget).o)
+> +
+> +# $(objtree)/$(obj) for including generated headers from checkin source files
+> +ifeq ($(KBUILD_EXTMOD),)
+> +ifdef building_out_of_srctree
+> +_tprogc_flags   += -I $(objtree)/$(obj)
+> +endif
+> +endif
+> +
+> +tprogc_flags    = -Wp,-MD,$(depfile) $(_tprogc_flags)
+> +
+> +# Create executable from a single .c file
+> +# tprog-csingle -> Executable
+> +quiet_cmd_tprog-csingle        = CC  $@
+> +      cmd_tprog-csingle        = $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ $< \
+> +               $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
+> +$(tprog-csingle): $(obj)/%: $(src)/%.c FORCE
+> +       $(call if_changed_dep,tprog-csingle)
+> +
+> +# Link an executable based on list of .o files, all plain c
+> +# tprog-cmulti -> executable
+> +quiet_cmd_tprog-cmulti = LD  $@
+> +      cmd_tprog-cmulti = $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ \
+> +                         $(addprefix $(obj)/,$($(@F)-objs)) \
+> +                         $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
+> +$(tprog-cmulti): $(tprog-cobjs) FORCE
+> +       $(call if_changed,tprog-cmulti)
+> +$(call multi_depend, $(tprog-cmulti), , -objs)
+> +
+> +# Create .o file from a single .c file
+> +# tprog-cobjs -> .o
+> +quiet_cmd_tprog-cobjs  = CC  $@
+> +      cmd_tprog-cobjs  = $(CC) $(tprogc_flags) -c -o $@ $<
+> +$(tprog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
+> +       $(call if_changed_dep,tprog-cobjs)
+> --
+> 2.17.1
+>
 
-thanks,
--- Shuah
+tprogs is quite confusing, but overall looks good to me.
