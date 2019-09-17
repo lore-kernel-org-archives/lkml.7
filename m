@@ -2,192 +2,297 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64934C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAECC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24BAA21897
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:21:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="n+xRrcAx"
+	by mail.kernel.org (Postfix) with ESMTP id E1E62214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:24:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568723050;
+	bh=fvc1B25q+wpmmsBosHvZ5+1URMnECZuZln3G5v0t/zo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AMIQhVBABQzWCY/Wn10GhOVlPE5LVPJu1niB1gSDpMFwiErNeNeAjxsbPx9fxPi9M
+	 fV8hgAnSixVVTH+p5H+KjIr9jkq1kTQ1Ro5Zwxu22EfLUvZkX5wBaTWQadrjLbj/8t
+	 Uf7VlfXM5mvzExzEhYBHajR8ekgRpvSoTDu+tI2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbfIQMVq (ORCPT
+        id S1727897AbfIQMYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:21:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39503 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727334AbfIQMVp (ORCPT
+        Tue, 17 Sep 2019 08:24:09 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34603 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbfIQMYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:21:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i1so2069977pfa.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4BRlkDiRVpYHDuvyTB4ajOSpeeuxZXo5KFyEK1n6laU=;
-        b=n+xRrcAxRqHVDzDR8635HzhcaJc9SQ5a/X+xP5vM+yGZVFp7VNLWK02OxrDd1G45x3
-         b2+4l08qr1pXwzGWdMejaAU5FsvShMnP1RxUBt8V45ojCcED5nGW2ZSu0vfKTT/Fe475
-         rHMifPXiXzTCUdF2lZaxw/ErXTv+9WLWAZ4PG1FywT2//+Jy2guEoNey0v9ekNlvftQ+
-         QxGaHvCV3SQ+toXL9oQUUZd0CbuFHQg0mADO/1tcJkPSFuP5OwrTJqBPiKlDnCQ42cg5
-         KK6dhqG1ARgtYEvOCSmzVVIVnyYPRSwi6VcjNZUIRSUWhbTDkfxGskWp1HQdNL8kM/Uu
-         l5mg==
+        Tue, 17 Sep 2019 08:24:08 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r22so2749597lfm.1;
+        Tue, 17 Sep 2019 05:24:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4BRlkDiRVpYHDuvyTB4ajOSpeeuxZXo5KFyEK1n6laU=;
-        b=P1gRzeZOZGlI+eF/KujjRkiUC+jeTEavxC99KYGEJFGAWjCZye3qxJHyiOi3yKAlBJ
-         xs7rr2pSVVTDczVpiCQPEawktyt8HDQF1DsgRBn6qsW/hPacm5sHA/z4oX+NliuDFF3Q
-         ahj7DgfP0khkZIt1MSk9H2lxj8bSUSXx4G1/7zwJyG3vbgBJs7xVHUdo4pZ1FZpWVLOU
-         vGVXFZstWgpP8KPwQ31fxdbuEzjcI16+IHUuwH+GvKmFpgidzRno4Ze6tfrB9+qcoIml
-         FgakQL1JJ72JTLaDJrFxUa2bi0H1PxKXPxzQvApbxnwyIf75KEYt5sA4vuuYzXTjLbEA
-         57tA==
-X-Gm-Message-State: APjAAAV/wqiyB+O4Vi9ZuwJuKltemv067qsmcuYvF0IWISaAj0OQGGTd
-        jfUhzpl76rOd84CmOSbAIHKIGEaaGlsSxxQ97hNzgw==
-X-Google-Smtp-Source: APXvYqz85P2t1gk6XbriGFr+HUaiGczYquTiq8YyL69AsLE8BXdF4U6nsNjDL862ow7ePc6f/hPNV9XSNJ31zR1l0W8=
-X-Received: by 2002:a17:90a:1990:: with SMTP id 16mr4585471pji.47.1568722904678;
- Tue, 17 Sep 2019 05:21:44 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ATmMm4PtOzpf5MHakWpyzAkkWvJPFHoj6oF0JiZe8g8=;
+        b=RQKmgjN9tokGC8BoYzDJkJdx07U83nBgOeQN2BFR6hCvnYVzRsU7+7t0fr/4DTZaKR
+         2dc2k8K0hcEFMuk3UNc8FrBqYOaCU8mRHyLJWll79ZzJ3vU3GZE0igpX4J83vz4wWHhM
+         kuMihiHd70iGf4c24R9xf2Z62TJSXyn9PwfIO8UolzNR2oxNMTUlnZyQ2/QR3b803uuc
+         h1juUvBmXhSV1VgAexoQ+agbkgAWfy23ts7VDigAX5GPFSjwyn7mG/RZxVIDTBaUX8xP
+         F7s6WaM7IY4uuhd0GvP8qrGlgcN2+Ib/zZ1JHFwYVTT3f3i9+Y3mje9AxK9KJbkI80Y+
+         2w/Q==
+X-Gm-Message-State: APjAAAXS41qzOxl8wXCpbO/ImfeRDHUu/71gWJ26Hghr4euRpdIILxG6
+        lp4VdjlsB+wijBannUTMAI8=
+X-Google-Smtp-Source: APXvYqxlfXMRhZv/pAJAf/P+GGqfQIDe/BvUcAPJ2p/Lb2/Wc4v+Wt4K4ovTclFnoCc2P9o6u30KHA==
+X-Received: by 2002:a19:f24d:: with SMTP id d13mr1953235lfk.127.1568723045984;
+        Tue, 17 Sep 2019 05:24:05 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id v4sm404070lji.103.2019.09.17.05.24.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 05:24:05 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@kernel.org>)
+        id 1iACWa-0007fL-R2; Tue, 17 Sep 2019 14:24:04 +0200
+Date:   Tue, 17 Sep 2019 14:24:04 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     syzbot <syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com>
+Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: possible deadlock in usb_deregister_dev (2)
+Message-ID: <20190917122404.GA29364@localhost>
+References: <000000000000d58eb90592add24e@google.com>
+ <000000000000b02ae30592b279e4@google.com>
 MIME-Version: 1.0
-References: <000000000000361fc90592b00fa4@google.com>
-In-Reply-To: <000000000000361fc90592b00fa4@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Tue, 17 Sep 2019 14:21:33 +0200
-Message-ID: <CAAeHK+wOgbfLHz=1DXG+UxZZNG+N7=nWYAwmE3PHR4Hk2rmxsg@mail.gmail.com>
-Subject: Re: KMSAN: uninit-value in ld_usb_read
-To:     syzbot <syzbot+2a4f0b034e05c34252d0@syzkaller.appspotmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, enric.balletbo@collabora.com,
-        Alexander Potapenko <glider@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kirr@nexedi.com, LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>, lkundrak@v3.sk,
-        logang@deltatee.com,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000b02ae30592b279e4@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 8:49 PM syzbot
-<syzbot+2a4f0b034e05c34252d0@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    014077b5 DO-NOT-SUBMIT: usb-fuzzer: main usb gadget fuzzer..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1510d63a600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=f03c659d0830ab8d
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2a4f0b034e05c34252d0
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13887b71600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14761d99600000
->
+On Mon, Sep 16, 2019 at 02:42:06PM -0700, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=175cdb95600000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> dashboard link: https://syzkaller.appspot.com/bug?extid=f9549f5ee8a5416f0b95
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13961369600000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139c811d600000
+> 
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2a4f0b034e05c34252d0@syzkaller.appspotmail.com
->
-> ldusb 4-1:0.28: Read buffer overflow, -414328874449497579 bytes dropped
-> ==================================================================
-> BUG: KMSAN: uninit-value in _copy_to_user+0x1aa/0x1f0 lib/usercopy.c:29
-> CPU: 0 PID: 12202 Comm: syz-executor155 Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->   kmsan_report+0x162/0x2d0 mm/kmsan/kmsan_report.c:109
->   __msan_warning+0x75/0xe0 mm/kmsan/kmsan_instr.c:294
->   _copy_to_user+0x1aa/0x1f0 lib/usercopy.c:29
->   copy_to_user include/linux/uaccess.h:174 [inline]
->   ld_usb_read+0x58d/0xc40 drivers/usb/misc/ldusb.c:495
->   __vfs_read+0x1a9/0xc90 fs/read_write.c:425
->   vfs_read+0x359/0x6f0 fs/read_write.c:461
->   ksys_read+0x265/0x430 fs/read_write.c:587
->   __do_sys_read fs/read_write.c:597 [inline]
->   __se_sys_read+0x92/0xb0 fs/read_write.c:595
->   __x64_sys_read+0x4a/0x70 fs/read_write.c:595
->   do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:297
->   entry_SYSCALL_64_after_hwframe+0x63/0xe7
-> RIP: 0033:0x441839
-> Code: e8 8c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
-> ff 0f 83 cb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffd47c58b68 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441839
-> RDX: 0000001788000335 RSI: 0000000020000140 RDI: 0000000000000004
-> RBP: 0000000000017997 R08: 000000000000000f R09: 00000009004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402590
-> R13: 0000000000402620 R14: 0000000000000000 R15: 0000000000000000
->
-> Uninit was created at:
->   kmsan_save_stack_with_flags+0x37/0x70 mm/kmsan/kmsan.c:189
->   kmsan_internal_alloc_meta_for_pages+0x123/0x510 mm/kmsan/kmsan_hooks.c:114
->   kmsan_alloc_page+0x7a/0xf0 mm/kmsan/kmsan_hooks.c:244
->   __alloc_pages_nodemask+0x142d/0x5fa0 mm/page_alloc.c:4757
->   alloc_pages_current+0x68d/0x9a0 mm/mempolicy.c:2153
->   alloc_pages include/linux/gfp.h:511 [inline]
->   kmalloc_order mm/slab_common.c:1257 [inline]
->   kmalloc_order_trace+0x87/0x320 mm/slab_common.c:1269
->   kmalloc_large include/linux/slab.h:485 [inline]
->   __kmalloc+0x2e6/0x430 mm/slub.c:3823
->   kmalloc_array+0x86/0x110 include/linux/slab.h:676
->   ld_usb_probe+0x650/0x1650 drivers/usb/misc/ldusb.c:700
->   usb_probe_interface+0xd19/0x1310 drivers/usb/core/driver.c:361
->   really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
->   driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
->   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
->   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
->   __device_attach+0x489/0x750 drivers/base/dd.c:882
->   device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
->   bus_probe_device+0x131/0x390 drivers/base/bus.c:514
->   device_add+0x25b5/0x2df0 drivers/base/core.c:2165
->   usb_set_configuration+0x309f/0x3710 drivers/usb/core/message.c:2027
->   generic_probe+0xe7/0x280 drivers/usb/core/generic.c:210
->   usb_probe_device+0x146/0x200 drivers/usb/core/driver.c:266
->   really_probe+0x1373/0x1dc0 drivers/base/dd.c:552
->   driver_probe_device+0x1ba/0x510 drivers/base/dd.c:709
->   __device_attach_driver+0x5b8/0x790 drivers/base/dd.c:816
->   bus_for_each_drv+0x28e/0x3b0 drivers/base/bus.c:454
->   __device_attach+0x489/0x750 drivers/base/dd.c:882
->   device_initial_probe+0x4a/0x60 drivers/base/dd.c:929
->   bus_probe_device+0x131/0x390 drivers/base/bus.c:514
->   device_add+0x25b5/0x2df0 drivers/base/core.c:2165
->   usb_new_device+0x23e5/0x2fb0 drivers/usb/core/hub.c:2536
->   hub_port_connect drivers/usb/core/hub.c:5098 [inline]
->   hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->   port_event drivers/usb/core/hub.c:5359 [inline]
->   hub_event+0x581d/0x72f0 drivers/usb/core/hub.c:5441
->   process_one_work+0x1572/0x1ef0 kernel/workqueue.c:2269
->   worker_thread+0x111b/0x2460 kernel/workqueue.c:2415
->   kthread+0x4b5/0x4f0 kernel/kthread.c:256
->   ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:355
-> ==================================================================
->
->
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
->
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000361fc90592b00fa4%40google.com.
+> Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+> 
+> usb 1-1: config 0 descriptor??
+> legousbtower 1-1:0.219: LEGO USB Tower firmware version is 129.136 build  
+> 65535
+> legousbtower 1-1:0.219: LEGO USB Tower #-160 now attached to major 180  
+> minor 0
+> usb 1-1: USB disconnect, device number 2
+> ======================================================
+> WARNING: possible circular locking dependency detected
+> 5.3.0-rc7+ #0 Not tainted
+> ------------------------------------------------------
+> kworker/0:1/12 is trying to acquire lock:
+> 0000000098630ee4 (minor_rwsem){++++}, at: usb_deregister_dev+0x95/0x230  
+> drivers/usb/core/file.c:239
+> 
+> but task is already holding lock:
+> 00000000d9ad5b6f (open_disc_mutex){+.+.}, at: tower_disconnect+0x45/0x300  
+> drivers/usb/misc/legousbtower.c:945
+> 
+> which lock already depends on the new lock.
+> 
+> 
+> the existing dependency chain (in reverse order) is:
+> 
+> -> #1 (open_disc_mutex){+.+.}:
+>         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+>         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+>         tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
+>         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+>         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+>         do_dentry_open+0x494/0x1120 fs/open.c:797
+>         do_last fs/namei.c:3416 [inline]
+>         path_openat+0x1430/0x3f50 fs/namei.c:3533
+>         do_filp_open+0x1a1/0x280 fs/namei.c:3563
+>         do_sys_open+0x3c0/0x580 fs/open.c:1089
+>         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+>         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> -> #0 (minor_rwsem){++++}:
+>         check_prev_add kernel/locking/lockdep.c:2405 [inline]
+>         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+>         validate_chain kernel/locking/lockdep.c:2897 [inline]
+>         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+>         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+>         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+>         usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
+>         tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
+>         usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
+>         __device_release_driver drivers/base/dd.c:1134 [inline]
+>         device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
+>         bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
+>         device_del+0x420/0xb10 drivers/base/core.c:2339
+>         usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
+>         usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
+>         hub_port_connect drivers/usb/core/hub.c:4949 [inline]
+>         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+>         port_event drivers/usb/core/hub.c:5359 [inline]
+>         hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
+>         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+>         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+>         kthread+0x318/0x420 kernel/kthread.c:255
+>         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> 
+> other info that might help us debug this:
+> 
+>   Possible unsafe locking scenario:
+> 
+>         CPU0                    CPU1
+>         ----                    ----
+>    lock(open_disc_mutex);
+>                                 lock(minor_rwsem);
+>                                 lock(open_disc_mutex);
+>    lock(minor_rwsem);
+> 
+>   *** DEADLOCK ***
 
-Need to wait until all HID fixes are upstream, before we can actually
-tell if this is a new issue or not. Duping to the Logitech bug for
-now.
+This should be fixed by the below patch. Looks like we may have a
+similar issue in a few more drivers. Fixing them up next.
 
-#syz dup: general protection fault in __pm_runtime_resume
+Johan
+
+#syz test: https://github.com/google/kasan.git f0df5c1b
+
+
+From c2c2800f2687be963acc222045c8fd89f3877642 Mon Sep 17 00:00:00 2001
+From: Johan Hovold <johan@kernel.org>
+Date: Tue, 17 Sep 2019 12:32:22 +0200
+Subject: [PATCH] USB: legousbtower: fix deadlock on disconnect
+
+Fix a potential deadlock if disconnect races with open.
+
+Since commit d4ead16f50f9 ("USB: prevent char device open/deregister
+race") core holds an rw-semaphore while open is called and when
+releasing the minor number during deregistration. This can lead to an
+ABBA deadlock if a driver takes a lock in open which it also holds
+during deregistration.
+
+This effectively reverts commit 78663ecc344b ("USB: disconnect open race
+in legousbtower") which needlessly introduced this issue after a generic
+fix for this race had been added to core by commit d4ead16f50f9 ("USB:
+prevent char device open/deregister race").
+
+Fixes: 78663ecc344b ("USB: disconnect open race in legousbtower")
+Cc: stable <stable@vger.kernel.org>	# 2.6.24
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/usb/misc/legousbtower.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
+index 006cf13b2199..c125f03436a1 100644
+--- a/drivers/usb/misc/legousbtower.c
++++ b/drivers/usb/misc/legousbtower.c
+@@ -179,7 +179,6 @@ static const struct usb_device_id tower_table[] = {
+ };
+ 
+ MODULE_DEVICE_TABLE (usb, tower_table);
+-static DEFINE_MUTEX(open_disc_mutex);
+ 
+ #define LEGO_USB_TOWER_MINOR_BASE	160
+ 
+@@ -332,18 +331,14 @@ static int tower_open (struct inode *inode, struct file *file)
+ 		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	dev = usb_get_intfdata(interface);
+-
+ 	if (!dev) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -ENODEV;
+ 		goto exit;
+ 	}
+ 
+ 	/* lock this device */
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+-		mutex_unlock(&open_disc_mutex);
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+ 	}
+@@ -351,12 +346,10 @@ static int tower_open (struct inode *inode, struct file *file)
+ 
+ 	/* allow opening only once */
+ 	if (dev->open_count) {
+-		mutex_unlock(&open_disc_mutex);
+ 		retval = -EBUSY;
+ 		goto unlock_exit;
+ 	}
+ 	dev->open_count = 1;
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* reset the tower */
+ 	result = usb_control_msg (dev->udev,
+@@ -423,10 +416,9 @@ static int tower_release (struct inode *inode, struct file *file)
+ 
+ 	if (dev == NULL) {
+ 		retval = -ENODEV;
+-		goto exit_nolock;
++		goto exit;
+ 	}
+ 
+-	mutex_lock(&open_disc_mutex);
+ 	if (mutex_lock_interruptible(&dev->lock)) {
+ 	        retval = -ERESTARTSYS;
+ 		goto exit;
+@@ -456,10 +448,7 @@ static int tower_release (struct inode *inode, struct file *file)
+ 
+ unlock_exit:
+ 	mutex_unlock(&dev->lock);
+-
+ exit:
+-	mutex_unlock(&open_disc_mutex);
+-exit_nolock:
+ 	return retval;
+ }
+ 
+@@ -910,7 +899,6 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
+ 	if (retval) {
+ 		/* something prevented us from registering this driver */
+ 		dev_err(idev, "Not able to get a minor for this device.\n");
+-		usb_set_intfdata (interface, NULL);
+ 		goto error;
+ 	}
+ 	dev->minor = interface->minor;
+@@ -942,16 +930,13 @@ static void tower_disconnect (struct usb_interface *interface)
+ 	int minor;
+ 
+ 	dev = usb_get_intfdata (interface);
+-	mutex_lock(&open_disc_mutex);
+-	usb_set_intfdata (interface, NULL);
+ 
+ 	minor = dev->minor;
+ 
+-	/* give back our minor */
++	/* give back our minor and prevent further open() */
+ 	usb_deregister_dev (interface, &tower_class);
+ 
+ 	mutex_lock(&dev->lock);
+-	mutex_unlock(&open_disc_mutex);
+ 
+ 	/* if the device is not opened, then we clean up right now */
+ 	if (!dev->open_count) {
+-- 
+2.23.0
+
