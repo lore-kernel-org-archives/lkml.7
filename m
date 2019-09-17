@@ -2,81 +2,95 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5702EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF581C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EB6921848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568696207;
-	bh=Deta3mLDOjrS9MA60qe/1+TynhvYp3GzPvxWWxB81ZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0H50BHjcVHRQO0eHjAbBbc+dP1AZUE6c2ga1746VfwlwqRBhXt1buAM/kpfnBYkdb
-	 HoXaPLf430fYwLnrBYI4OHrCOWfqfs/sc5NAAglqDxLPRJvzZS9WQUzAFcUcLK3rwQ
-	 ZzlkQElRpjF02xS7VRmmKUpHcNTHleD1VLYYTrws=
+	by mail.kernel.org (Postfix) with ESMTP id 7780E21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:05:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YlRcGLEe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388269AbfIQE4q (ORCPT
+        id S2390980AbfIQFFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727234AbfIQE4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:56:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F490216C8;
-        Tue, 17 Sep 2019 04:56:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568696204;
-        bh=Deta3mLDOjrS9MA60qe/1+TynhvYp3GzPvxWWxB81ZY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BrxoadVByuVpgM40BAinFxCJkZ6eNEBhWtJ1X/FBcFtfRuOaHFxqD8UOlzzsySvee
-         Ur++qDaVoLWg9Rv/AzTPiXIKDmmtFzs44ba/4vGgYgYkNPEXPUFOt1tk1wp+jIZjHm
-         o762u14M0QLQ19CCnKYc3R7QGjXqqHJu3I4elIn0=
-Date:   Tue, 17 Sep 2019 06:56:40 +0200
-From:   'Greg KH' <gregkh@linuxfoundation.org>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     devel@driverdev.osuosl.org, Namjae Jeon <linkinjeon@gmail.com>,
-        'Valdis Kletnieks' <valdis.kletnieks@vt.edu>,
-        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
-        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-Message-ID: <20190917045640.GA2055638@kroah.com>
-References: <CGME20190917025738epcas1p1f1dd21ca50df2392b0f84f0340d82bcd@epcas1p1.samsung.com>
- <003601d56d03$aa04fa00$fe0eee00$@samsung.com>
- <003701d56d04$470def50$d529cdf0$@samsung.com>
+        Tue, 17 Sep 2019 01:05:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44880 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbfIQFFU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 01:05:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ojhynOeAxnR1dnfSk+M4BfJ0Fe7m4oLvhsSvo+gD7Lw=; b=YlRcGLEevt44FWVfme5NFIn0M
+        5yefhikk8KrtCEhKt6Heshu5ywG5OYxPXi/8RBlzptR19YRGHDC2bFyIIZuSr7YGsi5pzsX5wSy5m
+        PunmX5lKVQ8GdSRE5J6XXtZoqgUA10PgOYv/HMmOIaMWB+LGvvrL8qvgqwbqJ1yNUX3/Fr9Oe5BHJ
+        6su6LH4kGUaVCYyoxJDtl/rkJbIuvwCfch/u31rb3cnP2gWfhV9cYPfkLjIWvnatEzzDVqB+wp5nL
+        caOtrlLgC1/1GG5QeqNERnQHgw0EGSRMWnXzJP17W97vEbpYKSU4MhRAvipy73FNVM54imGrY0/oQ
+        sDttrPhMw==;
+Received: from [2601:1c0:6280:3f0::9a1f]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iA5fy-00016Y-1f; Tue, 17 Sep 2019 05:05:18 +0000
+Subject: Re: linux-next: Tree for Sep 16 (kernel/sched/core.c)
+To:     Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20190916223850.GQ4352@sirena.co.uk>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org>
+Date:   Mon, 16 Sep 2019 22:05:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <003701d56d04$470def50$d529cdf0$@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190916223850.GQ4352@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 12:02:01PM +0900, Namjae Jeon wrote:
-> We are excited to see this happening and would like to state that we appreciate
-> time and
-> effort which people put into upstreaming exfat. Thank you!
+On 9/16/19 3:38 PM, Mark Brown wrote:
+> Hi all,
 > 
-> However, if possible, can we step back a little bit and re-consider it? We
-> would prefer to see upstream the code which we are currently using in
-> our products - sdfat - as this can be mutually benefitial from various
-> points of view.
+> Changes since 20190915:
+> 
 
-What is "different" in it from the code that is currently in linux-next?
-What is supported "better"?  The code we have today seems to work for
-people, so what are we missing here?
+on x86_64:
 
-Also, submitting patches for this codebase to bring it up to the level
-of functionality you need would be wonderful, can you do that?
+when CONFIG_CGROUPS is not set:
 
-thanks,
+  CC      kernel/sched/core.o
+../kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
+../kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
+  struct css_task_iter it;
+                       ^~
+  CC      kernel/printk/printk_safe.o
+../kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
+  css_task_iter_start(css, 0, &it);
+  ^~~~~~~~~~~~~~~~~~~
+  __sg_page_iter_start
+../kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
+  while ((p = css_task_iter_next(&it))) {
+              ^~~~~~~~~~~~~~~~~~
+              __sg_page_iter_next
+../kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
+  css_task_iter_end(&it);
+  ^~~~~~~~~~~~~~~~~
+  get_task_cred
+../kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
+  struct css_task_iter it;
+                       ^~
 
-greg k-h
+
+-- 
+~Randy
