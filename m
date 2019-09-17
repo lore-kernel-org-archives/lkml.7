@@ -2,100 +2,142 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88868C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A83C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC6B20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:31:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rGHRRJc6"
+	by mail.kernel.org (Postfix) with ESMTP id DA14D20650
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392222AbfIQDbo (ORCPT
+        id S2392239AbfIQDcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:31:44 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43574 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730000AbfIQDbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:31:44 -0400
-Received: by mail-io1-f65.google.com with SMTP id v2so4080968iob.10;
-        Mon, 16 Sep 2019 20:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AZbBTIbQbqXwZoo2mD7WVQh8P9va3DGLxdwCMpbqykM=;
-        b=rGHRRJc6cmlQU6fzDipZt7KO5qJAWDWcnNDKSmndXpk0ewSLW23M8z7MSAS//IRj1l
-         tALlRIDw+7SUzX5oZBm7estXiqj5CDURnMfZuF79BxBQ+zBn15C215GlFtTeHRuG5oJR
-         v35CbGdsHyQUlJbZwndh7jhpbviDigFIUwvtN87/RcR1LLkquGA24oKzOknAIZzGKLxO
-         7oJx7GgYMDJcZTaQBiy1SXTwC0dRQjDNmtdSjt40yzfROfi7nvGYsEyGo683REJTh3cr
-         Csz+zl2qSybIJaFl1b9JqdfU0fZdWLhwBvZAW6VFTo1GDKCalj3bu56OLWpXe5/2EyHe
-         k8+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AZbBTIbQbqXwZoo2mD7WVQh8P9va3DGLxdwCMpbqykM=;
-        b=H0T7GzjEzd76Q4M+fZ0zeWuyI2xvoQ6DwrCEEZr3Gb78xewtcJrJ2Uoy02HqXTY7Wh
-         wPXhKdlNpvGEAr5jCqHSqAO97xEf0q8Uo+5PTpbIePdn6AUBy+oZq95pT7ugT55Lw+X4
-         0q/Ef6854dvkM3Z9cjers0ia9MTaDYv1Ipn5SZ0gb87EvuZ9iQxfcNxpiqrAR3DfEGIH
-         LTwDRowj4YD0b9QqzpEyDlqbsMWY2241Yfj+awLnJ0gOSCTnAhE/BlgB2BrraWvCYfFH
-         t7thN0U6VI7faKxaP/Q1pUMeJ3tIcq+5lXfEzZecdIBxHFvS5W4u4eULnDUKhaa/jk4u
-         SLbQ==
-X-Gm-Message-State: APjAAAVgR6KWN4oOwYJYA/Y6CJAcZxUfM16AUVfuG/Yx618weACP4BC4
-        YV7/xT1rb1pLuAt/gojQxXgdV4jgRos=
-X-Google-Smtp-Source: APXvYqx4BGYBTXWug5NY3wJbo99uGA8r8HQaH6QnaLuCl7KSJytf2lAhCbNRWnl2/4bx5Sw7OH9Ksg==
-X-Received: by 2002:a6b:c7c2:: with SMTP id x185mr1469065iof.224.1568691103125;
-        Mon, 16 Sep 2019 20:31:43 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id i26sm1134258ion.40.2019.09.16.20.31.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 20:31:42 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] rpmsg: char: release allocated memory
-Date:   Mon, 16 Sep 2019 22:31:23 -0500
-Message-Id: <20190917033124.1077-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Mon, 16 Sep 2019 23:32:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58840 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730000AbfIQDcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:32:17 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6592F10CC1E4;
+        Tue, 17 Sep 2019 03:32:17 +0000 (UTC)
+Received: from [10.72.12.121] (ovpn-12-121.pek2.redhat.com [10.72.12.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB54460126;
+        Tue, 17 Sep 2019 03:32:05 +0000 (UTC)
+Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
+To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
+        alex.williamson@redhat.com, maxime.coquelin@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com
+References: <20190917010204.30376-1-tiwei.bie@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
+Date:   Tue, 17 Sep 2019 11:32:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190917010204.30376-1-tiwei.bie@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 17 Sep 2019 03:32:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In rpmsg_eptdev_write_iter, if copy_from_iter_full fails the allocated
-buffer needs to be released.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/rpmsg/rpmsg_char.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On 2019/9/17 上午9:02, Tiwei Bie wrote:
+> This RFC is to demonstrate below ideas,
+>
+> a) Build vhost-mdev on top of the same abstraction defined in
+>     the virtio-mdev series [1];
+>
+> b) Introduce /dev/vhost-mdev to do vhost ioctls and support
+>     setting mdev device as backend;
+>
+> Now the userspace API looks like this:
+>
+> - Userspace generates a compatible mdev device;
+>
+> - Userspace opens this mdev device with VFIO API (including
+>    doing IOMMU programming for this mdev device with VFIO's
+>    container/group based interface);
+>
+> - Userspace opens /dev/vhost-mdev and gets vhost fd;
+>
+> - Userspace uses vhost ioctls to setup vhost (userspace should
+>    do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
+>    fd first before doing other vhost ioctls);
+>
+> Only compile test has been done for this series for now.
 
-diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-index eea5ebbb5119..c655074c07c2 100644
---- a/drivers/rpmsg/rpmsg_char.c
-+++ b/drivers/rpmsg/rpmsg_char.c
-@@ -227,8 +227,10 @@ static ssize_t rpmsg_eptdev_write_iter(struct kiocb *iocb,
- 	if (!kbuf)
- 		return -ENOMEM;
- 
--	if (!copy_from_iter_full(kbuf, len, from))
--		return -EFAULT;
-+	if (!copy_from_iter_full(kbuf, len, from)) {
-+		ret = -EFAULT;
-+		goto free_kbuf;
-+	}
- 
- 	if (mutex_lock_interruptible(&eptdev->ept_lock)) {
- 		ret = -ERESTARTSYS;
--- 
-2.17.1
 
+Have a hard thought on the architecture:
+
+1) Create a vhost char device and pass vfio mdev device fd to it as a 
+backend and translate vhost-mdev ioctl to virtio mdev transport (e.g 
+read/write). DMA was done through the VFIO DMA mapping on the container 
+that is attached.
+
+We have two more choices:
+
+2) Use vfio-mdev but do not create vhost-mdev device, instead, just 
+implement vhost ioctl on vfio_device_ops, and translate them into 
+virtio-mdev transport or just pass ioctl to parent.
+
+3) Don't use vfio-mdev, create a new vhost-mdev driver, during probe 
+still try to add dev to vfio group and talk to parent with device 
+specific ops
+
+So I have some questions:
+
+1) Compared to method 2, what's the advantage of creating a new vhost 
+char device? I guess it's for keep the API compatibility?
+
+2) For method 2, is there any easy way for user/admin to distinguish e.g 
+ordinary vfio-mdev for vhost from ordinary vfio-mdev?  I saw you 
+introduce ops matching helper but it's not friendly to management.
+
+3) A drawback of 1) and 2) is that it must follow vfio_device_ops that 
+assumes the parameter comes from userspace, it prevents support kernel 
+virtio drivers.
+
+4) So comes the idea of method 3, since it register a new vhost-mdev 
+driver, we can use device specific ops instead of VFIO ones, then we can 
+have a common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
+
+What's your thoughts?
+
+Thanks
+
+
+>
+> RFCv3: https://patchwork.kernel.org/patch/11117785/
+>
+> [1] https://lkml.org/lkml/2019/9/10/135
+>
+> Tiwei Bie (3):
+>    vfio: support getting vfio device from device fd
+>    vfio: support checking vfio driver by device ops
+>    vhost: introduce mdev based hardware backend
+>
+>   drivers/vfio/mdev/vfio_mdev.c    |   3 +-
+>   drivers/vfio/vfio.c              |  32 +++
+>   drivers/vhost/Kconfig            |   9 +
+>   drivers/vhost/Makefile           |   3 +
+>   drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
+>   drivers/vhost/vhost.c            |  39 ++-
+>   drivers/vhost/vhost.h            |   6 +
+>   include/linux/vfio.h             |  11 +
+>   include/uapi/linux/vhost.h       |  10 +
+>   include/uapi/linux/vhost_types.h |   5 +
+>   10 files changed, 573 insertions(+), 7 deletions(-)
+>   create mode 100644 drivers/vhost/mdev.c
+>
