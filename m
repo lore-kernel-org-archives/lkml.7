@@ -2,102 +2,89 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F44EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE309C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9892189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:43:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568738585;
-	bh=wc6lF05lSmV7CZjhYqDiRofI9ULWkRojtrGgtVqBsDs=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=B1OoWhe9JeqmfKzQs00++bML9jOGA6x2rZP/sfwCuITV6qMWQVs+IgSbfWQ0Jr9Ua
-	 wxyc9AQP0E+BvBNas1nS31kr2Ep1Cg6aeZraorFAypYo3u4kh7LekMqRmW9GkSjsIV
-	 1jCy7R4kpXEvR5bJ0bw7Ys/gJ9N3R+PUDY16kTLE=
+	by mail.kernel.org (Postfix) with ESMTP id A2CDA21920
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfIQQnF (ORCPT
+        id S1730616AbfIQQue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:43:05 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55877 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfIQQnE (ORCPT
+        Tue, 17 Sep 2019 12:50:34 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43027 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727545AbfIQQue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:43:04 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g207so4297590wmg.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 09:43:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=yhTmZINtjNfdp4gy1K5HLazPZjxpYm/RmtHx4P4J7gY=;
-        b=PWVPVn3VE37rm5VJuvT6zs5SFlmQsxfQq9dzO5BDmtNCkSdrQmQ5XLD5ordLBKslRs
-         w6es5BFxMvAh0cS4GPmw/RcKde/+Oa2GSgFyFAvWgdQGHFufgD0933kklrd4pS6wG+oM
-         p0YsLEUWNfj9r2qq2VSoNGL3DIlJPGeiaIUTMqJ6bqmSZ1ogv48zXcqb31yLz0isn1JU
-         FTLA7Zss8cGdmQCbCB5NXFB1ix3RHCbh94sZTsEGJ+arTlwQp14d9bwXoj4RzlBWq0nC
-         Wv49g4fZsQzRgJsR/Qw2cdthpmjFhrMH7zQyDxeOmzN/YBdu8OS7I3KNLLjkfaCvBa2l
-         li8A==
-X-Gm-Message-State: APjAAAUDEj3ajtxCpQrzr2pQxtpqnefjSYv2wwl8csLY6Qc8qVGsqa01
-        c8OZIgJMaSVs5ad4dpfE9oQ=
-X-Google-Smtp-Source: APXvYqxo7+Dhbm2ARLzfR1YcZoqWrp4JTcUZckLYvieruU64IlfJhLMXkN1r2iECDr4iJFLWN5CcqQ==
-X-Received: by 2002:a7b:c4c9:: with SMTP id g9mr4729974wmk.150.1568738582617;
-        Tue, 17 Sep 2019 09:43:02 -0700 (PDT)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c092:200::1:b644])
-        by smtp.gmail.com with ESMTPSA id e30sm4936977wra.48.2019.09.17.09.43.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 09:43:01 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 17:43:00 +0100
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@linux.com>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] percpu changes for v5.4-rc1
-Message-ID: <20190917164300.GA77280@dennisz-mbp.dhcp.thefacebook.com>
+        Tue, 17 Sep 2019 12:50:34 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iAGgN-0004H6-2z; Tue, 17 Sep 2019 18:50:27 +0200
+Date:   Tue, 17 Sep 2019 18:50:27 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: Re: [PATCH RT 8/8] sched: Lazy migrate_disable processing
+Message-ID: <20190917165026.pv3neijrpxrszdzo@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+ <20190727055638.20443-9-swood@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190727055638.20443-9-swood@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 2019-07-27 00:56:38 [-0500], Scott Wood wrote:
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 885a195dfbe0..0096acf1a692 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -939,17 +893,34 @@ static int takedown_cpu(unsigned int cpu)
+>  	 */
+>  	irq_lock_sparse();
+>  
+> -#ifdef CONFIG_PREEMPT_RT_FULL
+> -	__write_rt_lock(cpuhp_pin);
+> +#ifdef CONFIG_PREEMPT_RT_BASE
+> +	WARN_ON_ONCE(takedown_cpu_task);
+> +	takedown_cpu_task = current;
+> +
+> +again:
+> +	for (;;) {
+> +		int nr_pinned;
+> +
+> +		set_current_state(TASK_UNINTERRUPTIBLE);
+> +		nr_pinned = cpu_nr_pinned(cpu);
+> +		if (nr_pinned == 0)
+> +			break;
+> +		schedule();
+> +	}
 
-This pull request has a couple updates to clean up the code with no
-change in behavior.
+we used to have cpuhp_pin which ensured that once we own the write lock
+there will be no more tasks that can enter a migrate_disable() section
+on this CPU. It has been placed fairly late to ensure that nothing new
+comes in as part of the shutdown process and that it flushes everything
+out that is still in a migrate_disable() section.
+Now you claim that once the counter reached zero it never increments
+again. I would be happier if there was an explicit check for that :)
+There is no back off and flush mechanism which means on a busy CPU (as
+in heavily lock contended by multiple tasks) this will wait until the
+CPU gets idle again.
 
-Thanks,
-Dennis
+> +	set_current_state(TASK_RUNNING);
+>  #endif
 
-The following changes since commit 6fbc7275c7a9ba97877050335f290341a1fd8dbf:
-
-  Linux 5.2-rc7 (2019-06-30 11:25:36 +0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dennis/percpu.git for-5.4
-
-for you to fetch changes up to 14d3761245551bdfc516abd8214a9f76bfd51435:
-
-  percpu: Use struct_size() helper (2019-09-04 13:40:49 -0700)
-
-----------------------------------------------------------------
-Christophe JAILLET (1):
-      percpu: fix typo in pcpu_setup_first_chunk() comment
-
-Gustavo A. R. Silva (1):
-      percpu: Use struct_size() helper
-
-Kefeng Wang (1):
-      percpu: Make pcpu_setup_first_chunk() void function
-
- arch/ia64/mm/contig.c    |  5 +----
- arch/ia64/mm/discontig.c |  5 +----
- include/linux/percpu.h   |  2 +-
- mm/percpu.c              | 23 +++++++++--------------
- 4 files changed, 12 insertions(+), 23 deletions(-)
+Sebastian
