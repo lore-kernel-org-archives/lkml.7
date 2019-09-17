@@ -2,129 +2,68 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4BC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF65C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53BFE21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C11218AE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:47:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732465AbfIQIpK (ORCPT
+        id S1732016AbfIQIrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:45:10 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:39495 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726564AbfIQIpJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:45:09 -0400
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 2351324000A;
-        Tue, 17 Sep 2019 08:45:05 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 10:45:04 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Biwen Li <biwen.li@nxp.com>
-Cc:     a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com,
-        leoyang.li@nxp.com, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Martin Fuzzey <mfuzzey@parkeon.com>
-Subject: Re: [v4,1/2] dt-bindings: rtc: pcf85263/pcf85363: add some properties
-Message-ID: <20190917084504.GD21254@piout.net>
-References: <20190910104247.13142-1-biwen.li@nxp.com>
+        Tue, 17 Sep 2019 04:47:46 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:47524 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729610AbfIQIrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:47:46 -0400
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iA8pK-0005ZY-GI; Tue, 17 Sep 2019 10:27:10 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-rockchip@lists.infradead.org,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 11/13] dt-bindings: document PX30 usb2phy General Register Files
+Date:   Tue, 17 Sep 2019 10:26:57 +0200
+Message-Id: <20190917082659.25549-11-heiko@sntech.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190917082659.25549-1-heiko@sntech.de>
+References: <20190917082659.25549-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190910104247.13142-1-biwen.li@nxp.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/09/2019 18:42:46+0800, Biwen Li wrote:
-> Add some properties for pcf85263/pcf85363 as follows:
->   - nxp,rtc-interrupt-type: integer type
->   - nxp,rtc-interrupt-output-pin: string type
->   - quartz-load-femtofarads: integer type
->   - nxp,quartz-drive-strength: integer type
->   - nxp,quartz-low-jitter: bool type
->   - wakeup-source: bool type
-> 
-> Signed-off-by: Martin Fuzzey <mfuzzey@parkeon.com>
-> Signed-off-by: Biwen Li <biwen.li@nxp.com>
-> ---
-> Change in v4:
-> 	- Drop robust defines in include/dt-bindings/rtc/pcf85363.h
-> 	- Add nxp,rtc-interrupt-type property
-> 	- Replace interrupt-output-pin with nxp,rtc-interrupt-output-pin
-> 
-> Change in v3:
-> 	- None
-> 
-> Change in v2:
-> 	- Replace properties name
-> 	  quartz-load-capacitance -> quartz-load-femtofarads
-> 	  quartz-drive-strength -> nxp,quartz-drive-strength
-> 	  quartz-low-jitter -> nxp,quartz-low-jitter
-> 	- Replace drive strength name
-> 	  PCF85263_QUARTZDRIVE_NORMAL -> PCF85263_QUARTZDRIVE_100ko
-> 	  PCF85263_QUARTZDRIVE_LOW -> PCF85263_QUARTZDRIVE_60ko
-> 	  PCF85263_QUARTZDRIVE_HIGH -> PCF85263_QUARTZDRIVE_500ko
-> 	- Set default interrupt-output-pin as "INTA"
-> 
->  .../devicetree/bindings/rtc/pcf85363.txt      | 44 ++++++++++++++++++-
->  include/dt-bindings/rtc/pcf85363.h            | 14 ++++++
->  2 files changed, 57 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/rtc/pcf85363.h
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/pcf85363.txt b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> index 94adc1cf93d9..fc1579463657 100644
-> --- a/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> +++ b/Documentation/devicetree/bindings/rtc/pcf85363.txt
-> @@ -8,10 +8,52 @@ Required properties:
->  Optional properties:
->  - interrupts: IRQ line for the RTC (not implemented).
->  
-> +- nxp,rtc-interrupt-type: integer property, represent the interrupt's
-> +  type. Valid values are
-> +  INT_PIE(periodic interrupt enable),
-> +  INT_OIE(offset correction interrupt enable),
-> +  INT_A1IE(alarm1 interrupt enable),
-> +  INT_A2IE(alarm2 interrupt enable),
-> +  INT_TSRIE(timestamp register interrupt enable)
-> +  INT_BSIE(battery switch interrupt enable),
-> +  INT_WDIE(WatchDog interrupt enable,and
-> +  compose these values such as: INT_A1IE | INT_A2IE,
-> +  but currently only support INT_A1IE, default value is INT_A1IE.
-> +  The property and property nxp,rtc-interrupt-output-pin
-> +  work together to generate some interrupts on some pins.
-> +
-> +- nxp,rtc-interrupt-output-pin: The interrupt output pin must be
-> +  "INTA" or "INTB", default value is "INTA". The property and property
-> +  nxp,rtc-interrupt-type work together to generate some interrupts on
-> +  some pins.
-> +
+One of the separate General Register Files contains the registers for
+controlling the usb2phy, so add the necessary binding compatible for it.
 
-This binding still doesn't work because there may be any combination of
-interrupts on any of the two pins that this binding doesn't allow.
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ Documentation/devicetree/bindings/soc/rockchip/grf.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +- quartz-load-femtofarads: The internal capacitor to select for the quartz,
-> +  expressed in femto Farad (fF). Valid values are 6000, 7000 and 12500.
-> +  Default value is 12500fF.
-> +
-> +- nxp,quartz-drive-strength: Drive strength for the quartz,
-> +  expressed in kilo ohms (kOhm) Valid values are 60, 100 and 500.
-> +  Default value is 100kOhm.
-> +
-
-It makes more sense to have quartz-drive-strength-ohms as a generic
-property.
-
-
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+index 46e27cd69f18..d7debec26ba4 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+@@ -30,6 +30,7 @@ Required Properties:
+ - compatible: SGRF should be one of the following
+    - "rockchip,rk3288-sgrf", "syscon": for rk3288
+ - compatible: USB2PHYGRF should be one of the followings
++   - "rockchip,px30-usb2phy-grf", "syscon": for px30
+    - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
+ - compatible: USBGRF should be one of the following
+    - "rockchip,rv1108-usbgrf", "syscon": for rv1108
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
