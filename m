@@ -2,103 +2,189 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8824C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F693C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0574214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:48:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568746133;
-	bh=bNhraFRpJyiHFQp0JOLJ83CT9R3UVWD/HUhL/tUIzWc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TvEndzUbHYmH7DoA8CPFZHOsUdNdRiFgZuzx7E5FM3P/kNZKQ2CPoqvAPC/s9+QIO
-	 2vchfFUd+3cT5RRSB84iXgeeCwkmQoDyG/tcCoZOpXraY3bWXysjnj5vPHY/785REe
-	 PlIhD6MvSyPIIfGRQu+BjwdKB1nsFbOwlZ7vvSVg=
+	by mail.kernel.org (Postfix) with ESMTP id 85C65206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:49:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbfIQSsx (ORCPT
+        id S1728707AbfIQStH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:48:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbfIQSsw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:48:52 -0400
-Received: from linux-8ccs (unknown [193.86.95.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B10E920578;
-        Tue, 17 Sep 2019 18:48:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568746131;
-        bh=bNhraFRpJyiHFQp0JOLJ83CT9R3UVWD/HUhL/tUIzWc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dw1tt82qFDWdJRdFUKn2zjJVTzCZPxSkowNqN71cB0E8qBkynO4mwAqi2h6fB8y7S
-         3+RqeR0exvJQZt6gebzj3wEmNGcWuGj69zr/PDsW5nPMl/7csG6xtDwlq7qvhdsfI7
-         xOTyLshTk5gAXbLGV4BOL1/KcnIi6yoAGFJwhIF8=
-Date:   Tue, 17 Sep 2019 20:48:44 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthias Maennich <maennich@google.com>,
-        gregkh@linuxfoundation.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] Kbuild updates for v5.4-rc1
-Message-ID: <20190917184844.GA15149@linux-8ccs>
-References: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
- <20190917150902.GA4116@linux-8ccs>
- <CAK7LNAR_8atC3M9gGQ=DBwzFG52PVuNaFVAzAr32TKxTwDCLug@mail.gmail.com>
- <20190917180136.GA10376@linux-8ccs>
- <20190917181636.7sngz5lrldx34rth@willie-the-truck>
+        Tue, 17 Sep 2019 14:49:07 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:35309 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfIQStH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:49:07 -0400
+Received: by mail-io1-f69.google.com with SMTP id r5so58760iop.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 11:49:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=NwVpGkNHgsmoaBSsh3mYYG8q0xqBQTXg+ZIgnqs4C80=;
+        b=Rnq/CsNpRyHv53EUGBvBq7auMcmpaMZcgp4wn+nu7WqJj351aRzLcZk5F9VVg4weEc
+         p22bBze9dq4kEsrWiOgz7N6CN+/GuJD59zocgIVMzjtf/KYdZHGfu5g1OIM4AyU8fjhq
+         H7Chp2xrpU7UQGmGxY2rAKnpxsQcDLBK0QV9hIwIX9dzqOjdEOiRlMiLy1h6/62ARPbO
+         bhn2w+FYDytHbcoDeuMhslvgppDbXZuQ1jiUX3n9gWi/ThDEPCIwfOS11/s2p80WwDx6
+         nDdkoLpQNKCitAkxBdRaS1KCzde7wp5vdyQmbetJ8nLIarGlxSD909uRtwBmMhHvEM/B
+         4I0w==
+X-Gm-Message-State: APjAAAUbAiQt0agZIBxyBnYlWQQLf1yjAS09K45PwjL4a+jfHhdjzlP8
+        w/KUCPIpMlBoFO24MljvIAUeFSO5yhbBp6iYhRhMR4MrPRVP
+X-Google-Smtp-Source: APXvYqzsAS0Pl7r7pEqtH8I83JX6lJEg1mRzZST37KlCqUop1Eo1ndA/srmM39ERBKIJibHr2ZgJi5S+Xu59xduJ6ApYCPrWNg9H
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190917181636.7sngz5lrldx34rth@willie-the-truck>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a05:6602:1d6:: with SMTP id w22mr249979iot.144.1568746146283;
+ Tue, 17 Sep 2019 11:49:06 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 11:49:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000cacc7e0592c42ce3@google.com>
+Subject: KASAN: slab-out-of-bounds Read in bpf_prog_create
+From:   syzbot <syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com>
+To:     arnd@arndb.de, ast@kernel.org, bpf@vger.kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, hawk@kernel.org,
+        jakub.kicinski@netronome.com, john.fastabend@gmail.com,
+        kafai@fb.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ppp@vger.kernel.org,
+        netdev@vger.kernel.org, paulus@samba.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk,
+        yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Will Deacon [17/09/19 19:16 +0100]:
->Hi Jessica,
->
->On Tue, Sep 17, 2019 at 08:01:36PM +0200, Jessica Yu wrote:
->> Yikes, I did not catch Stephen Rothwell's email about pausing the
->> linux-next releases from Sept 5 until Sept 30
->> (https://lore.kernel.org/linux-next/20190904233443.3f73c46b@canb.auug.org.au/).
->>
->> The modules-next namespace patches have been in since last Tuesday,
->> and my original plan was for them to catch at least a week of
->> linux-next time before sending the pull request. :-/ But that did not
->> happen due to the above.
->>
->> So Linus, in light of the above realization, I'd say at this time - I
->> will still formally send a pull request with the merge conflicts
->> resolved with either solution #2 or #3, but merge at your own
->> discretion, it's fine to delay to the following release if you're
->> uncomfortable.
->
->FWIW, when I've run into unexpected merge conflicts with other trees in the
->past, I've found that it's usually sufficient just to include the resolution
->as an inline diff in the pull request, rather than try to munge the tree
->with merges or rebases.  Linus is pretty good at figuring it out, and with a
->resolution to compare with, the damage is limited. The downside of the merge
->is that it's fiddly to extract the changes and see what's actually being
->pulled.
->
->Also, it's not like the kbuild stuff has been in -next for ages, so this
->would've been a late and messy conflict regardless.
+Hello,
 
-Hi Will!
+syzbot found the following crash on:
 
-Thanks a lot for the advice :-) The inline diff sounds like a good
-idea. This is I believe only the second tree conflict I've encountered
-so far so the tips are much appreciated.
+HEAD commit:    2015a28f Add linux-next specific files for 20190915
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=11880d69600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=110691c2286b679a
+dashboard link: https://syzkaller.appspot.com/bug?extid=eb853b51b10f1befa0b7
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127c3481600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1150a70d600000
 
-Jessica
+The bug was bisected to:
+
+commit 2f4fa2db75e26995709043c8d3de4632ebed5c4b
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Thu Apr 18 03:48:01 2019 +0000
+
+     compat_ioctl: unify copy-in of ppp filters
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=145eee1d600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=165eee1d600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=125eee1d600000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+eb853b51b10f1befa0b7@syzkaller.appspotmail.com
+Fixes: 2f4fa2db75e2 ("compat_ioctl: unify copy-in of ppp filters")
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:404 [inline]
+BUG: KASAN: slab-out-of-bounds in bpf_prog_create+0xe9/0x250  
+net/core/filter.c:1351
+Read of size 32768 at addr ffff88809cf74000 by task syz-executor183/8575
+
+CPU: 0 PID: 8575 Comm: syz-executor183 Not tainted 5.3.0-rc8-next-20190915  
+#0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+  __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
+  kasan_report+0x12/0x20 mm/kasan/common.c:634
+  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
+  memcpy+0x24/0x50 mm/kasan/common.c:122
+  memcpy include/linux/string.h:404 [inline]
+  bpf_prog_create+0xe9/0x250 net/core/filter.c:1351
+  get_filter.isra.0+0x108/0x1a0 drivers/net/ppp/ppp_generic.c:572
+  ppp_get_filter drivers/net/ppp/ppp_generic.c:584 [inline]
+  ppp_ioctl+0x129d/0x2590 drivers/net/ppp/ppp_generic.c:801
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:539 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+  __do_sys_ioctl fs/ioctl.c:750 [inline]
+  __se_sys_ioctl fs/ioctl.c:748 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401a9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffebb37d0a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401a9
+RDX: 00000000200000c0 RSI: 0000000040107447 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 00000000004002c8 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a30
+R13: 0000000000401ac0 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 8575:
+  save_stack+0x23/0x90 mm/kasan/common.c:69
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc mm/kasan/common.c:510 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:483
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  __do_kmalloc mm/slab.c:3655 [inline]
+  __kmalloc_track_caller+0x15f/0x760 mm/slab.c:3670
+  memdup_user+0x26/0xb0 mm/util.c:172
+  get_filter.isra.0+0xd7/0x1a0 drivers/net/ppp/ppp_generic.c:568
+  ppp_get_filter drivers/net/ppp/ppp_generic.c:584 [inline]
+  ppp_ioctl+0x129d/0x2590 drivers/net/ppp/ppp_generic.c:801
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  file_ioctl fs/ioctl.c:539 [inline]
+  do_vfs_ioctl+0xdb6/0x13e0 fs/ioctl.c:726
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:743
+  __do_sys_ioctl fs/ioctl.c:750 [inline]
+  __se_sys_ioctl fs/ioctl.c:748 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:748
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 0:
+(stack is not available)
+
+The buggy address belongs to the object at ffff88809cf74000
+  which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 0 bytes inside of
+  4096-byte region [ffff88809cf74000, ffff88809cf75000)
+The buggy address belongs to the page:
+page:ffffea000273dd00 refcount:1 mapcount:0 mapping:ffff8880aa402000  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea0002672988 ffffea00027e7788 ffff8880aa402000
+raw: 0000000000000000 ffff88809cf74000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff88809cf74f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+  ffff88809cf74f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ffff88809cf75000: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+                    ^
+  ffff88809cf75080: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+  ffff88809cf75100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
