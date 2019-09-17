@@ -2,142 +2,77 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08A83C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95C9DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA14D20650
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:32:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 659D1206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 03:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392239AbfIQDcS (ORCPT
+        id S2392246AbfIQDiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 23:32:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58840 "EHLO mx1.redhat.com"
+        Mon, 16 Sep 2019 23:38:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730000AbfIQDcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 23:32:17 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727097AbfIQDiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 23:38:21 -0400
+Received: from [10.44.0.22] (unknown [103.48.210.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6592F10CC1E4;
-        Tue, 17 Sep 2019 03:32:17 +0000 (UTC)
-Received: from [10.72.12.121] (ovpn-12-121.pek2.redhat.com [10.72.12.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB54460126;
-        Tue, 17 Sep 2019 03:32:05 +0000 (UTC)
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com, maxime.coquelin@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
-Date:   Tue, 17 Sep 2019 11:32:03 +0800
+        by mail.kernel.org (Postfix) with ESMTPSA id C2BC120650;
+        Tue, 17 Sep 2019 03:38:19 +0000 (UTC)
+From:   Greg Ungerer <gerg@linux-m68k.org>
+Subject: [git pull] m68knommu changes for v5.4
+To:     torvalds@linux-foundation.org
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Message-ID: <a6d7c0bc-a6df-62be-ed2b-944551def5af@linux-m68k.org>
+Date:   Tue, 17 Sep 2019 13:38:17 +1000
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190917010204.30376-1-tiwei.bie@intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 17 Sep 2019 03:32:17 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/9/17 上午9:02, Tiwei Bie wrote:
-> This RFC is to demonstrate below ideas,
->
-> a) Build vhost-mdev on top of the same abstraction defined in
->     the virtio-mdev series [1];
->
-> b) Introduce /dev/vhost-mdev to do vhost ioctls and support
->     setting mdev device as backend;
->
-> Now the userspace API looks like this:
->
-> - Userspace generates a compatible mdev device;
->
-> - Userspace opens this mdev device with VFIO API (including
->    doing IOMMU programming for this mdev device with VFIO's
->    container/group based interface);
->
-> - Userspace opens /dev/vhost-mdev and gets vhost fd;
->
-> - Userspace uses vhost ioctls to setup vhost (userspace should
->    do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
->    fd first before doing other vhost ioctls);
->
-> Only compile test has been done for this series for now.
+Hi Linus,
+
+Can you please pull the m68knommu git tree, for-next branch.
+
+Only a single change, fix up header include in ColdFire specific GPIO
+handling code.
+
+Regards
+Greg
 
 
-Have a hard thought on the architecture:
-
-1) Create a vhost char device and pass vfio mdev device fd to it as a 
-backend and translate vhost-mdev ioctl to virtio mdev transport (e.g 
-read/write). DMA was done through the VFIO DMA mapping on the container 
-that is attached.
-
-We have two more choices:
-
-2) Use vfio-mdev but do not create vhost-mdev device, instead, just 
-implement vhost ioctl on vfio_device_ops, and translate them into 
-virtio-mdev transport or just pass ioctl to parent.
-
-3) Don't use vfio-mdev, create a new vhost-mdev driver, during probe 
-still try to add dev to vfio group and talk to parent with device 
-specific ops
-
-So I have some questions:
-
-1) Compared to method 2, what's the advantage of creating a new vhost 
-char device? I guess it's for keep the API compatibility?
-
-2) For method 2, is there any easy way for user/admin to distinguish e.g 
-ordinary vfio-mdev for vhost from ordinary vfio-mdev?  I saw you 
-introduce ops matching helper but it's not friendly to management.
-
-3) A drawback of 1) and 2) is that it must follow vfio_device_ops that 
-assumes the parameter comes from userspace, it prevents support kernel 
-virtio drivers.
-
-4) So comes the idea of method 3, since it register a new vhost-mdev 
-driver, we can use device specific ops instead of VFIO ones, then we can 
-have a common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
-
-What's your thoughts?
-
-Thanks
 
 
->
-> RFCv3: https://patchwork.kernel.org/patch/11117785/
->
-> [1] https://lkml.org/lkml/2019/9/10/135
->
-> Tiwei Bie (3):
->    vfio: support getting vfio device from device fd
->    vfio: support checking vfio driver by device ops
->    vhost: introduce mdev based hardware backend
->
->   drivers/vfio/mdev/vfio_mdev.c    |   3 +-
->   drivers/vfio/vfio.c              |  32 +++
->   drivers/vhost/Kconfig            |   9 +
->   drivers/vhost/Makefile           |   3 +
->   drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
->   drivers/vhost/vhost.c            |  39 ++-
->   drivers/vhost/vhost.h            |   6 +
->   include/linux/vfio.h             |  11 +
->   include/uapi/linux/vhost.h       |  10 +
->   include/uapi/linux/vhost_types.h |   5 +
->   10 files changed, 573 insertions(+), 7 deletions(-)
->   create mode 100644 drivers/vhost/mdev.c
->
+The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
+
+   Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
+
+are available in the Git repository at:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/gerg/m68knommu.git for-next
+
+for you to fetch changes up to 372ea263b3d9cdeb70f8cffa025b2e0875e51b62:
+
+   m68k: coldfire: Include the GPIO driver header (2019-09-09 09:32:32 +1000)
+
+----------------------------------------------------------------
+Linus Walleij (1):
+       m68k: coldfire: Include the GPIO driver header
+
+  arch/m68k/coldfire/gpio.c | 1 +
+  1 file changed, 1 insertion(+)
