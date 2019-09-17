@@ -2,186 +2,126 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2BDC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9338521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6772D218AC
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:26:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WhhWpk0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbfIQIXQ (ORCPT
+        id S1730425AbfIQIZ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:23:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34336 "EHLO mx1.suse.de"
+        Tue, 17 Sep 2019 04:25:59 -0400
+Received: from mail-eopbgr80044.outbound.protection.outlook.com ([40.107.8.44]:40579
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728364AbfIQIXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:23:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2049BAE84;
-        Tue, 17 Sep 2019 08:23:12 +0000 (UTC)
-Subject: Re: [PATCH v3] mm/kasan: dump alloc and free stack for page allocator
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     Qian Cai <cai@lca.pw>, Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-References: <20190911083921.4158-1-walter-zh.wu@mediatek.com>
- <5E358F4B-552C-4542-9655-E01C7B754F14@lca.pw>
- <c4d2518f-4813-c941-6f47-73897f420517@suse.cz>
- <1568297308.19040.5.camel@mtksdccf07>
- <613f9f23-c7f0-871f-fe13-930c35ef3105@suse.cz>
- <79fede05-735b-8477-c273-f34db93fd72b@virtuozzo.com>
- <6d58ce86-b2a4-40af-bf40-c604b457d086@suse.cz>
- <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a5103bf0-245e-5894-0486-3e92fa830e41@suse.cz>
-Date:   Tue, 17 Sep 2019 10:19:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <4e76e7ce-1d61-524a-622b-663c01d19707@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
+        id S1728364AbfIQIZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:25:59 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AZwvSjt4n+qvFO+NWUp0rLwE33AAlSi74/hAELk998T0tW6ybj5GNGz8bH9Cz99rGGB+/EzrWa7/nkubxi/lL9R9EDJT1mbLBm0/TZeWqlum6gW6sRmO4PfpnqYQxKVJJSOTUbjb3ZHfnpJ7ibng/rGIBGBU3qyOZKm16Uj/ijLZbbNM1k23dpUYT5hwtlAsnUnnMPg5TWSwOiIhXiBjxqFwSRTm32YFAqmoOsnJpjJkSN9o5giilePgVoVMSH1fLtH7ygwqFF5uTgxXipbvZG85vwSQ3cZ3WCJ9j2R4tvlT11a9u8ZlvEWrotXgCbJj7yAk3YyhMXfeQd46KwhihA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kQQ6JTmI7svK116YU17b2hhsHV14tM0ReFjJhpbvEug=;
+ b=Wf/Z5iSpHbl3zXrg+GD31XE1mRIGSYIPrKRUY7khR2bQkLORPETXNsUpuPFbcwP2C8inz528z+ZknyLGZ+WFJWYtOc7qwO/9Rupt1qmikVwpS0rljebn9Gu4eWi/CkYn1tIv2bsQ7QX5uSVmx9TMwrvWANkl/xzSLcI8tzuLu9wXw6rWIxU37MpqszAQSalD9liWLQWCeqm9H58ip6rEQxWGQYCv0fUdKbvcEZ5NxzelTldk1kGVuwbVQAbcw+alonvpEBFPZRyj/2mIX4MS07O1v8H5F/xrSkG4bCUrohWfxYLHm9DPJg3WRZGRXR0MMEGlAcrmTbXJ7SGAWkesAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kQQ6JTmI7svK116YU17b2hhsHV14tM0ReFjJhpbvEug=;
+ b=WhhWpk0Q86Z4Lpp+/OyNHtxt+Ob+iJwJaQ5Z7Iedvwg7nmam5irUYQAz4aBCPRjEG7/VWCbZrfQDQvgPI0sG0+/3KybWQXULu9RvIOnsFEuaLZu2HbQ6Ffu9ajE11dx9QUE97RHZAhl53IixFBybszQsemHcHykoA/5w5znQbXU=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB5546.eurprd04.prod.outlook.com (20.178.107.207) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.16; Tue, 17 Sep 2019 08:25:55 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 08:25:55 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     'Geert Uytterhoeven' <geert@linux-m68k.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH] devicetree: property-units: Add kohms unit
+Thread-Topic: [EXT] Re: [PATCH] devicetree: property-units: Add kohms unit
+Thread-Index: AQHVbS80z66smK3rv0SY+lUFtqLi0qcvhsKAgAAArgA=
+Date:   Tue, 17 Sep 2019 08:25:55 +0000
+Message-ID: <DB7PR04MB4490DD5F5A87EB796DE2A7A28F8F0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190917075850.40039-1-biwen.li@nxp.com>
+ <CAMuHMdUWue6-51Za7vejk=QkhV80iBXdc1E+6aTmQsvpB5AP-A@mail.gmail.com>
+In-Reply-To: <CAMuHMdUWue6-51Za7vejk=QkhV80iBXdc1E+6aTmQsvpB5AP-A@mail.gmail.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68328355-28d2-4ae3-4d73-08d73b48a926
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB5546;
+x-ms-traffictypediagnostic: DB7PR04MB5546:
+x-microsoft-antispam-prvs: <DB7PR04MB55468B6CDC14D1801B0C4D4D8F8F0@DB7PR04MB5546.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2276;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(39860400002)(346002)(136003)(199004)(189003)(54906003)(81166006)(99286004)(52536014)(81156014)(446003)(6246003)(478600001)(11346002)(71190400001)(186003)(53546011)(6506007)(4326008)(102836004)(7696005)(6116002)(66066001)(25786009)(3846002)(71200400001)(2906002)(316002)(476003)(486006)(5660300002)(66476007)(33656002)(44832011)(66556008)(66946007)(76116006)(66446008)(64756008)(8936002)(26005)(14454004)(76176011)(9686003)(6436002)(7736002)(74316002)(305945005)(229853002)(55016002)(86362001)(8676002)(6916009)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB5546;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 6COlNuCGhXn+U4Fta8wttS9vDWYK5GhG8dhzatNVlcUoTmFhiTjg8o2/UCvhVg+QO3vw1XFEhUx1vFoKLCmXJoCglEDlWh1x1RxDKtsbcSfnPP3V9NMLV5fBgj1qNxn165pBQuCRifB+dkwremdarHqLw1299uySTSBjminKkMXROcc8OZVHAJjIThD1axjhCbi6Uqee3jqAtGMgUOqohKRe8dnpf8kN1p1d4C6ZfSkBOMJ+5wtQqZIepyoGwqGj4TeMSE17ckeiPNKofT2nBALOUpfUqdIbnqaf2vvyQuFzuezvfhI1UPSjEJbEYiuFcVMFaHF7qQUn3StQFwJRzqo0SSWwVrxnznS6HtkeW3+7Zz4Rrr3G1XYq/CHPR6mRLNvHp8YxpIMeqQehg5Y5Tx5y3AIXJf8WUXsBW7Ru5+8=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68328355-28d2-4ae3-4d73-08d73b48a926
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 08:25:55.6998
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y/rDM0uGvOnQfGocQf8vnJxgtgQuKRQPdYQ6AyTpGcLCILExZmoEM0lGkqSjZicm7QqituuWJyu9sjn3YTLCnw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5546
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 5:57 PM, Andrey Ryabinin wrote:
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -710,8 +710,12 @@ static int __init early_debug_pagealloc(char *buf)
->>  	if (kstrtobool(buf, &enable))
->>  		return -EINVAL;
->>  
->> -	if (enable)
->> +	if (enable) {
->>  		static_branch_enable(&_debug_pagealloc_enabled);
->> +#ifdef CONFIG_PAGE_OWNER
->> +		page_owner_free_stack_disabled = false;
-> 
-> I think this won't work with CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y
-
-Good point, thanks.
-
->> +#endif
->> +	}
->>  
->>  	return 0;
->>  }
->> diff --git a/mm/page_owner.c b/mm/page_owner.c
->> index dee931184788..b589bfbc4795 100644
->> --- a/mm/page_owner.c
->> +++ b/mm/page_owner.c
->> @@ -24,13 +24,15 @@ struct page_owner {
->>  	short last_migrate_reason;
->>  	gfp_t gfp_mask;
->>  	depot_stack_handle_t handle;
->> -#ifdef CONFIG_DEBUG_PAGEALLOC
->> +#ifdef CONFIG_PAGE_OWNER_FREE_STACK
->>  	depot_stack_handle_t free_handle;
->>  #endif
->>  };
->>  
->>  static bool page_owner_disabled = true;
->> +bool page_owner_free_stack_disabled = true;
->>  DEFINE_STATIC_KEY_FALSE(page_owner_inited);
->> +static DEFINE_STATIC_KEY_FALSE(page_owner_free_stack);
->>  
->>  static depot_stack_handle_t dummy_handle;
->>  static depot_stack_handle_t failure_handle;
->> @@ -46,6 +48,9 @@ static int __init early_page_owner_param(char *buf)
->>  	if (strcmp(buf, "on") == 0)
->>  		page_owner_disabled = false;
->>  
->> +	if (!page_owner_disabled && IS_ENABLED(CONFIG_KASAN))
-> 
-> I'd rather keep all logic in one place, i.e. "if (!page_owner_disabled && (IS_ENABLED(CONFIG_KASAN) || debug_pagealloc_enabled())"
-> With this no changes in early_debug_pagealloc() required and CONFIG_DEBUG_PAGEALLOC_ENABLE_DEFAULT=y should also work correctly.
-
-In this function it would not work if the debug_pagealloc param gets
-processed later than page_owner, but should be doable in
-init_page_owner(), I'll try, thanks.
-
-> 
->> +		page_owner_free_stack_disabled = false;
->> +
->>  	return 0;
->>  }
->>  early_param("page_owner", early_page_owner_param);
->  
-> 
-
+PiANCj4gQ2F1dGlvbjogRVhUIEVtYWlsDQo+IA0KPiBIaSBCaXdlbiwNCj4gDQo+IE9uIFR1ZSwg
+U2VwIDE3LCAyMDE5IGF0IDEwOjA5IEFNIEJpd2VuIExpIDxiaXdlbi5saUBueHAuY29tPiB3cm90
+ZToNCj4gPiBUaGUgcGF0Y2ggYWRkcyBrb2htcyB1bml0DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBCaXdlbiBMaSA8Yml3ZW4ubGlAbnhwLmNvbT4NCj4gDQo+IFRoYW5rcyBmb3IgeW91ciBwYXRj
+aCENCj4gDQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Byb3Bl
+cnR5LXVuaXRzLnR4dA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9wcm9wZXJ0eS11bml0cy50eHQNCj4gPiBAQCAtMjcsNiArMjcsNyBAQCBFbGVjdHJpY2l0eQ0K
+PiA+ICAtbWljcm9hbXAgICAgICA6IG1pY3JvYW1wZXJlDQo+ID4gIC1taWNyb2FtcC1ob3VycyA6
+IG1pY3JvYW1wZXJlIGhvdXINCj4gPiAgLW9obXMgICAgICAgICAgOiBvaG0NCj4gPiArLWtvaG1z
+ICAgICAgICAgOiBraWxvb2htDQo+ID4gIC1taWNyby1vaG1zICAgIDogbWljcm9vaG0NCj4gPiAg
+LW1pY3Jvd2F0dC1ob3VyczogbWljcm93YXR0IGhvdXINCj4gPiAgLW1pY3Jvdm9sdCAgICAgOiBt
+aWNyb3ZvbHQNCj4gDQo+IFdoYXQncyB5b3VyIHJhdGlvbmFsZSBmb3IgYWRkaW5nICJrb2htcyI/
+DQo+IERvIHlvdSBuZWVkIHRvIHNwZWNpZnkgcmVzaXN0YW5jZSB2YWx1ZXMgdGhhdCBkbyBub3Qg
+Zml0IGluIDMyLWJpdCwgYW5kIHRodXMNCjMyLWJpdCBpcyBlbm91Z2gsIEkgaGF2ZSB0aHJlZSB2
+YWx1ZXMsIDYwIGtvaG0sIDEwMCBrb2htIGFuZCA1MDAga29obQ0KPiBjYW5ub3QgYmUgc3BlY2lm
+aWVkIHVzaW5nICJvaG1zIj8NCklmIHJlcGxhY2Ugd2l0aCBvaG1zLCB0aGUgdmFsdWUgaXMgYXMg
+Zm9sbG93czoNCjYwMDAwIG9obSwgMTAwMDAwIG9obSwgNTAwMDAwIG9obS4NCkl0J3Mgc28gbG9u
+ZyBmb3IgZXZlcnlvbmUuDQoNCj4gDQo+IEdye29ldGplLGVldGluZ31zLA0KPiANCj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAt
+LSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0NCj4gZ2VlcnRAbGludXgtbTY4
+ay5vcmcNCj4gDQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVv
+cGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQgd2hlbg0KPiBJJ20gdGFsa2luZyB0byBq
+b3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0
+Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQo=
