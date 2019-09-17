@@ -2,120 +2,130 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,LOCALPART_IN_SUBJECT,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDDD7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E5BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:51:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AAF321881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A7521852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 22:51:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568760495;
-	bh=35RZ9Cv1UOzb7vK/07nVlzsIyVImXIyZawe4lILEDA4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=n4BREtVMhmqObxJgREU76/TlkN+AnkmqY9llHYoq7l4xSatMdzuQvVdfsX9ZZW63x
-	 gBI/xmvxxKlzZrkP8k87sNI80QbewZTxqLscoWj9aKygdrNzLgv7mPsJQjSAMoru+w
-	 rSYmNvJlSvkbyB6IHmCTbyWXxBRVokr2iTz82PRk=
+	s=default; t=1568760661;
+	bh=+xX6erlXtfyLZTrfRuQqTSe/N2Cjx2bkna4npVRU0pI=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=Be+dqkn0sfbqGxRjiEiMSufI/frYM3a6n6Mf3r65HT3qSVCeTPimldGCm6+uMLdbb
+	 8szI9wvQ92RVbtKR7Ck2nzC95deaPetqkbb8oJ9UX19Iz3lhHEb41d3rDYfg4BJ755
+	 +StF5mAAD0+CmS9J7XnpG1eE5RtUJ9cABQZCkEvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfIQWsO (ORCPT
+        id S1728383AbfIQWvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 18:48:14 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33496 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726500AbfIQWsO (ORCPT
+        Tue, 17 Sep 2019 18:51:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36388 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfIQWvA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 18:48:14 -0400
-Received: by mail-io1-f67.google.com with SMTP id m11so11676195ioo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 15:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vl9Mu2mGZECf6RHSCn8ZprGBhzvSeBHJYZHrpw6VkxM=;
-        b=JQ1J+Njk4VPnJzxe2KL2pPrc0haxqF+9BtRtAW1dbV2+vgupUMQW/xUeV1i1xz7mwa
-         N3JjErsy0GS1umbjlAquYkYAwweVmkEuF3pBVfzJbotxP2tgEm8fh1ssSCleQ1BhUo//
-         yTOmY+WXE8yrMJZJtq46UAvsLG/K3PnEruJGs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Vl9Mu2mGZECf6RHSCn8ZprGBhzvSeBHJYZHrpw6VkxM=;
-        b=WE3dh5bhk2br58HUzAU3NuPFk4fyrJPt1fz/dMopLFNaE2j0Nrk8Ugf/PCPJL0ivb8
-         lh+wN+dHnlz+XqxIKbumzth8eyPQeEZ01hggsLC5SulCsMnoYxV0sh+li0A90yKS1M/Y
-         pfCG+RAShRO8Ic41hdSMxSkDiqJ7t74Nrwntn+veciUKZX3RvnToPL9J/XI0jeUJZcUG
-         dCDL9z2tvbz3saMol8NvVa4qrEX1bNAqUldLX+XuenVERtTznHmLK3+Fbz4vzwf5bKg3
-         WBnZYEjW5RSmd/CJr2xnBkeE/I7/SqtgyeWDPcVyJ5VNV86fOH6Tzpbh6i1t2aI5bzfh
-         O46g==
-X-Gm-Message-State: APjAAAXqVibwjNV4MTXKHtY+CPKexnJlCMa2Jpsj8oITIqLWyGUyvOx/
-        I/hSnz66z3dFP5NRRCHLfImNDw==
-X-Google-Smtp-Source: APXvYqwMLJcUixVtz9xYtBcUvpQimv23yZUDCsB/BJcMIPGA7v6r33wjK0uyyvnjE9fX6EdlrrglCQ==
-X-Received: by 2002:a5d:9b06:: with SMTP id y6mr1553483ion.77.1568760493464;
-        Tue, 17 Sep 2019 15:48:13 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id y17sm3129163ioa.52.2019.09.17.15.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 15:48:12 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     mchehab+samsung@kernel.org, corbet@lwn.net, rppt@linux.ibm.com,
-        rfontana@redhat.com, kstewart@linuxfoundation.org,
-        bhelgaas@google.com, tglx@linutronix.de
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/sphinx-pre-install: add how to exit virtualenv usage message
-Date:   Tue, 17 Sep 2019 16:48:05 -0600
-Message-Id: <20190917224805.2762-1-skhan@linuxfoundation.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Sep 2019 18:51:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BQkrGZo5tuLJBJQAzy2lLF+VZBINZ2SFT0dwCp0vtLc=; b=Hu4zYl5qzP+h1wZpPTS8yezBx
+        1LF0tc1aeqW4QIxUQBGu+7gnLDNTn2JtbiYK5N4SuUFP07eENAJG1iKLY2aSZXKLMCI8MbodcAHlS
+        UM6s4d6+ayZ7WscMlYC98Mbh305mLd3z26exuW27OutpUxrnyQcafCjgFq0FNZ/nef37w=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAMJF-0000wk-Tj; Tue, 17 Sep 2019 22:50:57 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 18B9827428EA; Tue, 17 Sep 2019 23:50:57 +0100 (BST)
+Date:   Tue, 17 Sep 2019 23:50:57 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Tree for Sep 17
+Message-ID: <20190917225057.GD47411@sirena.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
+Content-Disposition: inline
+X-Cookie: Have you locked your file cabinet?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add usage message on how to exit the virtualenv after documentation
-work is done.
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
----
- scripts/sphinx-pre-install | 8 ++++++++
- 1 file changed, 8 insertions(+)
+--GPJrCs/72TxItFYR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 3b638c0e1a4f..932547791e3c 100755
---- a/scripts/sphinx-pre-install
-+++ b/scripts/sphinx-pre-install
-@@ -645,6 +645,12 @@ sub check_distros()
- # Common dependencies
- #
- 
-+sub deactivate_help()
-+{
-+	printf "\tWhen work is done exit the virtualenv:\n";
-+	printf "\tdeactivate\n";
-+}
-+
- sub check_needs()
- {
- 	# Check for needed programs/tools
-@@ -686,6 +692,7 @@ sub check_needs()
- 		if ($need_sphinx && scalar @activates > 0 && $activates[0] ge $min_activate) {
- 			printf "\nNeed to activate a compatible Sphinx version on virtualenv with:\n";
- 			printf "\t. $activates[0]\n";
-+			deactivate_help();
- 			exit (1);
- 		} else {
- 			my $rec_activate = "$virtenv_dir/bin/activate";
-@@ -697,6 +704,7 @@ sub check_needs()
- 			printf "\t$virtualenv $virtenv_dir\n";
- 			printf "\t. $rec_activate\n";
- 			printf "\tpip install -r $requirement_file\n";
-+			deactivate_help();
- 
- 			$need++ if (!$rec_sphinx_upgrade);
- 		}
--- 
-2.20.1
+Hi all,
 
+Changes since 20190916:
+
+The sound-current tree gained a build failure for which I reverted a
+commit (this had actually been previously worked around with a patch
+against the tip tree but the issue got moved forward by Takashi's
+workflow for sending pull requests).
+
+The OMAP tree gained a conflict with Linus' tree.
+
+Non-merge commits (relative to Linus' tree): 10090
+ 9602 files changed, 691860 insertions(+), 283296 deletions(-)
+
+----------------------------------------------------------------------------
+
+I have created today's linux-next tree at
+git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+(patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+are tracking the linux-next tree using git, you should not use "git pull"
+to do so as that will try to merge the new linux-next release with the
+old one.  You should use "git fetch" and checkout or reset to the new
+master.
+
+You can see which trees have been included by looking in the Next/Trees
+file in the source.  There are also quilt-import.log and merge.log
+files in the Next directory.  Between each merge, the tree was built
+with a defconfig for arm64, an allmodconfig for x86_64, a
+multi_v7_defconfig for arm and a native build of tools/perf.
+
+Below is a summary of the state of the merge.
+
+I am currently merging 310 trees (counting Linus' and 77 trees of bug
+fix patches pending for the current merge release).
+
+Stats about the size of the tree over time can be seen at
+http://neuling.org/linux-next-size.html .
+
+Status of my local build tests will be at
+http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+advice about cross compilers/configs that work, we are always open to add
+more builds.
+
+Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+Gortmaker for triage and bug fixes.
+
+
+--GPJrCs/72TxItFYR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2BY1AACgkQJNaLcl1U
+h9CymAf+MyOY5psIKfcDreFqnmm0mg1f15g9LFL03eIHeqb10NtOvuY1blTuYaBk
+GzlynWCciAAR/Bdp04RksRcjk3VvcspqGvq/LxXtWQqiYoeVRjP/4TcwjI5fM1Xi
+Sz9+8y848QiMYO37LwlEv+1cL9ytJlg2wTtpop7XG74NEUDSyo57dNRdE0Gf8yPU
+RrS4EUJinjYtXmUY4lWygPCPB7upUG5d5DH9v36VRTq7pI3XU7q/aGeWaSpxQn8x
+bqUGMGGFZotaU3qxsc2YWIzXNWYFNbEvZGJjxRnBOotlU8bUTnrEP+etGn8Eos89
+SI/XOmvnW8vwIcmRg2OG/h04IVQ2MQ==
+=tBzR
+-----END PGP SIGNATURE-----
+
+--GPJrCs/72TxItFYR--
