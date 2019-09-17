@@ -2,290 +2,138 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A6DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2576AC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D4E0206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7EB3216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="JHFW7Vzd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeorArZ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392406AbfIQF2t (ORCPT
+        id S2392407AbfIQFbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 01:28:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:57447 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732712AbfIQF2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 01:28:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46XWqS6K4Cz9sNk;
-        Tue, 17 Sep 2019 15:28:36 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1568698124;
-        bh=aN50ZIFwgnpq9UgwoGTeDmA66UxmOVUz1V+DPk07KSI=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=JHFW7VzdOKGRMHcwPORPAFQRFQb9GgzjT3rqUdIhBrBak5TUzrKz7LvSJicBdUnSz
-         +lTsuCsim1mkACJ7AnCkM3JD4r9z1eoWvw2qLbgmHYzSrLSheAIhT7G4tZcnTgFn4y
-         Ot+r9Nvb74/peELR+d97R8N9wzEC72TFiDhOiLr8RbNIynB9xprM7lkiJlgjh4aFz+
-         ZR+I9qdp9kFj78/sznBtRl2z7btdTYvD8YFCgU5uS6aG0hmf2fN+JPU15Bd0ur9PrB
-         x98MOiDFHpwDEbLVm1DR4pLTEF8XPBSWCP3kuYFEaWRI1DexcVcDeSXFCHTjYsTiix
-         z7xt1QlKubw/Q==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com
-Cc:     akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
-        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
-        rafael@kernel.org, mhocko@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-In-Reply-To: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
-References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
-Date:   Tue, 17 Sep 2019 15:28:32 +1000
-Message-ID: <87pnjzsd8f.fsf@mpe.ellerman.id.au>
+        Tue, 17 Sep 2019 01:31:41 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:35694 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730407AbfIQFbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 01:31:41 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 205so1447946pfw.2;
+        Mon, 16 Sep 2019 22:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=EQ0acRLPRiNkuyWsFFHOV/6xwzk+wEWY0J/gcpntvHs=;
+        b=TeorArZ8kq/CR+J83TcgIcoMMXb0AYK6talNwdUHRJVyf9VikpQmWsGf7w3UTHfQny
+         pDINeP/EhlRnYY9sMv2fum/y2ArzqdmeDG6hxpTklbaUPRN7YV9s+U7mOiT0H/fgCQDm
+         KIxM9/+sDhNZpzPWn/c7afHOZPoV/5MgIDG31sTYYhJmzI7Ej8GSRGomCI5/6RQ9WiLr
+         Nvki95KG/xig1NrsLMbSId2FLFpvMbvTlBNBD0ED8BG2PooD4xBLZK9Rg5ULlGRAP60L
+         zaD45mDMcL2jwgoEcrUVWYTZN+cQdMEJJTuMS/Vxl5SJayjoOQjwbgRoHqPhCPuFKmUG
+         psIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=EQ0acRLPRiNkuyWsFFHOV/6xwzk+wEWY0J/gcpntvHs=;
+        b=bYTbXkAVcTlUyrnVw48jr5PLgn2vg7fWtCJaZ2eG4uSOvBKq9bMjFRQaxqU07lAAiL
+         LO1zry62i0NRnsz9BQf22Qy//+pNcAtiUWiB3F2XBYAXGou8OtiAHaIU8/ra9ks1glk5
+         won0V/76sKyidPgozkkr9ZcjxaehB8hg/psTfLhaWJ8UxF6zNrv7fWpcwp413DmNa0iN
+         LPnBspzA9uu9VhoA7XLjmnevS0GAzZ/DP2T31klgJFwgJLAaRPA3buYwPaIfbXEch3N/
+         hQH7pLFYIZ4xBwR3fpBIikt/EUjeDu7kplzMjSuJn1fm+5ud8pxy1GONzzhDryshZZbE
+         fd1g==
+X-Gm-Message-State: APjAAAX2M8FB4Ht/N7c1XZEMOrB2CI0DAgMsPmwDxJUvhvSTGFnKGBdZ
+        tMJ8bo/FhKFJTZ2DaE0IpMg=
+X-Google-Smtp-Source: APXvYqxR+x7zzJVajUqecslzP05unUQObpLjtCGBNhxJZNrfm+ZY01XHEVbEv4NirSM8n8X1LdMWug==
+X-Received: by 2002:aa7:8f08:: with SMTP id x8mr2368896pfr.48.1568698300250;
+        Mon, 16 Sep 2019 22:31:40 -0700 (PDT)
+Received: from arter97-x1.inha.ac.kr ([165.246.242.140])
+        by smtp.gmail.com with ESMTPSA id h2sm964076pfq.108.2019.09.16.22.31.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 22:31:39 -0700 (PDT)
+From:   Park Ju Hyung <qkrwngud825@gmail.com>
+To:     valdis.kletnieks@vt.edu, gregkh@linuxfoundation.org,
+        namjae.jeon@samsung.com
+Cc:     alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
+        linkinjeon@gmail.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sergey.senozhatsky@gmail.com
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Date:   Tue, 17 Sep 2019 14:31:34 +0900
+Message-Id: <20190917053134.27926-1-qkrwngud825@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <8998.1568693976@turing-police>
+References: <8998.1568693976@turing-police>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yunsheng Lin <linyunsheng@huawei.com> writes:
-> When passing the return value of dev_to_node() to cpumask_of_node()
-> without checking if the device's node id is NUMA_NO_NODE, there is
-> global-out-of-bounds detected by KASAN.
->
-> From the discussion [1], NUMA_NO_NODE really means no node affinity,
-> which also means all cpus should be usable. So the cpumask_of_node()
-> should always return all cpus online when user passes the node id as
-> NUMA_NO_NODE, just like similar semantic that page allocator handles
-> NUMA_NO_NODE.
->
-> But we cannot really copy the page allocator logic. Simply because the
-> page allocator doesn't enforce the near node affinity. It just picks it
-> up as a preferred node but then it is free to fallback to any other numa
-> node. This is not the case here and node_to_cpumask_map will only restrict
-> to the particular node's cpus which would have really non deterministic
-> behavior depending on where the code is executed. So in fact we really
-> want to return cpu_online_mask for NUMA_NO_NODE.
->
-> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
-> which should be identical with cpu_online_mask when those arches do not
-> support cpu hotplug, this patch also changes them to return cpu_online_mask
-> in order to be consistent and use NUMA_NO_NODE instead of "-1".
+On Tue, 17 Sep 2019 00:19:36 -0400, "Valdis Klētnieks" said:
+> I'm working off a somewhat cleaned up copy of Samsung's original driver,
+> because that's what I had knowledge of.  If the sdfat driver is closer to being
+> mergeable, I'd not object if that got merged instead.
 
-Except some of those arches *do* support CPU hotplug, powerpc and sparc
-at least. So switching from cpu_all_mask to cpu_online_mask is a
-meaningful change.
+Greg, as Valdis mentioned here, the staging tree driver is just another exFAT fork
+from Samsung.
+What's the point of using a much older driver?
 
-That doesn't mean it's wrong, but you need to explain why it's the right
-change.
+sdFAT is clearly more matured and been put into more recent production softwares.
+And as I wrote in previous email, it does include some real fixes.
 
+As Namjae said too, Samsung would be more interested in merging sdFAT to upstream.
+If we diverge, Samsung will have less reasons to contribute their patches to upstream.
 
-> Also there is a debugging version of node_to_cpumask_map() for x86 and
-> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
->
-> [1] https://lore.kernel.org/patchwork/patch/1125789/
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> ---
-> V5: Drop unsigned "fix" change for x86/arm64, and change comment log
->     according to Michal's comment.
-> V4: Have all these changes in a single patch.
+Also, I think it makes much more sense to make Samsung the maintainer of this driver
+(if they're willing to put in the manpower to do so). Asking them would be the first
+step in doing so.
 
-This makes it much harder to get the patch merged, you basically have to
-get Andrew Morton to merge it now. Sending individual patches for each
-arch means each arch maintainer can merge them separately.
+> But here's the problem... Samsung has their internal sdfat code, Park Yu Hyung
+> has what appears to be a fork of that code from some point (and it's unclear ,
+> and it's unclear which one has had more bugfixes and cleanups to get it to
+> somewhere near mainline mergeable.
 
-cheers
+I made it extremely clear on where I took the code.
 
-> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
->     for NUMA_NO_NODE case, and change the commit log to better justify
->     the change.
-> V2: make the node id checking change to other arches too.
-> ---
->  arch/alpha/include/asm/topology.h                | 2 +-
->  arch/arm64/include/asm/numa.h                    | 3 +++
->  arch/arm64/mm/numa.c                             | 3 +++
->  arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
->  arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
->  arch/powerpc/include/asm/topology.h              | 6 +++---
->  arch/s390/include/asm/topology.h                 | 3 +++
->  arch/sparc/include/asm/topology_64.h             | 6 +++---
->  arch/x86/include/asm/topology.h                  | 3 +++
->  arch/x86/mm/numa.c                               | 3 +++
->  10 files changed, 27 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
-> index 5a77a40..836c9e2 100644
-> --- a/arch/alpha/include/asm/topology.h
-> +++ b/arch/alpha/include/asm/topology.h
-> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
->  	int cpu;
->  
->  	if (node == NUMA_NO_NODE)
-> -		return cpu_all_mask;
-> +		return cpu_online_mask;
->  
->  	cpumask_clear(&node_to_cpumask_map[node]);
->  
-> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-> index 626ad01..c8a4b31 100644
-> --- a/arch/arm64/include/asm/numa.h
-> +++ b/arch/arm64/include/asm/numa.h
-> @@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
->  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->  static inline const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
->  	return node_to_cpumask_map[node];
->  }
->  #endif
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index 4f241cc..f57202d 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
->   */
->  const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
->  	if (WARN_ON(node >= nr_node_ids))
->  		return cpu_none_mask;
->  
-> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
-> index 965f079..04505e6 100644
-> --- a/arch/mips/include/asm/mach-ip27/topology.h
-> +++ b/arch/mips/include/asm/mach-ip27/topology.h
-> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
->  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
->  
->  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
-> -#define cpumask_of_node(node)	((node) == -1 ?				\
-> -				 cpu_all_mask :				\
-> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-> +				 cpu_online_mask :			\
->  				 &hub_data(node)->h_cpus)
->  struct pci_bus;
->  extern int pcibus_to_node(struct pci_bus *);
-> diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-> index 7ff819a..e78daa6 100644
-> --- a/arch/mips/include/asm/mach-loongson64/topology.h
-> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
-> @@ -5,7 +5,9 @@
->  #ifdef CONFIG_NUMA
->  
->  #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
-> -#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-> +				 cpu_online_mask :			\
-> +				 &__node_data[(node)]->cpumask)
->  
->  struct pci_bus;
->  extern int pcibus_to_node(struct pci_bus *);
-> diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-> index 2f7e1ea..309f847 100644
-> --- a/arch/powerpc/include/asm/topology.h
-> +++ b/arch/powerpc/include/asm/topology.h
-> @@ -17,9 +17,9 @@ struct device_node;
->  
->  #include <asm/mmzone.h>
->  
-> -#define cpumask_of_node(node) ((node) == -1 ?				\
-> -			       cpu_all_mask :				\
-> -			       node_to_cpumask_map[node])
-> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-> +				 cpu_online_mask :			\
-> +				 node_to_cpumask_map[node])
->  
->  struct pci_bus;
->  #ifdef CONFIG_PCI
-> diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-> index cca406f..1bd2e73 100644
-> --- a/arch/s390/include/asm/topology.h
-> +++ b/arch/s390/include/asm/topology.h
-> @@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
->  #define cpumask_of_node cpumask_of_node
->  static inline const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
->  	return &node_to_cpumask_map[node];
->  }
->  
-> diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
-> index 34c628a..8c29357 100644
-> --- a/arch/sparc/include/asm/topology_64.h
-> +++ b/arch/sparc/include/asm/topology_64.h
-> @@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
->  	return numa_cpu_lookup_table[cpu];
->  }
->  
-> -#define cpumask_of_node(node) ((node) == -1 ?				\
-> -			       cpu_all_mask :				\
-> -			       &numa_cpumask_lookup_table[node])
-> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-> +				 cpu_online_mask :			\
-> +				 &numa_cpumask_lookup_table[node])
->  
->  struct pci_bus;
->  #ifdef CONFIG_PCI
-> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-> index 4b14d23..7fa82e1 100644
-> --- a/arch/x86/include/asm/topology.h
-> +++ b/arch/x86/include/asm/topology.h
-> @@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
->  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
->  static inline const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
->  	return node_to_cpumask_map[node];
->  }
->  #endif
-> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> index e6dad60..84b28ef 100644
-> --- a/arch/x86/mm/numa.c
-> +++ b/arch/x86/mm/numa.c
-> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
->   */
->  const struct cpumask *cpumask_of_node(int node)
->  {
-> +	if (node == NUMA_NO_NODE)
-> +		return cpu_online_mask;
-> +
->  	if (node >= nr_node_ids) {
->  		printk(KERN_WARNING
->  			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-> -- 
-> 2.8.1
+The initial commit: "sdfat: import from G973FXXU3ASG8" states which kernel source
+I used.
+
+You can simply search "G973FXXU3ASG8" on http://opensource.samsung.com and download
+the source code. It'll match exactly with my initial commit.
+
+My repository is basically rename + clean-up + older kernel compat.
+
+I think we can all agree that using the sdFAT naming on non-Android is very
+misleading, which is why I renamed it to exFAT.
+
+sdFAT includes support for fat16/32, and as also mentioned in
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git/commit/?h=staging-next&id=58985a9d2d03e977db93bf574a16162766a318fe
+this isn't desirable, especially in mainline.
+I cleaned it up and removed some other Samsung's code that relies on proprietary
+userspace tools such as defrag.
+
+I believe my repository is in the cleanest state for getting merged to mainline,
+compared to other drivers avilable out there.
+
+If we happen to pick it to mainline, I think it'll also be quite trivial for Samsung
+to pick mainline patches back to their sdFAT drivers used in Galaxy devices.
+
+> Can you provide a pointer to what Samsung is *currently* using? We probably
+> need to stop and actually look at the code bases and see what's in the best
+> shape currently.
+
+Namjae could probably elaborate here, but if I were to guess, there wasn't a
+noticeable difference in recent sdFAT releases. Even the lastest Note10 kernel only
+had some uevent changes.
+
+I think the current latest public source's driver is the best one available.
+
+Thanks.
