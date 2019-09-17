@@ -2,241 +2,107 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D7FC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:36:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE9DC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0468B21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:36:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FEB20862
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568713024;
+	bh=Fe8XY02MKWVmUu0yJIS6DNTB2BQA7WdpsCervfWNCwc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PWvrye60UJ3fRvWMjwYCJOSaCvc1DuxIYCOoJ3do+QfhzB4yyGvvZU6oB6htv1dVu
+	 KLO8+sa6+sJ3Lwdj9NyuyWQJMDVuph0PPBofO62xgGtHYeKD8UlY2e5nZkD4uh4E7x
+	 mhHvazIWKLtWEvEym+OMS7abSurAbDkj4BZYpVKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfIQJgV (ORCPT
+        id S1728103AbfIQJhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:36:21 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:21929 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQJgT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:36:19 -0400
-IronPort-SDR: ZU7hZT/XlFkTD73BZmZTw9pOUanTclQ7hx2mpO2xH7Y/AcsFwPZzT6921jLyomyoC5vNELzrP/
- gKvBW6utXla4AEMnCBvDmXLra8bQO19LKKg8wgNXGR8I2nsZoFCWp/XRYoAUJdFu+ccp1k2Noz
- fR0jXmABe9aBbLzk/oZFMAahk8WdD3uU5H9ZP4mRlTOx9bphGyTPRx0JRk6XLPm5kl+HEmFocy
- lhgSVq18HNQ/vf0/79JvOsdUDOYrGSXVS768X2hf68UqN1KMXBs03z8MsuT0OF8a0IpgKgSVOl
- Gqc=
-X-IronPort-AV: E=Sophos;i="5.64,515,1559548800"; 
-   d="scan'208";a="41423010"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 17 Sep 2019 01:36:17 -0800
-IronPort-SDR: MhsUm4a3r3MNoHUr5zjo2adJYdu7Ztk7NT9C7+mYec+8VkwRjwR/+qrE/vICigIYYBd8GIxhRR
- MSo/TWa7umnV5G/2uKbZ04L28Cct70dnufeiFWQTwpQGfQrCY9X6hUIiXzGFV48I4GyNq2JMA8
- h4//qOULV9/05f1z8C1psKedUBZfAVRgyNBS8b6P4JJFGhchgDe6y0CJnvSW+tdNLfaOSxVFpm
- owef5Vni+BpeyAQ1WgtZ2DXlUhzcSX6rqz8JiWonjSMdNKDqf3x+Rdks8kg0U6Cgy6y/5vBhLZ
- UZQ=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v3 09/49] Input: atmel_mxt_ts - implement T15 Key Array support
-Date:   Tue, 17 Sep 2019 18:35:10 +0900
-Message-ID: <20190917093550.18335-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190917093550.18335-1-jiada_wang@mentor.com>
-References: <20190917093550.18335-1-jiada_wang@mentor.com>
+        Tue, 17 Sep 2019 05:37:03 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40034 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726191AbfIQJhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 05:37:02 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E6DA5ACC6;
+        Tue, 17 Sep 2019 09:36:58 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 11:36:55 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
+        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
+        rafael@kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190917093655.GA1872@dhcp22.suse.cz>
+References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
+ <87pnjzsd8f.fsf@mpe.ellerman.id.au>
+ <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-01.mgc.mentorg.com (147.34.90.201) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+On Tue 17-09-19 14:20:11, Yunsheng Lin wrote:
+> On 2019/9/17 13:28, Michael Ellerman wrote:
+> > Yunsheng Lin <linyunsheng@huawei.com> writes:
+[...]
+> >> But we cannot really copy the page allocator logic. Simply because the
+> >> page allocator doesn't enforce the near node affinity. It just picks it
+> >> up as a preferred node but then it is free to fallback to any other numa
+> >> node. This is not the case here and node_to_cpumask_map will only restrict
+> >> to the particular node's cpus which would have really non deterministic
+> >> behavior depending on where the code is executed. So in fact we really
+> >> want to return cpu_online_mask for NUMA_NO_NODE.
+> >>
+> >> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
+> >> which should be identical with cpu_online_mask when those arches do not
+> >> support cpu hotplug, this patch also changes them to return cpu_online_mask
+> >> in order to be consistent and use NUMA_NO_NODE instead of "-1".
+> > 
+> > Except some of those arches *do* support CPU hotplug, powerpc and sparc
+> > at least. So switching from cpu_all_mask to cpu_online_mask is a
+> > meaningful change.
+> 
+> Yes, thanks for pointing out.
+> 
+> > 
+> > That doesn't mean it's wrong, but you need to explain why it's the right
+> > change.
+> 
+> How about adding the below to the commit log:
+> Even if some of the arches do support CPU hotplug, it does not make sense
+> to return the cpu that has been hotplugged.
+>
+> Any suggestion?
 
-There is a key array object in many maXTouch chips which allows some X/Y
-lines to be used as a key array. This patch maps them to a series of keys
-which may be configured in a platform data array.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 15bb074b5abf3a101f7b79544213f1c110ea4cab)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: Fix compilation warning]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 85 ++++++++++++++++++++++++
- 1 file changed, 85 insertions(+)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 68c8237f7932..1d738c488bdd 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -314,6 +314,9 @@ struct mxt_data {
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
- 	bool use_retrigen_workaround;
-+	unsigned long t15_keystatus;
-+	int t15_num_keys;
-+	const unsigned int *t15_keymap;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -324,6 +327,8 @@ struct mxt_data {
- 	u16 T71_address;
- 	u8 T9_reportid_min;
- 	u8 T9_reportid_max;
-+	u8 T15_reportid_min;
-+	u8 T15_reportid_max;
- 	u16 T18_address;
- 	u8 T19_reportid;
- 	u8 T42_reportid_min;
-@@ -987,6 +992,38 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
- 	data->update_input = true;
- }
- 
-+static void mxt_proc_t15_messages(struct mxt_data *data, u8 *msg)
-+{
-+	struct input_dev *input_dev = data->input_dev;
-+	struct device *dev = &data->client->dev;
-+	int key;
-+	bool curr_state, new_state;
-+	bool sync = false;
-+	unsigned long keystates = le32_to_cpu((__force __le32)msg[2]);
-+
-+	for (key = 0; key < data->t15_num_keys; key++) {
-+		curr_state = test_bit(key, &data->t15_keystatus);
-+		new_state = test_bit(key, &keystates);
-+
-+		if (!curr_state && new_state) {
-+			dev_dbg(dev, "T15 key press: %u\n", key);
-+			__set_bit(key, &data->t15_keystatus);
-+			input_event(input_dev, EV_KEY,
-+				    data->t15_keymap[key], 1);
-+			sync = true;
-+		} else if (curr_state && !new_state) {
-+			dev_dbg(dev, "T15 key release: %u\n", key);
-+			__clear_bit(key, &data->t15_keystatus);
-+			input_event(input_dev, EV_KEY,
-+				    data->t15_keymap[key], 0);
-+			sync = true;
-+		}
-+	}
-+
-+	if (sync)
-+		input_sync(input_dev);
-+}
-+
- static void mxt_proc_t42_messages(struct mxt_data *data, u8 *msg)
- {
- 	struct device *dev = &data->client->dev;
-@@ -1045,6 +1082,9 @@ static int mxt_proc_message(struct mxt_data *data, u8 *message)
- 	} else if (report_id == data->T19_reportid) {
- 		mxt_input_button(data, message);
- 		data->update_input = true;
-+	} else if (report_id >= data->T15_reportid_min
-+		   && report_id <= data->T15_reportid_max) {
-+		mxt_proc_t15_messages(data, message);
- 	} else {
- 		mxt_dump_message(data, message);
- 	}
-@@ -1706,6 +1746,8 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	data->T71_address = 0;
- 	data->T9_reportid_min = 0;
- 	data->T9_reportid_max = 0;
-+	data->T15_reportid_min = 0;
-+	data->T15_reportid_max = 0;
- 	data->T18_address = 0;
- 	data->T19_reportid = 0;
- 	data->T42_reportid_min = 0;
-@@ -1784,6 +1826,10 @@ static int mxt_parse_object_table(struct mxt_data *data,
- 						object->num_report_ids - 1;
- 			data->num_touchids = object->num_report_ids;
- 			break;
-+		case MXT_TOUCH_KEYARRAY_T15:
-+			data->T15_reportid_min = min_id;
-+			data->T15_reportid_max = max_id;
-+			break;
- 		case MXT_SPT_COMMSCONFIG_T18:
- 			data->T18_address = object->start_address;
- 			break;
-@@ -2077,6 +2123,7 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 	int error;
- 	unsigned int num_mt_slots;
- 	unsigned int mt_flags = 0;
-+	int i;
- 
- 	switch (data->multitouch) {
- 	case MXT_TOUCH_MULTI_T9:
-@@ -2190,6 +2237,15 @@ static int mxt_initialize_input_device(struct mxt_data *data)
- 				     0, 255, 0, 0);
- 	}
- 
-+	/* For T15 Key Array */
-+	if (data->T15_reportid_min) {
-+		data->t15_keystatus = 0;
-+
-+		for (i = 0; i < data->t15_num_keys; i++)
-+			input_set_capability(input_dev, EV_KEY,
-+					data->t15_keymap[i]);
-+	}
-+
- 	input_set_drvdata(input_dev, data);
- 
- 	error = input_register_device(input_dev);
-@@ -3148,8 +3204,10 @@ static void mxt_input_close(struct input_dev *dev)
- static int mxt_parse_device_properties(struct mxt_data *data)
- {
- 	static const char keymap_property[] = "linux,gpio-keymap";
-+	static const char buttons_property[] = "atmel,key-buttons";
- 	struct device *dev = &data->client->dev;
- 	u32 *keymap;
-+	u32 *buttonmap;
- 	int n_keys;
- 	int error;
- 
-@@ -3180,6 +3238,33 @@ static int mxt_parse_device_properties(struct mxt_data *data)
- 		data->t19_num_keys = n_keys;
- 	}
- 
-+	if (device_property_present(dev, buttons_property)) {
-+		n_keys = device_property_read_u32_array(dev, buttons_property,
-+							NULL, 0);
-+		if (n_keys <= 0) {
-+			error = n_keys < 0 ? n_keys : -EINVAL;
-+			dev_err(dev, "invalid/malformed '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		buttonmap = devm_kmalloc_array(dev, n_keys, sizeof(*buttonmap),
-+					       GFP_KERNEL);
-+		if (!buttonmap)
-+			return -ENOMEM;
-+
-+		error = device_property_read_u32_array(dev, buttons_property,
-+						       buttonmap, n_keys);
-+		if (error) {
-+			dev_err(dev, "failed to parse '%s' property: %d\n",
-+				buttons_property, error);
-+			return error;
-+		}
-+
-+		data->t15_keymap = buttonmap;
-+		data->t15_num_keys = n_keys;
-+	}
-+
- 	return 0;
- }
- 
+Again, for the third time, I believe. Make it a separate patch please.
+There is absolutely no reason to conflate those two things.
 -- 
-2.19.2
-
+Michal Hocko
+SUSE Labs
