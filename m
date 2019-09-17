@@ -2,107 +2,166 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE9DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE79C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FEB20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568713024;
-	bh=Fe8XY02MKWVmUu0yJIS6DNTB2BQA7WdpsCervfWNCwc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PWvrye60UJ3fRvWMjwYCJOSaCvc1DuxIYCOoJ3do+QfhzB4yyGvvZU6oB6htv1dVu
-	 KLO8+sa6+sJ3Lwdj9NyuyWQJMDVuph0PPBofO62xgGtHYeKD8UlY2e5nZkD4uh4E7x
-	 mhHvazIWKLtWEvEym+OMS7abSurAbDkj4BZYpVKU=
+	by mail.kernel.org (Postfix) with ESMTP id 2E51F21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbfIQJhD (ORCPT
+        id S1728142AbfIQJhH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:37:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40034 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726191AbfIQJhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:37:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E6DA5ACC6;
-        Tue, 17 Sep 2019 09:36:58 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 11:36:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
-        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
-        rafael@kernel.org, gregkh@linuxfoundation.org
-Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190917093655.GA1872@dhcp22.suse.cz>
-References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
- <87pnjzsd8f.fsf@mpe.ellerman.id.au>
- <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
+        Tue, 17 Sep 2019 05:37:07 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:50332 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfIQJhF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 05:37:05 -0400
+Received: from mail-ot1-f70.google.com ([209.85.210.70])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iA9ux-0006ry-Ra
+        for linux-kernel@vger.kernel.org; Tue, 17 Sep 2019 09:37:04 +0000
+Received: by mail-ot1-f70.google.com with SMTP id g5so1408770otp.22
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 02:37:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EIbijquzMtQBr8kkr1tOGfR+o3tuxAs9+vpk/bBLO3Q=;
+        b=SHOTCyf/eO4g1OvJJIW00ojChWBNNBAtoUv7dVQMh7sa1KcFuMKsXwWvGmn63yVEOB
+         jxH94snzFLIYWeAW70wyovifyb+87PvvB88g6CZvEQCYrfCJJTXc++0Xw1guUTIGLdsQ
+         AO/KFGxNFXggII4Oe/h7A1CgAB1S5o2+/ehEc2vXQVnyNKzSruEgJjWa9/3a2iarLv90
+         X8ROtwcGSkdgdx4WVT3YVYZYRSMTk1XvOM4BUNn3ceFY6jAMdlX7oNO/HdsX0yHEdcML
+         aQqRNh4a0+/MncSwS/FCL9Wq7isElpR6GVNSbUlpw5oYwpxNtFg91yqGHLcUQeStyX3m
+         /YuQ==
+X-Gm-Message-State: APjAAAU+xrkqJY6FMp8rQBjbeoh16sQ5BGVDT7f0yPV8Fof04fqWk0ei
+        8tCTjV1UeGN+0S1V52dCe3sMDPxsFNmDV/B7DFMdvCkVN6fUqCy+DnV5xb9BlVuBdJN84K1R4vX
+        8XRn5mav7qM3G604lJqX6wZk6JLZCDBOfnRDO3OQK3yc2WlhKvQ6IEQMf0A==
+X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr2117283ote.0.1568713022837;
+        Tue, 17 Sep 2019 02:37:02 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwicLemrKh18hQPput+im8uQ+JqnJfWBVlweGggNmdSwQZv1LUrL1ZnqK0WlQoEBSHLeeBlQIMwrEGN5/Bcbgo=
+X-Received: by 2002:a05:6830:2306:: with SMTP id u6mr2117270ote.0.1568713022472;
+ Tue, 17 Sep 2019 02:37:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190827134756.10807-2-kai.heng.feng@canonical.com>
+ <20190828180128.1732-1-kai.heng.feng@canonical.com> <20190905213509.GI103977@google.com>
+In-Reply-To: <20190905213509.GI103977@google.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Tue, 17 Sep 2019 11:36:51 +0200
+Message-ID: <CAAd53p5LUat5MVkjbkk+st0TJA96y36keD898ZOepEdsnaiihw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ALSA: hda: Allow HDA to be runtime suspended when
+ dGPU is not bound
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     tiwai@suse.com, Linux PCI <linux-pci@vger.kernel.org>,
+        alsa-devel@alsa-project.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 17-09-19 14:20:11, Yunsheng Lin wrote:
-> On 2019/9/17 13:28, Michael Ellerman wrote:
-> > Yunsheng Lin <linyunsheng@huawei.com> writes:
-[...]
-> >> But we cannot really copy the page allocator logic. Simply because the
-> >> page allocator doesn't enforce the near node affinity. It just picks it
-> >> up as a preferred node but then it is free to fallback to any other numa
-> >> node. This is not the case here and node_to_cpumask_map will only restrict
-> >> to the particular node's cpus which would have really non deterministic
-> >> behavior depending on where the code is executed. So in fact we really
-> >> want to return cpu_online_mask for NUMA_NO_NODE.
-> >>
-> >> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
-> >> which should be identical with cpu_online_mask when those arches do not
-> >> support cpu hotplug, this patch also changes them to return cpu_online_mask
-> >> in order to be consistent and use NUMA_NO_NODE instead of "-1".
-> > 
-> > Except some of those arches *do* support CPU hotplug, powerpc and sparc
-> > at least. So switching from cpu_all_mask to cpu_online_mask is a
-> > meaningful change.
-> 
-> Yes, thanks for pointing out.
-> 
-> > 
-> > That doesn't mean it's wrong, but you need to explain why it's the right
-> > change.
-> 
-> How about adding the below to the commit log:
-> Even if some of the arches do support CPU hotplug, it does not make sense
-> to return the cpu that has been hotplugged.
->
-> Any suggestion?
+Hi Bjorn,
 
-Again, for the third time, I believe. Make it a separate patch please.
-There is absolutely no reason to conflate those two things.
--- 
-Michal Hocko
-SUSE Labs
+On Thu, Sep 5, 2019 at 11:35 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Thu, Aug 29, 2019 at 02:01:28AM +0800, Kai-Heng Feng wrote:
+> > It's a common practice to let dGPU unbound and use PCI platform power
+> > management to disable its power through _OFF method of power resource,
+> > which is listed by _PR3.
+> > When the dGPU comes with an HDA function, the HDA won't be suspended if
+> > the dGPU is unbound, so the power resource can't be turned off.
+>
+> I'm not involved in applying this patch, but from the peanut gallery:
+>
+>   - The above looks like it might be two paragraphs missing a blank
+>     line between?  Or maybe it's one paragraph that needs to be
+>     rewrapped?
+
+I think it can be both. I'll rephrase it.
+
+>
+>   - I can't parse the first sentence.  I guess "dGPU" and "HDA" are
+>     hardware devices, but I don't know what "unbound" means.  Is that
+>     something to do with a driver being bound to the dGPU?  Or is it
+>     some connection between the dGPU and the HDA?
+
+Yes, "unbound" in this context means the dGPU isn't bound to a driver.
+
+>
+>   - "PCI platform power management" is still confusing -- I think we
+>     either have "PCI power management" that uses the PCI PM Capability
+>     (i.e., writing PCI_PM_CTRL as in pci_raw_set_power_state()) OR we
+>     have "platform power management" that uses some other method,
+>     typically ACPI.  Since you refer to _OFF and _PR3, I guess you're
+>     referring to platform power management here.
+
+Yes, I'll make it clearer in next version. It's indeed referring to
+platform power management.
+
+>
+>   - "It's common practice to let dGPU unbound" -- does that refer to
+>     some programming technique common in drivers, or some user-level
+>     thing like unloading a driver, or ...?  My guess is it probably
+>     means "unbind the driver from the dGPU" but I still don't know
+>     what makes it common practice.
+
+Yes it means keep driver for dGPU unloaded. It's a common practice
+since the proprietary nvidia.ko doesn't support runtime power
+management, so when users are using integrated GPU, unload the dGPU
+driver can make PCI core use platform power management to disable the
+power source to save power.
+
+>
+> This probably all makes perfect sense to the graphics cognoscenti, but
+> for the rest of us there are a lot of dots here that are not
+> connected.
+
+Will send a v2 with clearer description.
+Kai-Heng
+
+>
+> > Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+> > discrete GPU") only allows HDA to be runtime-suspended once GPU is
+> > bound, to keep APU's HDA working.
+> >
+> > However, HDA on dGPU isn't that useful if dGPU is unbound. So let's
+> > relax the runtime suspend requirement for dGPU's HDA function, to save
+> > lots of power.
+> >
+> > BugLink: https://bugs.launchpad.net/bugs/1840835
+> > Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers”)
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v2:
+> > - Change wording.
+> > - Rebase to Tiwai's branch.
+> >
+> >  sound/pci/hda/hda_intel.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> > index 91e71be42fa4..c3654d22795a 100644
+> > --- a/sound/pci/hda/hda_intel.c
+> > +++ b/sound/pci/hda/hda_intel.c
+> > @@ -1284,7 +1284,11 @@ static void init_vga_switcheroo(struct azx *chip)
+> >               dev_info(chip->card->dev,
+> >                        "Handle vga_switcheroo audio client\n");
+> >               hda->use_vga_switcheroo = 1;
+> > -             chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
+> > +
+> > +             /* cleared in either gpu_bound op or codec probe, or when its
+> > +              * root port has _PR3 (i.e. dGPU).
+> > +              */
+> > +             chip->bus.keep_power = !pci_pr3_present(p);
+> >               chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+> >               pci_dev_put(p);
+> >       }
+> > --
+> > 2.17.1
+> >
