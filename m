@@ -2,236 +2,129 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0DDC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77309C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FCFC206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 529AC206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:36:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404262AbfIQGf7 (ORCPT
+        id S2404274AbfIQGgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:35:59 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:53962 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2404104AbfIQGf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:35:58 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 6B0B68EA14269BD79CBB;
-        Tue, 17 Sep 2019 14:35:56 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
- 2019 14:35:53 +0800
-Subject: Re: [f2fs-dev] [PATCH v4] f2fs: Fix indefinite loop in f2fs_gc()
-To:     Sahitya Tummala <stummala@codeaurora.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1565185232-11506-1-git-send-email-stummala@codeaurora.org>
- <2b8f7a88-5204-a4ea-9f80-1056abb30d98@kernel.org>
- <355d24c1-b07c-f8ff-1ab9-3f85653ced60@huawei.com>
- <20190917053316.GB12730@codeaurora.org>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <447ade2b-0199-6b02-c1cf-8835851bbd00@huawei.com>
-Date:   Tue, 17 Sep 2019 14:35:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 17 Sep 2019 02:36:14 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37441 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729094AbfIQGgN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:36:13 -0400
+Received: by mail-ot1-f68.google.com with SMTP id s28so2062185otd.4;
+        Mon, 16 Sep 2019 23:36:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VA/5M2S2lqIzcsMp1DPf/Sv28rPk2HKwJRxSgrZ6sG0=;
+        b=nm7ZFOvF7l2OnsjPSy7l28t10rId/mSWGcjP8M6h/x5CLjNRq3JSZ7LpCkOS1scS1f
+         /dKKENIJsM1pm3WNC3SF9JhOoEdYda29YrszQ3uC88/C0d5qJP7uaD2UxrGx+5gDNv4q
+         YO/robCU6ZRwuF2xxptdWR3pFHPzkRETnfchB/WbdzFSDpLUM/oxog3GMHs/KFCxxNhQ
+         SLuCrXiSvAGj2IjbbhjhRnsBvYDx6A2PW4E38u2wqOaEvRqiVES8m5vYey+2cVdNQPmE
+         sWGCH5afJ4oURlTqlxkpiN1iX/2o91sfHC1XtFFkfYSnbLby9Tl9uWMsSnOhY/JxmAGh
+         QV3w==
+X-Gm-Message-State: APjAAAXL5VSh0wI2H5AziHCksKBs7rxkUMmeg9nH3RaITru6AWqPVcPi
+        MPIM+vNqXqC7QUu39ST0MdH6tCBgKWEQNhPEm90=
+X-Google-Smtp-Source: APXvYqyzliy8aN4mUPDnslQqjjAc6HBGtMP/9mirV4GtW01sd8kN+3jplqulEdGp/El2AoHzaEfa+9yxYwadW99stJY=
+X-Received: by 2002:a9d:12ca:: with SMTP id g68mr1489740otg.145.1568702172994;
+ Mon, 16 Sep 2019 23:36:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190917053316.GB12730@codeaurora.org>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+References: <1568376720-7402-1-git-send-email-gareth.williams.jx@renesas.com>
+ <1568376720-7402-3-git-send-email-gareth.williams.jx@renesas.com>
+ <CAMuHMdUnzmYEcp0B5MG7itB1JHtNL7Stj9S2EFB0U0y_naQVBQ@mail.gmail.com> <TY2PR01MB2924AA1B012C2D305EE5C9B7DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY2PR01MB2924AA1B012C2D305EE5C9B7DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Sep 2019 08:36:01 +0200
+Message-ID: <CAMuHMdX9ZdLMmpHGqm2wmajwEDjuTY7s19PqwQ3kaVu8WLLykA@mail.gmail.com>
+Subject: Re: [PATCH 2/3] spi: dw: Add basic runtime PM support
+To:     Gareth Williams <gareth.williams.jx@renesas.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Phil Edworthy <phil.edworthy@renesas.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sahitya,
+Hi Gareth,
 
-On 2019/9/17 13:33, Sahitya Tummala wrote:
-> Hi Chao,
-> 
-> On Fri, Sep 06, 2019 at 07:00:32PM +0800, Chao Yu wrote:
->> Hi Sahitya,
->>
->> Luckily, I can reproduce this issue with generic/269, and have sent another
->> patch for the issue, could you please check that one?
->>
-> 
-> Thanks for the fix. The issue could not get reproduced yet, so could not make
-> much progress on the customer case.
+On Mon, Sep 16, 2019 at 6:14 PM Gareth Williams
+<gareth.williams.jx@renesas.com> wrote:
+> > On Mon, Sep 16, 2019 at 15:36 PM Geert Uytterhoeven
+> > <geert@linux-m68k.org> wrote:
+> > On Fri, Sep 13, 2019 at 2:13 PM Gareth Williams
+> > <gareth.williams.jx@renesas.com> wrote:
+> > > From: Phil Edworthy <phil.edworthy@renesas.com>
+> > >
+> > > Enable runtime PM so that the clock used to access the registers in
+> > > the peripheral is turned on using a clock domain.
+> > >
+> > > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > > Signed-off-by: Gareth Williams <gareth.williams.jx@renesas.com>
+> >
+> > Thanks for your patch!
+> >
+> > > --- a/drivers/spi/spi-dw.c
+> > > +++ b/drivers/spi/spi-dw.c
+> > > @@ -10,6 +10,7 @@
+> > >  #include <linux/module.h>
+> > >  #include <linux/highmem.h>
+> > >  #include <linux/delay.h>
+> > > +#include <linux/pm_runtime.h>
+> > >  #include <linux/slab.h>
+> > >  #include <linux/spi/spi.h>
+> > >
+> > > @@ -497,6 +498,9 @@ int dw_spi_add_host(struct device *dev, struct
+> > dw_spi *dws)
+> > >         if (dws->set_cs)
+> > >                 master->set_cs = dws->set_cs;
+> > >
+> > > +       pm_runtime_enable(dev);
+> > > +       pm_runtime_get_sync(dev);
+> >
+> > The second line keeps the device powered all the time.
+> > What about setting spi_controller.auto_runtime_pm = true, so the SPI code
+> > can manage its Runtime PM status?
+>
+> That makes sense and works on target, I will change this for V2.
 
-Alright, let me know if you get any clue or make progress on this issue.
+> > I assume this will be called from drivers/spi/spi-dw-mmio.c, which already
+> > enables the clock explicitly all the timer?
+> Yes, spi-dw-mmio.c already enables the bus clock, however we want to use clock
+>
+> domain to enable the clock and not explicitly provide pclk in the dts. If there are
+> no other uses of that pclk, we can remove that later on.
 
-Thanks,
+IC, that's useful sideband information.
 
-> 
-> thanks,
-> 
->> Thanks,
->>
->> On 2019/8/7 22:06, Chao Yu wrote:
->>> On 2019-8-7 21:40, Sahitya Tummala wrote:
->>>> Policy - Foreground GC, LFS and greedy GC mode.
->>>>
->>>> Under this policy, f2fs_gc() loops forever to GC as it doesn't have
->>>> enough free segements to proceed and thus it keeps calling gc_more
->>>> for the same victim segment.  This can happen if the selected victim
->>>> segment could not be GC'd due to failed blkaddr validity check i.e.
->>>> is_alive() returns false for the blocks set in current validity map.
->>>>
->>>> Fix this by keeping track of such invalid segments and skip those
->>>> segments for selection in get_victim_by_default() to avoid endless
->>>> GC loop under such error scenarios. Currently, add this logic under
->>>> CONFIG_F2FS_CHECK_FS to be able to root cause the issue in debug
->>>> version.
->>>>
->>>> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->>>> ---
->>>> v4: Cover all logic with CONFIG_F2FS_CHECK_FS
->>>>
->>>>  fs/f2fs/gc.c      | 31 +++++++++++++++++++++++++++++--
->>>>  fs/f2fs/segment.c | 14 +++++++++++++-
->>>>  fs/f2fs/segment.h |  3 +++
->>>>  3 files changed, 45 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>> index 8974672..cbcacbd 100644
->>>> --- a/fs/f2fs/gc.c
->>>> +++ b/fs/f2fs/gc.c
->>>> @@ -382,6 +382,16 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
->>>>  			nsearched++;
->>>>  		}
->>>>  
->>>> +#ifdef CONFIG_F2FS_CHECK_FS
->>>> +		/*
->>>> +		 * skip selecting the invalid segno (that is failed due to block
->>>> +		 * validity check failure during GC) to avoid endless GC loop in
->>>> +		 * such cases.
->>>> +		 */
->>>> +		if (test_bit(segno, sm->invalid_segmap))
->>>> +			goto next;
->>>> +#endif
->>>> +
->>>>  		secno = GET_SEC_FROM_SEG(sbi, segno);
->>>>  
->>>>  		if (sec_usage_check(sbi, secno))
->>>> @@ -602,8 +612,15 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
->>>>  {
->>>>  	struct page *node_page;
->>>>  	nid_t nid;
->>>> -	unsigned int ofs_in_node;
->>>> +	unsigned int ofs_in_node, segno;
->>>>  	block_t source_blkaddr;
->>>> +	unsigned long offset;
->>>> +#ifdef CONFIG_F2FS_CHECK_FS
->>>> +	struct sit_info *sit_i = SIT_I(sbi);
->>>> +#endif
->>>> +
->>>> +	segno = GET_SEGNO(sbi, blkaddr);
->>>> +	offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
->>>>  
->>>>  	nid = le32_to_cpu(sum->nid);
->>>>  	ofs_in_node = le16_to_cpu(sum->ofs_in_node);
->>>> @@ -627,8 +644,18 @@ static bool is_alive(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
->>>>  	source_blkaddr = datablock_addr(NULL, node_page, ofs_in_node);
->>>>  	f2fs_put_page(node_page, 1);
->>>>  
->>>> -	if (source_blkaddr != blkaddr)
->>>> +	if (source_blkaddr != blkaddr) {
->>>> +#ifdef CONFIG_F2FS_CHECK_FS
->>>
->>> 		unsigned int segno = GET_SEGNO(sbi, blkaddr);
->>> 		unsigned int offset = GET_BLKOFF_FROM_SEG0(sbi, blkaddr);
->>>
->>> Should be local, otherwise it looks good to me, I think Jaegeuk can help to fix
->>> this while merging.
->>>
->>> Reviewed-by: Chao Yu <yuchao0@huawei.com>
->>>
->>> Thanks,
->>>
->>>> +		if (unlikely(check_valid_map(sbi, segno, offset))) {
->>>> +			if (!test_and_set_bit(segno, sit_i->invalid_segmap)) {
->>>> +				f2fs_err(sbi, "mismatched blkaddr %u (source_blkaddr %u) in seg %u\n",
->>>> +						blkaddr, source_blkaddr, segno);
->>>> +				f2fs_bug_on(sbi, 1);
->>>> +			}
->>>> +		}
->>>> +#endif
->>>>  		return false;
->>>> +	}
->>>>  	return true;
->>>>  }
->>>>  
->>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->>>> index a661ac3..ee795b1 100644
->>>> --- a/fs/f2fs/segment.c
->>>> +++ b/fs/f2fs/segment.c
->>>> @@ -806,6 +806,9 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
->>>>  		enum dirty_type dirty_type)
->>>>  {
->>>>  	struct dirty_seglist_info *dirty_i = DIRTY_I(sbi);
->>>> +#ifdef CONFIG_F2FS_CHECK_FS
->>>> +	struct sit_info *sit_i = SIT_I(sbi);
->>>> +#endif
->>>>  
->>>>  	if (test_and_clear_bit(segno, dirty_i->dirty_segmap[dirty_type]))
->>>>  		dirty_i->nr_dirty[dirty_type]--;
->>>> @@ -817,9 +820,13 @@ static void __remove_dirty_segment(struct f2fs_sb_info *sbi, unsigned int segno,
->>>>  		if (test_and_clear_bit(segno, dirty_i->dirty_segmap[t]))
->>>>  			dirty_i->nr_dirty[t]--;
->>>>  
->>>> -		if (get_valid_blocks(sbi, segno, true) == 0)
->>>> +		if (get_valid_blocks(sbi, segno, true) == 0) {
->>>>  			clear_bit(GET_SEC_FROM_SEG(sbi, segno),
->>>>  						dirty_i->victim_secmap);
->>>> +#ifdef CONFIG_F2FS_CHECK_FS
->>>> +			clear_bit(segno, sit_i->invalid_segmap);
->>>> +#endif
->>>> +		}
->>>>  	}
->>>>  }
->>>>  
->>>> @@ -4015,6 +4022,10 @@ static int build_sit_info(struct f2fs_sb_info *sbi)
->>>>  	sit_i->sit_bitmap_mir = kmemdup(src_bitmap, bitmap_size, GFP_KERNEL);
->>>>  	if (!sit_i->sit_bitmap_mir)
->>>>  		return -ENOMEM;
->>>> +
->>>> +	sit_i->invalid_segmap = f2fs_kvzalloc(sbi, bitmap_size, GFP_KERNEL);
->>>> +	if (!sit_i->invalid_segmap)
->>>> +		return -ENOMEM;
->>>>  #endif
->>>>  
->>>>  	/* init SIT information */
->>>> @@ -4517,6 +4528,7 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
->>>>  	kvfree(sit_i->sit_bitmap);
->>>>  #ifdef CONFIG_F2FS_CHECK_FS
->>>>  	kvfree(sit_i->sit_bitmap_mir);
->>>> +	kvfree(sit_i->invalid_segmap);
->>>>  #endif
->>>>  	kvfree(sit_i);
->>>>  }
->>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
->>>> index b746028..9370d53 100644
->>>> --- a/fs/f2fs/segment.h
->>>> +++ b/fs/f2fs/segment.h
->>>> @@ -229,6 +229,9 @@ struct sit_info {
->>>>  	char *sit_bitmap;		/* SIT bitmap pointer */
->>>>  #ifdef CONFIG_F2FS_CHECK_FS
->>>>  	char *sit_bitmap_mir;		/* SIT bitmap mirror */
->>>> +
->>>> +	/* bitmap of segments to be ignored by GC in case of errors */
->>>> +	unsigned long *invalid_segmap;
->>>>  #endif
->>>>  	unsigned int bitmap_size;	/* SIT bitmap size */
->>>>  
->>>>
->>> .
->>>
-> 
+"pclk" is indeed an optional clock.
+"ssi_clk" must be first.
+
+However, to make use of the clock domain code, you still have to list "pclk"
+in DT, but use a different name, to avoid spi-dw-mmio.c enabling it all the
+time? Or do you plan to modify spi-dw-mmio.c for that?
+In the former case, you should document that in your bindings, which
+currently build on top of snps,dw-apb-ssi.txt, thus include "pclk".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
