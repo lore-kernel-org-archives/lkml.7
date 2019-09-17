@@ -2,235 +2,204 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBCFC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:15:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 363B8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E9ED21670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:15:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FA9206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 05:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="doCGybcd"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="AotuozRI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392360AbfIQFP2 (ORCPT
+        id S2392369AbfIQFTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 01:15:28 -0400
-Received: from sonic301-20.consmr.mail.gq1.yahoo.com ([98.137.64.146]:34884
-        "EHLO sonic301-20.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390985AbfIQFP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 01:15:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568697326; bh=AhwlOckvccyE4ysmUMD5BMK/gwbKT5/hEQb6y+cMRsY=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=doCGybcdMUHL4nqHBB//ks8M0OG08uDUHfElj/xYQPCoROM0iy5ee3zmF8iUqyETv0ZAo2ou0ojaVJJQAcwi0AviI7XR+immJkdWXcu6l6hB+7DT/yeuOF4AK4G1wxKD1E7Gnz9HvBNlXJQwIhqwtSrWgBUqEdf1W1EO0c+kILu8MW4SQ3NzYpmD/dnTNukqp6UKbGjdLFPW9Dw9UOBABvFKEE3DY6tPYNYu8NedmXX3Kh2DYiAyxYPMuX7NUatFHYCrSkt5Rta/ho/6LmZz3bhpssmGLb5WaeIQGFS7wQpPYaeD6HLeT23dtUZwlmrdqAKNEurC0Y6OoAongs2RcA==
-X-YMail-OSG: GxorC3EVM1nHmDVxUdfLQlpFhahMbf_7tT23iP7NgeCDiuXTyF9f8pZ5HSC1.xN
- gdHvQRdKK7kCEaIreg9_KhtRHesRMXHrm8YNJK3PL2_Zy0ufZlHm3tkUt30BSEsv9yINSIDBdCZn
- 9EwGrFBnT106nEEdpH8vvtLpVhd3ET5yt6.aJbDQoMhlTbBZB2ETxcbyf4cQpO_n099_mFvZggqk
- 4ytnmtcU.sBcY10bZGc3Y338GuImDwAkGyPmQqgLgOh7vzNJPC4FIjdKTW4FOhr2Unm7pZ85ZF5E
- hZhMeLJXgNn9lx9RepSili.L.2aNCODwIsERJp_5jE4SR13kPjZRQ2joXanyCbH8tTcw3jYuym4s
- RrZYIMLc09oqO9yv5n9CEOQjGTZZStlxXjMxNqpYZbSyp6W1D.ZFP_xImEPHE.iA0dLEiRBGX6a_
- tAsEAeDXcd_HKhi4C41BwlV9bDpHxxkHHHHeZgBGmwPp8JJpWLtgUZkCF4oKXgARxNi7pBUpXnEw
- lG0FF7NJ8clVJun.lFdtAvwnecqFtZx4f65u2yMUsP4.apd8PiT1nrYfRS73M0UY3pYjAV2Mot82
- E83rGo8yBU8wkwZG0APbB8.uDDj88.7JNm_mKsQFn6qmOdYfVnbkOy9OHjszmjNFXREa8EKrGXIV
- ByZHt3ePjBY3jncIWnMAOaf2o.QWPdNZGsb77WQGdvYLxvj3aRDP2aW_Is3wfgOCj_z.Q4oQ7vR3
- OA6sJXU2yLx3GbJS_mWheW5TmBWCd...iZMzgL7TIgjPmLN3Ve5YgEMddLhMXn.2UYBEAUyjVF.t
- fzK98ndiMAKdzIIAD5UM_CRS9mYZqsOXehl9_3cqly1bHaqqb2UysgDHbgLUoLLz4toDcBvguLn2
- Iox5eWfTmoW3H7.DCxdHSWx9DooL_8Ij6y_R9kGvUtlzTjkIJtNzK0p567NkTjwm5vE._OLJJIGV
- McPpTHZ8DtCiD2ALEtHDYm2qx6xBflaIpxv.3twuKvy9eu1k1zQd3ZPlOCMOItNu.URYPXpzRgSQ
- 7fW3aLoBjspLl2tkA5mjrGtTr3jtkUxXCS6nEsHhrWZzr.B6njPiZRm2mCzd1cp8XW9YPjbt_ZX0
- 8O9mxnd.shlapPDJsVS2jw4THp6lAeWhE6lTRz8AjMP5wq.ywEsjMvC1BvNNRYpJnlgmLQNNwtjs
- H3zrHEhdLYlSdiF4x3AZvvwVDguro3Us9FVnkmdW5xR00fxg2XznYrbrD6djxargI8YMnArS.u4X
- eapxsIbCE272sbMkyZON6l4I4XGcvPFrZ1_inJRV02GqZCL1O3Fq._hyoQ7fxOZFL8v6Iv2yg8wL
- e3y.zgenDvwhbggKUENe0FDnqIeSm69pdIarjhg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.gq1.yahoo.com with HTTP; Tue, 17 Sep 2019 05:15:26 +0000
-Received: by smtp405.mail.ir2.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 426117e608ffd8534b66767bfb4416c3;
-          Tue, 17 Sep 2019 05:15:22 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 13:15:15 +0800
-From:   Gao Xiang <hsiangkao@aol.com>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     'Greg KH' <gregkh@linuxfoundation.org>,
-        alexander.levin@microsoft.com, devel@driverdev.osuosl.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        'Valdis Kletnieks' <valdis.kletnieks@vt.edu>,
-        sergey.senozhatsky@gmail.com, Namjae Jeon <linkinjeon@gmail.com>
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-Message-ID: <20190917051510.GA22891@hsiangkao-HP-ZHAN-66-Pro-G1>
-References: <CGME20190917025738epcas1p1f1dd21ca50df2392b0f84f0340d82bcd@epcas1p1.samsung.com>
- <003601d56d03$aa04fa00$fe0eee00$@samsung.com>
- <003701d56d04$470def50$d529cdf0$@samsung.com>
+        Tue, 17 Sep 2019 01:19:33 -0400
+Received: from mail-eopbgr30061.outbound.protection.outlook.com ([40.107.3.61]:8843
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732982AbfIQFTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 01:19:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fqeeMWUg+UpTtYIqKlpYGdwrdxBZUiw5zP//AFnSh/4TyQoHGg+NMC/V1IJQJxhNf+9jD6OAHurE1Oa7dBL7EGxJ4xem5DRxxgnpWvRi220cAmOvPACF8JVYH4S0wSfclCvCn5Fb1A/77vSolUye4/gFugfbOzIUtPhf/v1KzrUPulwQm6Fclcmxjw4e5W5IeROT5xD2Rh+3IVNMgsjPHT7qg2hoHLNOYErJVpGW2rnWhQC2hFyEQTiS51PPBb02ZXRgV06BUAIi1zOmSQC0+4OyR+yleuOgj7ud69XnDzgukus0m+varv+JwmIfnimz5AMRdgG5dlpkYzD0GrB7Vg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MbYt1bA7N9cNT3SN0+tASLXuMT+2pA/VaphvD4aEk2o=;
+ b=Ebcc148/EmBGKQ4lYo9B99YkN/wCzGMGq2d9CDkf+7/V/pRfySkzufp1mH8pgjDwFfrmo+xUqkhtuTEQuvnwvcy5PuJXWB/P0aFtG8ajhGI1q4Qu5zNPabVDfF29T3vxn0/fN4Jb3N1pLw1iQjcP/RTeqALx7/lmU2rN+NQPonQnzuONNHTHSjY4WpIBz4QK20z/YT2uTrsGI3IeelAi47jwco+QaeDvGr6INE5cRbjGPXj2nYZsQL6DHssxtbrPEkEdlLwh+uPa5Fm4NG1OcUy+070Bo2aNQFEGSJ/M4YucHRcElKIcPpywa5EECt1ndt4seBoYntt8BxryH/brjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MbYt1bA7N9cNT3SN0+tASLXuMT+2pA/VaphvD4aEk2o=;
+ b=AotuozRIU+IdiRpDyBqfY+TzryrEtPdAfERPV8aoGbtC9nr6gWhjcpWSqqTDlwC5OGNX35HAeL2Px3d7X/ZCIrjlKLFkysi3nwEFZsypS6oIERBNCL7HG6Adz4O6DK81SfF75LLDsoE/WBSQ7SxnHUqqlmc9uQv4BIm3rRd4OYY=
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com (52.135.138.150) by
+ DB7PR04MB4668.eurprd04.prod.outlook.com (52.135.140.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.15; Tue, 17 Sep 2019 05:18:49 +0000
+Received: from DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa]) by DB7PR04MB4490.eurprd04.prod.outlook.com
+ ([fe80::4427:96f2:f651:6dfa%5]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 05:18:49 +0000
+From:   Biwen Li <biwen.li@nxp.com>
+To:     Biwen Li <biwen.li@nxp.com>, Leo Li <leoyang.li@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [v2,1/3] soc: fsl: fix that flextimer cannot wakeup system in
+ deep sleep on LS1021A
+Thread-Topic: [v2,1/3] soc: fsl: fix that flextimer cannot wakeup system in
+ deep sleep on LS1021A
+Thread-Index: AQHVbROdoB535Ez3jEqF/pAa+UXLsacvVCeA
+Date:   Tue, 17 Sep 2019 05:18:49 +0000
+Message-ID: <DB7PR04MB4490FE75A61224ACD6B8D75A8F8F0@DB7PR04MB4490.eurprd04.prod.outlook.com>
+References: <20190917044119.21895-1-biwen.li@nxp.com>
+In-Reply-To: <20190917044119.21895-1-biwen.li@nxp.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=biwen.li@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f0619266-7d07-475f-7abc-08d73b2e85e5
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB7PR04MB4668;
+x-ms-traffictypediagnostic: DB7PR04MB4668:|DB7PR04MB4668:
+x-ms-exchange-purlcount: 8
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB7PR04MB4668AA6C442319249E759A1D8F8F0@DB7PR04MB4668.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(39860400002)(346002)(396003)(136003)(53754006)(199004)(189003)(74316002)(76116006)(3846002)(6246003)(8936002)(6506007)(71200400001)(6116002)(25786009)(44832011)(2501003)(71190400001)(26005)(305945005)(7736002)(99286004)(256004)(186003)(316002)(66066001)(110136005)(54906003)(102836004)(55016002)(6306002)(486006)(52536014)(64756008)(9686003)(66556008)(66476007)(7696005)(66946007)(476003)(4326008)(5660300002)(14454004)(478600001)(33656002)(86362001)(2906002)(966005)(76176011)(11346002)(81166006)(229853002)(81156014)(8676002)(446003)(6436002)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4668;H:DB7PR04MB4490.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: qikXGCFbrEVuIThYZhlCg0Yj+50D8VMzYkFzPNMkHpwvEfLIy9BWsnxWVT0h1premlol2olyJUQewwtNA3kOZmAn2Aorq6diTcwL5g1Ny9lhkwJ0i31z3r1wiap6oC8srz5rOBY6jdDWefPeFyYBjdnZcwvKSnXR4X5/9hm40V33l/0PdwqCDL8/hRiECbK+fTR4cKPmzoYgqhHwzGHhOoOP65vHUpEigCVgs+q129tJMfFqJHdAmgtfrPFrIBS7p+wbF+qeNh8uddPs0HdtljswYE2pp+vvoD4kBuItYtaLApqFDDlMTxj8dcRruINCIjYDjhaEZU8eH75IvgzsHmmXwjUzQuA9LAzzCZ5f1MD2epBKOevkqs7zgLI4YuAnNmgI2m42vRthrBY/VpWV8wS5kanhkTxTJDm9QpxFe8E=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <003701d56d04$470def50$d529cdf0$@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0619266-7d07-475f-7abc-08d73b2e85e5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 05:18:49.5728
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 47P5Hew7ProlSrLVNeJq56+JTb72U+2iGw5NIXwbBEUfhOS38zT/O1Kc+t8R5q23MuTaE52Rw/hXFE+5Li/6xA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4668
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi all,
+	the linux patches depended by RCPM driver,FlexTimer driver and FlexTimer d=
+ts, need apply these patches as follows:
 
-On Tue, Sep 17, 2019 at 12:02:01PM +0900, Namjae Jeon wrote:
-> We are excited to see this happening and would like to state that we appreciate
-> time and
-> effort which people put into upstreaming exfat. Thank you!
-> 
-> However, if possible, can we step back a little bit and re-consider it? We
-> would prefer to
-> see upstream the code which we are currently using in our products - sdfat - as
-> this can
-> be mutually benefitial from various points of view.
+	1. RCPM driver:
 
-(Only represent my personal views)
+		https://patchwork.kernel.org/series/162731/mbox/ (https://patchwork.kerne=
+l.org/patch/11105279/)
 
-I'd like to know the detailed commit history as an individual Android hobbyist.
+	2. FlexTimer dts:
 
-I noticed sdfat years ago and there is a difference from the previous exfat driver.
+		https://lore.kernel.org/patchwork/series/405653/mbox/ (https://lore.kerne=
+l.org/patchwork/patch/1112493/)
 
-I have no idea it's a good way to blindly keep the code from some opensource tar
-on some website. and so many forks on github (hard to know which one is more stable,
-cleaner or latest)... someone could take more time and play a role in that actively
-in the community and maybe draw a roadmap of this so I could study more and maybe
-contribute a little in my spare time.
+	3. FlexTimer driver:
 
-And I think if it permits, development on multiple branches could be avoided...
-If I am wrong, please ignore me...
+		https://patchwork.ozlabs.org/series/124718/mbox/ (https://patchwork.ozlab=
+s.org/patch/1145999/)
 
-Thanks,
-Gao Xiang
+		https://patchwork.ozlabs.org/series/126942/mbox/ (https://patchwork.ozlab=
+s.org/patch/1152085/)
 
-> 
-> Thanks!
-> 
-> > ---------- Forwarded message ---------
-> > ????????: Ju Hyung Park <qkrwngud825@gmail.com>
-> > Date: 2019?? 9?? 16?? (??) ???? 3:49
-> > Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-> > To: Greg KH <gregkh@linuxfoundation.org>
-> > Cc: <alexander.levin@microsoft.com>, <devel@driverdev.osuosl.org>, <linux-
-> > fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Valdis Kletnieks
-> > <valdis.kletnieks@vt.edu>
-> > 
-> > 
-> > Hi Greg,
-> > 
-> > On Sun, Sep 15, 2019 at 10:54 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > Note, this just showed up publically on August 12, where were you with
-> > > all of this new code before then?  :)
-> > 
-> > My sdFAT port, exfat-nofuse and the one on the staging tree, were all
-> > made by Samsung.
-> > And unless you guys had a chance to talk to Samsung developers
-> > directly, those all share the same faith of lacking proper development
-> > history.
-> > 
-> > The source I used was from http://opensource.samsung.com, which
-> > provides kernel sources as tar.gz files.
-> > There is no code history available.
-> > 
-> > > For the in-kernel code, we would have to rip out all of the work you did
-> > > for all older kernels, so that's a non-starter right there.
-> > 
-> > I'm aware.
-> > I'm just letting mainline know that there is potentially another (much
-> > better) base that could be upstreamed.
-> > 
-> > If you want me to rip out older kernel support for upstreaming, I'm
-> > more than happy to do so.
-> > 
-> > > As for what codebase to work off of, I don't want to say it is too late,
-> > > but really, this shows up from nowhere and we had to pick something so
-> > > we found the best we could at that point in time.
-> > 
-> > To be honest, whole public exFAT sources are all from nowhere unless
-> > you had internal access to Samsung's development archive.
-> > The one in the current staging tree isn't any better.
-> > 
-> > I'm not even sure where the staging driver is from, actually.
-> > 
-> > Samsung used the 1.2.x versioning until they switched to a new code
-> > base - sdFAT.
-> > The one in the staging tree is marked version 1.3.0(exfat_super.c).
-> > I failed to find anything 1.3.x from Samsung's public kernel sources.
-> > 
-> > The last time exFAT 1.2.x was used was in Galaxy S7(released in 2016).
-> > Mine was originally based on sdFAT 2.1.10, used in Galaxy S10(released
-> > in March 2019) and it just got updated to 2.2.0, used in Galaxy
-> > Note10(released in August 2019).
-> > 
-> > > Is there anything specific in the codebase you have now, that is lacking
-> > > in the in-kernel code?  Old-kernel-support doesn't count here, as we
-> > > don't care about that as it is not applicable.  But functionality does
-> > > matter, what has been added here that we can make use of?
-> > 
-> > This is more of a suggestion of
-> > "Let's base on a *much more recent* snapshot for the community to work on",
-> > since the current one on the staging tree also lacks development history.
-> > 
-> > The diff is way too big to even start understanding the difference.
-> > 
-> > 
-> > With that said though, I do have some vague but real reason as to why
-> > sdFAT base is better.
-> > 
-> > With some major Android vendors showing interests in supporting exFAT,
-> > Motorola notably published their work on public Git repository with
-> > full development history(the only vendor to do this that I'm aware
-> > of).
-> > Commits like this:
-> > https://github.com/MotorolaMobilityLLC/kernel-msm/commit/7ab1657 is
-> > not merged to exFAT(including the current staging tree one) while it
-> > did for sdFAT.
-> > 
-> > 
-> > The only thing I regret is not working on porting sdFAT sooner.
-> > I definitely didn't anticipate Microsoft to suddenly lift legal issues
-> > on upstreaming exFAT just around when I happen to gain interest in
-> > porting sdFAT.
-> > 
-> > If my port happened sooner, it would have been a no-brainer for it to
-> > be considered as a top candidate for upstreaming.
-> > 
-> > > And do you have any "real" development history to look at instead of the
-> > > "one giant commit" of the initial code drop?  That is where we could
-> > > actually learn what has changed over time.  Your repo as-is shows none
-> > > of the interesting bits :(
-> > 
-> > As I mentioned, development history is unobtainable, even for the
-> > current staging tree or exfat-nofuse.
-> > (If you guys took exfat-nofuse, you can also see that there's barely
-> > any real exFAT-related development done in that tree. Everything is
-> > basically fixes for newer kernel versions.)
-> > 
-> > The best I could do, if someone's interested, is to diff all versions
-> > of exFAT/sdFAT throughout the Samsung's kernel versions, but that
-> > still won't give us reasons as to why the changes were made.
-> > 
-> > TL;DR
-> > My suggestion - Let's base on a much newer driver that's matured more,
-> > contains more fixes, gives (slightly?) better performance and
-> > hopefully has better code quality.
-> > 
-> > Both drivers are horrible.
-> > You said it yourself(for the current staging one), and even for my new
-> > sdFAT-base proposal, I'm definitely not comfortable seeing this kind
-> > of crap in mainline:
-> > https://github.com/arter97/exfat-linux/commit/0f1ddde
-> > 
-> > However, it's clear to me that the sdFAT base is less-horrible.
-> > 
-> > Please let me know what you think.
-> > 
-> > > thanks,
-> > >
-> > > greg kh
-> > 
-> > Thanks.
-> > 
-> 
-> 
-> 
+	4. Adjust drivers/soc/fsl/Makefile:
+
+   		remove the line 'obj-y +=3D ftm_alarm.o' in drivers/soc/fsl/Makefile t=
+o resolve a compilation error
+
+> Why:
+>     - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
+>       Register RCPM_IPPDEXPCR1's default value is zero.
+>       So the register value that reading from register
+>       RCPM_IPPDEXPCR1 is always zero.
+>=20
+> How:
+>     - Save register RCPM_IPPDEXPCR1's value to
+>       register SCFG_SPARECR8.(uboot's psci also
+>       need reading value from the register SCFG_SPARECR8
+>       to set register RCPM_IPPDEXPCR1)
+>=20
+> Signed-off-by: Biwen Li <biwen.li@nxp.com>
+> ---
+> Change in v2:
+> 	- fix stype problems
+>=20
+>  drivers/soc/fsl/rcpm.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>=20
+> diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c index
+> 82c0ad5e663e..0b710c24999c 100644
+> --- a/drivers/soc/fsl/rcpm.c
+> +++ b/drivers/soc/fsl/rcpm.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+>  #include <linux/kernel.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+>=20
+>  #define RCPM_WAKEUP_CELL_MAX_SIZE	7
+>=20
+> @@ -63,6 +65,31 @@ static int rcpm_pm_prepare(struct device *dev)
+>  					tmp |=3D value[i + 1];
+>  					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
+>  				}
+> +				#ifdef CONFIG_SOC_LS1021A
+> +				/* Workaround: There is a bug of register ippdexpcr1,
+> +				 * cannot write it but can read it.Tt's default value is zero,
+> +				 * then read it will always returns zero.
+> +				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
+> +				 * And the value of ippdexpcr1 will be read from
+> SCFG_SPARECR8.
+> +				 */
+> +				{
+> +					struct regmap *rcpm_scfg_regmap =3D NULL;
+> +					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
+> +					u32 reg_value =3D 0;
+> +
+> +					rcpm_scfg_regmap =3D
+> syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
+> +					if (rcpm_scfg_regmap) {
+> +						if (of_property_read_u32_array(dev->of_node,
+> +						    "fsl,rcpm-scfg", reg_offset,
+> rcpm->wakeup_cells + 1)) {
+> +							rcpm_scfg_regmap =3D NULL;
+> +							continue;
+> +						}
+> +						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1],
+> &reg_value);
+> +						/* Write value to register SCFG_SPARECR8 */
+> +						regmap_write(rcpm_scfg_regmap, reg_offset[i +
+> 1], tmp | reg_value);
+> +					}
+> +				}
+> +				#endif //CONFIG_SOC_LS1021A
+>  			}
+>  		}
+>  	} while (ws =3D wakeup_source_get_next(ws));
+> --
+> 2.17.1
+
