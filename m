@@ -2,196 +2,179 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDAFC4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2881C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 125CE21852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:51:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF74421852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfIQMv1 (ORCPT
+        id S1727208AbfIQMwo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:51:27 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55622 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726131AbfIQMv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:51:26 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9DDFB6AEE488B1C6EA43;
-        Tue, 17 Sep 2019 20:51:23 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 17 Sep 2019 20:51:18 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Date:   Tue, 17 Sep 2019 20:48:54 +0800
-Message-ID: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Tue, 17 Sep 2019 08:52:44 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38247 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfIQMwo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:52:44 -0400
+Received: by mail-ot1-f66.google.com with SMTP id e11so1761990otl.5;
+        Tue, 17 Sep 2019 05:52:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=cGu+OKqa8P9FhmcrfusKIEOBVN7wjkZzGzIlcpxnAM4=;
+        b=YDGHOiH8Z2ke//JikJFiTQ4b+CXgil1DYPxcbgdq0fkW34HGDqEwrkiZJPiVsYWIHu
+         8/ss3Jmsnr3Et0gzx2GCOMuHXT5tPqjCyELSeuzuJ42j3HZuuO7Vi3nWowO7psxK5/oW
+         1GV73nRMwcjDbCj+7CPfIgTAwfLsGRtpCwTAAZvFbpkAcN0V+A2C82tZnAZ5dqQDHwdM
+         PngDPryYsnZLrqDXhS8iWYVLIvb7tOC1pTlXGe+0ovnOZrainDfkPCo2HdsGp6UnNwOi
+         /8z5ASbhbXjWXwO84ZSkROA+IrsAq4kph4eyb5pygXufmgfwb5pUyyll1KM/EoWRIU07
+         qMIw==
+X-Gm-Message-State: APjAAAUOIsG/ZD3xV9QLOI5PG26S7lQBnUeYNY0t1LXU+8T4AqXKUEQ6
+        bbilXmhC7wi36l4yQS8Llug0NK6t/430rUNQ9us=
+X-Google-Smtp-Source: APXvYqwF7djb29BU4JOekDq/w2ATaouFkjTZStu1zawPVEUhoivXp7Jzh/X/ybbkO0GGmU/IOqDimmtEJFBAiFablnE=
+X-Received: by 2002:a9d:5a06:: with SMTP id v6mr2514884oth.250.1568724762614;
+ Tue, 17 Sep 2019 05:52:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
+ <20190824132846.8589-2-u.kleine-koenig@pengutronix.de> <20190913215809.GA11833@bogus>
+ <CAMuHMdV+pwoAA0zH_vQf2nKqzrgHP8rcMStyJbnuu2qviFC_qg@mail.gmail.com>
+ <20190917101303.t5otztdus7y3ayau@pengutronix.de> <489c90fb-a135-4fd8-ecb9-46404bd3c234@axentia.se>
+ <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
+In-Reply-To: <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 17 Sep 2019 14:52:31 +0200
+Message-ID: <CAMuHMdXk5uSk-v4vYVR1YO46gQd0mRYy5eEM6wOHqgkRTfyn-g@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] of: Let of_for_each_phandle fallback to
+ non-negative cell_count
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When passing the return value of dev_to_node() to cpumask_of_node()
-without checking if the device's node id is NUMA_NO_NODE, there is
-global-out-of-bounds detected by KASAN.
+Hi Uwe,
 
-From the discussion [1], NUMA_NO_NODE really means no node affinity,
-which also means all cpus should be usable. So the cpumask_of_node()
-should always return all cpus online when user passes the node id as
-NUMA_NO_NODE, just like similar semantic that page allocator handles
-NUMA_NO_NODE.
+On Tue, Sep 17, 2019 at 2:25 PM Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Sep 17, 2019 at 11:25:46AM +0000, Peter Rosin wrote:
+> > On 2019-09-17 12:13, Uwe Kleine-König wrote:
+> > > On Tue, Sep 17, 2019 at 11:40:25AM +0200, Geert Uytterhoeven wrote:
+> > >> On Fri, Sep 13, 2019 at 11:58 PM Rob Herring <robh@kernel.org> wrote:
+> > >>> On Sat, 24 Aug 2019 15:28:46 +0200, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=          wrote:
+> > >>>> Referencing device tree nodes from a property allows to pass arguments.
+> > >>>> This is for example used for referencing gpios. This looks as follows:
+> > >>>>
+> > >>>>       gpio_ctrl: gpio-controller {
+> > >>>>               #gpio-cells = <2>
+> > >>>>               ...
+> > >>>>       }
+> > >>>>
+> > >>>>       someothernode {
+> > >>>>               gpios = <&gpio_ctrl 5 0 &gpio_ctrl 3 0>;
+> > >>>>               ...
+> > >>>>       }
+> > >>>>
+> > >>>> To know the number of arguments this must be either fixed, or the
+> > >>>> referenced node is checked for a $cells_name (here: "#gpio-cells")
+> > >>>> property and with this information the start of the second reference can
+> > >>>> be determined.
+> > >>>>
+> > >>>> Currently regulators are referenced with no additional arguments. To
+> > >>>> allow some optional arguments without having to change all referenced
+> > >>>> nodes this change introduces a way to specify a default cell_count. So
+> > >>>> when a phandle is parsed we check for the $cells_name property and use
+> > >>>> it as before if present. If it is not present we fall back to
+> > >>>> cells_count if non-negative and only fail if cells_count is smaller than
+> > >>>> zero.
+> > >>>>
+> > >>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > >>
+> > >> This is now commit e42ee61017f58cd9 ("of: Let of_for_each_phandle fallback
+> > >> to non-negative cell_count") in robh/for-next, which causes a lock-up when
+> > >> booting a shmobile_defconfig kernel on r8a7791/koelsch:
+> > >>
+> > >> rcu: INFO: rcu_sched self-detected stall on CPU
 
-But we cannot really copy the page allocator logic. Simply because the
-page allocator doesn't enforce the near node affinity. It just picks it
-up as a preferred node but then it is free to fallback to any other numa
-node. This is not the case here and node_to_cpumask_map will only restrict
-to the particular node's cpus which would have really non deterministic
-behavior depending on where the code is executed. So in fact we really
-want to return cpu_online_mask for NUMA_NO_NODE.
+> Oh yeah, you're right. I'm a bit disappointed that I didn't spot this
+> myself :-|
+>
+> Untested patch to fix this problem:
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 2f25d2dfecfa..26f7a21d7187 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1284,6 +1284,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
+>         const __be32 *list;
+>         int size;
+>
+> +       /*
+> +        * one of cell_count or cells_name must be provided to determine the
+> +        * argument length.
+> +        */
+> +       if (cell_count < 0 && !cells_name)
+> +               return -EINVAL;
+> +
+>         memset(it, 0, sizeof(*it));
+>
+>         list = of_get_property(np, list_name, &size);
+> @@ -1765,6 +1772,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+>         struct of_phandle_iterator it;
+>         int rc, cur_index = 0;
+>
+> +       /* If cells_name is NULL we assume an cell_count of 0 */
 
-Also there is a debugging version of node_to_cpumask_map() for x86 and
-arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+a cell count
 
-[1] https://lore.kernel.org/patchwork/patch/1125789/
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Suggested-by: Michal Hocko <mhocko@kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
----
-V6: Drop the cpu_all_mask -> cpu_online_mask change for it seems a
-    little controversial, may need deeper investigation, and rebased
-    on the latest linux-next.
-V5: Drop unsigned "fix" change for x86/arm64, and change comment log
-    according to Michal's comment.
-V4: Have all these changes in a single patch.
-V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
-    for NUMA_NO_NODE case, and change the commit log to better justify
-    the change.
-V2: make the node id checking change to other arches too.
----
- arch/arm64/include/asm/numa.h                    | 3 +++
- arch/arm64/mm/numa.c                             | 3 +++
- arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
- arch/s390/include/asm/topology.h                 | 3 +++
- arch/x86/include/asm/topology.h                  | 3 +++
- arch/x86/mm/numa.c                               | 3 +++
- 6 files changed, 18 insertions(+), 1 deletion(-)
+> +       if (cells_name == NULL) {
+> +               const __be32 *list;
+> +               int size;
+> +
+> +               list = of_get_property(np, list_name, &size);
+> +               if (!list)
+> +                       return -ENOENT;
+> +
+> +               return size / sizeof(*list);
+> +       }
+> +
+>         rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
+>         if (rc)
+>                 return rc;
 
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 626ad01..c8a4b31 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4decf16..5ae7eea 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	if (WARN_ON(node >= nr_node_ids))
- 		return cpu_none_mask;
- 
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 7ff819a..e78daa6 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -5,7 +5,9 @@
- #ifdef CONFIG_NUMA
- 
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
--#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &__node_data[(node)]->cpumask)
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index cca406f..1bd2e73 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
- #define cpumask_of_node cpumask_of_node
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return &node_to_cpumask_map[node];
- }
- 
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 4b14d23..7fa82e1 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index 4123100e..9859acb 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	if ((unsigned)node >= nr_node_ids) {
- 		printk(KERN_WARNING
- 			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+Thanks, that fixes the boot for me!
+
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.8.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
