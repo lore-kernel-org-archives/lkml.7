@@ -2,195 +2,132 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B66BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 818C4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5366A206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:33:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cx7wIAPP"
+	by mail.kernel.org (Postfix) with ESMTP id 60AEC206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:33:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728744AbfIQNdD (ORCPT
+        id S1728798AbfIQNdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:33:03 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39386 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfIQNdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:33:03 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v17so3193205wml.4;
-        Tue, 17 Sep 2019 06:33:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZVgKnBHXrCapFMh+Z2Qyzmz08ZgElhJ/PjWus/3se+Q=;
-        b=cx7wIAPPbkZwjitPfhwfpYd32Nm6ooxcoW8VNle3eGxiFuPCSZnNuod2vCvra6267S
-         9o76RnwMcjgP7mSptOk2MZF84XYOwQ/IGYFPsmKyaXmdy0WRO8EL1VzhdvmZc2X5bqjR
-         80zV2BHKgL9Y52+Yo/Peo1aQegn36yezGozJ87Af+/TDgB9lfV3Z0IPitzGJUvpcyzQA
-         9qB77hcfnovKQKcAVnf6TTyph3wZ3rjwKZvEVARrGE3koGesEDGCQOFCqKmLoPmPGGOW
-         dANYI/Ywt3AetD//HUWPe2x0qndAfvoM1/8gtWpPRPzARQmgbnlw2N/u3C623Rz4X3pV
-         MohA==
+        Tue, 17 Sep 2019 09:33:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33708 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfIQNdG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:33:06 -0400
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BEE8414AFB6
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:33:05 +0000 (UTC)
+Received: by mail-wm1-f69.google.com with SMTP id h6so1269229wmb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:33:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZVgKnBHXrCapFMh+Z2Qyzmz08ZgElhJ/PjWus/3se+Q=;
-        b=DlNtLheiHpkhxCkn4NtV8ouHMORZWvOrY1TEFJnwYsrYDUYVl42kEbKQks+ttHKZN1
-         MKmjl/HC8d/9iRV76Mq01q5WAPHOhlBdAv6UZISAcDdNFp/k/OUQE5EsXMdzTj56YP+a
-         y9Xzyn4XRyh8wRzRoo/PFyI89PoUJ8MYGHjLozzyonSN8wCm2sjprQYlrIrET/2iK9nV
-         WYC57hJG0wmig75ygD83RRRTnqavLHAoXO6sFJC68+b1fzlXPVjZvZmHBw8VebtRPoz3
-         DZfO6CMasA3cygWXLqJdb7q4/j8FzuUgXPLLrUKbWvkyBl/3579bNK3Gg0aAWLlNeoYJ
-         7I4g==
-X-Gm-Message-State: APjAAAXGCGcJZiGzTVxtZVXE0vmuM3QaLsfhpAq3/IjWF378dEh6zk1j
-        UDIQYzz6HPGuqfGm2nlFef0=
-X-Google-Smtp-Source: APXvYqyEgxKzW2vpA5Wj3noahECRn2sB6UkfO12EaBTE+oNhBh9T0Y5DZ1LHA4+4ATlFTZBcW2NdVg==
-X-Received: by 2002:a1c:99cd:: with SMTP id b196mr3529756wme.83.1568727180060;
-        Tue, 17 Sep 2019 06:33:00 -0700 (PDT)
-Received: from arch-dsk-01 ([77.126.41.65])
-        by smtp.gmail.com with ESMTPSA id q124sm4222816wma.5.2019.09.17.06.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 06:32:59 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 16:32:53 +0300
-From:   tinywrkb <tinywrkb@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Baruch Siach <baruch@tkos.co.il>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Russell King <linux@armlinux.org.uk>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
- max-speed
-Message-ID: <20190917133253.GA1210141@arch-dsk-01>
-References: <20190910155507.491230-1-tinywrkb@gmail.com>
- <20190910185033.GD9761@lunn.ch>
- <87muf6oyvr.fsf@tarshish>
- <20190915135652.GC3427@lunn.ch>
- <20190917124101.GA1200564@arch-dsk-01>
- <20190917125434.GH20778@lunn.ch>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cg3dvAt0VFzmUN1YPgL+dPK2myjZsUUL53Sl0WEidEk=;
+        b=ZikR31uFT3F0b3+OTsGzgzKteUWjrA2c5DcDhjSYvKuXL+2ZCW3PZ/Y4mAeaqcoCxd
+         s1hcpzd0UiMUwJVscSEBL7zTrBuYuZ0fvP0aXijjIJC03BHPSZz/IKKACiuRT7GnB6gl
+         RyyBToq/adqj7+8whzT6F8HbNF6TZoWxruSneUOiLkgOJgRnVGkErrug6aTR4qeuYZfC
+         dLlbJUXf/UMZAZH+GRwD7NViPD3851MQy4cC7I55UTMForNCN+O8I7Rk9q5AusHUs6gr
+         3S3IiugsU4EOxnJh6TouRclC7dqx6o49ZF1ItVG5RtIUw714atdtwSt2yt4oSyblPiId
+         A3Fw==
+X-Gm-Message-State: APjAAAWkoxbVqFhZGifVOqi3RNKH+aJEXYPeNHDQWsDoQOoxReIdIGof
+        OIRKWBsOn4NkDOF0Wrx1AE6s8x0P9wgYOKd85Wcqzh/si0ZUYEqDDYDaO6WEYfHeaizyRfHxQXy
+        5gMb35qQpNIS0ImfGKRCsHo7f
+X-Received: by 2002:a05:6000:10ce:: with SMTP id b14mr2946366wrx.96.1568727184403;
+        Tue, 17 Sep 2019 06:33:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwVIUY09eaidUdU2ahcWvWN6d65X3WK1nbAqCtgATGj0PFVUNV5ady3K77sD3EYpOtdpgtYGA==
+X-Received: by 2002:a05:6000:10ce:: with SMTP id b14mr2946350wrx.96.1568727184137;
+        Tue, 17 Sep 2019 06:33:04 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id c8sm2624551wrr.49.2019.09.17.06.33.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 06:33:03 -0700 (PDT)
+Subject: Re: [PATCH v3 0/4] KVM: selftests: Introduce VM_MODE_PXXV48_4K
+To:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Andrew Jones <drjones@redhat.com>
+References: <20190830013619.18867-1-peterx@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3e648108-c82a-6505-a1eb-01c6a7caa175@redhat.com>
+Date:   Tue, 17 Sep 2019 15:33:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917125434.GH20778@lunn.ch>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190830013619.18867-1-peterx@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 02:54:34PM +0200, Andrew Lunn wrote:
-> On Tue, Sep 17, 2019 at 03:41:01PM +0300, tinywrkb wrote:
-> > On Sun, Sep 15, 2019 at 03:56:52PM +0200, Andrew Lunn wrote:
-> > > > Tinywrkb confirmed to me in private communication that revert of
-> > > > 5502b218e001 fixes Ethernet for him on effected system.
-> > > > 
-> > > > He also referred me to an old Cubox-i spec that lists 10/100 Ethernet
-> > > > only for i.MX6 Solo/DualLite variants of Cubox-i. It turns out that
-> > > > there was a plan to use a different 10/100 PHY for Solo/DualLite
-> > > > SOMs. This plan never materialized. All SolidRun i.MX6 SOMs use the same
-> > > > AR8035 PHY that supports 1Gb.
-> > > > 
-> > > > Commit 5502b218e001 might be triggering a hardware issue on the affected
-> > > > Cubox-i. I could not reproduce the issue here with Cubox-i and a Dual
-> > > > SOM variant running v5.3-rc8. I have no Solo/DualLite variant handy at
-> > > > the moment.
-> > > 
-> > > Could somebody with an affected device show us the output of ethtool
-> > > with and without 5502b218e001. Does one show 1G has been negotiated,
-> > > and the other 100Mbps? If this is true, how does it get 100Mbps
-> > > without that patch? We are missing a piece of the puzzle.
-> > > 
-> > > 	Andrew
-> > 
-> > linux-test-5.1rc1-a2703de70942-without_bad_commit
-> > 
-> > Settings for eth0:
-> > 	Supported ports: [ TP MII ]
-> > 	Supported link modes:   10baseT/Half 10baseT/Full
-> > 	                        100baseT/Half 100baseT/Full
-> > 	                        1000baseT/Full
+On 30/08/19 03:36, Peter Xu wrote:
+> v3:
+> - pick r-b
+> - refine DEBUG macro [Drew]
 > 
-> So this means the local device says it can do 1000Mbps.
+> v2:
+> - pick r-bs
+> - rebased to master
+> - fix pa width detect, check cpuid(1):edx.PAE(bit 6)
+> - fix arm compilation issue [Drew]
+> - fix indents issues and ways to define macros [Drew]
+> - provide functions for fetching cpu pa/va bits [Drew]
 > 
+> This series originates from "[PATCH] KVM: selftests: Detect max PA
+> width from cpuid" [1] and one of Drew's comments - instead of keeping
+> the hackish line to overwrite guest_pa_bits all the time, this series
+> introduced the new mode VM_MODE_PXXV48_4K for x86_64 platform.
 > 
-> > 	Supported pause frame use: Symmetric
-> > 	Supports auto-negotiation: Yes
-> > 	Supported FEC modes: Not reported
-> > 	Advertised link modes:  10baseT/Half 10baseT/Full
-> > 	                        100baseT/Half 100baseT/Full
-> > 	                        1000baseT/Full
+> The major issue is that even all the x86_64 kvm selftests are
+> currently using the guest mode VM_MODE_P52V48_4K, many x86_64 hosts
+> are not using 52 bits PA (and in most cases, far less).  If with luck
+> we could be having 48 bits hosts, but it's more adhoc (I've observed 3
+> x86_64 systems, they are having different PA width of 36, 39, 48).  I
+> am not sure whether this is happening to the other archs as well, but
+> it probably makes sense to bring the x86_64 tests to the real world on
+> always using the correct PA bits.
 > 
-> The link peer can also do 1000Mbps.
+> A side effect of this series is that it will also fix the crash we've
+> encountered on Xeon E3-1220 as mentioned [1] due to the
+> differenciation of PA width.
 > 
+> With [1], we've observed AMD host issues when with NPT=off.  However a
+> funny fact is that after I reworked into this series, the tests can
+> instead pass on both NPT=on/off.  It could be that the series changes
+> vm->pa_bits or other fields so something was affected.  I didn't dig
+> more on that though, considering we should not lose anything.
 > 
-> > 	Advertised pause frame use: Symmetric
-> > 	Advertised auto-negotiation: Yes
-> > 	Advertised FEC modes: Not reported
-> > 	Link partner advertised link modes:  10baseT/Half 10baseT/Full
-> > 	                                     100baseT/Half 100baseT/Full
-> > 	                                     1000baseT/Full
-> > 	Link partner advertised pause frame use: Symmetric
-> > 	Link partner advertised auto-negotiation: Yes
-> > 	Link partner advertised FEC modes: Not reported
-> > 	Speed: 100Mb/s
+> [1] https://lkml.org/lkml/2019/8/26/141
 > 
-> Yet they have decided to do 100Mbps. 
+> Peter Xu (4):
+>   KVM: selftests: Move vm type into _vm_create() internally
+>   KVM: selftests: Create VM earlier for dirty log test
+>   KVM: selftests: Introduce VM_MODE_PXXV48_4K
+>   KVM: selftests: Remove duplicate guest mode handling
 > 
-> We need to understand Why? The generic PHY driver would not do this on
-> its own. So i'm thinking something has poked a PHY register with some
-> value, and this patch is causing it to be over written.
+>  tools/testing/selftests/kvm/dirty_log_test.c  | 79 +++++--------------
+>  .../testing/selftests/kvm/include/kvm_util.h  | 18 ++++-
+>  .../selftests/kvm/include/x86_64/processor.h  |  3 +
+>  .../selftests/kvm/lib/aarch64/processor.c     |  3 +
+>  tools/testing/selftests/kvm/lib/kvm_util.c    | 67 ++++++++++++----
+>  .../selftests/kvm/lib/x86_64/processor.c      | 30 ++++++-
+>  6 files changed, 121 insertions(+), 79 deletions(-)
 > 
-> Please can you use mii-tool -v -v to dump the PHY registers in each
-> case.
-> 
-> Thanks
-> 	Andrew
 
-Here's the output of # mii-tool -v -v eth0 
+Queued, thanks.
 
-* linux-test-5.1rc1-a2703de70942-without_bad_commit
-
-Using SIOCGMIIPHY=0x8947
-eth0: negotiated 100baseTx-FD flow-control, link ok
-  registers for MII PHY 0:
-    3100 796d 004d d072 15e1 c5e1 000f 0000
-    0000 0000 0800 0000 0000 0000 0000 a000
-    0000 0000 0000 f420 082c 0000 04e8 0000
-    3200 3000 0000 063d 0000 0000 0000 0000
-  product info: vendor 00:13:74, model 7 rev 2
-  basic mode:   autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-
-
-* linux-test-5.1rc1-5502b218e001-with_bad_commit
-
-Using SIOCGMIIPHY=0x8947
-eth0: negotiated 100baseTx-FD flow-control, link ok
-  registers for MII PHY 0:
-    3100 796d 004d d072 15e1 c5e1 000d 0000
-    0000 0000 0800 0000 0000 0000 0000 a000
-    0000 0000 0000 0000 082c 0000 04e8 0000
-    3200 3000 0000 063d 0000 0000 0000 0000
-  product info: vendor 00:13:74, model 7 rev 2
-  basic mode:   autonegotiation enabled
-  basic status: autonegotiation complete, link ok
-  capabilities: 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD
-  advertising:  100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-  link partner: 1000baseT-FD 100baseTx-FD 100baseTx-HD 10baseT-FD 10baseT-HD flow-control
-
-Thanks for helping Andrew.
+Paolo
