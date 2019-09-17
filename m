@@ -2,398 +2,265 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53B8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876E1218AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Y6Waow0D"
+	by mail.kernel.org (Postfix) with ESMTP id 8602F21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfIQMjY (ORCPT
+        id S1728104AbfIQMjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:39:24 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:35461 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbfIQMjW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:39:22 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HCV7lC014188;
-        Tue, 17 Sep 2019 14:38:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=qg2VRZ3FLUdPLqfly5fLD9QSw93pB/E+jMQZP4//0tI=;
- b=Y6Waow0DZ5m9Mj5fZ3UawFuERUHP9vnLeo3CXToMXbmPEpZaxgnhLTk0ynLNVNF6TpIz
- pt02Be5WhH4BZYR7vBlJ/7+/VROumADAkK+CzUF4F8mCpMOQANzyN9f5OWS/w+dmjNbZ
- 7G2Xhy+VGDta5PyZZt9PR00KwFqhj40gn3MgPCUE4hSlJzW2XXsOSByO1EiIlW18MJ+9
- CuX/iu2Kb1crJP/r493HwcDsedpmBMblNkLnbHSbi6C+D4AoYYrSEKuOGOXIMo1QH/VB
- X/1XfukEcwHPM93iAtfRt62cv63nH3FzAoncoFSd53FyKQaVlwlYCM65QpRTfmEB2ha6 nw== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2v0nyx1hnp-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 17 Sep 2019 14:38:44 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 6314C50;
-        Tue, 17 Sep 2019 12:38:35 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C315E2BDA80;
-        Tue, 17 Sep 2019 14:38:34 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
- 2019 14:38:34 +0200
-Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep 2019 14:38:34 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 1/2] iio: adc: stm32-adc: move registers definitions
-Date:   Tue, 17 Sep 2019 14:38:15 +0200
-Message-ID: <1568723896-19063-2-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568723896-19063-1-git-send-email-fabrice.gasnier@st.com>
-References: <1568723896-19063-1-git-send-email-fabrice.gasnier@st.com>
+        Tue, 17 Sep 2019 08:39:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:55332 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727821AbfIQMjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:39:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AD211000;
+        Tue, 17 Sep 2019 05:39:39 -0700 (PDT)
+Received: from [10.37.9.122] (unknown [10.37.9.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 281AE3F59C;
+        Tue, 17 Sep 2019 05:39:37 -0700 (PDT)
+Subject: Re: [PATCH] drm/panfrost: Prevent race when handling page fault
+To:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+Cc:     Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20190905121141.42820-1-steven.price@arm.com>
+ <20190913172454.GA5387@kevin>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <15e36fa5-df70-ba46-489a-71b258776c5f@arm.com>
+Date:   Tue, 17 Sep 2019 13:39:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.48.1.232]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-17_06:2019-09-17,2019-09-17 signatures=0
+In-Reply-To: <20190913172454.GA5387@kevin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move STM32 ADC registers definitions to common header.
-This is precursor patch to:
-- iio: adc: stm32-adc: fix a race when using several adcs with dma and irq
+On 13/09/2019 18:24, Alyssa Rosenzweig wrote:
+> I'm conflicted on this series.
 
-It keeps registers definitions as a whole block, to ease readability and
-allow simple access path to EOC bits (readl) in stm32-adc-core driver.
+I'm on holiday, but thought I had to reply...
 
-Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
+> On the one hand, userspace should obviously not be able to crash the
+> kernel. So the crash should be fixed in one way or another.
+> 
+> On the other hand, userspace really has to supply all the BOs it uses
+> for correctness. I realize the DDK doesn't do this but... it probably
+> should, umm...
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/adc/stm32-adc-core.c |  27 --------
- drivers/iio/adc/stm32-adc-core.h | 136 +++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/stm32-adc.c      | 109 -------------------------------
- 3 files changed, 136 insertions(+), 136 deletions(-)
+It turns out you don't need the missing BOs to trigger this - see the 
+test case I added to IGT[1], referenced from v2 of this patch[2].
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 9b85fef..84ac326 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -24,33 +24,6 @@
- 
- #include "stm32-adc-core.h"
- 
--/* STM32F4 - common registers for all ADC instances: 1, 2 & 3 */
--#define STM32F4_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
--#define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
--
--/* STM32F4_ADC_CSR - bit fields */
--#define STM32F4_EOC3			BIT(17)
--#define STM32F4_EOC2			BIT(9)
--#define STM32F4_EOC1			BIT(1)
--
--/* STM32F4_ADC_CCR - bit fields */
--#define STM32F4_ADC_ADCPRE_SHIFT	16
--#define STM32F4_ADC_ADCPRE_MASK		GENMASK(17, 16)
--
--/* STM32H7 - common registers for all ADC instances */
--#define STM32H7_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
--#define STM32H7_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x08)
--
--/* STM32H7_ADC_CSR - bit fields */
--#define STM32H7_EOC_SLV			BIT(18)
--#define STM32H7_EOC_MST			BIT(2)
--
--/* STM32H7_ADC_CCR - bit fields */
--#define STM32H7_PRESC_SHIFT		18
--#define STM32H7_PRESC_MASK		GENMASK(21, 18)
--#define STM32H7_CKMODE_SHIFT		16
--#define STM32H7_CKMODE_MASK		GENMASK(17, 16)
--
- #define STM32_ADC_CORE_SLEEP_DELAY_MS	2000
- 
- /* SYSCFG registers */
-diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-index 8af507b..94aa2d2 100644
---- a/drivers/iio/adc/stm32-adc-core.h
-+++ b/drivers/iio/adc/stm32-adc-core.h
-@@ -27,6 +27,142 @@
- #define STM32_ADC_MAX_ADCS		3
- #define STM32_ADCX_COMN_OFFSET		0x300
- 
-+/* STM32F4 - Registers for each ADC instance */
-+#define STM32F4_ADC_SR			0x00
-+#define STM32F4_ADC_CR1			0x04
-+#define STM32F4_ADC_CR2			0x08
-+#define STM32F4_ADC_SMPR1		0x0C
-+#define STM32F4_ADC_SMPR2		0x10
-+#define STM32F4_ADC_HTR			0x24
-+#define STM32F4_ADC_LTR			0x28
-+#define STM32F4_ADC_SQR1		0x2C
-+#define STM32F4_ADC_SQR2		0x30
-+#define STM32F4_ADC_SQR3		0x34
-+#define STM32F4_ADC_JSQR		0x38
-+#define STM32F4_ADC_JDR1		0x3C
-+#define STM32F4_ADC_JDR2		0x40
-+#define STM32F4_ADC_JDR3		0x44
-+#define STM32F4_ADC_JDR4		0x48
-+#define STM32F4_ADC_DR			0x4C
-+
-+/* STM32F4 - common registers for all ADC instances: 1, 2 & 3 */
-+#define STM32F4_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
-+#define STM32F4_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x04)
-+
-+/* STM32F4_ADC_SR - bit fields */
-+#define STM32F4_STRT			BIT(4)
-+#define STM32F4_EOC			BIT(1)
-+
-+/* STM32F4_ADC_CR1 - bit fields */
-+#define STM32F4_RES_SHIFT		24
-+#define STM32F4_RES_MASK		GENMASK(25, 24)
-+#define STM32F4_SCAN			BIT(8)
-+#define STM32F4_EOCIE			BIT(5)
-+
-+/* STM32F4_ADC_CR2 - bit fields */
-+#define STM32F4_SWSTART			BIT(30)
-+#define STM32F4_EXTEN_SHIFT		28
-+#define STM32F4_EXTEN_MASK		GENMASK(29, 28)
-+#define STM32F4_EXTSEL_SHIFT		24
-+#define STM32F4_EXTSEL_MASK		GENMASK(27, 24)
-+#define STM32F4_EOCS			BIT(10)
-+#define STM32F4_DDS			BIT(9)
-+#define STM32F4_DMA			BIT(8)
-+#define STM32F4_ADON			BIT(0)
-+
-+/* STM32F4_ADC_CSR - bit fields */
-+#define STM32F4_EOC3			BIT(17)
-+#define STM32F4_EOC2			BIT(9)
-+#define STM32F4_EOC1			BIT(1)
-+
-+/* STM32F4_ADC_CCR - bit fields */
-+#define STM32F4_ADC_ADCPRE_SHIFT	16
-+#define STM32F4_ADC_ADCPRE_MASK		GENMASK(17, 16)
-+
-+/* STM32H7 - Registers for each ADC instance */
-+#define STM32H7_ADC_ISR			0x00
-+#define STM32H7_ADC_IER			0x04
-+#define STM32H7_ADC_CR			0x08
-+#define STM32H7_ADC_CFGR		0x0C
-+#define STM32H7_ADC_SMPR1		0x14
-+#define STM32H7_ADC_SMPR2		0x18
-+#define STM32H7_ADC_PCSEL		0x1C
-+#define STM32H7_ADC_SQR1		0x30
-+#define STM32H7_ADC_SQR2		0x34
-+#define STM32H7_ADC_SQR3		0x38
-+#define STM32H7_ADC_SQR4		0x3C
-+#define STM32H7_ADC_DR			0x40
-+#define STM32H7_ADC_DIFSEL		0xC0
-+#define STM32H7_ADC_CALFACT		0xC4
-+#define STM32H7_ADC_CALFACT2		0xC8
-+
-+/* STM32H7 - common registers for all ADC instances */
-+#define STM32H7_ADC_CSR			(STM32_ADCX_COMN_OFFSET + 0x00)
-+#define STM32H7_ADC_CCR			(STM32_ADCX_COMN_OFFSET + 0x08)
-+
-+/* STM32H7_ADC_ISR - bit fields */
-+#define STM32MP1_VREGREADY		BIT(12)
-+#define STM32H7_EOC			BIT(2)
-+#define STM32H7_ADRDY			BIT(0)
-+
-+/* STM32H7_ADC_IER - bit fields */
-+#define STM32H7_EOCIE			STM32H7_EOC
-+
-+/* STM32H7_ADC_CR - bit fields */
-+#define STM32H7_ADCAL			BIT(31)
-+#define STM32H7_ADCALDIF		BIT(30)
-+#define STM32H7_DEEPPWD			BIT(29)
-+#define STM32H7_ADVREGEN		BIT(28)
-+#define STM32H7_LINCALRDYW6		BIT(27)
-+#define STM32H7_LINCALRDYW5		BIT(26)
-+#define STM32H7_LINCALRDYW4		BIT(25)
-+#define STM32H7_LINCALRDYW3		BIT(24)
-+#define STM32H7_LINCALRDYW2		BIT(23)
-+#define STM32H7_LINCALRDYW1		BIT(22)
-+#define STM32H7_ADCALLIN		BIT(16)
-+#define STM32H7_BOOST			BIT(8)
-+#define STM32H7_ADSTP			BIT(4)
-+#define STM32H7_ADSTART			BIT(2)
-+#define STM32H7_ADDIS			BIT(1)
-+#define STM32H7_ADEN			BIT(0)
-+
-+/* STM32H7_ADC_CFGR bit fields */
-+#define STM32H7_EXTEN_SHIFT		10
-+#define STM32H7_EXTEN_MASK		GENMASK(11, 10)
-+#define STM32H7_EXTSEL_SHIFT		5
-+#define STM32H7_EXTSEL_MASK		GENMASK(9, 5)
-+#define STM32H7_RES_SHIFT		2
-+#define STM32H7_RES_MASK		GENMASK(4, 2)
-+#define STM32H7_DMNGT_SHIFT		0
-+#define STM32H7_DMNGT_MASK		GENMASK(1, 0)
-+
-+enum stm32h7_adc_dmngt {
-+	STM32H7_DMNGT_DR_ONLY,		/* Regular data in DR only */
-+	STM32H7_DMNGT_DMA_ONESHOT,	/* DMA one shot mode */
-+	STM32H7_DMNGT_DFSDM,		/* DFSDM mode */
-+	STM32H7_DMNGT_DMA_CIRC,		/* DMA circular mode */
-+};
-+
-+/* STM32H7_ADC_CALFACT - bit fields */
-+#define STM32H7_CALFACT_D_SHIFT		16
-+#define STM32H7_CALFACT_D_MASK		GENMASK(26, 16)
-+#define STM32H7_CALFACT_S_SHIFT		0
-+#define STM32H7_CALFACT_S_MASK		GENMASK(10, 0)
-+
-+/* STM32H7_ADC_CALFACT2 - bit fields */
-+#define STM32H7_LINCALFACT_SHIFT	0
-+#define STM32H7_LINCALFACT_MASK		GENMASK(29, 0)
-+
-+/* STM32H7_ADC_CSR - bit fields */
-+#define STM32H7_EOC_SLV			BIT(18)
-+#define STM32H7_EOC_MST			BIT(2)
-+
-+/* STM32H7_ADC_CCR - bit fields */
-+#define STM32H7_PRESC_SHIFT		18
-+#define STM32H7_PRESC_MASK		GENMASK(21, 18)
-+#define STM32H7_CKMODE_SHIFT		16
-+#define STM32H7_CKMODE_MASK		GENMASK(17, 16)
-+
- /**
-  * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
-  * @base:		control registers base cpu addr
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 6a7dd08..663f8a5 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -28,115 +28,6 @@
- 
- #include "stm32-adc-core.h"
- 
--/* STM32F4 - Registers for each ADC instance */
--#define STM32F4_ADC_SR			0x00
--#define STM32F4_ADC_CR1			0x04
--#define STM32F4_ADC_CR2			0x08
--#define STM32F4_ADC_SMPR1		0x0C
--#define STM32F4_ADC_SMPR2		0x10
--#define STM32F4_ADC_HTR			0x24
--#define STM32F4_ADC_LTR			0x28
--#define STM32F4_ADC_SQR1		0x2C
--#define STM32F4_ADC_SQR2		0x30
--#define STM32F4_ADC_SQR3		0x34
--#define STM32F4_ADC_JSQR		0x38
--#define STM32F4_ADC_JDR1		0x3C
--#define STM32F4_ADC_JDR2		0x40
--#define STM32F4_ADC_JDR3		0x44
--#define STM32F4_ADC_JDR4		0x48
--#define STM32F4_ADC_DR			0x4C
--
--/* STM32F4_ADC_SR - bit fields */
--#define STM32F4_STRT			BIT(4)
--#define STM32F4_EOC			BIT(1)
--
--/* STM32F4_ADC_CR1 - bit fields */
--#define STM32F4_RES_SHIFT		24
--#define STM32F4_RES_MASK		GENMASK(25, 24)
--#define STM32F4_SCAN			BIT(8)
--#define STM32F4_EOCIE			BIT(5)
--
--/* STM32F4_ADC_CR2 - bit fields */
--#define STM32F4_SWSTART			BIT(30)
--#define STM32F4_EXTEN_SHIFT		28
--#define STM32F4_EXTEN_MASK		GENMASK(29, 28)
--#define STM32F4_EXTSEL_SHIFT		24
--#define STM32F4_EXTSEL_MASK		GENMASK(27, 24)
--#define STM32F4_EOCS			BIT(10)
--#define STM32F4_DDS			BIT(9)
--#define STM32F4_DMA			BIT(8)
--#define STM32F4_ADON			BIT(0)
--
--/* STM32H7 - Registers for each ADC instance */
--#define STM32H7_ADC_ISR			0x00
--#define STM32H7_ADC_IER			0x04
--#define STM32H7_ADC_CR			0x08
--#define STM32H7_ADC_CFGR		0x0C
--#define STM32H7_ADC_SMPR1		0x14
--#define STM32H7_ADC_SMPR2		0x18
--#define STM32H7_ADC_PCSEL		0x1C
--#define STM32H7_ADC_SQR1		0x30
--#define STM32H7_ADC_SQR2		0x34
--#define STM32H7_ADC_SQR3		0x38
--#define STM32H7_ADC_SQR4		0x3C
--#define STM32H7_ADC_DR			0x40
--#define STM32H7_ADC_DIFSEL		0xC0
--#define STM32H7_ADC_CALFACT		0xC4
--#define STM32H7_ADC_CALFACT2		0xC8
--
--/* STM32H7_ADC_ISR - bit fields */
--#define STM32MP1_VREGREADY		BIT(12)
--#define STM32H7_EOC			BIT(2)
--#define STM32H7_ADRDY			BIT(0)
--
--/* STM32H7_ADC_IER - bit fields */
--#define STM32H7_EOCIE			STM32H7_EOC
--
--/* STM32H7_ADC_CR - bit fields */
--#define STM32H7_ADCAL			BIT(31)
--#define STM32H7_ADCALDIF		BIT(30)
--#define STM32H7_DEEPPWD			BIT(29)
--#define STM32H7_ADVREGEN		BIT(28)
--#define STM32H7_LINCALRDYW6		BIT(27)
--#define STM32H7_LINCALRDYW5		BIT(26)
--#define STM32H7_LINCALRDYW4		BIT(25)
--#define STM32H7_LINCALRDYW3		BIT(24)
--#define STM32H7_LINCALRDYW2		BIT(23)
--#define STM32H7_LINCALRDYW1		BIT(22)
--#define STM32H7_ADCALLIN		BIT(16)
--#define STM32H7_BOOST			BIT(8)
--#define STM32H7_ADSTP			BIT(4)
--#define STM32H7_ADSTART			BIT(2)
--#define STM32H7_ADDIS			BIT(1)
--#define STM32H7_ADEN			BIT(0)
--
--/* STM32H7_ADC_CFGR bit fields */
--#define STM32H7_EXTEN_SHIFT		10
--#define STM32H7_EXTEN_MASK		GENMASK(11, 10)
--#define STM32H7_EXTSEL_SHIFT		5
--#define STM32H7_EXTSEL_MASK		GENMASK(9, 5)
--#define STM32H7_RES_SHIFT		2
--#define STM32H7_RES_MASK		GENMASK(4, 2)
--#define STM32H7_DMNGT_SHIFT		0
--#define STM32H7_DMNGT_MASK		GENMASK(1, 0)
--
--enum stm32h7_adc_dmngt {
--	STM32H7_DMNGT_DR_ONLY,		/* Regular data in DR only */
--	STM32H7_DMNGT_DMA_ONESHOT,	/* DMA one shot mode */
--	STM32H7_DMNGT_DFSDM,		/* DFSDM mode */
--	STM32H7_DMNGT_DMA_CIRC,		/* DMA circular mode */
--};
--
--/* STM32H7_ADC_CALFACT - bit fields */
--#define STM32H7_CALFACT_D_SHIFT		16
--#define STM32H7_CALFACT_D_MASK		GENMASK(26, 16)
--#define STM32H7_CALFACT_S_SHIFT		0
--#define STM32H7_CALFACT_S_MASK		GENMASK(10, 0)
--
--/* STM32H7_ADC_CALFACT2 - bit fields */
--#define STM32H7_LINCALFACT_SHIFT	0
--#define STM32H7_LINCALFACT_MASK		GENMASK(29, 0)
--
- /* Number of linear calibration shadow registers / LINCALRDYW control bits */
- #define STM32H7_LINCALFACT_NUM		6
- 
--- 
-2.7.4
+[1] https://patchwork.freedesktop.org/patch/330513/
+[2] 
+https://lore.kernel.org/lkml/20190913160310.50444-1-steven.price@arm.com/
+
+> Would it be possible to check for the NULL pointer in the kernel and
+> skip printing information that would require a dereference? (Without
+> having to play games with reference counts). Presumably that might fix
+> crashes in other corner cases.
+
+I think we should try to do the right thing here and keep the reference 
+counts correct. While it might be possible to handle the NULL pointer in 
+practise the code has looked up the BO and is operating on it - so we 
+should ensure that it can't disappear while that is happening.
+
+This isn't about supporting the quirks of the DDK - at the moment the 
+DDK-on-Panfrost work I've been doing is really just a hack to be able to 
+test the feasibility and it may yet never be published externally. But 
+when I can trigger kernel bugs I might as well fix them!
+
+Steve
+
+> On Thu, Sep 05, 2019 at 01:11:41PM +0100, Steven Price wrote:
+>> When handling a GPU page fault addr_to_drm_mm_node() is used to
+>> translate the GPU address to a buffer object. However it is possible for
+>> the buffer object to be freed after the function has returned resulting
+>> in a use-after-free of the BO.
+>>
+>> Change addr_to_drm_mm_node to return the panfrost_gem_object with an
+>> extra reference on it, preventing the BO from being freed until after
+>> the page fault has been handled.
+>>
+>> Signed-off-by: Steven Price <steven.price@arm.com>
+>> ---
+>>
+>> I've managed to trigger this, generating the following stack trace.
+>>
+>> Unable to handle kernel NULL pointer dereference at virtual address 00000090
+>> pgd = 33a6a181
+>> [00000090] *pgd=00000000
+>> Internal error: Oops: 5 [#1] SMP ARM
+>> Modules linked in:
+>> CPU: 0 PID: 81 Comm: irq/60-mmu Not tainted 5.3.0-rc1+ #4
+>> Hardware name: Rockchip (Device Tree)
+>> PC is at panfrost_mmu_map_fault_addr+0x140/0x3a0
+>> LR is at _raw_spin_unlock+0x20/0x3c
+>> pc : [<c0508944>]    lr : [<c07ced10>]    psr: 20030013
+>> sp : ec643e88  ip : ea70ce24  fp : ec5fe840
+>> r10: 00000001  r9 : 00000000  r8 : 000178c9
+>> r7 : 00000000  r6 : 178c9f00  r5 : ec5fe940  r4 : ea70ce08
+>> r3 : 00000000  r2 : 00000000  r1 : ec640e00  r0 : ec5fe940
+>> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+>> Control: 10c5387d  Table: 29f8406a  DAC: 00000051
+>> Process irq/60-mmu (pid: 81, stack limit = 0x4b907106)
+>> Stack: (0xec643e88 to 0xec644000)
+>> 3e80:                   ec640e00 c07cede0 c0c0b200 ec640e00 00000000 00000000
+>> 3ea0: 000178c9 00000000 c0c0b200 c07cede0 eef91040 ec5fe840 00000001 00000000
+>> 3ec0: 00010001 010003c3 000000c3 00000001 178c9f00 c0508c98 eef91050 00000000
+>> 3ee0: ec643f34 c07c9188 00000001 c0167854 00000000 ec643ef8 c0c08448 c07c933c
+>> 3f00: 00000000 ec643f04 fffefffe 3d182b17 ee193468 ee193400 ec5db3c0 ec5db3c0
+>> 3f20: c0183840 ec5db3e4 c0cb2874 c0183b08 00000001 c018385c ffffe000 ee193400
+>> 3f40: ec5db3c0 c0183b8c c0c08448 00000000 60000013 00000000 c01839b8 3d182b17
+>> 3f60: ffffe000 ec5d0500 ec5db380 ec642000 ec5db3c0 c0183a64 00000000 ed025cd8
+>> 3f80: ec5d0538 c0146cfc ec642000 ec5db380 c0146bc0 00000000 00000000 00000000
+>> 3fa0: 00000000 00000000 00000000 c01010b4 00000000 00000000 00000000 00000000
+>> 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
+>> [<c0508944>] (panfrost_mmu_map_fault_addr) from [<c0508c98>] (panfrost_mmu_irq_handler_thread+0xf4/0x248)
+>> [<c0508c98>] (panfrost_mmu_irq_handler_thread) from [<c018385c>] (irq_thread_fn+0x1c/0x58)
+>> [<c018385c>] (irq_thread_fn) from [<c0183b8c>] (irq_thread+0x128/0x240)
+>> [<c0183b8c>] (irq_thread) from [<c0146cfc>] (kthread+0x13c/0x154)
+>> [<c0146cfc>] (kthread) from [<c01010b4>] (ret_from_fork+0x14/0x20)
+>> Exception stack(0xec643fb0 to 0xec643ff8)
+>> 3fa0:                                     00000000 00000000 00000000 00000000
+>> 3fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+>> 3fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+>> Code: 1affffec eaffffe8 e5143004 e59d2014 (e5933090)
+>> ---[ end trace 04eadc3009b8f507 ]---
+>> ---
+>>   drivers/gpu/drm/panfrost/panfrost_mmu.c | 38 ++++++++++++++++---------
+>>   1 file changed, 24 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/panfrost/panfrost_mmu.c b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> index 842bdd7cf6be..115925e7460a 100644
+>> --- a/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> +++ b/drivers/gpu/drm/panfrost/panfrost_mmu.c
+>> @@ -392,9 +392,11 @@ void panfrost_mmu_pgtable_free(struct panfrost_file_priv *priv)
+>>   	free_io_pgtable_ops(mmu->pgtbl_ops);
+>>   }
+>>   
+>> -static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pfdev, int as, u64 addr)
+>> +static struct panfrost_gem_object *
+>> +addr_to_drm_mm_node(struct panfrost_device *pfdev, int as, u64 addr)
+>>   {
+>> -	struct drm_mm_node *node = NULL;
+>> +	struct panfrost_gem_object *bo = NULL;
+>> +	struct drm_mm_node *node;
+>>   	u64 offset = addr >> PAGE_SHIFT;
+>>   	struct panfrost_mmu *mmu;
+>>   
+>> @@ -406,14 +408,17 @@ static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pfdev, in
+>>   
+>>   		priv = container_of(mmu, struct panfrost_file_priv, mmu);
+>>   		drm_mm_for_each_node(node, &priv->mm) {
+>> -			if (offset >= node->start && offset < (node->start + node->size))
+>> +			if (offset >= node->start &&
+>> +			    offset < (node->start + node->size)) {
+>> +				bo = drm_mm_node_to_panfrost_bo(node);
+>> +				drm_gem_object_get(&bo->base.base);
+>>   				goto out;
+>> +			}
+>>   		}
+>>   	}
+>> -
+>>   out:
+>>   	spin_unlock(&pfdev->as_lock);
+>> -	return node;
+>> +	return bo;
+>>   }
+>>   
+>>   #define NUM_FAULT_PAGES (SZ_2M / PAGE_SIZE)
+>> @@ -421,29 +426,28 @@ static struct drm_mm_node *addr_to_drm_mm_node(struct panfrost_device *pfdev, in
+>>   int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+>>   {
+>>   	int ret, i;
+>> -	struct drm_mm_node *node;
+>>   	struct panfrost_gem_object *bo;
+>>   	struct address_space *mapping;
+>>   	pgoff_t page_offset;
+>>   	struct sg_table *sgt;
+>>   	struct page **pages;
+>>   
+>> -	node = addr_to_drm_mm_node(pfdev, as, addr);
+>> -	if (!node)
+>> +	bo = addr_to_drm_mm_node(pfdev, as, addr);
+>> +	if (!bo)
+>>   		return -ENOENT;
+>>   
+>> -	bo = drm_mm_node_to_panfrost_bo(node);
+>>   	if (!bo->is_heap) {
+>>   		dev_WARN(pfdev->dev, "matching BO is not heap type (GPU VA = %llx)",
+>> -			 node->start << PAGE_SHIFT);
+>> -		return -EINVAL;
+>> +			 bo->node.start << PAGE_SHIFT);
+>> +		ret = -EINVAL;
+>> +		goto err_bo;
+>>   	}
+>>   	WARN_ON(bo->mmu->as != as);
+>>   
+>>   	/* Assume 2MB alignment and size multiple */
+>>   	addr &= ~((u64)SZ_2M - 1);
+>>   	page_offset = addr >> PAGE_SHIFT;
+>> -	page_offset -= node->start;
+>> +	page_offset -= bo->node.start;
+>>   
+>>   	mutex_lock(&bo->base.pages_lock);
+>>   
+>> @@ -452,7 +456,8 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+>>   				     sizeof(struct sg_table), GFP_KERNEL | __GFP_ZERO);
+>>   		if (!bo->sgts) {
+>>   			mutex_unlock(&bo->base.pages_lock);
+>> -			return -ENOMEM;
+>> +			ret = -ENOMEM;
+>> +			goto err_bo;
+>>   		}
+>>   
+>>   		pages = kvmalloc_array(bo->base.base.size >> PAGE_SHIFT,
+>> @@ -461,7 +466,8 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+>>   			kfree(bo->sgts);
+>>   			bo->sgts = NULL;
+>>   			mutex_unlock(&bo->base.pages_lock);
+>> -			return -ENOMEM;
+>> +			ret = -ENOMEM;
+>> +			goto err_bo;
+>>   		}
+>>   		bo->base.pages = pages;
+>>   		bo->base.pages_use_count = 1;
+>> @@ -499,12 +505,16 @@ int panfrost_mmu_map_fault_addr(struct panfrost_device *pfdev, int as, u64 addr)
+>>   
+>>   	dev_dbg(pfdev->dev, "mapped page fault @ AS%d %llx", as, addr);
+>>   
+>> +	drm_gem_object_put_unlocked(&bo->base.base);
+>> +
+>>   	return 0;
+>>   
+>>   err_map:
+>>   	sg_free_table(sgt);
+>>   err_pages:
+>>   	drm_gem_shmem_put_pages(&bo->base);
+>> +err_bo:
+>> +	drm_gem_object_put_unlocked(&bo->base.base);
+>>   	return ret;
+>>   }
+>>   
+>> -- 
+>> 2.20.1
+>>
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
