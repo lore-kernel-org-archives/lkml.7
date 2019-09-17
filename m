@@ -2,297 +2,240 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAECC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DCDC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1E62214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:24:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568723050;
-	bh=fvc1B25q+wpmmsBosHvZ5+1URMnECZuZln3G5v0t/zo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AMIQhVBABQzWCY/Wn10GhOVlPE5LVPJu1niB1gSDpMFwiErNeNeAjxsbPx9fxPi9M
-	 fV8hgAnSixVVTH+p5H+KjIr9jkq1kTQ1Ro5Zwxu22EfLUvZkX5wBaTWQadrjLbj/8t
-	 Uf7VlfXM5mvzExzEhYBHajR8ekgRpvSoTDu+tI2Q=
+	by mail.kernel.org (Postfix) with ESMTP id 140BA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:25:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727897AbfIQMYJ (ORCPT
+        id S1727758AbfIQMZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:24:09 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34603 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbfIQMYI (ORCPT
+        Tue, 17 Sep 2019 08:25:49 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42779 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfIQMZs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:24:08 -0400
-Received: by mail-lf1-f65.google.com with SMTP id r22so2749597lfm.1;
-        Tue, 17 Sep 2019 05:24:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ATmMm4PtOzpf5MHakWpyzAkkWvJPFHoj6oF0JiZe8g8=;
-        b=RQKmgjN9tokGC8BoYzDJkJdx07U83nBgOeQN2BFR6hCvnYVzRsU7+7t0fr/4DTZaKR
-         2dc2k8K0hcEFMuk3UNc8FrBqYOaCU8mRHyLJWll79ZzJ3vU3GZE0igpX4J83vz4wWHhM
-         kuMihiHd70iGf4c24R9xf2Z62TJSXyn9PwfIO8UolzNR2oxNMTUlnZyQ2/QR3b803uuc
-         h1juUvBmXhSV1VgAexoQ+agbkgAWfy23ts7VDigAX5GPFSjwyn7mG/RZxVIDTBaUX8xP
-         F7s6WaM7IY4uuhd0GvP8qrGlgcN2+Ib/zZ1JHFwYVTT3f3i9+Y3mje9AxK9KJbkI80Y+
-         2w/Q==
-X-Gm-Message-State: APjAAAXS41qzOxl8wXCpbO/ImfeRDHUu/71gWJ26Hghr4euRpdIILxG6
-        lp4VdjlsB+wijBannUTMAI8=
-X-Google-Smtp-Source: APXvYqxlfXMRhZv/pAJAf/P+GGqfQIDe/BvUcAPJ2p/Lb2/Wc4v+Wt4K4ovTclFnoCc2P9o6u30KHA==
-X-Received: by 2002:a19:f24d:: with SMTP id d13mr1953235lfk.127.1568723045984;
-        Tue, 17 Sep 2019 05:24:05 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id v4sm404070lji.103.2019.09.17.05.24.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 05:24:05 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iACWa-0007fL-R2; Tue, 17 Sep 2019 14:24:04 +0200
-Date:   Tue, 17 Sep 2019 14:24:04 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     syzbot <syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com>
-Cc:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com,
-        Oliver Neukum <oneukum@suse.com>
-Subject: Re: possible deadlock in usb_deregister_dev (2)
-Message-ID: <20190917122404.GA29364@localhost>
-References: <000000000000d58eb90592add24e@google.com>
- <000000000000b02ae30592b279e4@google.com>
+        Tue, 17 Sep 2019 08:25:48 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iACY2-00073e-FZ; Tue, 17 Sep 2019 14:25:34 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iACXy-0007cg-QF; Tue, 17 Sep 2019 14:25:30 +0200
+Date:   Tue, 17 Sep 2019 14:25:30 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux IOMMU <iommu@lists.linux-foundation.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Linux I2C <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] of: Let of_for_each_phandle fallback to
+ non-negative cell_count
+Message-ID: <20190917122530.3xy7sut3xdvzlomj@pengutronix.de>
+References: <20190824132846.8589-1-u.kleine-koenig@pengutronix.de>
+ <20190824132846.8589-2-u.kleine-koenig@pengutronix.de>
+ <20190913215809.GA11833@bogus>
+ <CAMuHMdV+pwoAA0zH_vQf2nKqzrgHP8rcMStyJbnuu2qviFC_qg@mail.gmail.com>
+ <20190917101303.t5otztdus7y3ayau@pengutronix.de>
+ <489c90fb-a135-4fd8-ecb9-46404bd3c234@axentia.se>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <000000000000b02ae30592b279e4@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <489c90fb-a135-4fd8-ecb9-46404bd3c234@axentia.se>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 02:42:06PM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following crash on:
+On Tue, Sep 17, 2019 at 11:25:46AM +0000, Peter Rosin wrote:
+> On 2019-09-17 12:13, Uwe Kleine-König wrote:
+> > Hello Geert,
+> > 
+> > On Tue, Sep 17, 2019 at 11:40:25AM +0200, Geert Uytterhoeven wrote:
+> >> Hi Rob, Uwe,
+> >>
+> >> On Fri, Sep 13, 2019 at 11:58 PM Rob Herring <robh@kernel.org> wrote:
+> >>> On Sat, 24 Aug 2019 15:28:46 +0200, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=          wrote:
+> >>>> Referencing device tree nodes from a property allows to pass arguments.
+> >>>> This is for example used for referencing gpios. This looks as follows:
+> >>>>
+> >>>>       gpio_ctrl: gpio-controller {
+> >>>>               #gpio-cells = <2>
+> >>>>               ...
+> >>>>       }
+> >>>>
+> >>>>       someothernode {
+> >>>>               gpios = <&gpio_ctrl 5 0 &gpio_ctrl 3 0>;
+> >>>>               ...
+> >>>>       }
+> >>>>
+> >>>> To know the number of arguments this must be either fixed, or the
+> >>>> referenced node is checked for a $cells_name (here: "#gpio-cells")
+> >>>> property and with this information the start of the second reference can
+> >>>> be determined.
+> >>>>
+> >>>> Currently regulators are referenced with no additional arguments. To
+> >>>> allow some optional arguments without having to change all referenced
+> >>>> nodes this change introduces a way to specify a default cell_count. So
+> >>>> when a phandle is parsed we check for the $cells_name property and use
+> >>>> it as before if present. If it is not present we fall back to
+> >>>> cells_count if non-negative and only fail if cells_count is smaller than
+> >>>> zero.
+> >>>>
+> >>>> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> >>
+> >> This is now commit e42ee61017f58cd9 ("of: Let of_for_each_phandle fallback
+> >> to non-negative cell_count") in robh/for-next, which causes a lock-up when
+> >> booting a shmobile_defconfig kernel on r8a7791/koelsch:
+> >>
+> >> rcu: INFO: rcu_sched self-detected stall on CPU
+> >> rcu:     0-....: (2099 ticks this GP) idle=6fe/1/0x40000002
+> >> softirq=29/29 fqs=1050
+> >>  (t=2100 jiffies g=-1131 q=0)
+> >> NMI backtrace for cpu 0
+> >> CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+> >> 5.3.0-rc2-shmobile-00050-ge42ee61017f58cd9 #376
+> >> Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
+> >> [<c010f8ac>] (unwind_backtrace) from [<c010b620>] (show_stack+0x10/0x14)
+> >> [<c010b620>] (show_stack) from [<c073d038>] (dump_stack+0x7c/0x9c)
+> >> [<c073d038>] (dump_stack) from [<c0742e80>] (nmi_cpu_backtrace+0xa0/0xb8)
+> >> [<c0742e80>] (nmi_cpu_backtrace) from [<c0742f1c>] (nmi_trigger_cpumask_backtrace+0x84/0x114)
+> >> [<c0742f1c>] (nmi_trigger_cpumask_backtrace) from [<c017d684>] (rcu_dump_cpu_stacks+0xac/0xc8)
+> >> [<c017d684>] (rcu_dump_cpu_stacks) from [<c017a598>] (rcu_sched_clock_irq+0x2ac/0x6b4)
+> >> [<c017a598>] (rcu_sched_clock_irq) from [<c0183980>] (update_process_times+0x30/0x5c)
+> >> [<c0183980>] (update_process_times) from [<c01941a8>] (tick_nohz_handler+0xcc/0x120)
+> >> [<c01941a8>] (tick_nohz_handler) from [<c05b1d40>] (arch_timer_handler_virt+0x28/0x30)
+> >> [<c05b1d40>] (arch_timer_handler_virt) from [<c016c9e0>] (handle_percpu_devid_irq+0xe8/0x21c)
+> >> [<c016c9e0>] (handle_percpu_devid_irq) from [<c0167a8c>] (generic_handle_irq+0x18/0x28)
+> >> [<c0167a8c>] (generic_handle_irq) from [<c0167b3c>] (__handle_domain_irq+0xa0/0xb4)
+> >> [<c0167b3c>] (__handle_domain_irq) from [<c03673ec>] (gic_handle_irq+0x58/0x90)
+> >> [<c03673ec>] (gic_handle_irq) from [<c0101a8c>] (__irq_svc+0x6c/0x90)
+> >> Exception stack(0xeb08dd30 to 0xeb08dd78)
+> >> dd20:                                     c0cc7514 20000013 00000005 00003b27
+> >> dd40: eb7c4020 c0cc750c 00000051 00000051 20000013 c0c66b08 eb1cdc00 00000018
+> >> dd60: 00000000 eb08dd80 c05c1a38 c0756c00 20000013 ffffffff
+> >> [<c0101a8c>] (__irq_svc) from [<c0756c00>] (_raw_spin_unlock_irqrestore+0x1c/0x20)
+> >> [<c0756c00>] (_raw_spin_unlock_irqrestore) from [<c05c1a38>] (of_find_node_by_phandle+0xcc/0xf0)
+> >> [<c05c1a38>] (of_find_node_by_phandle) from [<c05c1bb8>] (of_phandle_iterator_next+0x68/0x178)
+> >> [<c05c1bb8>] (of_phandle_iterator_next) from [<c05c22bc>] (of_count_phandle_with_args+0x5c/0x7c)
+> >> [<c05c22bc>] (of_count_phandle_with_args) from [<c053fc38>] (i2c_demux_pinctrl_probe+0x24/0x1fc)
+> >> [<c053fc38>] (i2c_demux_pinctrl_probe) from [<c04463c4>] (platform_drv_probe+0x48/0x94)
+> >> [<c04463c4>] (platform_drv_probe) from [<c0444a20>] (really_probe+0x1f0/0x2b8)
+> >> [<c0444a20>] (really_probe) from [<c0444e68>] (driver_probe_device+0x140/0x158)
+> >> [<c0444e68>] (driver_probe_device) from [<c0444ff0>] (device_driver_attach+0x44/0x5c)
+> >> [<c0444ff0>] (device_driver_attach) from [<c04450b4>] (__driver_attach+0xac/0xb4)
+> >> [<c04450b4>] (__driver_attach) from [<c0443178>] (bus_for_each_dev+0x64/0xa0)
+> >> [<c0443178>] (bus_for_each_dev) from [<c04438a8>] (bus_add_driver+0x148/0x1a8)
+> >> [<c04438a8>] (bus_add_driver) from [<c0445ad0>] (driver_register+0xac/0xf0)
+> >> [<c0445ad0>] (driver_register) from [<c0b010b0>] (do_one_initcall+0xa8/0x1d4)
+> >> [<c0b010b0>] (do_one_initcall) from [<c0b01448>] (kernel_init_freeable+0x26c/0x2c8)
+> >> [<c0b01448>] (kernel_init_freeable) from [<c0751c70>] (kernel_init+0x8/0x10c)
+> >> [<c0751c70>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> >> Exception stack(0xeb08dfb0 to 0xeb08dff8)
+> >> dfa0:                                     00000000 00000000 00000000 00000000
+> >> dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> >> dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> >>
+> >> Presumably it loops forever, due to a conversion of -1 to unsigned
+> >> somewhere?
+> > 
+> > Hmm, I fail to see the culprit. i2c_demux_pinctrl_probe calls
+> > of_count_phandle_with_args with cells_name=NULL. With that I don't see
+> > how my patch changes anything as the only change is in an if
+> > (it->cells_name) block that shouldn't be relevant in your case.
+> > 
+> > Can you please verify that the loop in of_count_phandle_with_args is
+> > indeed not terminating, e.g. with
 > 
-> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=175cdb95600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=f9549f5ee8a5416f0b95
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13961369600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139c811d600000
+> The below indicated else-branch was not touched by e42ee61017f58cd9,
+> which ends up setting the count to -1 (aka 0xff...ff in this case).
+> No?
 > 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+> int of_phandle_iterator_next(struct of_phandle_iterator *it)
+> {
 > 
-> usb 1-1: config 0 descriptor??
-> legousbtower 1-1:0.219: LEGO USB Tower firmware version is 129.136 build  
-> 65535
-> legousbtower 1-1:0.219: LEGO USB Tower #-160 now attached to major 180  
-> minor 0
-> usb 1-1: USB disconnect, device number 2
-> ======================================================
-> WARNING: possible circular locking dependency detected
-> 5.3.0-rc7+ #0 Not tainted
-> ------------------------------------------------------
-> kworker/0:1/12 is trying to acquire lock:
-> 0000000098630ee4 (minor_rwsem){++++}, at: usb_deregister_dev+0x95/0x230  
-> drivers/usb/core/file.c:239
+> 	...
 > 
-> but task is already holding lock:
-> 00000000d9ad5b6f (open_disc_mutex){+.+.}, at: tower_disconnect+0x45/0x300  
-> drivers/usb/misc/legousbtower.c:945
+> 		if (it->cells_name) {
 > 
-> which lock already depends on the new lock.
+> 			...
 > 
-> 
-> the existing dependency chain (in reverse order) is:
-> 
-> -> #1 (open_disc_mutex){+.+.}:
->         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
->         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
->         tower_open+0xce/0x9b0 drivers/usb/misc/legousbtower.c:335
->         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
->         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
->         do_dentry_open+0x494/0x1120 fs/open.c:797
->         do_last fs/namei.c:3416 [inline]
->         path_openat+0x1430/0x3f50 fs/namei.c:3533
->         do_filp_open+0x1a1/0x280 fs/namei.c:3563
->         do_sys_open+0x3c0/0x580 fs/open.c:1089
->         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
->         entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> -> #0 (minor_rwsem){++++}:
->         check_prev_add kernel/locking/lockdep.c:2405 [inline]
->         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
->         validate_chain kernel/locking/lockdep.c:2897 [inline]
->         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
->         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
->         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
->         usb_deregister_dev+0x95/0x230 drivers/usb/core/file.c:239
->         tower_disconnect+0xa8/0x300 drivers/usb/misc/legousbtower.c:951
->         usb_unbind_interface+0x1bd/0x8a0 drivers/usb/core/driver.c:423
->         __device_release_driver drivers/base/dd.c:1134 [inline]
->         device_release_driver_internal+0x42f/0x500 drivers/base/dd.c:1165
->         bus_remove_device+0x2dc/0x4a0 drivers/base/bus.c:556
->         device_del+0x420/0xb10 drivers/base/core.c:2339
->         usb_disable_device+0x211/0x690 drivers/usb/core/message.c:1237
->         usb_disconnect+0x284/0x8d0 drivers/usb/core/hub.c:2199
->         hub_port_connect drivers/usb/core/hub.c:4949 [inline]
->         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
->         port_event drivers/usb/core/hub.c:5359 [inline]
->         hub_event+0x1454/0x3640 drivers/usb/core/hub.c:5441
->         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
->         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
->         kthread+0x318/0x420 kernel/kthread.c:255
->         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-> 
-> other info that might help us debug this:
-> 
->   Possible unsafe locking scenario:
-> 
->         CPU0                    CPU1
->         ----                    ----
->    lock(open_disc_mutex);
->                                 lock(minor_rwsem);
->                                 lock(open_disc_mutex);
->    lock(minor_rwsem);
-> 
->   *** DEADLOCK ***
+> 		} else {
+> 			count = it->cell_count;    /* <---- SUSPECT!!! */
+> 		}
 
-This should be fixed by the below patch. Looks like we may have a
-similar issue in a few more drivers. Fixing them up next.
+Oh yeah, you're right. I'm a bit disappointed that I didn't spot this
+myself :-|
 
-Johan
+Untested patch to fix this problem:
 
-#syz test: https://github.com/google/kasan.git f0df5c1b
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 2f25d2dfecfa..26f7a21d7187 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1284,6 +1284,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
+ 	const __be32 *list;
+ 	int size;
+ 
++	/*
++	 * one of cell_count or cells_name must be provided to determine the
++	 * argument length.
++	 */
++	if (cell_count < 0 && !cells_name)
++		return -EINVAL;
++
+ 	memset(it, 0, sizeof(*it));
+ 
+ 	list = of_get_property(np, list_name, &size);
+@@ -1765,6 +1772,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+ 	struct of_phandle_iterator it;
+ 	int rc, cur_index = 0;
+ 
++	/* If cells_name is NULL we assume an cell_count of 0 */
++	if (cells_name == NULL) {
++		const __be32 *list;
++		int size;
++
++		list = of_get_property(np, list_name, &size);
++		if (!list)
++			return -ENOENT;
++
++		return size / sizeof(*list);
++	}
++
+ 	rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
+ 	if (rc)
+ 		return rc;
 
+Best regards
+Uwe
 
-From c2c2800f2687be963acc222045c8fd89f3877642 Mon Sep 17 00:00:00 2001
-From: Johan Hovold <johan@kernel.org>
-Date: Tue, 17 Sep 2019 12:32:22 +0200
-Subject: [PATCH] USB: legousbtower: fix deadlock on disconnect
-
-Fix a potential deadlock if disconnect races with open.
-
-Since commit d4ead16f50f9 ("USB: prevent char device open/deregister
-race") core holds an rw-semaphore while open is called and when
-releasing the minor number during deregistration. This can lead to an
-ABBA deadlock if a driver takes a lock in open which it also holds
-during deregistration.
-
-This effectively reverts commit 78663ecc344b ("USB: disconnect open race
-in legousbtower") which needlessly introduced this issue after a generic
-fix for this race had been added to core by commit d4ead16f50f9 ("USB:
-prevent char device open/deregister race").
-
-Fixes: 78663ecc344b ("USB: disconnect open race in legousbtower")
-Cc: stable <stable@vger.kernel.org>	# 2.6.24
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/usb/misc/legousbtower.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 006cf13b2199..c125f03436a1 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -179,7 +179,6 @@ static const struct usb_device_id tower_table[] = {
- };
- 
- MODULE_DEVICE_TABLE (usb, tower_table);
--static DEFINE_MUTEX(open_disc_mutex);
- 
- #define LEGO_USB_TOWER_MINOR_BASE	160
- 
-@@ -332,18 +331,14 @@ static int tower_open (struct inode *inode, struct file *file)
- 		goto exit;
- 	}
- 
--	mutex_lock(&open_disc_mutex);
- 	dev = usb_get_intfdata(interface);
--
- 	if (!dev) {
--		mutex_unlock(&open_disc_mutex);
- 		retval = -ENODEV;
- 		goto exit;
- 	}
- 
- 	/* lock this device */
- 	if (mutex_lock_interruptible(&dev->lock)) {
--		mutex_unlock(&open_disc_mutex);
- 	        retval = -ERESTARTSYS;
- 		goto exit;
- 	}
-@@ -351,12 +346,10 @@ static int tower_open (struct inode *inode, struct file *file)
- 
- 	/* allow opening only once */
- 	if (dev->open_count) {
--		mutex_unlock(&open_disc_mutex);
- 		retval = -EBUSY;
- 		goto unlock_exit;
- 	}
- 	dev->open_count = 1;
--	mutex_unlock(&open_disc_mutex);
- 
- 	/* reset the tower */
- 	result = usb_control_msg (dev->udev,
-@@ -423,10 +416,9 @@ static int tower_release (struct inode *inode, struct file *file)
- 
- 	if (dev == NULL) {
- 		retval = -ENODEV;
--		goto exit_nolock;
-+		goto exit;
- 	}
- 
--	mutex_lock(&open_disc_mutex);
- 	if (mutex_lock_interruptible(&dev->lock)) {
- 	        retval = -ERESTARTSYS;
- 		goto exit;
-@@ -456,10 +448,7 @@ static int tower_release (struct inode *inode, struct file *file)
- 
- unlock_exit:
- 	mutex_unlock(&dev->lock);
--
- exit:
--	mutex_unlock(&open_disc_mutex);
--exit_nolock:
- 	return retval;
- }
- 
-@@ -910,7 +899,6 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 	if (retval) {
- 		/* something prevented us from registering this driver */
- 		dev_err(idev, "Not able to get a minor for this device.\n");
--		usb_set_intfdata (interface, NULL);
- 		goto error;
- 	}
- 	dev->minor = interface->minor;
-@@ -942,16 +930,13 @@ static void tower_disconnect (struct usb_interface *interface)
- 	int minor;
- 
- 	dev = usb_get_intfdata (interface);
--	mutex_lock(&open_disc_mutex);
--	usb_set_intfdata (interface, NULL);
- 
- 	minor = dev->minor;
- 
--	/* give back our minor */
-+	/* give back our minor and prevent further open() */
- 	usb_deregister_dev (interface, &tower_class);
- 
- 	mutex_lock(&dev->lock);
--	mutex_unlock(&open_disc_mutex);
- 
- 	/* if the device is not opened, then we clean up right now */
- 	if (!dev->open_count) {
 -- 
-2.23.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
