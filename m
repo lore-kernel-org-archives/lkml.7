@@ -2,96 +2,142 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C857BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4591DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:26:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9890D20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:24:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568741066;
-	bh=0Art3gK5c5hrrmdkefySZA9KIDlpcFErLejaCZZ3HNQ=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=GGA+gyzK39XpDbHpL0JLoLwqeqlZqvSQEww5seiFKgqRkRJXYb40SRT/w2Qu6o9pL
-	 1CGEU0OLD/GzumZlPb9ThTVh+hSNCriGkVPdf9XdVJw4hYGJ718Gvi5oNsboPchHuX
-	 F6qdygN6/KbyG5NfW1QMBzbv7xPZjXce8vG/VghY=
+	by mail.kernel.org (Postfix) with ESMTP id 1AF0721848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731003AbfIQRY0 (ORCPT
+        id S1731071AbfIQR0m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:24:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731017AbfIQRYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:24:25 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAF5C214AF;
-        Tue, 17 Sep 2019 17:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568741064;
-        bh=0Art3gK5c5hrrmdkefySZA9KIDlpcFErLejaCZZ3HNQ=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=em7sPNUKhN2YtBZAccWyaW84ugOmDBd44dgaqa3DPFMDDswhXf+jkie+X+DUwGeHn
-         7uZ7J4xpEJ8tMQWLoJhR2hyFJTo25beYciFNAzBcAKaJIRp9OXjmbEPARlQZ+ifCq7
-         9x/PaCVHDg5vmJcRQBsdrUESWoT4FbbUhnnX8wRg=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 13:26:42 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:50768 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727763AbfIQR0m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:26:42 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iAHFQ-00028e-2l; Tue, 17 Sep 2019 11:26:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iAHFP-00085B-9T; Tue, 17 Sep 2019 11:26:39 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190917100350.GB1872@dhcp22.suse.cz>
+        <38349607-b09c-fa61-ccbb-20bee9f282a3@gmx.de>
+        <20190917153830.GE1872@dhcp22.suse.cz>
+Date:   Tue, 17 Sep 2019 12:26:18 -0500
+In-Reply-To: <20190917153830.GE1872@dhcp22.suse.cz> (Michal Hocko's message of
+        "Tue, 17 Sep 2019 17:38:30 +0200")
+Message-ID: <87ftku96md.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190828181959.204401-1-sboyd@kernel.org>
-References: <20190828181959.204401-1-sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2] clk: Evict unregistered clks from parent caches
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 10:24:23 -0700
-Message-Id: <20190917172424.AAF5C214AF@mail.kernel.org>
+Content-Type: text/plain
+X-XM-SPF: eid=1iAHFP-00085B-9T;;;mid=<87ftku96md.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18xBhL9oDfoGmZ3rm6I4lqlaRWJ1t5MgDI=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: threads-max observe limits
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2019-08-28 11:19:59)
-> We leave a dangling pointer in each clk_core::parents array that has an
-> unregistered clk as a potential parent when that clk_core pointer is
-> freed by clk{_hw}_unregister(). It is impossible for the true parent of
-> a clk to be set with clk_set_parent() once the dangling pointer is left
-> in the cache because we compare parent pointers in
-> clk_fetch_parent_index() instead of checking for a matching clk name or
-> clk_hw pointer.
->=20
-> Before commit ede77858473a ("clk: Remove global clk traversal on fetch
-> parent index"), we would check clk_hw pointers, which has a higher
-> chance of being the same between registration and unregistration, but it
-> can still be allocated and freed by the clk provider. In fact, this has
-> been a long standing problem since commit da0f0b2c3ad2 ("clk: Correct
-> lookup logic in clk_fetch_parent_index()") where we stopped trying to
-> compare clk names and skipped over entries in the cache that weren't
-> NULL.
->=20
-> There are good (performance) reasons to not do the global tree lookup in
-> cases where the cache holds dangling pointers to parents that have been
-> unregistered. Let's take the performance hit on the uncommon
-> registration path instead. Loop through all the clk_core::parents arrays
-> when a clk is unregistered and set the entry to NULL when the parent
-> cache entry and clk being unregistered are the same pointer. This will
-> fix this problem and avoid the overhead for the "normal" case.
->=20
-> Based on a patch by Bjorn Andersson.
->=20
-> Fixes: da0f0b2c3ad2 ("clk: Correct lookup logic in clk_fetch_parent_index=
-()")
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
+Michal Hocko <mhocko@kernel.org> writes:
 
-Applied to clk-next
+> On Tue 17-09-19 17:28:02, Heinrich Schuchardt wrote:
+>> 
+>> On 9/17/19 12:03 PM, Michal Hocko wrote:
+>> > Hi,
+>> > I have just stumbled over 16db3d3f1170 ("kernel/sysctl.c: threads-max
+>> > observe limits") and I am really wondering what is the motivation behind
+>> > the patch. We've had a customer noticing the threads_max autoscaling
+>> > differences btween 3.12 and 4.4 kernels and wanted to override the auto
+>> > tuning from the userspace, just to find out that this is not possible.
+>> 
+>> set_max_threads() sets the upper limit (max_threads_suggested) for
+>> threads such that at a maximum 1/8th of the total memory can be occupied
+>> by the thread's administrative data (of size THREADS_SIZE). On my 32 GiB
+>> system this results in 254313 threads.
+>
+> This is quite arbitrary, isn't it? What would happen if the limit was
+> twice as large?
+>
+>> With patch 16db3d3f1170 ("kernel/sysctl.c: threads-max observe limits")
+>> a user cannot set an arbitrarily high number for
+>> /proc/sys/kernel/threads-max which could lead to a system stalling
+>> because the thread headers occupy all the memory.
+>
+> This is still a decision of the admin to make.  You can consume the
+> memory by other means and that is why we have measures in place. E.g.
+> memcg accounting.
+>
+>> When developing the patch I remarked that on a system where memory is
+>> installed dynamically it might be a good idea to recalculate this limit.
+>> If you have a system that boots with let's say 8 GiB and than
+>> dynamically installs a few TiB of RAM this might make sense. But such a
+>> dynamic update of thread_max_suggested was left out for the sake of
+>> simplicity.
+>> 
+>> Anyway if more than 100,000 threads are used on a system, I would wonder
+>> if the software should not be changed to use thread-pools instead.
+>
+> You do not change the software to overcome artificial bounds based on
+> guessing.
+>
+> So can we get back to the justification of the patch. What kind of
+> real life problem does it solve and why is it ok to override an admin
+> decision?
+> If there is no strong justification then the patch should be reverted
+> because from what I have heard it has been noticed and it has broken
+> a certain deployment. I am not really clear about technical details yet
+> but it seems that there are workloads that believe they need to touch
+> this tuning and complain if that is not possible.
+
+Taking a quick look myself.
+
+I am completely mystified by both sides of this conversation.
+
+a) The logic to set the default number of threads in a system
+   has not changed since 2.6.12-rc2 (the start of the git history).
+
+The implementation has changed but we should still get the same
+value.  So anyone seeing threads_max autoscaling differences
+between kernels is either seeing a bug in the rewritten formula
+or something else weird is going on.
+
+Michal is it a very small effect your customers are seeing?
+Is it another bug somewhere else?
+
+b) Not being able to bump threads_max to the physical limit of
+   the machine is very clearly a regression.
+
+ Limiting threads_max to THREADS_MIN on the low end and THREAD_MAX on
+ the high end is reasonable, because linux can't cope with values
+ outside of that range.  Limiting threads_max to the auto-scaling value
+ is a regression.
+
+The point of limits like threads_max is to have something that 99%
+of people won't hit and if they do it will indicate a bug in their
+application.  And to generally keep the kernel working when an
+application bug happens.
+
+But there are always cases where heuristics fail so it is completely
+reasonable to allow these values to be manually tuned.
+
+Eric
 
