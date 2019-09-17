@@ -2,114 +2,79 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F20BFC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 443862171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2785214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfIQOiA (ORCPT
+        id S1728057AbfIQOnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:38:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:26541 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728187AbfIQOiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:38:00 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8F7CB8980EF;
-        Tue, 17 Sep 2019 14:37:59 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.72])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 4A7FF5DC18;
-        Tue, 17 Sep 2019 14:37:54 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 17 Sep 2019 16:37:59 +0200 (CEST)
-Date:   Tue, 17 Sep 2019 16:37:53 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     Jan Kratochvil <jan.kratochvil@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH? v2] powerpc: Hard wire PT_SOFTE value to 1 in gpr_get() too
-Message-ID: <20190917143753.GA12300@redhat.com>
-References: <20190917121256.GA8659@redhat.com>
+        Tue, 17 Sep 2019 10:43:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:42093 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbfIQOnB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:43:01 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iAEgu-0008Eh-MC; Tue, 17 Sep 2019 16:42:52 +0200
+Date:   Tue, 17 Sep 2019 16:42:52 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
+Message-ID: <20190917144252.v34ina4z2ydchoit@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-2-swood@redhat.com>
+ <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
+ <63b430ca2f067e61bef1c387fad782ab4a2c1ed3.camel@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190917121256.GA8659@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 17 Sep 2019 14:37:59 +0000 (UTC)
+In-Reply-To: <63b430ca2f067e61bef1c387fad782ab4a2c1ed3.camel@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I don't have a ppc machine, this patch wasn't even compile tested,
-could you please review?
+On 2019-09-17 09:06:28 [-0500], Scott Wood wrote:
+> Sorry, I missed that you were asking about rcu_read_lock_bh() as well.  I
+> did remove the change to rcu_read_lock_bh_held().
 
-The commit a8a4b03ab95f ("powerpc: Hard wire PT_SOFTE value to 1 in
-ptrace & signals") changed ptrace_get_reg(PT_SOFTE) to report 0x1,
-but PTRACE_GETREGS still copies pt_regs->softe as is.
+Sorry for not being clear here.
 
-This is not consistent and this breaks
-http://sourceware.org/systemtap/wiki/utrace/tests/user-regs-peekpoke
+> With this patch, local_bh_disable() calls rcu_read_lock() on RT which
+> handles this debug stuff.  Doing it twice shouldn't be explicitly harmful,
+> but it's redundant, and debug kernels are slow enough as is.
 
-Reported-by: Jan Kratochvil <jan.kratochvil@redhat.com>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- arch/powerpc/kernel/ptrace.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+rcu_read_lock() does:
+|         __rcu_read_lock();
+|         __acquire(RCU);
+|         rcu_lock_acquire(&rcu_lock_map);
+|         RCU_LOCKDEP_WARN(!rcu_is_watching(),
+|                          "rcu_read_lock() used illegally while idle");
 
-diff --git a/arch/powerpc/kernel/ptrace.c b/arch/powerpc/kernel/ptrace.c
-index 8c92feb..291acfb 100644
---- a/arch/powerpc/kernel/ptrace.c
-+++ b/arch/powerpc/kernel/ptrace.c
-@@ -363,11 +363,36 @@ static int gpr_get(struct task_struct *target, const struct user_regset *regset,
- 	BUILD_BUG_ON(offsetof(struct pt_regs, orig_gpr3) !=
- 		     offsetof(struct pt_regs, msr) + sizeof(long));
- 
-+#ifdef CONFIG_PPC64
-+	if (!ret)
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &target->thread.regs->orig_gpr3,
-+					  offsetof(struct pt_regs, orig_gpr3),
-+					  offsetof(struct pt_regs, softe));
-+
-+	if (!ret) {
-+		unsigned long softe = 0x1;
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, &softe,
-+					  offsetof(struct pt_regs, softe),
-+					  offsetof(struct pt_regs, softe) +
-+					  sizeof(softe));
-+	}
-+
-+	BUILD_BUG_ON(offsetof(struct pt_regs, trap) !=
-+		     offsetof(struct pt_regs, softe) + sizeof(long));
-+
-+	if (!ret)
-+		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
-+					  &target->thread.regs->trap,
-+					  offsetof(struct pt_regs, trap),
-+					  sizeof(struct user_pt_regs));
-+#else
- 	if (!ret)
- 		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
- 					  &target->thread.regs->orig_gpr3,
- 					  offsetof(struct pt_regs, orig_gpr3),
- 					  sizeof(struct user_pt_regs));
-+#endif
- 	if (!ret)
- 		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
- 					       sizeof(struct user_pt_regs), -1);
--- 
-2.5.0
+__acquire() is removed removed by cpp.
+That RCU_LOCKDEP_WARN is doing the same thing as above and redundant.
+Am I right to assume that you consider
+	rcu_lock_acquire(&rcu_bh_lock_map);
 
+redundant because the only user of that is also checking for
+rcu_lock_map?
 
+> -Scott
+
+Sebastian
