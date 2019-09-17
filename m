@@ -2,208 +2,144 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC40C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E69AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:12:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C595B21848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568736602;
-	bh=nAN0n7FNPLtue0I3YwzCKEoDfO6TOrlN0tJC0LD47mc=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=LRy+s7SjLleN/P8Rz+x8KUJ+H8qSSzBkeMd3iIrQ0j109fRXVVNCVQ2x/3zJfU6eL
-	 QD/GToY9Hg2PfWzsclMbre1I8gC8lrwX3BQi0Ewk3XMIJLEwmPbfgDEHxRf1pv//b9
-	 rQC1CPhtAtbInuXiMoh4NGp4u+WpKNUGHcr75NBQ=
+	by mail.kernel.org (Postfix) with ESMTP id D35AD21848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:12:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tdxiAs3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729255AbfIQQKC (ORCPT
+        id S1729850AbfIQQMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:10:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbfIQQKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:10:01 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAFF3206C2;
-        Tue, 17 Sep 2019 16:10:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568736601;
-        bh=nAN0n7FNPLtue0I3YwzCKEoDfO6TOrlN0tJC0LD47mc=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=iZjJ8PRODuFF5bQCssu/hVtDsJt7QwjSBt4kNvNneXOX6wGA6Zlkb4QU2gzWezJP6
-         6MUE9CaTWyKxZTSJCPpIE8H7eaG1gxm+FxLAL1bQ2nFg4/1dVucQCVNgFDkl9z9tzX
-         okCisscpM4ABBs+pESlO8FG1++bfZoKlkah9nxSM=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190917091623.3453-1-vkoul@kernel.org>
-References: <20190917091623.3453-1-vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Andy Gross <agross@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Vinod Koul <vkoul@kernel.org>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: gcc: Add missing clocks in SM8150
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 09:09:59 -0700
-Message-Id: <20190917161000.DAFF3206C2@mail.kernel.org>
+        Tue, 17 Sep 2019 12:12:30 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39517 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726965AbfIQQM3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:12:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id a1so8960943ioc.6;
+        Tue, 17 Sep 2019 09:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MeCcoXMCEze80Bl3xggqeDeE3aKjlz0D7xrnRXvSz50=;
+        b=tdxiAs3nS/HFbj/DnmJeqprShjlCUPDO/gKB3EjOJ0I68afG8KHwKw5RDFiCNDld2d
+         1jxQ6jGrcC/yklXj6kEa70e85VPQoP4Kj/ndgRJEwUloLOz6XC7Qm325QBl2KlmUGB0U
+         8A6myYwT0/IjL/2oiVzNLhBrZFN+xToynXQdAuo+m2MWqEVDjBQPSs596Mw+Noy+YeLT
+         LpEJAPE8sPhh8IK9Jw4NEmeDyE07xhCLoqlur1cbNtqaQD2W7DCs5dtB63L7lTN6vxE1
+         KzSjJ539vD+auBG3Ig5Jk/uTszD+oFbJ2tjG2e5/fax5mSQOzbK9QXmnRbVSumDiWZtU
+         u5aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MeCcoXMCEze80Bl3xggqeDeE3aKjlz0D7xrnRXvSz50=;
+        b=j2bDK+RBu6A2nFuioQnxKzNCNyy1nmLKRqUB+DCdnvxolKYMe14crBf0zjIuqrzG/d
+         727YQIfoVK+dR2xl3Vpu9hnV769IQXnaXz6kTCzeYIPbFQGccaN+N6DKgPcee32e/u89
+         0Ax84e2c/Kp6aRCf8J2KzX3hT0xdfKwfOPzTTynEEwNsvyY9PJrpWEi08qKKjYyhPic/
+         X3SaaUm+CGAAOEtvQCWDRcU4yOv7WoqQGSt1NCj/VZfl76c4M2xkM24OFcX9SmcccnYj
+         aXu5zCYZoFaHNpgzmKp58yeHtEh/Bpew41s2sFYHAt4zkKxVI3HkqWgmQZEV58TdqFMf
+         aNyQ==
+X-Gm-Message-State: APjAAAWQZVVlBKkZFzeOhIY2bbSUCDNwKJZgQa1KRrR3Z1unGx3qxCx0
+        lZW3qV14TtT02djQRemFXO0=
+X-Google-Smtp-Source: APXvYqy18s+Gh6RSCdBqHLdIA20bXqdc0iO0ZL76QMlGSl93FwBpVFflu0PIfUb3+kuezZYYc95Iiw==
+X-Received: by 2002:a5d:9956:: with SMTP id v22mr4304351ios.27.1568736748634;
+        Tue, 17 Sep 2019 09:12:28 -0700 (PDT)
+Received: from aford-OptiPlex-7050.logicpd.com ([174.46.170.158])
+        by smtp.gmail.com with ESMTPSA id p25sm2090487ioo.35.2019.09.17.09.12.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 09:12:27 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     linux-omap@vger.kernel.org, adam.ford@logicpd.com,
+        Adam Ford <aford173@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] drm/panel: simple: Add Logic PD Type 28 display support
+Date:   Tue, 17 Sep 2019 11:12:11 -0500
+Message-Id: <20190917161214.2913-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Vinod Koul (2019-09-17 02:16:23)
-> The initial upstreaming of SM8150 GCC driver missed few clock so add
-> them up now.
->=20
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
+Previously, there was an omap panel-dpi driver that would
+read generic timings from the device tree and set the display
+timing accordingly.  This driver was removed so the screen
+no longer functions.  This patch modifies the panel-simple
+file to setup the timings to the same values previously used.
 
-Should have some sort of fixes tag?
+Fixes: 8bf4b1621178 ("drm/omap: Remove panel-dpi driver")
 
->  drivers/clk/qcom/gcc-sm8150.c | 172 ++++++++++++++++++++++++++++++++++
->  1 file changed, 172 insertions(+)
->=20
-> diff --git a/drivers/clk/qcom/gcc-sm8150.c b/drivers/clk/qcom/gcc-sm8150.c
-> index 12ca2d14797f..13d4d14a5744 100644
-> --- a/drivers/clk/qcom/gcc-sm8150.c
-> +++ b/drivers/clk/qcom/gcc-sm8150.c
-> @@ -1616,6 +1616,38 @@ static struct clk_branch gcc_gpu_cfg_ahb_clk =3D {
->         },
->  };
-> =20
-> +static struct clk_branch gcc_gpu_gpll0_clk_src =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
+Signed-off-by: Adam Ford <aford173@gmail.com>
 
-Why skip?
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 5a93c4edf1e4..c86c30f3a8a1 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1900,6 +1900,40 @@ static const struct drm_display_mode mitsubishi_aa070mc01_mode = {
+ 	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
+ };
+ 
++static const struct drm_display_mode logicpd_type_28_mode = {
++	.clock = 9000,
++	.hdisplay = 480,
++	.hsync_start = 480 + 3,
++	.hsync_end = 480 + 3 + 42,
++	.htotal = 480 + 3 + 42 + 2,
++
++	.vdisplay = 272,
++	.vsync_start = 272 + 2,
++	.vsync_end = 272 + 2 + 11,
++	.vtotal = 272 + 2 + 11 + 3,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
++};
++
++static const struct panel_desc logicpd_type_28 = {
++	.modes = &logicpd_type_28_mode,
++	.num_modes = 1,
++	.bpc = 8,
++	.size = {
++		.width = 105,
++		.height = 67,
++	},
++	.delay = {
++		.prepare = 200,
++		.enable = 200,
++		.unprepare = 200,
++		.disable = 200,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
++		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
++};
++
+ static const struct panel_desc mitsubishi_aa070mc01 = {
+ 	.modes = &mitsubishi_aa070mc01_mode,
+ 	.num_modes = 1,
+@@ -2948,6 +2982,9 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
++	}, {
++		.compatible = "logicpd,type28",
++		.data = &logicpd_type_28,
+ 	}, {
+ 		.compatible = "mitsubishi,aa070mc01-ca1",
+ 		.data = &mitsubishi_aa070mc01,
+-- 
+2.17.1
 
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52004,
-> +               .enable_mask =3D BIT(15),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_gpu_gpll0_clk_src",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &gpll0.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_gpu_gpll0_div_clk_src =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-
-Why skip?
-
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52004,
-> +               .enable_mask =3D BIT(16),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_gpu_gpll0_div_clk_src",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &gcc_gpu_gpll0_clk_src.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
->  static struct clk_branch gcc_gpu_iref_clk =3D {
->         .halt_reg =3D 0x8c010,
->         .halt_check =3D BRANCH_HALT,
-> @@ -1698,6 +1730,38 @@ static struct clk_branch gcc_npu_cfg_ahb_clk =3D {
->         },
->  };
-> =20
-> +static struct clk_branch gcc_npu_gpll0_clk_src =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52004,
-> +               .enable_mask =3D BIT(18),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_npu_gpll0_clk_src",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &gpll0.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_npu_gpll0_div_clk_src =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x52004,
-> +               .enable_mask =3D BIT(19),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_npu_gpll0_div_clk_src",
-> +                       .parent_hws =3D (const struct clk_hw *[]){
-> +                               &gcc_npu_gpll0_clk_src.clkr.hw },
-> +                       .num_parents =3D 1,
-> +                       .flags =3D CLK_SET_RATE_PARENT,
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
->  static struct clk_branch gcc_npu_trig_clk =3D {
->         .halt_reg =3D 0x4d00c,
->         .halt_check =3D BRANCH_VOTED,
-> @@ -2812,6 +2876,42 @@ static struct clk_branch gcc_ufs_card_phy_aux_hw_c=
-tl_clk =3D {
->         },
->  };
-> =20
-> +static struct clk_branch gcc_ufs_card_rx_symbol_0_clk =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-
-Can't we fix the UFS driver to not require this anymore? This is the
-fourth or fifth time I've asked for this.
-
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x7501c,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_ufs_card_rx_symbol_0_clk",
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_ufs_card_rx_symbol_1_clk =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x750ac,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_ufs_card_rx_symbol_1_clk",
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static struct clk_branch gcc_ufs_card_tx_symbol_0_clk =3D {
-> +       .halt_check =3D BRANCH_HALT_SKIP,
-> +       .clkr =3D {
-> +               .enable_reg =3D 0x75018,
-> +               .enable_mask =3D BIT(0),
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gcc_ufs_card_tx_symbol_0_clk",
-> +                       .ops =3D &clk_branch2_ops,
-> +               },
-> +       },
-> +};
-> +
->  static struct clk_branch gcc_ufs_card_unipro_core_clk =3D {
->         .halt_reg =3D 0x75058,
->         .halt_check =3D BRANCH_HALT,
