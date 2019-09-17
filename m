@@ -2,54 +2,204 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 717ADC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944AFC4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDE621881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:24:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A24C21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568715918;
+	bh=QFpft6p1XeowPmTvoDFXMoFInhhVUV7MOjL9aixbNDs=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=qZFXDMSCRrRCI+xTOaqCSc2W6uK0mvyHcytLgAwptUx2QuDR8pzWqxLYpSPDM79as
+	 gNGVg+QlYHbliKBOY86SX/gRMiOhlbwciK0fvAllN931JK+UZTGTPEYjga6cgb3swz
+	 S91TLZ9hV5bM8ExUnh//fOCYt+rOK8ViQ1jHzMyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfIQKYk (ORCPT
+        id S1727838AbfIQKZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:24:40 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:41203 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfIQKYk (ORCPT
+        Tue, 17 Sep 2019 06:25:17 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41318 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfIQKZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:24:40 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iAAez-0001jn-8C; Tue, 17 Sep 2019 12:24:37 +0200
-Date:   Tue, 17 Sep 2019 12:24:37 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     John Kacur <jkacur@redhat.com>
-Cc:     Sultan Alsawaf <sultan@kerneltoast.com>,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org,
-        sebastian@breakpoint.cc, tglx@linutronix.de, rostedt@goodmis.org
-Subject: Re: [PATCH] rt-tests: backfire: Don't include asm/uaccess.h directly
-Message-ID: <20190917102436.tn2faq3hcdadybgw@linutronix.de>
-References: <20190903191321.6762-1-sultan@kerneltoast.com>
- <alpine.LFD.2.21.1909162356500.10273@planxty>
+        Tue, 17 Sep 2019 06:25:17 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g13so2540143otp.8;
+        Tue, 17 Sep 2019 03:25:16 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=U8AK8lep52zI4AFbsmkmWfoZZHVuoR54siydWKVCQfk=;
+        b=jRB+VendOOO3zqzMBwDpUbBRFaqu8U68JlQXrRuTDfWoMXw6pPlh7ziCDe6MraafOm
+         f9GX3XeXckwL/l9a3+H5FfxOGQb09m4Ezqic2l/rqHTN1oiAqfHqPXECbHJjg1PoEQEr
+         bq2qD10LejiOm4Ye0o/tiBVzJxYeUXIbAZnHa8AuCVYpVUXDDt9c0yjpxOMFQBIHQrYb
+         GKfh/Dp+QeX6UUke1nlvDh+nWKdP95hzBvakK61DUjveR/pLzgC5i43THm2SPgYGrYpN
+         cKb29ZbdmmlruAwfQVuoarNvoR4GjF8WKQVLkCILxaY0IwddEuqaC805SbwbJmyqH7LN
+         639A==
+X-Gm-Message-State: APjAAAUN6yAB941Jn0nw9dmhurqMR3RIBQPBV5wu58Kj3Ztjy7jcAvSm
+        HNkMPRX2gitatLMo5QrdGouoj7lVSPc2k/Fe6wI=
+X-Google-Smtp-Source: APXvYqxU2RKcbkpQZ8/6Op1mnYhZjI6D3bJFaVBF50pFi/ORMWkDWOVzeZQvGuVCZ6z8U9odIwxV0sOsGx2hxkJAgLE=
+X-Received: by 2002:a05:6830:9:: with SMTP id c9mr2135163otp.262.1568715915953;
+ Tue, 17 Sep 2019 03:25:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.21.1909162356500.10273@planxty>
-User-Agent: NeoMutt/20180716
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 17 Sep 2019 12:25:05 +0200
+Message-ID: <CAJZ5v0jHzVKJiLzMxC6eqqCkpeKA-UD_9fhy1KpVp6fM=XwiSQ@mail.gmail.com>
+Subject: [GIT PULL] ACPI updates for v5.4-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-16 23:57:32 [+0200], John Kacur wrote:
-> Signed-off-by: John Kacur <jkacur@redhat.com>
+Hi Linus,
 
-Hmmm. I remember this thing came up years ago in the Debian BTS and then
-that backfire module got removed from the Debian package because there
-was no need for it.
-Just to clarify: is there any need to keep this module or do I mix up
-things?
+Please pull from the tag
 
-Sebastian
+ git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+ acpi-5.4-rc1
+
+with top-most commit 0b3e7973128528e804b05dd7f79d54c2792318d6
+
+ Merge branches 'acpi-misc' and 'acpi-doc'
+
+on top of commit a55aa89aab90fae7c815b0551b07be37db359d76
+
+ Linux 5.3-rc6
+
+to receive ACPI updates for 5.4-rc1.
+
+These include an ACPICA update (to upstream revision 20190816),
+improvements of support for memory hot-add in the HMAT handling code
+and some assorted fixes and cleanups.
+
+Specifics:
+
+ - Update the ACPICA code in the kernel to upstream revision 20190816
+   including:
+   * Internal limits change to support larger systems (Bob Moore).
+   * Macros clean up (Bob Moore).
+   * printf format string fixes (Bob Moore).
+   * Full deployment of the ACPI_PRINTF_LIKE macro (Bob Moore).
+   * Tools improvements (Bob Moore, Colin Ian King).
+   * Windows _OSI support fixes (Jung-uk Kim).
+
+ - Improve memory hot-add support in the ACPI HMAT handling code (Dan
+   Williams, Keith Busch).
+
+ - Fix the ACPI LPSS (Low-Power Subsystem) driver for Intel SoCs to
+   save and restore private registers during system-wide suspend and
+   resume on systems with the Lynxpoint PCH (Jarkko Nikula).
+
+ - Convert the ACPI documentation related to LEDs to ReST (Sakari
+   Ailus).
+
+ - Fix assorted issues and make assorted minor improvements in the
+   ACPI-related code (Al Stone, Andy Shevchenko, Jiri Slaby, Kelsey
+   Skunberg, Krzysztof Wilczynski, Liguang Zhang, Wenwen Wang,
+   YueHaibing).
+
+Thanks!
+
+
+---------------
+
+Al Stone (1):
+      ACPI / CPPC: do not require the _PSD method
+
+Andy Shevchenko (1):
+      ACPI / APEI: Get rid of NULL_UUID_LE constant
+
+Bob Moore (6):
+      ACPICA: Increase total number of possible Owner IDs
+      ACPICA: Macros: remove pointer math on a null pointer
+      ACPICA: Fix issues with arg types within printf format strings
+      ACPICA: iASL,acpi_dump: Improve y/n query
+      ACPICA: Fully deploy ACPI_PRINTF_LIKE macro
+      ACPICA: Update version to 20190816.
+
+Colin Ian King (1):
+      ACPICA: Debugger: remove redundant assignment on obj_desc
+
+Dan Williams (1):
+      HMAT: Skip publishing target info for nodes with no online memory
+
+Jarkko Nikula (1):
+      ACPI / LPSS: Save/restore LPSS private registers also on Lynxpoint
+
+Jiri Slaby (1):
+      ACPI / processor: don't print errors for processorIDs == 0xff
+
+Jung-uk Kim (2):
+      ACPICA: Differentiate Windows 8.1 from Windows 8.
+      ACPICA: Add "Windows 2019" string to _OSI support.
+
+Keith Busch (2):
+      HMAT: Register memory-side cache after parsing
+      HMAT: Register attributes for memory hot add
+
+Kelsey Skunberg (1):
+      ACPI: thermal: Remove redundant acpi_has_method() calls
+
+Krzysztof Wilczynski (1):
+      ACPI/PCI: Remove surplus parentheses from a return statement
+
+Liguang Zhang (1):
+      ACPI / APEI: Release resources if gen_pool_add() fails
+
+Sakari Ailus (1):
+      Documentation: ACPI: DSD: Convert LED documentation to ReST
+
+Wenwen Wang (2):
+      ACPI: custom_method: fix memory leaks
+      ACPI / PCI: fix acpi_pci_irq_enable() memory leak
+
+YueHaibing (1):
+      ACPI: SBS: remove unused const variable 'SMBUS_PEC'
+
+---------------
+
+ .../leds.txt => firmware-guide/acpi/dsd/leds.rst}  |  20 ++-
+ Documentation/firmware-guide/acpi/index.rst        |   1 +
+ drivers/acpi/acpi_lpss.c                           |   8 +-
+ drivers/acpi/acpi_processor.c                      |  10 +-
+ drivers/acpi/acpica/aclocal.h                      |   4 +-
+ drivers/acpi/acpica/acobject.h                     |   2 +-
+ drivers/acpi/acpica/acstruct.h                     |   2 +-
+ drivers/acpi/acpica/acutils.h                      |  10 +-
+ drivers/acpi/acpica/dbhistry.c                     |   2 +-
+ drivers/acpi/acpica/dbinput.c                      |  10 +-
+ drivers/acpi/acpica/dbmethod.c                     |   4 +
+ drivers/acpi/acpica/dbobject.c                     |   1 -
+ drivers/acpi/acpica/dbstats.c                      |  92 +++++++------
+ drivers/acpi/acpica/exdump.c                       |   6 +-
+ drivers/acpi/acpica/nsaccess.c                     |   2 +-
+ drivers/acpi/acpica/nsalloc.c                      |   2 +-
+ drivers/acpi/acpica/nsdump.c                       |   2 +-
+ drivers/acpi/acpica/nsrepair2.c                    |   2 +-
+ drivers/acpi/acpica/tbdata.c                       |   1 +
+ drivers/acpi/acpica/utdebug.c                      |   4 +-
+ drivers/acpi/acpica/uterror.c                      |   6 +-
+ drivers/acpi/acpica/utosi.c                        |   3 +-
+ drivers/acpi/acpica/utownerid.c                    |  12 +-
+ drivers/acpi/apei/ghes.c                           |  19 ++-
+ drivers/acpi/cppc_acpi.c                           |   6 +-
+ drivers/acpi/custom_method.c                       |   5 +-
+ drivers/acpi/hmat/hmat.c                           | 143 ++++++++++++++++-----
+ drivers/acpi/pci_irq.c                             |   4 +-
+ drivers/acpi/pci_link.c                            |   4 +-
+ drivers/acpi/sbshc.h                               |   2 -
+ drivers/acpi/thermal.c                             |  11 +-
+ include/acpi/acconfig.h                            |   4 +-
+ include/acpi/acpiosxf.h                            |   1 +
+ include/acpi/acpixf.h                              |   2 +-
+ include/acpi/actypes.h                             |  20 +--
+ tools/power/acpi/tools/acpidump/apfiles.c          |  10 +-
+ 36 files changed, 285 insertions(+), 152 deletions(-)
