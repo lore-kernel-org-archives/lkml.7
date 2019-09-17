@@ -6,109 +6,76 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E393EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37355C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA832189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16361216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 04:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392308AbfIQEvt (ORCPT
+        id S2392319AbfIQEvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 00:51:49 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:36260 "EHLO inva021.nxp.com"
+        Tue, 17 Sep 2019 00:51:51 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:36312 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbfIQEvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 00:51:49 -0400
+        id S2392295AbfIQEvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 00:51:50 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 59854200667;
-        Tue, 17 Sep 2019 06:51:47 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5460D20010A;
+        Tue, 17 Sep 2019 06:51:48 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B242720064A;
-        Tue, 17 Sep 2019 06:51:42 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B02C720065B;
+        Tue, 17 Sep 2019 06:51:43 +0200 (CEST)
 Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id C036C402A6;
-        Tue, 17 Sep 2019 12:51:36 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id B782F402AD;
+        Tue, 17 Sep 2019 12:51:37 +0800 (SGT)
 From:   Biwen Li <biwen.li@nxp.com>
 To:     leoyang.li@nxp.com, shawnguo@kernel.org, robh+dt@kernel.org,
         mark.rutland@arm.com
 Cc:     linuxppc-dev@lists.ozlabs.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Biwen Li <biwen.li@nxp.com>
-Subject: [v2,1/3] soc: fsl: fix that flextimer cannot wakeup system in deep sleep on LS1021A
-Date:   Tue, 17 Sep 2019 12:41:17 +0800
-Message-Id: <20190917044119.21895-1-biwen.li@nxp.com>
+Subject: [v2,2/3] arm: dts: ls1021a: fix that FlexTimer cannot wakeup system in deep sleep
+Date:   Tue, 17 Sep 2019 12:41:18 +0800
+Message-Id: <20190917044119.21895-2-biwen.li@nxp.com>
 X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20190917044119.21895-1-biwen.li@nxp.com>
+References: <20190917044119.21895-1-biwen.li@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Why:
-    - Cannot write register RCPM_IPPDEXPCR1 on LS1021A,
-      Register RCPM_IPPDEXPCR1's default value is zero.
-      So the register value that reading from register
-      RCPM_IPPDEXPCR1 is always zero.
-
-How:
-    - Save register RCPM_IPPDEXPCR1's value to
-      register SCFG_SPARECR8.(uboot's psci also
-      need reading value from the register SCFG_SPARECR8
-      to set register RCPM_IPPDEXPCR1)
+The patch fix a bug that FlexTimer cannot
+wakeup system in deep sleep.
 
 Signed-off-by: Biwen Li <biwen.li@nxp.com>
 ---
 Change in v2:
-	- fix stype problems
+	- None
 
- drivers/soc/fsl/rcpm.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/ls1021a.dtsi | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/fsl/rcpm.c b/drivers/soc/fsl/rcpm.c
-index 82c0ad5e663e..0b710c24999c 100644
---- a/drivers/soc/fsl/rcpm.c
-+++ b/drivers/soc/fsl/rcpm.c
-@@ -13,6 +13,8 @@
- #include <linux/slab.h>
- #include <linux/suspend.h>
- #include <linux/kernel.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index e3973b611c3a..377bb4717584 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -1000,12 +1000,13 @@
+ 			compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-rcpm-2.1+";
+ 			reg = <0x0 0x1ee2140 0x0 0x8>;
+ 			#fsl,rcpm-wakeup-cells = <2>;
++			fsl,rcpm-scfg = <&scfg 0x0 0x51c>; /* SCFG_SPARECR8 */
+ 		};
  
- #define RCPM_WAKEUP_CELL_MAX_SIZE	7
- 
-@@ -63,6 +65,31 @@ static int rcpm_pm_prepare(struct device *dev)
- 					tmp |= value[i + 1];
- 					iowrite32be(tmp, rcpm->ippdexpcr_base + i * 4);
- 				}
-+				#ifdef CONFIG_SOC_LS1021A
-+				/* Workaround: There is a bug of register ippdexpcr1,
-+				 * cannot write it but can read it.Tt's default value is zero,
-+				 * then read it will always returns zero.
-+				 * So save ippdexpcr1's value to register SCFG_SPARECR8.
-+				 * And the value of ippdexpcr1 will be read from SCFG_SPARECR8.
-+				 */
-+				{
-+					struct regmap *rcpm_scfg_regmap = NULL;
-+					u32 reg_offset[RCPM_WAKEUP_CELL_MAX_SIZE + 1];
-+					u32 reg_value = 0;
-+
-+					rcpm_scfg_regmap = syscon_regmap_lookup_by_phandle(np, "fsl,rcpm-scfg");
-+					if (rcpm_scfg_regmap) {
-+						if (of_property_read_u32_array(dev->of_node,
-+						    "fsl,rcpm-scfg", reg_offset, rcpm->wakeup_cells + 1)) {
-+							rcpm_scfg_regmap = NULL;
-+							continue;
-+						}
-+						regmap_read(rcpm_scfg_regmap, reg_offset[i + 1], &reg_value);
-+						/* Write value to register SCFG_SPARECR8 */
-+						regmap_write(rcpm_scfg_regmap, reg_offset[i + 1], tmp | reg_value);
-+					}
-+				}
-+				#endif //CONFIG_SOC_LS1021A
- 			}
- 		}
- 	} while (ws = wakeup_source_get_next(ws));
+ 		ftm_alarm0: timer0@29d0000 {
+ 			compatible = "fsl,ls1021a-ftm-alarm";
+ 			reg = <0x0 0x29d0000 0x0 0x10000>;
+-			fsl,rcpm-wakeup = <&rcpm 0x0 0x20000000>;
++			fsl,rcpm-wakeup = <&rcpm 0x0 0x30000000>; /* FlexTimer1 and OCRAM1 are not powerdown during LPM20(sleep) */
+ 			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
+ 			big-endian;
+ 		};
 -- 
 2.17.1
 
