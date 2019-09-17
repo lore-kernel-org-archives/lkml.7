@@ -2,157 +2,130 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12D0C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49612C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFC921852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:05:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ktt6Mrib"
+	by mail.kernel.org (Postfix) with ESMTP id 1D02B21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:14:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568700850;
+	bh=sE3YRRODfOBV2JbJVxF12dvUKJrD1eRcmK4W8+NtWs0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JCxLtpVL3OiSDDMM04dysOAv4vG2ZzQMuNM8Yp4bNSXdhTqJU1MjcoT//Al5d8CIz
+	 piQXt1L351yFHxcrWypMPK+ORseWmled9iIU4wDuuDdHG/Zifjj4cIwWF1CuP2vJrA
+	 p3ojCdkT5zbHOp3MMSE8uyJMcRycKp2u1gMuI6gQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392473AbfIQGF0 (ORCPT
+        id S2404104AbfIQGOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:05:26 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:49958 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390980AbfIQGF0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:05:26 -0400
-Received: from pps.filterd (m0167091.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8H63vjT012011;
-        Tue, 17 Sep 2019 02:05:17 -0400
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2055.outbound.protection.outlook.com [104.47.44.55])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2v0sy95h02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 17 Sep 2019 02:05:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eQvhRgt1/iscwPjy4sVo3QjkantTDXoGk/j7jPEmuN6OgcbPCz2m3dLe7OoUWg95G+v1TmXC6DI1haWnVlwJbAE7r3VzxU62nf6cC46uK0r5PJf3qmVeyMXxQXwN5T3JUL7dq+bnBzSfQzis+/7cjrLh9zzOMZp9LBtcbyT2crrPgoesdSQsxT97+1mPJruKSatobrLtgzreURGtHrfF/Jy0hi7sujp/QtWLOZ+qoY+s6PqMVOoZKQgON/3o7SVKmkHArYeZAt6NRyPvhek4JggOC0GXOquW2vfcWUk3pMmmNO6fs5fitCnJPVyhHHxMMbaW4zYJKgh6sEQM0ya6tQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i+6Kej0PWywlbLk7/futs8QlscG0Jq/zavuIB5fyv7Y=;
- b=jJlDd/b3K5OaBIvCDKAyYsN7Ko2Mp0a8mNchORP1Tm8VxVGNQJSb+aGZmrYz4ZgNYgfnq18WkfKWz/SFOJf7qWpUR0/YT8CyyX7VLEiSNapikRJ53S9XLVFn5N8A0stmJyes+EgoXKof+yRtXOas4CBQqRWt7W0m7lCUnN+zbEQemM8qp2Q+SHkaMPW/0YrvI7dPGucnN3JQX/mXRSWvFzi4RvvVlOCzO/04j+r74an2dgSdcwsStwMqPpiCzBNdDq0GTrmIqihlIWPMg6BGaz0aBGn3TTEx7oEmiVRAkRwhKVg9+MSDIX1BAIrv8dLtWzh5xUaaZZWWzDpN39JSDQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i+6Kej0PWywlbLk7/futs8QlscG0Jq/zavuIB5fyv7Y=;
- b=ktt6MribjegogA/KP3UPkJkGo/2tjjV99GyeCCdoTxB9DE57Q4nNmiFMSu4QDqD+6WDSFZCvDPe7OBiMu1PSitvIk5fBaGZyTMz0aRVA38yfr71WIPsIay9lOVLzm8K6dc0awtA7oxy4uBi20IndD8x4XVMCnrDJm/q7VbydXIs=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5271.namprd03.prod.outlook.com (20.180.13.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.23; Tue, 17 Sep 2019 06:05:16 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2284.009; Tue, 17 Sep 2019
- 06:05:16 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "broonie@kernel.org" <broonie@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "baolin.wang@linaro.org" <baolin.wang@linaro.org>,
-        "bcm-kernel-feedback-list@broadcom.com" 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "orsonzhai@gmail.com" <orsonzhai@gmail.com>,
-        "zhang.lyra@gmail.com" <zhang.lyra@gmail.com>
-Subject: Re: [RFC PATCH 03/15] spi: make `cs_change_delay` the first user of
- the `spi_delay` logic
-Thread-Topic: [RFC PATCH 03/15] spi: make `cs_change_delay` the first user of
- the `spi_delay` logic
-Thread-Index: AQHVag+8uWmQQq3ExEyRd/qnwNwICqcuP2sAgAADYYCAAALHAIAABOiAgAAKv4CAAUSvAA==
-Date:   Tue, 17 Sep 2019 06:05:15 +0000
-Message-ID: <2ebd680eb38bd3bc46414a5e18e399279946bd9b.camel@analog.com>
-References: <20190913114550.956-1-alexandru.ardelean@analog.com>
-         <20190913114550.956-4-alexandru.ardelean@analog.com>
-         <20190916122505.GC4352@sirena.co.uk>
-         <ae469c65828443524f9ff0409f1c7a81bf64cf6b.camel@analog.com>
-         <20190916124707.GD4352@sirena.co.uk>
-         <458cbb212fbd04c157c9861501f51c03ea958302.camel@analog.com>
-         <20190916134309.GH4352@sirena.co.uk>
-In-Reply-To: <20190916134309.GH4352@sirena.co.uk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c9bdd46e-9884-4ad4-68e3-08d73b3502b0
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR03MB5271;
-x-ms-traffictypediagnostic: CH2PR03MB5271:
-x-microsoft-antispam-prvs: <CH2PR03MB5271501AC8E77D431352B9A0F98F0@CH2PR03MB5271.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 01630974C0
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(39860400002)(366004)(136003)(346002)(396003)(199004)(189003)(478600001)(2501003)(256004)(36756003)(81166006)(5660300002)(6436002)(8676002)(7416002)(99286004)(118296001)(229853002)(26005)(6916009)(6486002)(102836004)(6506007)(81156014)(6246003)(6512007)(5640700003)(64756008)(66946007)(66476007)(446003)(2616005)(6116002)(476003)(3846002)(66066001)(486006)(45080400002)(86362001)(1730700003)(186003)(8936002)(76176011)(76116006)(2906002)(4326008)(66446008)(2351001)(14454004)(66556008)(7736002)(305945005)(71200400001)(71190400001)(316002)(25786009)(11346002)(54906003)(81973001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5271;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kZsGlFYYmK0WXjafWp4O0BtMkHbvEAGcueY8IC9IqUoM1X8EZiPcizWsPhD+hz3GHa9wxFdwMzHQYlQ4dxnMi+KA1Ah8y7ntFaJ1EFpbLJspZAYh3KMhcH32UyV6AofgCuFrFjqIEYp17Ql4B/tOSAf53eDCgbcYMnX/av5g54SMNswEh5BkOyA1+My00gzdUx6JJSqoC6E5Atof1nb1o+WzEHfVamXBlR7oeVVOc8tpnk2i4XiLiiEcWTRgBAo2v+gnilMi0ZDa4Dgp8K8jA6bvr7h3dUGAUBLN1iRzIkloBKxafvMvxmIAOYag9Cm3Glgn/O2kVx8SUKsAkRlutWt+DrvcHdA6DrmNhWN1emzB3CxCzdg6vQMjvGF6jHYNtrqnGREom5V3QEKORJkEuTBFnEHJCzf9UJZ1w8eAFSE=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <418F646267A0C44DA315D6E3661E68FC@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9bdd46e-9884-4ad4-68e3-08d73b3502b0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 06:05:15.8524
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 1xrIj0E0aOd+aqAXisvroVX5E8RXhW1tEliF+YUDg06IR6FvJVAwzJxl/3PwfrHUOo6h4JuiEzP+RSbueEkgX8i6NIOSg4kcocNBg1afswg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5271
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-17_03:2019-09-11,2019-09-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 spamscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 priorityscore=1501 clxscore=1015 malwarescore=0 impostorscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909170068
+        Tue, 17 Sep 2019 02:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726511AbfIQGOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:14:09 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A118B206C2;
+        Tue, 17 Sep 2019 06:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568700848;
+        bh=sE3YRRODfOBV2JbJVxF12dvUKJrD1eRcmK4W8+NtWs0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PiljeJClnrFwTFVeSrlY/eFqTrasaUfOpTJM3Un7Z8k0+/0fBioj6SEPpWBLJuP/p
+         0HjLXHipxGvcx7Eo5gzjhpBbuCYOEuj71yWix3N2qWvtK63wJw/8vTB9P3Ev1LtT5l
+         7I5S2tyM+uguK9IugUHKcKw7SS/l6VD/P0GMnsCY=
+Date:   Tue, 17 Sep 2019 15:14:03 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrew Cooper <andrew.cooper3@citrix.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Subject: Re: [PATCH -tip v4 0/4] x86: kprobes: Prohibit kprobes on Xen/KVM
+ emulate prefixes
+Message-Id: <20190917151403.60023814bda80304777a35e5@kernel.org>
+In-Reply-To: <156777561745.25081.1205321122446165328.stgit@devnote2>
+References: <156777561745.25081.1205321122446165328.stgit@devnote2>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA5LTE2IGF0IDE0OjQzICswMTAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBb
-RXh0ZXJuYWxdDQo+IA0KPiBPbiBNb24sIFNlcCAxNiwgMjAxOSBhdCAwMTowNDo0MlBNICswMDAw
-LCBBcmRlbGVhbiwgQWxleGFuZHJ1IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAxOS0wOS0xNiBhdCAx
-Mzo0NyArMDEwMCwgTWFyayBCcm93biB3cm90ZToNCj4gPiA+IFRoYXQgdjMgc2VlbXMgdG8gYmUg
-YSBzbWFsbCBzdWJzZXQgb2YgdGhpcyBzZXJpZXM/DQo+ID4gQWNrLg0KPiA+IFYzIGlzIHRoZSBm
-aXJzdCA0IHBhdGNoZXMgZnJvbSB0aGlzIHNlcmllcy4NCj4gPiBXZWxsLCBwYXRjaGVzIDMgJiA0
-IGFyZSBzcXVhc2hlZC4NCj4gPiBJIGFtIDEwMCUgY29udmluY2VkIHRoYXQgdGhlIGVudGlyZSBz
-ZXJpZXMgaXMgYSBnb29kIGlkZWEuDQoNClNvbWV0aGluZyBoYXBwZW5lZCBoZXJlIHRvIHRoZSAi
-bm90IiB3b3JkLg0KUHJvYmFibHkgZ290IGxvc3QgaW4gYW4gYWx0ZXJuYXRlIGRpbWVuc2lvbiAg
-wq9cXyjjg4QpXy/CryAuDQoNCldhcyBzdXBwb3NlZCB0byBiZToNCiJJIGFtIG5vdCAxMDAlIGNv
-bnZpbmNlZCB0aGF0IHRoZSBlbnRpcmUgc2VyaWVzIGlzIGEgZ29vZCBpZGVhLiINCg0KDQo+ID4g
-SW4gdGhlIHNlbnNlIHRoYXQgYSBgc3RydWN0IHNwaV9kZWxheWAgbWF5IGJlIGEgZ29vZCBpZGVh
-LCBidXQgYXQgdGhlDQo+ID4gc2FtZSB0aW1lLCBpdCBtYXkgYmUgdW4tbmVlZGVkLg0KPiA+IEFs
-bCBJIHdhbnRlZCB0byBkbywgd2FzIHRvIGFkZCBhbm90aGVyIGRlbGF5IHNvbWV3aGVyZSwgYW5k
-IGdvdCBsb3N0IGluDQo+ID4gdGhlIHJld29yayBvZiBjdXJyZW50IGRlbGF5cy4NCj4gPiBJIHRo
-b3VnaHQgYWJvdXQgcHJvcG9zaW5nIGp1c3QgdGhlIGZpcnN0IDQgcGF0Y2hlcyBbb24gdGhlaXIg
-b3duXSwgYnV0DQo+ID4gSSB0aG91Z2h0IHRoYXQgc2hvd2luZyB0aGUgY3VycmVudCBzZXJpZXMg
-YXMtaXMNCj4gPiBub3csIG1heSBiZSBhIGdvb2QgaWRlYSBhcyB3ZWxsIFt0byBnYXRoZXIgc29t
-ZSBmZWVkYmFja10uDQo+IA0KPiBJIHRoaW5rIGl0IG1ha2VzIG1vcmUgc2Vuc2UgdG8gcmV2aWV3
-IGFzIGEgd2hvbGUgc2VyaWVzIHJhdGhlciB0aGFuIG9ubHkNCj4gYSBwYXJ0IG9mIHRoZSBjb252
-ZXJzaW9uLCBpdCBkb2Vzbid0IHJlYWxseSBoZWxwIHRvIG9ubHkgZG8gcGFydCBvZiBpdC4NCj4g
-DQo+IFBsZWFzZSBmaXggeW91ciBtYWlsIGNsaWVudCB0byB3b3JkIHdyYXAgd2l0aGluIHBhcmFn
-cmFwaHMgYXQgc29tZXRoaW5nDQo+IHN1YnN0YW50aWFsbHkgbGVzcyB0aGFuIDgwIGNvbHVtbnMu
-ICBEb2luZyB0aGlzIG1ha2VzIHlvdXIgbWVzc2FnZXMgbXVjaA0KPiBlYXNpZXIgdG8gcmVhZCBh
-bmQgcmVwbHkgdG8uDQoNCkFjay4NClByb2JsZW0gaXM6IEkgaGF2ZSB0byByZS1zZXR1cCBteSBl
-bWFpbCBjbGllbnQgZXZlcnkgbm93LW4tdGhlbiBzaW5jZSB0aGUNCndvcmstZW1haWwgc2VydmVy
-IGhhcyBzb21lIGlzc3VlcyB3aXRoIExpbnV4IGVtYWlsIGNsaWVudHMuDQpBbmQgSSBzb21ldGlt
-ZXMgZm9yZ2V0IHRvIGNvbmZpZ3VyZSB0aGlzLg0KWyBFeGNoYW5nZSBkb2VzIG5vdCBhbHdheXMg
-Z2V0IGFsb25nIHdlbGwgd2l0aCBub24tT3V0bG9vayBjbGllbnRzIF0NCg==
+Hi Peter,
+
+Could you review this version?
+
+Thank you,
+
+On Fri,  6 Sep 2019 22:13:37 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Hi,
+> 
+> Here is the 4th version of patches to handle Xen/KVM emulate
+> prefix by x86 instruction decoder.
+> 
+> These patches allow x86 instruction decoder to decode
+> Xen and KVM emulate prefix correctly, and prohibit kprobes to
+> probe on it.
+> Previous version is here;
+> 
+>  https://lkml.kernel.org/r/156773433821.31441.2905951246664148487.stgit@devnote2
+> 
+> In this version, I added 2 patches, [1/4] fixes __ASM_FORM() to
+> accept macros using __stringify(), [2/4] introduces new
+> asm/emulate_prefix.h to initialize Xen and KVM emulate prefix
+> at one place. [3/4] is updated to use new emulate_prefix.h and
+> fix to add emulate_prefix.h to sync check list.
+> 
+> This series can be applied on -tip master branch which
+> has merged Josh's objtool/perf sharing common x86 insn
+> decoder series.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (4):
+>       x86/asm: Allow to pass macros to __ASM_FORM()
+>       x86: xen: kvm: Gather the definition of emulate prefixes
+>       x86: xen: insn: Decode Xen and KVM emulate-prefix signature
+>       x86: kprobes: Prohibit probing on instruction which has emulate prefix
+> 
+> 
+>  arch/x86/include/asm/asm.h                  |    8 ++++--
+>  arch/x86/include/asm/emulate_prefix.h       |   14 +++++++++++
+>  arch/x86/include/asm/insn.h                 |    6 +++++
+>  arch/x86/include/asm/xen/interface.h        |   11 +++------
+>  arch/x86/kernel/kprobes/core.c              |    4 +++
+>  arch/x86/kvm/x86.c                          |    4 ++-
+>  arch/x86/lib/insn.c                         |   34 +++++++++++++++++++++++++++
+>  tools/arch/x86/include/asm/emulate_prefix.h |   14 +++++++++++
+>  tools/arch/x86/include/asm/insn.h           |    6 +++++
+>  tools/arch/x86/lib/insn.c                   |   34 +++++++++++++++++++++++++++
+>  tools/objtool/sync-check.sh                 |    3 ++
+>  tools/perf/check-headers.sh                 |    3 ++
+>  12 files changed, 128 insertions(+), 13 deletions(-)
+>  create mode 100644 arch/x86/include/asm/emulate_prefix.h
+>  create mode 100644 tools/arch/x86/include/asm/emulate_prefix.h
+> 
+> --
+> Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
