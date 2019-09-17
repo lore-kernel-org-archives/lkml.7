@@ -2,105 +2,178 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42630C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B77CAC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E1321881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 858F221848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:22:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lpeuK2ju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404261AbfIQGWu (ORCPT
+        id S2404232AbfIQGWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:22:50 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:11520 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404225AbfIQGWs (ORCPT
+        Tue, 17 Sep 2019 02:22:46 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33147 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404215AbfIQGWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:22:48 -0400
-X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 02:22:35 EDT
-Received: from localhost.localdomain (10.28.8.19) by mail-sz.amlogic.com
- (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Tue, 17 Sep 2019
- 14:08:27 +0800
-From:   Qianggui Song <qianggui.song@amlogic.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>
-CC:     Qianggui Song <qianggui.song@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
+        Tue, 17 Sep 2019 02:22:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id t11so1064172plo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 16 Sep 2019 23:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=H3ZFg6Ip4/ySx02vg351K3EIXCHgNEDMYbg7+0FsxGE=;
+        b=lpeuK2juqN/qKVXGSyG+DrKB9lu5i1+75AnOkmalz4I/1UotZnqmGrQraPClhhYBDc
+         i1UMXEalGUoD52lG2gH6Xkkov8Wjk4LSoVfMqWEG4DoqPUgxdrOCsgA1r6bSmLJf47zs
+         u++uv0HCaezKN7MyOChrXe7xcHA2LP5be9PvkMlITbfLueY1fhlKjszoo813ND9NABEo
+         Vh78+OiSTOCMtNKggBu3UPm6A3GbBJsSW7DvelQMDNtv5vVMhjD94HX/bhV/V0abl7AB
+         fYHXZ6KULRMFDNr7gdUHUYI7NOdBOoQ+n+iJeqcvOv7vyVkD7TMfKLrLcFIXifqbU8PL
+         /u+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=H3ZFg6Ip4/ySx02vg351K3EIXCHgNEDMYbg7+0FsxGE=;
+        b=GYLSlLGsGZNmr/yQzabinZy+nlJ76/mlvXH2FPcmGm68XWhbmWWVUvJWaS4ggPgpMt
+         1zNnT4NV7SKPZEdDvxiMJOsAYlyBVZp87fIEv5U/Z+QmIQkai+g+FX0UBYy07Xnoc01T
+         trC45dBvGCrGVXLdmPa9dBUuwGR3hsvIWO1l+CRE+aE0cXM+oXMrPvaYRj8+cc42dlCG
+         xxqU4VGjPVWm5ZFeYgfrnsCpSTM8+ptDF3qxzD6Oxk9BzwMWSNWxO3JlkBLUlNivQcZs
+         1Wmp1g5tICKVrT0QuUGqWcyR2hcMdYvz5ymd8k3DXRfMBCKkYDZOXCWu0VEDFmTbJsk0
+         0bYg==
+X-Gm-Message-State: APjAAAX98+wIqYCWqZZu/26xxxpxyYh74PfEFu8qqN4CGXLxDncdiqof
+        moZuvDjhGOT1wG5aIrzghvfJrQ==
+X-Google-Smtp-Source: APXvYqxc1GSAJOFhL24PM4/sAigtUqJGuzkbsT3sbmZF9dP6esNli7c5E5OOqkMQBHYzpIIxZa8pFg==
+X-Received: by 2002:a17:902:b40c:: with SMTP id x12mr2076829plr.236.1568701363879;
+        Mon, 16 Sep 2019 23:22:43 -0700 (PDT)
+Received: from localhost.localdomain (111-241-124-228.dynamic-ip.hinet.net. [111.241.124.228])
+        by smtp.gmail.com with ESMTPSA id v21sm1318096pjy.3.2019.09.16.23.22.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Sep 2019 23:22:43 -0700 (PDT)
+From:   Green Wan <green.wan@sifive.com>
+Cc:     linux-hackers@sifive.com, Green Wan <green.wan@sifive.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 3/3] arm64: dts: meson: a1: add pinctrl controller support
-Date:   Tue, 17 Sep 2019 14:07:22 +0800
-Message-ID: <1568700442-18540-4-git-send-email-qianggui.song@amlogic.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
-References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.28.8.19]
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] dt-bindings: dmaengine: sf-pdma: add bindins for SiFive PDMA
+Date:   Tue, 17 Sep 2019 14:22:05 +0800
+Message-Id: <20190917062239.762-1-green.wan@sifive.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add peripheral pinctrl controller to a1 soc
+Add DT bindings document for Platform DMA(PDMA) driver of board,
+HiFive Unleashed Rev A00.
 
-Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
-Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+Signed-off-by: Green Wan <green.wan@sifive.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  | 63 +++++++++++++++++++
+ MAINTAINERS                                   |  5 ++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad0..0965259 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -5,6 +5,7 @@
- 
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/gpio/meson-a1-gpio.h>
- 
- / {
- 	compatible = "amlogic,a1";
-@@ -74,6 +75,23 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
- 
-+			periphs_pinctrl: pinctrl@0400 {
-+				compatible = "amlogic,meson-a1-periphs-pinctrl";
-+				#address-cells = <2>;
-+				#size-cells = <2>;
-+				ranges;
+diff --git a/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+new file mode 100644
+index 000000000000..b5423f1cfcaf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/dma/sifive,fu540-c000-pdma.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+				gpio: bank@0400 {
-+					reg = <0x0 0x0400 0x0 0x003c>,
-+					      <0x0 0x0480 0x0 0x0118>;
-+					reg-names = "mux", "gpio";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&periphs_pinctrl 0 0 62>;
-+				};
++title: SiFive Unleashed Rev C000 Platform DMA
 +
-+			};
++maintainers:
++  - Green Wan <green.wan@sifive.com>
++  - Palmer Debbelt <palmer@sifive.com>
++  - Paul Walmsley <paul.walmsley@sifive.com>
 +
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
++description: |
++  Platform DMA is a DMA engine of SiFive Unleashed. It supports 4
++  channels. Each channel has 2 interrupts. One is for DMA done and
++  the other is for DME error.
++
++  In different SoC, DMA could be attached to different IRQ line.
++  DT file need to be changed to meet the difference. For technical
++  doc,
++
++  https://static.dev.sifive.com/FU540-C000-v1.0.pdf
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-pdma
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    minItems: 8
++    maxItems: 8
++
++  interrupt-parent:
++    description:
++      Interrupt parent must correspond to the name PLIC interrupt
++      controller, i.e. "plic0"
++    maxItems: 1
++
++  '#dma-cells':
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupt-parent
++  - interrupts
++  - '#dma-cells'
++
++examples:
++  - |
++    dma@3000000 {
++      compatible = "sifive,fu540-c000-pdma";
++      reg = <0x0 0x3000000 0x0 0x8000>;
++      interrupt-parent = <&plic0>;
++      interrupts = <23 24 25 26 27 28 29 30>;
++      #dma-cells = <1>;
++    };
++
++...
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 49f75d1b7b51..d0caa09a479e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14591,6 +14591,11 @@ F:	drivers/media/usb/siano/
+ F:	drivers/media/usb/siano/
+ F:	drivers/media/mmc/siano/
+ 
++SIFIVE PDMA DRIVER
++M:	Green Wan <green.wan@sifive.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/dma/sifive,fu540-c000-pdma.yaml
++
+ SIFIVE DRIVERS
+ M:	Palmer Dabbelt <palmer@sifive.com>
+ M:	Paul Walmsley <paul.walmsley@sifive.com>
 -- 
-1.9.1
+2.17.1
 
