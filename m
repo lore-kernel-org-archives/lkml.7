@@ -2,105 +2,106 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 187E5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4940C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D80BC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568739986;
-	bh=2GzNt1P+iqY/06t/D5kCmnG+P1fIONIj1Ts/1jyDsRA=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=UTs6GTCy5ls4b2w+dBmcNisKUVS2fbs6rkwHP3L2bfi6CSIcEw/Axq7Jc66PZk5Xp
-	 W1zn1VunCihGU5dcOnXnUZQKlha52bn9GEL0lR98O0GazbVDuvpkkxY3Ez3aFrrlBE
-	 nMdKw2+TkSAMXJ9hXdeBpzXA4nDoGVHKWgyodoq4=
+	by mail.kernel.org (Postfix) with ESMTP id B39D6214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:06:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfIQRGZ (ORCPT
+        id S1730752AbfIQRG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54994 "EHLO mail.kernel.org"
+        Tue, 17 Sep 2019 13:06:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57223 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIQRGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:06:24 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [50.237.200.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728507AbfIQRG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:06:26 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E20E62067B;
-        Tue, 17 Sep 2019 17:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568739984;
-        bh=2GzNt1P+iqY/06t/D5kCmnG+P1fIONIj1Ts/1jyDsRA=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=xZ0/InWY37pRBWkJRyhn7y07poVMPUU3OnqDU2tNYBCoU6rP22nkOEJqRfrfL9beU
-         izDrC8g9OPcWKcNYX480XSgF785jXpu06tVL6ZNJPeqta9ZFV4uSW+Sw1VJOHxRbXx
-         WZVwTFQDqcD316NGjcUFYh+OxjoD8AYepj0NKz+I=
-Date:   Tue, 17 Sep 2019 10:06:20 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
-Message-ID: <20190917170620.GC30224@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20190916145404.bukcmlliequu77wk@linutronix.de>
- <20190917071614.kcmux562y6wbskj5@linux-p48b>
+        by mx1.redhat.com (Postfix) with ESMTPS id 05D29C08E2A2;
+        Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B189A5D9D5;
+        Tue, 17 Sep 2019 17:06:08 +0000 (UTC)
+Message-ID: <0af37d2ec77e3a3c2d8ba5adbe9aab4170dc13e4.camel@redhat.com>
+Subject: Re: [PATCH RT 8/8] sched: Lazy migrate_disable processing
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Date:   Tue, 17 Sep 2019 12:06:08 -0500
+In-Reply-To: <20190917165026.pv3neijrpxrszdzo@linutronix.de>
+References: <20190727055638.20443-1-swood@redhat.com>
+         <20190727055638.20443-9-swood@redhat.com>
+         <20190917165026.pv3neijrpxrszdzo@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917071614.kcmux562y6wbskj5@linux-p48b>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 17 Sep 2019 17:06:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 12:16:14AM -0700, Davidlohr Bueso wrote:
-> On Mon, 16 Sep 2019, Sebastian Andrzej Siewior wrote:
+On Tue, 2019-09-17 at 18:50 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-07-27 00:56:38 [-0500], Scott Wood wrote:
+> > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > index 885a195dfbe0..0096acf1a692 100644
+> > --- a/kernel/cpu.c
+> > +++ b/kernel/cpu.c
+> > @@ -939,17 +893,34 @@ static int takedown_cpu(unsigned int cpu)
+> >  	 */
+> >  	irq_lock_sparse();
+> >  
+> > -#ifdef CONFIG_PREEMPT_RT_FULL
+> > -	__write_rt_lock(cpuhp_pin);
+> > +#ifdef CONFIG_PREEMPT_RT_BASE
+> > +	WARN_ON_ONCE(takedown_cpu_task);
+> > +	takedown_cpu_task = current;
+> > +
+> > +again:
+> > +	for (;;) {
+> > +		int nr_pinned;
+> > +
+> > +		set_current_state(TASK_UNINTERRUPTIBLE);
+> > +		nr_pinned = cpu_nr_pinned(cpu);
+> > +		if (nr_pinned == 0)
+> > +			break;
+> > +		schedule();
+> > +	}
 > 
-> > From: Wolfgang M. Reimer <linuxball@gmail.com>
-> > 
-> > Including rwlock.h directly will cause kernel builds to fail
-> > if CONFIG_PREEMPT_RT is defined. The correct header file
-> > (rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
-> > is included by locktorture.c anyway.
-> > 
-> > Remove the include of linux/rwlock.h.
-> > 
-> 
-> Acked-by: Davidlohr Bueso <dbueso@suse.de>
+> we used to have cpuhp_pin which ensured that once we own the write lock
+> there will be no more tasks that can enter a migrate_disable() section
+> on this CPU. It has been placed fairly late to ensure that nothing new
+> comes in as part of the shutdown process and that it flushes everything
+> out that is still in a migrate_disable() section.
+> Now you claim that once the counter reached zero it never increments
+> again. I would be happier if there was an explicit check for that :)
 
-Applied, thank you!
+I don't claim that.  A check is added in take_cpu_down() to see whether it
+went back up, and if so, exit with EAGAIN.  If *that* check succeeds, it
+can't go back up because it's in stop machine, and any tasks will get
+migrated to another CPU before they can run again.  There's also a WARN in
+migrate_tasks() if somehow a migrate-disabled task does get encountered.
 
-But does anyone actually run locktorture?
+> There is no back off and flush mechanism which means on a busy CPU (as
+> in heavily lock contended by multiple tasks) this will wait until the
+> CPU gets idle again.
 
-							Thanx, Paul
+Not really any different from the reader-biased rwlock that this replaces...
 
-> > Signed-off-by: Wolfgang M. Reimer <linuxball@gmail.com>
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > ---
-> > kernel/locking/locktorture.c | 1 -
-> > 1 file changed, 1 deletion(-)
-> > 
-> > diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-> > index c513031cd7e33..9fb042d610d23 100644
-> > --- a/kernel/locking/locktorture.c
-> > +++ b/kernel/locking/locktorture.c
-> > @@ -16,7 +16,6 @@
-> > #include <linux/kthread.h>
-> > #include <linux/sched/rt.h>
-> > #include <linux/spinlock.h>
-> > -#include <linux/rwlock.h>
-> > #include <linux/mutex.h>
-> > #include <linux/rwsem.h>
-> > #include <linux/smp.h>
-> > -- 
-> > 2.23.0
-> > 
+-Scott
+
+
