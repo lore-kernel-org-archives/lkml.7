@@ -2,139 +2,90 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A82C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CB0C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88EA2171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:05:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B815E21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:06:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfIQOFo (ORCPT
+        id S1726736AbfIQOGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:05:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:56556 "EHLO foss.arm.com"
+        Tue, 17 Sep 2019 10:06:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60634 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbfIQOFn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:05:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E72028;
-        Tue, 17 Sep 2019 07:05:43 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70FEA3F575;
-        Tue, 17 Sep 2019 07:05:42 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 15:05:33 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
-Message-ID: <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
-References: <20190916135435.5017-1-jonathan.derrick@intel.com>
- <20190916135435.5017-3-jonathan.derrick@intel.com>
- <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
- <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
+        id S1726234AbfIQOGj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 10:06:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E2631300CB2C;
+        Tue, 17 Sep 2019 14:06:38 +0000 (UTC)
+Received: from ovpn-117-172.phx2.redhat.com (ovpn-117-172.phx2.redhat.com [10.3.117.172])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 46B175D9D5;
+        Tue, 17 Sep 2019 14:06:29 +0000 (UTC)
+Message-ID: <63b430ca2f067e61bef1c387fad782ab4a2c1ed3.camel@redhat.com>
+Subject: Re: [PATCH RT v3 1/5] rcu: Acquire RCU lock when disabling BHs
+From:   Scott Wood <swood@redhat.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Date:   Tue, 17 Sep 2019 09:06:28 -0500
+In-Reply-To: <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+         <20190911165729.11178-2-swood@redhat.com>
+         <20190917074456.yj7t3wdwuhn3zcng@linutronix.de>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 17 Sep 2019 14:06:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 01:55:59PM +0000, Derrick, Jonathan wrote:
-> On Tue, 2019-09-17 at 11:41 +0100, Lorenzo Pieralisi wrote:
-> > On Mon, Sep 16, 2019 at 07:54:35AM -0600, Jon Derrick wrote:
-> > > The shadow offset scratchpad was moved to 0x2000-0x2010. Update the
-> > > location to get the correct shadow offset.
+On Tue, 2019-09-17 at 09:44 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-11 17:57:25 [+0100], Scott Wood wrote:
 > > 
-> > Hi Jon,
-> > 
-> > what does "was moved" mean ? Would this code still work on previous HW ?
-> > 
-> The previous code won't work on (not yet released) hw. Guests using the
-> domain will see the wrong offset and enumerate the domain incorrectly.
+> > @@ -615,10 +645,7 @@ static inline void rcu_read_unlock(void)
+> >  static inline void rcu_read_lock_bh(void)
+> >  {
+> >  	local_bh_disable();
+> > -	__acquire(RCU_BH);
+> > -	rcu_lock_acquire(&rcu_bh_lock_map);
+> > -	RCU_LOCKDEP_WARN(!rcu_is_watching(),
+> > -			 "rcu_read_lock_bh() used illegally while idle");
+> > +	rcu_bh_lock_acquire();
+> >  }
+> >  
+> >  /*
+> 
+> I asked previously why do you need to change rcu_read_lock_bh() and you
+> replied that you don't remember:
+>    
+> https://lore.kernel.org/linux-rt-users/b948ec6cccda31925ed8dc123bd0f55423fff3d4.camel@redhat.com/
+> 
+> Did this change?
 
-That's true also for new kernels on _current_ hardware, isn't it ?
+Sorry, I missed that you were asking about rcu_read_lock_bh() as well.  I
+did remove the change to rcu_read_lock_bh_held().
 
-What I am saying is that there must be a way to detect the right
-offset from HW probing or firmware otherwise things will break
-one way of another.
+With this patch, local_bh_disable() calls rcu_read_lock() on RT which
+handles this debug stuff.  Doing it twice shouldn't be explicitly harmful,
+but it's redundant, and debug kernels are slow enough as is.
 
-> > We must make sure that the address move is managed seamlessly by the
-> > kernel.
-> If we need to avoid changing addressing within stable, then that's
-> fine. But otherwise is there an issue merging with 5.4?
+-Scott
 
-See above. Would 5.4 with this patch applied work on systems where
-the offset is the same as the _current_ one without this patch
-applied ?
 
-> > For the time being I have to drop this fix and it is extremely
-> > tight to get it in v5.4, I can't send stable changes that we may
-> > have to revert.
-> Aren't we in the beginning of the merge window?
-
-Yes and that's the problem, patches for v5.4 should have already
-being queued a while ago, I do not know when Bjorn will send the
-PR for v5.4 but that's going to happen shortly, I am making an
-exception to squeeze these patches in since it is vmd only code
-but still it is very very tight.
-
-Thanks,
-Lorenzo
-
-> > Thanks,
-> > Lorenzo
-> > 
-> > > Cc: stable@vger.kernel.org # v5.2+
-> > > Fixes: 6788958e ("PCI: vmd: Assign membar addresses from shadow registers")
-> > > Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
-> > > ---
-> > >  drivers/pci/controller/vmd.c | 9 ++++++---
-> > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > > index 2e4da3f51d6b..a35d3f3996d7 100644
-> > > --- a/drivers/pci/controller/vmd.c
-> > > +++ b/drivers/pci/controller/vmd.c
-> > > @@ -31,6 +31,9 @@
-> > >  #define PCI_REG_VMLOCK		0x70
-> > >  #define MB2_SHADOW_EN(vmlock)	(vmlock & 0x2)
-> > >  
-> > > +#define MB2_SHADOW_OFFSET	0x2000
-> > > +#define MB2_SHADOW_SIZE		16
-> > > +
-> > >  enum vmd_features {
-> > >  	/*
-> > >  	 * Device may contain registers which hint the physical location of the
-> > > @@ -578,7 +581,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> > >  		u32 vmlock;
-> > >  		int ret;
-> > >  
-> > > -		membar2_offset = 0x2018;
-> > > +		membar2_offset = MB2_SHADOW_OFFSET + MB2_SHADOW_SIZE;
-> > >  		ret = pci_read_config_dword(vmd->dev, PCI_REG_VMLOCK, &vmlock);
-> > >  		if (ret || vmlock == ~0)
-> > >  			return -ENODEV;
-> > > @@ -590,9 +593,9 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
-> > >  			if (!membar2)
-> > >  				return -ENOMEM;
-> > >  			offset[0] = vmd->dev->resource[VMD_MEMBAR1].start -
-> > > -						readq(membar2 + 0x2008);
-> > > +					readq(membar2 + MB2_SHADOW_OFFSET);
-> > >  			offset[1] = vmd->dev->resource[VMD_MEMBAR2].start -
-> > > -						readq(membar2 + 0x2010);
-> > > +					readq(membar2 + MB2_SHADOW_OFFSET + 8);
-> > >  			pci_iounmap(vmd->dev, membar2);
-> > >  		}
-> > >  	}
-> > > -- 
-> > > 2.20.1
-> > > 
