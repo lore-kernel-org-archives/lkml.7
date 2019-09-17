@@ -2,124 +2,109 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF7C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A912C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A7A0214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66716216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568753144;
+	bh=sN16v5aE9f1en31OdtpF6sxJr9PK5t1WeiNsz4wlq24=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xo0nUlpDxRzrBhBmcyr239tOncKso1FD8OdYQXrrpSQrKqPAqBkhpB9pbGYOrGStD
+	 POY4XlhN0EX8ZcVPTxcaOQ8vcWbqFLFhR4NngHjFTdNkpB0q06b631SZVdcL7vGGIz
+	 NPmKdFo7Wkzg9iAI9dx31Ws3XlZr/wB5Hqnw656I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729915AbfIQUo3 convert rfc822-to-8bit (ORCPT
+        id S1729954AbfIQUpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:44:29 -0400
-Received: from luna.lichtvoll.de ([194.150.191.11]:37695 "EHLO
-        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726668AbfIQUo3 (ORCPT
+        Tue, 17 Sep 2019 16:45:43 -0400
+Received: from mail-lj1-f172.google.com ([209.85.208.172]:34732 "EHLO
+        mail-lj1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfIQUpn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:44:29 -0400
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.lichtvoll.de (Postfix) with ESMTPSA id AAB4C776E2;
-        Tue, 17 Sep 2019 22:44:25 +0200 (CEST)
-From:   Martin Steigerwald <martin@lichtvoll.de>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Date:   Tue, 17 Sep 2019 22:42:57 +0200
-Message-ID: <2119167.1ishuQyBJ6@merkaba>
-In-Reply-To: <20190917172929.GD27999@1wt.eu>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190917171328.GA31798@gardel-login> <20190917172929.GD27999@1wt.eu>
+        Tue, 17 Sep 2019 16:45:43 -0400
+Received: by mail-lj1-f172.google.com with SMTP id h2so5006621ljk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:45:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UTaApOHQWYgneuGzZ7YNtvEevdvs1utVLoBKbHK1gYc=;
+        b=dJLYKuAkBH0gzZVZ5XUTjdiwI6yU/P2WChCP/N72EQ2Jjw/TxbYhFEMt3oMsLrmAsQ
+         sO9ViXYnECjpjc2F/0uAhTdcUXwf//dQw+raN4fOY8re5ShVjoy3PG1vK0CYyIyluosO
+         q0/CbwDt7HWX9fUrgappPxJpagzsKuCP75+uY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UTaApOHQWYgneuGzZ7YNtvEevdvs1utVLoBKbHK1gYc=;
+        b=CSJlvZxvF85Lm//Wy6864Qg2S0pn9n7IXvmJa0rQtqLb/OE6Onh1U9Ujm/noy3lhci
+         Wanuc3M43PWavq0dOVOJ4DwSllWw6jACScAehbYdVQBwtn/5GYpL9AtE/6Vpb3YzxNi2
+         NkAKpj5eEFVmbZcFXrH/HvmD6KTSEam9iZbWSToNAC5Q7scHmRppn/W/EJgpW8xwYnyp
+         ItiPVJ2+0gdPTSyP4lgFEYe+otd0Ex/mH69S+iNPKutB0ea7BoxzdUP3WBAIIFVWEWzv
+         QdhpvQBO48nbrBYD3RmV61vBdKiM0t9A3/7rNmq9cuAFx3evrg/6yvg1uyAs2nXfJWPV
+         BBlQ==
+X-Gm-Message-State: APjAAAXU7N9MQ1vEcv5LuNTUMk5ZuS6DOYGE95zMNRS3G5eGakiGORlX
+        Md+Z+7Yl2jg2cEYu0kBAWdatieKWN4g=
+X-Google-Smtp-Source: APXvYqy+Bi8BZqDt1AdAABsxu0uP7ZGXYiT9vFh9u//Orld57MuDiKNUQNvIjnSgjzQgk01zE+tR5A==
+X-Received: by 2002:a2e:9a03:: with SMTP id o3mr155002lji.51.1568753138926;
+        Tue, 17 Sep 2019 13:45:38 -0700 (PDT)
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
+        by smtp.gmail.com with ESMTPSA id k13sm629827ljc.96.2019.09.17.13.45.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
+Received: by mail-lf1-f44.google.com with SMTP id u28so3951114lfc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
+X-Received: by 2002:ac2:47f8:: with SMTP id b24mr128474lfp.134.1568753137199;
+ Tue, 17 Sep 2019 13:45:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
+References: <20190913072237.GA12381@zn.tnic> <20190917201021.evoxxj7vkcb45rpg@treble>
+In-Reply-To: <20190917201021.evoxxj7vkcb45rpg@treble>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 17 Sep 2019 13:45:20 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
+Message-ID: <CAHk-=wjDiDOcz2GHC88rV8gySCMZZko8PFW-ywJDkeY5n+je9Q@mail.gmail.com>
+Subject: Re: [RFC] Improve memset
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>, x86-ml <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Authentication-Results: mail.lichtvoll.de;
-        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Willy Tarreau - 17.09.19, 19:29:29 CEST:
-> On Tue, Sep 17, 2019 at 07:13:28PM +0200, Lennart Poettering wrote:
-> > On Di, 17.09.19 18:21, Willy Tarreau (w@1wt.eu) wrote:
-> > > On Tue, Sep 17, 2019 at 05:57:43PM +0200, Lennart Poettering 
-> > > wrote:
-> > > > Note that calling getrandom(0) "too early" is not something
-> > > > people do
-> > > > on purpose. It happens by accident, i.e. because we live in a
-> > > > world
-> > > > where SSH or HTTPS or so is run in the initrd already, and in a
-> > > > world
-> > > > where booting sometimes can be very very fast.
-> > > 
-> > > It's not an accident, it's a lack of understanding of the impacts
-> > > from the people who package the systems. Generating an SSH key
-> > > from
-> > > an initramfs without thinking where the randomness used for this
-> > > could come from is not accidental, it's a lack of experience that
-> > > will be fixed once they start to collect such reports. And those
-> > > who absolutely need their SSH daemon or HTTPS server for a
-> > > recovery image in initramfs can very well feed fake entropy by
-> > > dumping whatever they want into /dev/random to make it possible
-> > > to build temporary keys for use within this single session. At
-> > > least all supposedly incorrect use will be made *on purpose* and
-> > > will still be possible to match what users need.> 
-> > What do you expect these systems to do though?
-> > 
-> > I mean, think about general purpose distros: they put together live
-> > images that are supposed to work on a myriad of similar (as in: same
-> > arch) but otherwise very different systems (i.e. VMs that might lack
-> > any form of RNG source the same as beefy servers with muliple
-> > sources
-> > the same as older netbooks with few and crappy sources, ...). They
-> > can't know what the specific hw will provide or won't. It's not
-> > their incompetence that they build the image like that. It's a
-> > common, very common usecase to install a system via SSH, and it's
-> > also very common to have very generic images for a large number
-> > varied systems to run on.
-> 
-> I'm totally file with installing the system via SSH, using a temporary
-> SSH key. I do make a strong distinction between the installation
-> phase and the final deployment. The SSH key used *for installation*
-> doesn't need to the be same as the final one. And very often at the
-> end of the installation we'll have produced enough entropy to produce
-> a correct key.
+On Tue, Sep 17, 2019 at 1:10 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> Could it instead do this?
+>
+>         ALTERNATIVE_2("call memset_orig",
+>                       "call memset_rep",        X86_FEATURE_REP_GOOD,
+>                       "rep; stosb",             X86_FEATURE_ERMS)
+>
+> Then the "reverse alternatives" feature wouldn't be needed anyway.
 
-Well… systems cloud-init adapts may come from the same template. Cloud 
-Init thus replaces the key that has been there before on their first 
-boot. There is no "installation".
+That sounds better, but I'm a bit nervous about the whole thing
+because who knows when the alternatives code itself internally uses
+memset() and then we have a nasty little chicken-and-egg problem.
 
-Cloud Init could replace the key in the background… and restart SSH 
-then… but that will give those big fat man in the middle warnings and 
-all systems would use the same SSH host key initially. I just don't see 
-a good way at the moment how to handle this. Introducing an SSH mode for 
-this is still a temporary not so random key with proper warnings might 
-be challenging to get right from both a security and usability point of 
-view. And it would add complexity.
+Also, for it to make sense to inline rep stosb, I think we also need
+to just make the calling conventions for the alternative calls be that
+they _don't_ clobber other registers than the usual rep ones
+(cx/di/si). Otherwise one big code generation advantage of inlining
+the thing just goes away.
 
-That said with Proxmox VE on Fujitsu S8 or Intel NUCs I have never seen 
-this issue even when starting 50 VMs in a row, however, with large cloud 
-providers starting 50 VMs in a row does not sound like all that much. 
-And I bet with Proxmox VE virtio rng is easily available cause it uses 
-KVM.
+On the whole I get the feeling that this is all painful complexity and
+we shouldn't do it. At least not without some hard performance numbers
+for some huge improvement, which I don't think we've seen.
 
--- 
-Martin
+Because I find the thing fascinating conceptually, but am not at all
+convinced I want to deal with the pain in practice ;)
 
-
+              Linus
