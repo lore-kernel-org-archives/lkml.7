@@ -2,114 +2,134 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4430C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C41F5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:52:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0B2206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972D4206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:52:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="IV3dtqvS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404542AbfIQHwV (ORCPT
+        id S2404556AbfIQHw0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:52:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36584 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727479AbfIQHwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:52:21 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8B8BAB048;
-        Tue, 17 Sep 2019 07:52:18 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 09:52:16 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        AndreaParri <parri.andrea@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Paul Turner <pjt@google.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Peter Zijlstra <peterz@infradead.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LinusTorvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        PraritBhargava <prarit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: printk meeting at LPC
-Message-ID: <20190917075216.agzoy6cnol5eio6y@pathway.suse.cz>
-References: <20190904123531.GA2369@hirez.programming.kicks-ass.net>
- <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
- <20190905143118.GP2349@hirez.programming.kicks-ass.net>
- <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
- <20190905121101.60c78422@oasis.local.home>
- <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
- <87k1acz5rx.fsf@linutronix.de>
- <cfc7b1fa-e629-19a6-154b-0dd4f5604aa7@I-love.SAKURA.ne.jp>
- <20190916104624.n3jh363z37ah2kxa@pathway.suse.cz>
- <20190916094314.6053f988@gandalf.local.home>
+        Tue, 17 Sep 2019 03:52:26 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37165 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404543AbfIQHwY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:52:24 -0400
+Received: by mail-io1-f65.google.com with SMTP id b19so5386357iob.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 00:52:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jic4rHTv3yMtwdOu17+6UfT3+SUC7jTwi6ljBW+pvYE=;
+        b=IV3dtqvSDIRWDXPjXcX06Ffl/7ljGdcE8DIosKk5L/JRHh8kzXH24Rye+VdBQibPHO
+         xg1S+GArM7qvm+Fr283w2sx1nmfwITJFPnv5lIMEc69DZgNWxtaa4tA2zilqhBEkHKXc
+         zp0zekRQXdYTzXqNFgWZSH8mQTgV7Bq1ZMFKg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jic4rHTv3yMtwdOu17+6UfT3+SUC7jTwi6ljBW+pvYE=;
+        b=teOuUaZFiWe/+7TMo6QUnuEuQD+4w7yBxpuQJ10x1fk98TlktptgKMbLjb9TmpQRG3
+         +iUCRH6XMxShjM6TUDqXsV9Ele95/uP1mVO1VnEDN3kGnw9CoZbD9Xv50eo+aafdG66N
+         0SnxW+6wAHRRwsMi3Ex01OjjjnGLaz+Lsr/wYYA02jDzwE9MKAFtUhrRiNPsUY32OX/a
+         GTkZHmXHJ5SqcFZWLYm7GVfRI7knxG3RXPsWGUDB4PHQPwpwmLRsmsLHHfj4ifhwQgbj
+         mJGu84eeInoSd1X0Xiq2bFwv2znZBy4Pm08iw3p/mo1wvyvsx8IW9tkY9FKW5+tkuPWW
+         RQNA==
+X-Gm-Message-State: APjAAAWxNuvlUZ3hcbNZ9e4fJYqKEsmgN6KDp6l33sA7N7aW+jR8wcTq
+        dMGu5h1SwFNRW0ogsG93FzDYmUxiOA6wSsKdZLIwLA==
+X-Google-Smtp-Source: APXvYqwq9xhPNKB8OWh2wP8Z5AXGp8coGFe7f76p7eudxsi0rAEIGsWCQE314CRVRHw/1VuCFwiZB1UffSV7/kgP1/0=
+X-Received: by 2002:a6b:bec6:: with SMTP id o189mr2094109iof.62.1568706743655;
+ Tue, 17 Sep 2019 00:52:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916094314.6053f988@gandalf.local.home>
-User-Agent: NeoMutt/20170912 (1.9.0)
+References: <20190916235642.167583-1-khazhy@google.com> <20190916235642.167583-2-khazhy@google.com>
+In-Reply-To: <20190916235642.167583-2-khazhy@google.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 17 Sep 2019 09:52:12 +0200
+Message-ID: <CAJfpegtevJHaOpeaGCTmj6WMjOt-RsfMs+oJBgNTLTOJt9Je_g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] fuse: kmemcg account fs data
+To:     Khazhismel Kumykov <khazhy@google.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel B <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-09-16 09:43:14, Steven Rostedt wrote:
-> On Mon, 16 Sep 2019 12:46:24 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
-> > > By the way, do we need to keep printk() return bytes like printf() ?
-> > > Maybe we can make printk() return "void", for almost nobody can do
-> > > meaningful things with the return value.  
-> > 
-> > It is true that I have never seen anyone checking the return value.
-> > On the other hand, it is a minor detail. And I would prefer to stay
-> > compatible with the userland printf() as much as possible.
-> 
-> I understand your wanting to keep compatibility with printf(), but I
-> would suggest that we only do so if it doesn't complicate any of the
-> design. I'm actually leaning on recommending that we remove the return
-> value, to prevent there becoming a dependency on it. I don't see any
-> reason to have the "number of bytes processed" as the return value
-> being useful within the kernel.
+On Tue, Sep 17, 2019 at 1:56 AM Khazhismel Kumykov <khazhy@google.com> wrote:
+>
+> account per-file, dentry, and inode data
+>
+> blockdev/superblock and temporary per-request data was left alone, as
+> this usually isn't accounted
+>
+> Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> Reviewed-by: Shakeel Butt <shakeelb@google.com>
+> ---
+>  fs/fuse/dir.c   | 3 ++-
+>  fs/fuse/file.c  | 5 +++--
+>  fs/fuse/inode.c | 3 ++-
+>  3 files changed, 7 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/fuse/dir.c b/fs/fuse/dir.c
+> index 58557d4817e9..d572c900bb0f 100644
+> --- a/fs/fuse/dir.c
+> +++ b/fs/fuse/dir.c
+> @@ -279,7 +279,8 @@ static int fuse_dentry_revalidate(struct dentry *entry, unsigned int flags)
+>  #if BITS_PER_LONG < 64
+>  static int fuse_dentry_init(struct dentry *dentry)
+>  {
+> -       dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry), GFP_KERNEL);
+> +       dentry->d_fsdata = kzalloc(sizeof(union fuse_dentry),
+> +                                  GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
+>
+>         return dentry->d_fsdata ? 0 : -ENOMEM;
+>  }
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index a2ea347c4d2c..862aff3665b5 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -63,12 +63,13 @@ struct fuse_file *fuse_file_alloc(struct fuse_conn *fc)
+>  {
+>         struct fuse_file *ff;
+>
+> -       ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL);
+> +       ff = kzalloc(sizeof(struct fuse_file), GFP_KERNEL_ACCOUNT);
+>         if (unlikely(!ff))
+>                 return NULL;
+>
+>         ff->fc = fc;
+> -       ff->release_args = kzalloc(sizeof(*ff->release_args), GFP_KERNEL);
+> +       ff->release_args = kzalloc(sizeof(*ff->release_args),
+> +                                  GFP_KERNEL_ACCOUNT);
+>         if (!ff->release_args) {
+>                 kfree(ff);
+>                 return NULL;
+> diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
+> index 3d598a5bb5b5..6cb445bed89d 100644
+> --- a/fs/fuse/inode.c
+> +++ b/fs/fuse/inode.c
+> @@ -66,7 +66,8 @@ static struct file_system_type fuseblk_fs_type;
+>
+>  struct fuse_forget_link *fuse_alloc_forget(void)
+>  {
+> -       return kzalloc(sizeof(struct fuse_forget_link), GFP_KERNEL);
+> +       return kzalloc(sizeof(struct fuse_forget_link),
+> +                      GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
 
-Heh, I did some grepping and the return value is actually used on
-three locations:
+What does __GFP_RECLAIMBALE signify in slab allocs?
 
-$> git grep "= printk("
-drivers/scsi/aic7xxx/aic79xx_core.c:	printed = printk("%s[0x%x]", name, value);
-drivers/scsi/aic7xxx/aic79xx_core.c:		printed += printk(" ");
-drivers/scsi/aic7xxx/aic79xx_core.c:			printed += printk("%s%s",
-drivers/scsi/aic7xxx/aic79xx_core.c:		printed += printk(") ");
-drivers/scsi/aic7xxx/aic79xx_core.c:		printed += printk(" ");
-drivers/scsi/aic7xxx/aic79xx_core.c:		cur_col = printk("\n%3d FIFO_USE[0x%x] ", SCB_GET_TAG(scb),
-drivers/scsi/aic7xxx/aic79xx_core.c:		cur_col += printk("SHADDR = 0x%x%x, SHCNT = 0x%x ",
-drivers/scsi/aic7xxx/aic79xx_core.c:		cur_col += printk("HADDR = 0x%x%x, HCNT = 0x%x ",
-drivers/scsi/aic7xxx/aic7xxx_core.c:	printed  = printk("%s[0x%x]", name, value);
-drivers/scsi/aic7xxx/aic7xxx_core.c:		printed += printk(" ");
-drivers/scsi/aic7xxx/aic7xxx_core.c:			printed += printk("%s%s",
-drivers/scsi/aic7xxx/aic7xxx_core.c:		printed += printk(") ");
-drivers/scsi/aic7xxx/aic7xxx_core.c:		printed += printk(" ");
-drivers/scsi/aic7xxx/aic7xxx_core.c:		cur_col  = printk("\n%3d ", i);
-drivers/scsi/aic7xxx/aic7xxx_core.c:		cur_col  = printk("\n%3d ", scb->hscb->tag);
-drivers/scsi/libsas/sas_ata.c:	r = printk("%s" SAS_FMT "ata%u: %s: %pV",
-kernel/locking/lockdep.c:			len += printk("%*s   %s", depth, "", usage_str[bit]);
-kernel/locking/lockdep.c:			len += printk(KERN_CONT " at:\n");
+You understand that the forget_link is not reclaimable in the sense,
+that it requires action (reading requests from the fuse device) from
+the userspace filesystem daemon?
 
-It is probably not a big deal. For example, lockdep uses the value
-just for formatting (extra spaces) when printing backtrace.
-
-I agree that it does not make sense to return the value if it
-complicates the code too much. Well, we will need to count
-the string length also from another reason (reservation).
-
-Best Regards,
-Petr
+Thanks,
+Miklos
