@@ -2,279 +2,151 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CB5C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BAEC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A224B21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B328821881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:13:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fXJJsD1t";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="fUenzcXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfIQKMU (ORCPT
+        id S1727309AbfIQKNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:12:20 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2285 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726250AbfIQKMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:12:20 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4281380F730F3DD69CC1;
-        Tue, 17 Sep 2019 18:12:18 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
- 18:12:14 +0800
-Date:   Tue, 17 Sep 2019 11:11:59 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-CC:     Jonathan Cameron <jic23@kernel.org>, <lars@metafoo.de>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <pmeerw@pmeerw.net>, <linux-kernel@vger.kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <knaack.h@gmx.de>,
+        Tue, 17 Sep 2019 06:13:01 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:37174 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726250AbfIQKNA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:13:00 -0400
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 55028C1E10;
+        Tue, 17 Sep 2019 10:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1568715180; bh=55hIxEwLvgs5kLSQrU/U2eQwuEULqggG0gGoikcEBKs=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=fXJJsD1tUVSXbBGUShcWX6UlSB8nFUhNpl1+9LiFA+JT5Dv6vEYr4e8pZmCoNGIoE
+         JbA8s4KaK1extzrMqAnmsDcLR7c4vxletcRc3Eb1m7Llmbx+W2VIK9nLDMUf2aAQe9
+         qT7QXNF24S3zf7eYwckon+FduvKbHNqgECJIXhEh/yshBRU0eAokikguba3yar6apF
+         9JSixAp72vF4QLho58auqzRWIdrn/DM9Xua8jWFRwZtMMIpvO5ydxWUPGfvGc9Oux9
+         /rfYCLGhKD7VP50wEZRCKgDzjX464wV884rQSYwlc32l02BJoXZ2akml5veg7Y+UOd
+         H3EWihHerEVrw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 9304AA0083;
+        Tue, 17 Sep 2019 10:12:57 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 17 Sep 2019 03:12:57 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.13.134.195)
+ by mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Tue, 17 Sep 2019 03:12:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Vi0VVVLOQ+R83YkAgwIJKkPeWX+I4zPlK17ebRc2psQ39g0BzeRD+fERRCuDKGQ7kPUpekh2r9HJKcf7lpcfVCOSAIKosqASrAHwNbv7a3KLNB+aVgwaF3BowoxnegQjEQsUodqTRs4n95+2fns7RHghFGU5UWFufeIjKJMZwIgDSeXBbgYEP+fUxBv+OwzvaQPUzB8fsVnBS5ar8LEDoWmjay4etMlsOHP/T4W/ZMbdGRHwrUbaKJUu202piqZIS181ry+p3r0e1/Bx6XLtorfp1MgkBd2rxqk8/cZ324+DjFfSxUxbI/fYbDr6gKbvbOzXL3jzX9atpT8oX3UOXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=55hIxEwLvgs5kLSQrU/U2eQwuEULqggG0gGoikcEBKs=;
+ b=GLY+ypWKmzgH3mKrb2W5cX+xFH6qZa7my3gTuqwt/kAZ2FMwWaB5XNPJIvZd2z971l1kP5Fb7QEQaZ8IvSVs7C31C0oVxgkkWhN30yyis7GKi83yZinMObjHEFs6bcRdpYj2+o5gl+iQ6cbdvYH6NWylzQ3Hab/dQBLUFEDNBvuj81fhAnvIT9THVTi9yoBKOwjQcTXb/OU418GHAsYWBoEBEla1D8wPy9xJsbQ+/FxT7jmwifyW5zpznYKlWMQK2+BpIgKn16AQz7RJziZ4LAf2+NZdU1uWurullDTmOebZU2ZO4JTrk2ghfPr+/rGHRX6lFngJQOtQ0vI7v1Bdaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=55hIxEwLvgs5kLSQrU/U2eQwuEULqggG0gGoikcEBKs=;
+ b=fUenzcXwPHJmURL3QMeulHQ1EI1z6HJl6roZfFU2cZODtgq3wTHB9+luRlGC/aEvcgsui+evlFXf80yJXPuouHVzvkeG/QHOsIs9ep/q79lDUUEgWszJZiFhjjPKhDWE+10TqWv1DTSnZgGtPcynpppDnpghHCiA1VPUSvtZ+b0=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3265.namprd12.prod.outlook.com (20.179.66.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.24; Tue, 17 Sep 2019 10:12:55 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::59fc:d942:487d:15b8%7]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 10:12:55 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Loys Ollivier <lollivier@baylibre.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
         <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] iio: adc: stm32-adc: fix a race when using several adcs
- with dma and irq
-Message-ID: <20190917111159.00001e9f@huawei.com>
-In-Reply-To: <6c330b1f-ef95-d9bd-3c8b-ccda03148561@st.com>
-References: <1568380890-313-1-git-send-email-fabrice.gasnier@st.com>
-        <20190915110524.2ec1b41d@archlinux>
-        <6c330b1f-ef95-d9bd-3c8b-ccda03148561@st.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] net: stmmac: Fix ASSERT_RTNL() warning on suspend/resume
+Thread-Topic: [PATCH] net: stmmac: Fix ASSERT_RTNL() warning on suspend/resume
+Thread-Index: AQHVbT8k5mxtCRmP9kOirH5PqJ0Ndacvpi6w
+Date:   Tue, 17 Sep 2019 10:12:55 +0000
+Message-ID: <BN8PR12MB3266A4C33D234165A0F2A978D38F0@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <1568714556-25024-1-git-send-email-lollivier@baylibre.com>
+In-Reply-To: <1568714556-25024-1-git-send-email-lollivier@baylibre.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 99540496-cd53-4879-0fb8-08d73b579bdb
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN8PR12MB3265;
+x-ms-traffictypediagnostic: BN8PR12MB3265:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <BN8PR12MB3265C35AD2A6E6DE893E1393D38F0@BN8PR12MB3265.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:765;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(199004)(189003)(2906002)(6506007)(229853002)(26005)(186003)(8676002)(76176011)(76116006)(4326008)(446003)(476003)(6306002)(9686003)(11346002)(966005)(55016002)(81166006)(66066001)(102836004)(25786009)(6436002)(498600001)(486006)(110136005)(5660300002)(256004)(3846002)(6116002)(6246003)(86362001)(7736002)(81156014)(305945005)(14444005)(33656002)(71190400001)(4744005)(71200400001)(52536014)(99286004)(66946007)(64756008)(66446008)(66476007)(66556008)(8936002)(14454004)(54906003)(7416002)(7696005)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3265;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: wv8eaTGV9maZAmjnxs1kK+yVfD3r9rtl0tJcH4beavReyZ2R+o5A6vlTYuhHXeK/O1VwxbrCaVKvgQKbJWJyZ1HhnYhIz3/7w1I/RQ17z3Aj+mi+zx5SOLFKvjtZS5neO9LJnvCB0W+fJfa4VOaWZtwR+vnDtFRgrr0GXdDr8hTKPe5Gvc6vnhPkYtepljOp6xO/tCxf1gNeotcL+u18XATCWtgnhpNwdTiowWy1swq/mt3ZE0fZI1nCNukRKkdFeqwQhlquG2B1XJF4LTkwpFzCA7+f9xyggmPSr71mLMfL6/m++R1AvQ/XULCgdpWu2Z7mnIX37SdOZlq1jJgqI7y/NP4jbU2M9yeB3SQ4cTOh0WhO4Q+2Hydjgpv2dD/UsLpHasjCYNtThI4NfAaYlmWNXTkhpOSipv6dEx/FtNY=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99540496-cd53-4879-0fb8-08d73b579bdb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 10:12:55.8113
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8T5i1n6OKKjp56dwg+hs19XpTv0OHRSjuLb6KvVMgH06+c4GaRO2TSHEwehegru3AQRGfVSSd/qlYJtQpA3uuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3265
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019 13:47:34 +0200
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+From: Loys Ollivier <lollivier@baylibre.com>
+Date: Sep/17/2019, 11:02:36 (UTC+00:00)
 
-> On 9/15/19 12:05 PM, Jonathan Cameron wrote:
-> > On Fri, 13 Sep 2019 15:21:30 +0200
-> > Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> >   
-> >> End of conversion may be handled by using IRQ or DMA. There may be a
-> >> race when two conversions complete at the same time on several ADCs.
-> >> EOC can be read as 'set' for several ADCs, with:
-> >> - an ADC configured to use IRQs. EOCIE bit is set. The handler is normally
-> >>   called in this case.
-> >> - an ADC configured to use DMA. EOCIE bit isn't set. EOC triggers the DMA
-> >>   request instead. It's then automatically cleared by DMA read. But the
-> >>   handler gets called due to status bit is temporarily set (IRQ triggered
-> >>   by the other ADC).
-> >> So both EOC status bit in CSR and EOCIE control bit must be checked
-> >> before invoking the interrupt handler (e.g. call ISR only for
-> >> IRQ-enabled ADCs).
-> >>
-> >> Fixes: 2763ea0585c9 ("iio: adc: stm32: add optional dma support")
-> >>
-> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>  
-> > Fix looks fine to me, but I'm not keen on splitting out individual bits from
-> > register defines.  That's a long term readability nightmare.
-> > 
-> > See below,
-> > 
-> > Jonathan
-> >   
-> >> ---
-> >>  drivers/iio/adc/stm32-adc-core.c | 43 +++++++++++++++++++++++++++++++++++++---
-> >>  drivers/iio/adc/stm32-adc-core.h | 13 ++++++++++++
-> >>  drivers/iio/adc/stm32-adc.c      |  6 ------
-> >>  3 files changed, 53 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-> >> index 9b85fef..7297396 100644
-> >> --- a/drivers/iio/adc/stm32-adc-core.c
-> >> +++ b/drivers/iio/adc/stm32-adc-core.c
-> >> @@ -71,6 +71,8 @@
-> >>   * @eoc1:	adc1 end of conversion flag in @csr
-> >>   * @eoc2:	adc2 end of conversion flag in @csr
-> >>   * @eoc3:	adc3 end of conversion flag in @csr
-> >> + * @ier:	interrupt enable register offset for each adc
-> >> + * @eocie_msk:	end of conversion interrupt enable mask in @ier
-> >>   */
-> >>  struct stm32_adc_common_regs {
-> >>  	u32 csr;
-> >> @@ -78,6 +80,8 @@ struct stm32_adc_common_regs {
-> >>  	u32 eoc1_msk;
-> >>  	u32 eoc2_msk;
-> >>  	u32 eoc3_msk;
-> >> +	u32 ier;
-> >> +	u32 eocie_msk;
-> >>  };
-> >>  
-> >>  struct stm32_adc_priv;
-> >> @@ -303,6 +307,8 @@ static const struct stm32_adc_common_regs stm32f4_adc_common_regs = {
-> >>  	.eoc1_msk = STM32F4_EOC1,
-> >>  	.eoc2_msk = STM32F4_EOC2,
-> >>  	.eoc3_msk = STM32F4_EOC3,
-> >> +	.ier = STM32F4_ADC_CR1,
-> >> +	.eocie_msk = STM32F4_EOCIE,
-> >>  };
-> >>  
-> >>  /* STM32H7 common registers definitions */
-> >> @@ -311,8 +317,24 @@ static const struct stm32_adc_common_regs stm32h7_adc_common_regs = {
-> >>  	.ccr = STM32H7_ADC_CCR,
-> >>  	.eoc1_msk = STM32H7_EOC_MST,
-> >>  	.eoc2_msk = STM32H7_EOC_SLV,
-> >> +	.ier = STM32H7_ADC_IER,
-> >> +	.eocie_msk = STM32H7_EOCIE,
-> >>  };
-> >>  
-> >> +static const unsigned int stm32_adc_offset[STM32_ADC_MAX_ADCS] = {
-> >> +	0, STM32_ADC_OFFSET, STM32_ADC_OFFSET * 2,
-> >> +};
-> >> +
-> >> +static unsigned int stm32_adc_eoc_enabled(struct stm32_adc_priv *priv,
-> >> +					  unsigned int adc)
-> >> +{
-> >> +	u32 ier, offset = stm32_adc_offset[adc];
-> >> +
-> >> +	ier = readl_relaxed(priv->common.base + offset + priv->cfg->regs->ier);
-> >> +
-> >> +	return ier & priv->cfg->regs->eocie_msk;
-> >> +}
-> >> +
-> >>  /* ADC common interrupt for all instances */
-> >>  static void stm32_adc_irq_handler(struct irq_desc *desc)
-> >>  {
-> >> @@ -323,13 +345,28 @@ static void stm32_adc_irq_handler(struct irq_desc *desc)
-> >>  	chained_irq_enter(chip, desc);
-> >>  	status = readl_relaxed(priv->common.base + priv->cfg->regs->csr);
-> >>  
-> >> -	if (status & priv->cfg->regs->eoc1_msk)
-> >> +	/*
-> >> +	 * End of conversion may be handled by using IRQ or DMA. There may be a
-> >> +	 * race here when two conversions complete at the same time on several
-> >> +	 * ADCs. EOC may be read 'set' for several ADCs, with:
-> >> +	 * - an ADC configured to use DMA (EOC triggers the DMA request, and
-> >> +	 *   is then automatically cleared by DR read in hardware)
-> >> +	 * - an ADC configured to use IRQs (EOCIE bit is set. The handler must
-> >> +	 *   be called in this case)
-> >> +	 * So both EOC status bit in CSR and EOCIE control bit must be checked
-> >> +	 * before invoking the interrupt handler (e.g. call ISR only for
-> >> +	 * IRQ-enabled ADCs).
-> >> +	 */
-> >> +	if (status & priv->cfg->regs->eoc1_msk &&
-> >> +	    stm32_adc_eoc_enabled(priv, 0))
-> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 0));
-> >>  
-> >> -	if (status & priv->cfg->regs->eoc2_msk)
-> >> +	if (status & priv->cfg->regs->eoc2_msk &&
-> >> +	    stm32_adc_eoc_enabled(priv, 1))
-> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 1));
-> >>  
-> >> -	if (status & priv->cfg->regs->eoc3_msk)
-> >> +	if (status & priv->cfg->regs->eoc3_msk &&
-> >> +	    stm32_adc_eoc_enabled(priv, 2))
-> >>  		generic_handle_irq(irq_find_mapping(priv->domain, 2));
-> >>  
-> >>  	chained_irq_exit(chip, desc);
-> >> diff --git a/drivers/iio/adc/stm32-adc-core.h b/drivers/iio/adc/stm32-adc-core.h
-> >> index 8af507b..8dc936b 100644
-> >> --- a/drivers/iio/adc/stm32-adc-core.h
-> >> +++ b/drivers/iio/adc/stm32-adc-core.h
-> >> @@ -25,8 +25,21 @@
-> >>   * --------------------------------------------------------
-> >>   */
-> >>  #define STM32_ADC_MAX_ADCS		3
-> >> +#define STM32_ADC_OFFSET		0x100
-> >>  #define STM32_ADCX_COMN_OFFSET		0x300
-> >>  
-> >> +/* STM32F4 - registers for each ADC instance */
-> >> +#define STM32F4_ADC_CR1			0x04
-> >> +
-> >> +/* STM32F4_ADC_CR1 - bit fields */
-> >> +#define STM32F4_EOCIE			BIT(5)
-> >> +
-> >> +/* STM32H7 - registers for each instance */
-> >> +#define STM32H7_ADC_IER			0x04
-> >> +
-> >> +/* STM32H7_ADC_IER - bit fields */
-> >> +#define STM32H7_EOCIE			BIT(2)
-> >> +
-> >>  /**
-> >>   * struct stm32_adc_common - stm32 ADC driver common data (for all instances)
-> >>   * @base:		control registers base cpu addr
-> >> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> >> index 6a7dd08..3c9f456 100644
-> >> --- a/drivers/iio/adc/stm32-adc.c
-> >> +++ b/drivers/iio/adc/stm32-adc.c
-> >> @@ -30,7 +30,6 @@
-> >>  
-> >>  /* STM32F4 - Registers for each ADC instance */
-> >>  #define STM32F4_ADC_SR			0x00
-> >> -#define STM32F4_ADC_CR1			0x04
-> >>  #define STM32F4_ADC_CR2			0x08
-> >>  #define STM32F4_ADC_SMPR1		0x0C
-> >>  #define STM32F4_ADC_SMPR2		0x10
-> >> @@ -54,7 +53,6 @@
-> >>  #define STM32F4_RES_SHIFT		24
-> >>  #define STM32F4_RES_MASK		GENMASK(25, 24)
-> >>  #define STM32F4_SCAN			BIT(8)
-> >> -#define STM32F4_EOCIE			BIT(5)  
-> > Hmm. This is breaking up the definitions of bits in a single register.
-> > That is rather nasty from a code readability point of view.  
-> > 
-> > I am as keen as the next person on only exposing definitions where
-> > we need to, but in this case we either need to provide an access path
-> > to it here, or we need to move the whole block to the header.  
-> 
-> Hi Jonathan,
-> 
-> I think I'll add a precursor patch in v2 to move the whole block to the
-> header file. This way, the access path is easy (e.g. readl).
-> I'm only wondering about the Fixes tag... this will probably not be
-> straight forward to apply the fix on the maintenance releases ?
-> Or do I need to add it to the precursor patch as well ?
-The precursor is a simple move of definitions. Even if it's large, I don't
-think it will be a problem applying it to stable.
-Just make it clear in the patch description why it is needed for the fix.
+> rtnl_lock needs to be taken before calling phylink_start/stop to lock the
+> network stack.
+> Fix ASSERT_RTNL() warnings by protecting such calls with lock/unlock.
+>=20
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib l=
+ogic")
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 
+I already sent a fix for this. Please see in -net:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git/commit/driv
+ers/net/ethernet/stmicro/stmmac?id=3D19e13cb27b998ff49f07e399b5871bfe5ba7e3
+f0
+
+---
 Thanks,
-
-Jonathan
-
-> 
-> Thanks for reviewing,
-> Best regards,
-> Fabrice
-> 
-> >   
-> >>  
-> >>  /* STM32F4_ADC_CR2 - bit fields */
-> >>  #define STM32F4_SWSTART			BIT(30)
-> >> @@ -69,7 +67,6 @@
-> >>  
-> >>  /* STM32H7 - Registers for each ADC instance */
-> >>  #define STM32H7_ADC_ISR			0x00
-> >> -#define STM32H7_ADC_IER			0x04
-> >>  #define STM32H7_ADC_CR			0x08
-> >>  #define STM32H7_ADC_CFGR		0x0C
-> >>  #define STM32H7_ADC_SMPR1		0x14
-> >> @@ -89,9 +86,6 @@
-> >>  #define STM32H7_EOC			BIT(2)
-> >>  #define STM32H7_ADRDY			BIT(0)
-> >>  
-> >> -/* STM32H7_ADC_IER - bit fields */
-> >> -#define STM32H7_EOCIE			STM32H7_EOC
-> >> -
-> >>  /* STM32H7_ADC_CR - bit fields */
-> >>  #define STM32H7_ADCAL			BIT(31)
-> >>  #define STM32H7_ADCALDIF		BIT(30)  
-> >   
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+Jose Miguel Abreu
