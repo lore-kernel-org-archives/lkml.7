@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C20B8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAA3C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F23521852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3330421852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729715AbfIQPk3 (ORCPT
+        id S1729753AbfIQPkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:40:29 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:47103 "EHLO
+        Tue, 17 Sep 2019 11:40:31 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51065 "EHLO
         metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfIQPk2 (ORCPT
+        with ESMTP id S1729702AbfIQPk2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Sep 2019 11:40:28 -0400
 Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
         by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iAFaZ-0003Zb-HU; Tue, 17 Sep 2019 17:40:23 +0200
+        id 1iAFaZ-0003ZZ-HU; Tue, 17 Sep 2019 17:40:23 +0200
 Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
         (envelope-from <mfe@pengutronix.de>)
-        id 1iAFaY-0003yg-GN; Tue, 17 Sep 2019 17:40:22 +0200
+        id 1iAFaY-0003yb-FZ; Tue, 17 Sep 2019 17:40:22 +0200
 From:   Marco Felsch <m.felsch@pengutronix.de>
 To:     zhang.chunyan@linaro.org, dianders@chromium.org,
         lgirdwood@gmail.com, broonie@kernel.org,
         ckeepax@opensource.cirrus.com
 Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH 3/3] regulator: core: make regulator_register() EPROBE_DEFER aware
-Date:   Tue, 17 Sep 2019 17:40:21 +0200
-Message-Id: <20190917154021.14693-4-m.felsch@pengutronix.de>
+Subject: [PATCH 1/3] regulator: core: fix boot-on regulators use_count usage
+Date:   Tue, 17 Sep 2019 17:40:19 +0200
+Message-Id: <20190917154021.14693-2-m.felsch@pengutronix.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190917154021.14693-1-m.felsch@pengutronix.de>
 References: <20190917154021.14693-1-m.felsch@pengutronix.de>
@@ -50,71 +50,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sometimes it can happen that the regulator_of_get_init_data() can't
-retrieve the config due to a not probed device the regulator depends on.
-Fix that by checking the return value of of_parse_cb() and return
-EPROBE_DEFER in such cases.
+Since commit 1fc12b05895e ("regulator: core: Avoid propagating to
+supplies when possible") regulators marked with boot-on can't be
+disabled anymore because the commit handles always-on and boot-on
+regulators the same way.
+
+Now commit 05f224ca6693 ("regulator: core: Clean enabling always-on
+regulators + their supplies") changed the regulator_resolve_supply()
+logic a bit by using 'use_count'. So we can't just skip the
+'use_count++' during set_machine_constraints(). The easiest way I found
+is to correct the 'use_count' just before returning the rdev device
+during regulator_register().
 
 Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- drivers/regulator/core.c         | 13 +++++++++++++
- drivers/regulator/of_regulator.c | 19 ++++++++++++++-----
- 2 files changed, 27 insertions(+), 5 deletions(-)
+ drivers/regulator/core.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index f9444f509440..e8e145c2a5df 100644
+index e0c0cf462004..f9444f509440 100644
 --- a/drivers/regulator/core.c
 +++ b/drivers/regulator/core.c
-@@ -5047,6 +5047,19 @@ regulator_register(const struct regulator_desc *regulator_desc,
- 
- 	init_data = regulator_of_get_init_data(dev, regulator_desc, config,
- 					       &rdev->dev.of_node);
+@@ -5170,6 +5170,11 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	/* try to resolve regulators supply since a new one was registered */
+ 	class_for_each_device(&regulator_class, NULL, NULL,
+ 			      regulator_register_resolve_supply);
 +
-+	/*
-+	 * Sometimes not all resources are probed already so we need to take
-+	 * that into account. This happens most the time if the ena_gpiod comes
-+	 * from a gpio extender or something else.
-+	 */
-+	if (PTR_ERR(init_data) == -EPROBE_DEFER) {
-+		kfree(config);
-+		kfree(rdev);
-+		ret = -EPROBE_DEFER;
-+		goto rinse;
-+	}
++	/* cleanup use_count -> boot-on marked regulators can be disabled */
++	if (rdev->constraints->boot_on && !rdev->constraints->always_on)
++		rdev->use_count--;
 +
- 	/*
- 	 * We need to keep track of any GPIO descriptor coming from the
- 	 * device tree until we have handled it over to the core. If the
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 38dd06fbab38..ef7198b76e50 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -445,11 +445,20 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
- 		goto error;
- 	}
+ 	kfree(config);
+ 	return rdev;
  
--	if (desc->of_parse_cb && desc->of_parse_cb(child, desc, config)) {
--		dev_err(dev,
--			"driver callback failed to parse DT for regulator %pOFn\n",
--			child);
--		goto error;
-+	if (desc->of_parse_cb) {
-+		int ret;
-+
-+		ret = desc->of_parse_cb(child, desc, config);
-+		if (ret) {
-+			if (ret == -EPROBE_DEFER) {
-+				of_node_put(child);
-+				return ERR_PTR(-EPROBE_DEFER);
-+			}
-+			dev_err(dev,
-+				"driver callback failed to parse DT for regulator %pOFn\n",
-+				child);
-+			goto error;
-+		}
- 	}
- 
- 	*node = child;
 -- 
 2.20.1
 
