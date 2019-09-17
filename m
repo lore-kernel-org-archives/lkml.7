@@ -2,84 +2,107 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ADBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDC6C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 749872171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568753567;
-	bh=sEXHckyL/cCH0O4C1qWMPq6O/5tY+bGXgQqUyzTzH0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RhIGBFJGTkdLiAeNkgD8RMt5TI2Y+PFODOrjRJ7/Re/tCpLLEE3gVzRIotJ9dc0HJ
-	 Ftim9Y98TGfQ/3CC2sA66E8TuNnBOWLeGCSn1a4O2oJ6vo4ZIxCFuapVcUw0jsS8O+
-	 j4gqVI1BTqgSG6Uc+gYxTOJl2oenMyZP9GW6M17Q=
+	by mail.kernel.org (Postfix) with ESMTP id F23F4216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:54:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXL7i/wN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfIQUwq (ORCPT
+        id S1730032AbfIQUyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:52:46 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:47039 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfIQUwo (ORCPT
+        Tue, 17 Sep 2019 16:54:18 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:39149 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfIQUyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:52:44 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f21so1191911otl.13;
-        Tue, 17 Sep 2019 13:52:44 -0700 (PDT)
+        Tue, 17 Sep 2019 16:54:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g12so4602463eds.6;
+        Tue, 17 Sep 2019 13:54:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TB55ogVb7L8Rnu3J7GOd1CTL9DFPAcCA1b2WA++LLLI=;
+        b=eXL7i/wN7GH6Vg8CmKxQzNRZqwTGKPKReKUXNjbUDxJBsbaoKuTv2WhQj5LHhHJpXm
+         oautn+efA3gz0kSro5bUCcJVZQVBLUyLxb4YCuWmAzRzrnBA5MJZsem6hlUSZVWup6a/
+         Xvf+SgcqbOGD2PwUX6hzZN80jtJYz35lyc6BeP/7YTPTcRoJ888Y6II9fuYR+tj+KonK
+         C2uTpTrcHKeOpqpjfWBqbzbnGojiJdArPYR41YbhBDpXniyg7vdT3iuaMzjOsf1hsvlb
+         mlojdKbD+hLueWkALJGurBh6/X17j9NQAxEpUCYwgTZIHI2G1N9CsY55cso3hXb7ttqf
+         hZqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fMeEne97qv8JgyDBdhgCgz19g4bKacaJieBUVcMpack=;
-        b=mlqpZK9xthaMKikW8riP5E+V89oPda99k4GJuxJSH/yjmdYzJiBP7UsX1e9YS9A5u0
-         h5dwb+pCPNf0mC/pzvVb4pa4tOaA3rcdjcA3s0/6wrAsqiMbWHEinbibT322RDBCJrv1
-         MOMwK/CuCgO+3e18sYI2G/59xO0H9mxuqfoC2N1OCXb273y+GVkidlTQRUH+I/F2aHzA
-         bvnwC9B0NYa5hBvUBBHDIdSTXxKFc57K8NtH6vtqKCDBmZ4qW7ahUM+f8Eknfy4UM2Cp
-         +2IIYJHjD5TBaEbFyPINuW4grvp2/om6CW1XLnGhRf6tykAxVflM7fdocGvqkpQDp+jW
-         OBNw==
-X-Gm-Message-State: APjAAAXW/1I4XRvA8e8qP78NXSTOZcFXnRJH+93oCNL6+Ig/hNoRJq22
-        AALwApcwTZSwpPlghbcoGA==
-X-Google-Smtp-Source: APXvYqzRKAYZIfGsZkV4fCugV4JzQs8fH0BJsUQ19vkI9qCJna0q4Qb3+RlGtktm94O7IeQFbkDXJg==
-X-Received: by 2002:a05:6830:124f:: with SMTP id s15mr611563otp.95.1568753564008;
-        Tue, 17 Sep 2019 13:52:44 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v132sm1162365oif.34.2019.09.17.13.52.42
+        bh=TB55ogVb7L8Rnu3J7GOd1CTL9DFPAcCA1b2WA++LLLI=;
+        b=LSkG27rZWs3XlZG6Y9pgkusPkvgFY+MgN76BgD8I6tw/ULA4Fjgep7N9lDSu4MRXoO
+         N+bENX+vGvgIeHd62RSyvj8dJsBJSbJqaGM/qyVV8hjmvs9xsSQeSfeEGV7alz3+1xau
+         5IQYV/OhnSH2tCNZ0LP1jC6g4QEuvpGT78jCRI7ZYhzItUqecDTb1jB5vWdpjV/L/zH5
+         Y9oRD+Xs1WXAW5N0CdJDnSf3Ul4jX8aPk/hM6n+RQB9yAnyU+E6Ko0NBdrs0t+PEbpAU
+         2Y1Yp9c4fDGH62Vhd+4XCwP1/ziltR6lLLzH+7e6ezTBj0jsiFd6CI1Ky60DHbPx0EEv
+         jIOQ==
+X-Gm-Message-State: APjAAAWSN0ycK/CxWW0bWqv8VKs5IZusLRIS1pD5CuaAj6rnuwqxo9TW
+        FKmE0/5XEm571qGe79d4/Z8=
+X-Google-Smtp-Source: APXvYqwvE6X1EVnGhC9HVkhxDzcqBzkxXBlXuu8iArgUgF2V6xspFM36gdqHu0QLdhUXF8/RxV0Wsg==
+X-Received: by 2002:a17:906:6dd4:: with SMTP id j20mr6585951ejt.173.1568753656032;
+        Tue, 17 Sep 2019 13:54:16 -0700 (PDT)
+Received: from hv-1.home ([5.3.191.207])
+        by smtp.gmail.com with ESMTPSA id h3sm407037ejp.77.2019.09.17.13.54.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 13:52:43 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 15:52:42 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jan Kotas <jank@cadence.com>
-Cc:     maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, rafalc@cadence.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
-Subject: Re: [PATCH v2 1/3] media: dt-bindings: Update bindings for Cadence
- CSI2RX
-Message-ID: <20190917205242.GA15921@bogus>
-References: <20190905105601.27034-1-jank@cadence.com>
- <20190905105601.27034-2-jank@cadence.com>
+        Tue, 17 Sep 2019 13:54:15 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 23:54:03 +0300
+From:   Vanya Lazeev <ivan.lazeev@gmail.com>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] tpm_crb: fix fTPM on AMD Zen+ CPUs
+Message-ID: <20190917205402.GA2500@hv-1.home>
+References: <20190914171743.22786-1-ivan.lazeev@gmail.com>
+ <20190916055130.GA7925@linux.intel.com>
+ <20190916200029.GA27567@hv-1.home>
+ <20190917190950.GG10244@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190905105601.27034-2-jank@cadence.com>
+In-Reply-To: <20190917190950.GG10244@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Sep 2019 11:55:59 +0100, Jan Kotas wrote:
-> This patch adds a DT bindings documentation for
-> Cadence CSI2RX v1.3 and v2.1 controllers.
+On Tue, Sep 17, 2019 at 10:10:13PM +0300, Jarkko Sakkinen wrote:
+> On Mon, Sep 16, 2019 at 11:00:30PM +0300, Vanya Lazeev wrote:
+> > On Mon, Sep 16, 2019 at 08:51:30AM +0300, Jarkko Sakkinen wrote:
+> > > On Sat, Sep 14, 2019 at 08:17:44PM +0300, ivan.lazeev@gmail.com wrote:
+> > > > +	struct list_head acpi_resources, crb_resources;
+> > > 
+> > > Please do not create crb_resources. I said this already last time.
+> > 
+> > But then, if I'm not mistaken, it will be impossible to track pointers
+> > to multiple remaped regions. In this particular case, it
+> > doesn't matter, because both buffers are in different ACPI regions,
+> > and using acpi_resources only to fix buffer will be enough.
+> > However, this creates incosistency between single- and
+> > multiple-region cases: in the latter iobase field of struct crb_priv
+> > doesn't make any difference. Am I understanding the situation correctly?
+> > Will such fix be ok?
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
-> ---
->  Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
+> So why you need to track pointers other than in initialization as devm
+> will take care of freeing them. Just trying to understand the problem.
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+We need to know, which ioremap'ed address assign to control area, command
+and response buffer, based on which ACPI region contains each of them.
+Is there any method of getting remapped address for the raw one after
+resouce containing it has been allocated?
+And what do you mean by initialization? crb_resources lives only in
+crb_map_io, which seems to run only once.
