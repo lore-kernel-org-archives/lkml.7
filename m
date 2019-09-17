@@ -2,104 +2,113 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3D8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1041C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E9021881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C1921881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 10:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568717126;
-	bh=lRD33XVMU31YDKixMT8vCEatLaoLNEVQy4Wzf/bj7LU=;
+	s=default; t=1568717430;
+	bh=CMv27HSqoNlAVEfJg7x7juVBvO72wMCFsjn1ssmBpBM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Z6GLlPRYvrPzbeZCq8/0brV4Zg1IuvQ/sZVttSgI+5xLr+RzTmEXCG4z1Os9hnCoo
-	 1T4fxT7ju8kvkZ1E3wKc3JCXV5VRy2MQScx0iO37LpUsjphnGDR6Oy6wvnILA65pUv
-	 YHn4jpurMfmYyhJoS4cuhN71gAy92g3ZzGADir94=
+	b=XtqSObVXXsinfeTmPGaPcW4x/vC7Ue6b27qxg2GI/wZcAbrwR1O48pK2v60Trw5I5
+	 zw9rDxFaRi+dinliRegkk/yH31ME6NVOZXNksVxZ8kwB4XIYGnO5WDE1A2w7EwY61w
+	 XicoWCgeptaM0X59Dpj+kbcYF4N9yXtYg8pYpT7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfIQKpZ (ORCPT
+        id S1727049AbfIQKu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 06:45:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726181AbfIQKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 06:45:24 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9309521852;
-        Tue, 17 Sep 2019 10:45:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568717124;
-        bh=lRD33XVMU31YDKixMT8vCEatLaoLNEVQy4Wzf/bj7LU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AFxODCLVmBmUj01R26irYPN8YQuPyH1UaOrRml1WD7+1jCwimkkB1M6KsQFFUYhqi
-         PRr2K9zMWyVz9E9koZIbr5XJPWVkIzDVPatCfKxXuyECrCN/Y2DUxWQvq1N6KBI1Zv
-         /nWXbB5STf9OLjKm5R+/bGAn9MIO+UHk1+LmoYG8=
-Date:   Tue, 17 Sep 2019 11:45:19 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Xogium <contact@xogium.me>
-Cc:     linux-arm-kernel@lists.infradead.org, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, gregkh@linuxfoundation.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk
-Subject: Re: [breakage] panic() does not halt arm64 systems under certain
- conditions
-Message-ID: <20190917104518.ovg6ivadyst7h76o@willie-the-truck>
-References: <BX1W47JXPMR8.58IYW53H6M5N@dragonstone>
+        Tue, 17 Sep 2019 06:50:29 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39472 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIQKu3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 06:50:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=7ysJyJKJEUr4khG20YZEwGPv0cFPLtQKqiinCxXuok0=; b=d3ghXNPhfvvMkLgEW7LycS0Ug
+        ymSwgqY8bAJNrorMgwhnxFj9Rohc8yczZHJMmSo5h0BwDLXQUMS2u0vH3+QMRCG7wrkIKww6LF+/k
+        ZrAVCENWlfhmlXwchnRGwmgYebaN2RMhblMPHqtVI1WsF/7uoBD2tA4lPdn9iZR+rvCfQ=;
+Received: from ypsilon.sirena.org.uk ([2001:470:1f1d:6b5::7])
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAB3U-0007hu-0J; Tue, 17 Sep 2019 10:49:56 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 3B2E327419E9; Tue, 17 Sep 2019 11:49:55 +0100 (BST)
+Date:   Tue, 17 Sep 2019 11:49:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "shifu0704@thundersoft.com" <shifu0704@thundersoft.com>
+Cc:     lgirdwood <lgirdwood@gmail.com>, perex <perex@perex.cz>,
+        tiwai <tiwai@suse.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        alsa-devel <alsa-devel@alsa-project.org>,
+        robh+dt <robh+dt@kernel.org>, Dan?Murphy <dmurphy@ti.com>,
+        "Navada Kanyana, Mukund" <navada@ti.com>
+Subject: Re: [PATCH v5] tas2770: add tas2770 smart PA kernel driver
+Message-ID: <20190917104955.GB3524@sirena.co.uk>
+References: <1568705889-6224-1-git-send-email-shifu0704@thundersoft.com>
+ <1568705889-6224-2-git-send-email-shifu0704@thundersoft.com>
+ <201909171540576235182@thundersoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
 Content-Disposition: inline
-In-Reply-To: <BX1W47JXPMR8.58IYW53H6M5N@dragonstone>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <201909171540576235182@thundersoft.com>
+X-Cookie: Know Thy User.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-[Expanding CC list; original message is here:
- https://lore.kernel.org/linux-arm-kernel/BX1W47JXPMR8.58IYW53H6M5N@dragonstone/]
+--FkmkrVfFsRoUs1wW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, Sep 16, 2019 at 09:35:36PM -0400, Xogium wrote:
-> On arm64 in some situations userspace will continue running even after a
-> panic. This means any userspace watchdog daemon will continue pinging,
-> that service managers will keep running and displaying messages in certain
-> cases, and that it is possible to enter via ssh in the now unstable system
-> and to do almost anything except reboot/power off and etc. If
-> CONFIG_PREEMPT=n is set in the kernel's configuration, the issue is fixed.
-> I have reproduced the very same behavior with linux 4.19, 5.2 and 5.3. On
-> x86/x86_64 the issue does not seem to be present at all.
+On Tue, Sep 17, 2019 at 03:40:59PM +0800, shifu0704@thundersoft.com wrote:
 
-I've managed to reproduce this under both 32-bit and 64-bit ARM kernels.
-The issue is that the infinite loop at the end of panic() can run with
-preemption enabled (particularly when invoking by echoing 'c' to
-/proc/sysrq-trigger), so we end up rescheduling user tasks. On x86, this
-doesn't happen because smp_send_stop() disables the local APIC in
-native_stop_other_cpus() and so interrupts are effectively masked while
-spinning.
+> > +reload:
+> > + /* hardware reset and reload */
+> > + tas2770_load_config(tas2770);
 
-A straightforward fix is to disable preemption explicitly on the panic()
-path (diff below), but I've expanded the cc list to see both what others
-think, but also in case smp_send_stop() is supposed to have the side-effect
-of disabling interrupt delivery for the local CPU.
+> Sometimes devices need to be reset to return to normal, and this setting is necessary.
 
-Will
+But why do we have systems where the device is being reset?  Like I keep
+saying I'd just get a normal driver merged first, then go back and
+figure out what's going on with the reset support so it can be reviewed
+separately.
 
---->8
+> > +end:
+> > + return IRQ_HANDLED;
+> > +}
 
-diff --git a/kernel/panic.c b/kernel/panic.c
-index 057540b6eee9..02d0de31c42d 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -179,6 +179,7 @@ void panic(const char *fmt, ...)
-	 * after setting panic_cpu) from invoking panic() again.
-	 */
-	local_irq_disable();
-+	preempt_disable_notrace();
- 
-	/*
-	 * It's possible to come here directly from a panic-assertion and
+> I see that the other drivers, the return values in irq_handler are IRQ_HANDLED.
+
+If they've actually handled an interrupt.  There's some buggy drivers
+that do it unconditionally, they aren't a good reason to add more.
+
+--FkmkrVfFsRoUs1wW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2AulIACgkQJNaLcl1U
+h9CivAf/TXpClZFNRdOGm/qTXoebLIrHtsAWHL6Bdl4IOjCwRg4e7053muNi9edC
+DdQ7xdI1C1uu/G6JoAZ33gCe78eDbqxL/QYXOJS0w75Zyp1/YeTsnbTR8d24P29x
+z6Z/Q2f3W62Uc5n/aVp0KLvYI+OklBLH2A7YGOztNLm5FyXLXvKyekr1rwRErYpO
+O/0505YBiy1reQSUNpDFpwVDPFwpPT7WSdk6hSi0euR8tUoefU3lV6B5iT1iJktE
+nRsUu1j2a7i/8iev1295vbiaFQQ18vCGK7CPzX8uTWhrymZrl20urSyL4Kd+WQLy
+BG7HzdYIKjS3LYutXM8425ufkcnzXQ==
+=vT2v
+-----END PGP SIGNATURE-----
+
+--FkmkrVfFsRoUs1wW--
