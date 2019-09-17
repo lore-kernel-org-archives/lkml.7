@@ -2,118 +2,91 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD504C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB42C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1E620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62996214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:39:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=bitmath.org header.i=@bitmath.org header.b="i54V4mb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfIQSgD (ORCPT
+        id S1726711AbfIQSjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:36:03 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38186 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIQSgD (ORCPT
+        Tue, 17 Sep 2019 14:39:17 -0400
+Received: from mailrelay4-2.pub.mailoutpod1-cph3.one.com ([46.30.212.3]:55583
+        "EHLO mailrelay4-2.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726044AbfIQSjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:36:03 -0400
-Received: by mail-ot1-f68.google.com with SMTP id e11so2826371otl.5;
-        Tue, 17 Sep 2019 11:36:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=89MnuguQ9bvZxHwMu/z5v0jmYgMuK+bvkbMFTX2cRFk=;
-        b=Yp20852S1cn2UCaZ5C3XkUEYzKgRZOyto7t4kPfBmyw2k7+UgS5WN9V90j4pCxcrc7
-         Ap4fSyA4m8xzZOXimAX01lQXHbSkXQwuKmEGyE6vMCiHX7ZRFOfV0FStQ99KBOjIrEDw
-         FH4WW58iPffBhmBmKB1wM1QgDc/BaTO9KI0/5HeEKy/wULTmUIw5yDt60rmYTcMSgI/m
-         EM9WGJ5lubduzkREJeoayaBKwuei1tePqah5ty+gx73fMPta//VVzHS3CdvZyCpUgLUb
-         agVdSQrPsPmkX3zzdcja6E76z8peSbieKahIVAtM07wIalHuQBClcuKh5saWPLY10UhL
-         NzaA==
-X-Gm-Message-State: APjAAAXrjKr6pFu8yZ3miTDtoxw/DdbgI6sVHq8l/cbmfk2tbSyxm5lb
-        aPR6ypctYsCYetu0ZhdA4JxaLvA0emufy0QXao4=
-X-Google-Smtp-Source: APXvYqyn9SE7wRWHYVeLcbDaLC/fA8y5pA7lkSh6vNLDdZy2V2ds67R6P3uJv32ZyOi3p+RMtTl90k1tqw+mRyZxi4Q=
-X-Received: by 2002:a9d:5784:: with SMTP id q4mr191546oth.107.1568745362364;
- Tue, 17 Sep 2019 11:36:02 -0700 (PDT)
+        Tue, 17 Sep 2019 14:39:17 -0400
+X-Greylist: delayed 962 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 14:39:16 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bitmath.org; s=20140924;
+        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
+         message-id:from:references:cc:to:subject:from;
+        bh=2QCEbDkNTVlepmxfafwkDO+VtRnQKigkL8ILiS9erYo=;
+        b=i54V4mb44f3KPaPCXXwcmOKK2reosPHOkefCdH94bX4dNRBYrfF6vas3EfbFXDr9IV4wufI8IYY5D
+         LEem8usf73om5pI1FU64FkRNrxlIcSmx0K6QgG7iEaaMvFvSTEmB7PqBpWPiOeLYFHG+0QtP23y4ZT
+         lOwCjXHS6ngQrvT8=
+X-HalOne-Cookie: 3202c1e5ddf8ba5138876360452462549f22ef0d
+X-HalOne-ID: 34d1a670-d978-11e9-8285-d0431ea8bb10
+Received: from [192.168.19.13] (unknown [98.128.166.173])
+        by mailrelay4.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+        id 34d1a670-d978-11e9-8285-d0431ea8bb10;
+        Tue, 17 Sep 2019 18:23:11 +0000 (UTC)
+Subject: Re: [PATCH v3 02/49] Input: introduce input_mt_report_slot_inactive
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190917093320.18134-1-jiada_wang@mentor.com>
+ <20190917093320.18134-3-jiada_wang@mentor.com>
+From:   Henrik Rydberg <rydberg@bitmath.org>
+Message-ID: <546c8205-ecb7-1c34-3727-b10c7ff86232@bitmath.org>
+Date:   Tue, 17 Sep 2019 20:25:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <20190821124850.9592-1-yuehaibing@huawei.com>
-In-Reply-To: <20190821124850.9592-1-yuehaibing@huawei.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 17 Sep 2019 20:35:51 +0200
-Message-ID: <CAMuHMdXdd4oiHqTpFTYBTSeCB6A78_gSGmwPy5EgPRZXibOqZw@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: ethernet: ti: use devm_platform_ioremap_resource()
- to simplify code
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        ivan.khoronzhuk@linaro.org, Andrew Lunn <andrew@lunn.ch>,
-        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
-        <linux-omap@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190917093320.18134-3-jiada_wang@mentor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi YueHaibing,
+Hi Jiada,
 
-On Wed, Aug 21, 2019 at 2:51 PM YueHaibing <yuehaibing@huawei.com> wrote:
-> Use devm_platform_ioremap_resource() to simplify the code a bit.
-> This is detected by coccinelle.
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/net/ethernet/ti/cpsw.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-> index 32a8974..5401095 100644
-> --- a/drivers/net/ethernet/ti/cpsw.c
-> +++ b/drivers/net/ethernet/ti/cpsw.c
-> @@ -2764,7 +2764,7 @@ static int cpsw_probe(struct platform_device *pdev)
->         struct net_device               *ndev;
->         struct cpsw_priv                *priv;
->         void __iomem                    *ss_regs;
-> -       struct resource                 *res, *ss_res;
-> +       struct resource                 *ss_res;
->         struct gpio_descs               *mode;
->         const struct soc_device_attribute *soc;
->         struct cpsw_common              *cpsw;
-> @@ -2798,8 +2798,7 @@ static int cpsw_probe(struct platform_device *pdev)
+> input_mt_report_slot_state() ignores the tool when the slot is closed.
+> which has caused a bit of confusion.
+> This patch introduces input_mt_report_slot_inactive() to report slot
+> inactive state.
+> replaces all input_mt_report_slot_state() with
+> input_mt_report_slot_inactive() in case of close of slot.
 
-And just out-of-context, we also have:
+This patch looks very odd, I am afraid.
 
-        ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-        ss_regs = devm_ioremap_resource(dev, ss_res);
-        if (IS_ERR(ss_regs))
+When a driver needs to use input_mt functions, it first calls 
+input_mt_init_slots() during setup. The MT state then remains in effect 
+until the driver is destroyed. Thus, there is no valid case when 
+input_mt_report_slot_state() would fail to execute the line
 
-which was not detected as being the same pattern?
+    input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1)
 
-Interesting...
+when active == false.
 
->                 return PTR_ERR(ss_regs);
->         cpsw->regs = ss_regs;
->
-> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> -       cpsw->wr_regs = devm_ioremap_resource(dev, res);
-> +       cpsw->wr_regs = devm_platform_ioremap_resource(pdev, 1);
->         if (IS_ERR(cpsw->wr_regs))
->                 return PTR_ERR(cpsw->wr_regs);
+What input_mt_report_slot_state() does do, however, is to ignore the 
+event when no MT state has been set, which does happen for some drivers 
+handling both normal and MT devices. Changing such a driver in the way 
+you suggest would introduce new events in existing, working cases, and 
+possibly break userspace. We should try very hard to avoid it.
 
-Gr{oetje,eeting}s,
+Thanks,
 
-                        Geert
+Henrik
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
