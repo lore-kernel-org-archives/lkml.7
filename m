@@ -2,136 +2,169 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CE1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEB0C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4EF821852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A3221852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:54:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="v73eJh3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbfIQOyO (ORCPT
+        id S1728780AbfIQOyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:54:14 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:44531 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfIQOyN (ORCPT
+        Tue, 17 Sep 2019 10:54:44 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36022 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727315AbfIQOyn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:54:13 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id C92BF3C0579;
-        Tue, 17 Sep 2019 16:54:09 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id C98Q-R7PqAfm; Tue, 17 Sep 2019 16:54:04 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 0D0F33C00C4;
-        Tue, 17 Sep 2019 16:54:04 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 17 Sep
- 2019 16:54:03 +0200
-Date:   Tue, 17 Sep 2019 16:54:00 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     shuah <shuah@kernel.org>
-CC:     "George G. Davis" <george_davis@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] selftests: watchdog: Validate optional file argument
-Message-ID: <20190917145400.GA14341@vmlxhi-102.adit-jv.com>
-References: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
- <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
+        Tue, 17 Sep 2019 10:54:43 -0400
+Received: by mail-io1-f68.google.com with SMTP id b136so8345019iof.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 07:54:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Jv1nPKgN541dTWmjgoEE9NwVDDUkzt0DXYH4qos1wVs=;
+        b=v73eJh3uUNV4peUeNoFa4mDDYOe2IZXEjgBJUoCBGCgjBsgIbfu05XFsHgQB4KrUnl
+         ClzCo2YW4NeUFULmoP+thvo1Wh3h6uMan9rX16hOOXijvSbeZTx2R0kjT6O0EvHiXbpf
+         XTwdV2DJLAx+VpLQdtD53wXRBUHbudINTHxFOu02+NCkvsewyLc2A6QO+mkgFHf8zRYx
+         bN/Douii1AgojQ7PmLM1ahi+WlMu7Saw5N1gHzGEp4HVPtwEfVDY+qUSKMM7nb1fUO+2
+         VX7hYAA4262TK03HNT+jOQKkkEqF1Fyr9Z3QKj7Jbsy2N5sKu5YZh9cAWVfIBVM0NYIM
+         tTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Jv1nPKgN541dTWmjgoEE9NwVDDUkzt0DXYH4qos1wVs=;
+        b=ejlx/6ooOz66cwrVpmwt3S01OuiVVA88APCnGFiESbLpbV5AyYjaAVHT/ZyyA03/ds
+         Qf4YemSIm2smZxtTjFy1j0hTU1wK4l65Y3NM+7JQTCcSIVh2vV72Fuk5lNk2YLgv0lTw
+         6SJiBNin4abw8vihGuDFw1NeNHDMTWfXoj+i/uEhQC++joxPNB7YDnn2BciOt9pM6ote
+         yy/zE1XIEiH55bzcnjGduTMoq+9XN/F2OOLW+meNh0qYQkf35m340Sl+bZwB8KzAd3ZH
+         QyPJZNP0rr+gowix3Vi9f2djON1MS3l51mcs7d0kcQOmhcIgJvIVgDML2teUm/oqNLgd
+         hagQ==
+X-Gm-Message-State: APjAAAUBHfXo8vp08rwJ2/kLK+oIuCmeJ03L6/ejiTyj+bA0vbUUscpq
+        a6jHQvgO8PR3Wrk+Pxv1+wetepKlVCIkJQ==
+X-Google-Smtp-Source: APXvYqxFi2HNJ4XA/+AhE/mtwc9nQdyUwXe1Y7l8AvgBzKOcStcSiE5SoaZGNyRREh/Shnzi0iMwtw==
+X-Received: by 2002:a02:1c02:: with SMTP id c2mr4710119jac.118.1568732081291;
+        Tue, 17 Sep 2019 07:54:41 -0700 (PDT)
+Received: from [192.168.1.50] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id u24sm1868664iob.12.2019.09.17.07.54.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 07:54:39 -0700 (PDT)
+Subject: Re: [PATCH v1] io_uring: reserve word at cqring tail+4 for the user
+To:     Avi Kivity <avi@scylladb.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+References: <20190917091358.3652-1-avi@scylladb.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <3e886e3a-458d-0fe4-68ff-5925835efb5e@kernel.dk>
+Date:   Tue, 17 Sep 2019 08:54:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+In-Reply-To: <20190917091358.3652-1-avi@scylladb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shuah,
-
-On Mon, Sep 16, 2019 at 07:19:35PM -0600, shuah wrote:
-> On 9/16/19 12:49 PM, George G. Davis wrote:
-> > As reported by Eugeniu Rosca, a side of affect of commit c3f2490d6e92
-> > ("selftests: watchdog: Add optional file argument") is that arbitrary files
-> > may be opened for watchdog testing, e.g.
-> > 
+On 9/17/19 3:13 AM, Avi Kivity wrote:
+> In some applications, a thread waits for I/O events generated by
+> the kernel, and also events generated by other threads in the same
+> application. Typically events from other threads are passed using
+> in-memory queues that are not known to the kernel. As long as the
+> threads is active, it polls for both kernel completions and
+> inter-thread completions; when it is idle, it tells the other threads
+> to use an I/O event to wait it up (e.g. an eventfd or a pipe) and
+> then enters the kernel, waiting for such an event or an ordinary
+> I/O completion.
 > 
-> You don't need to say this here since you are already have a
-> Reported-by tag. 
-
-This looks like asking people to stick to your personal taste which
-BTW doesn't really match the patterns established in Linux community.
-
-With a bit of scripting, I am able to find around 4600 vanilla commits
-which happen to mention the name of the reporter in addition to
-Reported-by: https://paste.ubuntu.com/p/wNXfdGCJbX/ .
-
-I really don't care if my name is mentioned once or twice, but I do
-believe that requesting a new patch revision just based on this criteria
-is nonsense. Can you please revise your review criteria?
-
-> You are missing the Fixes tag.
-
-The _fixed_ commit didn't land in vanilla as of v5.3-2061-gad062195731.
-It is still undergoing the linux-next testing, where it can be found as
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=c3f2490d6e92
-("selftests: watchdog: Add optional file argument").
-
-Since the _fixed_ commit is not yet in mainline, there is no Fixes tag
-included in this patch.
-
-> > ./watchdog-test  -f /dev/zero
-> > Watchdog Ticking Away!
-> > 
-> > To prevent watchdog-test from operating on non-watchdog device files,
-> > validate that a file is indeed a watchdog device via an
-> > ioctl(WDIOC_GETSUPPORT) call.
-> > 
-> > While we're at it, since the watchdog_info is available as a result of the
-> > ioctl(WDIOC_GETSUPPORT) call, add a command line option to optionally show
-> > the watchdog_info.
-> > 
+> When such a thread goes idle, it typically spins for a while to
+> avoid the kernel entry/exit cost in case an event is forthcoming
+> shortly. While it spins it polls both I/O completions and
+> inter-thread queues.
 > 
-> Let's try this again. I want two patches. The first one with Fixes tag.
-> The first patch might be candidate for going into stables.
-
-This makes me wonder if you figured out the relationship and timeline
-of this and the fixed patches. Since both are going to be part of the
-same kernel release (v5.4), why do you worry about the stable updates?
-
+> The x86 instruction pair UMONITOR/UMWAIT allows waiting for a cache
+> line to be written to. This can be used with io_uring to wait for a
+> wakeup without spinning (and wasting power and slowing down the other
+> hyperthread). Other threads can also wake up the waiter by doing a
+> safe write to the tail word (which triggers the wakeup), but safe
+> writes are slow as they require an atomic instruction. To speed up
+> those wakeups, reserve a word after the tail for user writes.
 > 
-> The -i (info) should be a separate patch. This won't go into stables.
-
-Please, see the above. I don't think this patch, or any of its parts,
-are candidate for linux-stable.
-
+> A thread consuming an io_uring completion queue can then use the
+> following sequences:
 > 
-> Please write a clear commit log. The following will help:
+>    - while busy:
+>      - pick up work from the completion queue and from other threads,
+>        and process it
 > 
-> https://chris.beams.io/posts/git-commit/
+>    - while idle:
+>      - use UMONITOR/UMWAIT to wait on completions and notifications
+>        from other threads for a short period
+>      - if no work is picked up, let other threads know you will need
+>        a kernel wakeup, and use io_uring_enter to wait indefinitely
 
-With all my appreciation for https://chris.beams.io/, I see no
-contributions from him in Linux whatsoever. Given that Linux commit
-descriptions and summary lines obey specific/unique rules, I doubt this
-is the best guide to provide to your contributors :)
+This is cool, I like it. A few comments:
 
-With the above inputs, can you please outline your expectations
-precisely which changes are expected in the next patch revision, if at
-all needed?
+> diff --git a/fs/io_uring.c b/fs/io_uring.c
+> index cfb48bd088e1..4bd7905cee1d 100644
+> --- a/fs/io_uring.c
+> +++ b/fs/io_uring.c
+> @@ -77,12 +77,13 @@
+>   
+>   #define IORING_MAX_ENTRIES	4096
+>   #define IORING_MAX_FIXED_FILES	1024
+>   
+>   struct io_uring {
+> -	u32 head ____cacheline_aligned_in_smp;
+> -	u32 tail ____cacheline_aligned_in_smp;
+> +	u32 head ____cacheline_aligned;
+> +	u32 tail ____cacheline_aligned;
+> +	u32 reserved_for_user; // for cq ring and UMONITOR/UMWAIT (or similar) wakeups
+>   };
+
+Since we have that full cacheline, maybe name this one a bit more
+appropriately as we can add others if we need it. Not a big deal.
+But definitely use /* */ style comments :-)
+
+> diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
+> index 1e1652f25cc1..1a6a826a66f3 100644
+> --- a/include/uapi/linux/io_uring.h
+> +++ b/include/uapi/linux/io_uring.h
+> @@ -103,10 +103,14 @@ struct io_sqring_offsets {
+>    */
+>   #define IORING_SQ_NEED_WAKEUP	(1U << 0) /* needs io_uring_enter wakeup */
+>   
+>   struct io_cqring_offsets {
+>   	__u32 head;
+> +	// tail is guaranteed to be aligned on a cache line, and to have the
+> +	// following __u32 free for user use. This allows using e.g.
+> +	// UMONITOR/UMWAIT to wait on both writes to head and writes from
+> +	// other threads to the following word.
+>   	__u32 tail;
+>   	__u32 ring_mask;
+>   	__u32 ring_entries;
+>   	__u32 overflow;
+>   	__u32 cqes;
+
+Ditto on the comments here.
+
+Would be ideal if we could pair this with an example for liburing, a basic
+test case would be fine. Something that shows how to use it, and verifies
+that it works.
+
+Also, this patch is against master, it should be against for-5.4/io_iuring as
+it won't apply there right now.
 
 -- 
-Best Regards,
-Eugeniu
+Jens Axboe
+
