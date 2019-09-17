@@ -2,88 +2,165 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E82FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F126DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1EA2189D
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568750240;
-	bh=DNnw9TY+cVk/mxNQN7BJwyfl4hOHKnPyhZGsBagknLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gj4h5sAvA9DwWp65Via+ilm8z0PZ7gg6ms+ZeEGzwbw7jOmNXj+iek5WQPxZtvgGY
-	 E3tL5RMHp/bd4DTQtNbNd/yBG93ZBfDK1HjFTGvAuoMfVCYyCjf1ZGyeHJU2bsJffg
-	 03hk35aZBBDUtTKPYQjhkxUB3w1VhU0VXBOhBHYg=
+	by mail.kernel.org (Postfix) with ESMTP id B7964214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:57:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="PNqaKnUM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfIQT5T (ORCPT
+        id S1727576AbfIQT5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 15:57:19 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44045 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfIQT5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 15:57:19 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w6so3947665oie.11;
-        Tue, 17 Sep 2019 12:57:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8OJcLjUpBrW1/qbYAiu6WuFYEuH8ShVscvI6okWWXn8=;
-        b=NBKLjCzBX+ploTfH4gb6j9J2DVp0W13GY+lpEeehz2Eimy8Y7/Xho4G2r1eqvw+ST5
-         qhaK7xY/XylrkwXD1f3gwbeHcEq+AjMo3K9HVWWRoO9Pn9pXjCITusMRVT7KrKgaYa/o
-         xSXJ34WwiUyi4mk3BFJKjzxc8syedn4g+7wz3xbhDSATjr9RHxf/lIGsNe+ljeQ7iqPj
-         3asMHy1PF4Pi9BUpvzDpYdv5+W15mB4/NyGUF0qOIPxFMmMJGCk/sSbk0w6YCqWU8+Jo
-         DF+bTOLDF8V5agyl0y4D+9Sg9CIqV267QGZE/fdSKmPGIMVDIqRgEw/HuOusHH5lCAI0
-         gdGA==
-X-Gm-Message-State: APjAAAWGTSJR4JOOboUl8rZ1F+lPGwQtMkkA1KciEuf1fsXYGZpyh3zM
-        UkE4bXfHxmVIP5B3ThYzhw==
-X-Google-Smtp-Source: APXvYqyZSU4eFtO2Ik2YQkAoBuTSYow+Kn3ZPm23D3N/+ENyPy94zmiHTTWDOHk5oVigXiOADvOO7w==
-X-Received: by 2002:aca:4c84:: with SMTP id z126mr5362414oia.86.1568750238166;
-        Tue, 17 Sep 2019 12:57:18 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y137sm1092025oie.53.2019.09.17.12.57.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 12:57:17 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 14:57:16 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     mpm@selenic.com, herbert@gondor.apana.org.au, arnd@arndb.de,
-        gregkh@linuxfoundation.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, avifishman70@gmail.com,
-        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
-        benjaminfair@google.com, sumit.garg@linaro.org,
-        jens.wiklander@linaro.org, vkoul@kernel.org, tglx@linutronix.de,
-        joel@jms.id.au, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        openbmc@lists.ozlabs.org, Tomer Maimon <tmaimon77@gmail.com>
-Subject: Re: [PATCH v3 1/2] dt-binding: hwrng: add NPCM RNG documentation
-Message-ID: <20190917195716.GA25687@bogus>
-References: <20190912090149.7521-1-tmaimon77@gmail.com>
- <20190912090149.7521-2-tmaimon77@gmail.com>
+        Tue, 17 Sep 2019 15:57:31 -0400
+Received: from mail-eopbgr50043.outbound.protection.outlook.com ([40.107.5.43]:14672
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbfIQT5a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 15:57:30 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OZOdbqW8w96sewLqdU57X3woqAQm2krA1MaHiDfkkAiG2wmk4r9PX3wP4HYFTyGp1qYSUxVbA9xrfUUp+KtEKOqF6yeTzWagSwkQDpvSq+h8q7UjVNuACFf1n2pOc3wZVHs+xX7tPhiarwHr17Ds49lT7t/xyf6V+SL0cC+FwIvEqbTMkwdI3xeyQWNFHQjfAUAvQz8p+WHOoDeRIOpWzIPElQb/+QOyspnU76yM9bGFE9wu+HLP5tbfU4fT1e2K8f5HmiuP8Coh4OVliv9K7HrFMvpvFey1A01tlAXjvAOzeZC66y1HXZQI1jn+w1WRDBmPa1DFNRErZJs/kjf+tg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2VRZ07a3kDHT27MDqV7a4bhDVpoq5+3M2kRHUEY/D9I=;
+ b=mT6giivNs+PihSrZutpqwqLamQ0FiYEIXjsCtkoo7SY2UZ3kAj08MyfCNU92GVfqlPSxwj7IBcKYHtxcFdoviBnquDh+4Fc5D303C9a/mfWCjI5bSs7pr3TqoUWwxzWImKKKmk/Z+IgaOdB1mxNtiSVG/P7q+Rm7mcK4OInas+E6Zt0PWXODbmtVsoGZs6zH7F/gQAr5pxy4iDOmDAGEfxbQmrNwaQ9LgLG3H2N5Bw4eFEHkxfPanxOiYaTMDzMBJ7XQl/KlmBKdWzYCQkaMkWEwy3v4BkSAuizJ/VjzJI77eXP8vQNFNMtYsMGDYrKQ8N8602EpxnA/AR0BnR5LqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2VRZ07a3kDHT27MDqV7a4bhDVpoq5+3M2kRHUEY/D9I=;
+ b=PNqaKnUMYypVUjWz/CK7ZqwXes456l15x4tNEJn4qVLYFQ35FeIiTbPxxinch//2ULlWG27FjKj/5ZKtQsFIgcKk5+PMN4uwkRpNgpjiIxRtDm6JAayRZrWoUwR8DaT6AbgqnOqksN10lp5qWgur6QLZpuoJR6Sgk7eeqv0IOhc=
+Received: from VI1PR05MB5295.eurprd05.prod.outlook.com (20.178.12.80) by
+ VI1PR05MB3277.eurprd05.prod.outlook.com (10.170.238.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.24; Tue, 17 Sep 2019 19:57:19 +0000
+Received: from VI1PR05MB5295.eurprd05.prod.outlook.com
+ ([fe80::f910:e7e:8717:f59d]) by VI1PR05MB5295.eurprd05.prod.outlook.com
+ ([fe80::f910:e7e:8717:f59d%6]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 19:57:19 +0000
+From:   Vlad Buslov <vladbu@mellanox.com>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+CC:     Vlad Buslov <vladbu@mellanox.com>,
+        syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        David Ahern <dsahern@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "hawk@kernel.org" <hawk@kernel.org>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@mellanox.com>, Jiri Pirko <jiri@resnulli.us>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Petr Machata <petrm@mellanox.com>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
+        "yhs@fb.com" <yhs@fb.com>
+Subject: Re: BUG: sleeping function called from invalid context in
+ tcf_chain0_head_change_cb_del
+Thread-Topic: BUG: sleeping function called from invalid context in
+ tcf_chain0_head_change_cb_del
+Thread-Index: AQHVbOfxS+4wZTnw/UG0HWKBhwV4mKcvHPGAgABs04CAAI/6AIAAMJ2A
+Date:   Tue, 17 Sep 2019 19:57:19 +0000
+Message-ID: <vbf8sqmd7cn.fsf@mellanox.com>
+References: <00000000000029a3a00592b41c48@google.com>
+ <CAM_iQpX0FAvhcZgKjRd=3Rbp8cbfYiUqkF2KnmF9Pd0U4EkSDw@mail.gmail.com>
+ <vbfk1a7cooq.fsf@mellanox.com>
+ <CAM_iQpWNSdx59iTTNO6GdyZ6NBAMD8=wON6Q7dvnhiX50pwEvQ@mail.gmail.com>
+In-Reply-To: <CAM_iQpWNSdx59iTTNO6GdyZ6NBAMD8=wON6Q7dvnhiX50pwEvQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: LO2P265CA0171.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a::15) To VI1PR05MB5295.eurprd05.prod.outlook.com
+ (2603:10a6:803:b1::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vladbu@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.142.13.130]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d8dde8f5-e7c0-4f54-10b1-08d73ba93f39
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB3277;
+x-ms-traffictypediagnostic: VI1PR05MB3277:|VI1PR05MB3277:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR05MB32778BAD914B5B5B49A79801AD8F0@VI1PR05MB3277.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(199004)(189003)(14444005)(26005)(305945005)(229853002)(6506007)(7736002)(386003)(6246003)(6116002)(4326008)(8676002)(186003)(476003)(446003)(2616005)(11346002)(66446008)(6512007)(6486002)(6436002)(81166006)(53546011)(3846002)(102836004)(66066001)(76176011)(25786009)(64756008)(5660300002)(256004)(99286004)(66476007)(81156014)(36756003)(86362001)(316002)(478600001)(71200400001)(71190400001)(66946007)(66556008)(8936002)(6916009)(2906002)(7416002)(54906003)(14454004)(486006)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3277;H:VI1PR05MB5295.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 9zHefuzZY4IU9aDpo9oquxPRaBk3LAiJxoNb7poXRUf6prz4bRSCLv47GBCsOBoSHA92n7jUr5qxMJWlfASxG6jqhnaDUrnqPmw/AKw1e53Q6lU00s8ETCqqpHMkeaZp9ceNtV/HjML0/oY/qMdF98414y3kp2k6+LVlZp2cUTtmDljLVkM2RXfZXRmB5gXlY6A/edLtolRQxDOLLXN90JgWFrI34/8HNOIlnhDFfoBWtpYLPHh/Fw3MsUAaciSgU6v8rwhOnoLCxRWKQ87C5Feq4nC65N+iAt3WsE0+/WqpC9A8/lBzwe94rVh/+sREJQ0yJC0k+8Q1/9G2v/6LH0PwFJa7bYxluNWIYyedJZea/j9pbk4ZMoZ5sAelPXUdxkV5g6zPDuOF83pykEYiq/hgxQZEWZanJdYCmoxlBbc=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190912090149.7521-2-tmaimon77@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8dde8f5-e7c0-4f54-10b1-08d73ba93f39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 19:57:19.6338
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: V6c6dz8RCQnUp5AXeYxPLQsURMFPZ4A/VET/1X6PV/qBFFfsinGZd9NfL63SXy9G1kKujF5xlQvx/7VQhNZV0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3277
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 12 Sep 2019 12:01:48 +0300, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Random Number Generator (RNG).
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../devicetree/bindings/rng/nuvoton,npcm-rng.txt     | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/nuvoton,npcm-rng.txt
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue 17 Sep 2019 at 20:03, Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> On Tue, Sep 17, 2019 at 1:27 AM Vlad Buslov <vladbu@mellanox.com> wrote:
+>> Hi Cong,
+>>
+>> Don't see why we would need qdisc tree lock while releasing the
+>> reference to (or destroying) previous Qdisc. I've skimmed through other
+>> scheds and it looks like sch_multiq, sch_htb and sch_tbf are also
+>> affected. Do you want me to send patches?
+>
+> Yes, please do.
+
+It looks like tbf is not affected by the bug after all. Relevant part of
+code from tbf_change():
+
+	if (q->qdisc !=3D &noop_qdisc) {
+		err =3D fifo_set_limit(q->qdisc, qopt->limit);
+		if (err)
+			goto done;
+	} else if (qopt->limit > 0) {
+		child =3D fifo_create_dflt(sch, &bfifo_qdisc_ops, qopt->limit,
+					 extack);
+		if (IS_ERR(child)) {
+			err =3D PTR_ERR(child);
+			goto done;
+		}
+
+		/* child is fifo, no need to check for noop_qdisc */
+		qdisc_hash_add(child, true);
+	}
+
+	sch_tree_lock(sch);
+	if (child) {
+		qdisc_tree_flush_backlog(q->qdisc);
+		qdisc_put(q->qdisc);
+		q->qdisc =3D child;
+	}
+
+It seems that qdisc_put() is redundant here because it is only called
+q->qdisc =3D=3D &noop_qdisc, which is a noop.
