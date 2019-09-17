@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EACC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD91C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74BF22067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:12:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDE8521881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="eQjSy21K"
+	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="D7mi3tO9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfIQJMZ (ORCPT
+        id S1726791AbfIQJMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:12:25 -0400
-Received: from mail4.protonmail.ch ([185.70.40.27]:20970 "EHLO
-        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfIQJMZ (ORCPT
+        Tue, 17 Sep 2019 05:12:47 -0400
+Received: from mail1.protonmail.ch ([185.70.40.18]:36145 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfIQJMr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:12:25 -0400
-Date:   Tue, 17 Sep 2019 09:12:14 +0000
+        Tue, 17 Sep 2019 05:12:47 -0400
+Date:   Tue, 17 Sep 2019 09:12:38 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
-        s=protonmail; t=1568711541;
+        s=protonmail; t=1568711564;
         bh=ZKYIzKdgRRtrB7OyOmWDzTMGg6uay9ipjlu1WQonyTU=;
         h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
-        b=eQjSy21KM5OSXxxHfL1Q0qHO98l3ynqXu8fnUA4rHJu0AHrC6MQbLJr3PyVby+VLd
-         HftIbwWlow6/FRq+UwbpO4l5ArWqYTCd+B5WEmp/Ozjw7Y/szu+/yOmVBRq/qx4u4A
-         NkAgdHx082bP+SO2K8f2zMj/58ejxv+TrWH7LCa4=
+        b=D7mi3tO9OXOzH1MotQvSz5Xmg1HsCtocmFhGEDC8gaoDjaSgP8ZAH6lI4D5cv9xQR
+         z4wJXjvbMhdrV9iw0HdgmUfCQ6saU63wOYPhAX9Wvn2LuRdRu3Qf2eRLfhxRFxlMZd
+         1gAju0l8p9aV8sK57miyyI+8NQsuslGsmb7desLU=
 To:     broonie@kernel.org, palmer@sifive.com, paul.walmsley@sifive.com
 From:   Aurabindo Jayamohanan <mail@aurabindo.in>
 Cc:     linux-spi@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
 Subject: [PATCH] spi: sifive: check return value for platform_get_resource()
-Message-ID: <20190917091207.4925-1-mail@aurabindo.in>
+Message-ID: <20190917085627.4562-1-mail@aurabindo.in>
 Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
