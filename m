@@ -2,175 +2,198 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9813EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051C0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6117E20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:50:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ilkHUpp/"
+	by mail.kernel.org (Postfix) with ESMTP id DA6BA2189D
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:53:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389204AbfIQIuT (ORCPT
+        id S1726371AbfIQIw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:50:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40845 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbfIQIuP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:50:15 -0400
-Received: by mail-wm1-f68.google.com with SMTP id b24so2080538wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/VonGSSqqMDxfF4QwP1WKI+1bEgxLGoOBgLkXqBtfQA=;
-        b=ilkHUpp/PYb0KHuZDcHzX1Ounlux5/YOswWqF8JQI4guW6HyXLoFNHBxUeNmgS4wgj
-         K9dFh8cZLWZ/BdmJbF43N1GQBPg6kjKVLrRXRYjgVYTnMrRDG220nh4uH/Ae07miHenH
-         41eiYv/vkY2/0nZDXcre85bHwnoMGFfGzSUqgb4/Zr6YXyN+4KRF5kOyRV10MSKNKVVE
-         isggylYG8cxJ7Bqb3NED3KeUBFmz3uLAa7onauWOba53gvEICMBj/MDYo+Y8qIHRHc1O
-         PMMWfgl1quOU1X7L9GHDhmzpPIchZUCWJ1X84ePdTR8qDIu1hS7xXVb+9iSwfCNp03eK
-         vohA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/VonGSSqqMDxfF4QwP1WKI+1bEgxLGoOBgLkXqBtfQA=;
-        b=AhhB7iNiPwQd135JTaMDSCNtPMjpLUJdBogulC73cE+PfXUkc8a75LhL0PEO5KCwpq
-         K/GB/CGfprpsyvrttiDfbEj5n7bK+PwHHeFgYzhAr3Ebv4RiM3RiFJZyYOCDgqrF347F
-         zqJz8gYyGG+R0yw78ns/x/nVv0gjgYrcmn3MVgME08pxarEQ6cMIxDIFV/s80AjsGAo3
-         bPMeG0mtbGuiOgMEmFedoOtfUL2co1Kbm3rkQH40+BCLdQzRi85KbUEhgvJ1d+yp8nao
-         UsdyU626g9XLmqV8IkaHNqVhUwCatnsxOK+5ntR5kb+jsgp5OI1zJMCrY5N7BVkzAvDP
-         ePvA==
-X-Gm-Message-State: APjAAAWG2Ao+xFTlXqzm6Qd7BUgolEZLTtxXXyOsSHiiJNRCkHE2ZCI7
-        dX/oqZvUpLwCVdVwmHLtePv5TzF11sek5A==
-X-Google-Smtp-Source: APXvYqxmUuN4vsQBrM1hohQXVK4AD/ImfVSsKnQMjN5EZZTIlBaWxTXWVN88fT67M4dyPna59whj+g==
-X-Received: by 2002:a7b:c949:: with SMTP id i9mr2307693wml.136.1568710212091;
-        Tue, 17 Sep 2019 01:50:12 -0700 (PDT)
-Received: from localhost (p4FC6BBBF.dip0.t-ipconnect.de. [79.198.187.191])
-        by smtp.gmail.com with ESMTPSA id x6sm2904730wmf.35.2019.09.17.01.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 01:50:11 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 10:50:04 +0200
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH RFC 01/14] mm: memcg: subpage charging API
-Message-ID: <20190917085004.GA1486@cmpxchg.org>
-References: <20190905214553.1643060-1-guro@fb.com>
- <20190905214553.1643060-2-guro@fb.com>
- <20190916125611.GB29985@cmpxchg.org>
- <20190917022713.GB8073@castle.DHCP.thefacebook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917022713.GB8073@castle.DHCP.thefacebook.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 17 Sep 2019 04:52:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:37165 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725951AbfIQIwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:52:31 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 01:52:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,515,1559545200"; 
+   d="scan'208";a="193695473"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 01:52:28 -0700
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, sean.j.christopherson@intel.com
+Cc:     mst@redhat.com, rkrcmar@redhat.com, jmattson@google.com,
+        yu.c.zhang@intel.com, alazar@bitdefender.com,
+        Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v5 2/9] vmx: spp: Add control flags for Sub-Page Protection(SPP)
+Date:   Tue, 17 Sep 2019 16:52:57 +0800
+Message-Id: <20190917085304.16987-3-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190917085304.16987-1-weijiang.yang@intel.com>
+References: <20190917085304.16987-1-weijiang.yang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 02:27:19AM +0000, Roman Gushchin wrote:
-> On Mon, Sep 16, 2019 at 02:56:11PM +0200, Johannes Weiner wrote:
-> > On Thu, Sep 05, 2019 at 02:45:45PM -0700, Roman Gushchin wrote:
-> > > Introduce an API to charge subpage objects to the memory cgroup.
-> > > The API will be used by the new slab memory controller. Later it
-> > > can also be used to implement percpu memory accounting.
-> > > In both cases, a single page can be shared between multiple cgroups
-> > > (and in percpu case a single allocation is split over multiple pages),
-> > > so it's not possible to use page-based accounting.
-> > > 
-> > > The implementation is based on percpu stocks. Memory cgroups are still
-> > > charged in pages, and the residue is stored in perpcu stock, or on the
-> > > memcg itself, when it's necessary to flush the stock.
-> > 
-> > Did you just implement a slab allocator for page_counter to track
-> > memory consumed by the slab allocator?
-> 
-> :)
-> 
-> > 
-> > > @@ -2500,8 +2577,9 @@ void mem_cgroup_handle_over_high(void)
-> > >  }
-> > >  
-> > >  static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > > -		      unsigned int nr_pages)
-> > > +		      unsigned int amount, bool subpage)
-> > >  {
-> > > +	unsigned int nr_pages = subpage ? ((amount >> PAGE_SHIFT) + 1) : amount;
-> > >  	unsigned int batch = max(MEMCG_CHARGE_BATCH, nr_pages);
-> > >  	int nr_retries = MEM_CGROUP_RECLAIM_RETRIES;
-> > >  	struct mem_cgroup *mem_over_limit;
-> > > @@ -2514,7 +2592,9 @@ static int try_charge(struct mem_cgroup *memcg, gfp_t gfp_mask,
-> > >  	if (mem_cgroup_is_root(memcg))
-> > >  		return 0;
-> > >  retry:
-> > > -	if (consume_stock(memcg, nr_pages))
-> > > +	if (subpage && consume_subpage_stock(memcg, amount))
-> > > +		return 0;
-> > > +	else if (!subpage && consume_stock(memcg, nr_pages))
-> > >  		return 0;
-> > 
-> > The layering here isn't clean. We have an existing per-cpu cache to
-> > batch-charge the page counter. Why does the new subpage allocator not
-> > sit on *top* of this, instead of wedged in between?
-> > 
-> > I think what it should be is a try_charge_bytes() that simply gets one
-> > page from try_charge() and then does its byte tracking, regardless of
-> > how try_charge() chooses to implement its own page tracking.
-> > 
-> > That would avoid the awkward @amount + @subpage multiplexing, as well
-> > as annotating all existing callsites of try_charge() with a
-> > non-descript "false" parameter.
-> > 
-> > You can still reuse the stock data structures, use the lower bits of
-> > stock->nr_bytes for a different cgroup etc., but the charge API should
-> > really be separate.
-> 
-> Hm, I kinda like the idea, however there is a complication: for the subpage
-> accounting the css reference management is done in a different way, so that
-> all existing code should avoid changing the css refcounter. So I'd need
-> to pass a boolean argument anyway.
+Check SPP capability in MSR_IA32_VMX_PROCBASED_CTLS2, its 23-bit
+indicates SPP capability. Enable SPP feature bit in CPU capabilities
+bitmap if it's supported.
 
-Can you elaborate on the refcounting scheme? I don't quite understand
-how there would be complications with that.
+Co-developed-by: He Chen <he.chen@linux.intel.com>
+Signed-off-by: He Chen <he.chen@linux.intel.com>
+Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+---
+ arch/x86/include/asm/cpufeatures.h |  1 +
+ arch/x86/include/asm/vmx.h         |  1 +
+ arch/x86/kernel/cpu/intel.c        |  4 ++++
+ arch/x86/kvm/mmu.h                 |  2 ++
+ arch/x86/kvm/vmx/capabilities.h    |  5 +++++
+ arch/x86/kvm/vmx/vmx.c             | 10 ++++++++++
+ 6 files changed, 23 insertions(+)
 
-Generally, references are held for each page that is allocated in the
-page_counter. try_charge() allocates a batch of css references,
-returns one and keeps the rest in stock.
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index e880f2408e29..ee2c76fdadf6 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -228,6 +228,7 @@
+ #define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
+ #define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
+ #define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
++#define X86_FEATURE_SPP			( 8*32+ 5) /* Intel EPT-based Sub-Page Write Protection */
+ 
+ #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
+ #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
+diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+index a39136b0d509..e1137807affc 100644
+--- a/arch/x86/include/asm/vmx.h
++++ b/arch/x86/include/asm/vmx.h
+@@ -68,6 +68,7 @@
+ #define SECONDARY_EXEC_XSAVES			0x00100000
+ #define SECONDARY_EXEC_PT_USE_GPA		0x01000000
+ #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	0x00400000
++#define SECONDARY_EXEC_ENABLE_SPP		0x00800000
+ #define SECONDARY_EXEC_TSC_SCALING              0x02000000
+ 
+ #define PIN_BASED_EXT_INTR_MASK                 0x00000001
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index 8d6d92ebeb54..27617e522f01 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -503,6 +503,7 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+ #define X86_VMX_FEATURE_PROC_CTLS2_EPT		0x00000002
+ #define X86_VMX_FEATURE_PROC_CTLS2_VPID		0x00000020
+ #define x86_VMX_FEATURE_EPT_CAP_AD		0x00200000
++#define X86_VMX_FEATURE_PROC_CTLS2_SPP		0x00800000
+ 
+ 	u32 vmx_msr_low, vmx_msr_high, msr_ctl, msr_ctl2;
+ 	u32 msr_vpid_cap, msr_ept_cap;
+@@ -513,6 +514,7 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+ 	clear_cpu_cap(c, X86_FEATURE_EPT);
+ 	clear_cpu_cap(c, X86_FEATURE_VPID);
+ 	clear_cpu_cap(c, X86_FEATURE_EPT_AD);
++	clear_cpu_cap(c, X86_FEATURE_SPP);
+ 
+ 	rdmsr(MSR_IA32_VMX_PROCBASED_CTLS, vmx_msr_low, vmx_msr_high);
+ 	msr_ctl = vmx_msr_high | vmx_msr_low;
+@@ -536,6 +538,8 @@ static void detect_vmx_virtcap(struct cpuinfo_x86 *c)
+ 		}
+ 		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_VPID)
+ 			set_cpu_cap(c, X86_FEATURE_VPID);
++		if (msr_ctl2 & X86_VMX_FEATURE_PROC_CTLS2_SPP)
++			set_cpu_cap(c, X86_FEATURE_SPP);
+ 	}
+ }
+ 
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 54c2a377795b..3c1423526a98 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -26,6 +26,8 @@
+ #define PT_PAGE_SIZE_MASK (1ULL << PT_PAGE_SIZE_SHIFT)
+ #define PT_PAT_MASK (1ULL << 7)
+ #define PT_GLOBAL_MASK (1ULL << 8)
++#define PT_SPP_SHIFT 61
++#define PT_SPP_MASK (1ULL << PT_SPP_SHIFT)
+ #define PT64_NX_SHIFT 63
+ #define PT64_NX_MASK (1ULL << PT64_NX_SHIFT)
+ 
+diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
+index d6664ee3d127..e3bde7a32123 100644
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -241,6 +241,11 @@ static inline bool cpu_has_vmx_pml(void)
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_PML;
+ }
+ 
++static inline bool cpu_has_vmx_ept_spp(void)
++{
++	return vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_ENABLE_SPP;
++}
++
+ static inline bool vmx_xsaves_supported(void)
+ {
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl &
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index c030c96fc81a..8ecf9cb24879 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -60,6 +60,7 @@
+ #include "vmcs12.h"
+ #include "vmx.h"
+ #include "x86.h"
++#include "spp.h"
+ 
+ MODULE_AUTHOR("Qumranet");
+ MODULE_LICENSE("GPL");
+@@ -113,6 +114,7 @@ module_param_named(pml, enable_pml, bool, S_IRUGO);
+ 
+ static bool __read_mostly dump_invalid_vmcs = 0;
+ module_param(dump_invalid_vmcs, bool, 0644);
++static bool __read_mostly spp_supported = 0;
+ 
+ #define MSR_BITMAP_MODE_X2APIC		1
+ #define MSR_BITMAP_MODE_X2APIC_APICV	2
+@@ -2279,6 +2281,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
+ 			SECONDARY_EXEC_RDSEED_EXITING |
+ 			SECONDARY_EXEC_RDRAND_EXITING |
+ 			SECONDARY_EXEC_ENABLE_PML |
++			SECONDARY_EXEC_ENABLE_SPP |
+ 			SECONDARY_EXEC_TSC_SCALING |
+ 			SECONDARY_EXEC_PT_USE_GPA |
+ 			SECONDARY_EXEC_PT_CONCEAL_VMX |
+@@ -3931,6 +3934,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
+ 	if (!enable_pml)
+ 		exec_control &= ~SECONDARY_EXEC_ENABLE_PML;
+ 
++	if (!spp_supported)
++		exec_control &= ~SECONDARY_EXEC_ENABLE_SPP;
++
+ 	if (vmx_xsaves_supported()) {
+ 		/* Exposing XSAVES only when XSAVE is exposed */
+ 		bool xsaves_enabled =
+@@ -7521,6 +7527,10 @@ static __init int hardware_setup(void)
+ 	if (!cpu_has_vmx_flexpriority())
+ 		flexpriority_enabled = 0;
+ 
++	if (cpu_has_vmx_ept_spp() && enable_ept &&
++	    boot_cpu_has(X86_FEATURE_SPP))
++		spp_supported = 1;
++
+ 	if (!cpu_has_virtual_nmis())
+ 		enable_vnmi = 0;
+ 
+-- 
+2.17.2
 
-So couldn't the following work?
-
-When somebody allocates a subpage, the css reference returned by
-try_charge() is shared by the allocated subpage object and the
-remainder that is kept via stock->subpage_cache and stock->nr_bytes
-(or memcg->nr_stocked_bytes when the percpu cache is reset).
-
-When the subpage objects are freed, you'll eventually have a full page
-again in stock->nr_bytes, at which point you page_counter_uncharge()
-paired with css_put(_many) as per usual.
-
-A remainder left in old->nr_stocked_bytes would continue to hold on to
-one css reference. (I don't quite understand who is protecting this
-remainder in your current version, actually. A bug?)
-
-Instead of doing your own batched page_counter uncharging in
-refill_subpage_stock() -> drain_subpage_stock(), you should be able to
-call refill_stock() when stock->nr_bytes adds up to a whole page again.
-
-Again, IMO this would be much cleaner architecture if there was a
-try_charge_bytes() byte allocator that would sit on top of a cleanly
-abstracted try_charge() page allocator, just like the slab allocator
-is sitting on top of the page allocator - instead of breaking through
-the abstraction layer of the underlying page allocator.
