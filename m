@@ -2,212 +2,126 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9801C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2935FC4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF8EE21881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E6E21881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:35:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="e4vIQB3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbfIQJfA (ORCPT
+        id S1727903AbfIQJfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:35:00 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:21876 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727843AbfIQJe5 (ORCPT
+        Tue, 17 Sep 2019 05:35:22 -0400
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:51051 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbfIQJfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:34:57 -0400
-IronPort-SDR: 8ZNFfkmDIPXLmeKSohIEQbmIbpSSALB95R4qhK1M8p6VIS0fr0v9lsWBd6xW+hlCUJHxgm6cqc
- otVxeXnKINKDpOw+LPDrvzpr+8AMbKJvhzsVwhaTSwILUPVOVBjfaGy348kMmmd9D8BCIAEr+X
- zU2IkqXdvk6xoBLEjdTvaczoDvSJqZtH0n+Za8uOAvUhTE7SzLFpks/rrBSFJOAnrwMRwu/LpD
- a2Gec8fkKm4xLca5IczKDRmxLYdGUzofwXY+nVw9BaO/Mc2X56q3fP8s+ezmCm0/nJXcv+v1Sq
- E5s=
-X-IronPort-AV: E=Sophos;i="5.64,515,1559548800"; 
-   d="scan'208";a="41422954"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 17 Sep 2019 01:34:56 -0800
-IronPort-SDR: faGpSfMIK0ze1+xK+LdclQEaiYdN6Yho6BYy8PQEO9L82KF1yPjCVMqsJYqtKerkkFYpgjBnwW
- iF8AlsTy86oubDFS/+chKn/dorcQsjgi0AvthP4ylAZaZVlHri5Tf6dyq5mp0+p0sOfBSeCxTv
- HeVautLqaAKOwU5/pMCNd3+35BlotSxQGGwsO0N+lZXzH9L34/8nti9aE8wu54ICA8noukaqSc
- ulWQ13SbVrt/fqEva2J4BFGFCY8S+vOoqoSa3IpmTSlrkUeTxHvE5Vy030xWnWSE3drChmRfWc
- 2vE=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 04/49] Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when necessary
-Date:   Tue, 17 Sep 2019 18:32:35 +0900
-Message-ID: <20190917093320.18134-5-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
-In-Reply-To: <20190917093320.18134-1-jiada_wang@mentor.com>
-References: <20190917093320.18134-1-jiada_wang@mentor.com>
+        Tue, 17 Sep 2019 05:35:21 -0400
+Date:   Tue, 17 Sep 2019 09:35:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
+        s=protonmail; t=1568712918;
+        bh=7al/T7V+BY7NjSZ3yvHA/yYuZG9e2Bk22StX9CKMVk4=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=e4vIQB3/ek87t2wke2ANUNusBnbTVWIcoFZ38xRO+RsNAgqHQ68bwGUxW3I0+pC1U
+         SMgWFisYL4+sGAEvTxGuN9NccZR0KxyyuH8QeIMgofR2/BbX3YYcCIcq9IF9iDTf6p
+         kXNBD093B6RmoIhtrR97jSvg6zLsYtVf8moUxBNM=
+To:     Palmer Dabbelt <palmer@sifive.com>
+From:   Aurabindo Jayamohanan <mail@aurabindo.in>
+Cc:     Anup Patel <Anup.Patel@wdc.com>,
+        Troy Benjegerdes <troy.benjegerdes@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>
+Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
+Subject: RE: [RFC] buildtar: add case for riscv architecture
+Message-ID: <lMUhcsewB9GAKeZH2cH-zl3vFME8u2z5IzCqDBFhtT2IbG71vhHnjrlHKbhyxFee5XFe1X1gRllNJBR9e9dQlC0vbIpSffL_y0pLb46VddQ=@aurabindo.in>
+In-Reply-To: <mhng-4e30fb12-057c-425c-a867-ecf93e080ed9@palmer-si-x1e>
+References: <mhng-4e30fb12-057c-425c-a867-ecf93e080ed9@palmer-si-x1e>
+Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Sunday, September 15, 2019 12:57 AM, Palmer Dabbelt <palmer@sifive.com> =
+wrote:
 
-The workaround of reading all messages until an invalid is received is a
-way of forcing the CHG line high, which means that when using
-edge-triggered interrupts the interrupt can be acquired.
+> On Sat, 14 Sep 2019 06:05:59 PDT (-0700), Anup Patel wrote:
+>
+> > > -----Original Message-----
+> > > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > > owner@vger.kernel.org> On Behalf Of Palmer Dabbelt
+> > > Sent: Saturday, September 14, 2019 6:30 PM
+> > > To: mail@aurabindo.in
+> > > Cc: Troy Benjegerdes troy.benjegerdes@sifive.com; Paul Walmsley
+> > > paul.walmsley@sifive.com; aou@eecs.berkeley.edu; linux-
+> > > riscv@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> > > kbuild@vger.kernel.org
+> > > Subject: Re: [RFC] buildtar: add case for riscv architecture
+> > > On Wed, 11 Sep 2019 05:54:07 PDT (-0700), mail@aurabindo.in wrote:
+> > >
+> > > > > None of the available RiscV platforms that I=E2=80=99m aware of u=
+se compressed
+> > > > > images, unless there are some new bootloaders I haven=E2=80=99t s=
+een yet.
+> > > >
+> > > > >
+> > > >
+> > > > I noticed that default build image is Image.gz, which is why I thou=
+ght its a
+> > > > good idea to copy it into the tarball. Does such a copy not make se=
+nse at this
+> > > > point ?
+> > >
+> > > Image.gz can't be booted directly: it's just Image that's been compre=
+ssed
+> > > with the standard gzip command. A bootloader would have to decompress
+> > > that image before loading it into memory, which requires extra bootlo=
+ader
+> > > support.
+> > > Contrast that with the zImage style images (which are vmlinuz on x86)=
+, which
+> > > are self-extracting and therefor require no bootloader support. The
+> > > examples for u-boot all use the "booti" command, which expects
+> > > uncompressed images.
+> > > Poking around I couldn't figure out a way to have u-boot decompress t=
+he
+> > > images, but that applies to arm64 as well so I'm not sure if I'm miss=
+ing
+> > > something.
+> > > If I was doing this, I'd copy over arch/riscv/boot/Image and call it
+> > > "/boot/image-${KERNELRELEASE}", as calling it vmlinuz is a bit confus=
+ing to
+> > > me because I'd expect vmlinuz to be a self-extracting compressed
+> > > executable and not a raw gzip file.
+> >
+> > On the contrary, it is indeed possible to boot Image.gz directly using
+> > U-Boot booti command so this patch would be useful.
+> > Atish had got it working on U-Boot but he has deferred booti Image.gz
+> > support due to few more dependent changes. May be he can share
+> > more info.
+>
+> Oh, great. I guess it makes sense to just put both in the tarball, then, =
+as
+> users will still need to use the Image format for now.
+>
 
-With level-triggered interrupts the workaround is unnecessary.
-
-Also, most recent maXTouch chips have a feature called RETRIGEN which, when
-enabled, reasserts the interrupt line every cycle if there are messages
-waiting. This also makes the workaround unnecessary.
-
-Note: the RETRIGEN feature is only in some firmware versions/chips, it's
-not valid simply to enable the bit.
-
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-Acked-by: Benson Leung <bleung@chromium.org>
-Acked-by: Yufeng Shen <miletus@chromium.org>
-(cherry picked from ndyer/linux/for-upstream commit 1ae4e8281e491b22442cd5acdfca1862555f8ecb)
-[gdavis: Fix conflicts due to v4.6-rc7 commit eb43335c4095 ("Input:
-	 atmel_mxt_ts - use mxt_acquire_irq in mxt_soft_reset").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: reset use_retrigen_workaround at beginning of mxt_check_retrigen()]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 51 ++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 17263c260124..35cbe60094ab 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -20,6 +20,7 @@
- #include <linux/i2c.h>
- #include <linux/input/mt.h>
- #include <linux/interrupt.h>
-+#include <linux/irq.h>
- #include <linux/of.h>
- #include <linux/property.h>
- #include <linux/slab.h>
-@@ -129,6 +130,7 @@ struct t9_range {
- /* MXT_SPT_COMMSCONFIG_T18 */
- #define MXT_COMMS_CTRL		0
- #define MXT_COMMS_CMD		1
-+#define MXT_COMMS_RETRIGEN      BIT(6)
- 
- /* MXT_DEBUG_DIAGNOSTIC_T37 */
- #define MXT_DIAGNOSTIC_PAGEUP	0x01
-@@ -308,6 +310,7 @@ struct mxt_data {
- 	struct t7_config t7_cfg;
- 	struct mxt_dbg dbg;
- 	struct gpio_desc *reset_gpio;
-+	bool use_retrigen_workaround;
- 
- 	/* Cached parameters from object table */
- 	u16 T5_address;
-@@ -318,6 +321,7 @@ struct mxt_data {
- 	u16 T71_address;
- 	u8 T9_reportid_min;
- 	u8 T9_reportid_max;
-+	u16 T18_address;
- 	u8 T19_reportid;
- 	u16 T44_address;
- 	u8 T100_reportid_min;
-@@ -1190,9 +1194,11 @@ static int mxt_acquire_irq(struct mxt_data *data)
- 
- 	enable_irq(data->irq);
- 
--	error = mxt_process_messages_until_invalid(data);
--	if (error)
--		return error;
-+	if (data->use_retrigen_workaround) {
-+		error = mxt_process_messages_until_invalid(data);
-+		if (error)
-+			return error;
-+	}
- 
- 	return 0;
- }
-@@ -1282,6 +1288,33 @@ static u32 mxt_calculate_crc(u8 *base, off_t start_off, off_t end_off)
- 	return crc;
- }
- 
-+static int mxt_check_retrigen(struct mxt_data *data)
-+{
-+	struct i2c_client *client = data->client;
-+	int error;
-+	int val;
-+
-+	data->use_retrigen_workaround = false;
-+
-+	if (irq_get_trigger_type(data->irq) & IRQF_TRIGGER_LOW)
-+		return 0;
-+
-+	if (data->T18_address) {
-+		error = __mxt_read_reg(client,
-+				       data->T18_address + MXT_COMMS_CTRL,
-+				       1, &val);
-+		if (error)
-+			return error;
-+
-+		if (val & MXT_COMMS_RETRIGEN)
-+			return 0;
-+	}
-+
-+	dev_warn(&client->dev, "Enabling RETRIGEN workaround\n");
-+	data->use_retrigen_workaround = true;
-+	return 0;
-+}
-+
- static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
- {
- 	struct device *dev = &data->client->dev;
-@@ -1561,6 +1594,10 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- 
- 	mxt_update_crc(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE);
- 
-+	ret = mxt_check_retrigen(data);
-+	if (ret)
-+		goto release_mem;
-+
- 	ret = mxt_soft_reset(data);
- 	if (ret)
- 		goto release_mem;
-@@ -1604,6 +1641,7 @@ static void mxt_free_object_table(struct mxt_data *data)
- 	data->T71_address = 0;
- 	data->T9_reportid_min = 0;
- 	data->T9_reportid_max = 0;
-+	data->T18_address = 0;
- 	data->T19_reportid = 0;
- 	data->T44_address = 0;
- 	data->T100_reportid_min = 0;
-@@ -1678,6 +1716,9 @@ static int mxt_parse_object_table(struct mxt_data *data,
- 						object->num_report_ids - 1;
- 			data->num_touchids = object->num_report_ids;
- 			break;
-+		case MXT_SPT_COMMSCONFIG_T18:
-+			data->T18_address = object->start_address;
-+			break;
- 		case MXT_SPT_MESSAGECOUNT_T44:
- 			data->T44_address = object->start_address;
- 			break;
-@@ -2141,6 +2182,10 @@ static int mxt_initialize(struct mxt_data *data)
- 		msleep(MXT_FW_RESET_TIME);
- 	}
- 
-+	error = mxt_check_retrigen(data);
-+	if (error)
-+		return error;
-+
- 	error = mxt_acquire_irq(data);
- 	if (error)
- 		return error;
--- 
-2.19.2
+Uncompressed vmlinux is already copied by default. This patch just adds the
+Image.gz into the archive as vmlinuz. But as you said, since the name vmlin=
+uz is
+reserved for self extracting archives, should I keep the original name Imag=
+e.gz ?
 
