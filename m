@@ -2,123 +2,65 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2E3C4CED0
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2510C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2CC121852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:36:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568727408;
-	bh=Ql3S5LeLxQu05wGmhaTM95fv1AHLxdIM1bfELOE4N7I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QmB/SsMmagE3KSY5U5MMjGpyben8hrzTjsD0Sr+ASSbk/YBe/jXGcPmh4PJEJNBGq
-	 sbUOcv4O6yApgB1BbUrClADB0XwOIsn8g8uL2hCP7prFeCUooqNStQXlvsJ5Rd4HeK
-	 7J3leYf4Y7SDuxFpLzerH7M1V0uoALw0hxZOJCzI=
+	by mail.kernel.org (Postfix) with ESMTP id 989592171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfIQNgs (ORCPT
+        id S1728632AbfIQNhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfIQNgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:36:47 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBE97206C2;
-        Tue, 17 Sep 2019 13:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568727406;
-        bh=Ql3S5LeLxQu05wGmhaTM95fv1AHLxdIM1bfELOE4N7I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sar6QHXnAAyU7CqcX6S4XEMZKCw1XqlFh7JOPCZcEm7NSSw7o9n4M4YTyIEluCTr+
-         PlHd+kmgg4Vr/dK3w6I2fdh2OfNlJWZ1RrBSnCix074v+q0zWCpWT1ivxI6TO8Oge1
-         wto9mDPRvI0UPcufLj8FL+blmnWYDbjxJUHoo8rI=
-Date:   Tue, 17 Sep 2019 14:36:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Bruce Wang <bzwang@chromium.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <freedreno@lists.freedesktop.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Joe Perches <joe@perches.com>, Joerg Roedel <jroedel@suse.de>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sean Paul <seanpaul@chromium.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3 0/2] iommu: handle drivers that manage iommu directly
-Message-ID: <20190917133637.urqphz5drzmugern@willie-the-truck>
-References: <20190906214409.26677-1-robdclark@gmail.com>
- <c43de10f-7768-592c-0fd8-6fb64b3fd43e@arm.com>
- <CAF6AEGv5WtwOuUE-+koL3SxuoXxcT5n=EooD7G_4YRh34HFTwQ@mail.gmail.com>
+        Tue, 17 Sep 2019 09:37:10 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53122 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727930AbfIQNhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:37:09 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 18446C2E2417DE0954E7;
+        Tue, 17 Sep 2019 21:37:07 +0800 (CST)
+Received: from [127.0.0.1] (10.177.29.68) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
+ 21:37:02 +0800
+Message-ID: <5D80E17D.2000800@huawei.com>
+Date:   Tue, 17 Sep 2019 21:37:01 +0800
+From:   zhong jiang <zhongjiang@huawei.com>
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGv5WtwOuUE-+koL3SxuoXxcT5n=EooD7G_4YRh34HFTwQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+To:     Kalle Valo <kvalo@codeaurora.org>
+CC:     <davem@davemloft.net>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ath10k: Use ARRAY_SIZE instead of dividing sizeof array
+ with sizeof an element
+References: <1567582878-18739-1-git-send-email-zhongjiang@huawei.com> <20190917071632.001AC6155E@smtp.codeaurora.org>
+In-Reply-To: <20190917071632.001AC6155E@smtp.codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.29.68]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 10:10:49AM -0700, Rob Clark wrote:
-> On Tue, Sep 10, 2019 at 9:34 AM Robin Murphy <robin.murphy@arm.com> wrote:
-> > On 06/09/2019 22:44, Rob Clark wrote:
-> > > NOTE that in discussion of previous revisions, RMRR came up.  This is
-> > > not really a replacement for RMRR (nor does RMRR really provide any
-> > > more information than we already get from EFI GOP, or DT in the
-> > > simplefb case).  I also don't see how RMRR could help w/ SMMU handover
-> > > of CB/SMR config (Bjorn's patchset[1]) without defining new tables.
-> >
-> > The point of RMRR-like-things is that they identify not just the memory
-> > region but also the specific device accessing them, which means the
-> > IOMMU driver knows up-front which IDs etc. it must be careful not to
-> > disrupt. Obviously for SMMU that *would* be some new table (designed to
-> > encompass everything relevant) since literal RMRRs are specifically an
-> > Intel VT-d thing.
-> 
-> Perhaps I'm not looking in the right place, but the extent of what I
-> could find about RMRR tables was:
-> 
-> https://github.com/tianocore/edk2/blob/master/MdePkg/Include/IndustryStandard/DmaRemappingReportingTable.h#L122
-> 
-> I couldn't really see how that specifies the device.  But entirely
-> possible that I'm not seeing the whole picture.
+On 2019/9/17 15:16, Kalle Valo wrote:
+> zhong jiang <zhongjiang@huawei.com> wrote:
+>
+>> With the help of Coccinelle, ARRAY_SIZE can be replaced in ath10k_snoc_wlan_enable.
+>>
+>> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
+> I already got an identical patch so dropping this one.
+>
+> error: patch failed: drivers/net/wireless/ath/ath10k/snoc.c:976
+> error: drivers/net/wireless/ath/ath10k/snoc.c: patch does not apply
+> stg import: Diff does not apply cleanly
+>
+Thank for your remainder.
 
-I don't think anybody was planning to implement RMRR "as-is" for arm64, so
-you might be better off looking at the proposal from Thierry, although it
-has some issues that are still to be resolved:
+Sincerely,
+zhong jiang
 
-http://lkml.kernel.org/r/20190829111407.17191-1-thierry.reding@gmail.com
-
-Will
