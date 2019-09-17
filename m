@@ -2,107 +2,104 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12A17C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C301C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8AE20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEBF42171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:53:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1pFlI5o2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfIQNvm (ORCPT
+        id S1726151AbfIQNwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:51:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43330 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfIQNvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:51:38 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3987951EE6;
-        Tue, 17 Sep 2019 13:51:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0AE825D6B2;
-        Tue, 17 Sep 2019 13:51:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
-References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck> <25289.1568379639@warthog.procyon.org.uk>
-To:     Will Deacon <will@kernel.org>
-Cc:     dhowells@redhat.com, torvalds@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        peterz@infradead.org
-Subject: Re: [RFC][PATCH] pipe: Convert ring to head/tail
+        Tue, 17 Sep 2019 09:52:46 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39176 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbfIQNwR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:52:17 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8HDfoKU019778;
+        Tue, 17 Sep 2019 15:52:08 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=aUuRSQwIFPiGfsmi4Vym/gWuxjE0wuSWUtUhECjq8Vc=;
+ b=1pFlI5o2/+K+HEBbhT3MPTQXm7yxt3Gzo2eBe5uTkx372Kt7/Laxyj3Vtx+Gmx5fNMaY
+ qloenvWqU1Z3UVZ6ob5J6SZGGLqzSFIEukHcJBFJDDgE6v7YkbEtGXsLmEsYc7CNERVZ
+ oT52XBQFinU0phxaysyMRatRlMtYQluA14BOOpCfFdLgx0tRFA/o30A2zrnZ3IoZksSZ
+ HvpJe2tLblTVSGlFARLU6FnIeFdgMiXsZN13jX37BGVkT5t+rqZfSPkt2C1mRwmhkn1t
+ FN6KiqjXiAlHy01FMmU07yaqY5/IPOS0CTTzQa9WHDo5txYNt4tJw2rZJa18Bgu4XuIL pQ== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2v0q3fspqm-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 17 Sep 2019 15:52:08 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9777D4D;
+        Tue, 17 Sep 2019 13:52:05 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068FE2C2B9A;
+        Tue, 17 Sep 2019 15:52:05 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep
+ 2019 15:52:04 +0200
+Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 17 Sep 2019 15:52:04 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <thierry.reding@gmail.com>
+CC:     <fabrice.gasnier@st.com>, <alexandre.torgue@st.com>,
+        <mcoquelin.stm32@gmail.com>, <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH] pwm: stm32-lp: add check in case requested period cannot be achieved
+Date:   Tue, 17 Sep 2019 15:51:50 +0200
+Message-ID: <1568728310-20948-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <28446.1568728295.1@warthog.procyon.org.uk>
-Date:   Tue, 17 Sep 2019 14:51:35 +0100
-Message-ID: <28447.1568728295@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 17 Sep 2019 13:51:38 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.48.1.232]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-17_06:2019-09-17,2019-09-17 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Will Deacon <will@kernel.org> wrote:
+LPTimer can use a 32KHz clock for counting. It depends on clock tree
+configuration. In such a case, PWM output frequency range is limited.
+Although unlikely, nothing prevents user from requesting a PWM frequency
+above counting clock (32KHz for instance):
+- This causes (prd - 1) = 0xffff to be written in ARR register later in
+the apply() routine.
+This results in badly configured PWM period (and also duty_cycle).
+Add a check to report an error is such a case.
 
-> > +		/* Barrier: head belongs to the write side, so order reading
-> > +		 * the data after reading the head pointer.
-> > +		 */
-> > +		unsigned int head = READ_ONCE(pipe->head);
-> 
-> Hmm, I don't understand this. Since READ_ONCE() doesn't imply a barrier,
-> how are you enforcing the read-read ordering in the CPU?
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/pwm/pwm-stm32-lp.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-It does imply a barrier: smp_read_barrier_depends().  I believe that's
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 2211a64..5c2c728 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate the period and prescaler value */
+ 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
+ 	do_div(div, NSEC_PER_SEC);
++	if (!div) {
++		/* Fall here in case source clock < period */
++		dev_err(priv->chip.dev, "Can't reach expected period\n");
++		return -EINVAL;
++	}
++
+ 	prd = div;
+ 	while (div > STM32_LPTIM_MAX_ARR) {
+ 		presc++;
+-- 
+2.7.4
 
-> What is the purpose of saying "This may need to insert a barrier"? Can this
-> function be overridden or something?
-
-I mean it's arch-dependent whether READ_ONCE() inserts a barrier or not.
-
-> Saying that "This inserts a barrier" feels misleading, because READ_ONCE()
-> doesn't do that.
-
-Yes it does - on the Alpha:
-
-[arch/alpha/include/asm/barrier.h]
-#define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
-
-[include/asm-generic/barrier.h]
-#ifndef __smp_read_barrier_depends
-#define __smp_read_barrier_depends()	read_barrier_depends()
-#endif
-...
-#ifndef smp_read_barrier_depends
-#define smp_read_barrier_depends()	__smp_read_barrier_depends()
-#endif
-
-[include/linux/compiler.h]
-#define __READ_ONCE(x, check)						\
-({									\
-	union { typeof(x) __val; char __c[1]; } __u;			\
-	if (check)							\
-		__read_once_size(&(x), __u.__c, sizeof(x));		\
-	else								\
-		__read_once_size_nocheck(&(x), __u.__c, sizeof(x));	\
-	smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
-	__u.__val;							\
-})
-#define READ_ONCE(x) __READ_ONCE(x, 1)
-
-See:
-
-    commit 76ebbe78f7390aee075a7f3768af197ded1bdfbb
-    Author: Will Deacon <will.deacon@arm.com>
-    Date:   Tue Oct 24 11:22:47 2017 +0100
-    locking/barriers: Add implicit smp_read_barrier_depends() to READ_ONCE()
-
-David
