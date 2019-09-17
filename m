@@ -2,95 +2,161 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2135C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:01:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F612C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A5D72171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:01:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6F42171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568743304;
+	bh=mI5SdrtZ/Aok/xl1eNIs2VTy2rz7dWlhBAnfJkTXKuc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jxxV/9Wyo/Q5+q84ZnneG7VbsEg95nDpfKXS4lU8Hfv+QTShNUJY8F/d8ishu+ftP
+	 3+/WHyQ85WN0OI9HgVL/RSy8Iim4usfUn0P0msApLgkAoa7Lx6cWA3c3kzQ1jhDcSz
+	 gCcalR20ktvslg+JmImLLlVA+S2q+VfMbAyba8FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbfIQSBB (ORCPT
+        id S1728104AbfIQSBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:01:01 -0400
-Received: from mga03.intel.com ([134.134.136.65]:10292 "EHLO mga03.intel.com"
+        Tue, 17 Sep 2019 14:01:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727406AbfIQSBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:01:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 11:01:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,517,1559545200"; 
-   d="scan'208";a="187531639"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga007.fm.intel.com with ESMTP; 17 Sep 2019 11:01:00 -0700
-Received: from orsmsx115.amr.corp.intel.com (10.22.240.11) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 17 Sep 2019 11:00:59 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX115.amr.corp.intel.com ([169.254.4.199]) with mapi id 14.03.0439.000;
- Tue, 17 Sep 2019 11:00:59 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Busch, Keith" <keith.busch@intel.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec changes
-Thread-Topic: [PATCH 2/2] PCI: vmd: Fix shadow offsets to reflect spec
- changes
-Thread-Index: AQHVbMjFlFehq2RCUUKRkku/dOKnLKcwJJgAgAA2cgCAAAKugIAACwgAgAAIeoCAAAohAIAADMoAgAAXVwA=
-Date:   Tue, 17 Sep 2019 18:00:58 +0000
-Message-ID: <331edc682197a497db91dd2378c6436688006012.camel@intel.com>
-References: <20190916135435.5017-1-jonathan.derrick@intel.com>
-         <20190916135435.5017-3-jonathan.derrick@intel.com>
-         <20190917104106.GB32602@e121166-lin.cambridge.arm.com>
-         <87f1f92276becb6f83d040b36697ef8084e63105.camel@intel.com>
-         <20190917140525.GA6377@e121166-lin.cambridge.arm.com>
-         <087e23dc3bb7b94bb96c33b380732ebd1285e467.camel@intel.com>
-         <20190917151523.GA7948@e121166-lin.cambridge.arm.com>
-         <ec24dc3d6f6f962a9f96ab1bab8c9cf4e138d61a.camel@intel.com>
-         <20190917163716.GA9715@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190917163716.GA9715@e121166-lin.cambridge.arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.2.79]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C269F6C4B3B7294F971AC72F9BBB551F@intel.com>
-Content-Transfer-Encoding: base64
+        id S1725976AbfIQSBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 14:01:43 -0400
+Received: from linux-8ccs (unknown [193.86.95.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27613206C2;
+        Tue, 17 Sep 2019 18:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568743302;
+        bh=mI5SdrtZ/Aok/xl1eNIs2VTy2rz7dWlhBAnfJkTXKuc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wvk/HLtX/p/z27ilCrYNn7HL60B/Tnwz9roUXgLha9opPG4eCVCbzHOkoL0GRVLvx
+         y/A340QmWlNabDNJ6hpYTqtpOn8JCSZATUUA6K3zca89NA98vTGTv5QapOblS4GRGN
+         OjyxArKbO5v8eXjmaFCz3R03pviCbS6zzckMWe08=
+Date:   Tue, 17 Sep 2019 20:01:36 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Matthias Maennich <maennich@google.com>,
+        Will Deacon <will@kernel.org>, gregkh@linuxfoundation.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] Kbuild updates for v5.4-rc1
+Message-ID: <20190917180136.GA10376@linux-8ccs>
+References: <CAK7LNARsoed86dY75b_HNXXkCXRAKdMUGaEWUUca4BuGaZCwcg@mail.gmail.com>
+ <20190917150902.GA4116@linux-8ccs>
+ <CAK7LNAR_8atC3M9gGQ=DBwzFG52PVuNaFVAzAr32TKxTwDCLug@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAK7LNAR_8atC3M9gGQ=DBwzFG52PVuNaFVAzAr32TKxTwDCLug@mail.gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.28-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTA5LTE3IGF0IDE3OjM3ICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gVHVlLCBTZXAgMTcsIDIwMTkgYXQgMDM6NTE6MzlQTSArMDAwMCwgRGVycmljaywg
-Sm9uYXRoYW4gd3JvdGU6DQo+IA0KPiBbLi4uXQ0KPiANCj4gPiBTb3JyeSBmb3IgdGhlIGNvbmZ1
-c2lvbi4NCj4gPiANCj4gPiBUaGVzZSBjaGFuZ2VzIG9ubHkgYWZmZWN0IHN5c3RlbXMgd2l0aCBW
-TUQgZGV2aWNlcyB3aXRoIDgwODY6MjhDMA0KPiA+IGRldmljZSBJRHMsIGJ1dCB0aGVzZSB3b24n
-dCBiZSBwcm9kdWN0aW9uIGhhcmR3YXJlIGZvciBzb21lIHRpbWUuDQo+ID4gDQo+ID4gU3lzdGVt
-cyB3aXRoIFZNRCBkZXZpY2VzIGV4aXN0IGluIHRoZSB3aWxkIHdpdGggODA4NjoyMDFEIGRldmlj
-ZSBJRHMuDQo+ID4gVGhlc2UgZG9uJ3Qgc3VwcG9ydCB0aGUgZ3Vlc3QgcGFzc3Rocm91Z2ggbW9k
-ZSBhbmQgdGhpcyBjb2RlIHdvbid0DQo+ID4gYnJlYWsgYW55dGhpbmcgd2l0aCB0aGVtLiBBZGRp
-dGlvbmFsbHksIHBhdGNoIDEvMiAoYnVzIG51bWJlcmluZykgb25seQ0KPiA+IGFmZmVjdHMgODA4
-NjoyOEMwLg0KPiA+IA0KPiA+IFNvIG9uIGV4aXN0aW5nIEhXLCB0aGVzZSBwYXRjaGVzIHdvbid0
-IGFmZmVjdCBhbnl0aGluZw0KPiANCj4gSXQgaXMgbWUgd2hvIGNyZWF0ZWQgY29uZnVzaW9uLCBh
-cG9sb2dpZXMuIEkgcmVhZCB0aGUgY29kZSBwcm9wZXJseSBhbmQNCj4gSSB1bmRlcnN0YW5kIHRo
-YXQgYm90aCBwYXRjaGVzIGFyZSBmaXhlcyBmb3IgSFcgdGhhdCBpcyBzdGlsbCBub3QNCj4gYXZh
-aWxhYmxlIChhbmQgdGhleSBjYW4ndCBjcmVhdGUgYW4gaXNzdWUgd2l0aCBjdXJyZW50IGtlcm5l
-bCBiZWNhdXNlDQo+IEhBU19NRU1CQVJfU0hBRE9XIGFuZCBIQVNfQlVTX1JFU1RSSUNUSU9OUyBm
-ZWF0dXJlcyBhcmUgbm90IGltcGxlbWVudGVkDQo+IG9uIDgwODY6MjAxRCksIHdlIHNob3VsZCB0
-YWtlIHRoZXNlIHBhdGNoZXMgYW5kIHRyaWNrbGUgdGhlbSB0byBzdGFibGUNCj4ga2VybmVscyBh
-cyBzb29uIGFzIHBvc3NpYmxlIHNvIHRoYXQgd2hlbiBIVyBfaXNfIGF2YWlsYWJsZSBtYWlubGlu
-ZSBhbmQNCj4gc3RhYmxlIGtlcm5lbHMgYXJlIGZpeGVkLg0KPiANCj4gQ29ycmVjdCA/DQo+IA0K
-PiBMb3JlbnpvDQoNClRoYXQncyBjb3JyZWN0LiBJdCB3aWxsIGFwcGx5IHRvIDUuMiBzdGFibGUg
-YnV0IGlzIG1pc3NpbmcgYSBmZXcgZGVwcw0KZm9yIDQuMTkgdGhhdCBJIHdvdWxkbid0IGNvbnNp
-ZGVyIGFzIHF1YWxpZnlpbmcgYXMgc3RhYmxlLiBJIGNhbg0KYmFja3BvcnQgdG8gNC4xOSBmYWly
-bHkgZWFzaWx5Lg0KDQoNClRoYW5rcywNCkpvbg0K
++++ Masahiro Yamada [18/09/19 02:26 +0900]:
+>Hi Jessica, Linus,
+>
+>On Wed, Sep 18, 2019 at 12:09 AM Jessica Yu <jeyu@kernel.org> wrote:
+>>
+>> +++ Masahiro Yamada [15/09/19 22:27 +0900]:
+>> >Hi Linus,
+>> >
+>> >This is a Kbuild pull request for v5.4-rc1.
+>> >I am sending this a bit earlier.
+>> >Please pull it in when you open the merge window.
+>> >
+>> >Thanks.
+>>
+>> Hi Masahiro, Linus,
+>>
+>> There is a merge conflict between the kbuild and modules-next tree.
+>>
+>> Specifically, commits
+>>
+>>     69a94abb82e ("export.h, genksyms: do not make genksyms calculate CRC of trimmed symbols")
+>>
+>> and
+>>
+>>     9b9a3f20cbe ("kbuild: split final module linking out into Makefile.modfinal")
+>>
+>> from the kbuild tree caused some conflicts in modules-next in
+>> include/linux/export.h and scripts/Makefile.modpost. The conflict
+>> caused by 69a94abb82e in export.h is *non* trivial whereas the latter
+>> commit involving Makefile.modpost is trivial.
+>>
+>> So there are a few options here..
+>>
+>> Solution #1: Masahiro pops the topmost 4 commits (down to 69a94abb82e)
+>> from kbuild/for-next and I take them resolved through modules-next.
+>> This would only leave the trivial conflict in Makefile.modpost left.
+>> Send Linus the modules-next tree with a trivial resolution for
+>> Makefile.modpost.
+>
+>
+>No. I do not like to do it.
+>
+>
+>Reason 1:
+>Commit 69a94abb82e is a bug fix.
+>On the other hand, the module name-space is a completely new feature.
+>Why must the bug-fix commit rebased on top of the new feature commits?
+>
+>Reason 2:
+>If 69a94abb82e were moved to your branch,
+>its commit log would become really strange because the module-next branch
+>does not contain 15bfc2348d54
+
+No problem, fair enough points.
+
+>> Solution #2:
+>> Matthias Maennich staged a merge resolution from his tree
+>> (https://github.com/metti/linux/tree/modules-next_linux-kbuild) so
+>> another solution might be that I merge kbuild/for-next into
+>> modules-next, take Matthias' (CC'd) conflict resolution including his
+>> Signed-off-by, and then take that to Linus.
+>
+>I do not mind this.  Please feel free to proceed.
+>
+>
+>
+>But, if you do not mind, I can propose one more solution.
+>
+>Solution #3
+>
+>Linus will pull this Kbuild PR.
+>
+>Then, Jessica will rebase the module-next branch on the latest Linus tree.
+>
+>Because nothing in the modules-next branch has been tested in linux-next yet,
+>(the patches were queued after -rc8, but there was no linux-next
+>release last week)
+>there is no strong reason to keep them on v5.3-rc7, right?
+
+Yikes, I did not catch Stephen Rothwell's email about pausing the
+linux-next releases from Sept 5 until Sept 30
+(https://lore.kernel.org/linux-next/20190904233443.3f73c46b@canb.auug.org.au/).
+
+The modules-next namespace patches have been in since last Tuesday,
+and my original plan was for them to catch at least a week of
+linux-next time before sending the pull request. :-/ But that did not
+happen due to the above.
+
+So Linus, in light of the above realization, I'd say at this time - I
+will still formally send a pull request with the merge conflicts
+resolved with either solution #2 or #3, but merge at your own
+discretion, it's fine to delay to the following release if you're
+uncomfortable.
+
+Thanks,
+
+Jessica
