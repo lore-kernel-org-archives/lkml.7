@@ -2,154 +2,64 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA76DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF670C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C996521848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:54:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C68121670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJFwjHFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404393AbfIQGyZ (ORCPT
+        id S2391275AbfIQG4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:54:25 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37315 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404348AbfIQGyY (ORCPT
+        Tue, 17 Sep 2019 02:56:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42584 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728320AbfIQG4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:54:24 -0400
-Received: by mail-ed1-f65.google.com with SMTP id r4so2265907edy.4;
-        Mon, 16 Sep 2019 23:54:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QcIjvbufynPeD91Mg15EYJOqVZcGPs0ArRORK/sU2Is=;
-        b=NORm7alJ/NNFYNkVsZw+y+4XhYlOEOShxHvxTJPWgXXUiVyAarBOcAenGtwDXaH2jz
-         GdPRxL67K1a5KlTt+a+FCsg7PpXh52KAOTl8xIYKpO58/HRF37EIZberLr+yXRCuaC/z
-         HId8brympq/JQFH3C00bulq67OzY3zHaLSeFAr0l+yA5QG6bSAE2vmNSYoHSvLLPOsW7
-         1E7jv8IcgNPppX9utxWYtBsWWkYw5388UAe/Hotui9vKINlKh+miLNHaYR5jdl43kGRV
-         6v1eLEWlLIxoq212lzEc9thUQ9BTQI1dQpgtmvtdyznHC/gA1w/3IfSK0yutA8vM1wYo
-         USoQ==
-X-Gm-Message-State: APjAAAXrAa8Ytc+2TYmyAuCuQSIDwXAwl1ulbJ/E5yirWXLeeoPBU4Ci
-        5TgVByFJ4epPunPgrB2kWeA5B+MEKTQ=
-X-Google-Smtp-Source: APXvYqzLUqfE8YUain5USpHp+Ppmc+vkqA5g9akw1Ro5kQZY2J0pWwc15KMdNJBtIktYxdN+ZbdIQw==
-X-Received: by 2002:a17:906:4c4c:: with SMTP id d12mr3351491ejw.174.1568703261676;
-        Mon, 16 Sep 2019 23:54:21 -0700 (PDT)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
-        by smtp.gmail.com with ESMTPSA id ba28sm261139edb.4.2019.09.16.23.54.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 16 Sep 2019 23:54:21 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id i16so1833406wmd.3;
-        Mon, 16 Sep 2019 23:54:21 -0700 (PDT)
-X-Received: by 2002:a1c:a54a:: with SMTP id o71mr2230059wme.51.1568703260882;
- Mon, 16 Sep 2019 23:54:20 -0700 (PDT)
+        Tue, 17 Sep 2019 02:56:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bYiI0JJ9ZBjZE1FGSPS2C/WnExB5o+6ZPs1rok4OHT8=; b=SJFwjHFQt4G7gcejJJT7BevFl
+        vwDc01e8Mu7YmMNxBCU+YoCfHqqnDUTW+/NKeEJ+gIjie1a3ep45YkUYR0nMXGAzzDUWby4ORbPCY
+        Tipuat77Aj9ao7X1fNi0ldJ23xSKdh8zLWQ0kyCOHbtmMJI7cE31/YdM+eqTUgEq8BDFCIbNPggZJ
+        BsxzZal7Xg1O/8kfvgo8UNYjPfjbTi7xRC+H/4IqCbKuGEtj09TQCKAcWYS4KNZZVfNU82+y1O9Qs
+        1umTLhakjmKJWYKFzy5CZdze7pMvXB5GT1mFsZ8w7/80/EFpzN4OiQwwD2e+vAjoHVtdu4UODDkbH
+        gYRe3Yojw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iA7Ph-00041w-Me; Tue, 17 Sep 2019 06:56:37 +0000
+Date:   Mon, 16 Sep 2019 23:56:37 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Palmer Dabbelt <palmer@sifive.com>, jason@lakedaemon.net,
+        Darius Rad <darius@bluespec.com>, linux-kernel@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv@lists.infradead.org, David Johnson <davidj@sifive.com>,
+        tglx@linutronix.de
+Subject: Re: [PATCH] irqchip/sifive-plic: add irq_mask and irq_unmask
+Message-ID: <20190917065637.GA15034@infradead.org>
+References: <8636gxskmj.wl-maz@kernel.org>
+ <mhng-8de39ab4-730a-4ded-a8b5-d50f34d1697b@palmer-si-x1e>
+ <861rwhs9on.wl-maz@kernel.org>
 MIME-Version: 1.0
-References: <20190914135100.327412-1-jernej.skrabec@siol.net>
-In-Reply-To: <20190914135100.327412-1-jernej.skrabec@siol.net>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 17 Sep 2019 14:54:08 +0800
-X-Gmail-Original-Message-ID: <CAGb2v640R7edA3EJvC=aJQZXGcfqot50O3-PFyrYj767pUEYrQ@mail.gmail.com>
-Message-ID: <CAGb2v640R7edA3EJvC=aJQZXGcfqot50O3-PFyrYj767pUEYrQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: h6: Use sigma-delta
- modulation for audio PLL
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     Maxime Ripard <mripard@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <861rwhs9on.wl-maz@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Sep 14, 2019 at 9:51 PM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
->
-> Audio devices needs exact clock rates in order to correctly reproduce
-> the sound. Until now, only integer factors were used to configure H6
-> audio PLL which resulted in inexact rates. Fix that by adding support
-> for fractional factors using sigma-delta modulation look-up table. It
-> contains values for two most commonly used audio base frequencies.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> index d89353a3cdec..ed6338d74474 100644
-> --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
-> @@ -203,12 +203,21 @@ static struct ccu_nkmp pll_hsic_clk = {
->   * hardcode it to match with the clock names.
->   */
->  #define SUN50I_H6_PLL_AUDIO_REG                0x078
-> +
-> +static struct ccu_sdm_setting pll_audio_sdm_table[] = {
-> +       { .rate = 541900800, .pattern = 0xc001288d, .m = 1, .n = 22 },
-> +       { .rate = 589824000, .pattern = 0xc00126e9, .m = 1, .n = 24 },
-> +};
-> +
->  static struct ccu_nm pll_audio_base_clk = {
->         .enable         = BIT(31),
->         .lock           = BIT(28),
->         .n              = _SUNXI_CCU_MULT_MIN(8, 8, 12),
->         .m              = _SUNXI_CCU_DIV(1, 1), /* input divider */
-> +       .sdm            = _SUNXI_CCU_SDM(pll_audio_sdm_table,
-> +                                        BIT(24), 0x178, BIT(31)),
->         .common         = {
-> +               .features       = CCU_FEATURE_SIGMA_DELTA_MOD,
->                 .reg            = 0x078,
->                 .hw.init        = CLK_HW_INIT("pll-audio-base", "osc24M",
->                                               &ccu_nm_ops,
-> @@ -753,12 +762,12 @@ static const struct clk_hw *clk_parent_pll_audio[] = {
->  };
->
->  /*
-> - * The divider of pll-audio is fixed to 8 now, as pll-audio-4x has a
-> - * fixed post-divider 2.
-> + * The divider of pll-audio is fixed to 24 for now, so 24576000 and 22579200
-> + * rates can be set exactly in conjunction with sigma-delta modulation.
->   */
->  static CLK_FIXED_FACTOR_HWS(pll_audio_clk, "pll-audio",
->                             clk_parent_pll_audio,
-> -                           8, 1, CLK_SET_RATE_PARENT);
-> +                           24, 1, CLK_SET_RATE_PARENT);
->  static CLK_FIXED_FACTOR_HWS(pll_audio_2x_clk, "pll-audio-2x",
->                             clk_parent_pll_audio,
->                             4, 1, CLK_SET_RATE_PARENT);
-
-You need to fix the factors for the other two outputs as well, since all
-three are derived from pll-audio-base.
-
-ChenYu
-
-> @@ -1215,12 +1224,12 @@ static int sun50i_h6_ccu_probe(struct platform_device *pdev)
->         }
->
->         /*
-> -        * Force the post-divider of pll-audio to 8 and the output divider
-> -        * of it to 1, to make the clock name represents the real frequency.
-> +        * Force the post-divider of pll-audio to 12 and the output divider
-> +        * of it to 2, so 24576000 and 22579200 rates can be set exactly.
->          */
->         val = readl(reg + SUN50I_H6_PLL_AUDIO_REG);
->         val &= ~(GENMASK(21, 16) | BIT(0));
-> -       writel(val | (7 << 16), reg + SUN50I_H6_PLL_AUDIO_REG);
-> +       writel(val | (11 << 16) | BIT(0), reg + SUN50I_H6_PLL_AUDIO_REG);
->
->         /*
->          * First clock parent (osc32K) is unusable for CEC. But since there
-> --
-> 2.23.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190914135100.327412-1-jernej.skrabec%40siol.net.
+With the fixes it seems to still work fine on the Kendryte KD210.
+Although currently only the serial interrupt is tested and this might
+not be a very exhaustive test case..
