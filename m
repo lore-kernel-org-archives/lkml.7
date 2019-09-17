@@ -2,198 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E92C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60DAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:22:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCB620678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:21:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BWdUE3ZO"
+	by mail.kernel.org (Postfix) with ESMTP id A7611206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 19:22:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568748170;
+	bh=pvd8supAsrhJRvuydpH3fWoKLsuXDgMRhRdZTrDnxj8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tcfPlvOyVBLYeSY6zr+r9wI9wDnTGLqVtmBoyngCmC4ymkpO39rbwbTtdeAETGaKa
+	 dhTtkVa185q2M6pmy4JUWhPsSeH4fEllqfRuS1vlVGc1Gw98fddiWY1RmoXHe3r/am
+	 dsLJ998meA2jOHlXmk68e+8MytEfrWGfEMNIo7t0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfIQTVy (ORCPT
+        id S1730137AbfIQTWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 15:21:54 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44877 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725927AbfIQTVy (ORCPT
+        Tue, 17 Sep 2019 15:22:50 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:32898 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfIQTWt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 15:21:54 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w6so3857859oie.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 12:21:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+MExCGPllq8tidvf8q51bbwRS+JgYiFJpJOu4Gc4mEM=;
-        b=BWdUE3ZOkWGPQdfWfI6TxWv3OZ27i/ITzStODtr3lKRAHYJwPFx7CNrSas6JIXoEsj
-         iOHaCr/GjfQrpXDToNsiVlYTleQUlhhNP6Na5gTQwr9npjqiU8kxIm83dhLAT2sTOeQu
-         5tjbknYYXmC3x8zmFf4yGgowgXs2pi5pNwdaQKHL+NrNnJKeig5ka5CRDdxoGBPsuOvZ
-         4EHQY427DI4scwcMCM6bIK9JSTOK0aupaQeBT5TBGOaaI5JbwZtsQ/lUjmd+0c6xnw74
-         L5LOJ70bzSdtUIEiRyLVBzyGgy1Ma/afyVZAkgsV732oweyR7bgqj5vH9OFuT7UZrVP5
-         wxBQ==
+        Tue, 17 Sep 2019 15:22:49 -0400
+Received: by mail-ot1-f68.google.com with SMTP id g25so4165466otl.0;
+        Tue, 17 Sep 2019 12:22:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+MExCGPllq8tidvf8q51bbwRS+JgYiFJpJOu4Gc4mEM=;
-        b=gxmRWkS3vSQFtmHdEtjkWBzRZvk5dgFeMMAUOKMnCFcSVJB5hhlZ5q09+d0TIpmEVZ
-         Sak0PNYKUHMl8wit+tZdhSZrQxGYfg/pMWSp8IOCX1uzRrNKIpTCh/X9uHC90lhhKH9P
-         hMfcJflTG47argxvacr06CKL7CViiaQuF3+iH71CfJzp8o3R0Zu5DzQFB90e2Cua9MHp
-         tcyKSPwL0vHN1BtwV6KF3z9sYVBX27rsh+dEnW0AfebtVyoHVN1R3ZzJbxOuorAmuROK
-         JZuWj8onHHmNOYkw6Qqae+YlVpcFQyt5HjESReJBBKit27wofA351JfHw5E31P2EwbLG
-         vLTA==
-X-Gm-Message-State: APjAAAUX6QqaoNxnONSVCu+pLgbY/BepWhq8MOjSzcBeyyj9oegOMpBB
-        urBKybRlWTEpyhw66JWx2BAoeNJKVQn21ReVjQS8Kcch
-X-Google-Smtp-Source: APXvYqxDv40b5cqE2ETgwiNF3qrYNAGsI7vbevHR2FphpK0W/0sZPEXegj4KhUhi9IDH+7pMG8BVVM2EoWjl7SAsqa8=
-X-Received: by 2002:aca:5bd4:: with SMTP id p203mr4819538oib.153.1568748112732;
- Tue, 17 Sep 2019 12:21:52 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ueOlxJgXhHGR0t/S2l0g404wxAKQDmbp//P/jfatHng=;
+        b=pZmmy0zSU/Ji0t3xZsx309XC0RP+9Hg3EfaND5oz2dyV5fEzn+oxMYErE1Ef7DKGi8
+         QVtC3AQnfmdc0qK51Zrvv1N0v28Y3gdZOumspFUAkhYwmDJd00DBq3gjP4D7aD/uzX6z
+         pZT+TjDFVkG5NNLLsm6AgFfWMtEJh01sCQNzVgkef870kwDEAwz/IihnRqMlmC/ITZHR
+         BYk/6ocnDXC5EpwPiKjnd3Vx27KEVrf2G42Fu/Me1b0vD6wKQ5tig3GyWt2kLhdwK40t
+         fcGPXOF74M24Nolst2Qzl0AEViXKNnSGvrMH4PvsVT95PuLjR0vWQGu5UEK8oVpw161y
+         Z6Zw==
+X-Gm-Message-State: APjAAAUaWLWgGTgqKPNaaNQxC4H9gJBsec3/QWRN830kpskB9IWCSAIe
+        7SolRm0V3fyeulzLmpwGvA==
+X-Google-Smtp-Source: APXvYqyeJCbqzZZ3GBSOlmWeWQLiFwUCCb1lRRjCc1FSgIfpRPjy68M3i6sEvrofJCoe+vdjL4x/fw==
+X-Received: by 2002:a9d:714e:: with SMTP id y14mr356697otj.109.1568748168469;
+        Tue, 17 Sep 2019 12:22:48 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t12sm930174otl.35.2019.09.17.12.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 12:22:47 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 14:22:47 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Adam Ford <aford173@gmail.com>,
+        =?iso-8859-1?Q?Andr=E9?= Roth <neolynx@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Enric Balletbo i Serra <eballetbo@gmail.com>,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Roger Quadros <rogerq@ti.com>,
+        Teresa Remmet <t.remmet@phytec.de>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        letux-kernel@openphoenux.org, kernel@pyra-handheld.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v3 5/8] cpufreq: ti-cpufreq: omap36xx use "cpu0","vbb" if
+ run in multi_regulator mode
+Message-ID: <20190917192247.GA7233@bogus>
+References: <cover.1568224032.git.hns@goldelico.com>
+ <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
 MIME-Version: 1.0
-References: <20190916235642.167583-1-khazhy@google.com> <20190916235642.167583-2-khazhy@google.com>
- <CAJfpegtevJHaOpeaGCTmj6WMjOt-RsfMs+oJBgNTLTOJt9Je_g@mail.gmail.com>
-In-Reply-To: <CAJfpegtevJHaOpeaGCTmj6WMjOt-RsfMs+oJBgNTLTOJt9Je_g@mail.gmail.com>
-From:   Khazhismel Kumykov <khazhy@google.com>
-Date:   Tue, 17 Sep 2019 12:21:41 -0700
-Message-ID: <CACGdZY+iviCmTc1fQriWSBbxhywGiFj1+f6RJ1AXpE6i=O_i-w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] fuse: kmemcg account fs data
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shakeel B <shakeelb@google.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000000b4e140592c4a2c6"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1c803be8060fb99b7d92e2f5cde3c0e1962fbe2b.1568224033.git.hns@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000000b4e140592c4a2c6
-Content-Type: text/plain; charset="UTF-8"
+On Wed, 11 Sep 2019 19:47:11 +0200, "H. Nikolaus Schaller" wrote:
+> In preparation for using the multi_regulator capability of
+> this driver for handling the ABB LDO for OPP1G of the omap36xx
+> we have to take care that the (legacy) vdd-supply name is
+> cpu0-supply = <&vcc>;
+> 
+> To do this we add another field to the SoC description table which
+> optionally can specify a list of regulator names.
+> 
+> For omap36xx we define "cpu0-supply" and "vbb-supply".
+> 
+> The default remains "vdd-supply" and "vbb-supply".
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> ---
+>  .../devicetree/bindings/cpufreq/ti-cpufreq.txt       |  6 +++++-
+>  drivers/cpufreq/ti-cpufreq.c                         | 12 ++++++++++--
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+> 
 
-On Tue, Sep 17, 2019 at 12:52 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Tue, Sep 17, 2019 at 1:56 AM Khazhismel Kumykov <khazhy@google.com> wrote:
-> >  struct fuse_forget_link *fuse_alloc_forget(void)
-> >  {
-> > -       return kzalloc(sizeof(struct fuse_forget_link), GFP_KERNEL);
-> > +       return kzalloc(sizeof(struct fuse_forget_link),
-> > +                      GFP_KERNEL_ACCOUNT | __GFP_RECLAIMABLE);
->
-> What does __GFP_RECLAIMBALE signify in slab allocs?
->
-
-Marking these allocations reclaimable hints to mm how much we can
-reclaim overall by shrinking, so if it is reclaimable we should mark
-it as such.
-
-For d_fsdata, the lifetime is linked to the dentry, which is
-reclaimable, so it makes sense here.
-
-> You understand that the forget_link is not reclaimable in the sense,
-> that it requires action (reading requests from the fuse device) from
-> the userspace filesystem daemon?
->
-
-Ah, I see, whenever we evict the fuse_inode, we queue a forget
-command, which usually waits for userspace. So it's not actually
-linked to the inode itself, and yeah, if we need userspace to
-intervene we shouldn't treat forget_link as reclaimable. I had figured
-since fuse_inode is reclaimable, this should be too, but missed that
-disconnect, thanks.
-
---0000000000000b4e140592c4a2c6
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIS5wYJKoZIhvcNAQcCoIIS2DCCEtQCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ghBNMIIEXDCCA0SgAwIBAgIOSBtqDm4P/739RPqw/wcwDQYJKoZIhvcNAQELBQAwZDELMAkGA1UE
-BhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExOjA4BgNVBAMTMUdsb2JhbFNpZ24gUGVy
-c29uYWxTaWduIFBhcnRuZXJzIENBIC0gU0hBMjU2IC0gRzIwHhcNMTYwNjE1MDAwMDAwWhcNMjEw
-NjE1MDAwMDAwWjBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEiMCAG
-A1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBALR23lKtjlZW/17kthzYcMHHKFgywfc4vLIjfq42NmMWbXkNUabIgS8KX4PnIFsTlD6F
-GO2fqnsTygvYPFBSMX4OCFtJXoikP2CQlEvO7WooyE94tqmqD+w0YtyP2IB5j4KvOIeNv1Gbnnes
-BIUWLFxs1ERvYDhmk+OrvW7Vd8ZfpRJj71Rb+QQsUpkyTySaqALXnyztTDp1L5d1bABJN/bJbEU3
-Hf5FLrANmognIu+Npty6GrA6p3yKELzTsilOFmYNWg7L838NS2JbFOndl+ce89gM36CW7vyhszi6
-6LqqzJL8MsmkP53GGhf11YMP9EkmawYouMDP/PwQYhIiUO0CAwEAAaOCASIwggEeMA4GA1UdDwEB
-/wQEAwIBBjAdBgNVHSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwEgYDVR0TAQH/BAgwBgEB/wIB
-ADAdBgNVHQ4EFgQUyzgSsMeZwHiSjLMhleb0JmLA4D8wHwYDVR0jBBgwFoAUJiSSix/TRK+xsBtt
-r+500ox4AAMwSwYDVR0fBEQwQjBAoD6gPIY6aHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9ncy9n
-c3BlcnNvbmFsc2lnbnB0bnJzc2hhMmcyLmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIG
-CCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG
-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
-BQUHMAKGNGh0dHA6Ly9zZWN1cmUuZ2xvYmFsc2lnbi5jb20vY2FjZXJ0L2dzaHZzbWltZWNhMS5j
-cnQwHQYDVR0OBBYEFKBLk14axMQMpZ/b8PKcFvP/M5dTMB8GA1UdIwQYMBaAFMs4ErDHmcB4koyz
-IZXm9CZiwOA/MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8v
-d3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMDsGA1UdHwQ0MDIwMKAuoCyGKmh0dHA6Ly9j
-cmwuZ2xvYmFsc2lnbi5jb20vZ3NodnNtaW1lY2ExLmNybDAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4IBAQBKP0VRR9yRe7hRjO9f
-l8vyi9FFUHwUYhQNrCn759p3gcg02mxtS8zV2g/xgJuYRni5WstweUmeTAslWVGNcsYVUOn973Ep
-l/19VTDE1G3k+wvs3xY5+Y11hUzgDVsCvuicWAOWAmHgoKEd95uNI30HFT/XRIHAizSXG3uZTciq
-c77VPsnICGmrIQnD9UJGknakL8eyVDAcdO1FxpGiWmW1c2eTMf2mqOTrB+1+ixiDCV5Iq7vFY/vk
-/OjbOc2/RCcDlA6VNEeLUeSWQe59aQ+YiO1jrgnLn3fMgcE7o3t3Lah9K3fFRP8foYGcx8XOESWI
-zZM9o9E2BY7eSO1XYXxyMYICXjCCAloCAQEwXDBMMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xv
-YmFsU2lnbiBudi1zYTEiMCAGA1UEAxMZR2xvYmFsU2lnbiBIViBTL01JTUUgQ0EgMQIMTewG74t+
-Y00MjT2SMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCN3zDuglHCEr3WnH4XSwZR
-8MSg/aQM6i8lI3GG9E3vTDAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEP
-Fw0xOTA5MTcxOTIxNTNaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQB
-FjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglg
-hkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAo5jRnoO57BrfYOxVNhs5a3PcmLsS+fL6sdT5qER1
-fW6qWP5st53ZkbrXumQMMAgeaWSMrYyCpGGwrwHukup0xOnWSqJCYXkSDAh9aKVXwMOHIKALsIgR
-ugOSRg3lyi09icSmw5REN1/dU5XKJZzTlYnzXjvEbpTv42rORWzvFAlg5zfsbsS7CHsc96MJ4jas
-xG1QVbaxnU2Yb2SiGr9Sj4wYsw2batC3m2/QWSojfbzB7oQasoUYgGgCeK4u8jdf0PAgRF6VaW7w
-hKfz8BZ+YIndtNPpQgTgDrraR1N7z8B+iJT035uP59JC+kg0bbIR1R6EAbVddadIxcNwD3CgDA==
---0000000000000b4e140592c4a2c6--
+Acked-by: Rob Herring <robh@kernel.org>
