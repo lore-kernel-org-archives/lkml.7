@@ -2,147 +2,91 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49434C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BA2C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DBA82067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B5F2067B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 18:30:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="s7JYZdok"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfIQSYw (ORCPT
+        id S1729317AbfIQSaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 14:24:52 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39220 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729148AbfIQSYw (ORCPT
+        Tue, 17 Sep 2019 14:30:12 -0400
+Received: from mail.efficios.com ([167.114.142.138]:37422 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbfIQSaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 14:24:52 -0400
-Received: (qmail 6810 invoked by uid 2102); 17 Sep 2019 14:24:51 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Sep 2019 14:24:51 -0400
-Date:   Tue, 17 Sep 2019 14:24:51 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <benjamin.tissoires@redhat.com>,
-        <jikos@kernel.org>, <linux-input@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: slab-out-of-bounds Write in ga_probe
-In-Reply-To: <000000000000cd1def0592ab9697@google.com>
-Message-ID: <Pine.LNX.4.44L0.1909171423360.1590-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Tue, 17 Sep 2019 14:30:11 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 03E2D1D4DD6;
+        Tue, 17 Sep 2019 14:30:10 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id gEQfOulKEOTt; Tue, 17 Sep 2019 14:30:09 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id B240F1D4DCA;
+        Tue, 17 Sep 2019 14:30:09 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B240F1D4DCA
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1568745009;
+        bh=Ebem6mYheuShEfrBBKlZ/Oh2E7NeDB5wZOPBU2goDVU=;
+        h=From:To:Date:Message-Id;
+        b=s7JYZdokFIHnk4c1dc+/Ud/ANaZ0/3HZh7/L0Sat54Vjc3l3TR0RpRkXwi88QiBC8
+         7/tWO8EWQXu7130e33FpfbLy7VCDRFsMqEfVur5CU+YLBzN6Uz0Mh7tJ6zue4V9Ygq
+         gJITHkXjrvdtFIAo/Sp5uOb5SWmzXXT6SYkHOk02GF79bOeybVbnZZmIgl6s3ht6+d
+         /9VBE0BYNe3gUOwcNk4no/Lcue//Zk2Jy7bKC/H9biJMjiMFRcr0G3mlhI94x5GhuS
+         zZR/Jq1J7rjODmFrbRLrESdL5g4fmAgrDYFBATsGk76mSODh4Jq+t++2XmPOlhbiif
+         koq8j/bKJ+63w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id YXYReruiuvkK; Tue, 17 Sep 2019 14:30:09 -0400 (EDT)
+Received: from localhost.localdomain (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 4A1B71D4DBE;
+        Tue, 17 Sep 2019 14:30:09 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Paul Turner <pjt@google.com>,
+        linux-api@vger.kernel.org, stable@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH for 5.4 0/3] Restartable Sequences Fixes
+Date:   Tue, 17 Sep 2019 14:29:56 -0400
+Message-Id: <20190917182959.16333-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 16 Sep 2019, syzbot wrote:
+Hi,
 
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=14045831600000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> dashboard link: https://syzkaller.appspot.com/bug?extid=403741a091bf41d4ae79
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c1e62d600000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166a3a95600000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com
-> 
-> usb 1-1: config 0 interface 0 altsetting 0 has 1 endpoint descriptor,  
-> different from the interface descriptor's value: 9
-> usb 1-1: New USB device found, idVendor=0e8f, idProduct=0012, bcdDevice=  
-> 0.00
-> usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-> usb 1-1: config 0 descriptor??
-> greenasia 0003:0E8F:0012.0001: unknown main item tag 0x0
-> greenasia 0003:0E8F:0012.0001: hidraw0: USB HID v0.00 Device [HID  
-> 0e8f:0012] on usb-dummy_hcd.0-1/input0
-> ==================================================================
-> BUG: KASAN: slab-out-of-bounds in set_bit  
-> include/asm-generic/bitops-instrumented.h:28 [inline]
-> BUG: KASAN: slab-out-of-bounds in gaff_init drivers/hid/hid-gaff.c:97  
-> [inline]
-> BUG: KASAN: slab-out-of-bounds in ga_probe+0x1fd/0x6f0  
-> drivers/hid/hid-gaff.c:146
-> Write of size 8 at addr ffff8881d9acafc0 by task kworker/1:1/78
-> 
-> CPU: 1 PID: 78 Comm: kworker/1:1 Not tainted 5.3.0-rc7+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-> Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0xca/0x13e lib/dump_stack.c:113
->   print_address_description+0x6a/0x32c mm/kasan/report.c:351
->   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
->   kasan_report+0xe/0x12 mm/kasan/common.c:618
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
->   set_bit include/asm-generic/bitops-instrumented.h:28 [inline]
->   gaff_init drivers/hid/hid-gaff.c:97 [inline]
->   ga_probe+0x1fd/0x6f0 drivers/hid/hid-gaff.c:146
->   hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
->   really_probe+0x281/0x6d0 drivers/base/dd.c:548
->   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
->   __device_attach_driver+0x
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Here is a small set of rseq fixes aiming Linux 5.4. Those should be
+backported to stable kernels >= 4.18.
 
-The driver assumes that the device contains an input.
+Thanks,
 
-Alan Stern
+Mathieu
 
-https://github.com/google/kasan.git f0df5c1b
+Mathieu Desnoyers (3):
+  rseq: Fix: Reject unknown flags on rseq unregister
+  rseq: Fix: Unregister rseq for clone CLONE_VM
+  rseq/selftests: Fix: Namespace gettid() for compatibility with glibc
+    2.30
 
- drivers/hid/hid-gaff.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ include/linux/sched.h                     |  4 ++--
+ kernel/rseq.c                             |  2 ++
+ tools/testing/selftests/rseq/param_test.c | 18 ++++++++++--------
+ 3 files changed, 14 insertions(+), 10 deletions(-)
 
-Index: usb-devel/drivers/hid/hid-gaff.c
-===================================================================
---- usb-devel.orig/drivers/hid/hid-gaff.c
-+++ usb-devel/drivers/hid/hid-gaff.c
-@@ -64,14 +64,20 @@ static int gaff_init(struct hid_device *
- {
- 	struct gaff_device *gaff;
- 	struct hid_report *report;
--	struct hid_input *hidinput = list_entry(hid->inputs.next,
--						struct hid_input, list);
-+	struct hid_input *hidinput;
- 	struct list_head *report_list =
- 			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
- 	struct list_head *report_ptr = report_list;
--	struct input_dev *dev = hidinput->input;
-+	struct input_dev *dev;
- 	int error;
- 
-+	if (list_empty(&hid->inputs)) {
-+		hid_err(hid, "no inputs found\n");
-+		return -ENODEV;
-+	}
-+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
-+	dev = hidinput->input;
-+
- 	if (list_empty(report_list)) {
- 		hid_err(hid, "no output reports found\n");
- 		return -ENODEV;
+-- 
+2.17.1
 
