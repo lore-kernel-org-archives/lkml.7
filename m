@@ -2,66 +2,117 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C06C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E8C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8511F20862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:09:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FC5921670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:09:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hf/AAXhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbfIQIJS (ORCPT
+        id S2404651AbfIQIJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 17 Sep 2019 04:09:21 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37640 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728126AbfIQIJS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 17 Sep 2019 04:09:18 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:59186 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbfIQIJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:09:18 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 857501A0AE8;
-        Tue, 17 Sep 2019 10:09:16 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 55D8B1A0B3B;
-        Tue, 17 Sep 2019 10:09:12 +0200 (CEST)
-Received: from titan.ap.freescale.net (TITAN.ap.freescale.net [10.192.208.233])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D9358402C4;
-        Tue, 17 Sep 2019 16:09:06 +0800 (SGT)
-From:   Biwen Li <biwen.li@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, geert+renesas@glider.be,
-        alexandre.belloni@bootlin.com, sam@ravnborg.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Biwen Li <biwen.li@nxp.com>
-Subject: [PATCH] devicetree: property-units: Add kohms unit
-Date:   Tue, 17 Sep 2019 15:58:50 +0800
-Message-Id: <20190917075850.40039-1-biwen.li@nxp.com>
-X-Mailer: git-send-email 2.9.5
-X-Virus-Scanned: ClamAV using ClamSMTP
+Received: by mail-ot1-f66.google.com with SMTP id s28so2251556otd.4
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vo/oVpeB3qhdq7dqY8xlj9Tzr7vj+ZfcOGdaj1cujrc=;
+        b=hf/AAXhWJ1kDjSCHqgEJyJvrWfGfpo0PtPZysXVvZcD52JRSE2JO+9LyTajUdDmbk6
+         IB8MhXfJqp0lprL2UUZyUydwvZ4/JS3BsMduAPqZge1MDz8VpPs/K1uc9bJdsGLph/3p
+         2BROoCuI9Mrn8g27pZ9DLlqkkBLxKE8uv5IH5m+3LkGQKtxC3GcjZG7ABQA3rtL4cElp
+         j4K/LrjfLj5JCzxdXTx3UeFRCYTVcErpKPJ/2Gg4U0aYA3dHUL1ylyfKSBk6hd1tL1pf
+         00/gzjZAn3KOdIJ5jh2/iQyNWB0X3mEn0srkOj39hcakO458IFYnreJjsWIAg+V5ud42
+         Rmqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vo/oVpeB3qhdq7dqY8xlj9Tzr7vj+ZfcOGdaj1cujrc=;
+        b=THMNwpTghB3JKBYB0HkAohhG5wDjRIF1lVDlTtkJX72G1Q07ZYw+5dkl6Rali/LAeY
+         x3WXpLxmT5I3K3uy+ewJkNmeq/IG9/SgqqN6/zE6UNll1wTgczfgDMr5L931eu+6XY+G
+         YJiAWwhzx23L2GZzG2fWI+hPLSbpPY/n3VMe9l7CKC8vzOgZH7GBZCAS8HJVQ02wpW25
+         oNrQ/o+vMcpzJ9r9srfzHvuUTcQXGJt39Q1v3JlDyAIxm3QXJ2+BNWG6cpGUyL+ZBk90
+         ogFE15fZnSFJfu6zB7HxezElnPEyvrOicTiiixmxm40+628meMPHJm1kjVSGXsPQYO8f
+         A38Q==
+X-Gm-Message-State: APjAAAWg2jnrTJnwYkFe7X13/Eky3md8rz/P5hFu2PIc2YMMwQt5Xsb8
+        FOv3qpPjbDApZyLlnFetP/RyCfUdM8G5j53Z0Nb1YA==
+X-Google-Smtp-Source: APXvYqwtq0F/cD3QmH9ByzxWbexSd+XkNUO2+TWJmjSfUz7aVUU8Fyyl0II2Y5tGw9prcchOxrmDeVEeU/lexI1NUBU=
+X-Received: by 2002:a05:6830:18f3:: with SMTP id d19mr1727959otf.256.1568707757737;
+ Tue, 17 Sep 2019 01:09:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
+In-Reply-To: <5ca714b7bbd12ce24a6e8cc278eb438c576fa75d.1568627608.git.baolin.wang@linaro.org>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 17 Sep 2019 10:09:07 +0200
+Message-ID: <CAMpxmJVBzOwZ7JaySzq1bZkEtwEfMSu_e8dGTSEiY6wG0d=KiQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: eic: sprd: Fix the incorrect EIC offset when toggling
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Lyra Zhang <zhang.lyra@gmail.com>, bruce.chen@unisoc.com,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds kohms unit
+pon., 16 wrz 2019 o 11:57 Baolin Wang <baolin.wang@linaro.org> napisa=C5=82=
+(a):
+>
+> From: Bruce Chen <bruce.chen@unisoc.com>
+>
+> When toggling the level trigger to emulate the edge trigger, the
+> EIC offset is incorrect without adding the corresponding bank index,
+> thus fix it.
+>
+> Fixes: 7bf0d7f62282 ("gpio: eic: Add edge trigger emulation for EIC")
+> Signed-off-by: Bruce Chen <bruce.chen@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  drivers/gpio/gpio-eic-sprd.c |    7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
+> index 7b9ac4a..090539f 100644
+> --- a/drivers/gpio/gpio-eic-sprd.c
+> +++ b/drivers/gpio/gpio-eic-sprd.c
+> @@ -530,11 +530,12 @@ static void sprd_eic_handle_one_type(struct gpio_ch=
+ip *chip)
+>                 }
+>
+>                 for_each_set_bit(n, &reg, SPRD_EIC_PER_BANK_NR) {
+> -                       girq =3D irq_find_mapping(chip->irq.domain,
+> -                                       bank * SPRD_EIC_PER_BANK_NR + n);
+> +                       u32 offset =3D bank * SPRD_EIC_PER_BANK_NR + n;
+> +
+> +                       girq =3D irq_find_mapping(chip->irq.domain, offse=
+t);
+>
+>                         generic_handle_irq(girq);
+> -                       sprd_eic_toggle_trigger(chip, girq, n);
+> +                       sprd_eic_toggle_trigger(chip, girq, offset);
+>                 }
+>         }
+>  }
+> --
+> 1.7.9.5
+>
 
-Signed-off-by: Biwen Li <biwen.li@nxp.com>
----
- Documentation/devicetree/bindings/property-units.txt | 1 +
- 1 file changed, 1 insertion(+)
+Queued for fixes.
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index e9b8360b3288..97feb8995d1f 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -27,6 +27,7 @@ Electricity
- -microamp	: microampere
- -microamp-hours : microampere hour
- -ohms		: ohm
-+-kohms		: kiloohm
- -micro-ohms	: microohm
- -microwatt-hours: microwatt hour
- -microvolt	: microvolt
--- 
-2.17.1
-
+Bart
