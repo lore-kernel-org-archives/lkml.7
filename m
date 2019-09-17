@@ -2,127 +2,152 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F46C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7457C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2F320644
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7C72171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 21:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="u1tOKegF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728730AbfIQVih convert rfc822-to-8bit (ORCPT
+        id S1727623AbfIQVmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 17:38:37 -0400
-Received: from luna.lichtvoll.de ([194.150.191.11]:48061 "EHLO
-        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726999AbfIQVig (ORCPT
+        Tue, 17 Sep 2019 17:42:19 -0400
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:47296 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfIQVmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 17:38:36 -0400
-Received: from 127.0.0.1 (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.lichtvoll.de (Postfix) with ESMTPSA id 4277D77722;
-        Tue, 17 Sep 2019 23:38:33 +0200 (CEST)
-From:   Martin Steigerwald <martin@lichtvoll.de>
-To:     "Ahmed S. Darwish" <darwish.07@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Date:   Tue, 17 Sep 2019 23:38:33 +0200
-Message-ID: <1722575.Y5XjozQscI@merkaba>
-In-Reply-To: <20190917205234.GA1765@darwi-home-pc>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <2658007.Cequ2ms4lF@merkaba> <20190917205234.GA1765@darwi-home-pc>
+        Tue, 17 Sep 2019 17:42:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Abx4F+jwfMTtLUNyxvhKvVfgeehUhHffQfO59dPVzBw=; b=u1tOKegFJUc9oNAXUMrowBe6t
+        iSId7UHGw8DY7GFuW0EYnNtI5SS6w4mX6cD8gSmefCRb+N824LNIPTzXf1/4YGG0BFfzxQqMoObSZ
+        LfMACLLy+j9oFRNcw+MdfXOYe4T+e3KF4tW7S2fgYgGprjml5pz292h05s+6Jor5vQc4grFhCQwVF
+        ucHSFoeguoJbs1R74HGKDwjPvCG1cB2OavYY7cIsOTxrPlGtd514CzqYPKSPV2tmxkNWh/GarOWB2
+        lCrmanipMghHbtgJk2wvBcoQbKmY5/HFYg9eGdcpOPdGmYGmV9PfYsMjNLowLg2UTeTraZI1use1/
+        55U7FD6hw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:44930)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iALEb-0004Hs-3X; Tue, 17 Sep 2019 22:42:05 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iALEX-0001dO-MT; Tue, 17 Sep 2019 22:42:01 +0100
+Date:   Tue, 17 Sep 2019 22:42:01 +0100
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     tinywrkb <tinywrkb@gmail.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>,
+        Baruch Siach <baruch@tkos.co.il>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: dts: imx6dl: SolidRun: add phy node with 100Mb/s
+ max-speed
+Message-ID: <20190917214201.GB25745@shell.armlinux.org.uk>
+References: <20190915135652.GC3427@lunn.ch>
+ <20190917124101.GA1200564@arch-dsk-01>
+ <20190917125434.GH20778@lunn.ch>
+ <20190917133253.GA1210141@arch-dsk-01>
+ <20190917133942.GR25745@shell.armlinux.org.uk>
+ <20190917151707.GV25745@shell.armlinux.org.uk>
+ <20190917153027.GW25745@shell.armlinux.org.uk>
+ <20190917163427.GA1475935@arch-dsk-01>
+ <20190917170419.GX25745@shell.armlinux.org.uk>
+ <20190917171913.GY25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
-Authentication-Results: mail.lichtvoll.de;
-        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917171913.GY25745@shell.armlinux.org.uk>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ahmed S. Darwish - 17.09.19, 22:52:34 CEST:
-> On Tue, Sep 17, 2019 at 10:28:47PM +0200, Martin Steigerwald wrote:
-> [...]
+On Tue, Sep 17, 2019 at 06:19:13PM +0100, Russell King - ARM Linux admin wrote:
+> whether you can get the link to come up at all.  You might need to see
+> whether wiggling the RJ45 helps (I've had that sort of thing with some
+> cables.)
 > 
-> > I don't have any kernel logs old enough to see whether whether crng
-> > init times have been different with Systemd due to asking for
-> > randomness for UUID/hashmaps.
+> You might also need "ethtool -s eth0 advertise ffcf" after trying that
+> if it doesn't work to take the gigabit speeds out of the advertisement.
 > 
-> Please stop claiming this. It has been pointed out to you, __multiple
-> times__, that this makes no difference. For example:
+> Thanks.
 > 
->     https://lkml.kernel.org/r/20190916024904.GA22035@mit.edu
+>  drivers/net/phy/at803x.c | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
->     No. getrandom(2) uses the new CRNG, which is either initialized,
->     or it's not ... So to the extent that systemd has made systems
->     boot faster, you could call that systemd's "fault".
-> 
-> You've claimed this like 3 times before in this thread already, and
-> multiple people replied with the same response. If you don't get the
-> paragraph above, then please don't continue replying further on this
-> thread.
+> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+> index b3893347804d..85cf4a4a5e81 100644
+> --- a/drivers/net/phy/at803x.c
+> +++ b/drivers/net/phy/at803x.c
+> @@ -296,6 +296,11 @@ static int at803x_config_init(struct phy_device *phydev)
+>  	if (ret < 0)
+>  		return ret;
+>  
+> +	/* Disable smartspeed */
+> +	ret = phy_modify(phydev, 0x14, BIT(5), 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+>  	/* The RX and TX delay default is:
+>  	 *   after HW reset: RX delay enabled and TX delay disabled
+>  	 *   after SW reset: RX delay enabled, while TX delay retains the
 
-First off, this mail you referenced has not been an answer to a mail of 
-mine. It does not have my mail address in Cc. So no, it has not been 
-pointed out directly to me in that mail.
+Hi,
 
-Secondly: Pardon me, but I do not see how asking for entropy early at 
-boot times or not doing so has *no effect* on the available entropy¹. And 
-I do not see the above mail actually saying this. To my knowledge 
-Sysvinit does not need entropy for itself². The above mail merely talks 
-about the blocking on boot. And whether systemd-random-seed would drain 
-entropy, not whether hashmaps/UUID do. And also not the effect that 
-asking for entropy early has on the available entropy and on the 
-*initial* initialization time of the new CRNG. However I did not claim 
-that Systemd would block booting. *Not at all*.
+Could you try this patch instead - it seems that the PHY needs to be
+soft-reset for the write to take effect, and _even_ for the clearance
+of the bit to become visible in the register.
 
-Thirdly: I disagree with the tone you use in your mail. And for that 
-alone I feel it may be better for me to let go of this discussion.
+I'm not expecting this on its own to solve anything, but it should at
+least mean that the at803x doesn't modify the advertisement registers
+itself.  It may mean that the link doesn't even come up without forcing
+the advertisement via the ethtool command I mentioned before.
 
-My understanding of entropy always has been that only a certain amount 
-of it can be produced in a certain amount of time. If that is wrong… 
-please by all means, please teach me, how it would be.
+Thanks.
 
-However I am not even claiming anything. All I wrote above is that I do 
-not have any measurements. But I'd expect that the more entropy is asked 
-for early during boot, the longer the initial initialization of the new 
-CRNG will take. And if someone else relies on this initialization, that 
-something else would block for a longer time.
+ drivers/net/phy/at803x.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-I got that it the new crng won't block after that anymore.
-
-[1] https://github.com/systemd/systemd/issues/4167
-
-(I know that it still with /dev/urandom, so if it is using RDRAND now, 
-this may indeed be different, but would it then deplete entropy the CPU 
-has available and that by default is fed into the Linux crng as well 
-(even without trusting it completely)?)
-
-[2] According to
-
-https://daniel-lange.com/archives/152-Openssh-taking-minutes-to-become-available,-booting-takes-half-an-hour-...-because-your-server-waits-for-a-few-bytes-of-randomness.html
-
-sysvinit does not contain a single line of code about entropy or random 
-numbers.
-
-Daniel even updated his blog post with a hint to this discussion.
-
-Thanks,
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index b3893347804d..69a58c0e6b42 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -296,6 +296,16 @@ static int at803x_config_init(struct phy_device *phydev)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	/* Disable smartspeed */
++	ret = phy_modify(phydev, 0x14, BIT(5), 0);
++	if (ret < 0)
++		return ret;
++
++	/* Must soft-reset the PHY for smartspeed disable to take effect */
++	ret = genphy_soft_reset(phydev);
++	if (ret < 0)
++		return ret;
++
+ 	/* The RX and TX delay default is:
+ 	 *   after HW reset: RX delay enabled and TX delay disabled
+ 	 *   after SW reset: RX delay enabled, while TX delay retains the
 -- 
-Martin
-
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
