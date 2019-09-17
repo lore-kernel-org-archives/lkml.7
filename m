@@ -2,160 +2,89 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF69C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E589BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1275B206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A036120640
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UMYw0f+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404309AbfIQGlq (ORCPT
+        id S2404328AbfIQGqU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:41:46 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:36765 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729443AbfIQGlq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:41:46 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=3;SR=0;TI=SMTPD_---0TcaHJnG_1568702495;
-Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TcaHJnG_1568702495)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 17 Sep 2019 14:41:41 +0800
-From:   shile.zhang@linux.alibaba.com
-To:     linux@armlinux.org.uk
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [RESEND PATCH] mm/hugetlb: topdown mmap supports for hugepage
-Date:   Tue, 17 Sep 2019 14:41:35 +0800
-Message-Id: <1568702495-220091-1-git-send-email-shile.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <VI1PR0701MB2846C892037A515D0B3F4EF8A12B0@VI1PR0701MB2846.eurprd07.prod.outlook.com>
-References: <VI1PR0701MB2846C892037A515D0B3F4EF8A12B0@VI1PR0701MB2846.eurprd07.prod.outlook.com>
+        Tue, 17 Sep 2019 02:46:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60016 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726953AbfIQGqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:46:19 -0400
+Received: from nazgul.tnic (unknown [193.86.95.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CB7771EC0200;
+        Tue, 17 Sep 2019 08:46:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1568702778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9Q0Z13rG711uvWRmfQeCjyd2F/ANVybw/Hkd7OjcJ+k=;
+        b=UMYw0f+j81fcQuCG7ECcpHsVLbVG9alHrC0/6b8TqoWSohdnLoJyU/hHYtNk8lTLsbMLU/
+        EF9zGd03VHAckmOpVQvt4YVaVkT39pU1toKGQuSjHJnX5qUHUspRS4y2kiMsESxoxNbCKP
+        dRxae3zO6LYvSxKaji6M0M4BGLV+rbo=
+Date:   Tue, 17 Sep 2019 08:46:12 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Johannes Erdfelt <johannes@erdfelt.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Mihai Carabas <mihai.carabas@oracle.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, patrick.colp@oracle.com,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
+ revision is unchanged
+Message-ID: <20190917064612.GA12174@nazgul.tnic>
+References: <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
+ <20190905222706.GA4422@otc-nc-03>
+ <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
+ <20190906144039.GA29569@sventech.com>
+ <alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de>
+ <20190907003338.GA14807@araj-mobl1.jf.intel.com>
+ <alpine.DEB.2.21.1909071236120.1902@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1909161227060.10731@nanos.tec.linutronix.de>
+ <20190917003122.GA3005@otc-nc-03>
+ <alpine.DEB.2.21.1909170824220.2066@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1909170824220.2066@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shile Zhang <shile.zhang@linux.alibaba.com>
+On Tue, Sep 17, 2019 at 08:37:10AM +0200, Thomas Gleixner wrote:
+> So what happens if the ucode update "fixes" one of the executed
+> instructions on the fly? Is that guaranteed to be safe? There is nothing
+> which says so.
 
-Similar to other arches, this adds topdown mmap support for hugepage
-in user process address space allocation. It allows mmap big size
-hugepage. This patch copied from the implementation in arch/x86.
+You'd expect that when you load microcode on the core, the one thread
+does the loading and the other SMT thread is in a holding pattern. That
+would be optimal.
 
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
----
- arch/arm/include/asm/page.h |  1 +
- arch/arm/mm/hugetlbpage.c   | 85 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
+Considering the dancing through hoops we're doing to keep all threads
+quiesced, I'd be sceptical that is the case...
 
-diff --git a/arch/arm/include/asm/page.h b/arch/arm/include/asm/page.h
-index c2b75cb..dcb4df5 100644
---- a/arch/arm/include/asm/page.h
-+++ b/arch/arm/include/asm/page.h
-@@ -141,6 +141,7 @@ extern void __cpu_copy_user_highpage(struct page *to, struct page *from,
- 
- #ifdef CONFIG_KUSER_HELPERS
- #define __HAVE_ARCH_GATE_AREA 1
-+#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
- #endif
- 
- #ifdef CONFIG_ARM_LPAE
-diff --git a/arch/arm/mm/hugetlbpage.c b/arch/arm/mm/hugetlbpage.c
-index a1e5aac..ba9e151 100644
---- a/arch/arm/mm/hugetlbpage.c
-+++ b/arch/arm/mm/hugetlbpage.c
-@@ -33,3 +33,88 @@ int pmd_huge(pmd_t pmd)
- {
- 	return pmd_val(pmd) && !(pmd_val(pmd) & PMD_TABLE_BIT);
- }
-+
-+#ifdef CONFIG_HUGETLB_PAGE
-+static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
-+		unsigned long addr, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+
-+	info.flags = 0;
-+	info.length = len;
-+	info.low_limit = current->mm->mmap_legacy_base;
-+	info.high_limit = TASK_SIZE;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	return vm_unmapped_area(&info);
-+}
-+
-+static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
-+		unsigned long addr0, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+	unsigned long addr;
-+
-+	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-+	info.length = len;
-+	info.low_limit = PAGE_SIZE;
-+	info.high_limit = current->mm->mmap_base;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	addr = vm_unmapped_area(&info);
-+
-+	/*
-+	 * A failed mmap() very likely causes application failure,
-+	 * so fall back to the bottom-up function here. This scenario
-+	 * can happen with large stack limits and large mmap()
-+	 * allocations.
-+	 */
-+	if (addr & ~PAGE_MASK) {
-+		VM_BUG_ON(addr != -ENOMEM);
-+		info.flags = 0;
-+		info.low_limit = TASK_UNMAPPED_BASE;
-+		info.high_limit = TASK_SIZE;
-+		addr = vm_unmapped_area(&info);
-+	}
-+
-+	return addr;
-+}
-+
-+unsigned long
-+hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
-+		unsigned long len, unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+
-+	if (len & ~huge_page_mask(h))
-+		return -EINVAL;
-+	if (len > TASK_SIZE)
-+		return -ENOMEM;
-+
-+	if (flags & MAP_FIXED) {
-+		if (prepare_hugepage_range(file, addr, len))
-+			return -EINVAL;
-+		return addr;
-+	}
-+
-+	if (addr) {
-+		addr = ALIGN(addr, huge_page_size(h));
-+		vma = find_vma(mm, addr);
-+		if (TASK_SIZE - len >= addr &&
-+		    (!vma || addr + len <= vma->vm_start))
-+			return addr;
-+	}
-+	if (mm->get_unmapped_area == arch_get_unmapped_area)
-+		return hugetlb_get_unmapped_area_bottomup(file, addr, len,
-+				pgoff, flags);
-+	else
-+		return hugetlb_get_unmapped_area_topdown(file, addr, len,
-+				pgoff, flags);
-+}
-+#endif /* CONFIG_HUGETLB_PAGE */
 -- 
-1.8.3.1
+Regards/Gruss,
+    Boris.
 
+ECO tip #101: Trim your mails when you reply.
+--
