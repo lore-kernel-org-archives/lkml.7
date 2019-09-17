@@ -2,110 +2,60 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988AAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474E9C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72DA020665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:29:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0581920880
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:37:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391346AbfIQB34 (ORCPT
+        id S2391681AbfIQBhm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 21:29:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36924 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730648AbfIQB34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:29:56 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BDC728980E8;
-        Tue, 17 Sep 2019 01:29:55 +0000 (UTC)
-Received: from [10.72.12.121] (ovpn-12-121.pek2.redhat.com [10.72.12.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F41F05C1D6;
-        Tue, 17 Sep 2019 01:29:44 +0000 (UTC)
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>, mst@redhat.com,
-        alex.williamson@redhat.com, maxime.coquelin@redhat.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        dan.daly@intel.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, lingshan.zhu@intel.com
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <980958b0-b541-6e37-830e-f2b82358845b@redhat.com>
-Date:   Tue, 17 Sep 2019 09:29:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 21:37:42 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:36396 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730648AbfIQBhm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 21:37:42 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iA2R3-0004hi-Ee; Tue, 17 Sep 2019 01:37:41 +0000
+Date:   Tue, 17 Sep 2019 02:37:41 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [git pull] d_path fixup
+Message-ID: <20190917013741.GE1131@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190917010204.30376-1-tiwei.bie@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 17 Sep 2019 01:29:55 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+	d_absolute_path() regression in the last cycle (felt by tomoyo,
+mostly)
 
-On 2019/9/17 上午9:02, Tiwei Bie wrote:
-> This RFC is to demonstrate below ideas,
->
-> a) Build vhost-mdev on top of the same abstraction defined in
->     the virtio-mdev series [1];
->
-> b) Introduce /dev/vhost-mdev to do vhost ioctls and support
->     setting mdev device as backend;
->
-> Now the userspace API looks like this:
->
-> - Userspace generates a compatible mdev device;
->
-> - Userspace opens this mdev device with VFIO API (including
->    doing IOMMU programming for this mdev device with VFIO's
->    container/group based interface);
->
-> - Userspace opens /dev/vhost-mdev and gets vhost fd;
->
-> - Userspace uses vhost ioctls to setup vhost (userspace should
->    do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
->    fd first before doing other vhost ioctls);
->
-> Only compile test has been done for this series for now.
->
-> RFCv3: https://patchwork.kernel.org/patch/11117785/
->
-> [1] https://lkml.org/lkml/2019/9/10/135
+The following changes since commit 5f9e832c137075045d15cd6899ab0505cfb2ca4b:
 
+  Linus 5.3-rc1 (2019-07-21 14:05:38 -0700)
 
-Thanks a lot for the patches.
+are available in the git repository at:
 
-Per Michael request, the API in [1] might need some tweak, I want to 
-introduce some device specific parent_ops instead of vfio specific one. 
-This RFC has been posted at https://lkml.org/lkml/2019/9/12/151.
+  git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dcache
 
+for you to fetch changes up to f2683bd8d5bdebb929f05ae26ce6d9b578927ce5:
 
->
-> Tiwei Bie (3):
->    vfio: support getting vfio device from device fd
->    vfio: support checking vfio driver by device ops
->    vhost: introduce mdev based hardware backend
->
->   drivers/vfio/mdev/vfio_mdev.c    |   3 +-
->   drivers/vfio/vfio.c              |  32 +++
->   drivers/vhost/Kconfig            |   9 +
->   drivers/vhost/Makefile           |   3 +
->   drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
->   drivers/vhost/vhost.c            |  39 ++-
->   drivers/vhost/vhost.h            |   6 +
->   include/linux/vfio.h             |  11 +
->   include/uapi/linux/vhost.h       |  10 +
->   include/uapi/linux/vhost_types.h |   5 +
->   10 files changed, 573 insertions(+), 7 deletions(-)
->   create mode 100644 drivers/vhost/mdev.c
->
+  [PATCH] fix d_absolute_path() interplay with fsmount() (2019-08-30 19:31:09 -0400)
+
+----------------------------------------------------------------
+Al Viro (1):
+      fix d_absolute_path() interplay with fsmount()
+
+ fs/d_path.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
