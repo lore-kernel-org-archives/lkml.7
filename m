@@ -2,99 +2,97 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA630C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797C6C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:34:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E08521670
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:31:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="m9rM+oJU"
+	by mail.kernel.org (Postfix) with ESMTP id 48A0B21670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731009AbfIQIbp (ORCPT
+        id S1731009AbfIQIe1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:31:45 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40393 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728906AbfIQIbp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:31:45 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b24so2012657wmj.5
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 01:31:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Yvd80cqDC7g7H/3EGDdUC4+VFqTvhuXauCbBSXd4cKQ=;
-        b=m9rM+oJUxhFcRzvtzjy/b03fyK0MatUXoMTP9FtAwjLXnD6dShihpi6S/onI1oOhV/
-         Mx2RNhcstTmfbx+3xLB7tBwCGyi+TN360USzfuG9fWN/aiBGOMhXaUge5vW6rWYoIwsw
-         RyoYVbM7aUjqBKmBi9RIMcf4EpOi2yHlMhMpY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Yvd80cqDC7g7H/3EGDdUC4+VFqTvhuXauCbBSXd4cKQ=;
-        b=mGuEMgRPr9cfOh0O3/tELrt9+QHzTLcujiN3vVuMbsnp4ARwm6kujDa1BNmPRaAhDm
-         Y44ei9t2J6NMaTNUGEhwmiixSk1OR5mWcBW8rtfr1iOypi04IgwF9c+TOoBh/zG2T5N9
-         pnWPcIOTMmDuyiFlP8KtbCOJZHLlrZEfVZ8Um9SHIRl3bjUpRKkPpuucf6/W8lecohMm
-         Vk9F+IdQineFeE5PTBRltdyUr3z8c3IAhLIJ1L79vEhxHKVerzc8fzPOHTFAgJYOdbaI
-         daGYj7yjDiOqr1ZdTaHdQV0/Soji9QxxbGr12VcgKhEh7Em0PAZhvsNtJL4DFzzEEjNU
-         Diiw==
-X-Gm-Message-State: APjAAAXg8YNiGX+kjZYbJivbObsKYS9CwDORLlUht4YKN2IMtIYxur06
-        l38Q2OohKWSsV8drbGeWSEo08g==
-X-Google-Smtp-Source: APXvYqxhY4IauqcE6+bMW3Vzuz9urpQh9TOpjOry2a1gYoCQgrUeWJVIoSvMOTh1Myigya4XWNS7LA==
-X-Received: by 2002:a1c:f916:: with SMTP id x22mr2499436wmh.69.1568709103043;
-        Tue, 17 Sep 2019 01:31:43 -0700 (PDT)
-Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id e20sm2405568wrc.34.2019.09.17.01.31.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 01:31:42 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 10:31:35 +0200
-From:   Miklos Szeredi <miklos@szeredi.hu>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-unionfs@vger.kernel.org
-Subject: [GIT PULL] overlayfs fixes for 5.3
-Message-ID: <20190917083135.GA19549@miu.piliscsaba.redhat.com>
+        Tue, 17 Sep 2019 04:34:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46278 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727492AbfIQIe1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:34:27 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EE30A8980E0;
+        Tue, 17 Sep 2019 08:34:26 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-47.ams2.redhat.com [10.36.116.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D2571001281;
+        Tue, 17 Sep 2019 08:34:26 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 5B01B17444; Tue, 17 Sep 2019 10:34:25 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 10:34:25 +0200
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>,
+        Huang Rui <ray.huang@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>
+Subject: Re: [PATCH 4/8] drm/ttm: factor out ttm_bo_mmap_vma_setup
+Message-ID: <20190917083425.kwwqyn463gn3mghf@sirius.home.kraxel.org>
+References: <20190913122908.784-1-kraxel@redhat.com>
+ <20190913122908.784-5-kraxel@redhat.com>
+ <88d5a253-ef9e-c998-6353-5ba8680129f2@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <88d5a253-ef9e-c998-6353-5ba8680129f2@suse.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Tue, 17 Sep 2019 08:34:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Fri, Sep 13, 2019 at 03:05:34PM +0200, Thomas Zimmermann wrote:
 
-Please pull from:
+> > +void ttm_bo_mmap_vma_setup(struct ttm_buffer_object *bo, struct vm_area_struct *vma)
+> > +{
+> > +	vma->vm_ops = &ttm_bo_vm_ops;
+> > +
+> > +	/*
+> > +	 * Note: We're transferring the bo reference to
+> > +	 * vma->vm_private_data here.
+> > +	 */
+> > +
+> > +	vma->vm_private_data = bo;
+> > +
+> > +	/*
+> > +	 * We'd like to use VM_PFNMAP on shared mappings, where
+> > +	 * (vma->vm_flags & VM_SHARED) != 0, for performance reasons,
+> > +	 * but for some reason VM_PFNMAP + x86 PAT + write-combine is very
+> > +	 * bad for performance. Until that has been sorted out, use
+> > +	 * VM_MIXEDMAP on all mappings. See freedesktop.org bug #75719
+> > +	 */
+> > +	vma->vm_flags |= VM_MIXEDMAP;
+> > +	vma->vm_flags |= VM_IO | VM_DONTEXPAND | VM_DONTDUMP;
+> > +}
+> > +EXPORT_SYMBOL(ttm_bo_mmap_vma_setup);
+> 
+> To me, this function looks like an internal helper that should rather
+> remain internal.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git tags/ovl-fixes-5.3
+Well, I'm moving that to a helper exactly to avoid drm gem ttm helpers
+messing with ttm internals.  To not them initialize vm_flags for
+example, and to avoid exporting ttm_bo_vm_ops.  Also to make sure ttm bo
+vma's are initialized the same way no matter which code path was taken
+to mmap the object.
 
-Fix a regression in docker introduced by overlayfs changes in 4.19.  Also
-fix a couple of miscellaneous bugs.
+> As mentioned in my reply to patch 5, maybe re-using
+> ttm_fbdev_mmap() could help.
 
-Thanks,
-Miklos
+No, the check in that function prevents that from working.
 
-----------------------------------------------------------------
-Amir Goldstein (1):
-      ovl: fix regression caused by overlapping layers detection
+cheers,
+  Gerd
 
-Ding Xiang (1):
-      ovl: Fix dereferencing possible ERR_PTR()
-
-Mark Salyzyn (1):
-      ovl: filter of trusted xattr results in audit
-
----
- Documentation/filesystems/overlayfs.txt |  2 +-
- fs/overlayfs/export.c                   |  3 +-
- fs/overlayfs/inode.c                    |  3 +-
- fs/overlayfs/ovl_entry.h                |  1 +
- fs/overlayfs/super.c                    | 73 +++++++++++++++++++++------------
- 5 files changed, 52 insertions(+), 30 deletions(-)
