@@ -2,70 +2,154 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F919C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CDA5C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A5B420644
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D711520644
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:15:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404459AbfIQHO1 (ORCPT
+        id S2391581AbfIQHPj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:14:27 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:37942 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727126AbfIQHO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:14:26 -0400
-Received: from erd987.prtnl (erd987.prtnl [192.168.237.3])
-        by sparta (Postfix) with ESMTP id 63AC744A009E;
-        Tue, 17 Sep 2019 09:16:27 +0200 (CEST)
-From:   Robin van der Gracht <robin@protonic.nl>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Andreas Pretzsch <apr@cn-eng.de>,
-        Robin van der Gracht <robin@protonic.nl>
-Subject: [PATCH] media: i2c: tvp5150: Fix horizontal crop stop boundry
-Date:   Tue, 17 Sep 2019 09:14:42 +0200
-Message-Id: <20190917071442.24986-1-robin@protonic.nl>
-X-Mailer: git-send-email 2.20.1
+        Tue, 17 Sep 2019 03:15:39 -0400
+Received: from luna.lichtvoll.de ([194.150.191.11]:52607 "EHLO
+        mail.lichtvoll.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727126AbfIQHPi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 03:15:38 -0400
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.lichtvoll.de (Postfix) with ESMTPSA id 4ADD4772C8;
+        Tue, 17 Sep 2019 09:15:35 +0200 (CEST)
+From:   Martin Steigerwald <martin@lichtvoll.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthew Garrett <mjg59@srcf.ucam.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: a sane approach to random numbers (was: Re: Linux 5.3-rc8)
+Date:   Tue, 17 Sep 2019 09:15:35 +0200
+Message-ID: <4727002.QyS4NGTWcj@merkaba>
+In-Reply-To: <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com>
+References: <CAHk-=wiDNRPzuNE-eXs7QOpgPVLXsZOXEMQE9RmAWABiiZrSAQ@mail.gmail.com> <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Authentication-Results: mail.lichtvoll.de;
+        auth=pass smtp.auth=martin smtp.mailfrom=martin@lichtvoll.de
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The value for AVID stop is relative to the width of the active video area,
-not the maximum register value. Zero means equal and a negative value means
-we're cropping on the right side.
+As this is not about Linux 5.3-rc8 anymore I took the liberty to change 
+the subject.
 
-Signed-off-by: Robin van der Gracht <robin@protonic.nl>
----
- drivers/media/i2c/tvp5150.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Linus Torvalds - 17.09.19, 01:05:47 CEST:
+> On Mon, Sep 16, 2019 at 4:02 PM Matthew Garrett <mjg59@srcf.ucam.org> 
+> wrote:
+> > The semantics many people want for secure key generation is urandom,
+> > but with a guarantee that it's seeded.
+> 
+> And that is exactly what I'd suggest GRND_SECURE should do.
+> 
+> The problem with:
+> > getrandom()'s default behaviour at present provides that
+> 
+> is that exactly because it's the "default" (ie when you don't pass any
+> flags at all), that behavior is what all the random people get who do
+> *not* really intentionally want it, they just don't think about it.
+> > Changing the default (even with kernel warnings) seems like
+> > it risks people generating keys from an unseeded prng, and that
+> > seems
+> > like a bad thing?
+> 
+> I agree that it's a horrible thing, but the fact that the default 0
+> behavior had that "wait for entropy" is what now causes boot problems
+> for people.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index f47cb9a023fb..6bc65ab5e8ab 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1231,10 +1231,10 @@ __tvp5150_set_selection(struct v4l2_subdev *sd, struct v4l2_rect rect)
- 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
- 		     rect.left | (1 << TVP5150_CROP_SHIFT));
- 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
--		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-+		     (rect.left + rect.width - TVP5150_H_MAX) >>
- 		     TVP5150_CROP_SHIFT);
- 	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
--		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-+		     rect.left + rect.width - TVP5150_H_MAX);
- }
- 
- static int tvp5150_set_selection(struct v4l2_subdev *sd,
+Seeing all the discussion, I just got the impression that it may be best 
+to start from scratch. To stop trying to fix something that was broken to 
+begin with – at least that was what I got from the discussion here.
+
+Do a sane API with new function names, new flag names and over time 
+deprecate the old one completely so that one day it hopefully could be 
+gradually disabled until it can be removed. Similar like with statx() 
+replacing stat() someday hopefully.
+
+And do some documentation about how it is to be used by userspace 
+developers. I.e. like: If the kernel says it is not random, do not block 
+and poll on it, but do something to generate entropy.
+
+But maybe that is naive, too.
+
+However, in the end, what ever you kernel developers will come up with, 
+I bet there will be no way to make the kernel control userspace 
+developers. However I have the impression that that is what you attempt 
+to do here. As long as you have an API to obtain guaranteed random 
+numbers or at least somewhat guaranteed random numbers that is not 
+directly available at boot time, userspace could poll on its 
+availability. At least as long as the kernel would be honest about its 
+unavailability and tell about it. And if it doesn't applications that 
+*require* random numbers can never know whether they got some from the 
+kernel.
+
+Maybe you can make an API that is hard to abuse, yes. And that is good. 
+But impossible?
+
+I wonder: How could the Linux experience look like if kernel developers 
+and userspace developers actually work together instead of finding ways 
+to fight each other? I mean, for the most common userspace applications 
+in the free software continuum, there would not be all that many people 
+to talk with, or would there? It is basically gdm, sddm, some other 
+display managers probably, SSH, GnuPG and probably a few more. For 
+example for gdm someone could open a bug report about its use of the 
+current API and ask it to use something that is non blocking? And does 
+Systemd really need to deplete the random pool early at boot in order to 
+generate UUIDs? Even tough I do not use GNOME I'd be willing to help 
+with doing a few bug reports there and there. AFAIR there has been 
+something similar with sddm which I used, but I believe there it has 
+been fixed already with sddm.
+
+Sometimes I wonder what would happen if kernel and userspace developers 
+actually *talk* to each other, or better *with* each other.
+
+But instead for example with Lennart appears to be afraid to interact 
+with the kernel community and some kernel developers just talked about 
+personalities that they find difficult to interact it, judging them to be 
+like this and like that.
+
+There is a social, soft skill issue here that no amount of technical 
+excellence will resolve. That is at least how I observe this.
+
+Does it make it easier? Probably not. I fully appreciate that some 
+people may have a difficult time to talk with each other, I experienced 
+this myself often enough. I did not report a bug report with Systemd I 
+found  recently just cause I do not like to repeat the experience I had 
+when I reported bugs about it before and I do not use it anymore 
+personally anyway. So I totally get that.
+
+However… not talking with each other is not going to resolve those 
+userspace uses kernel API in a way kernel developers do not agree with 
+and that causes issues like stalled boots. Cause basically userspace can 
+abuse any kernel API and in the end the kernel can do nothing about it.
+
+Of course feel free to ignore this, if you think it is not useful.
+
+Thanks,
 -- 
-2.20.1
+Martin
+
 
