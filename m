@@ -2,187 +2,163 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB890C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCEAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9867720862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CEC214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568740043;
+	bh=+ubCWqZlPU1XeGPUgnyumUqfKdtQbouqijwBVicHlxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=X+hkqudgPa7mtVWSFeSn0dro8NF6RPs0W+36eT1oni2YrR3Wb/lwO7duyqehP1VS8
+	 GN+wOrFedCLU7ElRP1l//SVF34/rVG5J0y7NVPuH0SkuLIShT49nZvgs25+7/bc1hh
+	 py6KNzlxgHexdXSd1a5JKZZi9O1MhBCCwsww5RMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbfIQRHT (ORCPT
+        id S1730780AbfIQRHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:07:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35652 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 13:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIQRHT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:07:19 -0400
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728507AbfIQRHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:07:21 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9A38237E80
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 17:07:18 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id h6so1506325wmb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 10:07:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1ruT4jB1gaysYVDNCjFP18hxGY2r2nsdaAmRUQTyfVE=;
-        b=hEacvuYmBNGY2Qqd+j+novwQIFdyyI8S6O4UqbEa6pGpKfVgOnMDnYWWXSC7ZqLEmk
-         iks3kzLtzy7K5IPsPQRYOtii2mxRgsq3ZYu38CG8aCWfsMONpJKikhR3nzsjnIKXNAE3
-         /Ne39oGvDviPswE6SdAq7bZ9nR9+QjnfnqStMyZXR8eEKZJBpOmN94Lddh1ML81eFO2B
-         l1kNHaXxwzIaFC9inz5E51kG74iYiZyziglBdJHQodTvfR8cGA7mYI0rPXcSIHyi7lGr
-         ftSqyCX4sCi6azyJFmSGajCoj6XphkkKAZZUmNyNm8wSPsJFK6EOdBG3C+RbqhDIgCwX
-         lsSg==
-X-Gm-Message-State: APjAAAUSp2rZvphk51u/wNqqiSDGUb0LeZIYUftqeJsi+jK+5EC2Nt9w
-        muTVQAQMcabK6lA4trEPdy7qMaADmdVE735GutWRg+Uz/5S72c4mRv4kJIzHg44Jl1V49ypbOJl
-        oQe5tpCZfRTZ5VBtZJbkee9Zx
-X-Received: by 2002:a1c:6143:: with SMTP id v64mr4423954wmb.79.1568740037110;
-        Tue, 17 Sep 2019 10:07:17 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwIbFrwvol5OymNPikmzOF8yYlM2jDAoFYT60aSA6jpyo8zcnIn7QqaDqNF8TOdzR1saASRcw==
-X-Received: by 2002:a1c:6143:: with SMTP id v64mr4423932wmb.79.1568740036822;
-        Tue, 17 Sep 2019 10:07:16 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id d12sm3670731wme.33.2019.09.17.10.07.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 10:07:16 -0700 (PDT)
-Subject: Re: [PATCH v5 3/3] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
- <1568708186-20260-3-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <879b1950-3ca7-0a53-9e4f-508fd5db4bd4@redhat.com>
-Date:   Tue, 17 Sep 2019 19:07:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id CF5222067B;
+        Tue, 17 Sep 2019 17:07:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568740040;
+        bh=+ubCWqZlPU1XeGPUgnyumUqfKdtQbouqijwBVicHlxw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a0kFSS9ymJn81IkSf9ANdxCDtykIrw7fHnmw7PFNTDwCG0IwzfBlHvg2JDJlork8+
+         3cIUDtH9Oq+Ay3alcft/3VTmVpwCn95YG16VYNZCaqwuwlhuhhLbA/DOkVt3++++8/
+         EeF3p2xnDX3ssnolXC/Zw7GNL+Y6AXLogY9Kb2Mw=
+Date:   Tue, 17 Sep 2019 18:07:16 +0100
+From:   Will Deacon <will@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, peterz@infradead.org
+Subject: Re: [RFC][PATCH] pipe: Convert ring to head/tail
+Message-ID: <20190917170716.ud457wladfhhjd6h@willie-the-truck>
+References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
+ <25289.1568379639@warthog.procyon.org.uk>
+ <28447.1568728295@warthog.procyon.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <1568708186-20260-3-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28447.1568728295@warthog.procyon.org.uk>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/09/19 10:16, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
+Hi David,
+
+On Tue, Sep 17, 2019 at 02:51:35PM +0100, David Howells wrote:
+> Will Deacon <will@kernel.org> wrote:
 > 
-> Filter out drastic fluctuation and random fluctuation, remove
-> timer_advance_adjust_done altogether, the adjustment would be
-> continuous.
+> > > +		/* Barrier: head belongs to the write side, so order reading
+> > > +		 * the data after reading the head pointer.
+> > > +		 */
+> > > +		unsigned int head = READ_ONCE(pipe->head);
+> > 
+> > Hmm, I don't understand this. Since READ_ONCE() doesn't imply a barrier,
+> > how are you enforcing the read-read ordering in the CPU?
 > 
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> It does imply a barrier: smp_read_barrier_depends().  I believe that's
 
-Queued, thanks (I renamed the new variable to lapic_timer_advance_dynamic).
+I fed your incomplete sentence to https://talktotransformer.com/ :
 
-Thanks,
+  It does imply a barrier: smp_read_barrier_depends(). I believe that's
+  correct. (I'm not a coder so I assume it just means it's a dependency. Maybe
+  this works for other languages too.)
 
-Paolo
+but I have a feeling that's not what you meant. I guess AI isn't quite
+ready to rule the world.
 
-> ---
->  arch/x86/kvm/lapic.c | 28 ++++++++++++++--------------
->  arch/x86/kvm/lapic.h |  1 -
->  2 files changed, 14 insertions(+), 15 deletions(-)
+> > What is the purpose of saying "This may need to insert a barrier"? Can this
+> > function be overridden or something?
 > 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index dbbe478..323bdca 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -65,7 +65,9 @@
->  #define APIC_BROADCAST			0xFF
->  #define X2APIC_BROADCAST		0xFFFFFFFFul
->  
-> -#define LAPIC_TIMER_ADVANCE_ADJUST_DONE 100
-> +static bool dynamically_adjust_timer_advance __read_mostly;
-> +#define LAPIC_TIMER_ADVANCE_ADJUST_MIN 100
-> +#define LAPIC_TIMER_ADVANCE_ADJUST_MAX 5000
->  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
->  /* step-by-step approximation to mitigate fluctuation */
->  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
-> @@ -1485,26 +1487,25 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
->  	u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
->  	u64 ns;
->  
-> +	/* Do not adjust for tiny fluctuations or large random spikes. */
-> +	if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_ADJUST_MAX ||
-> +	    abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_MIN)
-> +		return;
-> +
->  	/* too early */
->  	if (advance_expire_delta < 0) {
->  		ns = -advance_expire_delta * 1000000ULL;
->  		do_div(ns, vcpu->arch.virtual_tsc_khz);
-> -		timer_advance_ns -= min((u32)ns,
-> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-> +		timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
->  	} else {
->  	/* too late */
->  		ns = advance_expire_delta * 1000000ULL;
->  		do_div(ns, vcpu->arch.virtual_tsc_khz);
-> -		timer_advance_ns += min((u32)ns,
-> -			timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
-> +		timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
->  	}
->  
-> -	if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
-> -		apic->lapic_timer.timer_advance_adjust_done = true;
-> -	if (unlikely(timer_advance_ns > 5000)) {
-> +	if (unlikely(timer_advance_ns > LAPIC_TIMER_ADVANCE_ADJUST_MAX))
->  		timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
-> -		apic->lapic_timer.timer_advance_adjust_done = false;
-> -	}
->  	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
->  }
->  
-> @@ -1524,7 +1525,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
->  	if (guest_tsc < tsc_deadline)
->  		__wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
->  
-> -	if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
-> +	if (dynamically_adjust_timer_advance)
->  		adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
->  }
->  
-> @@ -2302,13 +2303,12 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
->  	apic->lapic_timer.timer.function = apic_timer_fn;
->  	if (timer_advance_ns == -1) {
->  		apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
-> -		apic->lapic_timer.timer_advance_adjust_done = false;
-> +		dynamically_adjust_timer_advance = true;
->  	} else {
->  		apic->lapic_timer.timer_advance_ns = timer_advance_ns;
-> -		apic->lapic_timer.timer_advance_adjust_done = true;
-> +		dynamically_adjust_timer_advance = false;
->  	}
->  
-> -
->  	/*
->  	 * APIC is created enabled. This will prevent kvm_lapic_set_base from
->  	 * thinking that APIC state has changed.
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index 50053d2..2aad7e2 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -35,7 +35,6 @@ struct kvm_timer {
->  	s64 advance_expire_delta;
->  	atomic_t pending;			/* accumulated triggered timers */
->  	bool hv_timer_in_use;
-> -	bool timer_advance_adjust_done;
->  };
->  
->  struct kvm_lapic {
-> 
+> I mean it's arch-dependent whether READ_ONCE() inserts a barrier or not.
 
+Ok, but why would the caller care?
+
+> > Saying that "This inserts a barrier" feels misleading, because READ_ONCE()
+> > doesn't do that.
+> 
+> Yes it does - on the Alpha:
+> 
+> [arch/alpha/include/asm/barrier.h]
+> #define read_barrier_depends() __asm__ __volatile__("mb": : :"memory")
+> 
+> [include/asm-generic/barrier.h]
+> #ifndef __smp_read_barrier_depends
+> #define __smp_read_barrier_depends()	read_barrier_depends()
+> #endif
+> ...
+> #ifndef smp_read_barrier_depends
+> #define smp_read_barrier_depends()	__smp_read_barrier_depends()
+> #endif
+> 
+> [include/linux/compiler.h]
+> #define __READ_ONCE(x, check)						\
+> ({									\
+> 	union { typeof(x) __val; char __c[1]; } __u;			\
+> 	if (check)							\
+> 		__read_once_size(&(x), __u.__c, sizeof(x));		\
+> 	else								\
+> 		__read_once_size_nocheck(&(x), __u.__c, sizeof(x));	\
+> 	smp_read_barrier_depends(); /* Enforce dependency ordering from x */ \
+> 	__u.__val;							\
+> })
+> #define READ_ONCE(x) __READ_ONCE(x, 1)
+> 
+> See:
+> 
+>     commit 76ebbe78f7390aee075a7f3768af197ded1bdfbb
+>     Author: Will Deacon <will.deacon@arm.com>
+>     Date:   Tue Oct 24 11:22:47 2017 +0100
+>     locking/barriers: Add implicit smp_read_barrier_depends() to READ_ONCE()
+
+Ah, that guy. I tried emailing him but he didn't reply.
+
+Seriously though, READ_ONCE() implies a barrier on Alpha, but its portable
+barrier semantics are only that it can be used to head an address
+dependency, a bit like rcu_dereference(). You shouldn't be relying on the
+stronger ordering provided by Alpha, and I doubt that you really are.
+
+If I'm understanding your code correctly (big 'if'), then you have things
+like this in pipe_read():
+
+
+	unsigned int head = READ_ONCE(pipe->head);
+	unsigned int tail = pipe->tail;
+	unsigned int mask = pipe->buffers - 1;
+
+	if (tail != head) {
+		struct pipe_buffer *buf = &pipe->bufs[tail & mask];
+
+		[...]
+
+		written = copy_page_to_iter(buf->page, buf->offset, chars, to);
+
+
+where you want to make sure you don't read from 'buf->page' until after
+you've read the updated head index. Is that right? If so, then READ_ONCE()
+will not give you that guarantee on architectures such as Power and Arm,
+because the 'if (tail != head)' branch can be speculated and the buffer
+can be read before we've got around to looking at the head index.
+
+So I reckon you need smp_load_acquire() in this case. pipe_write() might be ok
+with the control dependency because CPUs don't tend to make speculative writes
+visible, but I didn't check it carefully and the compiler can do crazy stuff in
+this area, so I'd be inclined to use smp_load_acquire() here too unless you
+really need the last ounce of performance.
+
+Will
