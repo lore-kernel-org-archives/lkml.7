@@ -2,176 +2,97 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57711C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32439C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3458120640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568742909;
-	bh=QXTxpWKekTiVxVw6fbgCDvZIsHFhrJiUqYKpA6xuCOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BQD0RBmpsRnLErg37t0+/lrdrn8kVBcx+qPQMGqWcycUP5mbzKuj5DImxRoJ+JsUu
-	 qL98LA1/t8WFNGGe3u+jZ8ZLHF/2JObctfYNhN7rxuyiml2nLCYlda9GBeFv6pW66Y
-	 72PL4XX1abxUOxj5Q4Vhb52s7VwDjGCqoI6f25/4=
+	by mail.kernel.org (Postfix) with ESMTP id 123EF20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:57:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ArFIrrPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfIQRzI (ORCPT
+        id S1727608AbfIQR5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:55:08 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41279 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbfIQRzI (ORCPT
+        Tue, 17 Sep 2019 13:57:39 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45550 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfIQR5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:55:08 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w17so3644423oiw.8;
-        Tue, 17 Sep 2019 10:55:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=apP6EuGrN+2ThQnbuaWrR8NOtzPWwQdyNbUGXH4C9kY=;
-        b=eeoIZdWTQQs2G5KkJimNl0/32P8hYJoaCwOtNq/8uo8gh4J+71Ydh0ew+tDCEFoKXB
-         7Et6f1HFsbsVyqqUa1oklkrGd8W0XvaLOekQmnVLiJOrB1dt1XH/enk3ZdUfL/yziPKo
-         5nzJTAN2MZVnXBRb07y7xoutAQV9t6IG1YTHS9IxpJJWgEQJCfjnuqjU3sCS00GftAk0
-         eMSwtrydFMIuDHy18/gDW/704FJ3aeBObniyWHsRv/5LESFmn1H8bYIik2uyWVUUP3/+
-         ipTirvZ5nx3E/7mQefqbGNXXVyUhI7swAikyBb2LtPM6qjAkcSI71GmMo3lMLfb18Z7C
-         KrFw==
-X-Gm-Message-State: APjAAAUmKK1LISBciUrRp2QFWzJcGbt1Dvzr3XzQwbvRGUwsHWW8gRdl
-        3bwJ47FUtCNs4svdlW704Q==
-X-Google-Smtp-Source: APXvYqxroo1YBuMjGZ0BOe2e6ICZ0bADExyq7TNaM4+OK8EjcRVNatn2iNeE5lPJX0K6tHBwPgEUdQ==
-X-Received: by 2002:aca:c7d8:: with SMTP id x207mr4901443oif.99.1568742907207;
-        Tue, 17 Sep 2019 10:55:07 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b4sm868738oiy.30.2019.09.17.10.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 10:55:06 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 12:55:05 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc:     laurent.pinchart@ideasonboard.com,
-        kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        mark.rutland@arm.com
-Subject: Re: [PATCH v4 1/9] dt-bindings: display: renesas,cmm: Add R-Car CMM
- documentation
-Message-ID: <20190917175505.GA29276@bogus>
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-2-jacopo+renesas@jmondi.org>
+        Tue, 17 Sep 2019 13:57:38 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8HHvYgY042788;
+        Tue, 17 Sep 2019 12:57:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568743054;
+        bh=ayDEv5KDPEjVAFfcfW7p+0fAeZu6iOZwh35OysQrDZI=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ArFIrrPzDqlhQEmUZiP7mWQf1voNSZJwApOycZGk1YVlp+B2/e2eDgfR1JvSAVU2C
+         c27+UnldYrIZ+B9ugHtDgw/goPBDfigpGllDPJXucKj7A89pMKqEHzWn1AckIIrhI8
+         nJbAx9qXmUc7Skj9iS2AluU2WGcOMbjDrtCj63KI=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8HHvYUw116921
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 17 Sep 2019 12:57:34 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
+ Sep 2019 12:57:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 17 Sep 2019 12:57:31 -0500
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8HHvY9C109336;
+        Tue, 17 Sep 2019 12:57:34 -0500
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH v6 4/9] dt-bindings: leds: Add multicolor ID to the color ID list
+Date:   Tue, 17 Sep 2019 12:59:32 -0500
+Message-ID: <20190917175937.13872-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
+In-Reply-To: <20190917175937.13872-1-dmurphy@ti.com>
+References: <20190917175937.13872-1-dmurphy@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190906135436.10622-2-jacopo+renesas@jmondi.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 03:54:28PM +0200, Jacopo Mondi wrote:
-> Add device tree bindings documentation for the Renesas R-Car Display
-> Unit Color Management Module.
-> 
-> CMM is the image enhancement module available on each R-Car DU video
-> channel on R-Car Gen2 and Gen3 SoCs (V3H and V3M excluded).
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  .../bindings/display/renesas,cmm.yaml         | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/display/renesas,cmm.yaml b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> new file mode 100644
-> index 000000000000..9e5922689cd7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/renesas,cmm.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Add a new color ID that is declared as MULTICOLOR as with the
+multicolor framework declaring a definitive color is not accurate
+as the node can contain multiple colors.
 
-For new bindings:
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
 
-GPL-2.0-only OR BSD-2-Clause
+v6 - no change
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/display/renesas,cmm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car Color Management Module (CMM)
-> +
-> +maintainers:
-> +  - Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> +  - Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> +  - Jacopo Mondi <jacopo+renesas@jmondi.org>
-> +
-> +description: |+
-> +  Renesas R-Car color management module connected to R-Car DU video channels.
-> +  It provides image enhancement functions such as 1-D look-up tables (LUT),
-> +  3-D look-up tables (CMU), 1D-histogram generation (HGO), and color
-> +  space conversion (CSC).
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - renesas,r8a7795-cmm
-> +        - renesas,r8a7796-cmm
-> +        - renesas,r8a77965-cmm
-> +        - renesas,r8a77990-cmm
-> +        - renesas,r8a77995-cmm
-> +      - enum:
-> +        - renesas,rcar-gen3-cmm
-> +        - renesas,rcar-gen2-cmm
+ include/dt-bindings/leds/common.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This allows 10 valid cases when I imagine there's only really 5. I'm 
-okay leaving it, but might be better to split into 2 under a 'oneOf'.
+diff --git a/include/dt-bindings/leds/common.h b/include/dt-bindings/leds/common.h
+index 9e1256a7c1bf..7006d15f71e8 100644
+--- a/include/dt-bindings/leds/common.h
++++ b/include/dt-bindings/leds/common.h
+@@ -29,7 +29,8 @@
+ #define LED_COLOR_ID_VIOLET	5
+ #define LED_COLOR_ID_YELLOW	6
+ #define LED_COLOR_ID_IR		7
+-#define LED_COLOR_ID_MAX	8
++#define LED_COLOR_ID_MULTI	8
++#define LED_COLOR_ID_MAX	9
+ 
+ /* Standard LED functions */
+ #define LED_FUNCTION_ACTIVITY "activity"
+-- 
+2.22.0.214.g8dca754b1e
 
-I imagine there will be a lot of these for Renesas, so just be 
-consistent.
-
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - resets
-> +  - power-domains
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a7796-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a7796-sysc.h>
-> +
-> +    cmm0: cmm@fea40000 {
-> +         compatible = "renesas,r8a7796-cmm";
-> +         reg = <0 0xfea40000 0 0x1000>;
-> +         power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> +         clocks = <&cpg CPG_MOD 711>;
-> +         resets = <&cpg 711>;
-> +    };
-> --
-> 2.23.0
-> 
