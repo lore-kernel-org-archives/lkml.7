@@ -2,90 +2,208 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8F8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BF6C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31A820678
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6325321670
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 08:20:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="USJ+WYYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389201AbfIQITl (ORCPT
+        id S1730353AbfIQIUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 04:19:41 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:46544 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726777AbfIQIT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 04:19:26 -0400
-Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=phil.fritz.box)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iA8hm-0005Uf-FF; Tue, 17 Sep 2019 10:19:22 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        finley.xiao@rock-chips.com, zhangqing@rock-chips.com,
-        christoph.muellner@theobroma-systems.com,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 3/5] clk: rockchip: move px30 critical clocks to correct clock controller
-Date:   Tue, 17 Sep 2019 10:19:01 +0200
-Message-Id: <20190917081903.25139-3-heiko@sntech.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190917081903.25139-1-heiko@sntech.de>
-References: <20190917081903.25139-1-heiko@sntech.de>
+        Tue, 17 Sep 2019 04:20:43 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:34220 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726777AbfIQIUn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 04:20:43 -0400
+Received: by mail-ot1-f67.google.com with SMTP id z26so2299673oto.1;
+        Tue, 17 Sep 2019 01:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XpgjHKHMGdhYytJR52HQX9zR2F19bBgZYV7/64t/ajE=;
+        b=USJ+WYYwt74eTznKmC/uRoW4eZVYdWuJsKSS1b43kxlIq3/1Abr1ymMWrWMrRvVLar
+         fKzUZvVDlrtf4ErDwa2njNR4Ok16/9FrFQukQZg7t+Mtxz9/rFAJ3wZr55E0s950CGHQ
+         dHxUvfbMDJ07XZWB5i3pTwlMKy0D+VPwuEhVO/ItgHIdC+Aj4L0aei6y9GUXC3R8tL6W
+         Esxpw+xE57xzL2Xee/fB27zkM2h8UyeyOZe3I27dqi+ZbwQJ5Jbkwisfg3PeP1lggH91
+         SmmockzRR4pNecEU/gX4iVfE1ujIEywWbz13OfI2OZ9MRBaNxr6h5ewDnn+7HiMC77Ea
+         zgQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XpgjHKHMGdhYytJR52HQX9zR2F19bBgZYV7/64t/ajE=;
+        b=NYZiZDszYWv1UzXaQL6bFgA1FMqK6UIsBM2TqE1znI7CpWCtWtLI6vzdmeMC9nP4Bj
+         VU/oiUXn2VCD0g/68dVWF23i3IguHmlIDJ/4227V5JCn6duBEkJMdZk81gbwVlnAb4e4
+         muNBLkkbZjYtnfmY2G2FJoZC4xH3o7PxBgFfAOP9kqiZMBU2V0Qe96hN5gbMPTJqAAKy
+         1e7KNcRo4S49hBRk2TPmIatm9LyrPEmw9QVHXDM5CdaddkrzcidaDQBNJFDqA0gK3Lah
+         Zdai5BoDjKd64l00Rs7FCkHHSXr6aLlWQjAPM1G2aEdX/OHgpnMPxiOm2CQRaBTKJCx3
+         F8og==
+X-Gm-Message-State: APjAAAXPxs+XrJKJ+hXk6GYefLDPBOrTBKnfE1wUzp9bIYm8PfMJ1Ktp
+        7ig/wA7JsgBArQow9xfx1biI+IBShh9TMJ/v5y8=
+X-Google-Smtp-Source: APXvYqwyQGwfv5B2H4CmhMbP4o7l5wMLHcAEVKp9/9auRJcEZJz7hzGluE3CQhHCTn1SmUvI9xVulJA26h3Aef42f5M=
+X-Received: by 2002:a9d:4597:: with SMTP id x23mr1829071ote.185.1568708442003;
+ Tue, 17 Sep 2019 01:20:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1568623199-5294-1-git-send-email-wanpengli@tencent.com> <20190916185551.GL18871@linux.intel.com>
+In-Reply-To: <20190916185551.GL18871@linux.intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 17 Sep 2019 16:20:30 +0800
+Message-ID: <CANRm+CyvFtV7mGz5a-6UwXbqwbk9O81aVr3Z6j5OH7oqVjhPFw@mail.gmail.com>
+Subject: Re: [PATCH v4] KVM: LAPIC: Tune lapic_timer_advance_ns smoothly
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The clocks in the px30 critical clock section are from the regular cru not
-the pmucru, so move them to the correct place.
+On Tue, 17 Sep 2019 at 02:55, Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Mon, Sep 16, 2019 at 04:39:59PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Filter out drastic fluctuation and random fluctuation, remove
+> > timer_advance_adjust_done altogether, the adjustment would be
+> > continuous.
+> >
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c | 26 ++++++++++++--------------
+> >  arch/x86/kvm/lapic.h |  1 -
+> >  arch/x86/kvm/x86.c   |  2 +-
+> >  arch/x86/kvm/x86.h   |  1 +
+> >  4 files changed, 14 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index dbbe478..2585b86 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -69,6 +69,7 @@
+> >  #define LAPIC_TIMER_ADVANCE_ADJUST_INIT 1000
+> >  /* step-by-step approximation to mitigate fluctuation */
+> >  #define LAPIC_TIMER_ADVANCE_ADJUST_STEP 8
+> > +#define LAPIC_TIMER_ADVANCE_FILTER 5000
+> >
+> >  static inline int apic_test_vector(int vec, void *bitmap)
+> >  {
+> > @@ -1482,29 +1483,28 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
+> >                                             s64 advance_expire_delta)
+> >  {
+> >       struct kvm_lapic *apic = vcpu->arch.apic;
+> > -     u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns;
+> > -     u64 ns;
+> > +     u32 timer_advance_ns = apic->lapic_timer.timer_advance_ns, ns;
+>
+> Is changing 'ns' to a u32 intentionaly?  It's still cast to a u32 in the
+> calculations, and set from @advance_expire_delta.
+>
+> > +
+> > +     if (abs(advance_expire_delta) > LAPIC_TIMER_ADVANCE_FILTER ||
+>
+> Shouldn't LAPIC_TIMER_ADVANCE_FILTER be used in the other "if ... > 5000"
+> check?
+>
+>         if (unlikely(timer_advance_ns > 5000))
+>
+> And maybe name it LAPIC_TIMER_ADVANCE_MAX or something?
+>
+> > +             abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE) {
+>
+> This should be aligned with the other 'abs', e.g.:
+>
+>         if (abs(...) ||
+>             abs(...))
+>                 return
+>
+> > +             /* filter out random fluctuations */
+>
+> If you put the comment above the if statement then you can drop the
+> parentheses.  And if you're going to bother with a comment, maybe be a bit
+> more explicit?  E.g.:
+>
+>         /* Do not adjust for tiny fluctuations or large random spikes. */
+>         if (abs(...) ||
+>             abs(...))
+>                 return;
+>
+> > +             return;
+> > +     }
+> >
+> >       /* too early */
+> >       if (advance_expire_delta < 0) {
+> >               ns = -advance_expire_delta * 1000000ULL;
+> >               do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > -             timer_advance_ns -= min((u32)ns,
+> > -                     timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> > +             timer_advance_ns -= ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+> >       } else {
+> >       /* too late */
+> >               ns = advance_expire_delta * 1000000ULL;
+> >               do_div(ns, vcpu->arch.virtual_tsc_khz);
+> > -             timer_advance_ns += min((u32)ns,
+> > -                     timer_advance_ns / LAPIC_TIMER_ADVANCE_ADJUST_STEP);
+> > +             timer_advance_ns += ns/LAPIC_TIMER_ADVANCE_ADJUST_STEP;
+> >       }
+> >
+> > -     if (abs(advance_expire_delta) < LAPIC_TIMER_ADVANCE_ADJUST_DONE)
+> > -             apic->lapic_timer.timer_advance_adjust_done = true;
+> > -     if (unlikely(timer_advance_ns > 5000)) {
+> > +     if (unlikely(timer_advance_ns > 5000))
+> >               timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> > -             apic->lapic_timer.timer_advance_adjust_done = false;
+> > -     }
+> >       apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> >  }
+> >
+> > @@ -1524,7 +1524,7 @@ static void __kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
+> >       if (guest_tsc < tsc_deadline)
+> >               __wait_lapic_expire(vcpu, tsc_deadline - guest_tsc);
+> >
+> > -     if (unlikely(!apic->lapic_timer.timer_advance_adjust_done))
+> > +     if (lapic_timer_advance_ns == -1)
+>
+> Rather than expose 'lapic_timer_advance_ns' from x86.c, what if we add a
+> 'static bool dynamically_adjust_timer_advance __read_mostly;' in lapic.c,
+> and have that be set in kvm_create_lapic() and checked here?  That'd make
+> this code a little more readable, would make this patch more obvious (it
+> wasn't immediately clear why lapic_timer_advance_ns was being exposed),
+> and would reduce the probability of unintentionally writing/corrupting the
+> module param.
+>
+> >               adjust_lapic_timer_advance(vcpu, apic->lapic_timer.advance_expire_delta);
+> >  }
+> >
+> > @@ -2302,10 +2302,8 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+> >       apic->lapic_timer.timer.function = apic_timer_fn;
+> >       if (timer_advance_ns == -1) {
+> >               apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_ADJUST_INIT;
+> > -             apic->lapic_timer.timer_advance_adjust_done = false;
+> >       } else {
+> >               apic->lapic_timer.timer_advance_ns = timer_advance_ns;
+> > -             apic->lapic_timer.timer_advance_adjust_done = true;
+> >       }
+>
+> Parentheses can be dropped (unless this is converted to a local global, as
+> above).
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- drivers/clk/rockchip/clk-px30.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I just handle all the comments in the new version.
 
-diff --git a/drivers/clk/rockchip/clk-px30.c b/drivers/clk/rockchip/clk-px30.c
-index a973394f3d65..5c77da1e3abc 100644
---- a/drivers/clk/rockchip/clk-px30.c
-+++ b/drivers/clk/rockchip/clk-px30.c
-@@ -976,7 +976,7 @@ static struct rockchip_clk_branch px30_clk_pmu_branches[] __initdata = {
- 	GATE(0, "pclk_cru_pmu", "pclk_pmu_pre", CLK_IGNORE_UNUSED, PX30_PMU_CLKGATE_CON(0), 8, GFLAGS),
- };
- 
--static const char *const px30_pmucru_critical_clocks[] __initconst = {
-+static const char *const px30_cru_critical_clocks[] __initconst = {
- 	"aclk_bus_pre",
- 	"pclk_bus_pre",
- 	"hclk_bus_pre",
-@@ -1021,6 +1021,9 @@ static void __init px30_clk_init(struct device_node *np)
- 				     &px30_cpuclk_data, px30_cpuclk_rates,
- 				     ARRAY_SIZE(px30_cpuclk_rates));
- 
-+	rockchip_clk_protect_critical(px30_cru_critical_clocks,
-+				      ARRAY_SIZE(px30_cru_critical_clocks));
-+
- 	rockchip_register_softrst(np, 12, reg_base + PX30_SOFTRST_CON(0),
- 				  ROCKCHIP_SOFTRST_HIWORD_MASK);
- 
-@@ -1053,9 +1056,6 @@ static void __init px30_pmu_clk_init(struct device_node *np)
- 	rockchip_clk_register_branches(ctx, px30_clk_pmu_branches,
- 				       ARRAY_SIZE(px30_clk_pmu_branches));
- 
--	rockchip_clk_protect_critical(px30_pmucru_critical_clocks,
--				      ARRAY_SIZE(px30_pmucru_critical_clocks));
--
- 	rockchip_clk_of_add_provider(np, ctx);
- }
- CLK_OF_DECLARE(px30_cru_pmu, "rockchip,px30-pmucru", px30_pmu_clk_init);
--- 
-2.20.1
-
+    Wanpeng
