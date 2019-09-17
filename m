@@ -2,204 +2,130 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C778C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8127C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D71D214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CA021881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 11:22:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jAcJG8Hw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfIQLTI (ORCPT
+        id S1726781AbfIQLWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 07:19:08 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:39117 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfIQLTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 07:19:08 -0400
-Received: by mail-io1-f70.google.com with SMTP id x22so5299962iol.6
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 04:19:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ImZBuLTqSEGXljKxgyySfimbMAHeQ24x1lZOqK5BqZg=;
-        b=gOYcuJ9GgOOxIYcdeOXguZYYPINsGoa2Ku+g52Ut2uCmh932p7wF+1GeTVBSSAw15g
-         6HWeVGsXlaEqIunmslvGYQc5B+2E4scfpE5XAGXE3HHeqioq5yKsx5OubTj1TOui/Bpz
-         DMpMe4t3oD5PiTk+Hczitc1l4V/FhDzQ0DVD90d+6IbQBQa6ZdxYSeeh24IKxoZC7Ftt
-         nZb6fcJhwbg5Or8T0aLLFBTpngj+ePNfCVf1tBF3KXpeGe31/9Zsj0IFz86oGkaloTaq
-         FGm+I/Oq58FK9ju4dAvj10m1xnlGTjqzqsUvTAH0ol01aDNSSZ31CPUArqbF2RfybiCo
-         sHAw==
-X-Gm-Message-State: APjAAAWByk04fMmsBCstCg+FE2NIldNoblC1KBATRBvsDHfVjON23F7r
-        k9nxc7CZzFN2bZ8cFOE0iRSOBfNPsVL9sNNX4ga6kEwVCedn
-X-Google-Smtp-Source: APXvYqx+Hgx5u0l/NE/cjMdOUtMZw+vHj/Hty5p6SNnwuhmkFjhje/k05xn9Bspiy2nejxjNpcnVMNbSbJml2fEi5mBpUI19yDu8
+        Tue, 17 Sep 2019 07:22:38 -0400
+Received: from mail-eopbgr760077.outbound.protection.outlook.com ([40.107.76.77]:37440
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726230AbfIQLWi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 07:22:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WOFFla+M8Rhq1vZbYU/EQL+7GPJs+EnphPshzR7pF2iqgpWKCd0TKDDvGEifFsiQiFgc53qlGvLDEbTzJzyuuzJn5ZdMh8oV7w8b1+hlBj96AOnSerc1/gaJnsV2xLpKekG9IbOpx/eYOrjeF3r5hdnOclHJrHYleJ3+9lDCCia+fA/Q5mg9zedpmLl9TsIqnQuiS4jVM5NKtIcWgAkmvjpJZi2alIn+0PcQ4z2hWwzAxyeJ/1J3sr1tE6y4pjOJbrJ+tQgvBSHrrs4rSjwuuvcGEhBH3xbfs3hEyydBNsgsIKLSNPoXqXQEgGLA1IqA0pSxcBqyHp6u+e99TflBWQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WkeFA31HAvpvKC8umA+WVOXMySRmHSU+0+kali0P2CU=;
+ b=RdbO7jEo18WVuW+XayXt+Kmvj7UrulapLzkk8KcddHMOLzw6IoXYzrDuHtmPALMXtWZI+DhQud4y1Dh00HiU/rmq4blgI+b6t/LQ+brQTQJO2Q0Cds5jTvPBlbXpRYHzkV1QVQ9j/8qafMruHLkCZd7jx1GyjEGi94APyNTtvp613pM6vugW7l3g1G2yuhURLbeWvybDbpwyNZf/ae+F2GNlAMFt5+c4tlgdsPZyY5qdOhIa04U6YDdE90BXcg1MDowFTNgoMSgWf2VHlfmaMortsVkva3jwcEx74obkbD/o3r2NCa4ScfH+UQngPnDK/AN2578biZmr0Bo8NFr3pQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WkeFA31HAvpvKC8umA+WVOXMySRmHSU+0+kali0P2CU=;
+ b=jAcJG8Hw832BY6MOBSgxfCSngavDCFIAI4cVivHnDPgwS3wgMkn+YDmVhEQ68x+3QpFPFCqmXsuMqudwmK/HBj3Hi92qNBdBX+1eq4HmNQrjLxp+obJYiA6V7lvd7rGKAwPlA6YiPYSVyJkDPrnd+pbmdcieXWGJZyuSZKt53ys=
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB1404.namprd12.prod.outlook.com (10.168.238.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.24; Tue, 17 Sep 2019 11:22:35 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2263.023; Tue, 17 Sep 2019
+ 11:22:35 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Huang, Ray" <Ray.Huang@amd.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 07/11] drm/ttm: drop VM_DONTDUMP
+Thread-Topic: [PATCH v2 07/11] drm/ttm: drop VM_DONTDUMP
+Thread-Index: AQHVbTmsx2EByWAHbUyFT5pF6Z8Ra6cvuewA
+Date:   Tue, 17 Sep 2019 11:22:35 +0000
+Message-ID: <c29222f7-2737-2416-62c9-eafd4d608ded@amd.com>
+References: <20190917092404.9982-1-kraxel@redhat.com>
+ <20190917092404.9982-8-kraxel@redhat.com>
+In-Reply-To: <20190917092404.9982-8-kraxel@redhat.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: PR0P264CA0180.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1c::24) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 24e9c727-1787-4cba-a1e3-08d73b6156dd
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR12MB1404;
+x-ms-traffictypediagnostic: DM5PR12MB1404:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB140453F2D1E676440CED63F6838F0@DM5PR12MB1404.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3826;
+x-forefront-prvs: 01630974C0
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(346002)(39860400002)(136003)(189003)(199004)(5660300002)(31696002)(71190400001)(4326008)(6436002)(6486002)(6512007)(66556008)(31686004)(2501003)(2616005)(14444005)(256004)(476003)(186003)(66446008)(446003)(11346002)(71200400001)(65806001)(65956001)(8676002)(81156014)(81166006)(478600001)(229853002)(46003)(8936002)(7736002)(14454004)(99286004)(36756003)(316002)(25786009)(486006)(52116002)(58126008)(86362001)(6246003)(305945005)(66946007)(64756008)(66476007)(6116002)(110136005)(54906003)(102836004)(76176011)(2906002)(386003)(6506007);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1404;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: vynQ+4/Ti0Y5PU9M0MxsBcQjuLT3IvdeIexi488U0DfuxrzrBbl0osooYz13nAL5Dw6FzIJH+zTIW+F/DgfBhrhNYXfqqFJFFkLHmcDMbOvydpjMwWsvjdd6PdgC2mzzWXNZub8XDTz1/jN/TtA4Hp3mPPBBCFDs1n2gJ53k/s8VeOk9uvAFLWKqbMiolLSnqTF5lCLoTMcmhE/uM6abZu7ktAck5EkA6DF8U/A2ecZI6qMCul9CHovxAIJ2w62Dy9kFtdDiipc1zK8X9KWKiLcx5xLAwpYMlrVHtth26kZDLobhqT9O9a3u/lAkzUhyehgx3Jwj71EiWe/Ss6qMLPqun6bfQeFWRxTXHycCNPr6izs/eCwfUGlyI+AEfiKyLmVZ30Cn4JDrYouubzaqw7lf/JTz9WNcf1oNyD9UEkM=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2AD654A6AD6845418CACA25ACCA8A252@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fc15:: with SMTP id r21mr2694312ioh.25.1568719147452;
- Tue, 17 Sep 2019 04:19:07 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 04:19:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000008953790592bde396@google.com>
-Subject: possible deadlock in open_rio (3)
-From:   syzbot <syzbot+19df89b6a1c1aa59be2b@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        miquel@df.uba.ar, rio500-users@lists.sourceforge.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24e9c727-1787-4cba-a1e3-08d73b6156dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Sep 2019 11:22:35.5904
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: /Tr/28H9iAQH6DgG0FxJWuvEaNs+gEKHOFPPNKB2RpmLvYnPZ57rLJc8DFf940M6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1404
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=166a89be600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=19df89b6a1c1aa59be2b
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12558891600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=136f7409600000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19df89b6a1c1aa59be2b@syzkaller.appspotmail.com
-
-======================================================
-WARNING: possible circular locking dependency detected
-5.3.0-rc7+ #0 Not tainted
-------------------------------------------------------
-syz-executor220/1722 is trying to acquire lock:
-00000000ff068a1b (rio500_mutex){+.+.}, at: open_rio+0x16/0xe0  
-drivers/usb/misc/rio500.c:65
-
-but task is already holding lock:
-00000000a02b2d74 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
-drivers/usb/core/file.c:39
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #1 (minor_rwsem){++++}:
-        down_write+0x92/0x150 kernel/locking/rwsem.c:1500
-        usb_register_dev drivers/usb/core/file.c:187 [inline]
-        usb_register_dev+0x131/0x670 drivers/usb/core/file.c:156
-        probe_rio.cold+0x53/0x237 drivers/usb/misc/rio500.c:474
-        usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
-        really_probe+0x281/0x6d0 drivers/base/dd.c:548
-        driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-        __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-        bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-        __device_attach+0x217/0x360 drivers/base/dd.c:894
-        bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-        device_add+0xae6/0x16f0 drivers/base/core.c:2165
-        usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
-        generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
-        usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
-        really_probe+0x281/0x6d0 drivers/base/dd.c:548
-        driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
-        __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
-        bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
-        __device_attach+0x217/0x360 drivers/base/dd.c:894
-        bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
-        device_add+0xae6/0x16f0 drivers/base/core.c:2165
-        usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
-        hub_port_connect drivers/usb/core/hub.c:5098 [inline]
-        hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
-        port_event drivers/usb/core/hub.c:5359 [inline]
-        hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
-        process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
-        worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-        kthread+0x318/0x420 kernel/kthread.c:255
-        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
--> #0 (rio500_mutex){+.+.}:
-        check_prev_add kernel/locking/lockdep.c:2405 [inline]
-        check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-        validate_chain kernel/locking/lockdep.c:2897 [inline]
-        __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-        lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-        __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-        __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-        open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
-        usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-        chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-        do_dentry_open+0x494/0x1120 fs/open.c:797
-        do_last fs/namei.c:3416 [inline]
-        path_openat+0x1430/0x3f50 fs/namei.c:3533
-        do_filp_open+0x1a1/0x280 fs/namei.c:3563
-        do_sys_open+0x3c0/0x580 fs/open.c:1089
-        do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-        entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-other info that might help us debug this:
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(minor_rwsem);
-                                lock(rio500_mutex);
-                                lock(minor_rwsem);
-   lock(rio500_mutex);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor220/1722:
-  #0: 00000000a02b2d74 (minor_rwsem){++++}, at: usb_open+0x23/0x270  
-drivers/usb/core/file.c:39
-
-stack backtrace:
-CPU: 1 PID: 1722 Comm: syz-executor220 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
-  check_prev_add kernel/locking/lockdep.c:2405 [inline]
-  check_prevs_add kernel/locking/lockdep.c:2507 [inline]
-  validate_chain kernel/locking/lockdep.c:2897 [inline]
-  __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
-  lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
-  __mutex_lock_common kernel/locking/mutex.c:930 [inline]
-  __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
-  open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
-  usb_open+0x1df/0x270 drivers/usb/core/file.c:48
-  chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-  do_dentry_open+0x494/0x1120 fs/open.c:797
-  do_last fs/namei.c:3416 [inline]
-  path_openat+0x1430/0x3f50 fs/namei.c:3533
-  do_filp_open+0x1a1/0x280 fs/namei.c:3563
-  do_sys_open+0x3c0/0x580 fs/open.c:1089
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x401880
-Code: 01 f0 ff ff 0f 83 80 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
-44 00 00 83 3d 0d 05 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 54 0d 00 00 c3 48 83 ec 08 e8 ba 02 00 00
-RSP: 002b:00007ffcfca5b718 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
-RAX: ffffffffffffffda RBX: 00007ffcfca5bbd0 RCX: 0000000000401880
-RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00007ffcfca5b730
-RBP: 0000000000000000 R08: 0000000000000000 R09: 000000000000000f
-R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000402a60
-R13: 0000000000402af0 R14: 0000000000000000 R15: 0000000000
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+QW0gMTcuMDkuMTkgdW0gMTE6MjQgc2NocmllYiBHZXJkIEhvZmZtYW5uOg0KPiBOb3Qgb2J2aW91
+cyB3aHkgdGhpcyBpcyBuZWVkZWQuICBBY2NvcmRpbmcgdG8gRGVuaWVsIFZldHRlciB0aGlzIGlz
+IG1vc3QNCj4gbGlrZWx5IGEgaGlzdG9yaWMgYXJ0ZWZhY3QgZGF0aW5nIGJhY2sgdG8gdGhlIGRh
+eXMgd2hlcmUgZHJtIGRyaXZlcnMNCj4gZXhwb3NlZCBoYXJkd2FyZSByZWdpc3RlcnMgYXMgbW1h
+cCdhYmxlIGdlbSBvYmplY3RzLCB0byBhdm9pZCBkdW1waW5nDQo+IHRvdWNoaW5nIHRob3NlIHJl
+Z2lzdGVycy4NCg0KQ2xlYXJseSBhIE5BSy4NCg0KV2Ugc3RpbGwgaGF2ZSB0aGF0IGFuZCByZWFs
+bHkgZG9uJ3Qgd2FudCB0byB0cnkgZHVtcGluZyBhbnkgQ1BVIA0KaW5hY2Nlc3NpYmxlIFZSQU0g
+Y29udGVudCBldmVuIGlmIGl0IGlzIG1hcHBlZCBpbnRvIHRoZSBhZGRyZXNzIHNwYWNlIA0Kc29t
+ZXdoZXJlLg0KDQpSZWdhcmRzLA0KQ2hyaXN0aWFuLg0KDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEdl
+cmQgSG9mZm1hbm4gPGtyYXhlbEByZWRoYXQuY29tPg0KPiAtLS0NCj4gICBkcml2ZXJzL2dwdS9k
+cm0vdHRtL3R0bV9ib192bS5jIHwgMiArLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKSwgMSBkZWxldGlvbigtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3R0
+bS90dG1fYm9fdm0uYyBiL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMNCj4gaW5kZXgg
+N2MwZTg1YzEwZTBlLi40ZGM3N2E2NmFhZjYgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS90dG0vdHRtX2JvX3ZtLmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm9fdm0u
+Yw0KPiBAQCAtNDQ1LDcgKzQ0NSw3IEBAIHZvaWQgdHRtX2JvX21tYXBfdm1hX3NldHVwKHN0cnVj
+dCB0dG1fYnVmZmVyX29iamVjdCAqYm8sIHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqDQo+ICAgCSAq
+IFZNX01JWEVETUFQIG9uIGFsbCBtYXBwaW5ncy4gU2VlIGZyZWVkZXNrdG9wLm9yZyBidWcgIzc1
+NzE5DQo+ICAgCSAqLw0KPiAgIAl2bWEtPnZtX2ZsYWdzIHw9IFZNX01JWEVETUFQOw0KPiAtCXZt
+YS0+dm1fZmxhZ3MgfD0gVk1fSU8gfCBWTV9ET05URVhQQU5EIHwgVk1fRE9OVERVTVA7DQo+ICsJ
+dm1hLT52bV9mbGFncyB8PSBWTV9JTyB8IFZNX0RPTlRFWFBBTkQ7DQo+ICAgfQ0KPiAgIEVYUE9S
+VF9TWU1CT0wodHRtX2JvX21tYXBfdm1hX3NldHVwKTsNCj4gICANCg0K
