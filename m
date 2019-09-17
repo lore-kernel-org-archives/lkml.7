@@ -2,95 +2,136 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4538C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3F0C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91BA321881
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:19:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="G4742H6+"
+	by mail.kernel.org (Postfix) with ESMTP id 2BA7021925
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727269AbfIQNTN (ORCPT
+        id S1727711AbfIQNUl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:19:13 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35969 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbfIQNTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:19:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id s18so3950938qkj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:19:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=y9WGLrKKo8Mkmz25tH5PKr+ryw2VCq/9Rb24CinmnPc=;
-        b=G4742H6+c5HXp7NKayVefS8q9iEn3EZcdnSAYjvT9MLpnzHJKBAEHq7dSd2tiGREvn
-         QxbQUPEHbiWMJVtV1rzefcVnQJeRC+12Ciys2cR2qNVuAqtBuQIZSme9J6lojTxsxZcs
-         WmGUA/gGbhxE17e2YsL069WNjJcUuPoYQ+UigYJ0gJQcp+7v0HxFiTDXsnDNwpsRK2ow
-         EPTb3ZQ58M8MCWD5wghHSLIbHWWLc+dqg0b+GkEfrTWuuhviSs/4IHuLfInYXsIFsvWm
-         y0PkI+J3kSAjPyWi9yE/2JjfssmqlSyQIL+rW0JHmwDZvSlQhCekDlhbk5MH8D2u0Zms
-         75Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=y9WGLrKKo8Mkmz25tH5PKr+ryw2VCq/9Rb24CinmnPc=;
-        b=VPcuJFtkRZNWpL4hS8y1SJnWcPvD1oaxi6PIcv+ZTb2Gy+HKz5JrcBqknoqF0tmeoh
-         upq0fOKrSI3wu1l/ZxXzlJC/3/odyl9DY03ZPEJzXUpr1SdQcn/QdAedInbteungRajN
-         KPaBT2BZYDoH7QhIYXV8Aa7973YwuHWWzjVzDaEEFoPmyfNV9Hsuf96vTw6AZHSayOsb
-         ifjbiUq7w1cGX/SaXDwacs1PJCpLUb1A6g870PvKiFmjo8PMz9/H4U+co/FpoOqiuf8n
-         I4OwtvAxy/U7oq66vL8YJ8Dpn9jUzIidAhcl6NPNg5eBnh2S3JqrHfOUZvpSLBvU01X/
-         +UuA==
-X-Gm-Message-State: APjAAAXGk51s3/LZaBuAmZFIR5FwuiqSQ3TgKEHnnJTsGteU9c94pT/H
-        tAh6OxOCujea4sYIzJucgasfb/1yFEg=
-X-Google-Smtp-Source: APXvYqxrJy4rG5OBkjx64ujR31ERVUX+Ep+FcVymYk+DtsTFlFvsmfXl3LXDJ4xE/5Uhk7FWLrNA+g==
-X-Received: by 2002:ae9:d885:: with SMTP id u127mr3575112qkf.109.1568726351778;
-        Tue, 17 Sep 2019 06:19:11 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id m19sm1074152qke.22.2019.09.17.06.19.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 17 Sep 2019 06:19:10 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     linux@armlinux.org.uk, gregkh@linuxfoundation.org
-Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] tty/amba-pl011: fix a -Wunused-function warning
-Date:   Tue, 17 Sep 2019 09:19:00 -0400
-Message-Id: <1568726340-4518-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 17 Sep 2019 09:20:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:55808 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726131AbfIQNUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:20:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2BD828;
+        Tue, 17 Sep 2019 06:20:39 -0700 (PDT)
+Received: from bogus (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 078F33F575;
+        Tue, 17 Sep 2019 06:20:37 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 14:20:35 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
+        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 5/5] cpufreq: qcom-hw: Move driver initialisation earlier
+Message-ID: <20190917132035.GB30016@bogus>
+References: <cover.1568240476.git.amit.kucheria@linaro.org>
+ <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
+ <20190917093412.GA24757@bogus>
+ <58e60ca4-9615-bbdf-5fe7-2a0e1d7f48d8@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58e60ca4-9615-bbdf-5fe7-2a0e1d7f48d8@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pl011_dma_probe() is only used in pl011_dma_startup() which does only
-exist when CONFIG_DMA_ENGINE=y, so remove the unused dummy version to
-silence the warning.
+On Tue, Sep 17, 2019 at 02:47:22PM +0200, Daniel Lezcano wrote:
+>
+> Hi Sudeep,
+>
+> On 17/09/2019 11:34, Sudeep Holla wrote:
+> > On Thu, Sep 12, 2019 at 04:02:34AM +0530, Amit Kucheria wrote:
+> >> Allow qcom-hw driver to initialise right after the cpufreq and thermal
+> >> subsystems are initialised in core_initcall so we get earlier access to
+> >> thermal mitigation.
+> >>
+> >> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> >> ---
+> >>  drivers/cpufreq/qcom-cpufreq-hw.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> >> index 4b0b50403901..04676cc82ba6 100644
+> >> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> >> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> >> @@ -327,7 +327,7 @@ static int __init qcom_cpufreq_hw_init(void)
+> >>  {
+> >>  	return platform_driver_register(&qcom_cpufreq_hw_driver);
+> >>  }
+> >> -device_initcall(qcom_cpufreq_hw_init);
+> >> +postcore_initcall(qcom_cpufreq_hw_init);
+> >
+> > I am fine with core framework initcall pushed to earlier initcall levels
+> > if required, but for individual/platform specific drivers I am not so
+> > happy to see that.
+> >
+> > This goes against the grand plan of single common kernel strategy by
+> > Android moving all drivers as modules. We might decide to make this
+> > a module.
+>
+> module = mounted file system = very late initialization
+>
+> Is that the plan? Force every driver to load too late?
+>
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- drivers/tty/serial/amba-pl011.c | 4 ----
- 1 file changed, 4 deletions(-)
+Yes. Something similar to what we have on desktops/servers.
 
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 5921a33b2a07..91b59f1cd3e6 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -1236,10 +1236,6 @@ static inline bool pl011_dma_rx_running(struct uart_amba_port *uap)
- 
- #else
- /* Blank functions if the DMA engine is not available */
--static inline void pl011_dma_probe(struct uart_amba_port *uap)
--{
--}
--
- static inline void pl011_dma_remove(struct uart_amba_port *uap)
- {
- }
--- 
-1.8.3.1
+> There are core drivers which must be loaded as soon as possible. If the
+> qcom driver is one of them, then what is the problem?
+>
 
+I am fine with that if it's really issue but it shouldn't become the
+defacto trend.
+
+> "The grand plan" will have to solve this first before doing the module
+> move.
+>
+
+Sure, I just expressed my view as it looks to be going in different
+direction for me.
+
+> > Also there are few cpufreq drivers that are modules. Will
+> > they have issues ? If not, why do we need this change at all.
+>
+> Because some boards don't have thermal issues with the cpufreq drivers
+> as module, other boards have.
+>
+
+OK, so this platform boots with default high OPP and needs thermal
+mitigation that early ? If so, that's fine.
+
+> > Needing
+> > thermal mitigation during boot this earlier is still too much of
+> > expectation, I would rather boot slowly than relying on this feature.
+>
+> And what if we want to boot faster? The boot time is one of a key point
+> of benchmark.
+>
+
+I understand the requirement, though for me it's really sounds stupid.
+
+As Quentin pointed out, it would be good to get all those benchmark
+details, and preferably in the commit log so that we can look back
+whenever someone else take the same approach later.
+
+--
+Regards,
+Sudeep
