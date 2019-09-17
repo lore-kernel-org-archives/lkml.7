@@ -2,114 +2,84 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16447C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1ADBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD823216C8
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cw4D9QTM"
+	by mail.kernel.org (Postfix) with ESMTP id 749872171F
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 20:52:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568753567;
+	bh=sEXHckyL/cCH0O4C1qWMPq6O/5tY+bGXgQqUyzTzH0c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RhIGBFJGTkdLiAeNkgD8RMt5TI2Y+PFODOrjRJ7/Re/tCpLLEE3gVzRIotJ9dc0HJ
+	 Ftim9Y98TGfQ/3CC2sA66E8TuNnBOWLeGCSn1a4O2oJ6vo4ZIxCFuapVcUw0jsS8O+
+	 j4gqVI1BTqgSG6Uc+gYxTOJl2oenMyZP9GW6M17Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfIQUwo (ORCPT
+        id S1729990AbfIQUwq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 16:52:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40829 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbfIQUwn (ORCPT
+        Tue, 17 Sep 2019 16:52:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:47039 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbfIQUwo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 16:52:43 -0400
-Received: by mail-wm1-f67.google.com with SMTP id b24so22071wmj.5;
-        Tue, 17 Sep 2019 13:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ApT0kSwd0qDPrpu8YD2GohWeJamU26dBJ+jJSNS2N/w=;
-        b=Cw4D9QTM40QeSn5ag5Fy7naFWlT8CuE4Jc/VpV9ujyw+3wxs7IFqglZv4uqz6yJqKm
-         6ivRok4vGvWJWcKJpZM1ivrr33Pec+rCj0so6jzFdaVyD4Cax89Iv+Xt/91shEaJ1em5
-         jcCKhzicru/qAfkEN4GSeVGEO4hmgot0g2dt4xdTQwpZxfFEUgmGFh1BfkBG9Sc1Mk+0
-         GMLBMW2RmDs1S+Hr6z5v49Jy49YlrzqanorxZFwdsrAqSFvGGm7Xcn1kVozVWRDO1/zd
-         wVeKfHfGDLfKDQShYHG5XVVivYtqBa/C6af5JDz8B5zh9vGE+Ju7pQsLL3rwFQZblCsB
-         ylAw==
+        Tue, 17 Sep 2019 16:52:44 -0400
+Received: by mail-ot1-f67.google.com with SMTP id f21so1191911otl.13;
+        Tue, 17 Sep 2019 13:52:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ApT0kSwd0qDPrpu8YD2GohWeJamU26dBJ+jJSNS2N/w=;
-        b=EqzqVRfPlSisxo1tc7arKeagaX5gxCW9HBr9m8IrrH1Kx9R7oNYP6RXsU3YrRkhSRQ
-         Gr5MxrxNzA79Ioqq1Nfs+YtaGHOFIuCPgKrHaXOmJiYLCHRjJhjyne0uuD0jVWpYib40
-         q6iCw3TTBodn1IDDET34qetKI+4K1qNhZIqP4AKI8NMCuzYE7w5OgVdcuDliJy2BnjVs
-         04fBMnWrPVZo6VaOJUVc7sR7CM+lPJv+xeA/9y8iuW06XPdvQSMWTassfjRnUYMbP797
-         IGr+uaXTDJ8/ZL3+tN5sdi+wZXD9tAZe/cZjUYU11Jl6/AjZffJ31G401LmCZ5dRLvPX
-         7rZw==
-X-Gm-Message-State: APjAAAVMoya+/PD3H3AKoNPftdoXGaYYYX7DwXrv6fRo/5TBjcaMauVe
-        O8M7Ub9ZYKg2pVaAYIdIcEc=
-X-Google-Smtp-Source: APXvYqyFO//Zh6kStyRWZE1zRsXqFhQBmSoIvCWsjebAToll90pLtRXxEqs6I7c7Z0FUscm7OwWz1g==
-X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr18289wmd.7.1568753561336;
-        Tue, 17 Sep 2019 13:52:41 -0700 (PDT)
-Received: from darwi-home-pc (p200300D06F2D143EC08AA0470B895785.dip0.t-ipconnect.de. [2003:d0:6f2d:143e:c08a:a047:b89:5785])
-        by smtp.gmail.com with ESMTPSA id j1sm5256090wrg.24.2019.09.17.13.52.39
+        bh=fMeEne97qv8JgyDBdhgCgz19g4bKacaJieBUVcMpack=;
+        b=mlqpZK9xthaMKikW8riP5E+V89oPda99k4GJuxJSH/yjmdYzJiBP7UsX1e9YS9A5u0
+         h5dwb+pCPNf0mC/pzvVb4pa4tOaA3rcdjcA3s0/6wrAsqiMbWHEinbibT322RDBCJrv1
+         MOMwK/CuCgO+3e18sYI2G/59xO0H9mxuqfoC2N1OCXb273y+GVkidlTQRUH+I/F2aHzA
+         bvnwC9B0NYa5hBvUBBHDIdSTXxKFc57K8NtH6vtqKCDBmZ4qW7ahUM+f8Eknfy4UM2Cp
+         +2IIYJHjD5TBaEbFyPINuW4grvp2/om6CW1XLnGhRf6tykAxVflM7fdocGvqkpQDp+jW
+         OBNw==
+X-Gm-Message-State: APjAAAXW/1I4XRvA8e8qP78NXSTOZcFXnRJH+93oCNL6+Ig/hNoRJq22
+        AALwApcwTZSwpPlghbcoGA==
+X-Google-Smtp-Source: APXvYqzRKAYZIfGsZkV4fCugV4JzQs8fH0BJsUQ19vkI9qCJna0q4Qb3+RlGtktm94O7IeQFbkDXJg==
+X-Received: by 2002:a05:6830:124f:: with SMTP id s15mr611563otp.95.1568753564008;
+        Tue, 17 Sep 2019 13:52:44 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v132sm1162365oif.34.2019.09.17.13.52.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 13:52:40 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 22:52:34 +0200
-From:   "Ahmed S. Darwish" <darwish.07@gmail.com>
-To:     Martin Steigerwald <martin@lichtvoll.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190917205234.GA1765@darwi-home-pc>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <20190917174219.GD31798@gardel-login>
- <CAHk-=wjABG3+daJFr4w3a+OWuraVcZpi=SMUg=pnZ+7+O0E2FA@mail.gmail.com>
- <2658007.Cequ2ms4lF@merkaba>
+        Tue, 17 Sep 2019 13:52:43 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 15:52:42 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jan Kotas <jank@cadence.com>
+Cc:     maxime.ripard@bootlin.com, mchehab@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, rafalc@cadence.com,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
+Subject: Re: [PATCH v2 1/3] media: dt-bindings: Update bindings for Cadence
+ CSI2RX
+Message-ID: <20190917205242.GA15921@bogus>
+References: <20190905105601.27034-1-jank@cadence.com>
+ <20190905105601.27034-2-jank@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2658007.Cequ2ms4lF@merkaba>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190905105601.27034-2-jank@cadence.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:28:47PM +0200, Martin Steigerwald wrote:
-[...]
+On Thu, 5 Sep 2019 11:55:59 +0100, Jan Kotas wrote:
+> This patch adds a DT bindings documentation for
+> Cadence CSI2RX v1.3 and v2.1 controllers.
 > 
-> I don't have any kernel logs old enough to see whether whether crng init
-> times have been different with Systemd due to asking for randomness for
-> UUID/hashmaps.
->
+> Signed-off-by: Jan Kotas <jank@cadence.com>
+> ---
+>  Documentation/devicetree/bindings/media/cdns,csi2rx.txt | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
 
-Please stop claiming this. It has been pointed out to you, __multiple
-times__, that this makes no difference. For example:
-
-    https://lkml.kernel.org/r/20190916024904.GA22035@mit.edu
-    
-    No. getrandom(2) uses the new CRNG, which is either initialized,
-    or it's not ... So to the extent that systemd has made systems
-    boot faster, you could call that systemd's "fault".
-
-You've claimed this like 3 times before in this thread already, and
-multiple people replied with the same response. If you don't get the
-paragraph above, then please don't continue replying further on this
-thread.
-
-thanks,
-
--- 
-Ahmed Darwish
-http://darwish.chasingpointers.com
+Reviewed-by: Rob Herring <robh@kernel.org>
