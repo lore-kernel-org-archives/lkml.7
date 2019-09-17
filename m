@@ -2,149 +2,247 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065EBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB0DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:03:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C883221852
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 14:59:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Vl+iO5Ps"
+	by mail.kernel.org (Postfix) with ESMTP id 8A5FD21852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:03:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfIQO7D (ORCPT
+        id S1728909AbfIQPDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 10:59:03 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36977 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727315AbfIQO7D (ORCPT
+        Tue, 17 Sep 2019 11:03:02 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:38638 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727820AbfIQPDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:59:03 -0400
-Received: by mail-io1-f65.google.com with SMTP id b19so8369946iob.4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 07:59:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4N/btWkhdRtAkLwnNEi3JvgTHWUB7am8sFUWn4QTMHo=;
-        b=Vl+iO5Psm3owdP69GO+WOZQtnoLDGAdiMyy8AlEs6zj4KE57ayqKDns6d5FrJn5ROq
-         IGhwt1lh/vRUdyTt+CFCXnyKqmikSQqVhZXIEOj2KHwNr6k0Xuwx51HzaNHP8+vLH9rn
-         QxW4R+EVLL/5PivNA1qKPwAUzPWQ2jRsKoE9rxXNAtD8q3PcuUO9CR38EFV/4XMqqSnF
-         W7PTBHS/61nGVwhiw6EBQvCwO9ZxJq7pnVSmcp/9howaygFWPLKfe/DeMe9slMlkiwXm
-         f4jbaxLXZjDlgut4uJnT0u08GS7ZjP/PxosvoKtce/aPB6MMWEEQ8LBRv5MQpTwzzR6s
-         w6yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4N/btWkhdRtAkLwnNEi3JvgTHWUB7am8sFUWn4QTMHo=;
-        b=JbTIYkOdtTrGIlxPMW777/Dh06rSEL7slo+3xDmz8Ry7a8953YN5fAuBuN6gUgvE8Z
-         wwUMFMPCPwR0hPrjtKUQXyEpTFWA4WqRtS40vsOJXPRF5rRspaG9JZ++iI2xLblMjtuX
-         IMQx9VfhvHzz0pW2b4lcmgRxYCuzxWmQe0Kjp5QqfWgFHis6aIb6nNGct9xKgSdP3PY7
-         ZXS4H3OFsbFukhGrBNddxlmyZyPbfoBbE6Dx9f2fl0q2+pfPKAhpRr6k8WDvtR0G+zSD
-         SwLkaDCffzENyEX3l8I4S62UqLRWFE824/cm/py7CJ6tUOs2aF34v3d3ohEdLN1mQg1d
-         RpaA==
-X-Gm-Message-State: APjAAAWvaE5uUvaLcHJiyZ6D3zHmxAmZX1An0D4PD+Lx+8hDqx84BQH/
-        8/EG2FpyCDdmtlPfBMnKh7X4Necgq8nKu6aMeTpPTg==
-X-Google-Smtp-Source: APXvYqz9DvHQNg9JiUWZur8kh4NHVWmxIc5OJSKjAK0NEC6eFvWeXKcUfTuQH1pek1NBrEZiHfP0dJlLdiC+XjpI0K0=
-X-Received: by 2002:a05:6602:115:: with SMTP id s21mr3306650iot.122.1568732342359;
- Tue, 17 Sep 2019 07:59:02 -0700 (PDT)
+        Tue, 17 Sep 2019 11:03:02 -0400
+Received: (qmail 4019 invoked by uid 2102); 17 Sep 2019 11:03:01 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 17 Sep 2019 11:03:01 -0400
+Date:   Tue, 17 Sep 2019 11:03:01 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Dmitry Vyukov <dvyukov@google.com>
+cc:     syzbot <syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, <miquel@df.uba.ar>,
+        <rio500-users@lists.sourceforge.net>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: possible deadlock in open_rio (2)
+In-Reply-To: <CACT4Y+bRKjVG7iUZnEXsec_29wMzncvtwAo7cnDNj+17mqL0SA@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1909171051580.1590-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1568708186-20260-1-git-send-email-wanpengli@tencent.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 17 Sep 2019 07:58:51 -0700
-Message-ID: <CALMp9eSNTvHsSn55iNfF1tUAdAihz_2d5-Hac1H6TnvHyos-SQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] KVM: Fix coalesced mmio ring buffer out-of-bounds access
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, stable@vger.kernel.org,
-        Matt Delco <delco@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:16 AM Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Reported by syzkaller:
->
->         #PF: supervisor write access in kernel mode
->         #PF: error_code(0x0002) - not-present page
->         PGD 403c01067 P4D 403c01067 PUD 0
->         Oops: 0002 [#1] SMP PTI
->         CPU: 1 PID: 12564 Comm: a.out Tainted: G           OE     5.3.0-rc4+ #4
->         RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
->         Call Trace:
->          __kvm_io_bus_write+0x91/0xe0 [kvm]
->          kvm_io_bus_write+0x79/0xf0 [kvm]
->          write_mmio+0xae/0x170 [kvm]
->          emulator_read_write_onepage+0x252/0x430 [kvm]
->          emulator_read_write+0xcd/0x180 [kvm]
->          emulator_write_emulated+0x15/0x20 [kvm]
->          segmented_write+0x59/0x80 [kvm]
->          writeback+0x113/0x250 [kvm]
->          x86_emulate_insn+0x78c/0xd80 [kvm]
->          x86_emulate_instruction+0x386/0x7c0 [kvm]
->          kvm_mmu_page_fault+0xf9/0x9e0 [kvm]
->          handle_ept_violation+0x10a/0x220 [kvm_intel]
->          vmx_handle_exit+0xbe/0x6b0 [kvm_intel]
->          vcpu_enter_guest+0x4dc/0x18d0 [kvm]
->          kvm_arch_vcpu_ioctl_run+0x407/0x660 [kvm]
->          kvm_vcpu_ioctl+0x3ad/0x690 [kvm]
->          do_vfs_ioctl+0xa2/0x690
->          ksys_ioctl+0x6d/0x80
->          __x64_sys_ioctl+0x1a/0x20
->          do_syscall_64+0x74/0x720
->          entry_SYSCALL_64_after_hwframe+0x49/0xbe
->         RIP: 0010:coalesced_mmio_write+0xcc/0x130 [kvm]
->
-> Both the coalesced_mmio ring buffer indexs ring->first and ring->last are
-> bigger than KVM_COALESCED_MMIO_MAX from the testcase, array out-of-bounds
-> access triggers by ring->coalesced_mmio[ring->last].phys_addr = addr;
-> assignment. This patch fixes it by mod indexs by KVM_COALESCED_MMIO_MAX.
->
-> syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=134b2826a00000
->
-> Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  virt/kvm/coalesced_mmio.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-> index 5294abb..cff1ec9 100644
-> --- a/virt/kvm/coalesced_mmio.c
-> +++ b/virt/kvm/coalesced_mmio.c
-> @@ -73,6 +73,8 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
->
->         spin_lock(&dev->kvm->ring_lock);
->
-> +       ring->first = ring->first % KVM_COALESCED_MMIO_MAX;
-> +       ring->last = ring->last % KVM_COALESCED_MMIO_MAX;
+On Tue, 17 Sep 2019, Dmitry Vyukov wrote:
 
-I don't think this is sufficient, since the memory that ring points to
-is shared with userspace. Userspace can overwrite your corrected
-values with illegal ones before they are used. Not exactly a TOCTTOU
-issue, since there isn't technically a 'check' here, but the same
-idea.
+> On Mon, Sep 16, 2019 at 6:40 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Mon, 16 Sep 2019, syzbot wrote:
+> >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=11512cd1600000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=19cf612d23f66bc19f22
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16f92c6e600000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b9b85e600000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+19cf612d23f66bc19f22@syzkaller.appspotmail.com
+> > >
+> > > ======================================================
+> > > WARNING: possible circular locking dependency detected
+> > > 5.3.0-rc7+ #0 Not tainted
+> > > ------------------------------------------------------
+> > > syz-executor071/1724 is trying to acquire lock:
+> > > 00000000f749c934 (rio500_mutex){+.+.}, at: open_rio+0x16/0xe0
+> > > drivers/usb/misc/rio500.c:65
+> > >
+> > > but task is already holding lock:
+> > > 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
+> > > drivers/usb/core/file.c:39
+> > >
+> > > which lock already depends on the new lock.
+> > >
+> > >
+> > > the existing dependency chain (in reverse order) is:
+> > >
+> > > -> #1 (minor_rwsem){++++}:
+> > >         down_write+0x92/0x150 kernel/locking/rwsem.c:1500
+> > >         usb_register_dev drivers/usb/core/file.c:187 [inline]
+> > >         usb_register_dev+0x131/0x670 drivers/usb/core/file.c:156
+> > >         probe_rio.cold+0x53/0x237 drivers/usb/misc/rio500.c:474
+> > >         usb_probe_interface+0x305/0x7a0 drivers/usb/core/driver.c:361
+> > >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> > >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+> > >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> > >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+> > >         __device_attach+0x217/0x360 drivers/base/dd.c:894
+> > >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> > >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
+> > >         usb_set_configuration+0xdf6/0x1670 drivers/usb/core/message.c:2023
+> > >         generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+> > >         usb_probe_device+0x99/0x100 drivers/usb/core/driver.c:266
+> > >         really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> > >         driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+> > >         __device_attach_driver+0x1c2/0x220 drivers/base/dd.c:828
+> > >         bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:454
+> > >         __device_attach+0x217/0x360 drivers/base/dd.c:894
+> > >         bus_probe_device+0x1e4/0x290 drivers/base/bus.c:514
+> > >         device_add+0xae6/0x16f0 drivers/base/core.c:2165
+> > >         usb_new_device.cold+0x6a4/0xe79 drivers/usb/core/hub.c:2536
+> > >         hub_port_connect drivers/usb/core/hub.c:5098 [inline]
+> > >         hub_port_connect_change drivers/usb/core/hub.c:5213 [inline]
+> > >         port_event drivers/usb/core/hub.c:5359 [inline]
+> > >         hub_event+0x1b5c/0x3640 drivers/usb/core/hub.c:5441
+> > >         process_one_work+0x92b/0x1530 kernel/workqueue.c:2269
+> > >         worker_thread+0x96/0xe20 kernel/workqueue.c:2415
+> > >         kthread+0x318/0x420 kernel/kthread.c:255
+> > >         ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> > >
+> > > -> #0 (rio500_mutex){+.+.}:
+> > >         check_prev_add kernel/locking/lockdep.c:2405 [inline]
+> > >         check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+> > >         validate_chain kernel/locking/lockdep.c:2897 [inline]
+> > >         __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+> > >         lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+> > >         __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+> > >         __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+> > >         open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
+> > >         usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+> > >         chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> > >         do_dentry_open+0x494/0x1120 fs/open.c:797
+> > >         do_last fs/namei.c:3416 [inline]
+> > >         path_openat+0x1430/0x3f50 fs/namei.c:3533
+> > >         do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> > >         do_sys_open+0x3c0/0x580 fs/open.c:1089
+> > >         do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+> > >         entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > >
+> > > other info that might help us debug this:
+> > >
+> > >   Possible unsafe locking scenario:
+> > >
+> > >         CPU0                    CPU1
+> > >         ----                    ----
+> > >    lock(minor_rwsem);
+> > >                                 lock(rio500_mutex);
+> > >                                 lock(minor_rwsem);
+> > >    lock(rio500_mutex);
+> > >
+> > >   *** DEADLOCK ***
+> > >
+> > > 1 lock held by syz-executor071/1724:
+> > >   #0: 000000009c24ba51 (minor_rwsem){++++}, at: usb_open+0x23/0x270
+> > > drivers/usb/core/file.c:39
+> > >
+> > > stack backtrace:
+> > > CPU: 0 PID: 1724 Comm: syz-executor071 Not tainted 5.3.0-rc7+ #0
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > Call Trace:
+> > >   __dump_stack lib/dump_stack.c:77 [inline]
+> > >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> > >   check_noncircular+0x345/0x3e0 kernel/locking/lockdep.c:1741
+> > >   check_prev_add kernel/locking/lockdep.c:2405 [inline]
+> > >   check_prevs_add kernel/locking/lockdep.c:2507 [inline]
+> > >   validate_chain kernel/locking/lockdep.c:2897 [inline]
+> > >   __lock_acquire+0x1f7c/0x3b50 kernel/locking/lockdep.c:3880
+> > >   lock_acquire+0x127/0x320 kernel/locking/lockdep.c:4412
+> > >   __mutex_lock_common kernel/locking/mutex.c:930 [inline]
+> > >   __mutex_lock+0x158/0x1360 kernel/locking/mutex.c:1077
+> > >   open_rio+0x16/0xe0 drivers/usb/misc/rio500.c:65
+> > >   usb_open+0x1df/0x270 drivers/usb/core/file.c:48
+> > >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
+> > >   do_dentry_open+0x494/0x1120 fs/open.c:797
+> > >   do_last fs/namei.c:3416 [inline]
+> > >   path_openat+0x1430/0x3f50 fs/namei.c:3533
+> > >   do_filp_open+0x1a1/0x280 fs/namei.c:3563
+> > >   do_sys_open+0x3c0/0x580 fs/open.c:1089
+> > >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
+> > >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > RIP: 0033:0x401130
+> > > Code: 01 f0 ff ff 0f 83 00 0b 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f
+> > > 44 00 00 83 3d 5d 0c 2d 00 00 75 14 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff
+> > > ff 0f 83 d4 0a 00 00 c3 48 83 ec 08 e8 3a 00 00 00
+> > > RSP: 002b:00007ffca0216788 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+> > > RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 0000000000401130
+> > > RDX: 0000000000000000 RSI: 0000000000000002 RDI: 00007ffca02167a0
+> > > RBP: 00000000006cb018 R08: 0000000000000000 R09: 000000000000000f
+> > > R10: 0000000000000064 R11: 0000000000000246 R12: 0000000000402090
+> > > R13: 0000000000402120 R14: 0000000000000000 R15: 00
+> > >
+> > >
+> > > ---
+> > > This bug is generated by a bot. It may contain errors.
+> > > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > >
+> > > syzbot will keep track of this bug report. See:
+> > > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > > syzbot can test patches for this bug, for details see:
+> > > https://goo.gl/tpsmEJ#testing-patches
+> >
+> > This is undoubted the same as the previous bug report.  It should be
+> > fixed by commit 9472aff16ca0 in Greg KH's usb-next branch, but the
+> > fix is not yet in Linus's tree.
+> >
+> > #syz dup: possible deadlock in open_rio
+> 
+> Are you ready to bet money that this is undoubtedly the same as the
+> previous one? ;)
 
->         if (!coalesced_mmio_has_room(dev)) {
->                 spin_unlock(&dev->kvm->ring_lock);
->                 return -EOPNOTSUPP;
-> --
-> 2.7.4
->
+Yes.  Although perhaps it depends on your criteria for deciding whether 
+two bug reports are caused by the same bug...
+
+> syzbot never reports the same bug until the previous is completely
+> fixed. I see the commit in Linus tree.
+
+Which commit do you see?  The one that may have originally been 
+reported as fixing the bug probably was not the right one.
+
+> We will get version (3) of this bug soon.
+
+
+On Tue, 17 Sep 2019, Andrey Konovalov wrote:
+
+> Yeah, this one is confusing. If we look at the dashboard [1] we see
+> that the fixing commit for the original bug is "Revert "USB: rio500:
+> simplify locking"", which is in the usb-testing tree (btw, I've
+> switched syzbot from usb-next to usb-testing, as it looked more
+> relevant). So syzbot saw the Reported-by tag on that commit, and
+> decided that the fix is applied, so if another bug with the same
+> manifestation happens, it must be a different bug and should be
+> reported. Syzbot has no way to know that commit 9472aff16ca0 (with the
+> same Reported-by tag as "Revert "USB: rio500: simplify locking") is
+> the proper fix for this issue.
+> 
+> Since you've marked this bug as a dup of a fixed bug with the fix
+> applied to syzbot's tree, syzbot reported another one named "possible
+> deadlock in open_rio (3)". I'm going to manually mark that one as
+> fixed by commit 9472aff16ca0.
+> 
+> https://syzkaller.appspot.com/bug?id=5b6785f7f0febf30e2133fa6e6dab81683ffa1b5
+
+Yes, that's right; 9472aff16ca0 is the correct fix -- and it isn't in
+Linus's tree yet.  I don't even want to think about the state of the
+driver after the "Revert "USB: rio500:  simplify locking" commit...
+
+Alan Stern
+
