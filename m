@@ -2,154 +2,150 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774C6C4CECE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A775BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:38:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53D752053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:38:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8392A2053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 13:38:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfIQNiV (ORCPT
+        id S1728814AbfIQNim convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 09:38:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35060 "EHLO mx1.redhat.com"
+        Tue, 17 Sep 2019 09:38:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:56090 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727715AbfIQNiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 09:38:21 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 571A351EF4
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 13:38:20 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id z1so1315200wrw.21
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 06:38:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pNylua/wjzgg680hRcrNCRacO/4UoddbeF1Frj0pR4U=;
-        b=ZDgDLr2Py+nma/TFrQeEG3Fs2cT9BtlTYZJNjIp+TzU/LaN2/dxjRFlGVI/+IvRPNt
-         rSYcNh1Ombs8HLs7ZraYbr8kaaz5wRJmIC5f3MPvvQ0xPZiMTqNuH+TTNHcsrJsF1veU
-         C4PzlSM53Q54y4Ru0WqyFdF8T0XLxx5kX105tHb7vW7GjT+eGIr5iuiBsi6fM8cdgMmZ
-         Y3efMGwjaCaynjJMHvodbxCkN6hboDEB5Oaz1KhGw1+RjTenAFpSggpfrmdXT784I15L
-         GGl5OLCqKUaAlEv4vKdpUExy+qKU/ioSuShZmCedbo4F3mVoaR+zjJyMx5xQu7MRpAGM
-         zBnw==
-X-Gm-Message-State: APjAAAUumS0kBn2OMif9h9XLOolilft0yZliiMhxS9Zjipf8Xii5nssW
-        0G9uKB9LaC7bnjGkQKIS6uPgEamALlFRCkxujc30+jjDRNGmzgUCqcwIuuqDxGpqRI2yAb/FsFH
-        +MoVIxtUPG0u+b253uMwXFJGm
-X-Received: by 2002:a1c:a616:: with SMTP id p22mr3528055wme.3.1568727498905;
-        Tue, 17 Sep 2019 06:38:18 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxsLvWxCOsc23J98JYGRanNCdRrqAWk2KLztQrObdWEYvU54V6yD328/x7LlelVd9drNJQ4uQ==
-X-Received: by 2002:a1c:a616:: with SMTP id p22mr3528025wme.3.1568727498617;
-        Tue, 17 Sep 2019 06:38:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id r20sm3286243wrg.61.2019.09.17.06.38.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 06:38:17 -0700 (PDT)
-Subject: Re: [PATCH v3] KVM: hyperv: Fix Direct Synthetic timers assert an
- interrupt w/o lapic_in_kernel
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1568619752-3885-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <34368da9-2ef7-7fa2-d210-eb8937204896@redhat.com>
-Date:   Tue, 17 Sep 2019 15:38:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727715AbfIQNil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 09:38:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C81928;
+        Tue, 17 Sep 2019 06:38:41 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 382903F575;
+        Tue, 17 Sep 2019 06:38:40 -0700 (PDT)
+References: <20190916223850.GQ4352@sirena.co.uk> <1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org> <20190917075242.GB49590@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Sep 16 (kernel/sched/core.c)
+In-reply-to: <20190917075242.GB49590@gmail.com>
+Date:   Tue, 17 Sep 2019 14:38:28 +0100
+Message-ID: <8736gv2gbv.fsf@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1568619752-3885-1-git-send-email-wanpengli@tencent.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/09/19 09:42, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Reported by syzkaller:
-> 
-> 	kasan: GPF could be caused by NULL-ptr deref or user memory access
-> 	general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> 	RIP: 0010:__apic_accept_irq+0x46/0x740 arch/x86/kvm/lapic.c:1029
-> 	Call Trace:
-> 	kvm_apic_set_irq+0xb4/0x140 arch/x86/kvm/lapic.c:558
-> 	stimer_notify_direct arch/x86/kvm/hyperv.c:648 [inline]
-> 	stimer_expiration arch/x86/kvm/hyperv.c:659 [inline]
-> 	kvm_hv_process_stimers+0x594/0x1650 arch/x86/kvm/hyperv.c:686
-> 	vcpu_enter_guest+0x2b2a/0x54b0 arch/x86/kvm/x86.c:7896
-> 	vcpu_run+0x393/0xd40 arch/x86/kvm/x86.c:8152
-> 	kvm_arch_vcpu_ioctl_run+0x636/0x900 arch/x86/kvm/x86.c:8360
-> 	kvm_vcpu_ioctl+0x6cf/0xaf0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2765
-> 
-> The testcase programs HV_X64_MSR_STIMERn_CONFIG/HV_X64_MSR_STIMERn_COUNT,
-> in addition, there is no lapic in the kernel, the counters value are small
-> enough in order that kvm_hv_process_stimers() inject this already-expired
-> timer interrupt into the guest through lapic in the kernel which triggers
-> the NULL deferencing. This patch fixes it by don't advertise direct mode 
-> synthetic timers and discarding the inject when lapic is not in kernel.
-> 
-> syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=1752fe0a600000
-> 
-> Reported-by: syzbot+dff25ee91f0c7d5c1695@syzkaller.appspotmail.com
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
-> v2 -> v3:
->  * add the link of syzkaller source
-> v1 -> v2:
->  * don't advertise direct mode synthetic timers when lapic is not in kernel
-> 
->  arch/x86/kvm/hyperv.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index c10a8b1..069e655 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -645,7 +645,9 @@ static int stimer_notify_direct(struct kvm_vcpu_hv_stimer *stimer)
->  		.vector = stimer->config.apic_vector
->  	};
->  
-> -	return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> +	if (lapic_in_kernel(vcpu))
-> +		return !kvm_apic_set_irq(vcpu, &irq, NULL);
-> +	return 0;
->  }
->  
->  static void stimer_expiration(struct kvm_vcpu_hv_stimer *stimer)
-> @@ -1849,7 +1851,13 @@ int kvm_vcpu_ioctl_get_hv_cpuid(struct kvm_vcpu *vcpu, struct kvm_cpuid2 *cpuid,
->  
->  			ent->edx |= HV_FEATURE_FREQUENCY_MSRS_AVAILABLE;
->  			ent->edx |= HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE;
-> -			ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
-> +
-> +			/*
-> +			 * Direct Synthetic timers only make sense with in-kernel
-> +			 * LAPIC
-> +			 */
-> +			if (lapic_in_kernel(vcpu))
-> +				ent->edx |= HV_STIMER_DIRECT_MODE_AVAILABLE;
->  
->  			break;
->  
-> 
 
-Queued, thanks.
+On Tue, Sep 17, 2019 at 08:52:42 +0100, Ingo Molnar wrote...
 
-Paolo
+> * Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+>> On 9/16/19 3:38 PM, Mark Brown wrote:
+>> > Hi all,
+>> > 
+>> > Changes since 20190915:
+>> > 
+>> 
+>> on x86_64:
+>> 
+>> when CONFIG_CGROUPS is not set:
+
+Hi Randy,
+thanks for the report.
+
+>>   CC      kernel/sched/core.o
+>> ../kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
+>> ../kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
+>>   struct css_task_iter it;
+>>                        ^~
+>>   CC      kernel/printk/printk_safe.o
+>> ../kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
+>>   css_task_iter_start(css, 0, &it);
+>>   ^~~~~~~~~~~~~~~~~~~
+>>   __sg_page_iter_start
+>> ../kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
+>>   while ((p = css_task_iter_next(&it))) {
+>>               ^~~~~~~~~~~~~~~~~~
+>>               __sg_page_iter_next
+>> ../kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
+>>   css_task_iter_end(&it);
+>>   ^~~~~~~~~~~~~~~~~
+>>   get_task_cred
+>> ../kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
+>>   struct css_task_iter it;
+>>                        ^~
+>> 
+>
+> I cannot reproduce this build failue: I took Linus's latest which has all 
+> the -next scheduler commits included (ad062195731b), and an x86-64 "make 
+> defconfig" and a disabling of CONFIG_CGROUPS still resuls in a kernel 
+> that builds fine.
+
+Same here Ingo, I cannot reproduce on arm64 and !CONFIG_CGROUPS and
+testing on tip/sched/core.
+
+However, if you like, the following patch can make that code a
+bit more "robust".
+
+Best,
+Patrick
+
+---8<---
+From 7e17b7bb08dd8dfc57e01c2a7b6875439eb47cbe Mon Sep 17 00:00:00 2001
+From: Patrick Bellasi <patrick.bellasi@arm.com>
+Date: Tue, 17 Sep 2019 14:12:10 +0100
+Subject: [PATCH 1/1] sched/core: uclamp: Fix compile error on !CONFIG_CGROUPS
+
+Randy reported a compiler error on x86_64 and !CONFIG_CGROUPS which is due
+to uclamp_update_active_tasks() using the undefined css_task_iter().
+
+Since uclamp_update_active_tasks() is used only when cgroup support is
+enabled, fix that by properly guarding that function at compile time.
+
+Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+Link: https://lore.kernel.org/lkml/1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org/
+Fixes: commit babbe170e05 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+---
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3c7b90bcbe4e..14873ad4b34a 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1043,6 +1043,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
+ 
++#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static inline void
+ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+@@ -1091,7 +1092,6 @@ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+ 	css_task_iter_end(&it);
+ }
+ 
+-#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static void cpu_util_update_eff(struct cgroup_subsys_state *css);
+ static void uclamp_update_root_tg(void)
+ {
+-- 
+2.22.0
+---8<---
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
