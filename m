@@ -2,108 +2,338 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F4DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611D0C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955F220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:11:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iIiPJdSh"
+	by mail.kernel.org (Postfix) with ESMTP id 19F57216C8
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 23:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568761956;
+	bh=9vdtRdhs1/jAWjS0Kms4vvz9bTAK74kuM+HY/7RQ3PU=;
+	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
+	b=AzHYbHyWsBC82V7t22dkTpHhV8tzIFlPHSNqfGRv05fBm9UyJrPBPjA/DOfJdQr0U
+	 G2px+JPTrFXne3USmYF2f0s7xdCz53w09pLF6VgSWX5v5vWNaICeDx/iGm0vOn0nIW
+	 kyXNpt6HSgvJ6FCgmxrz+1z0wxAUCEIaREc+Fk5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbfIQXLG (ORCPT
+        id S1728573AbfIQXMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 19:11:06 -0400
-Received: from mail-ua1-f74.google.com ([209.85.222.74]:44833 "EHLO
-        mail-ua1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfIQXLG (ORCPT
+        Tue, 17 Sep 2019 19:12:35 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38444 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfIQXMf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 19:11:06 -0400
-Received: by mail-ua1-f74.google.com with SMTP id q60so1402341uaq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 16:11:04 -0700 (PDT)
+        Tue, 17 Sep 2019 19:12:35 -0400
+Received: by mail-io1-f67.google.com with SMTP id k5so11714187iol.5
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 16:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=jlMHw/lJbiY9oSEnSweuao0JSeVWEh3JbwJsg89mwrI=;
-        b=iIiPJdShJg+votTKhSxCj9XflkorFeVJZ+qv6HIz9JR671diyAgR0G2zhtr4I3sUqQ
-         LldERcVxSLVY1RRqQdUglxcBeKcTrQkHGQ/df7i4KlxZA8+7KuG4SkCa/wjPkkG45ijA
-         sCcJfzi+5yH/l+m7r3PJiL0UnjyEhd8caZkEL9EYpURgF5+sc3llcI0RO4CaKgvoIjDT
-         X/jNJtBK9yLf0v7koQEO3TBhUdQ9jgSeVUOzkgkFvKzHyDN/NN4xzXiQvZjhOL1x5q/Y
-         hdhk4Fb1lvFT5o1eWbby35wBe37vSpj3Z3ZNf/4ZAH6VAmMXV3en+UAquPQkv2oG/3wp
-         1aUg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=yqGgBojIZyVHVy1krOvbhQKaEfiFOGw5rhz3fKPGEaA=;
+        b=OZZgJfUSr3+vfbhngvDVpU753l8In96gprFSlB6dqNTivYS/439DQlnVa8qjZ+Ls64
+         HaBo2fzH2lrKAuL0eAXDHknFX2TINolbzYVKxbuXzjXUxbCnANK4pE/YIDh19IK4/M7M
+         EkC76eTtz1HkpbZjCTlpR4Bsnts6f0gVrvIzg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=jlMHw/lJbiY9oSEnSweuao0JSeVWEh3JbwJsg89mwrI=;
-        b=XsKMhLmwuVRR2kNrHhndgIqWs3nM8kXNyFBsuvng0k5eaN2+514lub8172dcU5FSOm
-         m80OxWL3SG937OeHtkG1anK8qnn6cgrqvPLerNMJOg+//dpbBZiA7g7O51CwYnXGlrp9
-         5Pj/iJDn/UohYEe5fZxV7HUJiEdXJZs3DTvyEE6rI8TkK3+iDsypXPxhsl+LW9mVpHUj
-         +HdKIlAk94Y9uk1w+aarhfAfS5iqXP7Vn0IJ6wbHaZPQ82R9K83NbM6wAxLYIGyFub2O
-         52JQcbg7LROA8YD4IVVAAT9Okov4rRO3YDEf4Qzklm6A5fpB9ZDvm1ZEKxH37XQGztZP
-         Oqcg==
-X-Gm-Message-State: APjAAAU0rwJ7d8c6Y51bBgdmaVLqCofU4lUQYN5ftxT3C6o+Z1SDeyJ6
-        X/C/Gilpca7Xnzmtct+uzPMbk0TxmnNjtkpJTmbLpUgm0u8o3iCY4rPWP00rWdaBisrncOxo/Il
-        DkzS9EgVO/PsM5IiAQ2zRXdkPvoSHkdrTlYHzkZkFffidVGfUNph66/YGU7XesdiXFbo3pr2qyZ
-        s=
-X-Google-Smtp-Source: APXvYqyxZnxMszRPn1jPzpK7n38YEEYv3W39ooLbNyjfXgLLARZtHr2YTGfUPKZqz5mdHxu+3w0TGzlkMwzX+w==
-X-Received: by 2002:ab0:4203:: with SMTP id i3mr823027uai.53.1568761863903;
- Tue, 17 Sep 2019 16:11:03 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 00:10:31 +0100
-Message-Id: <20190917231031.81341-1-maennich@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
-Subject: [PATCH] usb-storage: SCSI glue: use pr_fmt and pr_err
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, maennich@google.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yqGgBojIZyVHVy1krOvbhQKaEfiFOGw5rhz3fKPGEaA=;
+        b=AzjheuDRuLNg842pNaOJTy0bKdPrf9r3YT3LMn5s4XJJj+S47pvdFi6uDkg943pbRX
+         jmrhtObGo0j5wXdnhdFCoNJH0FV4lNdDQrq8u95vovuIb1x3kk0YonL9M6qud2EsJacQ
+         5mwMExv66KjytAw9ICQdcDh63VYRxb1MwAOd2vUWf0RqiBA2gzY9pi7RO2yiqXlYzhpo
+         rEzBFmWV/K7B8sujSjFldFVB1dPeoPIiZpWjgbY0g+JMquqa5w4ID0ZOjyUYjclidGRE
+         wY1VNFPsAT0/Yo6CA7F1YOz2zNrCHQvJ2/qSFb0dGIAQA4G7OulpIw6h8vVuOM8wKSEC
+         srzA==
+X-Gm-Message-State: APjAAAXug1zdbTCK0TeraEWm2qfdUt87Me9JUE1vSh9SJWsB2kGZbXKX
+        MQqa3WF25MJPeu2DEajY/WOZMg==
+X-Google-Smtp-Source: APXvYqwZqc4YmgGMXhuTArUpNJFTe5Nh6XUSxRt8U66ZmSINMRpYohUQ2oaktvY64awyt0Pbi1Tgmg==
+X-Received: by 2002:a6b:d208:: with SMTP id q8mr1694483iob.47.1568761953963;
+        Tue, 17 Sep 2019 16:12:33 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m67sm3241954iof.21.2019.09.17.16.12.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 16:12:33 -0700 (PDT)
+Subject: Re: [PATCH v2] media: vimc: Implement debayer control for mean window
+ size
+To:     Arthur Moraes do Lago <arthurmoraeslago@gmail.com>,
+        mchehab@kernel.org, helen.koike@collabora.com,
+        hverkuil-cisco@xs4all.nl, andrealmeid@collabora.com,
+        laispc19@gmail.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20190917225317.5872-1-arthurmoraeslago@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <39078cb4-1ea5-e97e-0323-0318b42910c6@linuxfoundation.org>
+Date:   Tue, 17 Sep 2019 17:12:32 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190917225317.5872-1-arthurmoraeslago@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow common practice and retire printk(KERN_ERR ...) in favor of
-pr_fmt and pr_err.
+On 9/17/19 4:53 PM, Arthur Moraes do Lago wrote:
+> Add mean window size parameter for debayer filter as a control in
+> vimc-debayer.
+> 
+> vimc-debayer was patched to allow changing mean windows parameter
+> of the filter without needing to reload the driver. The parameter
+> can now be set using a v4l2-ctl control(mean_window_size).
+> 
+> Co-developed-by: Laís Pessine do Carmo <laispc19@gmail.com>
+> Signed-off-by: Laís Pessine do Carmo <laispc19@gmail.com>
+> Signed-off-by: Arthur Moraes do Lago <arthurmoraeslago@gmail.com>
+> 
+> Small fixes to vimc debayer mean window size patch
+> ---
+> Changes in V2:
+>   - Updated documentation
+>   - Added v4l2_subev_core_ops to solve errors in v4l2-ctl compliance test
+>   - Changed control naming to follow English capitalization rules
+>   - Rebased to Shuah Khan's newest patch series 171283
+>      ("Collapse vimc single monolithic driver")
+>   - Change maximum value for mean window size
+> 
+> We did run streaming tests, the value of 1 for mean window size has a
+> nice side effect of not applying any filter, so we can see the original
+> pattern. The value of 99 for mean window size worked, but was very slow.
+> We wanted to find a way to show that higher values for mean window size
+> yielded very similar results to just blurring the image, but we could
+> not find any way to show this, so we just made the maximum value 25,
+> which runs faster, but is still probably a little high.
+> ---
+>   Documentation/media/v4l-drivers/vimc.rst   | 10 +--
+>   drivers/media/platform/vimc/vimc-common.h  |  1 +
+>   drivers/media/platform/vimc/vimc-debayer.c | 89 +++++++++++++++++++---
+>   3 files changed, 79 insertions(+), 21 deletions(-)
+> 
+> diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
+> index a582af0509ee..91c909904b87 100644
+> --- a/Documentation/media/v4l-drivers/vimc.rst
+> +++ b/Documentation/media/v4l-drivers/vimc.rst
+> @@ -80,9 +80,7 @@ vimc-capture:
+>           Module options
+>   ---------------
+>   
+> -Vimc has a few module parameters to configure the driver.
+> -
+> -        param=value
+> +Vimc has a module parameters to configure the driver.
 
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: usb-storage@lists.one-eyed-alien.net
-Signed-off-by: Matthias Maennich <maennich@google.com>
----
- drivers/usb/storage/scsiglue.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+parameter
 
-diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
-index 6737fab94959..0b6fa225b352 100644
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -28,6 +28,8 @@
-  * status of a command.
-  */
- 
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/blkdev.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
-@@ -379,8 +381,7 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
- 
- 	/* check for state-transition errors */
- 	if (us->srb != NULL) {
--		printk(KERN_ERR "usb-storage: Error in %s: us->srb = %p\n",
--			__func__, us->srb);
-+		pr_err("Error in %s: us->srb = %p\n", __func__, us->srb);
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 	}
- 
--- 
-2.23.0.237.gc6a4ce50a0-goog
+>   
+>   * ``sca_mult=<unsigned int>``
+>   
+> @@ -91,12 +89,6 @@ Vimc has a few module parameters to configure the driver.
+>           original one. Currently, only supports scaling up (the default value
+>           is 3).
+>   
+> -* ``deb_mean_win_size=<unsigned int>``
+> -
+> -        Window size to calculate the mean. Note: the window size needs to be an
+> -        odd number, as the main pixel stays in the center of the window,
+> -        otherwise the next odd number is considered (the default value is 3).
+> -
+>   Source code documentation
+>   -------------------------
+>   
+> diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/platform/vimc/vimc-common.h
+> index 236412ad7548..3a5102ddf794 100644
+> --- a/drivers/media/platform/vimc/vimc-common.h
+> +++ b/drivers/media/platform/vimc/vimc-common.h
+> @@ -19,6 +19,7 @@
+>   #define VIMC_CID_VIMC_BASE		(0x00f00000 | 0xf000)
+>   #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>   #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+> +#define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+>   
+>   #define VIMC_FRAME_MAX_WIDTH 4096
+>   #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
+> index 37f3767db469..76df2ac110c0 100644
+> --- a/drivers/media/platform/vimc/vimc-debayer.c
+> +++ b/drivers/media/platform/vimc/vimc-debayer.c
+> @@ -11,17 +11,12 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/vmalloc.h>
+>   #include <linux/v4l2-mediabus.h>
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-event.h>
+>   #include <media/v4l2-subdev.h>
+>   
+>   #include "vimc-common.h"
+>   
+> -static unsigned int deb_mean_win_size = 3;
+> -module_param(deb_mean_win_size, uint, 0000);
+> -MODULE_PARM_DESC(deb_mean_win_size, " the window size to calculate the mean.\n"
+> -	"NOTE: the window size needs to be an odd number, as the main pixel "
+> -	"stays in the center of the window, otherwise the next odd number "
+> -	"is considered");
+> -
+>   enum vimc_deb_rgb_colors {
+>   	VIMC_DEB_RED = 0,
+>   	VIMC_DEB_GREEN = 1,
+> @@ -46,6 +41,8 @@ struct vimc_deb_device {
+>   	u8 *src_frame;
+>   	const struct vimc_deb_pix_map *sink_pix_map;
+>   	unsigned int sink_bpp;
+> +	unsigned int mean_win_size;
+> +	struct v4l2_ctrl_handler hdl;
+>   };
+>   
+>   static const struct v4l2_mbus_framefmt sink_fmt_default = {
+> @@ -346,11 +343,18 @@ static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
+>   	return 0;
+>   }
+>   
+> +static const struct v4l2_subdev_core_ops vimc_deb_core_ops = {
+> +	.log_status = v4l2_ctrl_subdev_log_status,
+> +	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+> +	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+> +};
+> +
+>   static const struct v4l2_subdev_video_ops vimc_deb_video_ops = {
+>   	.s_stream = vimc_deb_s_stream,
+>   };
+>   
+>   static const struct v4l2_subdev_ops vimc_deb_ops = {
+> +	.core = &vimc_deb_core_ops,
+>   	.pad = &vimc_deb_pad_ops,
+>   	.video = &vimc_deb_video_ops,
+>   };
+> @@ -384,7 +388,7 @@ static void vimc_deb_calc_rgb_sink(struct vimc_deb_device *vdeb,
+>   	 * the top left corner of the mean window (considering the current
+>   	 * pixel as the center)
+>   	 */
+> -	seek = deb_mean_win_size / 2;
+> +	seek = vdeb->mean_win_size / 2;
+>   
+>   	/* Sum the values of the colors in the mean window */
+>   
+> @@ -474,6 +478,33 @@ static void *vimc_deb_process_frame(struct vimc_ent_device *ved,
+>   
+>   }
+>   
+> +static inline void vimc_deb_s_mean_win_size(struct vimc_deb_device *vdeb,
+> +					    unsigned int mean_win_size)
+> +{
+> +	if (vdeb->mean_win_size == mean_win_size)
+> +		return;
+> +	vdeb->mean_win_size = mean_win_size;
+> +}
+> +
+> +static int vimc_deb_s_ctrl(struct v4l2_ctrl *ctrl)
+> +{
+> +	struct vimc_deb_device *vdeb =
+> +		container_of(ctrl->handler, struct vimc_deb_device, hdl);
+> +
+> +	switch (ctrl->id) {
+> +	case VIMC_CID_MEAN_WIN_SIZE:
+> +		vimc_deb_s_mean_win_size(vdeb, ctrl->val);
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_ctrl_ops vimc_deb_ctrl_ops = {
+> +	.s_ctrl = vimc_deb_s_ctrl,
+> +};
+> +
+>   static void vimc_deb_release(struct v4l2_subdev *sd)
+>   {
+>   	struct vimc_deb_device *vdeb =
+> @@ -495,6 +526,24 @@ void vimc_deb_rm(struct vimc_device *vimc, struct vimc_ent_device *ved)
+>   	vimc_ent_sd_unregister(ved, &vdeb->sd);
+>   }
+>   
+> +static const struct v4l2_ctrl_config vimc_deb_ctrl_class = {
+> +	.flags = V4L2_CTRL_FLAG_READ_ONLY | V4L2_CTRL_FLAG_WRITE_ONLY,
+> +	.id = VIMC_CID_VIMC_CLASS,
+> +	.name = "VIMC Controls",
 
+Make this VIMC Debayer Controls?
+
+> +	.type = V4L2_CTRL_TYPE_CTRL_CLASS,
+> +};
+> +
+> +static const struct v4l2_ctrl_config vimc_deb_ctrl_mean_win_size = {
+> +	.ops = &vimc_deb_ctrl_ops,
+> +	.id = VIMC_CID_MEAN_WIN_SIZE,
+> +	.name = "Mean Window Size",
+> +	.type = V4L2_CTRL_TYPE_INTEGER,
+> +	.min = 1,
+> +	.max = 25,
+> +	.step = 2,
+> +	.def = 3,
+> +};
+> +
+>   struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+>   				     const char *vcfg_name)
+>   {
+> @@ -507,6 +556,16 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+>   	if (!vdeb)
+>   		return NULL;
+>   
+> +	/* Create controls: */
+> +	v4l2_ctrl_handler_init(&vdeb->hdl, 2);
+> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_class, NULL);
+> +	v4l2_ctrl_new_custom(&vdeb->hdl, &vimc_deb_ctrl_mean_win_size, NULL);
+> +	vdeb->sd.ctrl_handler = &vdeb->hdl;
+> +	if (vdeb->hdl.error) {
+> +		ret = vdeb->hdl.error;
+> +		goto err_free_vdeb;
+> +	}
+> +
+>   	/* Initialize ved and sd */
+>   	ret = vimc_ent_sd_register(&vdeb->ved, &vdeb->sd, v4l2_dev,
+>   				   vcfg_name,
+> @@ -514,13 +573,12 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+>   				   (const unsigned long[2]) {MEDIA_PAD_FL_SINK,
+>   				   MEDIA_PAD_FL_SOURCE},
+>   				   &vimc_deb_int_ops, &vimc_deb_ops);
+> -	if (ret) {
+> -		kfree(vdeb);
+> -		return NULL;
+> -	}
+> +	if (ret)
+> +		goto err_free_hdl;
+>   
+>   	vdeb->ved.process_frame = vimc_deb_process_frame;
+>   	vdeb->dev = &vimc->pdev.dev;
+> +	vdeb->mean_win_size = vimc_deb_ctrl_mean_win_size.def;
+>   
+>   	/* Initialize the frame format */
+>   	vdeb->sink_fmt = sink_fmt_default;
+> @@ -534,4 +592,11 @@ struct vimc_ent_device *vimc_deb_add(struct vimc_device *vimc,
+>   	vdeb->set_rgb_src = vimc_deb_set_rgb_mbus_fmt_rgb888_1x24;
+>   
+>   	return &vdeb->ved;
+> +
+> +err_free_hdl:
+> +	v4l2_ctrl_handler_free(&vdeb->hdl);
+
+Free the handle from vimc_deb_release()
+
+> +err_free_vdeb:
+> +	kfree(vdeb);
+> +
+> +	return NULL;
+>   }
+> 
+
+thanks,
+-- Shuah
