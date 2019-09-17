@@ -2,72 +2,131 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7B44C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FF2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:17:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801482067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568736982;
-	bh=CZ/KM/gXmljIiH0z+X3RrvgbxAfWQDwGFAhaAoajiiU=;
-	h=In-Reply-To:References:To:From:Subject:Date:List-ID:From;
-	b=hW2nJdqEx3uUB9hfacgZNMPE9aC26/KvIKdCHbmk0o3djUfd3trELUi7CUuS2Yj8W
-	 nzMgopKaBAxe9jqVhKmo1xHIeeubCIPlDyPNo1GyS8LLWpve08w0z0zzMSrKFoMRdv
-	 dqli8OjrpuO3dazEFVGUUQa5NljsK+nImE5z30VU=
+	by mail.kernel.org (Postfix) with ESMTP id B068A206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 16:17:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QLYvEZO4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730317AbfIQQQV (ORCPT
+        id S1730320AbfIQQRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 12:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfIQQQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 12:16:21 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FB9520665;
-        Tue, 17 Sep 2019 16:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568736980;
-        bh=CZ/KM/gXmljIiH0z+X3RrvgbxAfWQDwGFAhaAoajiiU=;
-        h=In-Reply-To:References:To:From:Subject:Date:From;
-        b=DPdwuC9Kn1JjoD0UWmRDfWnpXFl/6YDXpvWsyFrG/UCS3S6gJPaDj8+UjcaNedkr5
-         dZWKMmnW3WNfUg59IssfHTx87QiHMuTpqxDkq2v+8+IGWeWd6KPSg2Six2zg3Immil
-         glkwMtr2S8Tj8wLvnnhwtQ2nfOsZk8+MrG1R1Kzc=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 17 Sep 2019 12:17:07 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54722 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfIQQRG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 12:17:06 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH5m5051925;
+        Tue, 17 Sep 2019 11:17:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568737025;
+        bh=WbAHk/bYtnH2mwW0/tGEvTI0+nk2woFFg905dMFbxXE=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=QLYvEZO4gYfDUfS0YykpBlhIjQ/Je2AHOxa/eS+/XRlWAkedI59uvgKHg/LiNNNaC
+         iaNr/3ibbEIz1/hlyhPeytd515EANhhfBVeRlOvZvbWO29ztciQsROGJzJ7cSZp9uU
+         7ADruy6SkYPp3719J9qh9xedG2mlX9PVUzaYZbjw=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH5G8068621;
+        Tue, 17 Sep 2019 11:17:05 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 17
+ Sep 2019 11:17:02 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 17 Sep 2019 11:17:02 -0500
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8HGH4Sq084606;
+        Tue, 17 Sep 2019 11:17:04 -0500
+Date:   Tue, 17 Sep 2019 11:19:11 -0500
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Prabhakar Lad <prabhakar.csengg@gmail.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch 07/13] media: am437x-vpfe: Use a per instance format
+ array instead of a static one
+Message-ID: <20190917161911.tldspiynarmxd4ky@ti.com>
+References: <20190909162743.30114-1-bparrot@ti.com>
+ <20190909162743.30114-8-bparrot@ti.com>
+ <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1568375771-22933-8-git-send-email-gokulsri@codeaurora.org>
-References: <1568375771-22933-1-git-send-email-gokulsri@codeaurora.org> <1568375771-22933-8-git-send-email-gokulsri@codeaurora.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org,
-        david.brown@linaro.org, devicetree@vger.kernel.org,
-        gokulsri@codeaurora.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com,
-        nprakash@codeaurora.org, ohad@wizery.com, robh+dt@kernel.org,
-        sricharan@codeaurora.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 07/12] clk: qcom: Add WCSSAON reset
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 09:16:19 -0700
-Message-Id: <20190917161620.9FB9520665@mail.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d6aebae8-570a-284a-d336-f3a9670daa0b@xs4all.nl>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Gokul Sriram Palanisamy (2019-09-13 04:56:06)
-> Add WCSSAON reset required for Q6v5 on IPQ8074 SoC.
->=20
-> Signed-off-by: Gokul Sriram Palanisamy <gokulsri@codeaurora.org>
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: Nikhil Prakash V <nprakash@codeaurora.org>
-> ---
+Hans Verkuil <hverkuil@xs4all.nl> wrote on Fri [2019-Sep-13 15:07:29 +0200]:
+> On 9/9/19 6:27 PM, Benoit Parrot wrote:
+> > +/*
+> > + * This value needs to be at least as large as the number of entry in
+> > + * formats[].
+> > + * When formats[] is modified make sure to adjust this value also.
+> > + */
+> > +#define VPFE_MAX_ACTIVE_FMT	10
+> 
+> I recommend adding something like:
+> 
+> #if ARRAY_SIZE(formats) > VPFE_MAX_ACTIVE_FMT
+> 	#error must update VPFE_MAX_ACTIVE_FMT
+> #endif
+> 
+> to am437x-vpfe.c.
+> 
+> Or something along those lines. Don't rely on just the comment :-)
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+I remeber doing this a while back for another driver.
+Not sure if you ever treid this or not but "#if ARRAY_SIZE()" construct
+does not work because the ARRAY_SIZE() macro which needs to evaluate
+sizeof() generates the following compiler error:
 
+In file included from ../include/linux/delay.h:22,
+                 from ../drivers/media/platform/am437x/am437x-vpfe.c:23:
+../include/linux/kernel.h:47:26: warning: "sizeof" is not defined,
+evaluates to 0 [-Wundef]
+ #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) +
+                          __must_be_array(arr))
+
+So no luck there. But I remembered also how I previously fixed it.
+In this case if instead of leaving the formats[] definition with empty
+brackets you actually used the same defined value like
+formats[VPFE_MAX_ACTIVE_FMT] then if you inadvertantly add more enties in
+the table then the value of VPFE_MAX_ACTIVE_FMT then you'll get series of
+compile time warnings like this:
+
+drivers/media/platform/am437x/am437x-vpfe.c:108:5: warning: excess elements
+in array initializer
+  }, {
+     ^
+drivers/media/platform/am437x/am437x-vpfe.c:108:5: note: (near initialization
+for ‘formats’)
+drivers/media/platform/am437x/am437x-vpfe.c:115:5: warning: excess elements
+in array initializer
+  }, {
+
+etc...
+
+So this is how I will address this.
+
+Benoit
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
