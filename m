@@ -2,78 +2,70 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F0BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B39EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:59:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B16206C2
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EEE206C2
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 07:59:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404542AbfIQH5d (ORCPT
+        id S2404582AbfIQH7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 03:57:33 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46393 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729947AbfIQH5d (ORCPT
+        Tue, 17 Sep 2019 03:59:47 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:40863 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfIQH7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 03:57:33 -0400
-Received: by mail-qt1-f195.google.com with SMTP id u22so3178461qtq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 00:57:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IUxRgSOM+RJMXGGjbBYzlx3MiAC/rsxDlK8JSS/iIDg=;
-        b=FXY49tp7J4YPRtYpkrH4L8WxLOEWjgqeGsZtNqqyLuK1bcB8iV9ghe/IQFL6HsC3Ab
-         2EszJ6LB/o7Owz40vQKxRD0xDE8kXVS5F/91JxwsOm1iWG0Y53tROV4yILTb9FKgzKIz
-         OFerpqYGgMdrVYioQ1VYGTJxc82nEdXInILtCTIlgTEuRgsEeacculYRQ706qKYunNIz
-         R7xUPdhf3MsGMB+2aO38lpSRvDLx4v0H8hZb6EX6IXtRR+up9L8suHirZWBMgNo+KyVu
-         dhc/Hgl6OR+eFj5r/JRVY+hUhOMQtW/LvKQYJ/q1Mp63SuN8bQkvkOEUj1qkhjmzyO2c
-         HeXg==
-X-Gm-Message-State: APjAAAVWlDLwNN379UEcn8dO8ZKa6et9ZFvNeRgJNBi7mA7fpBJgfnI5
-        98k51KChA0RWhqfpQY8WHlad3iDrbZdMRXFyKEs=
-X-Google-Smtp-Source: APXvYqyVW5uR0zr3Z4l4/OWxGXKS97Xq2SxHgSFCrmgwNlMskha2F2/FD8IbbBZ+v65enZvrXs6deER9V4k50OjcFT8=
-X-Received: by 2002:aed:2842:: with SMTP id r60mr2342063qtd.142.1568707052075;
- Tue, 17 Sep 2019 00:57:32 -0700 (PDT)
+        Tue, 17 Sep 2019 03:59:46 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iA8Ol-00060O-8v; Tue, 17 Sep 2019 09:59:43 +0200
+Date:   Tue, 17 Sep 2019 09:59:43 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Scott Wood <swood@redhat.com>
+Cc:     linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>
+Subject: Re: [PATCH RT v3 3/5] sched: migrate_dis/enable: Use rt_invol_sleep
+Message-ID: <20190917075943.qsaakyent4dxjkq4@linutronix.de>
+References: <20190911165729.11178-1-swood@redhat.com>
+ <20190911165729.11178-4-swood@redhat.com>
 MIME-Version: 1.0
-References: <20190908121038.6877-1-sre@kernel.org>
-In-Reply-To: <20190908121038.6877-1-sre@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 17 Sep 2019 09:57:16 +0200
-Message-ID: <CAK8P3a0rqeksffu4swv2BGzhd68Brb76VFUCyfqtFAu6QppVgA@mail.gmail.com>
-Subject: Re: [PATCH] nvmem: core: fix nvmem_cell_write inline function
-To:     Sebastian Reichel <sre@kernel.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        kbuild test robot <lkp@intel.com>,
-        Han Nandor <nandor.han@vaisala.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190911165729.11178-4-swood@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 3:45 PM Sebastian Reichel <sre@kernel.org> wrote:
->
-> From: Sebastian Reichel <sebastian.reichel@collabora.com>
->
-> nvmem_cell_write's buf argument uses different types based on
-> the configuration of CONFIG_NVMEM. The function prototype for
-> enabled NVMEM uses 'void *' type, but the static dummy function
-> for disabled NVMEM uses 'const char *' instead. Fix the different
-> behaviour by always expecting a 'void *' typed buf argument.
->
-> Fixes: 7a78a7f7695b ("power: reset: nvmem-reboot-mode: use NVMEM as reboot mode write interface")
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Cc: Han Nandor <nandor.han@vaisala.com>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+On 2019-09-11 17:57:27 [+0100], Scott Wood wrote:
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 885a195dfbe0..32c6175b63b6 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -308,7 +308,9 @@ void pin_current_cpu(void)
+>  	preempt_lazy_enable();
+>  	preempt_enable();
+>  
+> +	rt_invol_sleep_inc();
+>  	__read_rt_lock(cpuhp_pin);
+> +	rt_invol_sleep_dec();
+>  
+>  	preempt_disable();
+>  	preempt_lazy_disable();
 
-I still see the issue in linux-next, did this get dropped by accident?
+I understand the other one. But now looking at it, both end up in
+rt_spin_lock_slowlock_locked() which would be the proper place to do
+that annotation. Okay.
 
-      Arnd
+Sebastian
