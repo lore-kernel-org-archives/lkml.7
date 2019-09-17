@@ -2,76 +2,115 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AEF1C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C84C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F30B32067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBDD521881
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 12:42:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbfIQMmC (ORCPT
+        id S1728388AbfIQMmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 08:42:02 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:57057 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbfIQMmB (ORCPT
+        Tue, 17 Sep 2019 08:42:14 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60884 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727308AbfIQMmN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:42:01 -0400
-Received: by mail-io1-f69.google.com with SMTP id n8so5458814ioh.23
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 05:42:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=EOWzZyfbf2PsTOR2XuGeTftz+ncATtL0MNUCtRnpmSE=;
-        b=HOwbY1fv8Iytd5Pr900wCMRLgS8V5PIH3FXIKUc0XOfGKUFXSoewVBpZwWOEMsV8Ir
-         g/+eEqq7Cn5/5ppXsmXis+YjLc8/XUEphTYkKr1uFvwxOL8CdSHuY1lTyz/gnlU9Tdqu
-         eDJWbr63N1kCxPDsSgDVxUYriSew0qQco7AdmWcOxEyJPvd30aRpuGmFRvYqEanCmHg0
-         ALyBNWPrExkNqe1NToNI84aeihIymdYv1DxLkT2fdKIaiwCyDsdu8vNDF2Qn5GURd/iW
-         TOeUOx3xHk/II8/cuGvw3oHD7dF5rsKap2kC0kzCKEMpFCfJnP6b6m5jMHEezcVPJey1
-         xz5w==
-X-Gm-Message-State: APjAAAVIxxpff2b5BWJzeiOKsbv+3SNIXz+rSdEcLSoMttnYvD88AhZu
-        bsgox3zi4rZaoD3e2pKoZYSW/lpryKmJgu7ZFB3eevnToZmy
-X-Google-Smtp-Source: APXvYqzfRJsy4y4ZMCY6Mkee25knrYvCZLxgAfloFJDI8xdlPzlKgTLAQ5ybhad6fxJZizScV+KNKJwvEqz8clvlRI56Mwn4rm3U
+        Tue, 17 Sep 2019 08:42:13 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 41C9981D0B; Tue, 17 Sep 2019 14:41:57 +0200 (CEST)
+Date:   Tue, 17 Sep 2019 14:42:11 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        kernel list <linux-kernel@vger.kernel.org>, sre@kernel.org,
+        nekit1000@gmail.com, mpartap@gmx.net, merlijn@wizzup.org,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Subject: Re: [FYI] lm3532: right registration to work with LED-backlight
+Message-ID: <20190917124210.GB27465@amd>
+References: <20190827215205.59677-1-tony@atomide.com>
+ <20190828085339.GB2923@amd>
+ <c3ac1863-9cdb-1ba6-d5a4-df1c4cfecbe1@gmail.com>
+ <20190908080305.GC25459@amd>
+ <390760c1-de39-9328-bb23-cbf791094718@gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:a617:: with SMTP id c23mr3095128jam.14.1568724121126;
- Tue, 17 Sep 2019 05:42:01 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 05:42:01 -0700
-In-Reply-To: <20190917122404.GA29364@localhost>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000fda29f0592bf0b95@google.com>
-Subject: Re: possible deadlock in usb_deregister_dev (2)
-From:   syzbot <syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        johan@kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, oneukum@suse.com,
-        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="aVD9QWMuhilNxW9f"
+Content-Disposition: inline
+In-Reply-To: <390760c1-de39-9328-bb23-cbf791094718@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot has tested the proposed patch and the reproducer did not trigger  
-crash:
+--aVD9QWMuhilNxW9f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-and-tested-by:  
-syzbot+f9549f5ee8a5416f0b95@syzkaller.appspotmail.com
+Hi!
 
-Tested on:
+> >>> +++ b/drivers/leds/leds-lm3532.c
+> >>> @@ -629,7 +629,7 @@ static int lm3532_parse_node(struct lm3532_data *=
+priv)
+> >>> =20
+> >>>  		lm3532_init_registers(led);
+> >>> =20
+> >>> -		ret =3D devm_led_classdev_register(priv->dev, &led->led_dev);
+> >>> +		ret =3D devm_of_led_classdev_register(priv->dev, to_of_node(child)=
+, &led->led_dev);
+> >>
+> >> We no longer have devm_of_led_classdev_register(). You must use
+> >> devm_led_classdev_register_ext().
+> >=20
+> > Something like this (untested)?
 
-commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-dashboard link: https://syzkaller.appspot.com/bug?extid=f9549f5ee8a5416f0b95
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=16753b2d600000
+> If you want to properly switch to the new extended LED registration
+> API, then you need:
+>=20
+> .default_label =3D ":",
+> .devicename =3D led->client->name;
+>=20
+> and in addition to that you need to remove old way of composing
+> the LED name. Something like patch [0] for leds-lm3692x.c.
+> And also patch for DT for consistency would be needed (like [1]).
+>=20
+> However it will not change anything in LED naming in comparison
+> to the existing code, except that it will enable the possibility
+> of using 'function' and 'color' DT properties instead of deprecated
+> 'label'.
+>=20
+> I suppose that you expected some extra bonus by passing
+> DT node, but I'm not sure what exactly. Possibly you confused
+> this with the patch set [2] that allows for instantiating
+> backlight device on top of LED class device (it has been forgotten
+> btw and will miss 5.4).
 
-Note: testing is done by a robot and is best-effort only.
+Yes, it is for LED backlight. Thanks for hints, you have corrected
+version in your inbox.
+
+Best regards,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--aVD9QWMuhilNxW9f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl2A1KIACgkQMOfwapXb+vKSiQCfSaOpmsMXHTUxjI7o+3uBZlgG
+Q08Amwb3v228sOb8lFX/gWhvInqTSOwS
+=oOu0
+-----END PGP SIGNATURE-----
+
+--aVD9QWMuhilNxW9f--
