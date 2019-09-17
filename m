@@ -2,75 +2,94 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451AAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CAA1C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA912067B
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568682043;
-	bh=I4NIFrMdlMutD9IU4xofBCwPU+5dl7IZYqXOeMmc1E4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=IQAzE+G//FYuc62FMD8WWV9CDbxCWXiA0oZmi3eysRtl60hLdjCrFdBqOWRoow8Ck
-	 kjHujy5CXoNI1/nKoA8EAo1vVtbV8GWL3i8yne9aYQhNrpSm503DzVFh3TGsundgWC
-	 0b/+4jiE16aY/y92lYs61CDqlFkN3SvvJWLIC3gA=
+	by mail.kernel.org (Postfix) with ESMTP id 070AF20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389014AbfIQBAl (ORCPT
+        id S2390612AbfIQBE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 21:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60502 "EHLO mail.kernel.org"
+        Mon, 16 Sep 2019 21:04:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:34819 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388496AbfIQBAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:00:24 -0400
-Subject: Re: [GIT PULL] perf changes for v5.4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568682023;
-        bh=I4NIFrMdlMutD9IU4xofBCwPU+5dl7IZYqXOeMmc1E4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=SWyjNYSsQgdmRZDNqdM99gkX9V4yjzUrqgdceMJTgMeAfhDZtVty7xmCkSaz65qQf
-         /EB9A7nN860j9AbDl54lyDOqMURpLii1e4u0sj217HnZacuw5An5gGWFNqtDumCkpF
-         0dubUtqTmCmIS8Lgwo+H1bHiFLNbdi35PZxOQbo0=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190916120314.GA31220@gmail.com>
-References: <20190916120314.GA31220@gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190916120314.GA31220@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-for-linus
-X-PR-Tracked-Commit-Id: e336b4027775cb458dc713745e526fa1a1996b2a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 772c1d06bd402f7ee72c61a18c2db74cd74b6758
-Message-Id: <156868202357.3683.10247344755698898190.pr-tracker-bot@kernel.org>
-Date:   Tue, 17 Sep 2019 01:00:23 +0000
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@infradead.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
+        id S1727996AbfIQBE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 21:04:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Sep 2019 18:04:58 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,514,1559545200"; 
+   d="scan'208";a="180611926"
+Received: from dpdk-virtio-tbie-2.sh.intel.com ([10.67.104.71])
+  by orsmga008.jf.intel.com with ESMTP; 16 Sep 2019 18:04:55 -0700
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com, tiwei.bie@intel.com
+Subject: [RFC v4 0/3] vhost: introduce mdev based hardware backend
+Date:   Tue, 17 Sep 2019 09:02:01 +0800
+Message-Id: <20190917010204.30376-1-tiwei.bie@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 16 Sep 2019 14:03:14 +0200:
+This RFC is to demonstrate below ideas,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-for-linus
+a) Build vhost-mdev on top of the same abstraction defined in
+   the virtio-mdev series [1];
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/772c1d06bd402f7ee72c61a18c2db74cd74b6758
+b) Introduce /dev/vhost-mdev to do vhost ioctls and support
+   setting mdev device as backend;
 
-Thank you!
+Now the userspace API looks like this:
+
+- Userspace generates a compatible mdev device;
+
+- Userspace opens this mdev device with VFIO API (including
+  doing IOMMU programming for this mdev device with VFIO's
+  container/group based interface);
+
+- Userspace opens /dev/vhost-mdev and gets vhost fd;
+
+- Userspace uses vhost ioctls to setup vhost (userspace should
+  do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
+  fd first before doing other vhost ioctls);
+
+Only compile test has been done for this series for now.
+
+RFCv3: https://patchwork.kernel.org/patch/11117785/
+
+[1] https://lkml.org/lkml/2019/9/10/135
+
+Tiwei Bie (3):
+  vfio: support getting vfio device from device fd
+  vfio: support checking vfio driver by device ops
+  vhost: introduce mdev based hardware backend
+
+ drivers/vfio/mdev/vfio_mdev.c    |   3 +-
+ drivers/vfio/vfio.c              |  32 +++
+ drivers/vhost/Kconfig            |   9 +
+ drivers/vhost/Makefile           |   3 +
+ drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
+ drivers/vhost/vhost.c            |  39 ++-
+ drivers/vhost/vhost.h            |   6 +
+ include/linux/vfio.h             |  11 +
+ include/uapi/linux/vhost.h       |  10 +
+ include/uapi/linux/vhost_types.h |   5 +
+ 10 files changed, 573 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/vhost/mdev.c
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.17.1
+
