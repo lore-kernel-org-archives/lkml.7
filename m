@@ -2,89 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E589BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F614C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A036120640
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C8CE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 06:50:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="UMYw0f+j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NFR60qqi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404328AbfIQGqU (ORCPT
+        id S2404355AbfIQGux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 02:46:20 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:60016 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726953AbfIQGqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 02:46:19 -0400
-Received: from nazgul.tnic (unknown [193.86.95.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CB7771EC0200;
-        Tue, 17 Sep 2019 08:46:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1568702778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=9Q0Z13rG711uvWRmfQeCjyd2F/ANVybw/Hkd7OjcJ+k=;
-        b=UMYw0f+j81fcQuCG7ECcpHsVLbVG9alHrC0/6b8TqoWSohdnLoJyU/hHYtNk8lTLsbMLU/
-        EF9zGd03VHAckmOpVQvt4YVaVkT39pU1toKGQuSjHJnX5qUHUspRS4y2kiMsESxoxNbCKP
-        dRxae3zO6LYvSxKaji6M0M4BGLV+rbo=
-Date:   Tue, 17 Sep 2019 08:46:12 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Mihai Carabas <mihai.carabas@oracle.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jon Grimm <Jon.Grimm@amd.com>, kanth.ghatraju@oracle.com,
-        konrad.wilk@oracle.com, patrick.colp@oracle.com,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        x86-ml <x86@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/microcode: Add an option to reload microcode even if
- revision is unchanged
-Message-ID: <20190917064612.GA12174@nazgul.tnic>
-References: <alpine.DEB.2.21.1909052316130.1902@nanos.tec.linutronix.de>
- <20190905222706.GA4422@otc-nc-03>
- <alpine.DEB.2.21.1909061431330.1902@nanos.tec.linutronix.de>
- <20190906144039.GA29569@sventech.com>
- <alpine.DEB.2.21.1909062237580.1902@nanos.tec.linutronix.de>
- <20190907003338.GA14807@araj-mobl1.jf.intel.com>
- <alpine.DEB.2.21.1909071236120.1902@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1909161227060.10731@nanos.tec.linutronix.de>
- <20190917003122.GA3005@otc-nc-03>
- <alpine.DEB.2.21.1909170824220.2066@nanos.tec.linutronix.de>
+        Tue, 17 Sep 2019 02:50:53 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:38653 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728003AbfIQGux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 02:50:53 -0400
+Received: by mail-pg1-f193.google.com with SMTP id x10so1467549pgi.5;
+        Mon, 16 Sep 2019 23:50:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=A09ebAA08AUXlIM7rfJAlfeNFb0/R3dzB4utBep7g5k=;
+        b=NFR60qqidHaph1jwlnhZRW3ByDD9bHtGwZnAvitu0gchqdLaQ8TJRpdntardshvLP/
+         HXCsWoPL1e53p9YJnxS3UUcfnZrd3Ns9Lf/dSdJzhWBQ8W2lCXDoOGuCwmNGtPfFRzU1
+         3dlWUxKDAL7faO5GMgwsxngt5VoYp/+9HzEVvag9C0HtrTUdOhtV7M253apWJEpnG/Eu
+         qdtoxDC/u/SycTF8h7KlrOStdgpGfxVLb7lrFutIVK2S1ByJJ9XtCZn+juDgdUmrmkfX
+         kzxs8Rco/90ISXEQ1mqrTGOgMe5IaOdiDMRRNOjD5AjQmf3N4MVUVDGzK6vTKGyzUPMj
+         NNFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=A09ebAA08AUXlIM7rfJAlfeNFb0/R3dzB4utBep7g5k=;
+        b=n5MrHH1M/EI9riGHgmm8dygwEp3gbN6MKJvreAuIIwdgEMusfO1vJ2tuyNjXkzIXHZ
+         qK00unwqFZ4GgNmETHma5zC7JaJoRnXEfnKx16hHb2tzfCL8ARXjUz0djhyFETJI2ijD
+         NlEe/ax1VAyt4Hr+XO83PyDOdLZ57Z8IapHDP3SO59ivoD1Rd0zcRBdXM9AFosPEArUg
+         SUHvBlzgY4vxQVj6OkRkXXQYQCiStXaec2Tb/archdcr4Ej0V3mXB+GlL0kGZDtcU5Kb
+         +Xw34M/SsGbqgtdvC7Xc5w67cn6Ur82TZ3OpaS50xczAUo/RbnwI6RjK/KQi7Kiz13/p
+         cNiw==
+X-Gm-Message-State: APjAAAVd4UVKyVN7/g7rXzSAR3PBvahSbj2aHrR1+KqtrAggeVsxgbBa
+        elSQrqg9V1blw8+0arP23Ic=
+X-Google-Smtp-Source: APXvYqzwM1TmdOu8NcHkAeG+Pl6QsEYbNbIdHu1NSxPw+dSxhz1ml+UvP48URsmAGWL44BJIuj1eyg==
+X-Received: by 2002:a62:8c10:: with SMTP id m16mr2487881pfd.58.1568703050638;
+        Mon, 16 Sep 2019 23:50:50 -0700 (PDT)
+Received: from LGEARND20B15 ([27.122.242.75])
+        by smtp.gmail.com with ESMTPSA id f62sm1500038pfg.74.2019.09.16.23.50.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 16 Sep 2019 23:50:50 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 15:50:44 +0900
+From:   Austin Kim <austindh.kim@gmail.com>
+To:     pkshih@realtek.com, kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, austindh.kim@gmail.com
+Subject: [PATCH] rtlwifi: rtl8723ae: Remove unused 'rtstatus' variable
+Message-ID: <20190917065044.GA173797@LGEARND20B15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1909170824220.2066@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 08:37:10AM +0200, Thomas Gleixner wrote:
-> So what happens if the ucode update "fixes" one of the executed
-> instructions on the fly? Is that guaranteed to be safe? There is nothing
-> which says so.
+'rtstatus' local variable is not used,
+so remove it for clean-up.
 
-You'd expect that when you load microcode on the core, the one thread
-does the loading and the other SMT thread is in a holding pattern. That
-would be optimal.
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+---
+ drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Considering the dancing through hoops we're doing to keep all threads
-quiesced, I'd be sceptical that is the case...
-
+diff --git a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
+index 54a3aec..22441dd 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
++++ b/drivers/net/wireless/realtek/rtlwifi/rtl8723ae/phy.c
+@@ -485,15 +485,12 @@ bool rtl8723e_phy_config_rf_with_headerfile(struct ieee80211_hw *hw,
+ 					    enum radio_path rfpath)
+ {
+ 	int i;
+-	bool rtstatus = true;
+ 	u32 *radioa_array_table;
+ 	u16 radioa_arraylen;
+ 
+ 	radioa_arraylen = RTL8723ERADIOA_1TARRAYLENGTH;
+ 	radioa_array_table = RTL8723E_RADIOA_1TARRAY;
+ 
+-	rtstatus = true;
+-
+ 	switch (rfpath) {
+ 	case RF90_PATH_A:
+ 		for (i = 0; i < radioa_arraylen; i = i + 2) {
 -- 
-Regards/Gruss,
-    Boris.
+2.6.2
 
-ECO tip #101: Trim your mails when you reply.
---
