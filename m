@@ -2,99 +2,97 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E174C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:03:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B098C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31C6620862
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:03:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D55C21925
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:04:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMfL2Vfn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u16SdUdO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbfIQRDU (ORCPT
+        id S1730685AbfIQREK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:03:20 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37801 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728702AbfIQRDU (ORCPT
+        Tue, 17 Sep 2019 13:04:10 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:32777 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730669AbfIQREK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:03:20 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y5so2524068pfo.4;
-        Tue, 17 Sep 2019 10:03:19 -0700 (PDT)
+        Tue, 17 Sep 2019 13:04:10 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n190so2359544pgn.0;
+        Tue, 17 Sep 2019 10:04:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=udsY9Bp2m5z8jBkGZjMz6n586Nv18MrVRKTMzJRSlKA=;
-        b=CMfL2Vfnz3ZUzfb5OufroCe8otqbnUCzQBGWSEK6wSWNEws46Tn6kFYCRDPtnlcHcd
-         1w6/zP80PObrKMLwR8PlPDlechU4Ts4mF2Rm+CFJG7BZ09eW4q+kDioqZv00s1QQHSpP
-         y+cNhlzLntpw5nE6aD8XlECxOXffte59k9CUDW/OK1O/AcwT6KyVYCGG9HwLz3MeLsTe
-         rnmb+6x5pP7ARDU4jlIUVEzIloU+i5BBdW7SCS4LkMiaD00im3YoLJcDLDKuvmE3u98r
-         I6va5e7HltFUMjshivgWm10veXELJ8sAYDypEuQ/OAUDDHq6exHq2HjXOwkdMj+JmXG1
-         dZqg==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=P2Um7Rko8n1alK6M3LQKKtwQ/oX8IiJYk8IZAkTV2KA=;
+        b=u16SdUdOGB2LLK/mGWmhW7AvoCPMmtYHrPR4NF7yEJXeguX86hVlDGt+Il3z1u2YdG
+         Gg6+ls/YjLptyRd84oxJTBEhuBrmjI7MuokGyxKxfnGqe72u4yOY5YAt1kPuY9AQxj1m
+         ZEDDJEV4bxwSf9YAgFNf+eea053uH+ZwKL9SGM6pfn57NCEgMnrZnlrYMHfQ7KuIeNwg
+         a7CBJhMbM5Qe0xMFTUpG0PQFqdYVSSCZeL6BEpLDZf2xcpAhI17EFP/9LsheyMI+Dzt/
+         rgpL+ox/Ak3H0s/Yn4W9VyPDvljb6yfa5j2lSwQ+E2Rz96F/dm7zCYLNoHMq4F6MDdtR
+         fIFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=udsY9Bp2m5z8jBkGZjMz6n586Nv18MrVRKTMzJRSlKA=;
-        b=XAzQ2WYV7OrHI9IJEwNpTESKLyK42V0Vk8NXunkP+4KzE2Kgj1oWGvuueXxw1kFvCM
-         y2ukrnb/doMwd9C9/8ml8KAS3P2b7LtZJBoX+xqKQdeZtLEGzBMF8JhuZjpbDSIKvTZL
-         uFTvaPnxPZViq0gjtZLJQxFOaWkx9ogaCvOGgvkvXtKlqDJxeGlnx19xeju25D6FzsSv
-         Cd/RE4roePF9tUxj8SuwVAmXyZHhN+6a5EMEpzyqBJCAoMHkdGqZMOBeJugnVbUEKFlZ
-         I+cB5mjrQeJNmTYnJ9fbMJkkD7uBQ7izuJe/diUiXCRP8T2RTsF98+Oh6UnX7Vhzqf4J
-         XvgQ==
-X-Gm-Message-State: APjAAAUIZuKJBoZoxCwqYxCJQkbei2VDTnPIl3W0fm5Tn1ZwG81sfuxj
-        ko7jS2GJ4lEUnSOZ/6yO/7RybkxLHCdiF+FUZos=
-X-Google-Smtp-Source: APXvYqxFEK77plJKGGIiq4+gona03laNJSu63v6wIesm1gEXhgNCvux0i1jX7XWB1P/D70jDYQXrsYTGzbNrBYSpd+M=
-X-Received: by 2002:a17:90b:294:: with SMTP id az20mr1869546pjb.16.1568739799399;
- Tue, 17 Sep 2019 10:03:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=P2Um7Rko8n1alK6M3LQKKtwQ/oX8IiJYk8IZAkTV2KA=;
+        b=ZKfhgU1g8DRN09twoh9dJwMQK1GI7sessMV+0F4IFGOX50R3ifbk/jE1qdWo2Zi/1E
+         CRPzGIWIOPSzPc45QcdiRXfphrr4S+46c1L071oqZqY5nhnqAwDez0Aft0I2fD+LoaCV
+         AkXX3a+24G9KHPL5Srm88Uw/NKZSLKNqycXeL9+tBegfcE/YsaUGn0MtONJc0vkuo3kJ
+         8Izp02lY+n8r03l86UAWf+e/wjO4zIa3RDdR93BLvTy1VdsidtIgcrQfmERpzJr7h0AD
+         OGgM5MNwM6u5ARZVpJzPrruAIG2CyBjNLaGzDtynLQqDSmc31dZr3Q0C+gpHiGvvadvu
+         J0Fw==
+X-Gm-Message-State: APjAAAXt5DRq3+C5mL6lWDyGS9Ck/bRQfibuMHa7NxoPWccTUHxSANjV
+        7O97d7NSiw4K4yIfdBgq9FY=
+X-Google-Smtp-Source: APXvYqwz5xFcDYTrAlmz56RXpp84dT+0rWOj9LUjJ/O1638m2Eldcgqs+1nKSKIc0KCLZC9Z7yBbxQ==
+X-Received: by 2002:a17:90a:1c01:: with SMTP id s1mr6097049pjs.76.1568739848250;
+        Tue, 17 Sep 2019 10:04:08 -0700 (PDT)
+Received: from SD ([106.222.12.103])
+        by smtp.gmail.com with ESMTPSA id s7sm3072278pjn.8.2019.09.17.10.04.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 10:04:07 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 22:33:57 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     agross@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, markus.elfring@web.de
+Subject: [PATCH v2] Fix issues reported by Coccinelle
+Message-ID: <20190917170357.GA7025@SD>
 MIME-Version: 1.0
-References: <00000000000029a3a00592b41c48@google.com> <CAM_iQpX0FAvhcZgKjRd=3Rbp8cbfYiUqkF2KnmF9Pd0U4EkSDw@mail.gmail.com>
- <vbfk1a7cooq.fsf@mellanox.com>
-In-Reply-To: <vbfk1a7cooq.fsf@mellanox.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 17 Sep 2019 10:03:08 -0700
-Message-ID: <CAM_iQpWNSdx59iTTNO6GdyZ6NBAMD8=wON6Q7dvnhiX50pwEvQ@mail.gmail.com>
-Subject: Re: BUG: sleeping function called from invalid context in tcf_chain0_head_change_cb_del
-To:     Vlad Buslov <vladbu@mellanox.com>
-Cc:     syzbot <syzbot+ac54455281db908c581e@syzkaller.appspotmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        David Ahern <dsahern@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "hawk@kernel.org" <hawk@kernel.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@mellanox.com>, Jiri Pirko <jiri@resnulli.us>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Petr Machata <petrm@mellanox.com>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        "xdp-newbies@vger.kernel.org" <xdp-newbies@vger.kernel.org>,
-        "yhs@fb.com" <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 1:27 AM Vlad Buslov <vladbu@mellanox.com> wrote:
-> Hi Cong,
->
-> Don't see why we would need qdisc tree lock while releasing the
-> reference to (or destroying) previous Qdisc. I've skimmed through other
-> scheds and it looks like sch_multiq, sch_htb and sch_tbf are also
-> affected. Do you want me to send patches?
+Using cocciecheck to ensure there are no semantic issues in
+i2c-qup driver.
 
-Yes, please do.
+Refer below links for more information.
+http://coccinelle.lip6.fr
+https://bottest.wiki.kernel.org/coccicheck
+
+Changes in v2:
+* Updated changelog as suggested by Markus Elfring.
+
+v1:
+https://patchwork.ozlabs.org/cover/1163043/
+
+Saiyam Doshi (3):
+  i2c: qup: remove explicit conversion to boolean
+  i2c: qup: Remove dev_err() log after platform_get_irq*() failure
+  i2c: qup: Use devm_platform_ioremap_resource helper
+
+ drivers/i2c/busses/i2c-qup.c | 22 ++++++++--------------
+ 1 file changed, 8 insertions(+), 14 deletions(-)
+
+-- 
+2.20.1
+
