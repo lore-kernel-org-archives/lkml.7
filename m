@@ -2,65 +2,137 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B088FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7E9C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 979E02171F
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFED021848
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 17:58:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568743118;
+	bh=ikamuBRjYTAJjEECrQrq+mo7qHzrbF4mQ+FeZxOIhOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RuxphK5xR57aXrPuVQE/arhv8/QSw0ZYfSCbGHd4A05Gp2WAEICK/elhgEf3+iOul
+	 nJzYniPiE6r54xYfqC1TE4WIT/CP+CfoGazDNdfl9A0VGTX5JTtPzwOL6RmPBJS1NZ
+	 6a2ztYED0FNnA7WKOwyD6wF07KMkdEVF+XuRqbc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbfIQR6T (ORCPT
+        id S1731508AbfIQR6i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 13:58:19 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:47227 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726017AbfIQR6T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 13:58:19 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8HHvrMC028082;
-        Tue, 17 Sep 2019 19:57:53 +0200
-Date:   Tue, 17 Sep 2019 19:57:53 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Matthew Garrett <mjg59@srcf.ucam.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Martin Steigerwald <martin@lichtvoll.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190917175753.GF27999@1wt.eu>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba>
- <CAHk-=wiGg-G8JFJ=R7qf0B+UtqA_Weouk6v+McmfsLJLRq6AKA@mail.gmail.com>
- <20190917163456.alzodstm3hd4yrni@srcf.ucam.org>
- <20190917171641.GC27999@1wt.eu>
- <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
+        Tue, 17 Sep 2019 13:58:38 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37623 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726017AbfIQR6h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:58:37 -0400
+Received: by mail-oi1-f194.google.com with SMTP id i16so3683757oie.4;
+        Tue, 17 Sep 2019 10:58:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7dX3IYhgH+re5ug66qG47rfti7dbGb0gT2E31r+ps6E=;
+        b=f8oG1j4rhHbS/tTZSFl2YvWItOWxK08+3xULzjQsHnQTPdGVQgWOwJr+qWTW4DCwpO
+         7HVvvg5oUwnjbY1WmEbaLZXmys8HNcnbxjqlB+5PPc1Zuhw7OzquV+vdljC7D38d6AaK
+         mJOjcEU6f2GxaHhBNcgj1Zao7PziAEIpUB7INlGQC7yLfMib2f9HYRIXXFJPIRUmizHo
+         qMvO/PvCFw414K1mMKntUhKtULzvXf2HMMeakt/VFYyFCqFmgEoNuUNNiq7mEfSqhd3Y
+         S79wJ2womXYl2w/PP4ky8wfJrxLrciB0ANC66Xjae270Pte4bCfz3B4cCjOesnbpHFVi
+         TjLg==
+X-Gm-Message-State: APjAAAWpjLLZr9W3sUzcjyIJl0x8pRDj6e1yicZddHyG8+fW6Bpx3gDk
+        lZ6kG4iP1HWunDkyt4mMMw==
+X-Google-Smtp-Source: APXvYqz6w6TOJ/O28uXBl30U4/ItHlYTLyX3bChwJpVDFlJIQYgFMGxvKNq5LJV/Lja3JMrrIhJ3sw==
+X-Received: by 2002:aca:52cd:: with SMTP id g196mr4827415oib.163.1568743116659;
+        Tue, 17 Sep 2019 10:58:36 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id g4sm850712otj.42.2019.09.17.10.58.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 10:58:35 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 12:58:35 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        laurent.pinchart@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v4 2/9] dt-bindings: display, renesas,du: Document cmms
+ property
+Message-ID: <20190917175835.GA6900@bogus>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-3-jacopo+renesas@jmondi.org>
+ <2bcbb30c-db36-38a1-dcff-4f4269c11ad6@ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190917172002.vrkudj2ejtrtl7rh@srcf.ucam.org>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+In-Reply-To: <2bcbb30c-db36-38a1-dcff-4f4269c11ad6@ideasonboard.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 06:20:02PM +0100, Matthew Garrett wrote:
-> AES keys are used for a variety of long-lived purposes (eg, disk 
-> encryption).
+On Wed, Sep 11, 2019 at 05:06:33PM +0100, Kieran Bingham wrote:
+> Hi Jacopo,
+> 
+> On 06/09/2019 14:54, Jacopo Mondi wrote:
+> > Document the newly added 'cmms' property which accepts a list of phandle
+> > and channel index pairs that point to the CMM units available for each
+> > Display Unit output video channel.
+> > 
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/renesas,du.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > index c97dfacad281..1773b0a2f54f 100644
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > @@ -45,6 +45,10 @@ Required Properties:
+> >      instance that serves the DU channel, and the channel index identifies the
+> >      LIF instance in that VSP.
+> > 
+> > +  - renesas,cmms: A list of phandles to the CMM instances present in the SoC,
+> > +    one for each available DU channel. The property shall not be specified for
+> > +    SoCs that do not provide any CMM (such as V3M and V3H).
+> > +
+> >  Required nodes:
+> > 
+> >  The connections to the DU output video ports are modeled using the OF graph
+> > @@ -91,6 +95,7 @@ Example: R8A7795 (R-Car H3) ES2.0 DU
+> >  			 <&cpg CPG_MOD 721>;
+> >  		clock-names = "du.0", "du.1", "du.2", "du.3";
+> >  		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+> > +		renesas,cmms = <&cmm0 &cmm1 &cmm2 &cmm3>;
+> 
+> Should these be comma separated in the same fashion as the vsps are
+> separated?
 
-True, good point.
+Yes. Doesn't matter from a dtb standpoint, but the schema are going to 
+be stricter here. Bracket each unit.
 
-Willy
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> 
+> I don't really mind either way though ...
+> 
+> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> 
+> 
+> > 
+> >  		ports {
+> >  			#address-cells = <1>;
+> > --
+> > 2.23.0
+> > 
+> 
