@@ -2,122 +2,106 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B0DC4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 188B7C4CECE
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB9F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E192F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 09:58:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=aurabindo.in header.i=@aurabindo.in header.b="h7fwfvpv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfIQJ6U convert rfc822-to-8bit (ORCPT
+        id S1726268AbfIQJ6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 05:58:20 -0400
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:46802 "EHLO
-        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfIQJ6T (ORCPT
+        Tue, 17 Sep 2019 05:58:25 -0400
+Received: from mail-40132.protonmail.ch ([185.70.40.132]:47085 "EHLO
+        mail-40132.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726141AbfIQJ6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 05:58:19 -0400
-Received: from mailgate01.nec.co.jp ([114.179.233.122])
-        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8H9vshM011512
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 17 Sep 2019 18:57:54 +0900
-Received: from mailsv01.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
-        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H9vsdV024649;
-        Tue, 17 Sep 2019 18:57:54 +0900
-Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
-        by mailsv01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8H9uoda001377;
-        Tue, 17 Sep 2019 18:57:54 +0900
-Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.148] [10.38.151.148]) by mail03.kamome.nec.co.jp with ESMTP id BT-MMP-1171633; Tue, 17 Sep 2019 18:32:44 +0900
-Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
- BPXC20GP.gisp.nec.co.jp ([10.38.151.148]) with mapi id 14.03.0439.000; Tue,
- 17 Sep 2019 18:32:44 +0900
-From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
-To:     David Hildenbrand <david@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "adobriyan@gmail.com" <adobriyan@gmail.com>,
-        "hch@lst.de" <hch@lst.de>,
-        "longman@redhat.com" <longman@redhat.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "mst@redhat.com" <mst@redhat.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
- ZONE_DEVICE driver.
-Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMAgAAgogCADDvdgIAATZsAgAAnMAA=
-Date:   Tue, 17 Sep 2019 09:32:43 +0000
-Message-ID: <3d27953a-88b8-5a7c-de3c-041f8b4436f6@vx.jp.nec.com>
-References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
- <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
- <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
- <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
- <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
- <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
- <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
- <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
-In-Reply-To: <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.34.125.135]
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <AD3069ADF1FE3147AE36DB50024CF9EB@gisp.nec.co.jp>
-Content-Transfer-Encoding: 8BIT
+        Tue, 17 Sep 2019 05:58:23 -0400
+Date:   Tue, 17 Sep 2019 09:58:13 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aurabindo.in;
+        s=protonmail; t=1568714301;
+        bh=ftJdTOKlBr/AG20OwG1MTUH8i2f7oG0aNtJYOC26Q5I=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=h7fwfvpvSgI4B6Q40CBaRg5cnJ0/Iz3EmB2KLqRa5RVwn3/TtbQTzhBzyGAQnNZEk
+         NvzxRMs6HVFIIwV5sDuXUPIaB4Ra+CzcDL/4rqAROsAUEleubQTba+ogOA93AeTyuK
+         SeZLT6owgA+nCuFWJwobVVA0qDDrI1ln6SMk7XRI=
+To:     Baolin Wang <baolin.wang@linaro.org>
+From:   Aurabindo Jayamohanan <mail@aurabindo.in>
+Cc:     Mark Brown <broonie@kernel.org>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        "paul.walmsley@sifive.com" <paul.walmsley@sifive.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Reply-To: Aurabindo Jayamohanan <mail@aurabindo.in>
+Subject: Re: [PATCH] spi: sifive: check return value for platform_get_resource()
+Message-ID: <7kLa83nF-ufh-AGA_LpBQ6M-ErUf-LEVXANxL2LmirJAh-snvVtJLTVFkBKFxaHvIH9Vi1E3iXDmxW6Ijktoo6k1S7pyFrwmVVLkhKr4Q_Q=@aurabindo.in>
+In-Reply-To: <CAMz4kuJczzjTPSohQ=kbZ0Pr7U_9-hzXk-jPgKk79PENOM1-dA@mail.gmail.com>
+References: <20190917085627.4562-1-mail@aurabindo.in>
+ <CAMz4kuJczzjTPSohQ=kbZ0Pr7U_9-hzXk-jPgKk79PENOM1-dA@mail.gmail.com>
+Feedback-ID: D1Wwva8zb0UdpJtanaReRLGO3iCsewpGmDn8ZDKmpao-Gnxd2qXPmwwrSQ99r5Q15lmK-D8x6vKzqhUKCgzweA==:Ext:ProtonMail
 MIME-Version: 1.0
-X-TM-AS-MML: disable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/09/17 16:13, David Hildenbrand wrote:
-> On 17.09.19 04:34, Toshiki Fukasawa wrote:
->> On 2019/09/09 16:46, David Hildenbrand wrote:
->>> Let's take a step back here to understand the issues I am aware of. I
->>> think we should solve this for good now:
->>>
->>> A PFN walker takes a look at a random PFN at a random point in time. It
->>> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
->>> options are:
->>>
->>> 1. It is buddy memory (add_memory()) that has not been online yet. The
->>> memmap contains garbage. Don't access.
->>>
->>> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
->>>
->>> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
->>> is only partially present: E.g., device starts at offset 64MB within a
->>> section or the device ends at offset 64MB within a section. Don't access it.
->>
->> I don't agree with case #3. In the case, struct page area is not allocated on
->> ZONE_DEVICE, but is allocated on system memory. So I think we can access the
->> struct pages. What do you mean "invalid memmap"?
-> No, that's not the case. There is no memory, especially not system
-> memory. We only allow partially present sections (sub-section memory
-> hotplug) for ZONE_DEVICE.
 
-Let me clear my thoughts. If I read correctly, the struct pages for sections
-(including partially present sections) on ZONE_DEVICE are allocated by
-vmemmap_populate(). And all the struct pages except (altmap->base_pfn) to
-(altmap->base_pfn + altmap->reserve) are initialized by memmap_init_zone()
-and memmap_init_zone_device().
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Tuesday, September 17, 2019 2:53 PM, Baolin Wang <baolin.wang@linaro.org=
+> wrote:
 
-Do struct pages for partially present sections go through a different process?
+> On Tue, 17 Sep 2019 at 17:12, Aurabindo Jayamohanan mail@aurabindo.in wro=
+te:
+>
+> > platform_get_resource() may return NULL. If it is so, return -ENXIO
+> >
+> > Signed-off-by: Aurabindo Jayamohanan mail@aurabindo.in
+> >
+> > -------------------------------------------------------
+> >
+> > drivers/spi/spi-sifive.c | 6 ++++++
+> > 1 file changed, 6 insertions(+)
+> > diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
+> > index 93ec2c6cdbfd..67485067a694 100644
+> > --- a/drivers/spi/spi-sifive.c
+> > +++ b/drivers/spi/spi-sifive.c
+> > @@ -308,6 +308,12 @@ static int sifive_spi_probe(struct platform_device=
+ *pdev)
+> > platform_set_drvdata(pdev, master);
+> >
+> >         res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >
+> >
+> > -         if (!res) {
+> >
+> >
+> > -                 dev_err(&pdev->dev, "no IOMEM resource found\\n");
+> >
+> >
+> > -                 ret =3D -ENXIO;
+> >
+> >
+> > -                 goto put_master;
+> >
+> >
+> > -         }
+> >
+> >
+>
+> Seems unnecessary, the devm_ioremap_resource() already validated if
+> the resource is available.
+>
 
-Thanks,
-Toshiki Fukasawa
-> 
-> invalid memmap == memmap was not initialized == struct pages contains
-> garbage. There is a memmap, but accessing it (e.g., pfn_to_nid()) will
-> trigger a BUG.
-> 
+Okay, thanks for the headsup
+
