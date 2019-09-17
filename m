@@ -2,139 +2,119 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE4CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20B8C4CECD
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E796821848
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="k65KTPRR"
+	by mail.kernel.org (Postfix) with ESMTP id 9F23521852
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 15:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729701AbfIQPkW (ORCPT
+        id S1729715AbfIQPk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 11:40:22 -0400
-Received: from mout.web.de ([212.227.15.4]:34575 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfIQPkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 11:40:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568734815;
-        bh=Z9bctWDpIcLF5jbzZ5SjGhI21IDVR1k5oXtZh1NOdNs=;
-        h=X-UI-Sender-Class:Cc:References:Subject:To:From:Date:In-Reply-To;
-        b=k65KTPRRxthTWsoZUn3AK5ISS4SCl7IKnsMHrXYn/046Wj3HL/cPAa1LVKjukwEza
-         /LnGjrFbNcYPoP4ZKHHs8x3T/xWsVHnZ2saXjeXpaV39+MW/oig+nsHJlRehWN3fo1
-         Z5fQ5VdXh8YbtA0Dyu8OLoPiDNlfCunNZie9RukU=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.93.51]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LhhVB-1hoL6c36mH-00mtmE; Tue, 17
- Sep 2019 17:40:15 +0200
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190916190254.GA14207@SD>
-Subject: Re: [3/3] i2c: qup: Use devm_platform_ioremap_resource helper
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <c24065f1-2692-9529-d505-ae639ce5d271@web.de>
-Date:   Tue, 17 Sep 2019 17:40:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 17 Sep 2019 11:40:29 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:47103 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfIQPk2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 11:40:28 -0400
+Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iAFaZ-0003Zb-HU; Tue, 17 Sep 2019 17:40:23 +0200
+Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iAFaY-0003yg-GN; Tue, 17 Sep 2019 17:40:22 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     zhang.chunyan@linaro.org, dianders@chromium.org,
+        lgirdwood@gmail.com, broonie@kernel.org,
+        ckeepax@opensource.cirrus.com
+Cc:     linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Subject: [PATCH 3/3] regulator: core: make regulator_register() EPROBE_DEFER aware
+Date:   Tue, 17 Sep 2019 17:40:21 +0200
+Message-Id: <20190917154021.14693-4-m.felsch@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190917154021.14693-1-m.felsch@pengutronix.de>
+References: <20190917154021.14693-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190916190254.GA14207@SD>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Gn6QLV8IyYo5OKOfLJia/XY5aC5iB9OCV413m5JqvDAIrTOfPC6
- Icn1nI7tVhw4A/mYqFZTO4BslXNuK6/M4H56/Jouc+r9ej51e+8gnDFrzPIuHcx2+PXspxk
- olfWARZBVZ1adnEDfDLhcykLriZ91uc/EujaFdQR6QTmAjESmaH5XqJ2HQhABrrV9z9Lodf
- JTb32xVqz602I1LCryqmA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1RPp9Hf0kBI=:wXZjz1fekG/GT9XA0UTJme
- LWrQvDUBVNQ1XYyAolOTBh61Y0shZjn+69NGjFm3fuKSXHVjKiABl+t8/J6Wg0pAI8V1SUMf4
- WtpU/86Q3tA0YUIQqdgznTPa/Hkfb1Quy/5PeMLtX25AUlNieHSHOg/ylDm5mzmLKTqRZjDh1
- lX2mHe78w2vTuaXLiElvfGz8yxQhWItg0V81Wb1AMYC/FN9nNkRJhQFEiEcQgZ3xtFKd5XK1N
- fryujCzDyYQ9MgFEq7DDhu91qCkrMmXgwhrsWbv+9zAS39MKVu2zd6+nLpjn8xXFPjozxB26J
- sR/PT8PpugHUS5/gBBuVtwb8nmyJV48TRdK7DlFjiazTIFyfJrlPryDGLozkoaRHDzuPN7Ht3
- 1/13V/qgamAitST9ADjeCSjek5p4Cu94040gcb1JYDmDBh+aY4rNCZ3tXAjKIdIvNS9tmy5K8
- XEr/QddckpuLqaEsE3PoIqZYzAJ+hnOdu71wvW47D/KuCv2t0Z5I6452AzPqv0JHwDfswqXzC
- sAwQMc38SgX2AgpCOdT/ajIfOU/wA4lqxDIs7ii9QhYwfnTpS1vkS/e9glk/CgaF7K6STMupT
- h/oR8XZkhd9eeVcy7xQhnAiYFgJYEm/Z3KQetPnefvRH6QIQvO1BrscWjSXZzAZTw4c4MIFxA
- tiSiNeooMpDi4NarG091RWQBe4GA1NvcPVNrLTBBRcSE9iL/wnzFwOnwXA8hykxeGoZ6LMou8
- +lBYw9SUjtOQy08OEwsIxdHDVN3gCezqzxiq7Dqjeay+gieSFcf6OYLgIhDszS1Rwfs1cnIew
- DoYd+bRQ7htUTiZU0Lg8FA6PrJWte46cpuGeFZtenPVPgHKzp1h5pW/EyVu3zDT2wwOl705rd
- yspkt78zIlZ6d/qf470O50frESlyFnAm26R100gFZy0XIBBcvpP7VtFlBZTF7I25l7NBoHiPr
- I+hHcPVVKI70TXM8vXI4X3CD3bNbkDmJ9Pwz4k5KigSqrsEUnfl68zhNkATSYr+A6fDtNiOzw
- r+YqUWEEGZVYtEiYqWjxJXnPVb+FHTr2h944mxUfxku1EWKVR8jAB2yJ5Ww7I3VVrN7usnVQh
- i+Ebic7P8wtnCHSSgyGjrBqpzTmRBJx0dDupyQP6qMRJE8Fp0qi35SHOJya9XNeqpS601G6Fm
- D+qViRccuNptE5f+gRkWvulqoM8zGRo+I5SBP9M4GXyi/70FB2SdHT/ZRQsdSGoknxnC4DKoK
- nZz8YcRbs1J1fb+pQy3t9oTv82DgzgmRSpUwlITEdkMyBhaY6Sg4UDaGSGYQ=
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Use devm_platform_ioremap_resource helper which wraps
-> platform_get_resource() and devm_ioremap_resource() together.
+Sometimes it can happen that the regulator_of_get_init_data() can't
+retrieve the config due to a not probed device the regulator depends on.
+Fix that by checking the return value of of_parse_cb() and return
+EPROBE_DEFER in such cases.
 
-Can a wording like =E2=80=9CSimplify this function implementation by using
-a known wrapper function.=E2=80=9D be nicer for this change description?
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/regulator/core.c         | 13 +++++++++++++
+ drivers/regulator/of_regulator.c | 19 ++++++++++++++-----
+ 2 files changed, 27 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index f9444f509440..e8e145c2a5df 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -5047,6 +5047,19 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 
+ 	init_data = regulator_of_get_init_data(dev, regulator_desc, config,
+ 					       &rdev->dev.of_node);
++
++	/*
++	 * Sometimes not all resources are probed already so we need to take
++	 * that into account. This happens most the time if the ena_gpiod comes
++	 * from a gpio extender or something else.
++	 */
++	if (PTR_ERR(init_data) == -EPROBE_DEFER) {
++		kfree(config);
++		kfree(rdev);
++		ret = -EPROBE_DEFER;
++		goto rinse;
++	}
++
+ 	/*
+ 	 * We need to keep track of any GPIO descriptor coming from the
+ 	 * device tree until we have handled it over to the core. If the
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 38dd06fbab38..ef7198b76e50 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -445,11 +445,20 @@ struct regulator_init_data *regulator_of_get_init_data(struct device *dev,
+ 		goto error;
+ 	}
+ 
+-	if (desc->of_parse_cb && desc->of_parse_cb(child, desc, config)) {
+-		dev_err(dev,
+-			"driver callback failed to parse DT for regulator %pOFn\n",
+-			child);
+-		goto error;
++	if (desc->of_parse_cb) {
++		int ret;
++
++		ret = desc->of_parse_cb(child, desc, config);
++		if (ret) {
++			if (ret == -EPROBE_DEFER) {
++				of_node_put(child);
++				return ERR_PTR(-EPROBE_DEFER);
++			}
++			dev_err(dev,
++				"driver callback failed to parse DT for regulator %pOFn\n",
++				child);
++			goto error;
++		}
+ 	}
+ 
+ 	*node = child;
+-- 
+2.20.1
 
-> The semantic patch that makes this report is available
-> in scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
->
-> Found using - http://coccinelle.lip6.fr/
-
-Can a tag like =E2=80=9CGenerated by: scripts/coccinelle/api/devm_platform=
-_ioremap_resource.cocci=E2=80=9D
-be more helpful than the other description variant?
-
-Regards,
-Markus
