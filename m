@@ -2,187 +2,105 @@ Return-Path: <SRS0=bFUY=XM=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8097C4CECD
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C80C49ED7
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDAC7214DE
-	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568683179;
-	bh=KRgkAyk8458l3DgVsWVloeG6qEEHG36sjtqN0HPTo+Y=;
-	h=Subject:To:References:From:Date:In-Reply-To:List-ID:From;
-	b=p7LUv2Ugm1HIKooMypwiljElI2JzgyJLaXHfd5SE82AXEYsN9zkyjueMzrVSX7W+d
-	 seIY3rOWI/ncG7drnRwdg8R04USjXQu2jzpX+LTzmGQNsgnsUTZINhBV/wu1/fW4pU
-	 D5wwuarPI6AqcG5QnIKPbthiUapGz++/iorNAZmo=
+	by mail.kernel.org (Postfix) with ESMTP id A6B3520665
+	for <linux-kernel@archiver.kernel.org>; Tue, 17 Sep 2019 01:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codon.org.uk header.i=@codon.org.uk header.b="cQWiJlTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391083AbfIQBTj (ORCPT
+        id S2391138AbfIQBYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 16 Sep 2019 21:19:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35462 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728363AbfIQBTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 16 Sep 2019 21:19:38 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDF420665;
-        Tue, 17 Sep 2019 01:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568683177;
-        bh=KRgkAyk8458l3DgVsWVloeG6qEEHG36sjtqN0HPTo+Y=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=hsle6yJHAeuWqyx/qTyMsQrltMjE1csbSaSpRBhS8jmxP2HaMgvot/CDgcnujAyNS
-         TchCXgVeealApAXcy55Dg06Sxtz1j1HJcvHaZiNSjuiiRYnZoAk94MfHF2O6PZvkbT
-         w4krIs5Bx+5XFp46lVrD+l7EOw5pmzN4G6rfpuaM=
-Subject: Re: [PATCH v2] selftests: watchdog: Validate optional file argument
-To:     "George G. Davis" <george_davis@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        shuah <shuah@kernel.org>
-References: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <fa008fd8-f867-b80e-84ed-148e1630c09e@kernel.org>
-Date:   Mon, 16 Sep 2019 19:19:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 16 Sep 2019 21:24:40 -0400
+Received: from cavan.codon.org.uk ([93.93.128.6]:47858 "EHLO
+        cavan.codon.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728878AbfIQBYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 16 Sep 2019 21:24:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codon.org.uk; s=63138784; h=Subject:Message-ID:From:CC:To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:
+        Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ydAjbIZ5ouf+5lvzLDorhNfi7gBeYR4RWW6tpcxYwTM=; b=cQWiJlTuJPP3r5asTWR/J0Pwk6
+        siSevHbSF2sb8NpnS38Yp5DEkk0eKNUWbHdU7/8oHciTwX/J5hhln2h9jQb+4Req/t83u+i40ClND
+        XJyWw8IVIOG1XZhZHfSuCpVt+5pfiBhCDdaYymeD5hmkCjvZ1dKPiQWg311SQAuCiN5c=;
+Received: from [2607:fb90:8069:6532:f8b6:19c9:6540:8c34]
+        by cavan.codon.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <mjg59@srcf.ucam.org>)
+        id 1iA2E0-0002eo-Nj; Tue, 17 Sep 2019 02:24:15 +0100
+Date:   Mon, 16 Sep 2019 18:23:56 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wh2PuYtuUVt523j20cTceN+ps8UNJY=uRWQuRaDeDyLQw@mail.gmail.com>
+References: <20190916042952.GB23719@1wt.eu> <CAHk-=wg4cONuiN32Tne28Cg2kEx6gsJCoOVroqgPFT7_Kg18Hg@mail.gmail.com> <20190916061252.GA24002@1wt.eu> <CAHk-=wjWSRzTjwN9F5gQcxtPkAgaRHJOOOTUjVakqP-Nzg9BXA@mail.gmail.com> <20190916172117.GB15263@mit.edu> <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com> <20190916230217.vmgvsm6o2o4uq5j7@srcf.ucam.org> <CAHk-=whwSt4RqzqM7cA5SAhj+wkORfr1bG=+yydTJPtayQ0JwQ@mail.gmail.com> <20190916231103.bic65ab4ifv7vhio@srcf.ucam.org> <CAHk-=wjwJDznDUsiaXH=UCxFRQxNEpj2tTCa0GvZm2WB4+hJ4A@mail.gmail.com> <20190916232922.GA7880@darwi-home-pc> <CAHk-=wh2PuYtuUVt523j20cTceN+ps8UNJY=uRWQuRaDeDyLQw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1568659751-1845-1-git-send-email-george_davis@mentor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>
+CC:     "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+From:   Matthew Garrett <mjg59@srcf.ucam.org>
+Message-ID: <BEF07E89-E36D-480F-AB1E-25C80C9DABE7@srcf.ucam.org>
+X-SA-Do-Not-Run: Yes
+X-SA-Exim-Connect-IP: 2607:fb90:8069:6532:f8b6:19c9:6540:8c34
+X-SA-Exim-Mail-From: mjg59@srcf.ucam.org
+Subject: Re: Linux 5.3-rc8
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: No (on cavan.codon.org.uk); Unknown failure
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/16/19 12:49 PM, George G. Davis wrote:
-> As reported by Eugeniu Rosca, a side of affect of commit c3f2490d6e92
-> ("selftests: watchdog: Add optional file argument") is that arbitrary files
-> may be opened for watchdog testing, e.g.
-> 
+On 16 September 2019 18:05:57 GMT-07:00, Linus Torvalds <torvalds@linux-fou=
+ndation=2Eorg> wrote:
+>On Mon, Sep 16, 2019 at 4:29 PM Ahmed S=2E Darwish <darwish=2E07@gmail=2E=
+com>
+>wrote:
+>>
+>> Linus, in all honesty, the other case is _not_ a hypothetical =2E
+>
+>Oh yes it is=2E
+>
+>You're confusing "use" with "breakage"=2E
+>
+>The _use_ of getrandom(0) for key generation isn't hypothetical=2E
+>
+>But the _breakage_ from the suggested patch that makes it time out is=2E
+>
+>See the difference?
+>
+>The thing is, to break, you have to
+>
+> (a) do that key generation at boot time
+>
+> (b) do it on an idle machine that doesn't have entropy
 
-You don't need to say this here since you are already have a
-Reported-by tag. You are missing the Fixes tag.
-> ./watchdog-test  -f /dev/zero
-> Watchdog Ticking Away!
-> 
-> To prevent watchdog-test from operating on non-watchdog device files,
-> validate that a file is indeed a watchdog device via an
-> ioctl(WDIOC_GETSUPPORT) call.
-> 
-> While we're at it, since the watchdog_info is available as a result of the
-> ioctl(WDIOC_GETSUPPORT) call, add a command line option to optionally show
-> the watchdog_info.
-> 
+Exactly the scenario where you want getrandom() to block, yes=2E=20
 
-Let's try this again. I want two patches. The first one with Fixes tag.
-The first patch might be candidate for going into stables.
+>in order to basically reproduce the current boot-time hang situation
+>with the broken gdm, except with an actual "generate key"=2E
+>
+>Then you have to ignore the big warning too=2E
 
-The -i (info) should be a separate patch. This won't go into stables.
+The big warning that's only printed in dmesg?=20
 
-Please write a clear commit log. The following will help:
 
-https://chris.beams.io/posts/git-commit/
-
-> Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> ---
-> v1: Applied/tested on commit ce54eab71e210f ("kunit: fix failure to build without printk") of
->      https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=next
-> v2: Squashed [1] and [2], and update commit description as discussed in [3].
->      [1] https://patchwork.kernel.org/patch/11136283/
->      [2] https://patchwork.kernel.org/patch/11136285/
->      [3] https://patchwork.kernel.org/patch/11136285/#22883573
-> ---
->   tools/testing/selftests/watchdog/watchdog-test.c | 27 +++++++++++++++++++++++-
->   1 file changed, 26 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/watchdog/watchdog-test.c b/tools/testing/selftests/watchdog/watchdog-test.c
-> index afff120c7be6..f45e510500c0 100644
-> --- a/tools/testing/selftests/watchdog/watchdog-test.c
-> +++ b/tools/testing/selftests/watchdog/watchdog-test.c
-> @@ -19,7 +19,7 @@
->   
->   int fd;
->   const char v = 'V';
-> -static const char sopts[] = "bdehp:t:Tn:NLf:";
-> +static const char sopts[] = "bdehp:t:Tn:NLf:i";
->   static const struct option lopts[] = {
->   	{"bootstatus",          no_argument, NULL, 'b'},
->   	{"disable",             no_argument, NULL, 'd'},
-> @@ -32,6 +32,7 @@ static const struct option lopts[] = {
->   	{"getpretimeout",       no_argument, NULL, 'N'},
->   	{"gettimeleft",		no_argument, NULL, 'L'},
->   	{"file",          required_argument, NULL, 'f'},
-> +	{"info",		no_argument, NULL, 'i'},
->   	{NULL,                  no_argument, NULL, 0x0}
->   };
->   
-> @@ -72,6 +73,7 @@ static void usage(char *progname)
->   	printf("Usage: %s [options]\n", progname);
->   	printf(" -f, --file\t\tOpen watchdog device file\n");
->   	printf("\t\t\tDefault is /dev/watchdog\n");
-> +	printf(" -i, --info\t\tShow watchdog_info\n");
->   	printf(" -b, --bootstatus\tGet last boot status (Watchdog/POR)\n");
->   	printf(" -d, --disable\t\tTurn off the watchdog timer\n");
->   	printf(" -e, --enable\t\tTurn on the watchdog timer\n");
-> @@ -97,6 +99,7 @@ int main(int argc, char *argv[])
->   	int c;
->   	int oneshot = 0;
->   	char *file = "/dev/watchdog";
-> +	struct watchdog_info info;
->   
->   	setbuf(stdout, NULL);
->   
-> @@ -118,6 +121,16 @@ int main(int argc, char *argv[])
->   		exit(-1);
->   	}
->   
-> +	/*
-> +	 * Validate that `file` is a watchdog device
-> +	 */
-> +	ret = ioctl(fd, WDIOC_GETSUPPORT, &info);
-> +	if (ret) {
-> +		printf("WDIOC_GETSUPPORT error '%s'\n", strerror(errno));
-> +		close(fd);
-> +		exit(ret);
-> +	}
-> +
->   	optind = 0;
->   
->   	while ((c = getopt_long(argc, argv, sopts, lopts, NULL)) != -1) {
-> @@ -205,6 +218,18 @@ int main(int argc, char *argv[])
->   		case 'f':
->   			/* Handled above */
->   			break;
-> +		case 'i':
-> +			/*
-> +			 * watchdog_info was obtained as part of file open
-> +			 * validation. So we just show it here.
-> +			 */
-> +			oneshot = 1;
-> +			printf("watchdog_info:\n");
-> +			printf(" identity:\t\t%s\n", info.identity);
-> +			printf(" firmware_version:\t%u\n",
-> +			       info.firmware_version);
-> +			printf(" options:\t\t%08x\n", info.options);
-> +			break;
->   
->   		default:
->   			usage(argv[0]);
-> 
-
-thanks,
--- Shuah
+--=20
+Matthew Garrett | mjg59@srcf=2Eucam=2Eorg
