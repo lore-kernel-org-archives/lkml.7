@@ -4,84 +4,113 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21012C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E53ACC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F58222D2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF3920644
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389371AbfIRUAn (ORCPT
+        id S2389406AbfIRUAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:00:43 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:48685 "EHLO
+        Wed, 18 Sep 2019 16:00:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:40441 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbfIRUAm (ORCPT
+        with ESMTP id S2389392AbfIRUAx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:00:42 -0400
+        Wed, 18 Sep 2019 16:00:53 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MBmI6-1iMncA0xDQ-00CBd2; Wed, 18 Sep 2019 22:00:30 +0200
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MuluN-1hsjpK0RUJ-00rtNj; Wed, 18 Sep 2019 22:00:01 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jens Axboe <axboe@kernel.dk>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "Liu, Chuansheng" <chuansheng.liu@intel.com>,
-        Tejun Heo <tj@kernel.org>, Steve Winslow <swinslow@gmail.com>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ahci: stop exporting ahci_em_messages
-Date:   Wed, 18 Sep 2019 22:00:14 +0200
-Message-Id: <20190918200028.2247535-1-arnd@arndb.de>
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        Michal Koutny <mkoutny@suse.com>, Tejun Heo <tj@kernel.org>,
+        Alessio Balsini <balsini@android.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Steve Muckle <smuckle@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Todd Kjos <tkjos@google.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH] sched/uclamp: fix building without cgroup
+Date:   Wed, 18 Sep 2019 21:59:43 +0200
+Message-Id: <20190918195957.2220297-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:bpP25I+L2snij/kUqvLgw3zHSK9dhWbjzC82+IB6twYDHAFGQcr
- 5mHV298wUutxqh5H8Q2yMZUqYznPqCkvmIqG6u5Kh672WygjToVZh0s6f8lm3imYrJzwLbT
- P1/e2gR8o6motJ+cDDMjVWt4l7XtghqMV+sEid255iuWxRJHeDJKQ6sQhTtiNsMohDFr4qy
- y4y5tq7fCFsPx2oaNdaNA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xAQ/KbzZe6w=:2FqdJaohZIwFU+qEOP2oOw
- F5ILF5tw/IuNk88r4Ibh28YVfTi6JlZG9n3Qa4SN6HfN2yIQEQRezbyrqyQ5XUn4BRQe2im66
- Vq+EOV9sCRYptdYn79nalJ8SKBPsXOuDt9V7Emf9LIjLAHbSsQP3WmecXwgx7o23rMFeki+RJ
- nmRvu2lFs1wwSpJdcZgQIuLZDQBSCBQ12dYBV9kXTBqTDxlw+64e7UOAK6YbMOff0iXuk/mji
- tDhRAKidxjGUl+gAudMlmOAoh0aVO5Q54b2b0Q4SSIfr3XjdvOOiaZKIk4UIhEKrl3H2Hlica
- GaAvi6u2D1eOhfk1ItmZsEVHOCw7EMu/H0y1zmhFTbPpH8Ds5xvqlntLIKmcCoc8Cud9NrvL2
- RqDgRzHiU+/+J652oY+z2Dc5W72sgXsnXOcS1coPV2Dss0CGIptBUMkvF2aN0Evd8k5z0yNHB
- F7EkvrmQ81ZC3wldoCURDUHWzUZFLhhz5SVaRuWumzkfRxDnwubL6HRR3FvPwdj5dLybKbJaX
- fYAlXbdppNaraVctdtQ7qxauidoYCoOrTGwdC9iKci9XAS+ykYEgUXcqNl0OKewyk11c9STWe
- bxiFzOAAATemrNkb9DPnD2FvCqa3BbX0sdJXbYptdXz9tH7UuOQLmUBCSfaf4C8SD2AD1/EfJ
- 99ZeZff6grEz/CbFGq4k+AWsnYD+NYeVyIE9doZJChQbOlxFa/tSMP1vT/IwIB6seRNLaMaxb
- mqkrWDDrEDmGnqbBw/ShhMEpqJwfWaI7PIXWh3ttujdL20KhpG7tn87NrjPJvqXTZ4sgwB76K
- 2PgQKpfWuDMNtDrNM2oWtVO1Nv83NlICCRic8GdFF5dlMQtiCVHZOjubW3QEOw8D2XTx3L5kx
- JeBhQHDS9NdMWsN7fr0w==
+X-Provags-ID: V03:K1:W6UnziFG3kMCKWVGK+UTFHQlxIRQdKUTIDJ084gJZNTBsNtL7DS
+ dIuyXGOXC7wMu+LXWQVKCmOS7f1ED5X/+W23rhvFmZ93oFgE6dfpAMXgOvH0XsmyNoLI3HH
+ 9EnW60Z64dOFjUQLl3GMhcwW0ZEpXdMLhyawy9laQr3otaNuyucqgiaS9ZYKYwm+7BwmvNo
+ lml5Whhi/b4JIrqCPw5YQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:22tuQPy5xkA=:KvoQAZKEoK6LxT2oHtVPVc
+ ArlCWm49saLo3vvbFy7b0J/kg085fN00/Q5QUfI4TbRZLDl9lqlbLkNpzC3LCb4XYlJkztfp3
+ 305Us38WHV3xkRh+yGqfA7e8TVT8ScVOJzcREwt6w9u6yeaVnFm4mDK4FPjfyGRnsXU/BJ243
+ gmIVYQz58PEGIvC9bQSRXsfCtvywqV4A4CwKT4QvaVXNUYlhDNEGDF23Kx55LgmDBT216Bfq1
+ 1F3CRAvCyjJZZIt4UoiqnFZNneg9ggAxzDWKK6113tdZ3S7DgTXyC5n5Yi8XNFg/T0uWyFbOF
+ F7LWk14nNQQui/iCHz+GCJVb5cZjWh1ij4q0YRRu3m9rYZn64rVBRPMc36xOdQ5gT2hfghBJu
+ IYxghUa6ZygtVyiX0nY+sNaFzLZgVJDBMzbQLFUZxskz+RTkAte2lrO473Hq1yEH6llyQ6W8y
+ j3E6bhndiCjh0+n8RmJZNmUwrUZeZrSBJ9I8DE0MPFgeTYt9qrygw5IrwGBTSf/tEzPRyJ60L
+ 2czBoeaycs2DRHw1QxCCfzXrcebpF800dASrtfU26Z+ZPxGjZ6b5wmoA93s9MxJBTjMMzee1n
+ thAkmXgZ9MU8BFV+AOD2x5mmrIa/XGBnwQjGjFHabl5ZvZCxS24qvEfVPdQo6XU4y8ZNRwTQ3
+ d7Vy2j1mW58k7kc16CGtjPEnPhaz5ot1w5g/uQ5o+JN0ha8YlquTQRDVMMWPyLMeeXyafCMJN
+ DQUYlSZQrcg17vzB4iRCZvJbc5qfZhGOBNGZi7I34TabvtMXZYp3gdVRaEERdDEEELsvQCZ0J
+ 8cX1th/rNi+sy1R9n0wHu9GRRmND6m5FOYLy0pZCOoip57cwiXS6aLgPUNYdZbWDXXQFuBt+9
+ OsArzbrOdKCUMDbdYOLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The symbol is now static and not used elswhere, which
-leads to a warning message:
+The css_task_iter interfaces are defined conditionally and
+cause build failures when used in other configurations:
 
-WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
+kernel/sched/core.c:1081:23: error: variable has incomplete type 'struct css_task_iter'
+kernel/sched/core.c:1084:2: error: implicit declaration of function 'css_task_iter_start' [-Werror,-Wimplicit-function-declaration]
+kernel/sched/core.c:1085:14: error: implicit declaration of function 'css_task_iter_next' [-Werror,-Wimplicit-function-declaration]
+kernel/sched/core.c:1091:2: error: implicit declaration of function 'css_task_iter_end' [-Werror,-Wimplicit-function-declaration]
 
-Fixes: ed08d40cdec4 ("ahci: Changing two module params with static and __read_mostly")
+As this code is unused anyway in that configuration, just put
+it into the same #ifdef. This also avoids possible warnings
+about unused inline functions.
+
+Fixes: babbe170e053 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/ata/libahci.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index e4c45d3cca79..bff369d9a1a7 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -175,7 +175,6 @@ struct ata_port_operations ahci_pmp_retry_srst_ops = {
- EXPORT_SYMBOL_GPL(ahci_pmp_retry_srst_ops);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index f9a1346a5fa9..f25e3949a5ba 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1043,6 +1043,7 @@ static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p)
+ 		uclamp_rq_dec_id(rq, p, clamp_id);
+ }
  
- static bool ahci_em_messages __read_mostly = true;
--EXPORT_SYMBOL_GPL(ahci_em_messages);
- module_param(ahci_em_messages, bool, 0444);
- /* add other LED protocol types when they become supported */
- MODULE_PARM_DESC(ahci_em_messages,
++#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static inline void
+ uclamp_update_active(struct task_struct *p, enum uclamp_id clamp_id)
+ {
+@@ -1091,7 +1092,6 @@ uclamp_update_active_tasks(struct cgroup_subsys_state *css,
+ 	css_task_iter_end(&it);
+ }
+ 
+-#ifdef CONFIG_UCLAMP_TASK_GROUP
+ static void cpu_util_update_eff(struct cgroup_subsys_state *css);
+ static void uclamp_update_root_tg(void)
+ {
 -- 
 2.20.0
 
