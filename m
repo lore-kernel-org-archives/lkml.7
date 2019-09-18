@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF22DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B55C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C529E21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7194921929
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788001;
-	bh=FdXQ5GCxGzSD3aWt3Raz/h1pzonloyJFe+fcXM42WoI=;
+	s=default; t=1568788005;
+	bh=adh0tBGTETTtxIVgnM5bATCU0nC6iXhziEM0s53ubv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DFEibTZFf79z9sFtFF8vycvojsZ6fPcykUgiLong8tw8TufT5BwqYCE0+MvZbLku3
-	 4vJbxmBWKwwVl4FtRkR59YccHCSQF55Hxhuzg966QeO/f5N/cu15rmUDsDyO7ArBh1
-	 sF1Ucm4K5QObBACdb474JxJZi8DGLhedkiFo80Xg=
+	b=bHgNXMK334azEcRmLu1QxsRqmiOP3DHnsNOkhf7v/I5pIjMTdZJY8461YMOswCnfV
+	 bgsrsM1ykZGAVHP88rs+yKBggddnzpxCaZrUBM3ostU+n88gTvapuG8DNJM1qkA8jq
+	 dfAvkA/bENPyrIzVGojCk4GFyZ5AWqSAlUMpjZL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbfIRG0l (ORCPT
+        id S1730385AbfIRG0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48094 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbfIRG0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:36 -0400
+        id S1730366AbfIRG0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5246321929;
-        Wed, 18 Sep 2019 06:26:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86270218AF;
+        Wed, 18 Sep 2019 06:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787995;
-        bh=FdXQ5GCxGzSD3aWt3Raz/h1pzonloyJFe+fcXM42WoI=;
+        s=default; t=1568788001;
+        bh=adh0tBGTETTtxIVgnM5bATCU0nC6iXhziEM0s53ubv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pGlBMaMYlrWw5Z7lkcGXokMrJ25J8yFsvW/b4acZXwDdbR8vJaSsIME9lvFUrYX8u
-         zPdq44WraUhoNSxuDuZ8fJ85w70yifXLAyHXTJlCH3Tw5IWUvpyBGoO//VW3X/x6Mc
-         Po/DOw5rALKpnQghw11M9PiCyxcZXAETY/hGdzw0=
+        b=h4tr29AjAyVCr3MdjVE4P+3ws0rgWR3VH7JXSF7VtGnAmz4vSIoxsybSaIdQbtON1
+         extVnt2TUoA9lMNJSeBcPjXKlqRTds5Eu1E1BRd6JOPoa1+qmpiyIp5U3XC8wJGDCz
+         lfbTheWdEBeAjys3UCp6n6ClefBrPMkNlTI+fQ7c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hyunchul Lee <hyc.lee@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.2 61/85] ubifs: Correctly use tnc_next() in search_dh_cookie()
-Date:   Wed, 18 Sep 2019 08:19:19 +0200
-Message-Id: <20190918061236.997345935@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 63/85] crypto: talitos - check AES key size
+Date:   Wed, 18 Sep 2019 08:19:21 +0200
+Message-Id: <20190918061237.359983950@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,85 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit bacfa94b08027b9f66ede7044972e3b066766b3e upstream.
+commit 1ba34e71e9e56ac29a52e0d42b6290f3dc5bfd90 upstream.
 
-Commit c877154d307f fixed an uninitialized variable and optimized
-the function to not call tnc_next() in the first iteration of the
-loop. While this seemed perfectly legit and wise, it turned out to
-be illegal.
-If the lookup function does not find an exact match it will rewind
-the cursor by 1.
-The rewinded cursor will not match the name hash we are looking for
-and this results in a spurious -ENOENT.
-So we need to move to the next entry in case of an non-exact match,
-but not if the match was exact.
+Although the HW accepts any size and silently truncates
+it to the correct length, the extra tests expects EINVAL
+to be returned when the key size is not valid.
 
-While we are here, update the documentation to avoid further confusion.
-
-Cc: Hyunchul Lee <hyc.lee@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: c877154d307f ("ubifs: Fix uninitialized variable in search_dh_cookie()")
-Fixes: 781f675e2d7e ("ubifs: Fix unlink code wrt. double hash lookups")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/tnc.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/crypto/talitos.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/fs/ubifs/tnc.c
-+++ b/fs/ubifs/tnc.c
-@@ -1158,8 +1158,8 @@ static struct ubifs_znode *dirty_cow_bot
-  *   o exact match, i.e. the found zero-level znode contains key @key, then %1
-  *     is returned and slot number of the matched branch is stored in @n;
-  *   o not exact match, which means that zero-level znode does not contain
-- *     @key, then %0 is returned and slot number of the closest branch is stored
-- *     in @n;
-+ *     @key, then %0 is returned and slot number of the closest branch or %-1
-+ *     is stored in @n; In this case calling tnc_next() is mandatory.
-  *   o @key is so small that it is even less than the lowest key of the
-  *     leftmost zero-level node, then %0 is returned and %0 is stored in @n.
-  *
-@@ -1882,13 +1882,19 @@ int ubifs_tnc_lookup_nm(struct ubifs_inf
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1591,6 +1591,18 @@ static int ablkcipher_des3_setkey(struct
+ 	return ablkcipher_setkey(cipher, key, keylen);
+ }
  
- static int search_dh_cookie(struct ubifs_info *c, const union ubifs_key *key,
- 			    struct ubifs_dent_node *dent, uint32_t cookie,
--			    struct ubifs_znode **zn, int *n)
-+			    struct ubifs_znode **zn, int *n, int exact)
- {
- 	int err;
- 	struct ubifs_znode *znode = *zn;
- 	struct ubifs_zbranch *zbr;
- 	union ubifs_key *dkey;
- 
-+	if (!exact) {
-+		err = tnc_next(c, &znode, n);
-+		if (err)
-+			return err;
-+	}
++static int ablkcipher_aes_setkey(struct crypto_ablkcipher *cipher,
++				  const u8 *key, unsigned int keylen)
++{
++	if (keylen == AES_KEYSIZE_128 || keylen == AES_KEYSIZE_192 ||
++	    keylen == AES_KEYSIZE_256)
++		return ablkcipher_setkey(cipher, key, keylen);
 +
- 	for (;;) {
- 		zbr = &znode->zbranch[*n];
- 		dkey = &zbr->key;
-@@ -1930,7 +1936,7 @@ static int do_lookup_dh(struct ubifs_inf
- 	if (unlikely(err < 0))
- 		goto out_unlock;
- 
--	err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
-+	err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
- 
- out_unlock:
- 	mutex_unlock(&c->tnc_mutex);
-@@ -2723,7 +2729,7 @@ int ubifs_tnc_remove_dh(struct ubifs_inf
- 		if (unlikely(err < 0))
- 			goto out_free;
- 
--		err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
-+		err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
- 		if (err)
- 			goto out_free;
- 	}
++	crypto_ablkcipher_set_flags(cipher, CRYPTO_TFM_RES_BAD_KEY_LEN);
++
++	return -EINVAL;
++}
++
+ static void common_nonsnoop_unmap(struct device *dev,
+ 				  struct talitos_edesc *edesc,
+ 				  struct ablkcipher_request *areq)
+@@ -2752,6 +2764,7 @@ static struct talitos_alg_template drive
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+ 				.ivsize = AES_BLOCK_SIZE,
++				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
+ 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
+@@ -2768,6 +2781,7 @@ static struct talitos_alg_template drive
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+ 				.ivsize = AES_BLOCK_SIZE,
++				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
+ 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
+@@ -2785,6 +2799,7 @@ static struct talitos_alg_template drive
+ 				.min_keysize = AES_MIN_KEY_SIZE,
+ 				.max_keysize = AES_MAX_KEY_SIZE,
+ 				.ivsize = AES_BLOCK_SIZE,
++				.setkey = ablkcipher_aes_setkey,
+ 			}
+ 		},
+ 		.desc_hdr_template = DESC_HDR_TYPE_AESU_CTR_NONSNOOP |
 
 
