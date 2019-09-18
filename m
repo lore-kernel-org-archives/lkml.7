@@ -2,186 +2,93 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94416C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABDB218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1AC721897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvINT1Vg"
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="jnwvM/JC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729024AbfIRJov (ORCPT
+        id S1729247AbfIRJpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:44:51 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38438 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbfIRJot (ORCPT
+        Wed, 18 Sep 2019 05:45:00 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36834 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfIRJo7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:44:49 -0400
-Received: by mail-wr1-f66.google.com with SMTP id l11so6157198wrx.5;
-        Wed, 18 Sep 2019 02:44:48 -0700 (PDT)
+        Wed, 18 Sep 2019 05:44:59 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y19so6182586wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:44:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3Rz4+N7H1ln2Vna1WFP8im8ksXNhaTE1OgM0jxOhdrc=;
-        b=UvINT1Vgnd+2nQUvIPxr1Su3x9t/mRPh3TAy2UBSO8oE4Hz5ZGPtXNzeKBbyX5CvJF
-         7MzTgwz1W4cZlF8J6tM3VijezhhpiRBdzUhrwHZ9t1G2/ldTF8h5QhEdNzHsZpQScxsO
-         bxesaf/lub7DpvKqMHyHLzqy6RM1YYn7567JcwK7Szkcb/5AQuLPGHuT8EUpIbxAxWRf
-         IJMsL7Dg2WZjhEtcQ9Gx/xZtKYitIBEhrSnT34JmCF7hMAMIsSaBhVot66ASPqGBBMH9
-         sGx2LWTXZC89+kszozsMG6YtlPq4QWPIgMhRazRgdK6nmUHO2h6hV2Mct8e2A1l3/Wbi
-         3vMw==
+        d=6wind.com; s=google;
+        h=reply-to:subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eCLILMrB8mD8WH5ZI56Ui1as0kflIkZo+f5drYOqODU=;
+        b=jnwvM/JCe7dQxy7Jt7t2lIaLS1sxq4bmGQbRrF201NU4Bd1fyk7F5kyeEg/DDLMaVR
+         Z7tgAHpqjlAYtdALkNpqwcEci9O2JtbFAJz22s2EiLpirMpvNYuX88N1xQGTMENZqOtf
+         aVoORxLEdmpJqpqC896kQg3oPyoW215I4/KEu6e2XVx8U4FF83j1m7Abq0mwgglBaPJT
+         VqEA5b0x44lhvuH61nOFBLQ4+FWiuftqr6Ixgiwf/VQPQ4KbSqNckrcMShtD2b0+i8FW
+         Wmmhp33aTs2VFu10vThZ984O2okOenV4/PuX+BcNoCWYIp8ZoZT1Qrlaf6Ntzo2bT8D6
+         N0Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3Rz4+N7H1ln2Vna1WFP8im8ksXNhaTE1OgM0jxOhdrc=;
-        b=YkbmDm5DFx+sRvARmNVkvMb/BwwGruPmVADe0OtPnbI1hdXpnAN4WPhvT8prdzhQYU
-         T+3O5GZdM9tBi/rK17HVz6gPsYzW1b3x6FtVPSeZLGzCxnxNM9cJt9v26yU7keYMJeBr
-         e/dXM76xNuvAEw0XS4GkreCSoVXAauHxl1K0SGF4+XaRPmvK6Q83+TXRiI8Vy51YSKMv
-         YwFdUcRzGMtT8sumDKlSURa7rptshef5KaGFVL7EsD6oTDw9RXNR0JRunFR57KW9Lspv
-         1oF+noeOcXSAhnivQNXlAvMLvp8dyiW0KZ+GthqSlvoRkZoYOA81yvK50Thto0zyxnTH
-         NYgw==
-X-Gm-Message-State: APjAAAXTTMrQj+5vBVH+IlKsRyAeWwoneDmJmcPlEJCBVhAw6ykUgX7F
-        ZGbLfjb8R97DAiylJVQJUmk=
-X-Google-Smtp-Source: APXvYqyD44rrU2sGlu+iwaMHYpSL8FJXt3XAb5u2KJ7V6qq+/x5ovOO7QPeVO3qULs7uNWPFwDVOUA==
-X-Received: by 2002:adf:e607:: with SMTP id p7mr2418957wrm.230.1568799888155;
-        Wed, 18 Sep 2019 02:44:48 -0700 (PDT)
-Received: from t1700.criteois.lan ([91.199.242.236])
-        by smtp.gmail.com with ESMTPSA id t8sm3776341wrx.76.2019.09.18.02.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 02:44:47 -0700 (PDT)
-From:   Erwan Velu <erwanaliasr1@gmail.com>
-X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
-Cc:     Erwan Velu <e.velu@criteo.com>, Jean Delvare <jdelvare@suse.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Robert P. J. Day" <rpjday@crashcourse.ca>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Changbin Du <changbin.du@intel.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
-Subject: [PATCH 3/3] firmware/dmi: Report DMI Embedded Firmware release
-Date:   Wed, 18 Sep 2019 11:43:21 +0200
-Message-Id: <20190918094323.17515-3-e.velu@criteo.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190918094323.17515-1-e.velu@criteo.com>
-References: <20190918094323.17515-1-e.velu@criteo.com>
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=eCLILMrB8mD8WH5ZI56Ui1as0kflIkZo+f5drYOqODU=;
+        b=RoT9eO+KnWjW+kMegio8JEsxg/VetvBR14AcUF7Gbwa7uiuWw5dpotZVBfyXLsJ6Qq
+         o6g8cQNAUXkAxPP6pBe5vkZsT6PFUO7wsTlW5a9cHs2icAsKQxZvchkmum7Wzg1LrDkb
+         JXcfSj1DXwyilqBN8O9FlxT5PRLMqcHs7owEx/CRi/Y0iY10V37Wzjgz/V1Brvv3aWq3
+         Bt4xZP4B9X2DCQrYp/CM1S4ObppmTKQ4MSc6/TEJZmfY3sgQMZCKEoaNQVGvlioLZIiU
+         bnnFR0lae7idjQFieXS2jlv/BYLsNfpsJOxpNTHg6cLTQFd8unrSJhk2b8KBPnItNC5g
+         0nzw==
+X-Gm-Message-State: APjAAAXVaUulsJXvkZ60uKPuMyewgjGsbo2j5p3sfEKon0jyZRepDlqj
+        voStS7Bis2r+EzYEjdBUJ2ws+TYfW2I=
+X-Google-Smtp-Source: APXvYqwL1vvLlHf+fFasKN8fEXWfnu/p1xv2EtDJE7z4Lp9yim6eYktJPsrPXov8PON1BslCWJPD7w==
+X-Received: by 2002:a5d:6885:: with SMTP id h5mr2372166wru.92.1568799896895;
+        Wed, 18 Sep 2019 02:44:56 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:8b63:dc30:80ea:482c:5423:216b? ([2a01:e35:8b63:dc30:80ea:482c:5423:216b])
+        by smtp.gmail.com with ESMTPSA id v64sm2266331wmf.12.2019.09.18.02.44.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 02:44:56 -0700 (PDT)
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
+To:     "George G. Davis" <george_davis@mentor.com>,
+        David Miller <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
+ <20190516.142744.1107545161556108780.davem@davemloft.net>
+ <20190517144345.GA16926@mam-gdavis-lt> <20190708224732.GA8009@mam-gdavis-lt>
+ <20190917155354.GA15686@mam-gdavis-lt>
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+Message-ID: <14606764-a026-c171-ba71-bf242a930e7e@6wind.com>
+Date:   Wed, 18 Sep 2019 11:44:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190917155354.GA15686@mam-gdavis-lt>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Servers that have a BMC encodes the release version of their firmware
-in the "Embedded Controller Firmware {Major|Minor} Release" fields of Type 0.
+Le 17/09/2019 à 17:53, George G. Davis a écrit :
+[snip]
+> Ping, "Linux 5.3" kernel has been released [1] and it appears that the
+> 5.4 merge window is open. The patch [2] remains unchanged since my initial
+> post. Please consider applying it.
 
-This information is useful to know which release of the BMC is actually running.
-It could be used for some quirks, debugging sessions or inventory tasks.
+net-next is closed:
+http://vger.kernel.org/~davem/net-next.html
 
-This patch extract these 2 fields in DMI_EMBEDDED_FW_MAJOR_RELEASE & DMI_EMBEDDED_FW_MINOR_RELEASE
-
-A typical output for a Dell system running the 3.75 bios is :
-
-    [root@t1700 ~]# cat /sys/devices/virtual/dmi/id/fw_release_major
-    3
-    [root@t1700 ~]# cat /sys/devices/virtual/dmi/id/fw_release_minor
-    75
-    [root@t1700 ~]#
-
-Signed-off-by: Erwan Velu <e.velu@criteo.com>
----
- drivers/firmware/dmi-id.c       | 10 ++++++++--
- drivers/firmware/dmi_scan.c     |  2 ++
- include/linux/mod_devicetable.h |  2 ++
- scripts/mod/file2alias.c        |  2 ++
- 4 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/firmware/dmi-id.c b/drivers/firmware/dmi-id.c
-index 3248c2837a4d..5262626bf9f1 100644
---- a/drivers/firmware/dmi-id.c
-+++ b/drivers/firmware/dmi-id.c
-@@ -42,8 +42,10 @@ DEFINE_DMI_ATTR_WITH_SHOW(bios_vendor,		0444, DMI_BIOS_VENDOR);
- DEFINE_DMI_ATTR_WITH_SHOW(bios_version,		0444, DMI_BIOS_VERSION);
- DEFINE_DMI_ATTR_WITH_SHOW(bios_date,		0444, DMI_BIOS_DATE);
- DEFINE_DMI_ATTR_WITH_SHOW(sys_vendor,		0444, DMI_SYS_VENDOR);
--DEFINE_DMI_ATTR_WITH_SHOW(bios_release_major, 0444, DMI_BIOS_MAJOR_RELEASE);
--DEFINE_DMI_ATTR_WITH_SHOW(bios_release_minor, 0444, DMI_BIOS_MINOR_RELEASE);
-+DEFINE_DMI_ATTR_WITH_SHOW(bios_release_major,	0444, DMI_BIOS_MAJOR_RELEASE);
-+DEFINE_DMI_ATTR_WITH_SHOW(bios_release_minor,	0444, DMI_BIOS_MINOR_RELEASE);
-+DEFINE_DMI_ATTR_WITH_SHOW(fw_release_major,	0444, DMI_EMBEDDED_FW_MAJOR_RELEASE);
-+DEFINE_DMI_ATTR_WITH_SHOW(fw_release_minor,	0444, DMI_EMBEDDED_FW_MINOR_RELEASE);
- DEFINE_DMI_ATTR_WITH_SHOW(product_name,		0444, DMI_PRODUCT_NAME);
- DEFINE_DMI_ATTR_WITH_SHOW(product_version,	0444, DMI_PRODUCT_VERSION);
- DEFINE_DMI_ATTR_WITH_SHOW(product_serial,	0400, DMI_PRODUCT_SERIAL);
-@@ -82,6 +84,8 @@ static ssize_t get_modalias(char *buffer, size_t buffer_size)
- 		{ "bd",  DMI_BIOS_DATE },
- 		{ "bjr", DMI_BIOS_MAJOR_RELEASE },
- 		{ "bmr", DMI_BIOS_MINOR_RELEASE },
-+		{ "efj", DMI_EMBEDDED_FW_MAJOR_RELEASE },
-+		{ "efm", DMI_EMBEDDED_FW_MINOR_RELEASE },
- 		{ "svn", DMI_SYS_VENDOR },
- 		{ "pn",  DMI_PRODUCT_NAME },
- 		{ "pvr", DMI_PRODUCT_VERSION },
-@@ -193,6 +197,8 @@ static void __init dmi_id_init_attr_table(void)
- 	ADD_DMI_ATTR(bios_date,         DMI_BIOS_DATE);
- 	ADD_DMI_ATTR(bios_release_major, DMI_BIOS_MAJOR_RELEASE);
- 	ADD_DMI_ATTR(bios_release_minor, DMI_BIOS_MINOR_RELEASE);
-+	ADD_DMI_ATTR(fw_release_major,  DMI_EMBEDDED_FW_MAJOR_RELEASE);
-+	ADD_DMI_ATTR(fw_release_minor,  DMI_EMBEDDED_FW_MINOR_RELEASE);
- 	ADD_DMI_ATTR(sys_vendor,        DMI_SYS_VENDOR);
- 	ADD_DMI_ATTR(product_name,      DMI_PRODUCT_NAME);
- 	ADD_DMI_ATTR(product_version,   DMI_PRODUCT_VERSION);
-diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
-index 886ace54e527..3beec6896a58 100644
---- a/drivers/firmware/dmi_scan.c
-+++ b/drivers/firmware/dmi_scan.c
-@@ -466,6 +466,8 @@ static void __init dmi_decode(const struct dmi_header *dm, void *dummy)
- 		dmi_save_ident(dm, DMI_BIOS_DATE, 8);
- 		dmi_save_release(dm, DMI_BIOS_MAJOR_RELEASE, 20);
- 		dmi_save_release(dm, DMI_BIOS_MINOR_RELEASE, 21);
-+		dmi_save_release(dm, DMI_EMBEDDED_FW_MAJOR_RELEASE, 22);
-+		dmi_save_release(dm, DMI_EMBEDDED_FW_MINOR_RELEASE, 23);
- 		break;
- 	case 1:		/* System Information */
- 		dmi_save_ident(dm, DMI_SYS_VENDOR, 4);
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index 2471de601bd6..e6482fd94bfd 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -534,6 +534,8 @@ enum dmi_field {
- 	DMI_BIOS_DATE,
- 	DMI_BIOS_MAJOR_RELEASE,
- 	DMI_BIOS_MINOR_RELEASE,
-+	DMI_EMBEDDED_FW_MAJOR_RELEASE,
-+	DMI_EMBEDDED_FW_MINOR_RELEASE,
- 	DMI_SYS_VENDOR,
- 	DMI_PRODUCT_NAME,
- 	DMI_PRODUCT_VERSION,
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index 1b4f9bc3b06c..ce03040271cd 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -933,6 +933,8 @@ static const struct dmifield {
- 	{ "bd",  DMI_BIOS_DATE },
- 	{ "bjr", DMI_BIOS_MAJOR_RELEASE },
- 	{ "bmr", DMI_BIOS_MINOR_RELEASE },
-+	{ "efj", DMI_EMBEDDED_FW_MAJOR_RELEASE },
-+	{ "efm", DMI_EMBEDDED_FW_MINOR_RELEASE },
- 	{ "svn", DMI_SYS_VENDOR },
- 	{ "pn",  DMI_PRODUCT_NAME },
- 	{ "pvr", DMI_PRODUCT_VERSION },
--- 
-2.21.0
-
+You will have to resend the patch when net-next opens.
