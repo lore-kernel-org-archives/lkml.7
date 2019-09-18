@@ -2,92 +2,169 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85746C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:29:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 380D9C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCDE21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:29:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0601321D6C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:30:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568817018;
+	bh=n7hEc4U3JFOCFiwdHi6OxEy+MNo9Uxm6c6RnEDR8WCk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fuC+/8h900LtCwe0R/OfSCy8qD5resP45bgYMuG2hl16WMgT7Wq0o3Z1KGix/xRMJ
+	 GTyeDE/Oyj8Bl7HUAQKZEjCyG8l0qEj7Dv2f0kAKOGOBr28sSnr1UshSvHQZkaVrwn
+	 BXjzL/Lvsq2o9Rq8G1NWeeWjwkUl46/nzUkDzdBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbfIRO3H (ORCPT
+        id S1730964AbfIROaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:29:07 -0400
-Received: from mga14.intel.com ([192.55.52.115]:25585 "EHLO mga14.intel.com"
+        Wed, 18 Sep 2019 10:30:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728770AbfIRO3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:29:07 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 07:29:06 -0700
-X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="338344444"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 07:29:03 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 4B5C02075A; Wed, 18 Sep 2019 17:29:01 +0300 (EEST)
-Date:   Wed, 18 Sep 2019 17:29:01 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v7 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
-Message-ID: <20190918142901.GS5781@paasikivi.fi.intel.com>
-References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
- <20190918133419.7969-10-sakari.ailus@linux.intel.com>
- <20190918100023.078e3b8e@gandalf.local.home>
+        id S1727273AbfIROaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:30:17 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BD8F218AE;
+        Wed, 18 Sep 2019 14:30:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568817015;
+        bh=n7hEc4U3JFOCFiwdHi6OxEy+MNo9Uxm6c6RnEDR8WCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u0FC0ls3vLRORjqiIUVr1q5uIM4D5c4rEUU4iQtMFK+Zkh4h99Regs1s/KZ3GBhWq
+         Cl8vuE9rrla1mh+Y+QW3Vxw9p3O8xmlC2DfI34/YeRkgXBIDmStGfXKkhtIJ9zmCf2
+         EZ12GpdDZk3k7CnbMblC+5hiUGtkMC/B7Ps3/BLY=
+Date:   Wed, 18 Sep 2019 16:30:12 +0200
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
+Message-ID: <20190918143012.4o54doeauiv3j42z@gilmour>
+References: <20190912175132.411-1-jernej.skrabec@siol.net>
+ <20190912175132.411-6-jernej.skrabec@siol.net>
+ <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
+ <3227980.eWD6USAIP4@jernej-laptop>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="murlg7gnizd4neyj"
 Content-Disposition: inline
-In-Reply-To: <20190918100023.078e3b8e@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3227980.eWD6USAIP4@jernej-laptop>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:00:23AM -0400, Steven Rostedt wrote:
-> On Wed, 18 Sep 2019 16:34:15 +0300
-> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-> 
-> > Add a note warning of re-use of obsolete %pf or %pF extensions.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> 
-> Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Yes, I'll add that for v8.
+--murlg7gnizd4neyj
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> > ---
-> >  lib/vsprintf.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> > index b00b57f9f911f..df59818537b52 100644
-> > --- a/lib/vsprintf.c
-> > +++ b/lib/vsprintf.c
-> > @@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
-> >   * - 'S' For symbolic direct pointers (or function descriptors) with offset
-> >   * - 's' For symbolic direct pointers (or function descriptors) without offset
-> >   * - '[Ss]R' as above with __builtin_extract_return_addr() translation
-> > + * - '[Ff]' Obsolete an now unsupported extension for printing direct pointers
-> 
->  "Obsolete and now"?
+Hi,
 
-Fixed.
+On Sat, Sep 14, 2019 at 08:42:22AM +0200, Jernej =C5=A0krabec wrote:
+> Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard na=
+pisal(a):
+> > Hi,
+> >
+> > On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
+> > > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
+> > > +
+> &deinterlace_regmap_config);
+> > > +	if (IS_ERR(dev->regmap)) {
+> > > +		dev_err(dev->dev, "Couldn't create deinterlace
+> regmap\n");
+> > > +
+> > > +		return PTR_ERR(dev->regmap);
+> > > +	}
+> > > +
+> > > +	ret =3D clk_prepare_enable(dev->bus_clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev->dev, "Failed to enable bus clock\n");
+> > > +
+> > > +		return ret;
+> > > +	}
+> >
+> > Do you need to keep the bus clock enabled all the time? Usually, for
+> > the SoCs that have a reset line, you only need it to read / write to
+> > the registers, not to have the controller actually running.
+> >
+> > If you don't, then regmap_init_mmio_clk will take care of that for
+> > you.
+> >
+> > > +	clk_set_rate(dev->mod_clk, 300000000);
+> > > +
+> > > +	ret =3D clk_prepare_enable(dev->mod_clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev->dev, "Failed to enable mod clock\n");
+> > > +
+> > > +		goto err_bus_clk;
+> > > +	}
+> > > +
+> > > +	ret =3D clk_prepare_enable(dev->ram_clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev->dev, "Failed to enable ram clock\n");
+> > > +
+> > > +		goto err_mod_clk;
+> > > +	}
+> > > +
+> > > +	ret =3D reset_control_reset(dev->rstc);
+> > > +	if (ret) {
+> > > +		dev_err(dev->dev, "Failed to apply reset\n");
+> > > +
+> > > +		goto err_ram_clk;
+> > > +	}
+> >
+> > This could be moved to a runtime_pm hook, with get_sync called in the
+> > open. That way you won't leave the device powered on if it's unused.
+>
+> Currently I'm looking at sun4i_csi.c as an example of runtime ops, but it
+> seems a bit wrong to have suspend and resume function marked with
+> __maybe_unused because they are the only functions which enable needed cl=
+ocks.
+> If CONFIG_PM is not enabled, then this driver simply won't work, because
+> clocks will never get enabled. I guess I can implement runtime pm ops in =
+the
+> same way and add additional handling when CONFIG_PM is not enabled, right?
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Ah, right. I guess you can either add a depends on PM, or you can call
+the function directly and use set_active like we're doing in the SPI
+driver.
+
+> BTW, which callback is get_sync? I don't see it in dev_pm_ops. I suppose I
+> need only runtime_suspend and runtime_resume.
+
+get_sync is the user facing API, ie what you call when you want the
+device to be powered up. This will call runtime_resume if needed
+(there were no users, and you become the first one), and on the parent
+devices if needed too (even though it's not our case).
+
+> Off topic: sun6i_csi.c includes linux/pm_runtime.h but it doesn't have an=
+y kind
+> of power management as far as I can see.
+
+That's probably something we can remove then
+
+Thanks!
+Maxime
+
+--murlg7gnizd4neyj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYI/dAAKCRDj7w1vZxhR
+xevqAQCkxjBKYVgA/AYg52M5egxPmCw9EbU+dTVOFOS3HnL94wD8C/1DfMGYclzH
+K2NXT3v5e5dek4yjiUUAdMyPuzrn4gU=
+=xZgs
+-----END PGP SIGNATURE-----
+
+--murlg7gnizd4neyj--
