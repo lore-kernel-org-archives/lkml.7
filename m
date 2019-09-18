@@ -2,96 +2,100 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E35C4CECD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA9BC4CECD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4864621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jWw9DjXC"
+	by mail.kernel.org (Postfix) with ESMTP id 6C34021855
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568765250;
+	bh=+NY5WoEAqqS6novROyU2f32JAJvctxG3luGJQz6X+jY=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=paOrLY516t3ajhYhYM8H50Bi7oJe9+bkFpTxxIez//Oa6+QLCp1tz+4LalM11A+Ft
+	 lEfWL2ygUTSER2qRYxfT1EERj/HLMayf/YiBMuTZvfMyiV/M4IsOIEqtji/q3oTDAa
+	 svrJsQueetgX5vyaK1RjG0UKQKyri0Rx1W0/Pvyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbfIRAA1 (ORCPT
+        id S1728642AbfIRAH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 20:00:27 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36719 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726593AbfIRAA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 20:00:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id b136so11948018iof.3;
-        Tue, 17 Sep 2019 17:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=MdJOyIaAxsqTTOGBVhPPqQpQxjpwNJs1HcQFYx3Zzjg=;
-        b=jWw9DjXC8X0srUG5iRljpsbgeveN9bipAp40ZauDfDI5ciDtXBTSOl6zx/ERQq/stC
-         dxax2laU4flVGPyPiO9aL0aqHg5cHPGP5L5NbFg+Sk6dRinavy+eqiQ+KPaQFwketJUd
-         BiJTeeJRxxBXZe4nEdEy52LoTKz9DsQ4rQMSarNvkTp5AxXUvD3lLZ/yOQy9VO30Zlfv
-         0IFSl8r5WN29vLItvLteSkSOwiYj00ELuOJpYeJrSXrz/IJfJ9fRnBnUPwITsq4U64VX
-         uCGWSrxhxfcCeihZ1PN9BZjDxxdjrS3+O50Zk3TGk53SONW2Bt/dbhGbDfYOCgdqm5TK
-         lfAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=MdJOyIaAxsqTTOGBVhPPqQpQxjpwNJs1HcQFYx3Zzjg=;
-        b=H+bX+TPSGL4NT4yma03T/Ts+JNP4G33fGChqaCAvnaYul5GPR4oyNYGk5DqRZzyCnL
-         kHzGk5Eeb8VNUL8YNxcfE3I86kglPPZ7FGIA84vh0Fjx991UHvz7ugH+nUhu4LxWR8jD
-         zLLuqpTvMXv3X8Fu/swlYwl5eRRuUIJcxcZCBjWudmHotBD/mNNV/bCOy05ptZFN56Gx
-         QamPb1evKUQNLZSwKeJcH/r7CxoUTogRbRGDhCwsCB2Los9682hfFqJyoXcOnrKc6Zrk
-         wMwO3WWcT8QVBwdv7wF8SjZx9K2IxSO25tXUbKNC13KkqaKxaNyo+2fXnetha56jrgCY
-         4pHQ==
-X-Gm-Message-State: APjAAAVquua5KPxgK20n+dVtoEr9wL5xCrqoxKtIUyWTZnFeieZBxSmv
-        GGhOY5sI38YdKRtDeT9bBx8=
-X-Google-Smtp-Source: APXvYqzmiswsCyeFthfzjufcIIgZlOT29bJ0N0k7YjBWC3ZXRNMFWqSFzUBIIbggvt7Sob9yutzjnA==
-X-Received: by 2002:a6b:c409:: with SMTP id y9mr1823814ioa.155.1568764825846;
-        Tue, 17 Sep 2019 17:00:25 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id x2sm2815969iob.74.2019.09.17.17.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 17:00:25 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ethernet/intel:  release the local packet buffer
-Date:   Tue, 17 Sep 2019 19:00:12 -0500
-Message-Id: <20190918000013.32083-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 17 Sep 2019 20:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfIRAH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 20:07:29 -0400
+Received: from paulmck-ThinkPad-P72 (96-84-246-146-static.hfc.comcastbusiness.net [96.84.246.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 538C121848;
+        Wed, 18 Sep 2019 00:07:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568765248;
+        bh=+NY5WoEAqqS6novROyU2f32JAJvctxG3luGJQz6X+jY=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=zsANeLU6Cz3RIwa319k0IjYHwrQrjrJm/ziAt0SMJn6F6RUT0aEc5Es4qyLAHMVq+
+         sZ54Gdu0Yh386yEI719OgSoxaXkMihgXI0kyryqCdn0JNlmjrxMkPFo9YkLM65AK8x
+         FtbAPm44NEWvdZQ0fp0vdrSmx33BUJbCMbo9IdBA=
+Date:   Tue, 17 Sep 2019 17:07:26 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>
+Subject: Re: Build regressions/improvements in v5.3
+Message-ID: <20190918000726.GD30224@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20190916065853.12394-1-geert@linux-m68k.org>
+ <CAMuHMdVO6S_U96O6VYgK3xaDPhsT_X=O9ibGfCqKjBGcFgmyLg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVO6S_U96O6VYgK3xaDPhsT_X=O9ibGfCqKjBGcFgmyLg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In e100_loopback_test the buffer allocated for the local packet needs to
-be released.
+On Mon, Sep 16, 2019 at 10:19:08AM +0200, Geert Uytterhoeven wrote:
+> On Mon, Sep 16, 2019 at 9:43 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > JFYI, when comparing v5.3[1] to v5.3-rc8[3], the summaries are:
+> >   - build errors: +0/-0
+> >   - build warnings: +50/-50
+> 
+> Just the levelspread noise.
+> Anyone with an idea to get rid of it (and to prove they're all false-positives)?
+> 
+> > [1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/4d856f72c10ecb060868ed10ff1b1453943fc6c8/ (all 242 configs)
+> > [3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/f74c2bb98776e2de508f4d607cd519873065118e/ (all 242 configs)
+> 
+> > 122 warning regressions:
+> 
+> >   + /kisskb/src/kernel/rcu/srcutree.c: warning: 'levelspread[<U aa0>]' may be used uninitialized in this function [-Wuninitialized]:  => 121:34
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/ethernet/intel/e100.c | 1 +
- 1 file changed, 1 insertion(+)
+Looks to me like rcu_init_levelspread() unconditionally initializes all
+of the elements.  I suppose that I could stomp the unused portion of
+the array, as in the following (untested) patch.
 
-diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
-index a65d5a9ba7db..4de7dca341fc 100644
---- a/drivers/net/ethernet/intel/e100.c
-+++ b/drivers/net/ethernet/intel/e100.c
-@@ -2394,6 +2394,7 @@ static int e100_loopback_test(struct nic *nic, enum loopback loopback_mode)
- 	e100_hw_reset(nic);
- err_clean_rx:
- 	e100_rx_clean_list(nic);
-+	dev_kfree_skb(skb);
- 	return err;
- }
+Thoughts?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+index aeec70f..ab504fb 100644
+--- a/kernel/rcu/rcu.h
++++ b/kernel/rcu/rcu.h
+@@ -299,6 +299,8 @@ static inline void rcu_init_levelspread(int *levelspread, const int *levelcnt)
+ {
+ 	int i;
  
--- 
-2.17.1
-
++	for (i = 0; i < RCU_NUM_LVLS; i++)
++		levelspread[i] = INT_MIN;
+ 	if (rcu_fanout_exact) {
+ 		levelspread[rcu_num_lvls - 1] = rcu_fanout_leaf;
+ 		for (i = rcu_num_lvls - 2; i >= 0; i--)
