@@ -2,162 +2,183 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F837C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A012C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDBB621907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC4F21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lrjHapFy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732044AbfIRRGm convert rfc822-to-8bit (ORCPT
+        id S1732065AbfIRRGu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:06:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:45332 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726908AbfIRRGm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:06:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E800337;
-        Wed, 18 Sep 2019 10:06:41 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EC10B3F59C;
-        Wed, 18 Sep 2019 10:06:39 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 18:06:37 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Message-ID: <20190918180637.1ac3ae08@donnerap.cambridge.arm.com>
-In-Reply-To: <CABb+yY3gJpK5ghS1u-e=f-msO+=oVvX=zDNj3Jg2i0-uJHrLiA@mail.gmail.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
-        <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
-        <20190917183115.3e40180f@donnerap.cambridge.arm.com>
-        <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
-        <20190918104347.285bd7ad@donnerap.cambridge.arm.com>
-        <CABb+yY3drgYHk2_SZMgGhgSisB7wMVKFSx8VVabCcXkGByvgwg@mail.gmail.com>
-        <20190918154654.6fb7e7f5@donnerap.cambridge.arm.com>
-        <CABb+yY3gJpK5ghS1u-e=f-msO+=oVvX=zDNj3Jg2i0-uJHrLiA@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Wed, 18 Sep 2019 13:06:50 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:46346 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726908AbfIRRGt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:06:49 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IH6iPq120554;
+        Wed, 18 Sep 2019 12:06:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568826404;
+        bh=uJVcOB+ch38YNMZP4f1rNkBv5jy24fM/dgvduX4wNqs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=lrjHapFy0Xjxm7F/eUB9mlxvptcXK8XzN2gbibV2r9SuxErIIHyA0mS3XYaHggLws
+         7CFXvQ0uxxjco0xex8PJ2NJbzxVpbLNorlzm3BrEhRW/hvDGt83GgUU6MYpYgTy+NC
+         ycxXTwO7YdgRBDBPeEzd1Hqh5GSqGDdvf9/24OEo=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IH6iSt029052
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Sep 2019 12:06:44 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
+ Sep 2019 12:06:44 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 18 Sep 2019 12:06:41 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IH6iBw084821;
+        Wed, 18 Sep 2019 12:06:44 -0500
+Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190917175937.13872-1-dmurphy@ti.com>
+ <20190917175937.13872-6-dmurphy@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f5cf1fa4-c891-744c-6fa9-4b166b64f463@ti.com>
+Date:   Wed, 18 Sep 2019 12:09:12 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190917175937.13872-6-dmurphy@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 10:31:57 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
+Greg
 
-Hi,
+<snip>
 
-> On Wed, Sep 18, 2019 at 9:46 AM Andre Przywara <andre.przywara@arm.com> wrote:
-> >
-> > On Wed, 18 Sep 2019 09:19:46 -0500
-> > Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> >
-> > Hi,
-> >  
-> > > On Wed, Sep 18, 2019 at 4:44 AM Andre Przywara <andre.przywara@arm.com> wrote:
-> > >  
-> > > >  
-> > > > > which needs 9 arguments to work. The fact that the fist argument is
-> > > > > always going to be same on a platform is just the way we use this
-> > > > > instruction.
-> > > > >  
-> > > > > > We should be as strict as possible to avoid any security issues.
-> > > > > >  
-> > > > > Any example of such a security issue?  
-> > > >
-> > > > Someone finds a way to trick some mailbox client to send a crafted message to the mailbox.
-> > > >  
-> > > What if someone finds a way to trick the block layer to erase 'sda' ?  
-> >
-> > Yes, the Linux block driver control the whole block device, it can do whatever it wants.
-> >  
-> Sorry, it doesn't make any sense.
+> +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
+> +				     struct led_classdev_mc *mcled_cdev,
+> +				     int color_id, int color_index)
+> +{
+> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+> +	struct led_mc_color_entry *mc_priv;
+> +	int ret;
+> +
+> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
+> +	if (!mc_priv)
+> +		return -ENOMEM;
+> +
+> +	mc_priv->led_color_id = color_id;
+> +	mc_priv->mcled_cdev = mcled_cdev;
+> +
+> +	led_color_group.name = led_colors[color_id];
+> +	ret = sysfs_create_group(data->color_kobj, &led_color_group);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
+> +	mc_priv->intensity_attr.attr.name = "intensity";
+> +	mc_priv->intensity_attr.attr.mode = 666;
+> +	mc_priv->intensity_attr.store = intensity_store;
+> +	mc_priv->intensity_attr.show = intensity_show;
+> +	ret = sysfs_add_file_to_group(data->color_kobj,
+> +				      &mc_priv->intensity_attr.attr,
+> +				      led_color_group.name);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
+> +	mc_priv->max_intensity_attr.attr.name = "max_intensity";
+> +	mc_priv->max_intensity_attr.attr.mode = 444;
+> +	mc_priv->max_intensity_attr.show = max_intensity_show;
+> +	ret = sysfs_add_file_to_group(data->color_kobj,
+> +				      &mc_priv->max_intensity_attr.attr,
+> +				      led_color_group.name);
+> +	if (ret)
+> +		goto err_out;
+> +
+> +	mc_priv->max_intensity = LED_FULL;
+> +	list_add_tail(&mc_priv->list, &data->color_list);
+> +
+> +err_out:
+> +	return ret;
+> +}
+> +
+> +static int led_multicolor_init_color_dir(struct led_classdev_mc_data *data,
+> +					 struct led_classdev_mc *mcled_cdev)
+> +{
+> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
+> +	u32 color_id;
+> +	int ret;
+> +	int i, j = 0;
+> +
+> +	data->color_kobj = kobject_create_and_add("colors",
+> +						  &led_cdev->dev->kobj);
 
-What I meant is that in contrast to a block driver the SMC interface is a shared resource. The mailbox controller is just using a tiny part of that. We must make sure to not interfere with the other services offered by firmware.
- 
-> > >  That is called "bug in the code".
-> > > It does happen in every subsystem but we don't stop implementing new
-> > > features .... we write flexible code and then fix any bug.
-> > >
-> > >  
-> > > > Do you have any example of a use case where the mailbox client needs to provide the function ID?
-> > > >  
-> > > FSL_SIP_SCMI_1/2 ?  
-> >
-> > Huh? Where does the SCPI or SCMI driver provide this? Those clients don't even provide any arguments. Adding some would defeat the whole point of having this mailbox in the first place, which was to provide a drop-in replacement for a hardware mailbox device used on other platforms.
-> >  
-> SCPI/SCMI implementation is broken. I did NAK it.
-> With the 'smc' mailbox you may get away without have to program the
-> channel before transmit, but not every controller is natively so.
-> 
-> > > But that is not the main point, which is to be consistent (not
-> > > ignoring first argument because someone may find a bug to exploit) and
-> > > flexible.  
-> >
-> > Please read the SMCCC[1]: The first argument is in r1/w1/x1. r0/w0 is the function ID, and this is a specific value (fixed by the firmware implementation, see Peng's ATF patch) and not up to be guessed by a client.
-> >  
-> The first argument of smc call is the function-id
->   arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, arg5, 0, &res);
+We need some guidance here on how to properly create sub directories 
+more then 1 level deep.
 
-As I wrote we can't safely use a bare smc call. We must comply with the SMCCC, because there are a possible multitude of services the firmware offers. PSCI is a one obvious example.
-And SMCCC says:
-When an SMC32/HVC32 call is made from AArch32:
-   • A Function Identifier is passed in register R0.
-   • Arguments are passed in registers R1-R6.
-   • Results are returned in R0-R3.
-...
-(similar for SMC64)
+In short under the LED class device parent directory we want to create a 
+directory called "colors".
 
-So arguments start from r1/x1.
+Under that directory we want to create a directory corresponding to the 
+monochrome LED color.
+Under that directory we have the files to for intensity and 
+max_intensity for the monochrome LED.
 
-> >
-> > That's why I think the function ID (which is part of the SMCCC protocol, not of the mailbox service!) should just be set in the controller DT node and nowhere else.
-> >  
-> Actually that is the very reason func-id should be a client thing and
-> passed via client's DT node :)
-> It is general understanding that protocol specific bits should not be
-> a part of controller driver, but the client(protocol) driver.
+We can use the LED class kobject to create the colors directory using 
+the sysfs calls but the issue comes when creating the LED color 
+directory.  We don't have a kobj for colors to associate those 
+directories to.  The only API we see to use the kobject_create_and_add 
+which then gives us the colors directory kobj.
 
-There are *two* protocols to consider here:
-One is the outer SMCCC protocol, which establishes communication between the mailbox controller driver and the firmware. SMCCC defines very precisely the meaning of r0/w0 for that, but leaves the rest (x1-x6) to the user. Think of the function ID being the equivalent of an MMIO base address. You can use it to select several instances of one type of mailbox. It's the task of the controller driver to abstract from that. Surely you wouldn't provide the MMIO base address of the particular mailbox in the client's DT node.
+So the directory structure would look like this which is explained in 
+this patch https://lore.kernel.org/patchwork/patch/1128444/
 
-The *client* protocol is then wrapped inside this, using the six argument registers that SMCCC gives us. This is indeed up to the client to use and it dictates its meaning.
+Directory Layout Example
+========================
+root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
+colors/:
+drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
+rwxr-xr-x    2 root     root             0 Jun 28 20:21 green
+drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
 
-Maybe there is some misunderstanding that this mailbox is really a SMCCC mailbox rather than a pure SMC mailbox? Should we use a different naming like smccc_mailbox or firmware_mbox instead?
+colors/blue:
+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
++colors/green:
+-rw-------    1 root     root          4096 Jun 28 20:22 intensity
+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
 
-> Page-7 Function-ID specifies :-
-> 1) The service to be invoked.
-> 2) The function to be invoked.
+colors/red:
+-rw-------    1 root     root          4096 Jun 28 20:21 intensity
+-r--------    1 root     root          4096 Jun 28 20:27 max_intensity
 
-"Service" is the term used for a "group of functions". PSCI is one service, for instance. It's typically determined by some upper bits. Inside this service there are several functions, like CPU_ON or SYSTEM_RESET, typically using low order bits.
-In our case the service is the mailbox, and there is just one function, the actual doorbell. We could have introduced more functions (like disocvery, information or statistics), but there is no real need for that.
+I have reviewed your example code and read your blogs and papers on the 
+subject but nothing really talks about sub-sub directories.
 
-Cheers,
-Andre.
+Now if this is a no-no in the kernel that is fine we can adjust but 
+Jacek wanted to get your opinon/guidance on this topic.
 
-> 3) The calling convention (32-bit or 64-bit) that is in use.
-> 4) The call type (fast or yielding) that is in use.
-> 
-> Even if we turn blind to 2,3 & 4, but (1) shouts like a runtime property.
+Dan
 
-> 
-> Thanks.
-
+<snip>
