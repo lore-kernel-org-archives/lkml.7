@@ -2,107 +2,88 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49100C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF10C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2912C214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF2D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfIRF65 (ORCPT
+        id S1727315AbfIRF7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:58:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35540 "EHLO mx1.redhat.com"
+        Wed, 18 Sep 2019 01:59:10 -0400
+Received: from mga09.intel.com ([134.134.136.24]:19499 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725834AbfIRF65 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:58:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98E773083363;
-        Wed, 18 Sep 2019 05:58:56 +0000 (UTC)
-Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 72118600C8;
-        Wed, 18 Sep 2019 05:58:44 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/4] mdev: introduce helper to set per device dma ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     mst@redhat.com, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kwankhede@nvidia.com,
-        cohuck@redhat.com, tiwei.bie@intel.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, idos@mellanox.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com
-References: <20190910081935.30516-1-jasowang@redhat.com>
- <20190910081935.30516-3-jasowang@redhat.com>
- <20190917130044.4fb97637@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <f0df968e-9322-829a-11c7-ca62408b9bae@redhat.com>
-Date:   Wed, 18 Sep 2019 13:58:42 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725834AbfIRF7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:59:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 22:59:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,519,1559545200"; 
+   d="scan'208";a="189161370"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 17 Sep 2019 22:59:09 -0700
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id 645335800B9;
+        Tue, 17 Sep 2019 22:59:07 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
+ SoC
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916113255.GA4352@sirena.co.uk>
+ <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
+ <20190917153650.GF3524@sirena.co.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
+Date:   Wed, 18 Sep 2019 13:59:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190917130044.4fb97637@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190917153650.GF3524@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 18 Sep 2019 05:58:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
-On 2019/9/18 ä¸Šåˆ3:00, Alex Williamson wrote:
-> On Tue, 10 Sep 2019 16:19:33 +0800
-> Jason Wang<jasowang@redhat.com>  wrote:
+    Thank you for the review comments.
+
+On 17/9/2019 11:36 PM, Mark Brown wrote:
+> On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrote:
 >
->> This patch introduces mdev_set_dma_ops() which allows parent to set
->> per device DMA ops. This help for the kernel driver to setup a correct
->> DMA mappings.
->>
->> Signed-off-by: Jason Wang<jasowang@redhat.com>
->> ---
->>   drivers/vfio/mdev/mdev_core.c | 7 +++++++
->>   include/linux/mdev.h          | 2 ++
->>   2 files changed, 9 insertions(+)
->>
->> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->> index b558d4cfd082..eb28552082d7 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/uuid.h>
->>   #include <linux/sysfs.h>
->>   #include <linux/mdev.h>
->> +#include <linux/dma-mapping.h>
->>   
->>   #include "mdev_private.h"
->>   
->> @@ -27,6 +28,12 @@ static struct class_compat *mdev_bus_compat_class;
->>   static LIST_HEAD(mdev_list);
->>   static DEFINE_MUTEX(mdev_list_lock);
->>   
->> +void mdev_set_dma_ops(struct mdev_device *mdev, struct dma_map_ops *ops)
->> +{
->> +	set_dma_ops(&mdev->dev, ops);
->> +}
->> +EXPORT_SYMBOL(mdev_set_dma_ops);
->> +
-> Why does mdev need to be involved here?  Your sample driver in 4/4 calls
-> this from its create callback, where it could just as easily call:
->
->    set_dma_ops(mdev_dev(mdev), ops);
->
-> Thanks,
-> Alex
+>> *    spi-cadence.c* in *drivers/spi/*, which supports very old legacy
+>> cadence-spi based devices(normal)
+>> *    cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to SPI-NOR
+>> flash with new spi-nor layer.
+>>      all the API's in this driver purely on spi-nor specific, so couldn't
+>> proceed to adapt.
+> Are these completely separate IPs or are they just different versions of
+> the same IP?
 
+These are same IPs , but different features Enabled/Disabled depends 
+upon the SoC vendors.
 
-Yes, let me withdraw this patch.
+for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct 
+access controller.
 
-Thanks
+also dedicated support to flash devices.
+
+Best regards
+
+Vadivel
 
