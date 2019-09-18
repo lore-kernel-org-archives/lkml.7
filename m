@@ -2,232 +2,157 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2520C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880E420665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YhdXqXno"
+	by mail.kernel.org (Postfix) with ESMTP id 1C34021907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfIRRQD (ORCPT
+        id S1732088AbfIRRQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:16:03 -0400
-Received: from mail-eopbgr60083.outbound.protection.outlook.com ([40.107.6.83]:6305
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726799AbfIRRQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:16:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VFck5S15JJiV7PN/BFJJ8s3cr3UVgDoVqWOL7+c03XssBrZCpox3OTZG/Oi/6Bid6Kk7osy4qmzkBhEGl+E5+OOp+H3wbmuT2X6PqBiv0g7YA+UAm6Fi2SzymtucehCiXwxaa+V089iOOHPbpVTxngfLhBMdp+2mydjSe0d91ZAAtiWwvStK/m2mOhUdsNbT8foDvVxGnId2EA6FPIIe3y0kjgJykF2guxSD59EYzx4Rfvin7d7+l62Gjb3Ab65U1eEakR83/KVMo5vWuwL5XinfzHARMDuCgquz/zZD49S5WLhB0G1Ed82/IgY8FRnoxh59FeVfumdxbBBbFev/zQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y9dczobqtw8rbBsi6y3LaHyll5Q64WXKqJNZRuiPQ5U=;
- b=WXhF6DHdmKLeQfzZ12IeuSB2XlM/9uwZJ0oF2SRCpPiZhAqzmfEB8UGH0HJU/nV/df8ldGUzypmbAq4y+gp/9+6Iu6EypIAC4ClufxY/b7FXZ8AuQuz4NHfA/rU2cmgJZSH9VefAHANI3NLk7hDPIgpUQsMe4D5jkgbyzyMvKxKg+oiiUaLxYsQG7sKFRJs7JxBUslBtO73B27Mf7psSpL9hYurSBeKxzptB1hNIbtWbBgZ9SBP48j4baQc36ZarQI56Ph5T/OEdz6jQ4/IwVzhSGeo/BFuNGLSnYTFArO0Up8/ATbtFuMQja9JRpX660HvtXEC/XLtgN78YYUdLVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y9dczobqtw8rbBsi6y3LaHyll5Q64WXKqJNZRuiPQ5U=;
- b=YhdXqXnoJ2DeVUi99LPNQzCj9j+VwjJShrMCxSNQCdvPCm33itUthSeQ8Qo5EHgDzHELDwBGxmZysqoh3/TwWFdRrCnB1LyVU8ZMh9mX8jO3XOaXXp8P1BGLKwy2a42Vn1Kbhe9+sGmFSwsHE60Z7cdyYBizGoovT6tr3/xXF5U=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6388.eurprd05.prod.outlook.com (20.179.35.206) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Wed, 18 Sep 2019 17:15:58 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
- 17:15:58 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Topic: [PATCH v3 0/5] Introduce variable length mdev alias
-Thread-Index: AQHVYUZdAS6KYIr8SUO1vQ8myuXcNacvvq6AgAIHUSA=
-Date:   Wed, 18 Sep 2019 17:15:58 +0000
-Message-ID: <AM0PR05MB4866EA74D8C47F28C7435B0CD18E0@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20190826204119.54386-1-parav@mellanox.com>
-        <20190902042436.23294-1-parav@mellanox.com>
- <20190917121357.02480c09.cohuck@redhat.com>
-In-Reply-To: <20190917121357.02480c09.cohuck@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 068a336b-8ebb-44bc-6ad9-08d73c5bdf70
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6388;
-x-ms-traffictypediagnostic: AM0PR05MB6388:|AM0PR05MB6388:
-x-ms-exchange-purlcount: 3
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB6388F295205372DD6C405C71D18E0@AM0PR05MB6388.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 01644DCF4A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(366004)(376002)(136003)(189003)(199004)(13464003)(54534003)(51914003)(8936002)(7736002)(66946007)(478600001)(66446008)(486006)(8676002)(66066001)(316002)(33656002)(476003)(25786009)(54906003)(4326008)(229853002)(81156014)(81166006)(52536014)(2906002)(6306002)(55016002)(76176011)(3846002)(86362001)(26005)(446003)(11346002)(102836004)(186003)(305945005)(6246003)(6506007)(74316002)(53546011)(71190400001)(9686003)(66476007)(6916009)(14444005)(256004)(64756008)(966005)(66556008)(71200400001)(76116006)(99286004)(7696005)(5660300002)(6436002)(6116002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6388;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: H/LqQOlhkHlsgw0qbJE2eUi/Q+f9X06e0HoQvGfm7fGlAAkV+wub+sCnuOEooUEpcD29OBQqpl3M66LVLZV7rhODtouCUIMkmRb6hnJ07nyOWZ3sV2mXtWIyKT16UpVEMteg9e2E7vYVJbzUt5VLqZGSgpZzSQ5SLJPtZbAmHiG/5YWOUVGSOIXWnojwizbcX5XLFtjs3OV2VZTQaimXp7FGWuzPMeNk4bTwZEyePDcUa6/JYc+rPw14JjGTO10U5egE4QyCl7Li9xdBU/VmZlksPTIrH7Hf5f9jGIdLIHnHEQtJml7u6+ce3UNICT5ExwZzCaj3LqCCCartzlXlesF6mQzfcqWKOqzC1sA3yFkhgBdNpY/c17+XfWyYtTlTMO/Ct1I0AMDKxKtMYgIbOs9PUpmIYAmbg68OK8Lw8+8=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Sep 2019 13:16:31 -0400
+Received: from mga06.intel.com ([134.134.136.31]:25810 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731177AbfIRRQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:16:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 10:16:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,521,1559545200"; 
+   d="scan'208";a="386963137"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Sep 2019 10:16:29 -0700
+To:     Parth Shah <parth@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Patrick Bellasi <patrick.bellasi@arm.com>,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        Valentin Schneider <valentin.schneider@arm.com>
+Cc:     mingo@redhat.com, morten.rasmussen@arm.com,
+        dietmar.eggemann@arm.com, pjt@google.com,
+        vincent.guittot@linaro.org, quentin.perret@arm.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org, tj@kernel.org,
+        rafael.j.wysocki@intel.com, qais.yousef@arm.com
+References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: Usecases for the per-task latency-nice attribute
+Message-ID: <426c0513-4354-e085-5a5d-8073ab035030@linux.intel.com>
+Date:   Wed, 18 Sep 2019 10:16:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 068a336b-8ebb-44bc-6ad9-08d73c5bdf70
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 17:15:58.3332
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Xlz5265V5Pji2UY6vs5lkpsGIzxkgwfOvTAsxtvEeL42MPxeZ/kGWbZ6QPM+hwUId9Xk8bhJMtVygGhBKngelQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6388
+In-Reply-To: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Cornelia,
+On 9/18/19 5:41 AM, Parth Shah wrote:
+> Hello everyone,
+> 
+> As per the discussion in LPC2019, new per-task property like latency-nice
+> can be useful in certain scenarios. The scheduler can take proper decision
+> by knowing latency requirement of a task from the end-user itself.
+> 
+> There has already been an effort from Subhra for introducing Task
+> latency-nice [1] values and have seen several possibilities where this type of
+> interface can be used.
+> 
+> From the best of my understanding of the discussion on the mail thread and
+> in the LPC2019, it seems that there are two dilemmas;
 
-> -----Original Message-----
-> From: Cornelia Huck <cohuck@redhat.com>
-> Sent: Tuesday, September 17, 2019 5:14 AM
-> To: Parav Pandit <parav@mellanox.com>
-> Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
-> kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org
-> Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
->=20
-> On Sun,  1 Sep 2019 23:24:31 -0500
-> Parav Pandit <parav@mellanox.com> wrote:
->=20
-> > To have consistent naming for the netdevice of a mdev and to have
-> > consistent naming of the devlink port [1] of a mdev, which is formed
-> > using phys_port_name of the devlink port, current UUID is not usable
-> > because UUID is too long.
-> >
-> > UUID in string format is 36-characters long and in binary 128-bit.
-> > Both formats are not able to fit within 15 characters limit of netdev
-> > name.
-> >
-> > It is desired to have mdev device naming consistent using UUID.
-> > So that widely used user space framework such as ovs [2] can make use
-> > of mdev representor in similar way as PCIe SR-IOV VF and PF representor=
-s.
-> >
-> > Hence,
-> > (a) mdev alias is created which is derived using sha1 from the mdev nam=
-e.
-> > (b) Vendor driver describes how long an alias should be for the child
-> > mdev created for a given parent.
-> > (c) Mdev aliases are unique at system level.
-> > (d) alias is created optionally whenever parent requested.
-> > This ensures that non networking mdev parents can function without
-> > alias creation overhead.
-> >
-> > This design is discussed at [3].
-> >
-> > An example systemd/udev extension will have,
-> >
-> > 1. netdev name created using mdev alias available in sysfs.
-> >
-> > mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-> > mdev 12 character alias=3Dcd5b146a80a5
-> >
-> > netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet link =
-m =3D
-> > mediated device
-> >
-> > 2. devlink port phys_port_name created using mdev alias.
-> > devlink phys_port_name=3Dpcd5b146a80a5
-> >
-> > This patchset enables mdev core to maintain unique alias for a mdev.
-> >
-> > Patch-1 Introduces mdev alias using sha1.
-> > Patch-2 Ensures that mdev alias is unique in a system.
-> > Patch-3 Exposes mdev alias in a sysfs hirerchy, update Documentation
-> > Patch-4 Introduces mdev_alias() API.
-> > Patch-5 Extends mtty driver to optionally provide alias generation.
-> > This also enables to test UUID based sha1 collision and trigger error
-> > handling for duplicate sha1 results.
-> >
-> > [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
-> > [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
-> > [3] https://patchwork.kernel.org/cover/11084231/
-> >
-> > ---
-> > Changelog:
-> > v2->v3:
-> >  - Addressed comment from Yunsheng Lin
-> >  - Changed strcmp() =3D=3D0 to !strcmp()
-> >  - Addressed comment from Cornelia Hunk
-> >  - Merged sysfs Documentation patch with syfs patch
-> >  - Added more description for alias return value
-> > v1->v2:
-> >  - Corrected a typo from 'and' to 'an'
-> >  - Addressed comments from Alex Williamson
-> >  - Kept mdev_device naturally aligned
-> >  - Added error checking for crypt_*() calls
-> >  - Moved alias NULL check at beginning
-> >  - Added mdev_alias() API
-> >  - Updated mtty driver to show example mdev_alias() usage
-> >  - Changed return type of generate_alias() from int to char*
-> > v0->v1:
-> >  - Addressed comments from Alex Williamson, Cornelia Hunk and Mark
-> > Bloch
-> >  - Moved alias length check outside of the parent lock
-> >  - Moved alias and digest allocation from kvzalloc to kzalloc
-> >  - &alias[0] changed to alias
-> >  - alias_length check is nested under get_alias_length callback check
-> >  - Changed comments to start with an empty line
-> >  - Added comment where alias memory ownership is handed over to mdev
-> > device
-> >  - Fixed cleaunup of hash if mdev_bus_register() fails
-> >  - Updated documentation for new sysfs alias file
-> >  - Improved commit logs to make description more clear
-> >  - Fixed inclusiong of alias for NULL check
-> >  - Added ratelimited debug print for sha1 hash collision error
-> >
-> > Parav Pandit (5):
-> >   mdev: Introduce sha1 based mdev alias
-> >   mdev: Make mdev alias unique among all mdevs
-> >   mdev: Expose mdev alias in sysfs tree
-> >   mdev: Introduce an API mdev_alias
-> >   mtty: Optionally support mtty alias
-> >
-> >  .../driver-api/vfio-mediated-device.rst       |   9 ++
-> >  drivers/vfio/mdev/mdev_core.c                 | 142 +++++++++++++++++-
-> >  drivers/vfio/mdev/mdev_private.h              |   5 +-
-> >  drivers/vfio/mdev/mdev_sysfs.c                |  26 +++-
-> >  include/linux/mdev.h                          |   5 +
-> >  samples/vfio-mdev/mtty.c                      |  13 ++
-> >  6 files changed, 190 insertions(+), 10 deletions(-)
-> >
->=20
-> The patches on their own look sane (and I gave my R-b), but the consumer =
-of
-> this new API should be ready before this is merged, as already discussed =
-below.
+Thanks for starting the discussion.
 
-Thanks for the review. I will send v4 here to address all comments and to a=
-dd your R-b tag.
-I am waiting for Saeed to post other prep series of mlx5_core to be merged =
-before I post actual consumer series, as it depends on it.
-I will also drop the mtty sample patch and change-log to avoid confusion wi=
-th versions when I combine them with consumer series.
+
+> 
+> -------------------
+> **Usecases**
+> -------------------
+> 
+> $> TurboSched
+> ====================
+> TurboSched [2] tries to minimize the number of active cores in a socket by
+> packing an un-important and low-utilization (named jitter) task on an
+> already active core and thus refrains from waking up of a new core if
+> possible. This requires tagging of tasks from the userspace hinting which
+> tasks are un-important and thus waking-up a new core to minimize the
+> latency is un-necessary for such tasks.
+> As per the discussion on the posted RFC, it will be appropriate to use the
+> task latency property where a task with the highest latency-nice value can
+> be packed.
+> But for this specific use-cases, having just a binary value to know which
+> task is latency-sensitive and which not is sufficient enough, but having a
+> range is also a good way to go where above some threshold the task can be
+> packed.
+> 
+> 
+
+$> Separating AVX512 tasks and latency sensitive tasks on separate cores
+-------------------------------------------------------------------------
+Another usecase we are considering is to segregate those workload that will pull down
+core cpu frequency (e.g. AVX512) from workload that are latency sensitive.
+There are certain tasks that need to provide a fast response time (latency sensitive)
+and they are best scheduled on cpu that has a lighter load and not have other
+tasks running on the sibling cpu that could pull down the cpu core frequency.
+
+Some users are running machine learning batch tasks with AVX512, and have observed
+that these tasks affect the tasks needing a fast response.  They have to
+rely on manual CPU affinity to separate these tasks.  With appropriate
+latency hint on task, the scheduler can be taught to separate them.
+
+Tim
+
+
 
