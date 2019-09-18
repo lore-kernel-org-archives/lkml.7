@@ -2,213 +2,123 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1DFAC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB62C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775D1222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568836574;
-	bh=4eU6w+0ThXpMTuRvqqyQ15DzuRIOjSwyvXAY1ONPr98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XrinpWSxftqASZjFmUQh0lmUUgzjGg/T9hYc7D5+h4r/XUeDDJ7xj7eH4g2Uf+ZWc
-	 /wVAAaGragco+mhuDWs1ZFgs6uJwGx7JH8Hcv3eNOpR48KQh/gieUqmZxa8ZyY/0hG
-	 fgP8G8E5kHu8Igrzzgz8x/5n16FPyw/EY/omGL1s=
+	by mail.kernel.org (Postfix) with ESMTP id 4591721928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731992AbfIRT4O (ORCPT
+        id S2388895AbfIRT4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:56:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731973AbfIRT4N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:56:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DC00222D0;
-        Wed, 18 Sep 2019 19:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568836572;
-        bh=4eU6w+0ThXpMTuRvqqyQ15DzuRIOjSwyvXAY1ONPr98=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wmNtcKSjeKP6ZbuPYRGX306NgCz5nagpS0NBjWJQXOwIOCXy7M4B2dJSRU+9d0Qv5
-         WRq8vxmBTG7BW3dK31f+mVsxdi7PQyjw6T8tpfS2OXCgcnlU3vcTOc7/QNU16oboHf
-         ERDWbCzyKMQc5zU9Ar1ITlaQZK1kktdORBVIx9Hc=
-Date:   Wed, 18 Sep 2019 21:56:10 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
-        linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
- definition
-Message-ID: <20190918195610.GC2020317@kroah.com>
-References: <20190917175937.13872-1-dmurphy@ti.com>
- <20190917175937.13872-6-dmurphy@ti.com>
- <f5cf1fa4-c891-744c-6fa9-4b166b64f463@ti.com>
+        Wed, 18 Sep 2019 15:56:18 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:37647 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731994AbfIRT4Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 15:56:16 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M8Syu-1iF5tw2IvA-004RAk; Wed, 18 Sep 2019 21:56:08 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] dynamic_debug: provide dynamic_hex_dump stub
+Date:   Wed, 18 Sep 2019 21:55:11 +0200
+Message-Id: <20190918195607.2080036-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f5cf1fa4-c891-744c-6fa9-4b166b64f463@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Provags-ID: V03:K1:ovq3juYvSxkhml2oJ/RZRmqQHrA4XE75uWc3u0KJ+V4KdWJOs6t
+ i39PGmoo9NADZL/6Ekow8/e6SKCYQ1+jJJ2IO44y+GJgjYZZsdgFTYxJVuFWSKQv19igyDB
+ ZRAZT2QKqwwTo5Ex3zkMdJByff/UrhSAeTFNeZmnOXoLgsqfcH/Bd7sE26aAYVYnIIOpLZF
+ bs+dkOdwvqu0h7qATQJKg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jI2VMkCpF2U=:mAaUB4R8b+R4MeHwr9Ea99
+ rJarNNaXKaH5L1aYOP+Zg/VFfUX5Hs+WYfsV6UApY+yKOxLR+uGs1arXHaRNHpz2o3j+DKk+i
+ mgdv5/8KJOI5bp8iMvTTztmp4PieylIqTS5mgaG1XNNe59qYjSznaEQeOS0U8xGD9ou19q60c
+ AlS6oqQXlhn9cXBiMuCy6PeiEQ4wIE4/I3/9RrziVpemcO8s6Ghe1+HmzcsAxQRy0UZYcD4Dn
+ zaege8LbFSxoCE/eRi00eR5OFbERDpAx+z2/m68qluhQbBJIRESHBrH7ho5+pUZd4QBEqQl5l
+ sMw97DaiVAh5zwDXEebys/8R/fjPqH/5TV/ksxtwAT2F4GED0/qOKGdBcXR3hqjq65n4WgFvO
+ usK5ig18eKv7l6As9QX7hFG0+sZi6o5CqCLbbG8sFczYd+3O+pjc1XbGi83kC1Gj1KPTrfiX+
+ Zc/BR7uE5khKV7bDu7xX8JXr0VSuyKN+tVj7llDBGgKJLFtJczR8ghgMia1LohHQuv9dbgIZ+
+ Os0ufhGE83ukTvJGRKXjKVUAUEzxv9sRz/XJnPP6S8N7xE3J32tFppI6nx1ickJ2ppKC66t/U
+ cGwKNhAS0s4XwIFgyfbSWV9Q/05BoKoFK0sHj+P972LCn845gxOvyT1k2SCHsdj2d5lAUfXo5
+ KPMbsKrmsMeW6cM4Od2EFH1mG/kc4QFt1SOcs4R+xTnlKNRl/cMWi8sb8cDdtkNHuL1UV50wo
+ o7SOhLuacXyM/O+MuVdQcXGu/QFaUo6GPtQ7ZvhUcnJgTXdi9k5sdmFnT5dHd29bBcq+X/2YJ
+ 2rxBDKTZ2v/7JKpadl5GUsunYte6sAQEYlR66KVATrAQjxM0bUo1fuzC/BTMYhziQQ8kEXwzR
+ U4CPNZl0BC3GFJsDba7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:09:12PM -0500, Dan Murphy wrote:
-> Greg
-> 
-> <snip>
-> 
-> > +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
-> > +				     struct led_classdev_mc *mcled_cdev,
-> > +				     int color_id, int color_index)
-> > +{
-> > +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> > +	struct led_mc_color_entry *mc_priv;
-> > +	int ret;
-> > +
-> > +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
-> > +	if (!mc_priv)
-> > +		return -ENOMEM;
-> > +
-> > +	mc_priv->led_color_id = color_id;
-> > +	mc_priv->mcled_cdev = mcled_cdev;
-> > +
-> > +	led_color_group.name = led_colors[color_id];
-> > +	ret = sysfs_create_group(data->color_kobj, &led_color_group);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
-> > +	mc_priv->intensity_attr.attr.name = "intensity";
-> > +	mc_priv->intensity_attr.attr.mode = 666;
-> > +	mc_priv->intensity_attr.store = intensity_store;
-> > +	mc_priv->intensity_attr.show = intensity_show;
-> > +	ret = sysfs_add_file_to_group(data->color_kobj,
-> > +				      &mc_priv->intensity_attr.attr,
-> > +				      led_color_group.name);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
-> > +	mc_priv->max_intensity_attr.attr.name = "max_intensity";
-> > +	mc_priv->max_intensity_attr.attr.mode = 444;
-> > +	mc_priv->max_intensity_attr.show = max_intensity_show;
-> > +	ret = sysfs_add_file_to_group(data->color_kobj,
-> > +				      &mc_priv->max_intensity_attr.attr,
-> > +				      led_color_group.name);
-> > +	if (ret)
-> > +		goto err_out;
-> > +
-> > +	mc_priv->max_intensity = LED_FULL;
-> > +	list_add_tail(&mc_priv->list, &data->color_list);
-> > +
-> > +err_out:
-> > +	return ret;
-> > +}
-> > +
-> > +static int led_multicolor_init_color_dir(struct led_classdev_mc_data *data,
-> > +					 struct led_classdev_mc *mcled_cdev)
-> > +{
-> > +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> > +	u32 color_id;
-> > +	int ret;
-> > +	int i, j = 0;
-> > +
-> > +	data->color_kobj = kobject_create_and_add("colors",
-> > +						  &led_cdev->dev->kobj);
-> 
-> We need some guidance here on how to properly create sub directories more
-> then 1 level deep.
+The ionic driver started using dymamic_hex_dump(), but
+that is not always defined:
 
-Short answer, don't.
+drivers/net/ethernet/pensando/ionic/ionic_main.c:229:2: error: implicit declaration of function 'dynamic_hex_dump' [-Werror,-Wimplicit-function-declaration]
 
-Long answer, use a 'struct device' but ONLY IF YOU KNOW WHAT YOU ARE
-DOING!
+Add a dummy implementation to use when CONFIG_DYNAMIC_DEBUG
+is disabled, printing nothing.
 
-Follow the short answer please.
+Fixes: 938962d55229 ("ionic: Add adminq action")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/net/ethernet/pensando/ionic/ionic_lif.c  | 2 ++
+ drivers/net/ethernet/pensando/ionic/ionic_main.c | 2 ++
+ include/linux/dynamic_debug.h                    | 6 ++++++
+ 3 files changed, 10 insertions(+)
 
-> In short under the LED class device parent directory we want to create a
-> directory called "colors".
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index db7c82742828..a255d24c8e40 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
+ 
++#include <linux/printk.h>
++#include <linux/dynamic_debug.h>
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/rtnetlink.h>
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+index 15e432386b35..aab311413412 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+@@ -1,6 +1,8 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
+ 
++#include <linux/printk.h>
++#include <linux/dynamic_debug.h>
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
+ #include <linux/utsname.h>
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index 6c809440f319..4cf02ecd67de 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -204,6 +204,12 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
+ 	do { if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); } while (0)
+ #define dynamic_dev_dbg(dev, fmt, ...)					\
+ 	do { if (0) dev_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__); } while (0)
++#define dynamic_hex_dump(prefix_str, prefix_type, rowsize,		\
++			 groupsize, buf, len, ascii)			\
++	do { if (0)							\
++		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
++				rowsize, groupsize, buf, len, ascii);	\
++	} while (0)
+ #endif
+ 
+ #endif
+-- 
+2.20.0
 
-Ok, that's simple.
-
-> Under that directory we want to create a directory corresponding to the
-> monochrome LED color.
-
-Why?
-
-> Under that directory we have the files to for intensity and max_intensity
-> for the monochrome LED.
-
-Why not just have colors/monochrome_intensity and
-colors/monochrome_max_intensity as your files in the colors/ directory?
-
-> We can use the LED class kobject to create the colors directory using the
-> sysfs calls but the issue comes when creating the LED color directory.
-
-Yes.
-
-> We don't have a kobj for colors to associate those directories to. 
-
-And you shouldn't :)
-
-> The only API we see to use the kobject_create_and_add which then gives
-> us the colors directory kobj.
-
-Don't do that, you will break userspace code hard if you do that.
-
-NEVER put a raw kobject after a 'struct device' in the sysfs tree if you
-expect normal userspace libraries to be able to understand what is going
-on.  That's why this is "hard", you are not supposed to be doing it.
-
-> So the directory structure would look like this which is explained in this
-> patch https://lore.kernel.org/patchwork/patch/1128444/
-> 
-> Directory Layout Example
-> ========================
-> root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-> colors/:
-> drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-> rwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-> drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-> 
-> colors/blue:
-> -rw-------    1 root     root          4096 Jun 28 20:21 intensity
-> -r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-> +colors/green:
-> -rw-------    1 root     root          4096 Jun 28 20:22 intensity
-> -r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-> 
-> colors/red:
-> -rw-------    1 root     root          4096 Jun 28 20:21 intensity
-> -r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-
-
-No, just add blue, green, red to the prefix of those files and all
-should be fine.  Don't try to get fancy and use subdirs, that way lies
-madness.
-
-> I have reviewed your example code and read your blogs and papers on the
-> subject but nothing really talks about sub-sub directories.
-
-Because you shouldn't do it, I didn't think I had to describe everything
-you should not do :)
-
-> Now if this is a no-no in the kernel that is fine we can adjust but Jacek
-> wanted to get your opinon/guidance on this topic.
-
-Yes, don't do it.
-
-did I say it enough times?  :)
-
-thanks,
-
-greg k-h
