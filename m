@@ -6,82 +6,92 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B31E2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BE2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91CBB20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8D220640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729981AbfIRIRO (ORCPT
+        id S1730014AbfIRISO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:17:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36256 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729745AbfIRIRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:17:14 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 03AD030A76A9;
-        Wed, 18 Sep 2019 08:17:14 +0000 (UTC)
-Received: from [10.72.12.58] (ovpn-12-58.pek2.redhat.com [10.72.12.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2C9925C21A;
-        Wed, 18 Sep 2019 08:17:11 +0000 (UTC)
-Subject: Re: [RFC PATCH] memalloc_noio: update the comment to make it cleaner
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20190917232820.23504-1-xiubli@redhat.com>
- <20190918072542.GC12770@dhcp22.suse.cz>
- <315246db-ec28-f5e0-e9b3-eba0cb60b796@redhat.com>
- <20190918081431.GD12770@dhcp22.suse.cz>
-From:   Xiubo Li <xiubli@redhat.com>
-Message-ID: <e49636bd-11d2-b90c-d1b2-3afd89de43d2@redhat.com>
-Date:   Wed, 18 Sep 2019 16:17:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Sep 2019 04:18:14 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53963 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfIRISN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:18:13 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iAVA9-0005wX-KR; Wed, 18 Sep 2019 10:18:09 +0200
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iAVA7-0006x5-PO; Wed, 18 Sep 2019 10:18:07 +0200
+Date:   Wed, 18 Sep 2019 10:18:07 +0200
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     zhang.chunyan@linaro.org, Doug Anderson <dianders@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, ckeepax@opensource.cirrus.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Subject: Re: [PATCH 3/3] regulator: core: make regulator_register()
+ EPROBE_DEFER aware
+Message-ID: <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
+References: <20190917154021.14693-1-m.felsch@pengutronix.de>
+ <20190917154021.14693-4-m.felsch@pengutronix.de>
+ <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190918081431.GD12770@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 18 Sep 2019 08:17:14 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:11:24 up 123 days, 14:29, 70 users,  load average: 0.15, 0.11,
+ 0.06
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/18 16:14, Michal Hocko wrote:
-> On Wed 18-09-19 16:02:52, Xiubo Li wrote:
->> On 2019/9/18 15:25, Michal Hocko wrote:
->>> On Wed 18-09-19 04:58:20, xiubli@redhat.com wrote:
->>>> From: Xiubo Li <xiubli@redhat.com>
->>>>
->>>> The GFP_NOIO means all further allocations will implicitly drop
->>>> both __GFP_IO and __GFP_FS flags and so they are safe for both the
->>>> IO critical section and the the critical section from the allocation
->>>> recursion point of view. Not only the __GFP_IO, which a bit confusing
->>>> when reading the code or using the save/restore pair.
->>> Historically GFP_NOIO has always implied GFP_NOFS as well. I can imagine
->>> that this might come as an surprise for somebody not familiar with the
->>> code though.
->> Yeah, it true.
->>
->>>    I am wondering whether your update of the documentation
->>> would be better off at __GFP_FS, __GFP_IO resp. GFP_NOFS, GFP_NOIO level.
->>> This interface is simply a way to set a scoped NO{IO,FS} context.
->> The "Documentation/core-api/gfp_mask-from-fs-io.rst" is already very detail
->> about them all.
->>
->> This fixing just means to make sure that it won't surprise someone who is
->> having a quickly through some code and not familiar much about the detail.
->> It may make not much sense ?
-> Ohh, I do not think this would be senseless. I just think that the NOIO
-> implying NOFS as well should be described at the level where they are
-> documented rather than the api you have chosen.
+On 19-09-17 17:57, Dmitry Torokhov wrote:
+> On Tue, Sep 17, 2019 at 4:42 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> >
+> > Sometimes it can happen that the regulator_of_get_init_data() can't
+> > retrieve the config due to a not probed device the regulator depends on.
+> > Fix that by checking the return value of of_parse_cb() and return
+> > EPROBE_DEFER in such cases.
+> 
+> Treating EPROBE_DEFER in a special way is usually wrong.
+> regulator_of_get_init_data() may fail for multiple reasons (no memory,
+> invalid DT, etc, etc). All of them should abort instantiating
+> regulator.
 
-Hmm, yeah totally agree :-)
+Those errors are handled but the behaviour of this funciton is to return
+NULL in such errors which is fine for the caller of this function. I
+only want to handle EPROBE_DEFER special..
 
-Thanks
-BRs
+Regards,
+  Marco
+
+
+> Thanks.
+> 
+> -- 
+> Dmitry
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
