@@ -2,170 +2,321 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC3FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B661BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF82218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80970218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731139AbfIRObr (ORCPT
+        id S1731238AbfIROcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:31:47 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:49270 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730457AbfIRObq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:31:46 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 24F1D482F9; Wed, 18 Sep 2019 16:31:43 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 1F14B482F6;
-        Wed, 18 Sep 2019 16:31:43 +0200 (CEST)
-Date:   Wed, 18 Sep 2019 16:31:43 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Moore, Robert" <robert.moore@intel.com>
-cc:     Ferry Toth <fntoth@gmail.com>,
-        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "devel@acpica.org" <devel@acpica.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>
-Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
-In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B968327D@ORSMSX110.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.20.1909181624550.3925@fox.voss.local>
-References: <20190906174605.GY2680@smile.fi.intel.com> <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de> <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com> <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com> <20190913151228.GT2680@smile.fi.intel.com> <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com> <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1909161134070.2910@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B968327D@ORSMSX110.amr.corp.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Wed, 18 Sep 2019 10:32:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57004 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727301AbfIROcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:32:07 -0400
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3FA058553A
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:32:06 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id 190so110697wme.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 07:32:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=N4sdFuel5+nVmdxHmTXUt+0u8Cikmvj2A4KMlujnwYA=;
+        b=FYyjusb+erre1wNH8DubEb0+JX1So6NawSc2wUlDsVBLuXLCr8ha9XRzySZibyDon/
+         yO1nsEMpoDxNkiYUpyuxkQvYXO1VPDBRWbhfNGfUDiO+FHSO4Cs5fc0ExRB9m9CFKRod
+         9SY5hCgN4DH+ye/3VB08sEoEIEioeB/zx8b2zTOE/Ey5q2s3bH2YdbYFzcD1f/hIep0y
+         RsRpOYfJaEtyMNiWOKJDSTbTrdhp4VBy2MDadNQU1vEXQnxEHywDxdGht/NutzobDzHk
+         1P/AV6TOas2ovX8zB5PM6Z6w3cWEL5EeW3qiFuqxzUQtK3VhpcUG8atHGHzb5RlDJzLj
+         TF8w==
+X-Gm-Message-State: APjAAAUWheO6DhvJgsznvCkDUwbF4FW03ekcS2PLnUcfpECo7Dy4Y/WI
+        LrNnu6TKBv9NwePaSow+QUb9eg6x2goMG1O9uBtJ86JKIpOEDuFL842NytHDHNKm/FyeJYk8cjd
+        gD/fjiW3CDoxLDWOHfTlkXtrq
+X-Received: by 2002:a1c:a851:: with SMTP id r78mr3090902wme.166.1568817124971;
+        Wed, 18 Sep 2019 07:32:04 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwuE2QGPTNyVQO5nQ6qrsNWVDsMlCiJDcWBe1uwJVlaV7O67tfIesfml17HWkISRNOcna9OMg==
+X-Received: by 2002:a1c:a851:: with SMTP id r78mr3090880wme.166.1568817124713;
+        Wed, 18 Sep 2019 07:32:04 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id l10sm8512918wrh.20.2019.09.18.07.32.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 07:32:03 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:32:00 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Tiwei Bie <tiwei.bie@intel.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
+Message-ID: <20190918102923-mutt-send-email-mst@kernel.org>
+References: <20190917010204.30376-1-tiwei.bie@intel.com>
+ <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
+ <20190917105801.GA24855@___>
+ <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019, Moore, Robert wrote:
->
->
-> -----Original Message-----
-> From: Nikolaus Voss [mailto:nv@vosn.de]
-> Sent: Monday, September 16, 2019 2:47 AM
-> To: Moore, Robert <robert.moore@intel.com>
-> Cc: Ferry Toth <fntoth@gmail.com>; Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Jan Kiszka <jan.kiszka@siemens.com>
-> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
->
-> On Fri, 13 Sep 2019, Moore, Robert wrote:
->>
->>
->> -----Original Message-----
->> From: Ferry Toth [mailto:fntoth@gmail.com]
->> Sent: Friday, September 13, 2019 9:48 AM
->> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Moore, Robert
->> <robert.moore@intel.com>
->> Cc: Nikolaus Voss <nv@vosn.de>; Schmauss, Erik
->> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len
->> Brown <lenb@kernel.org>; Jacek Anaszewski
->> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
->> <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org;
->> linux-kernel@vger.kernel.org; nikolaus.voss@loewensteinmedical.de; Jan
->> Kiszka <jan.kiszka@siemens.com>
->> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
->>
->> Hello all,
->>
->> Sorry to have sent our message with cancelled e-mail address. I have correct this now.
->>
->> Op 13-09-19 om 17:12 schreef Shevchenko, Andriy:
->>> On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
->>>> -----Original Message-----
->>>> From: Nikolaus Voss [mailto:nv@vosn.de]
->>>> Sent: Friday, September 13, 2019 12:44 AM
->>>> To: Moore, Robert <robert.moore@intel.com>
->>>> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik
->>>> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>;
->>>> Len Brown <lenb@kernel.org>; Jacek Anaszewski
->>>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
->>>> Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org;
->>>> devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth
->>>> <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
->>>> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table
->>>> index
->>>>
->>>> Bob,
->>>>
->>>> On Thu, 12 Sep 2019, Moore, Robert wrote:
->>>>> The ability to unload an ACPI table (especially AML tables such as
->>>>> SSDTs) is in the process of being deprecated in ACPICA -- since it
->>>>> is also deprecated in the current ACPI specification. This is being
->>>>> done because of the difficulty of deleting the namespace entries
->>>>> for the table.  FYI, Windows does not properly support this function either.
->>>>
->>>> ok, I see it can be a problem to unload an AML table with all it's
->>>> consequences e.g. with respect to driver unregistering in setups
->>>> with complex dependencies. It will only work properly under certain
->>>> conditions
->>>> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
->>>>
->>>> AcpiTbUnloadTable is not exported, it is an internal interface only
->>>> -- as recognized by the "AcpiTb".
->>>
->>> In Linux it became a part of ABI when the
->>>
->>> commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
->>> Author: Jan Kiszka <jan.kiszka@siemens.com>
->>> Date:   Fri Jun 9 20:36:31 2017 +0200
->>>
->>>      ACPI: configfs: Unload SSDT on configfs entry removal
->>>
->>> appeared in the kernel.
->>
->> And the commit message explains quite well why it is an important feature:
->>
->> "This allows to change SSDTs without rebooting the system.
->> It also allows to destroy devices again that a dynamically loaded SSDT created.
->>
->> The biggest problem AFAIK is that under linux, many drivers cannot be unloaded. Also, there are many race conditions as the namespace entries "owned" by an SSDT being unloaded are deleted (out from underneath a driver).
->>
->> This is widely similar to the DT overlay behavior."
->>
->>>> I'm not sure that I want to change the interface to AcpiLoadTable
->>>> just for something that is being deprecated. Already, we throw an
->>>> ACPI_EXCEPTION if the Unload operator is encountered in the AML byte
->>>> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
->>>>
->>>>      ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
->>>>          "AML Unload operator is not supported"));
->
-> Bob, what is your suggestion to fix the regression then?
->
-> We could revert acpi_configfs.c to use acpi_tb_install_and_load_table() 
-> instead of acpi_load_table(), leaving loaded APCI objects uninitalized, 
-> but at least, unloading will work again.
->
-> I guess my next question is: why do you want to unload a table in the 
-> first place?
+On Wed, Sep 18, 2019 at 01:51:21PM +0800, Jason Wang wrote:
+> 
+> On 2019/9/17 下午6:58, Tiwei Bie wrote:
+> > On Tue, Sep 17, 2019 at 11:32:03AM +0800, Jason Wang wrote:
+> > > On 2019/9/17 上午9:02, Tiwei Bie wrote:
+> > > > This RFC is to demonstrate below ideas,
+> > > > 
+> > > > a) Build vhost-mdev on top of the same abstraction defined in
+> > > >      the virtio-mdev series [1];
+> > > > 
+> > > > b) Introduce /dev/vhost-mdev to do vhost ioctls and support
+> > > >      setting mdev device as backend;
+> > > > 
+> > > > Now the userspace API looks like this:
+> > > > 
+> > > > - Userspace generates a compatible mdev device;
+> > > > 
+> > > > - Userspace opens this mdev device with VFIO API (including
+> > > >     doing IOMMU programming for this mdev device with VFIO's
+> > > >     container/group based interface);
+> > > > 
+> > > > - Userspace opens /dev/vhost-mdev and gets vhost fd;
+> > > > 
+> > > > - Userspace uses vhost ioctls to setup vhost (userspace should
+> > > >     do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
+> > > >     fd first before doing other vhost ioctls);
+> > > > 
+> > > > Only compile test has been done for this series for now.
+> > > 
+> > > Have a hard thought on the architecture:
+> > Thanks a lot! Do appreciate it!
+> > 
+> > > 1) Create a vhost char device and pass vfio mdev device fd to it as a
+> > > backend and translate vhost-mdev ioctl to virtio mdev transport (e.g
+> > > read/write). DMA was done through the VFIO DMA mapping on the container that
+> > > is attached.
+> > Yeah, that's what we are doing in this series.
+> > 
+> > > We have two more choices:
+> > > 
+> > > 2) Use vfio-mdev but do not create vhost-mdev device, instead, just
+> > > implement vhost ioctl on vfio_device_ops, and translate them into
+> > > virtio-mdev transport or just pass ioctl to parent.
+> > Yeah. Instead of introducing /dev/vhost-mdev char device, do
+> > vhost ioctls on VFIO device fd directly. That's what we did
+> > in RFC v3.
+> > 
+> > > 3) Don't use vfio-mdev, create a new vhost-mdev driver, during probe still
+> > > try to add dev to vfio group and talk to parent with device specific ops
+> > If my understanding is correct, this means we need to introduce
+> > a new VFIO device driver to replace the existing vfio-mdev driver
+> > in our case. Below is a quick draft just to show my understanding:
+> > 
+> > #include <linux/init.h>
+> > #include <linux/module.h>
+> > #include <linux/device.h>
+> > #include <linux/kernel.h>
+> > #include <linux/slab.h>
+> > #include <linux/vfio.h>
+> > #include <linux/mdev.h>
+> > 
+> > #include "mdev_private.h"
+> > 
+> > /* XXX: we need a proper way to include below vhost header. */
+> > #include "../../vhost/vhost.h"
+> > 
+> > static int vfio_vhost_mdev_open(void *device_data)
+> > {
+> > 	if (!try_module_get(THIS_MODULE))
+> > 		return -ENODEV;
+> > 
+> > 	/* ... */
+> > 	vhost_dev_init(...);
+> > 
+> > 	return 0;
+> > }
+> > 
+> > static void vfio_vhost_mdev_release(void *device_data)
+> > {
+> > 	/* ... */
+> > 	module_put(THIS_MODULE);
+> > }
+> > 
+> > static long vfio_vhost_mdev_unlocked_ioctl(void *device_data,
+> > 					   unsigned int cmd, unsigned long arg)
+> > {
+> > 	struct mdev_device *mdev = device_data;
+> > 	struct mdev_parent *parent = mdev->parent;
+> > 
+> > 	/*
+> > 	 * Use vhost ioctls.
+> > 	 *
+> > 	 * We will have a different parent_ops design.
+> > 	 * And potentially, we can share the same parent_ops
+> > 	 * with virtio_mdev.
+> > 	 */
+> > 	switch (cmd) {
+> > 	case VHOST_GET_FEATURES:
+> > 		parent->ops->get_features(mdev, ...);
+> > 		break;
+> > 	/* ... */
+> > 	}
+> > 
+> > 	return 0;
+> > }
+> > 
+> > static ssize_t vfio_vhost_mdev_read(void *device_data, char __user *buf,
+> > 				    size_t count, loff_t *ppos)
+> > {
+> > 	/* ... */
+> > 	return 0;
+> > }
+> > 
+> > static ssize_t vfio_vhost_mdev_write(void *device_data, const char __user *buf,
+> > 				     size_t count, loff_t *ppos)
+> > {
+> > 	/* ... */
+> > 	return 0;
+> > }
+> > 
+> > static int vfio_vhost_mdev_mmap(void *device_data, struct vm_area_struct *vma)
+> > {
+> > 	/* ... */
+> > 	return 0;
+> > }
+> > 
+> > static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
+> > 	.name		= "vfio-vhost-mdev",
+> > 	.open		= vfio_vhost_mdev_open,
+> > 	.release	= vfio_vhost_mdev_release,
+> > 	.ioctl		= vfio_vhost_mdev_unlocked_ioctl,
+> > 	.read		= vfio_vhost_mdev_read,
+> > 	.write		= vfio_vhost_mdev_write,
+> > 	.mmap		= vfio_vhost_mdev_mmap,
+> > };
+> > 
+> > static int vfio_vhost_mdev_probe(struct device *dev)
+> > {
+> > 	struct mdev_device *mdev = to_mdev_device(dev);
+> > 
+> > 	/* ... */
+> > 	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
+> > }
+> > 
+> > static void vfio_vhost_mdev_remove(struct device *dev)
+> > {
+> > 	/* ... */
+> > 	vfio_del_group_dev(dev);
+> > }
+> > 
+> > static struct mdev_driver vfio_vhost_mdev_driver = {
+> > 	.name	= "vfio_vhost_mdev",
+> > 	.probe	= vfio_vhost_mdev_probe,
+> > 	.remove	= vfio_vhost_mdev_remove,
+> > };
+> > 
+> > static int __init vfio_vhost_mdev_init(void)
+> > {
+> > 	return mdev_register_driver(&vfio_vhost_mdev_driver, THIS_MODULE);
+> > }
+> > module_init(vfio_vhost_mdev_init)
+> > 
+> > static void __exit vfio_vhost_mdev_exit(void)
+> > {
+> > 	mdev_unregister_driver(&vfio_vhost_mdev_driver);
+> > }
+> > module_exit(vfio_vhost_mdev_exit)
+> 
+> 
+> Yes, something like this basically.
+> 
+> 
+> > > So I have some questions:
+> > > 
+> > > 1) Compared to method 2, what's the advantage of creating a new vhost char
+> > > device? I guess it's for keep the API compatibility?
+> > One benefit is that we can avoid doing vhost ioctls on
+> > VFIO device fd.
+> 
+> 
+> Yes, but any benefit from doing this?
 
-Because it worked before and there are people who rely on it. If it's 
-deprecated there should be a user notification and a reasonable 
-end-of-life timeline to give these users a chance to develop an 
-alternative solution.
+It does seem a bit more modular, but it's certainly not a big deal.
 
-Niko
-
->
->
-> Do we have any other options?
->
-> Niko
->
+> > 
+> > > 2) For method 2, is there any easy way for user/admin to distinguish e.g
+> > > ordinary vfio-mdev for vhost from ordinary vfio-mdev?
+> > I think device-api could be a choice.
+> 
+> 
+> Ok.
+> 
+> 
+> > 
+> > > I saw you introduce
+> > > ops matching helper but it's not friendly to management.
+> > The ops matching helper is just to check whether a given
+> > vfio-device is based on a mdev device.
+> > 
+> > > 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
+> > > assumes the parameter comes from userspace, it prevents support kernel
+> > > virtio drivers.
+> > > 
+> > > 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
+> > > we can use device specific ops instead of VFIO ones, then we can have a
+> > > common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
+> > As the above draft shows, this requires introducing a new
+> > VFIO device driver. I think Alex's opinion matters here.
+> 
+> 
+> Yes, it is.
+> 
+> Thanks
+> 
+> 
+> > Thanks,
+> > Tiwei
+> > 
+> > > What's your thoughts?
+> > > 
+> > > Thanks
+> > > 
+> > > 
+> > > > RFCv3: https://patchwork.kernel.org/patch/11117785/
+> > > > 
+> > > > [1] https://lkml.org/lkml/2019/9/10/135
+> > > > 
+> > > > Tiwei Bie (3):
+> > > >     vfio: support getting vfio device from device fd
+> > > >     vfio: support checking vfio driver by device ops
+> > > >     vhost: introduce mdev based hardware backend
+> > > > 
+> > > >    drivers/vfio/mdev/vfio_mdev.c    |   3 +-
+> > > >    drivers/vfio/vfio.c              |  32 +++
+> > > >    drivers/vhost/Kconfig            |   9 +
+> > > >    drivers/vhost/Makefile           |   3 +
+> > > >    drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
+> > > >    drivers/vhost/vhost.c            |  39 ++-
+> > > >    drivers/vhost/vhost.h            |   6 +
+> > > >    include/linux/vfio.h             |  11 +
+> > > >    include/uapi/linux/vhost.h       |  10 +
+> > > >    include/uapi/linux/vhost_types.h |   5 +
+> > > >    10 files changed, 573 insertions(+), 7 deletions(-)
+> > > >    create mode 100644 drivers/vhost/mdev.c
+> > > > 
