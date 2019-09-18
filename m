@@ -2,118 +2,169 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05E5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FA2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0318214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666B5214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfIRKBa (ORCPT
+        id S1729437AbfIRKDH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:01:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43904 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfIRKB3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:01:29 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1iAWm2-0001XJ-Nx; Wed, 18 Sep 2019 10:01:22 +0000
-Date:   Wed, 18 Sep 2019 12:01:21 +0200
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     keescook@chromium.org, luto@amacapital.net, jannh@google.com,
-        wad@chromium.org, shuah@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 3/4] seccomp: avoid overflow in implicit constant
- conversion
-Message-ID: <20190918100121.GB5088@elm>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
- <20190918084833.9369-4-christian.brauner@ubuntu.com>
+        Wed, 18 Sep 2019 06:03:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:38570 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728941AbfIRKDG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:03:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41EC4337;
+        Wed, 18 Sep 2019 03:03:06 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BAB93F59C;
+        Wed, 18 Sep 2019 03:03:05 -0700 (PDT)
+References: <20190916223850.GQ4352@sirena.co.uk> <1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org> <20190917075242.GB49590@gmail.com> <8736gv2gbv.fsf@arm.com> <30eb4c83-a90d-21aa-3f9e-4da8e66769ef@infradead.org> <20190918060553.GA21173@gmail.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Sep 16 (kernel/sched/core.c)
+In-reply-to: <20190918060553.GA21173@gmail.com>
+Date:   Wed, 18 Sep 2019 11:03:02 +0100
+Message-ID: <87y2yl2a7d.fsf@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918084833.9369-4-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 10:48:32, Christian Brauner wrote:
-> USER_NOTIF_MAGIC is assigned to int variables in this test so set it to INT_MAX
-> to avoid warnings:
-> 
-> seccomp_bpf.c: In function ‘user_notification_continue’:
-> seccomp_bpf.c:3088:26: warning: overflow in implicit constant conversion [-Woverflow]
->  #define USER_NOTIF_MAGIC 116983961184613L
->                           ^
-> seccomp_bpf.c:3572:15: note: in expansion of macro ‘USER_NOTIF_MAGIC’
->   resp.error = USER_NOTIF_MAGIC;
->                ^~~~~~~~~~~~~~~~
-> 
-> Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Will Drewry <wad@chromium.org>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Martin KaFai Lau <kafai@fb.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: Tycho Andersen <tycho@tycho.ws>
-> CC: Tyler Hicks <tyhicks@canonical.com>
 
-INT_MAX should be a safe value to use.
+On Wed, Sep 18, 2019 at 07:05:53 +0100, Ingo Molnar wrote...
 
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
+> * Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+>> On 9/17/19 6:38 AM, Patrick Bellasi wrote:
+>> > 
+>> > On Tue, Sep 17, 2019 at 08:52:42 +0100, Ingo Molnar wrote...
+>> > 
+>> >> * Randy Dunlap <rdunlap@infradead.org> wrote:
+>> >>
+>> >>> On 9/16/19 3:38 PM, Mark Brown wrote:
+>> >>>> Hi all,
+>> >>>>
+>> >>>> Changes since 20190915:
+>> >>>>
+>> >>>
+>> >>> on x86_64:
+>> >>>
+>> >>> when CONFIG_CGROUPS is not set:
+>> > 
+>> > Hi Randy,
+>> > thanks for the report.
+>> > 
+>> >>>   CC      kernel/sched/core.o
+>> >>> ../kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
+>> >>> ../kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
+>> >>>   struct css_task_iter it;
+>> >>>                        ^~
+>> >>>   CC      kernel/printk/printk_safe.o
+>> >>> ../kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
+>> >>>   css_task_iter_start(css, 0, &it);
+>> >>>   ^~~~~~~~~~~~~~~~~~~
+>> >>>   __sg_page_iter_start
+>> >>> ../kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
+>> >>>   while ((p = css_task_iter_next(&it))) {
+>> >>>               ^~~~~~~~~~~~~~~~~~
+>> >>>               __sg_page_iter_next
+>> >>> ../kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
+>> >>>   css_task_iter_end(&it);
+>> >>>   ^~~~~~~~~~~~~~~~~
+>> >>>   get_task_cred
+>> >>> ../kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
+>> >>>   struct css_task_iter it;
+>> >>>                        ^~
+>> >>>
+>> >>
+>> >> I cannot reproduce this build failue: I took Linus's latest which has all 
+>> >> the -next scheduler commits included (ad062195731b), and an x86-64 "make 
+>> >> defconfig" and a disabling of CONFIG_CGROUPS still resuls in a kernel 
+>> >> that builds fine.
+>> > 
+>> > Same here Ingo, I cannot reproduce on arm64 and !CONFIG_CGROUPS and
+>> > testing on tip/sched/core.
+>> > 
+>> > However, if you like, the following patch can make that code a
+>> > bit more "robust".
+>> > 
+>> > Best,
+>> > Patrick
+>> > 
+>> > ---8<---
+>> > From 7e17b7bb08dd8dfc57e01c2a7b6875439eb47cbe Mon Sep 17 00:00:00 2001
+>> > From: Patrick Bellasi <patrick.bellasi@arm.com>
+>> > Date: Tue, 17 Sep 2019 14:12:10 +0100
+>> > Subject: [PATCH 1/1] sched/core: uclamp: Fix compile error on !CONFIG_CGROUPS
+>> > 
+>> > Randy reported a compiler error on x86_64 and !CONFIG_CGROUPS which is due
+>> > to uclamp_update_active_tasks() using the undefined css_task_iter().
+>> > 
+>> > Since uclamp_update_active_tasks() is used only when cgroup support is
+>> > enabled, fix that by properly guarding that function at compile time.
+>> > 
+>> > Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+>> > Link: https://lore.kernel.org/lkml/1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org/
+>> > Fixes: commit babbe170e05 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+>> 
+>> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+>> 
+>> Thanks.
+>
+> Build failures like this one shouldn't depend on the compiler version - 
+> and it's still a mystery how and why this build bug triggered - we cannot 
+> apply the fix without knowing the answer to those questions.
 
-Tyler
+Right, but it's also quite strange it's not triggering without the
+guarding above. The only definition of struct css_task_iter I can see is
+the one
+provided in:
 
-> Cc: Jann Horn <jannh@google.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: bpf@vger.kernel.org
-> ---
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index ee52eab01800..921f0e26f835 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -35,6 +35,7 @@
->  #include <stdbool.h>
->  #include <string.h>
->  #include <time.h>
-> +#include <limits.h>
->  #include <linux/elf.h>
->  #include <sys/uio.h>
->  #include <sys/utsname.h>
-> @@ -3080,7 +3081,7 @@ static int user_trap_syscall(int nr, unsigned int flags)
->  	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
->  }
->  
-> -#define USER_NOTIF_MAGIC 116983961184613L
-> +#define USER_NOTIF_MAGIC INT_MAX
->  TEST(user_notification_basic)
->  {
->  	pid_t pid;
-> -- 
-> 2.23.0
-> 
+   include/linux/cgroup.h:50
+   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/linux/cgroup.h?h=35f7a95266153b1cf0caca3aa9661cb721864527#n50
+
+which is CONFIG_CGROUPS guarded.
+
+> Can you reproduce the build bug with Linus's latest tree? If not, which 
+> part of -next triggers the build failure?
+
+I tried again using this morning's Linus tree headed at:
+
+  commit 35f7a9526615 ("Merge tag 'devprop-5.4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm")
+
+and compilation actually fails for me too.
+
+Everything is fine in v5.3 with !CONFIG_CGROUPS and a git bisect
+between v5.3 and Linus master points to:
+
+  commit babbe170e053c ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
+
+So, I think it's really my fault not properly testing !CONFIG_CGROUP,
+which is enforced by default from CONFIG_SCHED_AUTOGROUP.
+
+The patch above fixes the compilation error, hope this helps.
+
+Cheers,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
