@@ -2,165 +2,113 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E2EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327AEC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7033821897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:01:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE76921907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:03:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/dJS/VD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfIRSBR (ORCPT
+        id S1729708AbfIRSDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:01:17 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:59747 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfIRSBR (ORCPT
+        Wed, 18 Sep 2019 14:03:09 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33872 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfIRSDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:01:17 -0400
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 53E51240002;
-        Wed, 18 Sep 2019 18:01:14 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 20:01:12 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
-Cc:     ludovic.desroches@microchip.com, ulf.hansson@linaro.org,
-        nicolas.ferre@microchip.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: host: atmel-mci: assign false/true to bool variable
-Message-ID: <20190918180112.GR21254@piout.net>
-References: <20190918172823.GA28786@SD>
+        Wed, 18 Sep 2019 14:03:08 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d3so336941plr.1;
+        Wed, 18 Sep 2019 11:03:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=5epdwrSXh24EUYUO/PsVgpCcezuZCgW1f8L8LT4NsHY=;
+        b=i/dJS/VDhqfAqPVgQ/ck7wrtabxGfffmzDn0nMfR5H568dDaQFl2P/Zy079A0htSOA
+         Wiio4no42QZIVigvdIj3Vjd3aA3T0azmWQG1+WLCIJ7LxrqVC7CKEqqP9Gr13E97Y9CL
+         mHQMetm8Gw7sTYI203Av8Kq3UtvNCAvqjAmESgeBdELLWZWyL8H28JA+U98iktz0aqPS
+         zA0KgD2cO/DukWAxD/Yj2EnLCNGqPBsDQTkJiz/VnwdPTgCHImidxiRv1XmDTpky0HT3
+         xhaAMzSAqypcThRZSwxTZDfcNHzN+HpkXlf+GUc1pJZBnwsTh1Mz6LZaG3dPyVjp2+mc
+         cEQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=5epdwrSXh24EUYUO/PsVgpCcezuZCgW1f8L8LT4NsHY=;
+        b=tQIDvYQbgQdUxm7spGB1gJN6XFee38tnw5aEv2B8QNYqPB/13tRVDL+B8t/EDFo/e3
+         FvYyKZzyA4+TQ4rLADLHzb2nwDPt77f0vzVPkxNmPaJCgxjuXrBOCDOVVeH0n3fJc1fV
+         i8PmJRjegCtwT6KToGj5rjZD+Ag71w+UlGeuRY4UECrAi7Xh8SdHOwn9HdtttuEN/fXq
+         v9eCbVvPKW7yXUT/gevtecNKJYGrXup19iD7pbeuV4zI8I3gDi4I7Df1wXzrCcNVGDHz
+         seFrfXLm6Ye0BVA+sAJSCY5n3Ip5L449eNdKmVaaQkEttTwUAqP33ioVd14RkDuOf7pi
+         l10g==
+X-Gm-Message-State: APjAAAUSsQGgdmBoDr6MD1EWqIkDiDMjsEVoND8LwsPJlGA3pGQ6WCjo
+        V6Ha0gYPSxquPnGM8NNsYwk=
+X-Google-Smtp-Source: APXvYqyYqnTo+S8mIhE7N3BpCMpcOR7dlHge/PQw/HZmevaSnGiFmYkE/f8O5PTqUjatXLVoD3/KNg==
+X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr5598867plp.245.1568829787218;
+        Wed, 18 Sep 2019 11:03:07 -0700 (PDT)
+Received: from SD ([2405:204:828a:aaec:f0de:d7f9:abdf:1568])
+        by smtp.gmail.com with ESMTPSA id u18sm5212624pge.69.2019.09.18.11.03.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 11:03:06 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 23:32:53 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     ulf.hansson@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
+        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: host: bcm2835: use devm_platform_ioremap_resource
+ wrapper
+Message-ID: <20190918180253.GA11702@SD>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190918172823.GA28786@SD>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Use devm_platform_ioremap_resource helper which wraps
+platform_get_resource() and devm_ioremap_resource() together.
 
-On 18/09/2019 22:58:23+0530, Saiyam Doshi wrote:
-> Use false/true instead of 0/1 in bool variable assignment.
-> 
-> This fixes below coccicheck warning.
-> "WARNING: Assignment of 0/1 to bool variable"
-> 
-> Generated by: scripts/coccinelle/misc/boolinit.cocci
-> 
-> More information about semantic patching is available at
-> http://coccinelle.lip6.fr/
-> 
+Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
 
-More useful than information than info on semantic patching, it would be
-good to have info on why you feel this is necessary.
+More information about semantic patching is available at
+http://coccinelle.lip6.fr/
 
-> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
-> ---
->  drivers/mmc/host/atmel-mci.c | 50 ++++++++++++++++++------------------
->  1 file changed, 25 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-> index c26fbe5f2222..91088b1712ae 100644
-> --- a/drivers/mmc/host/atmel-mci.c
-> +++ b/drivers/mmc/host/atmel-mci.c
-> @@ -706,7 +706,7 @@ static void atmci_timeout_timer(struct timer_list *t)
->  		host->mrq->cmd->error = -ETIMEDOUT;
->  		host->cmd = NULL;
->  	}
-> -	host->need_reset = 1;
-> +	host->need_reset = true;
->  	host->state = STATE_END_REQUEST;
->  	smp_wmb();
->  	tasklet_schedule(&host->tasklet);
-> @@ -1610,7 +1610,7 @@ static void atmci_command_complete(struct atmel_mci *host,
->  	else if (host->mrq->data && (host->mrq->data->blksz & 3)) {
->  		if (host->caps.need_blksz_mul_4) {
->  			cmd->error = -EINVAL;
-> -			host->need_reset = 1;
-> +			host->need_reset = true;
->  		}
->  	} else
->  		cmd->error = 0;
-> @@ -2396,45 +2396,45 @@ static void atmci_get_cap(struct atmel_mci *host)
->  	dev_info(&host->pdev->dev,
->  			"version: 0x%x\n", version);
->  
-> -	host->caps.has_dma_conf_reg = 0;
-> -	host->caps.has_pdc = 1;
-> -	host->caps.has_cfg_reg = 0;
-> -	host->caps.has_cstor_reg = 0;
-> -	host->caps.has_highspeed = 0;
-> -	host->caps.has_rwproof = 0;
-> -	host->caps.has_odd_clk_div = 0;
-> -	host->caps.has_bad_data_ordering = 1;
-> -	host->caps.need_reset_after_xfer = 1;
-> -	host->caps.need_blksz_mul_4 = 1;
-> -	host->caps.need_notbusy_for_read_ops = 0;
-> +	host->caps.has_dma_conf_reg = false;
-> +	host->caps.has_pdc = true;
-> +	host->caps.has_cfg_reg = false;
-> +	host->caps.has_cstor_reg = false;
-> +	host->caps.has_highspeed = false;
-> +	host->caps.has_rwproof = false;
-> +	host->caps.has_odd_clk_div = false;
-> +	host->caps.has_bad_data_ordering = true;
-> +	host->caps.need_reset_after_xfer = true;
-> +	host->caps.need_blksz_mul_4 = true;
-> +	host->caps.need_notbusy_for_read_ops = false;
->  
->  	/* keep only major version number */
->  	switch (version & 0xf00) {
->  	case 0x600:
->  	case 0x500:
-> -		host->caps.has_odd_clk_div = 1;
-> +		host->caps.has_odd_clk_div = true;
->  		/* Fall through */
->  	case 0x400:
->  	case 0x300:
-> -		host->caps.has_dma_conf_reg = 1;
-> -		host->caps.has_pdc = 0;
-> -		host->caps.has_cfg_reg = 1;
-> -		host->caps.has_cstor_reg = 1;
-> -		host->caps.has_highspeed = 1;
-> +		host->caps.has_dma_conf_reg = true;
-> +		host->caps.has_pdc = false;
-> +		host->caps.has_cfg_reg = true;
-> +		host->caps.has_cstor_reg = true;
-> +		host->caps.has_highspeed = true;
->  		/* Fall through */
->  	case 0x200:
-> -		host->caps.has_rwproof = 1;
-> -		host->caps.need_blksz_mul_4 = 0;
-> -		host->caps.need_notbusy_for_read_ops = 1;
-> +		host->caps.has_rwproof = true;
-> +		host->caps.need_blksz_mul_4 = false;
-> +		host->caps.need_notbusy_for_read_ops = true;
->  		/* Fall through */
->  	case 0x100:
-> -		host->caps.has_bad_data_ordering = 0;
-> -		host->caps.need_reset_after_xfer = 0;
-> +		host->caps.has_bad_data_ordering = false;
-> +		host->caps.need_reset_after_xfer = false;
->  		/* Fall through */
->  	case 0x0:
->  		break;
->  	default:
-> -		host->caps.has_pdc = 0;
-> +		host->caps.has_pdc = false;
->  		dev_warn(&host->pdev->dev,
->  				"Unmanaged mci version, set minimum capabilities\n");
->  		break;
-> -- 
-> 2.20.1
-> 
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ drivers/mmc/host/bcm2835.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+index 148414d7f0c9..99f61fd2a658 100644
+--- a/drivers/mmc/host/bcm2835.c
++++ b/drivers/mmc/host/bcm2835.c
+@@ -1357,7 +1357,6 @@ static int bcm2835_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct clk *clk;
+-	struct resource *iomem;
+ 	struct bcm2835_host *host;
+ 	struct mmc_host *mmc;
+ 	const __be32 *regaddr_p;
+@@ -1373,8 +1372,7 @@ static int bcm2835_probe(struct platform_device *pdev)
+ 	host->pdev = pdev;
+ 	spin_lock_init(&host->lock);
+ 
+-	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	host->ioaddr = devm_ioremap_resource(dev, iomem);
++	host->ioaddr = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(host->ioaddr)) {
+ 		ret = PTR_ERR(host->ioaddr);
+ 		goto err;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.20.1
+
