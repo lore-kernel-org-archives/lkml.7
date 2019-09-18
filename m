@@ -2,107 +2,173 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D9DBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:18:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0212AC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5941621670
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CFF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:20:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="CKclyGoB"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="clwgV87r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbfIRHSZ (ORCPT
+        id S1728579AbfIRHUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:18:25 -0400
-Received: from mx1.cock.li ([185.10.68.5]:54117 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726077AbfIRHSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:18:24 -0400
+        Wed, 18 Sep 2019 03:20:05 -0400
+Received: from mout.web.de ([212.227.15.4]:43519 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726077AbfIRHUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 03:20:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1568791161;
+        bh=mZHVM8uPGDHs/8eftxOEninmY5yjMFztwfgfbXzFL/0=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=clwgV87rSvVCe4yBu+Jge0mozWO5w7oV8oHj8hQNjaanjIWt6MSUQNdDT35ls+YL9
+         jH0gr017PY9a/sJufEx0wIwQLZrGHFWJtJiQ0PN3UHONt7foo/S0QGckA3v1tlcG+O
+         1NqfhoZVMLt6X/toBlkmmqJ+6N79lpHxCcRM6ZvE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.244.2.101]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MJCAc-1iDE4B0BSM-002ldM; Wed, 18
+ Sep 2019 09:19:21 +0200
+To:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Matt Mackall <mpm@selenic.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] hwrng: iproc-rng200 - Use devm_platform_ioremap_resource() in
+ iproc_rng200_probe()
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Message-ID: <0ecb0679-0558-6cbe-af2f-6ee9122a4a7e@web.de>
+Date:   Wed, 18 Sep 2019 09:19:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1568791101; bh=jQ6BPQQtLCvIveIWCDJZB1auaV4iY75zRl3ywPF9Vz4=;
-        h=Date:From:To:Subject:From;
-        b=CKclyGoBo59dpOiV4eD4iWTH3Dqjn6JwDNLm6Zur/w13CYfy5hKgIXQBf8Or9e88O
-         BD6/pTr9gxdzp2cYfUBQrF1z1p3jLvFe8k7p2xS+ZAsDsyG/v/RUFCc7FhLjqxocQR
-         nvv+8732HedQ0YVMI1VMSmluhVp5J6eNxhigFbgugRhKjoV8RY6+1Pvpki3ZG1enBn
-         aZfLrKnnXKEUiL30oVDEYElmWis7VvP85aQFWKujoFq+F2ClTwPIK59dJBdCSKaD5v
-         py57SD8ZLMW0NiWHmZLz3el7tcEmEubZrOdMUhW/Ilbg17FXsxN/WDSmOymq2ih/pQ
-         jR/HSiD9oXXJA==
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 18 Sep 2019 07:18:21 +0000
-From:   gameonlinux@redchan.it
-To:     rms@gnu.org, linux-kernel@vger.kernel.org
-Subject: SFConservancy attacks RMS. - SFConservancy: GO TO HELL
-Message-ID: <116744a32ae4963b8552946534c21864@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:zG8nKyPeoG1/iJ+5zOtkf9tAVKXpcEu5K+KWWYLMFoZOYR7Ez8v
+ N4j65B4sScGyu9JK7VDecxkHLIGUT+tL8ZB+LBkZTotbsvc5r0j9QXZg0RCfnrg8Z6QmjAD
+ QmJt38QtOFg6zcDjAvB04EjzxH2s+05nFXcHsnomSsoLTWcIkDv0fuPrzSG9uhb4Waf3ev5
+ TJ08bLOVXuwYw/B/365Bw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:knI0/qaWLC4=:N8e0l9Ha1V57NqnYsDncV8
+ RAEs8wW1kF4fj8UeQQojzpV1ea+OIXrWgJ7yWUM7uK8dTbzLLbd4tiM3bxaHZNMy2zSRvBcXe
+ 504dxKZJMvj3D+I4s9R5dv8BPqD+kslPL652e75ZPSPEO3UEsx7JEugauzzh7a1oQkLEGRM0E
+ qBdnQ/g8fJMAGoneYVD/oD3WMmsN+8p/4nzU/tirwRRFeZ64OPJHkqALoILiIFX/RgscmtSZh
+ ds1ExTBdPfujtUHrZ5aReWyY3A9qOobH/c6Gif5Cj1z4mT3DxhevrT99OCO1Sb/3hwGHmTFjj
+ wyp2bWz1I4KSqp3EQZAKtywiv+iNfOuRt7/ZH52hXnODC/WEy7Qe+qjUYjs/0qVrZu9xVG4+M
+ D1wq7ENrA6AA2OxROwHh+RO20NOhUZv/H0Yn6F7tmR3VGP5P573cvSe54332xBDt0SkUx/sH3
+ PT1JL0yKr2ofdkIujyqle9U11VHZkNNPyVHlSymilNRlW0EYXDZtw3tC3jQeLqavLPHHyVx1N
+ U94CbAI12TrIp/bJbTzWsqlNWgG2dGNjPibDewJ+R9JG9IRsA0pLb1FlZuE0xN69BQegInj0R
+ TxqHc+dsUSnLF6qrBRqb2rDMD/qRilTxUSwawIm1c+MGxPmB6nYzsCtrVdeZKaKSO5NXBYts5
+ ghGH3PYhtM4fat3fkSLaZoLkw5MgNfrpA2WfohDoHPHeOL+onF1oT4zou/z0ftAJDJG5cx43l
+ mZxa4bs2Kq5M28A2bsD3Ap7m7oD3MHeOfQnjxcAMBGIHOrQ73QmS8b5lTIXX+ESc0jE0yhjVy
+ wbUrSTwS5hjMShAWahVaUl6m5ORpbp2v38RYRxoD7FPQ0eKREAnj9xHbuSd7use90n24pDbFM
+ oZ0x5M21ZIylUrK/MmMzVewaMBOL6gtziW/nwU+CqiTDuyWXvNiD39GTPtpc2Z0WQjXZjH17H
+ 9MFLisgz9DpR9cLxAHiq6pf/BHI6Mh+tOUCi5iHJL0icUCaRUdl9BngADvnaaEuPFmcl17DrX
+ 9ZLyc1Q5T9sZ2UEy+Sg9AaqSfqkKpZQcqQcMV3EQDKz98h4QQYYjh9ivAN1HZYRfLkB5crjkQ
+ 2iElmVmRwrlE6f/qII76HDznnAlJcoqDDiCWMCghas0xS0g1XcqSlAtsIsgrlkCtyFYLWr9PI
+ bW7sdCh8Wl9y9xtoQzY3XWg9e7hdYvYu14qon39FzeX7meMzhDz5pMLG0bQJJEcCROUN64xbL
+ 1XeTBCCKPUlhf9G5YoDeIesK1JSa2OnjtpobswWzfUSipr05PwQZyD8F5DyQ=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Software Freedom Conservancy
-‏>Verified account @conservancy
-> 
-> The fight for diversity, equality and inclusion is the fight for 
-> software freedom. Our movement will only be successful
-> if it includes everyone. RMS does not speak for these values.
-> twitter.com/conservancy/status/1173603417769545734
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Wed, 18 Sep 2019 09:09:22 +0200
 
-Dear SFConservancy. You might not understand the lawyer-speak, being 
-headed for the longest time by a mere techie (ie: one who thinks arrays 
-are a "necessary language tool"), but Free licenses are Revocable from 
-free-takers.
+Simplify this function implementation by using a known wrapper function.
 
-Keep attacking the men who created the software and the men will 
-eventually move to revoke your gratis licenses of their copyrighted 
-works and burn the legal framework of Free Software to the ground (a 
-framework that relies mostly on ignorance of the vagaries of copyright 
-and licensing law).
+This issue was detected by using the Coccinelle software.
 
-Look, Free Software world, I told you a decade ago NOT to invite random 
-women and non-techies into your world: you will gain nothing and they 
-will set themselves up as gate keepers to your community.
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/char/hw_random/iproc-rng200.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-They have done so. They just kicked out RMS from his own foundation. Who 
-knows what "GPLv4" will contain now.
-(Not that it matters: you can still revoke free licenses from 
-free-takers regardless of what "terms" were "agreed upon" (no 
-consideration on the part of the taker means no contractual rights to 
-hold the distributee to))
-RMS said absolutely nothing wrong: just things White Women and their 
-golem-like white "men" find offensive.
+diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_rando=
+m/iproc-rng200.c
+index 92be1c0ab99f..899ff25f4f28 100644
+=2D-- a/drivers/char/hw_random/iproc-rng200.c
++++ b/drivers/char/hw_random/iproc-rng200.c
+@@ -181,7 +181,6 @@ static void iproc_rng200_cleanup(struct hwrng *rng)
+ static int iproc_rng200_probe(struct platform_device *pdev)
+ {
+ 	struct iproc_rng200_dev *priv;
+-	struct resource *res;
+ 	struct device *dev =3D &pdev->dev;
+ 	int ret;
 
-(YHWH allows child brides, including in cases of rape (taphas): Devarim 
-chapter 22, verse 28 (Hebrew Masoretic Text: Na'ar (child), Greek 
-Septuagint: Padia (child, root word for paedophile), Latin Vulgate: 
-Puella)
+@@ -190,13 +189,7 @@ static int iproc_rng200_probe(struct platform_device =
+*pdev)
+ 		return -ENOMEM;
 
-It's time to move Free Software and OpenSource out of America. America 
-is the global enemy of all men anyway: why deal with the savages that 
-slaughter countless innocents in the near-east because "they marry young 
-girls, BETTER A MILLSTONE!" etc? Why associate yourself with such evil 
-torturers and murderers that are the Proud American (White) Man (and his 
-female Masters)?
+ 	/* Map peripheral */
+-	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(dev, "failed to get rng resources\n");
+-		return -EINVAL;
+-	}
+-
+-	priv->base =3D devm_ioremap_resource(dev, res);
++	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base)) {
+ 		dev_err(dev, "failed to remap rng regs\n");
+ 		return PTR_ERR(priv->base);
+=2D-
+2.23.0
 
-
-
-> Regarding threats to "CoC" you. - You do have recourse - license 
-> rescission
-lkml.org/lkml/2019/5/9/434
-> For easy to read by lay-people discussions on this topic:
-lkml.org/lkml/2019/5/4/334
-lkml.org/lkml/2019/5/3/698
-lkml.org/lkml/2018/9/20/444
-
-
-> For legal articles and treatises that agree: no consideration from GPL 
-> free-taker, no contract, revocable by the copyright holder:
-scholarship.law.duke.edu/faculty_scholarship/1857/
-www.amazon.com/Open-Source-Licensing-Software-Intellectual/dp/0131487876
-papers.ssrn.com/sol3/papers.cfm?abstract_id=243237
