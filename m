@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98482C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1E7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94A207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1D8421920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:19:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fUltYfIH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S31B2pEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732148AbfIRRT3 (ORCPT
+        id S1732160AbfIRRTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:19:29 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38885 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732112AbfIRRT0 (ORCPT
+        Wed, 18 Sep 2019 13:19:33 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:39138 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732142AbfIRRT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:19:26 -0400
-Received: by mail-pf1-f196.google.com with SMTP id h195so418111pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:19:25 -0700 (PDT)
+        Wed, 18 Sep 2019 13:19:28 -0400
+Received: by mail-pg1-f194.google.com with SMTP id u17so219361pgi.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:19:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0Uy6bHHevUENAulkqSQtPk+BZ1l0ipc3uMDtQFYz2nQ=;
-        b=fUltYfIHMIOjnGd1FS6BZiNa/6sr2uKEIzz7Km04e6IE93VkMueUYltt3JEHNNMed1
-         GQRuxifsOhM9iy6QFfjHwj5jaUiX3QsJHwCb9hKSyT0mAeqdcDs9/ajmOcMrgjTnntfh
-         MuRVkkBgPraBP+jhxCtecPZoou+N86UCV+33hwtlyvZfuoOtA0EbncL9o39XLbqVd6I9
-         3Kg49BtFHgGwGEp4UMyN1ypdjImD87vMg/gWcEbN4c7Q86aX4C3vTbB5HbKi9hjaqPtq
-         2h1Yj5ChS0HnM9jwMmeHYwddXhW14mb+g0jXmXjUb2lJQQov7Qcyp0X7vLD0dfDJ7xdN
-         fnhA==
+        bh=o8jBbFMTRVOLRjVfPalAAvaLLhvjkkI5HoxGIVyvU8o=;
+        b=S31B2pEsbk+z279WHVu2T3GrmYwNDVVVEi/rj5HIvyV6nVgECY/7RfHJ/xSGEt3k8s
+         xShPMHY9cudQDZP2dH2wQvi5BLCnKKfojyVvVTmE40etR2gvyyljlHoYoi6uumzoghtX
+         w9Z9vYHDU4Nr8o77x/MECD8F0zYjEGM0wGFN0W6SV4mPq4kePFnte+jMuBjO+V9Mk2y0
+         PAcA8IRjRYXTcc9rvtEv5ImAlwMDeEupI6jzInysqLqlG72aANz/bomMqQVVysMA8gZM
+         P5q4KvZmbHFyFK1W4gXjZrIhbNXctmumsmzN1F3DphKi2qR0jlIHMwLf4SO12NlkfTlY
+         7LCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0Uy6bHHevUENAulkqSQtPk+BZ1l0ipc3uMDtQFYz2nQ=;
-        b=b7cpB3isz2LtY/ks7HXwygFkmIU+wV5LBifwGyxQuvXtxDjr1uZ7AlPYbXJPec3swi
-         8lid+v5kr2XcGdles7u2+dtPIHdCtUD+Vs906E8O34mpI3MZYFmhvHBdPZMT5ZIbfefi
-         HiOJkGbdDeLSOBA8BiMCVIO3mJJn2yUfytZoZgjCWlSSg9S+NusSform+MVGeXmB/Cx7
-         umQ63VCbXWmvY+SsdovI4/CoRZT5/Qa5QkncJoYAtdXiNWtV8I3L8WYsSv0TySuSm9ws
-         ccm2I9ISCml+fx9npZGxbzp9jaevmk1loi7NHACvWgmFmOCYKtwOfzP/FXBjbu6Jj6rL
-         Ttjg==
-X-Gm-Message-State: APjAAAXhfkFxIY3H10RxwzsousfTHGoRszwzlrM+IhJQ7RpfU7kkzdot
-        3qTWRz/M7FwzE9kAFxXnGmeskA==
-X-Google-Smtp-Source: APXvYqzUBAdLgS6iTt8bHDfY8QFjRB3LWD0ZA7+0XCI2Z/UvIRKaIlHhFvg+rPfjmsmeW771XqxKXg==
-X-Received: by 2002:a62:db84:: with SMTP id f126mr5532642pfg.25.1568827165043;
-        Wed, 18 Sep 2019 10:19:25 -0700 (PDT)
+        bh=o8jBbFMTRVOLRjVfPalAAvaLLhvjkkI5HoxGIVyvU8o=;
+        b=EVpkrskpxYwMaXm+C9HFz4nkfGJYg+Mb3qYNnEPxVDYtNJN3b0iIf9sJNkHzCKqhER
+         fQSiok5uV/+MNj9IquOexTlxPZkLqfnUfvZB/uPCfVktTT1dXpw8L0hrfWIg8qOTb2iF
+         1rvZGuhepjCpueRd6xSv2VYNdzB3hzMiOtSP8wFdpW5IA8npflLPy2CFachbHBc5S8Hd
+         lrp3HCzjZooaRgKjZXLZLElRA0UNDCPW4sSToljMkj4DeurZMavtkLVZUBYQNxRdoBPK
+         R+4yEiUsPIyDFXeI5jiKdXE+fdqMplDwolFiFvr68aCj/VM4QMnjP46K8IW9MgeLEzeh
+         VRJA==
+X-Gm-Message-State: APjAAAWnrAwO66A/3e8NdzaNogHjOFEjVQlToPQXcrT5W46MEeUpAj9j
+        KtlnKALVH/MWumpG9UiQfdhgWw==
+X-Google-Smtp-Source: APXvYqz2NwfyeZRXxm7dgiBTjnJCh8SRsdzqxi1i88kaJsXr+YupiSXjV/8iuycHgXoZ1FvOMMG8Fw==
+X-Received: by 2002:a63:34cb:: with SMTP id b194mr4926065pga.446.1568827167913;
+        Wed, 18 Sep 2019 10:19:27 -0700 (PDT)
 Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id y4sm2614981pjn.19.2019.09.18.10.19.23
+        by smtp.gmail.com with ESMTPSA id y4sm2614981pjn.19.2019.09.18.10.19.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 10:19:24 -0700 (PDT)
+        Wed, 18 Sep 2019 10:19:27 -0700 (PDT)
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -62,9 +62,9 @@ To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
 Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
         linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH 4/6] rpmsg: glink: Fix rpmsg_register_device err handling
-Date:   Wed, 18 Sep 2019 10:19:14 -0700
-Message-Id: <20190918171916.4039-5-bjorn.andersson@linaro.org>
+Subject: [PATCH 6/6] rpmsg: glink: Free pending deferred work on remove
+Date:   Wed, 18 Sep 2019 10:19:16 -0700
+Message-Id: <20190918171916.4039-7-bjorn.andersson@linaro.org>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190918171916.4039-1-bjorn.andersson@linaro.org>
 References: <20190918171916.4039-1-bjorn.andersson@linaro.org>
@@ -73,42 +73,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Lew <clew@codeaurora.org>
-
-The device release function is set before registering with rpmsg. If
-rpmsg registration fails, the framework will call device_put(), which
-invokes the release function. The channel create logic does not need to
-free rpdev if rpmsg_register_device() fails and release is called.
+By just cancelling the deferred rx worker during GLINK instance teardown
+any pending deferred commands are leaked, so free them.
 
 Fixes: b4f8e52b89f6 ("rpmsg: Introduce Qualcomm RPM glink driver")
 Cc: stable@vger.kernel.org
-Signed-off-by: Chris Lew <clew@codeaurora.org>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/rpmsg/qcom_glink_native.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index 21fd2ae5f7f1..89e02baea2d0 100644
+index 0d7518a6ebf0..5920432e697a 100644
 --- a/drivers/rpmsg/qcom_glink_native.c
 +++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1423,15 +1423,13 @@ static int qcom_glink_rx_open(struct qcom_glink *glink, unsigned int rcid,
- 
- 		ret = rpmsg_register_device(rpdev);
- 		if (ret)
--			goto free_rpdev;
-+			goto rcid_remove;
- 
- 		channel->rpdev = rpdev;
+@@ -1562,6 +1562,18 @@ static void qcom_glink_work(struct work_struct *work)
  	}
+ }
  
- 	return 0;
++static void qcom_glink_cancel_rx_work(struct qcom_glink *glink)
++{
++	struct glink_defer_cmd *dcmd;
++	struct glink_defer_cmd *tmp;
++
++	/* cancel any pending deferred rx_work */
++	cancel_work_sync(&glink->rx_work);
++
++	list_for_each_entry_safe(dcmd, tmp, &glink->rx_queue, node)
++		kfree(dcmd);
++}
++
+ struct qcom_glink *qcom_glink_native_probe(struct device *dev,
+ 					   unsigned long features,
+ 					   struct qcom_glink_pipe *rx,
+@@ -1640,7 +1652,7 @@ void qcom_glink_native_remove(struct qcom_glink *glink)
+ 	unsigned long flags;
  
--free_rpdev:
--	kfree(rpdev);
- rcid_remove:
- 	spin_lock_irqsave(&glink->idr_lock, flags);
- 	idr_remove(&glink->rcids, channel->rcid);
+ 	disable_irq(glink->irq);
+-	cancel_work_sync(&glink->rx_work);
++	qcom_glink_cancel_rx_work(glink);
+ 
+ 	ret = device_for_each_child(glink->dev, NULL, qcom_glink_remove_device);
+ 	if (ret)
 -- 
 2.18.0
 
