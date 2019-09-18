@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB644C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D760C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7CB121906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286FF21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788189;
-	bh=VuHNiLvCe8DWb60mOj+Qp0dPZ5HLt47rLlkOTRkmYR8=;
+	s=default; t=1568788196;
+	bh=7HJG+tyke0aMUoyf9Jd+F8sWEbOTMi+IfHKsAHxKB3w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NeTy4+0Ea5APU9y0Mbb8Oqjy1+Ks0ztdcxPKyEH8NFCSfcypiTvm6KU/WvUQgzI3j
-	 q/xPm+OvaMndFR7DlHrkUSsg644g/SrV30grBprnOgEdxtVgJcfw0lH3aSSFNGYWa1
-	 X54MfRnrrIiq/nN4aR8jf5BueHWUAArUWVncJpTM=
+	b=AC1BHjAinZ4nDrvytfw36QhrSd+J14y6avWXIIQ2y2bz/+XcW9fjGgfXSkcKKKByc
+	 5SdzwtdJHmoNgg7Wk7G/RVYC2ytxOZcCbOKjKtaLRneKivE9vqDUME2Fxix2qRxKe+
+	 AD+lwLocYD3zm6IRvpjCby/qxYlN7WO/Tt2vpkvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfIRGZj (ORCPT
+        id S1730050AbfIRGZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46598 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727598AbfIRGZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:33 -0400
+        id S1729345AbfIRGZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40F4A21920;
-        Wed, 18 Sep 2019 06:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58AF821924;
+        Wed, 18 Sep 2019 06:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787932;
-        bh=VuHNiLvCe8DWb60mOj+Qp0dPZ5HLt47rLlkOTRkmYR8=;
+        s=default; t=1568787919;
+        bh=7HJG+tyke0aMUoyf9Jd+F8sWEbOTMi+IfHKsAHxKB3w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aYdGR7MV0PA9RVTbljLKzcxgtoh+/bifvRA/NHoRq+bsgLFWU6uJgE0WUU2bWgh4+
-         G6Hw9DJwBbpsGZsschom4t5NdFv0jASrNhMjrgaeovFT6waws70MipKxZmd5A290at
-         r6QrcBkVAD0qTDQNPrb1/Fx9e8GcOHU8EzoGqwEw=
+        b=0NFQBDEmuYAFm3EByUGNC6mET7y5UKh3vxl+Z/qLAXVoWJMiPriOI6/qpPIjoi5TI
+         jIgoIFwgiB0oyAfo6bgrsr6bzAO413mINL/SDyXFyx6IbW/aJtVTJJKF46AHS0v7/G
+         NPe1UcSb0wmVywkCNZgc2zgbz/PflltHAK1DKZvk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matt Turner <mattst88@gmail.com>,
-        Anatoly Pugachev <matorola@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.2 36/85] ipc: fix sparc64 ipc() wrapper
-Date:   Wed, 18 Sep 2019 08:18:54 +0200
-Message-Id: <20190918061235.288080697@linuxfoundation.org>
+        stable@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH 5.2 31/85] mmc: tmio: Fixup runtime PM management during remove
+Date:   Wed, 18 Sep 2019 08:18:49 +0200
+Message-Id: <20190918061235.139292345@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,188 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
 
-commit fb377eb80c80339b580831a3c0fcce34a4c9d1ad upstream.
+commit 87b5d602a1cc76169b8d81ec2c74c8d95d9350dc upstream.
 
-Matt bisected a sparc64 specific issue with semctl, shmctl and msgctl
-to a commit from my y2038 series in linux-5.1, as I missed the custom
-sys_ipc() wrapper that sparc64 uses in place of the generic version that
-I patched.
+Accessing the device when it may be runtime suspended is a bug, which is
+the case in tmio_mmc_host_remove(). Let's fix the behaviour.
 
-The problem is that the sys_{sem,shm,msg}ctl() functions in the kernel
-now do not allow being called with the IPC_64 flag any more, resulting
-in a -EINVAL error when they don't recognize the command.
-
-Instead, the correct way to do this now is to call the internal
-ksys_old_{sem,shm,msg}ctl() functions to select the API version.
-
-As we generally move towards these functions anyway, change all of
-sparc_ipc() to consistently use those in place of the sys_*() versions,
-and move the required ksys_*() declarations into linux/syscalls.h
-
-The IS_ENABLED(CONFIG_SYSVIPC) check is required to avoid link
-errors when ipc is disabled.
-
-Reported-by: Matt Turner <mattst88@gmail.com>
-Fixes: 275f22148e87 ("ipc: rename old-style shmctl/semctl/msgctl syscalls")
 Cc: stable@vger.kernel.org
-Tested-by: Matt Turner <mattst88@gmail.com>
-Tested-by: Anatoly Pugachev <matorola@gmail.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/sparc/kernel/sys_sparc_64.c |   33 ++++++++++++++++++---------------
- include/linux/syscalls.h         |   19 +++++++++++++++++++
- ipc/util.h                       |   25 ++-----------------------
- 3 files changed, 39 insertions(+), 38 deletions(-)
+ drivers/mmc/host/tmio_mmc_core.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/sparc/kernel/sys_sparc_64.c
-+++ b/arch/sparc/kernel/sys_sparc_64.c
-@@ -336,25 +336,28 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int,
- {
- 	long err;
+--- a/drivers/mmc/host/tmio_mmc_core.c
++++ b/drivers/mmc/host/tmio_mmc_core.c
+@@ -1284,12 +1284,11 @@ void tmio_mmc_host_remove(struct tmio_mm
+ 	struct platform_device *pdev = host->pdev;
+ 	struct mmc_host *mmc = host->mmc;
  
-+	if (!IS_ENABLED(CONFIG_SYSVIPC))
-+		return -ENOSYS;
++	pm_runtime_get_sync(&pdev->dev);
 +
- 	/* No need for backward compatibility. We can start fresh... */
- 	if (call <= SEMTIMEDOP) {
- 		switch (call) {
- 		case SEMOP:
--			err = sys_semtimedop(first, ptr,
--					     (unsigned int)second, NULL);
-+			err = ksys_semtimedop(first, ptr,
-+					      (unsigned int)second, NULL);
- 			goto out;
- 		case SEMTIMEDOP:
--			err = sys_semtimedop(first, ptr, (unsigned int)second,
-+			err = ksys_semtimedop(first, ptr, (unsigned int)second,
- 				(const struct __kernel_timespec __user *)
--					     (unsigned long) fifth);
-+					      (unsigned long) fifth);
- 			goto out;
- 		case SEMGET:
--			err = sys_semget(first, (int)second, (int)third);
-+			err = ksys_semget(first, (int)second, (int)third);
- 			goto out;
- 		case SEMCTL: {
--			err = sys_semctl(first, second,
--					 (int)third | IPC_64,
--					 (unsigned long) ptr);
-+			err = ksys_old_semctl(first, second,
-+					      (int)third | IPC_64,
-+					      (unsigned long) ptr);
- 			goto out;
- 		}
- 		default:
-@@ -365,18 +368,18 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int,
- 	if (call <= MSGCTL) {
- 		switch (call) {
- 		case MSGSND:
--			err = sys_msgsnd(first, ptr, (size_t)second,
-+			err = ksys_msgsnd(first, ptr, (size_t)second,
- 					 (int)third);
- 			goto out;
- 		case MSGRCV:
--			err = sys_msgrcv(first, ptr, (size_t)second, fifth,
-+			err = ksys_msgrcv(first, ptr, (size_t)second, fifth,
- 					 (int)third);
- 			goto out;
- 		case MSGGET:
--			err = sys_msgget((key_t)first, (int)second);
-+			err = ksys_msgget((key_t)first, (int)second);
- 			goto out;
- 		case MSGCTL:
--			err = sys_msgctl(first, (int)second | IPC_64, ptr);
-+			err = ksys_old_msgctl(first, (int)second | IPC_64, ptr);
- 			goto out;
- 		default:
- 			err = -ENOSYS;
-@@ -396,13 +399,13 @@ SYSCALL_DEFINE6(sparc_ipc, unsigned int,
- 			goto out;
- 		}
- 		case SHMDT:
--			err = sys_shmdt(ptr);
-+			err = ksys_shmdt(ptr);
- 			goto out;
- 		case SHMGET:
--			err = sys_shmget(first, (size_t)second, (int)third);
-+			err = ksys_shmget(first, (size_t)second, (int)third);
- 			goto out;
- 		case SHMCTL:
--			err = sys_shmctl(first, (int)second | IPC_64, ptr);
-+			err = ksys_old_shmctl(first, (int)second | IPC_64, ptr);
- 			goto out;
- 		default:
- 			err = -ENOSYS;
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -1397,4 +1397,23 @@ static inline unsigned int ksys_personal
- 	return old;
- }
+ 	if (host->pdata->flags & TMIO_MMC_SDIO_IRQ)
+ 		sd_ctrl_write16(host, CTL_TRANSACTION_CTL, 0x0000);
  
-+/* for __ARCH_WANT_SYS_IPC */
-+long ksys_semtimedop(int semid, struct sembuf __user *tsops,
-+		     unsigned int nsops,
-+		     const struct __kernel_timespec __user *timeout);
-+long ksys_semget(key_t key, int nsems, int semflg);
-+long ksys_old_semctl(int semid, int semnum, int cmd, unsigned long arg);
-+long ksys_msgget(key_t key, int msgflg);
-+long ksys_old_msgctl(int msqid, int cmd, struct msqid_ds __user *buf);
-+long ksys_msgrcv(int msqid, struct msgbuf __user *msgp, size_t msgsz,
-+		 long msgtyp, int msgflg);
-+long ksys_msgsnd(int msqid, struct msgbuf __user *msgp, size_t msgsz,
-+		 int msgflg);
-+long ksys_shmget(key_t key, size_t size, int shmflg);
-+long ksys_shmdt(char __user *shmaddr);
-+long ksys_old_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
-+long compat_ksys_semtimedop(int semid, struct sembuf __user *tsems,
-+			    unsigned int nsops,
-+			    const struct old_timespec32 __user *timeout);
-+
- #endif
---- a/ipc/util.h
-+++ b/ipc/util.h
-@@ -276,29 +276,7 @@ static inline int compat_ipc_parse_versi
- 	*cmd &= ~IPC_64;
- 	return version;
- }
--#endif
+-	if (!host->native_hotplug)
+-		pm_runtime_get_sync(&pdev->dev);
 -
--/* for __ARCH_WANT_SYS_IPC */
--long ksys_semtimedop(int semid, struct sembuf __user *tsops,
--		     unsigned int nsops,
--		     const struct __kernel_timespec __user *timeout);
--long ksys_semget(key_t key, int nsems, int semflg);
--long ksys_old_semctl(int semid, int semnum, int cmd, unsigned long arg);
--long ksys_msgget(key_t key, int msgflg);
--long ksys_old_msgctl(int msqid, int cmd, struct msqid_ds __user *buf);
--long ksys_msgrcv(int msqid, struct msgbuf __user *msgp, size_t msgsz,
--		 long msgtyp, int msgflg);
--long ksys_msgsnd(int msqid, struct msgbuf __user *msgp, size_t msgsz,
--		 int msgflg);
--long ksys_shmget(key_t key, size_t size, int shmflg);
--long ksys_shmdt(char __user *shmaddr);
--long ksys_old_shmctl(int shmid, int cmd, struct shmid_ds __user *buf);
+ 	dev_pm_qos_hide_latency_limit(&pdev->dev);
  
--/* for CONFIG_ARCH_WANT_OLD_COMPAT_IPC */
--long compat_ksys_semtimedop(int semid, struct sembuf __user *tsems,
--			    unsigned int nsops,
--			    const struct old_timespec32 __user *timeout);
--#ifdef CONFIG_COMPAT
- long compat_ksys_old_semctl(int semid, int semnum, int cmd, int arg);
- long compat_ksys_old_msgctl(int msqid, int cmd, void __user *uptr);
- long compat_ksys_msgrcv(int msqid, compat_uptr_t msgp, compat_ssize_t msgsz,
-@@ -306,6 +284,7 @@ long compat_ksys_msgrcv(int msqid, compa
- long compat_ksys_msgsnd(int msqid, compat_uptr_t msgp,
- 		       compat_ssize_t msgsz, int msgflg);
- long compat_ksys_old_shmctl(int shmid, int cmd, void __user *uptr);
--#endif /* CONFIG_COMPAT */
-+
-+#endif
+ 	mmc_remove_host(mmc);
+@@ -1298,6 +1297,8 @@ void tmio_mmc_host_remove(struct tmio_mm
+ 	tmio_mmc_release_dma(host);
  
- #endif
+ 	pm_runtime_dont_use_autosuspend(&pdev->dev);
++	if (host->native_hotplug)
++		pm_runtime_put_noidle(&pdev->dev);
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ }
 
 
