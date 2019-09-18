@@ -2,72 +2,125 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62364C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7727DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:40:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34DB1208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2169A208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:40:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="t0sHHbkP"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="Ztvd/Sqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfIRNki (ORCPT
+        id S1731060AbfIRNkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:40:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46922 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfIRNkh (ORCPT
+        Wed, 18 Sep 2019 09:40:41 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38445 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbfIRNkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:40:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1vgoCsT0xO+Rn0pklazhNMvrKBUV1W3s56aPAfmOcsg=; b=t0sHHbkPpIo/HUcrOE6fruK/7
-        4FJLr13BgWmHp/DVqbXnyy1jTgfoGRtLlhx85IH69rVWow/hNGOgPhAsgys/vfYYlZN+P7d7dpIqQ
-        c8HyieCSr2f/y6XLy/ZPU74g8IgR0vI5WeqmHrRItXMqhCm1i74hG3TZ5UMjupSPg/PNWtBSbKOVc
-        waYDmgdd8unQsSezDki4aUVdRJtuYnTPmnG41y0PgQ33IiHPua8AhJZFQdziQRy3DDvwHYebFHg3V
-        dXABWys0mZMPAofRKgUXPGLK5rMJsIqSiR5SA1sU2JsLUSjhVu28FcbwSIKcIw6qsxxI0hV63g82j
-        8AipFOU/Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iAaBt-0006wS-Re; Wed, 18 Sep 2019 13:40:17 +0000
-Date:   Wed, 18 Sep 2019 06:40:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        hch@infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v1 0/4] powerpc: Add support for GENERIC_EARLY_IOREMAP
-Message-ID: <20190918134017.GA22027@infradead.org>
-References: <cover.1568295907.git.christophe.leroy@c-s.fr>
+        Wed, 18 Sep 2019 09:40:40 -0400
+Received: by mail-io1-f67.google.com with SMTP id k5so16230839iol.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 06:40:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ATuX8EIOxlpSwdyBiZYQlv1azss4zE5wSKwxCtolCdI=;
+        b=Ztvd/SqnlNDBgL+KDRGV+FRvBx5glU46mX94XgrT3UH+kjAMAeFCUQUB31kfRa+cDF
+         haZ0otJGgvTf/K9cJmHvRlS+hKi9MSIRMPn4RuAEfdepH4HYFKUXbZ3FRKqObTH9Uw3/
+         QDH0ivFlviTUhy2mu+Crd92Eot2PvGscRg7Ck=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ATuX8EIOxlpSwdyBiZYQlv1azss4zE5wSKwxCtolCdI=;
+        b=TVIb+RmRHIAYO3YXURyAkT9Vb4pL7NuODOkGxOYq/Hfb126OuPC7CW81NfMuPQWY5H
+         zJeNtTVx7DQ4x2mR7E8VgrFiDLuw/OWbZuJLWTRuhIMx5igaFmCU+ywgYStKEPCqJBQq
+         xTipgS99FKYQ5ZIrP3twL87zRX2tfpAICrAMMFxJvYlr8ng5q/GQssBx0Tb8UVJdxoSu
+         ijOwOgeUAcmzJC229BUy/Dzd4sm3etKoGJ7/n7+Jo+4EA4qwZ/53C1X7K8tyQ2fbWwfb
+         3Zj3ON+jzjySGforps6tBXeIU0/sqQfxSm59ZV//pqYtZeC1XSOf5JFv3kwDTZt5ihD0
+         OQ+w==
+X-Gm-Message-State: APjAAAVBs/nLLlBynM4D+YohJpafxwFtCOEYKSoLf4BLmqYtaOY1t8WQ
+        Jy8Rd6Gk9H4/viWkVHsVeHdeKnwbui9jzTAHfIIgIQ==
+X-Google-Smtp-Source: APXvYqwkARifyRHf1YCC3t6qp1ghAXswoFF1Gj2kUefz8lsvcOfTKUMbWbx3+tGYozwtOMEnjHdeTY5LtlPZlydkDdE=
+X-Received: by 2002:a6b:3b94:: with SMTP id i142mr5056239ioa.212.1568814039180;
+ Wed, 18 Sep 2019 06:40:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1568295907.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190912141931.30819-1-mszeredi@redhat.com> <20190918084651-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20190918084651-mutt-send-email-mst@kernel.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 18 Sep 2019 15:40:27 +0200
+Message-ID: <CAJfpegsUEOyUsiNPMaoXCqpoF236mu=DqOvZgqqOE4x1WDLTXw@mail.gmail.com>
+Subject: Re: [PATCH v6] virtio-fs: add virtiofs filesystem
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Miklos Szeredi <mszeredi@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 12, 2019 at 01:49:40PM +0000, Christophe Leroy wrote:
-> This series adds support for GENERIC_EARLY_IOREMAP on powerpc.
-> 
-> It also adds a warning in the standard ioremap() when it's called
-> before vmalloc is available in order to help locate those users.
-> 
-> Next step will be to incrementaly migrate all early users of
-> ioremap() to using early_ioremap() or other method.
-> 
-> Once they are all converted we can drop all the logic
-> behind ioremap_bot.
+On Wed, Sep 18, 2019 at 2:57 PM Michael S. Tsirkin <mst@redhat.com> wrote:
 
-Thanks, this looks pretty nice!
+> Overall this looks ok to me. Handling full vq by a timer is really gross
+> but it's correct - just terribly inefficient.
+
+Yes.  The reason this didn't get too much attention is that it's
+relatively difficult to make the queues actually fill up (which is a
+good thing).
+
+But this should definitely be one of the first things to be cleaned up...
+
+>  I think you should add a
+> MAINTAINERS entry though, we want
+> virtualization@lists.linux-foundation.org Cc'd on patches.
+
+Already done in the documentation patch (which I didn't resend, but
+you should find the v5 version in your mailbox).
+
+> With that corrected:
+>
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+>
+> Who's going to merge this? Miklos do you want to merge it yourself?
+
+I'll merge this since it depends on the rest of the fuse queue.
+
+> > +     /**
+> > +      * Cleanup up when fuse_iqueue is destroyed
+>
+> Cleanup up -> Clean up
+
+Fixed.
+
+> > + * virtio-fs: Virtio Filesystem
+> > + * Copyright (C) 2018 Red Hat, Inc.
+>
+>
+> 2019 at this point?
+
+I'd consider the creation year okay for this.  These copyright notices
+don't seem to be kept up to date, and don't need to, since the SOB
+procedure allows for fine-grained tracking of authorship.
+
+> > +     /* After holding mutex, make sure virtiofs device is still there.
+> > +      * Though we are holding a refernce to it, drive ->remove might
+>
+> refernce -> reference
+
+Fixed.
+
+Changes, with your ack pushed to:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse.git#for-next
+
+Thanks,
+Miklos
