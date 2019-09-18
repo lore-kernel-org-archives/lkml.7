@@ -2,175 +2,136 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F480C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D7DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC17021925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:26:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5425521920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568838393;
-	bh=b121uJlnZpdyC7nWhbV1OT40vYybgUmU7vaeAm0qmvQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Favm8mk7bTjVm3gs4UiPpJ31d1X5NTm1wb6VqYq8R9s//0PY67jXRrnCJcPy28Vai
-	 680TZIbthGYeFbEYZxhbcHK8a3a/fG5fKys09zSbGc21Q+Y1nngD3NF4qnIov1kKRL
-	 xdv9jYX5LgVYb+xtiLtCP1xnI/G91GrRiTIdFDCY=
+	s=default; t=1568838421;
+	bh=iWz1hc+UBJTCvZLLe/HKUYvdmjhb8Mua+uTJchCNsHs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Vyd2+/awkViU7gwtQ/lceSQusV98vrow2ReGYMqsRRqKhOoeDMN0rt4g01pCnjpfR
+	 HcuHEE9NSxlOwqIU97Fv4Q1G7CR5NkvYvZ9zm3l7myCN4bHZXj7dm+7MTy8zRzBzV/
+	 jp1NiA++am/tnQ9A2rRAt/WIlnRipy1KsgYTZ/Lg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbfIRU0c (ORCPT
+        id S1731180AbfIRU1A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:26:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730892AbfIRU0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:26:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3505E21897;
-        Wed, 18 Sep 2019 20:26:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568838391;
-        bh=b121uJlnZpdyC7nWhbV1OT40vYybgUmU7vaeAm0qmvQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ji6Q685JYPrNKpsjOaFmL7aCE6IYQUsu0vF+fh8q+iELRyh+c6LKDpw2tDTIGyUXZ
-         JpXQrRAthVSbUZRW4ebSTBGOMD3KwMfgV1f23oTONY+J7Kr25NafVNkcfn/+LAE/sy
-         yw+a4UyoXJPkmcJamdmhBK0tJhuHsolLBm07qaQM=
-Date:   Wed, 18 Sep 2019 22:26:29 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ju Hyung Park <qkrwngud825@gmail.com>
-Cc:     Namjae Jeon <namjae.jeon@samsung.com>, sj1557.seo@samsung.com,
-        devel@driverdev.osuosl.org, linkinjeon@gmail.com,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
-        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] staging: exfat: rebase to sdFAT v2.2.0
-Message-ID: <20190918202629.GA2026850@kroah.com>
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190918195920.25210-1-qkrwngud825@gmail.com>
- <20190918201318.GB2025570@kroah.com>
- <CAD14+f0YeAPxmLbxB5gpJbNyjE1YiDyicBXeodwKN4Wvm_qJwA@mail.gmail.com>
+        Wed, 18 Sep 2019 16:27:00 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:38761 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730892AbfIRU1A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 16:27:00 -0400
+Received: by mail-lf1-f68.google.com with SMTP id u28so633493lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:26:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WA83kKskWDi0wSYWEMANppD1TtU2egtENlabxouEkMs=;
+        b=D7phgcdky5drAnukp4PGzIPILGleUSxw/Oy6UL6EcAOEXsYTKGPslV2lsSMTxEN+mH
+         M3RqihbNDrPkWyIcw/igYnJ1odNGKJcr97829hJnei6qtbXfJEkFQsRdPHCP5ZG4HipW
+         KeCnm0IJheqNUiL0MQFc74cHjOFPY3i9mSC8g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WA83kKskWDi0wSYWEMANppD1TtU2egtENlabxouEkMs=;
+        b=OS1zhOJ9RTYsVsuhNOYYGZNHpqyQ0XB/By/Ln7s+VkIrIzq9qQKOG33wzLAUlhZOBi
+         ZZgiBnfLv6ZK0KuKVAoI5jYszErKLnDVzhQ1E3e8vpUOvbTpRBnF5Fg6VzctKNYpimB6
+         1HfTIi68geVJZZx50t7Ed4mUb+hxUH5pV0qt0oaEHEGzfMxr5tKJkk11n2dJZEgihpLr
+         t/ZCd//sXuBXlDwRLYjMvJxr5Xlc2XrQOtcv11ttK1aS1uNOpGA57o/o4QhmB9o1pMMK
+         bbqpQXIF/vFzNo1s5w4khXGsPoyrH03te055fy6uhOr18ac0WFjuPpSoJz9r2zJq60mm
+         Kv9Q==
+X-Gm-Message-State: APjAAAXP6JNmlhaLQhlKJXe/5w6KifnHmYkr1dwRGevqGvT3QOFBcttJ
+        NPriS5HKxZndv9XBDworlUgT1DWPE+w=
+X-Google-Smtp-Source: APXvYqx3Gmjh2P7R8o6PkP5KdX1/JxbbMrlFjFE+oiAoqpkAtewh93wsSEx37Gz7fQhNDYRQuBuEYg==
+X-Received: by 2002:a19:c7d3:: with SMTP id x202mr3036911lff.124.1568838417682;
+        Wed, 18 Sep 2019 13:26:57 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id i17sm1154319lfj.35.2019.09.18.13.26.55
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 13:26:56 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id t8so590294lfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:26:55 -0700 (PDT)
+X-Received: by 2002:ac2:5c11:: with SMTP id r17mr3099120lfp.61.1568838415644;
+ Wed, 18 Sep 2019 13:26:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD14+f0YeAPxmLbxB5gpJbNyjE1YiDyicBXeodwKN4Wvm_qJwA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org> <20190917052438.GA26923@1wt.eu>
+ <2508489.jOnZlRuxVn@merkaba> <20190917121156.GC6762@mit.edu>
+ <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+ <20190917160844.GC31567@gardel-login> <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
+ <20190917174219.GD31798@gardel-login> <87zhj15qgf.fsf@x220.int.ebiederm.org> <84824f79-2d12-0fd5-5b32-b0360eb075ac@gmail.com>
+In-Reply-To: <84824f79-2d12-0fd5-5b32-b0360eb075ac@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Sep 2019 13:26:39 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
+Message-ID: <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
+Subject: Re: Linux 5.3-rc8
+To:     "Alexander E. Patrakov" <patrakov@gmail.com>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Sep 19, 2019 at 05:22:03AM +0900, Ju Hyung Park wrote:
-> Hi Greg,
-> 
-> On Thu, Sep 19, 2019 at 5:12 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > That's a lot of rewriting :(
-> >
-> > How about at least keeping the file names the same to make it easier to
-> > see what happened here?
-> >
-> > Then send a follow-on patch that just does the rename?
-> 
-> That's still not quite useful tbh, lemme bring the diff stat I wrote
-> in previous email just in case you missed it:
-> <Full diff stat>
->  Kconfig      |   79 +-
->  Makefile     |   46 +-
->  api.c        |  423 ----
->  api.h        |  310 ---
->  blkdev.c     |  409 +---
->  cache.c      | 1142 ++++-----
->  config.h     |   49 -
->  core.c       | 5583 ++++++++++++++++++++++++--------------------
->  core.h       |  196 --
->  core_exfat.c | 1553 ------------
->  exfat.h      | 1309 +++++++----
->  exfat_fs.h   |  417 ----
->  extent.c     |  351 ---
->  fatent.c     |  182 --
->  misc.c       |  401 ----
->  nls.c        |  490 ++--
->  super.c      | 5103 +++++++++++++++++++++-------------------
->  upcase.c     |  740 ++++++
->  upcase.h     |  407 ----
->  version.h    |   29 -
->  xattr.c      |  136 --
->  21 files changed, 8186 insertions(+), 11169 deletions(-)
-> 
-> <diff-filter=M>
->  Kconfig  |   79 +-
->  Makefile |   46 +-
->  blkdev.c |  409 +---
->  cache.c  | 1142 +++++-----
->  core.c   | 5583 ++++++++++++++++++++++++++----------------------
->  exfat.h  | 1309 ++++++++----
->  nls.c    |  490 ++---
->  super.c  | 5103 ++++++++++++++++++++++---------------------
->  8 files changed, 7446 insertions(+), 6715 deletions(-)
-> 
-> These diff stats were taken by removing "exfat_" prefix from the
-> current staging drivers.
-> 
-> But if that's still what you want, I'll do it.
+On Wed, Sep 18, 2019 at 1:15 PM Alexander E. Patrakov
+<patrakov@gmail.com> wrote:
+>
+> No, this is not the solution, if we take seriously not only getrandom
+> hangs, but also urandom warnings. In some setups (root on LUKS is one of
+> them) they happen early in the initramfs. Therefore "restoring" entropy
+> from the previous boot by a script that runs from the main system is too
+> late. That's why it is suggested to load at least a part of the random
+> seed in the boot loader, and that has not been commonly implemented.
 
-It will show easier when you do funny things like take off the
-formatting of the huge tables for no good reason :)
+Honestly, I think the bootloader suggestion is naive and silly too.
 
-> btw, removing "exfat_" prefix from the current one makes more sense imo.
+Yes, we now support it. And no, I don't think people will trust that
+either. And I suspect for good reason: there's really very little
+reason to believe that bootloaders would be any better than any other
+part of the system.
 
-I agree.
+So right now some people trust bootloaders exactly _because_ there
+basically is just one or two that do this, and the people who use them
+are usually the people who wrote them or are at least closely
+associated with them. That will change, and then people will say "why
+would I trust that, when we know of bug Xyz".
 
-> If we add "exfat_" prefix to the new one, we get weird file names like
-> "exfat_core_exfat.c".
+And I guarantee that those bugs _will_ happen, and people will quite
+reasonably then say "yeah, I don't trust the bootloader". Bootloaders
+do some questionable things.
 
-Agreed.
+The most likely thing to actually be somewhat useful is I feel things
+like the kernel just saving the seed by itself in nvram. There's
+already an example of this for the EFI random seed thing, but that's
+used purely for kexec, I think.
 
-> > And by taking something like this, are you agreeing that Samsung will
-> > help out with the development of this code to clean it up and get it
-> > into "real" mergable shape?
-> 
-> Well, I think you got me confused with Namjae.
-> (Yeah Korean names are confusing I know :) )
+Adding an EFI variable (or other platform nonvolatile thing), and
+reading (and writing to it) purely from the kernel ends up being one
+of those things where you can then say "ok, if we trust the platform
+AT ALL, we can trust that". Since you can't reasonably do things like
+add EFI variables to your distro image by mistake.
 
-It was a general ask, that's all :)
+Of course, even then people will say "I don't trust the platform". But
+at some point you just say "you have trust issues" and move on.
 
-> Namjae (or anyone else from Samsung) should answer that, not me.
-> 
-> I just prepared a patch as we were getting nowhere like you mentioned :)
-> 
-> > Also, I can't take this patch for this simple reason alone:
-> > Don't delete SPDX lines :)
-> 
-> Sorry.
-> I'll add that back for v2.
-> 
-> On Thu, Sep 19, 2019 at 5:13 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Thu, Sep 19, 2019 at 04:59:20AM +0900, Park Ju Hyung wrote:
-> > > --- a/drivers/staging/exfat/exfat.h
-> > > +++ b/drivers/staging/exfat/exfat.h
-> > > @@ -1,4 +1,4 @@
-> > > -/* SPDX-License-Identifier: GPL-2.0 */
-> > > +// SPDX-License-Identifier: GPL-2.0-or-later
-> >
-> > You just changed the license of this file.  Are you SURE about that?
-> 
-> The sdFAT code release explicitly states "either version 2 of the
-> License, or (at your option) any later version", so I thought that
-> makes sense:
-> https://github.com/arter97/exfat-linux/commit/d5393c4cbe0e5b50231aacd33d9b5b0ddf46a005
-> 
-> Please correct me if I'm wrong.
-
-That differs from the original exfat code, so something is odd here.  I
-need some sort of clarification from Samsung as to when they changed the
-license in order to be able to relicense these files.
-
-thanks,
-
-greg k-h
+            Linus
