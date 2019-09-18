@@ -2,109 +2,76 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6C6C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5655C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:07:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECC821920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:06:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568808393;
-	bh=EiWNRaKT5YKCl1MF5pVlHDrq82FVL6w4JQ56eo+DjoU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GeQpUMveXrRN8KvXozxUWFtuMIf33vCwSB1wXNNABJuG8yH8Eee/o+4qoIQCTZr0x
-	 uTmq+K92kfRg0f2OFgcXc2rlyATyUsxYrCEAmO3k3jv4OqOh3tfUoVSiz7qUDQamg4
-	 XI7Cv6vS67pCKdl/+jlt93d8FbwSOqqsgCzPSf8A=
+	by mail.kernel.org (Postfix) with ESMTP id AA3A921907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:07:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730640AbfIRMGc (ORCPT
+        id S1730650AbfIRMHD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727095AbfIRMGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:06:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD71C21907;
-        Wed, 18 Sep 2019 12:06:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568808391;
-        bh=EiWNRaKT5YKCl1MF5pVlHDrq82FVL6w4JQ56eo+DjoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YdcH7MB66ggbdWktSVnY3VzHJlS8bsN5IkHUobkxNTzwB1bFEASD8r+TFslycQW8N
-         BFLC3FGMlmZ8A2mhzTwoFsbUqt3ypKVT42WSwsKWVPzRgkDD0v8XlBDEn/wYJBW11k
-         DRC8eYqnPeAv+gO9IyDepuQqQ0GOa0YcBwUwj5Sk=
-Date:   Wed, 18 Sep 2019 14:06:29 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [RFC PATCH 8/9] soundwire: intel: remove platform
- devices and provide new interface
-Message-ID: <20190918120629.GD1901208@kroah.com>
-References: <20190916212342.12578-1-pierre-louis.bossart@linux.intel.com>
- <20190916212342.12578-9-pierre-louis.bossart@linux.intel.com>
- <20190917055512.GE2058532@kroah.com>
- <ab06c0c9-6224-a7b8-51c2-01226f763b98@linux.intel.com>
+        Wed, 18 Sep 2019 08:07:03 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:57092 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbfIRMHD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 08:07:03 -0400
+Received: by mail-io1-f70.google.com with SMTP id n8so10683725ioh.23
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 05:07:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=FSF2twrGv8C9R/LR+gpcvgwHJvITBl5yE80ajwcfqc8=;
+        b=tjFEF69AOSEfOq3g5Ax2rPjNB4iatEihnFiNwZXndgh5NcMAahmq7pZ3btrJL0ht/8
+         pXslIfrFJiserULfOyxcR0q115W6PEZcBUhYrBWTfu6doa+kYViD1n0Cmxuba1m/kkdm
+         GcOlvEZpyzny3t73vcbtz1tJLwJFd9pC6YflovIdyxE1Rar6eP8AAULzt3pGk066/fWj
+         sYN52tcVBG1fEgi4/ZYc1FY5EeqM2jKi2CSIAGT8mREirPziXzMpONXFlYj9tQVP9KRD
+         YO8omuBSJbAr632oJ/ivwkgDj8zxIoMD9oMFbe9WpMLsIYo1U1xdFE+IlJ5TMd8OmXQ8
+         FdAA==
+X-Gm-Message-State: APjAAAWvuHc4wao+zeiJkm0XNYGWud/9UZnVey9dVoPhsm9yZfbFUHQL
+        OfaqRebwu1ypr7gl1Kgg+GWRPYrOsszLDn6kCoFyADzZNvln
+X-Google-Smtp-Source: APXvYqzES4YyS8y/saMw3rpqBpSMCMeoqohImRV7AUnMLaeFyiNo0H/N/+OnqsOmNVhxdEBios6/bgoM8zTK3A3v+hOUj2vp5oOi
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab06c0c9-6224-a7b8-51c2-01226f763b98@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Received: by 2002:a5d:9dd4:: with SMTP id 20mr4838250ioo.1.1568808420767;
+ Wed, 18 Sep 2019 05:07:00 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 05:07:00 -0700
+In-Reply-To: <CAAeHK+xJgJoR9rODcRH74knaRKmEq+DDVarNNwDMT_Vtg+gV2Q@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a400c60592d2ac8f@google.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in ga_probe
+From:   syzbot <syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, benjamin.tissoires@redhat.com,
+        jikos@kernel.org, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        stern@rowland.harvard.edu, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 09:29:52AM -0500, Pierre-Louis Bossart wrote:
-> On 9/17/19 12:55 AM, Greg KH wrote:
-> > On Mon, Sep 16, 2019 at 04:23:41PM -0500, Pierre-Louis Bossart wrote:
-> > > +/**
-> > > + * sdw_intel_probe() - SoundWire Intel probe routine
-> > > + * @parent_handle: ACPI parent handle
-> > > + * @res: resource data
-> > > + *
-> > > + * This creates SoundWire Master and Slave devices below the controller.
-> > > + * All the information necessary is stored in the context, and the res
-> > > + * argument pointer can be freed after this step.
-> > > + */
-> > > +struct sdw_intel_ctx
-> > > +*sdw_intel_probe(struct sdw_intel_res *res)
-> > > +{
-> > > +	return sdw_intel_probe_controller(res);
-> > > +}
-> > > +EXPORT_SYMBOL(sdw_intel_probe);
-> > > +
-> > > +/**
-> > > + * sdw_intel_startup() - SoundWire Intel startup
-> > > + * @ctx: SoundWire context allocated in the probe
-> > > + *
-> > > + */
-> > > +int sdw_intel_startup(struct sdw_intel_ctx *ctx)
-> > > +{
-> > > +	return sdw_intel_startup_controller(ctx);
-> > > +}
-> > > +EXPORT_SYMBOL(sdw_intel_startup);
-> > 
-> > Why are you exporting these functions if no one calls them?
-> 
-> They are used in the next series, see '[RFC PATCH 04/12] ASoC: SOF: Intel:
-> add SoundWire configuration interface'
+Hello,
 
-That wasn't obvious :)
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-Also, why not EXPORT_SYMBOL_GPL()?  :)
+Reported-and-tested-by:  
+syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com
 
-thanks,
+Tested on:
 
-greg k-h
+commit:         f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan.git
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+dashboard link: https://syzkaller.appspot.com/bug?extid=403741a091bf41d4ae79
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=131651c9600000
+
+Note: testing is done by a robot and is best-effort only.
