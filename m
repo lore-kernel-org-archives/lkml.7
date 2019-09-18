@@ -2,92 +2,124 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B163C4CED5
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 04:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A01D9C4CED4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 04:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183CD2189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 04:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFDuX1PX"
+	by mail.kernel.org (Postfix) with ESMTP id 777AF214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 04:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726444AbfIREUt (ORCPT
+        id S1726553AbfIREWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 00:20:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:39262 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfIREUt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 00:20:49 -0400
-Received: by mail-qt1-f193.google.com with SMTP id n7so7288593qtb.6;
-        Tue, 17 Sep 2019 21:20:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YPRk8Ltt/rxBY02wM0hyQQPeWRaW6k6EkP3BDo16FyQ=;
-        b=KFDuX1PXpLWWIazN6/ioyRAch+g6ExS7Mi1eJP7n+2GTjzyKZJXpHxHiZvbfIw5rqQ
-         1FuUiZCchmNjby9OGOw9M3whMMclD2EoqWoAscDh8fcY6oXHkMwHSaBA452+zG+nCQRb
-         G6AwVzYIjyPCVzOxujsBeTapvy5uDNXW7Lud5SzA4ddU9eeMSDN4qeEZoNnXQlZV0m7U
-         jogRvj7v8RswnXcdHb7ERgxyXWUhmPBLRenKC5npsfPo96KaL+haPApMgJT7l+Vddd3I
-         AQGJTK0dDHJ3fUhZk6wGvs+f1jb2kzvIaf1p/d4RnXBoHoktFgw6ujELhd8kXi4oaWmk
-         72QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YPRk8Ltt/rxBY02wM0hyQQPeWRaW6k6EkP3BDo16FyQ=;
-        b=a7hRzDSLhoEvp8mNupDJpYs782IimjQDhqTK60+fti7dCwxpNjlGtX+fJirFCGNl4X
-         m1prQXjUO/MSlsH3gaN4qLHaua7XhBWtBlt3HRmNCiD1NCscYfpdjZLt/86h9ZQUKhdf
-         m1eB/DTfSWs5OpDsta1qhpZXorTMDrWUj6YDOReiXoJ/oaRXxjtDZty5REY70JOASCtu
-         JPKHLA+fX41NDMvRXx2DwtpWYM7zZNOE05/8pVEfaM9/9hNtn+B4pd1Hu9EdSNosgT+L
-         tqRv/SQ1WvwzH8m+ug9ExRNiKS5I7r6NpfgyWKupqXyeWrUlLevFZz3Q1TCfNzPIEjMQ
-         Z6qw==
-X-Gm-Message-State: APjAAAUvtGu2eXEhR7Kr3Ti/x/JIHX+6DtBvISZl9IjHqHMP1aRGK+Tk
-        MV/zxXa9a0qo+gDl/2ANA5g/J6Ar+2zxkmLfW8E=
-X-Google-Smtp-Source: APXvYqxiiKvseCHPfAVRHjwSoUfPxvktprCcCOjau/D3GUt52yYMNjL2XT2qePP6phobolINXgPdQ61WvVbmtjBFu+A=
-X-Received: by 2002:ac8:c01:: with SMTP id k1mr2214859qti.59.1568780446767;
- Tue, 17 Sep 2019 21:20:46 -0700 (PDT)
+        Wed, 18 Sep 2019 00:22:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36096 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725842AbfIREWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 00:22:44 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C9E0C158DB4B75F7F103;
+        Wed, 18 Sep 2019 12:22:41 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Sep 2019
+ 12:22:36 +0800
+To:     <rppt@linux.ibm.com>, <akpm@linux-foundation.org>,
+        <osalvador@suse.de>, <mhocko@suse.co>, <dan.j.williams@intel.com>,
+        <rppt@linux.ibm.com>, <david@redhat.com>,
+        <richardw.yang@linux.intel.com>, <cai@lca.pw>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+Message-ID: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
+Date:   Wed, 18 Sep 2019 12:22:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-11-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190916105433.11404-11-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 Sep 2019 21:20:35 -0700
-Message-ID: <CAEf4BzYzorwyZdmy=2vwuvmACOJoCY5c0EGzDA3n48FXZs1FYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 10/14] samples: bpf: makefile: use target CC
- environment for HDR_PROBE
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> No need in hacking HOSTCC to be cross-compiler any more, so drop
-> this trick and use target CC for HDR_PROBE.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
+Currently, when memblock_find_in_range_node() fail on the exact node, it
+will use %NUMA_NO_NODE to find memblock from other nodes. At present,
+the work is good, but when the large memory is insufficient and the
+small memory is enough, we want to allocate the small memory of this
+node first, and do not need to allocate large memory from other nodes.
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+In sparse_buffer_init(), it will prepare large chunks of memory for page
+structure. The page management structure requires a lot of memory, but
+if the node does not have enough memory, it can be converted to a small
+memory allocation without having to allocate it from other nodes.
+
+Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
+behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
+not allocate from other nodes when a single node fails to allocate.
+
+If large contiguous block memory allocated fail in sparse_buffer_init(),
+it will allocates small block memmory section by section later.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ include/linux/memblock.h | 1 +
+ mm/memblock.c            | 3 ++-
+ mm/sparse.c              | 2 +-
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index f491690..9a81d9c 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+ #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
+ #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+ #define MEMBLOCK_ALLOC_KASAN		1
++#define MEMBLOCK_ALLOC_EXACT_NODE	2
+
+ /* We are using top down, so it is safe to use 0 here */
+ #define MEMBLOCK_LOW_LIMIT 0
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 7d4f61a..dbd52c3c 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+
+ 	/* pump up @end */
+ 	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
++	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
+ 	    end == MEMBLOCK_ALLOC_KASAN)
+ 		end = memblock.current_limit;
+
+@@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+ 	if (found && !memblock_reserve(found, size))
+ 		goto done;
+
+-	if (nid != NUMA_NO_NODE) {
++	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
+ 		found = memblock_find_in_range_node(size, align, start,
+ 						    end, NUMA_NO_NODE,
+ 						    flags);
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 72f010d..828db46 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+ 	sparsemap_buf =
+ 		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+ 						addr,
+-						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
++						MEMBLOCK_ALLOC_EXACT_NODE, nid);
+ 	sparsemap_buf_end = sparsemap_buf + size;
+ }
+
+-- 
+2.7.4.huawei.3
 
 
-[...]
