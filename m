@@ -2,134 +2,139 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B76C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2F5C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74DE021925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568843729;
-	bh=xoCNgIaVFJujXuY913fIPfMihUwfkzPP8T/ZrRQcfJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PDfzVhIkrckXwU2B8okPcxxQvffFhpvTyVRh77k0bRyZf7u3oNwy+15TwTT23bkOu
-	 DLWIQfYwycQY2HEnbiNS1M9LyDcJobg+KEdaVcDTcjH5VQRvEdFO/K+GlvclWa9Pnt
-	 +tGkbKeluQBchkEDgyfgR439oHZ1wty5FDzS3SwM=
+	by mail.kernel.org (Postfix) with ESMTP id C99A521BE5
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:57:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbfIRVz2 (ORCPT
+        id S2388267AbfIRV5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:55:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43460 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732151AbfIRVz2 (ORCPT
+        Wed, 18 Sep 2019 17:57:10 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46989 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732268AbfIRV5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:55:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nnfFIiNieLihG356kpTXZHoPISeQ6pVKSGXwBlR03Wg=; b=fHD0IoldyloezyuQIE3+33mgz
-        a2FRf6PtQPtxgzqevoFWU+haWqndcceRfaeFhzd/7nhQTa0krkKiyT8+9Y/PwE0iseXRu6lt8NJ6W
-        1NDc084MrgSL9rvNCpmRd0+y4/Af7pNYWv0Su+rgqUU9h0OCUfdZ4P0Z6UBHAAOJOu4Pc=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iAhv2-0007ch-4U; Wed, 18 Sep 2019 21:55:24 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 302E72742927; Wed, 18 Sep 2019 22:55:23 +0100 (BST)
-Date:   Wed, 18 Sep 2019 22:55:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-i2c@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the driver-core tree
-Message-ID: <20190918215522.GU2596@sirena.co.uk>
-References: <20190918170952.GT2596@sirena.co.uk>
- <20190918185257.GC1933777@kroah.com>
- <CAHk-=whreYmsU_AQtzDS5gd3yamYJ72gBo+YekYSyJLPQ1Qo-A@mail.gmail.com>
+        Wed, 18 Sep 2019 17:57:09 -0400
+Received: from 79.184.255.25.ipv4.supernova.orange.pl (79.184.255.25) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id b726423193c484be; Wed, 18 Sep 2019 23:57:07 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mario.Limonciello@dell.com
+Cc:     kbusch@kernel.org, axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ryan.Hong@dell.com, Crag.Wang@dell.com, sjg@google.com,
+        Jared.Dominguez@dell.com, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into deepest state
+Date:   Wed, 18 Sep 2019 23:57:07 +0200
+Message-ID: <10489808.bq04Fa26WH@kreacher>
+In-Reply-To: <346fd9ced98e40229d0cc0871ad5ed32@AUSX13MPC105.AMER.DELL.COM>
+References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com> <4858057.cjDlXVALXj@kreacher> <346fd9ced98e40229d0cc0871ad5ed32@AUSX13MPC105.AMER.DELL.COM>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rfwNdt5cNUUjB/69"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whreYmsU_AQtzDS5gd3yamYJ72gBo+YekYSyJLPQ1Qo-A@mail.gmail.com>
-X-Cookie: The devil finds work for idle glands.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday, September 18, 2019 11:43:28 PM CEST Mario.Limonciello@dell.com wrote:
+> > -----Original Message-----
+> > From: Rafael J. Wysocki <rjw@rjwysocki.net>
+> > Sent: Wednesday, September 18, 2019 4:31 PM
+> > To: Limonciello, Mario
+> > Cc: Keith Busch; Jens Axboe; Christoph Hellwig; Sagi Grimberg; linux-
+> > nvme@lists.infradead.org; LKML; Hong, Ryan; Wang, Crag; sjg@google.com;
+> > Dominguez, Jared; Linux PCI; Linux PM
+> > Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into deepest
+> > state
+> > 
+> > 
+> > [EXTERNAL EMAIL]
+> > 
+> > On Thursday, September 12, 2019 1:42:33 AM CEST Mario Limonciello wrote:
+> > > The action of saving the PCI state will cause numerous PCI configuration
+> > > space reads which depending upon the vendor implementation may cause
+> > > the drive to exit the deepest NVMe state.
+> > >
+> > > In these cases ASPM will typically resolve the PCIe link state and APST
+> > > may resolve the NVMe power state.  However it has also been observed
+> > > that this register access after quiesced will cause PC10 failure
+> > > on some device combinations.
+> > >
+> > > To resolve this, move the PCI state saving to before SetFeatures has been
+> > > called.  This has been proven to resolve the issue across a 5000 sample
+> > > test on previously failing disk/system combinations.
+> > 
+> > This sounds reasonable to me, but it would be nice to CC that to linux-pm
+> > and/or linux-pci too.
+> > 
+> > > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > > ---
+> > >  drivers/nvme/host/pci.c | 13 +++++++------
+> > >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > > index 732d5b6..9b3fed4 100644
+> > > --- a/drivers/nvme/host/pci.c
+> > > +++ b/drivers/nvme/host/pci.c
+> > > @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
+> > >  	if (ret < 0)
+> > >  		goto unfreeze;
+> > >
+> > > +	/*
+> > > +	 * A saved state prevents pci pm from generically controlling the
+> > > +	 * device's power. If we're using protocol specific settings, we don't
+> > > +	 * want pci interfering.
+> > > +	 */
+> > > +	pci_save_state(pdev);
+> > > +
+> > >  	ret = nvme_set_power_state(ctrl, ctrl->npss);
+> > >  	if (ret < 0)
+> > >  		goto unfreeze;
+> > > @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
+> > 
+> > This is the case in which the PCI layer is expected to put the device into
+> > D3, so you need
+> > 
+> > pdev->state_saved = 0;
+> > 
+> > at this point, because you have saved the config space already.
+> > 
+> > >  		ret = 0;
+> > >  		goto unfreeze;
+> > 
+> > And here you don't need to jump to "unfreeze" any more.
+> > 
+> > >  	}
+> > > -	/*
+> > > -	 * A saved state prevents pci pm from generically controlling the
+> > > -	 * device's power. If we're using protocol specific settings, we don't
+> > > -	 * want pci interfering.
+> > > -	 */
+> > > -	pci_save_state(pdev);
+> > >  unfreeze:
+> > >  	nvme_unfreeze(ctrl);
+> > >  	return ret;
+> > >
+> > 
+> > 
+> > 
+> 
+> Thanks, I actually followed up with something along that line in a v2 sent out
+> today.  My apology you weren't in CC, but here is a weblink to it.
+> http://lists.infradead.org/pipermail/linux-nvme/2019-September/027251.html
+> 
 
---rfwNdt5cNUUjB/69
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't think that pci_load_saved_state() will work, because it sets
+state_saved at the end again (if all goes well).  You simply only need to
+clear state_saved here.
 
-On Wed, Sep 18, 2019 at 12:03:17PM -0700, Linus Torvalds wrote:
-> On Wed, Sep 18, 2019 at 11:53 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > On Wed, Sep 18, 2019 at 06:09:52PM +0100, Mark Brown wrote:
 
-> > > After merging the driver-core tree, today's linux-next build
-> > > for arm64 allmodconfig failed like this:
 
-> > Wait, I thought Linus said this fixup was now resolved.  What went
-> > wrong?
 
-> I think this is purely a linux-next build failure.
-
-> I do full allmodconfig builds between each merge I do, and what
-> happened is that as part of the LED merge, I removed the
-> no-longer-used 'i2c_acpi_find_match_adapter()' to resolve that build
-> warning.
-
-> Then linux-next presumably merged my tree with the driver-core tree,
-> and that re-instated the use of i2c_acpi_find_match_adapter() - which
-> was now gone.
-
-> But when *I* merged the driver-core tree, I did the merge fixup
-> correctly to actually re-instate not only the use, but also re-instate
-> the removed function that now had a use again.
-
-Yes, that's exactly what happened - it's purely an issue when Greg's
-tree is merged automatically, I was reporting the same thing you fixed
-up.  If the initial build of your tree had been broken I'd have been
-complaining much more loudy and much earlier!
-
-> > Linus, should I submit a fix for this?
-
-> My tree should be fine, and I really think this is just a temporary
-> linux-next effect from the above. I think linux-next only handled the
-> actual syntactic conflicts, not the semantic conflict of "function had
-> been removed to avoid build error from previous merge, and needed to
-> be brought back"
-
-Right, git just sees the code moving about and got confused.  Since
-you've merged both trees now tomorrow's -next won't do anything for
-driver-core and the automation will handle everything fine.
-
---rfwNdt5cNUUjB/69
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2Cp8oACgkQJNaLcl1U
-h9CQaQf7Be6CUCkBLIU+XgGxIxBpFAKQ3/Lj7v4elTs1RQzhubAGFZLNi0Gmj6jL
-9qUFgUH7iPpweMkXP2SdsHWipAa04WYfhyLrNXtWa3NBnn6ZK3N2kEO10NFdH/eo
-XiPHkN2gm6gbuP7RWb3379fqCKa6QMPwYU3i5hn5+DYhYd6uxqtZhjBl3IcIgBUt
-yd/B6f7fn33tPTVvid8AEeERj7z1M3R8NKqGNX8Nor8m5xR+ANm8kDMR926waYqp
-XyLgCdf/Sm2jPJhCa1xKkxGJCirYLq/1rvDfxA3+MtBsf3sqcOfvvCdeQqaZpJDd
-dp2CveS+YlO4vxhcok9dt/IzaTkbSQ==
-=TZl6
------END PGP SIGNATURE-----
-
---rfwNdt5cNUUjB/69--
