@@ -2,143 +2,64 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F4FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9369CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B27F218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73F02214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:15:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbfIRJPV (ORCPT
+        id S1730359AbfIRJPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:15:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:42732 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfIRJPV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:15:21 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=elm)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1iAW3O-0006i4-C9; Wed, 18 Sep 2019 09:15:14 +0000
-Date:   Wed, 18 Sep 2019 11:15:12 +0200
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     keescook@chromium.org, luto@amacapital.net, jannh@google.com,
-        wad@chromium.org, shuah@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Tycho Andersen <tycho@tycho.ws>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 2/4] seccomp: add two missing ptrace ifdefines
-Message-ID: <20190918091512.GA5088@elm>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
- <20190918084833.9369-3-christian.brauner@ubuntu.com>
+        Wed, 18 Sep 2019 05:15:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:37942 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbfIRJPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:15:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E1F48337;
+        Wed, 18 Sep 2019 02:15:39 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2165F3F59C;
+        Wed, 18 Sep 2019 02:15:39 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:15:32 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jon Derrick <jonathan.derrick@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Keith Busch <keith.busch@intel.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] VMD fixes for v5.4
+Message-ID: <20190918091532.GA24503@e121166-lin.cambridge.arm.com>
+References: <20190916135435.5017-1-jonathan.derrick@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918084833.9369-3-christian.brauner@ubuntu.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190916135435.5017-1-jonathan.derrick@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 10:48:31, Christian Brauner wrote:
-> Add tw missing ptrace ifdefines to avoid compilation errors on systems
-> that do not provide PTRACE_EVENTMSG_SYSCALL_ENTRY or
-> PTRACE_EVENTMSG_SYSCALL_EXIT or:
+On Mon, Sep 16, 2019 at 07:54:33AM -0600, Jon Derrick wrote:
+> Hi Lorenzo, Bjorn, Keith,
 > 
-> gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
-> In file included from seccomp_bpf.c:52:0:
-> seccomp_bpf.c: In function ‘tracer_ptrace’:
-> seccomp_bpf.c:1792:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->                     ^
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
-> seccomp_bpf.c:1792:20: note: each undeclared identifier is reported only once for each function it appears in
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->                     ^
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
-> seccomp_bpf.c:1793:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’?
->     : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
->       ^
-> ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
->   __typeof__(_expected) __exp = (_expected); \
->              ^~~~~~~~~
-> seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
->   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
->   ^~~~~~~~~
+> Please consider the following patches for 5.4 inclusion.
 > 
-> Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-
-I think this Fixes line is incorrect and should be changed to:
-
-Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
-
-With that changed,
-
-Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
-
-Tyler
-
-> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Andy Lutomirski <luto@amacapital.net>
-> Cc: Will Drewry <wad@chromium.org>
-> Cc: Shuah Khan <shuah@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Cc: Martin KaFai Lau <kafai@fb.com>
-> Cc: Song Liu <songliubraving@fb.com>
-> Cc: Yonghong Song <yhs@fb.com>
-> Cc: Tycho Andersen <tycho@tycho.ws>
-> CC: Tyler Hicks <tyhicks@canonical.com>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: stable@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: bpf@vger.kernel.org
-> ---
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> These will apply to 5.2 stable. 4.19 has a few feature deps so I will instead
+> follow-up with a backport.
 > 
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index 6ef7f16c4cf5..ee52eab01800 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -155,6 +155,14 @@ struct seccomp_data {
->  #ifndef PTRACE_SECCOMP_GET_METADATA
->  #define PTRACE_SECCOMP_GET_METADATA	0x420d
->  
-> +#ifndef PTRACE_EVENTMSG_SYSCALL_ENTRY
-> +#define PTRACE_EVENTMSG_SYSCALL_ENTRY 1
-> +#endif
-> +
-> +#ifndef PTRACE_EVENTMSG_SYSCALL_EXIT
-> +#define PTRACE_EVENTMSG_SYSCALL_EXIT 2
-> +#endif
-> +
->  struct seccomp_metadata {
->  	__u64 filter_off;       /* Input: which filter */
->  	__u64 flags;             /* Output: filter's flags */
-> -- 
-> 2.23.0
+> Jon Derrick (2):
+>   PCI: vmd: Fix config addressing when using bus offsets
+>   PCI: vmd: Fix shadow offsets to reflect spec changes
 > 
+>  drivers/pci/controller/vmd.c | 25 +++++++++++++++----------
+>  1 file changed, 15 insertions(+), 10 deletions(-)
+
+I have pulled them into pci/vmd hopefully for v5.4.
+
+Thanks,
+Lorenzo
