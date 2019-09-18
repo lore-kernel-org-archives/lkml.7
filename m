@@ -2,84 +2,157 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E31C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0B4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA1820882
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568794501;
-	bh=qQZzL6ly9I6kH55d2tXDq6DR4DL9Zv92rVRrgf918SA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MhX7mkAwV+BIuu8XjG1u7QXRGYrdkQKY/Yw0GvA1qCKpWS53HYn+xrFLnfupJKfIW
-	 qUq0mHdlqcM6QwFDHT36+FkSQBlNH1eM+OhKDSpJ4FM2dwtwi9F3veIznJfQqCFe2u
-	 0qgyS5zrLNZtg7DuURIOcH6z5TM5zMXT8SJ81ANo=
+	by mail.kernel.org (Postfix) with ESMTP id 5251121928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:15:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="HoepIBlq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfIRIPA (ORCPT
+        id S1727697AbfIRIPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:15:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36046 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727569AbfIRIPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:15:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8004EAF80;
-        Wed, 18 Sep 2019 08:14:58 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 10:14:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Xiubo Li <xiubli@redhat.com>
-Cc:     mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] memalloc_noio: update the comment to make it cleaner
-Message-ID: <20190918081431.GD12770@dhcp22.suse.cz>
-References: <20190917232820.23504-1-xiubli@redhat.com>
- <20190918072542.GC12770@dhcp22.suse.cz>
- <315246db-ec28-f5e0-e9b3-eba0cb60b796@redhat.com>
+        Wed, 18 Sep 2019 04:15:04 -0400
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:30400 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729889AbfIRIPE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:15:04 -0400
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8I88LsG028312;
+        Wed, 18 Sep 2019 04:14:57 -0400
+Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2053.outbound.protection.outlook.com [104.47.46.53])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2v37jgh39h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 04:14:57 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zmol7K8+6exMDLocvPVvXYapa/o0RRVZtdtXW2Sj8Ze2npGmFbAF7d4hRShzBh+eSAdoPzduOZO/QnXCh2TVoF4qkyGKvoOJW+h9VwF45QXaZADAOvlVjyewwHKuQhaAzOZN1IFlB5ulPuUTLwuyWzW+RKafVly5dVg6zs8LuEhRqgYiEjPO9SCoIZDnnEBs0tCaPKaW60LF69Zv6qfyF9P4FlpodXw4QGsYUBKss08qt5ZczxRWStoa+ss6kV61kJ6U4lm/+dOrBH04eET3QewH66NxFY9bSllLgzn+/hJK9vrdov4j1UG5PdifagKnZNLDtLoN3fuvvH0DPfbupQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l16CVakqKBk3JG429+sVUBmeHB4mIe0ewsGgDwHG2X4=;
+ b=QsIst4tQsFMk3x3qOiTWjmXg2Ox370lfhlfYDb+ddKNYR0HqqFVMW6ycWRN8wKmuROsC9tkgq/N+ZlLdNAxhuyMbdy4SbSzRUK+20PqP2jWdPOYqKkQ/72cOnkgnh+fc18/WJDbjAV1PbGP16ywGUvJ5yo6dizGsxsyNuDaiLMhd7Jfgq46cWWnwV53OAdNL/quH9z9cIf3MAoioQPB/gLrh51j7y8OERVyeEofujCRfIJWJ4uNYKd5hM6TAXwmgCcm8SBnWVIYR7XYnnHnON/1p3KWYuBz7Y1EJ4UqGQopFmj2i6K8zQEKzb1wmPO1I/5DJFJkQML3tq7RkX0eRsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.55) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l16CVakqKBk3JG429+sVUBmeHB4mIe0ewsGgDwHG2X4=;
+ b=HoepIBlqPpYBVadFJdGyvLy/MVKbPot3ZQ3chimYTyR4NHGVFuxVzlI2y4HUGvwjs6GO7NU7DucYE1FJGJBi7z9qouhV8YkqT9fe3mE0AlenhsLljdb3lcZWq3IQ0PYZ+1Ov2UIG3/zS3p0H74j3uzw9yPiPH7P1kF5JFYY0U3s=
+Received: from BN8PR03CA0035.namprd03.prod.outlook.com (2603:10b6:408:94::48)
+ by BYAPR03MB4823.namprd03.prod.outlook.com (2603:10b6:a03:137::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.18; Wed, 18 Sep
+ 2019 08:14:55 +0000
+Received: from BL2NAM02FT003.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::205) by BN8PR03CA0035.outlook.office365.com
+ (2603:10b6:408:94::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2199.21 via Frontend
+ Transport; Wed, 18 Sep 2019 08:14:55 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT003.mail.protection.outlook.com (10.152.76.204) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2263.17
+ via Frontend Transport; Wed, 18 Sep 2019 08:14:54 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x8I8Esc3010853
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Wed, 18 Sep 2019 01:14:54 -0700
+Received: from saturn.ad.analog.com (10.48.65.123) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 18 Sep 2019 04:14:54 -0400
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <davem@davemloft.net>, <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] dt-bindings: net: remove un-implemented property
+Date:   Wed, 18 Sep 2019 14:14:47 +0300
+Message-ID: <20190918111447.3084-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <315246db-ec28-f5e0-e9b3-eba0cb60b796@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(136003)(346002)(376002)(189003)(199004)(126002)(5660300002)(50466002)(44832011)(70206006)(4326008)(14444005)(246002)(2616005)(316002)(476003)(1076003)(26005)(2201001)(486006)(107886003)(36756003)(54906003)(6666004)(7636002)(336012)(356004)(106002)(70586007)(2870700001)(86362001)(478600001)(110136005)(186003)(50226002)(8676002)(48376002)(8936002)(426003)(2906002)(47776003)(7696005)(51416003)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR03MB4823;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 962ff4cb-4045-4393-d207-08d73c1049a4
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(4709080)(1401327)(4618075)(2017052603328);SRVR:BYAPR03MB4823;
+X-MS-TrafficTypeDiagnostic: BYAPR03MB4823:
+X-Microsoft-Antispam-PRVS: <BYAPR03MB48236597DE6E4E59784604A1F98E0@BYAPR03MB4823.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-Forefront-PRVS: 01644DCF4A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: IuyfLdV0qE2GtHZvewq4wYtEQQtc3Lnq1ST1yHGYMVw5bXskT5K+anSePLTrDCy69QlV+YvZBuySfGbv5by1T0cMC3dnVqWEw5YsnPVm0ZXklvi4hPo/L957NKicNrjqj5RPvUd5/asSQ9rtG0SZysnNWz2Rx/1Sh6A58IR2p3H3bwKtsmWhJnA2QICmAaY4Bvl4opoCuy6F83bByQ/hqPOuieJwW8VJSGzkoYj3WmHmQRVg79P5WQUXQwFHe/q2/IgljjoJgXgRUiKjSSw+5aSWwBDAoRprLSnIc1ZY+Nw+UZELDbwWGeVpp6FQnYnh7dsRXV++CTwEyJhkjXVqq21ySlCDiMCeopxxmU7hvR/S/U6Kd63NrpiPgeJyt0Q2rFnlDuorVWVNoGK8ySryt5HXVfHScuXzxC/pL7ZayJQ=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2019 08:14:54.8445
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 962ff4cb-4045-4393-d207-08d73c1049a4
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR03MB4823
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-18_06:2019-09-17,2019-09-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 priorityscore=1501 clxscore=1015
+ spamscore=0 mlxlogscore=888 phishscore=0 mlxscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909180085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 18-09-19 16:02:52, Xiubo Li wrote:
-> On 2019/9/18 15:25, Michal Hocko wrote:
-> > On Wed 18-09-19 04:58:20, xiubli@redhat.com wrote:
-> > > From: Xiubo Li <xiubli@redhat.com>
-> > > 
-> > > The GFP_NOIO means all further allocations will implicitly drop
-> > > both __GFP_IO and __GFP_FS flags and so they are safe for both the
-> > > IO critical section and the the critical section from the allocation
-> > > recursion point of view. Not only the __GFP_IO, which a bit confusing
-> > > when reading the code or using the save/restore pair.
-> > Historically GFP_NOIO has always implied GFP_NOFS as well. I can imagine
-> > that this might come as an surprise for somebody not familiar with the
-> > code though.
-> 
-> Yeah, it true.
-> 
-> >   I am wondering whether your update of the documentation
-> > would be better off at __GFP_FS, __GFP_IO resp. GFP_NOFS, GFP_NOIO level.
-> > This interface is simply a way to set a scoped NO{IO,FS} context.
-> 
-> The "Documentation/core-api/gfp_mask-from-fs-io.rst" is already very detail
-> about them all.
-> 
-> This fixing just means to make sure that it won't surprise someone who is
-> having a quickly through some code and not familiar much about the detail.
-> It may make not much sense ?
+The `adi,disable-energy-detect` property was implemented in an initial
+version of the `adin` driver series, but after a review it was discarded in
+favor of implementing the ETHTOOL_PHY_EDPD phy-tunable option.
 
-Ohh, I do not think this would be senseless. I just think that the NOIO
-implying NOFS as well should be described at the level where they are
-documented rather than the api you have chosen.
+With the ETHTOOL_PHY_EDPD control, it's possible to disable/enable
+Energy-Detect-Power-Down for the `adin` PHY, so this device-tree is not
+needed.
+
+Fixes: 767078132ff9 ("dt-bindings: net: add bindings for ADIN PHY driver")
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ Documentation/devicetree/bindings/net/adi,adin.yaml | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/adi,adin.yaml b/Documentation/devicetree/bindings/net/adi,adin.yaml
+index 69375cb28e92..d95cc691a65f 100644
+--- a/Documentation/devicetree/bindings/net/adi,adin.yaml
++++ b/Documentation/devicetree/bindings/net/adi,adin.yaml
+@@ -36,12 +36,6 @@ properties:
+     enum: [ 4, 8, 12, 16, 20, 24 ]
+     default: 8
+ 
+-  adi,disable-energy-detect:
+-    description: |
+-      Disables Energy Detect Powerdown Mode (default disabled, i.e energy detect
+-      is enabled if this property is unspecified)
+-    type: boolean
+-
+ examples:
+   - |
+     ethernet {
+@@ -68,6 +62,5 @@ examples:
+             reg = <1>;
+ 
+             adi,fifo-depth-bits = <16>;
+-            adi,disable-energy-detect;
+         };
+     };
 -- 
-Michal Hocko
-SUSE Labs
+2.20.1
+
