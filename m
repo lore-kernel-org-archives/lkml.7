@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416B5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1ECC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD96218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C985D218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788410;
-	bh=Eq8nOojIoQBEV2ltmRd9T9w8XNsdLrk8lVfJrb1qrtM=;
+	s=default; t=1568788423;
+	bh=fwcXE3+ff7XDDD7ue7mjmrUCE7f6Rj6+NyZ1oujrTAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KJqSpeCjBD3fPsXBKtlbRX2e2LE/NgclEUF5OumoHKzMGFKqt2bmBwO7sOeW5aUBd
-	 IrmbJCylOtHf7YfhM99z/Bu026mwfFgInqN3M4Sa4u4fpZFNjRV8OahF7t5nocdB67
-	 4byflWPOnsJtDRkqOc8fb69IOEjt9QML2pI0cTp0=
+	b=qVEOkKIROzRWQTOsxjNGDCI3oy0JYhZdtaew5H5Tv7bCAIljJgNaQBJdLO1PamEQM
+	 IBIKtxM/Pp7lcBvZ/J9q/0isFHDwMSQ1s6WjEjYR2ov3BP+yfaylC8aiJy4hH2l80s
+	 2ZMkWUsoqgvrZEyXB25zSlUNaqFotiK+KqDho7bM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfIRGUl (ORCPT
+        id S1727669AbfIRGUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39590 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728598AbfIRGUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:38 -0400
+        id S1727764AbfIRGUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3EEF218AE;
-        Wed, 18 Sep 2019 06:20:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A90218AF;
+        Wed, 18 Sep 2019 06:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787638;
-        bh=Eq8nOojIoQBEV2ltmRd9T9w8XNsdLrk8lVfJrb1qrtM=;
+        s=default; t=1568787611;
+        bh=fwcXE3+ff7XDDD7ue7mjmrUCE7f6Rj6+NyZ1oujrTAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KD6ZaZQbWVWXO19Uhx9siPzUDaNTPW7w8wfqMYwzLmS9fYE/Rv7AtdIxuZxgMAo/v
-         QRWXctXm30o5BPjxppz4iMEp8xgsiaNbA1kETL2qNb/FFfGj+57Bs4xCKkcQd0dTys
-         Pr26xy+W+Owdxy8oD5xWs6SK3QjZlM0Q668RehCY=
+        b=y+y2Ie3xVI03yBEkq8isUGl7s+CUgOxzl7xOvZkB8fPXuDJp81JKJRHadJVim/AI0
+         Hb8vq7prMwVw/ZG2eqg4IdBA2D+PfJk0G6mfUssA2yiPx+iDN9kriAqwC/p55Uxcff
+         487zymPf92jFICknflSfkTv6Pz09pzsbNF5VGAD4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fuqian Huang <huangfq.daxian@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 23/45] KVM: x86: work around leak of uninitialized stack contents
-Date:   Wed, 18 Sep 2019 08:19:01 +0200
-Message-Id: <20190918061225.380926803@linuxfoundation.org>
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 14/45] btrfs: compression: add helper for type to string conversion
+Date:   Wed, 18 Sep 2019 08:18:52 +0200
+Message-Id: <20190918061224.325794824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -59,44 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fuqian Huang <huangfq.daxian@gmail.com>
+From: David Sterba <dsterba@suse.com>
 
-commit 541ab2aeb28251bf7135c7961f3a6080eebcc705 upstream.
+commit e128f9c3f7242318e1c76d204c7ae32bc878b8c7 upstream.
 
-Emulation of VMPTRST can incorrectly inject a page fault
-when passed an operand that points to an MMIO address.
-The page fault will use uninitialized kernel stack memory
-as the CR2 and error code.
+There are several places opencoding this conversion, add a helper now
+that we have 3 compression algorithms.
 
-The right behavior would be to abort the VM with a KVM_EXIT_INTERNAL_ERROR
-exit to userspace; however, it is not an easy fix, so for now just ensure
-that the error code and CR2 are zero.
-
-Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
-Cc: stable@vger.kernel.org
-[add comment]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ fs/btrfs/compression.c |   15 +++++++++++++++
+ fs/btrfs/compression.h |    2 ++
+ 2 files changed, 17 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4721,6 +4721,13 @@ int kvm_write_guest_virt_system(struct k
- 	/* kvm_write_guest_virt_system can pull in tons of pages. */
- 	vcpu->arch.l1tf_flush_l1d = true;
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -43,6 +43,21 @@
+ #include "extent_io.h"
+ #include "extent_map.h"
  
-+	/*
-+	 * FIXME: this should call handle_emulation_failure if X86EMUL_IO_NEEDED
-+	 * is returned, but our callers are not ready for that and they blindly
-+	 * call kvm_inject_page_fault.  Ensure that they at least do not leak
-+	 * uninitialized kernel stack memory into cr2 and error code.
-+	 */
-+	memset(exception, 0, sizeof(*exception));
- 	return kvm_write_guest_virt_helper(addr, val, bytes, vcpu,
- 					   PFERR_WRITE_MASK, exception);
- }
++static const char* const btrfs_compress_types[] = { "", "zlib", "lzo", "zstd" };
++
++const char* btrfs_compress_type2str(enum btrfs_compression_type type)
++{
++	switch (type) {
++	case BTRFS_COMPRESS_ZLIB:
++	case BTRFS_COMPRESS_LZO:
++	case BTRFS_COMPRESS_ZSTD:
++	case BTRFS_COMPRESS_NONE:
++		return btrfs_compress_types[type];
++	}
++
++	return NULL;
++}
++
+ static int btrfs_decompress_bio(struct compressed_bio *cb);
+ 
+ static inline int compressed_bio_size(struct btrfs_fs_info *fs_info,
+--- a/fs/btrfs/compression.h
++++ b/fs/btrfs/compression.h
+@@ -130,6 +130,8 @@ extern const struct btrfs_compress_op bt
+ extern const struct btrfs_compress_op btrfs_lzo_compress;
+ extern const struct btrfs_compress_op btrfs_zstd_compress;
+ 
++const char* btrfs_compress_type2str(enum btrfs_compression_type type);
++
+ int btrfs_compress_heuristic(struct inode *inode, u64 start, u64 end);
+ 
+ #endif
 
 
