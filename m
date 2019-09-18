@@ -2,202 +2,320 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01700C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31AD0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD87B21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1C9218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D1AILnud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfIRIs6 (ORCPT
+        id S1730669AbfIRItE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:48:58 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41706 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730522AbfIRIsr (ORCPT
+        Wed, 18 Sep 2019 04:49:04 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:42583 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730652AbfIRItD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:48:47 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iAVdg-0004BF-Ba; Wed, 18 Sep 2019 08:48:40 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     keescook@chromium.org, luto@amacapital.net
-Cc:     jannh@google.com, wad@chromium.org, shuah@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Tyler Hicks <tyhicks@canonical.com>, stable@vger.kernel.org
-Subject: [PATCH 4/4] seccomp: test SECCOMP_RET_USER_NOTIF_ALLOW
-Date:   Wed, 18 Sep 2019 10:48:33 +0200
-Message-Id: <20190918084833.9369-5-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918084833.9369-1-christian.brauner@ubuntu.com>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+        Wed, 18 Sep 2019 04:49:03 -0400
+Received: by mail-qk1-f195.google.com with SMTP id f16so7171050qkl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 01:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=G5YbJWFGfh3PunxXFzgcpBaC8N6gVE+B9QKsVJivxZY=;
+        b=D1AILnudmGYgiv6O0vqrHBIUC8fGqP21v5M2nIJSybEf8eNpSJm83VOozFQDs9j6Zu
+         JdouMaFHOanSZq/NR8LQDrLSq5343LGwkvv4AZ4loO5yf/+6caCULzuaT7SijUJ+wXqD
+         Pk8fPoxC5yDj2TXdh8aACnUKN+wSUXcU4htyf+JNcp1Q3921zB+uO2NUmm+TflmZvSK4
+         2BoqGCl0IClrgba6sGoW95T0OcyYLALFFCFO0K46dVk/ZHhE4hkLmdr+DrwqiOt4qBhs
+         dzeN4GEzr5cOhr5IZiKjFcDi+JHNlluVDZ4l/LYJlTFBGxjKaEbhdbg28BK4Nz1CVyso
+         wtow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=G5YbJWFGfh3PunxXFzgcpBaC8N6gVE+B9QKsVJivxZY=;
+        b=mA0KqpYmDqLUCkKjVEQVJwSATnzzgK5ZRYO+xRzVwl5sKwXfhVBzXaAu/bBW5NMjcw
+         M+Sb/BYNSM5zMCKORjpNvttax8bBa7YW9GiCieJdImK9WcZ/DEADnwtJthCQEknlMSVj
+         TtQv+z/BAL9+yOuVoxVSkastbBDUBQDgbylu0vhzoVRmEsCIZoJUd69gE0QL9MHrKX3M
+         xMa1hUfXwIARYutAVEwtmtdj5Jt0Yp4XY22UAtOjz+VyyYQFgb2D6SAvvpUjfLgMWwK9
+         EW+YXV0e2unx8OJznNfV52gg49swFntSqzjeB4nf/Rd3LsxznOBrTDUopGEd0tIV8xVQ
+         6/JA==
+X-Gm-Message-State: APjAAAX6oe07/g0xwSuiZktoo3pBATw9OKRvIWxemPvSX9Z8Uqe3WLb1
+        D4+8IDOACI2A5zpkJRFaPIK1G821lieNj7bMpqnNNA==
+X-Google-Smtp-Source: APXvYqy6epwJY7MhGtovSNnXDgOF3DzUxJAuMiuZYv0/5SaRC9poymus+HIxyCOScdZgFRZnhwGO9IGsB5+2H3SgsjM=
+X-Received: by 2002:a37:7086:: with SMTP id l128mr2718999qkc.433.1568796542176;
+ Wed, 18 Sep 2019 01:49:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1568792697.git.vilhelm.gray@gmail.com> <f7969048e5db977cc6cc9daa8d32b170cf9f4c17.1568792697.git.vilhelm.gray@gmail.com>
+In-Reply-To: <f7969048e5db977cc6cc9daa8d32b170cf9f4c17.1568792697.git.vilhelm.gray@gmail.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Wed, 18 Sep 2019 10:48:51 +0200
+Message-ID: <CA+M3ks45XTRjED2+2FAwcaG96YSszu2BZshTA7DSGscQQzAOFQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] counter: Simplify the count_read and count_write callbacks
+To:     William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc:     Jonathan Cameron <jic23@jic23.retrosnub.co.uk>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-iio@vger.kernel.org,
+        Patrick Havelange <patrick.havelange@essensium.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test whether a syscall can be performed after having been intercepted by
-the seccomp notifier. The test uses dup() and kcmp() since it allows us to
-nicely test whether the dup() syscall actually succeeded by comparing whether
-the fd refers to the same underlying struct file.
+Le mer. 18 sept. 2019 =C3=A0 09:53, William Breathitt Gray
+<vilhelm.gray@gmail.com> a =C3=A9crit :
+>
+> The count_read and count_write callbacks are simplified to pass val as
+> unsigned long rather than as an opaque data structure. The opaque
+> counter_count_read_value and counter_count_write_value structures,
+> counter_count_value_type enum, and relevant counter_count_read_value_set
+> and counter_count_write_value_get functions, are removed as they are no
+> longer used.
+>
+> Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Tycho Andersen <tycho@tycho.ws>
-CC: Tyler Hicks <tyhicks@canonical.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: stable@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
----
- tools/testing/selftests/seccomp/seccomp_bpf.c | 99 +++++++++++++++++++
- 1 file changed, 99 insertions(+)
+Hi William,
 
-diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-index 921f0e26f835..788d7e9007d5 100644
---- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-+++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-@@ -44,6 +44,7 @@
- #include <sys/times.h>
- #include <sys/socket.h>
- #include <sys/ioctl.h>
-+#include <linux/kcmp.h>
- 
- #include <unistd.h>
- #include <sys/syscall.h>
-@@ -175,6 +176,10 @@ struct seccomp_metadata {
- 
- #define SECCOMP_RET_USER_NOTIF 0x7fc00000U
- 
-+#ifndef SECCOMP_RET_USER_NOTIF_ALLOW
-+#define SECCOMP_RET_USER_NOTIF_ALLOW 0x00000001
-+#endif
-+
- #define SECCOMP_IOC_MAGIC		'!'
- #define SECCOMP_IO(nr)			_IO(SECCOMP_IOC_MAGIC, nr)
- #define SECCOMP_IOR(nr, type)		_IOR(SECCOMP_IOC_MAGIC, nr, type)
-@@ -3489,6 +3494,100 @@ TEST(seccomp_get_notif_sizes)
- 	EXPECT_EQ(sizes.seccomp_notif_resp, sizeof(struct seccomp_notif_resp));
- }
- 
-+static int filecmp(pid_t pid1, pid_t pid2, int fd1, int fd2)
-+{
-+#ifdef __NR_kcmp
-+	return syscall(__NR_kcmp, pid1, pid2, KCMP_FILE, fd1, fd2);
-+#else
-+	errno = ENOSYS;
-+	return -1;
-+#endif
-+}
-+
-+TEST(user_notification_continue)
-+{
-+	pid_t pid;
-+	long ret;
-+	int status, listener;
-+	struct seccomp_notif req = {};
-+	struct seccomp_notif_resp resp = {};
-+	struct pollfd pollfd;
-+
-+	ret = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0);
-+	ASSERT_EQ(0, ret) {
-+		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-+	}
-+
-+	listener = user_trap_syscall(__NR_dup, SECCOMP_FILTER_FLAG_NEW_LISTENER);
-+	ASSERT_GE(listener, 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+
-+	if (pid == 0) {
-+		int dup_fd, pipe_fds[2];
-+		pid_t self;
-+
-+		ret = pipe(pipe_fds);
-+		if (ret < 0)
-+			exit(EXIT_FAILURE);
-+
-+		dup_fd = dup(pipe_fds[0]);
-+		if (dup_fd < 0)
-+			exit(EXIT_FAILURE);
-+
-+		self = getpid();
-+
-+		ret = filecmp(self, self, pipe_fds[0], dup_fd);
-+		if (ret)
-+			exit(EXIT_FAILURE);
-+
-+		exit(EXIT_SUCCESS);
-+	}
-+
-+	pollfd.fd = listener;
-+	pollfd.events = POLLIN | POLLOUT;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_EQ(pollfd.revents, POLLIN);
-+
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_RECV, &req), 0);
-+
-+	pollfd.fd = listener;
-+	pollfd.events = POLLIN | POLLOUT;
-+
-+	EXPECT_GT(poll(&pollfd, 1, -1), 0);
-+	EXPECT_EQ(pollfd.revents, POLLOUT);
-+
-+	EXPECT_EQ(req.data.nr, __NR_dup);
-+
-+	resp.id = req.id;
-+	resp.flags = SECCOMP_RET_USER_NOTIF_ALLOW;
-+
-+	/* check that if (flags & SECCOMP_RET_USER_NOTIF_ALLOW) the rest is 0 */
-+	resp.error = 0;
-+	resp.val = USER_NOTIF_MAGIC;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	resp.error = USER_NOTIF_MAGIC;
-+	resp.val = 0;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), -1);
-+	EXPECT_EQ(errno, EINVAL);
-+
-+	resp.error = 0;
-+	resp.val = 0;
-+	EXPECT_EQ(ioctl(listener, SECCOMP_IOCTL_NOTIF_SEND, &resp), 0) {
-+		if (errno == EINVAL)
-+			XFAIL(goto skip, "Kernel does not support SECCOMP_RET_USER_NOTIF_ALLOW");
-+	}
-+
-+skip:
-+	EXPECT_EQ(waitpid(pid, &status, 0), pid);
-+	EXPECT_EQ(true, WIFEXITED(status));
-+	EXPECT_EQ(0, WEXITSTATUS(status));
-+}
-+
- /*
-  * TODO:
-  * - add microbenchmarks
--- 
-2.23.0
+This first patch break the compilation because you remove some
+structure needed for the drivers.
+You should merge all the serie in 1 patch to avoid that.
 
+Benjamin
+
+> ---
+>  drivers/counter/counter.c | 66 +++++----------------------------------
+>  include/linux/counter.h   | 43 +++----------------------
+>  2 files changed, 12 insertions(+), 97 deletions(-)
+>
+> diff --git a/drivers/counter/counter.c b/drivers/counter/counter.c
+> index 106bc7180cd8..1d08f1437b1b 100644
+> --- a/drivers/counter/counter.c
+> +++ b/drivers/counter/counter.c
+> @@ -246,60 +246,6 @@ void counter_signal_read_value_set(struct counter_si=
+gnal_read_value *const val,
+>  }
+>  EXPORT_SYMBOL_GPL(counter_signal_read_value_set);
+>
+> -/**
+> - * counter_count_read_value_set - set counter_count_read_value data
+> - * @val:       counter_count_read_value structure to set
+> - * @type:      property Count data represents
+> - * @data:      Count data
+> - *
+> - * This function sets an opaque counter_count_read_value structure with =
+the
+> - * provided Count data.
+> - */
+> -void counter_count_read_value_set(struct counter_count_read_value *const=
+ val,
+> -                                 const enum counter_count_value_type typ=
+e,
+> -                                 void *const data)
+> -{
+> -       switch (type) {
+> -       case COUNTER_COUNT_POSITION:
+> -               val->len =3D sprintf(val->buf, "%lu\n", *(unsigned long *=
+)data);
+> -               break;
+> -       default:
+> -               val->len =3D 0;
+> -       }
+> -}
+> -EXPORT_SYMBOL_GPL(counter_count_read_value_set);
+> -
+> -/**
+> - * counter_count_write_value_get - get counter_count_write_value data
+> - * @data:      Count data
+> - * @type:      property Count data represents
+> - * @val:       counter_count_write_value structure containing data
+> - *
+> - * This function extracts Count data from the provided opaque
+> - * counter_count_write_value structure and stores it at the address prov=
+ided by
+> - * @data.
+> - *
+> - * RETURNS:
+> - * 0 on success, negative error number on failure.
+> - */
+> -int counter_count_write_value_get(void *const data,
+> -                                 const enum counter_count_value_type typ=
+e,
+> -                                 const struct counter_count_write_value =
+*const val)
+> -{
+> -       int err;
+> -
+> -       switch (type) {
+> -       case COUNTER_COUNT_POSITION:
+> -               err =3D kstrtoul(val->buf, 0, data);
+> -               if (err)
+> -                       return err;
+> -               break;
+> -       }
+> -
+> -       return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(counter_count_write_value_get);
+> -
+>  struct counter_attr_parm {
+>         struct counter_device_attr_group *group;
+>         const char *prefix;
+> @@ -788,13 +734,13 @@ static ssize_t counter_count_show(struct device *de=
+v,
+>         const struct counter_count_unit *const component =3D devattr->com=
+ponent;
+>         struct counter_count *const count =3D component->count;
+>         int err;
+> -       struct counter_count_read_value val =3D { .buf =3D buf };
+> +       unsigned long val;
+>
+>         err =3D counter->ops->count_read(counter, count, &val);
+>         if (err)
+>                 return err;
+>
+> -       return val.len;
+> +       return sprintf(buf, "%lu\n", val);
+>  }
+>
+>  static ssize_t counter_count_store(struct device *dev,
+> @@ -806,9 +752,13 @@ static ssize_t counter_count_store(struct device *de=
+v,
+>         const struct counter_count_unit *const component =3D devattr->com=
+ponent;
+>         struct counter_count *const count =3D component->count;
+>         int err;
+> -       struct counter_count_write_value val =3D { .buf =3D buf };
+> +       unsigned long val;
+> +
+> +       err =3D kstrtoul(buf, 0, &val);
+> +       if (err)
+> +               return err;
+>
+> -       err =3D counter->ops->count_write(counter, count, &val);
+> +       err =3D counter->ops->count_write(counter, count, val);
+>         if (err)
+>                 return err;
+>
+> diff --git a/include/linux/counter.h b/include/linux/counter.h
+> index a061cdcdef7c..7e40796598a6 100644
+> --- a/include/linux/counter.h
+> +++ b/include/linux/counter.h
+> @@ -300,24 +300,6 @@ struct counter_signal_read_value {
+>         size_t len;
+>  };
+>
+> -/**
+> - * struct counter_count_read_value - Opaque Count read value
+> - * @buf:       string representation of Count read value
+> - * @len:       length of string in @buf
+> - */
+> -struct counter_count_read_value {
+> -       char *buf;
+> -       size_t len;
+> -};
+> -
+> -/**
+> - * struct counter_count_write_value - Opaque Count write value
+> - * @buf:       string representation of Count write value
+> - */
+> -struct counter_count_write_value {
+> -       const char *buf;
+> -};
+> -
+>  /**
+>   * struct counter_ops - Callbacks from driver
+>   * @signal_read:       optional read callback for Signal attribute. The =
+read
+> @@ -328,15 +310,10 @@ struct counter_count_write_value {
+>   *                     signal_read callback.
+>   * @count_read:                optional read callback for Count attribut=
+e. The read
+>   *                     value of the respective Count should be passed ba=
+ck via
+> - *                     the val parameter. val points to an opaque type w=
+hich
+> - *                     should be set only by calling the
+> - *                     counter_count_read_value_set function from within=
+ the
+> - *                     count_read callback.
+> + *                     the val parameter.
+>   * @count_write:       optional write callback for Count attribute. The =
+write
+>   *                     value for the respective Count is passed in via t=
+he val
+> - *                     parameter. val points to an opaque type which sho=
+uld be
+> - *                     accessed only by calling the
+> - *                     counter_count_write_value_get function.
+> + *                     parameter.
+>   * @function_get:      function to get the current count function mode. =
+Returns
+>   *                     0 on success and negative error code on error. Th=
+e index
+>   *                     of the respective Count's returned function mode =
+should
+> @@ -357,11 +334,9 @@ struct counter_ops {
+>                            struct counter_signal *signal,
+>                            struct counter_signal_read_value *val);
+>         int (*count_read)(struct counter_device *counter,
+> -                         struct counter_count *count,
+> -                         struct counter_count_read_value *val);
+> +                         struct counter_count *count, unsigned long *val=
+);
+>         int (*count_write)(struct counter_device *counter,
+> -                          struct counter_count *count,
+> -                          struct counter_count_write_value *val);
+> +                          struct counter_count *count, unsigned long val=
+);
+>         int (*function_get)(struct counter_device *counter,
+>                             struct counter_count *count, size_t *function=
+);
+>         int (*function_set)(struct counter_device *counter,
+> @@ -486,19 +461,9 @@ enum counter_signal_value_type {
+>         COUNTER_SIGNAL_LEVEL =3D 0
+>  };
+>
+> -enum counter_count_value_type {
+> -       COUNTER_COUNT_POSITION =3D 0,
+> -};
+> -
+>  void counter_signal_read_value_set(struct counter_signal_read_value *con=
+st val,
+>                                    const enum counter_signal_value_type t=
+ype,
+>                                    void *const data);
+> -void counter_count_read_value_set(struct counter_count_read_value *const=
+ val,
+> -                                 const enum counter_count_value_type typ=
+e,
+> -                                 void *const data);
+> -int counter_count_write_value_get(void *const data,
+> -                                 const enum counter_count_value_type typ=
+e,
+> -                                 const struct counter_count_write_value =
+*const val);
+>
+>  int counter_register(struct counter_device *const counter);
+>  void counter_unregister(struct counter_device *const counter);
+> --
+> 2.23.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
