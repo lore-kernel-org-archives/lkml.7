@@ -2,192 +2,129 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F7DC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C150DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A8D021848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:42:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E22621848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:43:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfIRCmh (ORCPT
+        id S1726664AbfIRCnk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 22:42:37 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:19129 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725865AbfIRCmh (ORCPT
+        Tue, 17 Sep 2019 22:43:40 -0400
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161]:57223 "EHLO
+        tyo161.gate.nec.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfIRCnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 22:42:37 -0400
-X-UUID: a9ef452faeb844558cc62485fd79ccde-20190918
-X-UUID: a9ef452faeb844558cc62485fd79ccde-20190918
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <light.hsieh@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 389394205; Wed, 18 Sep 2019 10:42:32 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Sep 2019 10:42:29 +0800
-Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Sep 2019 10:42:28 +0800
-Message-ID: <1568774551.12617.14.camel@mtkswgap22>
-Subject: Re: [PATCH v5 1/5] pinctrl: mediatek: Check gpio pin number and use
- binary  search in mtk_hw_pin_field_lookup()
-From:   Light Hsieh <light.hsieh@mediatek.com>
-To:     <linus.walleij@linaro.org>
-CC:     <linux-mediatek@lists.infradead.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sean.wang@kernel.org>
-Date:   Wed, 18 Sep 2019 10:42:31 +0800
-In-Reply-To: <1568774348-24363-1-git-send-email-light.hsieh@mediatek.com>
-References: <1568774348-24363-1-git-send-email-light.hsieh@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Tue, 17 Sep 2019 22:43:40 -0400
+Received: from mailgate01.nec.co.jp ([114.179.233.122])
+        by tyo161.gate.nec.co.jp (8.15.1/8.15.1) with ESMTPS id x8I2hBIa003067
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 18 Sep 2019 11:43:11 +0900
+Received: from mailsv02.nec.co.jp (mailgate-v.nec.co.jp [10.204.236.94])
+        by mailgate01.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8I2hBKJ022445;
+        Wed, 18 Sep 2019 11:43:11 +0900
+Received: from mail01b.kamome.nec.co.jp (mail01b.kamome.nec.co.jp [10.25.43.2])
+        by mailsv02.nec.co.jp (8.15.1/8.15.1) with ESMTP id x8I2c5ON016435;
+        Wed, 18 Sep 2019 11:43:11 +0900
+Received: from bpxc99gp.gisp.nec.co.jp ([10.38.151.150] [10.38.151.150]) by mail01b.kamome.nec.co.jp with ESMTP id BT-MMP-8621061; Wed, 18 Sep 2019 11:16:10 +0900
+Received: from BPXM20GP.gisp.nec.co.jp ([10.38.151.212]) by
+ BPXC22GP.gisp.nec.co.jp ([10.38.151.150]) with mapi id 14.03.0439.000; Wed,
+ 18 Sep 2019 11:16:09 +0900
+From:   Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>
+To:     David Hildenbrand <david@redhat.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+CC:     Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "hch@lst.de" <hch@lst.de>,
+        "longman@redhat.com" <longman@redhat.com>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
+        "mst@redhat.com" <mst@redhat.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+Subject: Re: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Topic: [RFC PATCH v2] mm: initialize struct pages reserved by
+ ZONE_DEVICE driver.
+Thread-Index: AQHVZIp2xk1cU6nEkk+ez7kL5reVFKcdvuyAgAAVnwCAAAk8gIAEZuMAgAAgogCADDvdgIAATZsAgAAnMACAAA0zAIABCyeA
+Date:   Wed, 18 Sep 2019 02:16:08 +0000
+Message-ID: <6796e499-ea0e-ecf0-00f8-2bb9f988c9ae@vx.jp.nec.com>
+References: <20190906081027.15477-1-t-fukasawa@vx.jp.nec.com>
+ <b7732a55-4a10-2c1d-c2f5-ca38ee60964d@redhat.com>
+ <e762ee45-43e3-975a-ad19-065f07d1440f@vx.jp.nec.com>
+ <40a1ce2e-1384-b869-97d0-7195b5b47de0@redhat.com>
+ <6a99e003-e1ab-b9e8-7b25-bc5605ab0eb2@vx.jp.nec.com>
+ <e4e54258-e83b-cf0b-b66e-9874be6b5122@redhat.com>
+ <31fd3c86-5852-1863-93bd-8df9da9f95b4@vx.jp.nec.com>
+ <38e58d23-c20b-4e68-5f56-20bba2be2d6c@redhat.com>
+ <3d27953a-88b8-5a7c-de3c-041f8b4436f6@vx.jp.nec.com>
+ <ab946240-d335-b803-2f70-d255abd30b43@redhat.com>
+In-Reply-To: <ab946240-d335-b803-2f70-d255abd30b43@redhat.com>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.34.125.135]
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <6D5D8DA702E6494CB02FAFB0458A0DCA@gisp.nec.co.jp>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-MTK:  N
+X-TM-AS-MML: disable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear reviewer,
-
-Due to my operation error, one file (pinctrl-paris.h) is missed in patch
-seriers 5/5 of v4.
-v5 is sent to correct this error.
-
-On Wed, 2019-09-18 at 10:39 +0800, Light Hsieh wrote:
-> 1. Check if gpio pin number is in valid range to prevent from get invalid
->    pointer 'desc' in the following code:
-> 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+On 2019/09/17 19:20, David Hildenbrand wrote:
+> On 17.09.19 11:32, Toshiki Fukasawa wrote:
+>> On 2019/09/17 16:13, David Hildenbrand wrote:
+>>> On 17.09.19 04:34, Toshiki Fukasawa wrote:
+>>>> On 2019/09/09 16:46, David Hildenbrand wrote:
+>>>>> Let's take a step back here to understand the issues I am aware of. I
+>>>>> think we should solve this for good now:
+>>>>>
+>>>>> A PFN walker takes a look at a random PFN at a random point in time. It
+>>>>> finds a PFN with SECTION_MARKED_PRESENT && !SECTION_IS_ONLINE. The
+>>>>> options are:
+>>>>>
+>>>>> 1. It is buddy memory (add_memory()) that has not been online yet. The
+>>>>> memmap contains garbage. Don't access.
+>>>>>
+>>>>> 2. It is ZONE_DEVICE memory with a valid memmap. Access it.
+>>>>>
+>>>>> 3. It is ZONE_DEVICE memory with an invalid memmap, because the section
+>>>>> is only partially present: E.g., device starts at offset 64MB within a
+>>>>> section or the device ends at offset 64MB within a section. Don't access it.
+>>>>
+>>>> I don't agree with case #3. In the case, struct page area is not allocated on
+>>>> ZONE_DEVICE, but is allocated on system memory. So I think we can access the
+>>>> struct pages. What do you mean "invalid memmap"?
+>>> No, that's not the case. There is no memory, especially not system
+>>> memory. We only allow partially present sections (sub-section memory
+>>> hotplug) for ZONE_DEVICE.
+>>
+>> Let me clear my thoughts. If I read correctly, the struct pages for sections
+>> (including partially present sections) on ZONE_DEVICE are allocated by
+>> vmemmap_populate(). And all the struct pages except (altmap->base_pfn) to
+>> (altmap->base_pfn + altmap->reserve) are initialized by memmap_init_zone()
+>> and memmap_init_zone_device().
+>>
+>> Do struct pages for partially present sections go through a different process?
 > 
-> 2. Use binary search in mtk_hw_pin_field_lookup()
->    Modify mtk_hw_pin_field_lookup() to use binary search for accelerating
->    search.
+> No. However, the memmap is initialized via move_pfn_range_to_zone(). So
+> partially present sections will have partially uninitialized memmaps.
 > 
-> ---
->  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 24 +++++++++++++++++++-----
->  drivers/pinctrl/mediatek/pinctrl-paris.c         | 19 +++++++++++++++++++
->  2 files changed, 38 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> index 20e1c89..4687f63 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> @@ -68,7 +68,7 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  {
->  	const struct mtk_pin_field_calc *c, *e;
->  	const struct mtk_pin_reg_calc *rc;
-> -	u32 bits;
-> +	u32 bits, start = 0, end, found = 0, check;
->  
->  	if (hw->soc->reg_cal && hw->soc->reg_cal[field].range) {
->  		rc = &hw->soc->reg_cal[field];
-> @@ -79,21 +79,32 @@ static int mtk_hw_pin_field_lookup(struct mtk_pinctrl *hw,
->  		return -ENOTSUPP;
->  	}
->  
-> +	end = rc->nranges - 1;
->  	c = rc->range;
->  	e = c + rc->nranges;
->  
-> -	while (c < e) {
-> -		if (desc->number >= c->s_pin && desc->number <= c->e_pin)
-> +	while (start <= end) {
-> +		check = (start + end) >> 1;
-> +		if (desc->number >= rc->range[check].s_pin
-> +		 && desc->number <= rc->range[check].e_pin) {
-> +			found = 1;
->  			break;
-> -		c++;
-> +		} else if (start == end)
-> +			break;
-> +		else if (desc->number < rc->range[check].s_pin)
-> +			end = check - 1;
-> +		else
-> +			start = check + 1;
->  	}
->  
-> -	if (c >= e) {
-> +	if (!found) {
->  		dev_dbg(hw->dev, "Not support field %d for pin = %d (%s)\n",
->  			field, desc->number, desc->name);
->  		return -ENOTSUPP;
->  	}
->  
-> +	c = rc->range + check;
-> +
->  	if (c->i_base > hw->nbase - 1) {
->  		dev_err(hw->dev,
->  			"Invalid base for field %d for pin = %d (%s)\n",
-> @@ -182,6 +193,9 @@ int mtk_hw_set_value(struct mtk_pinctrl *hw, const struct mtk_pin_desc *desc,
->  	if (err)
->  		return err;
->  
-> +	if (value < 0 || value > pf.mask)
-> +		return -EINVAL;
-> +
->  	if (!pf.next)
->  		mtk_rmw(hw, pf.index, pf.offset, pf.mask << pf.bitpos,
->  			(value & pf.mask) << pf.bitpos);
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index 923264d..28b4951 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -693,6 +693,9 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
-> @@ -708,6 +711,9 @@ static int mtk_gpio_get(struct gpio_chip *chip, unsigned int gpio)
->  	const struct mtk_pin_desc *desc;
->  	int value, err;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DI, &value);
-> @@ -722,6 +728,9 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
->  	const struct mtk_pin_desc *desc;
->  
-> +	if (gpio > hw->soc->npins)
-> +		return;
-> +
->  	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
->  
->  	mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DO, !!value);
-> @@ -729,12 +738,22 @@ static void mtk_gpio_set(struct gpio_chip *chip, unsigned int gpio, int value)
->  
->  static int mtk_gpio_direction_input(struct gpio_chip *chip, unsigned int gpio)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	return pinctrl_gpio_direction_input(chip->base + gpio);
->  }
->  
->  static int mtk_gpio_direction_output(struct gpio_chip *chip, unsigned int gpio,
->  				     int value)
->  {
-> +	struct mtk_pinctrl *hw = gpiochip_get_data(chip);
-> +
-> +	if (gpio > hw->soc->npins)
-> +		return -EINVAL;
-> +
->  	mtk_gpio_set(chip, gpio, value);
->  
->  	return pinctrl_gpio_direction_output(chip->base + gpio);
+Thank you for explanation.
+To my understanding, depending on architecture, the situation is possible
+that the struct pages for entire section is allocated, but only pages
+in the zone are initialized.
 
-
+Thanks,
+Toshiki Fukasawa
