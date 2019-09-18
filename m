@@ -2,117 +2,103 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5431EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73262C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21FCA21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EA9A21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:31:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOpifsaf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dUmAIMPg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731970AbfIRQ3c (ORCPT
+        id S1730828AbfIRQbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:29:32 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41828 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfIRQ3c (ORCPT
+        Wed, 18 Sep 2019 12:31:01 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:52874 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfIRQbB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:29:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t10so187046plr.8;
-        Wed, 18 Sep 2019 09:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LgH/ZwMWdwKceO+DTTPhpRDYUttfSih6SgTkxTt1Xfk=;
-        b=VOpifsafjSIcwqi0QMLWPEJ6f4zF3EZWMzfCkWRWqN4bgvtxKEnjdz7z31KEPm7fms
-         4QASqUhFy5awtmgAEcmFP0kk81ZMQpuZrzUrqvC4lBMA1HSKAOD0Mo2QIWfzwZzHLuhg
-         Tv3WWTwwdz893rldnbVbhN7EBlfRwrsVxPeqo6o29WjIoWLP75r05ZVWjx0HV6N92BF/
-         vlHEC86LAjm5LYvREUWZOvSEcqjcZL9CnpFHUyOG4LILzgVs7+EvviL+Qgfh+f9uwPiW
-         K7LJsE8GCckE7juYnEuT8/CLz/dMElygVRz9/InPR4VtWLGsnL5mP4Czl7HmO0DirP18
-         gihA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LgH/ZwMWdwKceO+DTTPhpRDYUttfSih6SgTkxTt1Xfk=;
-        b=CvaHq4yr+NyXk6dhrhDsNzJLgazZChGx6Vhf5s6/Bx8Y8ZXp4mftmsCgxf5N3S38Cn
-         8lVcHJFFb0MDm5CmEY5YyaD01JVOmRdgKyRgZhA5Qp2IRVUiUJTiYVwzMxMKBlBLcCPQ
-         CW4P2PSvyMG3mnDTDDMLHruWqnUeC/jOacwGy5lIp5SK2QR6XgVJyc6R5w6VQvG/JR1S
-         LwGrTMuL8/HAP6n/ck74K2FXqCc9UiFgLcQ5UDK7t2la+32U6HoU4Z227dClJDc4X+Fn
-         weSRXrrWYYGBylqflQyuX56wHcgThJyhEl+7zH513OT2kEVKRCujOxksdv5PH7cIo6vB
-         4M6Q==
-X-Gm-Message-State: APjAAAVsfr2XRrduo22G1pi4q/X++mFWDe7A1yM5RPxsCCaVJZPtFzAO
-        weSlOycAbbNm5xUTLwey3GM=
-X-Google-Smtp-Source: APXvYqx1UIM3/8Nji+DD2WgS6NY8R9IirFIx14s8+laAK8nwbFGsr/WLx/R6LHpe2fpnBILoCLPvtA==
-X-Received: by 2002:a17:902:8d98:: with SMTP id v24mr2973155plo.265.1568824171177;
-        Wed, 18 Sep 2019 09:29:31 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.104.129])
-        by smtp.gmail.com with ESMTPSA id s73sm2744560pjb.15.2019.09.18.09.29.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 09:29:30 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     dmitry.torokhov@gmail.com
-Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH v2] HID: hidraw: replace printk() with corresponding pr_xx() variant
-Date:   Wed, 18 Sep 2019 21:59:11 +0530
-Message-Id: <1568824151-12668-1-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20190912203119.GC636@penguin>
-References: <20190912203119.GC636@penguin>
+        Wed, 18 Sep 2019 12:31:01 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGNamU178592;
+        Wed, 18 Sep 2019 16:30:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=TgunZWBu9b1BmO6HitEFm1hFDnIkgPngmteT+Ahcq04=;
+ b=dUmAIMPgBJ+Xkoa8RFOcS0medzQ6GpZKULtyguw8tJVvVctGRhH2GGT1oNNGCt8z88nq
+ 9HTPPdKJWtYjazcdipL9h+0y1LvUJK4p2cObiccwCfeE4PPVgqVxdAuLC7LsSHPU4GmA
+ 3+wMBjGiH0AK+tE8jy6PPbiz8j30xCgMq1ZcqoKTjYtPDwgLBxsDEaPaP9QLnIx4N12x
+ yxUHoc0b2STtuXTL/P3MeRbtJ0bWAi56veY63rqhQW5U812WW70ODnI33guG5QzWbazK
+ pgEZyCZDLfb9F4CeQqXElAv2FFUGC+wMV/L3YfJjK50gSYVjRNxhubv+/KhH4caRSwxj 0A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2v385e53qu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 16:30:53 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGMr64173715;
+        Wed, 18 Sep 2019 16:30:52 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2v37mmwng8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 16:30:52 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IGUkb2029057;
+        Wed, 18 Sep 2019 16:30:47 GMT
+Received: from x250.idc.oracle.com (/10.191.241.104)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Sep 2019 09:30:45 -0700
+From:   Allen Pais <allen.pais@oracle.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, daniel@ffwll.ch
+Subject: [PATCH] drm/amdkfd: fix a potential NULL pointer dereference
+Date:   Wed, 18 Sep 2019 22:00:31 +0530
+Message-Id: <1568824231-4007-1-git-send-email-allen.pais@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=899
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909180156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=983 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909180156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit replaces direct invocations of printk with
-their appropriate pr_info/warn() variant.
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
 ---
-Changes in v2:
-- Removed manually adding prefix "hidraw:".
+ drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- drivers/hid/hidraw.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
-index 006bd6f..2d082f3 100644
---- a/drivers/hid/hidraw.c
-+++ b/drivers/hid/hidraw.c
-@@ -197,14 +197,14 @@ static ssize_t hidraw_get_report(struct file *file, char __user *buffer, size_t
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
+index c56ac47..caa82a8 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_interrupt.c
+@@ -62,6 +62,11 @@ int kfd_interrupt_init(struct kfd_dev *kfd)
  	}
  
- 	if (count > HID_MAX_BUFFER_SIZE) {
--		printk(KERN_WARNING "hidraw: pid %d passed too large report\n",
-+		pr_warn("pid %d passed too large report\n",
- 				task_pid_nr(current));
- 		ret = -EINVAL;
- 		goto out;
- 	}
+ 	kfd->ih_wq = alloc_workqueue("KFD IH", WQ_HIGHPRI, 1);
++	if (unlikely(!kfd->ih_wq)) {
++		fifo_free(&kfd->ih_fifo);
++		dev_err(kfd_chardev(), "Failed to allocate KFD IH workqueue\n");
++		return kfd->ih_wq;
++	}
+ 	spin_lock_init(&kfd->interrupt_lock);
  
- 	if (count < 2) {
--		printk(KERN_WARNING "hidraw: pid %d passed too short report\n",
-+		pr_warn("pid %d passed too short report\n",
- 				task_pid_nr(current));
- 		ret = -EINVAL;
- 		goto out;
-@@ -597,7 +597,7 @@ int __init hidraw_init(void)
- 	if (result < 0)
- 		goto error_class;
- 
--	printk(KERN_INFO "hidraw: raw HID events driver (C) Jiri Kosina\n");
-+	pr_info("raw HID events driver (C) Jiri Kosina\n");
- out:
- 	return result;
- 
+ 	INIT_WORK(&kfd->interrupt_work, interrupt_wq);
 -- 
-2.7.4
+1.9.1
 
