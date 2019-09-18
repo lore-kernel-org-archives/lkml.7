@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F03C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06EA0C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C38221906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7D0E21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788114;
-	bh=Amq+M4DiCO97PAdKdNZc8x7IibU++eD91G9+f3YTBCA=;
+	s=default; t=1568788122;
+	bh=YVgQAE+ShXp0iEK2UypFwnD3fjYWg9f059yM5kZSxRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zeAJTvnW7ROE/RIzy73PgVvpB5uyEYiU8kH5UpNyDAB2r+XWTXrydj8X9C8hH9Mdx
-	 K7/Sy6hJ0VieWaJIfC4T6Fvxi/yfs5VukT5gOnZIUfb+2SsDRqZfdSzUS6g9NEFEqZ
-	 DT4tj53MmhMjq4oHYYB53OzOrtCZEWOGmtUzuwjw=
+	b=Wy0wA5LkQ1xmWYSlzDxo/VtSXCnguASnB4k3V8+BZNpRzpf4M8SspB1CrrVUZSWlD
+	 takiR2UbXZpMEX6kppxZKlBCs0w4mphydvrP+36SJUmVJ9Z31LCJp5e6BirvItBEv1
+	 KNaCSneM95MJq9KkrLrbrHchsSAWlz1EkZhjshys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729952AbfIRG2d (ORCPT
+        id S1730462AbfIRG1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:28:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49386 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbfIRG13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:29 -0400
+        id S1729595AbfIRG1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 706E2218AF;
-        Wed, 18 Sep 2019 06:27:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A182D218AF;
+        Wed, 18 Sep 2019 06:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788048;
-        bh=Amq+M4DiCO97PAdKdNZc8x7IibU++eD91G9+f3YTBCA=;
+        s=default; t=1568788025;
+        bh=YVgQAE+ShXp0iEK2UypFwnD3fjYWg9f059yM5kZSxRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NpXsaALkJxpQDLCHZ88wNytMkrTbJWXDSImplLJ2yHcjMtrWgYhLJX3i8ryFiEchA
-         cq1/1BpzjGiCOgKSIjo19XR3nmXngn0bf9jTdgkogRFgIzHncXMBOb4j9NrNxv0V+5
-         +lV+M0HStNUGUQAo9NCFi/1wkzK/y08jnpk2CdCA=
+        b=QSH7BelfBidkIbQbeJozkMyMWOcSuQKjHY+08VIlG74vE85izMuJXbCeM65+KgGzF
+         8JCzCp9/Qt7LBfsSa4M8u8aL9iC+imdyxM5ZCKmddP9vWbXYpwftcdGF8YiNeL11pO
+         GhLwhyHRq61vguNt8hX81kggJsD3zR18ZcSuMhT8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Kaiser <lists@kaiser.cx>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        David Lechner <david@lechnology.com>,
-        Martin Kaiser <martin@kaiser.cx>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 5.2 79/85] modules: always page-align module section allocations
-Date:   Wed, 18 Sep 2019 08:19:37 +0200
-Message-Id: <20190918061237.881859124@linuxfoundation.org>
+        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        CK Hu <ck.hu@mediatek.com>
+Subject: [PATCH 5.2 71/85] drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
+Date:   Wed, 18 Sep 2019 08:19:29 +0200
+Message-Id: <20190918061237.653050886@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -63,55 +59,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jessica Yu <jeyu@kernel.org>
+From: Nishka Dasgupta <nishkadg.linux@gmail.com>
 
-commit 38f054d549a869f22a02224cd276a27bf14b6171 upstream.
+commit 165d42c012be69900f0e2f8545626cb9e7d4a832 upstream.
 
-Some arches (e.g., arm64, x86) have moved towards non-executable
-module_alloc() allocations for security hardening reasons. That means
-that the module loader will need to set the text section of a module to
-executable, regardless of whether or not CONFIG_STRICT_MODULE_RWX is set.
+Each iteration of for_each_child_of_node puts the previous
+node, but in the case of a goto from the middle of the loop, there is
+no put, thus causing a memory leak. Hence add an of_node_put before the
+goto in two places.
+Issue found with Coccinelle.
 
-When CONFIG_STRICT_MODULE_RWX=y, module section allocations are always
-page-aligned to handle memory rwx permissions. On some arches with
-CONFIG_STRICT_MODULE_RWX=n however, when setting the module text to
-executable, the BUG_ON() in frob_text() gets triggered since module
-section allocations are not page-aligned when CONFIG_STRICT_MODULE_RWX=n.
-Since the set_memory_* API works with pages, and since we need to call
-set_memory_x() regardless of whether CONFIG_STRICT_MODULE_RWX is set, we
-might as well page-align all module section allocations for ease of
-managing rwx permissions of module sections (text, rodata, etc).
+Fixes: 119f5173628a (drm/mediatek: Add DRM Driver for Mediatek SoC MT8173)
 
-Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
-Reported-by: Martin Kaiser <lists@kaiser.cx>
-Reported-by: Bartosz Golaszewski <brgl@bgdev.pl>
-Tested-by: David Lechner <david@lechnology.com>
-Tested-by: Martin Kaiser <martin@kaiser.cx>
-Tested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |    7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -64,14 +64,9 @@
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -567,12 +567,15 @@ static int mtk_drm_probe(struct platform
+ 			comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
+ 			if (!comp) {
+ 				ret = -ENOMEM;
++				of_node_put(node);
+ 				goto err_node;
+ 			}
  
- /*
-  * Modules' sections will be aligned on page boundaries
-- * to ensure complete separation of code and data, but
-- * only when CONFIG_STRICT_MODULE_RWX=y
-+ * to ensure complete separation of code and data
-  */
--#ifdef CONFIG_STRICT_MODULE_RWX
- # define debug_align(X) ALIGN(X, PAGE_SIZE)
--#else
--# define debug_align(X) (X)
--#endif
+ 			ret = mtk_ddp_comp_init(dev, node, comp, comp_id, NULL);
+-			if (ret)
++			if (ret) {
++				of_node_put(node);
+ 				goto err_node;
++			}
  
- /* If this is set, the section belongs in the init part of the module */
- #define INIT_OFFSET_MASK (1UL << (BITS_PER_LONG-1))
+ 			private->ddp_comp[comp_id] = comp;
+ 		}
 
 
