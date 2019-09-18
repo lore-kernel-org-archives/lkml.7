@@ -2,128 +2,205 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC115C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05661C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98A8C206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D088221920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfIRPqX (ORCPT
+        id S1731762AbfIRPqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:46:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:44176 "EHLO foss.arm.com"
+        Wed, 18 Sep 2019 11:46:38 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:18286 "EHLO mx1.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbfIRPqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:46:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4933337;
-        Wed, 18 Sep 2019 08:46:22 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78B2F3F59C;
-        Wed, 18 Sep 2019 08:46:20 -0700 (PDT)
-References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com> <87woe51ydd.fsf@arm.com> <CAKfTPtAF1WM6tCktgyyj=SLfJGT0qT5e_2Fu+SVheyfrJ-pg2A@mail.gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.2
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Parth Shah <parth@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        subhra mazumdar <subhra.mazumdar@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
+        id S1726676AbfIRPqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:46:36 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id A4F6050D4B;
+        Wed, 18 Sep 2019 17:46:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id ZgCJrYNr5TyO; Wed, 18 Sep 2019 17:46:22 +0200 (CEST)
+Date:   Wed, 18 Sep 2019 17:46:15 +0200
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>
-Subject: Re: Usecases for the per-task latency-nice attribute
-In-reply-to: <CAKfTPtAF1WM6tCktgyyj=SLfJGT0qT5e_2Fu+SVheyfrJ-pg2A@mail.gmail.com>
-Date:   Wed, 18 Sep 2019 16:46:18 +0100
-Message-ID: <87v9tp1ub9.fsf@arm.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Andy Lutomirski <luto@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-alpha@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 05/12] namei: obey trailing magic-link DAC permissions
+Message-ID: <20190918154615.suruy5v5xjftfwyl@yavin.microfocus.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-6-cyphar@cyphar.com>
+ <CAG48ez1_64249RdX6Nj_32YS+jhuXZBAd_ZL9ozggbSQy+cc-A@mail.gmail.com>
+ <20190918135100.sdxdmdluq6wlwryv@yavin.microfocus.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="blplt4ksioniygek"
+Content-Disposition: inline
+In-Reply-To: <20190918135100.sdxdmdluq6wlwryv@yavin.microfocus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On Wed, Sep 18, 2019 at 16:22:32 +0100, Vincent Guittot wrote...
+--blplt4ksioniygek
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, 18 Sep 2019 at 16:19, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+On 2019-09-18, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2019-09-17, Jann Horn <jannh@google.com> wrote:
+> > On Wed, Sep 4, 2019 at 10:21 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > > The ability for userspace to "re-open" file descriptors through
+> > > /proc/self/fd has been a very useful tool for all sorts of usecases
+> > > (container runtimes are one common example). However, the current
+> > > interface for doing this has resulted in some pretty subtle security
+> > > holes. Userspace can re-open a file descriptor with more permissions
+> > > than the original, which can result in cases such as /proc/$pid/exe
+> > > being re-opened O_RDWR at a later date even though (by definition)
+> > > /proc/$pid/exe cannot be opened for writing. When combined with O_PATH
+> > > the results can get even more confusing.
+> > [...]
+> > > Instead we have to restrict it in such a way that it doesn't break
+> > > (good) users but does block potential attackers. The solution applied=
+ in
+> > > this patch is to restrict *re-opening* (not resolution through)
+> > > magic-links by requiring that mode of the link be obeyed. Normal
+> > > symlinks have modes of a+rwx but magic-links have other modes. These
+> > > magic-link modes were historically ignored during path resolution, but
+> > > they've now been re-purposed for more useful ends.
+> >=20
+> > Thanks for dealing with this issue!
+> >=20
+> > [...]
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index 209c51a5226c..54d57dad0f91 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -872,7 +872,7 @@ void nd_jump_link(struct path *path)
+> > >
+> > >         nd->path =3D *path;
+> > >         nd->inode =3D nd->path.dentry->d_inode;
+> > > -       nd->flags |=3D LOOKUP_JUMPED;
+> > > +       nd->flags |=3D LOOKUP_JUMPED | LOOKUP_MAGICLINK_JUMPED;
+> > >  }
+> > [...]
+> > > +static int trailing_magiclink(struct nameidata *nd, int acc_mode,
+> > > +                             fmode_t *opath_mask)
+> > > +{
+> > > +       struct inode *inode =3D nd->link_inode;
+> > > +       fmode_t upgrade_mask =3D 0;
+> > > +
+> > > +       /* Was the trailing_symlink() a magic-link? */
+> > > +       if (!(nd->flags & LOOKUP_MAGICLINK_JUMPED))
+> > > +               return 0;
+> > > +
+> > > +       /*
+> > > +        * Figure out the upgrade-mask of the link_inode. Since these=
+ aren't
+> > > +        * strictly POSIX semantics we don't do an acl_permission_che=
+ck() here,
+> > > +        * so we only care that at least one bit is set for each upgr=
+ade-mode.
+> > > +        */
+> > > +       if (inode->i_mode & S_IRUGO)
+> > > +               upgrade_mask |=3D FMODE_PATH_READ;
+> > > +       if (inode->i_mode & S_IWUGO)
+> > > +               upgrade_mask |=3D FMODE_PATH_WRITE;
+> > > +       /* Restrict the O_PATH upgrade-mask of the caller. */
+> > > +       if (opath_mask)
+> > > +               *opath_mask &=3D upgrade_mask;
+> > > +       return may_open_magiclink(upgrade_mask, acc_mode);
+> > >  }
+> >=20
+> > This looks racy because entries in the file descriptor table can be
+> > switched out as long as task->files->file_lock isn't held. Unless I'm
+> > missing something, something like the following (untested) would
+> > bypass this restriction:
+>=20
+> You're absolutely right -- good catch!
+>=20
+> > Perhaps you could change nd_jump_link() to "void nd_jump_link(struct
+> > path *path, umode_t link_mode)", and let proc_pid_get_link() pass the
+> > link_mode through from an out-argument of .proc_get_link()? Then
+> > proc_fd_link() could grab the proper mode in a race-free manner. And
+> > nd_jump_link() could stash the mode in the nameidata.
+>=20
+> This indeed does appear to be the simplest solution -- I'm currently
+> testing a variation of the patch you proposed (with a few extra bits to
+> deal with nd_jump_link and proc_get_link being used elsewhere).
+>=20
+> I'll include this change (assuming it fixes the flaw you found) in the
+> v13 series I'll send around next week. Thanks, Jann!
 
-[...]
+In case you're interested -- I've also included a selftest based on this
+attack in my series (though it uses CLONE_FILES so that we could also
+test O_EMPTYPATH, which wasn't affected because it didn't go through
+procfs and thus couldn't hit the "outdated inode->i_mode" problem).
 
->> $> Wakeup path tunings
->> ==========================
->>
->> Some additional possible use-cases was already discussed in [3]:
->>
->>  - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
->>    depending on crossing certain pre-configured threshold of latency
->>    niceness.
->>
->>  - dynamically bias the vruntime updates we do in place_entity()
->>    depending on the actual latency niceness of a task.
->>
->>    PeterZ thinks this is dangerous but that we can "(carefully) fumble a
->>    bit there."
->
-> I agree with Peter that we can easily break the fairness if we bias vruntime
+The attack script succeeds around 20% of the time on the original
+patchset, and with the updated patchset it doesn't succeed in several
+hundred thousand attempts (which I've repeated a few times).
 
-Just to be more precise here and also to better understand, here I'm
-talking about turning the tweaks we already have for:
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
- - START_DEBIT
- - GENTLE_FAIR_SLEEPERS
+--blplt4ksioniygek
+Content-Type: application/pgp-signature; name="signature.asc"
 
-a bit more parametric and proportional to the latency-nice of a task.
+-----BEGIN PGP SIGNATURE-----
 
-In principle, if a task declares a positive latency niceness, could we
-not read this also as "I accept to be a bit penalised in terms of
-fairness at wakeup time"?
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXYJRRAAKCRCdlLljIbnQ
+Ep3WAP0cvG8YTD9aS1zuiIbFfMQLKt1nuxBciHwn7LaCHk9Z0QEAtNdPaxztVO/p
+utsBd24Q6vZYzx6vj8OnW5nGpjaLpQA=
+=rL8c
+-----END PGP SIGNATURE-----
 
-Whatever tweaks we do there should affect anyway only one sched_latency
-period... although I'm not yet sure if that's possible and how.
-
->>  - bias the decisions we take in check_preempt_tick() still depending
->>    on a relative comparison of the current and wakeup task latency
->>    niceness values.
->
-> This one seems possible as it will mainly enable a task to preempt
-> "earlier" the running task but will not break the fairness
-> So the main impact will be the number of context switch between tasks
-> to favor or not the scheduling latency
-
-Preempting before is definitively a nice-to-have feature.
-
-At the same time it's interesting a support where a low latency-nice
-task (e.g. TOP_APP) RUNNABLE on a CPU has better chances to be executed
-up to completion without being preempted by an high latency-nice task
-(e.g. BACKGROUND) waking up on its CPU.
-
-For that to happen, we need a mechanism to "delay" the execution of a
-less important RUNNABLE task up to a certain period.
-
-It's impacting the fairness, true, but latency-nice in this case will
-means that we want to "complete faster", not just "start faster".
-
-Is this definition something we can reason about?
-
-Best,
-Patrick
-
--- 
-#include <best/regards.h>
-
-Patrick Bellasi
+--blplt4ksioniygek--
