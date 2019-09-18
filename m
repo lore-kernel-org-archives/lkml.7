@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91197C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B7620678
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF2B20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787656;
-	bh=yQ9h4yLVSfDxLQCWQd9WmA0cFx043a9Mbo/vQWky9s4=;
+	s=default; t=1568787659;
+	bh=8Oga840qT7mNdbKHWlniyreRrb6tdK+loARl/EV5NNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGRVlagZs0FWy6yES4EFnJIy68ISf4lMOcldxT+HAtli45sMAFq8kEwjKdIU7wwy0
-	 xc/VjpPO1Io0EfNDzy7IgvRlglGFCA6IEHTNFfhCfrcn9THoXmtyBCmmk2ayWUHufL
-	 EsrO2NBaEC7Pv0ltskJtexvFLnQjGcEFQw9RzAeA=
+	b=uOeFDymhbsXo7hLRssGy7NDOhVVUwrl00pwRGHUjSFK4KBamGIB8YdeQ098YvLIMn
+	 M3BinWxKMGeV9YKhVoQWXX1HR/GpRlxM42efxcTGMA9+kxjy2mgu3QqBtbYVNpA9hD
+	 XIkHNal/SoUuCBH37iGcqhzo5X9j5FtfYX3oBIVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfIRGUz (ORCPT
+        id S1728878AbfIRGU7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39934 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728837AbfIRGUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:52 -0400
+        id S1728847AbfIRGUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C57721924;
-        Wed, 18 Sep 2019 06:20:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C19222BD;
+        Wed, 18 Sep 2019 06:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787651;
-        bh=yQ9h4yLVSfDxLQCWQd9WmA0cFx043a9Mbo/vQWky9s4=;
+        s=default; t=1568787654;
+        bh=8Oga840qT7mNdbKHWlniyreRrb6tdK+loARl/EV5NNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f7YBDrzHn/XwdlzYew6Vy186ZAl2giD+seu/AlHBDvBik/FwuKG94IgbVXuGEpVhv
-         f16GwILB/GOFLgwVQH9W4Aq9XqF+Pk6exKwKzm5OvRcGWLsCrTFsACwx0wa/7dFL87
-         ckkyOm8J6uaJrJJMTBQlL0eFWIO5jh4CHStq0xxs=
+        b=2VkkYh535KMCMpb2uQ5ZXIMmnX9rDNiV/KCbXkKtuq0Ck8KstmsbZ2uDDZAi2lWRT
+         lFLQRXr8syQm96i13Vwy4mf8HM2yn2S8Bx83LkhVTimGmI8/zA5GUppBTfF+FZxFHY
+         iCr9n6w0dQT9qV/WEuaOv7iHWHA9Ii+bSUdEZVcI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 4.14 28/45] drm/meson: Add support for XBGR8888 & ABGR8888 formats
-Date:   Wed, 18 Sep 2019 08:19:06 +0200
-Message-Id: <20190918061226.060082443@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.14 29/45] clk: rockchip: Dont yell about bad mmc phases when getting
+Date:   Wed, 18 Sep 2019 08:19:07 +0200
+Message-Id: <20190918061226.298005862@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -59,61 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 5ffff4415f9eeae834960226770963e2947e17eb upstream.
+commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
 
-Add missing XBGR8888 & ABGR8888 formats variants from the primary plane.
+At boot time, my rk3288-veyron devices yell with 8 lines that look
+like this:
+  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
 
-Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190429075238.7884-1-narmstrong@baylibre.com
+This is because the clock framework at clk_register() time tries to
+get the phase but we don't have a parent yet.
+
+While the errors appear to be harmless they are still ugly and, in
+general, we don't want yells like this in the log unless they are
+important.
+
+There's no real reason to be yelling here.  We can still return
+-EINVAL to indicate that the phase makes no sense without a parent.
+If someone really tries to do tuning and the clock is reported as 0
+then we'll see the yells in rockchip_mmc_set_phase().
+
+Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/meson/meson_plane.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/meson/meson_plane.c
-+++ b/drivers/gpu/drm/meson/meson_plane.c
-@@ -124,6 +124,13 @@ static void meson_plane_atomic_update(st
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
- 					      OSD_COLOR_MATRIX_32_ARGB;
- 		break;
-+	case DRM_FORMAT_XBGR8888:
-+		/* For XRGB, replace the pixel's alpha by 0xFF */
-+		writel_bits_relaxed(OSD_REPLACE_EN, OSD_REPLACE_EN,
-+				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
-+		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
-+					      OSD_COLOR_MATRIX_32_ABGR;
-+		break;
- 	case DRM_FORMAT_ARGB8888:
- 		/* For ARGB, use the pixel's alpha */
- 		writel_bits_relaxed(OSD_REPLACE_EN, 0,
-@@ -131,6 +138,13 @@ static void meson_plane_atomic_update(st
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
- 					      OSD_COLOR_MATRIX_32_ARGB;
- 		break;
-+	case DRM_FORMAT_ABGR8888:
-+		/* For ARGB, use the pixel's alpha */
-+		writel_bits_relaxed(OSD_REPLACE_EN, 0,
-+				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
-+		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
-+					      OSD_COLOR_MATRIX_32_ABGR;
-+		break;
- 	case DRM_FORMAT_RGB888:
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_24 |
- 					      OSD_COLOR_MATRIX_24_RGB;
-@@ -200,7 +214,9 @@ static const struct drm_plane_funcs meso
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -59,10 +59,8 @@ static int rockchip_mmc_get_phase(struct
+ 	u32 delay_num = 0;
  
- static const uint32_t supported_drm_formats[] = {
- 	DRM_FORMAT_ARGB8888,
-+	DRM_FORMAT_ABGR8888,
- 	DRM_FORMAT_XRGB8888,
-+	DRM_FORMAT_XBGR8888,
- 	DRM_FORMAT_RGB888,
- 	DRM_FORMAT_RGB565,
- };
+ 	/* See the comment for rockchip_mmc_set_phase below */
+-	if (!rate) {
+-		pr_err("%s: invalid clk rate\n", __func__);
++	if (!rate)
+ 		return -EINVAL;
+-	}
+ 
+ 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
+ 
 
 
