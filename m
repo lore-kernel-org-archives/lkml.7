@@ -2,106 +2,159 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C904C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593BFC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3026321907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C53E214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:43:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="S2FCcJGd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730498AbfIRIeT (ORCPT
+        id S1729006AbfIRIny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:34:19 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:58664 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726336AbfIRIeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:34:19 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id B5078A00FAE7FCD80D5B;
-        Wed, 18 Sep 2019 16:34:16 +0800 (CST)
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 18 Sep 2019 16:34:15 +0800
-Received: from architecture4 (10.140.130.215) by
- dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 18 Sep 2019 16:34:15 +0800
-Date:   Wed, 18 Sep 2019 16:33:08 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     Wei Yongjun <weiyongjun1@huawei.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH -next] erofs: fix return value check in
- erofs_read_superblock()
-Message-ID: <20190918083308.GA30134@architecture4>
-References: <20190918083033.47780-1-weiyongjun1@huawei.com>
+        Wed, 18 Sep 2019 04:43:54 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39719 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfIRInx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:43:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r3so5946701wrj.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 01:43:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:references:user-agent:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Es/bmU3c9XGaRtzCiMLIVrPNjr9MNI0eTxg3xMnbUYc=;
+        b=S2FCcJGdZtO1gO4SQHnOHraw90NxGk+ySbB9OIxE1vfxheAusATdTaw/syxuwdGWQI
+         92sF2Nr9TgHxs7w9AuZJMkw35AR0EvurNbRLvbFBj0IhXv8+CtvAmZEn4/1JRD/sQl+7
+         tNMt7J5QEAw5awSGxUcQ8/C/fS2112pJR0ilZf81yL8vBnGNaugVKY9xmUmAErDUp2Sh
+         VlGTEU7rvD1DW5sD4FehEg9RXAfUKfdQ8YV5iBOpMAeohp1oWwhAsgleYcPMPeSmZEgO
+         sl+eIrDHwIH3Ei22m0zaGRvVaJHEvtf5PLgIY9dlvf0pyHhxZ0Kxb/8q3jOurf9y3lOh
+         +X0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:user-agent:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Es/bmU3c9XGaRtzCiMLIVrPNjr9MNI0eTxg3xMnbUYc=;
+        b=NJVVo16RGh+/E4YsYRLkNMQIE/i5TeRzv/wq4kLwt2ru7SShjNcFwWYCyEoQRnAOxY
+         g8HnuIty+2CU+w8OrD57BsHw9gxl94rGx7rtJM8+TJESK37/yG1rgrMQH8Aw+lGrPEaL
+         u3SQA4oH99DmigdiJc7CI8RVSdAWYjU6aRy/7NDF9SKPJzEriIo7ZyX27RUv3lSEFgSI
+         M0RFKL5IX8gwWe4OizxQwUn0ZTpyTd+ICYD4h6Lg8/5h43TpdS6IqeTi/p/f3Jqsni5c
+         sUHUuhQ6CblNcb1OWde3xJ/rFS4RH2zQwR76GICg+tAFt8LtRFqGVpXgDfEUst7Jy2FW
+         3kYg==
+X-Gm-Message-State: APjAAAWEkU4bn+Gq/Jrgz+mfdlqAr7LXKV2Un/uZC9X6VSW28QXZYxnr
+        ncuYJXlM7XWi0rRluzvlthWW/A==
+X-Google-Smtp-Source: APXvYqz3Kpju44v9NdaCUS71dFKfNZ3q3V7oya0OqrnOC9uxnDdFSkv5zrOWWA/QCE/CJM9pIPUidg==
+X-Received: by 2002:a5d:52c8:: with SMTP id r8mr2192409wrv.256.1568796231510;
+        Wed, 18 Sep 2019 01:43:51 -0700 (PDT)
+Received: from localhost (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id q10sm9774982wrd.39.2019.09.18.01.43.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 01:43:50 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+X-Google-Original-From: Jerome Brunet <jbrunet@starbuckisacylon.baylibre.com>
+References: <20190918082500.209281-1-cychiang@chromium.org> <20190918082500.209281-3-cychiang@chromium.org>
+User-agent: mu4e 1.3.1; emacs 26.2
+To:     Cheng-Yi Chiang <cychiang@chromium.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heiko Stuebner <heiko@sntech.de>, dianders@chromium.org,
+        dgreid@chromium.org, tzungbi@chromium.org,
+        alsa-devel@alsa-project.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org
+Subject: Re: [PATCH v6 2/4] drm: dw-hdmi-i2s: Use fixed id for codec device
+In-reply-to: <20190918082500.209281-3-cychiang@chromium.org>
+Date:   Wed, 18 Sep 2019 10:43:49 +0200
+Message-ID: <1j7e663sfu.fsf@starbuckisacylon.baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190918083033.47780-1-weiyongjun1@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Originating-IP: [10.140.130.215]
-X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
- dggeme762-chm.china.huawei.com (10.3.19.108)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yongjun,
 
-On Wed, Sep 18, 2019 at 08:30:33AM +0000, Wei Yongjun wrote:
-> In case of error, the function read_mapping_page() returns
-> ERR_PTR() not NULL. The NULL test in the return value check
-> should be replaced with IS_ERR().
-> 
-> Fixes: fe7c2423570d ("erofs: use read_mapping_page instead of sb_bread")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+On Wed 18 Sep 2019 at 10:24, Cheng-Yi Chiang <cychiang@chromium.org> wrote:
 
-Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+> The problem of using auto ID is that the device name will be like
+> hdmi-audio-codec.<id number>.auto.
+>
+> The number might be changed when there are other platform devices being
+> created before hdmi-audio-codec device.
+> Use a fixed name so machine driver can set codec name on the DAI link.
+>
+> Using the fixed name should be fine because there will only be one
+> hdmi-audio-codec device.
 
+While this is true all platforms we know of (I suppose), It might not be
+the case later on. I wonder if making such assumption is really
+desirable in a code which is used by quite a few different platforms.
 
-Right... That is my mistake on recent killing bh
-transformation...
+Instead of trying to predict what the device name will be, can't you just
+query it in your machine driver ? Using a device tree phandle maybe ?
 
-I have no idea this patch could be merged for -rc1
-since I don't know Greg could still accept patches
-or freezed...
+It is quite usual to set the dai links this way, "simple-card" is a good
+example of this.
 
-Since it's an error handling path and trivial, if
-it's some late, could I submit this later after
-erofs is merged into mainline (if it's ok) for -rc1?
-(or maybe -rc2?)
-
-Thanks,
-Gao Xiang
-
+>
+> Fix the codec name in rockchip rk3288_hdmi_analog machine driver.
+>
+> Signed-off-by: Cheng-Yi Chiang <cychiang@chromium.org>
 > ---
->  fs/erofs/super.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
-> index caf9a95173b0..0e369494f2f2 100644
-> --- a/fs/erofs/super.c
-> +++ b/fs/erofs/super.c
-> @@ -105,9 +105,9 @@ static int erofs_read_superblock(struct super_block *sb)
->  	int ret;
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c | 2 +-
+>  sound/soc/rockchip/rk3288_hdmi_analog.c             | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> index d7e65c869415..86bd482b9f94 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi-i2s-audio.c
+> @@ -193,7 +193,7 @@ static int snd_dw_hdmi_probe(struct platform_device *pdev)
 >  
->  	page = read_mapping_page(sb->s_bdev->bd_inode->i_mapping, 0, NULL);
-> -	if (!page) {
-> +	if (IS_ERR(page)) {
->  		erofs_err(sb, "cannot read erofs superblock");
-> -		return -EIO;
-> +		return PTR_ERR(page);
->  	}
+>  	memset(&pdevinfo, 0, sizeof(pdevinfo));
+>  	pdevinfo.parent		= pdev->dev.parent;
+> -	pdevinfo.id		= PLATFORM_DEVID_AUTO;
+> +	pdevinfo.id		= PLATFORM_DEVID_NONE;
+>  	pdevinfo.name		= HDMI_CODEC_DRV_NAME;
+>  	pdevinfo.data		= &pdata;
+>  	pdevinfo.size_data	= sizeof(pdata);
+> diff --git a/sound/soc/rockchip/rk3288_hdmi_analog.c b/sound/soc/rockchip/rk3288_hdmi_analog.c
+> index 767700c34ee2..8286025a8747 100644
+> --- a/sound/soc/rockchip/rk3288_hdmi_analog.c
+> +++ b/sound/soc/rockchip/rk3288_hdmi_analog.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/gpio.h>
+>  #include <linux/of_gpio.h>
+>  #include <sound/core.h>
+> +#include <sound/hdmi-codec.h>
+>  #include <sound/jack.h>
+>  #include <sound/pcm.h>
+>  #include <sound/pcm_params.h>
+> @@ -142,7 +143,7 @@ static const struct snd_soc_ops rk_ops = {
+>  SND_SOC_DAILINK_DEFS(audio,
+>  	DAILINK_COMP_ARRAY(COMP_EMPTY()),
+>  	DAILINK_COMP_ARRAY(COMP_CODEC(NULL, NULL),
+> -			   COMP_CODEC("hdmi-audio-codec.2.auto", "i2s-hifi")),
+> +			   COMP_CODEC(HDMI_CODEC_DRV_NAME, "i2s-hifi")),
+>  	DAILINK_COMP_ARRAY(COMP_EMPTY()));
 >  
->  	sbi = EROFS_SB(sb);
-> 
-> 
-> 
+>  static struct snd_soc_dai_link rk_dailink = {
+
