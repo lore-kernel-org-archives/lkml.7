@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 869F1C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D9BC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D95221920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8798320678
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787707;
-	bh=zqnBRzTtYB/0T/hE8i8xYasAQntEJx5++76H/peYRq4=;
+	s=default; t=1568787711;
+	bh=bwO8NrLUzX5QEkcPRdp7XJubD37gy/0HLOx1LlqE8Uk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C/PfgmCR0HNHSJF7XIsmr7umTRwt/4r4H/QCFSm+p8uUMBONyoCGEFqNQaTVYojR5
-	 l4EebmGRR8Ht6V8s8tISVhaDtmZ69Gqexd+TvDQtvou1SPk8pbiTu9aJ2LlbAc4Cb3
-	 LsuMOhAgcRT4ogXFHF9bTItlIU5ZjLXLjBI1pLhw=
+	b=LInKDPCdL8aEz5sg/CLzE0qB+6ZNuKJV0hLfHOJd0jr6gXNOoFFnP2fE4e/1Wasn4
+	 h55PoUcvQ7CYdc57IvV5YAGNz6hZozujhdc5L6ZqJ+bohq/sjI1+SYvIICXCxkn1OY
+	 EnQI9DFXH7tHorjbEoeUZQFopJ4PmVpkfogymIk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729231AbfIRGVq (ORCPT
+        id S1729266AbfIRGVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:21:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41288 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729197AbfIRGVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:21:42 -0400
+        id S1729238AbfIRGVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AEBA21924;
-        Wed, 18 Sep 2019 06:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D06FB20678;
+        Wed, 18 Sep 2019 06:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787702;
-        bh=zqnBRzTtYB/0T/hE8i8xYasAQntEJx5++76H/peYRq4=;
+        s=default; t=1568787707;
+        bh=bwO8NrLUzX5QEkcPRdp7XJubD37gy/0HLOx1LlqE8Uk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U9yXHdudXNl3nnvvniJvJoTefmLQxbZUuOIoKaart9bx8KWkI+eiHHcv7xxT5p8j4
-         PSRvTMvyWvsiNsutI8FFl/ipuCx4lGgRZLfEs1dqAvLaJiUZNexe99q0T3bN05qnZt
-         WcdAIKdRUpgU6AV5vaSsKMDg5WULasqrlQUIBDxQ=
+        b=vdE6SggwTVFD3Zkg3z+NJYdlZ67ZdyCTN+QqBOeJRVtwq1YbZC9ygpAd/unbY68Zj
+         EBxN++uO6yY5MHZwIPFP5vgVHj9kdMj796eE/pGhmaxmWwgSbQnXMBhrrP7/4MMiqK
+         jFNZEgX8LMm+ImuTQuBjLbK4gHY0J6+uXlI7PYfI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>,
-        Nishanth Menon <nm@ti.com>,
-        Alejandro Hernandez <ajhernandez@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: [PATCH 4.14 40/45] firmware: ti_sci: Always request response from firmware
-Date:   Wed, 18 Sep 2019 08:19:18 +0200
-Message-Id: <20190918061227.712028794@linuxfoundation.org>
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Christian Kellner <ckellner@redhat.com>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.14 42/45] Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
+Date:   Wed, 18 Sep 2019 08:19:20 +0200
+Message-Id: <20190918061227.872848858@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -62,54 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew F. Davis <afd@ti.com>
+From: Mario Limonciello <mario.limonciello@dell.com>
 
-commit 66f030eac257a572fbedab3d9646d87d647351fd upstream.
+commit 1ffdb51f28e8ec6be0a2b812c1765b5cf5c44a8f upstream.
 
-TI-SCI firmware will only respond to messages when the
-TI_SCI_FLAG_REQ_ACK_ON_PROCESSED flag is set. Most messages already do
-this, set this for the ones that do not.
+This reverts commit a0085f2510e8976614ad8f766b209448b385492f.
 
-This will be enforced in future firmware that better match the TI-SCI
-specifications, this patch will not break users of existing firmware.
+This commit has caused regressions in notebooks that support suspend
+to idle such as the XPS 9360, XPS 9370 and XPS 9380.
 
-Fixes: aa276781a64a ("firmware: Add basic support for TI System Control Interface (TI-SCI) protocol")
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-Acked-by: Nishanth Menon <nm@ti.com>
-Tested-by: Alejandro Hernandez <ajhernandez@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+These notebooks will wakeup from suspend to idle from an unsolicited
+advertising packet from an unpaired BLE device.
+
+In a bug report it was sugggested that this is caused by a generic
+lack of LE privacy support.  Revert this commit until that behavior
+can be avoided by the kernel.
+
+Fixes: a0085f2510e8 ("Bluetooth: btusb: driver to enable the usb-wakeup feature")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=200039
+Link: https://marc.info/?l=linux-bluetooth&m=156441081612627&w=2
+Link: https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/750073/
+CC: Bastien Nocera <hadess@hadess.net>
+CC: Christian Kellner <ckellner@redhat.com>
+CC: Sukumar Ghorai <sukumar.ghorai@intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/firmware/ti_sci.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/bluetooth/btusb.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -471,9 +471,9 @@ static int ti_sci_cmd_get_revision(struc
- 	struct ti_sci_xfer *xfer;
- 	int ret;
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1124,10 +1124,6 @@ static int btusb_open(struct hci_dev *hd
+ 	}
  
--	/* No need to setup flags since it is expected to respond */
- 	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_VERSION,
--				   0x0, sizeof(struct ti_sci_msg_hdr),
-+				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-+				   sizeof(struct ti_sci_msg_hdr),
- 				   sizeof(*rev_info));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
-@@ -601,9 +601,9 @@ static int ti_sci_get_device_state(const
- 	info = handle_to_ti_sci_info(handle);
- 	dev = info->dev;
+ 	data->intf->needs_remote_wakeup = 1;
+-	/* device specific wakeup source enabled and required for USB
+-	 * remote wakeup while host is suspended
+-	 */
+-	device_wakeup_enable(&data->udev->dev);
  
--	/* Response is expected, so need of any flags */
- 	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_GET_DEVICE_STATE,
--				   0, sizeof(*req), sizeof(*resp));
-+				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-+				   sizeof(*req), sizeof(*resp));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
- 		dev_err(dev, "Message alloc failed(%d)\n", ret);
+ 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+ 		goto done;
+@@ -1191,7 +1187,6 @@ static int btusb_close(struct hci_dev *h
+ 		goto failed;
+ 
+ 	data->intf->needs_remote_wakeup = 0;
+-	device_wakeup_disable(&data->udev->dev);
+ 	usb_autopm_put_interface(data->intf);
+ 
+ failed:
 
 
