@@ -2,302 +2,197 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93555C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B50C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CBE20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1790520856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QmOAFiHF"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="JiyTPGZA";
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="JiyTPGZA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfIRGBU (ORCPT
+        id S1727593AbfIRGBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:01:20 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42797 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726442AbfIRGBT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:01:19 -0400
-Received: by mail-io1-f66.google.com with SMTP id n197so13337409iod.9;
-        Tue, 17 Sep 2019 23:01:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=cbGSMpOHfbKLnIF9z4QnPBZdu4GJFMh8oYMZy4NVoII=;
-        b=QmOAFiHF0cOXzwvuqgyEEKm2NNy7lbv+yEFWr5kLY37xDpYSy81rXSkFfi12IYG4TX
-         aursQcYpzKfaPSK4l3YSxMfC9Chi0sun4Woh30qXFl8sGPGB4KXt4rUxsMpDcdEmOaZA
-         Vm7liW+XhNtLxwO1pK4gbU3Wrpuqydhmk0XvS3OMcUNasm818gDNz2LMWAJLGugEETPd
-         Dhu8CuPOmd3IhAcgUcwVQanxOh9sZ7jESN3iM+zjkE4eeGhhxzha5rODKtqsZ/yI9aUV
-         gqNLXT6YDWgEUQmgjHL8w9faQlecWu6kiazPYfy0IlsNcTXHePPfDUQOyeDoZdh7Xljc
-         YE+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=cbGSMpOHfbKLnIF9z4QnPBZdu4GJFMh8oYMZy4NVoII=;
-        b=inGJNf9vKqeYZNNogKJbL7qq4GoAYrjv1Y090RSc++T0kdLEMk9IfOqapkXHxPcBuc
-         tK+G1M5cSYw7fbU/c9B7Ih6lSBcwYPL7utvy9VaEFIw4Uhp0DSe58orxtQgrV5o7Ykpq
-         b/qPlVM7TDd69VbMlUAh3pvvkDTVJcMMcQJAkRGx+IQUgbNY6ZNphLUlcL/4lhNA8GrN
-         qLJGnA72wAnWgVReb4pMTHF0HlTYgM/XnbInDV+T9UhPJb4Qg6fNA40iclXa6aU7E7DO
-         bruR/f98bgHGBGQykBuByhTGKOEgA7YnejDf4R3UhkeVRyx/5M2XbNGjHp+EWygc0s5W
-         qSVw==
-X-Gm-Message-State: APjAAAUBx5gNMXR8FIWsfFALaFBaIWfnSIwOAvVlr8R7X/tl1vvv8EYG
-        Qi6RqhyQg9T7YVd3QH74Pi0/ACxhU5Q8N1Z3OlI=
-X-Google-Smtp-Source: APXvYqxW+NsRhBN107cSv+Z2oGee5zjuh7OHq3oL2KgP0qBYiLIw3E86OwRVO5wwEc/XEtqA8kB7ncde4bUhpvMqA0M=
-X-Received: by 2002:a6b:c947:: with SMTP id z68mr3406457iof.132.1568786478019;
- Tue, 17 Sep 2019 23:01:18 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-12-andrew.smirnov@gmail.com> <VI1PR0402MB34859D108C03F3AB0F64EE6598B10@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB34859D108C03F3AB0F64EE6598B10@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 17 Sep 2019 23:01:06 -0700
-Message-ID: <CAHQ1cqFyPs1vONwV3Ujv6MwqoP=672pCEXFTuM+j20zNPD86tw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: caam - use the same jr for rng init/exit
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 18 Sep 2019 02:01:54 -0400
+Received: from mail-eopbgr30081.outbound.protection.outlook.com ([40.107.3.81]:53921
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726442AbfIRGBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:01:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RU27VzIsiqU7nilB7U+07yVO9o8p1lR8kj+eahsonPg=;
+ b=JiyTPGZAXMv302JVGw553l0rEox4CkxBi98W/vYVbf40QRUT6zLc2jEmoXOSnyGs47MQnlOEWEr/HqK3GvJTNm3GAcbOApK3IChdFUXtKvsPmom422BhcFiDlzOSe1nmEXAO/MRwwd38ABxMskQTwm6FofKFeZW4hZnC5hGYFK4=
+Received: from HE1PR08CA0067.eurprd08.prod.outlook.com (2603:10a6:7:2a::38) by
+ DB8PR08MB4076.eurprd08.prod.outlook.com (2603:10a6:10:b0::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.21; Wed, 18 Sep 2019 06:01:46 +0000
+Received: from AM5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e08::206) by HE1PR08CA0067.outlook.office365.com
+ (2603:10a6:7:2a::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.18 via Frontend
+ Transport; Wed, 18 Sep 2019 06:01:46 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT028.mail.protection.outlook.com (10.152.16.118) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.14 via Frontend Transport; Wed, 18 Sep 2019 06:01:44 +0000
+Received: ("Tessian outbound d5a1f2820a4f:v31"); Wed, 18 Sep 2019 06:01:43 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 0b333124ff32.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.0.57])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 56582147-6A58-4446-8240-B293CC1E63B7.1;
+        Wed, 18 Sep 2019 06:01:38 +0000
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01lp2057.outbound.protection.outlook.com [104.47.0.57])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0b333124ff32.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 18 Sep 2019 06:01:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jqHsDtIzGeTFklqlq+VrgAgH397JKMRUBK10EM5eoFUfHVw8+aHHIkBWqnnrztbSJM9GNCRpfZC0s2QA4kGIbj0d8pJH3KwoNz2DNcDHs4Ma5l85j8KCjxn7BDLZIeSL2IMueWkk4ljfxcujVveDQ/kNJ6UQa4QjzZ2SWnM/oemgjd0TpkCkkphQgeJApMbbErkL+KDLwyJmY1liSpeO1/8POR3RQDFVbE/SuCt7yj+ZNc+FKWLutikHwOALsiUB9KyfYrceFX6niPi/8LEyl13cH4AAZT6EjdlHzAxY8IA+VHDBTeOlTvf6yyB6t4W2aRfFzY/oRwYeCb5qdnGQRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RU27VzIsiqU7nilB7U+07yVO9o8p1lR8kj+eahsonPg=;
+ b=QwuRhHML1cvZ49LJEMUWTV0zU/CTmFp8kZDrC7wm2CCFiPy/kOwfZLkH0WapOEXmo380uuQLNBs3JD13y8fl0LJiNXYH+22n4M9oelAeY+rH/+IuqGEYQr56Bdnp3kYCdRnHKqCqBHExFE/H2I66iM3CAkq3DZmgyScMECnThIU+qBxdOW/JBgWO/q8l8DtGLE7XeKM59cvd3IntCN8DaW9x1hno31aXA+k1wZjEmcUAVD20xPWCdkVi3cI1crzZppVAVIrypuCdSp9cu06F3b/pLcL+VFghf8yhnHu4bNp4HYO032AjWB9+KWFyBQWR3qmJGoYhd4wWz3+XQd9UrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RU27VzIsiqU7nilB7U+07yVO9o8p1lR8kj+eahsonPg=;
+ b=JiyTPGZAXMv302JVGw553l0rEox4CkxBi98W/vYVbf40QRUT6zLc2jEmoXOSnyGs47MQnlOEWEr/HqK3GvJTNm3GAcbOApK3IChdFUXtKvsPmom422BhcFiDlzOSe1nmEXAO/MRwwd38ABxMskQTwm6FofKFeZW4hZnC5hGYFK4=
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
+ HE1PR0801MB1690.eurprd08.prod.outlook.com (10.168.145.141) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Wed, 18 Sep 2019 06:01:34 +0000
+Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::40a2:f892:29a7:2942]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
+ ([fe80::40a2:f892:29a7:2942%10]) with mapi id 15.20.2263.023; Wed, 18 Sep
+ 2019 06:01:34 +0000
+From:   "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 3/6] Timer: expose monotonic clock and counter value
+Thread-Topic: [PATCH 3/6] Timer: expose monotonic clock and counter value
+Thread-Index: AQHVbUqaDFZ5iqdiL0+E9FJrHymYEKcwy6KAgAAi8UA=
+Date:   Wed, 18 Sep 2019 06:01:34 +0000
+Message-ID: <HE1PR0801MB1676AD8E5E50B70F1E3CD9F5F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20190917112430.45680-1-jianyong.wu@arm.com>
+ <20190917112430.45680-4-jianyong.wu@arm.com>
+ <20190918034235.GA1469@localhost>
+In-Reply-To: <20190918034235.GA1469@localhost>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: 608732e4-db59-46e7-920f-83398e68906f.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+x-originating-ip: [113.29.88.7]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: c962753e-ec51-4b27-f9d5-08d73bfdaf55
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:HE1PR0801MB1690;
+X-MS-TrafficTypeDiagnostic: HE1PR0801MB1690:|HE1PR0801MB1690:|DB8PR08MB4076:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DB8PR08MB407667EF5F2C4E42B60A1432F48E0@DB8PR08MB4076.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:2000;OLM:2000;
+x-forefront-prvs: 01644DCF4A
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(13464003)(199004)(189003)(186003)(102836004)(6506007)(53546011)(55236004)(66066001)(26005)(33656002)(99286004)(7696005)(66446008)(64756008)(66556008)(66476007)(76116006)(8936002)(66946007)(476003)(11346002)(81166006)(81156014)(8676002)(446003)(3846002)(52536014)(2906002)(5660300002)(486006)(54906003)(76176011)(86362001)(6116002)(316002)(7736002)(6246003)(478600001)(55016002)(14454004)(9686003)(25786009)(6436002)(229853002)(4326008)(71200400001)(71190400001)(1411001)(305945005)(74316002)(256004)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1690;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: l1G1qFjo0Us2Sxndm+WD5HpZPQ32cQmgsKtS2IrPrOn27WJAgOG1p6TYK5f2TMU1l76bqTQwboLBH4xb/CLu3E4PMV62rGQu2bb3xZIT7DwkuicwRybbd5g8eShNpa1LpB3rhxlPXQSiHS2++4qAqCFIUQlUXYpCOaMqd/LawWak5L827xrK4nrjf0FVDyoDzAE+fwFXTJJnip449RuucVmADRVOny/eSLE9t7D5C/OSR9cNSDR9U4ffaCmdIp3ttSO35O0XUMwDTV+KIYKQgp5INMFdAe9H3G/9JikgQcylEWcJBHBg2zOCTAEz3iTr/Tf1dfKFEcXcka+ca48up7YJIfkyzY95nF9Z7qIxLia+ujP0qn5q5HccPlnmEJy786q6X4WmfW2gkvoSJwLQyORYuRgUysdQFluDwfPmhzw=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1690
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Jianyong.Wu@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(136003)(346002)(199004)(189003)(13464003)(5660300002)(55016002)(6116002)(8746002)(478600001)(316002)(26005)(102836004)(26826003)(70586007)(53546011)(6862004)(50466002)(2906002)(76130400001)(8936002)(63350400001)(336012)(11346002)(446003)(33656002)(7696005)(14454004)(8676002)(186003)(81156014)(76176011)(86362001)(229853002)(6506007)(81166006)(4326008)(54906003)(36906005)(22756006)(1411001)(46406003)(52536014)(9686003)(450100002)(25786009)(6246003)(70206006)(476003)(66066001)(107886003)(74316002)(97756001)(356004)(99286004)(7736002)(305945005)(126002)(486006)(23726003)(3846002)(47776003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR08MB4076;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 840208ee-0a22-4ad2-17b1-08d73bfda944
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DB8PR08MB4076;
+NoDisclaimer: True
+X-Forefront-PRVS: 01644DCF4A
+X-Microsoft-Antispam-Message-Info: wIntRmAPq1glL77UCo9KT0o+hbr+U/eP45y1LMq59btu/4SCCAdU9teyjF9ZKDqGP7XOSxXpC37IEkPpCLWZF0hjhjGDip388MXyFT05W2J6Oq6P1fyb/qn5uXFKL+TFJPWbkE8VZx8vOfXhX5+Wl70XxIQcuUw6W2Ik/0/k4SMc0OGZXI4U85QLqnv3mb42NwvHVapm2uvGBxan84Pyc+ALqJPo99bXHMxYKhXtrsHGo7+bGP1FC8bqdKrwHHflDqidKHjBN6ztoJ++XYgj9cU75agNfBo5N0Z0VP5A0JPOh85O7lhtGzSTX+wkIpIG9wEC7oJU3bwOS748SH0BGyQ/SRhIr6Uuq74sz2HTydKpsRgW8H15OdZcl6zXcJtqhZob1G+k1j37QfK1lDzBKTvQptlrCaqgoZsgTbRWOZM=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2019 06:01:44.9875
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c962753e-ec51-4b27-f9d5-08d73bfdaf55
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB4076
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 2:35 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 9/4/2019 5:35 AM, Andrey Smirnov wrote:
-> > In order to allow caam_jr_enqueue() to lock underlying JR's
-> > device (via device_lock(), see commit that follows) we need to make
-> > sure that no code calls caam_jr_enqueue() as a part of caam_jr_probe()
-> > to avoid a deadlock. Unfortunately, current implementation of caamrng
-> > code does exactly that in caam_init_buf().
-> >
+Hi Richard,
 
-I don't think your patch addresses the above, so it can probably be
-cut out of the message.
+> -----Original Message-----
+> From: Richard Cochran <richardcochran@gmail.com>
+> Sent: Wednesday, September 18, 2019 11:43 AM
+> To: Jianyong Wu (Arm Technology China) <Jianyong.Wu@arm.com>
+> Cc: netdev@vger.kernel.org; pbonzini@redhat.com;
+> sean.j.christopherson@intel.com; maz@kernel.org; Mark Rutland
+> <Mark.Rutland@arm.com>; Will Deacon <Will.Deacon@arm.com>; Suzuki
+> Poulose <Suzuki.Poulose@arm.com>; linux-kernel@vger.kernel.org; Steve
+> Capper <Steve.Capper@arm.com>; Kaly Xin (Arm Technology China)
+> <Kaly.Xin@arm.com>; Justin He (Arm Technology China)
+> <Justin.He@arm.com>; nd <nd@arm.com>; linux-arm-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH 3/6] Timer: expose monotonic clock and counter value
+>=20
+> On Tue, Sep 17, 2019 at 07:24:27AM -0400, Jianyong Wu wrote:
+> > A number of PTP drivers (such as ptp-kvm) are assuming what the
+> > current clock source is, which could lead to interesting effects on
+> > systems where the clocksource can change depending on external events.
+> >
+> > For this purpose, add a new API that retrives both the current
+> > monotonic clock as well as its counter value.
+> >
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> > ---
+> >  include/linux/timekeeping.h |  3 +++
+> >  kernel/time/timekeeping.c   | 13 +++++++++++++
+> >  2 files changed, 16 insertions(+)
+>=20
+> For core time keeping changes, you must CC lkml, tglx, and John Stultz.
+>=20
 
-> > Another big problem with original caamrng initialization is a
-> > circular reference in the form of:
-> >
-> >  1. caam_rng_init() aquires JR via caam_jr_alloc(). Freed only by
-> >     caam_rng_exit()
-> >
-> >  2. caam_rng_exit() is only called by unregister_algs() once last JR
-> >     is shut down
-> >
-> >  3. caam_jr_remove() won't call unregister_algs() for last JR
-> >     until tfm_count reaches zero, which can only happen via
-> >     unregister_algs() -> caam_rng_exit() call chain.
-> >
-> > To avoid all of that, convert caamrng code to a platform device driver
-> > and extend caam_probe() to create corresponding platform device.
-> >
-> > Additionally, this change also allows us to remove any access to
-> > struct caam_drv_private in caamrng.c as well as simplify resource
-> > ownership/deallocation via devres.
-> >
-> I would avoid adding platform devices that don't have
-> corresponding DT nodes.
->
-> There's some generic advice here:
-> https://www.kernel.org/doc/html/latest/driver-api/driver-model/platform.h=
-tml#legacy-drivers-device-probing
->
-> and there's also previous experience in caam driver:
-> 6b175685b4a1 crypto: caam/qi - don't allocate an extra platform device
->
+Thanks, I will.
 
-Hmm, I am not sure how that experience relates to the case we have
-with hwrng, but OK, I'm going to assume that platform driver approach
-is a no-go.
+Thanks
+Jianyong Wu
 
-> The issue in caamrng is actually that caam/jr driver (jr.c) tries to call
-> caam_rng_exit() on the last available jr device.
-> Instead, caam_rng_exit() must be called on the same jr device that
-> was used during caam_rng_init().
->
-> Otherwise, by the time:
->
-> void caam_rng_exit(void)
-> {
->         if (!init_done)
->                 return;
->
->         caam_jr_free(rng_ctx->jrdev);
->         hwrng_unregister(&caam_rng);
-> [...]
->
-> is executed, rng_ctx->jrdev might have been removed.
->
-> This will cause an oops in caam_jr_free().
-> caam_cleanup() - .cleanup hwrng callback that is called when doing
-> hwrng_unregister() - also needs to be executed on that jr device.
->
-> The problem can be easily reproduced as follows.
->
-> If caamrng was initialized on jr0:
-> [...]
-> caam_jr 2101000.jr0: registering rng-caam
-> [...]
->
-> then by manually unbinding jr0 first, then jr1 (using i.MX6SX):
-> # echo -n "2101000.jr0" > /sys/bus/platform/drivers/caam_jr/
-> # echo -n "2102000.jr1" > /sys/bus/platform/drivers/caam_jr/
->
-> Unable to handle kernel NULL pointer dereference at virtual address 00000=
-040
-> pgd =3D 572e14e7
-> [00000040] *pgd=3Dbe2e8831
-> Internal error: Oops: 17 [#1] SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 629 Comm: sh Not tainted 5.3.0-rc1-00299-g8e2a2738e5d3-dirty =
-#8
-> Hardware name: Freescale i.MX6 SoloX (Device Tree)
-> PC is at caam_jr_free+0xc/0x24
-> LR is at caam_rng_exit+0x20/0x3c
-> pc : [<c08aef20>]    lr : [<c08bab1c>]    psr: 200f0013
-> sp : e9669e68  ip : 00001488  fp : 00000000
-> r10: 00000000  r9 : e9669f80  r8 : e9284010
-> r7 : e872d410  r6 : e872d410  r5 : e872d400  r4 : c1aa7cd8
-> r3 : 00000000  r2 : 00000040  r1 : 00000000  r0 : e872d010
-> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
-> Control: 10c5387d  Table: a969004a  DAC: 00000051
-> Process sh (pid: 629, stack limit =3D 0xfc1b6e94)
-> Stack: (0xe9669e68 to 0xe966a000)
-> 9e60:                   e865c940 c08af7dc e872d410 e872d410 c13a9cec c06b=
-223c
-> 9e80: c06b2218 e872d410 e81a9410 c06b08dc c13806f0 0000000b c13a9cec c06a=
-eaf8
-> 9ea0: 0000000b 00000000 0000000b e9284000 e91189c0 c0318c3c 00000000 0000=
-0000
-> 9ec0: e95ddbd0 e8843500 c1308b08 c6614c9f e8843500 00438340 e9668000 0000=
-0004
-> 9ee0: 00000000 c0285e00 00000001 00000000 00000000 c0288a44 00000000 0000=
-0000
-> 9f00: c1308b28 00000000 00000001 c130911c 00000001 c13e81d1 c0288a44 0000=
-0000
-> 9f20: e8ed9800 c019df00 e8ed9a7c c028ac08 00000001 00000000 c0288a44 c661=
-4c9f
-> 9f40: c1308b08 0000000b 00438340 e9669f80 e8843500 00438340 e9668000 c028=
-899c
-> 9f60: e95ddbc0 c6614c9f e8843500 e8843500 c1308b08 0000000b 00438340 c028=
-8bfc
-> 9f80: 00000000 00000000 00000000 c6614c9f 0000000b 00438340 b6ef1da0 0000=
-0004
-> 9fa0: c01011c4 c0101000 0000000b 00438340 00000001 00438340 0000000b 0000=
-0000
-> 9fc0: 0000000b 00438340 b6ef1da0 00000004 00438340 0000000b 00000000 0000=
-0000
-> 9fe0: 0000006c bea7f908 b6e19e58 b6e7325c 600f0010 00000001 00000000 0000=
-0000
-> [<c08aef20>] (caam_jr_free) from [<c08bab1c>] (caam_rng_exit+0x20/0x3c)
-> [<c08bab1c>] (caam_rng_exit) from [<c08af7dc>] (caam_jr_remove+0x38/0xc0)
-> [<c08af7dc>] (caam_jr_remove) from [<c06b223c>] (platform_drv_remove+0x24=
-/0x3c)
-> [<c06b223c>] (platform_drv_remove) from [<c06b08dc>] (device_release_driv=
-er_internal+0xdc/0x1a0)
-> [<c06b08dc>] (device_release_driver_internal) from [<c06aeaf8>] (unbind_s=
-tore+0x5c/0xcc)
-> [<c06aeaf8>] (unbind_store) from [<c0318c3c>] (kernfs_fop_write+0xfc/0x1e=
-0)
-> [<c0318c3c>] (kernfs_fop_write) from [<c0285e00>] (__vfs_write+0x2c/0x1d0=
-)
-> [<c0285e00>] (__vfs_write) from [<c028899c>] (vfs_write+0xa0/0x180)
-> [<c028899c>] (vfs_write) from [<c0288bfc>] (ksys_write+0x5c/0xdc)
-> [<c0288bfc>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> Exception stack(0xe9669fa8 to 0xe9669ff0)
-> 9fa0:                   0000000b 00438340 00000001 00438340 0000000b 0000=
-0000
-> 9fc0: 0000000b 00438340 b6ef1da0 00000004 00438340 0000000b 00000000 0000=
-0000
-> 9fe0: 0000006c bea7f908 b6e19e58 b6e7325c
-> Code: eaffff49 e5903040 e2832040 f5d2f000 (e1921f9f)
->
-> Thus, I'd say the following fix is needed:
->
-> -- >8 --
->
-> When caam_rng_exit() executes, the jr device that was used
-> during caam_rng_init() must be available.
->
-> This means that current scheme - where caam_rng_exit() is called
-> when last jr device is removed - is incorrect.
-> Instead, caam_rng_exit() has to run when the jr acquired
-> during caam_rng_init() is removed.
->
-> Fixes: 1b46c90c8e00 ("crypto: caam - convert top level drivers to librari=
-es")
-> Signed-off-by: Horia Geant=C4=83 <horia.geanta@nxp.com>
->
-> diff --git a/drivers/crypto/caam/caamrng.c b/drivers/crypto/caam/caamrng.=
-c
-> index e8baacaabe07..ec40178fa688 100644
-> --- a/drivers/crypto/caam/caamrng.c
-> +++ b/drivers/crypto/caam/caamrng.c
-> @@ -300,9 +300,9 @@ static struct hwrng caam_rng =3D {
->         .read           =3D caam_read,
->  };
->
-> -void caam_rng_exit(void)
-> +void caam_rng_exit(struct device *jrdev)
->  {
-> -       if (!init_done)
-> +       if (!init_done || jrdev !=3D rng_ctx->jrdev)
->                 return;
->
->         caam_jr_free(rng_ctx->jrdev);
-> diff --git a/drivers/crypto/caam/intern.h b/drivers/crypto/caam/intern.h
-> index 731b06becd9c..4795530203ad 100644
-> --- a/drivers/crypto/caam/intern.h
-> +++ b/drivers/crypto/caam/intern.h
-> @@ -165,7 +165,7 @@ static inline void caam_pkc_exit(void)
->  #ifdef CONFIG_CRYPTO_DEV_FSL_CAAM_RNG_API
->
->  int caam_rng_init(struct device *dev);
-> -void caam_rng_exit(void);
-> +void caam_rng_exit(struct device *jrdev);
->
->  #else
->
-> @@ -174,7 +174,7 @@ static inline int caam_rng_init(struct device *dev)
->         return 0;
->  }
->
-> -static inline void caam_rng_exit(void)
-> +static inline void caam_rng_exit(struct device *jrdev)
->  {
->  }
->
-> diff --git a/drivers/crypto/caam/jr.c b/drivers/crypto/caam/jr.c
-> index d11956bc358f..61aea11773a6 100644
-> --- a/drivers/crypto/caam/jr.c
-> +++ b/drivers/crypto/caam/jr.c
-> @@ -53,7 +53,6 @@ static void unregister_algs(void)
->
->         caam_qi_algapi_exit();
->
-> -       caam_rng_exit();
->         caam_pkc_exit();
->         caam_algapi_hash_exit();
->         caam_algapi_exit();
-> @@ -126,6 +125,8 @@ static int caam_jr_remove(struct platform_device *pde=
-v)
->         jrdev =3D &pdev->dev;
->         jrpriv =3D dev_get_drvdata(jrdev);
->
-> +       caam_rng_exit(jrdev);
-> +
->         /*
->          * Return EBUSY if job ring already allocated.
->          */
+> Thanks,
+> Richard
