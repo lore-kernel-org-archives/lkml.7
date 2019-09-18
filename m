@@ -2,111 +2,131 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DAFC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB5EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39CE7214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568769616;
-	bh=yNKb2fR8g43vrvkAKsCAqTyfpf5uaj1F45LBBODUWOY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DQmkLNzfKV3PAh0VkOorPSohjwKGyRCHNfNaTwFYidiB8nB3b2FyLAlxqGgJg2IBw
-	 e3mUxaZPSJ1PX1/+ubIRFxC9j76tXZAKFZiNerHF8gXbpWUzLCiKIVnms/OBVcimT4
-	 ntBaEqGUJMmRxxB9MNMWNQwLUHaYO/g3cuXYP1bc=
+	by mail.kernel.org (Postfix) with ESMTP id A4C1821881
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:22:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O67gS0zN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfIRBUP (ORCPT
+        id S1726832AbfIRBWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:20:15 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42871 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725834AbfIRBUO (ORCPT
+        Tue, 17 Sep 2019 21:22:22 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36118 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfIRBWV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:20:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id c195so4336270lfg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 18:20:13 -0700 (PDT)
+        Tue, 17 Sep 2019 21:22:21 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f2so5088846edw.3;
+        Tue, 17 Sep 2019 18:22:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XZNPfc6roJDRqmm7Hq8AaswPkY6LR6E77xlBLQ/HJ7I=;
-        b=FzJhEyBPVTskda0cSucuaFKcE8AEsBpYdGOJjLPClHwFKc2AS/i3sV9dJdFatrdl9/
-         d0bWr9ZHhztIufS7u+2stdRbWIRLzOK/Bwm0TtRbjePzxKxcyg40NuanmOr9EE+lFHAf
-         T09bX7Lwf4TX2HtwM0RbKJPmFyV4HubOteVNc=
+         :cc;
+        bh=jmVlm1jUulhRNDWUAIDhxEV+UjKaBeH5ZgS3p3eH2ow=;
+        b=O67gS0zNNb8AG6ODEGN1OqAHrHAVixyyp79QI70EvE0Mpcom7nT8hlTFb3xh8Waekp
+         Kamy8iwHkC+j8VfD47sRSZ8jeTbKa7J9hZ4+2hZXtJzr06YsrHb48h5IIidbdP9ndnzE
+         ARzB1fGVVCCsSWutrt8/Csnqwe0ONOvnp+x8g9sxUIzqpnWiCj3U5e1csb+kPMSzV9o2
+         hudZldSg0qndlVl9qfldI4mOcdWOm1orjNzZwsV4wu6YUxUkPn8WSozxskq+NDgxNqRG
+         aaFB+QAanF7yaWNGbmsLVDMUJSaSk1NiY25ElsbPsSzGeJxCYMjClfAmgjj2JOYxwLUT
+         mCKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XZNPfc6roJDRqmm7Hq8AaswPkY6LR6E77xlBLQ/HJ7I=;
-        b=Wx71Pjr91gkH7YRq3N1/SbWxuGC9VZFpIZqhtQ7tpKF4tsm9yBEHbeFgX+8K9z7TAN
-         PGpPFShQp/AyHANc2CmSgVufqdBv8OinQ1ZxMVzpjgW6g0iKiq1QfFw/r92RfkV7Rfqu
-         4jMWg6GN088Q9ta00wcFuIKow+MDwrhkpq2xuq7FRykHv7de2rEAVfdUO5s9wwpq6twS
-         2K+zxq8qgMRlcMm7scfLfTUlpY2LPoUdtbx7eyPHQZflm3znMZ9lVOF83Ao9sIRTzH8B
-         fPQ5VPl8DXa3Xn2yOt1HwG2beahl3Pp9vtLDYYaLUg9ZPhuuG7aQXlZxd/559tNVs0FH
-         B8Gw==
-X-Gm-Message-State: APjAAAW3fB1+jXIBe1zqWNsgmy+5AXNFn7t9Yw5Ox8pteM09nwSozYWx
-        w9enjKva7gMEQfYDy9e0bSD3lQrHxQc=
-X-Google-Smtp-Source: APXvYqzkanEfAmCVtq3MBWbFdHrpx0tYhaWI1gYzVMz50QeWm8pDBZWXYiWhaXFaOG3oipNGajzg1g==
-X-Received: by 2002:a05:6512:4dd:: with SMTP id w29mr601279lfq.2.1568769612396;
-        Tue, 17 Sep 2019 18:20:12 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id y16sm724031ljj.25.2019.09.17.18.20.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 18:20:12 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id d17so4342497lfa.7
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 18:20:12 -0700 (PDT)
-X-Received: by 2002:ac2:50cb:: with SMTP id h11mr580490lfm.170.1568769268404;
- Tue, 17 Sep 2019 18:14:28 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=jmVlm1jUulhRNDWUAIDhxEV+UjKaBeH5ZgS3p3eH2ow=;
+        b=WFdnJxN8TIQB+viPmGzgce/yOopWC3SbQZT24Z4UhQ1v1WX0yMeGab3AAzSAioK67O
+         5Y3yHuQKgB/dDZHV41Y/gY8Us1HXkcNkCBvdfMHgWijGn/6jjgogCr3lZmqnWzbhCTc3
+         NhMcsmVHIunrsbnTM1YSO7QhCSWvLZQtXIbd1RkwHBVMLHBRuAPNEdaABmOL5lNnhNTz
+         JOYbXXpRBIkrErJlVEbAmUBOJz99Iw20EkWSKiSQWyiTFLfOn+oy6IDGij/cKm9nbBHk
+         2YRtnkdY5JYOZH6e/1Ckso6SLv9BDPQIkck8CZd3RpFI8/sGzuS4/KjrPjf+f5IKQ7PZ
+         CEVQ==
+X-Gm-Message-State: APjAAAWuGwcjyia3pTC1uuaBAPRC5fal69mzTwCEidBqGJVhdwZkYBbE
+        x0Dbye3mP3Tj4dTDZ7v3TrQEw43xe3nltmzBznw=
+X-Google-Smtp-Source: APXvYqwhWXpzktRd+5vRWfk9UpsttS+IpYu81FG1a3dXaB1RHhj8YAh4LwU6mfV0UMe9SGhJOT6fCHKgk1AqdPdkgZ4=
+X-Received: by 2002:a17:906:c79a:: with SMTP id cw26mr7214469ejb.265.1568769739678;
+ Tue, 17 Sep 2019 18:22:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190916222133.9119-1-jacek.anaszewski@gmail.com> <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 17 Sep 2019 18:14:12 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-Message-ID: <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-Subject: Re: [GIT PULL] LED updates for 5.4-rc1
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, ada@thorsis.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        christophe.jaillet@wanadoo.fr, dmurphy@ti.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, info@metux.net,
-        Joe Perches <joe@perches.com>, kw@linux.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        nishkadg.linux@gmail.com, nstoughton@logitech.com, oleg@kaa.org.ua,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Lindgren <tony@atomide.com>, wenwen@cs.uga.edu,
-        wsa+renesas@sang-engineering.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
+References: <20190916201154.212465-1-ddavenport@chromium.org>
+ <CAF6AEGurXuCMj=bc5=9CwBqzNM_BKEaJupk+-V7=aYou=wgmDQ@mail.gmail.com> <20190917171420.GB25762@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20190917171420.GB25762@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 17 Sep 2019 18:22:06 -0700
+Message-ID: <CAF6AEGt_isMOiC6NL_xorUSnAEK5YnrzGanQrPV0YP=E5hV0VQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: Remove unused function arguments
+To:     Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     Drew Davenport <ddavenport@chromium.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Enrico Weigelt <info@metux.net>,
+        Bruce Wang <bzwang@chromium.org>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 6:13 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
+On Tue, Sep 17, 2019 at 10:14 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
-> So this is fine and I've pulled it,
+> On Mon, Sep 16, 2019 at 01:34:55PM -0700, Rob Clark wrote:
+> > On Mon, Sep 16, 2019 at 1:12 PM Drew Davenport <ddavenport@chromium.org> wrote:
+> > >
+> > > The arguments related to IOMMU port name have been unused since
+> > > commit 944fc36c31ed ("drm/msm: use upstream iommu") and can be removed.
+> > >
+> > > Signed-off-by: Drew Davenport <ddavenport@chromium.org>
+> > > ---
+> > > Rob, in the original commit the port name stuff was left intentionally.
+> > > Would it be alright to remove it now?
+> >
+> > Upstream support for snapdragon has improved considerably since then,
+> > it's been at least a couple years since I've had to backport drm to a
+> > downstream android vendor kernel.  (And I think the downstream vendor
+> > kernel is getting closer to upstream.)  So I think we can drop things
+> > that were originally left in place to simplify backporting to vendor
+> > kernel.
+>
+> Downstream has gotten close enough to the IOMMU API over the last few LTS
+> cycles and nearly everything outside of a2xx that can work on a modern
+> kernel will likely be using a arm-smmu-v2 or a MMU-500.  This code can happily
+> go.
+>
+> > (Also, some of the regulator usage falls into this category.. at one
+> > point the downstream kernel modeled gdsc's as regulators, but upstream
+> > uses genpd.)
+>
+> Downstream still uses regulators. If we ever needed to use a downstream kernel
+> for whatever reason we could easily hack them back in but I don't feel like this
+> is a likely scenario.
 
-Famous last words. I now get a new warning:
+ok, maybe we can keep the regulator cruft for a bit longer until
+downstream moves to genpd.. with dummy-regulator, it doesn't really
+hurt anything.
 
-drivers/i2c/i2c-core-acpi.c:347:12: warning:
-=E2=80=98i2c_acpi_find_match_adapter=E2=80=99 defined but not used [-Wunuse=
-d-function]
-  347 | static int i2c_acpi_find_match_adapter(struct device *dev,
-const void *data)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+Do let me know if future downstream rebase moves to genpd, I suppose
+after the next LTS after that would be a good time to garbage-collect
+the regulator related gdsc management
 
-with this pull request.  I'll have to look at it after dinner.
-
-              Linus
+BR,
+-R
