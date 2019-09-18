@@ -2,95 +2,171 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC76C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B177AC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C195221BE5
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:08:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DfqrCjY/"
+	by mail.kernel.org (Postfix) with ESMTP id 8306C222C8
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:09:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568837362;
+	bh=fOhSKAKBlBR8tnbKfh/2cRHcfVt6SAbNweeiVuSPlLE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ocImglVqVdfDyjxTZBvwwAqlIe/teSI9OUuBPl4lzmiHKM/8yfNtKpw6NyWWkdgID
+	 KH0AQlOJm6Su0DWHg3DBGf39RGIDW1Z2iE3UgW6+ngRlQRQVSJY9dA5xjjgfiSHN9L
+	 PCFf5Nejt9ZPvytCUspae6YXyVOyPNV2Xcu9Lf18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390547AbfIRUIq (ORCPT
+        id S2390641AbfIRUJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:08:46 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35546 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390533AbfIRUIp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:08:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id q10so2264729iop.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:08:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/tirIKQwqPi5b7L0wgzdi+w4/XVdukjfcgtLLjEguwI=;
-        b=DfqrCjY/L+ncH827dgVkK47JxDWYDq8n1Gr+IjrtakEagsw0/tnUlUGJXScHyD4s6N
-         mSmIB7G2/5J6eid16zBuRBzXZ//jVAF561Ju849aXVesApT36gPfhX0QT8nYhw+JEfYu
-         R2XHwS+ADhbrl+Z9r8PJQjhjZg8WeZQEnBkpDO0w8LiHDmMyTBk1UQtauLtqn9OAIOTa
-         tZn9VVoqW2LEbN203rLKhsfLG7utSqDM4lD7TAmkalCcQyFE0h+hpVWdNGiesLv3kE+K
-         zeDkosvPACEMW5xdSBFjXQKgG24/H2ExH0uRE+b5gd8MQ/ZroY5XVKeZuBTc/DJ0b+La
-         zlqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/tirIKQwqPi5b7L0wgzdi+w4/XVdukjfcgtLLjEguwI=;
-        b=XYtV4vy7mz3rlgsLBGsHQCCjtwXrHPZ/YDXNJSRtnC01+CJHkTZ1JRa9/+NnEZ3tVh
-         v2VhSHA0ShMR05QYLO+GuVxNPfZ0ALTWD4LSWW2W64edDmzFwWE/Fnit7u3mAwaV7uEe
-         NZLiSga3KWOQizucAO2QC/4WJwPM9hiZ5TuQhYF1p4MSL3dZ1tnhqVfDYwpY4ovWFgd/
-         Ray77cyfVAOREjfCRtdoFciFh4H8VQu89RwZlkiyyWKxKjinK08g3arhUE/D1toQE7u9
-         TswmDgvWcU0Pov4+NOWDV/u4pEpIMv0M6KBdeTocYPS8ObYB3UDi0Dpo21XFohMo/rYe
-         ezzg==
-X-Gm-Message-State: APjAAAVtJvLUVmz8DilUV40SJSIZlWCkuEC1izkwMJHcFCMf/UkY0nTS
-        uX1HVk9tjhWTa9BZHBvoK31li69b4kkWGg==
-X-Google-Smtp-Source: APXvYqxqyIESBbs5UNuARsPiCqsoNXJY06TIV1cftP2bVGya9UvnKZSogfqsdXBIH00g/Ko6QmyX9A==
-X-Received: by 2002:a5e:8218:: with SMTP id l24mr1950526iom.56.1568837323239;
-        Wed, 18 Sep 2019 13:08:43 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id b24sm5310567iob.2.2019.09.18.13.08.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 13:08:42 -0700 (PDT)
-Subject: Re: [PATCH] ahci: stop exporting ahci_em_messages
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Liu, Chuansheng" <chuansheng.liu@intel.com>,
-        Tejun Heo <tj@kernel.org>, Steve Winslow <swinslow@gmail.com>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190918200028.2247535-1-arnd@arndb.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cd65486c-b5c1-63d4-ea73-1d16e123aa41@kernel.dk>
-Date:   Wed, 18 Sep 2019 14:08:41 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 16:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390627AbfIRUJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 16:09:20 -0400
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E7921927;
+        Wed, 18 Sep 2019 20:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568837359;
+        bh=fOhSKAKBlBR8tnbKfh/2cRHcfVt6SAbNweeiVuSPlLE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g4e02vBhHET34BYIzpZHZNIUl+b6bp+dwAlK5jzLOO8OTMI4gYLfFIRk4nifKKp7q
+         GTHQzlEs7UIYqEidg/sbU4qiC2wPwKrO3CNhpL4l46hqNcSWkCfn5ow+G0YVCQRqeu
+         3agnnwij+hPSJaZ+U+tt1nhW43X/6GY9cht3IW9o=
+Received: by mail-qt1-f171.google.com with SMTP id c21so1256589qtj.12;
+        Wed, 18 Sep 2019 13:09:19 -0700 (PDT)
+X-Gm-Message-State: APjAAAWqZCLAA28sXRkqf8eihXTCM8RwypQ7qWkdj5+OxavTMk7tezNP
+        HoQ4CecdKkbn+jiSTeZuEykJHqKMbv+ogDjoXQ==
+X-Google-Smtp-Source: APXvYqyI0YWOlINOzwZl5AYOwbRdU1uVlZeni02GnsS/T/U6yuTYOht5gSEnZU8Z0DdyycUyh6iztt8ZwwabQaKl+2Y=
+X-Received: by 2002:ac8:75c7:: with SMTP id z7mr6127853qtq.136.1568837358985;
+ Wed, 18 Sep 2019 13:09:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190918200028.2247535-1-arnd@arndb.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+ <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se> <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+In-Reply-To: <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Sep 2019 15:09:06 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
+Message-ID: <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
+Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in of_*_phandle_with_args()
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Peter Rosin <peda@axentia.se>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 2:00 PM, Arnd Bergmann wrote:
-> The symbol is now static and not used elswhere, which
-> leads to a warning message:
-> 
-> WARNING: "ahci_em_messages" [vmlinux] is a static EXPORT_SYMBOL_GPL
+On Wed, Sep 18, 2019 at 3:47 AM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
+> non-negative cell_count") the iterator functions calling
+> of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
+> This corner case was missed when implementing the fallback logic in
+> e42ee61017f5 and resulted in an endless loop.
+>
+> Restore the old behaviour of of_count_phandle_with_args() and
+> of_parse_phandle_with_args() and add a check to
+> of_phandle_iterator_init() to prevent a similar failure as a safety
+> precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
+> as cells_name isn't NULL there.
+>
+> Affected drivers are:
+>  - drivers/base/power/domain.c
+>  - drivers/base/power/domain.c
+>  - drivers/clk/ti/clk-dra7-atl.c
+>  - drivers/hwmon/ibmpowernv.c
+>  - drivers/i2c/muxes/i2c-demux-pinctrl.c
+>  - drivers/iommu/mtk_iommu.c
+>  - drivers/net/ethernet/freescale/fman/mac.c
+>  - drivers/opp/of.c
+>  - drivers/perf/arm_dsu_pmu.c
+>  - drivers/regulator/of_regulator.c
+>  - drivers/remoteproc/imx_rproc.c
+>  - drivers/soc/rockchip/pm_domains.c
+>  - sound/soc/fsl/imx-audmix.c
+>  - sound/soc/fsl/imx-audmix.c
+>  - sound/soc/meson/axg-card.c
+>  - sound/soc/samsung/tm2_wm5110.c
+>  - sound/soc/samsung/tm2_wm5110.c
+>
+> Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
+> helping pinpoint the actual problem and the testers for confirming this
+> fix.
+>
+> Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negativ=
+e cell_count")
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> ---
+>
+> On Wed, Sep 18, 2019 at 08:01:05AM +0000, Peter Rosin wrote:
+> > On 2019-09-18 08:38, Uwe Kleine-K=C3=B6nig wrote:
+> > >  EXPORT_SYMBOL(of_parse_phandle_with_args);
+> > >
+> > > @@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct de=
+vice_node *np, const char *list_na
+> > >     struct of_phandle_iterator it;
+> > >     int rc, cur_index =3D 0;
+> > >
+> > > +   /* If cells_name is NULL we assume a cell count of 0 */
+> > > +   if (cells_name =3D=3D NULL) {
+> >
+> > A couple of nits.
+> >
+> > I don't know if there are other considerations, but in the previous two
+> > hunks you use !cells_name instead of comparing explicitly with NULL.
+> > Personally, I find the shorter form more readable, and in the name of
+> > consistency bla bla...
+>
+> Ack, changed to !cells_name here, too.
+>
+> >
+> > Also, the comment explaining this NULL-check didn't really make sense
+> > to me until I realized that knowing the cell count to be zero makes
+> > counting trivial. Something along those lines should perhaps be in the
+> > comment?
+>
+> You're right, I extended the comment a bit.
+>
+> > But as I said, these are nits. Feel free to ignore.
+>
+> I considered resending already anyhow as I fatfingerd my email address.
+> this is fixed now, too. Additionally I fixed a typo in one of the
+> comments.
+>
+> Thanks for your feedback.
+>
+> Best regards
+> Uwe
+>
+>  drivers/of/base.c | 35 +++++++++++++++++++++++++++++++++--
+>  1 file changed, 33 insertions(+), 2 deletions(-)
 
-If you look at master, this was fixed in this merge window:
+Can I get a proper patch please.
 
-commit 60fc35f327e0a9e60b955c0f3c3ed623608d1baa
-Author: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Date:   Fri Aug 30 22:42:55 2019 +0300
-
-    ahci: Do not export local variable ahci_em_messages
-
--- 
-Jens Axboe
-
+Rob
