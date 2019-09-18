@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8460DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F5C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E6E218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3690821928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788016;
-	bh=vD6JDGzbIZxa6SnE9uU+YbRlIM+lwOXfOkVjjujYh+g=;
+	s=default; t=1568788020;
+	bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m0su/fLoqgCLfIj6YPlbz4tA7itNHBMWG7Bh+r96HjrNzpinUO9bI5ajGatFsbuhU
-	 Ga8uxb/2pqqMuqeJ2aN/z1UN90ehpWpQ57pv68XCk3dIXKDU5cz16WddHU0aL0qtDf
-	 4o2YZdzwtlMi6PrCuOEu/4d/c44lndlmE+OAbQcQ=
+	b=e35r6csaSoefyAmO+9FxJosYDQUPNkU5H3SwL5nYOBuTcq2UNP/6LYcveK9cIJXSv
+	 hmyWkFxdicmByAomeAkn5Rr1iHIF/CNZ4M4McGB/ISVZNMKil4m7+fs39jseqJ7uOI
+	 kTCjFi3lIuGn7aeNjnP3FXbOZ0POtsQ22Gunmj0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbfIRG0z (ORCPT
+        id S1730429AbfIRG07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48472 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729091AbfIRG0w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:52 -0400
+        id S1729598AbfIRG0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 545A2218AF;
-        Wed, 18 Sep 2019 06:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0193F21925;
+        Wed, 18 Sep 2019 06:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788011;
-        bh=vD6JDGzbIZxa6SnE9uU+YbRlIM+lwOXfOkVjjujYh+g=;
+        s=default; t=1568788014;
+        bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJXwQB1foGv3aK0eYt0gjBlZRhT2YwKD9dlROBg5F0RfHUBWDtpdzt3TC8zJ+MCn6
-         Szt86JgPgGrcxoJZ00tCObM8Gw4WP/sNspN1zpl6hwKMptdwgrB/++q8lRoT5leQkk
-         3HfKYSVhtFkgjiivwBDz04pjvt++nSZtE/hmkk8k=
+        b=TVWaKaXCuLloGUKTDbDi1Kz72AUF7bZ1c4rD9gXZmtp075u+b1SATxdONRrORV7DU
+         mKdVQp9hdv5FpRx3vDhQNJrbVqB/bd4WFLvRyDybTZO/Z5+WNmvG/tI28THK1o+szg
+         J7oZzHmY5yQAbLxMiNjz5yEo3YL7yX4JafbYyynA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 67/85] crypto: talitos - Do not modify req->cryptlen on decryption.
-Date:   Wed, 18 Sep 2019 08:19:25 +0200
-Message-Id: <20190918061237.535504072@linuxfoundation.org>
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH 5.2 41/85] genirq: Prevent NULL pointer dereference in resend_irqs()
+Date:   Wed, 18 Sep 2019 08:18:59 +0200
+Message-Id: <20190918061235.442181547@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,162 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-commit 7ede4c36cf7c6516986ee9d75b197c8bf73ea96f upstream.
+commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
 
-For decrypt, req->cryptlen includes the size of the authentication
-part while all functions of the driver expect cryptlen to be
-the size of the encrypted data.
+The following crash was observed:
 
-As it is not expected to change req->cryptlen, this patch
-implements local calculation of cryptlen.
+  Unable to handle kernel NULL pointer dereference at 0000000000000158
+  Internal error: Oops: 96000004 [#1] SMP
+  pc : resend_irqs+0x68/0xb0
+  lr : resend_irqs+0x64/0xb0
+  ...
+  Call trace:
+   resend_irqs+0x68/0xb0
+   tasklet_action_common.isra.6+0x84/0x138
+   tasklet_action+0x2c/0x38
+   __do_softirq+0x120/0x324
+   run_ksoftirqd+0x44/0x60
+   smpboot_thread_fn+0x1ac/0x1e8
+   kthread+0x134/0x138
+   ret_from_fork+0x10/0x18
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+The reason for this is that the interrupt resend mechanism happens in soft
+interrupt context, which is a asynchronous mechanism versus other
+operations on interrupts. free_irq() does not take resend handling into
+account. Thus, the irq descriptor might be already freed before the resend
+tasklet is executed. resend_irqs() does not check the return value of the
+interrupt descriptor lookup and derefences the return value
+unconditionally.
+
+  1):
+  __setup_irq
+    irq_startup
+      check_irq_resend  // activate softirq to handle resend irq
+  2):
+  irq_domain_free_irqs
+    irq_free_descs
+      free_desc
+        call_rcu(&desc->rcu, delayed_free_desc)
+  3):
+  __do_softirq
+    tasklet_action
+      resend_irqs
+        desc = irq_to_desc(irq)
+        desc->handle_irq(desc)  // desc is NULL --> Ooops
+
+Fix this by adding a NULL pointer check in resend_irqs() before derefencing
+the irq descriptor.
+
+Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |   31 +++++++++++++++++--------------
- 1 file changed, 17 insertions(+), 14 deletions(-)
+ kernel/irq/resend.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -994,11 +994,13 @@ static void talitos_sg_unmap(struct devi
- 
- static void ipsec_esp_unmap(struct device *dev,
- 			    struct talitos_edesc *edesc,
--			    struct aead_request *areq)
-+			    struct aead_request *areq, bool encrypt)
- {
- 	struct crypto_aead *aead = crypto_aead_reqtfm(areq);
- 	struct talitos_ctx *ctx = crypto_aead_ctx(aead);
- 	unsigned int ivsize = crypto_aead_ivsize(aead);
-+	unsigned int authsize = crypto_aead_authsize(aead);
-+	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
- 	bool is_ipsec_esp = edesc->desc.hdr & DESC_HDR_TYPE_IPSEC_ESP;
- 	struct talitos_ptr *civ_ptr = &edesc->desc.ptr[is_ipsec_esp ? 2 : 3];
- 
-@@ -1007,7 +1009,7 @@ static void ipsec_esp_unmap(struct devic
- 					 DMA_FROM_DEVICE);
- 	unmap_single_talitos_ptr(dev, civ_ptr, DMA_TO_DEVICE);
- 
--	talitos_sg_unmap(dev, edesc, areq->src, areq->dst, areq->cryptlen,
-+	talitos_sg_unmap(dev, edesc, areq->src, areq->dst, cryptlen,
- 			 areq->assoclen);
- 
- 	if (edesc->dma_len)
-@@ -1018,7 +1020,7 @@ static void ipsec_esp_unmap(struct devic
- 		unsigned int dst_nents = edesc->dst_nents ? : 1;
- 
- 		sg_pcopy_to_buffer(areq->dst, dst_nents, ctx->iv, ivsize,
--				   areq->assoclen + areq->cryptlen - ivsize);
-+				   areq->assoclen + cryptlen - ivsize);
- 	}
- }
- 
-@@ -1040,7 +1042,7 @@ static void ipsec_esp_encrypt_done(struc
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
--	ipsec_esp_unmap(dev, edesc, areq);
-+	ipsec_esp_unmap(dev, edesc, areq, true);
- 
- 	/* copy the generated ICV to dst */
- 	if (edesc->icv_ool) {
-@@ -1074,7 +1076,7 @@ static void ipsec_esp_decrypt_swauth_don
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
--	ipsec_esp_unmap(dev, edesc, req);
-+	ipsec_esp_unmap(dev, edesc, req, false);
- 
- 	if (!err) {
- 		char icvdata[SHA512_DIGEST_SIZE];
-@@ -1120,7 +1122,7 @@ static void ipsec_esp_decrypt_hwauth_don
- 
- 	edesc = container_of(desc, struct talitos_edesc, desc);
- 
--	ipsec_esp_unmap(dev, edesc, req);
-+	ipsec_esp_unmap(dev, edesc, req, false);
- 
- 	/* check ICV auth status */
- 	if (!err && ((desc->hdr_lo & DESC_HDR_LO_ICCR1_MASK) !=
-@@ -1223,6 +1225,7 @@ static int talitos_sg_map(struct device
-  * fill in and submit ipsec_esp descriptor
-  */
- static int ipsec_esp(struct talitos_edesc *edesc, struct aead_request *areq,
-+		     bool encrypt,
- 		     void (*callback)(struct device *dev,
- 				      struct talitos_desc *desc,
- 				      void *context, int error))
-@@ -1232,7 +1235,7 @@ static int ipsec_esp(struct talitos_edes
- 	struct talitos_ctx *ctx = crypto_aead_ctx(aead);
- 	struct device *dev = ctx->dev;
- 	struct talitos_desc *desc = &edesc->desc;
--	unsigned int cryptlen = areq->cryptlen;
-+	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
- 	unsigned int ivsize = crypto_aead_ivsize(aead);
- 	int tbl_off = 0;
- 	int sg_count, ret;
-@@ -1359,7 +1362,7 @@ static int ipsec_esp(struct talitos_edes
- 
- 	ret = talitos_submit(dev, ctx->ch, desc, callback, areq);
- 	if (ret != -EINPROGRESS) {
--		ipsec_esp_unmap(dev, edesc, areq);
-+		ipsec_esp_unmap(dev, edesc, areq, encrypt);
- 		kfree(edesc);
- 	}
- 	return ret;
-@@ -1473,9 +1476,10 @@ static struct talitos_edesc *aead_edesc_
- 	unsigned int authsize = crypto_aead_authsize(authenc);
- 	struct talitos_ctx *ctx = crypto_aead_ctx(authenc);
- 	unsigned int ivsize = crypto_aead_ivsize(authenc);
-+	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
- 
- 	return talitos_edesc_alloc(ctx->dev, areq->src, areq->dst,
--				   iv, areq->assoclen, areq->cryptlen,
-+				   iv, areq->assoclen, cryptlen,
- 				   authsize, ivsize, icv_stashing,
- 				   areq->base.flags, encrypt);
- }
-@@ -1494,7 +1498,7 @@ static int aead_encrypt(struct aead_requ
- 	/* set encrypt */
- 	edesc->desc.hdr = ctx->desc_hdr_template | DESC_HDR_MODE0_ENCRYPT;
- 
--	return ipsec_esp(edesc, req, ipsec_esp_encrypt_done);
-+	return ipsec_esp(edesc, req, true, ipsec_esp_encrypt_done);
- }
- 
- static int aead_decrypt(struct aead_request *req)
-@@ -1506,8 +1510,6 @@ static int aead_decrypt(struct aead_requ
- 	struct talitos_edesc *edesc;
- 	void *icvdata;
- 
--	req->cryptlen -= authsize;
--
- 	/* allocate extended descriptor */
- 	edesc = aead_edesc_alloc(req, req->iv, 1, false);
- 	if (IS_ERR(edesc))
-@@ -1524,7 +1526,8 @@ static int aead_decrypt(struct aead_requ
- 
- 		/* reset integrity check result bits */
- 
--		return ipsec_esp(edesc, req, ipsec_esp_decrypt_hwauth_done);
-+		return ipsec_esp(edesc, req, false,
-+				 ipsec_esp_decrypt_hwauth_done);
- 	}
- 
- 	/* Have to check the ICV with software */
-@@ -1540,7 +1543,7 @@ static int aead_decrypt(struct aead_requ
- 	sg_pcopy_to_buffer(req->src, edesc->src_nents ? : 1, icvdata, authsize,
- 			   req->assoclen + req->cryptlen - authsize);
- 
--	return ipsec_esp(edesc, req, ipsec_esp_decrypt_swauth_done);
-+	return ipsec_esp(edesc, req, false, ipsec_esp_decrypt_swauth_done);
- }
- 
- static int ablkcipher_setkey(struct crypto_ablkcipher *cipher,
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -36,6 +36,8 @@ static void resend_irqs(unsigned long ar
+ 		irq = find_first_bit(irqs_resend, nr_irqs);
+ 		clear_bit(irq, irqs_resend);
+ 		desc = irq_to_desc(irq);
++		if (!desc)
++			continue;
+ 		local_irq_disable();
+ 		desc->handle_irq(desc);
+ 		local_irq_enable();
 
 
