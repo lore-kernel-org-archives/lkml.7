@@ -2,108 +2,114 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE473C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D43C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ABFB20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5664208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbfIRNiJ (ORCPT
+        id S1728764AbfIRNid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:38:09 -0400
-Received: from gardel.0pointer.net ([85.214.157.71]:41602 "EHLO
-        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfIRNiJ (ORCPT
+        Wed, 18 Sep 2019 09:38:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27460 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726618AbfIRNic (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:38:09 -0400
-Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
-        by gardel.0pointer.net (Postfix) with ESMTP id 81113E80FFC;
-        Wed, 18 Sep 2019 15:38:07 +0200 (CEST)
-Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
-        id 0B989160ADC; Wed, 18 Sep 2019 15:38:06 +0200 (CEST)
-Date:   Wed, 18 Sep 2019 15:38:06 +0200
-From:   Lennart Poettering <mzxreary@0pointer.de>
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190918133806.GA32346@gardel-login>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917155743.GB31567@gardel-login>
- <20190917162137.GA27921@1wt.eu>
- <20190917171328.GA31798@gardel-login>
- <20190917172929.GD27999@1wt.eu>
+        Wed, 18 Sep 2019 09:38:32 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IDWvV6118589;
+        Wed, 18 Sep 2019 09:38:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3jngxkrx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 09:38:20 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8IDXQjB120611;
+        Wed, 18 Sep 2019 09:38:20 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3jngxkra-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 09:38:19 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8IDPjPZ009354;
+        Wed, 18 Sep 2019 13:38:19 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02wdc.us.ibm.com with ESMTP id 2v37jvwmed-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 13:38:19 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IDcHO160227972
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 13:38:17 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8ADD0C6063;
+        Wed, 18 Sep 2019 13:38:17 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92B16C6057;
+        Wed, 18 Sep 2019 13:38:14 +0000 (GMT)
+Received: from [9.199.34.110] (unknown [9.199.34.110])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Sep 2019 13:38:14 +0000 (GMT)
+Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
+ cede_offline
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     Kamalesh Babulal <kamaleshb@in.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
+ <87r24ew5i0.fsf@mpe.ellerman.id.au>
+ <1568788924.kxcnnog4r7.naveen@linux.ibm.com>
+ <877e65x2lk.fsf@mpe.ellerman.id.au>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <9737a962-c88c-f372-d67e-2d0c45260a4f@linux.ibm.com>
+Date:   Wed, 18 Sep 2019 19:08:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917172929.GD27999@1wt.eu>
+In-Reply-To: <877e65x2lk.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909180138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Di, 17.09.19 19:29, Willy Tarreau (w@1wt.eu) wrote:
-
-> > What do you expect these systems to do though?
-> >
-> > I mean, think about general purpose distros: they put together live
-> > images that are supposed to work on a myriad of similar (as in: same
-> > arch) but otherwise very different systems (i.e. VMs that might lack
-> > any form of RNG source the same as beefy servers with muliple sources
-> > the same as older netbooks with few and crappy sources, ...). They can't
-> > know what the specific hw will provide or won't. It's not their
-> > incompetence that they build the image like that. It's a common, very
-> > common usecase to install a system via SSH, and it's also very common
-> > to have very generic images for a large number varied systems to run
-> > on.
+On 9/18/19 5:01 PM, Michael Ellerman wrote:
+> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
+>> Michael Ellerman wrote:
+>>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+>>>> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 >
-> I'm totally file with installing the system via SSH, using a temporary
-> SSH key. I do make a strong distinction between the installation phase
-> and the final deployment. The SSH key used *for installation* doesn't
-> need to the be same as the final one. And very often at the end of the
-> installation we'll have produced enough entropy to produce a correct
-> key.
 
-That's not how systems are built today though. And I am not sure they
-should be. I mean, the majority of systems at this point probably have
-some form of hardware (or virtualized) RNG available (even raspi has
-one these days!), so generating these keys once at boot is totally
-OK. Probably a number of others need just a few seconds to get the
-entropy needed, where things are totally OK too. The only problem is
-systems that lack any reasonable source of entropy and where
-initialization of the pool will take overly long.
+....
 
-I figure we can reduce the number of systems where entropy is scarce
-quite a bit if we'd start crediting entropy by default from various hw
-rngs we currently don't credit entropy for. For example, the TPM and
-older intel/amd chipsets. You currently have to specify
-rng_core.default_quality=1000 on the kernel cmdline to make them
-credit entropy. I am pretty sure this should be the default now, in a
-world where CONFIG_RANDOM_TRUST_CPU=y is set anyway. i.e. why say
-RDRAND is fine but those chipsets are not? That makes no sense to me.
+>> Also, since we expose [S]PURR through sysfs, any tools that make use of
+>> that directly are also affected due to this.
+> 
+> But again if we've had the current behaviour for 10 years then arguably
+> that's now the correct behaviour.
 
-I am very sure that crediting entropy to chipset hwrngs is a much
-better way to solve the issue on those systems than to just hand out
-rubbish randomness.
+Or nobody is looking at PURR based accounting/usage metric on Linux. We 
+got some customers complaining about this recently once they started 
+using the metric.
 
-Lennart
+-aneesh
 
---
-Lennart Poettering, Berlin
