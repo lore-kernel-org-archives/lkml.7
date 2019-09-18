@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BE5C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF9C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8DCA21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 012E221D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788044;
-	bh=8Kiqt8LnpmiZrm0Gg1CxF50zdVjyAfPkT5jvRPzY56U=;
+	s=default; t=1568788049;
+	bh=NElYCYZtG7ndIFLE/NKXMfydXZ+MIdGYUXPQCEkD1Ho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z/4v8qB2/UI3t2om3HF1qdB9XGY0xTIQJnX8iTAGa0GVHyPecULxs6CGno2j9Ib+M
-	 hl/+EV1ELFKWgX/JrSvqFqLpjiGbCaeuJ+BGohqe4obOIhAJp89kLiLH9UKbA8TSOI
-	 vyTPwjoo+g2XR6LMS0hSX2TKregiQiKCbssHA9iE=
+	b=khCz3QwEAD/q3VBT/NPF3/vZPZjeiE2AWzCP5zvr1BaIKHbWi6G1WbJrh2ABHhzAS
+	 honMRiF/1BBOJKxrfkFz6qmtztkHxrwqVow9C5rV3uaJ5pdKgDAH/2dn807SeIndCa
+	 Fk9VmX2pvG8SE/wmwkRiT3SXVaJ0n4T61izxfp98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfIRG1X (ORCPT
+        id S1730526AbfIRG12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49104 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726921AbfIRG1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:18 -0400
+        id S1730517AbfIRG1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA20821906;
-        Wed, 18 Sep 2019 06:27:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D6AF218AF;
+        Wed, 18 Sep 2019 06:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788038;
-        bh=8Kiqt8LnpmiZrm0Gg1CxF50zdVjyAfPkT5jvRPzY56U=;
+        s=default; t=1568788043;
+        bh=NElYCYZtG7ndIFLE/NKXMfydXZ+MIdGYUXPQCEkD1Ho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=om4CbDCeXnMcHFcsp1lF9o9l+FEbDGYDLMsAe2cpz6vluxgavnU9+fInrFgCuU2UB
-         JpXZw9nV6t+QZq4STThEogDCJnISj6W7KYLtA/CMA/w5iKpw45xe2aeFORMMjfp4m9
-         ZG0XJRmCBDsdlkA5ACj6yqAr0ZNuJIxLfr3fFzXs=
+        b=VipZztlDM8+nTtFv+n/7PFph16xE6AqWEjP+N61A6mHea5SwrysaAcr1PbjAfpXZZ
+         OJXnKmQ0WrJZfgsZ7yzf20kMAY6ptfdDLsTu1hD1wDZmyFbHySHF0c7N4NxOk5ilGd
+         2R9rJza0m8JpX8spf05ZH4kISEDzZc6OhuNT34xQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.2 76/85] iio: adc: stm32-dfsdm: fix data type
-Date:   Wed, 18 Sep 2019 08:19:34 +0200
-Message-Id: <20190918061237.797081080@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        Mark Brown <broonie@kernel.org>, Adam Ford <aford173@gmail.com>
+Subject: [PATCH 5.2 42/85] regulator: twl: voltage lists for vdd1/2 on twl4030
+Date:   Wed, 18 Sep 2019 08:19:00 +0200
+Message-Id: <20190918061235.470837048@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,42 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-commit c6013bf50e2a2a94ab3d012e191096432aa50c6f upstream.
+commit 3829100a63724f6dbf264b2a7f06e7f638ed952d upstream.
 
-Fix the data type as DFSDM raw output is complements 2,
-24bits left aligned in a 32-bit register.
-This change does not affect AUDIO path
-- Set data as signed for IIO (as for AUDIO)
-- Set 8 bit right shift for IIO.
-The 8 LSBs bits of data contains channel info and are masked.
+_opp_supported_by_regulators() wrongly ignored errors from
+regulator_is_supported_voltage(), so it considered errors as
+success. Since
+commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
+regulator_is_supported_voltage() returns a real boolean, so
+errors make _opp_supported_by_regulators() return false.
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+That reveals a problem with the declaration of the VDD1/2
+regulators on twl4030.
+The VDD1/VDD2 regulators on twl4030 are neither defined with
+voltage lists nor with the continuous flag set, so
+regulator_is_supported_voltage() returns false and an error
+before above mentioned commit (which was considered success)
+The result is that after the above mentioned commit cpufreq
+does not work properly e.g. dm3730.
+
+[    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
+[    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
+[    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
+[    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
+[    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
+[    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
+
+The patch fixes declaration of VDD1/2 regulators by
+adding proper voltage lists.
+
+Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
+Link: https://lore.kernel.org/r/20190814214319.24087-1-andreas@kemnade.info
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/twl-regulator.c |   23 ++++++++++++++++++++---
+ 1 file changed, 20 insertions(+), 3 deletions(-)
 
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1365,11 +1365,11 @@ static int stm32_dfsdm_adc_chan_init_one
- 					BIT(IIO_CHAN_INFO_SAMP_FREQ);
+--- a/drivers/regulator/twl-regulator.c
++++ b/drivers/regulator/twl-regulator.c
+@@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] =
+ 	2500, 2750,
+ };
  
- 	if (adc->dev_data->type == DFSDM_AUDIO) {
--		ch->scan_type.sign = 's';
- 		ch->ext_info = dfsdm_adc_audio_ext_info;
- 	} else {
--		ch->scan_type.sign = 'u';
-+		ch->scan_type.shift = 8;
++/* 600mV to 1450mV in 12.5 mV steps */
++static const struct regulator_linear_range VDD1_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
++};
++
++/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
++static const struct regulator_linear_range VDD2_ranges[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
++	REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
++};
++
+ static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
+ {
+ 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
+@@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struc
+ }
+ 
+ static const struct regulator_ops twl4030smps_ops = {
++	.list_voltage   = regulator_list_voltage_linear_range,
++
+ 	.set_voltage	= twl4030smps_set_voltage,
+ 	.get_voltage	= twl4030smps_get_voltage,
+ };
+@@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_
+ 		}, \
  	}
-+	ch->scan_type.sign = 's';
- 	ch->scan_type.realbits = 24;
- 	ch->scan_type.storagebits = 32;
  
+-#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
++#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
++		n_volt) \
+ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 	.base = offset, \
+ 	.id = num, \
+@@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_
+ 		.owner = THIS_MODULE, \
+ 		.enable_time = turnon_delay, \
+ 		.of_map_mode = twl4030reg_map_mode, \
++		.n_voltages = n_volt, \
++		.n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
++		.linear_ranges = label ## _ranges, \
+ 		}, \
+ 	}
+ 
+@@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 10
+ TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
+ TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
+ TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
+-TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
+-TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
++TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
++TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
+ /* VUSBCP is managed *only* by the USB subchip */
+ TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
+ TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
 
 
