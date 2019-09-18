@@ -2,99 +2,253 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD29C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5279BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C421021920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568816258;
-	bh=XlMjo+rJMmL2INhELdyisylIWWJuH9qmRMqjUBhMrPs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=y1ax0CrTV+fR04BmAMUdOZR48rP5Y7Ub7ZOpJEQ2MQMykBLENaxqqpZwl9fkwKQjs
-	 5nb5c4d1CctjS5rDEjrNaKSBh9SBxxcOwvVqLPzaO3EoBpQXeiSyvUlxB37nVKIJiA
-	 5RgMgzJmBHffkHIQkOgfauLEY2lTA6uHUZMd7i0U=
+	by mail.kernel.org (Postfix) with ESMTP id 2243F218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbfIRORi (ORCPT
+        id S1730686AbfIROTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:17:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37494 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 10:19:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:42754 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbfIRORh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:17:37 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A48A7218AF;
-        Wed, 18 Sep 2019 14:17:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568816257;
-        bh=XlMjo+rJMmL2INhELdyisylIWWJuH9qmRMqjUBhMrPs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sCU4sOePodZ0NZRXVMNEveX/tym8IABAHl9TG6H3SeCs3z6Ppyi6VenSOym+Cfzv/
-         3ND6vGPBodkNZ3H9Hg5nUSBl97swamBntj6Lwn2frijgY9Qnkfoi5WyjGHQxpgutMR
-         VgymzYgeFrgM7zIt6dH/U6bBqd5Btwkwb3V7T2Mc=
-Date:   Wed, 18 Sep 2019 16:17:34 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     megous@megous.com
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: sun8i-ui/vi: Fix layer zpos change/atomic
- modesetting
-Message-ID: <20190918141734.kerdbbaynwutrxf6@gilmour>
-References: <20190914220337.646719-1-megous@megous.com>
+        id S1727074AbfIROTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:19:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23DB51000;
+        Wed, 18 Sep 2019 07:19:19 -0700 (PDT)
+Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8E303F67D;
+        Wed, 18 Sep 2019 07:19:16 -0700 (PDT)
+References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
+User-agent: mu4e 1.3.3; emacs 26.2
+From:   Patrick Bellasi <patrick.bellasi@arm.com>
+To:     Parth Shah <parth@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        tim.c.chen@linux.intel.com,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        mingo@redhat.com, morten.rasmussen@arm.com,
+        dietmar.eggemann@arm.com, pjt@google.com,
+        vincent.guittot@linaro.org, quentin.perret@arm.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org, tj@kernel.org,
+        rafael.j.wysocki@intel.com, qais.yousef@arm.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>
+Subject: Re: Usecases for the per-task latency-nice attribute
+In-reply-to: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
+Date:   Wed, 18 Sep 2019 15:18:38 +0100
+Message-ID: <87woe51ydd.fsf@arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cdt6atu5ilzdls4s"
-Content-Disposition: inline
-In-Reply-To: <20190914220337.646719-1-megous@megous.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---cdt6atu5ilzdls4s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Sep 18, 2019 at 13:41:04 +0100, Parth Shah wrote...
 
-Hi,
+> Hello everyone,
 
-On Sun, Sep 15, 2019 at 12:03:37AM +0200, megous@megous.com wrote:
-> From: Ondrej Jirman <megous@megous.com>
+Hi Parth,
+thanks for staring this discussion.
+
+[ + patrick.bellasi@matbug.net ] my new email address, since with
+@arm.com I will not be reachable anymore starting next week.
+
+> As per the discussion in LPC2019, new per-task property like latency-nice
+> can be useful in certain scenarios. The scheduler can take proper decision
+> by knowing latency requirement of a task from the end-user itself.
 >
-> There are various issues that this re-work of sun8i_[uv]i_layer_enable
-> function fixes:
+> There has already been an effort from Subhra for introducing Task
+> latency-nice [1] values and have seen several possibilities where this type of
+> interface can be used.
 >
-> - Make sure that we re-initialize zpos on reset
-> - Minimize register updates by doing them only when state changes
-> - Fix issue where DE pipe might get disabled even if it is no longer
->   used by the layer that's currently calling sun8i_ui_layer_enable
-> - .atomic_disable callback is not really needed because .atomic_update
->   can do the disable too, so drop the duplicate code
+> From the best of my understanding of the discussion on the mail thread and
+> in the LPC2019, it seems that there are two dilemmas;
 >
-> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> 1. Name: What should be the name for such attr for all the possible usecases?
+> =============
+> Latency nice is the proposed name as of now where the lower value indicates
+> that the task doesn't care much for the latency
 
-It looks like these fixes should be in separate patches. Is there any
-reason it's not the case?
+If by "lower value" you mean -19 (in the proposed [-20,19] range), then
+I think the meaning should be the opposite.
 
-Maxime
+A -19 latency-nice task is a task which is not willing to give up
+latency. For those tasks for example we want to reduce the wake-up
+latency at maximum.
 
---cdt6atu5ilzdls4s
-Content-Type: application/pgp-signature; name="signature.asc"
+This will keep its semantic aligned to that of process niceness values
+which range from -20 (most favourable to the process) to 19 (least
+favourable to the process).
 
------BEGIN PGP SIGNATURE-----
+> and we can spend some more time in the kernel to decide a better
+> placement of a task (to save time, energy, etc.)
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYI8fgAKCRDj7w1vZxhR
-xb0xAP0UxpXjzIgS09xk7fwpffpkj2Q3Yv0Qg6MWjDlQTkd50gEAy9kA6SNT4uzq
-55chDp6x+7ABhqgw1Undj9ZVA3OQbQA=
-=Op1q
------END PGP SIGNATURE-----
+Tasks with an high latency-nice value (e.g. 19) are "less sensible to
+latency". These are tasks we wanna optimize mainly for throughput and
+thus, for example, we can spend some more time to find out a better task
+placement at wakeup time.
 
---cdt6atu5ilzdls4s--
+Does that makes sense?
+
+> But there seems to be a bit of confusion on whether we want biasing as well
+> (latency-biased) or something similar, in which case "latency-nice" may
+> confuse the end-user.
+
+AFAIU PeterZ point was "just" that if we call it "-nice" it has to
+behave as "nice values" to avoid confusions to users. But, if we come up
+with a different naming maybe we will have more freedom.
+
+Personally, I like both "latency-nice" or "latency-tolerant", where:
+
+ - latency-nice:
+   should have a better understanding based on pre-existing concepts
+
+ - latency-tolerant:
+   decouples a bit its meaning from the niceness thus giving maybe a bit
+   more freedom in its complete definition and perhaps avoid any
+   possible interpretation confusion like the one I commented above.
+
+Fun fact: there was also the latency-nasty proposal from PaulMK :)
+
+> 2. Value: What should be the range of possible values supported by this new
+> attr?
+> ==============
+> The possible values of such task attribute still need community attention.
+> Do we need a range of values or just binary/ternary values are sufficient?
+> Also signed or unsigned and so the length of the variable (u64, s32,
+> etc)?
+
+AFAIR, the proposal on the table are essentially two:
+
+ A) use a [-20,19] range
+ 
+    Which has similarities with the niceness concept and gives a minimal
+    continuous range. This can be on hand for things like scaling the
+    vruntime normalization [3]
+
+ B) use some sort of "profile tagging"
+    e.g. background, latency-sensible, etc...
+    
+    If I correctly got what PaulT was proposing toward the end of the
+    discussion at LPC.
+
+This last option deserves better exploration.
+
+At first glance I'm more for option A, I see a range as something that:
+
+  - gives us a bit of flexibility in terms of the possible internal
+    usages of the actual value
+
+  - better supports some kind of linear/proportional mapping
+
+  - still supports a "profile tagging" by (possible) exposing to
+    user-space some kind of system wide knobs defining threshold that
+    maps the continuous value into a "profile"
+    e.g. latency-nice >= 15: use SCHED_BATCH
+
+    In the following discussion I'll call "threshold based profiling"
+    this approach.
+
+
+> This mail is to initiate the discussion regarding the possible usecases of
+> such per task attribute and to come up with a specific name and value for
+> the same.
+>
+> Hopefully, interested one should plot out their usecase for which this new
+> attr can potentially help in solving or optimizing it.
+
++1
+
+> Well, to start with, here is my usecase.
+>
+> -------------------
+> **Usecases**
+> -------------------
+>
+> $> TurboSched
+> ====================
+> TurboSched [2] tries to minimize the number of active cores in a socket by
+> packing an un-important and low-utilization (named jitter) task on an
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+We should really come up with a different name, since jitters clashes
+with other RT related concepts.
+
+Maybe we don't even need a name at all, the other two attributes you
+specify are good enough to identify those tasks: they are just "small
+background" tasks.
+
+  small      : because on their small util_est value
+  background : because of their high latency-nice value
+
+> already active core and thus refrains from waking up of a new core if
+> possible. This requires tagging of tasks from the userspace hinting which
+> tasks are un-important and thus waking-up a new core to minimize the
+> latency is un-necessary for such tasks.
+> As per the discussion on the posted RFC, it will be appropriate to use the
+> task latency property where a task with the highest latency-nice value can
+> be packed.
+
+We should better defined here what you mean with "highest" latency-nice
+value, do you really mean the top of the range, e.g. 19?
+
+Or...
+
+> But for this specific use-cases, having just a binary value to know which
+> task is latency-sensitive and which not is sufficient enough, but having a
+> range is also a good way to go where above some threshold the task can be
+> packed.
+
+... yes, maybe we can reason about a "threshold based profiling" where
+something like for example:
+
+   /proc/sys/kernel/sched_packing_util_max    : 200
+   /proc/sys/kernel/sched_packing_latency_min : 17
+
+means that a task with latency-nice >= 17 and util_est <= 200 will be packed?
+
+
+$> Wakeup path tunings
+==========================
+
+Some additional possible use-cases was already discussed in [3]:
+
+ - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
+   depending on crossing certain pre-configured threshold of latency
+   niceness.
+  
+ - dynamically bias the vruntime updates we do in place_entity()
+   depending on the actual latency niceness of a task.
+  
+   PeterZ thinks this is dangerous but that we can "(carefully) fumble a
+   bit there."
+  
+ - bias the decisions we take in check_preempt_tick() still depending
+   on a relative comparison of the current and wakeup task latency
+   niceness values.
+
+> References:
+> ===========
+> [1]. https://lkml.org/lkml/2019/8/30/829
+> [2]. https://lkml.org/lkml/2019/7/25/296
+
+  [3]. Message-ID: <20190905114709.GM2349@hirez.programming.kicks-ass.net>
+       https://lore.kernel.org/lkml/20190905114709.GM2349@hirez.programming.kicks-ass.net/
+
+
+Best,
+Patrick
+
+-- 
+#include <best/regards.h>
+
+Patrick Bellasi
