@@ -2,79 +2,112 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2573BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 685FDC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBFF4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43630214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbfIRKml (ORCPT
+        id S1729823AbfIRKo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:42:41 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:47725 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfIRKmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:42:40 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id x8IAg55l029595;
-        Wed, 18 Sep 2019 12:42:05 +0200
-Date:   Wed, 18 Sep 2019 12:42:05 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Wed, 18 Sep 2019 06:44:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45946 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727485AbfIRKo0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:44:26 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iAXRA-0005FF-NK; Wed, 18 Sep 2019 12:43:52 +0200
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E34AC1C07A5;
+        Wed, 18 Sep 2019 12:43:51 +0200 (CEST)
+Date:   Wed, 18 Sep 2019 10:43:51 -0000
+From:   "tip-bot2 for Qian Cai" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/core: Convert vcpu_is_preempted() from
+ macro to an inline function
+Cc:     Qian Cai <cai@lca.pw>, Mel Gorman <mgorman@suse.de>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: Linux 5.3-rc8
-Message-ID: <20190918104205.GA29590@1wt.eu>
-References: <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
- <20190917160844.GC31567@gardel-login>
- <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
- <20190917174219.GD31798@gardel-login>
- <CAHk-=wjABG3+daJFr4w3a+OWuraVcZpi=SMUg=pnZ+7+O0E2FA@mail.gmail.com>
- <CAHk-=wgOCv2eOT2M8Vw9GD_yOpsTwF364-hkeADyEu9erHgMGw@mail.gmail.com>
- <89aeae9d-0bca-2a59-5ce2-1e18f6479936@rasmusvillemoes.dk>
- <20190918101616.GA29565@1wt.eu>
- <2c5a27b5-66cb-269a-547d-5584d51337bb@gmail.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bsegall@google.com,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, vincent.guittot@linaro.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <1568730894-10483-1-git-send-email-cai@lca.pw>
+References: <1568730894-10483-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2c5a27b5-66cb-269a-547d-5584d51337bb@gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Message-ID: <156880343178.24167.799070129320101322.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 03:25:51PM +0500, Alexander E. Patrakov wrote:
-> The results so far are:
-> 
-> 1. Desktop with MSI Z87I board: works.
-> 2. Lenovo Yoga 2 Pro laptop: works.
-> 3. Server based on the Intel Corporation S1200SPL board (available from OVH
-> as EG-32): does not work, memory is cleared.
-> 4. Cheap server based on Gooxi G1SCN-B board (the cheapes thing with IPMI
-> available on bacloud.com): works.
-> 
-> So that's 75% of success stories (found at least one page that is preserved
-> after the "reboot" command) based on my samples.
+The following commit has been merged into the sched/urgent branch of tip:
 
-That's pretty good! I didn't have this luck each time I tried this in
-the past :-/ I remember noticing that video RAM from graphics card was
-often usable however, which I figured I could use after seeing a ghost
-image from a previous boot when switching to graphics mode.
+Commit-ID:     42fd8baab31f53bed2952485fcf0e92f244c5e55
+Gitweb:        https://git.kernel.org/tip/42fd8baab31f53bed2952485fcf0e92f244c5e55
+Author:        Qian Cai <cai@lca.pw>
+AuthorDate:    Tue, 17 Sep 2019 10:34:54 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 18 Sep 2019 12:38:17 +02:00
 
-Willy
+sched/core: Convert vcpu_is_preempted() from macro to an inline function
+
+Clang reports this warning:
+
+  kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu' [-Wunused-function]
+
+due to osq_lock() calling vcpu_is_preempted(node_cpu(node->prev))), but
+vcpu_is_preempted() is compiled away. Fix it by converting the dummy
+vcpu_is_preempted() from a macro to a proper static inline function.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+Acked-by: Mel Gorman <mgorman@suse.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bsegall@google.com
+Cc: dietmar.eggemann@arm.com
+Cc: juri.lelli@redhat.com
+Cc: rostedt@goodmis.org
+Cc: vincent.guittot@linaro.org
+Link: https://lkml.kernel.org/r/1568730894-10483-1-git-send-email-cai@lca.pw
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ include/linux/sched.h | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index f0edee9..e2e9196 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1856,7 +1856,10 @@ static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
+  * running or not.
+  */
+ #ifndef vcpu_is_preempted
+-# define vcpu_is_preempted(cpu)	false
++static inline bool vcpu_is_preempted(int cpu)
++{
++	return false;
++}
+ #endif
+ 
+ extern long sched_setaffinity(pid_t pid, const struct cpumask *new_mask);
