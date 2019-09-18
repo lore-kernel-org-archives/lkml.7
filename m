@@ -2,62 +2,87 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C13C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80613C4CED0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB7DF222BD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CB4B222BE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568833063;
+	bh=pGrUpPKEww/jMtCOAId0b92U1XRo31vNqeiXqGc2zJU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pX4bw4iuXvA3lfrOjQKSXIU0CeV0QEdHjQ2P03Cex9UYMFlSfNTtSjaEEavTYnKmw
+	 U3I8TCbrX/yOaiFr6kbQJ3uEREBKUbQVsk6q77OTfAbR2TDu9ddlOcVWLb8SoRx/i9
+	 AhF+i5WhkPToqeCEdrVLR6LzPSG3vRt4evhtzmCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388915AbfIRS50 (ORCPT
+        id S2388930AbfIRS5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:57:26 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:54464 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2387693AbfIRS5Z (ORCPT
+        Wed, 18 Sep 2019 14:57:42 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42168 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387693AbfIRS5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:57:25 -0400
-Received: (qmail 7301 invoked by uid 2102); 18 Sep 2019 14:57:24 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Sep 2019 14:57:24 -0400
-Date:   Wed, 18 Sep 2019 14:57:24 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <kai.heng.feng@canonical.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <mans@mansr.com>, <oneukum@suse.com>,
-        <syzkaller-bugs@googlegroups.com>
-Subject: Re: general protection fault in usb_set_interface
-In-Reply-To: <00000000000001595b0592c41731@google.com>
-Message-ID: <Pine.LNX.4.44L0.1909181454300.1507-100000@iolanthe.rowland.org>
+        Wed, 18 Sep 2019 14:57:42 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n14so494381wrw.9;
+        Wed, 18 Sep 2019 11:57:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GJ3R8XhnecOsiy6g/x7C0Epa5BrgApmxuvPwK+dFs18=;
+        b=aKSnuTCrCjyTSPixc7HKskoy8t4QkDnUKmZHXm/ogfhRkac3YPQbwLAD9pr1QdaK7F
+         YIFs7q2EBZnx2jIN6qb3lNI2K1Rprien83OUYHBOBRfpM1EF4Bimu+Md41ZJ6wzdaKbl
+         XUa4I5TkoNeHSGOUlx/T4TQsH0qFXlCB4wYoPUlCA1T/PhJHihaAq2oOTYdqLYqEh0VJ
+         J/XxBkUAcbeIzu5tcWiLQbSUzK+F1nHeeeVtjqS0pFcHdTQmCD1SHCD1CM/pcuad70Oh
+         0LlFbR5r1+CBD+WXrzkAynXcK6T9ywR+couCrQV1EPEa79Puyu1MS8iIVOFMit6nj/LF
+         DBIA==
+X-Gm-Message-State: APjAAAXGy38ahFb6BV99dg1VFZu1/LNppubpde2mayCQACJgotIOF8gv
+        6JjJiOpma5VP4EZB+UiPhtI=
+X-Google-Smtp-Source: APXvYqxCZ8ybmcDduSjrnyaRtnNA3U3N4PBgLW8JuqHbZ7QUON1Zenp0iU3fty+pz/Nwx6fAtGOOVA==
+X-Received: by 2002:a05:6000:1002:: with SMTP id a2mr4017924wrx.272.1568833058449;
+        Wed, 18 Sep 2019 11:57:38 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id g73sm4743264wme.10.2019.09.18.11.57.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Sep 2019 11:57:35 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 20:57:32 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Lukasz Luba <l.luba@partner.samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] memory: exynos5422: fix spelling mistake "counld"
+ -> "could"
+Message-ID: <20190918185732.GC8463@kozik-lap>
+References: <20190916091249.31950-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190916091249.31950-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, syzbot wrote:
-
-> Hello,
+On Mon, Sep 16, 2019 at 10:12:49AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> WARNING in sysfs_remove_group
+> There is a spelling mistake in a dev_err message. Fix it.
 > 
-> ------------[ cut here ]------------
-> sysfs group 'power' not found for kobject 'radio0'
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/memory/samsung/exynos5422-dmc.c | 2 +-
 
-Andrey:
+Thanks, applied.
 
-Is there any way to tell syzbot to run the reproducer but with only one 
-device instance (that is, only one dummy-hcd bus)?
-
-Or can you a new, modified reproducer that will do this?
-
-Alan Stern
+Best regards,
+Krzysztof
 
