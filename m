@@ -2,114 +2,136 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B62F7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59D4121906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788429;
-	bh=+dI+rVf+1+sdiK1BAdoxjotm3JYBHjEnkmGqtzDyUPA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zrVSN1pqjmZOtb+qeqNFb9X2tfQDB/ameQJPXcViOHXX/8FdeHHL4SO2cd/l/u2jU
-	 ots/RUqyEn3BjDga105wMLZGe7MQbB4pCKWmDMv3N0ZNUYBPHHa22Cmfk39JG5/t5B
-	 HXW4FA1RC2ifQwPiKz60OLVz4vWplbHD5Qh7wLqo=
+	by mail.kernel.org (Postfix) with ESMTP id 88D46218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0g3AnbC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729077AbfIRGds (ORCPT
+        id S1729202AbfIRGeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38746 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbfIRGUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FD1F218AE;
-        Wed, 18 Sep 2019 06:20:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787606;
-        bh=+dI+rVf+1+sdiK1BAdoxjotm3JYBHjEnkmGqtzDyUPA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XADt5HcJXv1cqfrssUWBrBe5vmiKwbi50xfAhGfDuD3yozvnv1ZnWdpt2tMjQ+dKa
-         kWyUaENPIVN9Km8+DoRObNVjTydP23s885WAe5RnFDdXKTlcTo+CY6cWzzgvIRibmZ
-         e5slKG15Ywgd/4HpegSV74Q0qj6N+w5Dh81nwlmg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 12/45] tipc: add NULL pointer check before calling kfree_rcu
-Date:   Wed, 18 Sep 2019 08:18:50 +0200
-Message-Id: <20190918061224.137451852@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
-References: <20190918061222.854132812@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 18 Sep 2019 02:34:08 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45035 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726835AbfIRGeH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:34:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so3667747pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 23:34:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7hTH+QZ0Rg1J8IDO+1UiOPyFh3Jvo6QqRltmoWe2MW4=;
+        b=X0g3AnbCKw+4TwyXRilD5SoauIs7wFaCMcwJKFXFr+zMxnDhMe2h8FvUT7Uilb0cyQ
+         rOHGkNZRi46MCx5F3tyS4fy75friu9ruEtFpKh0Z2S6tWdUkZx4uLAeBKh4xjqoxzzut
+         G81E4cQU5C8fHwDxi0SovdBNlntxF3QSRCx+VA6snwPzZXgabK/h0b2LIylAYFPIKd47
+         JWy1+Eyc3nQWc3YU6i5tTx4u3XuZVT0CYgFy7OpgYJpZi0MtU3J1bN49gsY96lzLHLk9
+         z5THRSdFErwm8GSn5Xt6MaUpUggMzlOHC/DVjWGjGE6c61eUSrIhwQ5edcmv5qO4QayY
+         wi/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7hTH+QZ0Rg1J8IDO+1UiOPyFh3Jvo6QqRltmoWe2MW4=;
+        b=I8y9mPzYw1elcOQRxHb6tA83X2hjN71jOAfjIeDenAnQyU0f2paP2u0nAozpRHndwL
+         Y6UfyWbkV83m09X28GI9dujAILKQirfPXX/7N3WG/EZPSg/hmFh6QfBrBKmf7nel8Va4
+         e107cL9GdKlZHE8Wc12ZLEioPkbdJ1yRsQQcQnq1IfdJUPL4QypcdkQtEFEZ41uzZJ67
+         K1yvceHYBDRqNqlFW917aoWih0wB25vLOkRaAcJqSTHrO1DKurcBKsnmAAsfRN+PMRCo
+         3zlD9xJxxisXqlWnrUhRjxoIuPLiBvpQFG5VRpyiWsPOueGZmtyqnKP6aimOidmtSOud
+         LzPw==
+X-Gm-Message-State: APjAAAVzx5QwWiaq9g9aBq4sxSS4IbUIPplx+E2uTEpyvO+x22HkTb+h
+        H+T6XLQ52KRzN1ZttAd1I0DmjmVT75A=
+X-Google-Smtp-Source: APXvYqzAcu1KGj9IOpAdn6O/jLmmzMqwMmQyCiZJCCQ7WyfF5e2xkCOUO7dFfLtz2I7kRQrfl391pA==
+X-Received: by 2002:aa7:8dcf:: with SMTP id j15mr2449689pfr.5.1568788446445;
+        Tue, 17 Sep 2019 23:34:06 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id y28sm7614921pfq.48.2019.09.17.23.34.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 23:34:05 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 23:34:03 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     gregkh@linuxfoundation.org, arnd@arndb.de,
+        srinivas.kandagatla@linaro.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/5] misc: fastrpc: fix memory leak from miscdev->name
+Message-ID: <20190918063403.GD1636@tuxbook-pro>
+References: <20190913152532.24484-1-jorge.ramirez-ortiz@linaro.org>
+ <20190913152532.24484-3-jorge.ramirez-ortiz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190913152532.24484-3-jorge.ramirez-ortiz@linaro.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+On Fri 13 Sep 08:25 PDT 2019, Jorge Ramirez-Ortiz wrote:
 
-[ Upstream commit 42dec1dbe38239cf91cc1f4df7830c66276ced37 ]
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> 
+> Fix a memory leak in miscdev->name by using devm_variant
+> 
+> Orignally reported by kmemleak:
+>     [<ffffff80088b74d8>] kmemleak_alloc+0x50/0x84
+>     [<ffffff80081e015c>] __kmalloc_track_caller+0xe8/0x168
+>     [<ffffff8008371ab0>] kvasprintf+0x78/0x100
+>     [<ffffff8008371c6c>] kasprintf+0x50/0x74
+>     [<ffffff8008507f2c>] fastrpc_rpmsg_probe+0xd8/0x20c
+>     [<ffffff80086b63b4>] rpmsg_dev_probe+0xa8/0x148
+>     [<ffffff80084de50c>] really_probe+0x208/0x248
+>     [<ffffff80084de2dc>] driver_probe_device+0x98/0xc0
+>     [<ffffff80084dec6c>] __device_attach_driver+0x9c/0xac
+>     [<ffffff80084dca8c>] bus_for_each_drv+0x60/0x8c
+>     [<ffffff80084de64c>] __device_attach+0x8c/0x100
+>     [<ffffff80084de6e0>] device_initial_probe+0x20/0x28
+>     [<ffffff80084dcbd0>] bus_probe_device+0x34/0x7c
+>     [<ffffff80084da32c>] device_add+0x420/0x498
+>     [<ffffff80084da680>] device_register+0x24/0x2c
+> 
 
-Unlike kfree(p), kfree_rcu(p, rcu) won't do NULL pointer check. When
-tipc_nametbl_remove_publ returns NULL, the panic below happens:
+Cc: stable@vger.kernel.org
+Fixes: f6f9279f2bf0 ("misc: fastrpc: Add Qualcomm fastrpc basic driver model")
 
-   BUG: unable to handle kernel NULL pointer dereference at 0000000000000068
-   RIP: 0010:__call_rcu+0x1d/0x290
-   Call Trace:
-    <IRQ>
-    tipc_publ_notify+0xa9/0x170 [tipc]
-    tipc_node_write_unlock+0x8d/0x100 [tipc]
-    tipc_node_link_down+0xae/0x1d0 [tipc]
-    tipc_node_check_dest+0x3ea/0x8f0 [tipc]
-    ? tipc_disc_rcv+0x2c7/0x430 [tipc]
-    tipc_disc_rcv+0x2c7/0x430 [tipc]
-    ? tipc_rcv+0x6bb/0xf20 [tipc]
-    tipc_rcv+0x6bb/0xf20 [tipc]
-    ? ip_route_input_slow+0x9cf/0xb10
-    tipc_udp_recv+0x195/0x1e0 [tipc]
-    ? tipc_udp_is_known_peer+0x80/0x80 [tipc]
-    udp_queue_rcv_skb+0x180/0x460
-    udp_unicast_rcv_skb.isra.56+0x75/0x90
-    __udp4_lib_rcv+0x4ce/0xb90
-    ip_local_deliver_finish+0x11c/0x210
-    ip_local_deliver+0x6b/0xe0
-    ? ip_rcv_finish+0xa9/0x410
-    ip_rcv+0x273/0x362
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Fixes: 97ede29e80ee ("tipc: convert name table read-write lock to RCU")
-Reported-by: Li Shuang <shuali@redhat.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/tipc/name_distr.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/net/tipc/name_distr.c
-+++ b/net/tipc/name_distr.c
-@@ -224,7 +224,8 @@ static void tipc_publ_purge(struct net *
- 		       publ->key);
- 	}
- 
--	kfree_rcu(p, rcu);
-+	if (p)
-+		kfree_rcu(p, rcu);
- }
- 
- /**
+You should append your S-o-b here, as you forwarded the patch.
 
 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> ---
+>  drivers/misc/fastrpc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 8903388993d3..bc03500bfe60 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -1599,8 +1599,8 @@ static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
+>  	}
+>  
+>  	data->miscdev.minor = MISC_DYNAMIC_MINOR;
+> -	data->miscdev.name = kasprintf(GFP_KERNEL, "fastrpc-%s",
+> -				domains[domain_id]);
+> +	data->miscdev.name = devm_kasprintf(rdev, GFP_KERNEL, "fastrpc-%s",
+> +					    domains[domain_id]);
+>  	data->miscdev.fops = &fastrpc_fops;
+>  	err = misc_register(&data->miscdev);
+>  	if (err)
+> -- 
+> 2.23.0
+> 
