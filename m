@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71839C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAD1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4933B21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2230C21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787995;
-	bh=mqrNHnKR9H8wgI/Eov6wPy08jIg4/CyN6kxoTRpegyU=;
+	s=default; t=1568787998;
+	bh=pNjQlHwmYnMq2l7APwROzUARrPp84X47aBsz4iOvu9Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5hCxGn3ngeOMy+WJUEH2Ugrw3lUWOl83rCRjZL5JIxbHAcICMcR492TOc4gRey5N
-	 Eo98AdOkfq53YG549mbxo0m/6FYVg4jRE3Nk30FBnl1vH2Dp/IbwOVJ55FlMrv1luR
-	 N6uaJiKrvzjsBzAzmQwmFaXlqzqgG1iCvVH4h/BY=
+	b=kBFqFR3kOts2wr5gnOwVqgIa/jNmlwXpYYroZ/UZBebTneIR4Sqn1tOjS/w4afj5J
+	 5hnuRaOgbndOSvkKn6U7e/J3KYNGnIbaRqlmWWPhsjJo2UhIh0M4hALrlbvl1xEKjY
+	 HdC2G/GKkP3fkA6LpArxfunuIGGAk/UOIqNCyUFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfIRG0e (ORCPT
+        id S1730344AbfIRG0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47898 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbfIRG02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:28 -0400
+        id S1730326AbfIRG0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F79D218AF;
-        Wed, 18 Sep 2019 06:26:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5A36218AF;
+        Wed, 18 Sep 2019 06:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787987;
-        bh=mqrNHnKR9H8wgI/Eov6wPy08jIg4/CyN6kxoTRpegyU=;
+        s=default; t=1568787993;
+        bh=pNjQlHwmYnMq2l7APwROzUARrPp84X47aBsz4iOvu9Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eHc9kam2ERuGkZhj+RcXYfJAWsYbJox4zqezpdNC2wHFk67ccqlh+NfyW620hJJDB
-         wW9AhVL69E+1QSlONfeAok9JDSZqAGc1kptW4o83cSUpSnb9QmhZM2tXy204uUMcAa
-         OSm9wgz4GJCf3EMtLd+fEfieMdUirgTMuI5bSMK0=
+        b=BEe5r2ls8hloZf9T23X2LrYm4UL3d+pQ+6P/8ZikQhHh0E8ZaGX585DRbCA4yANf3
+         SrO86SInl1Y7+2eZDOmNXnLYPPtYKPMsC7tr2sFmd4f4GOt3wNQf3OeUt8LQ0BYF3C
+         QeArMnZhvzvNqhgkgFZ9/1ss4f1ZVpyODt1/Pymw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 5.2 58/85] clk: rockchip: Dont yell about bad mmc phases when getting
-Date:   Wed, 18 Sep 2019 08:19:16 +0200
-Message-Id: <20190918061235.943581380@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.2 60/85] PCI: Always allow probing with driver_override
+Date:   Wed, 18 Sep 2019 08:19:18 +0200
+Message-Id: <20190918061236.000565114@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,48 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
+commit 2d2f4273cbe9058d1f5a518e5e880d27d7b3b30f upstream.
 
-At boot time, my rk3288-veyron devices yell with 8 lines that look
-like this:
-  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") introduced the sriov_drivers_autoprobe attribute
+which allows users to prevent the kernel from automatically probing a
+driver for new VFs as they are created.  This allows VFs to be spawned
+without automatically binding the new device to a host driver, such as
+in cases where the user intends to use the device only with a meta
+driver like vfio-pci.  However, the current implementation prevents any
+use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
+blocks the now current general practice of setting driver_override
+followed by using drivers_probe to bind a device to a specified driver.
 
-This is because the clock framework at clk_register() time tries to
-get the phase but we don't have a parent yet.
+The kernel never automatically sets a driver_override therefore it seems
+we can assume a driver_override reflects the intent of the user.  Also,
+probing a device using a driver_override match seems outside the scope
+of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
+driver_override matches regardless of sriov_drivers_autoprobe, which we
+can do by simply testing if a driver_override is set for a device as a
+'can probe' condition.
 
-While the errors appear to be harmless they are still ugly and, in
-general, we don't want yells like this in the log unless they are
-important.
-
-There's no real reason to be yelling here.  We can still return
--EINVAL to indicate that the phase makes no sense without a parent.
-If someone really tries to do tuning and the clock is reported as 0
-then we'll see the yells in rockchip_mmc_set_phase().
-
-Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Link: https://lore.kernel.org/lkml/155742996741.21878.569845487290798703.stgit@gimli.home
+Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/pci/pci-driver.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -52,10 +52,8 @@ static int rockchip_mmc_get_phase(struct
- 	u32 delay_num = 0;
- 
- 	/* See the comment for rockchip_mmc_set_phase below */
--	if (!rate) {
--		pr_err("%s: invalid clk rate\n", __func__);
-+	if (!rate)
- 		return -EINVAL;
--	}
- 
- 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
- 
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_
+ #ifdef CONFIG_PCI_IOV
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
+ {
+-	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
++	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
++		pdev->driver_override);
+ }
+ #else
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
 
 
