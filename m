@@ -2,151 +2,68 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55476C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D4FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26ADA20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:18:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Bo2EKOV2"
+	by mail.kernel.org (Postfix) with ESMTP id 3C79320640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:19:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387945AbfIRVSN (ORCPT
+        id S2387963AbfIRVTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:18:13 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:53788 "EHLO vps0.lunn.ch"
+        Wed, 18 Sep 2019 17:19:36 -0400
+Received: from mga14.intel.com ([192.55.52.115]:56601 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfIRVSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:18:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=bGfAVdLrb+WtrOwj6S/Ke5fvJyoppeNpLvbmn3xM56E=; b=Bo2EKOV2JKWCr7domMkoJ9RxMR
-        t4jTivpww+hB5Ptcd4It1JeTeX5QNuA2Og0oERJFVKjdN60X3oNvEo2PEeQuGVBmSmd50Sj3FmhCP
-        ke0Erl3yScdOvZhnIlTiYJA+wIQZNhbcVgM8ALr34i92/bzNG1Zqr9tSxDL0Mkaobyhc=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iAhKt-00028X-Rq; Wed, 18 Sep 2019 23:18:03 +0200
-Date:   Wed, 18 Sep 2019 23:18:03 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     vincent.cheng.xh@renesas.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] ptp: Add a ptp clock driver for IDT ClockMatrix.
-Message-ID: <20190918211803.GO9591@lunn.ch>
-References: <1568837198-27211-1-git-send-email-vincent.cheng.xh@renesas.com>
- <1568837198-27211-2-git-send-email-vincent.cheng.xh@renesas.com>
+        id S2387948AbfIRVTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 17:19:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 14:19:35 -0700
+X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
+   d="scan'208";a="388065194"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 14:19:35 -0700
+From:   ira.weiny@intel.com
+To:     linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+Subject: [PATCH] nvdimm: Trivial comment fix
+Date:   Wed, 18 Sep 2019 14:19:33 -0700
+Message-Id: <20190918211933.13213-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1568837198-27211-2-git-send-email-vincent.cheng.xh@renesas.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:06:38PM -0400, vincent.cheng.xh@renesas.com wrote:
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
-> 
-> The IDT ClockMatrix (TM) family includes integrated devices that provide
-> eight PLL channels.  Each PLL channel can be independently configured as a
-> frequency synthesizer, jitter attenuator, digitally controlled
-> oscillator (DCO), or a digital phase lock loop (DPLL).  Typically
-> these devices are used as timing references and clock sources for PTP
-> applications.  This patch adds support for the device.
-> 
-> Co-developed-by: Richard Cochran <richardcochran@gmail.com>
-> Signed-off-by: Richard Cochran <richardcochran@gmail.com>
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+From: Ira Weiny <ira.weiny@intel.com>
 
-Hi Vincent 
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ include/linux/nd.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +static s32 idtcm_xfer(struct idtcm *idtcm,
-> +		      u8 regaddr,
-> +		      u8 *buf,
-> +		      u16 count,
-> +		      bool write)
-> +{
-> +	struct i2c_client *client = idtcm->client;
-> +	struct i2c_msg msg[2];
-> +	s32 cnt;
-> +
-> +	msg[0].addr = client->addr;
-> +	msg[0].flags = 0;
-> +	msg[0].len = 1;
-> +	msg[0].buf = &regaddr;
-> +
-> +	msg[1].addr = client->addr;
-> +	msg[1].flags = write ? 0 : I2C_M_RD;
-> +	msg[1].len = count;
-> +	msg[1].buf = buf;
-> +
-> +	cnt = i2c_transfer(client->adapter, msg, 2);
-> +
-> +	if (cnt < 0) {
-> +		pr_err("i2c_transfer returned %d\n", cnt);
+diff --git a/include/linux/nd.h b/include/linux/nd.h
+index f778f962d1b6..55c735997805 100644
+--- a/include/linux/nd.h
++++ b/include/linux/nd.h
+@@ -147,7 +147,7 @@ static inline int nvdimm_read_bytes(struct nd_namespace_common *ndns,
+ 
+ /**
+  * nvdimm_write_bytes() - synchronously write bytes to an nvdimm namespace
+- * @ndns: device to read
++ * @ndns: device to write
+  * @offset: namespace-relative starting offset
+  * @buf: buffer to drain
+  * @size: transfer length
+-- 
+2.20.1
 
-dev_err(client->dev, "i2c_transfer returned %d\n", cnt);
-
-We then have an idea which device has a transfer error.
-
-Please try to not use pr_err() when you have some sort of device.
-
-
-> +static s32 idtcm_state_machine_reset(struct idtcm *idtcm)
-> +{
-> +	s32 err;
-> +	u8 byte = SM_RESET_CMD;
-> +
-> +	err = idtcm_write(idtcm, RESET_CTRL, SM_RESET, &byte, sizeof(byte));
-> +
-> +	if (!err) {
-> +		/* delay */
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +		schedule_timeout(_msecs_to_jiffies(POST_SM_RESET_DELAY_MS));
-
-Maybe use msleep_interruptable()? 
-
-> +	}
-> +
-> +	return err;
-> +}
-> +
-> +static s32 idtcm_load_firmware(struct idtcm *idtcm,
-> +			       struct device *dev)
-> +{
-> +	const struct firmware *fw;
-> +	struct idtcm_fwrc *rec;
-> +	u32 regaddr;
-> +	s32 err;
-> +	s32 len;
-> +	u8 val;
-> +	u8 loaddr;
-> +
-> +	pr_info("requesting firmware '%s'\n", FW_FILENAME);
-
-dev_debug()
-
-> +
-> +	err = request_firmware(&fw, FW_FILENAME, dev);
-> +
-> +	if (err)
-> +		return err;
-> +
-> +	pr_info("firmware size %zu bytes\n", fw->size);
-
-dev_debug()
-
-Maybe look through all your pr_info and downgrade most of them to
-dev_debug()
-
-	Andrew
