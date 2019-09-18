@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55DE2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C451421897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061D621897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ElqVsB9l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJt5Kg3l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388898AbfIRSgH (ORCPT
+        id S2388864AbfIRSgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:36:07 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36202 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388852AbfIRSgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Sep 2019 14:36:03 -0400
-Received: by mail-io1-f67.google.com with SMTP id b136so1609464iof.3;
-        Wed, 18 Sep 2019 11:36:02 -0700 (PDT)
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38581 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388842AbfIRSgB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 14:36:01 -0400
+Received: by mail-io1-f67.google.com with SMTP id k5so1575526iol.5;
+        Wed, 18 Sep 2019 11:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ceH7V4gJ41xQfvzmCXW+ZuYzVS2GovbuO0nBvHMQ4TQ=;
-        b=ElqVsB9lRkhlvXeqDM3X7x4/dgwy2RTnip58JDQzDY8/5+qeHPyTyQM4oA9cNayZWU
-         /W9eLq3Wx0tNxRhkNRFFi8XKpYlfIP6/eILGpIRvNNR5fwVlpeK/ynR4gAL8xMaVSTlz
-         ow7CR52cdo/dv1jppfoghW5ybAJRzRFahrlbzBSHjkxb+oHMfrxyzojoPlBzB81f4N/g
-         H4YcEE1279xDa1M74NWxr0d7tRSh6NH0IOZoJ+l5cOuwVKojMuSHIv7Zlv6lsukRh8QF
-         r8Lihdxmwk48mkM48NSbCbn1Yb6mp+EZ5bJc6PXN7V5AEVUggwS5nCkLCx/zOtZDRhQ5
-         LDxw==
+        bh=GKgnywCkKmSTq/e0QreLPvGEikmWmR0pjLn7CwFHdMw=;
+        b=AJt5Kg3lSF3W7dIZdsRfNWghvGegv60LVKNMZULbpFCZAWNM0D2pYrMgXkrsug+t4H
+         5Zd7X2VCJJ2mKZky6cClZK3TwB+GRq4anZp9NsqzPD0+9+3qrhJGhn+yLYJYFHGJW6T5
+         WASpF5qQRA4oLwIk+5v+SefyJnrRDurCFPQ7l0fVEmp8pFOywhUI0XyljCb5kG3aSRmo
+         gF3wOrquMZR8iYgMxlhllR+psHeRN7XAzg3eYHiCHrWh6iSC33oE7b16npjkFu0vNUol
+         0xfgcnrKWjBwrvJeXXcrfLHhuFyayNvy1QZaE8LiRQCOCjIvUCK3JZgM6dywQKbJ+ehq
+         ckHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ceH7V4gJ41xQfvzmCXW+ZuYzVS2GovbuO0nBvHMQ4TQ=;
-        b=O+uLWQ+JLH26sH8whysB4wp7XxEC/0w5YY9oC1QcT0iyN6gOrYKIbld9tbC7k6EASO
-         nfgZCDcZdupt5nw/4b1rp3s20icqXEkZw1MuqFLUpUeAMLUWvgIhflTX8zoxVYT1aBdX
-         N5vlMFbdqk29XjlBrf4kle67B9ghRPrtuT18afHtHVm5iGy0MbKuUCSszTMBb7J0TkLR
-         VZy7o2VM4h/Ys6Y7s/35lFO+iIDfauuCdWxAHB2ZeUj+jygy4axnha4iENSuz3FkLfzq
-         shadBiiRam8tNVXoTtw7iUn+2ExzjM95th9xUn+2IVYNtG5sDgtNWizhTK9I/Wl6s4hX
-         IlpQ==
-X-Gm-Message-State: APjAAAXrGbTCq0A6cv3PgMreXRINb9BTY0pAIIzxbc0BamA5N9ejVpMr
-        jt2YhCeXVtNIYXDEZr3k6uU=
-X-Google-Smtp-Source: APXvYqyVBHzpmS860hcn9/BT9U7RDIapdUUmHHQN7v6AKfz0BUnzB+dtxLtziB5QfuFR/kM4paEWOw==
-X-Received: by 2002:a6b:d208:: with SMTP id q8mr3583806iob.47.1568831761669;
-        Wed, 18 Sep 2019 11:36:01 -0700 (PDT)
+        bh=GKgnywCkKmSTq/e0QreLPvGEikmWmR0pjLn7CwFHdMw=;
+        b=DEHjiWSqGwsXWZrpdjG66Z1nxIK0FfofP98EBDVCaMiq3ST/jR0V/HAQK9rUCnd3/P
+         MX/LB5TH5nK2BdEm3PHrL4Fr8ovPjC+mgou3cwO102/rCpxP1iriIaDoA8cE3Pr1n7J/
+         Vxnv9RFrUznkzS5GFq/pfVkTpnWHELd4OdX0/sXue+Y2nG+VjwOneNc3Qr/vCJmzLjoU
+         46AheuRA+tPGChd2T+pZoscnVqb3yPKHxwL7ZnGu++3gNOFYxpXTDOjXaVHq0JrRsAgU
+         FsvFntTDkPV8qNWn1eIhJz2DKBghKRiQX4zelqZ8zfk4w4rb4SHnAuTSTd1QxohlunGq
+         udvw==
+X-Gm-Message-State: APjAAAWIJSC7B6MEXBxm6tLQszvih+Z4plRC4fX/MJbCfJMStmpfcdTC
+        rkZ+wrYsEi5iM9nU8Aqwg/M=
+X-Google-Smtp-Source: APXvYqx93FD4q4dp1vrXJr+LU8KrC2R81Mr/DY8OpNAJisAC5ZfULAzn6D/CEOhy5+jjdaHJQ7DOpw==
+X-Received: by 2002:a5e:8b43:: with SMTP id z3mr660750iom.114.1568831759866;
+        Wed, 18 Sep 2019 11:35:59 -0700 (PDT)
 Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id s201sm8348190ios.83.2019.09.18.11.36.00
+        by smtp.gmail.com with ESMTPSA id s201sm8348190ios.83.2019.09.18.11.35.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 11:36:01 -0700 (PDT)
+        Wed, 18 Sep 2019 11:35:59 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     Greg KH <gregkh@linuxfoundation.org>
@@ -65,9 +65,9 @@ Cc:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
         Oliver Hartkopp <socketcan@hartkopp.net>,
         jan.kiszka@siemens.com, Frank Iwanitz <friw@hms-networks.de>,
         linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v1 5/5] staging: fieldbus: add support for HMS FL-NET industrial controller
-Date:   Wed, 18 Sep 2019 14:35:52 -0400
-Message-Id: <20190918183552.28959-6-TheSven73@gmail.com>
+Subject: [PATCH v1 3/5] staging: fieldbus core: add support for device configuration
+Date:   Wed, 18 Sep 2019 14:35:50 -0400
+Message-Id: <20190918183552.28959-4-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190918183552.28959-1-TheSven73@gmail.com>
 References: <20190918183552.28959-1-TheSven73@gmail.com>
@@ -76,341 +76,763 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Anybus-S FL-NET provides full FL-NET Class 1 functionality via the
-patented Anybus-S application interface. Any device supporting this
-standard can take advantage of the features offered by the module,
-providing seamless network integration regardless of network type.
+Support device configuration by adding
 
-FL-NET is a control network, primarily used for interconnection of devices
-such as PLCs, Robot Controllers and Numerical Control Devices. It features
-both cyclic and acyclic data exchange capabilities, and uses a token-based
-communication scheme for data transmission. The Anybus module is classified
-as a 'Class 1'-node, which means that it supports cyclic data exchange in
-both directions.
+- an in-kernel driver config API, and
+- a configfs-based userspace config ABI
 
-Official documentation:
-https://www.anybus.com/docs/librariesprovider7/default-document-library
-/manuals-design-guides/hms-scm_1200_073.pdf
+In short, drivers pick a subset from a set of standardized config
+properties. This is exposed by the fieldbus core as configfs files.
+Userspace may then configure the device by writing to these configfs
+files, prior to enabling the device.
 
-This implementation is an Anybus-S client driver, designed to be
-instantiated by the Anybus-S bus driver when it discovers the FL-NET
-card.
-
-If loaded successfully, the driver registers itself as a fieldbus_dev,
-and userspace can access it through the fieldbus_dev interface.
+For more details, refer to the included documentation.
 
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- drivers/staging/fieldbus/anybuss/Kconfig     |  17 +
- drivers/staging/fieldbus/anybuss/Makefile    |   1 +
- drivers/staging/fieldbus/anybuss/hms-flnet.c | 520 +++++++++++++++++++
- 3 files changed, 538 insertions(+)
- create mode 100644 drivers/staging/fieldbus/anybuss/hms-flnet.c
+ .../Documentation/ABI/configfs-fieldbus-dev   |  90 ++++
+ .../fieldbus/Documentation/fieldbus_dev.txt   |  60 ++-
+ drivers/staging/fieldbus/Kconfig              |  14 +
+ drivers/staging/fieldbus/Makefile             |   5 +-
+ drivers/staging/fieldbus/dev_config.c         | 383 ++++++++++++++++++
+ drivers/staging/fieldbus/dev_config.h         |  41 ++
+ drivers/staging/fieldbus/dev_core.c           |  22 +
+ drivers/staging/fieldbus/fieldbus_dev.h       |  49 +++
+ 8 files changed, 654 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev
+ create mode 100644 drivers/staging/fieldbus/dev_config.c
+ create mode 100644 drivers/staging/fieldbus/dev_config.h
 
-diff --git a/drivers/staging/fieldbus/anybuss/Kconfig b/drivers/staging/fieldbus/anybuss/Kconfig
-index 635a0a7b7dd2..8441c6ac210b 100644
---- a/drivers/staging/fieldbus/anybuss/Kconfig
-+++ b/drivers/staging/fieldbus/anybuss/Kconfig
-@@ -38,4 +38,21 @@ config HMS_PROFINET
- 
- 	  If unsure, say N.
- 
-+config HMS_FLNET
-+	tristate "HMS FL-Net Controller (Anybus-S)"
-+	depends on FIELDBUS_DEV && HMS_ANYBUSS_BUS
-+	select FIELDBUS_DEV_CONFIG
-+	help
-+	  If you say yes here you get support for the HMS Industrial
-+	  Networks FL-Net Controller.
-+
-+	  It will be registered with the kernel as a fieldbus_dev,
-+	  so userspace can interact with it via the fieldbus_dev userspace
-+	  interface(s).
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called hms-flnet.
-+
-+	  If unsure, say N.
-+
- endif
-diff --git a/drivers/staging/fieldbus/anybuss/Makefile b/drivers/staging/fieldbus/anybuss/Makefile
-index 3ad3dcc6be56..79c4083508f4 100644
---- a/drivers/staging/fieldbus/anybuss/Makefile
-+++ b/drivers/staging/fieldbus/anybuss/Makefile
-@@ -8,3 +8,4 @@ anybuss_core-y			+= host.o
- 
- obj-$(CONFIG_ARCX_ANYBUS_CONTROLLER) += arcx-anybus.o
- obj-$(CONFIG_HMS_PROFINET)	+= hms-profinet.o
-+obj-$(CONFIG_HMS_FLNET)		+= hms-flnet.o
-diff --git a/drivers/staging/fieldbus/anybuss/hms-flnet.c b/drivers/staging/fieldbus/anybuss/hms-flnet.c
+diff --git a/drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev b/drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev
 new file mode 100644
-index 000000000000..4dd0f66fe8ce
+index 000000000000..fc60460b62f9
 --- /dev/null
-+++ b/drivers/staging/fieldbus/anybuss/hms-flnet.c
-@@ -0,0 +1,520 @@
++++ b/drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev
+@@ -0,0 +1,90 @@
++What: 		/config/fieldbus_dev/fieldbus_dev<num>
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description: 	Interface used to configure and enable/disable fieldbus devices.
++
++		Attributes are visible only when configfs is mounted. To mount
++		configfs in /config directory use:
++		# mount -t configfs none /config/
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/enable
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Whether the device is enabled (power on) or
++			disabled (power off).
++		Possible values:
++			'1' meaning enabled
++			'0' meaning disabled
++		Writing '1' enables the device (power on) with settings
++			described by the configfs properties in this directory.
++		Writing '0' disables the card (power off).
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/macaddr
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		mac address of the device, eg. E8:B3:1F:0C:6D:19
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/ipaddr
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		IPv4 address of the device, in dotted notation
++			(eg. 192.168.22.50).
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/offline_mode
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Behaviour of the process data memory when the fieldbus goes
++			offline.
++		Possible values:
++			'clear'  meaning 'All data is cleared'.
++			'freeze' meaning 'All data is frozen in its current
++					state'.
++			'set'	 meaning 'All data is set'.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/rev_number
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Revision number of the device.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/rev_date_year
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Year of revision for the device.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/rev_date_month
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Month of revision for the device.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/rev_date_day
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		Day of revision for the device.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/id_type
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		The type id by which the card identifies itself on the network.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/id_vendor
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		The vendor id by which the card identifies itself on the
++		network.
++
++What: 		/config/fieldbus_dev/fieldbus_dev<num>/id_product
++KernelVersion:	5.4 (staging)
++Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
++Description:
++		The product id by which the card identifies itself on the
++		network.
+diff --git a/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt b/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
+index 89fb8e14676f..a7d1ffc5e3a6 100644
+--- a/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
++++ b/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
+@@ -50,17 +50,61 @@ Part III - How can userspace use the subsystem?
+ -----------------------------------------------
+ 
+ Fieldbus protocols and adapters are diverse and varied. However, they share
+-a limited few common behaviours and properties. This allows us to define
+-a simple interface consisting of a character device and a set of sysfs files:
++a limited few common behaviours and properties. This allows us to define a
++simple interface to a running device:
++
++- a set of read-only sysfs properties, which allows userspace to query the
++  operating properties of a running device, such as online status, enabled,
++  ip address currently in use, etc.
++- a character device which allows read-write access to process data memory.
+ 
+ See:
+ drivers/staging/fieldbus/Documentation/ABI/sysfs-class-fieldbus-dev
+ drivers/staging/fieldbus/Documentation/ABI/fieldbus-dev-cdev
+ 
+-Note that this simple interface does not provide a way to modify adapter
+-configuration settings. It is therefore useful only for adapters that get their
+-configuration settings some other way, e.g. non-volatile memory on the adapter,
+-through the network, ...
++Note: this simple interface does not provide a way to enable/disable the
++device, nor to provide configuration settings.
++
++Some types of fieldbus devices do not require any configuration settings from
++userspace at all. These are typically determined by some other way, e.g. via the
++network, or from non-volatile memory on the adapter. In this case, the driver
++may choose to make the 'enabled' sysfs property (above) read-write, so userspace
++can enable/disable the device with a simple write to the sysfs property. See the
++sysfs docs above for more details.
+ 
+-At a later phase, this simple interface can easily co-exist with a future
+-(netlink-based ?) configuration settings interface.
++To receive configuration settings from userspace, we define a simple configfs
++interface, which contains a (sub)set of standardized properties, and an 'enable'
++property.
++
++See:
++drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev
++
++The driver chooses the subset of standardized properties it requires. It may
++optionally initialize these with defaults. Prior to enabling the device,
++userspace must provide suitable values for each property in the subset. It does
++so by writing to the corresponding configfs properties - or by keeping the
++driver-provided default. When userspace enables the device, the configfs
++property values are used as the device's startup configuration.
++
++Example: consider a hypothetical fieldbus card with a single config property:
++its mac address.
++
++# assume configfs is mounted on /config
++$ cd /config/fieldbus_dev/fieldbus_dev5/
++$ ls
++enable  macaddr
++# check device is disabled now
++$ cat enable
++0
++# check driver provided defaults
++$ cat macaddr
++E8:B3:1F:0C:6D:19
++# override the mac address
++$ echo 93:FB:E5:3D:0E:BF > macaddr
++# enable the device, this will use the provided mac address
++$ echo 1 > enable
++$ cat enable
++1
++# we can change the mac address property, but this will have no
++# effect on the device itself - because it's already enabled
++$ echo E8:B3:1F:0C:6D:19 > macaddr
+diff --git a/drivers/staging/fieldbus/Kconfig b/drivers/staging/fieldbus/Kconfig
+index b0b865acccfb..26df88a32895 100644
+--- a/drivers/staging/fieldbus/Kconfig
++++ b/drivers/staging/fieldbus/Kconfig
+@@ -15,5 +15,19 @@ menuconfig FIELDBUS_DEV
+ 
+ 	  If unsure, say no.
+ 
++if FIELDBUS_DEV
++
++config FIELDBUS_DEV_CONFIG
++	tristate "Fieldbus Device configuration support"
++	select CONFIGFS_FS
++	help
++	  Select this option to enable support for Fieldbus Device
++	  configuration. The configurable groups will be visible under
++	  /config/fieldbus_dev, assuming configfs is mounted under /config.
++
++	  If unsure, say no.
++
++endif	# FIELDBUS_DEV
++
+ source "drivers/staging/fieldbus/anybuss/Kconfig"
+ 
+diff --git a/drivers/staging/fieldbus/Makefile b/drivers/staging/fieldbus/Makefile
+index bdf645d41344..6dbb9d398390 100644
+--- a/drivers/staging/fieldbus/Makefile
++++ b/drivers/staging/fieldbus/Makefile
+@@ -3,5 +3,6 @@
+ # Makefile for fieldbus_dev drivers.
+ #
+ 
+-obj-$(CONFIG_FIELDBUS_DEV)	+= fieldbus_dev.o anybuss/
+-fieldbus_dev-y			:= dev_core.o
++obj-$(CONFIG_FIELDBUS_DEV)		+= fieldbus_dev.o anybuss/
++fieldbus_dev-y				:= dev_core.o
++obj-$(CONFIG_FIELDBUS_DEV_CONFIG)	+= dev_config.o
+diff --git a/drivers/staging/fieldbus/dev_config.c b/drivers/staging/fieldbus/dev_config.c
+new file mode 100644
+index 000000000000..266e3ca19d84
+--- /dev/null
++++ b/drivers/staging/fieldbus/dev_config.c
+@@ -0,0 +1,383 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * HMS FL-Net Client Driver
++ * Fieldbus Device Core - configuration via configfs
 + *
-+ * Copyright (C) 2019 Arcx Inc
 + */
 +
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
 +#include <linux/slab.h>
++#include <linux/configfs.h>
 +
 +/* move to <linux/fieldbus_dev.h> when taking this out of staging */
-+#include "../fieldbus_dev.h"
++#include "fieldbus_dev.h"
 +
-+/* move to <linux/anybuss-client.h> when taking this out of staging */
-+#include "anybuss-client.h"
++#include "dev_config.h"
 +
-+#define FL_DPRAM_SIZE	512
++struct fieldbus_dev_config {
++	struct fieldbus_dev *fb;
++	struct config_group group;
++	struct configfs_attribute **fb_attrs;
++	struct config_item_type fb_item_type;
++};
++
++static struct fieldbus_dev_config *to_config(struct config_item *item)
++{
++	return container_of(to_config_group(item), struct fieldbus_dev_config,
++			    group);
++}
++
++enum prop_type {
++	PROP_TYPE_UNKNOWN = 0,
++	PROP_TYPE_MAC_ADDR,
++	PROP_TYPE_IP_ADDR,
++	PROP_TYPE_OFFLINE_MODE,
++	PROP_TYPE_INT,
++	PROP_TYPE_STRING
++};
++
++static enum prop_type to_prop_type(enum fieldbus_dev_cfgprop prop)
++{
++	enum prop_type t;
++
++	switch (prop) {
++	case FIELDBUS_DEV_PROP_OFFLINE_MODE:
++		t = PROP_TYPE_OFFLINE_MODE;
++		break;
++	case FIELDBUS_DEV_PROP_MAC_ADDR:
++		t = PROP_TYPE_MAC_ADDR;
++		break;
++	case FIELDBUS_DEV_PROP_IP_ADDR:
++		t = PROP_TYPE_IP_ADDR;
++		break;
++	case FIELDBUS_DEV_PROP_A1_IN_START:
++	case FIELDBUS_DEV_PROP_A1_IN_SIZE:
++	case FIELDBUS_DEV_PROP_A1_OUT_START:
++	case FIELDBUS_DEV_PROP_A1_OUT_SIZE:
++	case FIELDBUS_DEV_PROP_A2_IN_START:
++	case FIELDBUS_DEV_PROP_A2_IN_SIZE:
++	case FIELDBUS_DEV_PROP_A2_OUT_START:
++	case FIELDBUS_DEV_PROP_A2_OUT_SIZE:
++	case FIELDBUS_DEV_PROP_REV_NUMBER:
++	case FIELDBUS_DEV_PROP_REV_DATE_YEAR:
++	case FIELDBUS_DEV_PROP_REV_DATE_MONTH:
++	case FIELDBUS_DEV_PROP_REV_DATE_DAY:
++		t = PROP_TYPE_INT;
++		break;
++	case FIELDBUS_DEV_PROP_ID_TYPE:
++	case FIELDBUS_DEV_PROP_ID_VENDOR:
++	case FIELDBUS_DEV_PROP_ID_PRODUCT:
++		t = PROP_TYPE_STRING;
++		break;
++	default:
++		t = PROP_TYPE_UNKNOWN;
++		break;
++	}
++
++	return t;
++}
++
++static ssize_t
++_set_cfgprop(struct config_item *item, enum fieldbus_dev_cfgprop prop,
++	     const char *page, size_t count)
++{
++	struct fieldbus_dev_config *cfg = to_config(item);
++	enum prop_type t = to_prop_type(prop);
++	struct fieldbus_dev *fb = cfg->fb;
++	char buf[PROP_TYPE_STRING_BUFSZ];
++	union fieldbus_dev_propval val;
++	u8 addr[6];
++	int n, err;
++
++	switch (t) {
++	case PROP_TYPE_OFFLINE_MODE:
++		if (!strcmp(page, "clear\n"))
++			val.intval = FIELDBUS_DEV_OFFL_MODE_CLEAR;
++		else if (!strcmp(page, "freeze\n"))
++			val.intval = FIELDBUS_DEV_OFFL_MODE_FREEZE;
++		else if (!strcmp(page, "set\n"))
++			val.intval = FIELDBUS_DEV_OFFL_MODE_SET;
++		else
++			return -EINVAL;
++		break;
++	case PROP_TYPE_MAC_ADDR:
++		n = sscanf(page,
++			   "%02hhX:%02hhX:%02hhX:%02hhX:%02hhX:%02hhX\n",
++			   &addr[0], &addr[1], &addr[2], &addr[3], &addr[4],
++			   &addr[5]);
++		if (n != 6)
++			return -EINVAL;
++		val.addrval = addr;
++		break;
++	case PROP_TYPE_IP_ADDR:
++		n = sscanf(page, "%hhd.%hhd.%hhd.%hhd\n", &addr[0], &addr[1],
++			   &addr[2], &addr[3]);
++		if (n != 4)
++			return -EINVAL;
++		val.addrval = addr;
++		break;
++	case PROP_TYPE_INT:
++		n = sscanf(page, "%d\n", &val.intval);
++		if (n != 1)
++			return -EINVAL;
++		break;
++	case PROP_TYPE_STRING:
++		n = strlcpy(buf, page, sizeof(buf));
++		if (n >= sizeof(buf))
++			return -ENAMETOOLONG;
++		/* strip trailing \n if present */
++		if (n > 0 && buf[n - 1] == '\n')
++			buf[n - 1] = '\0';
++		val.strval = buf;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	err = fb->set_cfgprop(fb, prop, &val);
++	if (err)
++		return err;
++
++	return count;
++}
++
++static ssize_t
++_get_cfgprop(struct config_item *item, enum fieldbus_dev_cfgprop prop,
++	     char *page)
++{
++	struct fieldbus_dev_config *cfg = to_config(item);
++	enum prop_type t = to_prop_type(prop);
++	struct fieldbus_dev *fb = cfg->fb;
++	char buf[PROP_TYPE_STRING_BUFSZ];
++	union fieldbus_dev_propval val;
++	const char *mode;
++	u8 addr[6];
++	int err;
++
++	switch (t) {
++	case PROP_TYPE_OFFLINE_MODE:
++	case PROP_TYPE_INT:
++		break;
++	case PROP_TYPE_MAC_ADDR:
++	case PROP_TYPE_IP_ADDR:
++		val.addrval = addr;
++		break;
++	case PROP_TYPE_STRING:
++		val.strval = buf;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	err = fb->get_cfgprop(fb, prop, &val);
++	if (err)
++		return err;
++
++	switch (t) {
++	case PROP_TYPE_OFFLINE_MODE:
++		switch (val.intval) {
++		case FIELDBUS_DEV_OFFL_MODE_CLEAR:
++			mode = "clear";
++			break;
++		case FIELDBUS_DEV_OFFL_MODE_FREEZE:
++			mode = "freeze";
++			break;
++		case FIELDBUS_DEV_OFFL_MODE_SET:
++			mode = "set";
++			break;
++		default:
++			return -EINVAL;
++		}
++		return sprintf(page, "%s\n", mode);
++	case PROP_TYPE_MAC_ADDR:
++		return sprintf(page, "%02X:%02X:%02X:%02X:%02X:%02X\n",
++			       addr[0], addr[1], addr[2], addr[3], addr[4],
++			       addr[5]);
++	case PROP_TYPE_IP_ADDR:
++		return sprintf(page, "%pI4\n", addr);
++	case PROP_TYPE_INT:
++		return sprintf(page, "%d\n", val.intval);
++	case PROP_TYPE_STRING:
++		return sprintf(page, "%s\n", val.strval);
++	default:
++		return -EINVAL;
++	}
++
++	return -EINVAL;
++}
 +
 +/*
-+ * ---------------------------------------------------------------
-+ * Anybus FL-Net mailbox messages - definitions
-+ * ---------------------------------------------------------------
-+ * note that we're depending on the layout of these structures being
-+ * exactly as advertised.
++ * Only those cfgprops supported by the device should be visible / accessible.
++ * The way this is implemented is quite ugly. I'd appreciate feedback on
++ * a more elegant way to do this with configfs.
 + */
 +
-+struct msg_ip_addr {
-+	u8 addr[4];
++#define FIELDBUS_CONFIG_ITEM(_name, _prop)				\
++static ssize_t fb_##_name##_show(struct config_item *item, char *page)	\
++{									\
++	return _get_cfgprop(item, _prop, page);				\
++}									\
++static ssize_t fb_##_name##_store(struct config_item *item,		\
++				  const char *page, size_t count)	\
++{									\
++	return _set_cfgprop(item, _prop, page, count);			\
++}									\
++CONFIGFS_ATTR(fb_, _name)
++
++FIELDBUS_CONFIG_ITEM(macaddr, FIELDBUS_DEV_PROP_MAC_ADDR);
++FIELDBUS_CONFIG_ITEM(ipaddr, FIELDBUS_DEV_PROP_IP_ADDR);
++FIELDBUS_CONFIG_ITEM(offline_mode, FIELDBUS_DEV_PROP_OFFLINE_MODE);
++FIELDBUS_CONFIG_ITEM(a1_in_start, FIELDBUS_DEV_PROP_A1_IN_START);
++FIELDBUS_CONFIG_ITEM(a1_in_size, FIELDBUS_DEV_PROP_A1_IN_SIZE);
++FIELDBUS_CONFIG_ITEM(a1_out_start, FIELDBUS_DEV_PROP_A1_OUT_START);
++FIELDBUS_CONFIG_ITEM(a1_out_size, FIELDBUS_DEV_PROP_A1_OUT_SIZE);
++FIELDBUS_CONFIG_ITEM(a2_in_start, FIELDBUS_DEV_PROP_A2_IN_START);
++FIELDBUS_CONFIG_ITEM(a2_in_size, FIELDBUS_DEV_PROP_A2_IN_SIZE);
++FIELDBUS_CONFIG_ITEM(a2_out_start, FIELDBUS_DEV_PROP_A2_OUT_START);
++FIELDBUS_CONFIG_ITEM(a2_out_size, FIELDBUS_DEV_PROP_A2_OUT_SIZE);
++FIELDBUS_CONFIG_ITEM(rev_number, FIELDBUS_DEV_PROP_REV_NUMBER);
++FIELDBUS_CONFIG_ITEM(rev_date_year, FIELDBUS_DEV_PROP_REV_DATE_YEAR);
++FIELDBUS_CONFIG_ITEM(rev_date_month, FIELDBUS_DEV_PROP_REV_DATE_MONTH);
++FIELDBUS_CONFIG_ITEM(rev_date_day, FIELDBUS_DEV_PROP_REV_DATE_DAY);
++FIELDBUS_CONFIG_ITEM(id_type, FIELDBUS_DEV_PROP_ID_TYPE);
++FIELDBUS_CONFIG_ITEM(id_vendor, FIELDBUS_DEV_PROP_ID_VENDOR);
++FIELDBUS_CONFIG_ITEM(id_product, FIELDBUS_DEV_PROP_ID_PRODUCT);
++
++static struct configfs_attribute *fb_all_attrs[] = {
++	[FIELDBUS_DEV_PROP_MAC_ADDR] = &fb_attr_macaddr,
++	[FIELDBUS_DEV_PROP_IP_ADDR] = &fb_attr_ipaddr,
++	[FIELDBUS_DEV_PROP_OFFLINE_MODE] = &fb_attr_offline_mode,
++	[FIELDBUS_DEV_PROP_A1_IN_START] = &fb_attr_a1_in_start,
++	[FIELDBUS_DEV_PROP_A1_IN_SIZE] = &fb_attr_a1_in_size,
++	[FIELDBUS_DEV_PROP_A1_OUT_START] = &fb_attr_a1_out_start,
++	[FIELDBUS_DEV_PROP_A1_OUT_SIZE] = &fb_attr_a1_out_size,
++	[FIELDBUS_DEV_PROP_A2_IN_START] = &fb_attr_a2_in_start,
++	[FIELDBUS_DEV_PROP_A2_IN_SIZE] = &fb_attr_a2_in_size,
++	[FIELDBUS_DEV_PROP_A2_OUT_START] = &fb_attr_a2_out_start,
++	[FIELDBUS_DEV_PROP_A2_OUT_SIZE] = &fb_attr_a2_out_size,
++	[FIELDBUS_DEV_PROP_REV_NUMBER] = &fb_attr_rev_number,
++	[FIELDBUS_DEV_PROP_REV_DATE_YEAR] = &fb_attr_rev_date_year,
++	[FIELDBUS_DEV_PROP_REV_DATE_MONTH] = &fb_attr_rev_date_month,
++	[FIELDBUS_DEV_PROP_REV_DATE_DAY] = &fb_attr_rev_date_day,
++	[FIELDBUS_DEV_PROP_ID_TYPE] = &fb_attr_id_type,
++	[FIELDBUS_DEV_PROP_ID_VENDOR] = &fb_attr_id_vendor,
++	[FIELDBUS_DEV_PROP_ID_PRODUCT] = &fb_attr_id_product,
 +};
 +
-+struct msg_map {
-+	__be16 start;
-+	__be16 size;
-+};
-+
-+struct msg_map_io {
-+	struct msg_map a1_in;
-+	struct msg_map a2_in;
-+	struct msg_map a1_out;
-+	struct msg_map a2_out;
-+};
-+
-+#define FL_ID_BUFSZ	10
-+
-+struct msg_set_profile {
-+	u8	rev_number;
-+	u8	rev_year_hi;
-+	u8	rev_year_lo;
-+	u8	rev_month;
-+	u8	rev_day;
-+	/* id_XXX must be space-padded and not null terminated */
-+	char	id_type[FL_ID_BUFSZ];
-+	char	null0;
-+	char	id_vendor[FL_ID_BUFSZ];
-+	char	null1;
-+	char	id_product[FL_ID_BUFSZ];
-+	char	null2;
-+};
-+
-+struct fl_priv {
-+	struct fieldbus_dev fbdev;
-+	struct anybuss_client *client;
-+	struct mutex enable_lock; /* serializes card enable */
-+	bool power_on;
-+	/* configuration properties */
-+	enum fieldbus_dev_offl_mode offl_mode;
-+	struct msg_ip_addr ip;
-+	struct msg_map_io mapio;
-+	u8 rev_number;
-+	u16 rev_year;
-+	u8 rev_month;
-+	u8 rev_day;
-+	char id_type[FL_ID_BUFSZ + 1];
-+	char id_vendor[FL_ID_BUFSZ + 1];
-+	char id_product[FL_ID_BUFSZ + 1];
-+};
-+
-+static void fl_on_area_updated(struct anybuss_client *client)
++static ssize_t fb_enable_show(struct config_item *item, char *page)
 +{
-+	struct fl_priv *priv = anybuss_get_drvdata(client);
++	struct fieldbus_dev_config *cfg = to_config(item);
++	struct fieldbus_dev *fb = cfg->fb;
 +
-+	fieldbus_dev_area_updated(&priv->fbdev);
-+}
-+
-+static void fl_on_online_changed(struct anybuss_client *client, bool online)
-+{
-+	struct fl_priv *priv = anybuss_get_drvdata(client);
-+
-+	fieldbus_dev_online_changed(&priv->fbdev, online);
++	return sprintf(page, "%d\n", !!fb->enable_get(fb));
 +}
 +
 +static ssize_t
-+fl_read_area(struct fieldbus_dev *fbdev, char __user *buf, size_t size,
-+	     loff_t *offset)
++fb_enable_store(struct config_item *item, const char *page, size_t count)
 +{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+
-+	return anybuss_read_output(priv->client, buf, size, offset);
-+}
-+
-+static ssize_t
-+fl_write_area(struct fieldbus_dev *fbdev, const char __user *buf,
-+	      size_t size, loff_t *offset)
-+{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+
-+	return anybuss_write_input(priv->client, buf, size, offset);
-+}
-+
-+static int fl_id_get(struct fieldbus_dev *fbdev, char *buf, size_t max_size)
-+{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+	struct msg_ip_addr response;
++	struct fieldbus_dev_config *cfg = to_config(item);
++	struct fieldbus_dev *fb = cfg->fb;
++	bool value;
 +	int ret;
 +
-+	ret = anybuss_recv_msg(priv->client, 0x0002, &response,
-+			       sizeof(response));
++	ret = kstrtobool(page, &value);
++	if (ret)
++		return ret;
++	ret = fb->enable_set(fb, value);
 +	if (ret < 0)
 +		return ret;
-+	return sprintf(buf, "%pI4\n", response.addr);
++	return count;
 +}
 +
-+static bool fl_enable_get(struct fieldbus_dev *fbdev)
++CONFIGFS_ATTR(fb_, enable);
++
++static struct configfs_attribute **fb_create_attrs(struct fieldbus_dev *fb)
 +{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+	bool power_on;
++	struct configfs_attribute **attrs;
++	int i;
 +
-+	mutex_lock(&priv->enable_lock);
-+	power_on = priv->power_on;
-+	mutex_unlock(&priv->enable_lock);
++	/* cherry-pick the cfgprops we want, plus 'enable' and trailing NULL */
++	attrs = kcalloc(fb->num_cfgprops + 2, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return NULL;
++	for (i = 0; i < fb->num_cfgprops; i++)
++		attrs[i] = fb_all_attrs[fb->cfgprops[i]];
++	attrs[fb->num_cfgprops] = &fb_attr_enable;
 +
-+	return power_on;
++	return attrs;
 +}
 +
-+static bool ip_is_null(struct msg_ip_addr *ip)
-+{
-+	return !ip->addr[0] && !ip->addr[1] && !ip->addr[2] && !ip->addr[3];
-+}
++static const struct config_item_type fb_root_group_type = {
++	.ct_owner       = THIS_MODULE,
++};
 +
-+static bool map_is_empty(struct msg_map_io *map)
-+{
-+	return !map->a1_in.size && !map->a1_out.size && !map->a2_in.size &&
-+	       !map->a2_out.size;
-+}
++static struct configfs_subsystem fieldbus_dev_subsys = {
++	.su_group = {
++		.cg_item = {
++			.ci_namebuf = "fieldbus_dev",
++			.ci_type = &fb_root_group_type,
++		},
++	},
++	.su_mutex = __MUTEX_INITIALIZER(fieldbus_dev_subsys.su_mutex),
++};
 +
-+static void fl_id_copy_pad(char *id, const char *src)
++struct fieldbus_dev_config *
++fieldbus_dev_config_register(struct fieldbus_dev *fb)
 +{
-+	memset(id, ' ', FL_ID_BUFSZ);
-+	memcpy(id, src, min_t(size_t, strlen(src), FL_ID_BUFSZ));
-+}
++	struct config_group *group;
++	struct fieldbus_dev_config *cfg;
++	struct config_item *cg_item;
++	int err;
 +
-+static int __fl_enable(struct fl_priv *priv)
-+{
-+	int ret;
-+	size_t len;
-+	struct anybuss_client *client = priv->client;
-+	/* Initialization Sequence, Generic Anybus Mode */
-+	struct anybuss_memcfg mem_cfg = {
-+		.input_io = FL_DPRAM_SIZE,
-+		.input_dpram = FL_DPRAM_SIZE,
-+		.input_total = FL_DPRAM_SIZE,
-+		.output_io = FL_DPRAM_SIZE,
-+		.output_dpram = FL_DPRAM_SIZE,
-+		.output_total = FL_DPRAM_SIZE,
-+		.offl_mode = priv->offl_mode,
-+	};
-+	struct msg_set_profile profile = {
-+		.rev_number = priv->rev_number,
-+		.rev_day = priv->rev_day,
-+		.rev_month = priv->rev_month,
-+		.rev_year_hi = priv->rev_year >> 8,
-+		.rev_year_lo = priv->rev_year & 0xFF,
-+	};
-+
-+	if (map_is_empty(&priv->mapio)) {
-+		dev_err(&client->dev, "empty I/O area mapping");
-+		return -EINVAL;
++	/* some configuration info not filled in? return error */
++	if (!fb || !fb->cfgprops || !fb->num_cfgprops || !fb->get_cfgprop ||
++	    !fb->set_cfgprop || !fb->enable_set)
++		return ERR_PTR(-EINVAL);
++	cfg = kzalloc(sizeof(*cfg), GFP_KERNEL);
++	if (!cfg)
++		return ERR_PTR(-ENOMEM);
++	cfg->fb = fb;
++	group = &cfg->group;
++	cg_item = &group->cg_item;
++	config_item_set_name(cg_item, "%s", dev_name(fb->dev));
++	cfg->fb_attrs = fb_create_attrs(fb);
++	if (!cfg->fb_attrs) {
++		kfree(cfg);
++		return ERR_PTR(-ENOMEM);
 +	}
-+	len = be16_to_cpu(priv->mapio.a1_in.size) +
-+			be16_to_cpu(priv->mapio.a2_in.size);
-+	if (len > FL_DPRAM_SIZE) {
-+		dev_err(&client->dev, "I/O input area mapping too large");
-+		return -EINVAL;
-+	}
-+	len = be16_to_cpu(priv->mapio.a1_out.size) +
-+			be16_to_cpu(priv->mapio.a2_out.size);
-+	if (len > FL_DPRAM_SIZE) {
-+		dev_err(&client->dev, "I/O output area mapping too large");
-+		return -EINVAL;
-+	}
-+	if (ip_is_null(&priv->ip)) {
-+		dev_err(&client->dev, "null ip address");
-+		return -EINVAL;
++	cfg->fb_item_type.ct_owner = THIS_MODULE;
++	cfg->fb_item_type.ct_attrs = cfg->fb_attrs;
++	cg_item->ci_type = &cfg->fb_item_type;
++	config_group_init(group);
++	err = configfs_register_group(&fieldbus_dev_subsys.su_group, group);
++	if (err) {
++		kfree(cfg->fb_attrs);
++		kfree(cfg);
++		return ERR_PTR(err);
 +	}
 +
-+	/*
-+	 * switch anybus off then on, this ensures we can do a complete
-+	 * configuration cycle in case anybus was already on.
-+	 */
-+	anybuss_set_power(client, false);
-+	ret = anybuss_set_power(client, true);
-+	if (ret)
-+		goto err;
-+	ret = anybuss_start_init(client, &mem_cfg);
-+	if (ret)
-+		goto err;
-+	/* set ip address */
-+	ret = anybuss_send_msg(client, 0x0001, &priv->ip,
-+			       sizeof(priv->ip));
-+	if (ret)
-+		goto err;
-+	/* map io */
-+	ret = anybuss_send_msg(client, 0x0020, &priv->mapio,
-+			       sizeof(priv->mapio));
-+	if (ret)
-+		goto err;
-+	/* set profile */
-+	fl_id_copy_pad(profile.id_type, priv->id_type);
-+	fl_id_copy_pad(profile.id_vendor, priv->id_vendor);
-+	fl_id_copy_pad(profile.id_product, priv->id_product);
-+	ret = anybuss_send_msg(client, 0x0023, &profile, sizeof(profile));
-+	if (ret)
-+		goto err;
-+	ret = anybuss_finish_init(client);
-+	if (ret)
-+		goto err;
-+	priv->power_on = true;
++	return cfg;
++}
++EXPORT_SYMBOL_GPL(fieldbus_dev_config_register);
++
++void fieldbus_dev_config_unregister(struct fieldbus_dev_config *cfg)
++{
++	if (cfg) {
++		configfs_unregister_group(&cfg->group);
++		kfree(cfg->fb_attrs);
++		kfree(cfg);
++	}
++}
++EXPORT_SYMBOL_GPL(fieldbus_dev_config_unregister);
++
++int fieldbus_dev_config_init(void)
++{
++	config_group_init(&fieldbus_dev_subsys.su_group);
++
++	return configfs_register_subsystem(&fieldbus_dev_subsys);
++}
++EXPORT_SYMBOL_GPL(fieldbus_dev_config_init);
++
++void fieldbus_dev_config_exit(void)
++{
++	configfs_unregister_subsystem(&fieldbus_dev_subsys);
++}
++EXPORT_SYMBOL_GPL(fieldbus_dev_config_exit);
+diff --git a/drivers/staging/fieldbus/dev_config.h b/drivers/staging/fieldbus/dev_config.h
+new file mode 100644
+index 000000000000..4ead6464d541
+--- /dev/null
++++ b/drivers/staging/fieldbus/dev_config.h
+@@ -0,0 +1,41 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Fieldbus Device Core - configuration
++ *
++ */
++
++#ifndef __FIELDBUS_DEV_CONFIG_H
++#define __FIELDBUS_DEV_CONFIG_H
++
++struct fieldbus_dev_config;
++struct fieldbus_dev;
++
++#if IS_ENABLED(CONFIG_FIELDBUS_DEV_CONFIG)
++
++struct fieldbus_dev_config *
++fieldbus_dev_config_register(struct fieldbus_dev *fb);
++
++void fieldbus_dev_config_unregister(struct fieldbus_dev_config *cfg);
++
++int fieldbus_dev_config_init(void);
++void fieldbus_dev_config_exit(void);
++
++#else /* IS_ENABLED(CONFIG_FIELDBUS_DEV_CONFIG) */
++
++struct fieldbus_dev_config *
++fieldbus_dev_config_register(struct fieldbus_dev *fb)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++
++void fieldbus_dev_config_unregister(struct fieldbus_dev_config *cfg) {}
++
++int fieldbus_dev_config_init(void)
++{
 +	return 0;
-+
-+err:
-+	anybuss_set_power(client, false);
-+	priv->power_on = false;
-+	return ret;
 +}
 +
-+static int __fl_disable(struct fl_priv *priv)
-+{
-+	struct anybuss_client *client = priv->client;
++void fieldbus_dev_config_exit(void) {}
 +
-+	anybuss_set_power(client, false);
-+	priv->power_on = false;
-+	return 0;
-+}
++#endif /* IS_ENABLED(CONFIG_FIELDBUS_DEV_CONFIG) */
++#endif /* __FIELDBUS_DEV_CONFIG_H */
+diff --git a/drivers/staging/fieldbus/dev_core.c b/drivers/staging/fieldbus/dev_core.c
+index 1ba0234cc60d..9903c4f3cba9 100644
+--- a/drivers/staging/fieldbus/dev_core.c
++++ b/drivers/staging/fieldbus/dev_core.c
+@@ -15,6 +15,8 @@
+ /* move to <linux/fieldbus_dev.h> when taking this out of staging */
+ #include "fieldbus_dev.h"
+ 
++#include "dev_config.h"
 +
-+static int fl_enable(struct fieldbus_dev *fbdev, bool enable)
-+{
-+	int ret;
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
+ /* Maximum number of fieldbus devices */
+ #define MAX_FIELDBUSES		32
+ 
+@@ -249,6 +251,7 @@ static void __fieldbus_dev_unregister(struct fieldbus_dev *fb)
+ {
+ 	if (!fb)
+ 		return;
++	fieldbus_dev_config_unregister(fb->cfg);
+ 	device_destroy(&fieldbus_class, fb->cdev.dev);
+ 	cdev_del(&fb->cdev);
+ 	ida_simple_remove(&fieldbus_ida, fb->id);
+@@ -289,8 +292,19 @@ static int __fieldbus_dev_register(struct fieldbus_dev *fb)
+ 		err = PTR_ERR(fb->dev);
+ 		goto err_dev_create;
+ 	}
++	/* configuration interface required? */
++	if (fb->cfgprops || fb->num_cfgprops || fb->get_cfgprop ||
++	    fb->set_cfgprop || fb->enable_set) {
++		fb->cfg = fieldbus_dev_config_register(fb);
++		if (IS_ERR(fb->cfg)) {
++			err = PTR_ERR(fb->cfg);
++			goto err_cfg_create;
++		}
++	}
+ 	return 0;
+ 
++err_cfg_create:
++	device_destroy(&fieldbus_class, fb->cdev.dev);
+ err_dev_create:
+ 	cdev_del(&fb->cdev);
+ err_cdev:
+@@ -325,8 +339,15 @@ static int __init fieldbus_init(void)
+ 		pr_err("fieldbus_dev: unable to allocate char dev region\n");
+ 		goto err_alloc;
+ 	}
++	err = fieldbus_dev_config_init();
++	if (err < 0) {
++		pr_err("fieldbus_dev: unable to init config");
++		goto err_config;
++	}
+ 	return 0;
+ 
++err_config:
++	unregister_chrdev_region(fieldbus_devt, MAX_FIELDBUSES);
+ err_alloc:
+ 	class_unregister(&fieldbus_class);
+ 	return err;
+@@ -334,6 +355,7 @@ static int __init fieldbus_init(void)
+ 
+ static void __exit fieldbus_exit(void)
+ {
++	fieldbus_dev_config_exit();
+ 	unregister_chrdev_region(fieldbus_devt, MAX_FIELDBUSES);
+ 	class_unregister(&fieldbus_class);
+ 	ida_destroy(&fieldbus_ida);
+diff --git a/drivers/staging/fieldbus/fieldbus_dev.h b/drivers/staging/fieldbus/fieldbus_dev.h
+index 301dca3b8d71..3b00315600e5 100644
+--- a/drivers/staging/fieldbus/fieldbus_dev.h
++++ b/drivers/staging/fieldbus/fieldbus_dev.h
+@@ -10,6 +10,8 @@
+ #include <linux/cdev.h>
+ #include <linux/wait.h>
+ 
++struct fieldbus_dev_config;
 +
-+	mutex_lock(&priv->enable_lock);
-+	if (enable)
-+		ret = __fl_enable(priv);
-+	else
-+		ret = __fl_disable(priv);
-+	mutex_unlock(&priv->enable_lock);
-+
-+	return ret;
-+}
-+
-+static const enum fieldbus_dev_cfgprop config_props[] = {
+ enum fieldbus_dev_type {
+ 	FIELDBUS_DEV_TYPE_UNKNOWN = 0,
+ 	FIELDBUS_DEV_TYPE_PROFINET,
+@@ -21,6 +23,38 @@ enum fieldbus_dev_offl_mode {
+ 	FIELDBUS_DEV_OFFL_MODE_SET
+ };
+ 
++enum fieldbus_dev_cfgprop {
++	/* property of type 'u8 *' (addrval in fieldbus_dev_propval) */
++	FIELDBUS_DEV_PROP_MAC_ADDR = 0,
 +	FIELDBUS_DEV_PROP_IP_ADDR,
++	/* properties of type 'int' (intval in fieldbus_dev_propval) */
 +	FIELDBUS_DEV_PROP_OFFLINE_MODE,
 +	FIELDBUS_DEV_PROP_A1_IN_START,
 +	FIELDBUS_DEV_PROP_A1_IN_SIZE,
@@ -424,250 +846,59 @@ index 000000000000..4dd0f66fe8ce
 +	FIELDBUS_DEV_PROP_REV_DATE_YEAR,
 +	FIELDBUS_DEV_PROP_REV_DATE_MONTH,
 +	FIELDBUS_DEV_PROP_REV_DATE_DAY,
++	/* properties of type 'char *' (strval in fieldbus_dev_propval) */
 +	FIELDBUS_DEV_PROP_ID_TYPE,
 +	FIELDBUS_DEV_PROP_ID_VENDOR,
 +	FIELDBUS_DEV_PROP_ID_PRODUCT
 +};
 +
-+static int fl_get_cfgprop(struct fieldbus_dev *fbdev,
-+			  enum fieldbus_dev_cfgprop prop,
-+			  union fieldbus_dev_propval *val)
-+{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+	struct msg_map_io *mapio = &priv->mapio;
++#define PROP_TYPE_STRING_BUFSZ	128
 +
-+	switch (prop) {
-+	case FIELDBUS_DEV_PROP_OFFLINE_MODE:
-+		val->intval = priv->offl_mode;
-+		break;
-+	case FIELDBUS_DEV_PROP_IP_ADDR:
-+		memcpy(val->addrval, &priv->ip.addr, sizeof(priv->ip.addr));
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_IN_START:
-+		val->intval = be16_to_cpu(mapio->a1_in.start);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_IN_SIZE:
-+		val->intval = be16_to_cpu(mapio->a1_in.size);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_OUT_START:
-+		val->intval = be16_to_cpu(mapio->a1_out.start);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_OUT_SIZE:
-+		val->intval = be16_to_cpu(mapio->a1_out.size);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_IN_START:
-+		val->intval = be16_to_cpu(mapio->a2_in.start);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_IN_SIZE:
-+		val->intval = be16_to_cpu(mapio->a2_in.size);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_OUT_START:
-+		val->intval = be16_to_cpu(mapio->a2_out.start);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_OUT_SIZE:
-+		val->intval = be16_to_cpu(mapio->a2_out.size);
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_NUMBER:
-+		val->intval = priv->rev_number;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_YEAR:
-+		val->intval = priv->rev_year;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_MONTH:
-+		val->intval = priv->rev_month;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_DAY:
-+		val->intval = priv->rev_day;
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_TYPE:
-+		strcpy(val->strval, priv->id_type);
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_VENDOR:
-+		strcpy(val->strval, priv->id_vendor);
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_PRODUCT:
-+		strcpy(val->strval, priv->id_product);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int fl_set_cfgprop(struct fieldbus_dev *fbdev,
-+			  enum fieldbus_dev_cfgprop prop,
-+			  const union fieldbus_dev_propval *val)
-+{
-+	struct fl_priv *priv = container_of(fbdev, struct fl_priv, fbdev);
-+	struct msg_map_io *mapio = &priv->mapio;
-+
-+	/* validate userspace inputs */
-+	switch (prop) {
-+	case FIELDBUS_DEV_PROP_A1_IN_START:
-+	case FIELDBUS_DEV_PROP_A1_IN_SIZE:
-+	case FIELDBUS_DEV_PROP_A1_OUT_START:
-+	case FIELDBUS_DEV_PROP_A1_OUT_SIZE:
-+	case FIELDBUS_DEV_PROP_A2_IN_START:
-+	case FIELDBUS_DEV_PROP_A2_IN_SIZE:
-+	case FIELDBUS_DEV_PROP_A2_OUT_START:
-+	case FIELDBUS_DEV_PROP_A2_OUT_SIZE:
-+	case FIELDBUS_DEV_PROP_REV_DATE_YEAR:
-+		/* must be u16 */
-+		if (val->intval & ~0xFFFF)
-+			return -EINVAL;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_NUMBER:
-+	case FIELDBUS_DEV_PROP_REV_DATE_MONTH:
-+	case FIELDBUS_DEV_PROP_REV_DATE_DAY:
-+		/* must be u8 */
-+		if (val->intval & ~0xFF)
-+			return -EINVAL;
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_TYPE:
-+	case FIELDBUS_DEV_PROP_ID_VENDOR:
-+	case FIELDBUS_DEV_PROP_ID_PRODUCT:
-+		if (strlen(val->strval) > FL_ID_BUFSZ)
-+			return -EINVAL;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	switch (prop) {
-+	case FIELDBUS_DEV_PROP_OFFLINE_MODE:
-+		priv->offl_mode = val->intval;
-+		break;
-+	case FIELDBUS_DEV_PROP_IP_ADDR:
-+		memcpy(&priv->ip.addr, val->addrval, sizeof(priv->ip.addr));
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_IN_START:
-+		mapio->a1_in.start = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_IN_SIZE:
-+		mapio->a1_in.size = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_OUT_START:
-+		mapio->a1_out.start = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A1_OUT_SIZE:
-+		mapio->a1_out.size = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_IN_START:
-+		mapio->a2_in.start = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_IN_SIZE:
-+		mapio->a2_in.size = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_OUT_START:
-+		mapio->a2_out.start = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_A2_OUT_SIZE:
-+		mapio->a2_out.size = cpu_to_be16(val->intval);
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_NUMBER:
-+		priv->rev_number = val->intval;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_YEAR:
-+		priv->rev_year = val->intval;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_MONTH:
-+		priv->rev_month = val->intval;
-+		break;
-+	case FIELDBUS_DEV_PROP_REV_DATE_DAY:
-+		priv->rev_day = val->intval;
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_TYPE:
-+		strcpy(priv->id_type, val->strval);
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_VENDOR:
-+		strcpy(priv->id_vendor, val->strval);
-+		break;
-+	case FIELDBUS_DEV_PROP_ID_PRODUCT:
-+		strcpy(priv->id_product, val->strval);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	return 0;
-+}
-+
-+static int flnet_probe(struct anybuss_client *client)
-+{
-+	struct fl_priv *priv;
-+	struct device *dev = &client->dev;
-+	int err;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+	mutex_init(&priv->enable_lock);
-+	priv->offl_mode = FIELDBUS_DEV_OFFL_MODE_CLEAR;
-+	priv->rev_year = 2005;
-+	priv->rev_month = 7;
-+	priv->rev_day = 1;
-+	strcpy(priv->id_type, "OTHER");
-+	strcpy(priv->id_vendor, "HMS");
-+	strcpy(priv->id_product, "ABS-FLN");
-+	client->on_area_updated = fl_on_area_updated;
-+	client->on_online_changed = fl_on_online_changed;
-+	priv->client = client;
-+	priv->fbdev.read_area_sz = FL_DPRAM_SIZE;
-+	priv->fbdev.write_area_sz = FL_DPRAM_SIZE;
-+	priv->fbdev.card_name = "HMS FL-Net (Anybus-S)";
-+	priv->fbdev.fieldbus_type = FIELDBUS_DEV_TYPE_FLNET;
-+	priv->fbdev.read_area = fl_read_area;
-+	priv->fbdev.write_area = fl_write_area;
-+	priv->fbdev.fieldbus_id_get = fl_id_get;
-+	priv->fbdev.enable_get = fl_enable_get;
-+	priv->fbdev.cfgprops = config_props;
-+	priv->fbdev.num_cfgprops = ARRAY_SIZE(config_props);
-+	priv->fbdev.get_cfgprop = fl_get_cfgprop;
-+	priv->fbdev.set_cfgprop = fl_set_cfgprop;
-+	priv->fbdev.enable_set = fl_enable;
-+	priv->fbdev.parent = dev;
-+	err = fieldbus_dev_register(&priv->fbdev);
-+	if (err < 0)
-+		return err;
-+	dev_info(dev, "card detected, registered as %s",
-+		 dev_name(priv->fbdev.dev));
-+	anybuss_set_drvdata(client, priv);
-+
-+	return 0;
-+}
-+
-+static int flnet_remove(struct anybuss_client *client)
-+{
-+	struct fl_priv *priv = anybuss_get_drvdata(client);
-+
-+	fieldbus_dev_unregister(&priv->fbdev);
-+	return 0;
-+}
-+
-+static struct anybuss_client_driver flnet_driver = {
-+	.probe = flnet_probe,
-+	.remove = flnet_remove,
-+	.driver		= {
-+		.name   = "hms-flnet",
-+		.owner	= THIS_MODULE,
-+	},
-+	.anybus_id = 0x0086,
++union fieldbus_dev_propval {
++	int intval;
++	u8 *addrval;
++	char *strval; /* buffer size: PROP_TYPE_STRING_BUFSZ */
 +};
 +
-+static int __init flnet_init(void)
-+{
-+	return anybuss_client_driver_register(&flnet_driver);
-+}
-+module_init(flnet_init);
-+
-+static void __exit flnet_exit(void)
-+{
-+	return anybuss_client_driver_unregister(&flnet_driver);
-+}
-+module_exit(flnet_exit);
-+
-+MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
-+MODULE_DESCRIPTION("HMS FL-Net Driver (Anybus-S)");
-+MODULE_LICENSE("GPL v2");
+ /**
+  * struct fieldbus_dev - Fieldbus device
+  * @read_area:		[DRIVER] function to read the process data area of the
+@@ -41,6 +75,13 @@ enum fieldbus_dev_offl_mode {
+  *				 return value follows the snprintf convention
+  * @simple_enable_set	[DRIVER] (optional) function to enable the device
+  *				 according to its default settings
++ * @enable_set		[DRIVER] (optional) function to enable the device
++ *				 according to its config properties (see below)
++ * @cfgprops		[DRIVER] (optional) list of supported config properties
++ * @num_cfgprops	[DRIVER] (optional) number of supported config
++ *				 properties
++ * @get_cfgprop		[DRIVER] (optional) function to get a config property
++ * @set_cfgprop		[DRIVER] (optional) function to set a config property
+  * @parent		[DRIVER] (optional) the device's parent device
+  */
+ struct fieldbus_dev {
+@@ -56,6 +97,13 @@ struct fieldbus_dev {
+ 	int (*fieldbus_id_get)(struct fieldbus_dev *fbdev, char *buf,
+ 			       size_t max_size);
+ 	int (*simple_enable_set)(struct fieldbus_dev *fbdev, bool enable);
++	int (*enable_set)(struct fieldbus_dev *fbdev, bool enable);
++	const enum fieldbus_dev_cfgprop *cfgprops;
++	size_t num_cfgprops;
++	int (*get_cfgprop)(struct fieldbus_dev *fb, enum fieldbus_dev_cfgprop,
++			   union fieldbus_dev_propval *val);
++	int (*set_cfgprop)(struct fieldbus_dev *fb, enum fieldbus_dev_cfgprop,
++			   const union fieldbus_dev_propval *val);
+ 	struct device *parent;
+ 
+ 	/* private data */
+@@ -65,6 +113,7 @@ struct fieldbus_dev {
+ 	int dc_event;
+ 	wait_queue_head_t dc_wq;
+ 	bool online;
++	struct fieldbus_dev_config *cfg;
+ };
+ 
+ #if IS_ENABLED(CONFIG_FIELDBUS_DEV)
 -- 
 2.17.1
 
