@@ -2,167 +2,178 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B43BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:35:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 502D0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B612218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:35:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D12218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727657AbfIRGfa (ORCPT
+        id S1727159AbfIRGiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:35:30 -0400
-Received: from mail-sz.amlogic.com ([211.162.65.117]:17975 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfIRGfa (ORCPT
+        Wed, 18 Sep 2019 02:38:52 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58463 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfIRGiw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:35:30 -0400
-Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 18 Sep
- 2019 14:36:22 +0800
-Subject: Re: [PATCH 2/3] pinctrl: meson-a1: add pinctrl driver for Meson A1
- Soc
-To:     Jerome Brunet <jbrunet@baylibre.com>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        Xingyu Chen <xingyu.chen@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Carlo Caione <carlo@caione.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <1568700442-18540-1-git-send-email-qianggui.song@amlogic.com>
- <1568700442-18540-3-git-send-email-qianggui.song@amlogic.com>
- <1jef0f46fj.fsf@starbuckisacylon.baylibre.com>
- <73dc56bd-d6c5-1de7-e97e-91479a89a29e@amlogic.com>
- <1j8sqn3tjt.fsf@starbuckisacylon.baylibre.com>
-From:   Qianggui Song <qianggui.song@amlogic.com>
-Message-ID: <45b97927-c771-808a-b214-509af6c16931@amlogic.com>
-Date:   Wed, 18 Sep 2019 14:36:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 02:38:52 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iATc2-0003Vb-Bq; Wed, 18 Sep 2019 08:38:50 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iATby-0003FW-Lw; Wed, 18 Sep 2019 08:38:46 +0200
+From:   =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Peter Rosin <peda@axentia.se>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] of: restore old handling of cells_name=NULL in of_*_phandle_with_args()
+Date:   Wed, 18 Sep 2019 08:38:37 +0200
+Message-Id: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <1j8sqn3tjt.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.18.45]
-X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
- (10.28.11.5)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Uwe Kleine-König <uwe@kleine-koenig.org>
 
-On 2019/9/17 22:07, Jerome Brunet wrote:
-> 
-> On Tue 17 Sep 2019 at 13:51, Qianggui Song <qianggui.song@amlogic.com> wrote:
->>>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
->>>> index 8bba9d0..885b89d 100644
->>>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->>>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->>>> @@ -688,8 +688,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
->>>>  
->>>>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
->>>>  	if (IS_ERR(pc->reg_ds)) {
->>>> -		dev_dbg(pc->dev, "ds registers not found - skipping\n");
->>>> -		pc->reg_ds = NULL;
->>>> +		if (pc->data->reg_layout == A1_LAYOUT) {
->>>> +			pc->reg_ds = pc->reg_pullen;
->>>
->>> IMO, this kind of ID based init fixup is not going to scale and will
->>> lead to something difficult to maintain in the end.
->>>
->>> The way the different register sets interract with each other is already
->>> pretty complex to follow.
->>>
->>> You could rework this in 2 different ways:
->>> #1 - Have the generic function parse all the register sets and have all
->>> drivers provide a specific (as in gxbb, gxl, axg, etc ...)  function to :
->>>  - Verify the expected sets have been provided
->>>  - Make assignement fixup as above if necessary
->>>
->>> #2 - Rework the driver to have only one single register region
->>>  I think one of your colleague previously mentionned this was not
->>>  possible. It is still unclear to me why ...
->>>
->> Appreciate your advice.  I have an idea based on #1, how about providing
->> only two dt parse function, one is for chips before A1(the old one),
->> another is for A1 and later chips that share the same layout. Assign
->> these two functions to their own driver.
-> 
-> That's roughly the same thing as your initial proposition with function
-> pointer instead of IDs ... IMO, this would still be a quick fix to
-> address your immediate topic instead of dealing with the driver as
-> whole, which is my concern here.
-> 
-For #1. It would be like
-generic_parse_dt()
-{
-	1. parse all register regions (mux gpio pull pull_en ds)
-	
-	2. call  specific function through function pointer in
- 	   meson_pinctrl_data.(each platform should have AO and EE two
-           specific functions for they are not the same)
-	{
-		do work you mentioned above
-	}
-}
-right ?
-If that so, maybe there are a lot of duplicated codes for most Socs
-share the same reg layout. So I guess five specific functions are
-enough: AXG and before(ao,ee), G12A(ao,ee) and A1(will place them in
-pinctrl_meson.c). Since m8 to AXG are the same register layout for both
-ee and ao, G12A with new feature ds and new ao register layout.
+Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
+non-negative cell_count") the iterator functions calling
+of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
+This corner case was missed when implementing the fallback logic in
+e42ee61017f5 and resulted in an endless loop.
 
-Or I misunderstood the #1 ?
->>>> +		} else {
->>>> +			dev_dbg(pc->dev, "ds registers not found - skipping\n");
->>>> +			pc->reg_ds = NULL;
->>>> +		}
->>>>  	}
->>>>  
->>>>  	return 0;
->>>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
->>>> index c696f32..3d0c58d 100644
->>>> --- a/drivers/pinctrl/meson/pinctrl-meson.h
->>>> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
->>>> @@ -80,6 +80,14 @@ enum meson_pinconf_drv {
->>>>  };
->>>>  
->>>>  /**
->>>> + * enum meson_reg_layout - identify two types of reg layout
->>>> + */
->>>> +enum meson_reg_layout {
->>>> +	LEGACY_LAYOUT,
->>>> +	A1_LAYOUT,
->>>> +};
->>>> +
->>>> +/**
->>>>   * struct meson bank
->>>>   *
->>>>   * @name:	bank name
->>>> @@ -114,6 +122,7 @@ struct meson_pinctrl_data {
->>>>  	unsigned int num_banks;
->>>>  	const struct pinmux_ops *pmx_ops;
->>>>  	void *pmx_data;
->>>> +	unsigned int reg_layout;
->>>>  };
->>>>  
->>>>  struct meson_pinctrl {
->>>
->>> .
->>>
-> 
-> .
-> 
+Restore the old behaviour of of_count_phandle_with_args() and
+of_parse_phandle_with_args() and add a check to
+of_phandle_iterator_init() to prevent a similar failure as a safety
+precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
+as cells_name isn't NULL there.
+
+Affected drivers are:
+ - drivers/base/power/domain.c
+ - drivers/base/power/domain.c
+ - drivers/clk/ti/clk-dra7-atl.c
+ - drivers/hwmon/ibmpowernv.c
+ - drivers/i2c/muxes/i2c-demux-pinctrl.c
+ - drivers/iommu/mtk_iommu.c
+ - drivers/net/ethernet/freescale/fman/mac.c
+ - drivers/opp/of.c
+ - drivers/perf/arm_dsu_pmu.c
+ - drivers/regulator/of_regulator.c
+ - drivers/remoteproc/imx_rproc.c
+ - drivers/soc/rockchip/pm_domains.c
+ - sound/soc/fsl/imx-audmix.c
+ - sound/soc/fsl/imx-audmix.c
+ - sound/soc/meson/axg-card.c
+ - sound/soc/samsung/tm2_wm5110.c
+ - sound/soc/samsung/tm2_wm5110.c
+
+Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
+helping pinpoint the actual problem and the testers for confirming this
+fix.
+
+Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negative cell_count")
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+Hello,
+
+compared to the untested patch I sent yesterday I also fixed
+of_parse_phandle_with_args which has three users that pass
+cells_name=NULL. (i.e. drivers/clk/ti/clk-dra7-atl.c,
+sound/soc/fsl/imx-audmix.c, sound/soc/samsung/tm2_wm5110.c) I didn't
+look closely, but maybe these could be converted to use of_parse_phandle
+as there are no arguments to be processed with no cells_name?!
+
+Best regards
+Uwe
+
+ drivers/of/base.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 2f25d2dfecfa..25ee07c0a3cd 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1286,6 +1286,13 @@ int of_phandle_iterator_init(struct of_phandle_iterator *it,
+ 
+ 	memset(it, 0, sizeof(*it));
+ 
++	/*
++	 * one of cell_count or cells_name must be provided to determine the
++	 * argument length.
++	 */
++	if (cell_count < 0 && !cells_name)
++		return -EINVAL;
++
+ 	list = of_get_property(np, list_name, &size);
+ 	if (!list)
+ 		return -ENOENT;
+@@ -1512,10 +1519,17 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
+ 				const char *cells_name, int index,
+ 				struct of_phandle_args *out_args)
+ {
++	int cell_count = -1;
++
+ 	if (index < 0)
+ 		return -EINVAL;
+-	return __of_parse_phandle_with_args(np, list_name, cells_name, -1,
+-					    index, out_args);
++
++	/* If cells_name if NULL we assume a cell count of 0 */
++	if (!cells_name)
++		cell_count = 0;
++
++	return __of_parse_phandle_with_args(np, list_name, cells_name,
++					    cell_count, index, out_args);
+ }
+ EXPORT_SYMBOL(of_parse_phandle_with_args);
+ 
+@@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+ 	struct of_phandle_iterator it;
+ 	int rc, cur_index = 0;
+ 
++	/* If cells_name is NULL we assume a cell count of 0 */
++	if (cells_name == NULL) {
++		const __be32 *list;
++		int size;
++
++		list = of_get_property(np, list_name, &size);
++		if (!list)
++			return -ENOENT;
++
++		return size / sizeof(*list);
++	}
++
+ 	rc = of_phandle_iterator_init(&it, np, list_name, cells_name, -1);
+ 	if (rc)
+ 		return rc;
+-- 
+2.23.0
+
