@@ -2,112 +2,103 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2323C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A296AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45C021848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568825659;
-	bh=tpAlTzvpZ/90Mi6REw190HsgXG1VRy+RT6l9swKF6Ok=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=CCskKkS6P93lNevGVzDuLE3ZHDJVY+3mgtpfeegNKueeTS9UkS3s8o3G4GW9LpW67
-	 acer+oXx+9PZCgPe4/8+/htlLNyuEyqaLbf9uEhE0LpSHqYftsSkANx/NdqfSFyWjn
-	 ALfP7nbKt+xm2AMNgBi3dCDeziSO2LQCLPLZ800o=
+	by mail.kernel.org (Postfix) with ESMTP id 67BCE21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:57:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pS6kzUsS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfIRQyS (ORCPT
+        id S1732044AbfIRQ5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:54:18 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42939 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731169AbfIRQyS (ORCPT
+        Wed, 18 Sep 2019 12:57:35 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34507 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731251AbfIRQ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:54:18 -0400
-Received: by mail-lf1-f66.google.com with SMTP id c195so180427lfg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:54:17 -0700 (PDT)
+        Wed, 18 Sep 2019 12:57:35 -0400
+Received: by mail-io1-f68.google.com with SMTP id q1so933038ion.1;
+        Wed, 18 Sep 2019 09:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8VwfblmZ+e4fyFQouNlegNYvYNoRSmskQXhNh9EkLBA=;
-        b=hTbF/x1sm3Jzq49oZHqZoPNaFRwFunpf+5C65yxk9Rufw+9lbUdhUCNI9WxNFqYDhI
-         rEB8phARLo8Z30aVvWYY34efW+2WUH/E6AMzHD5MXBWOPqrWzUnOCMyObhZnc3yIs0ku
-         858p8fUsW9juBx8tfEpR6YaCHicSskxD1u2Ac=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=vt0ylMbOHCZnBNswP1adbnaG01l5yqsJyQnU8ZzdrtM=;
+        b=pS6kzUsSABU0wWdE/8hAYpTDdDEHmtzLiNOOmAAqM+HBtSxuqbmi5+iQCO1SE56TdR
+         OcxRfWj0OkYKDI7i1CcH9xanjEs4I3M64L/xVrbiJyO5upLrth/V9WjEXhbDhM1xe3hq
+         DpusZLMhe08NTdu8LHtG7Pb3UoCpata0nvyCq5dQBfg338EdDVhQU0MegkzyqUmM+hnd
+         dJ9I0Hbygz2UHBozw+EgQ6IfEQ60LQwumSQF/+RCUbUDgAz1ZNpsZc3MXac9Qm1Q+tfr
+         /3cabA5BQnDz9t+KV4mBs/CTw2BezpWrlciOAtNG7ettmP3vGTK8zYqGfQSQf53Z38Pn
+         Rh+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8VwfblmZ+e4fyFQouNlegNYvYNoRSmskQXhNh9EkLBA=;
-        b=a64TALkyD4K8j7Q0zyocbqqR1Y7yV3OyKe1oEVjbUn9KAGMbX/jYc9uZUl/zJDXpSI
-         oLDAE/68G+PZXSfpiZYWmAlY83RhFb9cYnlBN3Pcq/IvGN4Wl1nOTp8lD0OW9mrXuR5F
-         Pu8+nBhE8U26cbwKjcnWLo9yrKxADwPv3z9JVNVyTTXR+4W+q4s+OJqpxMThpjJxoEKP
-         1lBqmFUbGogrtEl2tmc8P1+mBiCyDSux2oXB0IiayFm3qjOhdwkQLrooaFo3S2re7VYi
-         iAt/nz4Z+bI/HUrIHJWwL0FsU8F/GkBRf2tcSx9Z14b7N/4DAD9UyHb2et9grGuEQDQq
-         gGJw==
-X-Gm-Message-State: APjAAAWKbYyiZ2OJ387ntt6C7l+Vl3UVL0rYqDAWy+8Jde+OJgrNADuC
-        HBzgNmLcUQgMtN0DTAx3s02lIBIPt4A=
-X-Google-Smtp-Source: APXvYqy6jFcoXA0unvUBTXQPH5xT8k5mViKe+iRgMqeav/HqYud70PuvoTZxreSwuMCX7enpfFN0kw==
-X-Received: by 2002:a05:6512:4dd:: with SMTP id w29mr2631832lfq.2.1568825656153;
-        Wed, 18 Sep 2019 09:54:16 -0700 (PDT)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com. [209.85.167.41])
-        by smtp.gmail.com with ESMTPSA id w30sm1081671lfn.82.2019.09.18.09.54.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 09:54:15 -0700 (PDT)
-Received: by mail-lf1-f41.google.com with SMTP id t8so160828lfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:54:14 -0700 (PDT)
-X-Received: by 2002:ac2:47f8:: with SMTP id b24mr2656966lfp.134.1568825654331;
- Wed, 18 Sep 2019 09:54:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190916222133.9119-1-jacek.anaszewski@gmail.com>
- <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com>
- <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
- <CAHk-=wjm422bg+ZPuKkjU6NffbAyysY2n8iLRFyiNKin4cvWgg@mail.gmail.com> <CAHp75Vdn5_U3rCvuK1_P_nf5gEO63r342dgp_wk77diPU8k06Q@mail.gmail.com>
-In-Reply-To: <CAHp75Vdn5_U3rCvuK1_P_nf5gEO63r342dgp_wk77diPU8k06Q@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 18 Sep 2019 09:53:58 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whg7WLb8mriT46iuMXCSj34FheRxGRPcifNsaLGuowiGw@mail.gmail.com>
-Message-ID: <CAHk-=whg7WLb8mriT46iuMXCSj34FheRxGRPcifNsaLGuowiGw@mail.gmail.com>
-Subject: Re: [GIT PULL] LED updates for 5.4-rc1
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        ada@thorsis.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Murphy <dmurphy@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Joe Perches <joe@perches.com>, kw@linux.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        nishkadg.linux@gmail.com, nstoughton@logitech.com, oleg@kaa.org.ua,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Lindgren <tony@atomide.com>, wenwen@cs.uga.edu,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=vt0ylMbOHCZnBNswP1adbnaG01l5yqsJyQnU8ZzdrtM=;
+        b=YWBQl592xb5Csbj1IFepegqDmR2l0/qym5LgmkfACrLH5MJ7hIrSwgXRE8GklaXaFF
+         3mFZKvnja5H007ELjBMBGns4Jhr8UutQkvihJKerVQUAdeNQSalBK2ApRjdQyHDDRV9C
+         hRzzKTENWvYdA3urKUEmUOiD+5s8F7sl9kF/Xx1do4h/EGh5hGOMuqLRVgPR7JPkoCht
+         lnucYWKqiC+z/kj2auF0rMX6HW+LIXqzLUu9ROGJhQXVuu0yyPlQTfPoZTIfIV3NeA50
+         HOhW/ueWM0t+J6290VmP3r87TbkRq3x/S7uZZRsKQUQp4OZkcKuRhS969Dc584hEjvFH
+         S/1w==
+X-Gm-Message-State: APjAAAVWqhrQjrhuuEMQ7SIGF5AopS7Hn1TBpZJ4C9WG/Cp01JmbwEYm
+        H4y9s/m6VGsx83G5a5157FM=
+X-Google-Smtp-Source: APXvYqz5jqKfargpeMxBeQGkSO24qaIY1Qqsc5ZzIGYHkB6YheR0ua6d2swLqQEHe4frMgT6nHjhEA==
+X-Received: by 2002:a6b:6c06:: with SMTP id a6mr5917503ioh.306.1568825854324;
+        Wed, 18 Sep 2019 09:57:34 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id i20sm4551476ioh.77.2019.09.18.09.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 09:57:33 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] iio: imu: adis16400: release allocated memory on failure
+Date:   Wed, 18 Sep 2019 11:57:23 -0500
+Message-Id: <20190918165724.3758-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:30 AM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> I hope you have a chance to read my previous email.
-> We still need that function.
+In adis_update_scan_mode, if allocation for adis->buffer fails,
+previously allocated adis->xfer needs to be released.
 
-Your email came in after I did the merge with the fixup, so the kernel
-now has the broken code (but without the warning).
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/iio/imu/adis_buffer.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I think (hope) the fixup commit is in one of Greg's pull requests that
-are now pending in my queue.
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 9ac8356d9a95..c5d7e368a636 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -78,8 +78,10 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
+ 		return -ENOMEM;
+ 
+ 	adis->buffer = kcalloc(indio_dev->scan_bytes, 2, GFP_KERNEL);
+-	if (!adis->buffer)
++	if (!adis->buffer) {
++		kfree(adis->xfer);
+ 		return -ENOMEM;
++	}
+ 
+ 	rx = adis->buffer;
+ 	tx = rx + scan_count;
+-- 
+2.17.1
 
-              Linus
