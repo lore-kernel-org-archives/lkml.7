@@ -2,103 +2,100 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0A8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D792C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C17DF21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:03:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PPN71l8I"
+	by mail.kernel.org (Postfix) with ESMTP id 57C7B21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387788AbfIRRDR (ORCPT
+        id S1731180AbfIRREo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:03:17 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39923 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387709AbfIRRDQ (ORCPT
+        Wed, 18 Sep 2019 13:04:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6076 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726391AbfIRREn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:03:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id a1so894397ioc.6;
-        Wed, 18 Sep 2019 10:03:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=5fl8PGJoyUyvTGUG9rw2at0SOKHlYdtFyvgpSZSiOb0=;
-        b=PPN71l8IN2TIkiGb4dNWQ0YbpislVMVGUaV0LmDcRshLuuqupsUP5z0hRGF093XaJP
-         wVj4hv71aPBghD2POsiM/aNzAN0VcAvcv6LWg19qwJteBCfpd5mmbdLi7k8uhJx+5uOK
-         S/ApsxUy9ZwGVAAIpxoqSmiHuNvbDswJ3ajOXKDUdfDcA+A7KkoiuY8Bzf7L5EA2+Jak
-         L+n5tT4jdIxWmYSLOQBgIqzVOSfXB/JbbOougq3495oOCiVcAHYmwTnU23gyrFjVNd8x
-         anvoXDlDLqCiSaoDLJkb5387Yzh+s179IVZoX06Q7fzetVA3qIX7ar5YX+pYRe+21a15
-         riAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5fl8PGJoyUyvTGUG9rw2at0SOKHlYdtFyvgpSZSiOb0=;
-        b=Jk1BZaGidfnCZcZBUywk4F4W12s6FUjd6hXw5YBCQRtlRz8Iyp2VEMKuSqEsVehPzq
-         GwDyH1ChqyJZS08iJdbdblGUYXLxuFUV8wc2dWvCP7aWxqWKTi5zcNE0GpGvS3cD+BAu
-         GNLhfPgoY7PAe20T+5VbW+Z0nrqxh6FEb5mQUBqJnIarVv7kQ6PWjuxJMjPRkuAcAtfE
-         TDxmracNZcVqS6D5Wgha/VsyncDDm0L1RDbMaDP8FoN9bw4g1E9dKmw4khBo/l5gpWle
-         BxOYRsGv+X5BO5mCiSEVA34opIqKJEi8SBgOfx5d2vxNITMlZ73wyNuR75Uzi6S0FqPH
-         WbgQ==
-X-Gm-Message-State: APjAAAWL2zYEBL1m/8PN1hX/tXnH4bcEKsaKKd9L+QAdszB/hXfnrRqO
-        0nafRUP/vyuoNEiZhytg5Gw=
-X-Google-Smtp-Source: APXvYqxhy4lBz8iZUuSyXOSiLKXK2bwYX8Cz7ZBJiFcYWm0cAQXv1yWsATfghU0RlquLAP+FyS9wfw==
-X-Received: by 2002:a05:6638:350:: with SMTP id x16mr6092343jap.29.1568826193772;
-        Wed, 18 Sep 2019 10:03:13 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id p26sm1294512iob.50.2019.09.18.10.03.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 10:03:13 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: imu: adis16400: fix memory leak
-Date:   Wed, 18 Sep 2019 12:03:05 -0500
-Message-Id: <20190918170306.4779-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 18 Sep 2019 13:04:43 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IH3S0A063557
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:04:43 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3q5vka1u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:04:42 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 18 Sep 2019 18:04:41 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Sep 2019 18:04:37 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IH4YnM45351162
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 17:04:35 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D129FAE04D;
+        Wed, 18 Sep 2019 17:04:34 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67571AE055;
+        Wed, 18 Sep 2019 17:04:34 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.108])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Sep 2019 17:04:34 +0000 (GMT)
+Date:   Wed, 18 Sep 2019 19:04:33 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v6 04/10] s390: vfio-ap: filter CRYCB bits for
+ unavailable queue devices
+In-Reply-To: <1568410018-10833-5-git-send-email-akrowiak@linux.ibm.com>
+References: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
+        <1568410018-10833-5-git-send-email-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091817-4275-0000-0000-000003681F0E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091817-4276-0000-0000-0000387A8892
+Message-Id: <20190918190433.713f4a93.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=897 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909180158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In adis_update_scan_mode_burst, if adis->buffer allocation fails release
-the adis->xfer.
+On Fri, 13 Sep 2019 17:26:52 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/iio/imu/adis_buffer.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> +static void vfio_ap_mdev_get_crycb_matrix(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	unsigned long apid, apqi;
+> +	unsigned long masksz = BITS_TO_LONGS(AP_DEVICES) *
+> +			       sizeof(unsigned long);
+> +
+> +	memset(matrix_mdev->crycb.apm, 0, masksz);
+> +	memset(matrix_mdev->crycb.apm, 0, masksz);
 
-diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
-index 9ac8356d9a95..1dbe25572a39 100644
---- a/drivers/iio/imu/adis_buffer.c
-+++ b/drivers/iio/imu/adis_buffer.c
-@@ -35,8 +35,10 @@ static int adis_update_scan_mode_burst(struct iio_dev *indio_dev,
- 		return -ENOMEM;
- 
- 	adis->buffer = kzalloc(burst_length + sizeof(u16), GFP_KERNEL);
--	if (!adis->buffer)
-+	if (!adis->buffer) {
-+		kfree(adis->xfer);
- 		return -ENOMEM;
-+	}
- 
- 	tx = adis->buffer + burst_length;
- 	tx[0] = ADIS_READ_REG(adis->burst->reg_cmd);
--- 
-2.17.1
+I guess you wanted to zero out aqm here (and not apm again)!
+
+> +	memcpy(matrix_mdev->crycb.adm, matrix_mdev->matrix.adm, masksz);
 
