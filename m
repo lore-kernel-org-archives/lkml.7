@@ -2,126 +2,171 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95006C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:41:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D09C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBAA208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:41:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1489208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d6m4J1Zb"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="VAw2COz9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfIRNk7 (ORCPT
+        id S1731207AbfIRNlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:40:59 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37017 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726853AbfIRNk7 (ORCPT
+        Wed, 18 Sep 2019 09:41:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42312 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbfIRNlL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:40:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y5so4511929pfo.4;
-        Wed, 18 Sep 2019 06:40:58 -0700 (PDT)
+        Wed, 18 Sep 2019 09:41:11 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n14so6087318wrw.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 06:41:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ljkWDHXlIkSy7NckWtNI1aeaRwQExF2XsDwU+t0+zEw=;
-        b=d6m4J1ZbQIhGPIwQcfje4nR1f6w8yt1CI3u+GQsXd/WQ1L2b7HiGOo+ApFiyEKkMUz
-         fJGlZWaoFe9UtwkqSU0vmw1VkNdRcxb+CXVmCSbqWhkZbSrFcUynODzmo7gVZEpyZoy0
-         9Y+INFsUmKqAIi1Qk6xO2WbrJmDt/LlLPQiy1U9Wx2KKJm5acHGrieZc6e3Yx4dfgZbF
-         jxE6Md+B18XEdp4C9MnCAbAMFBA3x9lJ23xbEJkT8ElPTbHCe0XhiOQtRH1FRGUQtCvZ
-         wXxS2muJjV9/MUPbkdhYAkEQKyy19DWNyQjMB7w3zwp9IrK3jCq32poQVV3sS3ziHy+5
-         R3vg==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Le2QH/5p+c8aA6YAOFY1HqDcS4tnXWKjjmJndzg7vug=;
+        b=VAw2COz9hJ2GODw4TUYBOjfVafamFQnhqcHSPoGtSL0UpHXJ9HJuVTTAOypbw/e5qx
+         nMNd6i1KOl6WeqCM4D0ok9G8UJFmOJrWjiLWaHI0cZAi0qHSYNFzMHIBNFOk3H62hQ70
+         CHh9MzUKVzxtb2P6/IH/mtlonsiPEY8GPDRL1GKwiNDjDUiP9ueltLepxrefCUgQvvFZ
+         OuLrURYApNhn1n2i1L7upc8GZYAeOH1npStQebjXti8ELLDaKP7yAtRo53Jckej27KnQ
+         eYhf8WM6WxDh0q4AZejqt6ACZHHmWXTvTtnjXQGLhQQo85xay3SnkTkDQZfbLei3fg5O
+         uPdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ljkWDHXlIkSy7NckWtNI1aeaRwQExF2XsDwU+t0+zEw=;
-        b=N4OFk9GgwARP0x4NFfktzBRG32DcKpYZQ8hJV7Q44jeYWau6VBd+3AAnPwQsCdsE7n
-         HZJExhj9u69MvHU+gYH+D/yTfYvS4BtN3lNM/mUC6SNI9ar9oJ1uNPL5sPPzEpAiCY8p
-         WB72uuyjNse4jXODuG1JEsiQxWAXVkFa7L0LyMxcZy6dXKZu5k/85+CaROqe6WCC3rNi
-         NpeEDti4cA4CP+jcU0+8sSRE0VptLqzmW1XDL3nj2Yp2QrLdXnQirCpW6B9H37wllz1Z
-         SPjwcRe1ldFmQ6kWdhgSxF2OR4G45HX4+9enOEjSG1ka+7+pjIzDUEGihbZXmDbVWQY2
-         ng6A==
-X-Gm-Message-State: APjAAAW5ctEZmsZj5P/FYADF8E75G8qZNCX/kugpeeS4hkpxc2LlRISu
-        shgBGzpAMv9mKxVPL3sckAo=
-X-Google-Smtp-Source: APXvYqwGmHrbLJCm4e7l/PHYfffMMtNA0UN+h8KyCp/tNWvDUeqDrbJ96Xivomf1/vTNRC4C9tCfzw==
-X-Received: by 2002:a62:64c9:: with SMTP id y192mr4444109pfb.6.1568814058533;
-        Wed, 18 Sep 2019 06:40:58 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i1sm12644118pfg.2.2019.09.18.06.40.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 06:40:57 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 06:40:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Amy.Shih@advantech.com.tw
-Cc:     she90122@gmail.com, oakley.ding@advantech.com.tw,
-        bichan.lu@advantech.com.tw, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [v3,1/1] hwmon: (nct7904) Fix the incorrect value of vsen_mask
- in nct7904_data struct.
-Message-ID: <20190918134056.GA21721@roeck-us.net>
-References: <20190918084801.9859-1-Amy.Shih@advantech.com.tw>
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Le2QH/5p+c8aA6YAOFY1HqDcS4tnXWKjjmJndzg7vug=;
+        b=bnyoieq22sDMHLjjdExb111YJwVUXL5ydV08RIi2qBzixB2tvzYKxyOJv2FARSxa9/
+         Yb3RB3aHTCosmZcvVj7OFFyMUcVQEQFqdlAUu7mlQ0OTGGsx/UmKCFHHTFsyormPExR2
+         OK5U5v+QW5A8GL2xqvzI3XvEilJw76hm5RFgP0/WspZyHo5zDJrQV+m27c4Y+Hh/HhLx
+         EApNSAUqsYXhZ6kShk3QfnAc+Gu4NxTdnsvKnkLVn453/G5RZ1nRAHxeCGTgh0esM1n1
+         VzUYbQOWY0L/szj2JBQqXQ/KJD6Y4OUQzEIV/RgF+VvPqmjcK54JrS8u1TScfzyZeTN9
+         PqSw==
+X-Gm-Message-State: APjAAAXKgXrdIW9y41p3ica9Z3YDnKGt8tsqCvCAMNrHjMrAmG3GlOzn
+        xoCYLYZIZLjy4OWcqCmpxE7l5Q==
+X-Google-Smtp-Source: APXvYqxv03GXuQ6Ll5/5yUHHr2Cqd6aGyprQTYFaVpTYbV1oBVZZcCF8gqYRsSTnVTCyAl0s5B26hg==
+X-Received: by 2002:a5d:6043:: with SMTP id j3mr3140609wrt.337.1568814068663;
+        Wed, 18 Sep 2019 06:41:08 -0700 (PDT)
+Received: from localhost ([195.200.173.126])
+        by smtp.gmail.com with ESMTPSA id b22sm3332004wmj.36.2019.09.18.06.41.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 06:41:07 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 06:41:06 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Subject: Re: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
+In-Reply-To: <CAJ2_jOHJ5zuxDc6gsFiZou+-yVg=pr+uSHGJB8VPT1O-Bu3idg@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1909180639530.29677@viisi.sifive.com>
+References: <CAJ2_jOGO-isv52rnwRusV7jtyCY_JWYWAj9opN3Zg6ZbZr-8-w@mail.gmail.com> <mhng-c8b87e96-987e-4577-acc2-1e22c9b81b10@palmer-si-x1e> <CAJ2_jOHJ5zuxDc6gsFiZou+-yVg=pr+uSHGJB8VPT1O-Bu3idg@mail.gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918084801.9859-1-Amy.Shih@advantech.com.tw>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:48:00PM +0800, Amy.Shih@advantech.com.tw wrote:
-> From: "amy.shih" <amy.shih@advantech.com.tw>
-> 
-> Voltage sensors overlap with external temperature sensors. Detect
-> the multi-function of voltage, thermal diode and thermistor from
-> register VT_ADC_MD_REG to set value of vsen_mask in nct7904_data
-> struct.
-> 
-> Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+On Mon, 16 Sep 2019, Yash Shah wrote:
 
-Applied.
-
-Thanks,
-Guenter
-
-> ---
-> Changes in v3:
-> - Simplified the bit map.
-> - Modified the if statement.
-> Changes in v2:
-> - Moved the if statement to outside.
+> On Sat, Sep 14, 2019 at 2:50 AM Palmer Dabbelt <palmer@sifive.com> wrote:
+> >
+> > On Tue, 10 Sep 2019 02:52:07 PDT (-0700), yash.shah@sifive.com wrote:
+> > > Hi,
+> > >
+> > > Any comments on this patch?
+> >
+> > I don't see "sifive,pwm0" in the DT bindings documentation, and it doesn't
+> > match our standard way of doing these things (which would have at least
+> > "sifive,fu540-c000-pwm").
 > 
->  drivers/hwmon/nct7904.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-> index 95b447cfa24c..f62dd1882451 100644
-> --- a/drivers/hwmon/nct7904.c
-> +++ b/drivers/hwmon/nct7904.c
-> @@ -915,12 +915,15 @@ static int nct7904_probe(struct i2c_client *client,
->  
->  	data->temp_mode = 0;
->  	for (i = 0; i < 4; i++) {
-> -		val = (ret & (0x03 << i)) >> (i * 2);
-> +		val = (ret >> (i * 2)) & 0x03;
->  		bit = (1 << i);
-> -		if (val == 0)
-> +		if (val == 0) {
->  			data->tcpu_mask &= ~bit;
-> -		else if (val == 0x1 || val == 0x2)
-> -			data->temp_mode |= bit;
-> +		} else {
-> +			if (val == 0x1 || val == 0x2)
-> +				data->temp_mode |= bit;
-> +			data->vsen_mask &= ~(0x06 << (i * 2));
-> +		}
->  	}
->  
->  	/* PECI */
+> "sifive,pwm0" is present in the DT bindings documentation at
+> Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> Yes, I agree that this patch is missing "sifive,fu540-c000-pwm". I
+> will add it along with "sifive,pwm0" and repost as version 2.
+
+Fixed the compat string here and also dropped the superfluous reg-names 
+property from pwm1.  Queued for v5.4-rc, thanks.
+
+
+- Paul
+
+From: Yash Shah <yash.shah@sifive.com>
+Date: Wed, 21 Aug 2019 14:53:40 +0530
+Subject: [PATCH] riscv: dts: Add DT support for SiFive FU540 PWM driver
+
+Add the PWM DT node in SiFive FU540 soc-specific DT file.
+Enable the PWM nodes in HiFive Unleashed board-specific DT file.
+
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Cc: Palmer Dabbelt <palmer@sifive.com>
+[paul.walmsley@sifive.com: added chip-specific compatible string;
+ dropped reg-names string from pwm1]
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi     | 18 ++++++++++++++++++
+ .../boot/dts/sifive/hifive-unleashed-a00.dts   |  8 ++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+index 42b5ec223100..5a29211d396e 100644
+--- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
++++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
+@@ -230,6 +230,24 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
++		pwm0: pwm@10020000 {
++			compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
++			reg = <0x0 0x10020000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <42 43 44 45>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
++		pwm1: pwm@10021000 {
++			compatible = "sifive,fu540-c000-pwm", "sifive,pwm0";
++			reg = <0x0 0x10021000 0x0 0x1000>;
++			interrupt-parent = <&plic0>;
++			interrupts = <46 47 48 49>;
++			clocks = <&prci PRCI_CLK_TLCLK>;
++			#pwm-cells = <3>;
++			status = "disabled";
++		};
+ 
+ 	};
+ };
+diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+index 93d68cbd64fe..104d334511cd 100644
+--- a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
++++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+@@ -85,3 +85,11 @@
+ 		reg = <0>;
+ 	};
+ };
++
++&pwm0 {
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++};
+-- 
+2.23.0
+
