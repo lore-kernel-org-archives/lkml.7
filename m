@@ -2,85 +2,101 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26817C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A170C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03E9120640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B63218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbfIRJFj (ORCPT
+        id S1730309AbfIRJFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:05:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45369 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfIRJFi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:05:38 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1iAVty-0002uu-W5; Wed, 18 Sep 2019 11:05:31 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Paul Turner <pjt@google.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Prarit Bhargava <prarit@redhat.com>
-Subject: Re: printk meeting at LPC
-References: <20190905143118.GP2349@hirez.programming.kicks-ass.net>
-        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
-        <20190905121101.60c78422@oasis.local.home>
-        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
-        <87k1acz5rx.fsf@linutronix.de> <20190918012546.GA12090@jagdpanzerIV>
-        <20190917220849.17a1226a@oasis.local.home>
-        <20190918023654.GB15380@jagdpanzerIV>
-        <20190918051933.GA220683@jagdpanzerIV> <87h85anj85.fsf@linutronix.de>
-        <20190918081012.GB37041@jagdpanzerIV>
-Date:   Wed, 18 Sep 2019 11:05:28 +0200
-In-Reply-To: <20190918081012.GB37041@jagdpanzerIV> (Sergey Senozhatsky's
-        message of "Wed, 18 Sep 2019 17:10:12 +0900")
-Message-ID: <877e66nfdz.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Wed, 18 Sep 2019 05:05:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:37806 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfIRJFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:05:51 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75E90337;
+        Wed, 18 Sep 2019 02:05:50 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E06CF3F59C;
+        Wed, 18 Sep 2019 02:05:49 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:05:48 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH v3 13/26] e1000: Use PCI_STD_NUM_BARS
+Message-ID: <20190918090547.GZ9720@e119886-lin.cambridge.arm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-14-efremov@linux.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916204158.6889-14-efremov@linux.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->> Each console has its own iterator. This iterators will need to
->> advance, regardless if the message was printed via write() or
->> write_atomic().
->
-> Great.
->
-> ->atomic_write() path will make sure that kthread is parked or will
-> those compete for uart port?
+On Mon, Sep 16, 2019 at 11:41:45PM +0300, Denis Efremov wrote:
+> To iterate through all possible BARs, loop conditions refactored to the
+> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
+> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
+> the fencepost error.
+> 
+> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  drivers/net/ethernet/intel/e1000/e1000.h      | 1 -
+>  drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
+>  2 files changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/intel/e1000/e1000.h b/drivers/net/ethernet/intel/e1000/e1000.h
+> index c40729b2c184..7fad2f24dcad 100644
+> --- a/drivers/net/ethernet/intel/e1000/e1000.h
+> +++ b/drivers/net/ethernet/intel/e1000/e1000.h
+> @@ -45,7 +45,6 @@
+>  
+>  #define BAR_0		0
+>  #define BAR_1		1
+> -#define BAR_5		5
 
-A cpu-lock (probably per-console) will be used to synchronize the
-two. Unlike my RFCv1, we want to keep the cpu-lock out of the console
-drivers and we want it to be less aggressive (using trylock's instead of
-spinning). This should make the cpu-lock less "dangerous". I talked with
-PeterZ, Thomas, and PetrM about how this can be implemented, but there
-may still be some corner cases.
+No issue with this patch. However I noticed that at least 5 of the network
+drivers have these same definitions, which are identical to the pci_barno enum
+of include/linux/pci-epf.h. There are mostly used with pci_ioremap_bar and
+pci_resource_** macros. I wonder if this is an indicator that these defintions
+should live in the core.
 
-I would like to put everything together now so that we can run and test
-if the decisions made in that meeting hold up for all the cases. I think
-it will be easier to identify/add the missing pieces, once we have it
-coded.
+Thanks,
 
-John Ogness
+Andrew Murray
+
+>  
+>  #define INTEL_E1000_ETHERNET_DEVICE(device_id) {\
+>  	PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
+> diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
+> index f703fa58458e..db4fd82036af 100644
+> --- a/drivers/net/ethernet/intel/e1000/e1000_main.c
+> +++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
+> @@ -977,7 +977,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  		goto err_ioremap;
+>  
+>  	if (adapter->need_ioport) {
+> -		for (i = BAR_1; i <= BAR_5; i++) {
+> +		for (i = BAR_1; i < PCI_STD_NUM_BARS; i++) {
+>  			if (pci_resource_len(pdev, i) == 0)
+>  				continue;
+>  			if (pci_resource_flags(pdev, i) & IORESOURCE_IO) {
+> -- 
+> 2.21.0
+> 
