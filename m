@@ -2,264 +2,225 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C5FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAE5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C645218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:50:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nkw5Ks0C"
+	by mail.kernel.org (Postfix) with ESMTP id 6C70D218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:52:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbfIROub (ORCPT
+        id S1731457AbfIROwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:50:31 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34555 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfIROub (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:50:31 -0400
-Received: by mail-lj1-f195.google.com with SMTP id h2so249612ljk.1;
-        Wed, 18 Sep 2019 07:50:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=shRcCqdrW2AA6jwy3OcrdqKfsL4WIJsDKGjUpc0AYZw=;
-        b=nkw5Ks0CtGS+LjOOxHN0PgSWk2Hwmmhr/3pdJ1CPEV07i+jlbspJDw68suIRxsAv7R
-         uBQYGtwtz5w1+hL+9kWVmop9ivZurDP2LYIVvJ4arLG2bxF7lAimOcTzb/f2viq3lRKe
-         XYFfolsMZRCoUmh8ApsT9mOxDEUY2Joc0SK9sb/Vmw6kr/51GfPyLv+rfbsKqMnNc5p6
-         N5da3msp1r88wh1+jeE1D/LLDYZPANyE6n8nA27I4ukWqnfEyeXRdkX4xWtRAd0O8K/M
-         mvBbaCET7VNmYg214sJbvE+65HvhoW4eG+agGXs5v78Y1CiF+JFYTqRiGJVotcjXPS7M
-         OwjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=shRcCqdrW2AA6jwy3OcrdqKfsL4WIJsDKGjUpc0AYZw=;
-        b=JkxcNSf3zvjSr+ylSfdT0IcJspU1UsQmTCswMjXltCNUrdhuNE4EBUU5bbtCmDtdBU
-         cDVHdJZlYWCHecQe+zOfPMmkOj5JplA67S1NKJtSs0YqsFqxjg2rkqW03MswW9FqGP+z
-         HC47WNNirwgXRWggpMzT4paXlb+YUuGWhlwRdQMEkOVaZUUyCodOwvnEGweYkekMIDBi
-         GtG9DI99JuvlqiQv2vb5zckLnYe0lM9x84mrou9e0O9KjDe7nARnn3S8GAdEGky3dyN1
-         iuh2Rlk28etk+OavpYMvXw3DNMF6Ha5elo6lkfdJVMNxr2V+pu7bquEDkqu170NjAQ7a
-         k6JA==
-X-Gm-Message-State: APjAAAUb/69CC6DUgh4AotDHB53HOp4CZdqLlDkPp8i8TyR/omLieJcB
-        n8sK8FiKl4rGcK0ICtYMWkqy9FbvT9Nv5LFz
-X-Google-Smtp-Source: APXvYqzVpfZ3g/DNv3R/y869cy71jjtjXgi5KEI7EV+27077xxDXDpdSn5ugeJ6m0sCi3JvAfHG/Gg==
-X-Received: by 2002:a2e:94cd:: with SMTP id r13mr2483813ljh.24.1568818226929;
-        Wed, 18 Sep 2019 07:50:26 -0700 (PDT)
-Received: from ?IPv6:2a02:17d0:4a6:5700::47f? ([2a02:17d0:4a6:5700::47f])
-        by smtp.googlemail.com with ESMTPSA id x15sm1205138lff.54.2019.09.18.07.50.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:50:25 -0700 (PDT)
-Subject: Re: Linux 5.3-rc8
-From:   "Alexander E. Patrakov" <patrakov@gmail.com>
-To:     Lennart Poettering <mzxreary@0pointer.de>, Willy Tarreau <w@1wt.eu>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu> <20190917155743.GB31567@gardel-login>
- <20190917162137.GA27921@1wt.eu> <20190917171328.GA31798@gardel-login>
- <20190917172929.GD27999@1wt.eu> <20190918133806.GA32346@gardel-login>
- <dde9545e-66a7-f9cc-7b03-63517c4f8655@gmail.com>
-Message-ID: <97a49761-701c-c5d9-0a35-65c01368017e@gmail.com>
-Date:   Wed, 18 Sep 2019 19:50:23 +0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 18 Sep 2019 10:52:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:43432 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731141AbfIROwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:52:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B5A51000;
+        Wed, 18 Sep 2019 07:52:38 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73CFE3F67D;
+        Wed, 18 Sep 2019 07:52:37 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 15:52:35 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Alessio Balsini <balsini@android.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: rt: Make RT capacity aware
+Message-ID: <20190918145233.kgntor5nb2gmnczd@e107158-lin.cambridge.arm.com>
+References: <20190903103329.24961-1-qais.yousef@arm.com>
+ <20190904072524.09de28aa@oasis.local.home>
+ <20190904154052.ygbhtduzkfj3xs5d@e107158-lin.cambridge.arm.com>
+ <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <dde9545e-66a7-f9cc-7b03-63517c4f8655@gmail.com>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms090904010206040709020606"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a cryptographically signed message in MIME format.
+On 09/13/19 14:30, Dietmar Eggemann wrote:
+> On 9/4/19 4:40 PM, Qais Yousef wrote:
+> > On 09/04/19 07:25, Steven Rostedt wrote:
+> >> On Tue,  3 Sep 2019 11:33:29 +0100
+> >> Qais Yousef <qais.yousef@arm.com> wrote:
+> 
+> [...]
+> 
+> >>> @@ -1614,7 +1660,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
+> >>>  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
+> >>>  {
+> >>>  	if (!task_running(rq, p) &&
+> >>> -	    cpumask_test_cpu(cpu, p->cpus_ptr))
+> >>> +	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
+> >>> +	    rt_task_fits_capacity(p, cpu))
+> >>
+> >> Hmm, so if a CPU goes idle, and looks for CPUS with more than one RT
+> >> task queued (overloaded), it will skip pulling RT tasks if they are
+> >> below capacity. Is that the desired effect? I think we could end up
+> >> with a small idle CPUs with RT tasks waiting to run.
+> > 
+> > The intention was not to pull this task that doesn't fit. But not to abort the
+> > whole pull operation. pick_highest_pushable_task() should still iterate through
+> > the remaining tasks, or did I miss something?
+> 
+> On a big.LITTLE system (6 CPUs with [446 1024 1024 446 466 466] CPU
+> capacity vector) I try to trace the handling of the 3rd big task
+> (big2-2, util_min: 800, util_max: 1024) of an rt-app workload running 3
+> of them.
+> 
+> rt_task_fits_capacity() call in:
+> 
+> tag 1: select_task_rq_rt(), 3-7: 1st till 5th in find_lowest_rq()
+> 
+> [   37.505325] rt_task_fits_capacity: CPU3 tag=1 [big2-2 285] ret=0
+> [   37.505882] find_lowest_rq: CPU3 [big2-2 285] tag=1 find_lowest_rq
+> [   37.506509] CPU3 [big2-2 285] lowest_mask=0,3-5
+> [   37.507971] rt_task_fits_capacity: CPU3 tag=3 [big2-2 285] ret=0
+> [   37.508200] rt_task_fits_capacity: CPU3 tag=4 [big2-2 285] ret=0
+> [   37.509486] rt_task_fits_capacity: CPU0 tag=5 [big2-2 285] ret=0
+> [   37.510191] rt_task_fits_capacity: CPU3 tag=5 [big2-2 285] ret=0
+> [   37.511334] rt_task_fits_capacity: CPU4 tag=5 [big2-2 285] ret=0
+> [   37.512194] rt_task_fits_capacity: CPU5 tag=5 [big2-2 285] ret=0
+> [   37.513210] rt_task_fits_capacity: CPU0 tag=6 [big2-2 285] ret=0
+> [   37.514085] rt_task_fits_capacity: CPU3 tag=7 [big2-2 285] ret=0
+> [   37.514732] --> select_task_rq_rt: CPU3 [big2-2 285] cpu=0
+> 
+> Since CPU 0,3-5 can't run big2-2, it takes up to the test that the
+> fitness hasn't changed. In case a capacity-aware (with fallback CPU)
+> cpupri_find() would have returned a suitable lowest_mask, less work
+> would have been needed.
 
---------------ms090904010206040709020606
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-PH
-Content-Transfer-Encoding: quoted-printable
+rt_task_fits_capacity() is inlined and I'd expect all the data it accesses to
+be cache hot, so it should be fast.
 
-18.09.2019 18:59, Alexander E. Patrakov =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> 18.09.2019 18:38, Lennart Poettering =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On Di, 17.09.19 19:29, Willy Tarreau (w@1wt.eu) wrote:
->>
->>>> What do you expect these systems to do though?
->>>>
->>>> I mean, think about general purpose distros: they put together live
->>>> images that are supposed to work on a myriad of similar (as in: same=
+I had 2 concerns with using cpupri_find()
 
->>>> arch) but otherwise very different systems (i.e. VMs that might lack=
+	1. find_lowest_rq() is not the only user
 
->>>> any form of RNG source the same as beefy servers with muliple source=
-s
->>>> the same as older netbooks with few and crappy sources, ...). They=20
->>>> can't
->>>> know what the specific hw will provide or won't. It's not their
->>>> incompetence that they build the image like that. It's a common, ver=
-y
->>>> common usecase to install a system via SSH, and it's also very commo=
-n
->>>> to have very generic images for a large number varied systems to run=
+	2. The fallback mechanism means we either have to call cpupri_find()
+	   twice once to find filtered lowest_rq and the other to return the
+	   none filtered version.
 
->>>> on.
->>>
->>> I'm totally file with installing the system via SSH, using a temporar=
-y
->>> SSH key. I do make a strong distinction between the installation phas=
-e
->>> and the final deployment. The SSH key used *for installation* doesn't=
+	   ie:
 
->>> need to the be same as the final one. And very often at the end of th=
-e
->>> installation we'll have produced enough entropy to produce a correct
->>> key.
->>
->> That's not how systems are built today though. And I am not sure they
->> should be. I mean, the majority of systems at this point probably have=
+		cpupri_find(..., check_fitness = true);
+		// returns lowest_mask that is filtered for cap fitness
 
->> some form of hardware (or virtualized) RNG available (even raspi has
->> one these days!), so generating these keys once at boot is totally
->> OK. Probably a number of others need just a few seconds to get the
->> entropy needed, where things are totally OK too. The only problem is
->> systems that lack any reasonable source of entropy and where
->> initialization of the pool will take overly long.
->>
->> I figure we can reduce the number of systems where entropy is scarce
->> quite a bit if we'd start crediting entropy by default from various hw=
+		fallback:
+			cpupri_find(..., check_fitness = false);
+			// returns lowest_mask without check for cap fitness
 
->> rngs we currently don't credit entropy for. For example, the TPM and
->> older intel/amd chipsets. You currently have to specify
->> rng_core.default_quality=3D1000 on the kernel cmdline to make them
->> credit entropy. I am pretty sure this should be the default now, in a
->> world where CONFIG_RANDOM_TRUST_CPU=3Dy is set anyway. i.e. why say
->> RDRAND is fine but those chipsets are not? That makes no sense to me.
->>
->> I am very sure that crediting entropy to chipset hwrngs is a much
->> better way to solve the issue on those systems than to just hand out
->> rubbish randomness.
->=20
-> Very well said. However, 1000 is more than the hard-coded quality of=20
-> some existing rngs, and so would send a misleading message that they ar=
-e=20
-> somehow worse. I would suggest case-by-case reevaluation of all existin=
-g=20
-> hwrng drivers by their maintainers, and then setting the default to=20
-> something like 899, so that evaluated drivers have priority.
->=20
+	   Or we can pass 2 masks to cpupri_find() so that we fill the filtered
+	   and non-filtered results in one go and use the one that is
+	   relevant.
 
-Well, I have to provide another data point. On Arch Linux and MSI Z87I=20
-desktop board:
+	   ie:
 
-$ lsmod | grep rng
-<nothing>
-$ modinfo rng_core
-<yes, the module does exist>
+	   	cpupri_find(... , struct cpumask *lowest_mask,
+	   			  struct cpumask *lowest_mask_filtered)
+		// Use lowest_mask_filtered
 
-So this particular board has no sources of randomness except interrupts=20
-(which are scarce), RDRAND (which is not trusted in Arch Linux by=20
-default) and jitter entropy (which is not collected by the kernel and=20
-needs haveged or equivalent).
+		fallback:
+			// Use lowest_mask
 
---=20
-Alexander E. Patrakov
+So the way I see it it's not actually making things neater and in my eyes looks
+more involved/complex.
 
+Happy to explore this path further if maintainers advocate for it too though.
 
---------------ms090904010206040709020606
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: Криптографическая подпись S/MIME
+> 
+> The snippet is repeating itself for the whole run of the workload since
+> all the rt-tasks run for the same time and I'm only faking big.LITTLE on
+> qemu.
+> 
+> [...]
+> 
+> >>>  	rcu_read_lock();
+> >>>  	for_each_domain(cpu, sd) {
+> >>> @@ -1692,11 +1747,15 @@ static int find_lowest_rq(struct task_struct *task)
+> >>>  				return this_cpu;
+> >>>  			}
+> >>>  
+> >>> -			best_cpu = cpumask_first_and(lowest_mask,
+> >>> -						     sched_domain_span(sd));
+> >>> -			if (best_cpu < nr_cpu_ids) {
+> >>> -				rcu_read_unlock();
+> >>> -				return best_cpu;
+> >>> +			for_each_cpu_and(best_cpu, lowest_mask,
+> >>> +					 sched_domain_span(sd)) {
+> >>> +				if (best_cpu >= nr_cpu_ids)
+> >>
+> >> Can that happen in this loop?
+> > 
+> > I kept the condition that was originally here but inverted the logic so we
+> > don't mindlessly iterate through the rest of the CPUs. IOW, tried to retain the
+> > original behavior of `if (best_cpu < nr_cpu_ids)` logic.
+> > 
+> > Whether we can remove this check I don't know to be honest. Similar check exist
+> > below and I did wonder under what conditions this could happen but didn't try
+> > to follow the thread.
+> > 
+> > The only case I can think about is if we set nr_cpu_ids through command line
+> > to a lower value. Then if cpu_possible_mask and family aren't updated
+> > accordingly then yeah this check will protect against scheduling on cpus the
+> > users said they don't want to use? Just guessing.
+> 
+> Why don't you build the capacity awareness into cpupri_find(...,
+> lowest_mask)?
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
-C5wwggVNMIIENaADAgECAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3DQEBCwUAMIGCMQsw
-CQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoM
-GkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBB
-dXRoZW50aWNhdGlvbiBDQSBHMTAeFw0xOTA2MDYwODAxMzVaFw0yMDA2MDYwODAxMzVaMB0x
-GzAZBgNVBAMMEnBhdHJha292QGdtYWlsLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCC
-AQoCggEBAOA0sb1ubDnIK32rbgW3BnjBcx1pYuEFOCU6aPVJ2gU+wtKJgAo9IdVUXG6kC1fF
-hXjIcZHOgbEqzFjHK1yXlHIUWEv+N8KdmBDOK1UdKQj58d9A4hnH62iEiwQsOR5YT1UyHX4A
-pfMjsBja7254cixR4jOPzfA4YUD6JTTPioyjDwuYQlhweVyXziKswLtGWfKeDcm3fOlKYxGy
-hxjWJRamGTreNBVC9uMkF4DHszpUm07agR2U4mnWy7FsjBuRJ++iX0SvuxKWf19HQWgmgIys
-jBVrArhVzgjOOnbvlklW849wIARF4Y0WAf91DsqPtuR8hu7+9KIVj2qk9BeNXXUCAwEAAaOC
-AiEwggIdMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUfmD8+GynPT3XrpOheQKPs3QpO/Uw
-SwYIKwYBBQUHAQEEPzA9MDsGCCsGAQUFBzAChi9odHRwOi8vY2FjZXJ0LmFjdGFsaXMuaXQv
-Y2VydHMvYWN0YWxpcy1hdXRjbGlnMTAdBgNVHREEFjAUgRJwYXRyYWtvdkBnbWFpbC5jb20w
-RwYDVR0gBEAwPjA8BgYrgR8BGAEwMjAwBggrBgEFBQcCARYkaHR0cHM6Ly93d3cuYWN0YWxp
-cy5pdC9hcmVhLWRvd25sb2FkMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCB6AYD
-VR0fBIHgMIHdMIGboIGYoIGVhoGSbGRhcDovL2xkYXAwNS5hY3RhbGlzLml0L2NuJTNkQWN0
-YWxpcyUyMENsaWVudCUyMEF1dGhlbnRpY2F0aW9uJTIwQ0ElMjBHMSxvJTNkQWN0YWxpcyUy
-MFMucC5BLi8wMzM1ODUyMDk2NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDti
-aW5hcnkwPaA7oDmGN2h0dHA6Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSENM
-LUcxL2dldExhc3RDUkwwHQYDVR0OBBYEFEhX9pz3jwI3+erfsAVB2b4xSsM8MA4GA1UdDwEB
-/wQEAwIFoDANBgkqhkiG9w0BAQsFAAOCAQEAVbKht9PGiUsUaqiyzJb6blSMNaLwopQr3AsI
-FvthyqnSqxmSNYDeZsQYPgBnXvMCvHCn07pm1b96Y3XstBt2FWb9dpDr7y+ec3vxFHb3lKGb
-3WREB1kEATnBu2++dPcILG58gdzgYde3RAJC3/OyOZhDqKwQA5CnXTHigTzw75iezdLne5pU
-MjEQoxdqC+sgbrAueaEpMmRsGSKzgIX8eQ3DWwyIL56fYPJP3u4WZmBUKTFhhUWowG62QLtt
-ZjkiX/j+vjcSRd2app8lYDwQRornZAqrDxy+c4qQJ5FN234p36opwespDCwLN3Z6wPzLvzS+
-jAlmV3DF2xuZGMoebzCCBkcwggQvoAMCAQICCCzUitOxHg+JMA0GCSqGSIb3DQEBCwUAMGsx
-CzAJBgNVBAYTAklUMQ4wDAYDVQQHDAVNaWxhbjEjMCEGA1UECgwaQWN0YWxpcyBTLnAuQS4v
-MDMzNTg1MjA5NjcxJzAlBgNVBAMMHkFjdGFsaXMgQXV0aGVudGljYXRpb24gUm9vdCBDQTAe
-Fw0xNTA1MTQwNzE0MTVaFw0zMDA1MTQwNzE0MTVaMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UE
-CAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAz
-MzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBH
-MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMD8wYlW2Yji9ARlv80JNasoKTD+
-DMr3J6scEe6GPV3k9WxEtgxXM5WX3oiKjS2p25Mqk8cnV2fpMaEvdO9alrGes0vqcUqly7Pk
-U753RGlseYXR2XCjVhs4cuRYjuBmbxpRSJxRImmPnThKY41r0nl6b3A6Z2MOjPQF7h6OCYYw
-tz/ziv/+UBV587U2uIlOukaS7Xjk4ArYkQsGTSsfBBXqqn06WL3xG+B/dRO5/mOtY5tHdhPH
-ydsBk2kksI3PJ0yNgKV7o6HM7pG9pB6sGhj96uVLnnVnJ0WXOuV1ISv2eit9ir60LjT99hf+
-TMZLxA5yaVJ57fYjBMbxM599cw0CAwEAAaOCAdUwggHRMEEGCCsGAQUFBwEBBDUwMzAxBggr
-BgEFBQcwAYYlaHR0cDovL29jc3AwNS5hY3RhbGlzLml0L1ZBL0FVVEgtUk9PVDAdBgNVHQ4E
-FgQUfmD8+GynPT3XrpOheQKPs3QpO/UwDwYDVR0TAQH/BAUwAwEB/zAfBgNVHSMEGDAWgBRS
-2Ig6yJ94Zu2J83s4cJTJAgI20DBFBgNVHSAEPjA8MDoGBFUdIAAwMjAwBggrBgEFBQcCARYk
-aHR0cHM6Ly93d3cuYWN0YWxpcy5pdC9hcmVhLWRvd25sb2FkMIHjBgNVHR8EgdswgdgwgZag
-gZOggZCGgY1sZGFwOi8vbGRhcDA1LmFjdGFsaXMuaXQvY24lM2RBY3RhbGlzJTIwQXV0aGVu
-dGljYXRpb24lMjBSb290JTIwQ0EsbyUzZEFjdGFsaXMlMjBTLnAuQS4lMmYwMzM1ODUyMDk2
-NyxjJTNkSVQ/Y2VydGlmaWNhdGVSZXZvY2F0aW9uTGlzdDtiaW5hcnkwPaA7oDmGN2h0dHA6
-Ly9jcmwwNS5hY3RhbGlzLml0L1JlcG9zaXRvcnkvQVVUSC1ST09UL2dldExhc3RDUkwwDgYD
-VR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4ICAQBNk87VJL5BG0oWWHNfZYny2Xo+WIy8
-y8QP5VsWZ7LBS6Qz8kn8zJp3c9xdOkudZbcA3vm5U8HKXc1JdzNmpSh92zq/OeZLvUa+rnnc
-mvhxkFE9Doag6NitggBPZwXHwDcYn430/F8wqAt3LX/bsd6INVrhPFk3C2SoAjLjUQZibXvQ
-uFINMN4l6j86vCrkUaGzSqnXT45NxIivkAPhBQgpGtcTi4f+3DxkyTDbWtf9LuaC4l2jgB3g
-C7f56nmdpGfpYsyvKE7+Ip+WryH93pWt6C+r68KU3Gu02cU1/dHvNOXWUDeKkVT3T26wZVrT
-aMx+0nS3i63KDfJdhFzutfdBgCWHcp03NhOhMqy1RnAylF/dVZgkka6hKaWe1tOU21kS4uvs
-D4wM5k6tl0pin2o6u47kyoJJMOxRSQcosWtDXUmaLHUG91ZC6hvBDmDmpmS6h/r+7mtPrpYO
-xTr4hW3me2EfXkTvNTvBQtbi4LrZchg9vhi44EJ7L53g7GzQFn5KK8vqqgMb1c1+T0mkKdqS
-edgGiB9TDdYtv4HkUj/N00TKxZMLiDMw4V8ShUL6bKTXNfb3E68s47cD+MatFjUuGFj0uFPv
-ZlvlNAoJ7IMfXzIiTWy35X+akm+d49wBh54yv6icz2t/cBU1y1weuPBd8NUH/Ue3mXk0SXwk
-GP3yVDGCA/YwggPyAgEBMIGXMIGCMQswCQYDVQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8w
-DQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFjdGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSww
-KgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRoZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4r
-qg9tGyNesDANBglghkgBZQMEAgEFAKCCAi8wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAc
-BgkqhkiG9w0BCQUxDxcNMTkwOTE4MTQ1MDIzWjAvBgkqhkiG9w0BCQQxIgQgiX/F7NbbowKH
-lAWbZTtS02XnWnSOdiy4jUyPKMY1N4MwbAYJKoZIhvcNAQkPMV8wXTALBglghkgBZQMEASow
-CwYJYIZIAWUDBAECMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIB
-QDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDCBqAYJKwYBBAGCNxAEMYGaMIGXMIGCMQswCQYD
-VQQGEwJJVDEPMA0GA1UECAwGTWlsYW5vMQ8wDQYDVQQHDAZNaWxhbm8xIzAhBgNVBAoMGkFj
-dGFsaXMgUy5wLkEuLzAzMzU4NTIwOTY3MSwwKgYDVQQDDCNBY3RhbGlzIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBDQSBHMQIQK0NjfYTmoz4rqg9tGyNesDCBqgYLKoZIhvcNAQkQAgsxgZqg
-gZcwgYIxCzAJBgNVBAYTAklUMQ8wDQYDVQQIDAZNaWxhbm8xDzANBgNVBAcMBk1pbGFubzEj
-MCEGA1UECgwaQWN0YWxpcyBTLnAuQS4vMDMzNTg1MjA5NjcxLDAqBgNVBAMMI0FjdGFsaXMg
-Q2xpZW50IEF1dGhlbnRpY2F0aW9uIENBIEcxAhArQ2N9hOajPiuqD20bI16wMA0GCSqGSIb3
-DQEBAQUABIIBAGoHs8qn60/eg+p+srTCkGRxWg2VuuEWk2K6iVv0oon7CMNLPmmbS6GmHKCZ
-5v1t2uKkWbXWYeeEuAsJFgb2KmOuRCC39X7VPSS+CevzN23qs/Czf0q0RrXPvXm71bGbsIUh
-VvJdaK9ZtPttYR9qr0zzCa5PTF2OnR7r0Teg00eEvP2psLzo4SWma2Txs8VR59J0CNqAFD4s
-SLL8OScewBHIWiJJzUHd3Ik7tl2Im8eKIiuibBhnTElymAKWN/wGPWBAuXYtpV+zDnzlW0Ok
-NBki46PcSQbDnHrgBXOIJG3rm04qg81XotLGy6NtPbZYNXhcETyNA0LPeMSVApVy8xAAAAAA
-AAA=
---------------ms090904010206040709020606--
+Hopefully my answer above covered this.
+
+> You would have to add a fallback strategy in case p doesn't fit on any
+> CPUs cpupri_find() returns today as lowest_mask. (return the CPU with
+> the max capacity).
+> 
+> Luca proposed something like this for SCHED_DEADLINE in "[RFC PATCH 0/6]
+> Capacity awareness for SCHED_DEADLINE" (patch 2/6 and 5/6)
+> 
+> https://lkml.kernel.org/r/20190506044836.2914-1-luca.abeni@santannapisa.it
+
+It would be nice to keep implementation the similar. I haven't looked closely
+at deadline code. I'm not sure if it has similar complexities like RT or not.
+I'll have a closer look to see if I can borrow ideas from there.
+
+> 
+> In this case you could get rid of all the newly introduced
+> rt_task_fits_capacity() logic in find_lowest_rq().
+> 
+> ---
+> 
+> I can't see the
+> 
+> for_each_domain(cpu, sd) {
+> 	for_each_cpu_and(best_cpu, lowest_mask, sched_domain_span(sd)) {
+>                 ...
+> 	}
+> }
+> 
+> other than we want to pick a CPU from the lowest_mask first which is
+> closer to task_cpu(task).
+> 
+> Qemu doesn't give me cluster:
+> 
+> # cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
+> MC
+
+I'm not sure I get what you're trying to get at here. Can you please elaborate
+more?
+
+Thanks!
+
+--
+Qais Yousef
