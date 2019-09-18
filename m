@@ -2,113 +2,116 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 327AEC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B52C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE76921907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 852C421897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:04:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/dJS/VD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMJ/Xs+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfIRSDJ (ORCPT
+        id S1730296AbfIRSEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:03:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33872 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfIRSDI (ORCPT
+        Wed, 18 Sep 2019 14:04:51 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34180 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfIRSEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:03:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id d3so336941plr.1;
-        Wed, 18 Sep 2019 11:03:07 -0700 (PDT)
+        Wed, 18 Sep 2019 14:04:51 -0400
+Received: by mail-io1-f67.google.com with SMTP id q1so1421185ion.1;
+        Wed, 18 Sep 2019 11:04:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=5epdwrSXh24EUYUO/PsVgpCcezuZCgW1f8L8LT4NsHY=;
-        b=i/dJS/VDhqfAqPVgQ/ck7wrtabxGfffmzDn0nMfR5H568dDaQFl2P/Zy079A0htSOA
-         Wiio4no42QZIVigvdIj3Vjd3aA3T0azmWQG1+WLCIJ7LxrqVC7CKEqqP9Gr13E97Y9CL
-         mHQMetm8Gw7sTYI203Av8Kq3UtvNCAvqjAmESgeBdELLWZWyL8H28JA+U98iktz0aqPS
-         zA0KgD2cO/DukWAxD/Yj2EnLCNGqPBsDQTkJiz/VnwdPTgCHImidxiRv1XmDTpky0HT3
-         xhaAMzSAqypcThRZSwxTZDfcNHzN+HpkXlf+GUc1pJZBnwsTh1Mz6LZaG3dPyVjp2+mc
-         cEQw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=upqoC8c2rSOEKiJW1ZDEjgjfH9qm+uaVc0P9OeAP7Hc=;
+        b=HMJ/Xs+F/Jz81h1wXx16MJIjcONMtaLJl29Wci2Qi/GJPzK/I+rAXs/+B9YVaHUdjZ
+         5/fF7OyepHwhNpnaiDkR/Pc1Adts0SnIrZVhdcPsAFvK3U/d5EVQee6e/Ma3AsQTwNI5
+         SD2Rz7W4Qi012mc4eDiyBeMKcaQNDa4R7nDjjSnbgakvBCVLO8J7o5J0SMiEZi+2zArs
+         XM0QKCip2qg5AA/D4S4gKHhir4UwW+hNlRGEv5MdNTmQ7GzBqmJCJ7feSRUxVyFAC3/t
+         eDJfQPs37rpL7Fp8lqJAIcyzvMTSuaVQtg9RIJXNa850jrwpYH56JeUYKwpihg2d8QrH
+         xxww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=5epdwrSXh24EUYUO/PsVgpCcezuZCgW1f8L8LT4NsHY=;
-        b=tQIDvYQbgQdUxm7spGB1gJN6XFee38tnw5aEv2B8QNYqPB/13tRVDL+B8t/EDFo/e3
-         FvYyKZzyA4+TQ4rLADLHzb2nwDPt77f0vzVPkxNmPaJCgxjuXrBOCDOVVeH0n3fJc1fV
-         i8PmJRjegCtwT6KToGj5rjZD+Ag71w+UlGeuRY4UECrAi7Xh8SdHOwn9HdtttuEN/fXq
-         v9eCbVvPKW7yXUT/gevtecNKJYGrXup19iD7pbeuV4zI8I3gDi4I7Df1wXzrCcNVGDHz
-         seFrfXLm6Ye0BVA+sAJSCY5n3Ip5L449eNdKmVaaQkEttTwUAqP33ioVd14RkDuOf7pi
-         l10g==
-X-Gm-Message-State: APjAAAUSsQGgdmBoDr6MD1EWqIkDiDMjsEVoND8LwsPJlGA3pGQ6WCjo
-        V6Ha0gYPSxquPnGM8NNsYwk=
-X-Google-Smtp-Source: APXvYqyYqnTo+S8mIhE7N3BpCMpcOR7dlHge/PQw/HZmevaSnGiFmYkE/f8O5PTqUjatXLVoD3/KNg==
-X-Received: by 2002:a17:902:9a07:: with SMTP id v7mr5598867plp.245.1568829787218;
-        Wed, 18 Sep 2019 11:03:07 -0700 (PDT)
-Received: from SD ([2405:204:828a:aaec:f0de:d7f9:abdf:1568])
-        by smtp.gmail.com with ESMTPSA id u18sm5212624pge.69.2019.09.18.11.03.03
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=upqoC8c2rSOEKiJW1ZDEjgjfH9qm+uaVc0P9OeAP7Hc=;
+        b=XpEaJpO2SDTt0kilP4b4bXRPGn+tKdama3n3KQef8dD6CXkULflUBbY8RBS50kcRbM
+         db1wPCu0ZpM4ArBCePvl3Z4SxlSg7W2v7ueFKe2ZyoDY1awKKjG4caksiq98VvtAMJPk
+         Q8s/JcVQmGmOqqghgziQu84cUmLg4jT2U/rbs3AfHWlUWvQg7hyat+6ttE/5k6KP8DBe
+         qXyaWA/kaUGSpUAy1tdgqmXHCfHIy+yjnRhz1qfMcSOY/30PHWIwOVBYdJpDFy0MNWmo
+         ot4dxcTLHgQnOk8QrvfXMrQvXuYMJ4eeBhiDeJg3cqSegwVYu1OKkggqnOuQtddu8eSK
+         8mIA==
+X-Gm-Message-State: APjAAAWIbGciqo1seYPFgme5VXA8/0zysT8E9bwCFWFoyMwjBBKk1pQE
+        rY+TWzdFefPVGc357bP9Twr44KTZiL8=
+X-Google-Smtp-Source: APXvYqwHs7c0OLT+gaaqTz2saOmiZoGr8G5n1g5ahrJeKQJo+RfAJ5OskK9SLwyF9bQhwlmMk3puuA==
+X-Received: by 2002:a5d:8415:: with SMTP id i21mr6605162ion.86.1568829888964;
+        Wed, 18 Sep 2019 11:04:48 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id s5sm4931032iol.71.2019.09.18.11.04.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 11:03:06 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 23:32:53 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     ulf.hansson@linaro.org, f.fainelli@gmail.com, rjui@broadcom.com,
-        sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: host: bcm2835: use devm_platform_ioremap_resource
- wrapper
-Message-ID: <20190918180253.GA11702@SD>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Sep 2019 11:04:48 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+To:     andrew@lunn.ch
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2] net: dsa: sja1105: prevent leaking memory
+Date:   Wed, 18 Sep 2019 13:04:38 -0500
+Message-Id: <20190918180439.12441-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190918172106.GN9591@lunn.ch>
+References: <20190918172106.GN9591@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource helper which wraps
-platform_get_resource() and devm_ioremap_resource() together.
+In sja1105_static_config_upload, in two cases memory is leaked: when
+static_config_buf_prepare_for_upload fails and when sja1105_inhibit_tx
+fails. In both cases config_buf should be released.
 
-Generated by: scripts/coccinelle/api/devm_platform_ioremap_resource.cocci.
+Fixes: 8aa9ebccae876 (avoid leaking config_buf)
+Fixes: 1a4c69406cc1c (avoid leaking config_buf)
 
-More information about semantic patching is available at
-http://coccinelle.lip6.fr/
-
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 ---
- drivers/mmc/host/bcm2835.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
-index 148414d7f0c9..99f61fd2a658 100644
---- a/drivers/mmc/host/bcm2835.c
-+++ b/drivers/mmc/host/bcm2835.c
-@@ -1357,7 +1357,6 @@ static int bcm2835_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct clk *clk;
--	struct resource *iomem;
- 	struct bcm2835_host *host;
- 	struct mmc_host *mmc;
- 	const __be32 *regaddr_p;
-@@ -1373,8 +1372,7 @@ static int bcm2835_probe(struct platform_device *pdev)
- 	host->pdev = pdev;
- 	spin_lock_init(&host->lock);
- 
--	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	host->ioaddr = devm_ioremap_resource(dev, iomem);
-+	host->ioaddr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(host->ioaddr)) {
- 		ret = PTR_ERR(host->ioaddr);
- 		goto err;
+diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+index 84dc603138cf..58dd37ecde17 100644
+--- a/drivers/net/dsa/sja1105/sja1105_spi.c
++++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+@@ -409,7 +409,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+ 	rc = static_config_buf_prepare_for_upload(priv, config_buf, buf_len);
+ 	if (rc < 0) {
+ 		dev_err(dev, "Invalid config, cannot upload\n");
+-		return -EINVAL;
++		rc = -EINVAL;
++		goto out;
+ 	}
+ 	/* Prevent PHY jabbering during switch reset by inhibiting
+ 	 * Tx on all ports and waiting for current packet to drain.
+@@ -418,7 +419,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+ 	rc = sja1105_inhibit_tx(priv, port_bitmap, true);
+ 	if (rc < 0) {
+ 		dev_err(dev, "Failed to inhibit Tx on ports\n");
+-		return -ENXIO;
++		rc = -ENXIO;
++		goto out;
+ 	}
+ 	/* Wait for an eventual egress packet to finish transmission
+ 	 * (reach IFG). It is guaranteed that a second one will not
 -- 
-2.20.1
+2.17.1
 
