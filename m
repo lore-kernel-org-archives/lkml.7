@@ -2,151 +2,158 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE89C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3476C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AEE21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:21:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NZ6iUKEz"
+	by mail.kernel.org (Postfix) with ESMTP id 85F5221925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:23:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388194AbfIRSVD (ORCPT
+        id S2388002AbfIRSXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:21:03 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:54030 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388200AbfIRSVC (ORCPT
+        Wed, 18 Sep 2019 14:23:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16568 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388121AbfIRSXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:21:02 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IIKoZe007568;
-        Wed, 18 Sep 2019 13:20:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568830850;
-        bh=mk1J1bxX/qV9LdpG8hTCViqMRxqXPXOYl6P5hZpjSjU=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=NZ6iUKEzkI36kTAaWDz30nD1CdUNXOMaIikyYcD3cpGTOe/2oPFrLneBeXV4vfeO9
-         NF31xKotltaMys5htSfHMdEVRXoCQvKHZYTtZPeAsK+MqppPRk0BkHTzwyuu/uvwHF
-         ACCsvliHwwFh+5jrnJV29VYib+8WSccTN6sDnkI8=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IIKol5025979;
-        Wed, 18 Sep 2019 13:20:50 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 13:20:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 13:20:50 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IIKoW2066248;
-        Wed, 18 Sep 2019 13:20:50 -0500
-Subject: Re: [PATCH 1/5] leds: lm3692x: Print error value on dev_err
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <cover.1568772964.git.agx@sigxcpu.org>
- <9f95299fe7f98e4defb445e2e29531465a3a3860.1568772964.git.agx@sigxcpu.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <ab49dddc-87ec-d7db-fca4-e3fbf2673290@ti.com>
-Date:   Wed, 18 Sep 2019 13:23:19 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 14:23:00 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IIMQ2k046260
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:22:59 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3rsehybj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:22:59 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Wed, 18 Sep 2019 19:22:57 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Sep 2019 19:22:47 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IIMkOY40436054
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 18:22:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D57D11C058;
+        Wed, 18 Sep 2019 18:22:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02F0511C04A;
+        Wed, 18 Sep 2019 18:22:45 +0000 (GMT)
+Received: from thinkpad (unknown [9.152.212.222])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Sep 2019 18:22:44 +0000 (GMT)
+Date:   Wed, 18 Sep 2019 20:22:43 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating
+ architecture page table helpers
+In-Reply-To: <64504101-d9dd-f273-02f9-e9a8b178eecc@c-s.fr>
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+        <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+        <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
+        <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+        <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
+        <f872e6f4-a5cb-069d-2034-78961930cb9f@arm.com>
+        <64504101-d9dd-f273-02f9-e9a8b178eecc@c-s.fr>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <9f95299fe7f98e4defb445e2e29531465a3a3860.1568772964.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091818-0008-0000-0000-000003180C76
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091818-0009-0000-0000-00004A368EF9
+Message-Id: <20190918202243.37e709df@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909180162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guido
+On Wed, 18 Sep 2019 18:26:03 +0200
+Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-On 9/17/19 9:19 PM, Guido Günther wrote:
-> This gives a way better idea what is going on.
->
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+[..] 
+> My suggestion was not to completely drop the #ifdef but to do like you 
+> did in pgd_clear_tests() for instance, ie to add the following test on 
+> top of the function:
+> 
+> 	if (mm_pud_folded(mm) || is_defined(__ARCH_HAS_5LEVEL_HACK))
+> 		return;
+> 
 
-Reviewed-by: Dan Murphy <dmurphy@ti.com>
+Ah, very nice, this would also fix the remaining issues for s390. Since
+we have dynamic page table folding, neither __PAGETABLE_PXX_FOLDED nor
+__ARCH_HAS_XLEVEL_HACK is defined, but mm_pxx_folded() will work.
 
+mm_alloc() returns with a 3-level page table by default on s390, so we
+will run into issues in p4d_clear/populate_tests(), and also at the end
+with p4d/pud_free() (double free).
 
-> ---
->   drivers/leds/leds-lm3692x.c | 17 ++++++++++-------
->   1 file changed, 10 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> index 3d381f2f73d0..487228c2bed2 100644
-> --- a/drivers/leds/leds-lm3692x.c
-> +++ b/drivers/leds/leds-lm3692x.c
-> @@ -174,19 +174,20 @@ static int lm3692x_brightness_set(struct led_classdev *led_cdev,
->   
->   	ret = lm3692x_fault_check(led);
->   	if (ret) {
-> -		dev_err(&led->client->dev, "Cannot read/clear faults\n");
-> +		dev_err(&led->client->dev, "Cannot read/clear faults: %d\n",
-> +			ret);
->   		goto out;
->   	}
->   
->   	ret = regmap_write(led->regmap, LM3692X_BRT_MSB, brt_val);
->   	if (ret) {
-> -		dev_err(&led->client->dev, "Cannot write MSB\n");
-> +		dev_err(&led->client->dev, "Cannot write MSB: %d\n", ret);
->   		goto out;
->   	}
->   
->   	ret = regmap_write(led->regmap, LM3692X_BRT_LSB, led_brightness_lsb);
->   	if (ret) {
-> -		dev_err(&led->client->dev, "Cannot write LSB\n");
-> +		dev_err(&led->client->dev, "Cannot write LSB: %d\n", ret);
->   		goto out;
->   	}
->   out:
-> @@ -203,7 +204,7 @@ static int lm3692x_init(struct lm3692x_led *led)
->   		ret = regulator_enable(led->regulator);
->   		if (ret) {
->   			dev_err(&led->client->dev,
-> -				"Failed to enable regulator\n");
-> +				"Failed to enable regulator: %d\n", ret);
->   			return ret;
->   		}
->   	}
-> @@ -213,7 +214,8 @@ static int lm3692x_init(struct lm3692x_led *led)
->   
->   	ret = lm3692x_fault_check(led);
->   	if (ret) {
-> -		dev_err(&led->client->dev, "Cannot read/clear faults\n");
-> +		dev_err(&led->client->dev, "Cannot read/clear faults: %d\n",
-> +			ret);
->   		goto out;
->   	}
->   
-> @@ -409,7 +411,8 @@ static int lm3692x_remove(struct i2c_client *client)
->   
->   	ret = regmap_update_bits(led->regmap, LM3692X_EN, LM3692X_DEVICE_EN, 0);
->   	if (ret) {
-> -		dev_err(&led->client->dev, "Failed to disable regulator\n");
-> +		dev_err(&led->client->dev, "Failed to disable regulator: %d\n",
-> +			ret);
->   		return ret;
->   	}
->   
-> @@ -420,7 +423,7 @@ static int lm3692x_remove(struct i2c_client *client)
->   		ret = regulator_disable(led->regulator);
->   		if (ret)
->   			dev_err(&led->client->dev,
-> -				"Failed to disable regulator\n");
-> +				"Failed to disable regulator: %d\n", ret);
->   	}
->   
->   	mutex_destroy(&led->lock);
+So, adding the mm_pud_folded() check to p4d_clear/populate_tests(),
+and also adding mm_p4d/pud_folded() checks at the end before calling
+p4d/pud_free(), would make it all work on s390.
+
+BTW, regarding p4d/pud_free(), I'm not sure if we should rather check
+the folding inside our s390 functions, similar to how we do it for
+p4d/pud_free_tlb(), instead of relying on not being called for folded
+p4d/pud. So far, I see no problem with this behavior, all callers of
+p4d/pud_free() should be fine because of our folding check within
+p4d/pud_present/none(). But that doesn't mean that it is correct not
+to check for the folding inside p4d/pud_free(). At least, with this
+test module we do now have a caller of p4d/pud_free() on potentially
+folded entries, so instead of adding pxx_folded() checks to this
+test module, we could add them to our p4d/pud_free() functions.
+Any thoughts on this?
+
+Regards,
+Gerald
+
