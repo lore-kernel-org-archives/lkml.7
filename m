@@ -2,91 +2,176 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CD8C4CECD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F09C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2219D20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:35:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2141721855
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568770514;
+	bh=CNhStEcQFuEdq1pfDCCSBIHt0K/zHVFSCw08issNtG8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=RsMvdmPdk/xKG5sIkE2kCVFGJOA1ztcD2WtdS9nFMb7SKLJKCEpwXQT1W7m7NnCuN
+	 W/c3/cBfUq8DRp5drXJkBM60eW1kaCA6KKxdAKBZt6kiff3PLZePDcS2zSDVv7NVAQ
+	 T6gCIQYQh0CRyT131La/CkKzkco8sTTuXMdp0Esc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfIRBfF (ORCPT
+        id S1728760AbfIRBfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:35:05 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:2289 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726829AbfIRBfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:35:04 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8C5E06666C79ED21B93B;
-        Wed, 18 Sep 2019 09:35:02 +0800 (CST)
-Received: from [127.0.0.1] (10.177.29.68) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Sep 2019
- 09:34:57 +0800
-Message-ID: <5D8189C0.3070107@huawei.com>
-Date:   Wed, 18 Sep 2019 09:34:56 +0800
-From:   zhong jiang <zhongjiang@huawei.com>
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20120428 Thunderbird/12.0.1
+        Tue, 17 Sep 2019 21:35:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfIRBfM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 21:35:12 -0400
+Received: from localhost.localdomain (cpe-70-114-128-244.austin.res.rr.com [70.114.128.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C950D20665;
+        Wed, 18 Sep 2019 01:35:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568770511;
+        bh=CNhStEcQFuEdq1pfDCCSBIHt0K/zHVFSCw08issNtG8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LxBaIkKgi9m6jiryV1r+1o60TVpkfr54kg+eSfrlMP7RRkywU+v7t9AJPCYLXe4Em
+         h8O5QGaCku+S8y5J/CD7Z2b737LGuowQ8E8YdapNJufKbapEaZ6mXy67UNWgAurpOJ
+         D3bukvgkFgn0NHZbscOaHOsgA7/GNjuxXEvlMxHs=
+From:   Dinh Nguyen <dinguyen@kernel.org>
+To:     linux-clk@vger.kernel.org
+Cc:     dinguyen@kernel.org, devicetree@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org,
+        Dinh Nguyen <dinh.nguyen@intel.com>
+Subject: [PATCH 1/2] dt-bindings: documentation: add clock bindings information for Agilex
+Date:   Tue, 17 Sep 2019 20:34:58 -0500
+Message-Id: <20190918013459.15966-1-dinguyen@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-To:     Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     <davem@davemloft.net>, <anna.schumaker@netapp.com>,
-        <trond.myklebust@hammerspace.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [RESENT PATCH v2] ixgbe: Use memzero_explicit directly in crypto
- cases
-References: <1568731462-46758-1-git-send-email-zhongjiang@huawei.com> <20190917111107.307295c6@cakuba.netronome.com>
-In-Reply-To: <20190917111107.307295c6@cakuba.netronome.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.29.68]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/18 2:11, Jakub Kicinski wrote:
-> On Tue, 17 Sep 2019 22:44:22 +0800, zhong jiang wrote:
->> It's better to use memzero_explicit() to replace memset() in crypto cases.
->>
->> Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-> Thank you for the follow up! Your previous patch to use kzfree() 
-> has been applied on its own merit, could you rebase this one on top 
-> of current net-next/master?
-I will do that.
+From: Dinh Nguyen <dinh.nguyen@intel.com>
 
-Thanks,
-zhong jiang
->> diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
->> index 31629fc..7e4f32f 100644
->> --- a/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
->> +++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c
->> @@ -960,10 +960,10 @@ int ixgbe_ipsec_vf_add_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->>  	return 0;
->>  
->>  err_aead:
->> -	memset(xs->aead, 0, sizeof(*xs->aead));
->> +	memzero_explicit(xs->aead, sizeof(*xs->aead));
->>  	kfree(xs->aead);
->>  err_xs:
->> -	memset(xs, 0, sizeof(*xs));
->> +	memzero_explicit(xs, sizeof(*xs));
->>  	kfree(xs);
->>  err_out:
->>  	msgbuf[1] = err;
->> @@ -1049,7 +1049,7 @@ int ixgbe_ipsec_vf_del_sa(struct ixgbe_adapter *adapter, u32 *msgbuf, u32 vf)
->>  	ixgbe_ipsec_del_sa(xs);
->>  
->>  	/* remove the xs that was made-up in the add request */
->> -	memset(xs, 0, sizeof(*xs));
->> +	memzero_explicit(xs, sizeof(*xs));
->>  	kfree(xs);
->>  
->>  	return 0;
->
-> .
->
+Document the Agilex clock bindings, and add the clock header file. The
+clock header is an enumeration of all the different clocks on the Agilex
+platform.
 
+Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+ .../devicetree/bindings/clock/intc_agilex.txt | 20 ++++++
+ include/dt-bindings/clock/agilex-clock.h      | 70 +++++++++++++++++++
+ 2 files changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/intc_agilex.txt
+ create mode 100644 include/dt-bindings/clock/agilex-clock.h
+
+diff --git a/Documentation/devicetree/bindings/clock/intc_agilex.txt b/Documentation/devicetree/bindings/clock/intc_agilex.txt
+new file mode 100644
+index 000000000000..bfec71420511
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/intc_agilex.txt
+@@ -0,0 +1,20 @@
++Device Tree Clock bindings for Intel's SoCFPGA Agilex platform
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be
++	"intel,agilex-clkmgr"
++
++- reg : shall be the control register offset from CLOCK_MANAGER's base for the clock.
++
++- #clock-cells : from common clock binding, shall be set to 1.
++
++Example:
++	clkmgr: clock-controller@ffd10000 {
++		compatible = "intel,agilex-clkmgr";
++		reg = <0xffd10000 0x1000>;
++		#clock-cells = <1>;
++	};
+diff --git a/include/dt-bindings/clock/agilex-clock.h b/include/dt-bindings/clock/agilex-clock.h
+new file mode 100644
+index 000000000000..f19cf8ccbdd2
+--- /dev/null
++++ b/include/dt-bindings/clock/agilex-clock.h
+@@ -0,0 +1,70 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2019, Intel Corporation
++ */
++
++#ifndef __AGILEX_CLOCK_H
++#define __AGILEX_CLOCK_H
++
++/* fixed rate clocks */
++#define AGILEX_OSC1			0
++#define AGILEX_CB_INTOSC_HS_DIV2_CLK	1
++#define AGILEX_CB_INTOSC_LS_CLK		2
++#define AGILEX_L4_SYS_FREE_CLK		3
++#define AGILEX_F2S_FREE_CLK		4
++
++/* PLL clocks */
++#define AGILEX_MAIN_PLL_CLK		5
++#define AGILEX_MAIN_PLL_C0_CLK		6
++#define AGILEX_MAIN_PLL_C1_CLK		7
++#define AGILEX_MAIN_PLL_C2_CLK		8
++#define AGILEX_MAIN_PLL_C3_CLK		9
++#define AGILEX_PERIPH_PLL_CLK		10
++#define AGILEX_PERIPH_PLL_C0_CLK	11
++#define AGILEX_PERIPH_PLL_C1_CLK	12
++#define AGILEX_PERIPH_PLL_C2_CLK	13
++#define AGILEX_PERIPH_PLL_C3_CLK	14
++#define AGILEX_MPU_FREE_CLK		15
++#define AGILEX_MPU_CCU_CLK		16
++#define AGILEX_BOOT_CLK			17
++
++/* fixed factor clocks */
++#define AGILEX_L3_MAIN_FREE_CLK		18
++#define AGILEX_NOC_FREE_CLK		19
++#define AGILEX_S2F_USR0_CLK		20
++#define AGILEX_NOC_CLK			21
++#define AGILEX_EMAC_A_FREE_CLK		22
++#define AGILEX_EMAC_B_FREE_CLK		23
++#define AGILEX_EMAC_PTP_FREE_CLK	24
++#define AGILEX_GPIO_DB_FREE_CLK		25
++#define AGILEX_SDMMC_FREE_CLK		26
++#define AGILEX_S2F_USER0_FREE_CLK	27
++#define AGILEX_S2F_USER1_FREE_CLK	28
++#define AGILEX_PSI_REF_FREE_CLK		29
++
++/* Gate clocks */
++#define AGILEX_MPU_CLK			30
++#define AGILEX_MPU_L2RAM_CLK		31
++#define AGILEX_MPU_PERIPH_CLK		32
++#define AGILEX_L4_MAIN_CLK		33
++#define AGILEX_L4_MP_CLK		34
++#define AGILEX_L4_SP_CLK		35
++#define AGILEX_CS_AT_CLK		36
++#define AGILEX_CS_TRACE_CLK		37
++#define AGILEX_CS_PDBG_CLK		38
++#define AGILEX_CS_TIMER_CLK		39
++#define AGILEX_S2F_USER0_CLK		40
++#define AGILEX_EMAC0_CLK		41
++#define AGILEX_EMAC1_CLK		43
++#define AGILEX_EMAC2_CLK		44
++#define AGILEX_EMAC_PTP_CLK		45
++#define AGILEX_GPIO_DB_CLK		46
++#define AGILEX_NAND_CLK			47
++#define AGILEX_PSI_REF_CLK		48
++#define AGILEX_S2F_USER1_CLK		49
++#define AGILEX_SDMMC_CLK		50
++#define AGILEX_SPI_M_CLK		51
++#define AGILEX_USB_CLK			52
++#define AGILEX_NUM_CLKS			53
++
++#endif	/* __AGILEX_CLOCK_H */
+-- 
+2.20.0
 
