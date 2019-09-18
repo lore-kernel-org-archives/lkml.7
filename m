@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1B9C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:34:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 672CBC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD996218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:34:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48BCA20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbfIRNeg (ORCPT
+        id S1731170AbfIRNem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:34:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:59490 "EHLO mga05.intel.com"
+        Wed, 18 Sep 2019 09:34:42 -0400
+Received: from mga17.intel.com ([192.55.52.151]:63140 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730962AbfIRNee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:34:34 -0400
+        id S1730727AbfIRNeJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:34:09 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:34 -0700
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:09 -0700
 X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="202056969"
+   d="scan'208";a="194063182"
 Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:30 -0700
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:06 -0700
 Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 876A820AC5;
-        Wed, 18 Sep 2019 16:33:59 +0300 (EEST)
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 520DD21232;
+        Wed, 18 Sep 2019 16:34:00 +0300 (EEST)
 Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
         (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1iAa68-00025Y-1O; Wed, 18 Sep 2019 16:34:20 +0300
+        id 1iAa68-00025w-OP; Wed, 18 Sep 2019 16:34:20 +0300
 From:   Sakari Ailus <sakari.ailus@linux.intel.com>
 To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
         rafael@kernel.org
@@ -41,9 +41,9 @@ Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Rob Herring <robh@kernel.org>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Joe Perches <joe@perches.com>
-Subject: [PATCH v7 02/13] software node: Get reference to parent swnode in get_parent op
-Date:   Wed, 18 Sep 2019 16:34:08 +0300
-Message-Id: <20190918133419.7969-3-sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 10/13] lib/vsprintf: Make use of fwnode API to obtain node names and separators
+Date:   Wed, 18 Sep 2019 16:34:16 +0300
+Message-Id: <20190918133419.7969-11-sakari.ailus@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
 References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
@@ -54,34 +54,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The software_node_get_parent() returned a pointer to the parent swnode,
-but did not take a reference to it, leading the caller to put a reference
-that was not taken. Take that reference now.
+Instead of implementing our own means of discovering parent nodes, node
+names or counting how many parents a node has, use the newly added
+functions in the fwnode API to obtain that information.
 
-Fixes: 59abd83672f7 ("drivers: base: Introducing software nodes to the firmware node framework")
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- drivers/base/swnode.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ lib/vsprintf.c | 39 +++++++++++++++++----------------------
+ 1 file changed, 17 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
-index e7b3aa3bd55ad..a7cb41812cfda 100644
---- a/drivers/base/swnode.c
-+++ b/drivers/base/swnode.c
-@@ -520,7 +520,10 @@ software_node_get_parent(const struct fwnode_handle *fwnode)
- {
- 	struct swnode *swnode = to_swnode(fwnode);
- 
--	return swnode ? (swnode->parent ? &swnode->parent->fwnode : NULL) : NULL;
-+	if (!swnode || !swnode->parent)
-+		return NULL;
-+
-+	return fwnode_handle_get(&swnode->parent->fwnode);
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index df59818537b52..1195a11d99ba2 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -38,6 +38,7 @@
+ #include <net/addrconf.h>
+ #include <linux/siphash.h>
+ #include <linux/compiler.h>
++#include <linux/property.h>
+ #ifdef CONFIG_BLOCK
+ #include <linux/blkdev.h>
+ #endif
+@@ -1863,32 +1864,25 @@ char *flags_string(char *buf, char *end, void *flags_ptr,
+ 	return format_flags(buf, end, flags, names);
  }
  
- static struct fwnode_handle *
+-static const char *device_node_name_for_depth(const struct device_node *np, int depth)
+-{
+-	for ( ; np && depth; depth--)
+-		np = np->parent;
+-
+-	return kbasename(np->full_name);
+-}
+-
+ static noinline_for_stack
+-char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
++char *fwnode_full_name_string(struct fwnode_handle *fwnode, char *buf,
++			      char *end)
+ {
+ 	int depth;
+-	const struct device_node *parent = np->parent;
+ 
+-	/* special case for root node */
+-	if (!parent)
+-		return string_nocheck(buf, end, "/", default_str_spec);
++	/* Loop starting from the root node to the current node. */
++	for (depth = fwnode_count_parents(fwnode); depth >= 0; depth--) {
++		struct fwnode_handle *__fwnode =
++			fwnode_get_nth_parent(fwnode, depth);
+ 
+-	for (depth = 0; parent->parent; depth++)
+-		parent = parent->parent;
+-
+-	for ( ; depth >= 0; depth--) {
+-		buf = string_nocheck(buf, end, "/", default_str_spec);
+-		buf = string(buf, end, device_node_name_for_depth(np, depth),
++		buf = string(buf, end, fwnode_get_name_prefix(__fwnode),
++			     default_str_spec);
++		buf = string(buf, end, fwnode_get_name(__fwnode),
+ 			     default_str_spec);
++
++		fwnode_handle_put(__fwnode);
+ 	}
++
+ 	return buf;
+ }
+ 
+@@ -1933,10 +1927,11 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 
+ 		switch (*fmt) {
+ 		case 'f':	/* full_name */
+-			buf = device_node_gen_full_name(dn, buf, end);
++			buf = fwnode_full_name_string(of_fwnode_handle(dn), buf,
++						      end);
+ 			break;
+ 		case 'n':	/* name */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			precision = str_spec.precision;
+ 			str_spec.precision = strchrnul(p, '@') - p;
+ 			buf = string(buf, end, p, str_spec);
+@@ -1946,7 +1941,7 @@ char *device_node_string(char *buf, char *end, struct device_node *dn,
+ 			buf = number(buf, end, (unsigned int)dn->phandle, num_spec);
+ 			break;
+ 		case 'P':	/* path-spec */
+-			p = kbasename(of_node_full_name(dn));
++			p = fwnode_get_name(of_fwnode_handle(dn));
+ 			if (!p[1])
+ 				p = "/";
+ 			buf = string(buf, end, p, str_spec);
 -- 
 2.20.1
 
