@@ -2,96 +2,172 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C641C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:41:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F56C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2543E21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:41:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CEAA21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AyH57jpK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="msZ9svm4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbfIRRlS (ORCPT
+        id S1729300AbfIRRoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:41:18 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39116 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfIRRlR (ORCPT
+        Wed, 18 Sep 2019 13:44:18 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:44768 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbfIRRoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:41:17 -0400
-Received: by mail-io1-f68.google.com with SMTP id a1so1172834ioc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:41:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=jm0GKZ+zs79GqNNWF0bZqXAiPqdnJ7mX725LngqNeLU=;
-        b=AyH57jpKls0MoQw6pX8sOAAZtlVmhb3SwrHEHMt+yhenFGJbwuB3oo/i2VhokOepSL
-         dshCfEkqojr3985fj9V639uHHEyl+N7jKzSr1MoOZ/S5/BxHiwxLh4Sexxgt/gp0yaU1
-         URrtQmewbGhlOzKmUy1zhzP8+82zQ2ADJwkDY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=jm0GKZ+zs79GqNNWF0bZqXAiPqdnJ7mX725LngqNeLU=;
-        b=fedZH8RPqG70YlT05gtsdoRIEZKfOvTijG+J7d1Lm5gMPuXSSJDqj8XJsZtw7QxqPZ
-         MIrRR/g1i4yIIkrbY3lKoI4YVgGsLWxGT4KeFflDjIQNrlueoju4WwT8E/+h7lJ2cuN6
-         1nvqBkbDlH3/jaNMOeukcIrwrMDQ+mCiT/Jm34p9bMTe3k3aKdmN78pySnBFUODAkq9x
-         hNYkV15oP/FYYrcbtvE/BClKhjsMpovBP9K9hWegvidY6rU6/pDnWkz/TAcr6gdJkZ9F
-         K7hx1C4UyNVwwtnSsLlGf6j/Us4fg9leAwYzO4DyjPk+xPooJAZ1VDiEQdLLOBvZ3ckR
-         1/rg==
-X-Gm-Message-State: APjAAAXuOBEboLcGStOSHIFlC1bYz2+joYVjOgr9Cy6hJbdLWTvuxnBn
-        r3w/UmkbO4Z3wQGW/twtdvWGaSqUpPLsWxPFUvFSKK9Fy7o=
-X-Google-Smtp-Source: APXvYqyqmyPlCjxTm+iq54gtMa6V2Hf3D4NA/wfYg+8rdQPOEkEMt80v6jNvqlmLrebuVHye2JqQOdf3XPODsa5VmQg=
-X-Received: by 2002:a5d:9f17:: with SMTP id q23mr6584195iot.301.1568828476751;
- Wed, 18 Sep 2019 10:41:16 -0700 (PDT)
+        Wed, 18 Sep 2019 13:44:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 87B663F712;
+        Wed, 18 Sep 2019 19:44:09 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=msZ9svm4;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id bGAvdWARNseX; Wed, 18 Sep 2019 19:44:05 +0200 (CEST)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 8D1B63F3BA;
+        Wed, 18 Sep 2019 19:44:03 +0200 (CEST)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id D789636020A;
+        Wed, 18 Sep 2019 19:44:02 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1568828642; bh=GJRbag8de5OLyDKo8HWyVkbRJublreoNXwx3gXTOWdM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=msZ9svm4xkJZX+qV+94dYAuQRk1LlAJIYDeI17uYtpNt8JMLrQwI7n109FFlIW4BG
+         fI+HNrYUbUA8iZJ313W6y2HYjGi3Md8g/Exh2KQzd9nyvwFFQbfhgPOnUfeJof6Syx
+         IxmSAE+DNQB/TcE07nLEFbjFi7wDUUEDYkeLD7x4=
+Subject: Re: [PATCH 1/7] mm: Add write-protect and clean utilities for address
+ space ranges
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Souptick Joarder <jrdr.linux@gmail.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>
+References: <20190918125914.38497-1-thomas_os@shipmail.org>
+ <20190918125914.38497-2-thomas_os@shipmail.org>
+ <20190918144102.jkukmhifmweagmwt@box>
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <8b710686-af78-d85a-d8a9-e4d92be4be57@shipmail.org>
+Date:   Wed, 18 Sep 2019 19:44:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-From:   Micah Morton <mortonm@chromium.org>
-Date:   Wed, 18 Sep 2019 10:41:06 -0700
-Message-ID: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
-Subject: [GIT PULL] SafeSetID LSM changes for 5.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190918144102.jkukmhifmweagmwt@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+On 9/18/19 4:41 PM, Kirill A. Shutemov wrote:
+> On Wed, Sep 18, 2019 at 02:59:08PM +0200, Thomas Hellström (VMware) wrote:
+>> From: Thomas Hellstrom <thellstrom@vmware.com>
+>>
+>> Add two utilities to a) write-protect and b) clean all ptes pointing into
+>> a range of an address space.
+>> The utilities are intended to aid in tracking dirty pages (either
+>> driver-allocated system memory or pci device memory).
+>> The write-protect utility should be used in conjunction with
+>> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
+>> accesses. Typically one would want to use this on sparse accesses into
+>> large memory regions. The clean utility should be used to utilize
+>> hardware dirtying functionality and avoid the overhead of page-faults,
+>> typically on large accesses into small memory regions.
+>>
+>> The added file "as_dirty_helpers.c" is initially listed as maintained by
+>> VMware under our DRM driver. If somebody would like it elsewhere,
+>> that's of course no problem.
+> After quick glance, it looks a lot as rmap code duplication. Why not
+> extend rmap_walk() interface instead to cover range of pages?
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+There appears to exist quite a few pagetable walks in the mm code. "Take 
+1" of this patch series modified the "apply_to_page_range" interface and 
+used that. But the interface modification was actually what eventually 
+caused Linus to reject the code. While it is entirely possible to do a 
+proper modification following Linus' and Christoph's guidelines, that 
+code doesn't allow for huge pages and populates all page table levels. 
+We will soon probably want to support huge pages and do not want to 
+populate. The number of altered code-paths itself IMO motivates yet 
+another pagetable walk implementation.
 
-are available in the Git repository at:
+The walk code currently resembling the present patch the most is the 
+unmap_mapping_range() implementation.
 
-  https://github.com/micah-morton/linux.git tags/safesetid-bugfix-5.4
+The rmap_walk() is not very well suited since it operates on a struct 
+page and the code of this patch has no notion of struct pages.
 
-for you to fetch changes up to 21ab8580b383f27b7f59b84ac1699cb26d6c3d69:
+So my thoughts on this is that the interface should in time move towards 
+the code in mm/pagewalk.c. If we eventually have more users of an 
+address-space pagewalk or want to re-implement unmap_mapping_range() 
+using a generic pagewalk, we should move the walk to pagewalk.c and 
+reuse its structures, but implement separate code for the walk since we 
+can't split huge pages and we can't take the mmap_sem. Meanwhile we 
+should keep the code separate in as_dirty_helpers.c
 
-  LSM: SafeSetID: Stop releasing uninitialized ruleset (2019-09-17
-11:27:05 -0700)
+>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Matthew Wilcox <willy@infradead.org>
+>> Cc: Will Deacon <will.deacon@arm.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Cc: Rik van Riel <riel@surriel.com>
+>> Cc: Minchan Kim <minchan@kernel.org>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Huang Ying <ying.huang@intel.com>
+>> Cc: Souptick Joarder <jrdr.linux@gmail.com>
+>> Cc: "Jérôme Glisse" <jglisse@redhat.com>
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+>> Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
+>> ---
+>>   MAINTAINERS           |   1 +
+>>   include/linux/mm.h    |  13 +-
+>>   mm/Kconfig            |   3 +
+>>   mm/Makefile           |   1 +
+>>   mm/as_dirty_helpers.c | 392 ++++++++++++++++++++++++++++++++++++++++++
+>>   5 files changed, 409 insertions(+), 1 deletion(-)
+>>   create mode 100644 mm/as_dirty_helpers.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index c2d975da561f..b596c7cf4a85 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -5287,6 +5287,7 @@ T:	git git://people.freedesktop.org/~thomash/linux
+>>   S:	Supported
+>>   F:	drivers/gpu/drm/vmwgfx/
+>>   F:	include/uapi/drm/vmwgfx_drm.h
+>> +F:	mm/as_dirty_helpers.c
+> Emm.. No. Core MM functinality cannot belong to random driver.
 
-----------------------------------------------------------------
-Fix for SafeSetID bug that was introduced in 5.3
+OK. I'll put it under core MM.
 
-Jann Horn sent some patches to fix some bugs in SafeSetID for 5.3. After
-he had done his testing there were a couple small code tweaks that went
-in and caused this bug. From what I can see SafeSetID is broken in 5.3
-and crashes the kernel every time during initialization if you try to
-use it. I came across this bug when backporting Jann's changes for 5.3
-to older kernels (4.14 and 4.19). I've tested on a Chrome OS device and
-verified that this change fixes things. Unless I'm missing something it
-doesn't seem super useful to have this change bake in linux-next, since it is
-completely broken in 5.3 and nobody noticed.
+/Thomas
 
-Signed-off-by: Micah Morton <mortonm@chromium.org>
 
-----------------------------------------------------------------
-Micah Morton (1):
-      LSM: SafeSetID: Stop releasing uninitialized ruleset
 
- security/safesetid/securityfs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
