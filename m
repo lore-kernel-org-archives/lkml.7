@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615F5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB386C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3690821928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B00FE218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788020;
-	bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
+	s=default; t=1568788022;
+	bh=Nt/kPG6oe+0JPPcyadZkQEyzrD/qvGFGAb41Yao9ZbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e35r6csaSoefyAmO+9FxJosYDQUPNkU5H3SwL5nYOBuTcq2UNP/6LYcveK9cIJXSv
-	 hmyWkFxdicmByAomeAkn5Rr1iHIF/CNZ4M4McGB/ISVZNMKil4m7+fs39jseqJ7uOI
-	 kTCjFi3lIuGn7aeNjnP3FXbOZ0POtsQ22Gunmj0k=
+	b=kBPnVQI657tRIj4/CTFtkdHjnav3x3b/rXIJ8NjsTnBWg73NBCGqNqamPr3spLU3Q
+	 meIiNLbas9v9eGNqwpux3SWFSCpIFTAwog3JbEJm2ccrxNht4W7PPn91w2Ul/dblFX
+	 jY1ETphFQ2+L6dRoZuWhzyq5mBqh5y23jdcWUqd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730429AbfIRG07 (ORCPT
+        id S1730435AbfIRG1B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48526 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729598AbfIRG0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:55 -0400
+        id S1729091AbfIRG05 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0193F21925;
-        Wed, 18 Sep 2019 06:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96249218AF;
+        Wed, 18 Sep 2019 06:26:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788014;
-        bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
+        s=default; t=1568788017;
+        bh=Nt/kPG6oe+0JPPcyadZkQEyzrD/qvGFGAb41Yao9ZbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVWaKaXCuLloGUKTDbDi1Kz72AUF7bZ1c4rD9gXZmtp075u+b1SATxdONRrORV7DU
-         mKdVQp9hdv5FpRx3vDhQNJrbVqB/bd4WFLvRyDybTZO/Z5+WNmvG/tI28THK1o+szg
-         J7oZzHmY5yQAbLxMiNjz5yEo3YL7yX4JafbYyynA=
+        b=RMmAP0F5pTDKHaB7n3q0kcztp5gaUE4WxvkXoZLGDx5vLOCD8F6W7Eqp7OMmtzrTZ
+         c/xNRgeXdda7rQXR9A6u4OvnP0H6Fg1lUMaOxX58ZSRNSEWwl2o/5aga2LFL2TaVMG
+         LmxBcMGBcHPCG9mTP8w0EjFGi6xtIc0Gpv3r/xek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH 5.2 41/85] genirq: Prevent NULL pointer dereference in resend_irqs()
-Date:   Wed, 18 Sep 2019 08:18:59 +0200
-Message-Id: <20190918061235.442181547@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.2 68/85] crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
+Date:   Wed, 18 Sep 2019 08:19:26 +0200
+Message-Id: <20190918061237.567054088@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,76 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
+commit 4bbfb839259a9c96a0be872e16f7471b7136aee5 upstream.
 
-The following crash was observed:
+In that mode, hardware ICV verification is not supported.
 
-  Unable to handle kernel NULL pointer dereference at 0000000000000158
-  Internal error: Oops: 96000004 [#1] SMP
-  pc : resend_irqs+0x68/0xb0
-  lr : resend_irqs+0x64/0xb0
-  ...
-  Call trace:
-   resend_irqs+0x68/0xb0
-   tasklet_action_common.isra.6+0x84/0x138
-   tasklet_action+0x2c/0x38
-   __do_softirq+0x120/0x324
-   run_ksoftirqd+0x44/0x60
-   smpboot_thread_fn+0x1ac/0x1e8
-   kthread+0x134/0x138
-   ret_from_fork+0x10/0x18
-
-The reason for this is that the interrupt resend mechanism happens in soft
-interrupt context, which is a asynchronous mechanism versus other
-operations on interrupts. free_irq() does not take resend handling into
-account. Thus, the irq descriptor might be already freed before the resend
-tasklet is executed. resend_irqs() does not check the return value of the
-interrupt descriptor lookup and derefences the return value
-unconditionally.
-
-  1):
-  __setup_irq
-    irq_startup
-      check_irq_resend  // activate softirq to handle resend irq
-  2):
-  irq_domain_free_irqs
-    irq_free_descs
-      free_desc
-        call_rcu(&desc->rcu, delayed_free_desc)
-  3):
-  __do_softirq
-    tasklet_action
-      resend_irqs
-        desc = irq_to_desc(irq)
-        desc->handle_irq(desc)  // desc is NULL --> Ooops
-
-Fix this by adding a NULL pointer check in resend_irqs() before derefencing
-the irq descriptor.
-
-Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 7405c8d7ff97 ("crypto: talitos - templates for AEAD using HMAC_SNOOP_NO_AFEU")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/resend.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/talitos.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -36,6 +36,8 @@ static void resend_irqs(unsigned long ar
- 		irq = find_first_bit(irqs_resend, nr_irqs);
- 		clear_bit(irq, irqs_resend);
- 		desc = irq_to_desc(irq);
-+		if (!desc)
-+			continue;
- 		local_irq_disable();
- 		desc->handle_irq(desc);
- 		local_irq_enable();
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1515,7 +1515,8 @@ static int aead_decrypt(struct aead_requ
+ 	if (IS_ERR(edesc))
+ 		return PTR_ERR(edesc);
+ 
+-	if ((priv->features & TALITOS_FTR_HW_AUTH_CHECK) &&
++	if ((edesc->desc.hdr & DESC_HDR_TYPE_IPSEC_ESP) &&
++	    (priv->features & TALITOS_FTR_HW_AUTH_CHECK) &&
+ 	    ((!edesc->src_nents && !edesc->dst_nents) ||
+ 	     priv->features & TALITOS_FTR_SRC_LINK_TBL_LEN_INCLUDES_EXTENT)) {
+ 
 
 
