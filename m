@@ -2,442 +2,262 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE24C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069F5C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F99C21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:42:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AWzmCZ1O";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Wu+r07eo"
+	by mail.kernel.org (Postfix) with ESMTP id CA28721897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbfIRJm2 (ORCPT
+        id S1728260AbfIRJoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:42:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54106 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727146AbfIRJm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:42:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 98B3C6156F; Wed, 18 Sep 2019 09:42:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568799745;
-        bh=WLXIi4f1QNdWbc3tOmtATiZAcgqtcMbzXOV035jMKsc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AWzmCZ1O4gq/kfkzzGCR3kTvKCM9TMFyZEYhIe9GTiWBcfV13gLs4jfNuyxJojudS
-         Tzu8NVNPDOq6mRoataBimukIEM05a8iDGqiSlLh+P2+UuZyg/CUgnZao4WDlsyfQH9
-         5fp8WMfyTQwEvHAevb0XAZHc7jvZVEhwjo16joak=
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DBE76156F;
-        Wed, 18 Sep 2019 09:42:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568799743;
-        bh=WLXIi4f1QNdWbc3tOmtATiZAcgqtcMbzXOV035jMKsc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Wu+r07eoUwKAeOmMw3butCA6404IQ/olZjh5Ig868vMhj0Hk+8NB8chASbGvX0otd
-         gRSaVQAYW4lvMEGFVOYokoDkVX75pV8SvkrR33r25/aRcmekWxmTBVHl2M1eaytmXK
-         HLAFsPJYuE1MUte817KYjDgGgFHfEIo0ZcL4rXaU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DBE76156F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: clk: qcom: Add YAML schemas for the
- GCC clock bindings
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
+        Wed, 18 Sep 2019 05:44:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:38316 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726591AbfIRJoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:44:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBF02337;
+        Wed, 18 Sep 2019 02:44:01 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621BB3F59C;
+        Wed, 18 Sep 2019 02:44:00 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:43:47 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-References: <20190819163748.18318-1-tdas@codeaurora.org>
- <20190819163748.18318-3-tdas@codeaurora.org>
- <CAL_Jsq+inANgxf2vjKtOQzydFdhjBwgArfn=L3e_nGUwRPyv_g@mail.gmail.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <ff10ab15-6134-7921-a8a8-db47c4a1c0e2@codeaurora.org>
-Date:   Wed, 18 Sep 2019 15:12:17 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the
+ ARM SMC/HVC mailbox
+Message-ID: <20190918104347.285bd7ad@donnerap.cambridge.arm.com>
+In-Reply-To: <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+        <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
+        <20190917183115.3e40180f@donnerap.cambridge.arm.com>
+        <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+inANgxf2vjKtOQzydFdhjBwgArfn=L3e_nGUwRPyv_g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Rob,
+On Wed, 18 Sep 2019 00:27:00 -0500
+Jassi Brar <jassisinghbrar@gmail.com> wrote:
 
-Thank you for your review comments.
+Hi,
 
-On 8/20/2019 12:44 AM, Rob Herring wrote:
-> On Mon, Aug 19, 2019 at 11:38 AM Taniya Das <tdas@codeaurora.org> wrote:
->>
->> The GCC clock provider have a bunch of generic properties that
->> are needed in a device tree. Add a YAML schemas for those. Also update
->> the compatible for SC7180 along with example for clocks & clock-names.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   .../devicetree/bindings/clock/qcom,gcc.yaml   | 141 ++++++++++++++++
->>   include/dt-bindings/clock/qcom,gcc-sc7180.h   | 155 ++++++++++++++++++
->>   2 files changed, 296 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->>   create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
+> On Tue, Sep 17, 2019 at 12:31 PM Andre Przywara <andre.przywara@arm.com> wrote:
+> >
+> > On Mon, 16 Sep 2019 09:44:37 +0000
+> > Peng Fan <peng.fan@nxp.com> wrote:
+> >
+> > Hi,
+> >  
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
+> > > actions in software layers running in the EL2 or EL3 exception levels.
+> > > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > > instruction set, not as a standard endorsed by ARM Ltd.
+> > >
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
+> > >  1 file changed, 96 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > > new file mode 100644
+> > > index 000000000000..bf01bec035fc
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
+> > > @@ -0,0 +1,96 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: ARM SMC Mailbox Interface
+> > > +
+> > > +maintainers:
+> > > +  - Peng Fan <peng.fan@nxp.com>
+> > > +
+> > > +description: |
+> > > +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor  
+> >
+> > I think "or" instead of "and" is less confusing.
+> >  
+> > > +  call) instruction to trigger a mailbox-connected activity in firmware,
+> > > +  executing on the very same core as the caller. The value of r0/w0/x0
+> > > +  the firmware returns after the smc call is delivered as a received
+> > > +  message to the mailbox framework, so synchronous communication can be
+> > > +  established. The exact meaning of the action the mailbox triggers as
+> > > +  well as the return value is defined by their users and is not subject
+> > > +  to this binding.
+> > > +
+> > > +  One use case of this mailbox is the SCMI interface, which uses shared  
+> >
+> >      One example use case of this mailbox ...
+> > (to make it more obvious that it's not restricted to this)
+> >  
+> > > +  memory to transfer commands and parameters, and a mailbox to trigger a
+> > > +  function call. This allows SoCs without a separate management processor
+> > > +  (or when such a processor is not available or used) to use this
+> > > +  standardized interface anyway.
+> > > +
+> > > +  This binding describes no hardware, but establishes a firmware interface.
+> > > +  Upon receiving an SMC using one of the described SMC function identifiers,  
+> >
+> >                              ... the described SMC function identifier,
+> >  
+> > > +  the firmware is expected to trigger some mailbox connected functionality.
+> > > +  The communication follows the ARM SMC calling convention.
+> > > +  Firmware expects an SMC function identifier in r0 or w0. The supported
+> > > +  identifiers are passed from consumers,  
+> >
+> >      identifier
+> >
+> > "passed from consumers": How? Where?
+> > But I want to repeat: We should not allow this.
+> > This is a binding for a mailbox controller driver, not a generic firmware backdoor.
+> >  
+> Exactly. The mailbox controller here is the  SMC/HVC instruction,
+
+No, the mailbox controller is an *SMCCC compliant* smc/hvc call, targeting a very specific function ID. SMC calls are used for PSCI already, for instance, and you don't want to mess with that. Also some platforms define a vendor specific smc interface, again using a well constructed function ID complying to SMCCC.
+So we definitely need to stay within SMCCC for this kind of generic interface, *and* to let firmware specify the function ID via the DT, to not clash with any other function ID.
+
+> which needs 9 arguments to work. The fact that the fist argument is
+> always going to be same on a platform is just the way we use this
+> instruction.
 > 
-> You need to remove the old doc.
-> 
+> > We should be as strict as possible to avoid any security issues.
+> >  
+> Any example of such a security issue?
 
-Would remove it in the next patch.
+Someone finds a way to trick some mailbox client to send a crafted message to the mailbox.
 
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> new file mode 100644
->> index 000000000000..17c563a036c7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
->> @@ -0,0 +1,141 @@
->> +# SPDX-License-Identifier: GPL-2.0
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Global Clock & Reset Controller Binding
->> +
->> +maintainers:
->> +  - Stephen Boyd <sboyd@kernel.org>
->> +
->> +properties:
->> +  "#clock-cells":
->> +    const: 1
->> +
->> +  "#reset-cells":
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: |
->> +      shall contain the base register location and length
-> 
-> Don't need a description if there's only 1 entry.
-> 
+Do you have any example of a use case where the mailbox client needs to provide the function ID?
 
-Thanks, would remove.
+> > The firmware certainly knows the function ID it implements. The firmware controls the DT. So it is straight-forward to put the ID into the DT. The firmware could even do this at boot time, dynamically, before passing on the DT to the non-secure world (bootloader or kernel).
+> >
+> > What would be the use case of this functionality?
+> >  
+> At least for flexibility and consistency.
 
->> +
->> +  compatible :
->> +     enum:
->> +       - qcom,gcc-apq8064
->> +       - qcom,gcc-apq8084
->> +       - qcom,gcc-ipq8064
->> +       - qcom,gcc-ipq4019
->> +       - qcom,gcc-ipq8074
->> +       - qcom,gcc-msm8660
->> +       - qcom,gcc-msm8916
->> +       - qcom,gcc-msm8960
->> +       - qcom,gcc-msm8974
->> +       - qcom,gcc-msm8974pro
->> +       - qcom,gcc-msm8974pro-ac
->> +       - qcom,gcc-msm8994
->> +       - qcom,gcc-msm8996
->> +       - qcom,gcc-msm8998
->> +       - qcom,gcc-mdm9615
->> +       - qcom,gcc-qcs404
->> +       - qcom,gcc-sdm630
->> +       - qcom,gcc-sdm660
->> +       - qcom,gcc-sdm845
->> +       - qcom,gcc-sc7180
->> +
->> +  clocks:
->> +    minItems: 1
->> +    maxItems: 2
->> +    items:
->> +      - description: Board XO source
->> +      - description: Board active XO source
->> +
->> +  clock-names:
->> +    minItems: 1
->> +    maxItems: 2
->> +    items:
->> +      - const: bi_tcxo
->> +      - const: bi_tcxo_ao
->> +
->> +  nvmem-cells:
->> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> 
-> Standard property, you don't need the type here. What's needed is the size.
-> 
+I appreciate the flexibility idea, but when creating an interface, especially a generic one to any kind of firmware, you should be as strict as possible, to avoid clashes in the future.
+ 
+> > > or listed in the the arm,func-ids  
+> >
+> >                        arm,func-id
+> >  
+> > > +  properties as described below. The firmware can return one value in  
+> >
+> >      property
+> >  
+> > > +  the first SMC result register, it is expected to be an error value,
+> > > +  which shall be propagated to the mailbox client.
+> > > +
+> > > +  Any core which supports the SMC or HVC instruction can be used, as long
+> > > +  as a firmware component running in EL3 or EL2 is handling these calls.
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    oneOf:
+> > > +      - description:
+> > > +          For implementations using ARM SMC instruction.
+> > > +        const: arm,smc-mbox
+> > > +
+> > > +      - description:
+> > > +          For implementations using ARM HVC instruction.
+> > > +        const: arm,hvc-mbox  
+> >
+> > I am not particularly happy with this, but well ...
+> >  
+> > > +
+> > > +  "#mbox-cells":
+> > > +    const: 1  
+> >
+> > Why is this "1"? What is this number used for? It used to be the channel ID, but since you are describing a single channel controller only, this should be 0 now.
+> >  
+> Yes. I overlooked it and actually queued the patch for pull request.
+> But I think the bindings should not carry a 'fix' patch later. Also I
+> realise this revision of binding hasn't been reviewed by Rob. Maybe I
+> should drop the patch for now.
 
-Would take care of it in the next patch.
+Yes, please do. I would like to make sure that the binding is correct, as it serves as a specification for people implementing both firmware services and other drivers (like *BSD).
 
->> +    description:
->> +      Qualcomm TSENS (thermal sensor device) on some devices can
->> +      be part of GCC and hence the TSENS properties can also be part
->> +      of the GCC/clock-controller node.
->> +      For more details on the TSENS properties please refer
->> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
->> +
->> +  nvmem-cell-names:
->> +    $ref: /schemas/types.yaml#/definitions/string-array
-> 
-> Don't need the type (and this would have to be under an 'allOf' to
-> actually work).
-> 
+> > > +
+> > > +  arm,func-id:
+> > > +    description: |
+> > > +      An 32-bit value specifying the function ID used by the mailbox.  
+> >
+> >          A single 32-bit value ...
+> >  
+> > > +      The function ID follow the ARM SMC calling convention standard [1].  
+> >
+> >                          follows
+> >  
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - "#mbox-cells"
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    sram@93f000 {
+> > > +      compatible = "mmio-sram";
+> > > +      reg = <0x0 0x93f000 0x0 0x1000>;
+> > > +      #address-cells = <1>;
+> > > +      #size-cells = <1>;
+> > > +      ranges = <0x0 0x93f000 0x1000>;
+> > > +
+> > > +      cpu_scp_lpri: scp-shmem@0 {
+> > > +        compatible = "arm,scmi-shmem";
+> > > +        reg = <0x0 0x200>;
+> > > +      };
+> > > +    };
+> > > +
+> > > +    smc_tx_mbox: tx_mbox {
+> > > +      #mbox-cells = <1>;  
+> >
+> > As mentioned above, should be 0.
+> >  
+> > > +      compatible = "arm,smc-mbox";
+> > > +      /* optional */  
+> >
+> > First: having "optional" in a specific example is not helpful, just confusing.
+> > Second: It is actually *not* optional in this case, as there is no other way of propagating the function ID. The SCMI driver as the mailbox client has certainly no clue about this.
+> > I think I said this previously: Relying on the mailbox client to pass the function ID sounds broken, as this is a property of the mailbox controller driver. The mailbox client does not care about this mailbox communication detail, it just wants to trigger the mailbox.
+> >  
+> Again, the mailbox controller here is the SMC/HVC _instruction_, which
+> doesn't care what value the first argument carry.
 
-Would take care of it in the next patch.
+That is not true. Just check Peng's example implementation he mentioned in the cover letter:
+#define FSL_SIP_SCMI_1			0xc20000fe
+#define FSL_SIP_SCMI_2			0xc20000ff
+....
+	case FSL_SIP_SCMI_1:
+	case FSL_SIP_SCMI_2:
+		SMC_RET1(handle, scmi_handler(smc_fid, x1, x2, x3));
 
->> +    description:
->> +      Names for each nvmem-cells specified.
->> +    items:
->> +      - const: calib
->> +      - const: calib_backup
->> +
->> +  "#thermal-sensor-cells":
->> +    const: 1
->> +
->> +  "#power-domain-cells":
->> +    const: 1
->> +
->> +  protected-clocks:
->> +    description:
->> +       Protected clock specifier list as per common clock binding
->> +
->> +required:
->> +  - "#clock-cells"
->> +  - "#reset-cells"
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - clock-names
->> +
->> +examples:
->> +  - |
->> +    clock-controller@900000 {
->> +      compatible = "qcom,gcc-msm8960";
->> +      reg = <0x900000 0x4000>;
->> +      #clock-cells = <1>;
->> +      #reset-cells = <1>;
->> +      #power-domain-cells = <1>;
->> +    };
->> +
->> +
->> +  - |
->> +    // Example of GCC with TSENS properties:
->> +    clock-controller@900000 {
->> +      compatible = "qcom,gcc-apq8064";
->> +      reg = <0x00900000 0x4000>;
->> +      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
->> +      nvmem-cell-names = "calib", "calib_backup";
->> +      #clock-cells = <1>;
->> +      #reset-cells = <1>;
->> +      #thermal-sensor-cells = <1>;
->> +    };
->> +
->> +  - |
->> +    //Example of GCC with protected-clocks properties:
->> +    clock-controller@100000 {
->> +      compatible = "qcom,gcc-sdm845";
->> +      reg = <0x100000 0x1f0000>;
->> +      #clock-cells = <1>;
->> +      #reset-cells = <1>;
->> +      #power-domain-cells = <1>;
->> +      protected-clocks = <187>, <188>, <189>, <190>, <191>;
->> +    };
->> +
->> +  - |
->> +    //Example of GCC with clock nodes properties:
->> +    clock-controller@100000 {
->> +      compatible = "qcom,gcc-sc7180";
->> +      reg = <0x100000 0x1f0000>;
->> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
->> +      clock-names = "bi_tcxo", "bi_tcxo_ao";
->> +      #clock-cells = <1>;
->> +      #reset-cells = <1>;
->> +      #power-domain-cells = <1>;
->> +    };
->> +...
->> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
->> new file mode 100644
->> index 000000000000..d76b061f6a4e
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
->> @@ -0,0 +1,155 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#ifndef _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
->> +#define _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
->> +
->> +/* GCC clocks */
->> +#define GCC_GPLL0_MAIN_DIV_CDIV                                        0
->> +#define GPLL0                                                  1
->> +#define GPLL0_OUT_EVEN                                         2
->> +#define GPLL1                                                  3
->> +#define GPLL4                                                  4
->> +#define GPLL6                                                  5
->> +#define GPLL7                                                  6
->> +#define GCC_AGGRE_UFS_PHY_AXI_CLK                              7
->> +#define GCC_AGGRE_USB3_PRIM_AXI_CLK                            8
->> +#define GCC_BOOT_ROM_AHB_CLK                                   9
->> +#define GCC_CAMERA_AHB_CLK                                     10
->> +#define GCC_CAMERA_HF_AXI_CLK                                  11
->> +#define GCC_CAMERA_THROTTLE_HF_AXI_CLK                         12
->> +#define GCC_CAMERA_XO_CLK                                      13
->> +#define GCC_CE1_AHB_CLK                                                14
->> +#define GCC_CE1_AXI_CLK                                                15
->> +#define GCC_CE1_CLK                                            16
->> +#define GCC_CFG_NOC_USB3_PRIM_AXI_CLK                          17
->> +#define GCC_CPUSS_AHB_CLK                                      18
->> +#define GCC_CPUSS_AHB_CLK_SRC                                  19
->> +#define GCC_CPUSS_GNOC_CLK                                     20
->> +#define GCC_CPUSS_RBCPR_CLK                                    21
->> +#define GCC_DDRSS_GPU_AXI_CLK                                  22
->> +#define GCC_DISP_AHB_CLK                                       23
->> +#define GCC_DISP_GPLL0_CLK_SRC                                 24
->> +#define GCC_DISP_GPLL0_DIV_CLK_SRC                             25
->> +#define GCC_DISP_HF_AXI_CLK                                    26
->> +#define GCC_DISP_THROTTLE_HF_AXI_CLK                           27
->> +#define GCC_DISP_XO_CLK                                                28
->> +#define GCC_GP1_CLK                                            29
->> +#define GCC_GP1_CLK_SRC                                                30
->> +#define GCC_GP2_CLK                                            31
->> +#define GCC_GP2_CLK_SRC                                                32
->> +#define GCC_GP3_CLK                                            33
->> +#define GCC_GP3_CLK_SRC                                                34
->> +#define GCC_GPU_CFG_AHB_CLK                                    35
->> +#define GCC_GPU_GPLL0_CLK_SRC                                  36
->> +#define GCC_GPU_GPLL0_DIV_CLK_SRC                              37
->> +#define GCC_GPU_MEMNOC_GFX_CLK                                 38
->> +#define GCC_GPU_SNOC_DVM_GFX_CLK                               39
->> +#define GCC_NPU_AXI_CLK                                                40
->> +#define GCC_NPU_BWMON_AXI_CLK                                  41
->> +#define GCC_NPU_BWMON_DMA_CFG_AHB_CLK                          42
->> +#define GCC_NPU_BWMON_DSP_CFG_AHB_CLK                          43
->> +#define GCC_NPU_CFG_AHB_CLK                                    44
->> +#define GCC_NPU_DMA_CLK                                                45
->> +#define GCC_NPU_GPLL0_CLK_SRC                                  46
->> +#define GCC_NPU_GPLL0_DIV_CLK_SRC                              47
->> +#define GCC_PDM2_CLK                                           48
->> +#define GCC_PDM2_CLK_SRC                                       49
->> +#define GCC_PDM_AHB_CLK                                                50
->> +#define GCC_PDM_XO4_CLK                                                51
->> +#define GCC_PRNG_AHB_CLK                                       52
->> +#define GCC_QSPI_CNOC_PERIPH_AHB_CLK                           53
->> +#define GCC_QSPI_CORE_CLK                                      54
->> +#define GCC_QSPI_CORE_CLK_SRC                                  55
->> +#define GCC_QUPV3_WRAP0_CORE_2X_CLK                            56
->> +#define GCC_QUPV3_WRAP0_CORE_CLK                               57
->> +#define GCC_QUPV3_WRAP0_S0_CLK                                 58
->> +#define GCC_QUPV3_WRAP0_S0_CLK_SRC                             59
->> +#define GCC_QUPV3_WRAP0_S1_CLK                                 60
->> +#define GCC_QUPV3_WRAP0_S1_CLK_SRC                             61
->> +#define GCC_QUPV3_WRAP0_S2_CLK                                 62
->> +#define GCC_QUPV3_WRAP0_S2_CLK_SRC                             63
->> +#define GCC_QUPV3_WRAP0_S3_CLK                                 64
->> +#define GCC_QUPV3_WRAP0_S3_CLK_SRC                             65
->> +#define GCC_QUPV3_WRAP0_S4_CLK                                 66
->> +#define GCC_QUPV3_WRAP0_S4_CLK_SRC                             67
->> +#define GCC_QUPV3_WRAP0_S5_CLK                                 68
->> +#define GCC_QUPV3_WRAP0_S5_CLK_SRC                             69
->> +#define GCC_QUPV3_WRAP1_CORE_2X_CLK                            70
->> +#define GCC_QUPV3_WRAP1_CORE_CLK                               71
->> +#define GCC_QUPV3_WRAP1_S0_CLK                                 72
->> +#define GCC_QUPV3_WRAP1_S0_CLK_SRC                             73
->> +#define GCC_QUPV3_WRAP1_S1_CLK                                 74
->> +#define GCC_QUPV3_WRAP1_S1_CLK_SRC                             75
->> +#define GCC_QUPV3_WRAP1_S2_CLK                                 76
->> +#define GCC_QUPV3_WRAP1_S2_CLK_SRC                             77
->> +#define GCC_QUPV3_WRAP1_S3_CLK                                 78
->> +#define GCC_QUPV3_WRAP1_S3_CLK_SRC                             79
->> +#define GCC_QUPV3_WRAP1_S4_CLK                                 80
->> +#define GCC_QUPV3_WRAP1_S4_CLK_SRC                             81
->> +#define GCC_QUPV3_WRAP1_S5_CLK                                 82
->> +#define GCC_QUPV3_WRAP1_S5_CLK_SRC                             83
->> +#define GCC_QUPV3_WRAP_0_M_AHB_CLK                             84
->> +#define GCC_QUPV3_WRAP_0_S_AHB_CLK                             85
->> +#define GCC_QUPV3_WRAP_1_M_AHB_CLK                             86
->> +#define GCC_QUPV3_WRAP_1_S_AHB_CLK                             87
->> +#define GCC_SDCC1_AHB_CLK                                      88
->> +#define GCC_SDCC1_APPS_CLK                                     89
->> +#define GCC_SDCC1_APPS_CLK_SRC                                 90
->> +#define GCC_SDCC1_ICE_CORE_CLK                                 91
->> +#define GCC_SDCC1_ICE_CORE_CLK_SRC                             92
->> +#define GCC_SDCC2_AHB_CLK                                      93
->> +#define GCC_SDCC2_APPS_CLK                                     94
->> +#define GCC_SDCC2_APPS_CLK_SRC                                 95
->> +#define GCC_SYS_NOC_CPUSS_AHB_CLK                              96
->> +#define GCC_UFS_MEM_CLKREF_CLK                                 97
->> +#define GCC_UFS_PHY_AHB_CLK                                    98
->> +#define GCC_UFS_PHY_AXI_CLK                                    99
->> +#define GCC_UFS_PHY_AXI_CLK_SRC                                        100
->> +#define GCC_UFS_PHY_ICE_CORE_CLK                               101
->> +#define GCC_UFS_PHY_ICE_CORE_CLK_SRC                           102
->> +#define GCC_UFS_PHY_PHY_AUX_CLK                                        103
->> +#define GCC_UFS_PHY_PHY_AUX_CLK_SRC                            104
->> +#define GCC_UFS_PHY_RX_SYMBOL_0_CLK                            105
->> +#define GCC_UFS_PHY_TX_SYMBOL_0_CLK                            106
->> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK                            107
->> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC                                108
->> +#define GCC_USB30_PRIM_MASTER_CLK                              109
->> +#define GCC_USB30_PRIM_MASTER_CLK_SRC                          110
->> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK                           111
->> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK_SRC                       112
->> +#define GCC_USB30_PRIM_SLEEP_CLK                               113
->> +#define GCC_USB3_PRIM_CLKREF_CLK                               114
->> +#define GCC_USB3_PRIM_PHY_AUX_CLK                              115
->> +#define GCC_USB3_PRIM_PHY_AUX_CLK_SRC                          116
->> +#define GCC_USB3_PRIM_PHY_COM_AUX_CLK                          117
->> +#define GCC_USB3_PRIM_PHY_PIPE_CLK                             118
->> +#define GCC_USB_PHY_CFG_AHB2PHY_CLK                            119
->> +#define GCC_VIDEO_AHB_CLK                                      120
->> +#define GCC_VIDEO_AXI_CLK                                      121
->> +#define GCC_VIDEO_GPLL0_DIV_CLK_SRC                            122
->> +#define GCC_VIDEO_THROTTLE_AXI_CLK                             123
->> +#define GCC_VIDEO_XO_CLK                                       124
->> +
->> +/* GCC resets */
->> +#define GCC_QUSB2PHY_PRIM_BCR                                  0
->> +#define GCC_QUSB2PHY_SEC_BCR                                   1
->> +#define GCC_UFS_PHY_BCR                                                2
->> +#define GCC_USB30_PRIM_BCR                                     3
->> +#define GCC_USB3_DP_PHY_PRIM_BCR                               4
->> +#define GCC_USB3_DP_PHY_SEC_BCR                                        5
->> +#define GCC_USB3_PHY_PRIM_BCR                                  6
->> +#define GCC_USB3_PHY_SEC_BCR                                   7
->> +#define GCC_USB3PHY_PHY_PRIM_BCR                               8
->> +#define GCC_USB3PHY_PHY_SEC_BCR                                        9
->> +#define GCC_USB_PHY_CFG_AHB2PHY_BCR                            10
->> +
->> +/* GCC GDSCRs */
->> +#define UFS_PHY_GDSC                                           0
->> +#define USB30_PRIM_GDSC                                                1
->> +#define HLOS1_VOTE_MMNOC_MMU_TBU_HF0_GDSC                      2
->> +#define HLOS1_VOTE_MMNOC_MMU_TBU_SF_GDSC                       3
->> +
->> +#endif
->> --
->> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
->> of the Code Aurora Forum, hosted by the  Linux Foundation.
->>
+Definitely the function ID is crucial here.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Cheers,
+Andre.
