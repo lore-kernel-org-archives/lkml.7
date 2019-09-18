@@ -2,187 +2,93 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A283BC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6506821906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:36:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="0xf9mIzB"
+	by mail.kernel.org (Postfix) with ESMTP id 4D6BD20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbfIRHgo (ORCPT
+        id S1727657AbfIRHmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:36:44 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33342 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbfIRHgo (ORCPT
+        Wed, 18 Sep 2019 03:42:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45116 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726937AbfIRHmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:36:44 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e18so5192130oii.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 00:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SnfA/z7sYmS4p90KugFRDGYAqrClHJ5yHTUJ5IzMHDY=;
-        b=0xf9mIzBD0QKbX2cTIovmV63drg+4bFZ2C0WEIGQX/8kD+lr9PORvLVtvWmqVnY2Hx
-         uw6DicmbP6IePdEL+n95cmQOhIk9nc9GgRhtNYYJFFx8kR2SMvvfw+iR+wMyZPY2QiZM
-         md2HIIXPM/RJGfNbpnUv1aW3b9YljxNxM2NMjyzQBN+kSUwhhZXHtxxKAStdhjx5QFD8
-         3KvY9Szt5E08abh4wEt9bmoKmO/hkpkb7RvSD+/em/plmFxXU63xHCMO8Mr5AC43Sh/k
-         ZcIkXW27Uor7Z0rF/d/YLluWqH4CrJj/sIPPcJOZIGn5/c/qjkI6XwbN6/QEUjRJmGoM
-         qgBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SnfA/z7sYmS4p90KugFRDGYAqrClHJ5yHTUJ5IzMHDY=;
-        b=BHJ8viC9NodpgDJijhu3VewpeqWoH8P+a62zImu+fhl7rLLyCGcqSwLyAHtU0Y9jr8
-         gMGdz+w58/2GnEtq4UuFVFrW5ER9AxVzC4DoWrTf4G8RNi/pmB8hsoaovXobIlrf+a2P
-         qUf9uLwfVrWmQSrQjA47Bj5tQekIBWnHPUNdDHb/yiudc2E+WylzSlXAQAi/mXZzdJos
-         Ht9z5I1lGmJgd94X4Ryde1Z1Z7Fb70DAaeQ3fEOBzwd88PMtZQ0yNa91g4Lp4D6Yc/Yg
-         jFsTwoggp+WhkLVawZ8SvL+/jTVfd4MAn8Fa7YyI1VhMFUchTDODyv/K3jutNotQ8Qg8
-         H42g==
-X-Gm-Message-State: APjAAAVsPM0Zkz5DSyZ+c5FDkGUdKSnsXgjqW4OCh5UeruvYFFZTt+J5
-        AMZLO48qGOxdML4Qx6VEWAUrtzdSsIOdEeyK5qiuCw==
-X-Google-Smtp-Source: APXvYqwMYiX7Vw6JmKe0Ol7MjxXPzGf9u9TbL2LZE7CKgVXuTc8ckQF2o5+GS64CpIQUfJoykEUEW8e0A9Ky5L8I4v8=
-X-Received: by 2002:aca:ad09:: with SMTP id w9mr1346998oie.114.1568792202394;
- Wed, 18 Sep 2019 00:36:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190916055817.43425-1-hui.song_1@nxp.com>
-In-Reply-To: <20190916055817.43425-1-hui.song_1@nxp.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 18 Sep 2019 09:36:31 +0200
-Message-ID: <CAMpxmJU6-nSCK0bVdJq_U9pKsWyVEE8G2G74Yyg_o2kyqnXhjw@mail.gmail.com>
-Subject: Re: [PATCH v5] gpio/mpc8xxx: change irq handler from chained to normal
-To:     Hui Song <hui.song_1@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
+        Wed, 18 Sep 2019 03:42:42 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1iAUbk-00008R-D2; Wed, 18 Sep 2019 09:42:36 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Theodore Ts'o <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: printk meeting at LPC
+References: <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+        <20190905121101.60c78422@oasis.local.home>
+        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+        <87k1acz5rx.fsf@linutronix.de> <20190918012546.GA12090@jagdpanzerIV>
+        <20190917220849.17a1226a@oasis.local.home>
+        <20190918023654.GB15380@jagdpanzerIV>
+        <20190918051933.GA220683@jagdpanzerIV>
+Date:   Wed, 18 Sep 2019 09:42:34 +0200
+In-Reply-To: <20190918051933.GA220683@jagdpanzerIV> (Sergey Senozhatsky's
+        message of "Wed, 18 Sep 2019 14:19:33 +0900")
+Message-ID: <87h85anj85.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 16 wrz 2019 o 08:08 Hui Song <hui.song_1@nxp.com> napisa=C5=82(a):
+On 2019-09-18, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>> For instance, tty/sysrq must be able to switch printk emergency
+>> on/off.
 >
-> From: Song Hui <hui.song_1@nxp.com>
+> How did we come up to that _sync() printk() emergency mode (when we
+> make sure that there is no active printing kthread)? We had a number
+> of cases (complaints) of lost kernel messages. There are scenarios in
+> which we cannot offload to async preemptible printing kthread, because
+> current control path is, for instance, going to reboot the kernel. In
+> sync printk() mode we have some sort (!) of guarantees that when we do
 >
-> More than one gpio controllers can share one interrupt, change the
-> driver to request shared irq.
+> 		pr_emerg("Restarting system\n");
+> 		kmsg_dump(KMSG_DUMP_RESTART);
+> 		machine_restart(cmd);
 >
-> Signed-off-by: Laurentiu Tudor <Laurentiu.Tudor@nxp.com>
-> Signed-off-by: Alex Marginean <alexandru.marginean@nxp.com>
-> Signed-off-by: Song Hui <hui.song_1@nxp.com>
-> ---
-> Changes in v5:
->         - add traverse every bit function.
-> Changes in v4:
->         - convert 'pr_err' to 'dev_err'.
-> Changes in v3:
->         - update the patch description.
-> Changes in v2:
->         - delete the compatible of ls1088a.
->  drivers/gpio/gpio-mpc8xxx.c | 30 +++++++++++++++++++-----------
->  1 file changed, 19 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-mpc8xxx.c b/drivers/gpio/gpio-mpc8xxx.c
-> index 16a47de..3a06ca9 100644
-> --- a/drivers/gpio/gpio-mpc8xxx.c
-> +++ b/drivers/gpio/gpio-mpc8xxx.c
-> @@ -22,6 +22,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/bitops.h>
-> +#include <linux/interrupt.h>
->
->  #define MPC8XXX_GPIO_PINS      32
->
-> @@ -127,20 +128,20 @@ static int mpc8xxx_gpio_to_irq(struct gpio_chip *gc=
-, unsigned offset)
->                 return -ENXIO;
->  }
->
-> -static void mpc8xxx_gpio_irq_cascade(struct irq_desc *desc)
-> +static irqreturn_t mpc8xxx_gpio_irq_cascade(int irq, void *data)
->  {
-> -       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D irq_desc_get_handler_dat=
-a(desc);
-> -       struct irq_chip *chip =3D irq_desc_get_chip(desc);
-> +       struct mpc8xxx_gpio_chip *mpc8xxx_gc =3D (struct mpc8xxx_gpio_chi=
-p *)data;
+> pr_emerg("Restarting system\n") is going to flush logbuf before the
+> system will machine_restart().
 
-There's no need to cast void pointers.
+Yes, this was why I asked Daniel how the bsod stuff will be
+implemented. We don't want a bsod just because we are
+restarting. Perhaps write_atomic() should also have a "reason" argument
+like kmsg_dump does. I will keep in touch with Daniel to make sure we
+are sync on this.
 
->         struct gpio_chip *gc =3D &mpc8xxx_gc->gc;
->         unsigned int mask;
-> +       int i;
->
->         mask =3D gc->read_reg(mpc8xxx_gc->regs + GPIO_IER)
->                 & gc->read_reg(mpc8xxx_gc->regs + GPIO_IMR);
-> -       if (mask)
-> +       for_each_set_bit(i, &mask, 32)
->                 generic_handle_irq(irq_linear_revmap(mpc8xxx_gc->irq,
-> -                                                    32 - ffs(mask)));
-> -       if (chip->irq_eoi)
-> -               chip->irq_eoi(&desc->irq_data);
-> +                                                    31 - i));
-> +
-> +       return IRQ_HANDLED;
->  }
->
->  static void mpc8xxx_irq_unmask(struct irq_data *d)
-> @@ -388,8 +389,8 @@ static int mpc8xxx_probe(struct platform_device *pdev=
-)
->
->         ret =3D gpiochip_add_data(gc, mpc8xxx_gc);
->         if (ret) {
-> -               pr_err("%pOF: GPIO chip registration failed with status %=
-d\n",
-> -                      np, ret);
-> +               dev_err(&pdev->dev, "%pOF: GPIO chip registration failed =
-with status %d\n",
-> +                       np, ret);
->                 goto err;
->         }
->
-> @@ -409,8 +410,15 @@ static int mpc8xxx_probe(struct platform_device *pde=
-v)
->         if (devtype->gpio_dir_in_init)
->                 devtype->gpio_dir_in_init(gc);
->
-> -       irq_set_chained_handler_and_data(mpc8xxx_gc->irqn,
-> -                                        mpc8xxx_gpio_irq_cascade, mpc8xx=
-x_gc);
-> +       ret =3D request_irq(mpc8xxx_gc->irqn, mpc8xxx_gpio_irq_cascade,
-> +                         IRQF_NO_THREAD | IRQF_SHARED, "gpio-cascade",
-> +                         mpc8xxx_gc);
+> It's going to be a bit harder when we have per-console kthread.
 
-You never free this irq. Maybe use devm_request_irq()?
+Each console has its own iterator. This iterators will need to advance,
+regardless if the message was printed via write() or write_atomic().
 
-Bart
-
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "%s: failed to request_irq(%d), ret =
-=3D %d\n",
-> +                       np->full_name, mpc8xxx_gc->irqn, ret);
-> +               goto err;
-> +       }
-> +
->         return 0;
->  err:
->         iounmap(mpc8xxx_gc->regs);
-> --
-> 2.9.5
->
+John Ogness
