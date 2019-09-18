@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 910FEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81654C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6780821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3FD218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788177;
-	bh=f2+vWx04TmRB6i4I5GjHQcWzo2NxdnBDv3aSTfyoxNc=;
+	s=default; t=1568788185;
+	bh=JFk5Jv4dKcXIkrB4AdcywhjcbvMFMjIgV59Vz693O0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WEhNVAkpW77tfl5RyeZ0iB1vqyDWRkryXl0hKGF4pgw8rRS3lWeZ6TcbIP7CD4PH0
-	 VK2MuL+WeHREqf7eqKhSRiSsJCZCc5rBiKB+xcs7jzBqijk5m4MvbSq4GIhSG/0ST4
-	 Wm9gLOPV6kjjF6snTePwby3DJogBVbRgqZsBoGns=
+	b=punJbApUtoU7LfJ/a1l2UyZZ0Pq5NOYPKlhnuZmgDuXHwSSuzJ9TVBhrX+Pb3r+93
+	 Sd8m4F2Ezw4VjkUdtBxVQv1j8Nla0h5aoundFeLN+3gG3gN9lhpA6h7/D20q+jItNu
+	 EjRfyyiNUXPqhMy7EmwEmU/+okCs8WpiunjN1t70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfIRGZ5 (ORCPT
+        id S1730174AbfIRG3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727136AbfIRGZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:51 -0400
+        id S1726990AbfIRGZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91528218AF;
-        Wed, 18 Sep 2019 06:25:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A68B21906;
+        Wed, 18 Sep 2019 06:25:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787951;
-        bh=f2+vWx04TmRB6i4I5GjHQcWzo2NxdnBDv3aSTfyoxNc=;
+        s=default; t=1568787940;
+        bh=JFk5Jv4dKcXIkrB4AdcywhjcbvMFMjIgV59Vz693O0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xQrvpqBOfAWuuDWowL6CzehY3rY46AlvGI5IT4mVoD1JgON6hyj2GQHFrZq+SVYmp
-         /749oHANnnkTWiHBYGBzf5/zWUJfnU8BzaUnbkozQ5nYfG6on6RaDYpDRxgrO4f0Zv
-         GK4EQbwVG9ZSFOI8Ce8KIhBrZWNgYXhUO0dO4Hwg=
+        b=xYgRxwhwg7PUGcDe+awqw+npdhnqEimfBi5JKaGau3vYbNYr/NrSVI4aCE6Alpl9K
+         8Kgjwa8WfXLWFDVm5l8O2eI/dr+zfl7QqmM3ucqWVgmoPM7Mn46FOEggqjGsmBOb30
+         XBB/LjkLdBreNme4N6SvQMsCxQ8NGeYWXTgNdRAQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Chulski <stefanc@marvell.com>,
-        Shaul Ben-Mayor <shaulb@marvell.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Michael Marley <michael@michaelmarley.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 09/85] net: phylink: Fix flow control resolution
-Date:   Wed, 18 Sep 2019 08:18:27 +0200
-Message-Id: <20190918061234.426760172@linuxfoundation.org>
+Subject: [PATCH 5.2 05/85] ixgbe: Fix secpath usage for IPsec TX offload.
+Date:   Wed, 18 Sep 2019 08:18:23 +0200
+Message-Id: <20190918061234.300610892@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,51 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Chulski <stefanc@marvell.com>
+From: Steffen Klassert <steffen.klassert@secunet.com>
 
-[ Upstream commit 63b2ed4e10b2e6c913e1d8cdd728e7fba4115a3d ]
+[ Upstream commit f39b683d35dfa93a58f1b400a8ec0ff81296b37c ]
 
-Regarding to IEEE 802.3-2015 standard section 2
-28B.3 Priority resolution - Table 28-3 - Pause resolution
+The ixgbe driver currently does IPsec TX offloading
+based on an existing secpath. However, the secpath
+can also come from the RX side, in this case it is
+misinterpreted for TX offload and the packets are
+dropped with a "bad sa_idx" error. Fix this by using
+the xfrm_offload() function to test for TX offload.
 
-In case of Local device Pause=1 AsymDir=0, Link partner
-Pause=1 AsymDir=1, Local device resolution should be enable PAUSE
-transmit, disable PAUSE receive.
-And in case of Local device Pause=1 AsymDir=1, Link partner
-Pause=1 AsymDir=0, Local device resolution should be enable PAUSE
-receive, disable PAUSE transmit.
-
-Fixes: 9525ae83959b ("phylink: add phylink infrastructure")
-Signed-off-by: Stefan Chulski <stefanc@marvell.com>
-Reported-by: Shaul Ben-Mayor <shaulb@marvell.com>
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 592594704761 ("ixgbe: process the Tx ipsec offload")
+Reported-by: Michael Marley <michael@michaelmarley.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/phylink.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -356,8 +356,8 @@ static void phylink_get_fixed_state(stru
-  *  Local device  Link partner
-  *  Pause AsymDir Pause AsymDir Result
-  *    1     X       1     X     TX+RX
-- *    0     1       1     1     RX
-- *    1     1       0     1     TX
-+ *    0     1       1     1     TX
-+ *    1     1       0     1     RX
-  */
- static void phylink_resolve_flow(struct phylink *pl,
- 				 struct phylink_link_state *state)
-@@ -378,7 +378,7 @@ static void phylink_resolve_flow(struct
- 			new_pause = MLO_PAUSE_TX | MLO_PAUSE_RX;
- 		else if (pause & MLO_PAUSE_ASYM)
- 			new_pause = state->pause & MLO_PAUSE_SYM ?
--				 MLO_PAUSE_RX : MLO_PAUSE_TX;
-+				 MLO_PAUSE_TX : MLO_PAUSE_RX;
- 	} else {
- 		new_pause = pl->link_config.pause & MLO_PAUSE_TXRX_MASK;
- 	}
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -36,6 +36,7 @@
+ #include <net/vxlan.h>
+ #include <net/mpls.h>
+ #include <net/xdp_sock.h>
++#include <net/xfrm.h>
+ 
+ #include "ixgbe.h"
+ #include "ixgbe_common.h"
+@@ -8691,7 +8692,7 @@ netdev_tx_t ixgbe_xmit_frame_ring(struct
+ #endif /* IXGBE_FCOE */
+ 
+ #ifdef CONFIG_IXGBE_IPSEC
+-	if (secpath_exists(skb) &&
++	if (xfrm_offload(skb) &&
+ 	    !ixgbe_ipsec_tx(tx_ring, first, &ipsec_tx))
+ 		goto out_drop;
+ #endif
 
 
