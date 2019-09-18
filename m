@@ -2,116 +2,81 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE41C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAD8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5F4218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vFLU2B6o"
+	by mail.kernel.org (Postfix) with ESMTP id 0158F21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbfIRQno (ORCPT
+        id S1731998AbfIRQny convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:43:44 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:36758 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfIRQnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:43:43 -0400
-Received: by mail-oi1-f196.google.com with SMTP id k20so200093oih.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:43:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t1NUWOIEDN4E5RHYpcV10vWnfzYBGN03OoblQkMuGaE=;
-        b=vFLU2B6oysAYmWSe71HyLxOsoHzg37qDGBwCjnyvUMO32SzG33ot6M1hbzm6vhUAKO
-         1zqMWWyzXP5b3CUh2r1i5pNM1yrV6MCq7fqnr/GfLY0TTwZiXiSCLvZLhyM26n75358H
-         gKZCTgqJTv8fhK0p3llTctYy0F5myEDxrmfBdRFGbixxE68t5Sj89yy5cJe8qO6+uwTu
-         CamFg4ZDdYJ+V/5YoUvap/hq59xJgftM+UI/+FJir0jo2DSPzcaw6sK6YEsy5h2LfTvL
-         ZB1jpS5w3iOWT2VQlngQm4UipBx51+CMP2PpjhVgb7dLB5qWOJZdcdk4dLpu8hq1PLEQ
-         ynZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=t1NUWOIEDN4E5RHYpcV10vWnfzYBGN03OoblQkMuGaE=;
-        b=H8embI7vADwOOvzjoKA5QGP52siFr7vSWxnwObq8SLUk4guz3TE1HgGZGN6jMHgDwa
-         47kvPY536Gzrl1ohYHlMk69wK33h82c7j1HIk1kxPYeh0b6Bp5wpoCxrAW+qHFBFMS5k
-         ONsxemuTMNXv2zb/j+ogZaJrN5ywR3oGChtB+9VEWbRlfKlOsAzYTM0qt214MeSusCgW
-         fNqbGrMIYk3H4L1MySeq/xkc78AikLlVC0B+AB6qFzL1dkaMkZhCAP2nc5KqF+W3fHd0
-         V3HLqNDDR7ybTTrRR6EbB/LAMMCkW9ZtnI86prwWKE3iCgXu5ijNwtK/3MPBWkGWXzC5
-         Gvkw==
-X-Gm-Message-State: APjAAAWLJbn65WR/7vLV6UmL29oTIPwrVtZ9pPb9BTWrZ2cqbB1+uRz7
-        U2mrXUreoo4E6GRp2qldOF8=
-X-Google-Smtp-Source: APXvYqz+284DQdiqICd7OIeRUsrgt3/mh6iKpnEc/vK9TL1b0uf4luKR8lwVFt8DUBcnBq7huRlpQQ==
-X-Received: by 2002:aca:4fc7:: with SMTP id d190mr2867413oib.25.1568825022786;
-        Wed, 18 Sep 2019 09:43:42 -0700 (PDT)
-Received: from localhost.localdomain (cpe-24-31-245-230.kc.res.rr.com. [24.31.245.230])
-        by smtp.gmail.com with ESMTPSA id m67sm959336otm.9.2019.09.18.09.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 09:43:42 -0700 (PDT)
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Christoph Hellwig <hch@lst.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2] x86/mm: Fix 185be15143aa ("Remove set_pages_x() and set_pages_nx()")
-Date:   Wed, 18 Sep 2019 11:43:38 -0500
-Message-Id: <20190918164338.31842-1-Larry.Finger@lwfinger.net>
-X-Mailer: git-send-email 2.23.0
+        Wed, 18 Sep 2019 12:43:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55276 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728817AbfIRQny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:43:54 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 85525550BB;
+        Wed, 18 Sep 2019 16:43:53 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 09984601AF;
+        Wed, 18 Sep 2019 16:43:46 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAMuHMdU_2RWFc=xs3tM38Nt_44k3dp5MMuKAT2MacyuCbO+1Hw@mail.gmail.com>
+References: <CAMuHMdU_2RWFc=xs3tM38Nt_44k3dp5MMuKAT2MacyuCbO+1Hw@mail.gmail.com> <278d9706-162d-28a4-4640-31b697924473@physik.fu-berlin.de> <c5acb1c0-7a5b-ce42-8b2f-5fd30cbdab6e@physik.fu-berlin.de> <6304acd1-7b71-b1fb-f8d8-298cb3025e69@physik.fu-berlin.de> <6725b972-05d4-fed4-7094-16401e86b452@gmail.com> <578d8a91-aaee-087f-1742-65e64001b8fa@physik.fu-berlin.de> <CAMuHMdUU6ejc168-ksqXrkE+PjCXFJumaRaWjRtj12NjG_TFSg@mail.gmail.com> <CAMuHMdWfTrx8VuJoifEEBc1n+3MiiuwKNWcRnUw+TgWJCtOWag@mail.gmail.com> <fea74ca3-4b24-780f-af74-a786646b1668@physik.fu-berlin.de> <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com> <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com> <16476.1568822057@warthog.procyon.org.uk>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     dhowells@redhat.com,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Can KEY_DH_OPERATIONS become tristate? (was: Re: Kernel 5.3.0 stuck during boot on Amiga)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <13303.1568825025.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 18 Sep 2019 17:43:45 +0100
+Message-ID: <13304.1568825025@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 18 Sep 2019 16:43:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In commit 185be15143aa ("x86/mm: Remove set_pages_x() and set_pages_nx()"),
-the wrappers were removed as they did not provide a real benefit over
-set_memory_x() and set_memory_nx(). This change causes a problem because
-the wrappers were exported, but the underlying routines were not. As a
-result, external modules that used the wrappers would need to recreate
-a significant part of memory management.
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-Signed-off-by: Larry Finger <Larry.Finger@lwfinger.net>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Fixes: 185be15143aa ("x86/mm: Remove set_pages_x() and set_pages_nx()")
-Cc: Ingo Molnar <mingo@kernel.org>
----
-v2 - Subject was messed up
----
- arch/x86/mm/pageattr.c | 2 ++
- 1 file changed, 2 insertions(+)
+> > > TL;DR: CONFIG_CRYPTO_DH=y is reported to cause boot delays of several
+> > > minutes on old and slow machines.
+> >
+> > Why is it doing that?  It doesn't do anything unless it is called, so
+> > something must be calling it.
+>
+> I don't know.  Enabling initcall_debug shows that dh_init() takes a very long
+> time.
 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 0d09cc5aad61..755867fc7c19 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -1885,6 +1885,7 @@ int set_memory_x(unsigned long addr, int numpages)
- 
- 	return change_page_attr_clear(&addr, numpages, __pgprot(_PAGE_NX), 0);
- }
-+EXPORT_SYMBOL(set_memory_x);
- 
- int set_memory_nx(unsigned long addr, int numpages)
- {
-@@ -1893,6 +1894,7 @@ int set_memory_nx(unsigned long addr, int numpages)
- 
- 	return change_page_attr_set(&addr, numpages, __pgprot(_PAGE_NX), 0);
- }
-+EXPORT_SYMBOL(set_memory_nx);
- 
- int set_memory_ro(unsigned long addr, int numpages)
- {
--- 
-2.23.0
+Ah...  The bit that handles keyctl_dh_compute() doesn't do anything unless
+asked, but the bit in the crypto layer that does dh does (ie. dh_init()).  I
+guess it's doing some sort of self-test, but I can't see how it effects that.
+I think you need to consult the author/maintainer of crypto/dh.c.
 
+It might be possible to make CONFIG_KEY_DH_OPERATIONS not depend on
+CONFIG_CRYPTO_DH and have crypto_alloc_kpp() load the *crypto* part on
+demand.  Failing that, I can look into demand-loading keyctl operations.
+
+David
