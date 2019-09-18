@@ -2,102 +2,68 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD033C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE69C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E7C6206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5706206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:32:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="czwpzDkk"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="AJnI+Z2E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbfIRQbo (ORCPT
+        id S1731127AbfIRQcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:31:44 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:53484 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728053AbfIRQbn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:31:43 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGNYFC178508;
-        Wed, 18 Sep 2019 16:31:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=JOeXBgFpap6hbPYDZwnqzFOoJIRBSAjBdsCXmG6t548=;
- b=czwpzDkkypI7XnCJTlhZfQIRHfQ1TIxg/tUVDvIvei/9QZR1yFMse4SzKendmNuGp/wU
- W9JgU58BsZriqRa2mMBubDk4gQCII8tuE89mLRRxH4Kh2DEh5AhPJuHsNTh/hItjMYiV
- TIaFAaQMATXRpXlZ8U8tVBBSkxCNANX13b2mqFn90/dvVwYaShftic7rDaXekeuUsUbX
- YDzndLBPRIX2CbL5iI8CaKRVr0yB1naWdFKmDU2K1OJsXpvcyJSbRvMGctjL5KejkiRA
- gyvn7q+UNejGztkVpqgOV2uBVNQxE5tOxxX0Zh5PxEMnONH//vSo2vynBOAXRCXXKcWm hA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2v385e53u9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 16:31:40 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGMrLq173711;
-        Wed, 18 Sep 2019 16:31:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2v37mmwqag-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 16:31:39 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8IGVbII022554;
-        Wed, 18 Sep 2019 16:31:37 GMT
-Received: from x250.idc.oracle.com (/10.191.241.104)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 09:31:36 -0700
-From:   Allen Pais <allen.pais@oracle.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, daniel@ffwll.ch
-Subject: [PATCH] drm/radeon: fix a potential NULL pointer dereference
-Date:   Wed, 18 Sep 2019 22:01:22 +0530
-Message-Id: <1568824282-4081-1-git-send-email-allen.pais@oracle.com>
-X-Mailer: git-send-email 1.9.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=984
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909180156
+        Wed, 18 Sep 2019 12:32:41 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53260 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbfIRQcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:32:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=JM2h7z5mh2kb0CtWLRTSGXMX+lpVQABcP7xIjoBOrH0=; b=AJnI+Z2Evqao1gW2eq+R32q6R8
+        7QL62YCkgAeqDBPgM9agnFDMd6xShli/DdqyH5WE15a3OcaxUoZJ8LYoa9yRMKxNf9nBDYzif/HYP
+        wsZHXORdkDpNUeSCIVV4Q4NevRZ9esb/3LVAOOsn2tq/CHYSTdrMQTypkiRVDzuSlXWc=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iAcsf-0000Pz-8g; Wed, 18 Sep 2019 18:32:37 +0200
+Date:   Wed, 18 Sep 2019 18:32:36 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Peter Mamonov <pmamonov@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net v3] net/phy: fix DP83865 10 Mbps HDX loopback disable
+ function
+Message-ID: <20190918163236.GM9591@lunn.ch>
+References: <20190918162755.24024-1-pmamonov@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918162755.24024-1-pmamonov@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+On Wed, Sep 18, 2019 at 07:27:55PM +0300, Peter Mamonov wrote:
+> According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+> disabled in the expanded memory register 0x1C0.1". The driver erroneously
+> used bit 0 instead of bit 1.
+> 
+> Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+> Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
----
- drivers/gpu/drm/radeon/radeon_display.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/drivers/gpu/drm/radeon/radeon_display.c b/drivers/gpu/drm/radeon/radeon_display.c
-index bd52f15..1a41764 100644
---- a/drivers/gpu/drm/radeon/radeon_display.c
-+++ b/drivers/gpu/drm/radeon/radeon_display.c
-@@ -683,6 +683,10 @@ static void radeon_crtc_init(struct drm_device *dev, int index)
- 	drm_mode_crtc_set_gamma_size(&radeon_crtc->base, 256);
- 	radeon_crtc->crtc_id = index;
- 	radeon_crtc->flip_queue = alloc_workqueue("radeon-crtc", WQ_HIGHPRI, 0);
-+	if (unlikely(!radeon_crtc->flip_queue)) {
-+		kfree(radeon_crtc);
-+		return;
-+	}
- 	rdev->mode_info.crtcs[index] = radeon_crtc;
- 
- 	if (rdev->family >= CHIP_BONAIRE) {
--- 
-1.9.1
+    Andrew
 
