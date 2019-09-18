@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68A8C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4ECC4CED2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DF4A21906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D400F21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787752;
-	bh=xCYf6H3BZ4UqZg17dDZOqY8hskqn5G7eCavzPOr6A7A=;
+	s=default; t=1568787754;
+	bh=aiMyOflR4wck0a8qIWZ76wu+xp3WB5tcLw1SZCJty5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o0Ur5Yv4NvyhS7VfbuNxXAhFvzQxywxAVuTD/OptlYKUfM0Zq39hxtNrcqkBSd8Us
-	 m9eZnxBXvQo0aMlnMgAU/6wbq5r6J8gLVnvIbPrXAqmV3l/PhYd/o8ncnZ2M2STvJl
-	 IsrH6mQ9L/yj1cC7GZIbdbTOTSiUfKvXWSpFO40s=
+	b=lc8U/Bb/9K3998JsM35ycqN5x78FF3ezQRA/szXpPL55sBhofD+3NKmO11ajneJbh
+	 zAhC9LqwELgrN16OB0pKWfXjwdqHYYC+MggDe7DMhZwJVJdP6BbB7syz8hV4u/uVqX
+	 FBqx0CQPy9RlvKVyWhczN0jTOaer0g/CD77ID4ss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfIRGWb (ORCPT
+        id S1727761AbfIRGWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfIRGW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:27 -0400
+        id S1726335AbfIRGWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E95B218AE;
-        Wed, 18 Sep 2019 06:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26B762196F;
+        Wed, 18 Sep 2019 06:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787746;
-        bh=xCYf6H3BZ4UqZg17dDZOqY8hskqn5G7eCavzPOr6A7A=;
+        s=default; t=1568787749;
+        bh=aiMyOflR4wck0a8qIWZ76wu+xp3WB5tcLw1SZCJty5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PtJ5uvn5Saig9S2MPc411/6Nl2sxa4DfRPHUlcyHVGvxwKO8RaNA5aalPY2n5eXrZ
-         Vki0DD8XPk82XpFrGPBFojYw2k7L5nsUmg/MntkNKOMLpkFFSZ5tW3feCkPQJ9hGQ1
-         nuKc9Gc/axWzXx3gPPOTD7k4QrM+JwibJOdwhmPg=
+        b=0j6ufk6DqoDw/HyaEMbLiVB34S94fq/QwbX6Xt80P9p7zMj5Tdug1mz8+t1XMNzmL
+         DpQOPNsebP7OcIaykp0GEDh9SS3Q776mP+NXl5nzGECaUpZ0zEXOn8LlsVU9+NLjzD
+         Qmhj7XjEgKj4TbCIC9BWyHKc5UIFT3xnNsLwfTwM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gregg Leventhal <gleventhal@janestreet.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 4.19 19/50] ixgbe: Prevent u8 wrapping of ITR value to something less than 10us
-Date:   Wed, 18 Sep 2019 08:19:02 +0200
-Message-Id: <20190918061225.140090286@linuxfoundation.org>
+        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 02/50] cdc_ether: fix rndis support for Mediatek based smartphones
+Date:   Wed, 18 Sep 2019 08:18:45 +0200
+Message-Id: <20190918061223.380826741@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -62,48 +60,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+From: "Bjørn Mork" <bjorn@mork.no>
 
-commit 377228accbbb8b9738f615d791aa803f41c067e0 upstream.
+[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
 
-There were a couple cases where the ITR value generated via the adaptive
-ITR scheme could exceed 126. This resulted in the value becoming either 0
-or something less than 10. Switching back and forth between a value less
-than 10 and a value greater than 10 can cause issues as certain hardware
-features such as RSC to not function well when the ITR value has dropped
-that low.
+A Mediatek based smartphone owner reports problems with USB
+tethering in Linux.  The verbose USB listing shows a rndis_host
+interface pair (e0/01/03 + 10/00/00), but the driver fails to
+bind with
 
-CC: stable@vger.kernel.org
-Fixes: b4ded8327fea ("ixgbe: Update adaptive ITR algorithm")
-Reported-by: Gregg Leventhal <gleventhal@janestreet.com>
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+[  355.960428] usb 1-4: bad CDC descriptors
+
+The problem is a failsafe test intended to filter out ACM serial
+functions using the same 02/02/ff class/subclass/protocol as RNDIS.
+The serial functions are recognized by their non-zero bmCapabilities.
+
+No RNDIS function with non-zero bmCapabilities were known at the time
+this failsafe was added. But it turns out that some Wireless class
+RNDIS functions are using the bmCapabilities field. These functions
+are uniquely identified as RNDIS by their class/subclass/protocol, so
+the failing test can safely be disabled.  The same applies to the two
+types of Misc class RNDIS functions.
+
+Applying the failsafe to Communication class functions only retains
+the original functionality, and fixes the problem for the Mediatek based
+smartphone.
+
+Tow examples of CDC functional descriptors with non-zero bmCapabilities
+from Wireless class RNDIS functions are:
+
+0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x0f
+          connection notifications
+          sends break
+          line coding and serial state
+          get/set/clear comm features
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+
+and
+
+19d2:1023  ZTE K4201-z
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x02
+          line coding and serial state
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+
+The Mediatek example is believed to apply to most smartphones with
+Mediatek firmware.  The ZTE example is most likely also part of a larger
+family of devices/firmwares.
+
+Suggested-by: Lars Melin <larsm17@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/usb/cdc_ether.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -2626,7 +2626,7 @@ adjust_by_size:
- 		/* 16K ints/sec to 9.2K ints/sec */
- 		avg_wire_size *= 15;
- 		avg_wire_size += 11452;
--	} else if (avg_wire_size <= 1980) {
-+	} else if (avg_wire_size < 1968) {
- 		/* 9.2K ints/sec to 8K ints/sec */
- 		avg_wire_size *= 5;
- 		avg_wire_size += 22420;
-@@ -2659,6 +2659,8 @@ adjust_by_size:
- 	case IXGBE_LINK_SPEED_2_5GB_FULL:
- 	case IXGBE_LINK_SPEED_1GB_FULL:
- 	case IXGBE_LINK_SPEED_10_FULL:
-+		if (avg_wire_size > 8064)
-+			avg_wire_size = 8064;
- 		itr += DIV_ROUND_UP(avg_wire_size,
- 				    IXGBE_ITR_ADAPTIVE_MIN_INC * 64) *
- 		       IXGBE_ITR_ADAPTIVE_MIN_INC;
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -221,9 +221,16 @@ int usbnet_generic_cdc_bind(struct usbne
+ 		goto bad_desc;
+ 	}
+ skip:
+-	if (	rndis &&
+-		header.usb_cdc_acm_descriptor &&
+-		header.usb_cdc_acm_descriptor->bmCapabilities) {
++	/* Communcation class functions with bmCapabilities are not
++	 * RNDIS.  But some Wireless class RNDIS functions use
++	 * bmCapabilities for their own purpose. The failsafe is
++	 * therefore applied only to Communication class RNDIS
++	 * functions.  The rndis test is redundant, but a cheap
++	 * optimization.
++	 */
++	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
++	    header.usb_cdc_acm_descriptor &&
++	    header.usb_cdc_acm_descriptor->bmCapabilities) {
+ 			dev_dbg(&intf->dev,
+ 				"ACM capabilities %02x, not really RNDIS?\n",
+ 				header.usb_cdc_acm_descriptor->bmCapabilities);
 
 
