@@ -2,148 +2,97 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E9FC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C597AC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12D58218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C051218AC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:06:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bkitgYed"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HcC7v5Vw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfIRC6V (ORCPT
+        id S1727057AbfIRDGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 22:58:21 -0400
-Received: from mail-eopbgr30079.outbound.protection.outlook.com ([40.107.3.79]:18331
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725865AbfIRC6V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 22:58:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IQC1+axT8UQygydNuj7WQY4qJJCOa0CReEvMHSAfBP+k82amEVmzbiYD7xtyO8LbdoS++h4M/6c1LOVmEe84+kj379GV1OlSHkTk0q8gHy7t+aSL1wuSP7QA90mwp7C9A188AqPKtsQ3uwxRNkFem/dWQ6Ofj8wC9XuNhnMDyDMDcYCoMd8GHEzVg1DRP6TzEVbesGaqDNskQkfaG9PQaw18jX45DTmmWiHkK/roSuZfSkeaP6zk/O/QsZz8KC81fRbTmemWHPwGNRMqpHv79n1GnR/fc7JFafHpEvLj94PU2heJn+pHFU7VKwQ7Nu9roGRUSY/Y5ozGLpH3x+miug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqoJaGhnB2lMMf86Y3LycK/MhVQrbEPk3PU5avXHEKo=;
- b=cigAiIquiXpbfTNOvvlsnrHNQlMBBR0MdK4etMjCyLQpoT/qE6Yu/T3r1xYC8GTxWC2Imd5qe4whuZ7m8C8h+OPvZXncMSIPdghl6mGUCzmKqv+EcvcxIGaJ1cGV2y2cs8xM7dYvDFzilxnONdbHnM4O0/Zbc0tSdRuXQlJRUJAZQGzG4XowSDQTSLr19h0c6c6wyfrUbXJ3m/fgeTXty82ueeC9S1XLCYNOeCfGQZu2wvlXKymAeGk+XzUsfZp2nSLAPv1tO1w3Or7RA9nVvzzzJaOKktbgFxjlkEPfAWFxpTjjQiVWs8ehrobRtA2BZY6nX9CTm24pGB9tD8slZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cqoJaGhnB2lMMf86Y3LycK/MhVQrbEPk3PU5avXHEKo=;
- b=bkitgYedlT79NKnHAJXzQhF/NkHFROYh2o5IdnJfdQwtcu9k6TgpSRO72qOJHTh6zLz7YK74NffUDD1vDiRJzfSm6mTm3/ZUjwfXP30PorUW7gBaqQKVf7F0FzoocdXo8IXQy2r1twh9Mc/Sovv6QiVJx9WIXp2hcVKAmVw8oxo=
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
- VE1PR04MB6352.eurprd04.prod.outlook.com (10.255.118.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Wed, 18 Sep 2019 02:58:17 +0000
-Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53]) by VE1PR04MB6479.eurprd04.prod.outlook.com
- ([fe80::5049:d7e5:95ff:3d53%7]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
- 02:58:17 +0000
-From:   "S.j. Wang" <shengjiu.wang@nxp.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-CC:     "timur@kernel.org" <timur@kernel.org>,
-        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/3] ASoC: fsl_asrc: update supported sample format
-Thread-Topic: [PATCH 2/3] ASoC: fsl_asrc: update supported sample format
-Thread-Index: AdVtzNYpmL+IWzVvSN6kQwMCHfj2cw==
-Date:   Wed, 18 Sep 2019 02:58:17 +0000
-Message-ID: <VE1PR04MB647930580E370538148FAAF2E38E0@VE1PR04MB6479.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shengjiu.wang@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 36a45189-a0d8-4e32-f152-08d73be40e29
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6352;
-x-ms-traffictypediagnostic: VE1PR04MB6352:
-x-microsoft-antispam-prvs: <VE1PR04MB63523E83ADDCE1D63E419863E38E0@VE1PR04MB6352.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 01644DCF4A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(346002)(396003)(366004)(376002)(136003)(189003)(199004)(4326008)(7736002)(7416002)(486006)(74316002)(66476007)(66556008)(86362001)(64756008)(66446008)(3846002)(54906003)(5660300002)(8676002)(25786009)(6116002)(66946007)(52536014)(102836004)(229853002)(6246003)(6916009)(15650500001)(476003)(2906002)(76116006)(305945005)(6506007)(26005)(9686003)(6436002)(55016002)(14454004)(66066001)(478600001)(186003)(33656002)(256004)(7696005)(8936002)(316002)(99286004)(1411001)(81166006)(71200400001)(71190400001)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6352;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Pel0sLltIdHk2amEO0DXCnu5rTO3qHObzJgr/xO+6i/0iA94boOkKvulH57NPpZH/yEn/bYEoeRjxsUMVkinl81bZM/CA0AQ69CdhsGOUr8mXlfu0audXof3BIPoxNxpQwE1eO1JBbnxGhBQb2BlPo2cFJNHinPvVEp8YAgM6oXzXjQmlJroZNZlE9sflY3V73wCu5x2CIMnZcGRkvY/sxSoTCJ00fmauccycaODnKlfyC8FXukzkH+VSuCfYEoaoaRJSwlBrUC/ppoFOaWdgPAldPifVAk6v6BXdCwC7WCFJtwBwDDw+JCeun6ZmmSg8YR6EFvVs9kusUErmdaiJqX1fREIgactXU/S/5eQOBZAP/ThwYVcA/pJTe+mXltlLWN561JvJ5chmmayQL2XhzQU00oJTpRrmwCW3k51Nj0=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36a45189-a0d8-4e32-f152-08d73be40e29
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 02:58:17.1457
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tqIqBJ6YyyHRzdynkTJWAaolGWUbgV8qygdsVKdit/Uuyk8x5/yywI5dIiJUfuo2dJwAu9q5fqT/y1E3ymShoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6352
+        Tue, 17 Sep 2019 23:06:35 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44150 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726396AbfIRDGe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 23:06:34 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i18so3111215pgl.11;
+        Tue, 17 Sep 2019 20:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=NFqeD5/zEvzuP1V57BQP+iJPXnvZP4oIjaBFaXSxWeA=;
+        b=HcC7v5VwaYc8p+6PUDHEtjpi5pjd0SqaG8yymmVHQ7Qc38w47fpqQXBBGoWjLyqtBg
+         vgWdY8stHVxsOhHW6JCwxyN+9pAOmdfBDOOPnxPTJzugaQR3jrj5NgPPHPG1UiCrck5P
+         B5lZJn9azBSJJNpx/J45bwRFVkBfywsG+yZh7kD2XyqcMCPPKvc6dNyM7HBdj6EQpOV6
+         ZzcRyB6qvA1QyIwuAlPeEBBR09RJo+4gCtOBA7h6xjfvj17LnUNoIylQZgPIeYsSt9Nn
+         PPWkr0hQ8uby9b7aPMFnQqiDizeM++fEUdze3zqmix5CJOCPAcJWtpiq76VWL5BH+63u
+         ZEiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=NFqeD5/zEvzuP1V57BQP+iJPXnvZP4oIjaBFaXSxWeA=;
+        b=HG5Os6m6/e82pNGbJByLBGxSWLvfPB4QpGZrAzRSAw6XIEfYUx6DlSP/MMg/4jg9FT
+         8ElSA+2JeAd9DNRgf6/LjaukjxTyXhpjpg8RrpJ1GNIUFvcVQpDh9htA2kybu81fFELn
+         wTozDEiLTofwtcb7qv+f6PCR+TpVJzIOIL7pfjtbF9hahVc7ix7RagtZvmftYnmKEjMm
+         zjAcAEdNlXD3xA+20HRbojAghuCdNHdTGkm5XdtZPiHP+wm4QDECSakNRRV5J6MOPGeL
+         7CEEa+CApO2ODsJAzOVUgWwE3gheoQry2zsOYNBAV7TLNOW165IyytOZ/0idotVpRabJ
+         rxeA==
+X-Gm-Message-State: APjAAAUBfMJxg2b3cOCQDWnX0ZrYjebayui07JYfwHbJ10IE2vc6CE8z
+        JlJAPzC+yW94d31sbSPGnZ0=
+X-Google-Smtp-Source: APXvYqyOcjtk9Gxp4VKjkQDDqHIZ+4UjqQOOJRCOfPZXKU9y6/oBgSiQ2Y6I8KqB0jCErc51dDXGaA==
+X-Received: by 2002:a65:60c4:: with SMTP id r4mr1891524pgv.31.1568775993844;
+        Tue, 17 Sep 2019 20:06:33 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.108.240])
+        by smtp.gmail.com with ESMTPSA id a18sm3285861pgl.44.2019.09.17.20.06.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Sep 2019 20:06:33 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     jic23@kernel.org
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Add driver for veml6030 ambient light sensor 
+Date:   Wed, 18 Sep 2019 08:36:20 +0530
+Message-Id: <1568775982-4682-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+The veml6030 is an ambient light sensor from vishay and
+is a different hardware from an existing hardware for which
+driver currently exist, therefore this driver submission.
 
->=20
-> On Fri, Sep 13, 2019 at 05:48:40AM +0000, S.j. Wang wrote:
-> > Hi
-> >
-> > >
-> > > On Tue, Sep 10, 2019 at 02:07:25AM +0000, S.j. Wang wrote:
-> > > > > On Mon, Sep 09, 2019 at 06:33:20PM -0400, Shengjiu Wang wrote:
-> > > > > > The ASRC support 24bit/16bit/8bit input width, so S20_3LE
-> > > > > > format should not be supported, it is word width is 20bit.
-> > > > >
-> > > > > I thought 3LE used 24-bit physical width. And the driver assigns
-> > > > > ASRC_WIDTH_24_BIT to "width" for all non-16bit cases, so 20-bit
-> > > > > would go for that 24-bit slot also. I don't clearly recall if I
-> > > > > had explicitly tested S20_3LE, but I feel it should work since I =
-put
-> there...
-> > > >
-> > > > For S20_3LE, the width is 20bit,  but the ASRC only support 24bit,
-> > > > if set the ASRMCR1n.IWD=3D 24bit, because the actual width is 20
-> > > > bit, the volume is Lower than expected,  it likes 24bit data right =
-shift 4
-> bit.
-> > > > So it is not supported.
-> > >
-> > > Hmm..S20_3LE right-aligns 20 bits in a 24-bit slot? I thought
-> > > they're left aligned...
-> > >
-> > > If this is the case...shouldn't we have the same lower-volume
-> > > problem for all hardwares that support S20_3LE now?
-> >
-> > Actually some hardware/module when they do transmission from FIFO to
-> > shift register, they can select the start bit, for example from the
-> > 20th bit. but not all module have this capability.
-> >
-> > For ASRC, it haven't.  IWD can only cover the data width,  there is no
-> > Other bit for slot width.
->=20
-> Okay..let's drop the S20_3LE then. But would it be possible for you to
-> elaborate the reasoning into the commit message also? Just for case when
-> people ask why we remove it simply.
->=20
-> Thanks
+* All features; ALS, white channel and power management is
+  supported.
 
-OK.
-Best regards
-Wang shengjiu
+* All configurable parameters are supported through standard
+  iio sysfs entries. User space can get valid values of any
+  parameter (xx_available) and then can write to appropriate
+  sysfs entry.
+
+* User space can get ALS and White channel readings through RAW
+  IIO interface.
+
+* IIO events are used to notify application whenever threshold
+  is crossed. This uses IRQ pin of veml6030.
+
+* Some registers in veml6030 are read only. For these registers
+  read callback returns error to user space.
+
+There are 2 patches for this submission:
+[PATCH 1/2] iio: light: add driver for veml6030 ambient light sensor
+[PATCH 2/2] dt-bindings: iio: light: add veml6030 ALS bindings
+
+Regards,
+Rishi
