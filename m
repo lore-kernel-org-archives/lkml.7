@@ -2,165 +2,90 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE851C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA82C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2365218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568812072;
-	bh=rj5WMPvEQEEDlEkrOcuDiRS34WbhKH/4aLvT8LmbHXM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=C8fKBH0MpqXpK9lhC/x1iUl7a8yS8JnEpERdkAgo9fV4Np+2CGZn8beoiXOxzeXYt
-	 FnGkG/SSR6Zb9TzIvgR7sdAgaqaaWToNyMlgB9SVmxskHvVKDcOXxksqWZ0S5190bx
-	 cEDN5DgmIzhxUh5wxx2Cu/K5mm4JobFeSmnfAbRo=
+	by mail.kernel.org (Postfix) with ESMTP id BD4E2218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731525AbfIRNHw (ORCPT
+        id S1731541AbfIRNIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 09:08:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17819 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfIRNHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:07:51 -0400
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13AE8218AF;
-        Wed, 18 Sep 2019 13:07:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568812070;
-        bh=rj5WMPvEQEEDlEkrOcuDiRS34WbhKH/4aLvT8LmbHXM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HkTpq5+CByuJLJDwSrthSKsjXN0hKpfqPBHUURdLgqFG9pQzMkystKtHtUZkcVRG9
-         We5olk9m+0byrycIfNpv0/D3RpKmOUaLK/JMJQA9ww0uMy6aZi+4/Bahh9uhvPX/em
-         vADBC0xYeKgnxRru0WPZgYYq+O93auE94vaHAndU=
-Received: by mail-ot1-f49.google.com with SMTP id e11so5089450otl.5;
-        Wed, 18 Sep 2019 06:07:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAWrRDNCiLBFW/7oP+FLXH2ntwqQas6CVjV5XefeqNOcV0Cv3sbE
-        /S4QBHEjzgjDG47hw9HJ0r3svEPzm50nVzBLhnY=
-X-Google-Smtp-Source: APXvYqwwzw5VrS2kd6JSzP3MY3hp/cDqnCUwn6rD+GogeFn8UDSudHrPnW0AvhgZI930v5OwBzBSAmmjv49Yu3xnlIU=
-X-Received: by 2002:a9d:6f08:: with SMTP id n8mr2951063otq.128.1568812069398;
- Wed, 18 Sep 2019 06:07:49 -0700 (PDT)
+        id S1727001AbfIRNIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:08:43 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:08:42 -0700
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="187761706"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:08:39 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id 38DF22075A; Wed, 18 Sep 2019 16:08:37 +0300 (EEST)
+Date:   Wed, 18 Sep 2019 16:08:37 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        linux-kernel@vger.kernel.org, rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Message-ID: <20190918130837.GQ5781@paasikivi.fi.intel.com>
+References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
+ <20190910084707.18380-2-sakari.ailus@linux.intel.com>
+ <20190910071837.2e9110f8@oasis.local.home>
+ <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
+ <20190910142621.0bec208d@oasis.local.home>
+ <c458e734f5777561138b87228384808398547762.camel@perches.com>
+ <20190910150303.5a0d3904@oasis.local.home>
+ <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
+ <20190916114158.GN5781@paasikivi.fi.intel.com>
+ <20190916103755.4c19eda9@gandalf.local.home>
 MIME-Version: 1.0
-References: <20190907092007.9946-1-krzk@kernel.org> <20190907092007.9946-8-krzk@kernel.org>
- <20190918123654.GA318@bogus>
-In-Reply-To: <20190918123654.GA318@bogus>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 18 Sep 2019 15:07:38 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfFS5bA_OK4Zw_2e3T2MEuNETdcBMLMhGRHC-_UYvsLfA@mail.gmail.com>
-Message-ID: <CAJKOXPfFS5bA_OK4Zw_2e3T2MEuNETdcBMLMhGRHC-_UYvsLfA@mail.gmail.com>
-Subject: Re: [PATCH v2 08/11] dt-bindings: arm: samsung: Convert Exynos System
- Registers bindings to json-schema
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Sebastian Reichel <sre@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916103755.4c19eda9@gandalf.local.home>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 14:36, Rob Herring <robh@kernel.org> wrote:
->
-> On Sat, Sep 07, 2019 at 11:20:04AM +0200, Krzysztof Kozlowski wrote:
-> > Convert Samsung Exynos System Registers (SYSREG) bindings to DT schema
-> > format using json-schema.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Example somehow fails:
-> > Documentation/devicetree/bindings/arm/samsung/pmu.example.dt.yaml:
-> > system-controller@10040000: compatible:0: 'samsung,exynos5250-pmu' is
-> > not one of ['samsung,exynos4-sysreg', 'samsung,exynos5-sysreg']
-> >
-> > It seems that PMU schema is applied to sysreq nodes (and vice-versa).
-> > ---
-> >  .../bindings/arm/samsung/sysreg.txt           | 19 -----------
-> >  .../bindings/arm/samsung/sysreg.yaml          | 33 +++++++++++++++++++
-> >  2 files changed, 33 insertions(+), 19 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> > deleted file mode 100644
-> > index 4fced6e9d5e4..000000000000
-> > --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> > +++ /dev/null
-> > @@ -1,19 +0,0 @@
-> > -SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
-> > -
-> > -Properties:
-> > - - compatible : should contain two values. First value must be one from following list:
-> > -             - "samsung,exynos4-sysreg" - for Exynos4 based SoCs,
-> > -             - "samsung,exynos5-sysreg" - for Exynos5 based SoCs.
-> > -             second value must be always "syscon".
-> > - - reg : offset and length of the register set.
-> > -
-> > -Example:
-> > -     syscon@10010000 {
-> > -             compatible = "samsung,exynos4-sysreg", "syscon";
-> > -             reg = <0x10010000 0x400>;
-> > -     };
-> > -
-> > -     syscon@10050000 {
-> > -             compatible = "samsung,exynos5-sysreg", "syscon";
-> > -             reg = <0x10050000 0x5000>;
-> > -     };
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> > new file mode 100644
-> > index 000000000000..a3d44646e441
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
-> > @@ -0,0 +1,33 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/arm/samsung/sysreg.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Samsung S5P/Exynos SoC series System Registers (SYSREG)
-> > +
-> > +maintainers:
-> > +  - Krzysztof Kozlowski <krzk@kernel.org>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    items:
-> > +      - enum:
-> > +          - samsung,exynos4-sysreg
-> > +          - samsung,exynos5-sysreg
-> > +      - const: syscon
->
-> The problem is this will by default match any node with 'syscon'. You
-> have to add a custom 'select' entry. See the LVDS panel bindings for an
-> example.
->
-> I'd like to kill off 'syscon'...
+Hi Steven,
 
-I see that panels use empty {} match but some other examples use
-custom select. The panel approach in my case does not actually check
-whether last compatible is syscon. I'll go then with a separate select
-approach.
+On Mon, Sep 16, 2019 at 10:37:55AM -0400, Steven Rostedt wrote:
+> > If you think that's an issue, I'll opt for another extension than %pfw,
+> > which I chose originally since it's memorable --- fw for fwnode (names,
+> > paths, and probably more in the future).
+> > 
+> 
+> I'm fine with the switch, as long as newer tools know how to handle it.
+> 
+> Make sure we also add a comment in the Linux kernel code that states
+> that older kernels use to have 'f' and 'F' and that new tools look for
+> 'fw' to denote that this isn't an older kernel. This way, people will
+> hopefully not add another 'fX' pointer name.
 
-Best regards,
-Krzysztof
+Good point. I'll add a comment on this to make_bprint_args() in
+tools/lib/traceevent/event-parse.c as well as in vsprintf.c.
+
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
