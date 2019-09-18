@@ -2,105 +2,257 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6337AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629C7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CD44218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A577218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NaC6eGGn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728431AbfIRFvY (ORCPT
+        id S1728749AbfIRFwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:51:24 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:21495 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728109AbfIRFvT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:51:19 -0400
-X-UUID: 552f55ea57b04b239c9b385afe9e2692-20190918
-X-UUID: 552f55ea57b04b239c9b385afe9e2692-20190918
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 117925910; Wed, 18 Sep 2019 13:51:14 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Sep 2019 13:51:10 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Sep 2019 13:51:10 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [RESEND, PATCH v7 06/11] pwm: mediatek: update license and switch to SPDX tag
-Date:   Wed, 18 Sep 2019 13:50:06 +0800
-Message-ID: <1568785811-9577-7-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
-References: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
+        Wed, 18 Sep 2019 01:52:00 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:38335 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728732AbfIRFv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:51:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Y8Ht6yBgz9sPK;
+        Wed, 18 Sep 2019 15:51:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1568785916;
+        bh=QAFbzdw2vnSZDQUXwV7YNxQAM2aphYQykkvqG9wUYLM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NaC6eGGnbleVGw4GycFoqaW3sdLe0yR9FbdH2m9+8pE8xu8c4Ikt1FU0Uq6UxsqHH
+         tMmVJJCxbjmojxHCOEttD8WhBBBKHRB0+RmB+N0HEeSS8Sdjd6m1jpzk3123nVxpJ5
+         iBH/r5PVb5wzDf+CIVccbU+YsGRePUix7o9Ne+k/91e5AT03J8GEw7cKqhZ/0XLZin
+         5uwy1C+hgCFUOhloXyyD0q+Kq36GoETfIprzA3Uc4NkdY8QF2J7pJlpXcLgx5tR8Jl
+         8Kl7XDlcAL68uS1knOKAahi6dvOGK/kZFdjzk9jsinUjJsH7Dq7Sn8XLJM5ZflU7ay
+         7sso523PH8EsA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/8] powerpc/32: Add VDSO version of getcpu
+In-Reply-To: <27d699092118ee8d21741c08a6ff7e4c65effdf2.1566491310.git.christophe.leroy@c-s.fr>
+References: <cover.1566491310.git.christophe.leroy@c-s.fr> <27d699092118ee8d21741c08a6ff7e4c65effdf2.1566491310.git.christophe.leroy@c-s.fr>
+Date:   Wed, 18 Sep 2019 15:51:54 +1000
+Message-ID: <87h85aw3r9.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-MTK:  N
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SPDX identifiers to pwm-mediatek.c
-Update license to GNU General Public License v2.0
+Hi Christophe,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Changes since v6:
-Add a Reviewed-by tag
+Sorry I'm late replying to this.
 
-Changes since v5:
-- Follow reviewers's comments
-The license stuff is a separate change
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
+> getcpu() for PPC64 only, by making use of a user readable general
+> purpose SPR.
+>
+> PPC32 doesn't have any such SPR, a full system call can still be
+> avoided by implementing a fast system call which reads the CPU id
+> in the task struct and returns immediately without going back in
+> virtual mode.
+>
+> Before the patch, vdsotest reported:
+> getcpu: syscall: 1572 nsec/call
+> getcpu:    libc: 1787 nsec/call
+> getcpu:    vdso: not tested
+>
+> Now, vdsotest reports:
+> getcpu: syscall: 1582 nsec/call
+> getcpu:    libc: 667 nsec/call
+> getcpu:    vdso: 368 nsec/call
+>
+> For non SMP, just return CPU id 0 from the VDSO directly.
+>
+> PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
+>
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>
+> ---
+> v2: fixed build error in getcpu.S
+> ---
+>  arch/powerpc/include/asm/vdso.h         |  2 ++
+>  arch/powerpc/kernel/head_32.h           | 13 +++++++++++++
+>  arch/powerpc/kernel/head_booke.h        | 11 +++++++++++
+>  arch/powerpc/kernel/vdso32/Makefile     |  4 +---
+>  arch/powerpc/kernel/vdso32/getcpu.S     |  7 +++++++
+>  arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 --
+>  6 files changed, 34 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
+> index b5e1f8f8a05c..adb54782df5f 100644
+> --- a/arch/powerpc/include/asm/vdso.h
+> +++ b/arch/powerpc/include/asm/vdso.h
+> @@ -16,6 +16,8 @@
+>  /* Define if 64 bits VDSO has procedure descriptors */
+>  #undef VDS64_HAS_DESCRIPTORS
+>  
+> +#define NR_MAGIC_FAST_VDSO_SYSCALL	0x789a
 
----
- drivers/pwm/pwm-mediatek.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+We are still in the middle of the years long process of removing the
+"magic" syscall on 64-bit:
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 11f9cc446f14..9a61829766fc 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -1,12 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-- * Mediatek Pulse Width Modulator driver
-+ * MediaTek Pulse Width Modulator driver
-  *
-  * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
-  * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
-  *
-- * This file is licensed under the terms of the GNU General Public
-- * License version 2. This program is licensed "as is" without any
-- * warranty of any kind, whether express or implied.
-  */
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/powerpc/kernel/exceptions-64s.S?commit=4d856f72c10ecb060868ed10ff1b1453943fc6c8#n1578
  
- #include <linux/err.h>
-@@ -331,4 +329,4 @@ static struct platform_driver pwm_mediatek_driver = {
- module_platform_driver(pwm_mediatek_driver);
- 
- MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
--MODULE_LICENSE("GPL");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
 
+Can we not add another one on 32-bit?
+
+Is it really such a fast path that it's worth putting a wart in the
+syscall entry like that?
+
+Is there some other method? On s390 they have a per-cpu VDSO page, that
+would be a nice option. How we do that would be specific to a particular
+MMU, and maybe not even possible with some MMUs. So maybe that's not
+feasible.
+
+If you do want to add a fastpath syscall then please just add it as a
+regular syscall number, that way it's at least a bit less of a wart.
+It's still not visible via tracing/ptrace etc. which is a pain but at
+least the number is not "magical" too.
+
+cheers
+
+
+>  /* Offsets relative to thread->vdso_base */
+> diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
+> index 4a692553651f..a2e38b59785a 100644
+> --- a/arch/powerpc/kernel/head_32.h
+> +++ b/arch/powerpc/kernel/head_32.h
+> @@ -3,6 +3,8 @@
+>  #define __HEAD_32_H__
+>  
+>  #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
+> +#include <asm/vdso.h>
+> +#include <asm/asm-offsets.h>
+>  
+>  /*
+>   * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
+> @@ -74,7 +76,13 @@
+>  .endm
+>  
+>  .macro SYSCALL_ENTRY trapno
+> +#ifdef CONFIG_SMP
+> +	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
+> +#endif
+>  	mfspr	r12,SPRN_SPRG_THREAD
+> +#ifdef CONFIG_SMP
+> +	beq-	1f
+> +#endif
+>  	mfcr	r10
+>  	lwz	r11,TASK_STACK-THREAD(r12)
+>  	mflr	r9
+> @@ -152,6 +160,11 @@
+>  	mtspr	SPRN_SRR0,r11
+>  	SYNC
+>  	RFI				/* jump to handler, enable MMU */
+> +#ifdef CONFIG_SMP
+> +1:
+> +	lwz	r5, TASK_CPU - THREAD(r12)
+> +	RFI
+> +#endif
+>  .endm
+>  
+>  /*
+> diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+> index 2ae635df9026..c534e87cac84 100644
+> --- a/arch/powerpc/kernel/head_booke.h
+> +++ b/arch/powerpc/kernel/head_booke.h
+> @@ -3,6 +3,8 @@
+>  #define __HEAD_BOOKE_H__
+>  
+>  #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
+> +#include <asm/vdso.h>
+> +#include <asm/asm-offsets.h>
+>  #include <asm/kvm_asm.h>
+>  #include <asm/kvm_booke_hv_asm.h>
+>  
+> @@ -104,6 +106,10 @@ FTR_SECTION_ELSE
+>  #ifdef CONFIG_KVM_BOOKE_HV
+>  ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
+>  #endif
+> +#ifdef CONFIG_SMP
+> +	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
+> +	beq-	1f
+> +#endif
+>  	BOOKE_CLEAR_BTB(r11)
+>  	lwz	r11, TASK_STACK - THREAD(r10)
+>  	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
+> @@ -176,6 +182,11 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
+>  	mtspr	SPRN_SRR0,r11
+>  	SYNC
+>  	RFI				/* jump to handler, enable MMU */
+> +#ifdef CONFIG_SMP
+> +1:
+> +	lwz	r5, TASK_CPU - THREAD(r10)
+> +	RFI
+> +#endif
+>  .endm
+>  
+>  /* To handle the additional exception priority levels on 40x and Book-E
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+> index 06f54d947057..e147bbdc12cd 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -2,9 +2,7 @@
+>  
+>  # List of files in the vdso, has to be asm only for now
+>  
+> -obj-vdso32-$(CONFIG_PPC64) = getcpu.o
+> -obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
+> -		$(obj-vdso32-y)
+> +obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
+>  
+>  # Build rules
+>  
+> diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
+> index 63e914539e1a..bde226ad904d 100644
+> --- a/arch/powerpc/kernel/vdso32/getcpu.S
+> +++ b/arch/powerpc/kernel/vdso32/getcpu.S
+> @@ -17,7 +17,14 @@
+>   */
+>  V_FUNCTION_BEGIN(__kernel_getcpu)
+>    .cfi_startproc
+> +#if defined(CONFIG_PPC64)
+>  	mfspr	r5,SPRN_SPRG_VDSO_READ
+> +#elif defined(CONFIG_SMP)
+> +	li	r0, NR_MAGIC_FAST_VDSO_SYSCALL
+> +	sc	/* returns cpuid in r5, clobbers cr0 and r10-r13 */
+> +#else
+> +	li	r5, 0
+> +#endif
+>  	cmpwi	cr0,r3,0
+>  	cmpwi	cr1,r4,0
+>  	clrlwi  r6,r5,16
+> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> index 099a6db14e67..663880671e20 100644
+> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+> @@ -152,9 +152,7 @@ VERSION
+>  		__kernel_sync_dicache_p5;
+>  		__kernel_sigtramp32;
+>  		__kernel_sigtramp_rt32;
+> -#ifdef CONFIG_PPC64
+>  		__kernel_getcpu;
+> -#endif
+>  		__kernel_time;
+>  
+>  	local: *;
+> -- 
+> 2.13.3
