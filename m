@@ -2,107 +2,146 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38FEC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 871E5C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939402067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A3962067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfWRRRQJ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="o2zvlyrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbfIROET (ORCPT
+        id S1731222AbfIROEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:04:19 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51715 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727004AbfIROES (ORCPT
+        Wed, 18 Sep 2019 10:04:22 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51902 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfIROEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:04:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 7so248234wme.1;
-        Wed, 18 Sep 2019 07:04:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cB7wK5jh53B0dhxFCR/qrhHtfE6JVJ/GUCjzuGEyTXc=;
-        b=WfWRRRQJVFwRQPzH8aFSxOIHzq/Sk55lYneF69JJ+fF9bQaXq2PK7F79y2tg29gNAl
-         qk9O9EBTqLVgXUoyLIQsCvoJQV0X+WLdfXUNHsl5ZueNsONcIV8sHNbxZ6pN5Y6xVPdU
-         KgVZZXg1VMY8T00YujYyvhsejrYg0pMbvasPfqtgxTkewS0isJ+ATmYYeq/VKF/nruBa
-         SybxcOlnKwT3GF601lim/ZCzAOjt+ms0ywc7pR1h04fi1w0MWUQVyJ26JDA4Mj2BLdl2
-         yHkzALwgxeIsBC8uGwjrEcawD6raiE/4uAEeVFCuyRg5Pr4XweuhqsJ+BGhIImCRcGI/
-         g3Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cB7wK5jh53B0dhxFCR/qrhHtfE6JVJ/GUCjzuGEyTXc=;
-        b=fxGUzieVcpAXODXB/I8VQGFxDIZkoM2YX7KJEpFMPRs42kjRRJNu7gBaziELW8SjwN
-         aTJ9g8+XCetJL01Ek7mI6UKh+oir1Euhcc1QY0p7qOtxyyloQ+V62HT2W1WNg9zNFU/M
-         pOrOn0T4fUOGkhTwmEhoStD0r/39A9W6TNSyr03wnhqMVIC5C7mcbYkXifEViRNK3nL7
-         YV4mVqLRNBrU57KCpZAz8xz2mqTaTxAEn8RNR63oupFMK9utYCYmrhokjlXA1WaN+H4h
-         B1KnFKrL4Z6ExLNdNhIJ/pTM902IIJXBwkc6qe765BVoCvjNkG2mVv9USD57cdjZuTK6
-         BcwQ==
-X-Gm-Message-State: APjAAAUwk2XNzx3H8yi6ODJ585B2L3jLMZCD2C3syASHO2AjKmA9OJUu
-        h743BKjOtnS8wBlKg1iX5Gw7pKyzLYo=
-X-Google-Smtp-Source: APXvYqzLsTqjT8/wlcD9sqvhOIA8h00p1kZc5mPwnx5tNvtpVAJYor1ocWzY6xTw5xaqNcHJ2WKQAQ==
-X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr2984723wmc.83.1568815456240;
-        Wed, 18 Sep 2019 07:04:16 -0700 (PDT)
-Received: from bfk-3-vm8-e4.cs.niisi.ras.ru (t109.niisi.ras.ru. [193.232.173.109])
-        by smtp.gmail.com with ESMTPSA id a13sm13725450wrf.73.2019.09.18.07.04.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 07:04:15 -0700 (PDT)
-From:   Peter Mamonov <pmamonov@gmail.com>
-To:     andrew@lunn.ch
-Cc:     Peter Mamonov <pmamonov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Wed, 18 Sep 2019 17:03:40 +0300
-Message-Id: <20190918140340.21032-1-pmamonov@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 18 Sep 2019 10:04:21 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IE4HF5015793;
+        Wed, 18 Sep 2019 09:04:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568815457;
+        bh=3IqZ7QQNPGbKB+VrbDJkv8iQGk6g6o0mAIi0I5dEBbc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=o2zvlyrj8s+xGfs2P4CEja5v4bbRkLuWiiBniwz+39fwrA8q/Kc8VilDxiQE+ROdc
+         r9k8kQeLz8LY6BJD8kYdqiyTdp0GwX4cjz1k20L6fmfUPTjWRaeCBwTltRLWc7lPW2
+         sUgRr/g8BDiSZsYyZyePm+M9taE91dRRkqkYpq5E=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IE4H51063528
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Sep 2019 09:04:17 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
+ Sep 2019 09:04:13 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 18 Sep 2019 09:04:13 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IE4ENA056662;
+        Wed, 18 Sep 2019 09:04:14 -0500
+Subject: Re: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change
+ dma-channel-mask to uint32-array
+To:     Rob Herring <robh@kernel.org>
+CC:     <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
+ <20190910114559.22810-2-peter.ujfalusi@ti.com> <20190918132835.GA4527@bogus>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
+Date:   Wed, 18 Sep 2019 17:04:50 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190918132835.GA4527@bogus>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the DP83865 datasheet "The 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1." The driver erroneously
-used bit 0 instead of bit 1.
 
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
----
- drivers/net/phy/national.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-index 2addf1d3f619..4892e785dbf3 100644
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -110,11 +110,14 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
- 
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
- {
-+	u16 lb_dis = 1 << 1;
-+
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
- 
- 	pr_debug("10BASE-T HDX loopback %s\n",
- 		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
--- 
-2.23.0
+On 18/09/2019 16.28, Rob Herring wrote:
+> On Tue, Sep 10, 2019 at 02:45:57PM +0300, Peter Ujfalusi wrote:
+>> Make the dma-channel-mask to be usable for controllers with more than 32
+>> channels.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/dma/dma-common.yaml | 10 +++++++++-
+>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/Documentation/devicetree/bindings/dma/dma-common.yaml
+>> index ed0a49a6f020..41460946be64 100644
+>> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+>> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+>> @@ -25,11 +25,19 @@ properties:
+>>        Used to provide DMA controller specific information.
+>>  
+>>    dma-channel-mask:
+>> -    $ref: /schemas/types.yaml#definitions/uint32
+>>      description:
+>>        Bitmask of available DMA channels in ascending order that are
+>>        not reserved by firmware and are available to the
+>>        kernel. i.e. first channel corresponds to LSB.
+>> +    allOf:
+>> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+>> +        items:
+>> +          minItems = 1
+> 
+> '='? Just making up the syntax?
 
+Opps, sorry.
+
+> 
+>> +          maxItems = 255 # Should be enough
+>> +          - description: Mask of channels 0-31
+>> +          - description: Mask of channels 32-63
+> 
+> You are mixing a schema and list here...
+
+Should I extend the description with something like this:
+"The first item in the array is for channels 0-31, the second is for
+channels 32-63, etc."
+
+To make sure that it is used in a correct and consistent manner.
+
+>> +          ...
+> 
+> That's end of doc marker in YAML...
+
+I believe I need some reading to do for YAML..
+
+> 
+>> +          - description: Mask of chnanels X-(X+31)
+> 
+> Obviously, this was not validated with 'make dt_binding_check'.
+make dt_bindings_check
+make: *** No rule to make target 'dt_bindings_check'.  Stop.
+
+> What you  want is:
+> 
+>     allOf:
+>       - $ref: /schemas/types.yaml#/definitions/uint32-array
+>       - minItems: 1
+>         maxItems: 255 # Should be enough
+
+OK and thanks for the comments.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
