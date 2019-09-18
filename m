@@ -2,117 +2,177 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E980C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDCBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218DB214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3923218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:26:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fk/TzG+z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQyCXC4u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbfIRJYY (ORCPT
+        id S1727865AbfIRJ0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:24:24 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34500 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfIRJYX (ORCPT
+        Wed, 18 Sep 2019 05:26:17 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45853 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726077AbfIRJ0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:24:23 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b128so4007308pfa.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:24:22 -0700 (PDT)
+        Wed, 18 Sep 2019 05:26:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id u12so143758pls.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gxoSuJQ6tFLYp4g2neEbM8yU2CStuYNj11hMjYPafM0=;
-        b=Fk/TzG+zR7aMVIWtTy+Yxf3cDDmJPfGy2lwVIWxXmfAmZzAlaACNEJbKJkPHu2ia2E
-         YXjLa9LF9NBR2KfrMTDAoPx3l7enK+r001ZMoNtsxj1kPshqgLP0pLTeQ91lqKaiWCOu
-         V/f2DW71FndaBt7uaP1SE0hsTLfZW+fEcvwj8mfYS6QqtidCeGNT5KvLVtkYTPKr4Qs/
-         ffcOfOcI8t8FEOiuOA6DrqjMNMkLVJCn08H9tZymDF3iN3mVcWFUCL8c9UxfacKhBkiv
-         GMv+kOMZ01UA2RSI/0DzJJtz25hxRKvTdbmOJORLhNCqUBnjcVqihD//gNsgoVXi5GAq
-         axEQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=TP5u6Ukr8naGDCwUgGDGagSd1luSKaVAHPd6/hA2Lxc=;
+        b=BQyCXC4uNCAIjoc6ev5sISLgargq7BoavxCTsf+ZXZA/3MRVJm6DE8cNuUu1er+7LE
+         g/uRuoy5CYC0InQssHzLPQdsPpqdDOFBC2ETNyaiJgR5JIbtEzXrer/bfNK3fgtO74WY
+         TWCHxcgI63IHQFZKGU5l3NNMYrBlSSndSIyO0hbjBMDFtrxbVBfNTD7F2Dfyu+CH6zN/
+         uDEZC0HHw+uSO0meiDOucKi5DYimCHKvbUWFE/Ju886VeMe4GEXm1duuQ35P1cAvvs8F
+         hbyvqDGWtmXdvz9KdsUQmA6EpSxpspLfxkObA8Ev5bFTbMN7Whp/NmFRDWXfvZDfArRq
+         pXSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gxoSuJQ6tFLYp4g2neEbM8yU2CStuYNj11hMjYPafM0=;
-        b=ohIwmweklXk+lXD/Ih8VPcX1lO07wUNUCR/bLWQWKFl5AIPEEHyoDTxgFDAswYFDaz
-         3faaL49nK408yzNYSb89elAdPuLJH21c4a8xMwUl2XON0e3A0nXtSfdCx7bVF3nB5hiQ
-         MlmWTUgkz+L9eFjF2/wPDh7Zp4Kqh12Q5xx40WhHboX8PUubAI8muk5QFnlU/VSyw9Vl
-         neHz6ct6n7CKBR05yLFsYI+gWCP+onfRk7euahT25B+ERk8/joUQIHhKTcJeUDaEgrrI
-         C9uDYLikAhZzCCZSB9QMuxUSt7RaSxfBOyJzC8KowG3XMkxdTzVXIhRgpfss1Yd/tT9I
-         DtXw==
-X-Gm-Message-State: APjAAAW6XQUkdo1bVADpFeiITxNRgB5afbWxhSinHJNDHeoGugM+sfms
-        BCQKdehadYHHjHnegppe9An/PQ==
-X-Google-Smtp-Source: APXvYqz7Ynw9js8OL9E7HFrRlFKBtt+IpGnyik3APBXO5zcuV+d4IhN19kTq6wgZbJpIvoCMlNjK6Q==
-X-Received: by 2002:aa7:8d81:: with SMTP id i1mr2935659pfr.191.1568798661686;
-        Wed, 18 Sep 2019 02:24:21 -0700 (PDT)
-Received: from localhost ([122.172.73.172])
-        by smtp.gmail.com with ESMTPSA id t8sm3523628pjq.30.2019.09.18.02.24.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 02:24:20 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 14:54:18 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Adam Ford <aford173@gmail.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Tony Lindgren <tony@atomide.com>,
-        =?iso-8859-1?Q?Andr=E9?= Roth <neolynx@gmail.com>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Kemnade <andreas@kemnade.info>,
-        Nishanth Menon <nm@ti.com>, Adam Ford <adam.ford@logicpd.com>
-Subject: Re: [RFC] ARM: dts: omap36xx: Enable thermal throttling
-Message-ID: <20190918092418.que4c5jpcn2dcavx@vireshk-mac-ubuntu>
-References: <20190912183037.18449-1-aford173@gmail.com>
- <51bb8890-bfd7-c241-1ce5-151df3a90513@linaro.org>
- <CAHCN7xKjwkJHysSkNymF=sw6KuS=FqbapuRFZODuj6E_hmRG1A@mail.gmail.com>
- <2ef812a4-2f2d-b2e2-9fa4-080775e24bc8@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2ef812a4-2f2d-b2e2-9fa4-080775e24bc8@linaro.org>
-User-Agent: NeoMutt/20170609 (1.8.3)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TP5u6Ukr8naGDCwUgGDGagSd1luSKaVAHPd6/hA2Lxc=;
+        b=XmoSaGH7iDABBLQzYeO2vAl9bwEp16qHLnmwlPBIi9BzGx0UT6Q/RTNf4O+2aJR31Y
+         XwYoxayOgZDv3+r+SYb+obb1zSqLcS/BcE/io2PMOsDtlBGnu7GMg+hR0j0nLIFYXtjO
+         Qcz3j9KMBn1kqJvEqHro542QMb8XQ3CPuBFRxnrRZRD9zuHhsiVwWZqvthFjPGeTxCg0
+         Jlzk0awuiAfaJtswYkINugzVhZP/3M5iNo0uUheJZzeo0FSGvDVFk+hY0FaZWZAv89RX
+         M8FF0kNWLMq6EO3sUcKIK7yD4CwkzHz5U4wqIR6HdHkJfSZLUXE/HLP1kh+XcV0sBIhe
+         AF/g==
+X-Gm-Message-State: APjAAAXJe3n6O8g6QGfHfS8MBEdZOCNsx2lxveYVMNDLpCyWze/ioGau
+        a0TE6ncKAyp4LqbSy9ZcK00=
+X-Google-Smtp-Source: APXvYqxxS5VPHg7voF/W/ZYyqfHN3XOErQ3eBbbKzxzjP8Q+m9zU5TQ5ykTgwHCm2au4U5JqDnIBsg==
+X-Received: by 2002:a17:902:9698:: with SMTP id n24mr3268424plp.238.1568798775771;
+        Wed, 18 Sep 2019 02:26:15 -0700 (PDT)
+Received: from localhost.localdomain ([2401:4900:1951:77d6:5858:909b:a968:2d14])
+        by smtp.gmail.com with ESMTPSA id m12sm9270654pff.66.2019.09.18.02.26.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 18 Sep 2019 02:26:14 -0700 (PDT)
+From:   Aliasgar Surti <aliasgar.surti500@gmail.com>
+X-Google-Original-From: Aliasgar Surti
+To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Aliasgar Surti <aliasgar.surti500@gmail.com>
+Subject: [PATCH v2] drivers:staging:rtl8723bs: Removed unneeded variables
+Date:   Wed, 18 Sep 2019 14:55:49 +0530
+Message-Id: <1568798749-9855-1-git-send-email-aliasgar.surti500@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-09-19, 00:33, Daniel Lezcano wrote:
-> 
-> Hi Adam,
-> 
-> On 12/09/2019 23:19, Adam Ford wrote:
-> > On Thu, Sep 12, 2019 at 4:12 PM Daniel Lezcano
-> > <daniel.lezcano@linaro.org> wrote:
-> >>
-> >> On 12/09/2019 20:30, Adam Ford wrote:
-> >>> The thermal sensor in the omap3 family isn't accurate, but it's
-> >>> better than nothing.  The various OPP's enabled for the omap3630
-> >>> support up to OPP1G, however the datasheet for the DM3730 states
-> >>> that OPP130 and OPP1G are not available above TJ of 90C.
-> >>>
-> >>> This patch configures the thermal throttling to limit the
-> >>> operating points of the omap3630 to Only OPP50 and OPP100 if
-> >>> the thermal sensor reads a value above 90C.
-> 
-> Oh, that's a very interesting use case.
-> 
-> AFAICT the thermal framework is not designed to deal with this
-> situation. I agree this setup may work (even if I'm not convinced about
-> the stability of the whole).
-> 
-> May be Viresh can help for the cpufreq side?
+From: Aliasgar Surti <aliasgar.surti500@gmail.com>
 
-Sorry but I am not able to understand what's not supported by thermal framework
-here and what can I do to help :)
+coccicheck reported warning for unneeded variable used.
 
+This patch removes the unneeded variables.
+
+Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
+---
+v2: removed unneeded functions and replaced them with NULL in function array.
+---
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 54 +++-----------------------
+ 1 file changed, 5 insertions(+), 49 deletions(-)
+
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index d1b199e..55c6e45 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -2425,13 +2425,6 @@ static  int rtw_drvext_hdl(struct net_device *dev, struct iw_request_info *info,
+ 	return 0;
+ }
+ 
+-static int rtw_mp_ioctl_hdl(struct net_device *dev, struct iw_request_info *info,
+-						union iwreq_data *wrqu, char *extra)
+-{
+-	int ret = 0;
+-	return ret;
+-}
+-
+ static int rtw_get_ap_info(struct net_device *dev,
+                                struct iw_request_info *info,
+                                union iwreq_data *wrqu, char *extra)
+@@ -4458,43 +4451,6 @@ static int rtw_pm_set(struct net_device *dev,
+ 	return ret;
+ }
+ 
+-static int rtw_mp_efuse_get(struct net_device *dev,
+-			struct iw_request_info *info,
+-			union iwreq_data *wdata, char *extra)
+-{
+-	int err = 0;
+-	return err;
+-}
+-
+-static int rtw_mp_efuse_set(struct net_device *dev,
+-			struct iw_request_info *info,
+-			union iwreq_data *wdata, char *extra)
+-{
+-	int err = 0;
+-	return err;
+-}
+-
+-static int rtw_tdls(struct net_device *dev,
+-				struct iw_request_info *info,
+-				union iwreq_data *wrqu, char *extra)
+-{
+-	int ret = 0;
+-	return ret;
+-}
+-
+-
+-static int rtw_tdls_get(struct net_device *dev,
+-				struct iw_request_info *info,
+-				union iwreq_data *wrqu, char *extra)
+-{
+-	int ret = 0;
+-	return ret;
+-}
+-
+-
+-
+-
+-
+ static int rtw_test(
+ 	struct net_device *dev,
+ 	struct iw_request_info *info,
+@@ -4744,7 +4700,7 @@ static iw_handler rtw_private_handler[] = {
+ 	rtw_wx_write32,					/* 0x00 */
+ 	rtw_wx_read32,					/* 0x01 */
+ 	rtw_drvext_hdl,					/* 0x02 */
+-	rtw_mp_ioctl_hdl,				/* 0x03 */
++	NULL,						/* 0x03 */
+ 
+ /*  for MM DTV platform */
+ 	rtw_get_ap_info,					/* 0x04 */
+@@ -4771,15 +4727,15 @@ static iw_handler rtw_private_handler[] = {
+ 	NULL,							/* 0x12 */
+ 	rtw_p2p_get2,					/* 0x13 */
+ 
+-	rtw_tdls,						/* 0x14 */
+-	rtw_tdls_get,					/* 0x15 */
++	NULL,						/* 0x14 */
++	NULL,						/* 0x15 */
+ 
+ 	rtw_pm_set,						/* 0x16 */
+ 	rtw_wx_priv_null,				/* 0x17 */
+ 	rtw_rereg_nd_name,				/* 0x18 */
+ 	rtw_wx_priv_null,				/* 0x19 */
+-	rtw_mp_efuse_set,				/* 0x1A */
+-	rtw_mp_efuse_get,				/* 0x1B */
++	NULL,						/* 0x1A */
++	NULL,						/* 0x1B */
+ 	NULL,							/*  0x1C is reserved for hostapd */
+ 	rtw_test,						/*  0x1D */
+ };
 -- 
-viresh
+2.7.4
+
