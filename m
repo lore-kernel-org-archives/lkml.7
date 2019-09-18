@@ -2,63 +2,64 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A015C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D415C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C7C620644
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CA6321924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787955;
-	bh=pjvi5e0JD3oQ6w9n9LpfofgHo6x1NQIQAj2rtjbJ3U8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mYnapv7FDZ6XjgWc2geBQMNxCeVyHEm+V/faSOu7Ruml7SjEnQPxpd5v3wJEwEU/t
-	 G5q7XKcEqcrNl7LnF4c/mc9Fd0U6r3jHCucMJEpXp0reuLI6MiJSVL9Lxpa1sLU5Ul
-	 uGOgHuniw5CmYvPoKzF2ua2Ze+u+PL1uzAlaBtwg=
+	s=default; t=1568787961;
+	bh=qLAAUX4SsYM1Clfv4xEO6SGYWjL/OsRk8EGWmNpBWag=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=aTDmDi85XsAUpc2ARtVHGAKEC+jF0ZnlieQyVlrdEbS+iBsZ7+QZCEd98nXMoTmn7
+	 JYTim7n88OizciMgg8wd1QWGsMPt2nTNWHwVzqXrm8WGk1a0Ke4yZGzLwDOuNQAiDB
+	 E24OjS9T6i9PMasBmY3kjiZsk0sQJF+JRu5GSVbs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbfIRGZy (ORCPT
+        id S1730223AbfIRG0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46910 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbfIRGZt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:49 -0400
+        id S1726736AbfIRGZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC0B921920;
-        Wed, 18 Sep 2019 06:25:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46BFC21925;
+        Wed, 18 Sep 2019 06:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787948;
-        bh=pjvi5e0JD3oQ6w9n9LpfofgHo6x1NQIQAj2rtjbJ3U8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ss39CC5DDXSCfeKeMivtaEhb7n1Sb3yNWkPPLhr6LEdOeEWwrdFrlqDGtL3P933fJ
-         yoaOvAJMR/F8A8ijmBpE/X3427Q9tu5DX+d1GPPZJC+0qxOceS3h4LqfMfPhEM24OV
-         met6tnEhVAXqUzPZ99uIJyBb9n2wKyF6OU8UzESg=
+        s=default; t=1568787953;
+        bh=qLAAUX4SsYM1Clfv4xEO6SGYWjL/OsRk8EGWmNpBWag=;
+        h=From:To:Cc:Subject:Date:From;
+        b=cPKAuGSKi9xqMEEiR13WNJV4ynNliIgTJzu2BBpxMT7aPI14tivdi1mrNzM96ZwVG
+         uxk5OvNQZxHF8wI0SEbLAjo+dp+H++B1UD/T1k1V1Jk30ASonLwoMGNrs1Us54YXo4
+         20vozI5frfpGdSspADx710ijL/IB/KfY6AhoatQU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 08/85] net: gso: Fix skb_segment splat when splitting gso_size mangled skb having linear-headed frag_list
-Date:   Wed, 18 Sep 2019 08:18:26 +0200
-Message-Id: <20190918061234.392649861@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 5.2 00/85] 5.2.16-stable review
+Date:   Wed, 18 Sep 2019 08:18:18 +0200
+Message-Id: <20190918061234.107708857@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
-References: <20190918061234.107708857@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-5.2.16-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.2.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.2.16-rc1
+X-KernelTest-Deadline: 2019-09-20T06:12+00:00
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,105 +67,366 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+This is the start of the stable review cycle for the 5.2.16 release.
+There are 85 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-[ Upstream commit 3dcbdb134f329842a38f0e6797191b885ab00a00 ]
+Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
+Anything received after that time might be too late.
 
-Historically, support for frag_list packets entering skb_segment() was
-limited to frag_list members terminating on exact same gso_size
-boundaries. This is verified with a BUG_ON since commit 89319d3801d1
-("net: Add frag_list support to skb_segment"), quote:
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.16-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
+and the diffstat can be found below.
 
-    As such we require all frag_list members terminate on exact MSS
-    boundaries.  This is checked using BUG_ON.
-    As there should only be one producer in the kernel of such packets,
-    namely GRO, this requirement should not be difficult to maintain.
+thanks,
 
-However, since commit 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper"),
-the "exact MSS boundaries" assumption no longer holds:
-An eBPF program using bpf_skb_change_proto() DOES modify 'gso_size', but
-leaves the frag_list members as originally merged by GRO with the
-original 'gso_size'. Example of such programs are bpf-based NAT46 or
-NAT64.
+greg k-h
 
-This lead to a kernel BUG_ON for flows involving:
- - GRO generating a frag_list skb
- - bpf program performing bpf_skb_change_proto() or bpf_skb_adjust_room()
- - skb_segment() of the skb
+-------------
+Pseudo-Shortlog of commits:
 
-See example BUG_ON reports in [0].
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 5.2.16-rc1
 
-In commit 13acc94eff12 ("net: permit skb_segment on head_frag frag_list skb"),
-skb_segment() was modified to support the "gso_size mangling" case of
-a frag_list GRO'ed skb, but *only* for frag_list members having
-head_frag==true (having a page-fragment head).
+Linus Torvalds <torvalds@linux-foundation.org>
+    x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
 
-Alas, GRO packets having frag_list members with a linear kmalloced head
-(head_frag==false) still hit the BUG_ON.
+Hui Peng <benquike@gmail.com>
+    rsi: fix a double free bug in rsi_91x_deinit()
 
-This commit adds support to skb_segment() for a 'head_skb' packet having
-a frag_list whose members are *non* head_frag, with gso_size mangled, by
-disabling SG and thus falling-back to copying the data from the given
-'head_skb' into the generated segmented skbs - as suggested by Willem de
-Bruijn [1].
+Enrico Weigelt <info@metux.net>
+    platform/x86: pcengines-apuv2: use KEY_RESTART for front button
 
-Since this approach involves the penalty of skb_copy_and_csum_bits()
-when building the segments, care was taken in order to enable this
-solution only when required:
- - untrusted gso_size, by testing SKB_GSO_DODGY is set
-   (SKB_GSO_DODGY is set by any gso_size mangling functions in
-    net/core/filter.c)
- - the frag_list is non empty, its item is a non head_frag, *and* the
-   headlen of the given 'head_skb' does not match the gso_size.
+Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+    platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
 
-[0]
-https://lore.kernel.org/netdev/20190826170724.25ff616f@pixies/
-https://lore.kernel.org/netdev/9265b93f-253d-6b8c-f2b8-4b54eff1835c@fb.com/
+Liran Alon <liran.alon@oracle.com>
+    KVM: SVM: Fix detection of AMD Errata 1096
 
-[1]
-https://lore.kernel.org/netdev/CA+FuTSfVsgNDi7c=GUU8nMg2hWxF2SjCNLXetHeVPdnxAW5K-w@mail.gmail.com/
+Jim Mattson <jmattson@google.com>
+    kvm: nVMX: Remove unnecessary sync_roots from handle_invept
 
-Fixes: 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper")
-Suggested-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/skbuff.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Jessica Yu <jeyu@kernel.org>
+    modules: always page-align module section allocations
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3531,6 +3531,25 @@ struct sk_buff *skb_segment(struct sk_bu
- 	int pos;
- 	int dummy;
- 
-+	if (list_skb && !list_skb->head_frag && skb_headlen(list_skb) &&
-+	    (skb_shinfo(head_skb)->gso_type & SKB_GSO_DODGY)) {
-+		/* gso_size is untrusted, and we have a frag_list with a linear
-+		 * non head_frag head.
-+		 *
-+		 * (we assume checking the first list_skb member suffices;
-+		 * i.e if either of the list_skb members have non head_frag
-+		 * head, then the first one has too).
-+		 *
-+		 * If head_skb's headlen does not fit requested gso_size, it
-+		 * means that the frag_list members do NOT terminate on exact
-+		 * gso_size boundaries. Hence we cannot perform skb_frag_t page
-+		 * sharing. Therefore we must fallback to copying the frag_list
-+		 * skbs; we do so by disabling SG.
-+		 */
-+		if (mss != GSO_BY_FRAGS && mss != skb_headlen(head_skb))
-+			features &= ~NETIF_F_SG;
-+	}
-+
- 	__skb_push(head_skb, doffset);
- 	proto = skb_network_protocol(head_skb, &dummy);
- 	if (unlikely(!proto))
+Yang Yingliang <yangyingliang@huawei.com>
+    modules: fix compile error if don't have strict module rwx
+
+Yang Yingliang <yangyingliang@huawei.com>
+    modules: fix BUG when load module with rodata=n
+
+Olivier Moysan <olivier.moysan@st.com>
+    iio: adc: stm32-dfsdm: fix data type
+
+Olivier Moysan <olivier.moysan@st.com>
+    iio: adc: stm32-dfsdm: fix output resolution
+
+Mario Limonciello <mario.limonciello@dell.com>
+    Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
+
+Gustavo A. R. Silva <gustavo@embeddedor.com>
+    mm/z3fold.c: fix lock/unlock imbalance in z3fold_page_isolate
+
+Henry Burns <henryburns@google.com>
+    mm/z3fold.c: remove z3fold_migration trylock
+
+Nishka Dasgupta <nishkadg.linux@gmail.com>
+    drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
+
+Hans de Goede <hdegoede@redhat.com>
+    drm: panel-orientation-quirks: Add extra quirk table entry for GPD MicroPC
+
+Andrew F. Davis <afd@ti.com>
+    firmware: ti_sci: Always request response from firmware
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - Do not modify req->cryptlen on decryption.
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - fix ECB algs ivsize
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - check data blocksize in ablkcipher.
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - fix CTR alg blocksize
+
+Christophe Leroy <christophe.leroy@c-s.fr>
+    crypto: talitos - check AES key size
+
+Muchun Song <smuchun@gmail.com>
+    driver core: Fix use-after-free and double free on glue directory
+
+Richard Weinberger <richard@nod.at>
+    ubifs: Correctly use tnc_next() in search_dh_cookie()
+
+Alex Williamson <alex.williamson@redhat.com>
+    PCI: Always allow probing with driver_override
+
+Xiaolei Li <xiaolei.li@mediatek.com>
+    mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
+
+Douglas Anderson <dianders@chromium.org>
+    clk: rockchip: Don't yell about bad mmc phases when getting
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    mt76: mt7615: Use after free in mt7615_mcu_set_bcn()
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    mt76: Fix a signedness bug in mt7615_add_interface()
+
+Stephen Boyd <sboyd@kernel.org>
+    clk: Simplify debugfs printing and add a newline
+
+Chen-Yu Tsai <wens@csie.org>
+    clk: Fix debugfs clk_possible_parents for clks without parent string names
+
+Neil Armstrong <narmstrong@baylibre.com>
+    drm/meson: Add support for XBGR8888 & ABGR8888 formats
+
+Mimi Zohar <zohar@linux.ibm.com>
+    x86/ima: check EFI SetupMode too
+
+Junichi Nomura <j-nomura@ce.jp.nec.com>
+    x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernels
+
+YueHaibing <yuehaibing@huawei.com>
+    kernel/module: Fix mem leak in module_add_modinfo_attrs
+
+Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+    powerpc: Add barrier_nospec to raw_copy_in_user()
+
+Steve Wahl <steve.wahl@hpe.com>
+    x86/purgatory: Change compiler flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
+
+Paolo Bonzini <pbonzini@redhat.com>
+    KVM: nVMX: handle page fault in vmread
+
+Sean Christopherson <sean.j.christopherson@intel.com>
+    KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
+
+Fuqian Huang <huangfq.daxian@gmail.com>
+    KVM: x86: work around leak of uninitialized stack contents
+
+Thomas Huth <thuth@redhat.com>
+    KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
+
+Igor Mammedov <imammedo@redhat.com>
+    KVM: s390: kvm_s390_vm_start_migration: check dirty_bitmap before using it as target for memset()
+
+Andreas Kemnade <andreas@kemnade.info>
+    regulator: twl: voltage lists for vdd1/2 on twl4030
+
+Yunfeng Ye <yeyunfeng@huawei.com>
+    genirq: Prevent NULL pointer dereference in resend_irqs()
+
+Stanislaw Gruszka <sgruszka@redhat.com>
+    mt76: mt76x0e: disable 5GHz band for MT7630E
+
+Stanislaw Gruszka <sgruszka@redhat.com>
+    Revert "rt2800: enable TX_PIN_CFG_LNA_PE_ bits per band"
+
+Alexander Duyck <alexander.h.duyck@linux.intel.com>
+    ixgbe: Prevent u8 wrapping of ITR value to something less than 10us
+
+Ilya Maximets <i.maximets@samsung.com>
+    ixgbe: fix double clean of Tx descriptors with xdp
+
+Arnd Bergmann <arnd@arndb.de>
+    ipc: fix sparc64 ipc() wrapper
+
+Arnd Bergmann <arnd@arndb.de>
+    ipc: fix semtimedop for generic 32-bit architectures
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    drm/i915: Restore relaxed padding (OCL_OOB_SUPPRES_ENABLE) for skl+
+
+Ville Syrjälä <ville.syrjala@linux.intel.com>
+    drm/i915: Limit MST to <= 8bpc once again
+
+Vasily Khoruzhick <anarsoul@gmail.com>
+    drm/lima: fix lima_gem_wait() return value
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: tmio: Fixup runtime PM management during remove
+
+Ulf Hansson <ulf.hansson@linaro.org>
+    mmc: tmio: Fixup runtime PM management during probe
+
+Daniel Drake <drake@endlessm.com>
+    Revert "mmc: sdhci: Remove unneeded quirk2 flag of O2 SD host controller"
+
+Stefan Wahren <wahrenst@gmx.net>
+    Revert "mmc: bcm2835: Terminate timeout work synchronously"
+
+Roman Gushchin <guro@fb.com>
+    cgroup: freezer: fix frozen state inheritance
+
+Filipe Manana <fdmanana@suse.com>
+    Btrfs: fix assertion failure during fsync and use of stale transaction
+
+Kent Gibson <warthog618@gmail.com>
+    gpio: fix line flag validation in lineevent_create
+
+Kent Gibson <warthog618@gmail.com>
+    gpio: fix line flag validation in linehandle_create
+
+Wei Yongjun <weiyongjun1@huawei.com>
+    gpio: mockup: add missing single_release()
+
+Hans de Goede <hdegoede@redhat.com>
+    gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
+
+John Fastabend <john.fastabend@gmail.com>
+    net: sock_map, fix missing ulp check in sock hash case
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: fix the missing put_user when dumping transport thresholds
+
+Moritz Fischer <mdf@kernel.org>
+    net: fixed_phy: Add forward declaration for struct gpio_desc;
+
+Maciej Żenczykowski <maze@google.com>
+    ipv6: addrconf_f6i_alloc - fix non-null pointer check to !IS_ERR()
+
+Maciej Żenczykowski <maze@google.com>
+    net-ipv6: fix excessive RTF_ADDRCONF flag on ::1/128 local route (and others)
+
+Yang Yingliang <yangyingliang@huawei.com>
+    tun: fix use-after-free when register netdev failed
+
+Xin Long <lucien.xin@gmail.com>
+    tipc: add NULL pointer check before calling kfree_rcu
+
+Neal Cardwell <ncardwell@google.com>
+    tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
+
+Xin Long <lucien.xin@gmail.com>
+    sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    sctp: Fix the link time qualifier of 'sctp_ctrlsock_exit()'
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+
+Eric Dumazet <edumazet@google.com>
+    net: sched: fix reordering issues
+
+Stefan Chulski <stefanc@marvell.com>
+    net: phylink: Fix flow control resolution
+
+Shmulik Ladkani <shmulik@metanetworks.com>
+    net: gso: Fix skb_segment splat when splitting gso_size mangled skb having linear-headed frag_list
+
+Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+    net: Fix null de-reference of device refcount
+
+Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+    ixgbevf: Fix secpath usage for IPsec Tx offload
+
+Steffen Klassert <steffen.klassert@secunet.com>
+    ixgbe: Fix secpath usage for IPsec TX offload.
+
+Eric Biggers <ebiggers@google.com>
+    isdn/capi: check message length in capi_write()
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    ipv6: Fix the link time qualifier of 'ping_v6_proc_exit_net()'
+
+Bjørn Mork <bjorn@mork.no>
+    cdc_ether: fix rndis support for Mediatek based smartphones
+
+Nicolas Dichtel <nicolas.dichtel@6wind.com>
+    bridge/mdb: remove wrong use of NLM_F_MULTI
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |   4 +-
+ arch/powerpc/include/asm/uaccess.h                 |   1 +
+ arch/s390/kvm/interrupt.c                          |  10 ++
+ arch/s390/kvm/kvm-s390.c                           |   4 +-
+ arch/sparc/kernel/sys_sparc_64.c                   |  33 +++--
+ arch/x86/Makefile                                  |   1 +
+ arch/x86/boot/compressed/acpi.c                    | 143 +++++++++++++-----
+ arch/x86/include/asm/kvm_host.h                    |   2 +
+ arch/x86/kernel/ima_arch.c                         |  12 +-
+ arch/x86/kvm/mmu.c                                 | 101 ++++++++++++-
+ arch/x86/kvm/svm.c                                 |  42 +++++-
+ arch/x86/kvm/vmx/nested.c                          |  12 +-
+ arch/x86/kvm/x86.c                                 |   7 +
+ arch/x86/purgatory/Makefile                        |  35 +++--
+ drivers/base/core.c                                |  53 ++++++-
+ drivers/bluetooth/btusb.c                          |   5 -
+ drivers/clk/clk.c                                  |  38 ++++-
+ drivers/clk/rockchip/clk-mmc-phase.c               |   4 +-
+ drivers/crypto/talitos.c                           |  70 ++++++---
+ drivers/firmware/ti_sci.c                          |   8 +-
+ drivers/gpio/gpio-mockup.c                         |   1 +
+ drivers/gpio/gpiolib-acpi.c                        |  42 +++++-
+ drivers/gpio/gpiolib.c                             |  16 +-
+ drivers/gpu/drm/drm_panel_orientation_quirks.c     |  12 ++
+ drivers/gpu/drm/i915/intel_dp_mst.c                |  10 +-
+ drivers/gpu/drm/i915/intel_workarounds.c           |   5 -
+ drivers/gpu/drm/lima/lima_gem.c                    |   2 +-
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c             |   5 +-
+ drivers/gpu/drm/meson/meson_plane.c                |  16 ++
+ drivers/iio/adc/stm32-dfsdm-adc.c                  | 162 ++++++++++++++++-----
+ drivers/iio/adc/stm32-dfsdm.h                      |  24 ++-
+ drivers/isdn/capi/capi.c                           |  10 +-
+ drivers/mmc/host/bcm2835.c                         |   2 +-
+ drivers/mmc/host/sdhci-pci-o2micro.c               |   2 +-
+ drivers/mmc/host/tmio_mmc.h                        |   1 +
+ drivers/mmc/host/tmio_mmc_core.c                   |  16 +-
+ drivers/mtd/nand/raw/mtk_nand.c                    |  21 ++-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c      |   7 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c       |  29 ++--
+ drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c  |   3 +-
+ drivers/net/phy/phylink.c                          |   6 +-
+ drivers/net/tun.c                                  |  16 +-
+ drivers/net/usb/cdc_ether.c                        |  10 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/main.c   |   5 +-
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c    |   2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c |   5 +
+ drivers/net/wireless/ralink/rt2x00/rt2800lib.c     |  18 +--
+ drivers/net/wireless/rsi/rsi_91x_usb.c             |   1 -
+ drivers/pci/pci-driver.c                           |   3 +-
+ drivers/platform/x86/pcengines-apuv2.c             |   2 +-
+ drivers/platform/x86/pmc_atom.c                    |   8 +
+ drivers/regulator/twl-regulator.c                  |  23 ++-
+ fs/btrfs/tree-log.c                                |  16 +-
+ fs/ubifs/tnc.c                                     |  16 +-
+ include/linux/phy_fixed.h                          |   1 +
+ include/linux/syscalls.h                           |  19 +++
+ include/uapi/asm-generic/unistd.h                  |   2 +-
+ include/uapi/linux/isdn/capicmd.h                  |   1 +
+ ipc/util.h                                         |  25 +---
+ kernel/cgroup/cgroup.c                             |  10 +-
+ kernel/irq/resend.c                                |   2 +
+ kernel/module.c                                    |  51 ++++---
+ mm/z3fold.c                                        |   7 +-
+ net/bridge/br_mdb.c                                |   2 +-
+ net/core/dev.c                                     |   2 +
+ net/core/skbuff.c                                  |  19 +++
+ net/core/sock_map.c                                |   3 +
+ net/ipv4/tcp_input.c                               |   2 +-
+ net/ipv6/ping.c                                    |   2 +-
+ net/ipv6/route.c                                   |   8 +-
+ net/sched/sch_generic.c                            |   9 +-
+ net/sched/sch_hhf.c                                |   2 +-
+ net/sctp/protocol.c                                |   2 +-
+ net/sctp/sm_sideeffect.c                           |   2 +-
+ net/sctp/socket.c                                  |   3 +-
+ net/tipc/name_distr.c                              |   3 +-
+ 76 files changed, 956 insertions(+), 323 deletions(-)
 
 
