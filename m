@@ -2,103 +2,94 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE71C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0947AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4EE21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:02:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lHwAihyQ"
+	by mail.kernel.org (Postfix) with ESMTP id C43F721907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:06:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568822785;
+	bh=ufV+8/UZw+vPMDxNA536wLRDJt1zPivHGmQyve3d8aw=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jXqdhQq8TAKORSytG0aYuw0Nto4ix20DmaDCN6CsynhfYzXcqe4tMIT9Ad5uB3Z+M
+	 KstNLN5aFMRklJv0aAWbSES9XzbjK7KrgiHTDbdTRvEE1tDi6E7WBwH3czv70XyMHO
+	 5//0ePKDQH1i+oPgbgy0z01jsD53jdAiho8IgAow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731857AbfIRQCm (ORCPT
+        id S1730104AbfIRQGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:02:42 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40179 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfIRQCl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:02:41 -0400
-Received: by mail-pg1-f195.google.com with SMTP id w10so92804pgj.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:02:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=GmcLSQu6EQAPA4h2lTeOhp0gk5DIW9Hi/4PZD6ne2GI=;
-        b=lHwAihyQ01mNJtRlkEW+zkPVzH7UN8YNJXaBctlQNpIunIvVg6WN0WEdXI8t5rk2Bi
-         RUrfAstL9JVlFpP/c3KOvWqDNzrtR7+IYAS7TGcOoB46wOLsdiXhx1uuo0MWNqsHm9V7
-         h3w2jHTh10BIcHn4CDyjqjbNZCdCCyQhafdFmzvxsC7i/5YRosUbwiwdaF8XZoZ/Ikmt
-         4qI+8/4UTWN9tlpuJGLujevehagKhBMf7TgEJBy3gpC9MDHln5DN6jtkSOOxYLz8F7Jb
-         g4S9sB51TTBrRobOH22E+ccjjnVfhGuoxzGV3N4Ze3FC5JzVyvwAnGspg3cF/W3bdQqf
-         lyUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=GmcLSQu6EQAPA4h2lTeOhp0gk5DIW9Hi/4PZD6ne2GI=;
-        b=gBThDNAtDctLDhgO0Vv/GMl847jmNr9u4+bxm9AAPLDXF0ldqZfPAaijn9HsW4SOoQ
-         OdXCIM1pn4fBOJ+4RTJ8Zl9Omu4BLy7QDiunn7ap39WZY2K3XBZP9CE9g+0BcgrilThR
-         hu6ShExiVcU7z6NogY0ieKd1og+FGDeJ9kMRoBVc7UZs6mFJlvoR/3gjRoWUukeMAmzw
-         +YR1Gr6I6K/0S9oKm6kLocP4Eg7KyNQhEw8/PRPz1FaXgZZUHcApXiLT5mA7undmPOQj
-         WkdHK7X/sQlJ4JfnHoEs5OCkHLbyh3gUg2LixXhV+pZIRCVpGiCnfU8XljS9ww1AfoyV
-         bL/g==
-X-Gm-Message-State: APjAAAUlKE64F84XUeN7DbWbiXOtq7iFFzR61BdX/nTKb8iFtJ/nB062
-        0GHv7ZPQzmPNBRb0a+KDqI6zbQ==
-X-Google-Smtp-Source: APXvYqxqsqKgZ2IZgToJhuCvJIAOwPTlNQxrTbdYExiHkeaBfu8MCmPQqWqbRpaNvkXeYJ5WvqewIg==
-X-Received: by 2002:aa7:8005:: with SMTP id j5mr5077266pfi.50.1568822560215;
-        Wed, 18 Sep 2019 09:02:40 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id g12sm9872379pfb.97.2019.09.18.09.02.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 09:02:39 -0700 (PDT)
-From:   Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-To:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
-Cc:     paul.walmsley@sifive.com, palmer@sifive.com, aou@eecs.berkeley.edu,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Subject: [PATCH v9 2/2] mtd: spi-nor: fix nor->addr_width for is25wp256
-Date:   Wed, 18 Sep 2019 21:31:45 +0530
-Message-Id: <1568822505-19297-3-git-send-email-sagar.kadam@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1568822505-19297-1-git-send-email-sagar.kadam@sifive.com>
-References: <1568822505-19297-1-git-send-email-sagar.kadam@sifive.com>
+        Wed, 18 Sep 2019 12:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35544 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727609AbfIRQGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:06:24 -0400
+Received: from paulmck-ThinkPad-P72 (unknown [50.237.200.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E0E4208C0;
+        Wed, 18 Sep 2019 16:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568822784;
+        bh=ufV+8/UZw+vPMDxNA536wLRDJt1zPivHGmQyve3d8aw=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=15NJGStM4Da4odbjTTHfh/6lBz4MhxmwovCJSvCvLS4Bz3vRQ8UokWtiXuxTvsTb8
+         X2f4xkjBMTU2ptM2IMkvGGgXIjjEDCXEq90+uXlkQihx9KtGqvAWX23Mk/Cr8g01au
+         0ubr42g5whT68U+j/17JeotLNHGHDNjZsHLqDBp4=
+Date:   Wed, 18 Sep 2019 09:06:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
+Message-ID: <20190918160621.GH30224@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20190916145404.bukcmlliequu77wk@linutronix.de>
+ <20190917071614.kcmux562y6wbskj5@linux-p48b>
+ <20190917170620.GC30224@paulmck-ThinkPad-P72>
+ <20190918062404.hyk5p2gs4mtybl3t@linux-p48b>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918062404.hyk5p2gs4mtybl3t@linux-p48b>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the post bfpt fixup hook for the is25wp256 device as done for
-is25lp256 device to overwrite the address width advertised by BFPT.
+On Tue, Sep 17, 2019 at 11:24:04PM -0700, Davidlohr Bueso wrote:
+> On Tue, 17 Sep 2019, Paul E. McKenney wrote:
+> 
+> > On Tue, Sep 17, 2019 at 12:16:14AM -0700, Davidlohr Bueso wrote:
+> > > On Mon, 16 Sep 2019, Sebastian Andrzej Siewior wrote:
+> > > 
+> > > > From: Wolfgang M. Reimer <linuxball@gmail.com>
+> > > >
+> > > > Including rwlock.h directly will cause kernel builds to fail
+> > > > if CONFIG_PREEMPT_RT is defined. The correct header file
+> > > > (rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
+> > > > is included by locktorture.c anyway.
+> > > >
+> > > > Remove the include of linux/rwlock.h.
+> > > >
+> > > 
+> > > Acked-by: Davidlohr Bueso <dbueso@suse.de>
+> > 
+> > Applied, thank you!
+> > 
+> > But does anyone actually run locktorture?
+> 
+> I do at least. I also know of cases of other folks making use of the
+> "framework" to test/pound on custom tailored locks -- ie btrfs tree lock.
+> 
+> I've also seen it in one or two academic papers.
 
-For instance the standard devices eg: IS25WP256D-JMLE where J stands
-for "standard" does not support SFDP.
+OK, I will hold off on a patch removing it, then.  ;-)
 
-Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/mtd/spi-nor/spi-nor.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 003c1c7..75e8560 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -1949,7 +1949,7 @@ static int spi_nor_spansion_clear_sr_bp(struct spi_nor *nor)
- 	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 512,
- 			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
- 			SPI_NOR_4B_OPCODES)
--	},
-+			.fixups = &is25lp256_fixups },
- 	/* Macronix */
- 	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
- 	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
--- 
-1.9.1
-
+							Thanx, Paul
