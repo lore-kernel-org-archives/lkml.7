@@ -2,199 +2,109 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63EE2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA253C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7772067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772942067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DAMnkgK9";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cPaFNWjv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfIRODR (ORCPT
+        id S1731135AbfIRODX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:03:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726038AbfIRODP (ORCPT
+        Wed, 18 Sep 2019 10:03:23 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:42744 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfIRODS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:03:15 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IDvQxK078472
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:03:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3mk53qg3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:03:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 18 Sep 2019 15:03:11 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Sep 2019 15:03:06 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IE34dc46989588
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 14:03:05 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E148D11C04C;
-        Wed, 18 Sep 2019 14:03:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4455B11C050;
-        Wed, 18 Sep 2019 14:03:04 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.67.121])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 14:03:04 +0000 (GMT)
-Subject: Re: [PATCH 2/5] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Vaibhav Jain <vaibhav@linux.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190917014307.30485-1-alastair@au1.ibm.com>
- <20190917014307.30485-3-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 18 Sep 2019 16:03:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 18 Sep 2019 10:03:18 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3F60560850; Wed, 18 Sep 2019 14:03:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568815397;
+        bh=GI8g7BdcEpF2wvGvgxsUXnHFIMMx79kllp6rnPF+YEE=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=DAMnkgK9yktfhC6LpBzpzRf3ErTSGwtdXaHtu9iwR99fuYwhVzPu4vbGmRe3H2j2Y
+         jV8TnVxzGPlTs1UwYl1KY4iNX5rov8FdENNkC/hj829cVAP4LVPGzp88nRSoLcGY4P
+         9mZzoR0E2zT1WDIj7kDevJD5aQQTmMiPmQbBXPaE=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8EDF0613A8;
+        Wed, 18 Sep 2019 14:03:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568815396;
+        bh=GI8g7BdcEpF2wvGvgxsUXnHFIMMx79kllp6rnPF+YEE=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=cPaFNWjv4igEjoXIw8leq53V6QydcyLRBRrA+UdRXV4uehhDiki/4NgnJLb6nW+57
+         4/gFaz9oNUtiXFXn3XbHjM6pxcIZBm40fSnTqCBa4mkVn4iB1HLbYBkI8ZzxkJixYR
+         3fs5g85v1J+uU3VCw3RBcPtfLLWXFfl7DSEYU01o=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8EDF0613A8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Brian Norris <briannorris@chromium.org>
+Cc:     Wen Gong <wgong@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        ath10k@lists.infradead.org
+Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
+References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
+        <20181114225910.GA220599@google.com>
+        <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+Date:   Wed, 18 Sep 2019 17:03:12 +0300
+In-Reply-To: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
+        (Brian Norris's message of "Tue, 17 Sep 2019 09:32:52 -0700")
+Message-ID: <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190917014307.30485-3-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091814-0016-0000-0000-000002AD96AD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091814-0017-0000-0000-0000330E411B
-Message-Id: <c644b511-86c8-e71b-11ae-dd425c3be28d@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=953 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180141
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Brian Norris <briannorris@chromium.org> writes:
 
+> Since Wen has once again suggested I use this patch in other forums,
+> I'll ping here to note:
+>
+> On Wed, Nov 14, 2018 at 2:59 PM Brian Norris <briannorris@chromium.org> wrote:
+>> You've introduced a regression in 4.20-rc1:
+>
+> This regression still survives in the latest tree. Is it fair to just
+> submit a revert?
 
-Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Map & release OpenCAPI LPC memory.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/include/asm/pnv-ocxl.h   |  2 ++
->   arch/powerpc/platforms/powernv/ocxl.c | 42 +++++++++++++++++++++++++++
->   2 files changed, 44 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
-> index 7de82647e761..f8f8ffb48aa8 100644
-> --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> @@ -32,5 +32,7 @@ extern int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   
->   extern int pnv_ocxl_alloc_xive_irq(u32 *irq, u64 *trigger_addr);
->   extern void pnv_ocxl_free_xive_irq(u32 irq);
-> +extern u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size);
-> +extern void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev);
->   
->   #endif /* _ASM_PNV_OCXL_H */
-> diff --git a/arch/powerpc/platforms/powernv/ocxl.c b/arch/powerpc/platforms/powernv/ocxl.c
-> index 8c65aacda9c8..81393728d6a3 100644
-> --- a/arch/powerpc/platforms/powernv/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/ocxl.c
-> @@ -475,6 +475,48 @@ void pnv_ocxl_spa_release(void *platform_data)
->   }
->   EXPORT_SYMBOL_GPL(pnv_ocxl_spa_release);
->   
-> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dn *pdn = pci_get_pdn(pdev);
-> +	u32 bdfn = (pdn->busno << 8) | pdn->devfn;
+Your description about the problem from an earlier email:
 
+  "It seems like youre enabling SCHED_SCAN support? But you're not
+   adding the NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR feature flag.
+   So it puts us in a tough place on using randomization -- we either
+   can't trust the FEATURE flags, or else we can't use both SCHED_SCAN
+   and scan randomization."
 
-We can spare a call to pci_get_pdn() with
-bdfn = (pdev->bus->number << 8) | pdev->devfn;
+So essentially the problem is that with firmwares supporting both
+WMI_SERVICE_NLO and WMI_SERVICE_SPOOF_MAC_SUPPORT ath10k enables
+NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR, but
+NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR is not enabled which is
+inconsistent from user space point of view. Is my understanding correct?
 
+Wen, can you enable NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR? Does firmware
+support that?
 
-> +	u64 base_addr = 0;
-> +
-> +	int rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr);
-> +
-> +	WARN_ON(rc);
+If that's not possible, one workaround might to be to not enable
+NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR if firmware supports
+WMI_SERVICE_NLO, but of course that would suck big time.
 
-Instead of a WARN, we should catch the error and return a null address 
-to the caller.
+Here's the full context in case someone is interested:
 
-> +
-> +	base_addr = be64_to_cpu(base_addr);
-> +
-> +	rc = check_hotplug_memory_addressable(base_addr, base_addr + size);
+https://patchwork.kernel.org/patch/10567005/
 
-
-That code is missing?
-
-
-> +	if (rc) {
-> +		dev_warn(&pdev->dev,
-> +			 "LPC memory range 0x%llx-0x%llx is not fully addressable",
-> +			 base_addr, base_addr + size - 1);
-> +		return 0;
-> +	}
-> +
-> +
-> +	return base_addr;
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_setup);
-> +
-> +void pnv_ocxl_platform_lpc_release(struct pci_dev *pdev)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	struct pci_dn *pdn = pci_get_pdn(pdev);
-> +	u32 bdfn;
-> +	int rc;
-> +
-> +	bdfn = (pdn->busno << 8) | pdn->devfn;
-> +	rc = opal_npu_mem_release(phb->opal_id, bdfn);
-> +	WARN_ON(rc);
-
-
-Same comments as above.
-
-   Fred
-
-
-
-> +}
-> +EXPORT_SYMBOL_GPL(pnv_ocxl_platform_lpc_release);
-> +
-> +
->   int pnv_ocxl_spa_remove_pe_from_cache(void *platform_data, int pe_handle)
->   {
->   	struct spa_data *data = (struct spa_data *) platform_data;
-> 
-
+-- 
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
