@@ -2,106 +2,147 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2566BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCEBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB3A20882
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A403620882
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:47:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gJkNowr2"
+	dkim=pass (2048-bit key) header.d=pensando.io header.i=@pensando.io header.b="kbz3gJCT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387633AbfIRUrS (ORCPT
+        id S2387774AbfIRUrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:47:18 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:32832 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387492AbfIRUrR (ORCPT
+        Wed, 18 Sep 2019 16:47:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44898 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387492AbfIRUrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:47:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yKO+JcrX4WlARPc+kWE02y475ov/blGOIN+ePLKY9jk=; b=gJkNowr2SzR7BFTbrahPJ2la/F
-        U1rGQ5TAnIe0V2wQvVHVJSudzxcXRhJugshBq0XINqmfULmUNnKwRQ4zxmtL+yEXmYzwGvSk+M8rN
-        hW91rXpleIbzAzZLgJCzWEwG6awzsOP6IA6vnkh6l1C9h9samuELA1m8N+atSr6m6BI4fWLQyMk0h
-        nYo1DwH6odStxfocEsZPWqm6gH22F1qi41VPwzpA0Pw7MPJfhlOfZxoDO6PUpyqNMhVlhj3BCBLcS
-        O0Lk/GPzewNCEagBg0+HVE1LD7QA9+1HH3D9IGrL9DcaDfUKZOmRD1E1uZ36BpAN3hc0VEV0lgcqf
-        sYvKSWlQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iAgr5-0005yZ-1J; Wed, 18 Sep 2019 20:47:15 +0000
-Date:   Wed, 18 Sep 2019 13:47:15 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        devel@linuxdriverproject.org, linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] Staging/IIO driver patches for 5.4-rc1
-Message-ID: <20190918204715.GA15538@infradead.org>
-References: <20190918114754.GA1899504@kroah.com>
- <20190918182412.GA9924@infradead.org>
- <20190918185010.GA1933470@kroah.com>
+        Wed, 18 Sep 2019 16:47:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q21so737493pfn.11
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:47:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=pensando.io; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=6L+VjzcHswaXTY/zBXV0IzeQ41/pBTuQGxWIV6p+PQ0=;
+        b=kbz3gJCTYu/9N2PsX9/677GNQ2MURRJArq/xJv3ayCLI8gWWCxJCFEGPe+ugqae2Op
+         lyc6xzcjb1ygHE+Rfe1DwLr4gr6kvLBu7wlkBbbLhoh6np1j8yp9t8A8ADWCT/E920gp
+         gF1uYD/q88hEPOnaqJ6c/jY2EAKrG75a9O6iixygduVU02O/V7wEIUixf1G0JANSSahx
+         1WykHopA8+iU2tUFKK32H/uQkQZwXFDnfPLYtO/cIXUyWwu5eOscKnZzydOUXobNlSjR
+         iRa7gOtHgg561aCZhMeEy+f/FXLuZ7bW38A9DMstE7V+G3u/Woy7B/K4n2mjzPDkOQXc
+         JFFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=6L+VjzcHswaXTY/zBXV0IzeQ41/pBTuQGxWIV6p+PQ0=;
+        b=PHIby9FVb8LpC/TtBHy3EP3Z3Dc6aBSfD7Jdqz+ACmK+QhhQ0uapxRAJ1eJ1JCqPAx
+         qjqCVk/fBVHBg2EVwGhxbe43xdJVun58cuwQ2w/EtXGQMiPShmuMowzj8o2CUhCsSPRm
+         iY1Xk/e4EHaAzVnLEVdX7ww9LBFe/kw2DFOu6bApdmpAvhyCOpAKILlnQeQWskrCcNxT
+         Z9ix8cMhYZuIhYeP4Arr78doBogK33f2s2dr+/jLrnNXnSmqB7ctRiamgZlIL9eCX2ep
+         MumWgYFKHxD3Rbl5kcuAnlvZRfnwiOIHyLl5Vr6zW/d6yIB1/h8ZFsPtnyfASJd09i1u
+         6b/w==
+X-Gm-Message-State: APjAAAWgLp2h4bh79snQAfCvIAxLig62TobQps8BEx31ZJeCXElf+PII
+        4n9VqQEivauohFb6cKM0E4rbEnK0WmUBaw==
+X-Google-Smtp-Source: APXvYqwuep5pewN0WPqjzbukkq/+BWVHR/FT3LTBOlPZv/Mprtab8gW5fvaHzSRHvWgfWVIo1gKR6w==
+X-Received: by 2002:a17:90a:17c5:: with SMTP id q63mr270784pja.106.1568839659039;
+        Wed, 18 Sep 2019 13:47:39 -0700 (PDT)
+Received: from Shannons-MacBook-Pro.local ([12.1.37.26])
+        by smtp.gmail.com with ESMTPSA id j1sm6051803pgl.12.2019.09.18.13.47.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 13:47:38 -0700 (PDT)
+Subject: Re: [PATCH] dynamic_debug: provide dynamic_hex_dump stub
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jason Baron <jbaron@akamai.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190918195607.2080036-1-arnd@arndb.de>
+From:   Shannon Nelson <snelson@pensando.io>
+Message-ID: <91b69922-926a-9c27-3a08-e2db2d7ea66f@pensando.io>
+Date:   Wed, 18 Sep 2019 13:47:36 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190918185010.GA1933470@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190918195607.2080036-1-arnd@arndb.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 08:50:10PM +0200, Greg KH wrote:
-> > exfat is just a random old code drop from Samsung hastily picked up,
-> > and also duplicating the fat16/32 functionality, and without
-> > consultation of the developes of that who are trying to work through
-> > their process of contributing the uptodate and official version of it.
-> 
-> Those developers are still yet to be found, we only got a "drop" of the
-> samsung code _after_ this code was merged, from non-samsung people.  No
-> samsung developers have said they would actually help with any of this
-> work, and when asked what differed from the in-tree stuff, I got a list,
-> but no specifics.  I'll be working through that list over the next month
-> to resolve those issues.
+On 9/18/19 12:55 PM, Arnd Bergmann wrote:
+> The ionic driver started using dymamic_hex_dump(), but
+> that is not always defined:
+>
+> drivers/net/ethernet/pensando/ionic/ionic_main.c:229:2: error: implicit declaration of function 'dynamic_hex_dump' [-Werror,-Wimplicit-function-declaration]
+>
+> Add a dummy implementation to use when CONFIG_DYNAMIC_DEBUG
+> is disabled, printing nothing.
+>
+> Fixes: 938962d55229 ("ionic: Add adminq action")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>   drivers/net/ethernet/pensando/ionic/ionic_lif.c  | 2 ++
+>   drivers/net/ethernet/pensando/ionic/ionic_main.c | 2 ++
+>   include/linux/dynamic_debug.h                    | 6 ++++++
+>   3 files changed, 10 insertions(+)
+>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> index db7c82742828..a255d24c8e40 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+> @@ -1,6 +1,8 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
+>   
+> +#include <linux/printk.h>
+> +#include <linux/dynamic_debug.h>
+>   #include <linux/netdevice.h>
+>   #include <linux/etherdevice.h>
+>   #include <linux/rtnetlink.h>
+> diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> index 15e432386b35..aab311413412 100644
+> --- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> +++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
+> @@ -1,6 +1,8 @@
+>   // SPDX-License-Identifier: GPL-2.0
+>   /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
+>   
+> +#include <linux/printk.h>
+> +#include <linux/dynamic_debug.h>
+>   #include <linux/module.h>
+>   #include <linux/netdevice.h>
+>   #include <linux/utsname.h>
+> diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+> index 6c809440f319..4cf02ecd67de 100644
+> --- a/include/linux/dynamic_debug.h
+> +++ b/include/linux/dynamic_debug.h
+> @@ -204,6 +204,12 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
+>   	do { if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); } while (0)
+>   #define dynamic_dev_dbg(dev, fmt, ...)					\
+>   	do { if (0) dev_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__); } while (0)
+> +#define dynamic_hex_dump(prefix_str, prefix_type, rowsize,		\
+> +			 groupsize, buf, len, ascii)			\
+> +	do { if (0)							\
+> +		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
+> +				rowsize, groupsize, buf, len, ascii);	\
+> +	} while (0)
+>   #endif
+>   
+>   #endif
 
-Park offered to help with a new version, and the Samsung guys are going
-through their internal review process to work upstream it.  Remember
-it is their codebase in each of the variants here.  While it is fine
-if we take some code that has been abandoned by the original developers
-and still merge it with helping hands I think it is very rude to not
-at least wait for them to get their act of working with their corporate
-overlords together first.  It isn't like we've been waiting forever
-for an exfat driver - the patent grant has been extremely recent, and
-this whole thing just seems like a publicity stunt to be honest.  Give
-them a couple weeks to sort their stuff out and then we can decide
-how to proceed.  I for one would defintively prefer to have code
-maintained by the original maintainers if possible.  And not have
-them hindered by the staging process to work on their own code.
+Thanks, I hadn't had a chance to look into that one yet.
 
-> To get back to the meta-problem here, we need a common "vfs/filesystem"
-> tree somewhere with reviewers.  I'm glad to set up the tree and handle
-> patches, but I am not a vfs expert by any means (I only understand the
-> virtual half, not the backing half), so I can't be the only one to do
-> reviews.  Do you know of anyone that we can drag in as reviewers to help
-> make it easier for new filesystems to get reviews as well as existing
-> ones to have their patches collected and forwarded on to Linus at the
-> proper times?
+Acked-by: Shannon Nelson <snelson@pensando.io>
 
-Following how staging works and its arcane rules I don't want it to be
-anywhere near fs code.  And seriously, it is not like we need one
-magic tree to deal with all file systems.  The whole point of git is
-that people can setup a tree to collaborate wherever they want if you
-just find people to work on it.  And we've had tons of successful
-drivers and filesystems that worked that way.  And at least the ones
-I've followed seem a lot more productive than the staging show that
-is baѕed around coding style cleanup micropatches.
+
