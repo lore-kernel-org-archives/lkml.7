@@ -2,88 +2,152 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36FDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F86C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A14521924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:34:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DC621907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfIRLd7 (ORCPT
+        id S1730248AbfIRLhF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:33:59 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49960 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfIRLd7 (ORCPT
+        Wed, 18 Sep 2019 07:37:05 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:45793 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfIRLhF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:33:59 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id BFA523C04C0;
-        Wed, 18 Sep 2019 13:33:57 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id XO4uxawDwBGG; Wed, 18 Sep 2019 13:33:52 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 03DB53C00C4;
-        Wed, 18 Sep 2019 13:33:52 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 18 Sep
- 2019 13:33:51 +0200
-Date:   Wed, 18 Sep 2019 13:33:48 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Shuah Khan <shuah@kernel.org>
-CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
- argument
-Message-ID: <20190918113348.GA23977@vmlxhi-102.adit-jv.com>
-References: <20190917184023.16701-1-erosca@de.adit-jv.com>
+        Wed, 18 Sep 2019 07:37:05 -0400
+X-Originating-IP: 86.207.98.53
+Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 98CC920007;
+        Wed, 18 Sep 2019 11:37:01 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Claudiu.Beznea@microchip.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v3] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
+Date:   Wed, 18 Sep 2019 13:36:57 +0200
+Message-Id: <20190918113657.25998-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190917184023.16701-1-erosca@de.adit-jv.com>
-User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
-X-Originating-IP: [10.72.93.184]
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+Implement .get_multiple and .set_multiple to allow reading or setting
+multiple pins simultaneously. Pins in the same bank will all be switched at
+the same time, improving synchronization and performances.
 
-On Tue, Sep 17, 2019 at 08:40:22PM +0200, Eugeniu Rosca wrote:
-> From: "George G. Davis" <george_davis@mentor.com>
-> 
-> The newly added optional file argument does not validate if the
-> file is indeed a watchdog, e.g.:
-> 
-> ./watchdog-test  -f /dev/zero
-> Watchdog Ticking Away!
-> 
-> Fix it by confirming that the WDIOC_GETSUPPORT ioctl succeeds.
-> 
-> Fixes: c3f2490d6e9257 ("selftests: watchdog: Add optional file argument")
-> Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> Signed-off-by: George G. Davis <george_davis@mentor.com>
-> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> ---
-> v3:
->  - Used v1 as starting point and simplified commit description
->  - Added Fixes tag (WARNING: commit id is from linux-next!)
->  - No change in the contents
->  - Applied cleanly to the same base as used in [v1]
+Keep the driver future proof by allowing its use on 64bits platforms if
+they ever appear with this IP and we end up with a mismatch between
+ATMEL_PIO_NPINS_PER_BANK and BITS_PER_LONG.
 
-Can we have your confirmation the patches look fine now?
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+---
 
+Changes in v3:
+ - Add ack from ludovic
+ - add comment and amend commit message to explain the ifdefd
+
+ drivers/pinctrl/pinctrl-at91-pio4.c | 62 +++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index d6de4d360cd4..e380202eb86a 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -328,6 +328,33 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 	return !!(reg & BIT(pin->line));
+ }
+ 
++static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
++				   unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	bitmap_zero(bits, atmel_pioctrl->npins);
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int word = bank;
++		unsigned int offset = 0;
++		unsigned int reg;
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
++#endif
++		if (!mask[word])
++			continue;
++
++		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
++		bits[word] |= mask[word] & (reg << offset);
++	}
++
++	return 0;
++}
++
+ static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+ 				       int value)
+ {
+@@ -358,11 +385,46 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
+ 			 BIT(pin->line));
+ }
+ 
++static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
++				    unsigned long *bits)
++{
++	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
++	unsigned int bank;
++
++	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
++		unsigned int bitmask;
++		unsigned int word = bank;
++
++/*
++ * On a 64-bit platform, BITS_PER_LONG is 64 so it is necessary to iterate over
++ * two 32bit words to handle the whole  bitmask
++ */
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
++#endif
++		if (!mask[word])
++			continue;
++
++		bitmask = mask[word] & bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
++
++		bitmask = mask[word] & ~bits[word];
++		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
++
++#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
++		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
++#endif
++	}
++}
++
+ static struct gpio_chip atmel_gpio_chip = {
+ 	.direction_input        = atmel_gpio_direction_input,
+ 	.get                    = atmel_gpio_get,
++	.get_multiple           = atmel_gpio_get_multiple,
+ 	.direction_output       = atmel_gpio_direction_output,
+ 	.set                    = atmel_gpio_set,
++	.set_multiple           = atmel_gpio_set_multiple,
+ 	.to_irq                 = atmel_gpio_to_irq,
+ 	.base                   = 0,
+ };
 -- 
-Best Regards,
-Eugeniu
+2.21.0
+
