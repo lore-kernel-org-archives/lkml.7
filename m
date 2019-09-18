@@ -2,108 +2,88 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E6FC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36FDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFAEE2196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568806407;
-	bh=CSH3eT5cxi0pDwaPL0/fHnxWR3SNeZ8WlKtatVQYD50=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=JabZmau+opdS0vH9QVD/OsLM0Ty6wt/25aJr63gItkZL46+/zED8hpIkZ8/o/WLQQ
-	 7r1fZtomZ+6sROYjj1RKwiqXUARXK6fHvT6Vb1Xg5XTyC3s0g/UKRgnaswtkUc8Z+G
-	 pX2zqc7hBnkTT7XsvotBgt1BWqj9kPoDOkotqiIo=
+	by mail.kernel.org (Postfix) with ESMTP id 8A14521924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfIRLd1 (ORCPT
+        id S1730226AbfIRLd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:33:27 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47660 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726882AbfIRLd0 (ORCPT
+        Wed, 18 Sep 2019 07:33:59 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:49960 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726882AbfIRLd7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:33:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bcGN1tHgOcZcfSU8gTTqa7QOFEiGLmlRGR0/vv9ZIqk=; b=uNpCUnuCks1kUKjwxK2vmjlI1
-        kj8IKxKPMxmHpQJwnHJZP4DzOyZ5MJbyXnCh6hRQaLctnxIa2XAG7WtWo5ALSZvRvI2ieQ8Gvd6ph
-        +1Glm4n5DHB7IWMakcre7ywBe23TNkYxAj4Kfqz+o65YvoKKt9cCEFNAsjWpCx4AuYch4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iAYD5-0004wN-V6; Wed, 18 Sep 2019 11:33:24 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 54EC22742927; Wed, 18 Sep 2019 12:33:23 +0100 (BST)
-Date:   Wed, 18 Sep 2019 12:33:23 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the mips tree with Linus' tree
-Message-ID: <20190918113323.GD2596@sirena.co.uk>
+        Wed, 18 Sep 2019 07:33:59 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id BFA523C04C0;
+        Wed, 18 Sep 2019 13:33:57 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id XO4uxawDwBGG; Wed, 18 Sep 2019 13:33:52 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 03DB53C00C4;
+        Wed, 18 Sep 2019 13:33:52 +0200 (CEST)
+Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Wed, 18 Sep
+ 2019 13:33:51 +0200
+Date:   Wed, 18 Sep 2019 13:33:48 +0200
+From:   Eugeniu Rosca <erosca@de.adit-jv.com>
+To:     Shuah Khan <shuah@kernel.org>
+CC:     Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Eugeniu Rosca <roscaeugeniu@gmail.com>,
+        "George G. Davis" <george_davis@mentor.com>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] selftests: watchdog: Validate optional file
+ argument
+Message-ID: <20190918113348.GA23977@vmlxhi-102.adit-jv.com>
+References: <20190917184023.16701-1-erosca@de.adit-jv.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-X-Cookie: The devil finds work for idle glands.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190917184023.16701-1-erosca@de.adit-jv.com>
+User-Agent: Mutt/1.12.1+40 (7f8642d4ee82) (2019-06-28)
+X-Originating-IP: [10.72.93.184]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Shuah,
 
---2JFBq9zoW8cOFH7v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Sep 17, 2019 at 08:40:22PM +0200, Eugeniu Rosca wrote:
+> From: "George G. Davis" <george_davis@mentor.com>
+> 
+> The newly added optional file argument does not validate if the
+> file is indeed a watchdog, e.g.:
+> 
+> ./watchdog-test  -f /dev/zero
+> Watchdog Ticking Away!
+> 
+> Fix it by confirming that the WDIOC_GETSUPPORT ioctl succeeds.
+> 
+> Fixes: c3f2490d6e9257 ("selftests: watchdog: Add optional file argument")
+> Reported-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> Signed-off-by: George G. Davis <george_davis@mentor.com>
+> Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> ---
+> v3:
+>  - Used v1 as starting point and simplified commit description
+>  - Added Fixes tag (WARNING: commit id is from linux-next!)
+>  - No change in the contents
+>  - Applied cleanly to the same base as used in [v1]
 
-Hi all,
+Can we have your confirmation the patches look fine now?
 
-Today's linux-next merge of the mips tree got a conflict in:
-
-  Documentation/index.rst
-
-between several commits from Linus' tree and commit:
-
-  97689a1a3fdad101d ("doc: Add doc for the Ingenic TCU hardware")
-
-=66rom the mips tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc Documentation/index.rst
-index b5fd87e7dbee4,87214feda41fb..0000000000000
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-
---2JFBq9zoW8cOFH7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2CFgIACgkQJNaLcl1U
-h9BD7wf/X2KrEjPlotVnXMoP3lrRuzhX7acOKrDUVTH8AZaaoaaqg5BeLQa6KOlL
-jK+VIU8khx7MFKyDruLALrrRctxGyn5k4vrsz+95GaNoXqWwhvdat0HekuExp66I
-3Q5dllS2WnTgwTrxb6H+IxkjW+FwqQbt8KgEmaWELdXgRfqkKUr1KSmqo7SGJUFb
-UqTtb6Srn5lL/UtOgB+CFjZO5oKUJcRWyNo48Lxc6RyPXkr1Ti/rJD6Ufg1AV15c
-D/h+B46rtNYl7f3LI1O1FmzuS+tEviIt+Ug1w452KSctz4XRMcJA6x3HA1THMEp0
-BiRbFPef/U7P5nPOdDPLb0pU6grzSA==
-=eWYx
------END PGP SIGNATURE-----
-
---2JFBq9zoW8cOFH7v--
+-- 
+Best Regards,
+Eugeniu
