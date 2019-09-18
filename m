@@ -2,121 +2,147 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7033DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3939F222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161BE222D0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xl1Qun6E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uPvJw2mL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbfIRUAD (ORCPT
+        id S2389324AbfIRUA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:00:03 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:38871 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389243AbfIRUAC (ORCPT
+        Wed, 18 Sep 2019 16:00:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38388 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387622AbfIRUAZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:00:02 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j31so1281245qta.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:00:01 -0700 (PDT)
+        Wed, 18 Sep 2019 16:00:25 -0400
+Received: by mail-wr1-f65.google.com with SMTP id l11so689350wrx.5;
+        Wed, 18 Sep 2019 13:00:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TgQ/PSk6s69IhIN3kvOl/nhDuvC2PFBPkZWWeBSDsGs=;
-        b=Xl1Qun6EPEyvqTdKGERpDMNRYpTRFOq7YiV8XD0S2EmdmsptfOtLQd53pPMRs40OsP
-         Zfy9SjE2m8yQ9aWYolH6euB+a9FwQpsK7Y2+IMqatO6MEdnrnCphSqpamfRBRAwMa/nW
-         8vU3taJ1EUfiqL3F/p7jpVoT241bFVBCtNH22U5s8Ej7yj7vaQABp30uutX/vzYonf9A
-         9lietmj1MbgOxYk5/tAT+6ERo8V7SOxyrePvTp4zvn3KLSn+JgvNajPuc5CGITRKlQjg
-         yF174PcmWCm0KjNteIID1GoKRcbgW+VoVImpMVdVv2Pcx4CtCLT6ViBXF8Y8z5y6CXU/
-         5IKQ==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TOU4ZuWvUzuxQNBU0z7noCr4TSQPsaqCOjm5rWDSQ8g=;
+        b=uPvJw2mL4p5ugyLfGDeQxqJzC+rQSmiHWuVTRqGVDz9OzjdMEwE3yyXeg/F2wLAkn+
+         4M3Ne7uijtBzWQFLDo7qY/cH4xRG5WEJFWERlnoa8Pym3uCs0rqkkAvOhL44sQQPb6xJ
+         zaiFXCeo9GNGOQdYksFtiwRfczEP8mxrcyYSNc/7BKK1YuTxe1HGl6FSaVxDUG5gOtbS
+         wbfHfeQPutIeuCfvqvXIox2ycWgV1a6OeM4gDT/tI5JIjq1v83c34vIQf6Vkfy87avhk
+         p5RP0J3YFRKxAl6lirtU4mspl7ZuBo9xb7ig+aGEpUV15JnU5TszYKSWt2rRMbzzoymS
+         /Siw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TgQ/PSk6s69IhIN3kvOl/nhDuvC2PFBPkZWWeBSDsGs=;
-        b=EAe+99SKIA0LuT7C197Wpm35QK+T/HggXhQYRF1CHgrG5Ka2//UiAhHbQXijEGO/Nj
-         /eBCk76yJ4PEBjI7nuFLzFXmEJmmzpV3m0gJlM5HSCDO3tPjlyd7uqtcVZOozuVXjUR2
-         sQhnY2rLE4CJV+doyGAhPS6ZVkKDxkaAYZlwyUnnsWUG5cPhdDLiGPHUiTb+wG9yGyyW
-         I17KSbna5hSF2fxtdMvsk264D8lC70WTZMPIX3Nk3flJUQlqiq/CvsoQoGdS3rfGxnWV
-         6C1YsEhkcPIO8/qMk7Y2XgBI/z0L2mQ33H/kIX9VlmxJ0KEJApe8WjW2bd87U+dv5k7F
-         b3dw==
-X-Gm-Message-State: APjAAAXeB+BFsH2fJwxqv+spjHlgop7htpaQ5xcas2orC9vyjnxqBf7M
-        dh0yN2m1cN/KUp2VbGg2gUYnHw==
-X-Google-Smtp-Source: APXvYqx7ylgOdwTwai485piXcLjFj5zgpjU/OumbjBfWNGW3uR90d7CFqs4O9RiBxseGmXqWFaFurw==
-X-Received: by 2002:ac8:16e2:: with SMTP id y31mr5909119qtk.370.1568836800501;
-        Wed, 18 Sep 2019 13:00:00 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id q207sm3616779qke.98.2019.09.18.12.59.58
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TOU4ZuWvUzuxQNBU0z7noCr4TSQPsaqCOjm5rWDSQ8g=;
+        b=b8OMIF3g9mJVaZUVM0+zOUBmgPnUxxnXe9OKjq2Mk56/YYT1Ecc9cnURQDUYByQpIY
+         8rmL1RRNa2c3WwgXFvZ/gTL9n0vahqQ6oJ/ZcX/Y9HOojvoFC0rUvG/WT+S7rCM0c/jJ
+         JTpHFOQu3WUxqHMocIXhETyaca2pdeR010Y51uSTpQtaxSd8zNdsJb2mZ1Xi2k+3UtMM
+         aFD6tqx7yiB/LjCjTVjCXtaO6zCMsB2bIr2H6hK12AiqKRjPZejJhJYGVhT2ManvsQYo
+         rtX4a/HD50fFcdzI2Ez3Sfc+k9XBn618ONDXYoKC6yR7/zPmV4l6cb14MloTWycLndBT
+         d7Gg==
+X-Gm-Message-State: APjAAAVI29JVqvFX68oYE8RtTnCRLdgKXEdpaNO3IKSczp/DMbEZanbl
+        rcbpHKbckkDNMkctjY11YunPoTKX
+X-Google-Smtp-Source: APXvYqwSInRuFWaitMmA9bfwrjFHcX/wSggG+aJ9Nj2YP6nJKGsFOpLNmYYNOIwMWskIMs4pdby+fg==
+X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr4525515wrs.98.1568836822579;
+        Wed, 18 Sep 2019 13:00:22 -0700 (PDT)
+Received: from [192.168.1.2] ([86.124.196.40])
+        by smtp.gmail.com with ESMTPSA id d193sm5352237wmd.0.2019.09.18.13.00.20
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 12:59:59 -0700 (PDT)
-Message-ID: <1568836797.5576.182.camel@lca.pw>
-Subject: Re: [PATCH] mm/slub: fix a deadlock in shuffle_freelist()
-From:   Qian Cai <cai@lca.pw>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     peterz@infradead.org, mingo@redhat.com, akpm@linux-foundation.org,
-        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
-        cl@linux.com, penberg@kernel.org, rientjes@google.com,
-        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        keescook@chromium.org
-Date:   Wed, 18 Sep 2019 15:59:57 -0400
-In-Reply-To: <20190917071634.c7i3i6jg676ejiw5@linutronix.de>
-References: <1568392064-3052-1-git-send-email-cai@lca.pw>
-         <20190916090336.2mugbds4rrwxh6uz@linutronix.de>
-         <1568642487.5576.152.camel@lca.pw>
-         <20190916195115.g4hj3j3wstofpsdr@linutronix.de>
-         <1568669494.5576.157.camel@lca.pw>
-         <20190917071634.c7i3i6jg676ejiw5@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 18 Sep 2019 13:00:21 -0700 (PDT)
+Subject: Re: [PATCH v2] net: dsa: sja1105: prevent leaking memory
+To:     Navid Emamdoost <navid.emamdoost@gmail.com>, andrew@lunn.ch
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+References: <20190918172106.GN9591@lunn.ch>
+ <20190918180439.12441-1-navid.emamdoost@gmail.com>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Message-ID: <8d6f6c54-1758-7d98-c9b5-5c16b171c885@gmail.com>
+Date:   Wed, 18 Sep 2019 23:00:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190918180439.12441-1-navid.emamdoost@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-09-17 at 09:16 +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-09-16 17:31:34 [-0400], Qian Cai wrote:
-> …
-> > get_random_u64() is also busted.
+Hi Navid,
+
+Thanks for the patch.
+
+On 9/18/19 9:04 PM, Navid Emamdoost wrote:
+> In sja1105_static_config_upload, in two cases memory is leaked: when
+> static_config_buf_prepare_for_upload fails and when sja1105_inhibit_tx
+> fails. In both cases config_buf should be released.
 > 
-> …
-> > [  753.486588]  Possible unsafe locking scenario:
-> > 
-> > [  753.493890]        CPU0                    CPU1
-> > [  753.499108]        ----                    ----
-> > [  753.504324]   lock(batched_entropy_u64.lock);
-> > [  753.509372]                                lock(&(&zone->lock)->rlock);
-> > [  753.516675]                                lock(batched_entropy_u64.lock);
-> > [  753.524238]   lock(random_write_wait.lock);
-> > [  753.529113] 
-> >                 *** DEADLOCK ***
+> Fixes: 8aa9ebccae876 (avoid leaking config_buf)
+> Fixes: 1a4c69406cc1c (avoid leaking config_buf)
 > 
-> This is the same scenario as the previous one in regard to the
-> batched_entropy_….lock.
 
-The commit 383776fa7527 ("locking/lockdep: Handle statically initialized percpu
-locks properly") which increased the chance of false positives for percpu locks
-significantly especially for large systems like in those examples since it makes
-all of them the same class. Once there happens a false positive, lockdep will
-become useless.
+You're not supposed to add a short description of the patch here, but 
+rather the commit message of the patch you're fixing.
+Add this to your ~/.gitconfig:
 
-In reality, each percpu lock is a different lock as we have seen in those
-examples where each CPU only take a local one. The only thing that should worry
-about is the path that another CPU could take a non-local percpu lock. For
-example, invalidate_batched_entropy() which is a for_each_possible_cpu() call.
-Is there any other place that another CPU could take a non-local percpu lock but
-not a for_each_possible_cpu() or similar iterator?
+[pretty]
+	fixes = Fixes: %h (\"%s\")
 
-Even before the above commit, if the system is running long enough, it could
-still catch a deadlock from those percpu lock iterators since it will register
-each percpu lock usage in lockdep
+And then run:
+git show --pretty=fixes 8aa9ebccae87621d997707e4f25e53fddd7e30e4
 
-Overall, it sounds to me the side-effects of commit 383776fa7527 outweight the
-benefits, and should be reverted. Do I miss anything?
+Fixes: 8aa9ebccae87 ("net: dsa: Introduce driver for NXP SJA1105 5-port 
+L2 switch")
+
+git show --pretty=fixes 1a4c69406cc1c3c42bb7391c8eb544e93fe9b320
+
+Fixes: 1a4c69406cc1 ("net: dsa: sja1105: Prevent PHY jabbering during 
+switch reset")
+
+> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+> ---
+>   drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
+>   1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
+> index 84dc603138cf..58dd37ecde17 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_spi.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_spi.c
+> @@ -409,7 +409,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+>   	rc = static_config_buf_prepare_for_upload(priv, config_buf, buf_len);
+>   	if (rc < 0) {
+>   		dev_err(dev, "Invalid config, cannot upload\n");
+> -		return -EINVAL;
+> +		rc = -EINVAL;
+> +		goto out;
+>   	}
+>   	/* Prevent PHY jabbering during switch reset by inhibiting
+>   	 * Tx on all ports and waiting for current packet to drain.
+> @@ -418,7 +419,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
+>   	rc = sja1105_inhibit_tx(priv, port_bitmap, true);
+>   	if (rc < 0) {
+>   		dev_err(dev, "Failed to inhibit Tx on ports\n");
+> -		return -ENXIO;
+> +		rc = -ENXIO;
+> +		goto out;
+>   	}
+>   	/* Wait for an eventual egress packet to finish transmission
+>   	 * (reach IFG). It is guaranteed that a second one will not
+> 
+
+Regards,
+-Vladimir
