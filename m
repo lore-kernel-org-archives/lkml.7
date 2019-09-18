@@ -2,155 +2,367 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F23C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D12FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAB89218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116B521925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfIRJ7f (ORCPT
+        id S1728672AbfIRKAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:59:35 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48367 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfIRJ7e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:59:34 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 1A7AE240013;
-        Wed, 18 Sep 2019 09:59:26 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org,
-        linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ASoC: atmel_ssc_dai: Remove wrong spinlock usage
-In-Reply-To: <20190918094800.GJ21254@piout.net>
-References: <20190918094114.15867-1-gregory.clement@bootlin.com> <20190918094800.GJ21254@piout.net>
-Date:   Wed, 18 Sep 2019 11:59:25 +0200
-Message-ID: <87impq7wn6.fsf@FE-laptop>
+        Wed, 18 Sep 2019 06:00:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:38526 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfIRKAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:00:42 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 90832337;
+        Wed, 18 Sep 2019 03:00:41 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 397723F59C;
+        Wed, 18 Sep 2019 03:00:40 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 11:00:37 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
+Message-ID: <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
+In-Reply-To: <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+        <1568626884-5189-3-git-send-email-peng.fan@nxp.com>
+        <20190917183856.2342beed@donnerap.cambridge.arm.com>
+        <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Wed, 18 Sep 2019 09:09:25 +0000
+Peng Fan <peng.fan@nxp.com> wrote:
 
-> On 18/09/2019 11:41:14+0200, Gregory CLEMENT wrote:
->> A potential bug was reported in the email "[BUG] atmel_ssc_dai: a
->> possible sleep-in-atomic bug in atmel_ssc_shutdown"[1]
->> 
->> Indeed in the function atmel_ssc_shutdown() free_irq() was called in a
->> critical section protected by spinlock.
->> 
->> However this spinlock is only used in atmel_ssc_shutdown() and
->> atmel_ssc_startup() functions. After further analysis, it occurred that
->> the call to these function are already protected by mutex used on the
->> calling functions.
->> 
->> Then we can remove the spinlock which will fix this bug as a side
->> effect. Thanks to this patch the following message disappears:
->> 
->> "BUG: sleeping function called from invalid context at
->> kernel/locking/mutex.c:909"
->> 
->> [1]: https://www.spinics.net/lists/alsa-devel/msg71286.html
->> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>  sound/soc/atmel/atmel_ssc_dai.c | 7 -------
->>  1 file changed, 7 deletions(-)
->> 
->> diff --git a/sound/soc/atmel/atmel_ssc_dai.c b/sound/soc/atmel/atmel_ssc_dai.c
->> index 6f89483ac88c..365957e86419 100644
->> --- a/sound/soc/atmel/atmel_ssc_dai.c
->> +++ b/sound/soc/atmel/atmel_ssc_dai.c
->> @@ -116,19 +116,16 @@ static struct atmel_pcm_dma_params ssc_dma_params[NUM_SSC_DEVICES][2] = {
->>  static struct atmel_ssc_info ssc_info[NUM_SSC_DEVICES] = {
->>  	{
->>  	.name		= "ssc0",
->> -	.lock		= __SPIN_LOCK_UNLOCKED(ssc_info[0].lock),
->
-> This member is now unused and can be removed from the struct.
->
-> Once fixed, Reviewed-by: Alexandre Belloni
-> <alexandre.belloni@bootlin.com>
+Hi,
 
-Indeed I wanted to do this but finally forgot.
-I am sending a v2.
+> > Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
+> > 
+> > On Mon, 16 Sep 2019 09:44:41 +0000
+> > Peng Fan <peng.fan@nxp.com> wrote:
+> > 
+> > Hi,
+> > 
+> > looks quite good now, some smaller comments below.
+> > I think the only thing left is the "function ID passed by the client" topic.
+> > 
+> > Have you tried using this interface using hvc, for instance in KVM or Xen? For  
+> 
+> No. I do not have that implementation in hypervisor.
 
-Thanks,
+OK, I was thinking about this, because this comes up from to time in Xen, for instance.
+It would allow to pass exactly one "virtual" clock to a guest (using SCMI), which Xen could pass on to Dom0, which would translate this to an the actual clock.
 
-Gregory
+I was just worried that having just *one* example implementation might be too little to have a proper generic interface.
+I started to update my Allwinner ATF mailbox implementation (which was using SCPI), I will let you know when I managed to eventually test this.
 
->
->>  	.dir_mask	= SSC_DIR_MASK_UNUSED,
->>  	.initialized	= 0,
->>  	},
->>  	{
->>  	.name		= "ssc1",
->> -	.lock		= __SPIN_LOCK_UNLOCKED(ssc_info[1].lock),
->>  	.dir_mask	= SSC_DIR_MASK_UNUSED,
->>  	.initialized	= 0,
->>  	},
->>  	{
->>  	.name		= "ssc2",
->> -	.lock		= __SPIN_LOCK_UNLOCKED(ssc_info[2].lock),
->>  	.dir_mask	= SSC_DIR_MASK_UNUSED,
->>  	.initialized	= 0,
->>  	},
->> @@ -317,13 +314,11 @@ static int atmel_ssc_startup(struct snd_pcm_substream *substream,
->>  
->>  	snd_soc_dai_set_dma_data(dai, substream, dma_params);
->>  
->> -	spin_lock_irq(&ssc_p->lock);
->>  	if (ssc_p->dir_mask & dir_mask) {
->>  		spin_unlock_irq(&ssc_p->lock);
->>  		return -EBUSY;
->>  	}
->>  	ssc_p->dir_mask |= dir_mask;
->> -	spin_unlock_irq(&ssc_p->lock);
->>  
->>  	return 0;
->>  }
->> @@ -355,7 +350,6 @@ static void atmel_ssc_shutdown(struct snd_pcm_substream *substream,
->>  
->>  	dir_mask = 1 << dir;
->>  
->> -	spin_lock_irq(&ssc_p->lock);
->>  	ssc_p->dir_mask &= ~dir_mask;
->>  	if (!ssc_p->dir_mask) {
->>  		if (ssc_p->initialized) {
->> @@ -369,7 +363,6 @@ static void atmel_ssc_shutdown(struct snd_pcm_substream *substream,
->>  		ssc_p->cmr_div = ssc_p->tcmr_period = ssc_p->rcmr_period = 0;
->>  		ssc_p->forced_divider = 0;
->>  	}
->> -	spin_unlock_irq(&ssc_p->lock);
->>  
->>  	/* Shutdown the SSC clock. */
->>  	pr_debug("atmel_ssc_dai: Stopping clock\n");
->> -- 
->> 2.23.0
->> 
->
-> -- 
-> Alexandre Belloni, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+> > instance to provide access to a clock for a passed-through platform device?
+> > Another use case that pops up from time to time is GPIO for guests. This
+> > sounds like a use case for using the register interface, also we could use the
+> > hvc return value.
+> >   
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > This mailbox driver implements a mailbox which signals transmitted
+> > > data via an ARM smc (secure monitor call) instruction. The mailbox
+> > > receiver is implemented in firmware and can synchronously return data
+> > > when it returns execution to the non-secure world again.
+> > > An asynchronous receive path is not implemented.
+> > > This allows the usage of a mailbox to trigger firmware actions on SoCs
+> > > which either don't have a separate management processor or on which
+> > > such a core is not available. A user of this mailbox could be the SCP
+> > > interface.
+> > >
+> > > Modified from Andre Przywara's v2 patch
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+> > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7  
+> > Cpeng.fa  
+> > >  
+> > n%40nxp.com%7C58a1ed4078264d14958f08d73b95ed7e%7C686ea1d3bc2b
+> > 4c6fa92cd  
+> > >  
+> > 99c5c301635%7C0%7C1%7C637043387484474825&amp;sdata=Cp1zlhlpQbg
+> > BsWu9ZDV  
+> > > RKkXmd6kvUR%2BtPO7EPR7YLpA%3D&amp;reserved=0
+> > >
+> > > Cc: Andre Przywara <andre.przywara@arm.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > ---
+> > >  drivers/mailbox/Kconfig           |   7 ++
+> > >  drivers/mailbox/Makefile          |   2 +
+> > >  drivers/mailbox/arm-smc-mailbox.c | 167
+> > > ++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 176 insertions(+)
+> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+> > >
+> > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
+> > > ab4eb750bbdd..7707ee26251a 100644
+> > > --- a/drivers/mailbox/Kconfig
+> > > +++ b/drivers/mailbox/Kconfig
+> > > @@ -16,6 +16,13 @@ config ARM_MHU
+> > >  	  The controller has 3 mailbox channels, the last of which can be
+> > >  	  used in Secure mode only.
+> > >
+> > > +config ARM_SMC_MBOX
+> > > +	tristate "Generic ARM smc mailbox"
+> > > +	depends on OF && HAVE_ARM_SMCCC
+> > > +	help
+> > > +	  Generic mailbox driver which uses ARM smc calls to call into
+> > > +	  firmware for triggering mailboxes.
+> > > +
+> > >  config IMX_MBOX
+> > >  	tristate "i.MX Mailbox"
+> > >  	depends on ARCH_MXC || COMPILE_TEST
+> > > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
+> > > c22fad6f696b..93918a84c91b 100644
+> > > --- a/drivers/mailbox/Makefile
+> > > +++ b/drivers/mailbox/Makefile
+> > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-test.o
+> > >
+> > >  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
+> > >
+> > > +obj-$(CONFIG_ARM_SMC_MBOX)	+= arm-smc-mailbox.o
+> > > +
+> > >  obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
+> > >
+> > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=  
+> > armada-37xx-rwtm-mailbox.o  
+> > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
+> > > b/drivers/mailbox/arm-smc-mailbox.c
+> > > new file mode 100644
+> > > index 000000000000..c84aef39c8d9
+> > > --- /dev/null
+> > > +++ b/drivers/mailbox/arm-smc-mailbox.c
+> > > @@ -0,0 +1,167 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2016,2017 ARM Ltd.
+> > > + * Copyright 2019 NXP
+> > > + */
+> > > +
+> > > +#include <linux/arm-smccc.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/mailbox_controller.h> #include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +struct arm_smc_chan_data {
+> > > +	unsigned int function_id;
+> > > +};
+> > > +
+> > > +struct arm_smccc_mbox_cmd {
+> > > +	unsigned int function_id;
+> > > +	union {
+> > > +		unsigned int args_smccc32[6];
+> > > +		unsigned long args_smccc64[6];  
+> > 
+> > Shouldn't this be u32 and u64 here, as the data type has this explicit length in
+> > the SMCCC?  
+> 
+> ok
+> 
+> >   
+> > > +	};
+> > > +};  
+> > 
+> > If this is the data structure that this mailbox controller uses, I would expect
+> > this to be documented somewhere, or even exported.  
+> 
+> Export this structure in include/linux/mailbox/smc-mailbox.h?
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+For instance, even though I am not sure this is really desired or helpful, since we expect a generic mailbox client (the SCPI or SCMI driver) to deal with that mailbox.
+
+But at least the expected format should be documented, which could just be in writing, not necessarily in code.
+
+> > And again, I don't like the idea of having the function ID in here.  
+> 
+> You mean function_id in arm_smccc_mbox_cmd is not good?
+
+Yes, this should not be something which mailbox clients are able to choose arbitrarily (see my other email).
+ 
+> >   
+> > > +
+> > > +typedef unsigned long (smc_mbox_fn)(unsigned int, unsigned long,
+> > > +				    unsigned long, unsigned long,
+> > > +				    unsigned long, unsigned long,
+> > > +				    unsigned long);
+> > > +static smc_mbox_fn *invoke_smc_mbox_fn;
+> > > +
+> > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+> > > +	struct arm_smc_chan_data *chan_data = link->con_priv;
+> > > +	struct arm_smccc_mbox_cmd *cmd = data;
+> > > +	unsigned long ret;
+> > > +	u32 function_id;
+> > > +
+> > > +	function_id = chan_data->function_id;
+> > > +	if (!function_id)
+> > > +		function_id = cmd->function_id;
+> > > +
+> > > +	if (function_id & BIT(30)) {  
+> > 
+> > 	if (ARM_SMCCC_IS_64(function_id)) {  
+> 
+> ok
+> 
+> >   
+> > > +		ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc64[0],
+> > > +					 cmd->args_smccc64[1],
+> > > +					 cmd->args_smccc64[2],
+> > > +					 cmd->args_smccc64[3],
+> > > +					 cmd->args_smccc64[4],
+> > > +					 cmd->args_smccc64[5]);
+> > > +	} else {
+> > > +		ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc32[0],
+> > > +					 cmd->args_smccc32[1],
+> > > +					 cmd->args_smccc32[2],
+> > > +					 cmd->args_smccc32[3],
+> > > +					 cmd->args_smccc32[4],
+> > > +					 cmd->args_smccc32[5]);
+> > > +	}
+> > > +
+> > > +	mbox_chan_received_data(link, (void *)ret);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static unsigned long __invoke_fn_hvc(unsigned int function_id,
+> > > +				     unsigned long arg0, unsigned long arg1,
+> > > +				     unsigned long arg2, unsigned long arg3,
+> > > +				     unsigned long arg4, unsigned long arg5) {
+> > > +	struct arm_smccc_res res;
+> > > +
+> > > +	arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
+> > > +		      arg5, 0, &res);
+> > > +	return res.a0;
+> > > +}
+> > > +
+> > > +static unsigned long __invoke_fn_smc(unsigned int function_id,
+> > > +				     unsigned long arg0, unsigned long arg1,
+> > > +				     unsigned long arg2, unsigned long arg3,
+> > > +				     unsigned long arg4, unsigned long arg5) {
+> > > +	struct arm_smccc_res res;
+> > > +
+> > > +	arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
+> > > +		      arg5, 0, &res);
+> > > +	return res.a0;
+> > > +}
+> > > +
+> > > +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
+> > > +	.send_data	= arm_smc_send_data,
+> > > +};
+> > > +
+> > > +static int arm_smc_mbox_probe(struct platform_device *pdev) {
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct mbox_controller *mbox;
+> > > +	struct arm_smc_chan_data *chan_data;
+> > > +	int ret;
+> > > +	u32 function_id = 0;
+> > > +
+> > > +	if (of_device_is_compatible(dev->of_node, "arm,smc-mbox"))
+> > > +		invoke_smc_mbox_fn = __invoke_fn_smc;
+> > > +	else
+> > > +		invoke_smc_mbox_fn = __invoke_fn_hvc;
+> > > +
+> > > +	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> > > +	if (!mbox)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	mbox->num_chans = 1;
+> > > +	mbox->chans = devm_kzalloc(dev, sizeof(*mbox->chans), GFP_KERNEL);
+> > > +	if (!mbox->chans)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	chan_data = devm_kzalloc(dev, sizeof(*chan_data), GFP_KERNEL);
+> > > +	if (!chan_data)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	of_property_read_u32(dev->of_node, "arm,func-id", &function_id);
+> > > +	chan_data->function_id = function_id;
+> > > +
+> > > +	mbox->chans->con_priv = chan_data;
+> > > +
+> > > +	mbox->txdone_poll = false;
+> > > +	mbox->txdone_irq = false;  
+> > 
+> > Don't we need to provide something to confirm reception to the client? In our
+> > case we can set this as soon as the smc/hvc returns.  
+> 
+> As smc/hvc returns, it means the transfer is over and receive is done.
+
+I understand that, but was wondering if the Linux mailbox framework knows about that? In my older version I was calling mbox_chan_received_data() after the smc call returned.
+Also there is mbox_chan_txdone() with which a controller driver can signal TX completion explicitly.
+
+Cheers,
+Andre.
+
+> > Cheers,
+> > Andre.
+> >   
+> > > +	mbox->ops = &arm_smc_mbox_chan_ops;
+> > > +	mbox->dev = dev;
+> > > +
+> > > +	platform_set_drvdata(pdev, mbox);
+> > > +
+> > > +	ret = devm_mbox_controller_register(dev, mbox);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	dev_info(dev, "ARM SMC mailbox enabled.\n");
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int arm_smc_mbox_remove(struct platform_device *pdev) {
+> > > +	struct mbox_controller *mbox = platform_get_drvdata(pdev);
+> > > +
+> > > +	mbox_controller_unregister(mbox);
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static const struct of_device_id arm_smc_mbox_of_match[] = {
+> > > +	{ .compatible = "arm,smc-mbox", },
+> > > +	{ .compatible = "arm,hvc-mbox", },
+> > > +	{},
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
+> > > +
+> > > +static struct platform_driver arm_smc_mbox_driver = {
+> > > +	.driver = {
+> > > +		.name = "arm-smc-mbox",
+> > > +		.of_match_table = arm_smc_mbox_of_match,
+> > > +	},
+> > > +	.probe		= arm_smc_mbox_probe,
+> > > +	.remove		= arm_smc_mbox_remove,
+> > > +};
+> > > +module_platform_driver(arm_smc_mbox_driver);
+> > > +
+> > > +MODULE_AUTHOR("Peng Fan <peng.fan@nxp.com>");
+> > > +MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
+> > > +MODULE_LICENSE("GPL v2");  
+> 
+
