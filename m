@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1ECC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929B0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C985D218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D4121906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788423;
-	bh=fwcXE3+ff7XDDD7ue7mjmrUCE7f6Rj6+NyZ1oujrTAM=;
+	s=default; t=1568788429;
+	bh=+dI+rVf+1+sdiK1BAdoxjotm3JYBHjEnkmGqtzDyUPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qVEOkKIROzRWQTOsxjNGDCI3oy0JYhZdtaew5H5Tv7bCAIljJgNaQBJdLO1PamEQM
-	 IBIKtxM/Pp7lcBvZ/J9q/0isFHDwMSQ1s6WjEjYR2ov3BP+yfaylC8aiJy4hH2l80s
-	 2ZMkWUsoqgvrZEyXB25zSlUNaqFotiK+KqDho7bM=
+	b=zrVSN1pqjmZOtb+qeqNFb9X2tfQDB/ameQJPXcViOHXX/8FdeHHL4SO2cd/l/u2jU
+	 ots/RUqyEn3BjDga105wMLZGe7MQbB4pCKWmDMv3N0ZNUYBPHHa22Cmfk39JG5/t5B
+	 HXW4FA1RC2ifQwPiKz60OLVz4vWplbHD5Qh7wLqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfIRGUQ (ORCPT
+        id S1729077AbfIRGds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38862 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:33:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbfIRGUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:12 -0400
+        id S1727536AbfIRGUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55A90218AF;
-        Wed, 18 Sep 2019 06:20:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD1F218AE;
+        Wed, 18 Sep 2019 06:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787611;
-        bh=fwcXE3+ff7XDDD7ue7mjmrUCE7f6Rj6+NyZ1oujrTAM=;
+        s=default; t=1568787606;
+        bh=+dI+rVf+1+sdiK1BAdoxjotm3JYBHjEnkmGqtzDyUPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+y2Ie3xVI03yBEkq8isUGl7s+CUgOxzl7xOvZkB8fPXuDJp81JKJRHadJVim/AI0
-         Hb8vq7prMwVw/ZG2eqg4IdBA2D+PfJk0G6mfUssA2yiPx+iDN9kriAqwC/p55Uxcff
-         487zymPf92jFICknflSfkTv6Pz09pzsbNF5VGAD4=
+        b=XADt5HcJXv1cqfrssUWBrBe5vmiKwbi50xfAhGfDuD3yozvnv1ZnWdpt2tMjQ+dKa
+         kWyUaENPIVN9Km8+DoRObNVjTydP23s885WAe5RnFDdXKTlcTo+CY6cWzzgvIRibmZ
+         e5slKG15Ywgd/4HpegSV74Q0qj6N+w5Dh81nwlmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 14/45] btrfs: compression: add helper for type to string conversion
-Date:   Wed, 18 Sep 2019 08:18:52 +0200
-Message-Id: <20190918061224.325794824@linuxfoundation.org>
+        stable@vger.kernel.org, Li Shuang <shuali@redhat.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 12/45] tipc: add NULL pointer check before calling kfree_rcu
+Date:   Wed, 18 Sep 2019 08:18:50 +0200
+Message-Id: <20190918061224.137451852@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -58,55 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Sterba <dsterba@suse.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit e128f9c3f7242318e1c76d204c7ae32bc878b8c7 upstream.
+[ Upstream commit 42dec1dbe38239cf91cc1f4df7830c66276ced37 ]
 
-There are several places opencoding this conversion, add a helper now
-that we have 3 compression algorithms.
+Unlike kfree(p), kfree_rcu(p, rcu) won't do NULL pointer check. When
+tipc_nametbl_remove_publ returns NULL, the panic below happens:
 
-Signed-off-by: David Sterba <dsterba@suse.com>
+   BUG: unable to handle kernel NULL pointer dereference at 0000000000000068
+   RIP: 0010:__call_rcu+0x1d/0x290
+   Call Trace:
+    <IRQ>
+    tipc_publ_notify+0xa9/0x170 [tipc]
+    tipc_node_write_unlock+0x8d/0x100 [tipc]
+    tipc_node_link_down+0xae/0x1d0 [tipc]
+    tipc_node_check_dest+0x3ea/0x8f0 [tipc]
+    ? tipc_disc_rcv+0x2c7/0x430 [tipc]
+    tipc_disc_rcv+0x2c7/0x430 [tipc]
+    ? tipc_rcv+0x6bb/0xf20 [tipc]
+    tipc_rcv+0x6bb/0xf20 [tipc]
+    ? ip_route_input_slow+0x9cf/0xb10
+    tipc_udp_recv+0x195/0x1e0 [tipc]
+    ? tipc_udp_is_known_peer+0x80/0x80 [tipc]
+    udp_queue_rcv_skb+0x180/0x460
+    udp_unicast_rcv_skb.isra.56+0x75/0x90
+    __udp4_lib_rcv+0x4ce/0xb90
+    ip_local_deliver_finish+0x11c/0x210
+    ip_local_deliver+0x6b/0xe0
+    ? ip_rcv_finish+0xa9/0x410
+    ip_rcv+0x273/0x362
+
+Fixes: 97ede29e80ee ("tipc: convert name table read-write lock to RCU")
+Reported-by: Li Shuang <shuali@redhat.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/compression.c |   15 +++++++++++++++
- fs/btrfs/compression.h |    2 ++
- 2 files changed, 17 insertions(+)
+ net/tipc/name_distr.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/compression.c
-+++ b/fs/btrfs/compression.c
-@@ -43,6 +43,21 @@
- #include "extent_io.h"
- #include "extent_map.h"
+--- a/net/tipc/name_distr.c
++++ b/net/tipc/name_distr.c
+@@ -224,7 +224,8 @@ static void tipc_publ_purge(struct net *
+ 		       publ->key);
+ 	}
  
-+static const char* const btrfs_compress_types[] = { "", "zlib", "lzo", "zstd" };
-+
-+const char* btrfs_compress_type2str(enum btrfs_compression_type type)
-+{
-+	switch (type) {
-+	case BTRFS_COMPRESS_ZLIB:
-+	case BTRFS_COMPRESS_LZO:
-+	case BTRFS_COMPRESS_ZSTD:
-+	case BTRFS_COMPRESS_NONE:
-+		return btrfs_compress_types[type];
-+	}
-+
-+	return NULL;
-+}
-+
- static int btrfs_decompress_bio(struct compressed_bio *cb);
+-	kfree_rcu(p, rcu);
++	if (p)
++		kfree_rcu(p, rcu);
+ }
  
- static inline int compressed_bio_size(struct btrfs_fs_info *fs_info,
---- a/fs/btrfs/compression.h
-+++ b/fs/btrfs/compression.h
-@@ -130,6 +130,8 @@ extern const struct btrfs_compress_op bt
- extern const struct btrfs_compress_op btrfs_lzo_compress;
- extern const struct btrfs_compress_op btrfs_zstd_compress;
- 
-+const char* btrfs_compress_type2str(enum btrfs_compression_type type);
-+
- int btrfs_compress_heuristic(struct inode *inode, u64 start, u64 end);
- 
- #endif
+ /**
 
 
