@@ -2,196 +2,120 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D3FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23BA8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5345F21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:43:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="DxycVrDL"
+	by mail.kernel.org (Postfix) with ESMTP id F339421D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbfIRVnd (ORCPT
+        id S2388106AbfIRVpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:43:33 -0400
-Received: from mx0b-00154904.pphosted.com ([148.163.137.20]:59252 "EHLO
-        mx0b-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388063AbfIRVnd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:43:33 -0400
-Received: from pps.filterd (m0170396.ppops.net [127.0.0.1])
-        by mx0b-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8ILeStD002110;
-        Wed, 18 Sep 2019 17:43:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=smtpout1;
- bh=APeqSupOa17yJyshJEarRmRxQctnz7EtTNwsuT5TFO4=;
- b=DxycVrDL556xL+ixdMIls8i5GnjMbZWlvruCYGrYqAOzGDYjLV34CVHTaAHkJ9reEjCa
- H7W/rcec3EwpDLQLeg2yDaJV8d9XudXqxDvCfzgRRiYyD7gr6ao6NSLN63qAFO8dfqvh
- JjH9nOGbk0kdWKGfLuVxd8WEhRjl6aEb26Z8ZfdBRLce7X6HwlZGWZy3hsXhBhrK/r7W
- 8yPkMWhxVqGJvq7qnDPZ3hSfhDzCiqta1VLJMao/Ac/Db1pwmXaPDTpFn3FWtFp0lReK
- j1hCX2ShK2QHJ1xqz7615yKo5iJX0Z/khQjznj3Spa6qnkxne0nx6ouWuy1hQ6Ymd1VV GQ== 
-Received: from mx0a-00154901.pphosted.com (mx0a-00154901.pphosted.com [67.231.149.39])
-        by mx0b-00154904.pphosted.com with ESMTP id 2v3vdy82wx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 17:43:32 -0400
-Received: from pps.filterd (m0142693.ppops.net [127.0.0.1])
-        by mx0a-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8ILcOTA029662;
-        Wed, 18 Sep 2019 17:43:31 -0400
-Received: from ausxipps301.us.dell.com (ausxipps301.us.dell.com [143.166.148.223])
-        by mx0a-00154901.pphosted.com with ESMTP id 2v3vdgg8ha-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 17:43:31 -0400
-X-LoopCount0: from 10.166.132.54
-X-PREM-Routing: D-Outbound
-X-IronPort-AV: E=Sophos;i="5.60,349,1549951200"; 
-   d="scan'208";a="398570735"
-From:   <Mario.Limonciello@dell.com>
-To:     <rjw@rjwysocki.net>
-CC:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>, <linux-nvme@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Ryan.Hong@Dell.com>,
-        <Crag.Wang@dell.com>, <sjg@google.com>, <Jared.Dominguez@dell.com>,
-        <linux-pci@vger.kernel.org>, <linux-pm@vger.kernel.org>
-Subject: RE: [PATCH] nvme-pci: Save PCI state before putting drive into
- deepest state
-Thread-Topic: [PATCH] nvme-pci: Save PCI state before putting drive into
- deepest state
-Thread-Index: AQHVaPqcVa1BaYWKPkaPLLLTJYPQjqcyUq2A//+vI2A=
-Date:   Wed, 18 Sep 2019 21:43:28 +0000
-Message-ID: <346fd9ced98e40229d0cc0871ad5ed32@AUSX13MPC105.AMER.DELL.COM>
-References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
- <4858057.cjDlXVALXj@kreacher>
-In-Reply-To: <4858057.cjDlXVALXj@kreacher>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Enabled=True;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SiteId=945c199a-83a2-4e80-9f8c-5a91be5752dd;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Owner=Mario_Limonciello@Dell.com;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_SetDate=2019-09-18T21:43:26.4017972Z;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Name=External Public;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_17cb76b2-10b8-4fe1-93d4-2202842406cd_Extended_MSFT_Method=Manual;
- aiplabel=External Public
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.143.18.86]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Sep 2019 17:45:09 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49924 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388087AbfIRVpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 17:45:08 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 14:45:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
+   d="scan'208";a="338457730"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga004.jf.intel.com with ESMTP; 18 Sep 2019 14:45:07 -0700
+Date:   Wed, 18 Sep 2019 14:45:07 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] libnvdimm/nfit_test: Fix acpi_handle redefinition
+Message-ID: <20190918214506.GA20171@iweiny-DESK2.sc.intel.com>
+References: <20190918042148.77553-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-18_10:2019-09-18,2019-09-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- lowpriorityscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 phishscore=0 malwarescore=0
- mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909180184
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011
- suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909180184
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918042148.77553-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Rafael J. Wysocki <rjw@rjwysocki.net>
-> Sent: Wednesday, September 18, 2019 4:31 PM
-> To: Limonciello, Mario
-> Cc: Keith Busch; Jens Axboe; Christoph Hellwig; Sagi Grimberg; linux-
-> nvme@lists.infradead.org; LKML; Hong, Ryan; Wang, Crag; sjg@google.com;
-> Dominguez, Jared; Linux PCI; Linux PM
-> Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into d=
-eepest
-> state
->=20
->=20
-> [EXTERNAL EMAIL]
->=20
-> On Thursday, September 12, 2019 1:42:33 AM CEST Mario Limonciello wrote:
-> > The action of saving the PCI state will cause numerous PCI configuratio=
-n
-> > space reads which depending upon the vendor implementation may cause
-> > the drive to exit the deepest NVMe state.
-> >
-> > In these cases ASPM will typically resolve the PCIe link state and APST
-> > may resolve the NVMe power state.  However it has also been observed
-> > that this register access after quiesced will cause PC10 failure
-> > on some device combinations.
-> >
-> > To resolve this, move the PCI state saving to before SetFeatures has be=
-en
-> > called.  This has been proven to resolve the issue across a 5000 sample
-> > test on previously failing disk/system combinations.
->=20
-> This sounds reasonable to me, but it would be nice to CC that to linux-pm
-> and/or linux-pci too.
->=20
-> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
-> > ---
-> >  drivers/nvme/host/pci.c | 13 +++++++------
-> >  1 file changed, 7 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> > index 732d5b6..9b3fed4 100644
-> > --- a/drivers/nvme/host/pci.c
-> > +++ b/drivers/nvme/host/pci.c
-> > @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
-> >  	if (ret < 0)
-> >  		goto unfreeze;
-> >
-> > +	/*
-> > +	 * A saved state prevents pci pm from generically controlling the
-> > +	 * device's power. If we're using protocol specific settings, we don'=
-t
-> > +	 * want pci interfering.
-> > +	 */
-> > +	pci_save_state(pdev);
-> > +
-> >  	ret =3D nvme_set_power_state(ctrl, ctrl->npss);
-> >  	if (ret < 0)
-> >  		goto unfreeze;
-> > @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
->=20
-> This is the case in which the PCI layer is expected to put the device int=
-o
-> D3, so you need
->=20
-> pdev->state_saved =3D 0;
->=20
-> at this point, because you have saved the config space already.
->=20
-> >  		ret =3D 0;
-> >  		goto unfreeze;
->=20
-> And here you don't need to jump to "unfreeze" any more.
->=20
-> >  	}
-> > -	/*
-> > -	 * A saved state prevents pci pm from generically controlling the
-> > -	 * device's power. If we're using protocol specific settings, we don'=
-t
-> > -	 * want pci interfering.
-> > -	 */
-> > -	pci_save_state(pdev);
-> >  unfreeze:
-> >  	nvme_unfreeze(ctrl);
-> >  	return ret;
-> >
->=20
->=20
->=20
+On Tue, Sep 17, 2019 at 09:21:49PM -0700, Nathan Chancellor wrote:
+> After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
+> compile checks"), clang warns:
+> 
+> In file included from
+> ../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
+> ../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
+> warning: redefinition of typedef 'acpi_handle' is a C11 feature
+> [-Wtypedef-redefinition]
+> typedef void *acpi_handle;
+>               ^
+> ../include/acpi/actypes.h:424:15: note: previous definition is here
+> typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
+>               ^
+> 1 warning generated.
+> 
+> The include chain:
+> 
+> iomap.c ->
+>     linux/acpi.h ->
+>         acpi/acpi.h ->
+>             acpi/actypes.h
+>     nfit_test.h
+> 
+> Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
+> remove both the typedef and the forward declaration of acpi_object.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/660
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Thanks, I actually followed up with something along that line in a v2 sent =
-out
-today.  My apology you weren't in CC, but here is a weblink to it.
-http://lists.infradead.org/pipermail/linux-nvme/2019-September/027251.html
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
+> ---
+> 
+> I know that every maintainer has their own thing with the number of
+> includes in each header file; this issue can be solved in a various
+> number of ways, I went with the smallest diff stat. Please solve it in a
+> different way if you see fit :)
+> 
+>  tools/testing/nvdimm/test/nfit_test.h | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/tools/testing/nvdimm/test/nfit_test.h b/tools/testing/nvdimm/test/nfit_test.h
+> index 448d686da8b1..0bf5640f1f07 100644
+> --- a/tools/testing/nvdimm/test/nfit_test.h
+> +++ b/tools/testing/nvdimm/test/nfit_test.h
+> @@ -4,6 +4,7 @@
+>   */
+>  #ifndef __NFIT_TEST_H__
+>  #define __NFIT_TEST_H__
+> +#include <linux/acpi.h>
+>  #include <linux/list.h>
+>  #include <linux/uuid.h>
+>  #include <linux/ioport.h>
+> @@ -202,9 +203,6 @@ struct nd_intel_lss {
+>  	__u32 status;
+>  } __packed;
+>  
+> -union acpi_object;
+> -typedef void *acpi_handle;
+> -
+>  typedef struct nfit_test_resource *(*nfit_test_lookup_fn)(resource_size_t);
+>  typedef union acpi_object *(*nfit_test_evaluate_dsm_fn)(acpi_handle handle,
+>  		 const guid_t *guid, u64 rev, u64 func,
+> -- 
+> 2.23.0
+> 
