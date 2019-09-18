@@ -2,192 +2,147 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A31AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDBCC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF225206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC31207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:53:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QgOx0GIe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731295AbfIRMvx (ORCPT
+        id S1731309AbfIRMx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:51:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41066 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725902AbfIRMvw (ORCPT
+        Wed, 18 Sep 2019 08:53:58 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37614 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729333AbfIRMx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:51:52 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8ICkrPl021767;
-        Wed, 18 Sep 2019 08:51:43 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3m8ghv1w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 08:51:43 -0400
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8IClK5P023058;
-        Wed, 18 Sep 2019 08:51:43 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3m8ghv0g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 08:51:43 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8ICoB9M002954;
-        Wed, 18 Sep 2019 12:51:41 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma03wdc.us.ibm.com with ESMTP id 2v37jvna51-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 12:51:41 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8ICpeuC56361420
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 12:51:40 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B3E8078066;
-        Wed, 18 Sep 2019 12:51:40 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D44278063;
-        Wed, 18 Sep 2019 12:51:40 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.237])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 12:51:40 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id 286BE2E2FE9; Wed, 18 Sep 2019 18:21:38 +0530 (IST)
-Date:   Wed, 18 Sep 2019 18:21:38 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
- cede_offline
-Message-ID: <20190918125138.GB12534@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
- <87r24ew5i0.fsf@mpe.ellerman.id.au>
+        Wed, 18 Sep 2019 08:53:58 -0400
+X-Greylist: delayed 109900 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Sep 2019 08:53:57 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568811236;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ycL5oW5FYNJjUQjrUvcbVifqvSx3XJongUQgpzwLpv8=;
+        b=QgOx0GIek0qfp/lg9De+LLFlVkvXJuz4rUQ4hfoSxbdR5MNTPVwMlu0z2s+f9g1Z0ub5d3
+        pYu/ZuMtH2TZCOKEZTUURmwLvsfgbJKI/9438/+BufySeFNeYeUpiN66RkaN/ToTrxHoyG
+        aGj5QIgvXTYy7nczVJdy0gfVUC6StzI=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-23-Rnw9RRrBNlWZbObQfttelg-1; Wed, 18 Sep 2019 08:53:55 -0400
+Received: by mail-ed1-f72.google.com with SMTP id c90so4340125edf.17
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 05:53:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vszg+W+WXavX+2L9Kk3QRPhq1ht0GvDGZ0kiRY4GbPg=;
+        b=FeAn3/ZcUI3/1XS/m0ED57FJfhHGZenIrfOeBtL7gBsGFWdjCVrfiLUW4h1cRR4T2w
+         1224al5a5CpP8QC0jgNXelM651jUW9sZcWYRrLCV5VoGNOt8eN9pNyHQAg6LqG7A7h28
+         gjGyoe1CLVDOG2aCitz/3UOXh+eJK4zNjBot3TuYDOJ3e1GMSd79lqLDBWuH1PRA8x23
+         ViMTs3cbmvL07f5RRmNFCaxbJfNtWOrKCOEqBbOEvzSTI/5vgV/6p249i5M4QaKQn56x
+         +jD1+N2WrHbD7b+VS3Ug1GQgi64X7TdNxPBkmT6yujiQHQ84Ox8yAfHvrztPmx+9rgPT
+         vmnw==
+X-Gm-Message-State: APjAAAUGpJce80qabKZiSJHsVxkYWDK7qI1IxfmttQKYkvskHySQ73jX
+        mEt5dJH9vV50vyNxaTfIj39o/eVDLd7UMmKd+awGojlcURdzgNqOjGQy3VuXchTjsGyrYWHov4S
+        Ul1VjwxNZw/NntLxpY5zgqQeW
+X-Received: by 2002:a05:6402:1688:: with SMTP id a8mr1250413edv.225.1568811233192;
+        Wed, 18 Sep 2019 05:53:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwkPtdTN1u+9c+esJNyeY2qigBbptrNK5/lYQVegkGY+1YkDa/JNljIAQa6OK+N4D9KWvBPng==
+X-Received: by 2002:a05:6402:1688:: with SMTP id a8mr1250393edv.225.1568811233017;
+        Wed, 18 Sep 2019 05:53:53 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id s21sm1035118edi.85.2019.09.18.05.53.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 05:53:51 -0700 (PDT)
+Subject: Re: [PATCH v2 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ TypeB and TypeC variants
+To:     Yauhen Kharuzhy <jekhor@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andy@infradead.org>
+References: <20190917194507.14771-1-jekhor@gmail.com>
+ <20190917194507.14771-2-jekhor@gmail.com>
+ <20190918113835.GA16243@kuha.fi.intel.com>
+ <20190918115251.GA28946@jeknote.loshitsa1.net>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <61df124e-18fc-c047-5490-a6b79cbed85c@redhat.com>
+Date:   Wed, 18 Sep 2019 14:53:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r24ew5i0.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180130
+In-Reply-To: <20190918115251.GA28946@jeknote.loshitsa1.net>
+Content-Language: en-US
+X-MC-Unique: Rnw9RRrBNlWZbObQfttelg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 03:14:15PM +1000, Michael Ellerman wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> > From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-> >
-> > Currently on Pseries Linux Guests, the offlined CPU can be put to one
-> > of the following two states:
-> >    - Long term processor cede (also called extended cede)
-> >    - Returned to the Hypervisor via RTAS "stop-self" call.
-> >
-> > This is controlled by the kernel boot parameter "cede_offline=on/off".
-> >
-> > By default the offlined CPUs enter extended cede.
-> 
-> Since commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU into an appropriate offline state") (Nov 2009)
-> 
-> Which you wrote :)
+Hi,
 
-Mea Culpa! I forgot to include the "Fixes commit 3aa565f53c39" into
-Patch 1 of the series.
+On 18-09-2019 13:52, Yauhen Kharuzhy wrote:
+> On Wed, Sep 18, 2019 at 02:38:35PM +0300, Heikki Krogerus wrote:
+>> On Tue, Sep 17, 2019 at 10:45:07PM +0300, Yauhen Kharuzhy wrote:
+>>> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
+>>> hardware has TypeC connector and register related devices described as
+>>> I2C connections in the _CRS resource.
+>>>
+>>> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with micro
+>>> USB B connector exists. It has INT33FE device in the DSDT table but
+>>> there are only two I2C connection described: PMIC and BQ27452 battery
+>>> fuel gauge.
+>>>
+>>> Splitting existing INT33FE driver allow to maintain code for USB type B
+>>> (AB) connector variant separately and make it simpler.
+>>
+>> Sorry, but "Type B" is even more confusing here. Type B refers to the
+>> Standard-B USB connector, so _not_ the micro connector family. You can
+>> check the connector definitions from the latest USB 3.2 specification.
+>> The standard-b definition goes something like this:
+>>
+>>          "The standard _Type-B_ connector defined by the USB x specifica=
+tion."
+>>
+>> Note that all the five supported connectors are listed in ch5
+>> "Mechanical":
+>>
+>>          Standard-A
+>>          Standard-B
+>>          Micro-B
+>>          Micro-AB
+>>          Type-C
+>>
+>> So what was the problem with names that refer to the micro connector
+>> family, for example "micro-ab" or "micro-b"?
+>=20
+> Only one problem: there is no difference between micro B, micro AB, mini
+> B or Standard-B types of connectors from this driver point of view =E2=80=
+=93 all
+> of them can be used for device charging. Now we have only two kind of
+> hardware with INT33FE pseudo-device: with Micro-B and Type-C connectors
+> but other kind may exist. TypeB is not standartized but it seemed to me
+> a good generalization of "USB connectors to charger connection but not
+> Type-C". No problem to change it to other suitable name, 'simple', 'dumb'=
+,
+> 'non-TypeC' or 'micro-B'. All this names are not ideal.
 
-> 
-> Why was that wrong?
+Since the one non Type-C connector device we has has a micro-B I would just
+call the file drivers/platform/x86/intel_cht_int33fe_microb.c and be done
+with it.
 
-It was wrong from the definition of what PHYP considers as
-"not-active" CPU. From the point of view of that hypervisor, a CPU is
-not-active iff it is in RTAS "stop-self". Thus if a CPU is offline via
-extended cede, and not using any cycles, it is still considered to be
-active, by PHYP. This causes PURR accounting is broken. 
+Regards,
 
-> 
-> > The PHYP hypervisor considers CPUs in extended cede to be "active"
-> > since the CPUs are still under the control fo the Linux Guests. Hence, when we change the
-> > SMT modes by offlining the secondary CPUs, the PURR and the RWMR SPRs
-> > will continue to count the values for offlined CPUs in extended cede
-> > as if they are online.
-> >
-> > One of the expectations with PURR is that the for an interval of time,
-> > the sum of the PURR increments across the online CPUs of a core should
-> > equal the number of timebase ticks for that interval.
-> >
-> > This is currently not the case.
-> 
-> But why does that matter? It's just some accounting stuff, does it
-> actually break something meaningful?
+Hans
 
-As Naveen mentioned, it breaks lparstat which the customers are using
-for capacity planning. Unfortunately we discovered this 10 years after
-the feature was written.
-
-> 
-> Also what does this do to the latency of CPU online/offline.
-
-It will have a slightly higher latency compared to extended cede,
-since it involves an additional rtas-call for both the start and
-stopping of CPU. Will measure the exact difference and post it in the
-next version.
-
-> And what does this do on KVM?
-
-KVM doesn't seem to depend on the state of the offline VCPU as it has
-an explicit way of signalling whether a CPU is online or not, via
-KVM_REG_PPC_ONLINE. In commit 7aa15842c15f ("KVM: PPC: Book3S HV: Set
-RWMR on POWER8 so PURR/SPURR count correctly") we use this KVM reg to
-update the count of online vCPUs in a core, and use this count to set
-the RWMR correctly before dispatching the core.
-
-So, this patchset doesn't affect KVM.
-
-> 
-> 
-> > In the following data (Generated using
-> > https://github.com/gautshen/misc/blob/master/purr_tb.py):
-> >
-> >
-> > delta tb = tb ticks elapsed in 1 second.
-> > delta purr = sum of PURR increments on online CPUs of that core in 1
-> >        	     second
-> >       
-> > SMT=off
-> > ===========================================
-> > Core        	delta tb(apprx)  delta purr	
-> > ===========================================
-> > core00 [  0]	512000000	69883784	
-> > core01 [  8]	512000000	88782536	
-> > core02 [ 16]	512000000	94296824	
-> > core03 [ 24]	512000000	80951968	
-> 
-> Showing the expected value in another column would make this much
-> clearer.
-
-Thanks. Will update the testcase to call out the expected value.
-> 
-> cheers
-> 
-
-
---
-Thanks and Regards
-gautham.
