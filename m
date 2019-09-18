@@ -2,63 +2,63 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04EA5C4CEC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D511C4CEC4
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C54DD218AF
+	by mail.kernel.org (Postfix) with ESMTP id 00DB721907
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BOAMerO+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q4WnMjqw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731268AbfIRWqU (ORCPT
+        id S1731669AbfIRWqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 18:46:20 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:39940 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfIRWqT (ORCPT
+        Wed, 18 Sep 2019 18:46:24 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:36602 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfIRWqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 18:46:19 -0400
-Received: by mail-qt1-f201.google.com with SMTP id x3so1820723qto.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 15:46:19 -0700 (PDT)
+        Wed, 18 Sep 2019 18:46:23 -0400
+Received: by mail-pg1-f201.google.com with SMTP id d19so928969pgh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 15:46:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=MMbo7IIaE45HFgWdH+A2eRZAR5+H2wpaQj+LQ4zYRIk=;
-        b=BOAMerO+kcAMWUQXs7MtP3XfcdNKy/o4Cyr/P+pN+bzgxIs4qnu/NG74SVVYxsigIu
-         bc2/ZI1B1FMPv4qXFw3xeEKuIPYQSPmChvvlrO1NVrFPgRzQKp5eJ9C/iGGzu3jInzv+
-         SjF751YALnidr+Dox5l6B9xpcFmAoeRot4Y9M9KI9QLdbDQ89eYirm91BZDJa5IxLoc1
-         vNMctYRbzDwaEf+OZBkIIFJdkQLXbadzdCfcYgxY9z2Q+VLc7RRJUW7mYVdQ6y1QuSxX
-         0M8W5bRjdpBTQg94IIbcdCw0abjo5pjpmmUS32uPJqQWbmHQkCK7tQVKraZ01hyzczWZ
-         +mcw==
+        bh=o1kP60V+4ATGhA+2GV7Kq8/nUZ9uGq30p+omw7gFOvE=;
+        b=q4WnMjqwmG39MhQ+fG2cb/pbsFDTo+RHKowHUy0iLPLD8XNFe7vn+BaNkoBOXLM60Y
+         7RmWtV5nHNgjLrrghEshq/n30wUnM+RLedP3SSKfX4Yk1U7JJ5q2nvdU7YWhxwFBLQFX
+         vLsSVNDW0/RXax2iE4CdNNtNGXfNfQ4Stgy2MVUb1XE5w+jUVZfbyOmFbeYtiPU7MBkg
+         iWdNZ5MTCMk7OYHPXYxefMxN8WFKIUGfJ0W8/M7pxorLRojr7oiyxH+WS602dxcGZCt+
+         o/JdTIr/6hwfPGFMD12GphMksXtnAZk5Vv2g46E8MwlYgJ3HhyaDqxgLxhfeukXMFLI/
+         GU7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=MMbo7IIaE45HFgWdH+A2eRZAR5+H2wpaQj+LQ4zYRIk=;
-        b=irSWmakOmFiaxs4y/zqcNTWVInwVLMS/CLX0++xpxK9B1QNIqMilsaopKgZs/WMyEJ
-         jVP2arE539AR+xfkQcLiwr0LJ/weh/T2ia0gVx0ZjlKdzVZuGnQZvEoLzKTMTp2/0iFS
-         fdaGqDvdbGBFw90olQhoGZ3NprQm8wfqX8XXfOetdKpHvFXfpTR+V+NQq0PvvVwC6mG+
-         SW2ebdVa5c4WcYhoc542Cz8Qe9/oWo7xTzxUcuinOHlEb2OhFmwv0yCSpXZF/UJmkkC2
-         KCmkpDgeSjWwKA+sT+jQo8lzVQ22IUYElcoyHfNIvpNfSHSuKMe0xIGahifw0cGYHnlK
-         Plbg==
-X-Gm-Message-State: APjAAAXE0KEVIg+YVJvED8komv117+O0GNpiY8cAIxbK5iFVrlkj/WeV
-        LS7V0i4Fi/qCXRfLc7H9vRCbkgxoABQTVyl/Vp0=
-X-Google-Smtp-Source: APXvYqwOrHdUs8OEIvDvqLOmSa8Rkk6hhV/z70vao1pG+RVSQciVLuQQSVbz5BPcRpgISXfd+TZmAirl3wFd5jI+I/8=
-X-Received: by 2002:a05:620a:25b:: with SMTP id q27mr6927937qkn.438.1568846778376;
- Wed, 18 Sep 2019 15:46:18 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 15:46:03 -0700
-In-Reply-To: <20190913210018.125266-1-samitolvanen@google.com>
-Message-Id: <20190918224608.77973-1-samitolvanen@google.com>
+        bh=o1kP60V+4ATGhA+2GV7Kq8/nUZ9uGq30p+omw7gFOvE=;
+        b=neAectRy4o19t/qPxmzDTSUyYq5XU1M4bsN7dcoV3vHrzFqGEcch0o5VNLhFqDGxPR
+         2o2qrbUVtXW0h5qpr/KZus4rJaWz/kjEti6+t2dZ9tCLuHGDejHpL7JKuXUTTh6c0e2Q
+         MS213uI8I3myPKNsI9CW+sw1VLX6gSsIE6A2ISUYiepvZlrmNDrxO9l0PYiPDgqnh+VL
+         Q2y/ziIcI3W/Kf671KxS5xiP1YKInR4xak9OqSZPck3IodLkYcBFty+XLpcuJnZaeDOH
+         J90/1akYp5/8MPVMcL1P+2YiJL03+F8SQtWbNd/AZyeG80Xy+r8XOCaxoSOEwHrKeANh
+         0cFg==
+X-Gm-Message-State: APjAAAVfiD2o1ZJRLI+jlsVK7ylFeJrzSrAmrzoqKur63S9umGZE+EYs
+        4sQ9hYPVOMrg0xr9rqnRTBk67TFldrdYQZ8bJzY=
+X-Google-Smtp-Source: APXvYqz+4m5LGb0FPgu6VnLU9/8RTXVuiZafq/yLxTf2lBSuoVVcnMZhPO1d1IvTEPPOjIMKguGaSKNLCPSLTOk5sns=
+X-Received: by 2002:a63:be48:: with SMTP id g8mr6060674pgo.193.1568846780982;
+ Wed, 18 Sep 2019 15:46:20 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 15:46:04 -0700
+In-Reply-To: <20190918224608.77973-1-samitolvanen@google.com>
+Message-Id: <20190918224608.77973-2-samitolvanen@google.com>
 Mime-Version: 1.0
-References: <20190913210018.125266-1-samitolvanen@google.com>
+References: <20190913210018.125266-1-samitolvanen@google.com> <20190918224608.77973-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.23.0.351.gc4317032e6-goog
-Subject: [PATCH v2 0/5] x86: fix syscall function type mismatches
+Subject: [PATCH v2 1/5] x86: use the correct function type in SYSCALL_DEFINE0
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Andy Lutomirski <luto@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -73,31 +73,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set changes x86 syscall wrappers and related functions to
-use function types that match sys_call_ptr_t. This fixes indirect call
-mismatches with Control-Flow Integrity (CFI) checking.
+Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
+parameters, use the correct function type to avoid type mismatches
+with Control-Flow Integrity (CFI) checking.
 
-Changes since v1:
-  - Use SYSCALL_DEFINE0 for __x64_sys_ni_syscall.
-  - Include Andy's COMPAT_SYSCALL_DEFINE0 patch and use the macro
-    for (rt_)sigreturn.
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Acked-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/include/asm/syscall_wrapper.h | 23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-Andy Lutomirski (1):
-  x86/syscalls: Wire up COMPAT_SYSCALL_DEFINE0
-
-Sami Tolvanen (4):
-  x86: use the correct function type in SYSCALL_DEFINE0
-  x86: use COMPAT_SYSCALL_DEFINE0 for IA32 (rt_)sigreturn
-  x86: use the correct function type for sys_ni_syscall
-  x86: fix function types in COND_SYSCALL
-
- arch/x86/entry/syscall_32.c            |  8 +--
- arch/x86/entry/syscall_64.c            | 14 +++--
- arch/x86/entry/syscalls/syscall_32.tbl |  8 +--
- arch/x86/ia32/ia32_signal.c            |  5 +-
- arch/x86/include/asm/syscall_wrapper.h | 76 ++++++++++++++++++++------
- 5 files changed, 78 insertions(+), 33 deletions(-)
-
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index e046a405743d..90eb70df0b18 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -48,12 +48,13 @@
+  * To keep the naming coherent, re-define SYSCALL_DEFINE0 to create an alias
+  * named __ia32_sys_*()
+  */
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __x64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
+-	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);	\
+-	asmlinkage long __x64_sys_##sname(void)
++
++#define SYSCALL_DEFINE0(sname)						\
++	SYSCALL_METADATA(_##sname, 0);					\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
++	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
++	SYSCALL_ALIAS(__ia32_sys_##sname, __x64_sys_##sname);		\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+ 
+ #define COND_SYSCALL(name)						\
+ 	cond_syscall(__x64_sys_##name);					\
+@@ -181,11 +182,11 @@
+  * macros to work correctly.
+  */
+ #ifndef SYSCALL_DEFINE0
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __x64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
+-	asmlinkage long __x64_sys_##sname(void)
++#define SYSCALL_DEFINE0(sname)						\
++	SYSCALL_METADATA(_##sname, 0);					\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
++	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
++	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
+ #endif
+ 
+ #ifndef COND_SYSCALL
 -- 
 2.23.0.351.gc4317032e6-goog
 
