@@ -2,173 +2,284 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=0.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0212AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC45CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0CFF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B32218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:22:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="clwgV87r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L4Pzj31U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfIRHUF (ORCPT
+        id S1728662AbfIRHWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:20:05 -0400
-Received: from mout.web.de ([212.227.15.4]:43519 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726077AbfIRHUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:20:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568791161;
-        bh=mZHVM8uPGDHs/8eftxOEninmY5yjMFztwfgfbXzFL/0=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=clwgV87rSvVCe4yBu+Jge0mozWO5w7oV8oHj8hQNjaanjIWt6MSUQNdDT35ls+YL9
-         jH0gr017PY9a/sJufEx0wIwQLZrGHFWJtJiQ0PN3UHONt7foo/S0QGckA3v1tlcG+O
-         1NqfhoZVMLt6X/toBlkmmqJ+6N79lpHxCcRM6ZvE=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.2.101]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MJCAc-1iDE4B0BSM-002ldM; Wed, 18
- Sep 2019 09:19:21 +0200
-To:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Matt Mackall <mpm@selenic.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] hwrng: iproc-rng200 - Use devm_platform_ioremap_resource() in
- iproc_rng200_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Message-ID: <0ecb0679-0558-6cbe-af2f-6ee9122a4a7e@web.de>
-Date:   Wed, 18 Sep 2019 09:19:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 18 Sep 2019 03:22:10 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:36930 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbfIRHWK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 03:22:10 -0400
+Received: by mail-yb1-f196.google.com with SMTP id v5so2369065ybq.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 00:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3waIZxFnfruYn6UWTx/U0ZPW+zFOtuGmcVoVDfSXecQ=;
+        b=L4Pzj31UcS3ktSop76cqcgLFAqAdFLv2e88WBeTP3SfgkwJy55J4Q+phq0d1PoSwoL
+         hJzcUtCB+vkKh3RwZ/SBuzM+h1WeeEd46MAsKsRX111CVnAk+bYgTezaN+fxK4uNji5C
+         JEqvEi1a0EIWtqnpjNodKxI5koMHy4uUybQQZ4SgypQ5nHg9/si5gDJs0+NxUeOfXmw/
+         NkXBvpV1IdLuL0828ziaWJ1Ssm8VKbaJbjpCK2zaG8VvX7FH9j5pWF2NGHHpAD/0LhBZ
+         WfESJHMHP+47p0+qEbwxuu2vs7CxyEwH2haK8OEQLAV7VRMKEfnTJWUt+KFMEP91MPU2
+         3MfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3waIZxFnfruYn6UWTx/U0ZPW+zFOtuGmcVoVDfSXecQ=;
+        b=Zg83p94wlZKbAICJE5whnuA7AlAn6j6w8q9Cu6BSCevT+C1lpp3J8AAjZZ3F6gVoP6
+         h8bfY+i6k8KSXuy7AtbXL3BqXFtOOOuOySimG2mkhLp5EoBQOcFefkQ1t4rNzyEs1ljn
+         WsGZe5lPzN724dqT+RlU3yPeu2nIUabtDuMCc8iXnQhFgIaMFAoK5cB6fKNVw4NpC8tI
+         315V9BQMRmYQEfFrY8C2Vhk8Sr0wV6HUT1AY6zguyhsHVsN/CmKVhiNGd77Gckest/7a
+         AmMGKhpKo1HwrggEegwqlnJgmjGpmbZE07PzAvnh0Al3xhQvL6U7vn6tdvMAK68ZhsUH
+         WoQA==
+X-Gm-Message-State: APjAAAXKtl/dI9ba5/a+rTtHD0nS/oFbtg8eC4Gy6ZkbdX6D8p+jRCoi
+        7Ff4H2T0pQYetLTOSrUCZEQ2u3s93s6bK0X4XJM=
+X-Google-Smtp-Source: APXvYqwMINabRag2TO51mwH36zD4OhkI5JYI+tim5VswZxut2oWIVpUZEfWVldmVRgOhRArtaqVmU3aaKCI3S6UI6Io=
+X-Received: by 2002:a25:76ca:: with SMTP id r193mr1780653ybc.33.1568791328924;
+ Wed, 18 Sep 2019 00:22:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zG8nKyPeoG1/iJ+5zOtkf9tAVKXpcEu5K+KWWYLMFoZOYR7Ez8v
- N4j65B4sScGyu9JK7VDecxkHLIGUT+tL8ZB+LBkZTotbsvc5r0j9QXZg0RCfnrg8Z6QmjAD
- QmJt38QtOFg6zcDjAvB04EjzxH2s+05nFXcHsnomSsoLTWcIkDv0fuPrzSG9uhb4Waf3ev5
- TJ08bLOVXuwYw/B/365Bw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:knI0/qaWLC4=:N8e0l9Ha1V57NqnYsDncV8
- RAEs8wW1kF4fj8UeQQojzpV1ea+OIXrWgJ7yWUM7uK8dTbzLLbd4tiM3bxaHZNMy2zSRvBcXe
- 504dxKZJMvj3D+I4s9R5dv8BPqD+kslPL652e75ZPSPEO3UEsx7JEugauzzh7a1oQkLEGRM0E
- qBdnQ/g8fJMAGoneYVD/oD3WMmsN+8p/4nzU/tirwRRFeZ64OPJHkqALoILiIFX/RgscmtSZh
- ds1ExTBdPfujtUHrZ5aReWyY3A9qOobH/c6Gif5Cj1z4mT3DxhevrT99OCO1Sb/3hwGHmTFjj
- wyp2bWz1I4KSqp3EQZAKtywiv+iNfOuRt7/ZH52hXnODC/WEy7Qe+qjUYjs/0qVrZu9xVG4+M
- D1wq7ENrA6AA2OxROwHh+RO20NOhUZv/H0Yn6F7tmR3VGP5P573cvSe54332xBDt0SkUx/sH3
- PT1JL0yKr2ofdkIujyqle9U11VHZkNNPyVHlSymilNRlW0EYXDZtw3tC3jQeLqavLPHHyVx1N
- U94CbAI12TrIp/bJbTzWsqlNWgG2dGNjPibDewJ+R9JG9IRsA0pLb1FlZuE0xN69BQegInj0R
- TxqHc+dsUSnLF6qrBRqb2rDMD/qRilTxUSwawIm1c+MGxPmB6nYzsCtrVdeZKaKSO5NXBYts5
- ghGH3PYhtM4fat3fkSLaZoLkw5MgNfrpA2WfohDoHPHeOL+onF1oT4zou/z0ftAJDJG5cx43l
- mZxa4bs2Kq5M28A2bsD3Ap7m7oD3MHeOfQnjxcAMBGIHOrQ73QmS8b5lTIXX+ESc0jE0yhjVy
- wbUrSTwS5hjMShAWahVaUl6m5ORpbp2v38RYRxoD7FPQ0eKREAnj9xHbuSd7use90n24pDbFM
- oZ0x5M21ZIylUrK/MmMzVewaMBOL6gtziW/nwU+CqiTDuyWXvNiD39GTPtpc2Z0WQjXZjH17H
- 9MFLisgz9DpR9cLxAHiq6pf/BHI6Mh+tOUCi5iHJL0icUCaRUdl9BngADvnaaEuPFmcl17DrX
- 9ZLyc1Q5T9sZ2UEy+Sg9AaqSfqkKpZQcqQcMV3EQDKz98h4QQYYjh9ivAN1HZYRfLkB5crjkQ
- 2iElmVmRwrlE6f/qII76HDznnAlJcoqDDiCWMCghas0xS0g1XcqSlAtsIsgrlkCtyFYLWr9PI
- bW7sdCh8Wl9y9xtoQzY3XWg9e7hdYvYu14qon39FzeX7meMzhDz5pMLG0bQJJEcCROUN64xbL
- 1XeTBCCKPUlhf9G5YoDeIesK1JSa2OnjtpobswWzfUSipr05PwQZyD8F5DyQ=
+References: <20190601082722.44543-1-irogers@google.com> <20190621082422.GH3436@hirez.programming.kicks-ass.net>
+ <CAP-5=fW7sMjQEHm+1e=cdAi+ZyP53UyU7xhAbnouMApuxYqrhw@mail.gmail.com>
+ <20190624075520.GC3436@hirez.programming.kicks-ass.net> <CAP-5=fU=xbP39b6WZV4h92g6Ub_w4tH2JdApw5t6DTyZqxShUQ@mail.gmail.com>
+ <CAKTKpr6m7YzqJ7U2icNHq7ZwoG0pw8ws_EHcLR+-T6ZeEfe15Q@mail.gmail.com>
+ <20190823115946.GM2349@hirez.programming.kicks-ass.net> <CAKTKpr5N6thBR+SJ8rdRTCEjv+7GVsw3R9EY+cKTGexz-yr4sg@mail.gmail.com>
+ <20190823130322.GO2349@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190823130322.GO2349@hirez.programming.kicks-ass.net>
+From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
+Date:   Wed, 18 Sep 2019 12:51:57 +0530
+Message-ID: <CAKTKpr7=U9zLXefvJ-DDxNkeQhZWTPUEzjiZW=28wJo9uCJPPw@mail.gmail.com>
+Subject: Re: [PATCH] perf cgroups: Don't rotate events for cgroups unnecessarily
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ganapatrao Kulkarni <gkulkarni@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 18 Sep 2019 09:09:22 +0200
+On Fri, Aug 23, 2019 at 6:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Fri, Aug 23, 2019 at 06:26:34PM +0530, Ganapatrao Kulkarni wrote:
+> > On Fri, Aug 23, 2019 at 5:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > On Fri, Aug 23, 2019 at 04:13:46PM +0530, Ganapatrao Kulkarni wrote:
+> > >
+> > > > We are seeing regression with our uncore perf driver(Marvell's
+> > > > ThunderX2, ARM64 server platform) on 5.3-Rc1.
+> > > > After bisecting, it turned out to be this patch causing the issue.
+> > >
+> > > Funnily enough; the email you replied to didn't contain a patch.
+> >
+> > Hmm sorry, not sure why the patch is clipped-off, I see it in my inbox.
+>
+> Your email is in a random spot of the discussion for me. At least it was
+> fairly easy to find the related patch.
+>
+> > > > Test case:
+> > > > Load module and run perf for more than 4 events( we have 4 counters,
+> > > > event multiplexing takes place for more than 4 events), then unload
+> > > > module.
+> > > > With this sequence of testing, the system hangs(soft lockup) after 2
+> > > > or 3 iterations. Same test runs for hours on 5.2.
+> > > >
+> > > > while [ 1 ]
+> > > > do
+> > > >         rmmod thunderx2_pmu
+> > > >         modprobe thunderx2_pmu
+> > > >         perf stat -a -e \
+> > > >         uncore_dmc_0/cnt_cycles/,\
+> > > >         uncore_dmc_0/data_transfers/,\
+> > > >         uncore_dmc_0/read_txns/,\
+> > > >         uncore_dmc_0/config=0xE/,\
+> > > >         uncore_dmc_0/write_txns/ sleep 1
+> > > >         sleep 2
+> > > > done
+> > >
+> > > Can you reproduce without the module load+unload? I don't think people
+> > > routinely unload modules.
+> >
+> > The issue wont happen, if module is not unloaded/reloaded.
+> > IMHO, this could be potential bug!
+>
+> Does the softlockup give a useful stacktrace? I don't have a thunderx2
+> so I cannot reproduce.
 
-Simplify this function implementation by using a known wrapper function.
+Sorry for the late reply, below is the dump that i am getting, when i
+hit the softlockup.
+Any suggestions to debug this further?
 
-This issue was detected by using the Coccinelle software.
+sequence of commands, which leads to this lockup,
+insmod thunderx2_pmu.ko
+perf stat -e \
+uncore_dmc_0/cnt_cycles/,\
+uncore_dmc_0/data_transfers/,\
+uncore_dmc_0/read_txns/,\
+uncore_dmc_0/config=0xE/,\
+uncore_dmc_0/write_txns/\
+rmmod thunderx2_pmu
+insmod thunderx2_pmu.ko
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/char/hw_random/iproc-rng200.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+root@SBR-26>~>> [ 1065.946772] watchdog: BUG: soft lockup - CPU#117
+stuck for 22s! [perf:5206]
+[ 1065.953722] Modules linked in: thunderx2_pmu(OE) nls_iso8859_1
+joydev input_leds bridge ipmi_ssif ipmi_devintf stp llc
+ipmi_msghandler sch_fq_codel ib_iser rdma_cm iw_cm ib_cm ib_core
+iscsi_tcp libiscsi_tcp
+libiscsi scsi_transport_iscsi ppdev lp parport ip_tables x_tables
+autofs4 btrfs zstd_compress raid10 raid456 async_raid6_recov
+async_memcpy async_pq async_xor async_tx xor xor_neon raid6_pq raid1
+raid0 multipat
+h linear aes_ce_blk hid_generic aes_ce_cipher usbhid uas usb_storage
+hid ast i2c_algo_bit drm_vram_helper ttm drm_kms_helper syscopyarea
+sysfillrect sysimgblt fb_sys_fops drm i40e i2c_smbus bnx2x
+crct10dif_ce g
+hash_ce e1000e sha2_ce mpt3sas nvme sha256_arm64 ptp ahci raid_class
+sha1_ce nvme_core scsi_transport_sas mdio libahci pps_core libcrc32c
+gpio_xlp i2c_xlp9xx aes_neon_bs aes_neon_blk crypto_simd cryptd
+aes_arm6
+4 [last unloaded: thunderx2_pmu]
+[ 1066.029640] CPU: 117 PID: 5206 Comm: perf Tainted: G           OE
+  5.3.0+ #160
+[ 1066.037109] Hardware name: Cavium Inc. Saber/Saber, BIOS
+TX2-FW-Release-7.2-build_08-0-g14f8c5bf8a 12/18/2018
+[ 1066.047009] pstate: 20400009 (nzCv daif +PAN -UAO)
+[ 1066.051799] pc : smp_call_function_single+0x198/0x1b0
+[ 1066.056838] lr : smp_call_function_single+0x16c/0x1b0
+[ 1066.061875] sp : fffffc00434cfc50
+[ 1066.065177] x29: fffffc00434cfc50 x28: 0000000000000000
+[ 1066.070475] x27: fffffebed4d2d952 x26: ffffffffd4d2d800
+[ 1066.075774] x25: fffffddf5da1e240 x24: 0000000000000001
+[ 1066.081073] x23: fffffc00434cfd38 x22: fffffc001026adb8
+[ 1066.086371] x21: 0000000000000000 x20: fffffc0011843000
+[ 1066.091669] x19: fffffc00434cfca0 x18: 0000000000000000
+[ 1066.096968] x17: 0000000000000000 x16: 0000000000000000
+[ 1066.102266] x15: 0000000000000000 x14: 0000000000000000
+[ 1066.107564] x13: 0000000000000000 x12: 0000000000000020
+[ 1066.112862] x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+[ 1066.118161] x9 : 0000000000000000 x8 : fffffebed44ec5e8
+[ 1066.123459] x7 : 0000000000000000 x6 : fffffc00434cfca0
+[ 1066.128757] x5 : fffffc00434cfca0 x4 : 0000000000000001
+[ 1066.134055] x3 : fffffc00434cfcb8 x2 : 0000000000000000
+[ 1066.139353] x1 : 0000000000000003 x0 : 0000000000000000
+[ 1066.144652] Call trace:
+[ 1066.147088]  smp_call_function_single+0x198/0x1b0
+[ 1066.151784]  perf_install_in_context+0x1b4/0x1d8
+[ 1066.156394]  __se_sys_perf_event_open+0x634/0xa68
+[ 1066.161089]  __arm64_sys_perf_event_open+0x1c/0x28
+[ 1066.165881]  el0_svc_common.constprop.0+0x78/0x168
+[ 1066.170660]  el0_svc_handler+0x34/0x90
+[ 1066.174399]  el0_svc+0x8/0xc
+[ 1100.985033] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[ 1100.990944] rcu:     0-...0: (4 ticks this GP) idle=bb6/0/0x1
+softirq=2178/2178 fqs=7365
+[ 1100.998864]  (detected by 154, t=15005 jiffies, g=14325, q=7133)
+[ 1101.004857] Task dump for CPU 0:
+[ 1101.008074] swapper/0       R  running task        0     0      0 0x0000002a
+[ 1101.015110] Call trace:
+[ 1101.017553]  __switch_to+0xbc/0x220
+[ 1244.366396] INFO: task kworker/116:1:1364 blocked for more than 120 seconds.
+[ 1244.373443]       Tainted: G           OEL    5.3.0+ #160
+[ 1244.378847] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[ 1244.386673] kworker/116:1   D    0  1364      2 0x00000028
+[ 1244.392166] Workqueue: events do_free_init
+[ 1244.396260] Call trace:
+[ 1244.398705]  __switch_to+0x194/0x220
+[ 1244.402282]  __schedule+0x30c/0x758
+[ 1244.405758]  schedule+0x38/0xa8
+[ 1244.408896]  schedule_timeout+0x220/0x3a8
+[ 1244.412902]  wait_for_common+0x110/0x220
+[ 1244.416819]  wait_for_completion+0x28/0x38
+[ 1244.420914]  __wait_rcu_gp+0x170/0x1a8
+[ 1244.424658]  synchronize_rcu+0x70/0xa0
+[ 1244.428403]  do_free_init+0x3c/0x70
+[ 1244.431889]  process_one_work+0x1f8/0x438
+[ 1244.435896]  worker_thread+0x50/0x4b8
+[ 1244.439554]  kthread+0x130/0x138
+[ 1244.442778]  ret_from_fork+0x10/0x18
+[ 1280.996503] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[ 1281.002415] rcu:     0-...0: (4 ticks this GP) idle=bb6/0/0x1
+softirq=2178/2178 fqs=29040
+[ 1281.010420]  (detected by 186, t=60010 jiffies, g=14325, q=22339)
+[ 1281.016500] Task dump for CPU 0:
+[ 1281.019715] swapper/0       R  running task        0     0      0 0x0000002a
+[ 1281.026751] Call trace:
+[ 1281.029189]  __switch_to+0xbc/0x220
+[ 1365.192710] INFO: task kworker/116:1:1364 blocked for more than 241 seconds.
+[ 1365.199756]       Tainted: G           OEL    5.3.0+ #160
+[ 1365.205158] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[ 1365.212984] kworker/116:1   D    0  1364      2 0x00000028
+[ 1365.218475] Workqueue: events do_free_init
+[ 1365.222569] Call trace:
+[ 1365.225014]  __switch_to+0x194/0x220
+[ 1365.228589]  __schedule+0x30c/0x758
+[ 1365.232065]  schedule+0x38/0xa8
+[ 1365.235203]  schedule_timeout+0x220/0x3a8
+[ 1365.239209]  wait_for_common+0x110/0x220
+[ 1365.243127]  wait_for_completion+0x28/0x38
+[ 1365.247222]  __wait_rcu_gp+0x170/0x1a8
+[ 1365.250966]  synchronize_rcu+0x70/0xa0
+[ 1365.254711]  do_free_init+0x3c/0x70
+[ 1365.258198]  process_one_work+0x1f8/0x438
+[ 1365.262205]  worker_thread+0x50/0x4b8
+[ 1365.265863]  kthread+0x130/0x138
+[ 1365.269087]  ret_from_fork+0x10/0x18
+[ 1461.008017] rcu: INFO: rcu_sched detected stalls on CPUs/tasks:
+[ 1461.013929] rcu:     0-...0: (4 ticks this GP) idle=bb6/0/0x1
+softirq=2178/2178 fqs=51540
+[ 1461.021930]  (detected by 123, t=105015 jiffies, g=14325, q=37487)
+[ 1461.028096] Task dump for CPU 0:
+[ 1461.031311] swapper/0       R  running task        0     0      0 0x0000002a
+[ 1461.038347] Call trace:
+[ 1461.040785]  __switch_to+0xbc/0x220
+[ 1486.023005] INFO: task kworker/116:1:1364 blocked for more than 362 seconds.
+[ 1486.030049]       Tainted: G           OEL    5.3.0+ #160
+[ 1486.035447] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[ 1486.043272] kworker/116:1   D    0  1364      2 0x00000028
+[ 1486.048762] Workqueue: events do_free_init
+[ 1486.052856] Call trace:
+[ 1486.055300]  __switch_to+0x194/0x220
+[ 1486.058875]  __schedule+0x30c/0x758
+[ 1486.062351]  schedule+0x38/0xa8
+[ 1486.065487]  schedule_timeout+0x220/0x3a8
+[ 1486.069493]  wait_for_common+0x110/0x220
+[ 1486.073411]  wait_for_completion+0x28/0x38
+[ 1486.077504]  __wait_rcu_gp+0x170/0x1a8
+[ 1486.081248]  synchronize_rcu+0x70/0xa0
+[ 1486.084994]  do_free_init+0x3c/0x70
+[ 1486.088479]  process_one_work+0x1f8/0x438
+[ 1486.092486]  worker_thread+0x50/0x4b8
+[ 1486.096143]  kthread+0x130/0x138
+[ 1486.099367]  ret_from_fork+0x10/0x18
+[ 1606.849300] INFO: task kworker/116:1:1364 blocked for more than 483 seconds.
+[ 1606.856345]       Tainted: G           OEL    5.3.0+ #160
 
-diff --git a/drivers/char/hw_random/iproc-rng200.c b/drivers/char/hw_rando=
-m/iproc-rng200.c
-index 92be1c0ab99f..899ff25f4f28 100644
-=2D-- a/drivers/char/hw_random/iproc-rng200.c
-+++ b/drivers/char/hw_random/iproc-rng200.c
-@@ -181,7 +181,6 @@ static void iproc_rng200_cleanup(struct hwrng *rng)
- static int iproc_rng200_probe(struct platform_device *pdev)
- {
- 	struct iproc_rng200_dev *priv;
--	struct resource *res;
- 	struct device *dev =3D &pdev->dev;
- 	int ret;
 
-@@ -190,13 +189,7 @@ static int iproc_rng200_probe(struct platform_device =
-*pdev)
- 		return -ENOMEM;
-
- 	/* Map peripheral */
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(dev, "failed to get rng resources\n");
--		return -EINVAL;
--	}
--
--	priv->base =3D devm_ioremap_resource(dev, res);
-+	priv->base =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(priv->base)) {
- 		dev_err(dev, "failed to remap rng regs\n");
- 		return PTR_ERR(priv->base);
-=2D-
-2.23.0
-
+Thanks,
+Ganapat
