@@ -2,95 +2,129 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF4EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6056C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D9C218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96EB5218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:19:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NkofmqnC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387578AbfIRQTC (ORCPT
+        id S1731923AbfIRQTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:19:02 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:36075 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726558AbfIRQTC (ORCPT
+        Wed, 18 Sep 2019 12:19:45 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36116 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbfIRQTp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:19:02 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 67so386522oto.3;
-        Wed, 18 Sep 2019 09:19:01 -0700 (PDT)
+        Wed, 18 Sep 2019 12:19:45 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y19so83249wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:19:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jkRvwN7j8d6+3yYxujaDpdYkk73iNWb6wxPtS0qswdE=;
+        b=NkofmqnCSprkwxBJoUDKnTb+3Uj/9yc6OmR4Yulm/W/mK7DM5Yry64Bb0TLfbeA4w/
+         0L360/+PzUU7wzqahEZy7qO+5UvxDTAuFOwOCAlEg3LFZvahuaRqYvKBr9K10Xko2Cx+
+         XHb6rYgdUm5i86gYRLXVj6258yQs9Qw1UUxnefk5no8k4IgTFts/Ue/Ou5RUqYyJHQOv
+         UFME+F58lY294Ujkr+Mw7u0QddYKlPHlIRh8zdFjNIMsMF1PIOFTOFLfuZsWEhEiI1+y
+         rNCoJv6uVhgfXsk+B7W/Laa1irG7idIEgpNZWvrfpDHtsFgiepPac8d3vgK4e82lcrgY
+         Gciw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ciT4MhcXAvfq4i7XiTa1B8OfzLIYbv4sUsNQGTpETZM=;
-        b=C2DM2GqI0n/TkqiDHNdCqvgNF3cUwEmD4dtdXDAjCGbmlL6kDC58IJxgWr78XQtvN8
-         eZqHTVYIxw5zsBlaPEcO4F4V33ak0/XnxeWAY/+F47ZhdnHLSSwsDWDYbfkzjR7E+Q9V
-         BnfTvvap+S6ieZl7SNzmveK1vT/WoA3yBTnyRAz3ya9G/rqLd1cS1TD2HaZtgHuopfL5
-         4XuTUmWWFGE7KdNTxGpjvFdUPM5J8XheB3Npn55rleJdQt4zOpq4lFigOHMEu/HzZbJn
-         e8tUmlZI4adwwnrY+G2hPCGUi6QB19XQadYcZk2/y6xv6ez448Qrg67KLT3phnWQMXyz
-         mbag==
-X-Gm-Message-State: APjAAAU/7BGBk/cX7P7Vuqpc4GiM5wP10cungYBAKDFThCWfFBcGoNXz
-        Q4By8TlTukExxE+kpl5BMtG+l0U4c1fbaqn1SV6Fkg==
-X-Google-Smtp-Source: APXvYqzWS5uh8zh7cquVyfq2RdGs36uE0xlRca7Ru+rbwDmoYYtXdC0n9VjTuPht7m3D8zBtdAIM5p944HIUvSYHY1M=
-X-Received: by 2002:a05:6830:1196:: with SMTP id u22mr3634441otq.39.1568823539833;
- Wed, 18 Sep 2019 09:18:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <278d9706-162d-28a4-4640-31b697924473@physik.fu-berlin.de>
- <c5acb1c0-7a5b-ce42-8b2f-5fd30cbdab6e@physik.fu-berlin.de>
- <6304acd1-7b71-b1fb-f8d8-298cb3025e69@physik.fu-berlin.de>
- <6725b972-05d4-fed4-7094-16401e86b452@gmail.com> <578d8a91-aaee-087f-1742-65e64001b8fa@physik.fu-berlin.de>
- <CAMuHMdUU6ejc168-ksqXrkE+PjCXFJumaRaWjRtj12NjG_TFSg@mail.gmail.com>
- <CAMuHMdWfTrx8VuJoifEEBc1n+3MiiuwKNWcRnUw+TgWJCtOWag@mail.gmail.com>
- <fea74ca3-4b24-780f-af74-a786646b1668@physik.fu-berlin.de>
- <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
- <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com> <16476.1568822057@warthog.procyon.org.uk>
-In-Reply-To: <16476.1568822057@warthog.procyon.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 18 Sep 2019 18:18:47 +0200
-Message-ID: <CAMuHMdU_2RWFc=xs3tM38Nt_44k3dp5MMuKAT2MacyuCbO+1Hw@mail.gmail.com>
-Subject: Re: Can KEY_DH_OPERATIONS become tristate? (was: Re: Kernel 5.3.0
- stuck during boot on Amiga)
-To:     David Howells <dhowells@redhat.com>
-Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=jkRvwN7j8d6+3yYxujaDpdYkk73iNWb6wxPtS0qswdE=;
+        b=LkUEs+rkoXt9FrPctfLoxnbH2KLIPtfl6yFMSaskLY+OWrVs4L6WcaX4Sb9p8RjwGj
+         ollghM1zdAL/WP6ybOu6B1a7gbzblSksWPAPVA3V6wvJCGzC5HYjccUGM2L+XMDii/Cs
+         u8c34cgIKPCdjg0xDT6bKQK+74lKANMgJAKTYOvtsARyX55Vhy1ujrOZHQ+yOcuJT5pk
+         EFu6gkOTE5PPB6xsJRnZ76ts/De0/lzneW/jWIWynCzrXhAIXfiPgGaTblTiIR7bwdCL
+         ApuQ92vKLHSBfLhd0d5dCMVjDPcG+Zkm0oP8ECd3yT23O+S3DZja98WO9d1qaf78j/zA
+         Fq6A==
+X-Gm-Message-State: APjAAAXMNkM5cbjBRqK1JRVMe0pJ02CLhRXuY07SoZqO1aMXGajUBk8k
+        jPS4+mmuppjregv9saOUa5DXPQ==
+X-Google-Smtp-Source: APXvYqxG3GZQpL0HIFBdWAF2a/qxLz0iEIJr3xmJKW6qnJ6mfouGFwWt9YLefI+hWVtg6SpdqccGFA==
+X-Received: by 2002:a05:6000:14b:: with SMTP id r11mr3737040wrx.58.1568823583638;
+        Wed, 18 Sep 2019 09:19:43 -0700 (PDT)
+Received: from [192.168.0.105] (146-241-52-159.dyn.eolo.it. [146.241.52.159])
+        by smtp.gmail.com with ESMTPSA id c132sm4283228wme.27.2019.09.18.09.19.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 09:19:43 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
+From:   Paolo Valente <paolo.valente@linaro.org>
+In-Reply-To: <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
+Date:   Wed, 18 Sep 2019 18:19:42 +0200
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        noreply-spamdigest via bfq-iosched 
+        <bfq-iosched@googlegroups.com>, oleksandr@natalenko.name,
+        cgroups@vger.kernel.org, Angelo Ruocco <angeloruocco90@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <4F416823-855F-4091-90B9-92253BF189FA@linaro.org>
+References: <20190917165148.19146-1-paolo.valente@linaro.org>
+ <20190917165148.19146-3-paolo.valente@linaro.org>
+ <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
+ <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
+ <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
+To:     Tejun Heo <tj@kernel.org>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
 
-On Wed, Sep 18, 2019 at 5:54 PM David Howells <dhowells@redhat.com> wrote:
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > CC crypto keys people
-> >
-> > TL;DR: CONFIG_CRYPTO_DH=y is reported to cause boot delays of several
-> > minutes on old and slow machines.
->
-> Why is it doing that?  It doesn't do anything unless it is called, so
-> something must be calling it.
 
-I don't know.  Enabling initcall_debug shows that dh_init() takes a very long
-time.
+> Il giorno 18 set 2019, alle ore 17:19, Tejun Heo <tj@kernel.org> ha =
+scritto:
+>=20
+> Hello,
+>=20
+> On Wed, Sep 18, 2019 at 07:18:50AM +0200, Paolo Valente wrote:
+>> A solution that both fulfills userspace request and doesn't break
+>> anything for hypothetical users of the current interface already made
+>> it to mainline, and Linus liked it too.  It is:
+>=20
+> Linus didn't like it.  The implementation was a bit nasty.  That was
+> why it became a subject in the first place.
+>=20
+>> 19e9da9e86c4 ("block, bfq: add weight symlink to the bfq.weight =
+cgroup parameter")
+>>=20
+>> But it was then reverted on Tejun's request to do exactly what we
+>> don't want do any longer now:
+>> cf8929885de3 ("cgroup/bfq: revert bfq.weight symlink change")
+>=20
+> Note that the interface was wrong at the time too.
+>=20
+>> So, Jens, Tejun, can we please just revert that revert?
+>=20
+> I think presenting both io.weight and io.bfq.weight interfaces are
+> probably the best course of action at this point but why does it have
+> to be a symlink?  What's wrong with just creating another file with
+> the same backing function?
+>=20
 
-Gr{oetje,eeting}s,
+I think a symlink would be much clearer for users, given the confusion
+already caused by two names for the same parameter.  But let's hear
+others' opinion too.
 
-                        Geert
+Thanks,
+Paolo
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> Thanks.
+>=20
+> --=20
+> tejun
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
