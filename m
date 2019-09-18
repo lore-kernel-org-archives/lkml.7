@@ -2,136 +2,67 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80D7DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2CF7C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5425521920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9329D21928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568838421;
-	bh=iWz1hc+UBJTCvZLLe/HKUYvdmjhb8Mua+uTJchCNsHs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Vyd2+/awkViU7gwtQ/lceSQusV98vrow2ReGYMqsRRqKhOoeDMN0rt4g01pCnjpfR
-	 HcuHEE9NSxlOwqIU97Fv4Q1G7CR5NkvYvZ9zm3l7myCN4bHZXj7dm+7MTy8zRzBzV/
-	 jp1NiA++am/tnQ9A2rRAt/WIlnRipy1KsgYTZ/Lg=
+	s=default; t=1568838604;
+	bh=aVtEsFQz3IdqAASUh/nUD4425z9OwoiunEOlVdwHSXs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=YKy4jQNppXVVa52uGPnjjRrpvMAQfdNaDjJL6e1eo2tPJai5YA4McuMiE1Ib/KYO4
+	 L6Kei7BO0YH7K0nQWBwonH/R5rF8XHqM5EGfSCiphN/y9Oe+zC/0fuuJd1qFc6dQeX
+	 zlI1tbsW1JdwdTKfjRdxm1lBfVxRdTrmjrwWqXn8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfIRU1A (ORCPT
+        id S2387455AbfIRUaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:27:00 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38761 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730892AbfIRU1A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:27:00 -0400
-Received: by mail-lf1-f68.google.com with SMTP id u28so633493lfc.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:26:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WA83kKskWDi0wSYWEMANppD1TtU2egtENlabxouEkMs=;
-        b=D7phgcdky5drAnukp4PGzIPILGleUSxw/Oy6UL6EcAOEXsYTKGPslV2lsSMTxEN+mH
-         M3RqihbNDrPkWyIcw/igYnJ1odNGKJcr97829hJnei6qtbXfJEkFQsRdPHCP5ZG4HipW
-         KeCnm0IJheqNUiL0MQFc74cHjOFPY3i9mSC8g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WA83kKskWDi0wSYWEMANppD1TtU2egtENlabxouEkMs=;
-        b=OS1zhOJ9RTYsVsuhNOYYGZNHpqyQ0XB/By/Ln7s+VkIrIzq9qQKOG33wzLAUlhZOBi
-         ZZgiBnfLv6ZK0KuKVAoI5jYszErKLnDVzhQ1E3e8vpUOvbTpRBnF5Fg6VzctKNYpimB6
-         1HfTIi68geVJZZx50t7Ed4mUb+hxUH5pV0qt0oaEHEGzfMxr5tKJkk11n2dJZEgihpLr
-         t/ZCd//sXuBXlDwRLYjMvJxr5Xlc2XrQOtcv11ttK1aS1uNOpGA57o/o4QhmB9o1pMMK
-         bbqpQXIF/vFzNo1s5w4khXGsPoyrH03te055fy6uhOr18ac0WFjuPpSoJz9r2zJq60mm
-         Kv9Q==
-X-Gm-Message-State: APjAAAXP6JNmlhaLQhlKJXe/5w6KifnHmYkr1dwRGevqGvT3QOFBcttJ
-        NPriS5HKxZndv9XBDworlUgT1DWPE+w=
-X-Google-Smtp-Source: APXvYqx3Gmjh2P7R8o6PkP5KdX1/JxbbMrlFjFE+oiAoqpkAtewh93wsSEx37Gz7fQhNDYRQuBuEYg==
-X-Received: by 2002:a19:c7d3:: with SMTP id x202mr3036911lff.124.1568838417682;
-        Wed, 18 Sep 2019 13:26:57 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id i17sm1154319lfj.35.2019.09.18.13.26.55
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 13:26:56 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id t8so590294lfc.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:26:55 -0700 (PDT)
-X-Received: by 2002:ac2:5c11:: with SMTP id r17mr3099120lfp.61.1568838415644;
- Wed, 18 Sep 2019 13:26:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org> <20190917052438.GA26923@1wt.eu>
- <2508489.jOnZlRuxVn@merkaba> <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
- <20190917160844.GC31567@gardel-login> <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
- <20190917174219.GD31798@gardel-login> <87zhj15qgf.fsf@x220.int.ebiederm.org> <84824f79-2d12-0fd5-5b32-b0360eb075ac@gmail.com>
-In-Reply-To: <84824f79-2d12-0fd5-5b32-b0360eb075ac@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 18 Sep 2019 13:26:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
-Message-ID: <CAHk-=whYhC-qXHdEypy6iC7SzPA+KvWphLXSGF+mvGCGHGjNZw@mail.gmail.com>
-Subject: Re: Linux 5.3-rc8
-To:     "Alexander E. Patrakov" <patrakov@gmail.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 18 Sep 2019 16:30:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41896 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbfIRUaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 16:30:03 -0400
+Subject: Re: [git pull] d_path fixup
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568838602;
+        bh=aVtEsFQz3IdqAASUh/nUD4425z9OwoiunEOlVdwHSXs=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=tTFCmM0M8ZuW7FjB11E4zWeFT4pwNzrnvoCq8JZoNBVZy7kchWupyMLlo9FL2Hh6Z
+         2MM9sJhzYMBQl5o5JshMa7jZqBmpa54oh0/wsQtriusq7CpvXDny6yn+wPMrjfmEAC
+         HnuqWTtPBGPhz+3qQKOTy0ZhnLnjnWWJKcBZQv+Q=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190917013741.GE1131@ZenIV.linux.org.uk>
+References: <20190917013741.GE1131@ZenIV.linux.org.uk>
+X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190917013741.GE1131@ZenIV.linux.org.uk>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dcache
+X-PR-Tracked-Commit-Id: f2683bd8d5bdebb929f05ae26ce6d9b578927ce5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b30d87cf969e1711f1f621b6b61efb145ee6c6d9
+Message-Id: <156883860284.13812.11041506142316678879.pr-tracker-bot@kernel.org>
+Date:   Wed, 18 Sep 2019 20:30:02 +0000
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 1:15 PM Alexander E. Patrakov
-<patrakov@gmail.com> wrote:
->
-> No, this is not the solution, if we take seriously not only getrandom
-> hangs, but also urandom warnings. In some setups (root on LUKS is one of
-> them) they happen early in the initramfs. Therefore "restoring" entropy
-> from the previous boot by a script that runs from the main system is too
-> late. That's why it is suggested to load at least a part of the random
-> seed in the boot loader, and that has not been commonly implemented.
+The pull request you sent on Tue, 17 Sep 2019 02:37:41 +0100:
 
-Honestly, I think the bootloader suggestion is naive and silly too.
+> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.dcache
 
-Yes, we now support it. And no, I don't think people will trust that
-either. And I suspect for good reason: there's really very little
-reason to believe that bootloaders would be any better than any other
-part of the system.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b30d87cf969e1711f1f621b6b61efb145ee6c6d9
 
-So right now some people trust bootloaders exactly _because_ there
-basically is just one or two that do this, and the people who use them
-are usually the people who wrote them or are at least closely
-associated with them. That will change, and then people will say "why
-would I trust that, when we know of bug Xyz".
+Thank you!
 
-And I guarantee that those bugs _will_ happen, and people will quite
-reasonably then say "yeah, I don't trust the bootloader". Bootloaders
-do some questionable things.
-
-The most likely thing to actually be somewhat useful is I feel things
-like the kernel just saving the seed by itself in nvram. There's
-already an example of this for the EFI random seed thing, but that's
-used purely for kexec, I think.
-
-Adding an EFI variable (or other platform nonvolatile thing), and
-reading (and writing to it) purely from the kernel ends up being one
-of those things where you can then say "ok, if we trust the platform
-AT ALL, we can trust that". Since you can't reasonably do things like
-add EFI variables to your distro image by mistake.
-
-Of course, even then people will say "I don't trust the platform". But
-at some point you just say "you have trust issues" and move on.
-
-            Linus
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
