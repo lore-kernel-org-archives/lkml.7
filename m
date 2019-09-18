@@ -2,136 +2,92 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F17C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F3BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1382214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F1B9218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:53:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568785999;
+	bh=HBh0qOHnVIY+RKDV01ik+wwHQTg6ypDerBR3WXnw6nI=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=1gBAAk0WSK1o77g1GkXBM4nI6xCGmjWUkj1HhsDVXlEKt3uwpXs0luN7QO3GUCh8n
+	 e3AX1IvinaDZSmdJo+zKpnMZDBppnNchIMj+4IN+t7JX3p54CVrGaTUgw8Eqf2DP6A
+	 MVaC3n1NVLyVU647iRv1ZXApbbE+XpZqJf0FKpXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfIRFwo (ORCPT
+        id S1727435AbfIRFxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:52:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59378 "EHLO mx1.redhat.com"
+        Wed, 18 Sep 2019 01:53:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725904AbfIRFwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:52:43 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1725920AbfIRFxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:53:18 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B33AE30821BF;
-        Wed, 18 Sep 2019 05:52:42 +0000 (UTC)
-Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E3BAA60872;
-        Wed, 18 Sep 2019 05:52:18 +0000 (UTC)
-Subject: Re: [RFC PATCH 1/2] mdev: device id support
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com
-References: <20190912094012.29653-1-jasowang@redhat.com>
- <20190912094012.29653-2-jasowang@redhat.com>
- <20190917140720.3686e0cc.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e53b38be-bc2a-785f-12d2-951805f3395f@redhat.com>
-Date:   Wed, 18 Sep 2019 13:52:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EF6E214AF;
+        Wed, 18 Sep 2019 05:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568785997;
+        bh=HBh0qOHnVIY+RKDV01ik+wwHQTg6ypDerBR3WXnw6nI=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=hTHYmX++O88o26Nb3TxPY1SHRqgFZk+yOUfmagmW5DahK+67NNVPcrjrWDo3cCqrh
+         I73dLNgd0vuZDvDcjMZjICEnpZBwZnmAyDYp+40NiLla5PXGP9zcF1clA0pbaNiZm/
+         bedvjC6jvSL9otTeBIWkw7C864Ztymk1Lz8ww564=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190917140720.3686e0cc.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 18 Sep 2019 05:52:43 +0000 (UTC)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <AM0PR04MB4481D54C4508152E458BA9BE888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1568043491-20680-1-git-send-email-peng.fan@nxp.com> <AM0PR04MB4481A31DD68C3C3409E95339888F0@AM0PR04MB4481.eurprd04.prod.outlook.com> <20190917162820.8DC542067B@mail.kernel.org> <AM0PR04MB4481D54C4508152E458BA9BE888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: RE: [PATCH V3 0/4] clk: imx8m: fix glitch/mux
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 22:53:16 -0700
+Message-Id: <20190918055317.8EF6E214AF@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Quoting Peng Fan (2019-09-17 22:45:20)
+> Hi Stephen,
+>=20
+> > Subject: RE: [PATCH V3 0/4] clk: imx8m: fix glitch/mux
+> >=20
+> > Quoting Peng Fan (2019-09-16 23:20:15)
+> > > Hi Stephen, Shawn,
+> > >
+> > > > Subject: [PATCH V3 0/4] clk: imx8m: fix glitch/mux
+> > >
+> > > Sorry to ping early. Is there a chance to land this patchset in 5.3 r=
+elease?
+> > >
+> >=20
+> > No, it won't be in 5.3 because that version is released. Shawn already =
+sent the
+> > PR for 5.4 too so this will most likely be in v5.5 at the earliest.
+>=20
+> Thanks for the info. But this patchset is bugfix, so hope this could be a=
+ccepted in 5.4.
+>=20
 
-On 2019/9/17 下午8:07, Cornelia Huck wrote:
-> On Thu, 12 Sep 2019 17:40:11 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Mdev bus only support vfio driver right now, so it doesn't implement
->> match method. But in the future, we may add drivers other than vfio,
->> one example is virtio-mdev[1] driver. This means we need to add device
->> id support in bus match method to pair the mdev device and mdev driver
->> correctly.
-> Sounds reasonable.
->
->> So this patch add id_table to mdev_driver and id for mdev parent, and
->> implement the match method for mdev bus.
->>
->> [1] https://lkml.org/lkml/2019/9/10/135
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   drivers/gpu/drm/i915/gvt/kvmgt.c  |  2 +-
->>   drivers/s390/cio/vfio_ccw_ops.c   |  2 +-
->>   drivers/s390/crypto/vfio_ap_ops.c |  3 ++-
->>   drivers/vfio/mdev/mdev_core.c     | 14 ++++++++++++--
->>   drivers/vfio/mdev/mdev_driver.c   | 14 ++++++++++++++
->>   drivers/vfio/mdev/mdev_private.h  |  1 +
->>   drivers/vfio/mdev/vfio_mdev.c     |  6 ++++++
->>   include/linux/mdev.h              |  6 +++++-
->>   include/linux/mod_devicetable.h   |  6 ++++++
->>   samples/vfio-mdev/mbochs.c        |  2 +-
->>   samples/vfio-mdev/mdpy.c          |  2 +-
->>   samples/vfio-mdev/mtty.c          |  2 +-
->>   12 files changed, 51 insertions(+), 9 deletions(-)
-> (...)
->
-> The transformations of the vendor drivers and the new interface look
-> sane.
->
-> (...)
->
->> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
->> index 5714fd35a83c..f1fc143df042 100644
->> --- a/include/linux/mod_devicetable.h
->> +++ b/include/linux/mod_devicetable.h
->> @@ -821,4 +821,10 @@ struct wmi_device_id {
->>   	const void *context;
->>   };
->>   
->> +/* MDEV */
->> +
-> Maybe add some kerneldoc and give vfio as an example of what we're
-> matching here?
+Ok. Then let's throw it into 5.4 PR and see what goes wrong.
 
-
-Will add when posting a non RFC patch.
-
-
->
->> +struct mdev_device_id {
->> +	__u8 id;
-> I agree with the suggestion to rename this to 'class_id'.
->
-
-Let me change it.
-
-Thanks
-
-
->> +};
->> +
->>   #endif /* LINUX_MOD_DEVICETABLE_H */
