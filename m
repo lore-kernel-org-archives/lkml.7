@@ -2,207 +2,111 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 010CAC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4F6FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11FF206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:35:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750EC206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:35:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="G9WtOfnB"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TLSqxsCQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731998AbfIRQfF (ORCPT
+        id S1732023AbfIRQfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:35:05 -0400
-Received: from mail-eopbgr680067.outbound.protection.outlook.com ([40.107.68.67]:39077
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728713AbfIRQfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:35:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Lz95R/mTwT5cS+d/vrmGfqdRRu+ZWop7F8/D5BCSCWPr4gnkVd3LNteGNzckrqoIPXcEoLHzQnqMTFF8b1GML7kf92+IM3gxe05L6N+duTbupYtTtjv2pzLnRUl6Z2Fh7++BoQlN0nab6F0yO8UN4jcFlqW0UP1X4XxjVdarKVqJgmyvqzgqfgiU0BcSd7Y6uCP1rE+dOE4DPO1k7gt4H3NNRmq6aiodEHfuikq6fd3NQT2DnMEnX4S9YALDLICr2RlR0CtJz3kCLd0jUYSHiv//W13VdwI7L39oM7MyPbX458Ykw56WBNoUe4qlcRZ6BSS4RGUvyuGCTdGMQob5Sw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hduTgWIiFppcB1vbJEnSVFfBPqfPrnsL/zGlB8y8Gp4=;
- b=hdVvunUe/SjxpFW1gg1XZwmKpx5Pw7piOVx3E5Wfy1B/1gzbCygXYtfW8wZ77Fn9LQ+BI92H8T5KNMLn9fXxjuG3m7Sum0/ACMSxZqB4q8Zaw/SlmkcbKNaexNwxXWd56o95V3uvte5GB6C4lq7+BYoECQxeMZwo4OvqnRovjTVrg8Zt0B4M2STLSxAYS0ETgogjdIiMZSu1ZFrcIyyQH9bKO1WXQP8tblI+upkO7fbHhs2w3bgRnBvC3KzZXWtZfPbjIBfe2p3NDT5ERMJDtLEMGz4huymfao5Klwuh6E9J8vgEM2nyZvmfJYphkIfSDpiQZktyPE7pxkE5D37tLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hduTgWIiFppcB1vbJEnSVFfBPqfPrnsL/zGlB8y8Gp4=;
- b=G9WtOfnBJ1CLVymEXqTf3+qCEZJCWBL76ycekWrq2yePPLnG95YllZTVivgl+vU5Bk/GVKSfGxkzCPY0ygDz+sMIxA9OnzTyhCs/Zss0AL2CupVueiv/00HZsAFwY0Vl8QXD79BtgEd/cscGo9N9MvPVaUhyANp6LHyRWDnYiEk=
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com (52.135.107.27) by
- SN6PR12MB2815.namprd12.prod.outlook.com (52.135.107.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.18; Wed, 18 Sep 2019 16:35:00 +0000
-Received: from SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::5dfd:68de:f647:8b1f]) by SN6PR12MB2736.namprd12.prod.outlook.com
- ([fe80::5dfd:68de:f647:8b1f%7]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
- 16:35:00 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-        Pu Wen <puwen@hygon.com>, Borislav Petkov <bp@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCH 2/2] Update cpupower to use the RDPRU instruction
-Thread-Topic: [PATCH 2/2] Update cpupower to use the RDPRU instruction
-Thread-Index: AQHVbj8CkLjjoC195k6Z0xrn14yRmA==
-Date:   Wed, 18 Sep 2019 16:34:59 +0000
-Message-ID: <20190918163445.129103-2-Janakarajan.Natarajan@amd.com>
-References: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com>
-In-Reply-To: <20190918163445.129103-1-Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0501CA0039.namprd05.prod.outlook.com
- (2603:10b6:803:41::16) To SN6PR12MB2736.namprd12.prod.outlook.com
- (2603:10b6:805:77::27)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc16f252-59c6-48d5-e313-08d73c56253f
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR12MB2815;
-x-ms-traffictypediagnostic: SN6PR12MB2815:|SN6PR12MB2815:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <SN6PR12MB2815719BC02262F8FB2CC602E78E0@SN6PR12MB2815.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 01644DCF4A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(189003)(199004)(66446008)(64756008)(316002)(66476007)(66556008)(446003)(7416002)(25786009)(11346002)(305945005)(7736002)(476003)(2616005)(486006)(26005)(186003)(76176011)(99286004)(1076003)(52116002)(6506007)(386003)(81156014)(86362001)(102836004)(81166006)(8936002)(50226002)(8676002)(2501003)(66946007)(4326008)(478600001)(14454004)(6486002)(110136005)(54906003)(66066001)(3846002)(2906002)(6512007)(71190400001)(256004)(36756003)(71200400001)(5660300002)(14444005)(6436002)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2815;H:SN6PR12MB2736.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0Ifvlyea1XI9BXqRtFTh9PGTYp6KPL7N73f8rsJdAy9I93J8RWxTyM6Od7XGEj+OKQs6vsTNq5BN9OO0Ga8OabzsgVNWvQD7p2d/YvYsBoBsUCp642veWjD/2cAyBNcGDYNUP7Cb/w/j54l9BGQ2SnmAJ0VPetWMNP5qtIbO07+28+vdiB5azJ0IpEkhMbBv9GkZQeagDXEiPKcVEHDEJYE0/i7pX7nUT3FCaYY1wsIFt6wMLFp4TwhFn9fGQ/DBOH2IW4TaYzVW2V5pIF20/KPaZgWNNkZn/nk8x60of04GNRibxnZikWe5JCPT3SsPeEyc9f9sQukeOziSdoVmFRfsiZsxBXNuCwGGEPx/8iDMyxcM/CUx8zjSX9aTXkA7fIMCppGnnqRDi/CDYe/7oW5Gea3zhlTRRlLOGYL5s+I=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc16f252-59c6-48d5-e313-08d73c56253f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 16:34:59.1439
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WKR4N3l6D+wEuSwJ2d3uS39375Zn4gz2cW6fFdACYhxWag6twcDDwuZxqJgzFRT422qnu3W0CDacaaZnEDXvIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2815
+        Wed, 18 Sep 2019 12:35:31 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:57564 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728713AbfIRQfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:35:30 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGNYVA178534;
+        Wed, 18 Sep 2019 16:35:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=NjiZCOg5xFo4Z5niVDbJDHIcUX3lm7EmZSt0FVk2UN4=;
+ b=TLSqxsCQV4cK9e8hGbsLr0Nt1u+CPKN0Murs67RcrbtobtmvuF7K/rAkUW0YlFILD+91
+ OJbBQlQKJ4eNb2gT7wKVr9qpkXqob/XEG0V2eWbwEssn81r2Epjyn8W7F7EmggwO/UlA
+ 87Q+h4eDFV8/3Cax0pphixSF99s0gQQm6pAKZ3GKBysFj8n9SOu9zpNSMxLN/8bKdKWv
+ OQbJi8EbiS2cm/Ky6WZIlNhB9D6nG3HJBEvY/ESz5xH65iqFSE9+lvL54adC/fJasIPF
+ ecJ2/jdg3M1UZGDeQD/dSO6QaFueYj2NbZHHatHvlqSkm97kfmcQroZa0MVXN4Hb6DuG uA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2v385e54nt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 16:35:22 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IGNLQr048332;
+        Wed, 18 Sep 2019 16:35:21 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2v37masp0e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 16:35:21 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x8IGZK6D012500;
+        Wed, 18 Sep 2019 16:35:20 GMT
+Received: from x250.idc.oracle.com (/10.191.241.104)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Sep 2019 09:35:14 -0700
+From:   Allen Pais <allen.pais@oracle.com>
+To:     netdev@vger.kernel.org
+Cc:     davem@davemloft.net, kvalo@codeaurora.org,
+        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] libertas: fix a potential NULL pointer dereference
+Date:   Wed, 18 Sep 2019 22:05:00 +0530
+Message-Id: <1568824500-4243-1-git-send-email-allen.pais@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909180156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909180156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AMD Zen 2 introduces the RDPRU instruction which can be used to access some
-processor registers which are typically only accessible in privilege level
-0. ECX specifies the register to read and EDX:EAX will contain the value re=
-ad.
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-ECX: 0 - Register MPERF
-     1 - Register APERF
-
-This has the added advantage of not having to use the msr module, since the
-userspace to kernel transitions which occur during each read_msr() might
-cause APERF and MPERF to go out of sync.
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
 ---
- tools/power/cpupower/utils/helpers/cpuid.c    |  4 ++++
- tools/power/cpupower/utils/helpers/helpers.h  |  1 +
- .../utils/idle_monitor/mperf_monitor.c        | 20 +++++++++++++++++++
- 3 files changed, 25 insertions(+)
+ drivers/net/wireless/marvell/libertas/if_sdio.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/power/cpupower/utils/helpers/cpuid.c b/tools/power/cpupo=
-wer/utils/helpers/cpuid.c
-index 5cc39d4e23ed..73bfafc60e9b 100644
---- a/tools/power/cpupower/utils/helpers/cpuid.c
-+++ b/tools/power/cpupower/utils/helpers/cpuid.c
-@@ -131,6 +131,10 @@ int get_cpu_info(struct cpupower_cpu_info *cpu_info)
- 		if (ext_cpuid_level >=3D 0x80000007 &&
- 		    (cpuid_edx(0x80000007) & (1 << 9)))
- 			cpu_info->caps |=3D CPUPOWER_CAP_AMD_CBP;
-+
-+		if (ext_cpuid_level >=3D 0x80000008 &&
-+		    cpuid_ebx(0x80000008) & (1 << 4))
-+			cpu_info->caps |=3D CPUPOWER_CAP_AMD_RDPRU;
- 	}
-=20
- 	if (cpu_info->vendor =3D=3D X86_VENDOR_INTEL) {
-diff --git a/tools/power/cpupower/utils/helpers/helpers.h b/tools/power/cpu=
-power/utils/helpers/helpers.h
-index 357b19bb136e..c258eeccd05f 100644
---- a/tools/power/cpupower/utils/helpers/helpers.h
-+++ b/tools/power/cpupower/utils/helpers/helpers.h
-@@ -69,6 +69,7 @@ enum cpupower_cpu_vendor {X86_VENDOR_UNKNOWN =3D 0, X86_V=
-ENDOR_INTEL,
- #define CPUPOWER_CAP_HAS_TURBO_RATIO	0x00000010
- #define CPUPOWER_CAP_IS_SNB		0x00000020
- #define CPUPOWER_CAP_INTEL_IDA		0x00000040
-+#define CPUPOWER_CAP_AMD_RDPRU		0x00000080
-=20
- #define CPUPOWER_AMD_CPBDIS		0x02000000
-=20
-diff --git a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c b/tool=
-s/power/cpupower/utils/idle_monitor/mperf_monitor.c
-index 8b072e39c897..faee00c078b0 100644
---- a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-@@ -20,6 +20,10 @@
- #define MSR_APERF	0xE8
- #define MSR_MPERF	0xE7
-=20
-+#define RDPRU ".byte 0x0f, 0x01, 0xfd"
-+#define RDPRU_ECX_MPERF	0
-+#define RDPRU_ECX_APERF	1
-+
- #define MSR_TSC	0x10
-=20
- #define MSR_AMD_HWCR 0xc0010015
-@@ -90,6 +94,8 @@ static int mperf_get_tsc(unsigned long long *tsc)
- static int get_aperf_mperf(int cpu, unsigned long long *aval,
- 			   unsigned long long *mval)
- {
-+	unsigned long low_a, high_a;
-+	unsigned long low_m, high_m;
- 	cpu_set_t set;
- 	int ret;
-=20
-@@ -100,6 +106,20 @@ static int get_aperf_mperf(int cpu, unsigned long long=
- *aval,
- 		return 1;
- 	}
-=20
-+	if (cpupower_cpu_info.caps & CPUPOWER_CAP_AMD_RDPRU) {
-+		asm volatile(RDPRU
-+			     : "=3Da" (low_a), "=3Dd" (high_a)
-+			     : "c" (RDPRU_ECX_APERF));
-+		asm volatile(RDPRU
-+			     : "=3Da" (low_m), "=3Dd" (high_m)
-+			     : "c" (RDPRU_ECX_MPERF));
-+
-+		*aval =3D ((low_a) | (high_a) << 32);
-+		*mval =3D ((low_m) | (high_m) << 32);
-+
-+		return 0;
+diff --git a/drivers/net/wireless/marvell/libertas/if_sdio.c b/drivers/net/wireless/marvell/libertas/if_sdio.c
+index 242d884..30f1025 100644
+--- a/drivers/net/wireless/marvell/libertas/if_sdio.c
++++ b/drivers/net/wireless/marvell/libertas/if_sdio.c
+@@ -1179,6 +1179,10 @@ static int if_sdio_probe(struct sdio_func *func,
+ 
+ 	spin_lock_init(&card->lock);
+ 	card->workqueue = alloc_workqueue("libertas_sdio", WQ_MEM_RECLAIM, 0);
++	if (unlikely(!card->workqueue)) {
++		ret = -ENOMEM;
++		goto err_queue;
 +	}
-+
- 	ret =3D read_msr(cpu, MSR_APERF, aval);
- 	ret |=3D read_msr(cpu, MSR_MPERF, mval);
-=20
---=20
-2.17.1
+ 	INIT_WORK(&card->packet_worker, if_sdio_host_to_card_worker);
+ 	init_waitqueue_head(&card->pwron_waitq);
+ 
+@@ -1230,6 +1234,7 @@ static int if_sdio_probe(struct sdio_func *func,
+ 	lbs_remove_card(priv);
+ free:
+ 	destroy_workqueue(card->workqueue);
++err_queue:
+ 	while (card->packets) {
+ 		packet = card->packets;
+ 		card->packets = card->packets->next;
+-- 
+1.9.1
 
