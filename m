@@ -2,101 +2,75 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A170C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3201C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B63218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E09E21A4C
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:07:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pew8Ehz/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfIRJFv (ORCPT
+        id S1728164AbfIRJH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:05:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:37806 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbfIRJFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:05:51 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75E90337;
-        Wed, 18 Sep 2019 02:05:50 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E06CF3F59C;
-        Wed, 18 Sep 2019 02:05:49 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 10:05:48 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 13/26] e1000: Use PCI_STD_NUM_BARS
-Message-ID: <20190918090547.GZ9720@e119886-lin.cambridge.arm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-14-efremov@linux.com>
+        Wed, 18 Sep 2019 05:07:28 -0400
+Received: from mail-lj1-f169.google.com ([209.85.208.169]:45220 "EHLO
+        mail-lj1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfIRJH2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:07:28 -0400
+Received: by mail-lj1-f169.google.com with SMTP id q64so6383595ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=BXE/TWSYzob8gU+Sikgl7OYHXmDtFDDYWo25UJgLagE=;
+        b=pew8Ehz/lTQqKN3suMmYGdevEHP6yS/gJ7V7z8F/VolEsaRy4sDN0lTAEdFh/AZ7iw
+         /+gXCLLgLVszHjHDkQ9xqfWBBknsiUxXE7hBsyg4p+YuOjZueNbCfGRDFs1nePuY9Va8
+         4uZpqfaM9h72sMrRbs7MGXVdJuYp+bRTExcvnIlKj4wzs27RAS5YwUqTySyMWqMyuEFT
+         9uSn6whYDNrdY4O6+9gUQXTNIJQkhQhJo1QmmB1qAYswkta7E12i4iBEY0DLeOUUfBmr
+         OLJvXLDKAYYkYeUfaoru02Cily/DLzlPZplYFg+1XSNBC98OwUtZCPcBe7dd1/woV+mr
+         4sCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=BXE/TWSYzob8gU+Sikgl7OYHXmDtFDDYWo25UJgLagE=;
+        b=hPD8SLFwFHuX0tUfzZE0riP9Tv7LzkvZSm4SZJDt+edt8LVU+DIJ9zGVK4I1W1FeAR
+         qLLqAffkv1H3MCGPDsIA33DJXIKMOk/gBbOo/wrk5z0Uy08vTlnSVXp6cX9yKFOggmQR
+         sYtmEsr5S3Ys5rhvasbNBif6LLd8ffSkhExkAlp8vLYq3aZgRYsqJ0+vNLKJXWL9Oyn5
+         mYSSi21I/G0UsO0K35N69phtANUdlF/hm3KWVg3kucbcTcATrSRGjlcGPUGjSTeicx0h
+         v/MFajvFVZKNxE7kuVUiuzStPtlXN2ppnbvlVmKLAIxvFA37/itdpNGglxWGCSS/kbax
+         pEdw==
+X-Gm-Message-State: APjAAAUg6BxY8SpJFnh8Dv2HaizcdVNqJytChVnQMTRHMQLDakHUEwb1
+        AHaIt6qrbpj2l919NhQygUNsdT0jU/DumZqJ0ybF0CZd/DM=
+X-Google-Smtp-Source: APXvYqwvZ2cnmrxKceb3DfYbGAsM3pbesQZixOTRkNY+AgNex2VnvWeGwucYFcguE8Ij0Cgxm8DV2F8UKoISpL/vmSo=
+X-Received: by 2002:a2e:5418:: with SMTP id i24mr1570575ljb.126.1568797645638;
+ Wed, 18 Sep 2019 02:07:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916204158.6889-14-efremov@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+From:   Elichai Turkel <elichai.turkel@gmail.com>
+Date:   Wed, 18 Sep 2019 12:08:02 +0300
+Message-ID: <CALN7hCKMP7xr4KmnP=hzC8rsBNk5vgmvybTy+ViUw9=2A5_NBg@mail.gmail.com>
+Subject: About getrandom(2) contract
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 11:41:45PM +0300, Denis Efremov wrote:
-> To iterate through all possible BARs, loop conditions refactored to the
-> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
-> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
-> the fencepost error.
-> 
-> Cc: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  drivers/net/ethernet/intel/e1000/e1000.h      | 1 -
->  drivers/net/ethernet/intel/e1000/e1000_main.c | 2 +-
->  2 files changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000.h b/drivers/net/ethernet/intel/e1000/e1000.h
-> index c40729b2c184..7fad2f24dcad 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000.h
-> +++ b/drivers/net/ethernet/intel/e1000/e1000.h
-> @@ -45,7 +45,6 @@
->  
->  #define BAR_0		0
->  #define BAR_1		1
-> -#define BAR_5		5
+Hi,
 
-No issue with this patch. However I noticed that at least 5 of the network
-drivers have these same definitions, which are identical to the pci_barno enum
-of include/linux/pci-epf.h. There are mostly used with pci_ioremap_bar and
-pci_resource_** macros. I wonder if this is an indicator that these defintions
-should live in the core.
+Unlike other syscalls(like `read(2)`) `getrandom(2)`'s contract
+doesn't define what happens if you pass `buflen=0`, does the pointer
+still has to be valid? (what does valid even mean?) are there any side
+effects?
+i.e. is `getrandom(0x01, 0, 0)` undefined behavior?.
 
 Thanks,
-
-Andrew Murray
-
->  
->  #define INTEL_E1000_ETHERNET_DEVICE(device_id) {\
->  	PCI_DEVICE(PCI_VENDOR_ID_INTEL, device_id)}
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000_main.c b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> index f703fa58458e..db4fd82036af 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000_main.c
-> +++ b/drivers/net/ethernet/intel/e1000/e1000_main.c
-> @@ -977,7 +977,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  		goto err_ioremap;
->  
->  	if (adapter->need_ioport) {
-> -		for (i = BAR_1; i <= BAR_5; i++) {
-> +		for (i = BAR_1; i < PCI_STD_NUM_BARS; i++) {
->  			if (pci_resource_len(pdev, i) == 0)
->  				continue;
->  			if (pci_resource_flags(pdev, i) & IORESOURCE_IO) {
-> -- 
-> 2.21.0
-> 
+Elichai.
+-- 
+PGP: 5607C93B5F86650C
