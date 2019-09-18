@@ -2,193 +2,120 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCFFC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE450C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E47B20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA3EB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbfIRNeH (ORCPT
+        id S1730879AbfIRNfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:34:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:19399 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfIRNeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:34:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:04 -0700
-X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="338331690"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:34:01 -0700
-Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
-        by paasikivi.fi.intel.com (Postfix) with ESMTP id 742172022B;
-        Wed, 18 Sep 2019 16:33:59 +0300 (EEST)
-Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@linux.intel.com>)
-        id 1iAa67-00025S-Sy; Wed, 18 Sep 2019 16:34:19 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: [PATCH v7 00/13] Device property improvements, add %pfw format specifier
-Date:   Wed, 18 Sep 2019 16:34:06 +0300
-Message-Id: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Sep 2019 09:35:46 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:2421 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbfIRNfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:35:45 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 543DB72AE6EC9CD72CCF;
+        Wed, 18 Sep 2019 21:35:41 +0800 (CST)
+Received: from dggeme704-chm.china.huawei.com (10.1.199.100) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 18 Sep 2019 21:35:41 +0800
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme704-chm.china.huawei.com (10.1.199.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Wed, 18 Sep 2019 21:35:40 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
+ Wed, 18 Sep 2019 21:35:40 +0800
+From:   "zhangsha (A)" <zhangsha.zhang@huawei.com>
+To:     "jay.vosburgh@canonical.com" <jay.vosburgh@canonical.com>,
+        "vfalico@gmail.com" <vfalico@gmail.com>,
+        "andy@greyhouse.net" <andy@greyhouse.net>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        yuehaibing <yuehaibing@huawei.com>,
+        hunongda <hunongda@huawei.com>,
+        "Chenzhendong (alex)" <alex.chen@huawei.com>
+Subject: RE: [PATCH v3] bonding: force enable lacp port after link state
+ recovery for 802.3ad
+Thread-Topic: [PATCH v3] bonding: force enable lacp port after link state
+ recovery for 802.3ad
+Thread-Index: AQHVbiHhj1lgrT2osES7x4pU2JseVqcxaH3A
+Date:   Wed, 18 Sep 2019 13:35:40 +0000
+Message-ID: <e333c8d2f3624a898a378eb1073f5f29@huawei.com>
+References: <20190918130620.8556-1-zhangsha.zhang@huawei.com>
+In-Reply-To: <20190918130620.8556-1-zhangsha.zhang@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.177.220.209]
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-
-This set adds functionality into the device property API (counting a
-node's parents as well as obtaining its name) in order to support printing
-fwnode names using a new conversion specifier "%pfw". The names that are
-produced are equivalent to its OF counterpart "%pOF" on OF systems for the
-two supported modifiers ("f" and "P").
-
-Printing a node's name is something that's been available on OF for a long
-time and if something is converted to device property API (such as the
-V4L2 fwnode framework) it always got removed of a nice feature that was
-sometimes essential in debugging. With this set, that no longer is the
-case.
-
-Note: the set now depends on 2d44d165e939 ("scsi: lpfc: Convert existing
-%pf users to %ps") that is expected from the linux-scsi tree. It is 
-
-since v6:
-
-- Added a patch for a warning note on re-using obsolete %pf oand %pF
-  extensions.
-
-- Rework %pfw validatition in checkpatch.pl according to Joe's comments.
-
-- Unwrap a line wrapped by a previous versions in get_bprint_format().
-
-- Handle %pf and %pF modifiers again in make_bprint_args() in case they're
-  no followed by 'w'.
-
-since v5:
-
-- Added a patch to convert %pf to %ps in tools/lib/traceevent.c (first in
-  the set).
-
-- Fix ReST syntax in Documentation/core-api/printk-formats.rst.
-
-- Fix returning root swnode name in patch "device property: Add
-  fwnode_get_name for returning the name of a node". Use to_swnode()
-  directly as well in the same patch.
-
-- Tests: take root node name into account, use direct indices and remove
-  the comma from the guardian entry.
-
-- Add a comment on how fwnode_full_name_string() enumerates the nodes.
-
-- Fix error string in fwnode_string().
-
-- Move 'f' + default case as last in the switch in fwnode_string().
-
-- Fix %pfw validation in checkpatch.pl.
-
-since v4:
-
-- Improved documentation for fwnode_get_nth_parent().
-
-- Removed comma from the guardian entry in fwnode_pointer() testcase.
-
-since v3:
-
-- Remove underscores in argument name of fwnode_count_parents().
-
-- Re-introduce "%pO?" error string.
-
-- Unwrap a call to string() in fwnode_string().
-
-- Removed a useless Depends-on: on a patch that was merged long ago.
-
-- Unwrap a Fixes: line.
-
-- Added a patch to move fwnode_get_parent() up to make the review of the
-  following patch easier.
-
-since v2:
-
-- Better comments in acpi_fwnode_get_name_prefix().
-
-- Added swnode implementation.
-
-- Fixed swnode refcounting in get_parent() ("swnode: Get reference to
-  parent swnode in get_parent op")
-
-- Make argument to to_software_node() const (a new patch)
-
-- Factored out confusingly named kobject_string() that had a single
-  caller.
-
-- Cleaner fwnode_count_parents() implementation (as discussed in review).
-
-- Made fwnode_count_parents() argument const.
-
-- Added tests (last patch in the set).
-
-since v1:
-
-- Add patch to remove support for %pf and %pF (depends on another patch
-  removing all use of %pf and %pF) (now 4th patch)
-
-- Fix kerneldoc argument documentation for fwnode_get_name (2nd patch)
-
-- Align kerneldoc style with the rest of drivers/base/property.c (no extra
-  newline after function name)
-
-- Make checkpatch.pl complain about "%pf" not followed by "w" (6th patch)
-
-- WARN_ONCE() on use of invalid conversion specifiers ("%pf" not followed
-  by "w")
-
-Sakari Ailus (13):
-  tools lib traceevent: Convert remaining %p[fF] users to %p[sS]
-  software node: Get reference to parent swnode in get_parent op
-  software node: Make argument to to_software_node const
-  device property: Move fwnode_get_parent() up
-  device property: Add functions for accessing node's parents
-  device property: Add fwnode_get_name for returning the name of a node
-  device property: Add a function to obtain a node's prefix
-  lib/vsprintf: Remove support for %pF and %pf in favour of %pS and %ps
-  lib/vsprintf: Add a note on re-using %pf or %pF
-  lib/vsprintf: Make use of fwnode API to obtain node names and
-    separators
-  lib/vsprintf: OF nodes are first and foremost, struct device_nodes
-  lib/vsprintf: Add %pfw conversion specifier for printing fwnode names
-  lib/test_printf: Add tests for %pfw printk modifier
-
- Documentation/core-api/printk-formats.rst     | 34 +++++--
- drivers/acpi/property.c                       | 48 ++++++++++
- drivers/base/property.c                       | 83 +++++++++++++++--
- drivers/base/swnode.c                         | 43 ++++++++-
- drivers/of/property.c                         | 16 ++++
- include/linux/fwnode.h                        |  4 +
- include/linux/property.h                      |  8 +-
- lib/test_printf.c                             | 32 +++++++
- lib/vsprintf.c                                | 91 ++++++++++++-------
- scripts/checkpatch.pl                         |  9 +-
- .../Documentation/libtraceevent-func_apis.txt | 10 +-
- tools/lib/traceevent/event-parse.c            | 18 +++-
- 12 files changed, 328 insertions(+), 68 deletions(-)
-
--- 
-2.20.1
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogemhhbmdzaGEgKEEpDQo+
+IFNlbnQ6IDIwMTnE6jnUwjE4yNUgMjE6MDYNCj4gVG86IGpheS52b3NidXJnaEBjYW5vbmljYWwu
+Y29tOyB2ZmFsaWNvQGdtYWlsLmNvbTsgYW5keUBncmV5aG91c2UubmV0Ow0KPiBkYXZlbUBkYXZl
+bWxvZnQubmV0OyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
+ZWwub3JnOw0KPiB5dWVoYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20+OyBodW5vbmdkYSA8
+aHVub25nZGFAaHVhd2VpLmNvbT47DQo+IENoZW56aGVuZG9uZyAoYWxleCkgPGFsZXguY2hlbkBo
+dWF3ZWkuY29tPjsgemhhbmdzaGEgKEEpDQo+IDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWkuY29tPg0K
+PiBTdWJqZWN0OiBbUEFUQ0ggdjNdIGJvbmRpbmc6IGZvcmNlIGVuYWJsZSBsYWNwIHBvcnQgYWZ0
+ZXIgbGluayBzdGF0ZSByZWNvdmVyeSBmb3INCj4gODAyLjNhZA0KPiANCj4gRnJvbTogU2hhIFpo
+YW5nIDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWkuY29tPg0KPiANCj4gQWZ0ZXIgdGhlIGNvbW1pdCAz
+MzQwMzEyMTlhODQgKCJib25kaW5nLzgwMi4zYWQ6IGZpeCBzbGF2ZSBsaW5rIGluaXRpYWxpemF0
+aW9uDQo+IHRyYW5zaXRpb24gc3RhdGVzIikgbWVyZ2VkLCB0aGUgc2xhdmUncyBsaW5rIHN0YXR1
+cyB3aWxsIGJlIGNoYW5nZWQgdG8NCj4gQk9ORF9MSU5LX0ZBSUwgZnJvbSBCT05EX0xJTktfRE9X
+TiBpbiB0aGUgZm9sbG93aW5nIHNjZW5hcmlvOg0KPiAtIERyaXZlciByZXBvcnRzIGxvc3Mgb2Yg
+Y2FycmllciBhbmQNCj4gICBib25kaW5nIGRyaXZlciByZWNlaXZlcyBORVRERVZfRE9XTiBub3Rp
+Zmllcg0KPiAtIHNsYXZlJ3MgZHVwbGV4IGFuZCBzcGVlZCBpcyB6ZXJvZCBhbmQNCj4gICBpdHMg
+cG9ydC0+aXNfZW5hYmxlZCBpcyBjbGVhcmQgdG8gJ2ZhbHNlJzsNCj4gLSBEcml2ZXIgcmVwb3J0
+cyBsaW5rIHJlY292ZXJ5IGFuZA0KPiAgIGJvbmRpbmcgZHJpdmVyIHJlY2VpdmVzIE5FVERFVl9V
+UCBub3RpZmllcjsNCj4gLSBJZiBzcGVlZC9kdXBsZXggZ2V0dGluZyBmYWlsZWQgaGVyZSwgdGhl
+IGxpbmsgc3RhdHVzDQo+ICAgd2lsbCBiZSBjaGFuZ2VkIHRvIEJPTkRfTElOS19GQUlMOw0KPiAt
+IFRoZSBNSUkgbW9ub3RvciBsYXRlciByZWNvdmVyIHRoZSBzbGF2ZSdzIHNwZWVkL2R1cGxleA0K
+PiAgIGFuZCBzZXQgbGluayBzdGF0dXMgdG8gQk9ORF9MSU5LX1VQLCBidXQgcmVtYWlucw0KPiAg
+IHRoZSAncG9ydC0+aXNfZW5hYmxlZCcgdG8gJ2ZhbHNlJy4NCj4gDQo+IEluIHRoaXMgc2NlbmFy
+aW8sIHRoZSBsYWNwIHBvcnQgd2lsbCBub3QgYmUgZW5hYmxlZCBldmVuIGl0cyBzcGVlZCBhbmQg
+ZHVwbGV4IGFyZQ0KPiB2YWxpZC4gVGhlIGJvbmQgd2lsbCBub3Qgc2VuZCBMQUNQRFUncywgYW5k
+IGl0cyBzdGF0ZSBpcyAnQURfU1RBVEVfREVGQVVMVEVEJw0KPiBmb3JldmVyLiBUaGUgc2ltcGxl
+c3QgZml4IEkgdGhpbmsgaXMgdG8gY2FsbCBib25kXzNhZF9oYW5kbGVfbGlua19jaGFuZ2UoKSBp
+bg0KPiBib25kX21paW1vbl9jb21taXQsIHRoaXMgZnVuY3Rpb24gY2FuIGVuYWJsZSBsYWNwIGFm
+dGVyIHBvcnQgc2xhdmUgc3BlZWQNCj4gY2hlY2suDQo+IEFzIGVuYWJsZWQsIHRoZSBsYWNwIHBv
+cnQgY2FuIHJ1biBpdHMgc3RhdGUgbWFjaGluZSBub3JtYWxseSBhZnRlciBsaW5rIHJlY292ZXJ5
+Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2hhIFpoYW5nIDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWku
+Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMgfCAzICsrLQ0K
+PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMNCj4gYi9kcml2ZXJz
+L25ldC9ib25kaW5nL2JvbmRfbWFpbi5jIGluZGV4IDkzMWQ5ZDkuLjc2MzI0YTUgMTAwNjQ0DQo+
+IC0tLSBhL2RyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9u
+ZXQvYm9uZGluZy9ib25kX21haW4uYw0KPiBAQCAtMjIwNiw3ICsyMjA2LDggQEAgc3RhdGljIHZv
+aWQgYm9uZF9taWltb25fY29tbWl0KHN0cnVjdCBib25kaW5nDQo+ICpib25kKQ0KPiAgCQkJICov
+DQo+ICAJCQlpZiAoQk9ORF9NT0RFKGJvbmQpID09IEJPTkRfTU9ERV84MDIzQUQgJiYNCj4gIAkJ
+CSAgICBzbGF2ZS0+bGluayA9PSBCT05EX0xJTktfVVApDQo+IC0NCj4gCWJvbmRfM2FkX2FkYXB0
+ZXJfc3BlZWRfZHVwbGV4X2NoYW5nZWQoc2xhdmUpOw0KPiArCQkJCWJvbmRfM2FkX2hhbmRsZV9s
+aW5rX2NoYW5nZShzbGF2ZSwNCj4gKwkJCQkJCQkgICAgQk9ORF9MSU5LX1VQKTsNCj4gIAkJCWNv
+bnRpbnVlOw0KPiANCj4gIAkJY2FzZSBCT05EX0xJTktfVVA6DQoNCkhpLCBEYXZpZCwNCkkgaGF2
+ZSByZXBsaWVkIHlvdXIgZW1haWwgZm9yIGEgd2hpbGUsICBJIGd1ZXNzIHlvdSBtYXkgbWlzcyBt
+eSBlbWFpbCwgc28gSSByZXNlbmQgaXQuDQpUaGUgZm9sbG93aW5nIGxpbmsgYWRkcmVzcyBpcyB0
+aGUgbGFzdCBlbWFpbCwgcGxlYXNlIHJldmlldyB0aGUgbmV3IG9uZSBhZ2FpbiwgdGhhbmsgeW91
+Lg0KaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMTUxOTE1Lw0KDQpMYXN0IHRp
+bWUsIHlvdSBkb3VidGVkIHRoaXMgaXMgYSBkcml2ZXIgc3BlY2lmaWMgcHJvYmxlbSwNCkkgcHJl
+ZmVyIHRvIGJlbGlldmUgaXQncyBub3QgYmVjYXVzZSBJIGZpbmQgdGhlIGNvbW1pdCA0ZDJjMGNk
+YSwNCml0cyBsb2cgc2F5cyAiIFNvbWUgTklDIGRyaXZlcnMgZG9uJ3QgaGF2ZSBjb3JyZWN0IHNw
+ZWVkL2R1cGxleCANCnNldHRpbmdzIGF0IHRoZSB0aW1lIHRoZXkgc2VuZCBORVRERVZfVVAgbm90
+aWZpY2F0aW9uIC4uLiIuDQoNCkFueXdheSwgSSB0aGluayB0aGUgbGFjcCBzdGF0dXMgc2hvdWxk
+IGJlIGZpeGVkIGNvcnJlY3RseSwNCnNpbmNlIGxpbmstbW9uaXRvcmluZyAobWlpbW9uKSBzZXQg
+U1BFRUQvRFVQTEVYIHJpZ2h0IGhlcmUuDQoNCj4gLS0NCj4gMS44LjMuMQ0KDQoNCg==
