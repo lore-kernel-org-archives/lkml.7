@@ -2,113 +2,197 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D783C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11F3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2758121924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D09C21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oguUc+kb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mxVRZRFo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387547AbfIRRxS (ORCPT
+        id S1730280AbfIRRxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:53:18 -0400
-Received: from mail-qt1-f201.google.com ([209.85.160.201]:44460 "EHLO
-        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387500AbfIRRxQ (ORCPT
+        Wed, 18 Sep 2019 13:53:47 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:43226 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729111AbfIRRxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:53:16 -0400
-Received: by mail-qt1-f201.google.com with SMTP id h10so906193qtq.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:53:14 -0700 (PDT)
+        Wed, 18 Sep 2019 13:53:46 -0400
+Received: by mail-ot1-f66.google.com with SMTP id b2so615214otq.10;
+        Wed, 18 Sep 2019 10:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=If4YHWCGBSP7JzXIJroo6+sBnmdEVgDVLiwCXHSsnXY=;
-        b=oguUc+kb+4yrrWH0itSSontlpChAevcIUhBnlNdleoDtVUZEFYp2QPXq1c+yHoiLzh
-         x3TCqnF9WrNtStcniUJIcTe1ErB0CNlRnCW5I7SqqHrUoMbTCz6ElEqPLjvKOy2AiELE
-         pKbfPkilKavW+ujb8DGZnQjf1QA8flarS9hTOttDnBruHAk7QT6ZTL2W0pzDGZ3cmS5p
-         d1FdamKEs1MS1JLVoKBJREpVJtVPJKPzWCExOq0KHNbV8tLNWe6iQPVxNcTCAi/K9Eac
-         f6V4ZKcVt9CAIW9JeudEeHgqsRsGz1jgyv6zF5HNW/wGKXe4pUblbVCfN8ZnoApo3dfq
-         IDrA==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=a/jqoVnZMS4gCQHlsNMs0Wm0i9/bhDBfzuCMndLKGiI=;
+        b=mxVRZRFofqB9VHPpnhAT0D2qY2vxDZ1aVOC8Ivg4ywPf0SoSqKkBkA0lErA+py0cOi
+         Phoq68J5mWdb6Axadc87lebiz/yrt/Lt7XLsSf435rrSNrRmzw4YQitb5g4DJ43TmEfO
+         bQWaa+eSzH50E0UlwKyPdM1f67Zbeu9B+6JNe0wyXmI+d8QFE0/ghL8e1hSSFe4ZelmR
+         RtC37PGkriZyTxAS6cG+cJVCRG0tEqODfQEwbThwEPAk3D+9faNHzeAjTusBuL82Gk0b
+         aYa6aDo58PZy43PBNx+jYufKFoA7j7I2A3YTfkK3efHTtU8DLE/ijZzPEqBgp0uBqJ8S
+         7PxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=If4YHWCGBSP7JzXIJroo6+sBnmdEVgDVLiwCXHSsnXY=;
-        b=WiU36S0lKjyyLejiONdvvIMe4n/ZgkAYQUDP5EYuYWjYORoxtB9GTl1jORtKEoze/W
-         hx4xt1El0dxJwVWE4wKm4q9DrlPm3V+ot9preBt2gZ1cacWmfzJMOo9emMn95g0kzOK6
-         FKJvh3hHH8EYaG7HnyjQ9+4JI28aMu/k8UHHSbCLFnhNl1f+zFOAEdT72RfwJDA4j031
-         wyWEJFbgGjlCblZO02DMoYYWLkxIWr+B17P5DbveItufklxZ/wuP22brujKZQRoAm8lc
-         k3S/xK8/wyWh5xTbeXc0cXTb6kPHUylXRA6PMVyKbaVK+7WDILjt6HdqKOC6aZy0unyH
-         Ykng==
-X-Gm-Message-State: APjAAAU2ySAdb+h7KIGBaS8P5BVUor/k1nyeAzzdDw6aZZWDbVnr6Edm
-        grdOtr7Mik+/GqUJUbmmU3gw7tpL6Gj/kEqObQ4EVjQkaDt+UMw3SeTG+LxoVTc1GXWaIXyOh/d
-        8+uA58lvNCgE4u2mgrK2C+Tsqbb88FCZIQvXVSCjhOg572DIqUo8edMhKoUOGuoRMwtKBCjLihT
-        g=
-X-Google-Smtp-Source: APXvYqwc7ZdpqllO9sb4kSIzSYVq3NgZO3dQ81K5ff7/OICmmahBAZJxEWREpdQXIYjPCFH2JGSKEq2zLH+reA==
-X-Received: by 2002:a37:8d6:: with SMTP id 205mr5340763qki.308.1568829193722;
- Wed, 18 Sep 2019 10:53:13 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 18:53:04 +0100
-In-Reply-To: <20190917231031.81341-1-maennich@google.com>
-Message-Id: <20190918175304.219849-1-maennich@google.com>
-Mime-Version: 1.0
-References: <20190917231031.81341-1-maennich@google.com>
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
-Subject: [PATCH v2] usb-storage: SCSI glue: use pr_fmt and pr_err
-From:   Matthias Maennich <maennich@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, maennich@google.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        usb-storage@lists.one-eyed-alien.net
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=a/jqoVnZMS4gCQHlsNMs0Wm0i9/bhDBfzuCMndLKGiI=;
+        b=MXvtUKyObIywd2kylmOpOVO4R65PnuRHj4uchgAA33DCnx+ckWdb/kh41VKERyocGC
+         wBhGZ3L1GOsnfd6nlKoDgVIRa2wE/uTn/J3wVK9TbUaho0lDYBNc8Egj5eQcp/5fvU5X
+         //czU+p81wXY29lbePTVeaVRuX36MoN0QATiNLaL/Ggx7exMWxIoLmldA1ZP6yaV1ARK
+         TqJfrAXFQoArJZL4o8cAcvWgnX20RVj2kuvEPTg3D4vgWLa/6+8TP8ihLgc/29Sm65mF
+         /Ximztiz1GAa+j2uAbl1Q9iDsNSBcestoD2hlCm16wI6AIYSLYs4nz/n4/kJGjBzGPLu
+         ntrQ==
+X-Gm-Message-State: APjAAAXwQwWjt+FxaKjr76JEUjW6ZVUeJBmICoYHVris1zEG2rF3HXjr
+        6tRayF4Ix9YN/FxW2JXA0lA=
+X-Google-Smtp-Source: APXvYqz0t5+ebI92vteMOWlqyFLfZiS195d+evCqucFxo/9o5+zuvvtyuNCeouoflWGA34VVfNklXQ==
+X-Received: by 2002:a9d:2007:: with SMTP id n7mr3756897ota.132.1568829225129;
+        Wed, 18 Sep 2019 10:53:45 -0700 (PDT)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id w201sm2029870oie.44.2019.09.18.10.53.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 10:53:44 -0700 (PDT)
+Subject: [PATCH v10 QEMU 1/3] virtio-ballon: Implement support for page
+ poison tracking feature
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com,
+        alexander.h.duyck@linux.intel.com
+Date:   Wed, 18 Sep 2019 10:53:42 -0700
+Message-ID: <20190918175342.23606.12400.stgit@localhost.localdomain>
+In-Reply-To: <20190918175109.23474.67039.stgit@localhost.localdomain>
+References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Follow common practice and retire printk(KERN_ERR ...) in favor of
-pr_fmt and dev_err().
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-Cc: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: usb-storage@lists.one-eyed-alien.net
-Signed-off-by: Matthias Maennich <maennich@google.com>
+We need to make certain to advertise support for page poison tracking if
+we want to actually get data on if the guest will be poisoning pages. So
+if free page hinting is active we should add page poisoning support and
+let the guest disable it if it isn't using it.
+
+Page poisoning will result in a page being dirtied on free. As such we
+cannot really avoid having to copy the page at least one more time since
+we will need to write the poison value to the destination. As such we can
+just ignore free page hinting if page poisoning is enabled as it will
+actually reduce the work we have to do.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 ---
- drivers/usb/storage/scsiglue.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ hw/virtio/virtio-balloon.c         |   25 +++++++++++++++++++++----
+ include/hw/virtio/virtio-balloon.h |    1 +
+ 2 files changed, 22 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
-index 6737fab94959..afc4e3221369 100644
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -28,6 +28,8 @@
-  * status of a command.
-  */
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 25de15430710..003b3ebcfdfb 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -530,6 +530,15 @@ static void virtio_balloon_free_page_start(VirtIOBalloon *s)
+         return;
+     }
  
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++    /*
++     * If page poisoning is enabled then we probably shouldn't bother with
++     * the hinting since the poisoning will dirty the page and invalidate
++     * the work we are doing anyway.
++     */
++    if (virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
++        return;
++    }
 +
- #include <linux/blkdev.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
-@@ -379,8 +381,8 @@ static int queuecommand_lck(struct scsi_cmnd *srb,
+     if (s->free_page_report_cmd_id == UINT_MAX) {
+         s->free_page_report_cmd_id =
+                        VIRTIO_BALLOON_FREE_PAGE_REPORT_CMD_ID_MIN;
+@@ -617,12 +626,10 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+     if (s->qemu_4_0_config_size) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
++        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+-        return offsetof(struct virtio_balloon_config, poison_val);
+-    }
+     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
+ }
  
- 	/* check for state-transition errors */
- 	if (us->srb != NULL) {
--		printk(KERN_ERR "usb-storage: Error in %s: us->srb = %p\n",
--			__func__, us->srb);
-+		dev_err(&us->pusb_intf->dev,
-+			"Error in %s: us->srb = %p\n", __func__, us->srb);
- 		return SCSI_MLQUEUE_HOST_BUSY;
- 	}
+@@ -633,6 +640,7 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
  
--- 
-2.23.0.237.gc6a4ce50a0-goog
+     config.num_pages = cpu_to_le32(dev->num_pages);
+     config.actual = cpu_to_le32(dev->actual);
++    config.poison_val = cpu_to_le32(dev->poison_val);
+ 
+     if (dev->free_page_report_status == FREE_PAGE_REPORT_S_REQUESTED) {
+         config.free_page_report_cmd_id =
+@@ -696,6 +704,8 @@ static void virtio_balloon_set_config(VirtIODevice *vdev,
+         qapi_event_send_balloon_change(vm_ram_size -
+                         ((ram_addr_t) dev->actual << VIRTIO_BALLOON_PFN_SHIFT));
+     }
++    dev->poison_val = virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON) ? 
++                      le32_to_cpu(config.poison_val) : 0;
+     trace_virtio_balloon_set_config(dev->actual, oldactual);
+ }
+ 
+@@ -705,6 +715,9 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
++    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++        virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
++    }
+ 
+     return f;
+ }
+@@ -846,6 +859,8 @@ static void virtio_balloon_device_reset(VirtIODevice *vdev)
+         g_free(s->stats_vq_elem);
+         s->stats_vq_elem = NULL;
+     }
++
++    s->poison_val = 0;
+ }
+ 
+ static void virtio_balloon_set_status(VirtIODevice *vdev, uint8_t status)
+@@ -908,6 +923,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("x-page-poison", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_PAGE_POISON, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d2376e..7fe78e5c14d7 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -70,6 +70,7 @@ typedef struct VirtIOBalloon {
+     uint32_t host_features;
+ 
+     bool qemu_4_0_config_size;
++    uint32_t poison_val;
+ } VirtIOBalloon;
+ 
+ #endif
 
