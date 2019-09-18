@@ -2,64 +2,64 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08A0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC5EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB1421925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF5B2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:39:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Bt+O0T7+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="W8Mbcm+q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731211AbfIRMjJ (ORCPT
+        id S1731226AbfIRMjr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:39:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43652 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfIRMjJ (ORCPT
+        Wed, 18 Sep 2019 08:39:47 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36248 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731213AbfIRMjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:39:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id q17so6717189wrx.10
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 05:39:05 -0700 (PDT)
+        Wed, 18 Sep 2019 08:39:46 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t3so2429426wmj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 05:39:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:openpgp:autocrypt:organization
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=95Hn3vPKkFfiEhTsyaC6yK6iZ0/sBJCmVCTbc9IUbFI=;
-        b=Bt+O0T7+/zZtxFhOTZCmHV4KBj7kAMLbRKVZFlBEuj/UJXpgWaRjBBDjKVPBR+FPpG
-         gs8QN8ajCWzf1ObO+qWjr2Y8NBOCQgocwVbqFLwjdQw1lwI2tJTavClGWprHc/Sj/gds
-         A7GWRDJUNRXaNpMp8wmBHWczthXfkINOw8Sgv0GJ6k5kwEhBJaF1xCieW4V6jDb3cFqW
-         02nnhIXoHQQ9rGI8EBPL3C4+tP1liJgpFoXON8IpBZlOjBIqpfGBk5ikEwJ+3PHz8sTe
-         gPf/oCufzoOJO3XdysfWJYHtEj4MkYZ3zezBH7L6Pp3QM6+uFpqPLKwGZkyKaha7y7DI
-         gY4w==
+        bh=rkEDxPdEl9Iaqh2ExNLmboEh+YYMG69tOVa/FPgt874=;
+        b=W8Mbcm+q/BLzyZpONFpQYn+Lvx9aEqdFtcLKiPU3LrB+cD16pcfciX7kd/0bjmQI33
+         5Wnj9waO5UMe8YyHPeY3bxN1JMtH5zKx5jqBEZzVGkugyVjN24ySUuRTyQMfQ2OBlAS+
+         DhYTG2Bgbp2JD423EMJCK/rsCLt5YxxyXR2mFOdSjEHnhzqtal9K1uVtPdxILjHr1vEG
+         rEwnDTyQKvV64frd8xWiSGcTrBk7UN9Oo65DRhzTVP4ADWqfF7EY6NZnC0RJh0i2CYMd
+         WukKgVwV41EX1LndYlaAkCBG5DuwoDyKJ069p0ukH7KPsz6F9meh1EwvuNDIeFmqf6Dt
+         tUfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :organization:message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=95Hn3vPKkFfiEhTsyaC6yK6iZ0/sBJCmVCTbc9IUbFI=;
-        b=L9xN94Bcsso7VWuFAOosrDGYYBkufPM1idkJcHXXqD8/kpXHHt/J8Kn4CMI3RS9Iba
-         W9InguwuZTsDKPb4IRiGqooTEDj6x3MsMyguYVZNfhqGtpd1KoZc5YBZsG80INgygsxa
-         i8YM1sG5S4VvqcqlpHNgxKHDeEXg3anoSbRHJx1/HnprWnKMUw6xxQYnnXYYLns6Or7E
-         1RvRgtZClZPZFMTf+/iVRwk/1q3RUTMCls0DaF7e07RWzaznYBoABYxXua8lTqsAZTGP
-         Tr7cjJkFLmr+gq81qYZmW133ntrJuEZbwWZcuD0Sxun+deMWXQ80z5E2fIfzo3GbB6Kd
-         rDqA==
-X-Gm-Message-State: APjAAAVgUBgPRjKRbIrMa+HZ2zT5a1oHXR2WKE+yPwWW2MVLZJxwnDf7
-        jUYf6KIeT6Wo2iLaoGBdMK9hyg==
-X-Google-Smtp-Source: APXvYqy1Yv0CSd98/sYCGClYE/YNtt1gQT/PQpw+NKu7BMtngQIQcoy0B2kt/Y0yw9KtpueF5SPZig==
-X-Received: by 2002:adf:df91:: with SMTP id z17mr2773260wrl.116.1568810344552;
-        Wed, 18 Sep 2019 05:39:04 -0700 (PDT)
+        bh=rkEDxPdEl9Iaqh2ExNLmboEh+YYMG69tOVa/FPgt874=;
+        b=CbqWKM4w49d+GjeffL4oEmsaNC1QBfDS78y9omV1+9WXdEPyuCTuoofsY+OHVDDwgv
+         wDMjIVfGpbrJWC4w+qzKhj3TJ+x2VVxq0nMuEm8EyYN05LURgAxp6ajAxBOwDJA4SNxi
+         sqcto80IeZ2CvddTVKce913FcuPIGNrz5HtXSKz6Y+VXy1TKA4u7IyctSU5i+CpFeJrg
+         DQ8C43pvlTJh0jzU7S8iyZYv/2/0LjH0MFI5yNkn9uvyyWZlHCLnveDxN/nE0fpEBZce
+         4n7tyaszHpoImXky8dqlle2IgLXQg39U/xkrvJTUG+QiH6YoBcbzzn8TbxV5gqnYdNxE
+         6Ygw==
+X-Gm-Message-State: APjAAAWidlftgmF9OHL5h2as6pv5vXdIodDtaevoA6zsmHqO2EQQZ+Rd
+        5oz9VkB2bmB54li3XfhIJSrcZDusMsc+3w==
+X-Google-Smtp-Source: APXvYqzNwqgKrZgEYWkYaBUQgGjKH6qJDUE1rezTzdXX535NLvUqmDDg21g6T9qRUVUwkXDf2nTd8g==
+X-Received: by 2002:a1c:ba08:: with SMTP id k8mr2824736wmf.63.1568810379765;
+        Wed, 18 Sep 2019 05:39:39 -0700 (PDT)
 Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v64sm3062976wmf.12.2019.09.18.05.39.03
+        by smtp.gmail.com with ESMTPSA id v2sm4749902wmf.18.2019.09.18.05.39.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 05:39:03 -0700 (PDT)
-Subject: Re: [PATCH 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC
- Reset Controller
+        Wed, 18 Sep 2019 05:39:39 -0700 (PDT)
+Subject: Re: [PATCH 3/3] reset: add support for the Meson-A1 SoC Reset
+ Controller
 To:     Xingyu Chen <xingyu.chen@amlogic.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Kevin Hilman <khilman@baylibre.com>
@@ -68,10 +68,8 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         Hanjie Lin <hanjie.lin@amlogic.com>,
         Jianxin Pan <jianxin.pan@amlogic.com>,
         linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
- <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1568808749-1196-1-git-send-email-xingyu.chen@amlogic.com>
 From:   Neil Armstrong <narmstrong@baylibre.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
@@ -124,12 +122,12 @@ Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
  VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
  ZaTUOEkgIor5losDrePdPgE=
 Organization: Baylibre
-Message-ID: <d99786ec-7635-67e5-3e47-738ce131b634@baylibre.com>
-Date:   Wed, 18 Sep 2019 14:39:02 +0200
+Message-ID: <ab6b5ef5-f251-3122-ad5b-558c65fe319e@baylibre.com>
+Date:   Wed, 18 Sep 2019 14:39:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
+In-Reply-To: <1568808749-1196-1-git-send-email-xingyu.chen@amlogic.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -138,105 +136,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
 On 18/09/2019 14:12, Xingyu Chen wrote:
-> Add DT bindings for the Meson-A1 SoC Reset Controller include file,
-> and also slightly update documentation.
+> The number of RESET registers and offset of RESET_LEVEL register for
+> Meson-A1 are different from previous SoCs, In order to describe these
+> differences, we introduce the struct meson_reset_param.
 > 
 > Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 > Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 > ---
->  .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
-
-The reset bindings has been moved to yaml, either rebase on linux-next or wait for v5.4-rc1 :
-https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next/+/refs/tags/next-20190917/Documentation/devicetree/bindings/reset/amlogic%2Cmeson-reset.yaml
-
-Neil
-
->  include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 2 deletions(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+>  drivers/reset/reset-meson.c | 35 ++++++++++++++++++++++++++++-------
+>  1 file changed, 28 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> index 28ef6c2..011151a 100644
-> --- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> +++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-> @@ -5,8 +5,8 @@ Please also refer to reset.txt in this directory for common reset
->  controller binding usage.
+> diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
+> index 5242e06..d9541c1 100644
+> --- a/drivers/reset/reset-meson.c
+> +++ b/drivers/reset/reset-meson.c
+> @@ -64,12 +64,16 @@
+>  #include <linux/types.h>
+>  #include <linux/of_device.h>
 >  
->  Required properties:
-> -- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
-> -	"amlogic,meson-axg-reset".
-> +- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset",
-> +	"amlogic,meson-axg-reset" or "amlogic,meson-a1-reset".
->  - reg: should contain the register address base
->  - #reset-cells: 1, see below
+> -#define REG_COUNT	8
+>  #define BITS_PER_REG	32
+> -#define LEVEL_OFFSET	0x7c
+> +
+> +struct meson_reset_param {
+> +	int reg_count;
+> +	int level_offset;
+> +};
 >  
-> diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> new file mode 100644
-> index 00000000..8d76a47
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-> @@ -0,0 +1,59 @@
-> +/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> + *
-> + * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-> + * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-> + *
-> + */
+>  struct meson_reset {
+>  	void __iomem *reg_base;
+> +	const struct meson_reset_param *param;
+>  	struct reset_controller_dev rcdev;
+>  	spinlock_t lock;
+>  };
+> @@ -95,10 +99,12 @@ static int meson_reset_level(struct reset_controller_dev *rcdev,
+>  		container_of(rcdev, struct meson_reset, rcdev);
+>  	unsigned int bank = id / BITS_PER_REG;
+>  	unsigned int offset = id % BITS_PER_REG;
+> -	void __iomem *reg_addr = data->reg_base + LEVEL_OFFSET + (bank << 2);
+> +	void __iomem *reg_addr;
+>  	unsigned long flags;
+>  	u32 reg;
+>  
+> +	reg_addr = data->reg_base + data->param->level_offset + (bank << 2);
 > +
-> +#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
-> +#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+>  	spin_lock_irqsave(&data->lock, flags);
+>  
+>  	reg = readl(reg_addr);
+> @@ -130,10 +136,21 @@ static const struct reset_control_ops meson_reset_ops = {
+>  	.deassert	= meson_reset_deassert,
+>  };
+>  
+> +static const struct meson_reset_param meson8b_param = {
+> +	.reg_count	= 8,
+> +	.level_offset	= 0x7c,
+> +};
 > +
-> +/* RESET0 */
-> +#define RESET_AM2AXI_VAD		1
-> +#define RESET_PSRAM			4
-> +#define RESET_PAD_CTRL			5
-> +#define RESET_TEMP_SENSOR		7
-> +#define RESET_AM2AXI_DEV		8
-> +#define RESET_SPICC_A			10
-> +#define RESET_MSR_CLK			11
-> +#define RESET_AUDIO			12
-> +#define RESET_ANALOG_CTRL		13
-> +#define RESET_SAR_ADC			14
-> +#define RESET_AUDIO_VAD			15
-> +#define RESET_CEC			16
-> +#define RESET_PWM_EF			17
-> +#define RESET_PWM_CD			18
-> +#define RESET_PWM_AB			19
-> +#define RESET_IR_CTRL			21
-> +#define RESET_I2C_S_A			22
-> +#define RESET_I2C_M_D			24
-> +#define RESET_I2C_M_C			25
-> +#define RESET_I2C_M_B			26
-> +#define RESET_I2C_M_A			27
-> +#define RESET_I2C_PROD_AHB		28
-> +#define RESET_I2C_PROD			29
+> +static const struct meson_reset_param meson_a1_param = {
+> +	.reg_count	= 3,
+> +	.level_offset	= 0x40,
+> +};
 > +
-> +/* RESET1 */
-> +#define RESET_ACODEC			32
-> +#define RESET_DMA			33
-> +#define RESET_SD_EMMC_A			34
-> +#define RESET_USBCTRL			36
-> +#define RESET_USBPHY			38
-> +#define RESET_RSA			42
-> +#define RESET_DMC			43
-> +#define RESET_IRQ_CTRL			45
-> +#define RESET_NIC_VAD			47
-> +#define RESET_NIC_AXI			48
-> +#define RESET_RAMA			49
-> +#define RESET_RAMB			50
-> +#define RESET_ROM			53
-> +#define RESET_SPIFC			54
-> +#define RESET_GIC			55
-> +#define RESET_UART_C			56
-> +#define RESET_UART_B			57
-> +#define RESET_UART_A			58
-> +#define RESET_OSC_RING			59
+>  static const struct of_device_id meson_reset_dt_ids[] = {
+> -	 { .compatible = "amlogic,meson8b-reset" },
+> -	 { .compatible = "amlogic,meson-gxbb-reset" },
+> -	 { .compatible = "amlogic,meson-axg-reset" },
+> +	 { .compatible = "amlogic,meson8b-reset",    .data = &meson8b_param},
+> +	 { .compatible = "amlogic,meson-gxbb-reset", .data = &meson8b_param},
+> +	 { .compatible = "amlogic,meson-axg-reset",  .data = &meson8b_param},
+> +	 { .compatible = "amlogic,meson-a1-reset",   .data = &meson_a1_param},
+>  	 { /* sentinel */ },
+>  };
+>  
+> @@ -151,12 +168,16 @@ static int meson_reset_probe(struct platform_device *pdev)
+>  	if (IS_ERR(data->reg_base))
+>  		return PTR_ERR(data->reg_base);
+>  
+> +	data->param = of_device_get_match_data(&pdev->dev);
+> +	if (!data->param)
+> +		return -ENODEV;
 > +
-> +/* RESET2 Reserved */
-> +
-> +#endif
+>  	platform_set_drvdata(pdev, data);
+>  
+>  	spin_lock_init(&data->lock);
+>  
+>  	data->rcdev.owner = THIS_MODULE;
+> -	data->rcdev.nr_resets = REG_COUNT * BITS_PER_REG;
+> +	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_REG;
+>  	data->rcdev.ops = &meson_reset_ops;
+>  	data->rcdev.of_node = pdev->dev.of_node;
+>  
 > 
 
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
