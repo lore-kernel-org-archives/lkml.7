@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7727FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5817DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4850821906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E45721924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788155;
-	bh=Wu+XqPCBnyhQtmrODD9JD8b44C8jwjxAH2GCqK3UrUM=;
+	s=default; t=1568788159;
+	bh=Lb6PQz8+/DWzFIUSaUwex+ThbiYq5c6fI82ixMMnb7o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fB6gfEpJpJda5u0/MFAsSDLkXsJleNFk8TT4btZ8ewaWceqZEXYBI+bXEQ0LJcAox
-	 FYbKM9ap+kxcLzkdENuWS1zBlFNwgYyghR7bkkGapiMXrEf/f3zrvw/w6LTK7kh1w2
-	 y4bs0DPdgpmE2O3SxuzXsPFCNDO4c4l3vSDKhCk8=
+	b=bM7qFdqa6rshkQc337db58rneTb25iJBs3hVcxpmYKtatj2w4al1bRcl+Lth8gbUP
+	 kxQpLszCPn3REX4r0fy5+q2IxhLkb4w9wNsh0bVLgZkLMKh0A46dg2ZSOtqnzMeJxd
+	 1faakzg+aHopYk93zkVLlARANk4MjJHfwQDt5UY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729565AbfIRG3O (ORCPT
+        id S1730294AbfIRG0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47958 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730319AbfIRG0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:31 -0400
+        id S1728395AbfIRG0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19D6D21924;
-        Wed, 18 Sep 2019 06:26:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD5A621924;
+        Wed, 18 Sep 2019 06:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787990;
-        bh=Wu+XqPCBnyhQtmrODD9JD8b44C8jwjxAH2GCqK3UrUM=;
+        s=default; t=1568787977;
+        bh=Lb6PQz8+/DWzFIUSaUwex+ThbiYq5c6fI82ixMMnb7o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=enMQSGx3EhilRc7Grc8gAg/hUfdAoz7F2WZynhJlZxhptwW6tFg/6ryNiYLaRb3gz
-         b3rCQTvYaDJpLCTtYRHSA/hfmsphF1cyQZLR/evA9oPgt4l/59ZsjRGmAL2yShUGi2
-         7oErTLKKFAzAl8ILWocllp0eBQgNqTVBcqiDnHL4=
+        b=t5rQa1o8zZnnRqYcIb4QzUUWiic86Dwl5DAYlK4HrrDSLmy8qbv13R/3xfHwFMdKS
+         0SIeheiHxnvBSb/B+AXbsPRDumqSbXJ4BdPcR57RlnzxRqwrvC/+8oBsKmVrInfTXP
+         GpCrksLA2i6cAfPOf107OjsEPVAIvTgDp1pU8cF0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaolei Li <xiaolei.li@mediatek.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 5.2 59/85] mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
-Date:   Wed, 18 Sep 2019 08:19:17 +0200
-Message-Id: <20190918061235.972681666@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.2 55/85] clk: Simplify debugfs printing and add a newline
+Date:   Wed, 18 Sep 2019 08:19:13 +0200
+Message-Id: <20190918061235.849500666@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,84 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolei Li <xiaolei.li@mediatek.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-commit 336d4b138be2dad372b67a2388e42805c48aaa38 upstream.
+commit 11f6c2307caee89370d7752eb6f404f1ed73faaf upstream.
 
-One main goal of the function mtk_nfc_update_ecc_stats is to check
-whether sectors are all empty. If they are empty, set these sectors's
-data buffer and OOB buffer as 0xff.
+The possible parent printing function duplicates a bunch of if
+conditions. Pull that into another function so we can print an extra
+character at the end, either a space or a newline. This way we can add
+the required newline that got lost here and also shorten the code.
 
-But now, the sector OOB buffer pointer is wrongly assigned. We always
-do memset from sector 0.
-
-To fix this issue, pass start sector number to make OOB buffer pointer
-be properly assigned.
-
-Fixes: 1d6b1e464950 ("mtd: mediatek: driver for MTK Smart Device")
-Signed-off-by: Xiaolei Li <xiaolei.li@mediatek.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: 2d156b78ce8f ("clk: Fix debugfs clk_possible_parents for clks without parent string names")
+Cc: Chen-Yu Tsai <wens@csie.org>
+Tested-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/raw/mtk_nand.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/clk/clk.c |   34 +++++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 19 deletions(-)
 
---- a/drivers/mtd/nand/raw/mtk_nand.c
-+++ b/drivers/mtd/nand/raw/mtk_nand.c
-@@ -853,19 +853,21 @@ static int mtk_nfc_write_oob_std(struct
- 	return mtk_nfc_write_page_raw(chip, NULL, 1, page);
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3020,11 +3020,10 @@ static int clk_flags_show(struct seq_fil
  }
+ DEFINE_SHOW_ATTRIBUTE(clk_flags);
  
--static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 sectors)
-+static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 start,
-+				    u32 sectors)
+-static int possible_parents_show(struct seq_file *s, void *data)
++static void possible_parent_show(struct seq_file *s, struct clk_core *core,
++				 unsigned int i, char terminator)
  {
- 	struct nand_chip *chip = mtd_to_nand(mtd);
- 	struct mtk_nfc *nfc = nand_get_controller_data(chip);
- 	struct mtk_nfc_nand_chip *mtk_nand = to_mtk_nand(chip);
- 	struct mtk_ecc_stats stats;
-+	u32 reg_size = mtk_nand->fdm.reg_size;
- 	int rc, i;
+-	struct clk_core *core = s->private;
+ 	struct clk_core *parent;
+-	int i;
  
- 	rc = nfi_readl(nfc, NFI_STA) & STA_EMP_PAGE;
- 	if (rc) {
- 		memset(buf, 0xff, sectors * chip->ecc.size);
- 		for (i = 0; i < sectors; i++)
--			memset(oob_ptr(chip, i), 0xff, mtk_nand->fdm.reg_size);
-+			memset(oob_ptr(chip, start + i), 0xff, reg_size);
- 		return 0;
- 	}
+ 	/*
+ 	 * Go through the following options to fetch a parent's name.
+@@ -3038,22 +3037,6 @@ static int possible_parents_show(struct
+ 	 * specified directly via a struct clk_hw pointer, but it isn't
+ 	 * registered (yet).
+ 	 */
+-	for (i = 0; i < core->num_parents - 1; i++) {
+-		parent = clk_core_get_parent_by_index(core, i);
+-		if (parent)
+-			seq_printf(s, "%s ", parent->name);
+-		else if (core->parents[i].name)
+-			seq_printf(s, "%s ", core->parents[i].name);
+-		else if (core->parents[i].fw_name)
+-			seq_printf(s, "<%s>(fw) ", core->parents[i].fw_name);
+-		else if (core->parents[i].index >= 0)
+-			seq_printf(s, "%s ",
+-				   of_clk_get_parent_name(core->of_node,
+-							  core->parents[i].index));
+-		else
+-			seq_puts(s, "(missing) ");
+-	}
+-
+ 	parent = clk_core_get_parent_by_index(core, i);
+ 	if (parent)
+ 		seq_printf(s, "%s", parent->name);
+@@ -3068,6 +3051,19 @@ static int possible_parents_show(struct
+ 	else
+ 		seq_puts(s, "(missing)");
  
-@@ -885,7 +887,7 @@ static int mtk_nfc_read_subpage(struct m
- 	u32 spare = mtk_nand->spare_per_sector;
- 	u32 column, sectors, start, end, reg;
- 	dma_addr_t addr;
--	int bitflips;
-+	int bitflips = 0;
- 	size_t len;
- 	u8 *buf;
- 	int rc;
-@@ -952,14 +954,11 @@ static int mtk_nfc_read_subpage(struct m
- 	if (rc < 0) {
- 		dev_err(nfc->dev, "subpage done timeout\n");
- 		bitflips = -EIO;
--	} else {
--		bitflips = 0;
--		if (!raw) {
--			rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
--			bitflips = rc < 0 ? -ETIMEDOUT :
--				mtk_nfc_update_ecc_stats(mtd, buf, sectors);
--			mtk_nfc_read_fdm(chip, start, sectors);
--		}
-+	} else if (!raw) {
-+		rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
-+		bitflips = rc < 0 ? -ETIMEDOUT :
-+			mtk_nfc_update_ecc_stats(mtd, buf, start, sectors);
-+		mtk_nfc_read_fdm(chip, start, sectors);
- 	}
- 
- 	dma_unmap_single(nfc->dev, addr, len, DMA_FROM_DEVICE);
++	seq_putc(s, terminator);
++}
++
++static int possible_parents_show(struct seq_file *s, void *data)
++{
++	struct clk_core *core = s->private;
++	int i;
++
++	for (i = 0; i < core->num_parents - 1; i++)
++		possible_parent_show(s, core, i, ' ');
++
++	possible_parent_show(s, core, i, '\n');
++
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(possible_parents);
 
 
