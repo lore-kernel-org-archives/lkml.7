@@ -4,101 +4,144 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53E4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF33FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6487208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFE7208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YNxcge2f"
+	dkim=pass (2048-bit key) header.d=dell.com header.i=@dell.com header.b="wtBDntCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfIRSN3 (ORCPT
+        id S2387462AbfIRSQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:13:29 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:41532 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfIRSN3 (ORCPT
+        Wed, 18 Sep 2019 14:16:16 -0400
+Received: from mx0a-00154904.pphosted.com ([148.163.133.20]:16730 "EHLO
+        mx0a-00154904.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbfIRSQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:13:29 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IHx8DJ064916;
-        Wed, 18 Sep 2019 18:13:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=UjgOSjTYHKYQ3BViNdA+1Pbt5OtO2DhITkMO0ccXbsE=;
- b=YNxcge2fE7Jf9NrE4p+pVvJxPpd0rJjk0uwx7Tbp/f7hgyjAIO2KSBUG44QXgsaamU8D
- jHZVZgST4X7qOj+gi8GFM6t/WOiU/uybel2RdsYS46a2MCMEcFVF8Xe/6LDP1eiHPuQV
- DINp+SGZ/XIXIbb/lyzQ2bpbn3t1AoN3tppko0FU5rIUBzuAPQs5E4pdHFPcAU3+N9Hr
- 6tlR7v9WpfPtGjdf8OzX0uuFmTPdA1cRY/0+25UsbUUYLa8I8B88JYOCVUabQiXdQCLZ
- YWN+7ntzC9CC5TK6D05ZlwOE0dKwUh8UHbPGufp1nwPoMROqx5bc1LxcXQ3WwWH9uIWe Jw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2v385e5p0t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:13:19 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8II4I1Y116899;
-        Wed, 18 Sep 2019 18:11:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2v37mb055b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 18:11:18 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IIBFZo005891;
-        Wed, 18 Sep 2019 18:11:15 GMT
-Received: from x250.idc.oracle.com (/10.191.241.104)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 11:11:14 -0700
-From:   Allen Pais <allen.pais@oracle.com>
-To:     kvalo@codeaurora.org
-Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlwifi: fix a potential NULL pointer dereference
-Date:   Wed, 18 Sep 2019 23:41:02 +0530
-Message-Id: <1568830262-5529-1-git-send-email-allen.pais@oracle.com>
-X-Mailer: git-send-email 1.9.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180161
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+        Wed, 18 Sep 2019 14:16:16 -0400
+Received: from pps.filterd (m0170391.ppops.net [127.0.0.1])
+        by mx0a-00154904.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8II0KqD016658
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:16:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dell.com; h=from : to : cc :
+ subject : date : message-id; s=smtpout1;
+ bh=A/GA2kt9PkFSXOdi/VLlD9hTYzR2T4fpkhomChyE9Co=;
+ b=wtBDntCf5Mg7NkwRO3z1NSwe+wwKrvyJ1tO4RyzGpkjZmVAU8SyKMLn3x5ypui8BY6ol
+ bfPdT3dlID39LPQ7hQfVE6jzfqgUIkuwu6AjkdnwEiSuoRfbqcNe1pfqqkXcJls6Gao7
+ 8pM3Iw49DJT6l551+PfrbkHNyDhXDMEQY5euUBhbh74bY9H9yV4RB977Vpdyc7EAm3Un
+ ibT8iZaRP9RVkhR7/XSA+ad/1td7qZfWvPbqWuW5l5pxayStpcTD6OE5eZ+CY9F4GOmB
+ YvduR+pfjd2vQzLIDb+zVAVyx4qxb1MXaFcWayKuweuRv2izOq2scZcZXsC1wBTtBLMj hQ== 
+Received: from mx0a-00154901.pphosted.com (mx0b-00154901.pphosted.com [67.231.157.37])
+        by mx0a-00154904.pphosted.com with ESMTP id 2v37p0wt4b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:16:15 -0400
+Received: from pps.filterd (m0089484.ppops.net [127.0.0.1])
+        by mx0b-00154901.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8II2vBp082587
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:16:14 -0400
+Received: from ausxippc101.us.dell.com (ausxippc101.us.dell.com [143.166.85.207])
+        by mx0b-00154901.pphosted.com with ESMTP id 2v37hs7vyy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:16:14 -0400
+X-LoopCount0: from 10.173.37.27
+X-PREM-Routing: D-Outbound
+X-IronPort-AV: E=Sophos;i="5.60,346,1549951200"; 
+   d="scan'208";a="1299619002"
+From:   Mario Limonciello <mario.limonciello@dell.com>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        sjg@google.com, Jared Dominguez <jared.dominguez@dell.com>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: [PATCH v2] nvme-pci: Save PCI state before putting drive into deepest state
+Date:   Wed, 18 Sep 2019 13:15:55 -0500
+Message-Id: <1568830555-11531-1-git-send-email-mario.limonciello@dell.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-18_09:2019-09-18,2019-09-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=3 mlxlogscore=567
+ clxscore=1015 malwarescore=0 mlxscore=0 phishscore=0 priorityscore=1501
+ adultscore=0 impostorscore=0 lowpriorityscore=3 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
  definitions=main-1909180161
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 malwarescore=0
+ clxscore=1015 lowpriorityscore=6 bulkscore=6 suspectscore=0
+ priorityscore=1501 adultscore=0 mlxlogscore=710 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1908290000 definitions=main-1909180161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_workqueue is not checked for errors and as a result,
-a potential NULL dereference could occur.
+The action of saving the PCI state will cause numerous PCI configuration
+space reads which depending upon the vendor implementation may cause
+the drive to exit the deepest NVMe state.
 
-Signed-off-by: Allen Pais <allen.pais@oracle.com>
+In these cases ASPM will typically resolve the PCIe link state and APST
+may resolve the NVMe power state.  However it has also been observed
+that this register access after quiesced will cause PC10 failure
+on some device combinations.
+
+To resolve this, move the PCI state saving to before SetFeatures has been
+called.  This has been proven to resolve the issue across a 5000 sample
+test on previously failing disk/system combinations.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/nvme/host/pci.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index db62c83..276c26b 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3655,6 +3655,11 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+Changes from v1:
+ * Discard saved state in error scenario
+ * Removed unneeded goto statement in error scenario
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 732d5b6..ef69013 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2894,11 +2894,21 @@ static int nvme_suspend(struct device *dev)
+ 	if (ret < 0)
+ 		goto unfreeze;
  
- 	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
- 						   WQ_HIGHPRI | WQ_UNBOUND, 1);
-+	if (unlikely(!trans_pcie->rba.alloc_wq)) {
-+		return -ENOMEM;
-+		goto out_free_ict;
-+	}
++	/*
++	 * A saved state prevents pci pm from generically controlling the
++	 * device's power. If we're using protocol specific settings, we don't
++	 * want pci interfering.
++	 */
++	pci_save_state(pdev);
 +
- 	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+ 	ret = nvme_set_power_state(ctrl, ctrl->npss);
+ 	if (ret < 0)
+ 		goto unfreeze;
  
- #ifdef CONFIG_IWLWIFI_PCIE_RTPM
+ 	if (ret) {
++		/* discard the saved state */
++		pci_load_saved_state(pdev, NULL);
++
+ 		/*
+ 		 * Clearing npss forces a controller reset on resume. The
+ 		 * correct value will be resdicovered then.
+@@ -2906,14 +2916,7 @@ static int nvme_suspend(struct device *dev)
+ 		nvme_dev_disable(ndev, true);
+ 		ctrl->npss = 0;
+ 		ret = 0;
+-		goto unfreeze;
+ 	}
+-	/*
+-	 * A saved state prevents pci pm from generically controlling the
+-	 * device's power. If we're using protocol specific settings, we don't
+-	 * want pci interfering.
+-	 */
+-	pci_save_state(pdev);
+ unfreeze:
+ 	nvme_unfreeze(ctrl);
+ 	return ret;
 -- 
-1.9.1
+2.7.4
 
