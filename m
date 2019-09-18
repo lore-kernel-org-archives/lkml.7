@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B55C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BB2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7194921929
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E532821D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788005;
-	bh=adh0tBGTETTtxIVgnM5bATCU0nC6iXhziEM0s53ubv0=;
+	s=default; t=1568788009;
+	bh=MTzfv2u6I4W1kbjdjtXIlDgI+1BXx2NM1ZGxnvUDH04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHgNXMK334azEcRmLu1QxsRqmiOP3DHnsNOkhf7v/I5pIjMTdZJY8461YMOswCnfV
-	 bgsrsM1ykZGAVHP88rs+yKBggddnzpxCaZrUBM3ostU+n88gTvapuG8DNJM1qkA8jq
-	 dfAvkA/bENPyrIzVGojCk4GFyZ5AWqSAlUMpjZL4=
+	b=FoNGOI6GucQKmiyjsENogeRC8ssgqq3oe97rzV4kGQims8btI7ax30QV07sfHqVl9
+	 /9CsPYy906cF88JKEotzrM7GiRwqPgDYqLdJYVy5zvhV4qQdhDz3Yn5qX3qQlM3Lvu
+	 Q7Ue/1hYkErLhpbqviKXhu6LUo/aUQ5O3zdiOgIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730385AbfIRG0o (ORCPT
+        id S1729090AbfIRG0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48202 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730366AbfIRG0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:42 -0400
+        id S1730381AbfIRG0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86270218AF;
-        Wed, 18 Sep 2019 06:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4254A21927;
+        Wed, 18 Sep 2019 06:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788001;
-        bh=adh0tBGTETTtxIVgnM5bATCU0nC6iXhziEM0s53ubv0=;
+        s=default; t=1568788003;
+        bh=MTzfv2u6I4W1kbjdjtXIlDgI+1BXx2NM1ZGxnvUDH04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h4tr29AjAyVCr3MdjVE4P+3ws0rgWR3VH7JXSF7VtGnAmz4vSIoxsybSaIdQbtON1
-         extVnt2TUoA9lMNJSeBcPjXKlqRTds5Eu1E1BRd6JOPoa1+qmpiyIp5U3XC8wJGDCz
-         lfbTheWdEBeAjys3UCp6n6ClefBrPMkNlTI+fQ7c=
+        b=wxxNBA+LW5egQ2CKvjWVemu8y6NJlNJ9Rp5wx1mYopvrRe0Sv17VwJqBoChIhZnHc
+         8/gFsPSEeJTeYGM8Hhe/4Lxl7k6m4riNklWGHMhCwwhOLJyg4+zkTY+9fSiKTmGzY2
+         JFD4KltUzSjNfZ1swxE1Cor4BnPhtVpZTVxIwVzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.2 63/85] crypto: talitos - check AES key size
-Date:   Wed, 18 Sep 2019 08:19:21 +0200
-Message-Id: <20190918061237.359983950@linuxfoundation.org>
+Subject: [PATCH 5.2 64/85] crypto: talitos - fix CTR alg blocksize
+Date:   Wed, 18 Sep 2019 08:19:22 +0200
+Message-Id: <20190918061237.424028985@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,65 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 1ba34e71e9e56ac29a52e0d42b6290f3dc5bfd90 upstream.
+commit b9a05b6041cb9810a291315569b2af0d63c3680a upstream.
 
-Although the HW accepts any size and silently truncates
-it to the correct length, the extra tests expects EINVAL
-to be returned when the key size is not valid.
+CTR has a blocksize of 1.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
+Fixes: 5e75ae1b3cef ("crypto: talitos - add new crypto modes")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/crypto/talitos.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/drivers/crypto/talitos.c
 +++ b/drivers/crypto/talitos.c
-@@ -1591,6 +1591,18 @@ static int ablkcipher_des3_setkey(struct
- 	return ablkcipher_setkey(cipher, key, keylen);
- }
- 
-+static int ablkcipher_aes_setkey(struct crypto_ablkcipher *cipher,
-+				  const u8 *key, unsigned int keylen)
-+{
-+	if (keylen == AES_KEYSIZE_128 || keylen == AES_KEYSIZE_192 ||
-+	    keylen == AES_KEYSIZE_256)
-+		return ablkcipher_setkey(cipher, key, keylen);
-+
-+	crypto_ablkcipher_set_flags(cipher, CRYPTO_TFM_RES_BAD_KEY_LEN);
-+
-+	return -EINVAL;
-+}
-+
- static void common_nonsnoop_unmap(struct device *dev,
- 				  struct talitos_edesc *edesc,
- 				  struct ablkcipher_request *areq)
-@@ -2752,6 +2764,7 @@ static struct talitos_alg_template drive
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
- 				.ivsize = AES_BLOCK_SIZE,
-+				.setkey = ablkcipher_aes_setkey,
- 			}
- 		},
- 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-@@ -2768,6 +2781,7 @@ static struct talitos_alg_template drive
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
- 				.ivsize = AES_BLOCK_SIZE,
-+				.setkey = ablkcipher_aes_setkey,
- 			}
- 		},
- 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-@@ -2785,6 +2799,7 @@ static struct talitos_alg_template drive
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
- 				.ivsize = AES_BLOCK_SIZE,
-+				.setkey = ablkcipher_aes_setkey,
- 			}
- 		},
- 		.desc_hdr_template = DESC_HDR_TYPE_AESU_CTR_NONSNOOP |
+@@ -2792,7 +2792,7 @@ static struct talitos_alg_template drive
+ 		.alg.crypto = {
+ 			.cra_name = "ctr(aes)",
+ 			.cra_driver_name = "ctr-aes-talitos",
+-			.cra_blocksize = AES_BLOCK_SIZE,
++			.cra_blocksize = 1,
+ 			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
+ 				     CRYPTO_ALG_ASYNC,
+ 			.cra_ablkcipher = {
 
 
