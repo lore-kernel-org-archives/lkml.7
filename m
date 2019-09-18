@@ -2,158 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B88C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA3AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F405F218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568816501;
-	bh=wXgtDQ2Bk9vjBzgeHu+dOpDd3lEyXdo3Em4I00Qq0go=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AiOh5ItQswasAZAL3SK1N2V+JzkWbk5GyuCk0Qn28WjGpMm+IN445aGmn0GaLaoX8
-	 WR1V6rW1YgQ6HQVGHoRNxUiN5UEsp37PpTcCHmH/YTBBfQTVANgCb6TK5T7bCFjf3m
-	 kASJJ7zQX4W6CQI27LCx0pvV7oJreH35Mr4m4dyo=
+	by mail.kernel.org (Postfix) with ESMTP id C34B62067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHvaxBqP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731242AbfIROVk (ORCPT
+        id S1730964AbfIROWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:21:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727056AbfIROVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:21:40 -0400
-Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC762067B;
-        Wed, 18 Sep 2019 14:21:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568816498;
-        bh=wXgtDQ2Bk9vjBzgeHu+dOpDd3lEyXdo3Em4I00Qq0go=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=GD8v6IR4n4ZFgYbHm4vs9fdVL0NBUorWvqvJHWa6MP0LPCqjmy/PtK6aRVG5s2IqP
-         GYXzm9YSypo9MsFMZfRbqMm38/8YmfgHGKiuzKo5iqlZV6wgW0sZ0dsm8lGJBWEamP
-         rjAfeX4yXPpsQjqB4lUUpEJvtiPfe9EBUsi7diQg=
-Received: by mail-yw1-f51.google.com with SMTP id j128so11153ywf.0;
-        Wed, 18 Sep 2019 07:21:38 -0700 (PDT)
-X-Gm-Message-State: APjAAAVEMhh0WkQjAtmwE3Eb/AI8yqm8p/GbO3inhJlmddEZM9fL0gwf
-        +Kc3ou6/fdeCj5xTEZXhZL0ZVAMd9gVrIOPPIA==
-X-Google-Smtp-Source: APXvYqzliDG2Xy58F978kJGtp6vQ1A2AyEZNr8e3uVSmktEs+lZEJgI2FWH3qKtnlcumLLeZFhha8AUbhOFoHfMVSDo=
-X-Received: by 2002:a81:9182:: with SMTP id i124mr3466623ywg.279.1568816497852;
- Wed, 18 Sep 2019 07:21:37 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190910114559.22810-1-peter.ujfalusi@ti.com> <20190910114559.22810-2-peter.ujfalusi@ti.com>
- <20190918132835.GA4527@bogus> <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
-In-Reply-To: <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 18 Sep 2019 09:21:26 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
-Message-ID: <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change
- dma-channel-mask to uint32-array
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 18 Sep 2019 10:22:38 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36588 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfIROWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:22:37 -0400
+Received: by mail-wm1-f67.google.com with SMTP id t3so285986wmj.1;
+        Wed, 18 Sep 2019 07:22:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=6nKowSJkmj6y8SDyX3nXm1VDFEY4+KARvCaZgONZgTY=;
+        b=sHvaxBqPoh9HdPutDdOHYNG2SiQafQqOoadtmSUHyz4TErj7HkOAVFdD3fLxc1PVw1
+         lpqaAH51OsWTKx8X84zmbkSqZgFQhhFGjJqKE1ov9OuP6FIXbGEBwQQhqy8+1Ce5pAf3
+         VUaUWu3i8/CW+QmemKXDsJM/WfwkC/bBbjxlz9kKSZgeMwwINkDivaEp/HfTCGuvTU14
+         4jB4VoH5Wqsfbf+Xqg3kURDJ4nT6Xjkv1KHFx0VF1wgXnjlXpclZbq4U6UVvmz/qKd3Z
+         JbGq8HyiiCxAtqGObSJ2bAXe6jge6XbJrNNTO5AmIu41RCgeXFXFN8BYojJddSg1kv8v
+         poUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=6nKowSJkmj6y8SDyX3nXm1VDFEY4+KARvCaZgONZgTY=;
+        b=SDCwECkup0cPakP6adTzco2rnMk4zoPguBFBEpQVKJT9ztkYhIi7zq/14TQwZNVP6M
+         DcNWxNZpBQDdSAiBgTZIwDNTh9HBs+wehvpB0dUwKBr+Xw9z99l371SqBasnulrDvprq
+         ACjZBwessEHjnGcqwajR6OtH8jnigiwqsTbYRD985zBQRRjspakqWER4Oi7hUXgG/tQf
+         2GFJKx5AoaAWJGUHHYIynHDZ83SkBMejBuSfbfTMpXtHDUpCClrCY1tkVwaLrMJ1MjVZ
+         WFcoVysgCTJZuHfKeJl9IjLdaCtSPWdSRdrW9IqSUAdEUlL2b8b/MhkZDt7DpES4rZs/
+         4BLg==
+X-Gm-Message-State: APjAAAVSXOrFSk7xxAXOuBmPKkf9qzn86mrA6T3f9JsV9ttonVwSVJv8
+        MCZXY15juoYa6AjolEGPklpHtV9A
+X-Google-Smtp-Source: APXvYqzCiXXfMRBxI/rS2G2gjm1hhgWe8jjxTZ2GV+783JJXtxbjxzg3RbvVoB2WwI7yT9MKS+K5RA==
+X-Received: by 2002:a1c:1d85:: with SMTP id d127mr3358148wmd.14.1568816555351;
+        Wed, 18 Sep 2019 07:22:35 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id q19sm10849959wra.89.2019.09.18.07.22.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:22:34 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] Urgent KVM fix
+Date:   Wed, 18 Sep 2019 16:22:33 +0200
+Message-Id: <1568816553-26210-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 9:04 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
-e:
->
->
->
-> On 18/09/2019 16.28, Rob Herring wrote:
-> > On Tue, Sep 10, 2019 at 02:45:57PM +0300, Peter Ujfalusi wrote:
-> >> Make the dma-channel-mask to be usable for controllers with more than =
-32
-> >> channels.
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/dma/dma-common.yaml | 10 +++++++++-
-> >>  1 file changed, 9 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/D=
-ocumentation/devicetree/bindings/dma/dma-common.yaml
-> >> index ed0a49a6f020..41460946be64 100644
-> >> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
-> >> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
-> >> @@ -25,11 +25,19 @@ properties:
-> >>        Used to provide DMA controller specific information.
-> >>
-> >>    dma-channel-mask:
-> >> -    $ref: /schemas/types.yaml#definitions/uint32
-> >>      description:
-> >>        Bitmask of available DMA channels in ascending order that are
-> >>        not reserved by firmware and are available to the
-> >>        kernel. i.e. first channel corresponds to LSB.
-> >> +    allOf:
-> >> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >> +        items:
-> >> +          minItems =3D 1
-> >
-> > '=3D'? Just making up the syntax?
->
-> Opps, sorry.
->
-> >
-> >> +          maxItems =3D 255 # Should be enough
-> >> +          - description: Mask of channels 0-31
-> >> +          - description: Mask of channels 32-63
-> >
-> > You are mixing a schema and list here...
->
-> Should I extend the description with something like this:
-> "The first item in the array is for channels 0-31, the second is for
-> channels 32-63, etc."
->
-> To make sure that it is used in a correct and consistent manner.
+Linus,
 
-Sure.
+this pull request is independent of the merge window.  Please pull it as it
+fixes a longstanding bug that was recently found by both Google humans
+and bots (syzkaller).
 
->
-> >> +          ...
-> >
-> > That's end of doc marker in YAML...
->
-> I believe I need some reading to do for YAML..
->
-> >
-> >> +          - description: Mask of chnanels X-(X+31)
-> >
-> > Obviously, this was not validated with 'make dt_binding_check'.
-> make dt_bindings_check
-> make: *** No rule to make target 'dt_bindings_check'.  Stop.
+The following changes since commit a9c20bb0206ae9384bd470a6832dd8913730add9:
 
-Read Documentation/devicetree/writing-schema.md (or .rst in next).
+  Merge tag 'kvm-s390-master-5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into kvm-master (2019-09-14 09:25:30 +0200)
 
-Either your config doesn't have DTC enabled or you don't have
-dt-schema installed.
+are available in the git repository at:
 
->
-> > What you  want is:
-> >
-> >     allOf:
-> >       - $ref: /schemas/types.yaml#/definitions/uint32-array
-> >       - minItems: 1
-> >         maxItems: 255 # Should be enough
->
-> OK and thanks for the comments.
->
-> - P=C3=A9ter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus-urgent
+
+for you to fetch changes up to b60fe990c6b07ef6d4df67bc0530c7c90a62623a:
+
+  KVM: coalesced_mmio: add bounds checking (2019-09-18 15:56:55 +0200)
+
+----------------------------------------------------------------
+Fix missing bounds-checking in coalesced_mmio (CVE-2019-14821).
+
+----------------------------------------------------------------
+Matt Delco (1):
+      KVM: coalesced_mmio: add bounds checking
+
+ virt/kvm/coalesced_mmio.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
