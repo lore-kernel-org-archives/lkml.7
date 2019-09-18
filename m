@@ -2,110 +2,106 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF18AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C904C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C14C821907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568795610;
-	bh=CLc3y6pr//+2xmg7YLTQLHeHBn+e19hZRGVpbW8meNU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1MZBFUh0GKpFFHEUlPQQja42IDqlBUXXVr17cR3QaXzbWR2itWbWx4gKXXqMlldIf
-	 8qpdpomdHiPbAm09zjz7j4ye3sgdXXZ7lvQooK6lki//BPJBYe9hk9KUZQoSi6PlAH
-	 NeXPTs0d38Xwl1/Pn4CyfMdUbLDZD9y9+Dl+xWgI=
+	by mail.kernel.org (Postfix) with ESMTP id 3026321907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbfIRIda (ORCPT
+        id S1730498AbfIRIeT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:33:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730405AbfIRId2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:33:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4629521929;
-        Wed, 18 Sep 2019 08:33:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568795607;
-        bh=CLc3y6pr//+2xmg7YLTQLHeHBn+e19hZRGVpbW8meNU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=znIfBdHgsym3F5/xNH+YfGG7tXY66oPckgoDte+XpQs2ah4hkok6s4N3bvzfjHGoV
-         F53Kp/GN3dTsljFP7m4tLJ2XeZB1M7yc0HFScEqB9gd69OTNrqzqL3zGsodQMu6moL
-         QB0ShhFstqLOaCLErX2wtgxDiiJ4xU1ryCgXYRl4=
-Date:   Wed, 18 Sep 2019 10:32:53 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     chien.yen@oracle.com, davem@davemloft.net, stable@vger.kernel.org,
-        rds-devel@oss.oracle.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH stable 4.4 net] net: rds: Fix NULL ptr use in
- rds_tcp_kill_sock
-Message-ID: <20190918083253.GA1862222@kroah.com>
-References: <20190918083733.50266-1-maowenan@huawei.com>
+        Wed, 18 Sep 2019 04:34:19 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:58664 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726336AbfIRIeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:34:19 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id B5078A00FAE7FCD80D5B;
+        Wed, 18 Sep 2019 16:34:16 +0800 (CST)
+Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 18 Sep 2019 16:34:15 +0800
+Received: from architecture4 (10.140.130.215) by
+ dggeme762-chm.china.huawei.com (10.3.19.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Wed, 18 Sep 2019 16:34:15 +0800
+Date:   Wed, 18 Sep 2019 16:33:08 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, <linux-erofs@lists.ozlabs.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH -next] erofs: fix return value check in
+ erofs_read_superblock()
+Message-ID: <20190918083308.GA30134@architecture4>
+References: <20190918083033.47780-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190918083733.50266-1-maowenan@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190918083033.47780-1-weiyongjun1@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [10.140.130.215]
+X-ClientProxiedBy: dggeme703-chm.china.huawei.com (10.1.199.99) To
+ dggeme762-chm.china.huawei.com (10.3.19.108)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 04:37:33PM +0800, Mao Wenan wrote:
-> After the commit c4e97b06cfdc ("net: rds: force to destroy
-> connection if t_sock is NULL in rds_tcp_kill_sock()."),
-> it introduced null-ptr-deref in rds_tcp_kill_sock as below:
+Hi Yongjun,
+
+On Wed, Sep 18, 2019 at 08:30:33AM +0000, Wei Yongjun wrote:
+> In case of error, the function read_mapping_page() returns
+> ERR_PTR() not NULL. The NULL test in the return value check
+> should be replaced with IS_ERR().
 > 
-> BUG: KASAN: null-ptr-deref on address 0000000000000020
-> Read of size 8 by task kworker/u16:10/910
-> CPU: 3 PID: 910 Comm: kworker/u16:10 Not tainted 4.4.178+ #3
-> Hardware name: linux,dummy-virt (DT)
-> Workqueue: netns cleanup_net
-> Call trace:
-> [<ffffff90080abb50>] dump_backtrace+0x0/0x618
-> [<ffffff90080ac1a0>] show_stack+0x38/0x60
-> [<ffffff9008c42b78>] dump_stack+0x1a8/0x230
-> [<ffffff90085d469c>] kasan_report_error+0xc8c/0xfc0
-> [<ffffff90085d54a4>] kasan_report+0x94/0xd8
-> [<ffffff90085d1b28>] __asan_load8+0x88/0x150
-> [<ffffff9009c9cc2c>] rds_tcp_dev_event+0x734/0xb48
-> [<ffffff90081eacb0>] raw_notifier_call_chain+0x150/0x1e8
-> [<ffffff900973fec0>] call_netdevice_notifiers_info+0x90/0x110
-> [<ffffff9009764874>] netdev_run_todo+0x2f4/0xb08
-> [<ffffff9009796d34>] rtnl_unlock+0x2c/0x48
-> [<ffffff9009756484>] default_device_exit_batch+0x444/0x528
-> [<ffffff9009720498>] ops_exit_list+0x1c0/0x240
-> [<ffffff9009724a80>] cleanup_net+0x738/0xbf8
-> [<ffffff90081ca6cc>] process_one_work+0x96c/0x13e0
-> [<ffffff90081cf370>] worker_thread+0x7e0/0x1910
-> [<ffffff90081e7174>] kthread+0x304/0x390
-> [<ffffff9008094280>] ret_from_fork+0x10/0x50
-> 
-> If the first loop add the tc->t_sock = NULL to the tmp_list,
-> 1). list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node)
-> 
-> then the second loop is to find connections to destroy, tc->t_sock
-> might equal NULL, and tc->t_sock->sk happens null-ptr-deref.
-> 2). list_for_each_entry_safe(tc, _tc, &tmp_list, t_tcp_node)
-> 
-> Fixes: c4e97b06cfdc ("net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().")
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> Fixes: fe7c2423570d ("erofs: use read_mapping_page instead of sb_bread")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
+
+
+Right... That is my mistake on recent killing bh
+transformation...
+
+I have no idea this patch could be merged for -rc1
+since I don't know Greg could still accept patches
+or freezed...
+
+Since it's an error handling path and trivial, if
+it's some late, could I submit this later after
+erofs is merged into mainline (if it's ok) for -rc1?
+(or maybe -rc2?)
+
+Thanks,
+Gao Xiang
+
 > ---
->  net/rds/tcp.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-
-Why is this not needed upstream as well?
-
-4.9.y?  4.14.y?  anything else?
-
-thanks,
-
-greg k-h
+>  fs/erofs/super.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/erofs/super.c b/fs/erofs/super.c
+> index caf9a95173b0..0e369494f2f2 100644
+> --- a/fs/erofs/super.c
+> +++ b/fs/erofs/super.c
+> @@ -105,9 +105,9 @@ static int erofs_read_superblock(struct super_block *sb)
+>  	int ret;
+>  
+>  	page = read_mapping_page(sb->s_bdev->bd_inode->i_mapping, 0, NULL);
+> -	if (!page) {
+> +	if (IS_ERR(page)) {
+>  		erofs_err(sb, "cannot read erofs superblock");
+> -		return -EIO;
+> +		return PTR_ERR(page);
+>  	}
+>  
+>  	sbi = EROFS_SB(sb);
+> 
+> 
+> 
