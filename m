@@ -2,117 +2,101 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1833DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BE4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE27D21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0A2218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:28:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568816889;
+	bh=5q3vXpVfMLjl2YjmXJxZQQGV0EcKWrcgUz73C6x30T8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wcnVew87yGjV8cJv9cbLdyIBCmUNlt9sx+WBq9fkFXLX2bY9s7LxB4t9UUXS9Mro5
+	 znzKSuW85MaSH/MZzYNYVhXK1PtMRfk2U+5VKBJMYwqHNbmupeWC5/1CEfviHBwaeT
+	 DMX9c1pkCf4+Nb3OB2U+arTYRPC968xqgFIm5g7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbfIRO1P (ORCPT
+        id S1730569AbfIRO2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:27:15 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45107 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfIRO1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:27:14 -0400
-Received: by mail-oi1-f194.google.com with SMTP id o205so6088924oib.12;
-        Wed, 18 Sep 2019 07:27:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BHV/5Y+4+cCMm6daXLOGdlbWIRWLheVwhv0/ivXbcAE=;
-        b=nq4h3v3EIBQhp3sB2ecGD04KWW1+dbvayQTY5UyWMQ+3juIbkpnBrygYDCalljWovR
-         BvjDKzzATCSkJxy2GEqac0D8zGjlWecYPftUoq1WULP6PW4GhnQ5sE5etzsbI9IPKvR4
-         o3BYxgC+y4qec1jlnFJOB3lpVv8ugn28PWdU3dBVkKk4aXbdAZm5E+/VkGENzNFiz3d6
-         tavhTNupDYcH1G1Cf5bOWge+usJFTC9JuWx6znSigkrXTyr5pN0aNJ5Z1dtpiHiuzL4b
-         M7qBNYwv+nOXFUyFNQ3Vy5dY2lgCIov5rsm4SMrINGfamBstelOuQ1bDmFFouNvKI7v7
-         Ckcg==
-X-Gm-Message-State: APjAAAVCNIARJtLNjEMbxFT9W2r/SwIpro32+yuvyek2ftlB8BEfRzdD
-        ndhFsWCuQ9yzp7BY9RIdkHmLxj4ikmeAYV89r/M=
-X-Google-Smtp-Source: APXvYqzTTZhnmal8UUl1l4fGKNj0vwH/8ztgh2Jwww8ltwigjgo6QuJG49rHLYVXKdkoJ0D+Bgnwc/c/39GCFzhd/4s=
-X-Received: by 2002:aca:f305:: with SMTP id r5mr2285556oih.131.1568816833580;
- Wed, 18 Sep 2019 07:27:13 -0700 (PDT)
+        Wed, 18 Sep 2019 10:28:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41310 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfIRO2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:28:07 -0400
+Received: from mail-yw1-f52.google.com (mail-yw1-f52.google.com [209.85.161.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B54C021924;
+        Wed, 18 Sep 2019 14:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568816886;
+        bh=5q3vXpVfMLjl2YjmXJxZQQGV0EcKWrcgUz73C6x30T8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Ba4o1lo7H5M0Bkey9QjJgKlytYEold2+Tr92Oqq0XjWXTRuMaQk4ECpE4Bcym2OoU
+         VgOzQtw36JtjoKjet0E68dqGZP8Nd3HV/mWlk4cC+CsLkHv+QLhsQue6x3PVcQ+B85
+         f0mQW+XOismF1Y0ZPox7DdF9Sw0qS7H7gFEP7r7M=
+Received: by mail-yw1-f52.google.com with SMTP id x64so10239ywg.3;
+        Wed, 18 Sep 2019 07:28:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAVBmvHxHJu/K8/0KIsv4ylPxJncORXqSL0I7nJriNi4F03ySc4t
+        wsBp/hgI1MW+a/YS6fDgCOJiiDt/7G7YOI+RrQ==
+X-Google-Smtp-Source: APXvYqw5G3bt/di0lrSkj1nCOaZlaS4Q/2r0yUPllZ9ZY6HdMcYoemkSqKqz/JjUcEKUGYaRq4XiSyhtyxGmFrcKgVY=
+X-Received: by 2002:a0d:ddc9:: with SMTP id g192mr3210591ywe.281.1568816885977;
+ Wed, 18 Sep 2019 07:28:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <278d9706-162d-28a4-4640-31b697924473@physik.fu-berlin.de>
- <c5acb1c0-7a5b-ce42-8b2f-5fd30cbdab6e@physik.fu-berlin.de>
- <6304acd1-7b71-b1fb-f8d8-298cb3025e69@physik.fu-berlin.de>
- <6725b972-05d4-fed4-7094-16401e86b452@gmail.com> <578d8a91-aaee-087f-1742-65e64001b8fa@physik.fu-berlin.de>
- <CAMuHMdUU6ejc168-ksqXrkE+PjCXFJumaRaWjRtj12NjG_TFSg@mail.gmail.com>
- <CAMuHMdWfTrx8VuJoifEEBc1n+3MiiuwKNWcRnUw+TgWJCtOWag@mail.gmail.com>
- <fea74ca3-4b24-780f-af74-a786646b1668@physik.fu-berlin.de> <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
-In-Reply-To: <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 18 Sep 2019 16:27:02 +0200
-Message-ID: <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com>
-Subject: Can KEY_DH_OPERATIONS become tristate? (was: Re: Kernel 5.3.0 stuck
- during boot on Amiga)
-To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Cc:     Michael Schmitz <schmitzmic@gmail.com>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Mat Martineau <mathew.j.martineau@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com>
+In-Reply-To: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Sep 2019 09:27:53 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
+Message-ID: <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
+Subject: Re: [PATCH] regulator: dt-bindings: Fix building error for dt_binding_check
+To:     Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CC crypto keys people
-
-TL;DR: CONFIG_CRYPTO_DH=y is reported to cause boot delays of several
-minutes on old and slow machines. Can KEY_DH_OPERATIONS be made tristate?
-
-On Wed, Sep 18, 2019 at 4:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Wed, Sep 18, 2019 at 3:57 PM John Paul Adrian Glaubitz
-> <glaubitz@physik.fu-berlin.de> wrote:
-> > On 9/18/19 3:48 PM, Geert Uytterhoeven wrote:
-> > >> Diffie-Hellman doing some heavy crypto lifting on a poor m68k CPU?
-> > >>
-> > >> Disable CONFIG_CRYPTO_DH?
-> > >
-> > > See also https://lists.debian.org/debian-68k/2019/04/msg00033.html
-> > >
-> > > CRYPTO_DH is selected by CRYPTO_DEV_QAT and KEY_DH_OPERATIONS.
-> > > The latter is bool, forcing CRYPTO_DH builtin.
-> > >
-> > > If KEY_DH_OPERATIONS needs to be enabled in a Debian kernel, perhaps
-> > > it can be made tristate?
-> > It was enabled in [1] as it's required for certain WiFi drivers [2].
-> >
-> > So, should it be fixed as you suggest or should we selectively disable it on m68k?
+On Wed, Sep 18, 2019 at 9:02 AM Pragnesh Patel
+<pragnesh.patel@sifive.com> wrote:
 >
-> Disabling it on m68k could be a first step (any WiFi drivers supported
-> on m68k yet?).
+
+The subject could be more specific rather than being one that applies
+to any dt_binding_check breakage in regulators.
+
+> Compatible property is not of type 'string' so replace enum
+> with items.
 >
-> Making it tristate is non-trivial, as there are some interdependencies:
+> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+> ---
+>  Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
->     security/keys/Makefile:compat-obj-$(CONFIG_KEY_DH_OPERATIONS) += compat_dh.o
->     security/keys/Makefile:obj-$(CONFIG_KEY_DH_OPERATIONS) += dh.o
->     security/keys/internal.h:#ifdef CONFIG_KEY_DH_OPERATIONS
->     security/keys/keyctl.c:
-> (IS_ENABLED(CONFIG_KEY_DH_OPERATIONS)    ? KEYCTL_CAPS0_DIFFIE_HELLMAN
-> : 0) |
+> diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> index a78150c..8d4a7b2 100644
+> --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+> @@ -29,7 +29,7 @@ if:
 >
-> > > [1] https://salsa.debian.org/kernel-team/linux/commit/88f44cb9eb34098138c79bdab5fae434492866d1
-> > > [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911998
+>  properties:
+>    compatible:
+> -    enum:
+> +    items:
+>        - const: regulator-fixed
+>        - const: regulator-fixed-clock
 
-Gr{oetje,eeting}s,
+This means you expect: compatible = "regulator-fixed", "regulator-fixed-clock";
 
-                        Geert
+Did you actually run 'dt_binding_check' because it should fail on the example?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I gave you exact change to make. Just remove 'const: ' on each entry.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Rob
