@@ -2,160 +2,116 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC37C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:30:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42370C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0F420640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:30:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZNbX8Zwg"
+	by mail.kernel.org (Postfix) with ESMTP id 18AE221906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568795599;
+	bh=bhRFbJTVCCXdGlg9G8DHJvi0UBcENXr89PrBpqx+QZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=z1OPVttpZxK9CLbUBUpa7TVcO0JvgmkfhuOO4F1S4JTkQucIVSRg+SbkIHwWSMkSp
+	 ugeWEtGFzMqSCQ40jepjhdtQH/HqblrFKgu+92785sQAgw2kTCSfay46SMMByWhrPL
+	 GyHGUb1C00jPQzcdRU73nB7POLalbS/G3gRknse0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbfIRIaS (ORCPT
+        id S1730403AbfIRIdS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:30:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:23540 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725866AbfIRIaS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:30:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568795417;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=LJ9x17++JlMAzSbihcUye9RvbBXaphj4wbKaTaSMCiA=;
-        b=ZNbX8ZwgNWRaZZevy0ByiOpwyhpEj4j6tb/YcktGj3HBSry5Dt5BoWZiinZfsreow3ORvA
-        YTBMchys13EJE5b8yfiKzTc7dblgyEwhDLQVBU5IhxXr8/BPagYymLLVn1pJ1Wnn2y2shW
-        GaD7rCqUp0MFSujXnqFqWd5gzG1pPrs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-FWMHzLstPYOy0SENdJFufg-1; Wed, 18 Sep 2019 04:29:10 -0400
-Received: by mail-wr1-f70.google.com with SMTP id h6so2087804wrh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 01:29:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IrWbIprHqWMlOEd3b8M/gmFgeShWjRa194btm7DSbPI=;
-        b=sp2i85YiI9zXXRfwEeXOObDCOzVBbTMIWvWeFhFID0Wi/NEulJrLBKI96Gl2a5DsJL
-         I52lmzdQ59bxsscIV/uD2tsso0MuRr5CIsVqOd717rwgGlAxqyqMwUrsMhbxWNQ9fc0G
-         4hV6Ermhw2+lyuRRihX2Y2e8vCHFxvq10a4KjzmsIL/Dhk8WK8FQSiLBAB9ZYWVFo8rn
-         WTLCDhVv/NssNCfv9VAx92PvTIKbaVC0mImFyWkKp5aX0BtFmwwqm3Xhb0Zr4r0ChR4B
-         BZAVcnKlNroipM0mONNmT0uy7ZcHHHA5hMA4oAWQxrYEBLBhDEXwLDRlOZEqYFUvrTGv
-         EotQ==
-X-Gm-Message-State: APjAAAX0v6/KBGJR//eZJU2NRCZC2V4OdzI1i+4CwQceOw/MDG1cz99E
-        H1K5gVW9dnJ0Wdc1XyfS50T10SHMS2KPqmYYCQ9UscjMN6o0r4mObvwqnZm2H4ovImSBLHGSZTv
-        YvVKDiaC3tOmMSbUXgZMDlRVD
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr1854475wrv.315.1568795347875;
-        Wed, 18 Sep 2019 01:29:07 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyonIjdT3rqMK/eFGzZQnLolYQxc5RAG8w8enPADilIGLfzNNbF2gDa1S1gTXGi5dhHblr98w==
-X-Received: by 2002:a5d:5381:: with SMTP id d1mr1854455wrv.315.1568795347599;
-        Wed, 18 Sep 2019 01:29:07 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id u22sm8125812wru.72.2019.09.18.01.29.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 01:29:07 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 3/6] timekeeping: Expose API allowing retrival of
- current clocksource and counter value
-To:     Jianyong Wu <jianyong.wu@arm.com>, netdev@vger.kernel.org,
-        yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        richardcochran@gmail.com, Mark.Rutland@arm.com,
-        Will.Deacon@arm.com, suzuki.poulose@arm.com
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Steve.Capper@arm.com, Kaly.Xin@arm.com, justin.he@arm.com,
-        nd@arm.com, linux-arm-kernel@lists.infradead.org
-References: <20190918080716.64242-1-jianyong.wu@arm.com>
- <20190918080716.64242-4-jianyong.wu@arm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <aecdffc5-7d15-6183-f8ea-ed557631cf75@redhat.com>
-Date:   Wed, 18 Sep 2019 10:29:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 04:33:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbfIRIdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:33:18 -0400
+Received: from localhost (unknown [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0D4420856;
+        Wed, 18 Sep 2019 08:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568795597;
+        bh=bhRFbJTVCCXdGlg9G8DHJvi0UBcENXr89PrBpqx+QZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TRGsR9PVcN6p7jD2NzQGbYZXK/ftjna43SLxyxBP6P5ExhX11W2IjaLMnWCY4+fMS
+         fP214uw5fMbjx6ggIu/cJeeGTNFhcix30z0MmTamWGnk3C3j3JPpVo2k7NOwTdSY2c
+         Pd44Z2Ks2OwUP0Fe83DYX9AY5zZV4pFcVetfoXkE=
+Date:   Wed, 18 Sep 2019 08:22:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-leds@vger.kernel.org, ada@thorsis.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        christophe.jaillet@wanadoo.fr, dmurphy@ti.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, info@metux.net,
+        Joe Perches <joe@perches.com>, kw@linux.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        nishkadg.linux@gmail.com, nstoughton@logitech.com, oleg@kaa.org.ua,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tony Lindgren <tony@atomide.com>, wenwen@cs.uga.edu,
+        wsa+renesas@sang-engineering.com,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [GIT PULL] LED updates for 5.4-rc1
+Message-ID: <20190918062247.GA1855305@kroah.com>
+References: <20190916222133.9119-1-jacek.anaszewski@gmail.com>
+ <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190918080716.64242-4-jianyong.wu@arm.com>
-Content-Language: en-US
-X-MC-Unique: FWMHzLstPYOy0SENdJFufg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/19 10:07, Jianyong Wu wrote:
-> From Marc Zyngier <maz@kernel.org>
-> A number of PTP drivers (such as ptp-kvm) are assuming what the
-> current clock source is, which could lead to interesting effects on
-> systems where the clocksource can change depending on external events.
->=20
-> For this purpose, add a new API that retrives both the current
-> monotonic clock as well as its counter value.
->=20
-> From Jianyong Wu: export this API then modules can use it.
+On Tue, Sep 17, 2019 at 06:13:09PM -0700, Linus Torvalds wrote:
+> On Mon, Sep 16, 2019 at 3:21 PM Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
+> >
+> > There is one merge of tag with generic_lookup_helpers since
+> > LED class has been made using class_find_device_by_name() helper:
+> >
+> >     Merge tag 'generic_lookup_helpers' into for-next
+> >     platform: Add platform_find_device_by_driver() helper
+> >     drivers: Add generic helper to match any device
+> >     drivers: Introduce device lookup variants by ACPI_COMPANION device
+> >     drivers: Introduce device lookup variants by device type
+> >     drivers: Introduce device lookup variants by fwnode
+> >     drivers: Introduce device lookup variants by of_node
+> >     drivers: Introduce device lookup variants by name
+> 
+> So this is fine and I've pulled it, but I have to say that I
+> absolutely detest how this device.h header keeps just growing
+> endlessly:
+> 
+>   [torvalds@linux]$ wc include/linux/device.h
+>    1921  8252 66021 include/linux/device.h
+> 
+> that's almost 2k of header file, and it's included a _lot_:
+> 
+>   [torvalds@linux]$ git grep include.*linux/device.h | wc
+>    2518    5085  144875
+> 
+> and many of those includes are actually from other core header files,
+> so it's effectively included from even more trees.
+> 
+> Yes, yes, many of those 2k lines are comments. But still... Do we
+> really want to have that humongous 65kB, 2kloc header file, and keep
+> growing it forever?
+> 
+> Greg?
 
-See review of patch 4.  ktime_get_snapshot is even better for your
-needs, if I'm not mistaken.
+Yeah, it is getting big, I'll look into splitting it up.
 
-Paolo
+thanks,
 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  include/linux/timekeeping.h |  3 +++
->  kernel/time/timekeeping.c   | 13 +++++++++++++
->  2 files changed, 16 insertions(+)
->=20
-> diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-> index a8ab0f143ac4..a5389adaa8bc 100644
-> --- a/include/linux/timekeeping.h
-> +++ b/include/linux/timekeeping.h
-> @@ -247,6 +247,9 @@ extern int get_device_system_crosststamp(
->  =09=09=09struct system_time_snapshot *history,
->  =09=09=09struct system_device_crosststamp *xtstamp);
-> =20
-> +/* Obtain current monotonic clock and its counter value  */
-> +extern void get_current_counterval(struct system_counterval_t *sc);
-> +
->  /*
->   * Simultaneously snapshot realtime and monotonic raw clocks
->   */
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index 44b726bab4bd..07a0969625b1 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -1098,6 +1098,19 @@ static bool cycle_between(u64 before, u64 test, u6=
-4 after)
->  =09return false;
->  }
-> =20
-> +/**
-> + * get_current_counterval - Snapshot the current clocksource and counter=
- value
-> + * @sc:=09Pointer to a struct containing the current clocksource and its=
- value
-> + */
-> +void get_current_counterval(struct system_counterval_t *sc)
-> +{
-> +=09struct timekeeper *tk =3D &tk_core.timekeeper;
-> +
-> +=09sc->cs =3D READ_ONCE(tk->tkr_mono.clock);
-> +=09sc->cycles =3D sc->cs->read(sc->cs);
-> +}
-> +EXPORT_SYMBOL_GPL(get_current_counterval);
-> +
->  /**
->   * get_device_system_crosststamp - Synchronously capture system/device t=
-imestamp
->   * @get_time_fn:=09Callback to get simultaneous device time and
->=20
+greg k-h
 
+
+> 
+>                   Linus
