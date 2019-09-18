@@ -2,114 +2,152 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E98C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04469C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B586C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:40:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568770854;
-	bh=B+mcMFY1lW5YzcNDF1nV15MQ42KQMb+AHEFiuEvs7F4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RqjyMjHFXH7dG60UkUuiDWHvRus4sPUINztMeCVT9logLqtyZWIqKfoz6fRGk0sdE
-	 UzM+EYv/k+f/7vg8YcpTJeW4vxO/VOgvIvmUc4hjCedor2cmlWvWZJKse3lA88Keap
-	 XVy+uKWkGHLVGjokgUOZgBfsS6gPnCtMnQxvIk74=
+	by mail.kernel.org (Postfix) with ESMTP id D618C2067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbfIRBky (ORCPT
+        id S1726229AbfIRBoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:40:54 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43426 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726832AbfIRBkx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:40:53 -0400
-Received: by mail-lj1-f193.google.com with SMTP id d5so5460904lja.10
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 18:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=fxZxgQXB1oaMwYliKzbFMQ3wWmFlE3pkMrUM3WHegTI=;
-        b=gll0QwYPhJXC5RJZMPEoVL65l3AwY9HheCrApLkuz9bM8z5Y6nQmWdcjiFnXXZD66l
-         wbKE8dQqumz0IA0gcfqzd7tQEKcaTkP2a0TZtm2uaU1XJ4P4e2jMjulleFNtwgmEhhT2
-         wZmpXrgJ61REEDlo/x/getB7PUdm6g7R/DNGE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=fxZxgQXB1oaMwYliKzbFMQ3wWmFlE3pkMrUM3WHegTI=;
-        b=JulcHireEYqV2+REXeiGlWrExQp2ok2UOdyJjAO1Q1NPycXCralbgfTqYEeBzzv8W+
-         W+sbbLUZVhpLUtz3KslvB7zbeGU+qdmIa+jEH8YURXkLaNtLKJYBXP5CbSluDJTz0FTM
-         wTrLo8z9z+0YsGsc5qKd6PcBBhIQKHT0gG/5nkEMiZ+86ux/pXRLxvgsezMkzRXdCizj
-         efHXwTuQKbtq8NHy6rIvY42EjcJObzLLRWwKGqelNiu7XtUSiA/jzcnsNWUNL9SK1cQf
-         1tbtEEQ2jNJ6ixkpAh2Eh6HBSLGpsQnJg7GzO+NRE2Ct+G7YBhHJOab4P9jeol+lKQVC
-         gayQ==
-X-Gm-Message-State: APjAAAXfwfyDoWx1sf53KQxqW8ig0wC/CSs/VqcsZS9ilQDeIUGLveCH
-        GqCiAicVZEQgQahiWcyCHzEkqo4bPkA=
-X-Google-Smtp-Source: APXvYqxEw4aYFJ5sSfHfLaeqbA9zXsVXYRs9uCqVOEdd1qNMGqzRTdaJ01XqhmqCKzUVIlwS0u9B8w==
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr643887ljh.106.1568770851031;
-        Tue, 17 Sep 2019 18:40:51 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id 207sm847348lfn.0.2019.09.17.18.40.49
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Sep 2019 18:40:49 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id m13so5426036ljj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 18:40:49 -0700 (PDT)
-X-Received: by 2002:a2e:2c02:: with SMTP id s2mr678446ljs.156.1568770848787;
- Tue, 17 Sep 2019 18:40:48 -0700 (PDT)
+        Tue, 17 Sep 2019 21:44:16 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:51846 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725943AbfIRBoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 21:44:15 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id EE4D627F15D75F8A9203;
+        Wed, 18 Sep 2019 09:44:11 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep
+ 2019 09:44:08 +0800
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
+ again
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20190909012532.20454-1-jaegeuk@kernel.org>
+ <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
+ <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
+ <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
+ <20190909120443.GA31108@jaegeuk-macbookpro.roam.corp.google.com>
+ <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
+ <20190916153736.GA2493@jaegeuk-macbookpro.roam.corp.google.com>
+ <ab9561c9-db27-2967-e6fc-accd9bc58747@huawei.com>
+ <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <e823b534-f4de-7f59-0c26-ff2c463260d1@huawei.com>
+Date:   Wed, 18 Sep 2019 09:43:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20190916222133.9119-1-jacek.anaszewski@gmail.com>
- <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com> <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 17 Sep 2019 18:40:33 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjm422bg+ZPuKkjU6NffbAyysY2n8iLRFyiNKin4cvWgg@mail.gmail.com>
-Message-ID: <CAHk-=wjm422bg+ZPuKkjU6NffbAyysY2n8iLRFyiNKin4cvWgg@mail.gmail.com>
-Subject: Re: [GIT PULL] LED updates for 5.4-rc1
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-leds@vger.kernel.org, ada@thorsis.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        christophe.jaillet@wanadoo.fr, dmurphy@ti.com,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>, info@metux.net,
-        Joe Perches <joe@perches.com>, kw@linux.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        nishkadg.linux@gmail.com, nstoughton@logitech.com, oleg@kaa.org.ua,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Lindgren <tony@atomide.com>, wenwen@cs.uga.edu,
-        wsa+renesas@sang-engineering.com,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 6:14 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Famous last words. I now get a new warning:
->
-> drivers/i2c/i2c-core-acpi.c:347:12: warning:
-> =E2=80=98i2c_acpi_find_match_adapter=E2=80=99 defined but not used [-Wunu=
-sed-function]
+On 2019/9/18 4:55, Jaegeuk Kim wrote:
+> On 09/17, Chao Yu wrote:
+>> On 2019/9/16 23:37, Jaegeuk Kim wrote:
+>>> On 09/16, Chao Yu wrote:
+>>>> On 2019/9/9 20:04, Jaegeuk Kim wrote:
+>>>>> On 09/09, Chao Yu wrote:
+>>>>>> On 2019/9/9 16:06, Jaegeuk Kim wrote:
+>>>>>>> On 09/09, Chao Yu wrote:
+>>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
+>>>>>>>>> GC must avoid select the same victim again.
+>>>>>>>>
+>>>>>>>> Blocks in previous victim will occupy addition free segment, I doubt after this
+>>>>>>>> change, FGGC may encounter out-of-free space issue more frequently.
+>>>>>>>
+>>>>>>> Hmm, actually this change seems wrong by sec_usage_check().
+>>>>>>> We may be able to avoid this only in the suspicious loop?
+>>>>>>>
+>>>>>>> ---
+>>>>>>>  fs/f2fs/gc.c | 2 +-
+>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>>>>>>> index e88f98ddf396..5877bd729689 100644
+>>>>>>> --- a/fs/f2fs/gc.c
+>>>>>>> +++ b/fs/f2fs/gc.c
+>>>>>>> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
+>>>>>>>  		round++;
+>>>>>>>  	}
+>>>>>>>  
+>>>>>>> -	if (gc_type == FG_GC)
+>>>>>>> +	if (gc_type == FG_GC && seg_freed)
+>>>>>>
+>>>>>> That's original solution Sahitya provided to avoid infinite loop of GC, but I
+>>>>>> suggest to find the root cause first, then we added .invalid_segmap for that
+>>>>>> purpose.
+>>>>>
+>>>>> I've checked the Sahitya's patch. So, it seems the problem can happen due to
+>>>>> is_alive or atomic_file.
+>>>>
+>>>> For some conditions, this doesn't help, for example, two sections contain the
+>>>> same fewest valid blocks, it will cause to loop selecting them if it fails to
+>>>> migrate blocks.
+>>>>
+>>>> How about keeping it as it is to find potential bug.
+>>>
+>>> I think it'd be fine to merge this. Could you check the above scenario in more
+>>> detail?
+>>
+>> I haven't saw this in real scenario yet.
+>>
+>> What I mean is if there is a bug (maybe in is_alive()) failing us to GC on one
+>> section, when that bug happens in two candidates, there could be the same
+>> condition that GC will run into loop (select A, fail to migrate; select B, fail
+>> to migrate, select A...).
+>>
+>> But I guess the benefit of this change is, if FGGC fails to migrate block due to
+>> i_gc_rwsem race, selecting another section and later retrying previous one may
+>> avoid lock race, right?
+> 
+> In any case, I think this can avoid potenial GC loop. At least to me, it'd be
+> quite risky, if we remain this just for debugging purpose only.
 
-Commit 00500147cbd3 ("drivers: Introduce device lookup variants by
-ACPI_COMPANION device") removed the use of that matching function, but
-didn't remove the function.
+Yup,
 
-It also removed the use of i2c_acpi_find_match_device(), but in that
-case it _did_ remove the function.
+One more concern is would this cur_victim_sec remain after FGGC? then BGGC/SSR
+will always skip the section cur_victim_sec points to.
 
-And apparently nobody bothers checking warnings. Tssk tssk.
+So could we reset cur_victim_sec in the end of FGGC?
 
-                Linus
+Thanks,
+
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>> Thanks,
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>>  		sbi->cur_victim_sec = NULL_SEGNO;
+>>>>>>>  
+>>>>>>>  	if (sync)
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
