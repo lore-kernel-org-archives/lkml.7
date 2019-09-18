@@ -2,93 +2,142 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001E2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1AC721897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C503121897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="jnwvM/JC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JQtrMNKm";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AHLJuNLf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbfIRJpA (ORCPT
+        id S1729371AbfIRJpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:45:00 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36834 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbfIRJo7 (ORCPT
+        Wed, 18 Sep 2019 05:45:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56624 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbfIRJpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:44:59 -0400
-Received: by mail-wr1-f68.google.com with SMTP id y19so6182586wrd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google;
-        h=reply-to:subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eCLILMrB8mD8WH5ZI56Ui1as0kflIkZo+f5drYOqODU=;
-        b=jnwvM/JCe7dQxy7Jt7t2lIaLS1sxq4bmGQbRrF201NU4Bd1fyk7F5kyeEg/DDLMaVR
-         Z7tgAHpqjlAYtdALkNpqwcEci9O2JtbFAJz22s2EiLpirMpvNYuX88N1xQGTMENZqOtf
-         aVoORxLEdmpJqpqC896kQg3oPyoW215I4/KEu6e2XVx8U4FF83j1m7Abq0mwgglBaPJT
-         VqEA5b0x44lhvuH61nOFBLQ4+FWiuftqr6Ixgiwf/VQPQ4KbSqNckrcMShtD2b0+i8FW
-         Wmmhp33aTs2VFu10vThZ984O2okOenV4/PuX+BcNoCWYIp8ZoZT1Qrlaf6Ntzo2bT8D6
-         N0Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=eCLILMrB8mD8WH5ZI56Ui1as0kflIkZo+f5drYOqODU=;
-        b=RoT9eO+KnWjW+kMegio8JEsxg/VetvBR14AcUF7Gbwa7uiuWw5dpotZVBfyXLsJ6Qq
-         o6g8cQNAUXkAxPP6pBe5vkZsT6PFUO7wsTlW5a9cHs2icAsKQxZvchkmum7Wzg1LrDkb
-         JXcfSj1DXwyilqBN8O9FlxT5PRLMqcHs7owEx/CRi/Y0iY10V37Wzjgz/V1Brvv3aWq3
-         Bt4xZP4B9X2DCQrYp/CM1S4ObppmTKQ4MSc6/TEJZmfY3sgQMZCKEoaNQVGvlioLZIiU
-         bnnFR0lae7idjQFieXS2jlv/BYLsNfpsJOxpNTHg6cLTQFd8unrSJhk2b8KBPnItNC5g
-         0nzw==
-X-Gm-Message-State: APjAAAXVaUulsJXvkZ60uKPuMyewgjGsbo2j5p3sfEKon0jyZRepDlqj
-        voStS7Bis2r+EzYEjdBUJ2ws+TYfW2I=
-X-Google-Smtp-Source: APXvYqwL1vvLlHf+fFasKN8fEXWfnu/p1xv2EtDJE7z4Lp9yim6eYktJPsrPXov8PON1BslCWJPD7w==
-X-Received: by 2002:a5d:6885:: with SMTP id h5mr2372166wru.92.1568799896895;
-        Wed, 18 Sep 2019 02:44:56 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:8b63:dc30:80ea:482c:5423:216b? ([2a01:e35:8b63:dc30:80ea:482c:5423:216b])
-        by smtp.gmail.com with ESMTPSA id v64sm2266331wmf.12.2019.09.18.02.44.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 02:44:56 -0700 (PDT)
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH] net: sysctl: cleanup net_sysctl_init error exit paths
-To:     "George G. Davis" <george_davis@mentor.com>,
-        David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1558020189-16843-1-git-send-email-george_davis@mentor.com>
- <20190516.142744.1107545161556108780.davem@davemloft.net>
- <20190517144345.GA16926@mam-gdavis-lt> <20190708224732.GA8009@mam-gdavis-lt>
- <20190917155354.GA15686@mam-gdavis-lt>
-From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
-Message-ID: <14606764-a026-c171-ba71-bf242a930e7e@6wind.com>
-Date:   Wed, 18 Sep 2019 11:44:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 05:45:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1D77160767; Wed, 18 Sep 2019 09:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568799898;
+        bh=01k7VsRuEiArmVgviOohpsSpMMj+aFioBTpHuknqkqU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=JQtrMNKmKlLkn02HSAU17ss9SOrAQIFDlsHI79hKwVIzPZJSjTBVJWqk8Q908C6NR
+         UikarPP2aTWhlbxuGGjaWuGZyeKt4E4vofKp+IOLV+stNIE3R3N7oUDchKbhX5RYjR
+         Up23E+4myxQ89LFjlDEFe1N0+uiEdIwU/m1Y+U+Y=
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AFA56611FA;
+        Wed, 18 Sep 2019 09:44:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568799896;
+        bh=01k7VsRuEiArmVgviOohpsSpMMj+aFioBTpHuknqkqU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AHLJuNLfqBcq8XZzyXcm7iB5e2+Fp+j2s8ADqfecBfhp5WK6snHjtADqFCj+ua1wc
+         jhm/v2XRwSWgqAdyxtDMw47HK0+NsXfAHouGpACmIHYDix85YZxg/nKRhYIa3syUEC
+         a/wzN3Qkqy4Oa8FWwWGEaAMb+jkFswhS6vzTJu20=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AFA56611FA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 3/3] clk: qcom: Add Global Clock controller (GCC)
+ driver for SC7180
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>, robh+dt@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20190819163748.18318-1-tdas@codeaurora.org>
+ <20190819163748.18318-4-tdas@codeaurora.org>
+ <20190821180200.1F7EF2082F@mail.kernel.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <6a5b6bf6-a99a-e4aa-b9ac-fcc0fceab5bd@codeaurora.org>
+Date:   Wed, 18 Sep 2019 15:14:50 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190917155354.GA15686@mam-gdavis-lt>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190821180200.1F7EF2082F@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 17/09/2019 à 17:53, George G. Davis a écrit :
-[snip]
-> Ping, "Linux 5.3" kernel has been released [1] and it appears that the
-> 5.4 merge window is open. The patch [2] remains unchanged since my initial
-> post. Please consider applying it.
+Hi Stephen,
 
-net-next is closed:
-http://vger.kernel.org/~davem/net-next.html
+Thanks for your review.
 
-You will have to resend the patch when net-next opens.
+On 8/21/2019 11:31 PM, Stephen Boyd wrote:
+> Quoting Taniya Das (2019-08-19 09:37:48)
+>> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
+>> index e1ff83cc361e..ebd4902afd9f 100644
+>> --- a/drivers/clk/qcom/Kconfig
+>> +++ b/drivers/clk/qcom/Kconfig
+>> @@ -322,5 +331,4 @@ config KRAITCC
+>>          help
+>>            Support for the Krait CPU clocks on Qualcomm devices.
+>>            Say Y if you want to support CPU frequency scaling.
+>> -
+>>   endif
+> 
+> Please remove this hunk
+> 
+
+Would remove this.
+
+>> diff --git a/drivers/clk/qcom/gcc-sc7180.c b/drivers/clk/qcom/gcc-sc7180.c
+>> new file mode 100644
+>> index 000000000000..8718b675d609
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gcc-sc7180.c
+> [...]
+>> +       },
+>> +};
+>> +
+>> +/* Camera Subsystem requires always ON. */
+> 
+> Yes, but why? This comment is useful unless it explains why.
+> 
+
+Next patch would take care.
+
+>> +static struct clk_branch gcc_camera_ahb_clk = {
+>> +       .halt_reg = 0xb008,
+>> +       .halt_check = BRANCH_HALT,
+>> +       .hwcg_reg = 0xb008,
+>> +       .hwcg_bit = 1,
+>> +       .clkr = {
+>> +               .enable_reg = 0xb008,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "gcc_camera_ahb_clk",
+>> +                       .flags = CLK_IS_CRITICAL,
+>> +                       .ops = &clk_branch2_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+>> +static struct clk_branch gcc_camera_hf_axi_clk = {
+>> +       .halt_reg = 0xb020,
+>> +       .halt_check = BRANCH_HALT,
+>> +       .clkr = {
+>> +               .enable_reg = 0xb020,
+>> +               .enable_mask = BIT(0),
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
