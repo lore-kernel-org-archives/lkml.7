@@ -2,135 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 493EEC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C641C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1852321848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2543E21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bV4R1sZP"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AyH57jpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfIRRkh (ORCPT
+        id S1729016AbfIRRlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:40:37 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:39871 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfIRRkh (ORCPT
+        Wed, 18 Sep 2019 13:41:18 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:39116 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727397AbfIRRlR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:40:37 -0400
-Received: by mail-pl1-f170.google.com with SMTP id x6so293218plv.6;
-        Wed, 18 Sep 2019 10:40:35 -0700 (PDT)
+        Wed, 18 Sep 2019 13:41:17 -0400
+Received: by mail-io1-f68.google.com with SMTP id a1so1172834ioc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:41:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:to:from:subject:openpgp:autocrypt:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=plQppAZKxNCPpfK0Y6vuJ/Qx4m3hZLsL5u1XGwlg8f0=;
-        b=bV4R1sZPwPZWMk6wZJLR1ULxsXXuQHiVMPNHOKYUoajXTpS2mZIxOf0siUyoReIq6x
-         gU/5M5N1GPqZa+YnSwUWLaKALfe28Vwt/m8ylDZubL3QPZ1/BCP0NMj+1B89L6bbeFuo
-         Kw2xO/6f+04feEL5b/cygXPqe8JJL7Cdrx8a5OSduHiQT/KiFvtKeZwSwel+Ohq1UqZ1
-         HUbZVDRuyVVRmQVVh69F1437fiZhy1klWXOA1R3VY13RXkT6iI4dXuaYTi5tg6C29Sgy
-         I7FvCRK3TUOHrU+i5zlr9tA4MpZ33Tyecf76NHD7RBCJaaEUkKmftWdrOsInGwEvBFEQ
-         +dFw==
+        d=chromium.org; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jm0GKZ+zs79GqNNWF0bZqXAiPqdnJ7mX725LngqNeLU=;
+        b=AyH57jpKls0MoQw6pX8sOAAZtlVmhb3SwrHEHMt+yhenFGJbwuB3oo/i2VhokOepSL
+         dshCfEkqojr3985fj9V639uHHEyl+N7jKzSr1MoOZ/S5/BxHiwxLh4Sexxgt/gp0yaU1
+         URrtQmewbGhlOzKmUy1zhzP8+82zQ2ADJwkDY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:to:from:subject:openpgp:autocrypt:message-id
-         :date:user-agent:mime-version:content-transfer-encoding
-         :content-language;
-        bh=plQppAZKxNCPpfK0Y6vuJ/Qx4m3hZLsL5u1XGwlg8f0=;
-        b=UhdGGeJetVnRDVo2FBB+BRNM008kswy80iMPmLTo1ei/AJ+KAKIC0C+jbb+AzU7qLU
-         qy9Bpy+uZq3J/eXtwT9d9zGd0mIJysM8ZuP2oOuqRLeRtuQUzKvxke5ZF932GAq1cSGb
-         JKvruQETZ3Mcq2s/Am5NcW9uQSvvB2Qvu1Ahqcr96BXQRlUk8ZDTGMh+moFWAZKPdCpH
-         cQ7icHvW3n36oWux4VQstoSInXrFbAYZuOIqc+VhFu9q9216spyJ3CrLoUSJ3hdVB77z
-         cQSnEaU07d3sqLesC+1gM5nsbKYDTCqw+rYINZhBxOj6WK/cZ80JrKsNlWIDcsxktvGm
-         uBkQ==
-X-Gm-Message-State: APjAAAXKoj+ihX1yC0HA2cgfpvSp/RlcJFGnMRukm2muNca4elBrd3th
-        3ySGmyP3kXZ5JfNmf8yAZ30qa4qdD+wVrQ==
-X-Google-Smtp-Source: APXvYqxw59ckELdZO06d3bXQlyPV8qFVJ6Xn8dLYmiumsySBr0RnFNU4CPTEwaSXEUdUcA0hR7WD1w==
-X-Received: by 2002:a17:902:76c9:: with SMTP id j9mr5186588plt.187.1568828434734;
-        Wed, 18 Sep 2019 10:40:34 -0700 (PDT)
-Received: from [192.168.111.105] ([198.182.47.47])
-        by smtp.gmail.com with ESMTPSA id w65sm8756823pfb.106.2019.09.18.10.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 10:40:33 -0700 (PDT)
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kbuild test robot <lkp@intel.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        arcml <linux-snps-arc@lists.infradead.org>
-To:     "stable@vger.kernel.org" <stable@vger.kernel.org>
-From:   Vineet Gupta <vineetg76@gmail.com>
-Subject: stable backport for dc8635b78cd8669
-Openpgp: preference=signencrypt
-Autocrypt: addr=vineetg76@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- deE0Dvw98SWmZSNtdOPnJZ0D
-Message-ID: <efb68643-3750-e94b-8387-6e4cacb3a82a@gmail.com>
-Date:   Wed, 18 Sep 2019 10:40:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jm0GKZ+zs79GqNNWF0bZqXAiPqdnJ7mX725LngqNeLU=;
+        b=fedZH8RPqG70YlT05gtsdoRIEZKfOvTijG+J7d1Lm5gMPuXSSJDqj8XJsZtw7QxqPZ
+         MIrRR/g1i4yIIkrbY3lKoI4YVgGsLWxGT4KeFflDjIQNrlueoju4WwT8E/+h7lJ2cuN6
+         1nvqBkbDlH3/jaNMOeukcIrwrMDQ+mCiT/Jm34p9bMTe3k3aKdmN78pySnBFUODAkq9x
+         hNYkV15oP/FYYrcbtvE/BClKhjsMpovBP9K9hWegvidY6rU6/pDnWkz/TAcr6gdJkZ9F
+         K7hx1C4UyNVwwtnSsLlGf6j/Us4fg9leAwYzO4DyjPk+xPooJAZ1VDiEQdLLOBvZ3ckR
+         1/rg==
+X-Gm-Message-State: APjAAAXuOBEboLcGStOSHIFlC1bYz2+joYVjOgr9Cy6hJbdLWTvuxnBn
+        r3w/UmkbO4Z3wQGW/twtdvWGaSqUpPLsWxPFUvFSKK9Fy7o=
+X-Google-Smtp-Source: APXvYqyqmyPlCjxTm+iq54gtMa6V2Hf3D4NA/wfYg+8rdQPOEkEMt80v6jNvqlmLrebuVHye2JqQOdf3XPODsa5VmQg=
+X-Received: by 2002:a5d:9f17:: with SMTP id q23mr6584195iot.301.1568828476751;
+ Wed, 18 Sep 2019 10:41:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+From:   Micah Morton <mortonm@chromium.org>
+Date:   Wed, 18 Sep 2019 10:41:06 -0700
+Message-ID: <CAJ-EccM49yBA+xgkR+3m5pEAJqmH_+FxfuAjijrQxaxxMUAt3Q@mail.gmail.com>
+Subject: [GIT PULL] SafeSetID LSM changes for 5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stable team,
+The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
 
-Can we please backport dc8635b78cd8669c37e230058d18c33af7451ab1 ("kernel/exit.c:
-export abort() to modules")
+  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
 
-0-Day kernel test infra reports ARC 4.x.y builds failing after backport of
-af1be2e21203867cb958aace ("ARC: handle gcc generated __builtin_trap for older
-compiler")
+are available in the Git repository at:
 
-Thx
--Vineet
+  https://github.com/micah-morton/linux.git tags/safesetid-bugfix-5.4
+
+for you to fetch changes up to 21ab8580b383f27b7f59b84ac1699cb26d6c3d69:
+
+  LSM: SafeSetID: Stop releasing uninitialized ruleset (2019-09-17
+11:27:05 -0700)
+
+----------------------------------------------------------------
+Fix for SafeSetID bug that was introduced in 5.3
+
+Jann Horn sent some patches to fix some bugs in SafeSetID for 5.3. After
+he had done his testing there were a couple small code tweaks that went
+in and caused this bug. From what I can see SafeSetID is broken in 5.3
+and crashes the kernel every time during initialization if you try to
+use it. I came across this bug when backporting Jann's changes for 5.3
+to older kernels (4.14 and 4.19). I've tested on a Chrome OS device and
+verified that this change fixes things. Unless I'm missing something it
+doesn't seem super useful to have this change bake in linux-next, since it is
+completely broken in 5.3 and nobody noticed.
+
+Signed-off-by: Micah Morton <mortonm@chromium.org>
+
+----------------------------------------------------------------
+Micah Morton (1):
+      LSM: SafeSetID: Stop releasing uninitialized ruleset
+
+ security/safesetid/securityfs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
