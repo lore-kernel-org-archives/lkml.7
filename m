@@ -7,180 +7,209 @@ X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F54C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01763C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F7A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD767214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:26:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N4HP+e2O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="agcxYxEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfIRLXC (ORCPT
+        id S1730064AbfIRL02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:23:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38345 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729986AbfIRLXC (ORCPT
+        Wed, 18 Sep 2019 07:26:28 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46539 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfIRL01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:23:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id h195so4228426pfe.5
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:23:01 -0700 (PDT)
+        Wed, 18 Sep 2019 07:26:27 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q5so4213172pfg.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:26:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dPa/Nd4Xm9egVVca3WCKvHDpOUWuA07121LqF/L0skA=;
-        b=N4HP+e2OMzdxyU3nrf6Wx1pXWulBYlFahBpxy3oBvwxTFSlM3vysv8oUKhMLbZafd9
-         jYn8gTWWBw04GKgdtECW18DNyF2ItFAb+13VFeaEy7VAWQMsmDw/cpnTDdfaFGdclFXY
-         FM5yJV4PdXHbbld+3MWth/b/gODMGcAjf1+lxfSQdkTSbnThW6eMRgZqgU5C7RTc2qov
-         Vy2grXb0h3B90KV4acvuYrEhQC7brTfNyBv5iiXEsvKAz54/fNr6SoylzXYqtxcq71Op
-         rM+QAiZS5LMFMOWfFQr83i7p5rGhYS5VrQeZQappZ3xR8J5YL7d61PYs8dExnwwMjUjv
-         pNHQ==
+        bh=GEKDbhzwNhpOBR6dELM5ZLkIekkSqfOIMrHIJk1k/V0=;
+        b=agcxYxEbPyxWq2pBrk006+27U5Xoh85acDeVMUH5z9Zi2Yv5CfEnPXpUFAYRMCeKXY
+         kb/TnliN0XwWkNMfvn54EUu0OVnJuqlPQpzsfLEnDEwnnpzrgJUe+yUBqUA5i10oYROg
+         vD4qAyXqC0EOCpXZfllRkyx6f/LAYJJl4mSF3yM2nBQJNF9dDD0/i+FYSMIWHc7+uAiz
+         0tJuoDxwPf5IWZ3sojDRmILrmqVY6mOOpq7JA1UiD31fR9gHccTokozsg3TehMZfQ5nN
+         dpzzMTHhZ8nJi5TruO/tQahI04h4PssBJrZuN4bTgGTpb8Vvjn78u3+N337VdsmXmQib
+         CWCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dPa/Nd4Xm9egVVca3WCKvHDpOUWuA07121LqF/L0skA=;
-        b=lzIa6f3eQiuE+znkiescvHvVpBy9CaCiuV6BdQA1zVyELjntDxPIBf/rkm8hjELoGz
-         v8xhceGapLCbRYTNMhefJ6xX4HAqbAgdC6dcsykIBpfxCLE/gcHL89nMEVkVVLHDEIJp
-         5s0uQ16DbIWVg+TC7hMIlRpa3r1TEewVVC8zLHGng6nfDnH3Pj9dsjGuGdN0M6hZXrwv
-         AtzsrJK2IbABcBRDKyukncxxsdL1qul7RkoDiTPAqkzY4Z8cNXyt9jQ2jFYJjsMFOaQT
-         40fLwHNwSKzI+wGEoGkHuHFKGLK48ffUEmI+0+GAm159yt5lhW1ufBrBerCjTqTziXPX
-         fAdw==
-X-Gm-Message-State: APjAAAUwlYNnXn4TPsHv8YIyDfnR7YGrue10yt31uo/YYCMvw2IS1DlE
-        nC5qGNYahpoM1UcAAdQUqgTDJ0PNGRFm/FiH5vo6s2L1hgA=
-X-Google-Smtp-Source: APXvYqwFjjmeCQQKrh6wpxNWJ3ampLnBhouMCf47XtUZ5EJ84Q0sV4PtV3qs2cO4Q0kI12jdMJjJeb9Mc4IMcgjUCO0=
-X-Received: by 2002:a17:90a:ff18:: with SMTP id ce24mr3122051pjb.123.1568805781151;
- Wed, 18 Sep 2019 04:23:01 -0700 (PDT)
+        bh=GEKDbhzwNhpOBR6dELM5ZLkIekkSqfOIMrHIJk1k/V0=;
+        b=Ks8lvZ6jlDCjZjcJiSRXZSatyRUwoHNsAt1eaYTM4XHRPg+KneorhRMls5XXDA9UWp
+         rVJzu9IUiZ2hOaE5oRAmFIjKmKE1fi1HkWdqc5iXmIC87D+Rygp9UUEmV1uXeU8OAa7y
+         hrth1lCRVXgKvs1GC6ewEpWlELTyeQhToM0TEJqkFmEaEqpQu9BLJ3AKYO7Uh6F2JrLQ
+         MISIhfPCTPJ7hUmb/XtxhWeU0BYRwARQcOTrMQ5rB+5pco/p+LdaT/i8XSQ/pxRbiBDD
+         0RMrxj9nDL2E6nmMyyWNzf4s+/x9tGTJAr/Wv1DPSQfXteHrTEaEsmMeLmVm8Y0qP6z3
+         nvFg==
+X-Gm-Message-State: APjAAAXnmUsz41UWbeBLwhzAd9y0xyyMKZVRwnAkR3+5es6FHYQJD/ED
+        pXQeUCT7mIV39nkms3hw/WNvEKObf58kTrY8pQR0ww==
+X-Google-Smtp-Source: APXvYqwYAv+hSySRkpTsC5JgvSWSS21M81RsY0zta+P6vdFIbrT8Kb6VbysxQ7uG06t7MGvURGAjaippiHqiexnoL7I=
+X-Received: by 2002:a63:c442:: with SMTP id m2mr3520643pgg.286.1568805986413;
+ Wed, 18 Sep 2019 04:26:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAeHK+zrR3pB2R3yyyUdGM4Vrv77o47MHsgvbQ+LFHfiWBt1OQ@mail.gmail.com>
- <Pine.LNX.4.44L0.1909161205280.1489-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.1909161205280.1489-100000@iolanthe.rowland.org>
+References: <000000000000cd1def0592ab9697@google.com> <Pine.LNX.4.44L0.1909171423360.1590-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1909171423360.1590-100000@iolanthe.rowland.org>
 From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 18 Sep 2019 13:22:49 +0200
-Message-ID: <CAAeHK+yL9DX9oraq5dN8CSU6LzYN7PnRzppVbiG5b6QM5_ygEg@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in dummy_timer
+Date:   Wed, 18 Sep 2019 13:26:15 +0200
+Message-ID: <CAAeHK+xJgJoR9rODcRH74knaRKmEq+DDVarNNwDMT_Vtg+gV2Q@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Write in ga_probe
 To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     syzbot <syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com>,
-        Felipe Balbi <balbi@kernel.org>, chunfeng.yun@mediatek.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     syzbot <syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Dmitry Vyukov <dvyukov@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: multipart/mixed; boundary="0000000000008b82dd0592d21ba8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 6:32 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 16 Sep 2019, Andrey Konovalov wrote:
->
-> > On Fri, Sep 13, 2019 at 10:35 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Fri, 13 Sep 2019, syzbot wrote:
-> > >
-> > > > syzbot has found a reproducer for the following crash on:
-> > > >
-> > > > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > > > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=1146550d600000
-> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=b24d736f18a1541ad550
-> > > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11203fa5600000
-> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=162cd335600000
-> > > >
-> > > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > > > Reported-by: syzbot+b24d736f18a1541ad550@syzkaller.appspotmail.com
-> > > >
-> > > > yurex 3-1:0.101: yurex_interrupt - unknown status received: -71
-> > > > yurex 5-1:0.101: yurex_interrupt - unknown status received: -71
-> > > > yurex 6-1:0.101: yurex_interrupt - unknown status received: -71
-> > > > rcu: INFO: rcu_sched self-detected stall on CPU
-> > >
-> > > Andrey:
-> > >
-> > > This problem may be a result of overloading dummy_timer.  The kernel
-> > > config you are using has CONFIG_HZ=100, but dummy-hcd needs
-> > > CONFIG_HZ=1000 (see the comment on line 1789).  That is, lower values
-> > > of HZ will occasionally lead to trouble, and this may be an example.
-> > >
-> > > Can you change the config value for HZ and see if the bug still
-> > > reproduces?
-> >
-> > Hi Alan,
-> >
-> > I've tried running the reproducer with CONFIG_HZ=1000 and still got
-> > the same stall message. It's accompanied by countless "yurex
-> > 6-1:0.101: yurex_interrupt - unknown status received: -71" messages,
-> > so I believe this is an issue in the yurex driver.
->
-> Maybe.  Depends on exactly what the reproducer is doing, something
-> which is not at all easy to figure out from the scripts or programs.
->
-> I got the impression that the reproducer connects an emulated yurex
-> device and then disconnects it -- but maybe that's not right at all.
-> Maybe the key point is that the reproducer sends a descriptor listing
-> an endpoint address that doesn't actually exist; that would have a
-> similar effect.  Can you tell?  (Trying to understand exactly what a
-> syzkaller test program does is not for the faint of heart.)
->
-> As far as I can remember, the USB spec doesn't say what a device should
-> do when the host sends a packet to a non-existent endpoint.  Which
-> means that some devices will do nothing at all, leading to the -71
-> (-EPROTO) errors you see in the log.  Indeed, there's only one place in
-> dummy_hcd.c where -EPROTO occurs -- for the case where an URB is sent
-> to an endpoint not supported by the gadget.
->
-> This leads to the question: How should the yurex driver (or any USB
-> class driver, in fact) respond to a -EPROTO or similar error?  The
-> thing is, this sort of error typically arises in two circumstances:
->
->         The device was just unplugged, so of course it can't send
->         any packets back to the host;
->
->         Noise on the bus caused a packet to be lost or corrupted.
->
-> In the first case, it doesn't much matter what the driver does because
-> the disconnection will be noticed and acted on within a few hundred
-> milliseconds (although I suppose a driver could generate a lot of
-> kernel-log spam during that time).
->
-> In the second case, retrying the lost/corrupted packet is the right
-> response.
->
-> But retrying is _not_ the right response in cases where the device is
-> never going to respond because the endpoint address is invalid.  This
-> can happen only in situations where the device provides incorrect
-> information (bad descriptors or something of that sort).  The only
-> suitable approach I can think of is to limit the number of retries.
->
-> Retry-limiting is not the sort of thing we want to add to each
-> individual USB class driver.  Maybe it can be handled in the USB core;
-> I'll try to write some code for it.  Under normal circumstances the
-> issue just doesn't arise, because normal devices aren't malicious.
->
-> > Why does dumy_hcd require CONFIG_HZ=1000? The comment doesn't really
-> > explain the reason.
->
-> Oh, that's simple enough.  USB events tend to happen at millisecond
-> intervals.  The data on the USB bus is organized into frames (and
-> microframes for high speed and SuperSpeed); a frame lasts one
-> millisecond (and a microframe lasts 1/8 ms).  Many host controllers
-> report important events when a frame boundary occurs (that's how
-> dummy-hcd works).
->
-> So for proper timing of the emulation, dummy-hcd requires timer
-> interrupts with millisecond resolution.  I suppose the driver could be
-> changed to use a high-res timer instead of a normal kernel timer, but
-> for now that doesn't seem particularly important.
+--0000000000008b82dd0592d21ba8
+Content-Type: text/plain; charset="UTF-8"
 
-So what are the practical differences between using CONFIG_HZ=100 and
-1000 for dummy-hcd? Is is going to be slower or faster? Or can it get
-overloaded with data and cause stalls? Or something else? We're
-somewhat hesitant to change CONFIG_HZ as we don't know how it will
-affect other parts of the kernel (at some point the USB fuzzer will
-become a part of the main syzbot instance that doesn't only fuzz USB).
+On Tue, Sep 17, 2019 at 8:24 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 16 Sep 2019, syzbot wrote:
+>
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=14045831600000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=403741a091bf41d4ae79
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13c1e62d600000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=166a3a95600000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+403741a091bf41d4ae79@syzkaller.appspotmail.com
+> >
+> > usb 1-1: config 0 interface 0 altsetting 0 has 1 endpoint descriptor,
+> > different from the interface descriptor's value: 9
+> > usb 1-1: New USB device found, idVendor=0e8f, idProduct=0012, bcdDevice=
+> > 0.00
+> > usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+> > usb 1-1: config 0 descriptor??
+> > greenasia 0003:0E8F:0012.0001: unknown main item tag 0x0
+> > greenasia 0003:0E8F:0012.0001: hidraw0: USB HID v0.00 Device [HID
+> > 0e8f:0012] on usb-dummy_hcd.0-1/input0
+> > ==================================================================
+> > BUG: KASAN: slab-out-of-bounds in set_bit
+> > include/asm-generic/bitops-instrumented.h:28 [inline]
+> > BUG: KASAN: slab-out-of-bounds in gaff_init drivers/hid/hid-gaff.c:97
+> > [inline]
+> > BUG: KASAN: slab-out-of-bounds in ga_probe+0x1fd/0x6f0
+> > drivers/hid/hid-gaff.c:146
+> > Write of size 8 at addr ffff8881d9acafc0 by task kworker/1:1/78
+> >
+> > CPU: 1 PID: 78 Comm: kworker/1:1 Not tainted 5.3.0-rc7+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > Workqueue: usb_hub_wq hub_event
+> > Call Trace:
+> >   __dump_stack lib/dump_stack.c:77 [inline]
+> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
+> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
+> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
+> >   kasan_report+0xe/0x12 mm/kasan/common.c:618
+> >   check_memory_region_inline mm/kasan/generic.c:185 [inline]
+> >   check_memory_region+0x128/0x190 mm/kasan/generic.c:192
+> >   set_bit include/asm-generic/bitops-instrumented.h:28 [inline]
+> >   gaff_init drivers/hid/hid-gaff.c:97 [inline]
+> >   ga_probe+0x1fd/0x6f0 drivers/hid/hid-gaff.c:146
+> >   hid_device_probe+0x2be/0x3f0 drivers/hid/hid-core.c:2209
+> >   really_probe+0x281/0x6d0 drivers/base/dd.c:548
+> >   driver_probe_device+0x101/0x1b0 drivers/base/dd.c:721
+> >   __device_attach_driver+0x
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
+>
+> The driver assumes that the device contains an input.
+>
+> Alan Stern
+>
+> https://github.com/google/kasan.git f0df5c1b
+
+You've forgotten "syz test" here :)
+
+#syz test: https://github.com/google/kasan.git f0df5c1b
+
+>
+>  drivers/hid/hid-gaff.c |   12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>
+> Index: usb-devel/drivers/hid/hid-gaff.c
+> ===================================================================
+> --- usb-devel.orig/drivers/hid/hid-gaff.c
+> +++ usb-devel/drivers/hid/hid-gaff.c
+> @@ -64,14 +64,20 @@ static int gaff_init(struct hid_device *
+>  {
+>         struct gaff_device *gaff;
+>         struct hid_report *report;
+> -       struct hid_input *hidinput = list_entry(hid->inputs.next,
+> -                                               struct hid_input, list);
+> +       struct hid_input *hidinput;
+>         struct list_head *report_list =
+>                         &hid->report_enum[HID_OUTPUT_REPORT].report_list;
+>         struct list_head *report_ptr = report_list;
+> -       struct input_dev *dev = hidinput->input;
+> +       struct input_dev *dev;
+>         int error;
+>
+> +       if (list_empty(&hid->inputs)) {
+> +               hid_err(hid, "no inputs found\n");
+> +               return -ENODEV;
+> +       }
+> +       hidinput = list_entry(hid->inputs.next, struct hid_input, list);
+> +       dev = hidinput->input;
+> +
+>         if (list_empty(report_list)) {
+>                 hid_err(hid, "no output reports found\n");
+>                 return -ENODEV;
+>
+
+--0000000000008b82dd0592d21ba8
+Content-Type: text/x-patch; charset="US-ASCII"; name="hid-gaff.patch"
+Content-Disposition: attachment; filename="hid-gaff.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k0p6kf7m0>
+X-Attachment-Id: f_k0p6kf7m0
+
+SW5kZXg6IHVzYi1kZXZlbC9kcml2ZXJzL2hpZC9oaWQtZ2FmZi5jCj09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KLS0tIHVz
+Yi1kZXZlbC5vcmlnL2RyaXZlcnMvaGlkL2hpZC1nYWZmLmMKKysrIHVzYi1kZXZlbC9kcml2ZXJz
+L2hpZC9oaWQtZ2FmZi5jCkBAIC02NCwxNCArNjQsMjAgQEAgc3RhdGljIGludCBnYWZmX2luaXQo
+c3RydWN0IGhpZF9kZXZpY2UgKgogewogCXN0cnVjdCBnYWZmX2RldmljZSAqZ2FmZjsKIAlzdHJ1
+Y3QgaGlkX3JlcG9ydCAqcmVwb3J0OwotCXN0cnVjdCBoaWRfaW5wdXQgKmhpZGlucHV0ID0gbGlz
+dF9lbnRyeShoaWQtPmlucHV0cy5uZXh0LAotCQkJCQkJc3RydWN0IGhpZF9pbnB1dCwgbGlzdCk7
+CisJc3RydWN0IGhpZF9pbnB1dCAqaGlkaW5wdXQ7CiAJc3RydWN0IGxpc3RfaGVhZCAqcmVwb3J0
+X2xpc3QgPQogCQkJJmhpZC0+cmVwb3J0X2VudW1bSElEX09VVFBVVF9SRVBPUlRdLnJlcG9ydF9s
+aXN0OwogCXN0cnVjdCBsaXN0X2hlYWQgKnJlcG9ydF9wdHIgPSByZXBvcnRfbGlzdDsKLQlzdHJ1
+Y3QgaW5wdXRfZGV2ICpkZXYgPSBoaWRpbnB1dC0+aW5wdXQ7CisJc3RydWN0IGlucHV0X2RldiAq
+ZGV2OwogCWludCBlcnJvcjsKIAorCWlmIChsaXN0X2VtcHR5KCZoaWQtPmlucHV0cykpIHsKKwkJ
+aGlkX2VycihoaWQsICJubyBpbnB1dHMgZm91bmRcbiIpOworCQlyZXR1cm4gLUVOT0RFVjsKKwl9
+CisJaGlkaW5wdXQgPSBsaXN0X2VudHJ5KGhpZC0+aW5wdXRzLm5leHQsIHN0cnVjdCBoaWRfaW5w
+dXQsIGxpc3QpOworCWRldiA9IGhpZGlucHV0LT5pbnB1dDsKKwogCWlmIChsaXN0X2VtcHR5KHJl
+cG9ydF9saXN0KSkgewogCQloaWRfZXJyKGhpZCwgIm5vIG91dHB1dCByZXBvcnRzIGZvdW5kXG4i
+KTsKIAkJcmV0dXJuIC1FTk9ERVY7Cg==
+--0000000000008b82dd0592d21ba8--
