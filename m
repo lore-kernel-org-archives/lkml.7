@@ -2,198 +2,174 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C33C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD80C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC48C21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:45:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B15B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Nfn4vYYm"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JRFpkB4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388131AbfIRVpN (ORCPT
+        id S2388181AbfIRVsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:45:13 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46788 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388087AbfIRVpL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:45:11 -0400
-Received: by mail-oi1-f193.google.com with SMTP id k25so875180oiw.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:45:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W7dgmGEb7jiXcDVOoTR3Y60qv1W+YIvlHIEXooqB17k=;
-        b=Nfn4vYYmqahbw5bImjcKKNhaG/umEZbk35DywdJMi8vFUMvoVbQL06VrdNGdNwpJAM
-         q0TyWW1phTEmA+8WxooalcEWilGfeV+b9QN/Vpnw2mR3wcVegp0T2KS7FqygdQ9Sjc8+
-         MIY/jDimM/1cJvKeEfud3N1KUM+igqZtQJBUg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W7dgmGEb7jiXcDVOoTR3Y60qv1W+YIvlHIEXooqB17k=;
-        b=p7z0PsvnQoIdB3sbEV0Ta2nSQJ7kQGDXVKLXL+vseU4nKCdI3ZZcN8dkxwD2qjhYjN
-         4Vm/eivWgjXZZKPrrlaQTd9nyk/h6I49xyJbglaizbT4zREGjlY2y2eWYoPrxmAqJ4yP
-         kROEfC4ctRWjHZAavl+YnF9RSR+wAyQ+0a8h+HBGPie38vs9SNaV7aQXLLqArPUUTy5i
-         fHOFkjWgPBG4LEKnl0dq8Cldko2ugpdeD2a+f30tBR79oHPaWcU/sxBZfCuG1kvzKpee
-         RX0qt5pWwgmwwkBchDMEf38Exd2npqMbDWzIVbJnaPDl1GWgcUm4lexx6gHuZDhwYdrz
-         Gd7Q==
-X-Gm-Message-State: APjAAAXpw4N22cydcG78ozeW7/AgmebaO2pXhMKazbdQp9irRmk4bnsu
-        RpXTRuwCjEduekYWq/A9x6WPgCB480g=
-X-Google-Smtp-Source: APXvYqxnYcUT168L/hLkmc4rg+BR772gC3kdEcprHb2jlFRmKL19iMFwZzZScsGSIpAfCJWW1ErRGw==
-X-Received: by 2002:aca:b902:: with SMTP id j2mr18474oif.169.1568843110117;
-        Wed, 18 Sep 2019 14:45:10 -0700 (PDT)
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com. [209.85.167.178])
-        by smtp.gmail.com with ESMTPSA id t207sm2210887oif.11.2019.09.18.14.45.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 14:45:09 -0700 (PDT)
-Received: by mail-oi1-f178.google.com with SMTP id k20so971087oih.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 14:45:08 -0700 (PDT)
-X-Received: by 2002:aca:da87:: with SMTP id r129mr19681oig.177.1568843108323;
- Wed, 18 Sep 2019 14:45:08 -0700 (PDT)
+        Wed, 18 Sep 2019 17:48:08 -0400
+Received: from mail-eopbgr690124.outbound.protection.outlook.com ([40.107.69.124]:47135
+        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388161AbfIRVsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 17:48:08 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eamRKjM9p6R6x/ocL6svpEpg2MI6IzkIimcPFJjWWVmvWslrjKWyTr5PIPFy+KaE7AwgDpTBRrjHaeAkhOpcTj25vUBLfetQXWJQLb+fG6a/GLeYTw2rEqLckbwx+LQMC/R/wdgD1DYWlP16nVy/R/VeDAmS8hj8jooVQU79oVcZUolHI45d7qY8e8hEuyQ/v0+ikNpF0IhEyi8cuKjUusXVkz85yb0ghPSnylIJwWTLorwAV+UqyiEVskIOv4NdgOgN2nYsetPd4EzNu81OeAN5AVA6dysBIuZMq1DWSlPdRgCdjQYv4I1zcAoxpDdc4QGkQL1sGWrnvaD7AXMhfw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yh2FKCWSuEotyGTjypH6Zue2u5Zb4sbK9lTKeZQriB0=;
+ b=oNBjlHraF1M8f+yKegbueiktpqh1l6/aR++mpsY7V4PPaaR3Bk5xkw1KfkQW0Xg9RzxzuLkw+f4YTi9egI4UHSoWuYVhfaFB7m0QqXrfYNENoA+7NFDGf1ZVLssJiUkHMAjSa/LNa8HQosG462LVFGMMCguPoidGS5ZUaWjGS9IdAoZ8H9L18vI6KRrkqZiTUq7cyKu8AS3hECbZjwFbzIn1almGt4WyqM8heDigmfSf3z+nagB1S4vw/yWS5UPcuX63SBZPFYPTr/sp/LIOo2TFsa2mYbOmTepgTYptUIs5kPXKO7cZn3KNB8MFZPltalXSoGI94k+w79eCwIofmA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yh2FKCWSuEotyGTjypH6Zue2u5Zb4sbK9lTKeZQriB0=;
+ b=JRFpkB4oc6BpPER98wftqf4VuUGJUUnwEfKr0x14fvqgWG5KJS6CD4Z141Qbu0P8wNYoJyjgUZuAUJ0OWI5SXQvNcUG2+WHO9VnsltbB3KF44xfyWT0m3q9IDwUcTxr/9FhTtTRyYRM5G5apNechKFrZatgUcJShiQSCUzDuL1k=
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com (10.173.173.12) by
+ DM5PR21MB0826.namprd21.prod.outlook.com (10.173.172.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.10; Wed, 18 Sep 2019 21:48:04 +0000
+Received: from DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::7d6d:e809:21df:d028]) by DM5PR21MB0137.namprd21.prod.outlook.com
+ ([fe80::7d6d:e809:21df:d028%9]) with mapi id 15.20.2284.008; Wed, 18 Sep 2019
+ 21:48:04 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Wei Hu <weh@microsoft.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "shc_work@mail.ru" <shc_work@mail.ru>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "baijiaju1990@gmail.com" <baijiaju1990@gmail.com>,
+        "fthain@telegraphics.com.au" <fthain@telegraphics.com.au>,
+        "info@metux.net" <info@metux.net>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Topic: [PATHC v6] video: hyperv: hyperv_fb: Support deferred IO for
+ Hyper-V frame buffer driver
+Thread-Index: AQHVbebF21J2EyXx3k2x6FCXKaeI5qcx+W9w
+Date:   Wed, 18 Sep 2019 21:48:04 +0000
+Message-ID: <DM5PR21MB0137DA408FE59E8C1171CFFCD78E0@DM5PR21MB0137.namprd21.prod.outlook.com>
+References: <20190918060227.6834-1-weh@microsoft.com>
+In-Reply-To: <20190918060227.6834-1-weh@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-09-18T21:48:02.5575555Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=30212914-bdb7-4059-a1ca-460e579deda0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:9:99c:b2aa:3faf:294b]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: af0721b1-4e76-444e-c912-08d73c81e27f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR21MB0826;
+x-ms-traffictypediagnostic: DM5PR21MB0826:|DM5PR21MB0826:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR21MB082626F3B24E7AFB92B9B605D78E0@DM5PR21MB0826.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 01644DCF4A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(346002)(39860400002)(136003)(376002)(366004)(199004)(189003)(86362001)(22452003)(6436002)(10290500003)(25786009)(9686003)(7736002)(1250700005)(478600001)(14454004)(81166006)(33656002)(6246003)(8936002)(8676002)(99286004)(6116002)(6636002)(10090500001)(81156014)(6506007)(55016002)(229853002)(8990500004)(2906002)(102836004)(110136005)(2201001)(446003)(71190400001)(71200400001)(486006)(316002)(76176011)(305945005)(186003)(1511001)(52536014)(46003)(66446008)(7696005)(66476007)(256004)(66556008)(74316002)(64756008)(76116006)(5660300002)(7416002)(476003)(2501003)(14444005)(11346002)(66946007)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0826;H:DM5PR21MB0137.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CqlHd7YfQxYgobyBxK4n5dR0c9j7VlKagM30nCliK2YE4e9jG5Pt9+vUNhmxGmC/5AttWkTW09MKpEb1C2mX7lrWmd+PhIpF6e5SmfgB/gpIUW3bDS20Rc7dxymtkyvS4MYhhGfsvQYOzqphUMY/fTf5a1VZz4IAMtnGEeF4i9YNWEEqLsNqiyFa516Jn8HXF6TQGDJWhn7c3GajJVOQJ0ROpD0xTOdVmjxyBQReuaOQrVFbxBR2dciVgvx95gcCvPp+E+bfpOFN090cLngQmJMztJdXWt7ildSWYw5JJEXMmRUSZbFJ21YeLuDJSRFPneIiIrktfZBFJqtGdD85Mm31njP0OCffgrTeT5Od45oLZt2OKnNJ1roJ5su/WvcfhXCdhP/aKm/IPK4aH5FhOcdP7GuFG6PPzaABduwK8Hc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190918204316.237342-1-campello@chromium.org>
-In-Reply-To: <20190918204316.237342-1-campello@chromium.org>
-From:   Nick Crews <ncrews@chromium.org>
-Date:   Wed, 18 Sep 2019 15:44:57 -0600
-X-Gmail-Original-Message-ID: <CAHX4x85JkU706D8mmMJ1Ahu2=8oSvU1o_sz3VeVHDD1BZ_fKMQ@mail.gmail.com>
-Message-ID: <CAHX4x85JkU706D8mmMJ1Ahu2=8oSvU1o_sz3VeVHDD1BZ_fKMQ@mail.gmail.com>
-Subject: Re: [PATCH v4] platform/chrome: wilco_ec: Add debugfs test_event file
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Duncan Laurie <dlaurie@google.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af0721b1-4e76-444e-c912-08d73c81e27f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 21:48:04.2278
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3DbYU6D+hKg7KD5j39PwaiacK18LW7LS8K3NNsTAi4Mjxb2qZAAAD7++KhGVhlBecPs2Z/GfC/5vq7oajS4C2hZOdK39VUsn1AEjQv6B0d4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0826
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Assuming that the Kbuild bot doesn't get mad about the format string
-now, LGTM. Thanks Daniel!
+From: Wei Hu <weh@microsoft.com> Sent: Tuesday, September 17, 2019 11:03 PM
 
-Reviewed-by: Nick Crews <ncrews@chromium.org>
-
-On Wed, Sep 18, 2019 at 2:43 PM Daniel Campello <campello@chromium.org> wrote:
->
-> This change introduces a new debugfs file 'test_event' that when written
-> to causes the EC to generate a test event.
->
-> Signed-off-by: Daniel Campello <campello@chromium.org>
+>=20
+> Without deferred IO support, hyperv_fb driver informs the host to refresh
+> the entire guest frame buffer at fixed rate, e.g. at 20Hz, no matter ther=
+e
+> is screen update or not. This patch supports deferred IO for screens in
+> graphics mode and also enables the frame buffer on-demand refresh. The
+> highest refresh rate is still set at 20Hz.
+>=20
+> Currently Hyper-V only takes a physical address from guest as the startin=
+g
+> address of frame buffer. This implies the guest must allocate contiguous
+> physical memory for frame buffer. In addition, Hyper-V Gen 2 VMs only
+> accept address from MMIO region as frame buffer address. Due to these
+> limitations on Hyper-V host, we keep a shadow copy of frame buffer
+> in the guest. This means one more copy of the dirty rectangle inside
+> guest when doing the on-demand refresh. This can be optimized in the
+> future with help from host. For now the host performance gain from deferr=
+ed
+> IO outweighs the shadow copy impact in the guest.
+>=20
+> Signed-off-by: Wei Hu <weh@microsoft.com>
 > ---
-> Changes for v2:
->   - Cleaned up and added comments.
->   - Renamed and updated function signature from write_to_mailbox to
->     send_ec_cmd.
-> Changes for v3:
->   - Switched NULL format string to empty format string
->   - Renamed val parameter on send_ec_cmd to out_val
-> Changes for v4:
->   - Provided a format string to avoid -Wformat-zero-length warning
->
->  drivers/platform/chrome/wilco_ec/debugfs.c | 46 +++++++++++++++++-----
->  1 file changed, 36 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
-> index 8d65a1e2f1a3..ba86c38421ff 100644
-> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
-> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-> @@ -160,29 +160,29 @@ static const struct file_operations fops_raw = {
->
->  #define CMD_KB_CHROME          0x88
->  #define SUB_CMD_H1_GPIO                0x0A
-> +#define SUB_CMD_TEST_EVENT     0x0B
->
-> -struct h1_gpio_status_request {
-> +struct ec_request {
->         u8 cmd;         /* Always CMD_KB_CHROME */
->         u8 reserved;
-> -       u8 sub_cmd;     /* Always SUB_CMD_H1_GPIO */
-> +       u8 sub_cmd;
->  } __packed;
->
-> -struct hi_gpio_status_response {
-> +struct ec_response {
->         u8 status;      /* 0 if allowed */
-> -       u8 val;         /* BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL */
-> +       u8 val;
->  } __packed;
->
-> -static int h1_gpio_get(void *arg, u64 *val)
-> +static int send_ec_cmd(struct wilco_ec_device *ec, u8 sub_cmd, u8 *out_val)
->  {
-> -       struct wilco_ec_device *ec = arg;
-> -       struct h1_gpio_status_request rq;
-> -       struct hi_gpio_status_response rs;
-> +       struct ec_request rq;
-> +       struct ec_response rs;
->         struct wilco_ec_message msg;
->         int ret;
->
->         memset(&rq, 0, sizeof(rq));
->         rq.cmd = CMD_KB_CHROME;
-> -       rq.sub_cmd = SUB_CMD_H1_GPIO;
-> +       rq.sub_cmd = sub_cmd;
->
->         memset(&msg, 0, sizeof(msg));
->         msg.type = WILCO_EC_MSG_LEGACY;
-> @@ -196,13 +196,37 @@ static int h1_gpio_get(void *arg, u64 *val)
->         if (rs.status)
->                 return -EIO;
->
-> -       *val = rs.val;
-> +       *out_val = rs.val;
->
->         return 0;
->  }
-> +/**
-> + * h1_gpio_get() - Gets h1 gpio status.
-> + * @arg: The wilco EC device.
-> + * @val: BIT(0)=ENTRY_TO_FACT_MODE, BIT(1)=SPI_CHROME_SEL
-> + */
-> +static int h1_gpio_get(void *arg, u64 *val)
-> +{
-> +       return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
-> +}
->
->  DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
->
-> +/**
-> + * test_event_set() - Sends command to EC to cause an EC test event.
-> + * @arg: The wilco EC device.
-> + * @val: unused.
-> + */
-> +static int test_event_set(void *arg, u64 val)
-> +{
-> +       u8 ret;
-> +
-> +       return send_ec_cmd(arg, SUB_CMD_TEST_EVENT, &ret);
-> +}
-> +
-> +/* Format is unused since it is only required for get method which is NULL */
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_test_event, NULL, test_event_set, "%llu\n");
-> +
->  /**
->   * wilco_ec_debugfs_probe() - Create the debugfs node
->   * @pdev: The platform device, probably created in core.c
-> @@ -226,6 +250,8 @@ static int wilco_ec_debugfs_probe(struct platform_device *pdev)
->         debugfs_create_file("raw", 0644, debug_info->dir, NULL, &fops_raw);
->         debugfs_create_file("h1_gpio", 0444, debug_info->dir, ec,
->                             &fops_h1_gpio);
-> +       debugfs_create_file("test_event", 0200, debug_info->dir, ec,
-> +                           &fops_test_event);
->
->         return 0;
->  }
-> --
-> 2.23.0.237.gc6a4ce50a0-goog
->
+>     v2: Incorporated review comments from Michael Kelley
+>     - Increased dirty rectangle by one row in deferred IO case when sendi=
+ng
+>     to Hyper-V.
+>     - Corrected the dirty rectangle size in the text mode.
+>     - Added more comments.
+>     - Other minor code cleanups.
+>=20
+>     v3: Incorporated more review comments
+>     - Removed a few unnecessary variable tests
+>=20
+>     v4: Incorporated test and review feedback from Dexuan Cui
+>     - Not disable interrupt while acquiring docopy_lock in
+>       hvfb_update_work(). This avoids significant bootup delay in
+>       large vCPU count VMs.
+>=20
+>     v5: Completely remove the unnecessary docopy_lock after discussing
+>     with Dexuan Cui.
+>=20
+>     v6: Do not request host refresh when the VM guest screen is
+>     closed or minimized.
+>=20
+>  drivers/video/fbdev/Kconfig     |   1 +
+>  drivers/video/fbdev/hyperv_fb.c | 210 ++++++++++++++++++++++++++++----
+>  2 files changed, 190 insertions(+), 21 deletions(-)
+>=20
+
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
