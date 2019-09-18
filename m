@@ -2,98 +2,165 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB91C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE851C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59AA721897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CptOw0hF"
+	by mail.kernel.org (Postfix) with ESMTP id C2365218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568812072;
+	bh=rj5WMPvEQEEDlEkrOcuDiRS34WbhKH/4aLvT8LmbHXM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=C8fKBH0MpqXpK9lhC/x1iUl7a8yS8JnEpERdkAgo9fV4Np+2CGZn8beoiXOxzeXYt
+	 FnGkG/SSR6Zb9TzIvgR7sdAgaqaaWToNyMlgB9SVmxskHvVKDcOXxksqWZ0S5190bx
+	 cEDN5DgmIzhxUh5wxx2Cu/K5mm4JobFeSmnfAbRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731416AbfIRNH1 (ORCPT
+        id S1731525AbfIRNHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:07:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45897 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfIRNH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:07:27 -0400
-Received: by mail-pl1-f196.google.com with SMTP id u12so447465pls.12;
-        Wed, 18 Sep 2019 06:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8PF5nIJ+jYt7X/oj9VI26YgDuXnqnvQElnGgf6PKBKU=;
-        b=CptOw0hFcRgsZzonPLlM5hp/DQ4fCfs36m+tm/qkQal+OHbaPwmbp0UGP0VGTdbS6/
-         1N70hF12R5oe2JyYIMvPrK7nklhgd4gcrhjscYmIoGChtfShE9npcuFH0uPnU8a2BXv6
-         04PQVNIb4x6PX8v0dAZty2bnJvy1+FgB5iXgMaunYBNmy4h3YrUUqbX/QZK13FRByd3g
-         BoXIbTMCiBLu/CphQwShGqjTZxhqFrky8MOxO9mLTZ8u3pWgT2AAKBHmhZObNuzV+EuL
-         YKut4pMBr+n2tLT46NUdVaZiPovMimUCiLPtyJS/sQ0YnjmC0w1xZOcmtpnetdKJjVxs
-         qdtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8PF5nIJ+jYt7X/oj9VI26YgDuXnqnvQElnGgf6PKBKU=;
-        b=M8wTMH+fEzRvgSSg7IvXKCyQk86JHTxx1RzOJO1E9wjwsaqmYGo3VIylmpLhV+75o6
-         v9bTjMssrC/m/IGS3XK4RPr2a8hsy6I4o2YLkdioxqH21C999KEPLpieo3E4l+lnf86B
-         0JEmHYn1gkpSrM0Kw/qDjh9CXXwGgfYc3FmRR7o63aZ017/oNaM+bUF5BbCEkN7m1D4C
-         cAj97r87aQvIXtgR9NmyH/M8tbZg7TkNFEXMzTnL9SjWfZTm0sa3pW7LUMqTTB7O2JaN
-         tpS6OL3EYjNcAuQZPYgjg8jBvJxxdi1RYgZU3UgGIz7jh04JXrhoMHoPoAPM8A2iFIw+
-         7UqA==
-X-Gm-Message-State: APjAAAVegng4HyAtiFzE6WMp8sDiu0yt1LZ6d3LEh/kYfe4YiTvYUi+0
-        PmWh5XQozHwwIeqWiBbd654PyZ8mg73z+ElF0cw=
-X-Google-Smtp-Source: APXvYqyHpOkH0A4Lg6RzofKUVA+U6jrBv3kh07YnVojlVqJxsaAVDPZmxzXots/ocDQKVAqG6Kvh8Nr+MMBw7hYu1Io=
-X-Received: by 2002:a17:902:968f:: with SMTP id n15mr4216536plp.18.1568812046476;
- Wed, 18 Sep 2019 06:07:26 -0700 (PDT)
+        Wed, 18 Sep 2019 09:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727001AbfIRNHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:07:51 -0400
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13AE8218AF;
+        Wed, 18 Sep 2019 13:07:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568812070;
+        bh=rj5WMPvEQEEDlEkrOcuDiRS34WbhKH/4aLvT8LmbHXM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HkTpq5+CByuJLJDwSrthSKsjXN0hKpfqPBHUURdLgqFG9pQzMkystKtHtUZkcVRG9
+         We5olk9m+0byrycIfNpv0/D3RpKmOUaLK/JMJQA9ww0uMy6aZi+4/Bahh9uhvPX/em
+         vADBC0xYeKgnxRru0WPZgYYq+O93auE94vaHAndU=
+Received: by mail-ot1-f49.google.com with SMTP id e11so5089450otl.5;
+        Wed, 18 Sep 2019 06:07:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAWrRDNCiLBFW/7oP+FLXH2ntwqQas6CVjV5XefeqNOcV0Cv3sbE
+        /S4QBHEjzgjDG47hw9HJ0r3svEPzm50nVzBLhnY=
+X-Google-Smtp-Source: APXvYqwwzw5VrS2kd6JSzP3MY3hp/cDqnCUwn6rD+GogeFn8UDSudHrPnW0AvhgZI930v5OwBzBSAmmjv49Yu3xnlIU=
+X-Received: by 2002:a9d:6f08:: with SMTP id n8mr2951063otq.128.1568812069398;
+ Wed, 18 Sep 2019 06:07:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190917194507.14771-1-jekhor@gmail.com> <20190917194507.14771-2-jekhor@gmail.com>
-In-Reply-To: <20190917194507.14771-2-jekhor@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Sep 2019 16:07:15 +0300
-Message-ID: <CAHp75Vc1puy01=Ki6EiJfZTGPtgkWiar9GhEb7EX0OF7CmNo7w@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] platform/x86/intel_cht_int33fe: Split code to USB
- TypeB and TypeC variants
-To:     Yauhen Kharuzhy <jekhor@gmail.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andy Shevchenko <andy@infradead.org>
+References: <20190907092007.9946-1-krzk@kernel.org> <20190907092007.9946-8-krzk@kernel.org>
+ <20190918123654.GA318@bogus>
+In-Reply-To: <20190918123654.GA318@bogus>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 18 Sep 2019 15:07:38 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfFS5bA_OK4Zw_2e3T2MEuNETdcBMLMhGRHC-_UYvsLfA@mail.gmail.com>
+Message-ID: <CAJKOXPfFS5bA_OK4Zw_2e3T2MEuNETdcBMLMhGRHC-_UYvsLfA@mail.gmail.com>
+Subject: Re: [PATCH v2 08/11] dt-bindings: arm: samsung: Convert Exynos System
+ Registers bindings to json-schema
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:45 PM Yauhen Kharuzhy <jekhor@gmail.com> wrote:
+On Wed, 18 Sep 2019 at 14:36, Rob Herring <robh@kernel.org> wrote:
 >
-> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-> hardware has TypeC connector and register related devices described as
-> I2C connections in the _CRS resource.
+> On Sat, Sep 07, 2019 at 11:20:04AM +0200, Krzysztof Kozlowski wrote:
+> > Convert Samsung Exynos System Registers (SYSREG) bindings to DT schema
+> > format using json-schema.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >
+> > ---
+> >
+> > Example somehow fails:
+> > Documentation/devicetree/bindings/arm/samsung/pmu.example.dt.yaml:
+> > system-controller@10040000: compatible:0: 'samsung,exynos5250-pmu' is
+> > not one of ['samsung,exynos4-sysreg', 'samsung,exynos5-sysreg']
+> >
+> > It seems that PMU schema is applied to sysreq nodes (and vice-versa).
+> > ---
+> >  .../bindings/arm/samsung/sysreg.txt           | 19 -----------
+> >  .../bindings/arm/samsung/sysreg.yaml          | 33 +++++++++++++++++++
+> >  2 files changed, 33 insertions(+), 19 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> > deleted file mode 100644
+> > index 4fced6e9d5e4..000000000000
+> > --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> > +++ /dev/null
+> > @@ -1,19 +0,0 @@
+> > -SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+> > -
+> > -Properties:
+> > - - compatible : should contain two values. First value must be one from following list:
+> > -             - "samsung,exynos4-sysreg" - for Exynos4 based SoCs,
+> > -             - "samsung,exynos5-sysreg" - for Exynos5 based SoCs.
+> > -             second value must be always "syscon".
+> > - - reg : offset and length of the register set.
+> > -
+> > -Example:
+> > -     syscon@10010000 {
+> > -             compatible = "samsung,exynos4-sysreg", "syscon";
+> > -             reg = <0x10010000 0x400>;
+> > -     };
+> > -
+> > -     syscon@10050000 {
+> > -             compatible = "samsung,exynos5-sysreg", "syscon";
+> > -             reg = <0x10050000 0x5000>;
+> > -     };
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+> > new file mode 100644
+> > index 000000000000..a3d44646e441
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+> > @@ -0,0 +1,33 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/samsung/sysreg.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung S5P/Exynos SoC series System Registers (SYSREG)
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - samsung,exynos4-sysreg
+> > +          - samsung,exynos5-sysreg
+> > +      - const: syscon
 >
-> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with micro
-> USB B connector exists. It has INT33FE device in the DSDT table but
-> there are only two I2C connection described: PMIC and BQ27452 battery
-> fuel gauge.
+> The problem is this will by default match any node with 'syscon'. You
+> have to add a custom 'select' entry. See the LVDS panel bindings for an
+> example.
 >
-> Splitting existing INT33FE driver allow to maintain code for USB type B
-> (AB) connector variant separately and make it simpler.
->
-> Split driver to intel_cht_int33fe_common.c and
-> intel_cht_int33fe_{typeb,typec}.c. Compile all this source to one .ko
-> module to make user experience easier.
+> I'd like to kill off 'syscon'...
 
-Before sending new version also check that you spell correctly
-"Type-C" everywhere (except variable / function names).
+I see that panels use empty {} match but some other examples use
+custom select. The panel approach in my case does not actually check
+whether last compatible is syscon. I'll go then with a separate select
+approach.
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+Best regards,
+Krzysztof
