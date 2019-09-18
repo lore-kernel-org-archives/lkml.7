@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFF9C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF08C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 012E221D56
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1C6B21D56
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788049;
-	bh=NElYCYZtG7ndIFLE/NKXMfydXZ+MIdGYUXPQCEkD1Ho=;
+	s=default; t=1568788052;
+	bh=BlZZyxwe1k/5J6YWXBAH1p9QSdMbz9nFu79JASgZdJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=khCz3QwEAD/q3VBT/NPF3/vZPZjeiE2AWzCP5zvr1BaIKHbWi6G1WbJrh2ABHhzAS
-	 honMRiF/1BBOJKxrfkFz6qmtztkHxrwqVow9C5rV3uaJ5pdKgDAH/2dn807SeIndCa
-	 Fk9VmX2pvG8SE/wmwkRiT3SXVaJ0n4T61izxfp98=
+	b=hV4LPGYUEuZWwIKNEgmhK0l5PnU+J+Yss+XbPm8Pmsvs6vpQDeVSz3rO+wXFYYgVC
+	 vkvvaX//e8DGa+eQ9RTOs2TRAl18r9fUGEXlRNT8s02JsmpUewP+RKnjmTiORkJwqa
+	 fbHt9WKqK29UtxFT3iXrMRSTVvG8CeWDraHFuHyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730526AbfIRG12 (ORCPT
+        id S1727369AbfIRG1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49256 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730517AbfIRG1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:24 -0400
+        id S1730508AbfIRG1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D6AF218AF;
-        Wed, 18 Sep 2019 06:27:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B6E321924;
+        Wed, 18 Sep 2019 06:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788043;
-        bh=NElYCYZtG7ndIFLE/NKXMfydXZ+MIdGYUXPQCEkD1Ho=;
+        s=default; t=1568788040;
+        bh=BlZZyxwe1k/5J6YWXBAH1p9QSdMbz9nFu79JASgZdJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VipZztlDM8+nTtFv+n/7PFph16xE6AqWEjP+N61A6mHea5SwrysaAcr1PbjAfpXZZ
-         OJXnKmQ0WrJZfgsZ7yzf20kMAY6ptfdDLsTu1hD1wDZmyFbHySHF0c7N4NxOk5ilGd
-         2R9rJza0m8JpX8spf05ZH4kISEDzZc6OhuNT34xQ=
+        b=AzZpZLOx4HFiKR62fqHdKDd0rRtRJlJ95TyjCVQBna/yLXZAgmiCbruNdb3DuzI22
+         rmm5N+xJFhGl5qbX2pUsYIhREazyoZaBlzPekuB357vbl4d8uMaF3osByDIy7usuNv
+         +KIjJ7uUKGbEMmUcwIAmvCtwJFctgUcRGZElDoRc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
-        Mark Brown <broonie@kernel.org>, Adam Ford <aford173@gmail.com>
-Subject: [PATCH 5.2 42/85] regulator: twl: voltage lists for vdd1/2 on twl4030
-Date:   Wed, 18 Sep 2019 08:19:00 +0200
-Message-Id: <20190918061235.470837048@linuxfoundation.org>
+        stable@vger.kernel.org, Jian Cheng <cj.chengjian@huawei.com>,
+        Nadav Amit <namit@vmware.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH 5.2 77/85] modules: fix BUG when load module with rodata=n
+Date:   Wed, 18 Sep 2019 08:19:35 +0200
+Message-Id: <20190918061237.825400850@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,107 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit 3829100a63724f6dbf264b2a7f06e7f638ed952d upstream.
+commit 2eef1399a866c57687962e15142b141a4f8e7862 upstream.
 
-_opp_supported_by_regulators() wrongly ignored errors from
-regulator_is_supported_voltage(), so it considered errors as
-success. Since
-commit 498209445124 ("regulator: core: simplify return value on suported_voltage")
-regulator_is_supported_voltage() returns a real boolean, so
-errors make _opp_supported_by_regulators() return false.
+When loading a module with rodata=n, it causes an executing
+NX-protected page BUG.
 
-That reveals a problem with the declaration of the VDD1/2
-regulators on twl4030.
-The VDD1/VDD2 regulators on twl4030 are neither defined with
-voltage lists nor with the continuous flag set, so
-regulator_is_supported_voltage() returns false and an error
-before above mentioned commit (which was considered success)
-The result is that after the above mentioned commit cpufreq
-does not work properly e.g. dm3730.
+[   32.379191] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+[   32.382917] BUG: unable to handle page fault for address: ffffffffc0005000
+[   32.385947] #PF: supervisor instruction fetch in kernel mode
+[   32.387662] #PF: error_code(0x0011) - permissions violation
+[   32.389352] PGD 240c067 P4D 240c067 PUD 240e067 PMD 421a52067 PTE 8000000421a53063
+[   32.391396] Oops: 0011 [#1] SMP PTI
+[   32.392478] CPU: 7 PID: 2697 Comm: insmod Tainted: G           O      5.2.0-rc5+ #202
+[   32.394588] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+[   32.398157] RIP: 0010:ko_test_init+0x0/0x1000 [ko_test]
+[   32.399662] Code: Bad RIP value.
+[   32.400621] RSP: 0018:ffffc900029f3ca8 EFLAGS: 00010246
+[   32.402171] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[   32.404332] RDX: 00000000000004c7 RSI: 0000000000000cc0 RDI: ffffffffc0005000
+[   32.406347] RBP: ffffffffc0005000 R08: ffff88842fbebc40 R09: ffffffff810ede4a
+[   32.408392] R10: ffffea00108e3480 R11: 0000000000000000 R12: ffff88842bee21a0
+[   32.410472] R13: 0000000000000001 R14: 0000000000000001 R15: ffffc900029f3e78
+[   32.412609] FS:  00007fb4f0c0a700(0000) GS:ffff88842fbc0000(0000) knlGS:0000000000000000
+[   32.414722] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   32.416290] CR2: ffffffffc0004fd6 CR3: 0000000421a90004 CR4: 0000000000020ee0
+[   32.418471] Call Trace:
+[   32.419136]  do_one_initcall+0x41/0x1df
+[   32.420199]  ? _cond_resched+0x10/0x40
+[   32.421433]  ? kmem_cache_alloc_trace+0x36/0x160
+[   32.422827]  do_init_module+0x56/0x1f7
+[   32.423946]  load_module+0x1e67/0x2580
+[   32.424947]  ? __alloc_pages_nodemask+0x150/0x2c0
+[   32.426413]  ? map_vm_area+0x2d/0x40
+[   32.427530]  ? __vmalloc_node_range+0x1ef/0x260
+[   32.428850]  ? __do_sys_init_module+0x135/0x170
+[   32.430060]  ? _cond_resched+0x10/0x40
+[   32.431249]  __do_sys_init_module+0x135/0x170
+[   32.432547]  do_syscall_64+0x43/0x120
+[   32.433853]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-[    2.490997] core: _opp_supported_by_regulators: OPP minuV: 1012500 maxuV: 1012500, not supported by regulator
-[    2.501617] cpu cpu0: _opp_add: OPP not supported by regulators (300000000)
-[    2.509246] core: _opp_supported_by_regulators: OPP minuV: 1200000 maxuV: 1200000, not supported by regulator
-[    2.519775] cpu cpu0: _opp_add: OPP not supported by regulators (600000000)
-[    2.527313] core: _opp_supported_by_regulators: OPP minuV: 1325000 maxuV: 1325000, not supported by regulator
-[    2.537750] cpu cpu0: _opp_add: OPP not supported by regulators (800000000)
+Because if rodata=n, set_memory_x() can't be called, fix this by
+calling set_memory_x in complete_formation();
 
-The patch fixes declaration of VDD1/2 regulators by
-adding proper voltage lists.
-
-Fixes: 498209445124 ("regulator: core: simplify return value on suported_voltage")
-Cc: stable@vger.kernel.org
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Tested-by: Adam Ford <aford173@gmail.com> #logicpd-torpedo-37xx-devkit
-Link: https://lore.kernel.org/r/20190814214319.24087-1-andreas@kemnade.info
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: f2c65fb3221a ("x86/modules: Avoid breaking W^X while loading modules")
+Suggested-by: Jian Cheng <cj.chengjian@huawei.com>
+Reviewed-by: Nadav Amit <namit@vmware.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/regulator/twl-regulator.c |   23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ kernel/module.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/regulator/twl-regulator.c
-+++ b/drivers/regulator/twl-regulator.c
-@@ -359,6 +359,17 @@ static const u16 VINTANA2_VSEL_table[] =
- 	2500, 2750,
- };
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1961,13 +1961,9 @@ void module_enable_ro(const struct modul
+ 	set_vm_flush_reset_perms(mod->core_layout.base);
+ 	set_vm_flush_reset_perms(mod->init_layout.base);
+ 	frob_text(&mod->core_layout, set_memory_ro);
+-	frob_text(&mod->core_layout, set_memory_x);
  
-+/* 600mV to 1450mV in 12.5 mV steps */
-+static const struct regulator_linear_range VDD1_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500)
-+};
+ 	frob_rodata(&mod->core_layout, set_memory_ro);
+-
+ 	frob_text(&mod->init_layout, set_memory_ro);
+-	frob_text(&mod->init_layout, set_memory_x);
+-
+ 	frob_rodata(&mod->init_layout, set_memory_ro);
+ 
+ 	if (after_init)
+@@ -2030,6 +2026,12 @@ void set_all_modules_text_ro(void)
+ static void module_enable_nx(const struct module *mod) { }
+ #endif
+ 
++static void module_enable_x(const struct module *mod)
++{
++	frob_text(&mod->core_layout, set_memory_x);
++	frob_text(&mod->init_layout, set_memory_x);
++}
 +
-+/* 600mV to 1450mV in 12.5 mV steps, everything above = 1500mV */
-+static const struct regulator_linear_range VDD2_ranges[] = {
-+	REGULATOR_LINEAR_RANGE(600000, 0, 68, 12500),
-+	REGULATOR_LINEAR_RANGE(1500000, 69, 69, 12500)
-+};
-+
- static int twl4030ldo_list_voltage(struct regulator_dev *rdev, unsigned index)
- {
- 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
-@@ -427,6 +438,8 @@ static int twl4030smps_get_voltage(struc
- }
+ #ifdef CONFIG_LIVEPATCH
+ /*
+  * Persist Elf information about a module. Copy the Elf header,
+@@ -3626,6 +3628,7 @@ static int complete_formation(struct mod
  
- static const struct regulator_ops twl4030smps_ops = {
-+	.list_voltage   = regulator_list_voltage_linear_range,
-+
- 	.set_voltage	= twl4030smps_set_voltage,
- 	.get_voltage	= twl4030smps_get_voltage,
- };
-@@ -466,7 +479,8 @@ static const struct twlreg_info TWL4030_
- 		}, \
- 	}
+ 	module_enable_ro(mod, false);
+ 	module_enable_nx(mod);
++	module_enable_x(mod);
  
--#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf) \
-+#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf, \
-+		n_volt) \
- static const struct twlreg_info TWL4030_INFO_##label = { \
- 	.base = offset, \
- 	.id = num, \
-@@ -479,6 +493,9 @@ static const struct twlreg_info TWL4030_
- 		.owner = THIS_MODULE, \
- 		.enable_time = turnon_delay, \
- 		.of_map_mode = twl4030reg_map_mode, \
-+		.n_voltages = n_volt, \
-+		.n_linear_ranges = ARRAY_SIZE(label ## _ranges), \
-+		.linear_ranges = label ## _ranges, \
- 		}, \
- 	}
- 
-@@ -518,8 +535,8 @@ TWL4030_ADJUSTABLE_LDO(VSIM, 0x37, 9, 10
- TWL4030_ADJUSTABLE_LDO(VDAC, 0x3b, 10, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VINTANA2, 0x43, 12, 100, 0x08);
- TWL4030_ADJUSTABLE_LDO(VIO, 0x4b, 14, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08);
--TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08);
-+TWL4030_ADJUSTABLE_SMPS(VDD1, 0x55, 15, 1000, 0x08, 68);
-+TWL4030_ADJUSTABLE_SMPS(VDD2, 0x63, 16, 1000, 0x08, 69);
- /* VUSBCP is managed *only* by the USB subchip */
- TWL4030_FIXED_LDO(VINTANA1, 0x3f, 1500, 11, 100, 0x08);
- TWL4030_FIXED_LDO(VINTDIG, 0x47, 1500, 13, 100, 0x08);
+ 	/* Mark state as coming so strong_try_module_get() ignores us,
+ 	 * but kallsyms etc. can see us. */
 
 
