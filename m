@@ -2,90 +2,89 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA82C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF965C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD4E2218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0ED72067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FZQShb2K";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ET8E4D+x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbfIRNIo (ORCPT
+        id S1731564AbfIRNI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:08:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:17819 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727001AbfIRNIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:08:43 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:08:42 -0700
-X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="187761706"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:08:39 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 38DF22075A; Wed, 18 Sep 2019 16:08:37 +0300 (EEST)
-Date:   Wed, 18 Sep 2019 16:08:37 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v6 01/12] tools lib traceevent: Convert remaining %p[fF]
- users to %p[sS]
-Message-ID: <20190918130837.GQ5781@paasikivi.fi.intel.com>
-References: <20190910084707.18380-1-sakari.ailus@linux.intel.com>
- <20190910084707.18380-2-sakari.ailus@linux.intel.com>
- <20190910071837.2e9110f8@oasis.local.home>
- <61a2b2ab4693535850306f396aac2a328e1d5a21.camel@perches.com>
- <20190910142621.0bec208d@oasis.local.home>
- <c458e734f5777561138b87228384808398547762.camel@perches.com>
- <20190910150303.5a0d3904@oasis.local.home>
- <c90c33b421c0fa0db5182d0f58c6ba6e86cf1622.camel@perches.com>
- <20190916114158.GN5781@paasikivi.fi.intel.com>
- <20190916103755.4c19eda9@gandalf.local.home>
+        Wed, 18 Sep 2019 09:08:58 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:39962 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729261AbfIRNI5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:08:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1ABCD6155D; Wed, 18 Sep 2019 13:08:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568812137;
+        bh=Xlm9buTwkjGMeOAaB1iCCifyWmGXMZvazAeI3ceUL+U=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=FZQShb2KcdByFxaca4AVvz7XWHjldvgGlJlQzoh8flyuU74TrUd7yCsv6eR3teZR8
+         Wjze0C+teQYY8fqNlMRPIvgnaJJhLDuMlx1fLgyZwIgVJ+el2clRsdkz3yC3tC2JpA
+         OyaRaQMaqitXo5SJcCUjS9+dXoUxFkeHi+zy/KOY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F129F614DC;
+        Wed, 18 Sep 2019 13:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568812136;
+        bh=Xlm9buTwkjGMeOAaB1iCCifyWmGXMZvazAeI3ceUL+U=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=ET8E4D+xHsJ5/aDa1J5+s0ESTYpL0JpbVSbrOQsbAvaQihdaGD18ntRHyCmOq6y29
+         UyK39hb8V64zMYu05Nx8wF+P20TxsoGiavH3XA7lr83pJ2/8egpH1RtSaEjlJ5t0R0
+         jVbwPwSgzIlRRPeD+hjQSSW81/J7ASldW4mD/6LM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F129F614DC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
+        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
+        <davem@davemloft.net>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH net] iwlwifi: add dependency of THERMAL with IWLMVM
+References: <20190918122815.155657-1-maowenan@huawei.com>
+Date:   Wed, 18 Sep 2019 16:08:51 +0300
+In-Reply-To: <20190918122815.155657-1-maowenan@huawei.com> (Mao Wenan's
+        message of "Wed, 18 Sep 2019 20:28:15 +0800")
+Message-ID: <875zlpbvks.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190916103755.4c19eda9@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steven,
+Mao Wenan <maowenan@huawei.com> writes:
 
-On Mon, Sep 16, 2019 at 10:37:55AM -0400, Steven Rostedt wrote:
-> > If you think that's an issue, I'll opt for another extension than %pfw,
-> > which I chose originally since it's memorable --- fw for fwnode (names,
-> > paths, and probably more in the future).
-> > 
-> 
-> I'm fine with the switch, as long as newer tools know how to handle it.
-> 
-> Make sure we also add a comment in the Linux kernel code that states
-> that older kernels use to have 'f' and 'F' and that new tools look for
-> 'fw' to denote that this isn't an older kernel. This way, people will
-> hopefully not add another 'fX' pointer name.
+> If CONFIG_IWLMVM=y, CONFIG_THERMAL=n, below error can be found:
+> drivers/net/wireless/intel/iwlwifi/mvm/fw.o: In function `iwl_mvm_up':
+> fw.c:(.text+0x2c26): undefined reference to `iwl_mvm_send_temp_report_ths_cmd'
+> make: *** [vmlinux] Error 1
+>
+> After commit 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal
+> monitoring regardless of CONFIG_THERMAL"), iwl_mvm_up()
+> calls iwl_mvm_send_temp_report_ths_cmd(), but this function
+> is under CONFIG_THERMAL, which is depended on CONFIG_THERMAL.
+>
+> Fixes: 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal monitoring regardless of CONFIG_THERMAL")
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
-Good point. I'll add a comment on this to make_bprint_args() in
-tools/lib/traceevent/event-parse.c as well as in vsprintf.c.
+Luca, should I apply this directly to wireless-drivers?
 
 -- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
