@@ -4,53 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F10C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B38C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 276A421929
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AFEE218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787744;
-	bh=nohuGyc7hfdYqZ6sL9+EviD0Dgpon4dbSK9zLX7rpCI=;
+	s=default; t=1568787749;
+	bh=E5qFM9JwfT/RlEFz5qXENUWs6QlfF4J6VVbZoYTgojM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oh8zposOMEUQk7w0aOyMDd4hVvOSbIRYeP/p02ZZbQK+rFRus/DcfP6T5nvTnH+Lj
-	 l5GeNuVQcCFr0J1OBL9AsZmTQIECRXMINjdXvMeMdOe9oi6X1UF6GyJiaaEOv1RGNp
-	 Lifgp2/FqwH4YwN+Pg6Ui8XumLkcfjNTuvoy3i+E=
+	b=1J8oZz3wJYjJWEYOrVDyb3jVGY+G5+MmdesJk0tckgh+2dbBNNHcocwoExIL1YuYr
+	 MsH5hlzDBiHtsGROSk6QMn51uxYEL/fWgRHHPC/kPF57kYKdrTtk86e8XXJSyGofhd
+	 wqCRc1IlnesLl9cnj3vnQsjNxUKvTLe2eInvAnq0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbfIRGWW (ORCPT
+        id S1729407AbfIRGW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42202 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbfIRGWU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:20 -0400
+        id S1729390AbfIRGWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7400F21906;
-        Wed, 18 Sep 2019 06:22:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CE8D21A4C;
+        Wed, 18 Sep 2019 06:22:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787739;
-        bh=nohuGyc7hfdYqZ6sL9+EviD0Dgpon4dbSK9zLX7rpCI=;
+        s=default; t=1568787741;
+        bh=E5qFM9JwfT/RlEFz5qXENUWs6QlfF4J6VVbZoYTgojM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vx6dXzeR1sr9h/iSLkL9JvRUhaztOWWFGkuEk+u84DsdWm/G7C/CZ0Elu678kVuaM
-         i3Ne0kv4344/ByThFtxbFM/ssk6UL1vNB1P9EbcsIR/xUR7dOmLiB7hAlanC2V6fo1
-         XtDm+7un/Bq+xVsACfnUD/grSeQsFSd8jUj19vhE=
+        b=CZX39OUdMG4AWaMDA6Lu42fEP5fCkx4DGdKuUeqIP4oCSS5KeDRPza4vxsWusjkFV
+         tX6Y75lnOB+ZYvRJ7LtEHiuWm3ZnbWEtuZwD4t2ppQ65Vro4AyVlVDe7UrEQ4HPQF9
+         /VaDCl7SlJawMW2YjHesA+UrggbvZEHXyR4Z9yaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Ian W MORRISON <ianwmorrison@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 16/50] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
-Date:   Wed, 18 Sep 2019 08:18:59 +0200
-Message-Id: <20190918061224.680169319@linuxfoundation.org>
+        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.19 17/50] gpio: fix line flag validation in linehandle_create
+Date:   Wed, 18 Sep 2019 08:19:00 +0200
+Message-Id: <20190918061224.818165049@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -63,115 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Kent Gibson <warthog618@gmail.com>
 
-commit 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4 upstream.
+commit e95fbc130a162ba9ad956311b95aa0da269eea48 upstream.
 
-Another day; another DSDT bug we need to workaround...
+linehandle_create should not allow both GPIOHANDLE_REQUEST_INPUT
+and GPIOHANDLE_REQUEST_OUTPUT to be set.
 
-Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
-at least once on boot") we call _AEI edge handlers at boot.
-
-In some rare cases this causes problems. One example of this is the Minix
-Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
-and pasted code for dealing with Micro USB-B connector host/device role
-switching, while the mini PC does not even have a micro-USB connector.
-This code, which should not be there, messes with the DDC data pin from
-the HDMI connector (switching it to GPIO mode) breaking HDMI support.
-
-To avoid problems like this, this commit adds a new
-gpiolib_acpi.run_edge_events_on_boot kernel commandline option, which
-allows disabling the running of _AEI edge event handlers at boot.
-
-The default value is -1/auto which uses a DMI based blacklist, the initial
-version of this blacklist contains the Neo Z83-4 fixing the HDMI breakage.
-
-Cc: stable@vger.kernel.org
-Cc: Daniel Drake <drake@endlessm.com>
-Cc: Ian W MORRISON <ianwmorrison@gmail.com>
-Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20190827202835.213456-1-hdegoede@redhat.com
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Ian W MORRISON <ianwmorrison@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   42 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 38 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -10,6 +10,7 @@
-  * published by the Free Software Foundation.
-  */
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -525,6 +525,14 @@ static int linehandle_create(struct gpio
+ 		return -EINVAL;
  
-+#include <linux/dmi.h>
- #include <linux/errno.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-@@ -23,6 +24,11 @@
- 
- #include "gpiolib.h"
- 
-+static int run_edge_events_on_boot = -1;
-+module_param(run_edge_events_on_boot, int, 0444);
-+MODULE_PARM_DESC(run_edge_events_on_boot,
-+		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
+ 	/*
++	 * Do not allow both INPUT & OUTPUT flags to be set as they are
++	 * contradictory.
++	 */
++	if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
++	    (lflags & GPIOHANDLE_REQUEST_OUTPUT))
++		return -EINVAL;
 +
- /**
-  * struct acpi_gpio_event - ACPI GPIO event handler data
-  *
-@@ -174,10 +180,13 @@ static void acpi_gpiochip_request_irq(st
- 	event->irq_requested = true;
- 
- 	/* Make sure we trigger the initial state of edge-triggered IRQs */
--	value = gpiod_get_raw_value_cansleep(event->desc);
--	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
--	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
--		event->handler(event->irq, event);
-+	if (run_edge_events_on_boot &&
-+	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
-+		value = gpiod_get_raw_value_cansleep(event->desc);
-+		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
-+		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
-+			event->handler(event->irq, event);
-+	}
- }
- 
- static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
-@@ -1253,3 +1262,28 @@ static int acpi_gpio_handle_deferred_req
- }
- /* We must use _sync so that this runs after the first deferred_probe run */
- late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
-+
-+static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
-+		}
-+	},
-+	{} /* Terminating entry */
-+};
-+
-+static int acpi_gpio_setup_params(void)
-+{
-+	if (run_edge_events_on_boot < 0) {
-+		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-+			run_edge_events_on_boot = 0;
-+		else
-+			run_edge_events_on_boot = 1;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Directly after dmi_setup() which runs as core_initcall() */
-+postcore_initcall(acpi_gpio_setup_params);
++	/*
+ 	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
+ 	 * the hardware actually supports enabling both at the same time the
+ 	 * electrical result would be disastrous.
 
 
