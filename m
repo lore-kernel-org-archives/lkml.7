@@ -2,72 +2,221 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBB7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77A3F21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B4C21897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfIRI47 (ORCPT
+        id S1730729AbfIRI6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:56:59 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:52084 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfIRI47 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:56:59 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x8I8ukxU018315, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x8I8ukxU018315
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 18 Sep 2019 16:56:47 +0800
-Received: from localhost.localdomain (172.21.83.238) by
- RTITCASV01.realtek.com.tw (172.21.6.18) with Microsoft SMTP Server id
- 14.3.468.0; Wed, 18 Sep 2019 16:56:46 +0800
-From:   <max.chou@realtek.com>
-To:     <marcel@holtmann.org>, <johan.hedberg@gmail.com>,
-        <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <alex_lu@realsil.com.cn>, <max.chou@realtek.com>
-Subject: [PATCH] Bluetooth: btrtl: Fix an issue for the incorrect error return code.
-Date:   Wed, 18 Sep 2019 16:56:41 +0800
-Message-ID: <20190918085641.5374-1-max.chou@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 18 Sep 2019 04:58:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:37732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfIRI6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:58:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFDD1337;
+        Wed, 18 Sep 2019 01:58:08 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 463C03F59C;
+        Wed, 18 Sep 2019 01:58:08 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 09:58:06 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
+Message-ID: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-7-efremov@linux.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.21.83.238]
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190916204158.6889-7-efremov@linux.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Chou <max.chou@realtek.com>
+On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+> global one PCI_STD_NUM_BARS instead.
+> 
+> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+>  arch/s390/include/asm/pci.h     |  5 +----
+>  arch/s390/include/asm/pci_clp.h |  6 +++---
+>  arch/s390/pci/pci.c             | 16 ++++++++--------
+>  arch/s390/pci/pci_clp.c         |  6 +++---
+>  4 files changed, 15 insertions(+), 18 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+> index a2399eff84ca..3a06c264ea53 100644
+> --- a/arch/s390/include/asm/pci.h
+> +++ b/arch/s390/include/asm/pci.h
+> @@ -2,9 +2,6 @@
+>  #ifndef __ASM_S390_PCI_H
+>  #define __ASM_S390_PCI_H
+>  
+> -/* must be set before including pci_clp.h */
+> -#define PCI_BAR_COUNT	6
+> -
+>  #include <linux/pci.h>
+>  #include <linux/mutex.h>
+>  #include <linux/iommu.h>
+> @@ -138,7 +135,7 @@ struct zpci_dev {
+>  
+>  	char res_name[16];
+>  	bool mio_capable;
+> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+>  
+>  	u64		start_dma;	/* Start of available DMA addresses */
+>  	u64		end_dma;	/* End of available DMA addresses */
+> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+> index 50359172cc48..bd2cb4ea7d93 100644
+> --- a/arch/s390/include/asm/pci_clp.h
+> +++ b/arch/s390/include/asm/pci_clp.h
+> @@ -77,7 +77,7 @@ struct mio_info {
+>  	struct {
+>  		u64 wb;
+>  		u64 wt;
+> -	} addr[PCI_BAR_COUNT];
+> +	} addr[PCI_STD_NUM_BARS];
+>  	u32 reserved[6];
+>  } __packed;
+>  
+> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+>  	u16 util_str_avail	:  1;	/* utility string available? */
+>  	u16 pfgid		:  8;	/* pci function group id */
+>  	u32 fid;			/* pci function id */
+> -	u8 bar_size[PCI_BAR_COUNT];
+> +	u8 bar_size[PCI_STD_NUM_BARS];
+>  	u16 pchid;
+> -	__le32 bar[PCI_BAR_COUNT];
+> +	__le32 bar[PCI_STD_NUM_BARS];
+>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+>  	u32			: 16;
+>  	u8 fmb_len;
+> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+> index b0e3b9a0e488..aca372c8e34f 100644
+> --- a/arch/s390/pci/pci.c
+> +++ b/arch/s390/pci/pci.c
+> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+>  static DEFINE_SPINLOCK(zpci_domain_lock);
+>  
+>  #define ZPCI_IOMAP_ENTRIES						\
+> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+>  	    ZPCI_IOMAP_MAX_ENTRIES)
+>  
+>  static DEFINE_SPINLOCK(zpci_iomap_lock);
+> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+>  			      unsigned long offset, unsigned long max)
+>  {
+> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>  		return NULL;
+>  
+>  	if (static_branch_likely(&have_mio))
+> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+>  				 unsigned long offset, unsigned long max)
+>  {
+> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>  		return NULL;
 
-It does not need the '-' for PTR_ERR(skb) because PTR_ERR(skb) will
-return the negative value during errors.
+This looks like a latent bug fix here. If 'bar' is out of range we return
+NULL instead accessing an invalid item of an array. Should this not be
+a separate patch and tagged as stable?
 
-Signed-off-by: Max Chou <max.chou@realtek.com>
----
- drivers/bluetooth/btrtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/bluetooth/btrtl.c b/drivers/bluetooth/btrtl.c
-index bf3c02be6930..ae9a2047f242 100644
---- a/drivers/bluetooth/btrtl.c
-+++ b/drivers/bluetooth/btrtl.c
-@@ -418,7 +418,7 @@ static int rtl_download_firmware(struct hci_dev *hdev,
- 		if (IS_ERR(skb)) {
- 			rtl_dev_err(hdev, "download fw command failed (%ld)",
- 				    PTR_ERR(skb));
--			ret = -PTR_ERR(skb);
-+			ret = PTR_ERR(skb);
- 			goto out;
- 		}
- 
--- 
-2.17.1
+Andrew Murray
 
+>  
+>  	if (static_branch_likely(&have_mio))
+> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+>  	resource_size_t len;
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		len = pci_resource_len(pdev, i);
+>  		if (!len)
+>  			continue;
+> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
+>  	if (zpci_use_mio(zdev))
+>  		return;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		len = pci_resource_len(pdev, i);
+>  		if (!len)
+>  			continue;
+> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
+>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		if (!zdev->bars[i].size)
+>  			continue;
+>  		entry = zpci_alloc_iomap(zdev);
+> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
+>  			continue;
+>  
+> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
+>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
+>  	zpci_map_resources(pdev);
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		res = &pdev->resource[i];
+>  		if (res->parent || !res->flags)
+>  			continue;
+> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+> index 9bdff4defef1..8b729b5f2972 100644
+> --- a/arch/s390/pci/pci_clp.c
+> +++ b/arch/s390/pci/pci_clp.c
+> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
+>  		zdev->bars[i].size = response->bar_size[i];
+>  	}
+> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>  		       sizeof(zdev->util_str));
+>  	}
+>  	zdev->mio_capable = response->mio_addr_avail;
+> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
+> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
+>  			continue;
+>  
+>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
+> -- 
+> 2.21.0
+> 
