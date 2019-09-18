@@ -2,216 +2,80 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E2D2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3826C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52344208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B185208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DkaJsqsv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MBxLekX4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728633AbfIRNjV (ORCPT
+        id S1729753AbfIRNjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:39:21 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:53984 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbfIRNjU (ORCPT
+        Wed, 18 Sep 2019 09:39:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46836 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726668AbfIRNjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:39:20 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IDd3Q0063141;
-        Wed, 18 Sep 2019 08:39:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568813943;
-        bh=vkbh30yrcTCJfdINM2lP7OAypyq1xtHtfVYZDkgedpI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=DkaJsqsvrA56bw6yvKDhdB7f/dpGcLTj2F7l5rJpC6belqMlpY6HRUoaPGZ745n+T
-         brAerETOSwQDssM4dNfqjp2TpkE9dZUSuhKJ2Cgje4BmDCD88SLgCdGZ4CbnCxIuoH
-         Lx1DZfbt9nwmc6wf+4mFgLK3/7QBH+UncwLBHFLA=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IDd35g029671
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Sep 2019 08:39:03 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 08:38:59 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 08:38:59 -0500
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IDcocF047879;
-        Wed, 18 Sep 2019 08:38:59 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <jejb@linux.ibm.com>,
-        Martin K Petersen <martin.petersen@oracle.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <nsekhar@ti.com>
-Subject: [PATCH 2/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-Date:   Wed, 18 Sep 2019 19:09:21 +0530
-Message-ID: <20190918133921.25844-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918133921.25844-1-vigneshr@ti.com>
-References: <20190918133921.25844-1-vigneshr@ti.com>
+        Wed, 18 Sep 2019 09:39:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=+FPdW41hn3jWUMh2kiLzcZnIMCmJZbpOQUJ5V447Q0c=; b=MBxLekX4f+O/r7ZOpsCS4BmYF0
+        wXC+caKqsmuKJrAfiFMUMM1IwLz8k0zHaQx2cyPmR/O/IcYQKogHi0qMHLnhEbOUniOs1IhtRC04E
+        OMWFaaRiU8U06M+d4d7i6bkAWYZwv+Bzun0AvUztVmNfW55gG7D2NbHsdB0Y7JmSGepLtcA3ftTfp
+        Wvdb2pLf//HYFzrI64DTF+PPUodJttLH5B66HVlJI77GZWDXsxBbRZQQNSX7wg9+3UOUgZg2myiSl
+        cF5eQIJaP0RChTD9hmm0aL000QnIptqKofOMCdVl44RgIhxNal+5vffQ0EBhcqgcjJpM6vOD0268c
+        5Yvd7arA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iAaBR-0005iN-HP; Wed, 18 Sep 2019 13:39:49 +0000
+Date:   Wed, 18 Sep 2019 06:39:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
+        linux-graphics-maintainer@vmware.com, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [PATCH v3 0/2] Fix SEV user-space mapping of unencrypted
+ coherent memory
+Message-ID: <20190918133949.GA20296@infradead.org>
+References: <20190917130115.51748-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190917130115.51748-1-thomas_os@shipmail.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TI's J721e SoC has a Cadence UFS IP with a TI specific wrapper. This is
-a minimal driver to configure the wrapper. It releases the UFS slave
-device out of reset and sets up registers to indicate PHY reference
-clock input frequency before probing child Cadence UFS driver.
+This looks sensibe to me.  x86 folks let me know if you guys want
+to pick this up or if I should take it.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/scsi/ufs/Kconfig        | 10 ++++
- drivers/scsi/ufs/Makefile       |  1 +
- drivers/scsi/ufs/ti-j721e-ufs.c | 90 +++++++++++++++++++++++++++++++++
- 3 files changed, 101 insertions(+)
- create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
+On Tue, Sep 17, 2019 at 03:01:13PM +0200, Thomas Hellström (VMware) wrote:
+> As far as I can tell there are no current users of dma_mmap_coherent() with
+> SEV or SME encryption which means that there is no need to CC stable.
 
-diff --git a/drivers/scsi/ufs/Kconfig b/drivers/scsi/ufs/Kconfig
-index 0b845ab7c3bf..d14c2243e02a 100644
---- a/drivers/scsi/ufs/Kconfig
-+++ b/drivers/scsi/ufs/Kconfig
-@@ -132,6 +132,16 @@ config SCSI_UFS_HISI
- 	  Select this if you have UFS controller on Hisilicon chipset.
- 	  If unsure, say N.
- 
-+config SCSI_UFS_TI_J721E
-+	tristate "TI glue layer for Cadence UFS Controller"
-+	depends on OF && HAS_IOMEM && (ARCH_K3 || COMPILE_TEST)
-+	help
-+	  This selects driver for TI glue layer for Cadence UFS Host
-+	  Controller IP.
-+
-+	  Selects this if you have TI platform with UFS controller.
-+	  If unsure, say N.
-+
- config SCSI_UFS_BSG
- 	bool "Universal Flash Storage BSG device node"
- 	depends on SCSI_UFSHCD
-diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-index 2a9097939bcb..94c6c5d7334b 100644
---- a/drivers/scsi/ufs/Makefile
-+++ b/drivers/scsi/ufs/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
- obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) += ufshcd-pltfrm.o
- obj-$(CONFIG_SCSI_UFS_HISI) += ufs-hisi.o
- obj-$(CONFIG_SCSI_UFS_MEDIATEK) += ufs-mediatek.o
-+obj-$(CONFIG_SCSI_UFS_TI_J721E) += ti-j721e-ufs.o
-diff --git a/drivers/scsi/ufs/ti-j721e-ufs.c b/drivers/scsi/ufs/ti-j721e-ufs.c
-new file mode 100644
-index 000000000000..a653bf1902f3
---- /dev/null
-+++ b/drivers/scsi/ufs/ti-j721e-ufs.c
-@@ -0,0 +1,90 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
-+//
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+
-+#define UFS_SS_CTRL		0x4
-+#define UFS_SS_RST_N_PCS	BIT(0)
-+#define UFS_SS_CLK_26MHZ	BIT(4)
-+
-+static int ti_j721e_ufs_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	unsigned long clk_rate;
-+	void __iomem *regbase;
-+	struct clk *clk;
-+	u32 reg = 0;
-+	int ret;
-+
-+	regbase = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(regbase))
-+		return PTR_ERR(regbase);
-+
-+	/* Select MPHY refclk frequency */
-+	clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "Cannot claim MPHY clock.\n");
-+		return PTR_ERR(clk);
-+	}
-+	clk_rate = clk_get_rate(clk);
-+	if (clk_rate == 26000000)
-+		reg |= UFS_SS_CLK_26MHZ;
-+	devm_clk_put(dev, clk);
-+
-+	pm_runtime_enable(dev);
-+	ret = pm_runtime_get_sync(dev);
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(dev);
-+		return ret;
-+	}
-+
-+	/*  Take UFS slave device out of reset */
-+	reg |= UFS_SS_RST_N_PCS;
-+	writel(reg, regbase + UFS_SS_CTRL);
-+
-+	ret = of_platform_populate(pdev->dev.of_node, NULL, NULL,
-+				   dev);
-+	if (ret) {
-+		dev_err(dev, "failed to populate child nodes %d\n", ret);
-+		pm_runtime_put_sync(dev);
-+	}
-+
-+	return ret;
-+}
-+
-+static int ti_j721e_ufs_remove(struct platform_device *pdev)
-+{
-+	of_platform_depopulate(&pdev->dev);
-+	pm_runtime_put_sync(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ti_j721e_ufs_of_match[] = {
-+	{
-+		.compatible = "ti,j721e-ufs",
-+	},
-+	{ },
-+};
-+
-+static struct platform_driver ti_j721e_ufs_driver = {
-+	.probe	= ti_j721e_ufs_probe,
-+	.remove	= ti_j721e_ufs_remove,
-+	.driver	= {
-+		.name   = "ti-j721e-ufs",
-+		.of_match_table = ti_j721e_ufs_of_match,
-+	},
-+};
-+module_platform_driver(ti_j721e_ufs_driver);
-+
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-+MODULE_DESCRIPTION("TI UFS host controller glue driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.23.0
-
+Note that the usbfs access really should use it, as the current version
+is completely broken on non-coherent architectures.  That already
+triggered on x86 dma_mmap_coherent fix.  So I'd actually like to see
+a stable backport to avoid hitting surprises.
