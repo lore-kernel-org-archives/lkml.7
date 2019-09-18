@@ -2,133 +2,119 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9571C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67FC6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D18721906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:24:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38E4820856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:24:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="md5DyGBY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l76iwH7F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfIRFYK (ORCPT
+        id S1727761AbfIRFY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:24:10 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42601 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727469AbfIRFYJ (ORCPT
+        Wed, 18 Sep 2019 01:24:29 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41100 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727469AbfIRFY3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:24:09 -0400
-Received: by mail-qt1-f193.google.com with SMTP id g16so7382286qto.9;
-        Tue, 17 Sep 2019 22:24:09 -0700 (PDT)
+        Wed, 18 Sep 2019 01:24:29 -0400
+Received: by mail-pg1-f195.google.com with SMTP id x15so3294667pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 22:24:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0D/XAt0W45n0d0sCLH4jOu6TgQPDUKf8Gz3W2ap8Xqk=;
-        b=md5DyGBYmsmccsOBew/l2Q6acRjFLttTAQalCrDkukcNbMLj9Q/vIMluOb5/NRlZFk
-         mqLG76KH79oR6AH1QaC9NtvOJYZioaELf6BotJHC/Jq+TeCgm+WeniHWRNUGJ1naEr1y
-         4g3aYvkpzMhb87MNSyAEb2w3arblB9eVpCyDuB/cbESykNrm/ydYYagmBqZdhRvLo0S6
-         RNrTeDH2+WrmST7Qpq1iLvnumewLdetuldzvVXd4kAaFJrIK20JZnjk1DfTsNdwafwP3
-         4cFuXMr8spo9fEAmKDt/tZgpKgVedF9pPTUHQ4z5X3ohki1AwL6kpCYDCsODLE2zFgcU
-         Tv4g==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uq2fhvUe4mweaNsFsji+gZkwDOHKsNYaLUVGLr8i/TY=;
+        b=l76iwH7FcEqhqpddZDyEgN3UlDs0CQ2l2yQlHnLqdOOJiFx+1Aj5/MdEAWoJs0Rl3x
+         uqae+B/kIrci0t8o1hn7E9TIq/c0LBawsBHnV0ooTMaoF9DIqqIe1Q/NiIIFWVzfeznX
+         HNzWM1UwZO+NaSUYwLl5gud7iVJsbqdg0F1sBqhPqreImHULPWUbUKXnuvNPBsENCK0E
+         GinaaoeBIwPpDjjzQMk+qao+5+0nXKJVtjnEBOitkRn9qwBEFxE0/hyaMmzW3ietCa9X
+         lbfledh5BimnvYsisHK9pXe5aFa/ZI6LIQAY/O/A+UiX8nb9u2kBMwKidC0z7/7RwqOk
+         H0eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0D/XAt0W45n0d0sCLH4jOu6TgQPDUKf8Gz3W2ap8Xqk=;
-        b=CVPGek5XeB2LhCrtMt1TKE9DjlLli5L7ilNs8zfuE5sSks3fCjjyJuKIBogPRvB8/l
-         pCISGyuRukGyt07xcHhI9Rs/E5/GfrgPKnxMnaBJMgaisKbeLUs/UkiNbwMFqA/4j7Z5
-         eIYwsJ4815ixCC4zD9u0Js3RO5LPUBnuR3OYPVaQ+eRC18yL/r1M+8JCgtSKvohQMOWL
-         GP0Tqz8V6rHXxspnBMLGHtUatbyF6wmt37a1WbldJ8C31KoMJtXMgGctNOWTqytRl58b
-         ZMN9yyHcOSaP59LXX88ZDErceaBeILI6IvhYH9o0OKGboNZ3wgauyBcUEnxL/wqO8Xf5
-         s8TQ==
-X-Gm-Message-State: APjAAAW4sMiD5UlyZXCl2SWN+KV5CQrGpNDOSNIippuGrqrcxY+IPDNZ
-        sZyHhArOMmunSOLB+IxYOqfrqeHCW7owrVl9cUI=
-X-Google-Smtp-Source: APXvYqyUXurfa9JqK2Qbjw5txI3gCzXusDzd4t5w0jcCT8RXq3e/NDhjaNf236nlMxZYOeC8kqZmsKkhydEcqjjuAjU=
-X-Received: by 2002:a0c:e48b:: with SMTP id n11mr1873130qvl.38.1568784248547;
- Tue, 17 Sep 2019 22:24:08 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Uq2fhvUe4mweaNsFsji+gZkwDOHKsNYaLUVGLr8i/TY=;
+        b=J4tUilBffdDGBAFyyKDbrMLSPOl4sd3IXFHf9CQwjBdJKsB0PMuRaNnGLr9zgRid//
+         lkMxUJi5Tx80CkFDmVlkN3W0tmPTTr7hynoMebRwDTvjJwV7ocf1ZipghRv5SbYwdARE
+         1qkqCWPUVjmE43IiiQZfIC3JroODgJr3knahg9Y5OkWOuXh3ztYcGdEytn6knTyjzPBy
+         EAGQebU5p7JFIqetqZ5S6i/xOg+i31I8JNXz7kc3hBQS1p7CQJb5PmnZ5GyUjb1t34VF
+         IcAdg4D0W2W1L+sPOFtP28MKjUwHkg2tRrEtCTw525OY6/GULaH8Uh2Wf2a0QN6NfZ+i
+         unTw==
+X-Gm-Message-State: APjAAAX3JJxwam3no0sZt1TwthLfClE9atGE0sWEaqEC3bFzpgugoJjI
+        dyvUGtyiyIidUQ9QFgWYNDboB3I7l1DkqQ==
+X-Google-Smtp-Source: APXvYqyyaEpLbiduqJTbAh4BRmNzZc0tnwIgkIx9DG6SJi/DVK9XM5JOYBj07uV1ce1I0qt8nInwRw==
+X-Received: by 2002:aa7:9735:: with SMTP id k21mr2266936pfg.174.1568784267984;
+        Tue, 17 Sep 2019 22:24:27 -0700 (PDT)
+Received: from imac.hsd1.ca.comcast.net (c-98-207-34-143.hsd1.ca.comcast.net. [98.207.34.143])
+        by smtp.gmail.com with ESMTPSA id z4sm195654pjt.17.2019.09.17.22.24.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 17 Sep 2019 22:24:27 -0700 (PDT)
+From:   jinshan.xiong@gmail.com
+To:     linux-kernel@vger.kernel.org, rostedt@goodmis.org, mingo@redhat.com
+Cc:     yhs@fb.com, jinshan.xiong@uber.com,
+        Jinshan Xiong <jinshan.xiong@gmail.com>
+Subject: [PATCH] staging: tracing/kprobe: filter kprobe based perf event
+Date:   Tue, 17 Sep 2019 22:24:06 -0700
+Message-Id: <20190918052406.21385-1-jinshan.xiong@gmail.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-14-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190916105433.11404-14-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 Sep 2019 22:23:57 -0700
-Message-ID: <CAEf4BzYa7mwFLZWdS0EMf4m=s88a94z6p30mxN8Q9=erpE5=Xg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 13/14] samples: bpf: makefile: add sysroot support
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 4:00 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> Basically it only enables that was added by previous couple fixes.
-> Sysroot contains correct libs installed and its headers ofc. Useful
+From: Jinshan Xiong <jinshan.xiong@gmail.com>
 
-Please, let's not use unnecessary abbreviations/slang. "Of course" is
-not too long and is a proper English, let's stick to it.
+Invoking bpf program only if kprobe based perf_event has been added into
+the percpu list. This is essential to make event tracing for cgroup to work
+properly.
 
-> when working with NFC or virtual machine.
->
-> Usage:
->
-> clean (on demand)
->     make ARCH=arm -C samples/bpf clean
->     make ARCH=arm -C tools clean
->     make ARCH=arm clean
->
-> configure and install headers:
->
->     make ARCH=arm defconfig
->     make ARCH=arm headers_install
->
-> build samples/bpf:
->     make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- samples/bpf/ \
->     SYSROOT="path/to/sysroot"
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  samples/bpf/Makefile | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 133123d4c7d7..57ddf055d6c3 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -194,6 +194,11 @@ TPROGS_CFLAGS += -I$(srctree)/tools/lib/
->  TPROGS_CFLAGS += -I$(srctree)/tools/include
->  TPROGS_CFLAGS += -I$(srctree)/tools/perf
->
-> +ifdef SYSROOT
-> +TPROGS_CFLAGS += --sysroot=${SYSROOT}
-> +TPROGS_LDFLAGS := -L${SYSROOT}/usr/lib
+Signed-off-by: Jinshan Xiong <jinshan.xiong@gmail.com>
+---
+ kernel/trace/trace_kprobe.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-Please stay consistent: $() instead of ${}?
-
-> +endif
-> +
->  EXTRA_CXXFLAGS := $(TPROGS_CFLAGS)
->
->  # options not valid for C++
-> --
-> 2.17.1
->
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index 9d483ad9bb6c..40ef0f1945f7 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -1171,11 +1171,18 @@ static int
+ kprobe_perf_func(struct trace_kprobe *tk, struct pt_regs *regs)
+ {
+ 	struct trace_event_call *call = trace_probe_event_call(&tk->tp);
++	struct hlist_head *head = this_cpu_ptr(call->perf_events);
+ 	struct kprobe_trace_entry_head *entry;
+-	struct hlist_head *head;
+ 	int size, __size, dsize;
+ 	int rctx;
+ 
++	/*
++	 * If head is empty, the process currently running on this cpu is not
++	 * interested by kprobe perf PMU.
++	 */
++	if (hlist_empty(head))
++		return 0;
++
+ 	if (bpf_prog_array_valid(call)) {
+ 		unsigned long orig_ip = instruction_pointer(regs);
+ 		int ret;
+@@ -1193,10 +1200,6 @@ kprobe_perf_func(struct trace_kprobe *tk, struct pt_regs *regs)
+ 			return 0;
+ 	}
+ 
+-	head = this_cpu_ptr(call->perf_events);
+-	if (hlist_empty(head))
+-		return 0;
+-
+ 	dsize = __get_data_size(&tk->tp, regs);
+ 	__size = sizeof(*entry) + tk->tp.size + dsize;
+ 	size = ALIGN(__size + sizeof(u32), sizeof(u64));
