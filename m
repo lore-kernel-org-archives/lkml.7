@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CC1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27AF8218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57427218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788271;
-	bh=H9w7/0BvPXj3hhUYfRuW3ve7SbHYUQvWQsY+jCmbvoE=;
+	s=default; t=1568788273;
+	bh=P2jkNYRLfUzzTKbaT5lBb357nOuaUdw3XhA7ZngbgrQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bn2gyMJOz1JJCsEkpGz735W5MAQGcOeY+q/1mmyQmLpwLm24rQ/SPbRDfDNW6uTIk
-	 dIOAcq4ToYqWrZ5Ty60a8gI+J7Pid1uyAO3W3wJKQFAnO8lftRs++9tubM/nYoRPJN
-	 XDCBPDf/V7hM81SGRHxE86LVw0x0wHvoGLV3GKRM=
+	b=MvJIhGJrvWfadTGjzuzvwl/wNbDFHls2NZC4V4liurKrhWsiKeMMhpVu4zz2P+tpi
+	 z0tHGotWR5JvhNFB+JKlsrYq2ZQJ/GVCTLxgkgcY3pClECdL38gPY58xupL7062GmZ
+	 Za9FcbJKdGqcXKgDJ9kvEqngNebIeUbN3ekiRBTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfIRGbK (ORCPT
+        id S1729691AbfIRGXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:31:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44010 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfIRGXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:45 -0400
+        id S1729670AbfIRGXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7BB221925;
-        Wed, 18 Sep 2019 06:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C311B21920;
+        Wed, 18 Sep 2019 06:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787824;
-        bh=H9w7/0BvPXj3hhUYfRuW3ve7SbHYUQvWQsY+jCmbvoE=;
+        s=default; t=1568787816;
+        bh=P2jkNYRLfUzzTKbaT5lBb357nOuaUdw3XhA7ZngbgrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hu58DGnBNE0oDteT2MSG2VV/936YC3h4GcTRTY45Qn0IhNneTCktJl06uDnMjrf4b
-         +rPJwigr1gcIfUMBLuu2Z6msQT9xWLyJodgHZiVBlPc30YiUaRsqL1ZUgTJcBDG40f
-         PrMyOXABYiUT0/MVM6kFlQkdcGcb7VqPfTrDDFPk=
+        b=HqgMlhkfz9TEwlFqWhfrgldhCQebJAvr8sGtnVtTvJeQhxeHIM0jG0r58Y20w4Ygf
+         fr83Fwr0pLNXEjiUHE+tD/mEo8UVGEMvHf4tYgzhbQAcehSU9gzWQtfzom6I/xp/jT
+         +Qrc6CNyZuV+9xoR5dS5J5neU6uWBF+e9pYVmc0o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 47/50] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
-Date:   Wed, 18 Sep 2019 08:19:30 +0200
-Message-Id: <20190918061228.374318923@linuxfoundation.org>
+        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 4.19 27/50] drm/meson: Add support for XBGR8888 & ABGR8888 formats
+Date:   Wed, 18 Sep 2019 08:19:10 +0200
+Message-Id: <20190918061226.059082737@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,39 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-commit 9452fbf5c6cf5f470e0748fe7a14a683e7765f7a upstream.
+commit 5ffff4415f9eeae834960226770963e2947e17eb upstream.
 
-The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
-adds it to the critclk_systems DMI table so the clocks are marked as
-CLK_CRITICAL and not turned off.
+Add missing XBGR8888 & ABGR8888 formats variants from the primary plane.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190429075238.7884-1-narmstrong@baylibre.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/pmc_atom.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/meson/meson_plane.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -423,6 +423,14 @@ static const struct dmi_system_id critcl
- 	},
- 	{
- 		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB4063",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
- 		.ident = "Beckhoff CB6263",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
+--- a/drivers/gpu/drm/meson/meson_plane.c
++++ b/drivers/gpu/drm/meson/meson_plane.c
+@@ -120,6 +120,13 @@ static void meson_plane_atomic_update(st
+ 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
+ 					      OSD_COLOR_MATRIX_32_ARGB;
+ 		break;
++	case DRM_FORMAT_XBGR8888:
++		/* For XRGB, replace the pixel's alpha by 0xFF */
++		writel_bits_relaxed(OSD_REPLACE_EN, OSD_REPLACE_EN,
++				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
++		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
++					      OSD_COLOR_MATRIX_32_ABGR;
++		break;
+ 	case DRM_FORMAT_ARGB8888:
+ 		/* For ARGB, use the pixel's alpha */
+ 		writel_bits_relaxed(OSD_REPLACE_EN, 0,
+@@ -127,6 +134,13 @@ static void meson_plane_atomic_update(st
+ 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
+ 					      OSD_COLOR_MATRIX_32_ARGB;
+ 		break;
++	case DRM_FORMAT_ABGR8888:
++		/* For ARGB, use the pixel's alpha */
++		writel_bits_relaxed(OSD_REPLACE_EN, 0,
++				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
++		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
++					      OSD_COLOR_MATRIX_32_ABGR;
++		break;
+ 	case DRM_FORMAT_RGB888:
+ 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_24 |
+ 					      OSD_COLOR_MATRIX_24_RGB;
+@@ -196,7 +210,9 @@ static const struct drm_plane_funcs meso
+ 
+ static const uint32_t supported_drm_formats[] = {
+ 	DRM_FORMAT_ARGB8888,
++	DRM_FORMAT_ABGR8888,
+ 	DRM_FORMAT_XRGB8888,
++	DRM_FORMAT_XBGR8888,
+ 	DRM_FORMAT_RGB888,
+ 	DRM_FORMAT_RGB565,
+ };
 
 
