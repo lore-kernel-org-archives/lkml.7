@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89E59C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D422053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1B6A2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787677;
-	bh=UwPwWnQUujDomChcfZB29rRr6co/+JKonyQaGZ7csTM=;
+	s=default; t=1568787680;
+	bh=PlwrvsatXtzITkWbZGl9RAV0pa378UmdtOmot4gk1mM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCMFk5+1cOKoitQrmKmvspPrkJzWS9Q0ik9SqVr4OoecvxWafhn/ypoVIXBFwj3vE
-	 AQX60sGMGRby4cfjlPSeSaj5vNbC+hnrhNrJmLb1UwwWESk9WNyPI36Xv3Z6Gnc0lr
-	 4/C8I/blHVsrA0R84BN3bhhYkaxnWbkpqXxPxY+I=
+	b=sN/Fts/BvhW2oZozAYQpr3qnCecPpRaM2NrWkD0M6j72feh6yS1SFCACp5eGpO3vJ
+	 I+LtZjTbXaz4CkC9O5MgvTTakmfjEoNW27j5ECKR9XUr+K9hiv1rpZQwToEX24QNg4
+	 EBTSIe5zc9rpZI8c9pO3wqGo4asRVCuDqLMPO2A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbfIRGVQ (ORCPT
+        id S1727624AbfIRGVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40502 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbfIRGVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:21:13 -0400
+        id S1729030AbfIRGVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6308920678;
-        Wed, 18 Sep 2019 06:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 184AA21927;
+        Wed, 18 Sep 2019 06:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787672;
-        bh=UwPwWnQUujDomChcfZB29rRr6co/+JKonyQaGZ7csTM=;
+        s=default; t=1568787675;
+        bh=PlwrvsatXtzITkWbZGl9RAV0pa378UmdtOmot4gk1mM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OX8gB78gp8LpvdGm8FJYZk/R0+XJGrFePxh/GOdVfMPfB18EhfMr2BDr6dIXHWf6k
-         cl0vHWKu7/OVffuguL5oXveDgK2Jy1eXQRBp/APZe4TsOo/X1gIvFFribX1vHN1XX/
-         X84x19cbMOFLXsyzkYcSGccLTSW0gN78eV6JX9Lc=
+        b=F636wQXmh+OqwEEHf+afj0iqXb7os9q1tiloS3pSLvG1+PgacVwbRby5VGF3LGM2K
+         LybubnQdZs/X8szA831v5fSR4hbIW0RpUixi/OUra36gYQ4bPTn7rONeul9OGg4Lea
+         hXbFBI5RdydlnF16D69qiUUN0ewkPWrszeo8/T3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.14 35/45] crypto: talitos - fix CTR alg blocksize
-Date:   Wed, 18 Sep 2019 08:19:13 +0200
-Message-Id: <20190918061227.116560649@linuxfoundation.org>
+Subject: [PATCH 4.14 36/45] crypto: talitos - check data blocksize in ablkcipher.
+Date:   Wed, 18 Sep 2019 08:19:14 +0200
+Message-Id: <20190918061227.295699631@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -61,29 +61,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit b9a05b6041cb9810a291315569b2af0d63c3680a upstream.
+commit ee483d32ee1a1a7f7d7e918fbc350c790a5af64a upstream.
 
-CTR has a blocksize of 1.
+When data size is not a multiple of the alg's block size,
+the SEC generates an error interrupt and dumps the registers.
+And for NULL size, the SEC does just nothing and the interrupt
+is awaited forever.
+
+This patch ensures the data size is correct before submitting
+the request to the SEC engine.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 5e75ae1b3cef ("crypto: talitos - add new crypto modes")
+Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/talitos.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 --- a/drivers/crypto/talitos.c
 +++ b/drivers/crypto/talitos.c
-@@ -2644,7 +2644,7 @@ static struct talitos_alg_template drive
- 		.alg.crypto = {
- 			.cra_name = "ctr(aes)",
- 			.cra_driver_name = "ctr-aes-talitos",
--			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_blocksize = 1,
- 			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
- 				     CRYPTO_ALG_ASYNC,
- 			.cra_ablkcipher = {
+@@ -1668,6 +1668,14 @@ static int ablkcipher_encrypt(struct abl
+ 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
+ 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
+ 	struct talitos_edesc *edesc;
++	unsigned int blocksize =
++			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
++
++	if (!areq->nbytes)
++		return 0;
++
++	if (areq->nbytes % blocksize)
++		return -EINVAL;
+ 
+ 	/* allocate extended descriptor */
+ 	edesc = ablkcipher_edesc_alloc(areq, true);
+@@ -1685,6 +1693,14 @@ static int ablkcipher_decrypt(struct abl
+ 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
+ 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
+ 	struct talitos_edesc *edesc;
++	unsigned int blocksize =
++			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
++
++	if (!areq->nbytes)
++		return 0;
++
++	if (areq->nbytes % blocksize)
++		return -EINVAL;
+ 
+ 	/* allocate extended descriptor */
+ 	edesc = ablkcipher_edesc_alloc(areq, false);
 
 
