@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 863A7C4CED2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02034C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529F421906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0B1B21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787613;
-	bh=Im3/R3m0/OV8mrWCzwbohtzQOoTW9s/D6dkWSBHtFhM=;
+	s=default; t=1568787617;
+	bh=WSXgFjWxeDIiTJ5O/+eF0M0IKcZfG/xLhuGR8D0Jay8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C3TbPuK/6Pi+ZJ44Ht9yeDm893W9LhP0SbggxYQsOmsJo5fPMlq8w2/avnJmnJjwb
-	 EJTParUZR0azIWj279dA9PkiDWyyRcnzxFziieD3Qf+wJnFXgYUgJr6fQwXAh5f5JN
-	 2xC7an1e0CvPg/OlW8fWmq1n4FEYP3upacuJCKfk=
+	b=DSzyH2NTvKRUGCwISTrAKVpQY2sYhdwmIcC8fS4kVyDCA3sNhmo08qt0YDkhHO6Md
+	 HvnZdXvqVK19cZvbPc6o0yMussBGdAM5oqNCWwkBqlj3AJMseS2/9cxSgRhj+bUwbb
+	 u5nGYtJUVFq9xAC0qNNgdkylqzxM8TNayKoq4Qlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfIRGUM (ORCPT
+        id S1727851AbfIRGUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38796 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfIRGUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:10 -0400
+        id S1727661AbfIRGUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B28E5218AE;
-        Wed, 18 Sep 2019 06:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC20421925;
+        Wed, 18 Sep 2019 06:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787609;
-        bh=Im3/R3m0/OV8mrWCzwbohtzQOoTW9s/D6dkWSBHtFhM=;
+        s=default; t=1568787614;
+        bh=WSXgFjWxeDIiTJ5O/+eF0M0IKcZfG/xLhuGR8D0Jay8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GI/sa0V8SbLXcM5YizpEXONYz6qFMfk4j9q8a/XpzMP7otFxR54Oiijj0mAuMVTLU
-         Esq/RoHK0fjaoRwjQ00mo2XdrvUWd44gDFZ2JlaWab8tqUpWE+08hCiJKMzWbV2yf+
-         AjP+DxaqxQRBst/pp10LduIuqUz3L5VIlqZBC3sY=
+        b=EvSWecvJ8OgACMbYqJKkcvCcs1km+acy8QqOOYMu/xw48Q1IzLjRNAtK8fMH+KnEy
+         OEQ8qKdcKThj4WaqWe004Mej9yLHmauLISXigLDpYHGrsztyvKoyjn3mrHOhu0zRlp
+         7Gs9qQhdVVp1LmSpfhUf5K9zjCP6g0T8mn236WVI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 13/45] tun: fix use-after-free when register netdev failed
-Date:   Wed, 18 Sep 2019 08:18:51 +0200
-Message-Id: <20190918061224.247780405@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.14 15/45] btrfs: correctly validate compression type
+Date:   Wed, 18 Sep 2019 08:18:53 +0200
+Message-Id: <20190918061224.441745861@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -61,193 +60,163 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Johannes Thumshirn <jthumshirn@suse.de>
 
-[ Upstream commit 77f22f92dff8e7b45c7786a430626d38071d4670 ]
+commit aa53e3bfac7205fb3a8815ac1c937fd6ed01b41e upstream.
 
-I got a UAF repport in tun driver when doing fuzzy test:
+Nikolay reported the following KASAN splat when running btrfs/048:
 
-[  466.269490] ==================================================================
-[  466.271792] BUG: KASAN: use-after-free in tun_chr_read_iter+0x2ca/0x2d0
-[  466.271806] Read of size 8 at addr ffff888372139250 by task tun-test/2699
-[  466.271810]
-[  466.271824] CPU: 1 PID: 2699 Comm: tun-test Not tainted 5.3.0-rc1-00001-g5a9433db2614-dirty #427
-[  466.271833] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
-[  466.271838] Call Trace:
-[  466.271858]  dump_stack+0xca/0x13e
-[  466.271871]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271890]  print_address_description+0x79/0x440
-[  466.271906]  ? vprintk_func+0x5e/0xf0
-[  466.271920]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271935]  __kasan_report+0x15c/0x1df
-[  466.271958]  ? tun_chr_read_iter+0x2ca/0x2d0
-[  466.271976]  kasan_report+0xe/0x20
-[  466.271987]  tun_chr_read_iter+0x2ca/0x2d0
-[  466.272013]  do_iter_readv_writev+0x4b7/0x740
-[  466.272032]  ? default_llseek+0x2d0/0x2d0
-[  466.272072]  do_iter_read+0x1c5/0x5e0
-[  466.272110]  vfs_readv+0x108/0x180
-[  466.299007]  ? compat_rw_copy_check_uvector+0x440/0x440
-[  466.299020]  ? fsnotify+0x888/0xd50
-[  466.299040]  ? __fsnotify_parent+0xd0/0x350
-[  466.299064]  ? fsnotify_first_mark+0x1e0/0x1e0
-[  466.304548]  ? vfs_write+0x264/0x510
-[  466.304569]  ? ksys_write+0x101/0x210
-[  466.304591]  ? do_preadv+0x116/0x1a0
-[  466.304609]  do_preadv+0x116/0x1a0
-[  466.309829]  do_syscall_64+0xc8/0x600
-[  466.309849]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.309861] RIP: 0033:0x4560f9
-[  466.309875] Code: 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-[  466.309889] RSP: 002b:00007ffffa5166e8 EFLAGS: 00000206 ORIG_RAX: 0000000000000127
-[  466.322992] RAX: ffffffffffffffda RBX: 0000000000400460 RCX: 00000000004560f9
-[  466.322999] RDX: 0000000000000003 RSI: 00000000200008c0 RDI: 0000000000000003
-[  466.323007] RBP: 00007ffffa516700 R08: 0000000000000004 R09: 0000000000000000
-[  466.323014] R10: 0000000000000000 R11: 0000000000000206 R12: 000000000040cb10
-[  466.323021] R13: 0000000000000000 R14: 00000000006d7018 R15: 0000000000000000
-[  466.323057]
-[  466.323064] Allocated by task 2605:
-[  466.335165]  save_stack+0x19/0x80
-[  466.336240]  __kasan_kmalloc.constprop.8+0xa0/0xd0
-[  466.337755]  kmem_cache_alloc+0xe8/0x320
-[  466.339050]  getname_flags+0xca/0x560
-[  466.340229]  user_path_at_empty+0x2c/0x50
-[  466.341508]  vfs_statx+0xe6/0x190
-[  466.342619]  __do_sys_newstat+0x81/0x100
-[  466.343908]  do_syscall_64+0xc8/0x600
-[  466.345303]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.347034]
-[  466.347517] Freed by task 2605:
-[  466.348471]  save_stack+0x19/0x80
-[  466.349476]  __kasan_slab_free+0x12e/0x180
-[  466.350726]  kmem_cache_free+0xc8/0x430
-[  466.351874]  putname+0xe2/0x120
-[  466.352921]  filename_lookup+0x257/0x3e0
-[  466.354319]  vfs_statx+0xe6/0x190
-[  466.355498]  __do_sys_newstat+0x81/0x100
-[  466.356889]  do_syscall_64+0xc8/0x600
-[  466.358037]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  466.359567]
-[  466.360050] The buggy address belongs to the object at ffff888372139100
-[  466.360050]  which belongs to the cache names_cache of size 4096
-[  466.363735] The buggy address is located 336 bytes inside of
-[  466.363735]  4096-byte region [ffff888372139100, ffff88837213a100)
-[  466.367179] The buggy address belongs to the page:
-[  466.368604] page:ffffea000dc84e00 refcount:1 mapcount:0 mapping:ffff8883df1b4f00 index:0x0 compound_mapcount: 0
-[  466.371582] flags: 0x2fffff80010200(slab|head)
-[  466.372910] raw: 002fffff80010200 dead000000000100 dead000000000122 ffff8883df1b4f00
-[  466.375209] raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-[  466.377778] page dumped because: kasan: bad access detected
-[  466.379730]
-[  466.380288] Memory state around the buggy address:
-[  466.381844]  ffff888372139100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.384009]  ffff888372139180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.386131] >ffff888372139200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.388257]                                                  ^
-[  466.390234]  ffff888372139280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.392512]  ffff888372139300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-[  466.394667] ==================================================================
+[ 1843.470920] ==================================================================
+[ 1843.471971] BUG: KASAN: slab-out-of-bounds in strncmp+0x66/0xb0
+[ 1843.472775] Read of size 1 at addr ffff888111e369e2 by task btrfs/3979
 
-tun_chr_read_iter() accessed the memory which freed by free_netdev()
-called by tun_set_iff():
+[ 1843.473904] CPU: 3 PID: 3979 Comm: btrfs Not tainted 5.2.0-rc3-default #536
+[ 1843.475009] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[ 1843.476322] Call Trace:
+[ 1843.476674]  dump_stack+0x7c/0xbb
+[ 1843.477132]  ? strncmp+0x66/0xb0
+[ 1843.477587]  print_address_description+0x114/0x320
+[ 1843.478256]  ? strncmp+0x66/0xb0
+[ 1843.478740]  ? strncmp+0x66/0xb0
+[ 1843.479185]  __kasan_report+0x14e/0x192
+[ 1843.479759]  ? strncmp+0x66/0xb0
+[ 1843.480209]  kasan_report+0xe/0x20
+[ 1843.480679]  strncmp+0x66/0xb0
+[ 1843.481105]  prop_compression_validate+0x24/0x70
+[ 1843.481798]  btrfs_xattr_handler_set_prop+0x65/0x160
+[ 1843.482509]  __vfs_setxattr+0x71/0x90
+[ 1843.483012]  __vfs_setxattr_noperm+0x84/0x130
+[ 1843.483606]  vfs_setxattr+0xac/0xb0
+[ 1843.484085]  setxattr+0x18c/0x230
+[ 1843.484546]  ? vfs_setxattr+0xb0/0xb0
+[ 1843.485048]  ? __mod_node_page_state+0x1f/0xa0
+[ 1843.485672]  ? _raw_spin_unlock+0x24/0x40
+[ 1843.486233]  ? __handle_mm_fault+0x988/0x1290
+[ 1843.486823]  ? lock_acquire+0xb4/0x1e0
+[ 1843.487330]  ? lock_acquire+0xb4/0x1e0
+[ 1843.487842]  ? mnt_want_write_file+0x3c/0x80
+[ 1843.488442]  ? debug_lockdep_rcu_enabled+0x22/0x40
+[ 1843.489089]  ? rcu_sync_lockdep_assert+0xe/0x70
+[ 1843.489707]  ? __sb_start_write+0x158/0x200
+[ 1843.490278]  ? mnt_want_write_file+0x3c/0x80
+[ 1843.490855]  ? __mnt_want_write+0x98/0xe0
+[ 1843.491397]  __x64_sys_fsetxattr+0xba/0xe0
+[ 1843.492201]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+[ 1843.493201]  do_syscall_64+0x6c/0x230
+[ 1843.493988]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[ 1843.495041] RIP: 0033:0x7fa7a8a7707a
+[ 1843.495819] Code: 48 8b 0d 21 de 2b 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 49 89 ca b8 be 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d ee dd 2b 00 f7 d8 64 89 01 48
+[ 1843.499203] RSP: 002b:00007ffcb73bca38 EFLAGS: 00000202 ORIG_RAX: 00000000000000be
+[ 1843.500210] RAX: ffffffffffffffda RBX: 00007ffcb73bda9d RCX: 00007fa7a8a7707a
+[ 1843.501170] RDX: 00007ffcb73bda9d RSI: 00000000006dc050 RDI: 0000000000000003
+[ 1843.502152] RBP: 00000000006dc050 R08: 0000000000000000 R09: 0000000000000000
+[ 1843.503109] R10: 0000000000000002 R11: 0000000000000202 R12: 00007ffcb73bda91
+[ 1843.504055] R13: 0000000000000003 R14: 00007ffcb73bda82 R15: ffffffffffffffff
 
-        CPUA                                           CPUB
-  tun_set_iff()
-    alloc_netdev_mqs()
-    tun_attach()
-                                                  tun_chr_read_iter()
-                                                    tun_get()
-                                                    tun_do_read()
-                                                      tun_ring_recv()
-    register_netdevice() <-- inject error
-    goto err_detach
-    tun_detach_all() <-- set RCV_SHUTDOWN
-    free_netdev() <-- called from
-                     err_free_dev path
-      netdev_freemem() <-- free the memory
-                        without check refcount
-      (In this path, the refcount cannot prevent
-       freeing the memory of dev, and the memory
-       will be used by dev_put() called by
-       tun_chr_read_iter() on CPUB.)
-                                                     (Break from tun_ring_recv(),
-                                                     because RCV_SHUTDOWN is set)
-                                                   tun_put()
-                                                     dev_put() <-- use the memory
-                                                                   freed by netdev_freemem()
+[ 1843.505268] Allocated by task 3979:
+[ 1843.505771]  save_stack+0x19/0x80
+[ 1843.506211]  __kasan_kmalloc.constprop.5+0xa0/0xd0
+[ 1843.506836]  setxattr+0xeb/0x230
+[ 1843.507264]  __x64_sys_fsetxattr+0xba/0xe0
+[ 1843.507886]  do_syscall_64+0x6c/0x230
+[ 1843.508429]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Put the publishing of tfile->tun after register_netdevice(),
-so tun_get() won't get the tun pointer that freed by
-err_detach path if register_netdevice() failed.
+[ 1843.509558] Freed by task 0:
+[ 1843.510188] (stack is not available)
 
-Fixes: eb0fb363f920 ("tuntap: attach queue 0 before registering netdevice")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Suggested-by: Jason Wang <jasowang@redhat.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[ 1843.511309] The buggy address belongs to the object at ffff888111e369e0
+                which belongs to the cache kmalloc-8 of size 8
+[ 1843.514095] The buggy address is located 2 bytes inside of
+                8-byte region [ffff888111e369e0, ffff888111e369e8)
+[ 1843.516524] The buggy address belongs to the page:
+[ 1843.517561] page:ffff88813f478d80 refcount:1 mapcount:0 mapping:ffff88811940c300 index:0xffff888111e373b8 compound_mapcount: 0
+[ 1843.519993] flags: 0x4404000010200(slab|head)
+[ 1843.520951] raw: 0004404000010200 ffff88813f48b008 ffff888119403d50 ffff88811940c300
+[ 1843.522616] raw: ffff888111e373b8 000000000016000f 00000001ffffffff 0000000000000000
+[ 1843.524281] page dumped because: kasan: bad access detected
+
+[ 1843.525936] Memory state around the buggy address:
+[ 1843.526975]  ffff888111e36880: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[ 1843.528479]  ffff888111e36900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[ 1843.530138] >ffff888111e36980: fc fc fc fc fc fc fc fc fc fc fc fc 02 fc fc fc
+[ 1843.531877]                                                        ^
+[ 1843.533287]  ffff888111e36a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[ 1843.534874]  ffff888111e36a80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+[ 1843.536468] ==================================================================
+
+This is caused by supplying a too short compression value ('lz') in the
+test-case and comparing it to 'lzo' with strncmp() and a length of 3.
+strncmp() read past the 'lz' when looking for the 'o' and thus caused an
+out-of-bounds read.
+
+Introduce a new check 'btrfs_compress_is_valid_type()' which not only
+checks the user-supplied value against known compression types, but also
+employs checks for too short values.
+
+
+Reported-by: Nikolay Borisov <nborisov@suse.com>
+Fixes: 272e5326c783 ("btrfs: prop: fix vanished compression property after failed set")
+CC: stable@vger.kernel.org # 5.1+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/tun.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ fs/btrfs/compression.c |   16 ++++++++++++++++
+ fs/btrfs/compression.h |    1 +
+ fs/btrfs/props.c       |    6 +-----
+ 3 files changed, 18 insertions(+), 5 deletions(-)
 
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -630,7 +630,8 @@ static void tun_detach_all(struct net_de
- 		module_put(THIS_MODULE);
+--- a/fs/btrfs/compression.c
++++ b/fs/btrfs/compression.c
+@@ -58,6 +58,22 @@ const char* btrfs_compress_type2str(enum
+ 	return NULL;
  }
  
--static int tun_attach(struct tun_struct *tun, struct file *file, bool skip_filter)
-+static int tun_attach(struct tun_struct *tun, struct file *file,
-+		      bool skip_filter, bool publish_tun)
++bool btrfs_compress_is_valid_type(const char *str, size_t len)
++{
++	int i;
++
++	for (i = 1; i < ARRAY_SIZE(btrfs_compress_types); i++) {
++		size_t comp_len = strlen(btrfs_compress_types[i]);
++
++		if (len < comp_len)
++			continue;
++
++		if (!strncmp(btrfs_compress_types[i], str, comp_len))
++			return true;
++	}
++	return false;
++}
++
+ static int btrfs_decompress_bio(struct compressed_bio *cb);
+ 
+ static inline int compressed_bio_size(struct btrfs_fs_info *fs_info,
+--- a/fs/btrfs/compression.h
++++ b/fs/btrfs/compression.h
+@@ -131,6 +131,7 @@ extern const struct btrfs_compress_op bt
+ extern const struct btrfs_compress_op btrfs_zstd_compress;
+ 
+ const char* btrfs_compress_type2str(enum btrfs_compression_type type);
++bool btrfs_compress_is_valid_type(const char *str, size_t len);
+ 
+ int btrfs_compress_heuristic(struct inode *inode, u64 start, u64 end);
+ 
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -386,11 +386,7 @@ int btrfs_subvol_inherit_props(struct bt
+ 
+ static int prop_compression_validate(const char *value, size_t len)
  {
- 	struct tun_file *tfile = file->private_data;
- 	struct net_device *dev = tun->dev;
-@@ -672,7 +673,8 @@ static int tun_attach(struct tun_struct
+-	if (!strncmp("lzo", value, 3))
+-		return 0;
+-	else if (!strncmp("zlib", value, 4))
+-		return 0;
+-	else if (!strncmp("zstd", value, 4))
++	if (btrfs_compress_is_valid_type(value, len))
+ 		return 0;
  
- 	tfile->queue_index = tun->numqueues;
- 	tfile->socket.sk->sk_shutdown &= ~RCV_SHUTDOWN;
--	rcu_assign_pointer(tfile->tun, tun);
-+	if (publish_tun)
-+		rcu_assign_pointer(tfile->tun, tun);
- 	rcu_assign_pointer(tun->tfiles[tun->numqueues], tfile);
- 	tun->numqueues++;
- 
-@@ -2011,7 +2013,7 @@ static int tun_set_iff(struct net *net,
- 		if (err < 0)
- 			return err;
- 
--		err = tun_attach(tun, file, ifr->ifr_flags & IFF_NOFILTER);
-+		err = tun_attach(tun, file, ifr->ifr_flags & IFF_NOFILTER, true);
- 		if (err < 0)
- 			return err;
- 
-@@ -2100,13 +2102,17 @@ static int tun_set_iff(struct net *net,
- 				       NETIF_F_HW_VLAN_STAG_TX);
- 
- 		INIT_LIST_HEAD(&tun->disabled);
--		err = tun_attach(tun, file, false);
-+		err = tun_attach(tun, file, false, false);
- 		if (err < 0)
- 			goto err_free_flow;
- 
- 		err = register_netdevice(tun->dev);
- 		if (err < 0)
- 			goto err_detach;
-+		/* free_netdev() won't check refcnt, to aovid race
-+		 * with dev_put() we need publish tun after registration.
-+		 */
-+		rcu_assign_pointer(tfile->tun, tun);
- 	}
- 
- 	netif_carrier_on(tun->dev);
-@@ -2252,7 +2258,7 @@ static int tun_set_queue(struct file *fi
- 		ret = security_tun_dev_attach_queue(tun->security);
- 		if (ret < 0)
- 			goto unlock;
--		ret = tun_attach(tun, file, false);
-+		ret = tun_attach(tun, file, false, true);
- 	} else if (ifr->ifr_flags & IFF_DETACH_QUEUE) {
- 		tun = rtnl_dereference(tfile->tun);
- 		if (!tun || !(tun->flags & IFF_MULTI_QUEUE) || tfile->detached)
+ 	return -EINVAL;
 
 
