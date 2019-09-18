@@ -2,137 +2,183 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E384CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82716C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B9C21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:24:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568827454;
-	bh=A1V/EfLTbcRI9RyIqwgOE7WQoth8tsczLQUrafsktnI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=mmj0BH6hVgGvlKfBNV9rQ4NdxuhEsIULKABBsfemKBZPvJJPY3rCOpx1370BlpB35
-	 owm/uNGizwF5xAg8gdJj6s2U0HzIxN8dXKND5uR2gloXXzTj5S7W6+4qa1TdNoL4r7
-	 ZyaBA5TDo8iwmVS1UP+0edjgKD9ysHp2mK6sP5Ks=
+	by mail.kernel.org (Postfix) with ESMTP id 4B79C208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXFUoMVf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731310AbfIRRYO (ORCPT
+        id S2387428AbfIRR2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:24:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfIRRYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:24:13 -0400
-Received: from paulmck-ThinkPad-P72 (unknown [50.237.200.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7096B208C0;
-        Wed, 18 Sep 2019 17:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568827453;
-        bh=A1V/EfLTbcRI9RyIqwgOE7WQoth8tsczLQUrafsktnI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=bOnWVhH0PQlbobozKVtZfWh0PQSA8QsUXeIY4Zw5HPFdvpm8cjDX4gCLldTjbw05A
-         pG4lVHTmzefY7a3kOU2IeEkf5jRAm8PXGrx6ZjZRy4gu+7RNDHxRpN2J4vAZVTZVcc
-         Hi1QB7friKdAZBYHCY7yu8GQ6e/OwOfkYTz5mbJA=
-Date:   Wed, 18 Sep 2019 10:24:10 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Andrea Parri <parri.andrea@gmail.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC] tools/memory-model: Fix data race detection for
- unordered store and load
-Message-ID: <20190918172410.GJ30224@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <Pine.LNX.4.44L0.1909061649430.1627-100000@iolanthe.rowland.org>
- <20190917113959.GA19404@andrea.guest.corp.microsoft.com>
+        Wed, 18 Sep 2019 13:28:39 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44061 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbfIRR2i (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:28:38 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q15so257108pll.11;
+        Wed, 18 Sep 2019 10:28:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3Yblg+LB3V/R3GdNlbQif00/TPj0swNUNYsErjlgIhk=;
+        b=HXFUoMVf9oYz5skz3MXc8uOX2c+LVWUkc+AnYLuxa+VPe4GMYiTSJZRTduFYB90vYA
+         wsF/clRsQJpZgHxDCYENhzvfpsJuWYpdZswM/OE2TpT7C74RKshiWkUGMlwWq5ERjR8U
+         dbozY19G4vKTB+A+M9xrLHMkmqzurVlBzXt5gglIlxmkFp4pjw5TIo3rdSakni6zodzg
+         RnaKIm4r9H2WCyRfgZ6B52RR09/dnQ6S+Ri4h91KhOl/oDT/037dTsuM1m+157PenJor
+         U//lr+7bYy+A5b9MWMO4lUqBqNvjZghw0wfCegy+lZNzsPsHtTUQlZPEC8SNspurvWfJ
+         keZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3Yblg+LB3V/R3GdNlbQif00/TPj0swNUNYsErjlgIhk=;
+        b=Qlnaxp7Gr9ixmXCkl4meMd5/u7bIr2gPI2r7P6E7c6Eo4LxYeRulah7+Nygp3Yxlf3
+         ceto7gRDGR5mKLT8OuGlQdArD3L4/WDNQSYZPzv7pD04S66DHwrkdlQCNRzgfCbBKnzv
+         ZnbzsuhJe12b1tC6mV2il/iHbGuxYQXTePaH2ijr6w899rPBe6zzL7yu8ajT00S0yrx2
+         tXpzI3Vw3jDP3GK0rsS+DN8HFhMjQiuwJ6nAyUFCzRXlFVxP5WbMiY1Ds4W6g74f/F6Z
+         RDbd5QqGxyQwopxTiUTBdFnlLIx6JkktYh2DFnkz0T8NWVnQL/Yw7OoZ+RGlfUJUSHbt
+         3EOQ==
+X-Gm-Message-State: APjAAAUBWJWqdT1HfQbJEkno6zwVoJAP28tarNJOrp8J0x+O9cqnMGRd
+        hPkI/kXaFT34M88RrvqgQgd2htq6
+X-Google-Smtp-Source: APXvYqxgZ752VxRN/due03VPsQCrS1XF3ptF4c7Qi7o+2sjsIsCmJ3TdigcZ8OdrVxhX8iv+SHQpPQ==
+X-Received: by 2002:a17:902:bd41:: with SMTP id b1mr5374116plx.174.1568827717447;
+        Wed, 18 Sep 2019 10:28:37 -0700 (PDT)
+Received: from SD ([2405:204:828a:aaec:f0de:d7f9:abdf:1568])
+        by smtp.gmail.com with ESMTPSA id q42sm3385855pja.16.2019.09.18.10.28.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 10:28:36 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 22:58:23 +0530
+From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
+To:     ludovic.desroches@microchip.com, ulf.hansson@linaro.org,
+        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: host: atmel-mci: assign false/true to bool variable
+Message-ID: <20190918172823.GA28786@SD>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190917113959.GA19404@andrea.guest.corp.microsoft.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 01:39:59PM +0200, Andrea Parri wrote:
-> On Fri, Sep 06, 2019 at 04:57:22PM -0400, Alan Stern wrote:
-> > Currently the Linux Kernel Memory Model gives an incorrect response
-> > for the following litmus test:
-> > 
-> > C plain-WWC
-> > 
-> > {}
-> > 
-> > P0(int *x)
-> > {
-> > 	WRITE_ONCE(*x, 2);
-> > }
-> > 
-> > P1(int *x, int *y)
-> > {
-> > 	int r1;
-> > 	int r2;
-> > 	int r3;
-> > 
-> > 	r1 = READ_ONCE(*x);
-> > 	if (r1 == 2) {
-> > 		smp_rmb();
-> > 		r2 = *x;
-> > 	}
-> > 	smp_rmb();
-> > 	r3 = READ_ONCE(*x);
-> > 	WRITE_ONCE(*y, r3 - 1);
-> > }
-> > 
-> > P2(int *x, int *y)
-> > {
-> > 	int r4;
-> > 
-> > 	r4 = READ_ONCE(*y);
-> > 	if (r4 > 0)
-> > 		WRITE_ONCE(*x, 1);
-> > }
-> > 
-> > exists (x=2 /\ 1:r2=2 /\ 2:r4=1)
-> > 
-> > The memory model says that the plain read of *x in P1 races with the
-> > WRITE_ONCE(*x) in P2.
-> > 
-> > The problem is that we have a write W and a read R related by neither
-> > fre or rfe, but rather W ->coe W' ->rfe R, where W' is an intermediate
-> > write (the WRITE_ONCE() in P0).  In this situation there is no
-> > particular ordering between W and R, so either a wr-vis link from W to
-> > R or an rw-xbstar link from R to W would prove that the accesses
-> > aren't concurrent.
-> > 
-> > But the LKMM only looks for a wr-vis link, which is equivalent to
-> > assuming that W must execute before R.  This is not necessarily true
-> > on non-multicopy-atomic systems, as the WWC pattern demonstrates.
-> > 
-> > This patch changes the LKMM to accept either a wr-vis or a reverse
-> > rw-xbstar link as a proof of non-concurrency.
-> > 
-> > Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-> 
-> Acked-by: Andrea Parri <parri.andrea@gmail.com>
+Use false/true instead of 0/1 in bool variable assignment.
 
-Applied, thank you both!
+This fixes below coccicheck warning.
+"WARNING: Assignment of 0/1 to bool variable"
 
-							Thanx, Paul
+Generated by: scripts/coccinelle/misc/boolinit.cocci
+
+More information about semantic patching is available at
+http://coccinelle.lip6.fr/
+
+Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+---
+ drivers/mmc/host/atmel-mci.c | 50 ++++++++++++++++++------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+index c26fbe5f2222..91088b1712ae 100644
+--- a/drivers/mmc/host/atmel-mci.c
++++ b/drivers/mmc/host/atmel-mci.c
+@@ -706,7 +706,7 @@ static void atmci_timeout_timer(struct timer_list *t)
+ 		host->mrq->cmd->error = -ETIMEDOUT;
+ 		host->cmd = NULL;
+ 	}
+-	host->need_reset = 1;
++	host->need_reset = true;
+ 	host->state = STATE_END_REQUEST;
+ 	smp_wmb();
+ 	tasklet_schedule(&host->tasklet);
+@@ -1610,7 +1610,7 @@ static void atmci_command_complete(struct atmel_mci *host,
+ 	else if (host->mrq->data && (host->mrq->data->blksz & 3)) {
+ 		if (host->caps.need_blksz_mul_4) {
+ 			cmd->error = -EINVAL;
+-			host->need_reset = 1;
++			host->need_reset = true;
+ 		}
+ 	} else
+ 		cmd->error = 0;
+@@ -2396,45 +2396,45 @@ static void atmci_get_cap(struct atmel_mci *host)
+ 	dev_info(&host->pdev->dev,
+ 			"version: 0x%x\n", version);
+ 
+-	host->caps.has_dma_conf_reg = 0;
+-	host->caps.has_pdc = 1;
+-	host->caps.has_cfg_reg = 0;
+-	host->caps.has_cstor_reg = 0;
+-	host->caps.has_highspeed = 0;
+-	host->caps.has_rwproof = 0;
+-	host->caps.has_odd_clk_div = 0;
+-	host->caps.has_bad_data_ordering = 1;
+-	host->caps.need_reset_after_xfer = 1;
+-	host->caps.need_blksz_mul_4 = 1;
+-	host->caps.need_notbusy_for_read_ops = 0;
++	host->caps.has_dma_conf_reg = false;
++	host->caps.has_pdc = true;
++	host->caps.has_cfg_reg = false;
++	host->caps.has_cstor_reg = false;
++	host->caps.has_highspeed = false;
++	host->caps.has_rwproof = false;
++	host->caps.has_odd_clk_div = false;
++	host->caps.has_bad_data_ordering = true;
++	host->caps.need_reset_after_xfer = true;
++	host->caps.need_blksz_mul_4 = true;
++	host->caps.need_notbusy_for_read_ops = false;
+ 
+ 	/* keep only major version number */
+ 	switch (version & 0xf00) {
+ 	case 0x600:
+ 	case 0x500:
+-		host->caps.has_odd_clk_div = 1;
++		host->caps.has_odd_clk_div = true;
+ 		/* Fall through */
+ 	case 0x400:
+ 	case 0x300:
+-		host->caps.has_dma_conf_reg = 1;
+-		host->caps.has_pdc = 0;
+-		host->caps.has_cfg_reg = 1;
+-		host->caps.has_cstor_reg = 1;
+-		host->caps.has_highspeed = 1;
++		host->caps.has_dma_conf_reg = true;
++		host->caps.has_pdc = false;
++		host->caps.has_cfg_reg = true;
++		host->caps.has_cstor_reg = true;
++		host->caps.has_highspeed = true;
+ 		/* Fall through */
+ 	case 0x200:
+-		host->caps.has_rwproof = 1;
+-		host->caps.need_blksz_mul_4 = 0;
+-		host->caps.need_notbusy_for_read_ops = 1;
++		host->caps.has_rwproof = true;
++		host->caps.need_blksz_mul_4 = false;
++		host->caps.need_notbusy_for_read_ops = true;
+ 		/* Fall through */
+ 	case 0x100:
+-		host->caps.has_bad_data_ordering = 0;
+-		host->caps.need_reset_after_xfer = 0;
++		host->caps.has_bad_data_ordering = false;
++		host->caps.need_reset_after_xfer = false;
+ 		/* Fall through */
+ 	case 0x0:
+ 		break;
+ 	default:
+-		host->caps.has_pdc = 0;
++		host->caps.has_pdc = false;
+ 		dev_warn(&host->pdev->dev,
+ 				"Unmanaged mci version, set minimum capabilities\n");
+ 		break;
+-- 
+2.20.1
+
