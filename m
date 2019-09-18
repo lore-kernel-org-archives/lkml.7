@@ -2,112 +2,114 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D40FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2798C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A74218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B651B21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:14:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+rtTKk5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DH4Z8wwF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726705AbfIRGKV (ORCPT
+        id S1726941AbfIRGO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:10:21 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:36356 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726231AbfIRGKU (ORCPT
+        Wed, 18 Sep 2019 02:14:57 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40530 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfIRGO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:10:20 -0400
-Received: by mail-ua1-f68.google.com with SMTP id r25so1960013uam.3
-        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 23:10:20 -0700 (PDT)
+        Wed, 18 Sep 2019 02:14:56 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x127so3652443pfb.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 23:14:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xTBwbLii9b70VDIiu2pkAKMCAWF61Wo+h6WzPYHryB4=;
-        b=T+rtTKk5TFAHOQsUgV/It9GsfiXKaB+bhfa5dN/sLkCoY4OmhkyktixzO9f+8YwHkk
-         cEwMurZ/Mg+6d/IyWE/VoTFh6ibwd0Mwl6dha6HSGU+9F+3oa3E4SG8ssP4tJD2gAj2Z
-         CgfhsGf+P+xpNd67ACMjlLHF9Vo5pLWNL+0rS9zkvOMFSZdZhpHuEdLXnjGXRBDdZa05
-         gMHUHQCZdMtNI95/7aMMVk9PajYLgBwdgoxrI69ssFUOuabdzO4bzrjNDV04fRzwiUtG
-         OU6mo3S5DUmnJ0GDQ58haSoMZ17PjkKDKF6Z+zaNrgrM1JI3wMct87apJQWCU/YgECc4
-         x8Ew==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/VLD4T4j6CkFnw+yLOSt4lxWLxJlglbtXkL6PJrDavs=;
+        b=DH4Z8wwFPfwMMvrzBvq7aENKUnQTudeD8psgUXMgs8wQbs/3KHt2oQ30ar5PknDbkK
+         1Ejs0D3Q5wT+WPpbySeeiCUzvmrlt8k7QMHVu9wxfmw79u6nQBKmsZj9m6bmYYe/9wvi
+         BAmQ5sr5esPjfMTGdzbJ+WPOkv6mqJQJfyd1o9D0o+YxgnIEJJKMSmu/T+d0iBdPck+D
+         tl4x3u450xj1o0fwmTqEPgq10UFjPQD4IqY43epcbGGAW0fMHANWD7WKOk97uOAFHxyQ
+         vBDxi5bZX5pbCZN3ViBmuMYQikDsFXT3gNqsM8IfZPsCWFrcF8tKcNRo5eqiwF2zvlKy
+         He0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xTBwbLii9b70VDIiu2pkAKMCAWF61Wo+h6WzPYHryB4=;
-        b=lM+TN958O1gQUGGDLTFV8FRmWiKdMpZVS1z7BdjLMtQRWemRRqCNZr31WqUBaj73MI
-         nbmPf05raR4kIZMztrxLJ6UBWRSeoKma9kIqUxvgHxulKpUpyXxsisFFWtgyY2/4/qeD
-         O9H1iw3OqsqtEiqMytUMa6bzJED3rMPMEgbCVEFFPI8o0QpGxCjceoej8UDVavC7YEmp
-         oNyY1rwU2zppm+SjzeruQDpM0lstNm+ycU9QqnekehG+MbYmPYZG4dNnDbOpEfvFeWSK
-         jCvOuJ4+EmRT18028AcS22SafE/jcgJrUbGuL4l9KSIvgk5Lw7JoU0rq7BL0IZL+nJhE
-         7/2g==
-X-Gm-Message-State: APjAAAVfdlLRrbIGcwKXMAcGzOz/8Cm6SK0wykU57w025YF0wSmRSriX
-        WyDPFy/2fDa0wwC9w/gIIuDa6xfHfKJwNLD83om3rA==
-X-Google-Smtp-Source: APXvYqw3WNN2Dndv9EUbQn4aZiKazwu1E6YluB67ZhBYYekBU3g4MWLJvI2vAwQzbc1TVbrUGcur2tykCtit3Ev9e/k=
-X-Received: by 2002:ab0:1856:: with SMTP id j22mr1425618uag.19.1568787019751;
- Tue, 17 Sep 2019 23:10:19 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/VLD4T4j6CkFnw+yLOSt4lxWLxJlglbtXkL6PJrDavs=;
+        b=czmtiOGoMAorGYMEEChuQGTT+D4zkyvXosznlxzOIgUXnnXvjmEpBw9Dk6cNcJtE1W
+         DoBdqkplEnqJaDU+AvV9mctHHE1HMPdIGZUVtUIifmHXq+jwXsuVodTZc8A7CJttlTkL
+         xvATLnhBd6Sy+/WnoFmyYM3eM2gRrpqr+1Xw3z621E2k8fUKM0XdtertZtzapLUIfKrd
+         ra580QJ0TF8JAX68u3mOHrk8gLnCjYJq1JE3qgYynLEf9oQxcyPQI8zgMtuKkQI+Xkmt
+         SSiqwvicQbCMJirruU9IWWdSjwL8xvxxYaiHzmjZUdBxfR1aQlwRmHuf/orvby2hxZhr
+         m+3Q==
+X-Gm-Message-State: APjAAAXJ331YYnkq+0Y8EZCTGUA1fljSXmcAKblvxC+LxiE0WOGqe5D5
+        KiXrSidWyxln5V7A/n5yDnuJLzEY8cY=
+X-Google-Smtp-Source: APXvYqwfsvwJhZB79moBclIo4UaUxsph4fJCrX8oQCQXsE0B5QQJdahsPtdE8Lon4onl9hUMl2lXPA==
+X-Received: by 2002:a63:2a87:: with SMTP id q129mr2485393pgq.101.1568787295612;
+        Tue, 17 Sep 2019 23:14:55 -0700 (PDT)
+Received: from aliasgar ([219.65.62.52])
+        by smtp.gmail.com with ESMTPSA id f14sm7424905pfq.187.2019.09.17.23.14.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 17 Sep 2019 23:14:54 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 11:44:50 +0530
+From:   ABC XYZ <aliasgar.surti500@gmail.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers:staging:rtl8723bs: Removed unneeded variables
+Message-ID: <20190918061450.GB8416@aliasgar>
+References: <1568730691-954-1-git-send-email-aliasgar.surti500@gmail.com>
+ <20190917144432.GB2959@kadam>
 MIME-Version: 1.0
-References: <20190917165148.19146-1-paolo.valente@linaro.org>
- <20190917165148.19146-3-paolo.valente@linaro.org> <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
-In-Reply-To: <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 18 Sep 2019 08:09:42 +0200
-Message-ID: <CAPDyKFrHeEb77F-U3W1HdSj3_rrMyi66XCt73By3OoLOVa65bQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
-To:     Tejun Heo <tj@kernel.org>, Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "'Paolo Valente' via bfq-iosched" <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        cgroups@vger.kernel.org, Angelo Ruocco <angeloruocco90@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917144432.GB2959@kadam>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tejun, Paolo,
+On Tue, Sep 17, 2019 at 05:44:32PM +0300, Dan Carpenter wrote:
+> On Tue, Sep 17, 2019 at 08:01:31PM +0530, Aliasgar Surti wrote:
+> > From: Aliasgar Surti <aliasgar.surti500@gmail.com>
+> > 
+> > coccicheck reported warning for unneeded variable used.
+> > 
+> > This patch removes the unneeded variables.
+> > 
+> > Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
+> > ---
+> >  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 15 +++++----------
+> >  1 file changed, 5 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> > index d1b199e..fa3ffc3 100644
+> > --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> > +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> > @@ -2428,8 +2428,7 @@ static  int rtw_drvext_hdl(struct net_device *dev, struct iw_request_info *info,
+> >  static int rtw_mp_ioctl_hdl(struct net_device *dev, struct iw_request_info *info,
+> >  						union iwreq_data *wrqu, char *extra)
+> >  {
+> > -	int ret = 0;
+> > -	return ret;
+> > +	return 0;
+> >  }
+> 
+> Just get rid of the whole function.  Replace the pointer in the function
+> array with a NULL.
+Okay, I will get rid of unneeded functions and replace them with NULL in
+function array.
 
-On Tue, 17 Sep 2019 at 23:32, Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> On Tue, Sep 17, 2019 at 06:51:48PM +0200, Paolo Valente wrote:
-> > When bfq was merged into mainline, there were two I/O schedulers that
-> > implemented the proportional-share policy: bfq for blk-mq and cfq for
-> > legacy blk. bfq's interface files in the blkio/io controller have the
-> > same names as cfq. But the cgroups interface doesn't allow two
-> > entities to use the same name for their files, so for bfq we had to
-> > prepend the "bfq" prefix to each of its files. However no legacy code
-> > uses these modified file names. This naming also causes confusion, as,
-> > e.g., in [1].
-> >
-> > Now cfq has gone with legacy blk, so there is no need any longer for
-> > these prefixes in (the never used) bfq names. In view of this fact, this
-> > commit removes these prefixes, thereby enabling legacy code to truly
-> > use the proportional share policy in blk-mq.
->
-> So, I wrote the iocost switching patch and don't have a strong
-> interest in whether bfq prefix should get dropped or not.  However, I
-> gotta point out that flipping interface this way is way out of the
-> norm.
->
-> In the previous release cycle, the right thing to do was dropping the
-> bfq prefix but that wasn't possible because bfq's interface wasn't
-> compatible at that point and didn't made to be compatible in time.
-
-Sounds like we really should send those relevant patches for stable,
-to set the correct ground. Then using a symlink, to make sure we don't
-brake current ABI, right?
-
-[...]
-
-Kind regards
-Uffe
+Thanks,
+Aliasgar
+> 
+> regards,
+> dan carpenter
+> 
