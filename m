@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C643FC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC6CCC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C31B20644
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9988121929
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787968;
-	bh=RNCX+fJlMdn0iDOz7lBTlhcRBNaEyS2dXlsok6AN1B4=;
+	s=default; t=1568787971;
+	bh=Ro5v5TTK15rKh4dRGXbk4uwYILBaoGlZGBkcYGRZ9wQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JPJNWS3teA6qLqZQiP5pw/wBDTCfBhoaI+TqMOxeJZq3gTgRQ1Kfi6VEbHbAiXAV3
-	 gNA/K9CqSwuYpqPCJD+ZWUSqd3DFH2JWXlYZqq94lNvV1bh14SfBBcoL0kmrO1BTNJ
-	 WqKXhjwcqdtJEPtvhiDua/7/p1OiYSRx28rYxyxo=
+	b=CqMfjgLtvZ1pZ3ho3mjLi7NIbC6NmUrwIaBFeRW2vkl+KNFqMDlsw8DUpK2NPkG2V
+	 pkl2oytDxb8JRYRKOU583Xxh/mHn4OPRkomBkrx+Vs9vvYwdhCRVYA8NR38zmtuDOE
+	 T+tmL7UnHM7c0iDmLLkQ61P7rvEjex/SFn7BhRBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfIRG0H (ORCPT
+        id S1728443AbfIRG0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47298 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbfIRG0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:05 -0400
+        id S1730227AbfIRG0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A86B821924;
-        Wed, 18 Sep 2019 06:26:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1574E218AF;
+        Wed, 18 Sep 2019 06:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787964;
-        bh=RNCX+fJlMdn0iDOz7lBTlhcRBNaEyS2dXlsok6AN1B4=;
+        s=default; t=1568787961;
+        bh=Ro5v5TTK15rKh4dRGXbk4uwYILBaoGlZGBkcYGRZ9wQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oRdEzQNhla/FX59hOODpH5fox/LZPR8w7/FSga2jHJ/Fs7Csc1xRm5qzIjzso343r
-         zFdilvB4hdGBGEunceTXA1qjicV/0e14RCc2HNbPhPz71euFy/YBYEq3yZSSbo0C68
-         PBTJSYVGq1go339C/X8JxaYWmQauCoCfuxxoKYAo=
+        b=sv1mFZxo+uoqxUH9oH6Efmk+8mwnCEZI3WsOq8CfrFi6dozA6IPArAuBYyldKGNVa
+         MWc3cJthavoJoltFPevFq5Nue734syelKZY0F82hGz95Q68oQglKCcOmQSAf0dnef/
+         DRm47PLQlO4fLmmg8TvGFLk3rvRoTt/CDmeMcnlI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>,
-        YueHaibing <yuehaibing@huawei.com>, Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 5.2 50/85] kernel/module: Fix mem leak in module_add_modinfo_attrs
-Date:   Wed, 18 Sep 2019 08:19:08 +0200
-Message-Id: <20190918061235.708547112@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.2 49/85] powerpc: Add barrier_nospec to raw_copy_in_user()
+Date:   Wed, 18 Sep 2019 08:19:07 +0200
+Message-Id: <20190918061235.680501458@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,98 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
 
-commit bc6f2a757d525e001268c3658bd88822e768f8db upstream.
+commit 6fbcdd59094ade30db63f32316e9502425d7b256 upstream.
 
-In module_add_modinfo_attrs if sysfs_create_file
-fails, we forget to free allocated modinfo_attrs
-and roll back the sysfs files.
+Commit ddf35cf3764b ("powerpc: Use barrier_nospec in copy_from_user()")
+Added barrier_nospec before loading from user-controlled pointers. The
+intention was to order the load from the potentially user-controlled
+pointer vs a previous branch based on an access_ok() check or similar.
 
-Fixes: 03e88ae1b13d ("[PATCH] fix module sysfs files reference counting")
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+In order to achieve the same result, add a barrier_nospec to the
+raw_copy_in_user() function before loading from such a user-controlled
+pointer.
+
+Fixes: ddf35cf3764b ("powerpc: Use barrier_nospec in copy_from_user()")
+Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/uaccess.h |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1697,6 +1697,8 @@ static int add_usage_links(struct module
- 	return ret;
- }
- 
-+static void module_remove_modinfo_attrs(struct module *mod, int end);
-+
- static int module_add_modinfo_attrs(struct module *mod)
+--- a/arch/powerpc/include/asm/uaccess.h
++++ b/arch/powerpc/include/asm/uaccess.h
+@@ -312,6 +312,7 @@ raw_copy_in_user(void __user *to, const
  {
- 	struct module_attribute *attr;
-@@ -1711,24 +1713,34 @@ static int module_add_modinfo_attrs(stru
- 		return -ENOMEM;
+ 	unsigned long ret;
  
- 	temp_attr = mod->modinfo_attrs;
--	for (i = 0; (attr = modinfo_attrs[i]) && !error; i++) {
-+	for (i = 0; (attr = modinfo_attrs[i]); i++) {
- 		if (!attr->test || attr->test(mod)) {
- 			memcpy(temp_attr, attr, sizeof(*temp_attr));
- 			sysfs_attr_init(&temp_attr->attr);
- 			error = sysfs_create_file(&mod->mkobj.kobj,
- 					&temp_attr->attr);
-+			if (error)
-+				goto error_out;
- 			++temp_attr;
- 		}
- 	}
-+
-+	return 0;
-+
-+error_out:
-+	if (i > 0)
-+		module_remove_modinfo_attrs(mod, --i);
- 	return error;
- }
- 
--static void module_remove_modinfo_attrs(struct module *mod)
-+static void module_remove_modinfo_attrs(struct module *mod, int end)
- {
- 	struct module_attribute *attr;
- 	int i;
- 
- 	for (i = 0; (attr = &mod->modinfo_attrs[i]); i++) {
-+		if (end >= 0 && i > end)
-+			break;
- 		/* pick a field to test for end of list */
- 		if (!attr->attr.name)
- 			break;
-@@ -1816,7 +1828,7 @@ static int mod_sysfs_setup(struct module
- 	return 0;
- 
- out_unreg_modinfo_attrs:
--	module_remove_modinfo_attrs(mod);
-+	module_remove_modinfo_attrs(mod, -1);
- out_unreg_param:
- 	module_param_sysfs_remove(mod);
- out_unreg_holders:
-@@ -1852,7 +1864,7 @@ static void mod_sysfs_fini(struct module
- {
- }
- 
--static void module_remove_modinfo_attrs(struct module *mod)
-+static void module_remove_modinfo_attrs(struct module *mod, int end)
- {
- }
- 
-@@ -1868,7 +1880,7 @@ static void init_param_lock(struct modul
- static void mod_sysfs_teardown(struct module *mod)
- {
- 	del_usage_links(mod);
--	module_remove_modinfo_attrs(mod);
-+	module_remove_modinfo_attrs(mod, -1);
- 	module_param_sysfs_remove(mod);
- 	kobject_put(mod->mkobj.drivers_dir);
- 	kobject_put(mod->holders_dir);
++	barrier_nospec();
+ 	allow_user_access(to, from, n);
+ 	ret = __copy_tofrom_user(to, from, n);
+ 	prevent_user_access(to, from, n);
 
 
