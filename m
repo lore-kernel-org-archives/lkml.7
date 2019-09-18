@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8120FC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F29C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7E521929
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECAFD21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787893;
-	bh=UqpGjpQIsaWV6BoQvz6w19/Y036E3Hu8dlA49ww9pRg=;
+	s=default; t=1568787896;
+	bh=EZNyax7R31/fUpxWagzOXKRSCF27HvnrImbZpRsL8sY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lXCiSICyHhbAAEAreYX4+ccqZ/oz+DYkhLXFVrRGvrSfuSHoleFvoHu32bFvpwThB
-	 meERc8gG/hV8dvMJLKNIXhGDjsAKeZf2No09FJ7nANdd2UPEJz+xN7ECyM+0rsGo1n
-	 JbKwPHy1Wez1D1q34woUaexfQ+FLHawxkStBT2Yg=
+	b=WK2JL24two+BimXscAj6bucEHnCP6FwM8/hyTsiKO3K/WVPhfohKqo/mMGiyGMc7f
+	 HsWJGMwbbI/K6ZhfNzYisYR2xVfjfguPgYoISwV7z81AM5kBp9IUrSictjaWtAG2my
+	 e+qbiASC0MIl6n1m3t9q+UBwINM3HpOQurHtVk1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfIRGYw (ORCPT
+        id S1729939AbfIRGYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45402 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:24:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfIRGYs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:48 -0400
+        id S1729914AbfIRGYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635EC21906;
-        Wed, 18 Sep 2019 06:24:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE809218AF;
+        Wed, 18 Sep 2019 06:24:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787887;
-        bh=UqpGjpQIsaWV6BoQvz6w19/Y036E3Hu8dlA49ww9pRg=;
+        s=default; t=1568787885;
+        bh=EZNyax7R31/fUpxWagzOXKRSCF27HvnrImbZpRsL8sY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=APRqOiTAAjcSw1jFqUBN60QzWMfgi8/CAXYU2dJ7sRkpkGFpzTIODs6JFtbU2M43v
-         kJx3/8P5XAZwojBElXaPyxtDKmanopA8u7cXx/MmY6SS9y5YF51q6s2Yph9LhycmNU
-         YhirIa4xUf2Eb9rOAPLuOZlZKypiAQpM/5Hpqbuw=
+        b=0od94pKX+gYwSXchVGSqT/7QT6rSEzJw7awGnx5vxMmDmdNZvDRwoNWlMAyovB7or
+         IAxqAYZBBDcnxlD4tGxzuH+WEkpQk3DY2T/7cPxObVBWSJ2UQ/R3njfbNZnsZ3IMBs
+         4eiu54gV5ECtKp1RxHCnz6pjZg37IxbfAMFUDQiA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
+        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 20/85] sctp: fix the missing put_user when dumping transport thresholds
-Date:   Wed, 18 Sep 2019 08:18:38 +0200
-Message-Id: <20190918061234.788486326@linuxfoundation.org>
+Subject: [PATCH 5.2 02/85] cdc_ether: fix rndis support for Mediatek based smartphones
+Date:   Wed, 18 Sep 2019 08:18:20 +0200
+Message-Id: <20190918061234.200486731@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,43 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: "Bjørn Mork" <bjorn@mork.no>
 
-[ Upstream commit f794dc2304d83ab998c2eee5bab0549aff5c53a2 ]
+[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
 
-This issue causes SCTP_PEER_ADDR_THLDS sockopt not to be able to dump
-a transport thresholds info.
+A Mediatek based smartphone owner reports problems with USB
+tethering in Linux.  The verbose USB listing shows a rndis_host
+interface pair (e0/01/03 + 10/00/00), but the driver fails to
+bind with
 
-Fix it by adding 'goto' put_user in sctp_getsockopt_paddr_thresholds.
+[  355.960428] usb 1-4: bad CDC descriptors
 
-Fixes: 8add543e369d ("sctp: add SCTP_FUTURE_ASSOC for SCTP_PEER_ADDR_THLDS sockopt")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
+The problem is a failsafe test intended to filter out ACM serial
+functions using the same 02/02/ff class/subclass/protocol as RNDIS.
+The serial functions are recognized by their non-zero bmCapabilities.
+
+No RNDIS function with non-zero bmCapabilities were known at the time
+this failsafe was added. But it turns out that some Wireless class
+RNDIS functions are using the bmCapabilities field. These functions
+are uniquely identified as RNDIS by their class/subclass/protocol, so
+the failing test can safely be disabled.  The same applies to the two
+types of Misc class RNDIS functions.
+
+Applying the failsafe to Communication class functions only retains
+the original functionality, and fixes the problem for the Mediatek based
+smartphone.
+
+Tow examples of CDC functional descriptors with non-zero bmCapabilities
+from Wireless class RNDIS functions are:
+
+0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x0f
+          connection notifications
+          sends break
+          line coding and serial state
+          get/set/clear comm features
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+
+and
+
+19d2:1023  ZTE K4201-z
+
+      CDC Header:
+        bcdCDC               1.10
+      CDC ACM:
+        bmCapabilities       0x02
+          line coding and serial state
+      CDC Call Management:
+        bmCapabilities       0x03
+          call management
+          use DataInterface
+        bDataInterface          1
+      CDC Union:
+        bMasterInterface        0
+        bSlaveInterface         1
+
+The Mediatek example is believed to apply to most smartphones with
+Mediatek firmware.  The ZTE example is most likely also part of a larger
+family of devices/firmwares.
+
+Suggested-by: Lars Melin <larsm17@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/socket.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/usb/cdc_ether.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -7176,7 +7176,7 @@ static int sctp_getsockopt_paddr_thresho
- 		val.spt_pathmaxrxt = trans->pathmaxrxt;
- 		val.spt_pathpfthld = trans->pf_retrans;
- 
--		return 0;
-+		goto out;
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -206,7 +206,15 @@ int usbnet_generic_cdc_bind(struct usbne
+ 		goto bad_desc;
  	}
- 
- 	asoc = sctp_id2assoc(sk, val.spt_assoc_id);
-@@ -7194,6 +7194,7 @@ static int sctp_getsockopt_paddr_thresho
- 		val.spt_pathmaxrxt = sp->pathmaxrxt;
- 	}
- 
-+out:
- 	if (put_user(len, optlen) || copy_to_user(optval, &val, len))
- 		return -EFAULT;
- 
+ skip:
+-	if (rndis && header.usb_cdc_acm_descriptor &&
++	/* Communcation class functions with bmCapabilities are not
++	 * RNDIS.  But some Wireless class RNDIS functions use
++	 * bmCapabilities for their own purpose. The failsafe is
++	 * therefore applied only to Communication class RNDIS
++	 * functions.  The rndis test is redundant, but a cheap
++	 * optimization.
++	 */
++	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
++	    header.usb_cdc_acm_descriptor &&
+ 	    header.usb_cdc_acm_descriptor->bmCapabilities) {
+ 		dev_dbg(&intf->dev,
+ 			"ACM capabilities %02x, not really RNDIS?\n",
 
 
