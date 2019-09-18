@@ -2,137 +2,100 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827C8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CEBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:42:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B9521848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F377A21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:42:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXmh30TE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbfIRDkZ (ORCPT
+        id S1728484AbfIRDmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 23:40:25 -0400
-Received: from aliyun-cloud.icoremail.net ([47.90.73.12]:25624 "HELO
-        aliyun-sdnproxy-4.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with SMTP id S1728106AbfIRDkZ (ORCPT
+        Tue, 17 Sep 2019 23:42:40 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35898 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbfIRDmj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 23:40:25 -0400
-X-Greylist: delayed 719 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 23:40:21 EDT
-Received: from [10.8.148.37] (unknown [218.85.123.226])
-        by app1 (Coremail) with SMTP id xjNnewCHZ9CgooFdnSR5AA--.80S2;
-        Wed, 18 Sep 2019 11:21:06 +0800 (CST)
-Subject: Re: [PATCH] [RFC] vmscan.c: add a sysctl entry for controlling memory
- reclaim IO congestion_wait length
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        keescook@chromium.org, mchehab+samsung@kernel.org,
-        mgorman@techsingularity.net, vbabka@suse.cz, mhocko@suse.com,
-        ktkhai@virtuozzo.com, hannes@cmpxchg.org
-References: <20190917115824.16990-1-linf@wangsu.com>
- <20190917120646.GT29434@bombadil.infradead.org>
-From:   Lin Feng <linf@wangsu.com>
-Message-ID: <3fbb428e-9466-b56b-0be8-c0f510e3aa99@wangsu.com>
-Date:   Wed, 18 Sep 2019 11:21:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 17 Sep 2019 23:42:39 -0400
+Received: by mail-pf1-f195.google.com with SMTP id y22so3456252pfr.3;
+        Tue, 17 Sep 2019 20:42:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GbKlbpTFe+CN6SKqbKlc9mQcgb7sBfZRnKgAQN3AI1c=;
+        b=BXmh30TEdIEExjRnV42l+vfzdAPAD/riGCZ7IGy53Z0oadUQcEpZgqiw024GpCiSq8
+         NcizBJivS4lGx4OFb7vZPgLvHK8tM/KgFGWseCGnc0Jq7rALDywN/Inxh+NR32tUJKby
+         7+cbX14kBGQ/C+JTIUDbxcnQeYbv9b7du5xjArn7Fz9gc52iX0hXQXy91a7hKR6vhP4i
+         eCQTiL+hpsslW1kg5MoLRgQu61dcQnBf/X0i+dg7irCtegc7acCSboWsHkp4rNTnpyx3
+         lG9ZuPq4a8uvsV+nEI8o2dvsvrGxw67x10BLJLSJCEbnqe9/zZ7HKZnVXiKCaAnNrCJc
+         n/Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GbKlbpTFe+CN6SKqbKlc9mQcgb7sBfZRnKgAQN3AI1c=;
+        b=IjVFzYBBlE2VIZ32C2wxPLjRQc1hBoExXRtDUuuda29moJ44rmFn+Fm6OlDV3JSuMf
+         S+siG5xEBTXEd1+TItfktoW7jfmrLIiHWin3yiq0Lsh/LyIXrA86dhOzCXPbS36hAORv
+         yUhgnIj95jxsBLtErl2mYzJq1e0XGD3+jleSu3O4r1QKxYIdqiski8Li5lfjoRmH40VM
+         Se4b627V6r5M6cPPk1q71N8Q5v7nFrXSDqmpRptUaQeP0OItijZ1PjWaP75RhihQnEfL
+         6mjpyYj9Yk6I4eO+3P7JTFCu/FHGx4PC3Y9uYIh+GuWvvtuk1mbkgZ5ZgRBiS1PrXpNN
+         pnJA==
+X-Gm-Message-State: APjAAAX4jWAAenDJEZSNqV6iyBRcpaJ0kEPJs0iafV+Y0ZS/eS5OdrCa
+        /ZMv/JV6DNUxfjGApuYOjWU=
+X-Google-Smtp-Source: APXvYqy08BeDDvIm2kVHdHR9PG1EFVLBSMzaosfyRmNnZq/cEClwPDdxo8DDn68lUaEDauBJgWoLBw==
+X-Received: by 2002:a62:1402:: with SMTP id 2mr1920506pfu.226.1568778159141;
+        Tue, 17 Sep 2019 20:42:39 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id n21sm652294pjo.21.2019.09.17.20.42.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 20:42:38 -0700 (PDT)
+Date:   Tue, 17 Sep 2019 20:42:35 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Jianyong Wu <jianyong.wu@arm.com>
+Cc:     netdev@vger.kernel.org, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, maz@kernel.org,
+        Mark.Rutland@arm.com, Will.Deacon@arm.com, suzuki.poulose@arm.com,
+        linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
+        Kaly.Xin@arm.com, justin.he@arm.com, nd@arm.com,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/6] Timer: expose monotonic clock and counter value
+Message-ID: <20190918034235.GA1469@localhost>
+References: <20190917112430.45680-1-jianyong.wu@arm.com>
+ <20190917112430.45680-4-jianyong.wu@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190917120646.GT29434@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: xjNnewCHZ9CgooFdnSR5AA--.80S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF1UKw15Zw48ury3ZF1xuFg_yoW5urykpF
-        WxKFZ3Ka1UAry3tFs2y3Zrur1Fqay8Ary3Jr98Wry5Ary5ZF1IkFWfKF4YvFyxCrn3Cr9I
-        vr45u3srur4YyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
-        cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
-        v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2
-        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
-        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAv
-        7VCY1x0262k0Y48FwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4
-        IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r48
-        MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Gr4l4I8I3I0E4IkC6x0Yz7v_Jr
-        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
-        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
-        VjvjDU0xZFpf9x07j_XocUUUUU=
-X-CM-SenderInfo: holqwq5zdqw23xof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917112430.45680-4-jianyong.wu@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/17/19 20:06, Matthew Wilcox wrote:
-> On Tue, Sep 17, 2019 at 07:58:24PM +0800, Lin Feng wrote:
->> In direct and background(kswapd) pages reclaim paths both may fall into
->> calling msleep(100) or congestion_wait(HZ/10) or wait_iff_congested(HZ/10)
->> while under IO pressure, and the sleep length is hard-coded and the later
->> two will introduce 100ms iowait length per time.
->>
->> So if pages reclaim is relatively active in some circumstances such as high
->> order pages reappings, it's possible to see a lot of iowait introduced by
->> congestion_wait(HZ/10) and wait_iff_congested(HZ/10).
->>
->> The 100ms sleep length is proper if the backing drivers are slow like
->> traditionnal rotation disks. While if the backing drivers are high-end
->> storages such as high iops ssds or even faster drivers, the high iowait
->> inroduced by pages reclaim is really misleading, because the storage IO
->> utils seen by iostat is quite low, in this case the congestion_wait time
->> modified to 1ms is likely enough for high-end ssds.
->>
->> Another benifit is that it's potentially shorter the direct reclaim blocked
->> time when kernel falls into sync reclaim path, which may improve user
->> applications response time.
+On Tue, Sep 17, 2019 at 07:24:27AM -0400, Jianyong Wu wrote:
+> A number of PTP drivers (such as ptp-kvm) are assuming what the
+> current clock source is, which could lead to interesting effects on
+> systems where the clocksource can change depending on external events.
 > 
-> This is a great description of the problem.
-The always 100ms blocked time sometimes is not necessary :)
-
+> For this purpose, add a new API that retrives both the current
+> monotonic clock as well as its counter value.
 > 
->> +mm_reclaim_congestion_wait_jiffies
->> +==========
->> +
->> +This control is used to define how long kernel will wait/sleep while
->> +system memory is under pressure and memroy reclaim is relatively active.
->> +Lower values will decrease the kernel wait/sleep time.
->> +
->> +It's suggested to lower this value on high-end box that system is under memory
->> +pressure but with low storage IO utils and high CPU iowait, which could also
->> +potentially decrease user application response time in this case.
->> +
->> +Keep this control as it were if your box are not above case.
->> +
->> +The default value is HZ/10, which is of equal value to 100ms independ of how
->> +many HZ is defined.
-> 
-> Adding a new tunable is not the right solution.  The right way is
-> to make Linux auto-tune itself to avoid the problem.  For example,
-> bdi_writeback contains an estimated write bandwidth (calculated by the
-> memory management layer).  Given that, we should be able to make an
-> estimate for how long to wait for the queues to drain.
-> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
+> ---
+>  include/linux/timekeeping.h |  3 +++
+>  kernel/time/timekeeping.c   | 13 +++++++++++++
+>  2 files changed, 16 insertions(+)
 
-Yes, I had ever considered that, auto-tuning is definitely the senior AI way.
-While considering all kinds of production environments hybird storage solution
-is also common today, servers' dirty pages' bdi drivers can span from high end
-ssds to low end sata disk, so we have to think of a *formula(AI core)* by using
-the factors of dirty pages' amount and bdis' write bandwidth, and this AI-core
-will depend on if the estimated write bandwidth is sane and moreover the to be
-written back dirty pages is sequential or random if the bdi is rotational disk,
-it's likey to give a not-sane number and hurt guys who dont't want that, while
-if only consider ssd is relatively simple.
+For core time keeping changes, you must CC lkml, tglx, and John Stultz.
 
-So IMHO it's not sane to brute force add a guessing logic into memory writeback
-codes and pray on inventing a formula that caters everyone's need.
-Add a sysctl entry may be a right choice that give people who need it and
-doesn't hurt people who don't want it.
-
-thanks,
-linfeng
-
+Thanks,
+Richard
