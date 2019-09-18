@@ -2,173 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CF6C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA5C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B623205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9PsKe2l"
+	by mail.kernel.org (Postfix) with ESMTP id 9E15321924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568804752;
+	bh=cfR8cp9RXeCZCrpG8ViPCQUuSx8Z3CiXOPGljSApjEA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CaQmga6YWCnEj/JTA9Mlk1ukhuVbYtCrU4YZY6swVdaUl9+ikWNtu0jwBtb4Jua12
+	 k+ff6dur+RcsBRzxjloT9OVY58Mh38k8oTwY+hY4Hoza7PvCfEaSTBEenvRugOHGFU
+	 SwnrBTRJwiDq1emR3UlbzoYk2uy/Ujosdv1RdUNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729419AbfIRLFZ (ORCPT
+        id S1729630AbfIRLFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:05:25 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:47058 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbfIRLFZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:05:25 -0400
-Received: by mail-lj1-f193.google.com with SMTP id e17so6705900ljf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:05:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JNIOOCl1FIlLK8OEQrCWm+4MRTLInoFaM8HwgPYRrSI=;
-        b=x9PsKe2lWSxm5YFoGrE7b1TTrtwP4ymR5aHH9sHEKViQA3aCR2IMzJ2aBGzYvIdJ17
-         OtiILmKAN0rwR0GwJFAJy5PwRZwXAemG0uob3Zz1kWZLO8HzXikGDYheeGh9XwMxZS/d
-         1zxWeZ4SDo0Y2AqIc/XMLu1xhSXcxP0qU0RdRalMXVHAiRHTuoqsaB4EXKrhfagz9qyc
-         6yeAvnu4eEoRjkGR1NbBOc+2f31Lbpk3CrBYvLHmDs9uFCPkcSXTh/ZzzcNQ3BXng9gA
-         GaCTr+J1gFHg2F27Zy0MkLOEU7YoJ3XFLbNPSeyu15FWT50wATdLXZbv7LCG/gCEx7Dv
-         AAaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=JNIOOCl1FIlLK8OEQrCWm+4MRTLInoFaM8HwgPYRrSI=;
-        b=lsLYNB6qd51rceNG5jGW/IYahBQonNmmjh0U0B1BHLdX9M6JwvmQWcxYYmBPHaLd+x
-         s2N4REGXNL4ugO83RWWOHLyq5hroCYUKdzjF+TVGQXJvmtBJFsbyKH9wX8moSVzDUPJI
-         zKqWwJhxGRzSD4JFPGk5AOlIP3X7j868oAwl+kW+gR/Jxi7eDHIUr9CBmBw3RINw4a+Q
-         +CbSP6kci5hgB/ezgzXg3SSunf4usT9cz0j+TbpKTmiTfzV001vK2phR+5P1aHLNRcgU
-         w5/57083nZtw7SzjB6H9b62cY19twmRzIAvaCh/jnwR64RNdl/pLHAMAR6fYxatx5Oz0
-         tGvQ==
-X-Gm-Message-State: APjAAAVZTxBVSZm+vH63sYDRnYWNzDHxckaFUgmOjDvABgSYXi0TakAB
-        AiQx2qG9+gNidN9KVro4XgT6QA==
-X-Google-Smtp-Source: APXvYqwhzGaNYWRfqqbacjV8ivacocjE8Zel8keZadSmB9WJFdU54IEBfsuyRvZlrIEaM1mB7lZcrg==
-X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr1793545ljj.206.1568804721863;
-        Wed, 18 Sep 2019 04:05:21 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id s7sm959288ljs.16.2019.09.18.04.05.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 04:05:20 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 14:05:18 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH v3 bpf-next 11/14] libbpf: makefile: add C/CXX/LDFLAGS to
- libbpf.so and test_libpf targets
-Message-ID: <20190918110517.GD2908@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
- <20190916105433.11404-12-ivan.khoronzhuk@linaro.org>
- <CAEf4BzZXNN_dhs=jUjtfCqtuV1bk9H=q5b07kVDQQsysjhF4cQ@mail.gmail.com>
+        Wed, 18 Sep 2019 07:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfIRLFv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 07:05:51 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F02021920;
+        Wed, 18 Sep 2019 11:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568804750;
+        bh=cfR8cp9RXeCZCrpG8ViPCQUuSx8Z3CiXOPGljSApjEA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0YZh2szIeQm27pXuTKLTHYih2e1HECMwYocnHTSG9EoPMofO3/COjdSNlWDhwV1tJ
+         m8rytbtGAGoOHCTrH8gziPc9Ms+RY7KfdFmcqxaLBjr0cUv3Kc2eGEFQpgnE+BAzFA
+         u2rg867+6ogshkqIuzNJLXQuGaDpWN2vuBZnyWco=
+Date:   Wed, 18 Sep 2019 13:05:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Ju Hyung Park <qkrwngud825@gmail.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        devel@driverdev.osuosl.org, linkinjeon@gmail.com,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
+        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
+        sj1557.seo@samsung.com
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190918110548.GA1894362@kroah.com>
+References: <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
+ <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
+ <20190918061605.GA1832786@kroah.com>
+ <20190918063304.GA8354@jagdpanzerIV>
+ <20190918082658.GA1861850@kroah.com>
+ <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
+ <20190918092405.GC2959@kadam>
+ <CAD14+f1yQWoZH4onJwbt1kezxyoHW147HA-1p+U0dVo3r=mqBw@mail.gmail.com>
+ <20190918100803.GD2959@kadam>
+ <CAD14+f1yT2_d8RP2a2NqAVYAkmB4ti6KjSsV2sM8SVCOQ_M=RQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAEf4BzZXNN_dhs=jUjtfCqtuV1bk9H=q5b07kVDQQsysjhF4cQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAD14+f1yT2_d8RP2a2NqAVYAkmB4ti6KjSsV2sM8SVCOQ_M=RQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:19:22PM -0700, Andrii Nakryiko wrote:
->On Mon, Sep 16, 2019 at 4:00 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> In case of LDFLAGS and EXTRA_CC/CXX flags there is no way to pass them
->> correctly to build command, for instance when --sysroot is used or
->> external libraries are used, like -lelf, wich can be absent in
->> toolchain. This can be used for samples/bpf cross-compiling allowing
->> to get elf lib from sysroot.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  tools/lib/bpf/Makefile | 11 ++++++++---
->>  1 file changed, 8 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
->> index c6f94cffe06e..bccfa556ef4e 100644
->> --- a/tools/lib/bpf/Makefile
->> +++ b/tools/lib/bpf/Makefile
->> @@ -94,6 +94,10 @@ else
->>    CFLAGS := -g -Wall
->>  endif
->>
->> +ifdef EXTRA_CXXFLAGS
->> +  CXXFLAGS := $(EXTRA_CXXFLAGS)
->> +endif
->> +
->>  ifeq ($(feature-libelf-mmap), 1)
->>    override CFLAGS += -DHAVE_LIBELF_MMAP_SUPPORT
->>  endif
->> @@ -176,8 +180,9 @@ $(BPF_IN): force elfdep bpfdep
->>  $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
->>
->>  $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
->> -       $(QUIET_LINK)$(CC) --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
->> -                                   -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
->> +       $(QUIET_LINK)$(CC) $(LDFLAGS) \
->> +               --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
->> +               -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
->>         @ln -sf $(@F) $(OUTPUT)libbpf.so
->>         @ln -sf $(@F) $(OUTPUT)libbpf.so.$(LIBBPF_MAJOR_VERSION)
->>
->> @@ -185,7 +190,7 @@ $(OUTPUT)libbpf.a: $(BPF_IN)
->>         $(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
->>
->>  $(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
->> -       $(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
->> +       $(QUIET_LINK)$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^ -lelf -o $@
->
->Instead of doing ifdef EXTRA_CXXFLAGS bit above, you can just include
->both $(CXXFLAGS) and $(EXTRA_CXXFLAGS), which will do the right thing
->(and is actually recommended my make documentation way to do this).
-It's good practice to follow existent style, I've done similar way as for
-CFLAGS + EXTRACFLAGS here, didn't want to verify it can impact on
-smth else. And my goal is not to correct everything but embed my
-functionality, series tool large w/o it.
+On Wed, Sep 18, 2019 at 07:46:25PM +0900, Ju Hyung Park wrote:
+> On Wed, Sep 18, 2019 at 7:09 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > Use Kconfig.
+> 
+> Not just that.
+> There are a lot of non-static functions that's not marked ex/sdfat-specific.
+> (which we would have to clean it up eventually)
 
->
->But actually, there is no need to use C++ compiler here,
->test_libbpf.cpp can just be plain C. Do you mind renaming it to .c and
->using C compiler instead?
-Seems like, will try in next v.
+Then clean them up :)
 
->
->>
->>  $(OUTPUT)libbpf.pc:
->>         $(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
->> --
->> 2.17.1
->>
+> Even with sdFAT base, there are some non-static functions named as exfat.
 
--- 
-Regards,
-Ivan Khoronzhuk
+Then just force both filesystems to only be built as a module and all
+should be fine, right?
+
+> Figuring out a solution for this is pretty pointless imho when one of
+> the drivers will be dropped soon(ish) anyways.
+
+Given we only have one filesytem that is submitted in patch form, I
+think people are making a lot of noise over nothing :)
+
+thanks,
+
+greg k-h
