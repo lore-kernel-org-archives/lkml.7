@@ -2,32 +2,32 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16F42C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E20C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D4920678
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3252A218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfIRGTn (ORCPT
+        id S1727206AbfIRGTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:19:43 -0400
+        Wed, 18 Sep 2019 02:19:45 -0400
 Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:39983 "EHLO
         ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725842AbfIRGTm (ORCPT
+        with ESMTP id S1727131AbfIRGTo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:19:42 -0400
+        Wed, 18 Sep 2019 02:19:44 -0400
 Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS2.zhaoxin.com
  (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 18 Sep
- 2019 14:19:38 +0800
+ 2019 14:19:41 +0800
 Received: from tony-HX002EA.zhaoxin.com (10.32.64.46) by zxbjmbx2.zhaoxin.com
  (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 18 Sep
- 2019 14:19:36 +0800
+ 2019 14:19:39 +0800
 From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
 To:     <tony.luck@intel.com>, <bp@alien8.de>, <tglx@linutronix.de>,
         <mingo@redhat.com>, <hpa@zytor.com>, <x86@kernel.org>,
@@ -36,10 +36,13 @@ To:     <tony.luck@intel.com>, <bp@alien8.de>, <tglx@linutronix.de>,
         <qiuxu.zhuo@intel.com>
 CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
         <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
-Subject: [PATCH v4 0/4] x86/mce: Add supports for Zhaoxin MCA
-Date:   Wed, 18 Sep 2019 14:19:29 +0800
-Message-ID: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+Subject: [PATCH v4 2/4] x86/mce: Make 3 functions non-static
+Date:   Wed, 18 Sep 2019 14:19:31 +0800
+Message-ID: <1568787573-1297-3-git-send-email-TonyWWang-oc@zhaoxin.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1568787573-1297-2-git-send-email-TonyWWang-oc@zhaoxin.com>
+References: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+ <1568787573-1297-2-git-send-email-TonyWWang-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.32.64.46]
@@ -50,47 +53,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhaoxin newer CPUs support MCE, CMCI and LMCE that compatible with
-Intel's "Machine-Check Architecture".
+These functions are declared static and cannot be used in others
+.c source file. this commit removes the static attribute and adds
+the declaration to the header for these functions.
 
-To enable the supports of Linux kernel to Zhaoxin's MCA, add
-specific patches for Zhaoxin's MCE, CMCI and LMCE. patches about
-Zhaoxin's CMCI, LMCE use 3 functions in mce/intel.c, so make these
-functions non-static.
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ arch/x86/kernel/cpu/mce/intel.c    | 6 +++---
+ arch/x86/kernel/cpu/mce/internal.h | 6 ++++++
+ 2 files changed, 9 insertions(+), 3 deletions(-)
 
-Some Zhaoxin's CPUs have MCA bank 8, that only has one error called SVAD
-(System View Address Decoder) which be controlled by IA32_MC8.CTL.0.
-If enabled, the prefetch on these CPUs will cause SVAD machine check
-exception when virtual machine startup and cause system panic. Add a
-quirk for these Zhaoxin CPUs MCA bank 8.
-
-v3->v4:
- - remove redundant if-case test (patch 4/4)
-
-v2->v3:
- - Make ifelse-case to switch-case (patch 1/4)
- - Simplify Zhaoxin CPU FMS checking (patch 1/4, 3/4)
- - Revert 1 unused function intel_ppin_init() (patch 2/4)
- - Rework mce_zhaoxin_feature_init() as static (patch 3/4)
- - Rework comment about Zhaoxin MCA SVAD and CMCI (patch 3/4)
- - Rework mce_zhaoxin_feature_clear() as static (patch 4/4)
- - Add comment and change coding style (patch 4/4)
-
-v1->v2:
- - Fix redefinition of "mce_zhaoxin_feature_init" (patch 3/4)
- - Fix redefinition of "mce_zhaoxin_feature_clear" (patch 4/4)
-
-Tony W Wang-oc (4):
-  x86/mce: Add Zhaoxin MCE support
-  x86/mce: Make 3 functions non-static
-  x86/mce: Add Zhaoxin CMCI support
-  x86/mce: Add Zhaoxin LMCE support
-
- arch/x86/kernel/cpu/mce/core.c     | 83 ++++++++++++++++++++++++++++++++------
- arch/x86/kernel/cpu/mce/intel.c    | 11 +++--
- arch/x86/kernel/cpu/mce/internal.h |  6 +++
- 3 files changed, 84 insertions(+), 16 deletions(-)
-
+diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+index 88cd959..70799a5 100644
+--- a/arch/x86/kernel/cpu/mce/intel.c
++++ b/arch/x86/kernel/cpu/mce/intel.c
+@@ -423,7 +423,7 @@ void cmci_disable_bank(int bank)
+ 	raw_spin_unlock_irqrestore(&cmci_discover_lock, flags);
+ }
+ 
+-static void intel_init_cmci(void)
++void intel_init_cmci(void)
+ {
+ 	int banks;
+ 
+@@ -442,7 +442,7 @@ static void intel_init_cmci(void)
+ 	cmci_recheck();
+ }
+ 
+-static void intel_init_lmce(void)
++void intel_init_lmce(void)
+ {
+ 	u64 val;
+ 
+@@ -455,7 +455,7 @@ static void intel_init_lmce(void)
+ 		wrmsrl(MSR_IA32_MCG_EXT_CTL, val | MCG_EXT_CTL_LMCE_EN);
+ }
+ 
+-static void intel_clear_lmce(void)
++void intel_clear_lmce(void)
+ {
+ 	u64 val;
+ 
+diff --git a/arch/x86/kernel/cpu/mce/internal.h b/arch/x86/kernel/cpu/mce/internal.h
+index 43031db..842b273 100644
+--- a/arch/x86/kernel/cpu/mce/internal.h
++++ b/arch/x86/kernel/cpu/mce/internal.h
+@@ -45,11 +45,17 @@ unsigned long cmci_intel_adjust_timer(unsigned long interval);
+ bool mce_intel_cmci_poll(void);
+ void mce_intel_hcpu_update(unsigned long cpu);
+ void cmci_disable_bank(int bank);
++void intel_init_cmci(void);
++void intel_init_lmce(void);
++void intel_clear_lmce(void);
+ #else
+ # define cmci_intel_adjust_timer mce_adjust_timer_default
+ static inline bool mce_intel_cmci_poll(void) { return false; }
+ static inline void mce_intel_hcpu_update(unsigned long cpu) { }
+ static inline void cmci_disable_bank(int bank) { }
++static inline void intel_init_cmci(void) { }
++static inline void intel_init_lmce(void) { }
++static inline void intel_clear_lmce(void) { }
+ #endif
+ 
+ void mce_timer_kick(unsigned long interval);
 -- 
 2.7.4
 
