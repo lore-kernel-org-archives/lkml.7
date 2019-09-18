@@ -2,133 +2,251 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B04BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA192C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D307B21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AQUtfExt"
+	by mail.kernel.org (Postfix) with ESMTP id 9A859218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731255AbfIROXh (ORCPT
+        id S1728863AbfIRO1E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:23:37 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41190 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730594AbfIROXg (ORCPT
+        Wed, 18 Sep 2019 10:27:04 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38951 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfIRO1D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:23:36 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q7so53138pfh.8;
-        Wed, 18 Sep 2019 07:23:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=X0YlaBg0eWRFmg01LcYcEakBboU2udItKz/WvLmsstE=;
-        b=AQUtfExt8PphIK/V+c+mEJ3tgaUEISxw78DBCeSXeyLH9gYToCX1fyDRsFiqifcLuN
-         c5domyKtQbNk8UW32C/o8pZxeVKctq+eYM2nl/a+mrfcyhODXnb1TWcvL3vFe3MDygUK
-         358nsEwOyj4l+QNqq6/0BFrGmo5RY6rTAIZqbnkTVAqAnMc+ybt1H0p7QnhLAYo0iSGa
-         W/AAiFLjZJoyfi3SME//ZCANuAHVX9bV2/CFWUIAQL4r8biRaX9RplWV0+THsCypl3Gp
-         G+ZgOwie51YPSdJZmnm4/9gLYzpCIxn8HXzoM2hzP3BYjAceYcayoq/G0oXGgCoTG/i3
-         u3EA==
+        Wed, 18 Sep 2019 10:27:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g12so169063eds.6;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=X0YlaBg0eWRFmg01LcYcEakBboU2udItKz/WvLmsstE=;
-        b=dS0VCQmttJ0uhvcCDU2xIrMT4XxM7x8ymI0HivUVIywEh/ocoJusZYWlAtIHChIi/P
-         rKnGzxsZYzJ5PzLgEVWN+ZRY3SZC2Om53lorO5KJsXj0GWuwBHSHytK94ntZrM52kZcW
-         dk+gJ9iWBfls1HNoMI/NdqKHnTyE2qjtKFmUSWRE73oXvyJIW+FQj/j8aXr+/fX+JkQ9
-         F1e8NLFUvOXtjy099Vj0e+02WjqhMM/LuGbfaNyuOHsh74etZaX2YowPvrE7QnqYdgct
-         A6ZbY+BlI+M7jmrjg0YnHHAtF67dV29rfCgbs0/c7TrNNCn1Svd8asZAkfgF2XzrFrkc
-         EWrQ==
-X-Gm-Message-State: APjAAAVS7Ts1oksG9FgpUsZ9DOVyvjzjjDCZQzNQ81moVbBlwF8FDmeh
-        9qAHeOZq56bEmvbIG+91LaE=
-X-Google-Smtp-Source: APXvYqwraF/YHqWdOvbISaW0toiHH71DUpkNZY1Cp7PbrQONBy+X5ThJP7vWM980IKlnropOI/g2qw==
-X-Received: by 2002:a17:90a:c8a:: with SMTP id v10mr3943216pja.6.1568816615452;
-        Wed, 18 Sep 2019 07:23:35 -0700 (PDT)
-Received: from localhost.localdomain ([2001:268:c145:8e3a:1c91:3b66:30:c335])
-        by smtp.gmail.com with ESMTPSA id d5sm10996675pfa.180.2019.09.18.07.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 07:23:34 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     jic23@jic23.retrosnub.co.uk
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v3 2/2] docs: driver-api: generic-counter: Update Count and Signal data types
-Date:   Wed, 18 Sep 2019 23:22:46 +0900
-Message-Id: <e7517c4062cfa186f90dc9e16765bd0745068c0b.1568816248.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1568816248.git.vilhelm.gray@gmail.com>
-References: <cover.1568816248.git.vilhelm.gray@gmail.com>
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=400pvBocvt0a62SbRKwLyz08gWO35MVfJMPe2DLlqA0=;
+        b=fnSwKR1VJeE3F4JaJydrKtOeTPqp12dpwM77BCPXUDdhvzgmHccXKrq/oCsmCq1FLG
+         U+mYI5xbw8JaZlT8Qg9Mp/FaMkYY3gQ/Wu+ZEBiBxtifdCyrqD28gXbMnesNP9VARrRN
+         0gVzbNehBj9OquvfHZl39p101gmIvuyvvUBW9S03klJuoyBTwJ/dR9gBVYotIhxIXTcU
+         tmc+VareCVxtjos5vNuGij/Eq+QSJAdUJnjTPJN3i1++vBt3tf2FH8m4m+TQT7qBpi09
+         PRNw6ZMrcGqXD740MgcdBjYDVIRDyT8o9Iy30OpiENexqd0HasM8c3XGR8Gpavjouu9p
+         BJ1Q==
+X-Gm-Message-State: APjAAAV3IIUAZgB/qHmtN5XuMfpK0KewUSoFlIIv/aRuvRdzArrQG2cm
+        NUHNX73V9DShikFFPsLm2U0=
+X-Google-Smtp-Source: APXvYqzaqGgg6lGItFTRHXIHvJvgJImWaglUXeJ4fzHPGSK/ke3TXsUH8vLlYYf5nYcHTun3x2qjAg==
+X-Received: by 2002:a17:906:493:: with SMTP id f19mr9629887eja.285.1568816821022;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id ci8sm245279ejb.71.2019.09.18.07.27.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:27:00 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-7-efremov@linux.com>
+ <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
+Date:   Wed, 18 Sep 2019 17:26:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Count data is now always represented as an unsigned integer, while
-Signal data is either SIGNAL_LOW or SIGNAL_HIGH.
+On 9/18/19 11:58 AM, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+>> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+>> global one PCI_STD_NUM_BARS instead.
+>>
+>> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+>> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> ---
+>>  arch/s390/include/asm/pci.h     |  5 +----
+>>  arch/s390/include/asm/pci_clp.h |  6 +++---
+>>  arch/s390/pci/pci.c             | 16 ++++++++--------
+>>  arch/s390/pci/pci_clp.c         |  6 +++---
+>>  4 files changed, 15 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+>> index a2399eff84ca..3a06c264ea53 100644
+>> --- a/arch/s390/include/asm/pci.h
+>> +++ b/arch/s390/include/asm/pci.h
+>> @@ -2,9 +2,6 @@
+>>  #ifndef __ASM_S390_PCI_H
+>>  #define __ASM_S390_PCI_H
+>>  
+>> -/* must be set before including pci_clp.h */
+>> -#define PCI_BAR_COUNT	6
+>> -
+>>  #include <linux/pci.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/iommu.h>
+>> @@ -138,7 +135,7 @@ struct zpci_dev {
+>>  
+>>  	char res_name[16];
+>>  	bool mio_capable;
+>> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+>> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+>>  
+>>  	u64		start_dma;	/* Start of available DMA addresses */
+>>  	u64		end_dma;	/* End of available DMA addresses */
+>> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+>> index 50359172cc48..bd2cb4ea7d93 100644
+>> --- a/arch/s390/include/asm/pci_clp.h
+>> +++ b/arch/s390/include/asm/pci_clp.h
+>> @@ -77,7 +77,7 @@ struct mio_info {
+>>  	struct {
+>>  		u64 wb;
+>>  		u64 wt;
+>> -	} addr[PCI_BAR_COUNT];
+>> +	} addr[PCI_STD_NUM_BARS];
+>>  	u32 reserved[6];
+>>  } __packed;
+>>  
+>> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+>>  	u16 util_str_avail	:  1;	/* utility string available? */
+>>  	u16 pfgid		:  8;	/* pci function group id */
+>>  	u32 fid;			/* pci function id */
+>> -	u8 bar_size[PCI_BAR_COUNT];
+>> +	u8 bar_size[PCI_STD_NUM_BARS];
+>>  	u16 pchid;
+>> -	__le32 bar[PCI_BAR_COUNT];
+>> +	__le32 bar[PCI_STD_NUM_BARS];
+>>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+>>  	u32			: 16;
+>>  	u8 fmb_len;
+>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+>> index b0e3b9a0e488..aca372c8e34f 100644
+>> --- a/arch/s390/pci/pci.c
+>> +++ b/arch/s390/pci/pci.c
+>> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+>>  static DEFINE_SPINLOCK(zpci_domain_lock);
+>>  
+>>  #define ZPCI_IOMAP_ENTRIES						\
+>> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+>> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+>>  	    ZPCI_IOMAP_MAX_ENTRIES)
+>>  
+>>  static DEFINE_SPINLOCK(zpci_iomap_lock);
+>> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+>>  			      unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
+>>  
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+>>  				 unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
+> 
+> This looks like a latent bug fix here. If 'bar' is out of range we return
+> NULL instead accessing an invalid item of an array. Should this not be
+> a separate patch and tagged as stable?
+> 
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- Documentation/driver-api/generic-counter.rst | 22 +++++++-------------
- 1 file changed, 8 insertions(+), 14 deletions(-)
+This fix was suggested by Bjorn in v1 review:
+https://lkml.org/lkml/2019/8/12/997
 
-diff --git a/Documentation/driver-api/generic-counter.rst b/Documentation/driver-api/generic-counter.rst
-index 8382f01a53e3..161652fc1025 100644
---- a/Documentation/driver-api/generic-counter.rst
-+++ b/Documentation/driver-api/generic-counter.rst
-@@ -39,10 +39,7 @@ There are three core components to a counter:
- COUNT
- -----
- A Count represents the count data for a set of Signals. The Generic
--Counter interface provides the following available count data types:
--
--* COUNT_POSITION:
--  Unsigned integer value representing position.
-+Counter interface represents the count data as an unsigned integer.
- 
- A Count has a count function mode which represents the update behavior
- for the count data. The Generic Counter interface provides the following
-@@ -93,19 +90,16 @@ SIGNAL
- A Signal represents a counter input data; this is the input data that is
- evaluated by the counter to determine the count data; e.g. a quadrature
- signal output line of a rotary encoder. Not all counter devices provide
--user access to the Signal data.
--
--The Generic Counter interface provides the following available signal
--data types for when the Signal data is available for user access:
-+user access to the Signal data, so exposure is optional for drivers.
- 
--* SIGNAL_LEVEL:
--  Signal line state level. The following states are possible:
-+When the Signal data is available for user access, the Generic Counter
-+interface provides the following available signal values:
- 
--  - SIGNAL_LEVEL_LOW:
--    Signal line is in a low state.
-+* SIGNAL_LOW:
-+  Signal line is in a low state.
- 
--  - SIGNAL_LEVEL_HIGH:
--    Signal line is in a high state.
-+* SIGNAL_HIGH:
-+  Signal line is in a high state.
- 
- A Signal may be associated with one or more Counts.
- 
--- 
-2.23.0
+
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>  
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+>>  	resource_size_t len;
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
+>>  	if (zpci_use_mio(zdev))
+>>  		return;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+>>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
+>>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size)
+>>  			continue;
+>>  		entry = zpci_alloc_iomap(zdev);
+>> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
+>>  			continue;
+>>  
+>> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
+>>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
+>>  	zpci_map_resources(pdev);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		res = &pdev->resource[i];
+>>  		if (res->parent || !res->flags)
+>>  			continue;
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index 9bdff4defef1..8b729b5f2972 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
+>>  		zdev->bars[i].size = response->bar_size[i];
+>>  	}
+>> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  		       sizeof(zdev->util_str));
+>>  	}
+>>  	zdev->mio_capable = response->mio_addr_avail;
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
+>>  			continue;
+>>  
+>>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
+>> -- 
+>> 2.21.0
+>>
 
