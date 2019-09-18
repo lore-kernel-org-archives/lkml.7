@@ -2,112 +2,74 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB313C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDC9C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACA97207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:53:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2bS6Mx9"
+	by mail.kernel.org (Postfix) with ESMTP id 7117921907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:54:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfIRPxy (ORCPT
+        id S1731797AbfIRPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:53:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40022 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbfIRPxx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:53:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so337504iof.7
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:53:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EQ45BCpmBEKnvHqL4KeZ85PzFZcYZhlr4Gvwwx3a9LE=;
-        b=j2bS6Mx9kJZxs5QQ/AlKQfbUAJAopRKCyfWwar9orN24zdcVYndxvCB5AKm4Xw9Iy3
-         mkYKHguyY0lxca6Paj1/bv2TbuAUVjkO3Cct9gNV1gKXQnbdLJVMsvdhSLqB/5Uzqa2J
-         9eM3gTS2OK1kbrI50Z34hKXMl6OadhAbrdNWjtdRBv3KEAEPPNx3xISZodzOqihnl9i2
-         pWJEuFZ2v+3aOuiU15uiX3/ejzcYXoNsFi2wRBv8L7Xm4TZH9BDV/ylYz8bgZLZrI2TP
-         jyWyqr8dEfMzXv2ocZu9qw9ynx/+OhhdaxjQQez0J48xng6b+dbXMBccljkJDt/mGMXk
-         NOJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EQ45BCpmBEKnvHqL4KeZ85PzFZcYZhlr4Gvwwx3a9LE=;
-        b=JRNyY0umjGPOyTZ0GTx7Koa071HPU6vabTIaFrQlSm9gG54McQm+ns5VANliUEaRI9
-         j1X+4JRlZ+enU3NYs8lcaM5+EzERotaadCj1V2r0DAG8JuGeDZR1SUsy/mRKAuoM4LfH
-         dRpKgWMyRMUo/nAbAH3oOlwdHWnhX4zcX+ZhEcwCX0zcNTgHjAvj2SdZfV+ikamMLaWJ
-         WwyGrXqsdrS5/84ngQ4knJSZZdyb5Z6MbeV/HJVRTKwbHyZlQaehpuc+3fbeMdBzpQYQ
-         TDVChiCq7iz9J6jxwwQTwYxw1P/yjbs1lHVmiOmNvuQSZXssOOneW/R2bJVm9eZMjSas
-         Dfrw==
-X-Gm-Message-State: APjAAAV84H5gWvzFcJYK29rSlBrptDt+ACRZIu0n3wVdAjWAn4A0aL5p
-        fX/B49XU72V3VYw7bR9zaKzbf5L1HxWZI2l6Irs=
-X-Google-Smtp-Source: APXvYqzWWtP7F3fhmYl9ngvjNxdw3ntiC8EMP+BaJfsXqc8gnQIUrrrgG1lqoXIvvsa4AUuT0Qb0x4xEk0eT5KqrDDw=
-X-Received: by 2002:a02:69cd:: with SMTP id e196mr5969184jac.84.1568822032590;
- Wed, 18 Sep 2019 08:53:52 -0700 (PDT)
+        Wed, 18 Sep 2019 11:54:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54822 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726369AbfIRPyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:54:22 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6A6048A1C99;
+        Wed, 18 Sep 2019 15:54:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 315F91001B23;
+        Wed, 18 Sep 2019 15:54:18 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com>
+References: <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com> <278d9706-162d-28a4-4640-31b697924473@physik.fu-berlin.de> <c5acb1c0-7a5b-ce42-8b2f-5fd30cbdab6e@physik.fu-berlin.de> <6304acd1-7b71-b1fb-f8d8-298cb3025e69@physik.fu-berlin.de> <6725b972-05d4-fed4-7094-16401e86b452@gmail.com> <578d8a91-aaee-087f-1742-65e64001b8fa@physik.fu-berlin.de> <CAMuHMdUU6ejc168-ksqXrkE+PjCXFJumaRaWjRtj12NjG_TFSg@mail.gmail.com> <CAMuHMdWfTrx8VuJoifEEBc1n+3MiiuwKNWcRnUw+TgWJCtOWag@mail.gmail.com> <fea74ca3-4b24-780f-af74-a786646b1668@physik.fu-berlin.de> <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     dhowells@redhat.com,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Can KEY_DH_OPERATIONS become tristate? (was: Re: Kernel 5.3.0 stuck during boot on Amiga)
 MIME-Version: 1.0
-References: <20190917154021.14693-1-m.felsch@pengutronix.de>
- <20190917154021.14693-4-m.felsch@pengutronix.de> <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
- <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
-In-Reply-To: <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Wed, 18 Sep 2019 08:53:40 -0700
-Message-ID: <CAKdAkRSneYYjcVe--P=m037aA1DaD+efbEcRGGKVk1hDeEw70A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] regulator: core: make regulator_register()
- EPROBE_DEFER aware
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     zhang.chunyan@linaro.org, Doug Anderson <dianders@chromium.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, ckeepax@opensource.cirrus.com,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <16475.1568822057.1@warthog.procyon.org.uk>
+Date:   Wed, 18 Sep 2019 16:54:17 +0100
+Message-ID: <16476.1568822057@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 18 Sep 2019 15:54:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 1:18 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> On 19-09-17 17:57, Dmitry Torokhov wrote:
-> > On Tue, Sep 17, 2019 at 4:42 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > >
-> > > Sometimes it can happen that the regulator_of_get_init_data() can't
-> > > retrieve the config due to a not probed device the regulator depends on.
-> > > Fix that by checking the return value of of_parse_cb() and return
-> > > EPROBE_DEFER in such cases.
-> >
-> > Treating EPROBE_DEFER in a special way is usually wrong.
-> > regulator_of_get_init_data() may fail for multiple reasons (no memory,
-> > invalid DT, etc, etc). All of them should abort instantiating
-> > regulator.
->
-> Those errors are handled but the behaviour of this funciton is to return
-> NULL in such errors which is fine for the caller of this function. I
-> only want to handle EPROBE_DEFER special..
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-And I am saying it is wrong to handle only EPROBE_DEFER.
-regulator_of_get_init_data() should always return ERR_PTR()-encoded
-error code when parsing callback returns error, so that regulator core
-does not mistakenly believe that there is no configuration/init data
-when in fact there is, but we failed to handle it properly.
+> CC crypto keys people
+> 
+> TL;DR: CONFIG_CRYPTO_DH=y is reported to cause boot delays of several
+> minutes on old and slow machines.
 
-IOW I'm advocating for extending you patch so that it reads:
+Why is it doing that?  It doesn't do anything unless it is called, so
+something must be calling it.
 
-+               ret = desc->of_parse_cb(child, desc, config);
-+               if (ret) {
-+                       of_node_put(child);
-+                       return ERR_PTR(ret);
-+               }
+> Can KEY_DH_OPERATIONS be made tristate?
 
-Thanks.
+Um.  It's non-trivial since it's implementing a keyctl() function for
+userspace to call and there's currently no ops table to jump through.
 
--- 
-Dmitry
+David
