@@ -2,58 +2,57 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFDFC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE98C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3017A21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E57421924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787692;
-	bh=qEC3OPBq2O/Yt0wWToHvduRL+baM8br/3x3yc5kO8KA=;
+	s=default; t=1568787694;
+	bh=jq8ybVu1n57Y65C+FrIyYI1E1FO2RqjaBIU3tXRCdb0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZQUaK81gQFF1nyjdyB2gs+E0W6PraO6vG7irvKJ63jfSfmEc2GWbFWtzCkYVef4Va
-	 erjO9CoriesuKsVBW4PMdw3GUYDcD4U43XoH0UCJgQZTK41vBDilpaPVclzckNZRqK
-	 fFsBl2+OE6JD8+Z2tCWBhsL91aBoI7IvYdoOtbNU=
+	b=QO3CnMhTPIt7V3Nkacig8SL53RAGPs5Q984VOgA9l/CffjcSNjjhoVxoH8QU7KxYK
+	 SfP0z4ZH5n1QKKSBzcJ6sJ6IFR2ywCYjDFmiwAwPlOmQ3/3WHHSwj+6QV/CNqjWZr9
+	 rc9tJT24ZhNGYcNPxncf/Be5gyZJM+QSN8EZIdjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfIRGVb (ORCPT
+        id S1729094AbfIRGVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:21:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40768 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729084AbfIRGVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:21:24 -0400
+        id S1728963AbfIRGV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F05172053B;
-        Wed, 18 Sep 2019 06:21:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25882218AE;
+        Wed, 18 Sep 2019 06:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787683;
-        bh=qEC3OPBq2O/Yt0wWToHvduRL+baM8br/3x3yc5kO8KA=;
+        s=default; t=1568787688;
+        bh=jq8ybVu1n57Y65C+FrIyYI1E1FO2RqjaBIU3tXRCdb0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e5AjyEpDn3JtBmizig6+NLpB0Ea5IkQW3q52fW2YAUyncQ9Ksf7XH/CakxIOKrJi9
-         RJS5rTQM5pJU/ofI3DsqqFW8SvAer1iBjCZkuDu6zbHIPuqnaQPnoCoIeEVZ7ar20r
-         c039uUhl4IqYWZqXOQxaOuod+JKgYpGUpyyPM1ks=
+        b=P+OP2iEicRhdzdHl0d5ELBdbV/GrJHvRfLddeYqSRnDmIqMJEaliRIiw70dJldyye
+         GgePUJBG9vW/1xFIGoAngnOL9iYZbD/u8tyYdNVtSnodolZpQEiTQ/Pn3qIBilB4Sp
+         J2ZFyQxBnIT7zVUO8it2ANM9UgWiYcPqDL1kzaPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
+        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
+        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>, Terry Lam <vtlam@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 06/45] net: gso: Fix skb_segment splat when splitting gso_size mangled skb having linear-headed frag_list
-Date:   Wed, 18 Sep 2019 08:18:44 +0200
-Message-Id: <20190918061223.498721351@linuxfoundation.org>
+Subject: [PATCH 4.14 08/45] sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+Date:   Wed, 18 Sep 2019 08:18:46 +0200
+Message-Id: <20190918061223.591928754@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -66,105 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 3dcbdb134f329842a38f0e6797191b885ab00a00 ]
+[ Upstream commit d4d6ec6dac07f263f06d847d6f732d6855522845 ]
 
-Historically, support for frag_list packets entering skb_segment() was
-limited to frag_list members terminating on exact same gso_size
-boundaries. This is verified with a BUG_ON since commit 89319d3801d1
-("net: Add frag_list support to skb_segment"), quote:
+In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
+it would make no progress inside the loop in hhf_dequeue() thus
+kernel would get stuck.
 
-    As such we require all frag_list members terminate on exact MSS
-    boundaries.  This is checked using BUG_ON.
-    As there should only be one producer in the kernel of such packets,
-    namely GRO, this requirement should not be difficult to maintain.
+Fix this by checking this corner case in hhf_change().
 
-However, since commit 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper"),
-the "exact MSS boundaries" assumption no longer holds:
-An eBPF program using bpf_skb_change_proto() DOES modify 'gso_size', but
-leaves the frag_list members as originally merged by GRO with the
-original 'gso_size'. Example of such programs are bpf-based NAT46 or
-NAT64.
-
-This lead to a kernel BUG_ON for flows involving:
- - GRO generating a frag_list skb
- - bpf program performing bpf_skb_change_proto() or bpf_skb_adjust_room()
- - skb_segment() of the skb
-
-See example BUG_ON reports in [0].
-
-In commit 13acc94eff12 ("net: permit skb_segment on head_frag frag_list skb"),
-skb_segment() was modified to support the "gso_size mangling" case of
-a frag_list GRO'ed skb, but *only* for frag_list members having
-head_frag==true (having a page-fragment head).
-
-Alas, GRO packets having frag_list members with a linear kmalloced head
-(head_frag==false) still hit the BUG_ON.
-
-This commit adds support to skb_segment() for a 'head_skb' packet having
-a frag_list whose members are *non* head_frag, with gso_size mangled, by
-disabling SG and thus falling-back to copying the data from the given
-'head_skb' into the generated segmented skbs - as suggested by Willem de
-Bruijn [1].
-
-Since this approach involves the penalty of skb_copy_and_csum_bits()
-when building the segments, care was taken in order to enable this
-solution only when required:
- - untrusted gso_size, by testing SKB_GSO_DODGY is set
-   (SKB_GSO_DODGY is set by any gso_size mangling functions in
-    net/core/filter.c)
- - the frag_list is non empty, its item is a non head_frag, *and* the
-   headlen of the given 'head_skb' does not match the gso_size.
-
-[0]
-https://lore.kernel.org/netdev/20190826170724.25ff616f@pixies/
-https://lore.kernel.org/netdev/9265b93f-253d-6b8c-f2b8-4b54eff1835c@fb.com/
-
-[1]
-https://lore.kernel.org/netdev/CA+FuTSfVsgNDi7c=GUU8nMg2hWxF2SjCNLXetHeVPdnxAW5K-w@mail.gmail.com/
-
-Fixes: 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper")
-Suggested-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
+Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
+Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Terry Lam <vtlam@google.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/skbuff.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ net/sched/sch_hhf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3514,6 +3514,25 @@ struct sk_buff *skb_segment(struct sk_bu
- 	int pos;
- 	int dummy;
+--- a/net/sched/sch_hhf.c
++++ b/net/sched/sch_hhf.c
+@@ -528,7 +528,7 @@ static int hhf_change(struct Qdisc *sch,
+ 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
  
-+	if (list_skb && !list_skb->head_frag && skb_headlen(list_skb) &&
-+	    (skb_shinfo(head_skb)->gso_type & SKB_GSO_DODGY)) {
-+		/* gso_size is untrusted, and we have a frag_list with a linear
-+		 * non head_frag head.
-+		 *
-+		 * (we assume checking the first list_skb member suffices;
-+		 * i.e if either of the list_skb members have non head_frag
-+		 * head, then the first one has too).
-+		 *
-+		 * If head_skb's headlen does not fit requested gso_size, it
-+		 * means that the frag_list members do NOT terminate on exact
-+		 * gso_size boundaries. Hence we cannot perform skb_frag_t page
-+		 * sharing. Therefore we must fallback to copying the frag_list
-+		 * skbs; we do so by disabling SG.
-+		 */
-+		if (mss != GSO_BY_FRAGS && mss != skb_headlen(head_skb))
-+			features &= ~NETIF_F_SG;
-+	}
-+
- 	__skb_push(head_skb, doffset);
- 	proto = skb_network_protocol(head_skb, &dummy);
- 	if (unlikely(!proto))
+ 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
+-	if (non_hh_quantum > INT_MAX)
++	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
+ 		return -EINVAL;
+ 
+ 	sch_tree_lock(sch);
 
 
