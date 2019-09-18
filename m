@@ -4,97 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5887FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891D0C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 302842242D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6598522435
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbfIRTyc (ORCPT
+        id S2387669AbfIRTzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:54:32 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:44435 "EHLO
+        Wed, 18 Sep 2019 15:55:19 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:58037 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfIRTyc (ORCPT
+        with ESMTP id S1731843AbfIRTzT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:54:32 -0400
+        Wed, 18 Sep 2019 15:55:19 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MdeSn-1hbcGC3xB3-00ZgA4; Wed, 18 Sep 2019 21:54:22 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N7iT4-1i5hwp41fW-014hEP; Wed, 18 Sep 2019 21:54:58 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Dingchen Zhang <dingchen.zhang@amd.com>,
-        Harry Wentland <Harry.Wentland@amd.com>,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        David Francis <David.Francis@amd.com>,
-        Mario Kleiner <mario.kleiner.de@gmail.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/display: hide an unused variable
-Date:   Wed, 18 Sep 2019 21:53:58 +0200
-Message-Id: <20190918195418.2042610-1-arnd@arndb.de>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] stmmac: selftest: avoid large stack usage
+Date:   Wed, 18 Sep 2019 21:54:34 +0200
+Message-Id: <20190918195454.2056139-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:e6RffvOmDj1nBJMeY+rrjixyu4FDdjpSMSkcA7dDa86QdgX8VAy
- vXJqdQHJ2VyuGNpIZmusNm/tmO6LSPOHGvbK29dNEXgwRjzOWBgH3zzgBys0a78d4gFJvgo
- po/+E1JWRhHgORmC1rtGZTv2ShsBdo79xTDlO7Eo10j0iqPbRuIQyj+h2JOyNBiQ1YeSiXh
- LEyb/3BeWh7FWoIm+goxQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SHiyb5ey+ic=:V8Ia1QvLm+87GxeewHaNIj
- +MQq8F2/vjHgW/LvBnX+bhxFxBSm4ML23WPlTYZ0wjJB1nIdj1VkZ0LTPaIgMCdDygijEKJmJ
- CLTRQ/9/A4fdswCadvZxgZVt38EeaHzpNJ/AnGsWJ7hSgB6qnqhXOZVxknwraLTdxbt65Ec9e
- mEdMKNYWaRiD3FisIkIq/8n8NlMTcJwRBdqJGTZDcqKQyZzVtdsdAay8FTq3IPMvyy9KHXm4V
- EVzTuO2vv+5jQHw4HMfICR9cdfGrfHzjAD9MmiiI8ZNvtHHfWw3qyhluD2f99sGP8AkxHx+6N
- FrBdNc0APae8lL9NbzPNZ752lVbZlDM5EZHCt8HLhB9TRbMtB/EMJc+37GhkZx0PQ3eZBqgUg
- blPHdXp2XrbYBkuBJ40E/KJY1End+dyZtDT9HxCxazHooVlQfE18+RFSrtsV6psQ5XDvJq6aZ
- eWDNopJAleGAhBWPw+cLhRwo1fBxC5UvpAL3D3x6fuCW/nKQaatIEc/B2pAmZ04MI6KxYgGbi
- LR6nmsfDosZobbLs3rrupbrYoXkoGi/lhtAVuIbZmgvqVhAmmr3Fi6v7IKaB2cbdHRdwhI+1u
- kfmlfOnQ/i5aK3GkNrwIJRMymQI3N5LYg1TL8DoquPj34rGvs3dZkdgSwp0n2ufKiYP0qgrqE
- N37X5BrJ4OPDim6fEiwKDnPX6DJxzeQjWp2tJoIR3Kmb/xK3o1cZer+q3b1JZHEnDO0r9gmUE
- Fb9dWjayXMttGo7QBlt7rfkpZ7Rv/b/JFwxP42F0f8GTrYtTQ56kAQ4czEeIU6hQBIoG9tYIE
- /tzOM9tFEfF88iR558bdS8BwGR5e7jslFmDy/Fq6f2DasJMIS0GYKdWUQlnv4CszXzYehBDCE
- D26Smq1Ru9yEUHCzXu/A==
+X-Provags-ID: V03:K1:N+l+qvP4iTKMClOZ10+3hqtOBzBcBQK6eoFXevu/u6P8UCjKnvn
+ c+9RDnKQFkt60Yhr/1wdrGXs/h/qCzzQXDCSJhjlsU6+bEk+wiqjs8z/5yU3GcgyEGtC2mO
+ 3SD5GPJx4Fpy/j1i29G7oBOMQ2+OoTir7lMG6/ltVEOii1JDkWm0JQtO4aQGYz1M2Yb6zNv
+ WFkT8hq38bCA3FJMEVH3A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1HosKkSRfoU=:b7Y0A535j0pAWaby1IDo4m
+ kOy6Bd+X63LxUX6r1gVlDqzAoHO1wmOf7fMp67ntknUvwuoKWDI08ticRc1et/NxH2Pz3Ztc1
+ azFGSYUV9W2A0RmNsI8CrjOIFuCQjsYs5oxyMB3GiEA6r+KyrxozwvqF+aHKVIGXX28XpPOEL
+ TWF1EiXNAYCuJbPSOqPT7ccBt8fmRIHoMYurJLI/gf1nooBvgdwHWRNZZaOcAsgG1e2gFBK9a
+ EfXBj0faIys9EuiWJJkgXT1INDk4x0hQfhnZJnLkmCcKePpkNyXlN7044PeIv8PTX/9NNlsNa
+ 4cTMTe/nUdhNLrlxc8c8GQsSvmMOtwff2oU5ZrKdWndUcRZ5GykriAHfu9BehqQZTYg6B1OQt
+ b9MHoOJQlZ/s7DnSsf92cdC2+CYPCzDtUMBLxWNrU/qC0JF12ujfFYwLvl5kO7PxkytkPWY6f
+ M3ljbyQUADlh0k1885oDO/KTU6iq4qyxcUnKqf4QEX9ZvjYDhTwdcDZf7SP7Ia2JYJ0XWZosp
+ x4TCOrGE0GEThjwnhpICjDW0g4tjH/sxSTe7Vo0R0gqT+UhSR9sWJjQJoFFwqY4SEqe8Jw6HR
+ LTZknHBNdHlgSPQSUUzmswGM+6zPm1aVVKLjnblgSzyhikNVkbnaLoHHS32Uo2QbYYCeTDeEt
+ QEhv2bWATOmmB0Y3EMN11m9Ttmx+pnRMfXgfRJxTGcOZKjSoB6VpR2VOZqfTFXyQaedt026l3
+ ZAqFvnENGhDBaE7vmydfRrLyrFWoeJXfXasA2E//AqyRdXcSZx+VnW6pHNIy/+JELjpYo/hmz
+ fqwMdRRp7V2LR3gthNtA8F66fblYzFc5smxmXTTNykbmXE0H+DPsiyKpcAxKb0Ml99kYiQSyQ
+ iPKy6AN1lEFHH2mS8u2A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without CONFIG_DEBUG_FS, we get a warning for an unused
-variable:
+Putting a struct stmmac_rss object on the stack is a bad idea,
+as it exceeds the warning limit for a stack frame on 32-bit architectures:
 
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6020:33: error: unused variable 'source' [-Werror,-Wunused-variable]
+drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:1221:12: error: stack frame size of 1208 bytes in function '__stmmac_test_l3filt' [-Werror,-Wframe-larger-than=]
+drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:1338:12: error: stack frame size of 1208 bytes in function '__stmmac_test_l4filt' [-Werror,-Wframe-larger-than=]
 
-Hide the variable in an #ifdef like its only users.
+As the object is the trivial empty case, change the called function
+to accept a NULL pointer to mean the same thing and remove the
+large variable in the two callers.
 
-Fixes: 14b2584636c6 ("drm/amd/display: add functionality to grab DPRX CRC entries.")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c   | 15 +++++++++++----
+ .../ethernet/stmicro/stmmac/stmmac_selftests.c    | 14 ++++----------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index e1b09bb432bd..74252f57bafb 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6017,7 +6017,9 @@ static void amdgpu_dm_enable_crtc_interrupts(struct drm_device *dev,
- 	struct drm_crtc *crtc;
- 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
- 	int i;
-+#ifdef CONFIG_DEBUG_FS
- 	enum amdgpu_dm_pipe_crc_source source;
-+#endif
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+index d5173dd02a71..c2f648062049 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
+@@ -523,25 +523,32 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
+ 				  struct stmmac_rss *cfg, u32 num_rxq)
+ {
+ 	void __iomem *ioaddr = hw->pcsr;
+-	u32 *key = (u32 *)cfg->key;
+ 	int i, ret;
+ 	u32 value;
  
- 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state,
- 				      new_crtc_state, i) {
+ 	value = readl(ioaddr + XGMAC_RSS_CTRL);
+-	if (!cfg->enable) {
++	if (!cfg || !cfg->enable) {
+ 		value &= ~XGMAC_RSSE;
+ 		writel(value, ioaddr + XGMAC_RSS_CTRL);
+ 		return 0;
+ 	}
+ 
+ 	for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
+-		ret = dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
++		if (cfg)
++			ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
++		else
++			ret = dwxgmac2_rss_write_reg(ioaddr, true, i, 0);
++
+ 		if (ret)
+ 			return ret;
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(cfg->table); i++) {
+-		ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
++		if (cfg)
++			ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
++		else
++			ret = dwxgmac2_rss_write_reg(ioaddr, false, i, 0);
++
+ 		if (ret)
+ 			return ret;
+ 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index c56e89e1ae56..9c8d210b2d6a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -1233,12 +1233,9 @@ static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ 		return -EOPNOTSUPP;
+ 	if (!priv->dma_cap.l3l4fnum)
+ 		return -EOPNOTSUPP;
+-	if (priv->rss.enable) {
+-		struct stmmac_rss rss = { .enable = false, };
+-
+-		stmmac_rss_configure(priv, priv->hw, &rss,
++	if (priv->rss.enable)
++		stmmac_rss_configure(priv, priv->hw, NULL,
+ 				     priv->plat->rx_queues_to_use);
+-	}
+ 
+ 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
+ 	if (!dissector) {
+@@ -1357,12 +1354,9 @@ static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ 		return -EOPNOTSUPP;
+ 	if (!priv->dma_cap.l3l4fnum)
+ 		return -EOPNOTSUPP;
+-	if (priv->rss.enable) {
+-		struct stmmac_rss rss = { .enable = false, };
+-
+-		stmmac_rss_configure(priv, priv->hw, &rss,
++	if (priv->rss.enable)
++		stmmac_rss_configure(priv, priv->hw, NULL,
+ 				     priv->plat->rx_queues_to_use);
+-	}
+ 
+ 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
+ 	if (!dissector) {
 -- 
 2.20.0
 
