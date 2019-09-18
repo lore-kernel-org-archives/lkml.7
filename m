@@ -2,244 +2,171 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76771C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE48C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3679C21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nSSdgw+6"
+	by mail.kernel.org (Postfix) with ESMTP id 2AF10206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfIRPmI (ORCPT
+        id S1731725AbfIRPm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:42:08 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34673 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728896AbfIRPmI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:42:08 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q203so8536755qke.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MxoYLfyiBUzPhqlCM4w4PwBwFKu/jtqQR2cCGb9YBT4=;
-        b=nSSdgw+6FYaaStUyX2sA8rUkMZXoeQQ1Bhj98GeF7Gz7fo9nVGjBG+6KdBsfdcv5RB
-         A34NyTjV5lYd/E//bk1eHCio4Y9+zd6V8vjqmhVzMVJgvx+ByAf2yrCUZtwkU8cOZgXO
-         aMU83MmPolqXpB6/osYDW0cz5mf0aYSufpWrYJmFXoPR9+ZRrRozpVBP94KeBGHhpu20
-         WN0SVFkgwuSDTkpCTSVtl3ieYTtGqEDj+JZHhWqnMrlilD7DCh1zsb5vtBGzIL/Vjr8H
-         C17TB7sqDGFLObwXy71/6DeZR9PMN1q3y/MX/0MsB919oVmtLH6WRPbyq2ZWD9zCDc2D
-         Spaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MxoYLfyiBUzPhqlCM4w4PwBwFKu/jtqQR2cCGb9YBT4=;
-        b=nDyRxBLGNg6gXrUOja96HPt0p+JipBSoI6BNNqAJF9t84ZszXLSVfKiMFl41gYJizT
-         uy5rdQmE58zofj1KUhyzbmWJMzdgNljY/sxqdpRMmqqp/d/xSmK2rWZkybmB38yk4Qng
-         Dn0QIYlCMCqszw7n29ZtMKsx006GCHCSTMqU0zrM7R8MJJzibSy8atSKvUBDBoGdtxoz
-         h+X5tu0lVHYjzmhy57PPgGgS4ciQ9fVUk9Hc0yLyTUduDodnaDHhOTBdjBNfQEMTAzjI
-         FjNKjHIR6laI3rgyI5b/KK11q1csWTU8jmOeu2/RzeUULI9Zn5JUw+wh2/8PggS97PFn
-         BS7w==
-X-Gm-Message-State: APjAAAXAqjyKwIBpH44gOGPb5A2xbVG6wEqKh8G0sPzTizRfS29e38oJ
-        Jw9TMnudfwTkHuOLHD6UHtcO2Kth0zg=
-X-Google-Smtp-Source: APXvYqwRPQBIvBID8wxxk+kHKEOudHk1TuWjSNq51em4yTV73znC4lOPaseqqlTF0JNOe7fXWkP9Tw==
-X-Received: by 2002:a37:67c6:: with SMTP id b189mr4597177qkc.472.1568821326580;
-        Wed, 18 Sep 2019 08:42:06 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id n65sm2937218qkb.19.2019.09.18.08.42.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 08:42:05 -0700 (PDT)
-Message-ID: <1568821324.5576.174.camel@lca.pw>
-Subject: Re: [PATCH v4] powerpc/setup_64: fix -Wempty-body warnings
-From:   Qian Cai <cai@lca.pw>
-To:     mpe@ellerman.id.au
-Cc:     paulus@samba.org, benh@kernel.crashing.org,
-        tyreld@linux.vnet.ibm.com, joe@perches.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Date:   Wed, 18 Sep 2019 11:42:04 -0400
-In-Reply-To: <1563215552-8166-1-git-send-email-cai@lca.pw>
-References: <1563215552-8166-1-git-send-email-cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+        Wed, 18 Sep 2019 11:42:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:44086 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728896AbfIRPm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:42:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AF17337;
+        Wed, 18 Sep 2019 08:42:26 -0700 (PDT)
+Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39EAD3F59C;
+        Wed, 18 Sep 2019 08:42:24 -0700 (PDT)
+Subject: Re: Usecases for the per-task latency-nice attribute
+To:     Patrick Bellasi <patrick.bellasi@arm.com>,
+        Parth Shah <parth@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        subhra mazumdar <subhra.mazumdar@oracle.com>,
+        tim.c.chen@linux.intel.com, mingo@redhat.com,
+        morten.rasmussen@arm.com, dietmar.eggemann@arm.com, pjt@google.com,
+        vincent.guittot@linaro.org, quentin.perret@arm.com,
+        dhaval.giani@oracle.com, daniel.lezcano@linaro.org, tj@kernel.org,
+        rafael.j.wysocki@intel.com, qais.yousef@arm.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>
+References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
+ <87woe51ydd.fsf@arm.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <77457d5b-185e-1548-4a5c-9b911b036cec@arm.com>
+Date:   Wed, 18 Sep 2019 16:42:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <87woe51ydd.fsf@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael, ping in case that you might forget this one forever as well.
+On 18/09/2019 15:18, Patrick Bellasi wrote:
+>> 1. Name: What should be the name for such attr for all the possible usecases?
+>> =============
+>> Latency nice is the proposed name as of now where the lower value indicates
+>> that the task doesn't care much for the latency
+> 
+> If by "lower value" you mean -19 (in the proposed [-20,19] range), then
+> I think the meaning should be the opposite.
+> 
+> A -19 latency-nice task is a task which is not willing to give up
+> latency. For those tasks for example we want to reduce the wake-up
+> latency at maximum.
+> 
+> This will keep its semantic aligned to that of process niceness values
+> which range from -20 (most favourable to the process) to 19 (least
+> favourable to the process).
+> 
 
-On Mon, 2019-07-15 at 14:32 -0400, Qian Cai wrote:
-> At the beginning of setup_64.c, it has,
+I don't want to start a bikeshedding session here, but I agree with Parth
+on the interpretation of the values.
+
+I've always read niceness values as
+-20 (least nice to the system / other processes)
++19 (most nice to the system / other processes)
+
+So following this trend I'd see for latency-nice:
+-20 (least nice to latency, i.e. sacrifice latency for throughput)
++19 (most nice to latency, i.e. sacrifice throughput for latency)
+
+However...
+
+>> But there seems to be a bit of confusion on whether we want biasing as well
+>> (latency-biased) or something similar, in which case "latency-nice" may
+>> confuse the end-user.
 > 
->   #ifdef DEBUG
->   #define DBG(fmt...) udbg_printf(fmt)
->   #else
->   #define DBG(fmt...)
->   #endif
+> AFAIU PeterZ point was "just" that if we call it "-nice" it has to
+> behave as "nice values" to avoid confusions to users. But, if we come up
+> with a different naming maybe we will have more freedom.
 > 
-> where DBG() could be compiled away, and generate warnings,
+
+...just getting rid of the "-nice" would leave us free not to have to
+interpret the values as "nice to / not nice to" :)
+
+> Personally, I like both "latency-nice" or "latency-tolerant", where:
 > 
-> arch/powerpc/kernel/setup_64.c: In function 'initialize_cache_info':
-> arch/powerpc/kernel/setup_64.c:579:49: warning: suggest braces around
-> empty body in an 'if' statement [-Wempty-body]
->     DBG("Argh, can't find dcache properties !\n");
->                                                  ^
-> arch/powerpc/kernel/setup_64.c:582:49: warning: suggest braces around
-> empty body in an 'if' statement [-Wempty-body]
->     DBG("Argh, can't find icache properties !\n");
+>  - latency-nice:
+>    should have a better understanding based on pre-existing concepts
 > 
-> Fix it by using the suggestions from Michael:
+>  - latency-tolerant:
+>    decouples a bit its meaning from the niceness thus giving maybe a bit
+>    more freedom in its complete definition and perhaps avoid any
+>    possible interpretation confusion like the one I commented above.
 > 
-> "Neither of those sites should use DBG(), that's not really early boot
-> code, they should just use pr_warn().
+> Fun fact: there was also the latency-nasty proposal from PaulMK :)
 > 
-> And the other uses of DBG() in initialize_cache_info() should just be
-> removed.
+
+[...]
+
 > 
-> In smp_release_cpus() the entry/exit DBG's should just be removed, and
-> the spinning_secondaries line should just be pr_debug().
+> $> Wakeup path tunings
+> ==========================
 > 
-> That would just leave the two calls in early_setup(). If we taught
-> udbg_printf() to return early when udbg_putc is NULL, then we could just
-> call udbg_printf() unconditionally and get rid of the DBG macro
-> entirely."
+> Some additional possible use-cases was already discussed in [3]:
 > 
-> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
+>  - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
+>    depending on crossing certain pre-configured threshold of latency
+>    niceness.
+>   
+>  - dynamically bias the vruntime updates we do in place_entity()
+>    depending on the actual latency niceness of a task.
+>   
+>    PeterZ thinks this is dangerous but that we can "(carefully) fumble a
+>    bit there."
+>   
+>  - bias the decisions we take in check_preempt_tick() still depending
+>    on a relative comparison of the current and wakeup task latency
+>    niceness values.
+
+Aren't we missing the point about tweaking the sched domain scans (which
+AFAIR was the original point for latency-nice)?
+
+Something like default value is current behaviour and
+- Being less latency-sensitive means increasing the scans (e.g. trending
+  towards only going through the slow wakeup-path at the extreme setting)
+- Being more latency-sensitive means reducing the scans (e.g. trending
+  towards a fraction of the domain scanned in the fast-path at the extreme
+  setting).
+
 > 
-> v4: Use the suggestions from Michael and __func__ per checkpatch.
-> v3: Use no_printk() macro, and make sure that format and argument are always
->     verified by the compiler using a more generic form ##__VA_ARGS__ per Joe.
-> v2: Fix it by using a NOP while loop per Tyrel.
+
+$> Load balance tuning
+======================
+
+Already mentioned these in [4]:
+
+- Increase (reduce) nr_balance_failed threshold when trying to active
+  balance a latency-sensitive (non-latency-sensitive) task.
+
+- Increase (decrease) sched_migration_cost factor in task_hot() for
+  latency-sensitive (non-latency-sensitive) tasks.
+
+>> References:
+>> ===========
+>> [1]. https://lkml.org/lkml/2019/8/30/829
+>> [2]. https://lkml.org/lkml/2019/7/25/296
 > 
->  arch/powerpc/kernel/setup_64.c | 26 ++++++--------------------
->  arch/powerpc/kernel/udbg.c     | 14 ++++++++------
->  2 files changed, 14 insertions(+), 26 deletions(-)
+>   [3]. Message-ID: <20190905114709.GM2349@hirez.programming.kicks-ass.net>
+>        https://lore.kernel.org/lkml/20190905114709.GM2349@hirez.programming.kicks-ass.net/
 > 
-> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-> index 44b4c432a273..d2af4c228970 100644
-> --- a/arch/powerpc/kernel/setup_64.c
-> +++ b/arch/powerpc/kernel/setup_64.c
-> @@ -68,12 +68,6 @@
->  
->  #include "setup.h"
->  
-> -#ifdef DEBUG
-> -#define DBG(fmt...) udbg_printf(fmt)
-> -#else
-> -#define DBG(fmt...)
-> -#endif
-> -
->  int spinning_secondaries;
->  u64 ppc64_pft_size;
->  
-> @@ -305,7 +299,7 @@ void __init early_setup(unsigned long dt_ptr)
->  	/* Enable early debugging if any specified (see udbg.h) */
->  	udbg_early_init();
->  
-> - 	DBG(" -> early_setup(), dt_ptr: 0x%lx\n", dt_ptr);
-> +	udbg_printf(" -> %s(), dt_ptr: 0x%lx\n", __func__, dt_ptr);
->  
->  	/*
->  	 * Do early initialization using the flattened device
-> @@ -362,11 +356,11 @@ void __init early_setup(unsigned long dt_ptr)
->  	 */
->  	this_cpu_enable_ftrace();
->  
-> -	DBG(" <- early_setup()\n");
-> +	udbg_printf(" <- %s()\n", __func__);
->  
->  #ifdef CONFIG_PPC_EARLY_DEBUG_BOOTX
->  	/*
-> -	 * This needs to be done *last* (after the above DBG() even)
-> +	 * This needs to be done *last* (after the above udbg_printf() even)
->  	 *
->  	 * Right after we return from this function, we turn on the MMU
->  	 * which means the real-mode access trick that btext does will
-> @@ -436,8 +430,6 @@ void smp_release_cpus(void)
->  	if (!use_spinloop())
->  		return;
->  
-> -	DBG(" -> smp_release_cpus()\n");
-> -
->  	/* All secondary cpus are spinning on a common spinloop, release them
->  	 * all now so they can start to spin on their individual paca
->  	 * spinloops. For non SMP kernels, the secondary cpus never get out
-> @@ -456,9 +448,7 @@ void smp_release_cpus(void)
->  			break;
->  		udelay(1);
->  	}
-> -	DBG("spinning_secondaries = %d\n", spinning_secondaries);
-> -
-> -	DBG(" <- smp_release_cpus()\n");
-> +	pr_debug("spinning_secondaries = %d\n", spinning_secondaries);
->  }
->  #endif /* CONFIG_SMP || CONFIG_KEXEC_CORE */
->  
-> @@ -551,8 +541,6 @@ void __init initialize_cache_info(void)
->  	struct device_node *cpu = NULL, *l2, *l3 = NULL;
->  	u32 pvr;
->  
-> -	DBG(" -> initialize_cache_info()\n");
-> -
->  	/*
->  	 * All shipping POWER8 machines have a firmware bug that
->  	 * puts incorrect information in the device-tree. This will
-> @@ -576,10 +564,10 @@ void __init initialize_cache_info(void)
->  	 */
->  	if (cpu) {
->  		if (!parse_cache_info(cpu, false, &ppc64_caches.l1d))
-> -			DBG("Argh, can't find dcache properties !\n");
-> +			pr_warn("Argh, can't find dcache properties !\n");
->  
->  		if (!parse_cache_info(cpu, true, &ppc64_caches.l1i))
-> -			DBG("Argh, can't find icache properties !\n");
-> +			pr_warn("Argh, can't find icache properties !\n");
->  
->  		/*
->  		 * Try to find the L2 and L3 if any. Assume they are
-> @@ -604,8 +592,6 @@ void __init initialize_cache_info(void)
->  
->  	cur_cpu_spec->dcache_bsize = dcache_bsize;
->  	cur_cpu_spec->icache_bsize = icache_bsize;
-> -
-> -	DBG(" <- initialize_cache_info()\n");
->  }
->  
->  /*
-> diff --git a/arch/powerpc/kernel/udbg.c b/arch/powerpc/kernel/udbg.c
-> index a384e7c8b01c..01595e8cafe7 100644
-> --- a/arch/powerpc/kernel/udbg.c
-> +++ b/arch/powerpc/kernel/udbg.c
-> @@ -120,13 +120,15 @@ int udbg_write(const char *s, int n)
->  #define UDBG_BUFSIZE 256
->  void udbg_printf(const char *fmt, ...)
->  {
-> -	char buf[UDBG_BUFSIZE];
-> -	va_list args;
-> +	if (udbg_putc) {
-> +		char buf[UDBG_BUFSIZE];
-> +		va_list args;
->  
-> -	va_start(args, fmt);
-> -	vsnprintf(buf, UDBG_BUFSIZE, fmt, args);
-> -	udbg_puts(buf);
-> -	va_end(args);
-> +		va_start(args, fmt);
-> +		vsnprintf(buf, UDBG_BUFSIZE, fmt, args);
-> +		udbg_puts(buf);
-> +		va_end(args);
-> +	}
->  }
->  
->  void __init udbg_progress(char *s, unsigned short hex)
+
+[4]: https://lkml.kernel.org/r/3d3306e4-3a78-5322-df69-7665cf01cc43@arm.com
+
+> 
+> Best,
+> Patrick
+> 
