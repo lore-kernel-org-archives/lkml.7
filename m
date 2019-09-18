@@ -2,123 +2,132 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21032C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B18C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C512196E
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:52:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pyrjSeCc"
+	by mail.kernel.org (Postfix) with ESMTP id A674721907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:53:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568814786;
+	bh=tOUTIuyO3zD8mv1/MtmP0yO9cQ9wXjNOnusI3yuBdHk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=avEx1EpT+50qkJMRktdyB3+LXKIUuz1ywXrSqYM9MloIsbkcjyCVIjXmt5/uSUHEX
+	 pJhNw5E/Vpl0YK2HldAvuBlloSs18GgzW9TR5OWcndYsi/XUlAxNF8fXWfRaHviOS1
+	 aNcmSqJpTsVlQMRMeoi06bt564u0ABMLnB4XAiUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbfIRNwU (ORCPT
+        id S1729915AbfIRNxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:52:20 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:34254 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfIRNwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1568814738; x=1600350738;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Q4ygvF7O7WhX2bwysg/F08BYHAFbQtKl5wcdvGKLvMM=;
-  b=pyrjSeCcYQUhBn0eQVHyNGUzohfuKgfUS13WFXgggY47Jr2S9BVfSGUx
-   suSkKS5QaMYLteSR97QVg0rLpvr7Ell9drH9SqFETxdGfqQep7jKoecOM
-   PCjBVrfgATC7yHg2jDhEh7Pujbpooe32RBPWe9Yl89oCL/3HLntxuIuGS
-   8=;
-X-IronPort-AV: E=Sophos;i="5.64,520,1559520000"; 
-   d="scan'208";a="833921746"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 18 Sep 2019 13:44:24 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-1c1b5cdd.us-west-2.amazon.com (Postfix) with ESMTPS id 8F247A213A;
-        Wed, 18 Sep 2019 13:44:23 +0000 (UTC)
-Received: from EX13D01EUB002.ant.amazon.com (10.43.166.113) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Wed, 18 Sep 2019 13:44:23 +0000
-Received: from [10.125.238.52] (10.43.161.217) by EX13D01EUB002.ant.amazon.com
- (10.43.166.113) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 18 Sep
- 2019 13:44:16 +0000
-Subject: Re: [PATCH v2 1/3] dt-bindings: soc: al-pos: Amazon's Annapurna Labs
- POS
-To:     Rob Herring <robh@kernel.org>
-CC:     <marc.zyngier@arm.com>, <tglx@linutronix.de>,
-        <jason@lakedaemon.net>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <mchehab+samsung@kernel.org>,
-        <shawn.lin@rock-chips.com>, <gregkh@linuxfoundation.org>,
-        <dwmw@amazon.co.uk>, <benh@kernel.crashing.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <1568142310-17622-1-git-send-email-talel@amazon.com>
- <1568142310-17622-2-git-send-email-talel@amazon.com>
- <20190918133248.GA16653@bogus>
-From:   "Shenhar, Talel" <talel@amazon.com>
-Message-ID: <6965161b-a51c-9e16-f6b8-6f33b40708ee@amazon.com>
-Date:   Wed, 18 Sep 2019 16:44:11 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 18 Sep 2019 09:53:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53736 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726562AbfIRNxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:53:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E62852067B;
+        Wed, 18 Sep 2019 13:53:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568814784;
+        bh=tOUTIuyO3zD8mv1/MtmP0yO9cQ9wXjNOnusI3yuBdHk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SzdEEvJEDs9IGneM+AQQk5PuVrIMlKoFeNT24elLCLvjtqmIynpAdH//B2PwS3BS3
+         2CvOr5oQAZKf61ntvu9rRoWkhJlAHIcv6W5H9nd1JaTUaHeJ7ZMmEl6iDwkVSDTbvn
+         g7bsaeokbrUeneI8Lgkrmdh6IB3iAS4UNwPcSM0s=
+Date:   Wed, 18 Sep 2019 15:53:02 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com, Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [alsa-devel] [RFC PATCH 8/9] soundwire: intel: remove platform
+ devices and provide new interface
+Message-ID: <20190918135302.GA1919118@kroah.com>
+References: <20190916212342.12578-1-pierre-louis.bossart@linux.intel.com>
+ <20190916212342.12578-9-pierre-louis.bossart@linux.intel.com>
+ <20190917055512.GE2058532@kroah.com>
+ <ab06c0c9-6224-a7b8-51c2-01226f763b98@linux.intel.com>
+ <20190918120629.GD1901208@kroah.com>
+ <c8f21078-1462-5463-ef12-957ebd9ba085@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190918133248.GA16653@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [10.43.161.217]
-X-ClientProxiedBy: EX13D02UWC002.ant.amazon.com (10.43.162.6) To
- EX13D01EUB002.ant.amazon.com (10.43.166.113)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8f21078-1462-5463-ef12-957ebd9ba085@linux.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tnx Rob for the review.
+On Wed, Sep 18, 2019 at 08:48:33AM -0500, Pierre-Louis Bossart wrote:
+> On 9/18/19 7:06 AM, Greg KH wrote:
+> > On Tue, Sep 17, 2019 at 09:29:52AM -0500, Pierre-Louis Bossart wrote:
+> > > On 9/17/19 12:55 AM, Greg KH wrote:
+> > > > On Mon, Sep 16, 2019 at 04:23:41PM -0500, Pierre-Louis Bossart wrote:
+> > > > > +/**
+> > > > > + * sdw_intel_probe() - SoundWire Intel probe routine
+> > > > > + * @parent_handle: ACPI parent handle
+> > > > > + * @res: resource data
+> > > > > + *
+> > > > > + * This creates SoundWire Master and Slave devices below the controller.
+> > > > > + * All the information necessary is stored in the context, and the res
+> > > > > + * argument pointer can be freed after this step.
+> > > > > + */
+> > > > > +struct sdw_intel_ctx
+> > > > > +*sdw_intel_probe(struct sdw_intel_res *res)
+> > > > > +{
+> > > > > +	return sdw_intel_probe_controller(res);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(sdw_intel_probe);
+> > > > > +
+> > > > > +/**
+> > > > > + * sdw_intel_startup() - SoundWire Intel startup
+> > > > > + * @ctx: SoundWire context allocated in the probe
+> > > > > + *
+> > > > > + */
+> > > > > +int sdw_intel_startup(struct sdw_intel_ctx *ctx)
+> > > > > +{
+> > > > > +	return sdw_intel_startup_controller(ctx);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(sdw_intel_startup);
+> > > > 
+> > > > Why are you exporting these functions if no one calls them?
+> > > 
+> > > They are used in the next series, see '[RFC PATCH 04/12] ASoC: SOF: Intel:
+> > > add SoundWire configuration interface'
+> > 
+> > That wasn't obvious :)
+> > 
+> > Also, why not EXPORT_SYMBOL_GPL()?  :)
+> 
+> Since the beginning of this SoundWire work, the intent what that the code
+> could be reused in non-GPL open-source circles, hence the dual license and
+> EXPORT_SYMBOL.
 
-Shall be part of v3.
+Hah, you _have_ talked to your lawyers about this, right?
 
-Waiting for responses from Arnd and James and will publish v3.
+You have a chance to do something like this for header files, for .c
+files, good luck.  That's going to be a hard road to go down.  Many have
+tried in the past, all but 1 have failed.
 
-On 9/18/2019 4:35 PM, Rob Herring wrote:
-> On Tue, Sep 10, 2019 at 10:05:08PM +0300, Talel Shenhar wrote:
->> Document Amazon's Annapurna Labs POS SoC binding.
->>
->> Signed-off-by: Talel Shenhar <talel@amazon.com>
->> ---
->>   .../devicetree/bindings/soc/amazon/amazon,al-pos.txt   | 18 ++++++++++++++++++
->>   1 file changed, 18 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
-> Please convert to DT schema.
->
->> diff --git a/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
->> new file mode 100644
->> index 00000000..035cc571
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/amazon/amazon,al-pos.txt
->> @@ -0,0 +1,18 @@
->> +Amazon's Annapurna Labs POS
->> +
->> +POS node is defined to describe the Point Of Serialization (POS) logger
->> +unit.
->> +
->> +Required properties:
->> +- compatible:	Shall be "amazon,al-pos".
->> +- reg:		POS logger resources.
->> +- interrupts:	should contain the interrupt for pos error event.
->> +
->> +Example:
->> +
->> +al_pos {
-> Needs a unit-address.
->
->> +	compatible = "amazon,al-pos";
->> +	reg = <0x0 0xf0070084 0x0 0x00000008>;
->> +	interrupt-parent = <&amazon_system_fabric>;
->> +	interrupts = <24 IRQ_TYPE_LEVEL_HIGH>;
->> +};
->> -- 
->> 2.7.4
->>
+> That said, there are cases where the code only makes sense for Linux, or
+> relies on symbols that are exported with EXPORT_SYMBOL_GPL, in those cases
+> we rely on GPLv2 and EXPORT_SYMBOL_GPL. For this series I added a disclaimer
+> in the cover letter that those parts need to be reviewed further to make
+> sure there are no conflicts with GPL.
+
+Please do that with your lawyers, do not require developers to do legal
+work for you, that's just mean :(
+
+thanks,
+
+greg k-h
