@@ -2,157 +2,69 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891D0C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC36C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6598522435
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A06122435
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:55:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568836529;
+	bh=Ppcqo0njTaWbTEH0HpXAidzscUG6hpIgS9kt5O0WjcU=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=wPkUx6gWUkNDgPY3AqOG7xvwCgw5epJuPvUIeeiXRhDONPFlkDcjY3XOd4rIu/6x+
+	 oKuKeuGae8N7CrOi69DUnZMjiYccnSW6v7GUJxahZwsTtbU66dcfPXBXg+O1tOmFvS
+	 e0HWzvCEMHQUwfUScU/Z1O58I3ExJjSQBbKFJ0O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfIRTzT (ORCPT
+        id S2388820AbfIRTz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:55:19 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:58037 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731843AbfIRTzT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:55:19 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N7iT4-1i5hwp41fW-014hEP; Wed, 18 Sep 2019 21:54:58 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
+        Wed, 18 Sep 2019 15:55:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388042AbfIRTz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 15:55:26 -0400
+Subject: Re: [GIT PULL] Crypto Update for 5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568836525;
+        bh=Ppcqo0njTaWbTEH0HpXAidzscUG6hpIgS9kt5O0WjcU=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=qAyOyLm/1BbxMH+icEtz75s60WiDrhHYj7UrJXmgLQ5c0sSgz9/bong4YA4ApQAWy
+         9LS+EYLomqC7LcmO3N7+SvkTy5mDjjegiAESMfdUP8ZUMAbARikQAKW7ODX6iGGS/s
+         9hDrCKjxhjEBhfJALpiQqecI3alODQXnJ9q+opiw=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190916084901.GA20338@gondor.apana.org.au>
+References: <20190916084901.GA20338@gondor.apana.org.au>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190916084901.GA20338@gondor.apana.org.au>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
+X-PR-Tracked-Commit-Id: 9575d1a5c0780ea26ff8dd29c94a32be32ce3c85
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 8b53c76533aa4356602aea98f98a2f3b4051464c
+Message-Id: <156883652591.14539.7281930528516114167.pr-tracker-bot@kernel.org>
+Date:   Wed, 18 Sep 2019 19:55:25 +0000
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] stmmac: selftest: avoid large stack usage
-Date:   Wed, 18 Sep 2019 21:54:34 +0200
-Message-Id: <20190918195454.2056139-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:N+l+qvP4iTKMClOZ10+3hqtOBzBcBQK6eoFXevu/u6P8UCjKnvn
- c+9RDnKQFkt60Yhr/1wdrGXs/h/qCzzQXDCSJhjlsU6+bEk+wiqjs8z/5yU3GcgyEGtC2mO
- 3SD5GPJx4Fpy/j1i29G7oBOMQ2+OoTir7lMG6/ltVEOii1JDkWm0JQtO4aQGYz1M2Yb6zNv
- WFkT8hq38bCA3FJMEVH3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1HosKkSRfoU=:b7Y0A535j0pAWaby1IDo4m
- kOy6Bd+X63LxUX6r1gVlDqzAoHO1wmOf7fMp67ntknUvwuoKWDI08ticRc1et/NxH2Pz3Ztc1
- azFGSYUV9W2A0RmNsI8CrjOIFuCQjsYs5oxyMB3GiEA6r+KyrxozwvqF+aHKVIGXX28XpPOEL
- TWF1EiXNAYCuJbPSOqPT7ccBt8fmRIHoMYurJLI/gf1nooBvgdwHWRNZZaOcAsgG1e2gFBK9a
- EfXBj0faIys9EuiWJJkgXT1INDk4x0hQfhnZJnLkmCcKePpkNyXlN7044PeIv8PTX/9NNlsNa
- 4cTMTe/nUdhNLrlxc8c8GQsSvmMOtwff2oU5ZrKdWndUcRZ5GykriAHfu9BehqQZTYg6B1OQt
- b9MHoOJQlZ/s7DnSsf92cdC2+CYPCzDtUMBLxWNrU/qC0JF12ujfFYwLvl5kO7PxkytkPWY6f
- M3ljbyQUADlh0k1885oDO/KTU6iq4qyxcUnKqf4QEX9ZvjYDhTwdcDZf7SP7Ia2JYJ0XWZosp
- x4TCOrGE0GEThjwnhpICjDW0g4tjH/sxSTe7Vo0R0gqT+UhSR9sWJjQJoFFwqY4SEqe8Jw6HR
- LTZknHBNdHlgSPQSUUzmswGM+6zPm1aVVKLjnblgSzyhikNVkbnaLoHHS32Uo2QbYYCeTDeEt
- QEhv2bWATOmmB0Y3EMN11m9Ttmx+pnRMfXgfRJxTGcOZKjSoB6VpR2VOZqfTFXyQaedt026l3
- ZAqFvnENGhDBaE7vmydfRrLyrFWoeJXfXasA2E//AqyRdXcSZx+VnW6pHNIy/+JELjpYo/hmz
- fqwMdRRp7V2LR3gthNtA8F66fblYzFc5smxmXTTNykbmXE0H+DPsiyKpcAxKb0Ml99kYiQSyQ
- iPKy6AN1lEFHH2mS8u2A==
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Putting a struct stmmac_rss object on the stack is a bad idea,
-as it exceeds the warning limit for a stack frame on 32-bit architectures:
+The pull request you sent on Mon, 16 Sep 2019 18:49:01 +1000:
 
-drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:1221:12: error: stack frame size of 1208 bytes in function '__stmmac_test_l3filt' [-Werror,-Wframe-larger-than=]
-drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c:1338:12: error: stack frame size of 1208 bytes in function '__stmmac_test_l4filt' [-Werror,-Wframe-larger-than=]
+> git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git linus
 
-As the object is the trivial empty case, change the called function
-to accept a NULL pointer to mean the same thing and remove the
-large variable in the two callers.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/8b53c76533aa4356602aea98f98a2f3b4051464c
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c   | 15 +++++++++++----
- .../ethernet/stmicro/stmmac/stmmac_selftests.c    | 14 ++++----------
- 2 files changed, 15 insertions(+), 14 deletions(-)
+Thank you!
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index d5173dd02a71..c2f648062049 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -523,25 +523,32 @@ static int dwxgmac2_rss_configure(struct mac_device_info *hw,
- 				  struct stmmac_rss *cfg, u32 num_rxq)
- {
- 	void __iomem *ioaddr = hw->pcsr;
--	u32 *key = (u32 *)cfg->key;
- 	int i, ret;
- 	u32 value;
- 
- 	value = readl(ioaddr + XGMAC_RSS_CTRL);
--	if (!cfg->enable) {
-+	if (!cfg || !cfg->enable) {
- 		value &= ~XGMAC_RSSE;
- 		writel(value, ioaddr + XGMAC_RSS_CTRL);
- 		return 0;
- 	}
- 
- 	for (i = 0; i < (sizeof(cfg->key) / sizeof(u32)); i++) {
--		ret = dwxgmac2_rss_write_reg(ioaddr, true, i, *key++);
-+		if (cfg)
-+			ret = dwxgmac2_rss_write_reg(ioaddr, true, i, cfg->key[i]);
-+		else
-+			ret = dwxgmac2_rss_write_reg(ioaddr, true, i, 0);
-+
- 		if (ret)
- 			return ret;
- 	}
- 
- 	for (i = 0; i < ARRAY_SIZE(cfg->table); i++) {
--		ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
-+		if (cfg)
-+			ret = dwxgmac2_rss_write_reg(ioaddr, false, i, cfg->table[i]);
-+		else
-+			ret = dwxgmac2_rss_write_reg(ioaddr, false, i, 0);
-+
- 		if (ret)
- 			return ret;
- 	}
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-index c56e89e1ae56..9c8d210b2d6a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
-@@ -1233,12 +1233,9 @@ static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
- 		return -EOPNOTSUPP;
- 	if (!priv->dma_cap.l3l4fnum)
- 		return -EOPNOTSUPP;
--	if (priv->rss.enable) {
--		struct stmmac_rss rss = { .enable = false, };
--
--		stmmac_rss_configure(priv, priv->hw, &rss,
-+	if (priv->rss.enable)
-+		stmmac_rss_configure(priv, priv->hw, NULL,
- 				     priv->plat->rx_queues_to_use);
--	}
- 
- 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
- 	if (!dissector) {
-@@ -1357,12 +1354,9 @@ static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
- 		return -EOPNOTSUPP;
- 	if (!priv->dma_cap.l3l4fnum)
- 		return -EOPNOTSUPP;
--	if (priv->rss.enable) {
--		struct stmmac_rss rss = { .enable = false, };
--
--		stmmac_rss_configure(priv, priv->hw, &rss,
-+	if (priv->rss.enable)
-+		stmmac_rss_configure(priv, priv->hw, NULL,
- 				     priv->plat->rx_queues_to_use);
--	}
- 
- 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
- 	if (!dissector) {
 -- 
-2.20.0
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
