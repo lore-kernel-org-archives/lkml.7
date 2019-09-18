@@ -4,56 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7348C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5A1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2E421928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECC921928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787789;
-	bh=4nilBRjjnFBu5fdYyEt2Loj65b5J8n73B8nWWcGuS58=;
+	s=default; t=1568787797;
+	bh=6LK2q22mv14Eqf+SpO2SWwRPMXXn1eXc6maI1npATho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cL/hXwdQUCjBT7KisUcS39ygz9VL/49AibnYFIcKSDn6+bvfQjvXBbzczi6oY3Tia
-	 lhf5YGLoaIWK+7Qg8Cis18iFcnpb6m6TydlIGerfFetSQQt7lttF5Qwr0sQ8B4995y
-	 zgWEGvgo6gO39RrueINKATpsoaQDkbudrpxQR1F0=
+	b=y/2BY8ygx4ap3tyh0rdjQ+9qQ44y5iMl8xj264Pj2LAfvaCLE96i3Iw4YtlO7yD3s
+	 hvzFjgecXvFjYSbXBYJkz1txPK71akfwZwRSgagJVMnhLtBkaxUkX8KZyXgj2463J2
+	 ZyS9r8Gxf7pX5oZDSDCe1JPEP4Fagal3UxsYvnd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfIRGXI (ORCPT
+        id S1729553AbfIRGXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43034 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbfIRGW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:57 -0400
+        id S1729512AbfIRGXC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1FE320678;
-        Wed, 18 Sep 2019 06:22:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1C23218AE;
+        Wed, 18 Sep 2019 06:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787776;
-        bh=4nilBRjjnFBu5fdYyEt2Loj65b5J8n73B8nWWcGuS58=;
+        s=default; t=1568787781;
+        bh=6LK2q22mv14Eqf+SpO2SWwRPMXXn1eXc6maI1npATho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gb7ahnnrAAtwe7QfUC5fGmbzWVc2NEITXpoV04+ngozv+om1yk6efqt2FXv7Asbm9
-         LH+Y7Vc/PDNH5+I2W2GmLkQqu4aQVa2mFSvKnK+y2mGWIsC2BlVRPD4IU+ZUT8RcTQ
-         XQ6xfG+aLjLPBlpWeEKg2YJJo3q8+gktf0VNioV4=
+        b=mheZtMCIOzVbW0O6JYQ2Hr06AUFUoL3I/k88NQ3/nX7QWFVRGdPDmpRjyrnQMReNu
+         tSj6xRasYp4F7VIJ4S0Q7iPpWlQZyhsu/6aWPDKsoDqKasoLQvnfJv1BRqBsqcpxO2
+         tov1h1pKn/ost+241D1OrLjEi2oMRMGEF+03Ql7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        Shmulik Ladkani <shmulik.ladkani@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/50] net: gso: Fix skb_segment splat when splitting gso_size mangled skb having linear-headed frag_list
-Date:   Wed, 18 Sep 2019 08:18:50 +0200
-Message-Id: <20190918061223.774381437@linuxfoundation.org>
+Subject: [PATCH 4.19 09/50] net: sched: fix reordering issues
+Date:   Wed, 18 Sep 2019 08:18:52 +0200
+Message-Id: <20190918061223.855532778@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -66,105 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shmulik Ladkani <shmulik@metanetworks.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 3dcbdb134f329842a38f0e6797191b885ab00a00 ]
+[ Upstream commit b88dd52c62bb5c5d58f0963287f41fd084352c57 ]
 
-Historically, support for frag_list packets entering skb_segment() was
-limited to frag_list members terminating on exact same gso_size
-boundaries. This is verified with a BUG_ON since commit 89319d3801d1
-("net: Add frag_list support to skb_segment"), quote:
+Whenever MQ is not used on a multiqueue device, we experience
+serious reordering problems. Bisection found the cited
+commit.
 
-    As such we require all frag_list members terminate on exact MSS
-    boundaries.  This is checked using BUG_ON.
-    As there should only be one producer in the kernel of such packets,
-    namely GRO, this requirement should not be difficult to maintain.
+The issue can be described this way :
 
-However, since commit 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper"),
-the "exact MSS boundaries" assumption no longer holds:
-An eBPF program using bpf_skb_change_proto() DOES modify 'gso_size', but
-leaves the frag_list members as originally merged by GRO with the
-original 'gso_size'. Example of such programs are bpf-based NAT46 or
-NAT64.
+- A single qdisc hierarchy is shared by all transmit queues.
+  (eg : tc qdisc replace dev eth0 root fq_codel)
 
-This lead to a kernel BUG_ON for flows involving:
- - GRO generating a frag_list skb
- - bpf program performing bpf_skb_change_proto() or bpf_skb_adjust_room()
- - skb_segment() of the skb
+- When/if try_bulk_dequeue_skb_slow() dequeues a packet targetting
+  a different transmit queue than the one used to build a packet train,
+  we stop building the current list and save the 'bad' skb (P1) in a
+  special queue. (bad_txq)
 
-See example BUG_ON reports in [0].
+- When dequeue_skb() calls qdisc_dequeue_skb_bad_txq() and finds this
+  skb (P1), it checks if the associated transmit queues is still in frozen
+  state. If the queue is still blocked (by BQL or NIC tx ring full),
+  we leave the skb in bad_txq and return NULL.
 
-In commit 13acc94eff12 ("net: permit skb_segment on head_frag frag_list skb"),
-skb_segment() was modified to support the "gso_size mangling" case of
-a frag_list GRO'ed skb, but *only* for frag_list members having
-head_frag==true (having a page-fragment head).
+- dequeue_skb() calls q->dequeue() to get another packet (P2)
 
-Alas, GRO packets having frag_list members with a linear kmalloced head
-(head_frag==false) still hit the BUG_ON.
+  The other packet can target the problematic queue (that we found
+  in frozen state for the bad_txq packet), but another cpu just ran
+  TX completion and made room in the txq that is now ready to accept
+  new packets.
 
-This commit adds support to skb_segment() for a 'head_skb' packet having
-a frag_list whose members are *non* head_frag, with gso_size mangled, by
-disabling SG and thus falling-back to copying the data from the given
-'head_skb' into the generated segmented skbs - as suggested by Willem de
-Bruijn [1].
+- Packet P2 is sent while P1 is still held in bad_txq, P1 might be sent
+  at next round. In practice P2 is the lead of a big packet train
+  (P2,P3,P4 ...) filling the BQL budget and delaying P1 by many packets :/
 
-Since this approach involves the penalty of skb_copy_and_csum_bits()
-when building the segments, care was taken in order to enable this
-solution only when required:
- - untrusted gso_size, by testing SKB_GSO_DODGY is set
-   (SKB_GSO_DODGY is set by any gso_size mangling functions in
-    net/core/filter.c)
- - the frag_list is non empty, its item is a non head_frag, *and* the
-   headlen of the given 'head_skb' does not match the gso_size.
+To solve this problem, we have to block the dequeue process as long
+as the first packet in bad_txq can not be sent. Reordering issues
+disappear and no side effects have been seen.
 
-[0]
-https://lore.kernel.org/netdev/20190826170724.25ff616f@pixies/
-https://lore.kernel.org/netdev/9265b93f-253d-6b8c-f2b8-4b54eff1835c@fb.com/
-
-[1]
-https://lore.kernel.org/netdev/CA+FuTSfVsgNDi7c=GUU8nMg2hWxF2SjCNLXetHeVPdnxAW5K-w@mail.gmail.com/
-
-Fixes: 6578171a7ff0 ("bpf: add bpf_skb_change_proto helper")
-Suggested-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Alexander Duyck <alexander.duyck@gmail.com>
-Signed-off-by: Shmulik Ladkani <shmulik.ladkani@gmail.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
-Reviewed-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Fixes: a53851e2c321 ("net: sched: explicit locking in gso_cpu fallback")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/skbuff.c |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ net/sched/sch_generic.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3530,6 +3530,25 @@ struct sk_buff *skb_segment(struct sk_bu
- 	int pos;
- 	int dummy;
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -49,6 +49,8 @@ EXPORT_SYMBOL(default_qdisc_ops);
+  * - updates to tree and tree walking are only done under the rtnl mutex.
+  */
  
-+	if (list_skb && !list_skb->head_frag && skb_headlen(list_skb) &&
-+	    (skb_shinfo(head_skb)->gso_type & SKB_GSO_DODGY)) {
-+		/* gso_size is untrusted, and we have a frag_list with a linear
-+		 * non head_frag head.
-+		 *
-+		 * (we assume checking the first list_skb member suffices;
-+		 * i.e if either of the list_skb members have non head_frag
-+		 * head, then the first one has too).
-+		 *
-+		 * If head_skb's headlen does not fit requested gso_size, it
-+		 * means that the frag_list members do NOT terminate on exact
-+		 * gso_size boundaries. Hence we cannot perform skb_frag_t page
-+		 * sharing. Therefore we must fallback to copying the frag_list
-+		 * skbs; we do so by disabling SG.
-+		 */
-+		if (mss != GSO_BY_FRAGS && mss != skb_headlen(head_skb))
-+			features &= ~NETIF_F_SG;
-+	}
++#define SKB_XOFF_MAGIC ((struct sk_buff *)1UL)
 +
- 	__skb_push(head_skb, doffset);
- 	proto = skb_network_protocol(head_skb, &dummy);
- 	if (unlikely(!proto))
+ static inline struct sk_buff *__skb_dequeue_bad_txq(struct Qdisc *q)
+ {
+ 	const struct netdev_queue *txq = q->dev_queue;
+@@ -74,7 +76,7 @@ static inline struct sk_buff *__skb_dequ
+ 				q->q.qlen--;
+ 			}
+ 		} else {
+-			skb = NULL;
++			skb = SKB_XOFF_MAGIC;
+ 		}
+ 	}
+ 
+@@ -272,8 +274,11 @@ validate:
+ 		return skb;
+ 
+ 	skb = qdisc_dequeue_skb_bad_txq(q);
+-	if (unlikely(skb))
++	if (unlikely(skb)) {
++		if (skb == SKB_XOFF_MAGIC)
++			return NULL;
+ 		goto bulk;
++	}
+ 	skb = q->dequeue(q);
+ 	if (skb) {
+ bulk:
 
 
