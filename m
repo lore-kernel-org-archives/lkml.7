@@ -2,89 +2,127 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9A7C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85EEDC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36243208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7BB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:39:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n/rCS7xi"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qS7h3ZDA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfIRNjJ (ORCPT
+        id S1729601AbfIRNjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:39:09 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:48820 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726659AbfIRNjJ (ORCPT
+        Wed, 18 Sep 2019 09:39:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43097 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726659AbfIRNjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:39:09 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IDctu9008971;
-        Wed, 18 Sep 2019 08:38:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568813935;
-        bh=UuvDUpX5XT0XAg5ntXHk59+WdiW1NxnKrqyb1xIJJLc=;
-        h=From:To:CC:Subject:Date;
-        b=n/rCS7xiGeVHFn1vwKukQ6xwpilVGRs2IzQ8tlRrt87OKYZgza93Iy2YFU1OSPGIx
-         Ul3l/4AD6RBTAxyXEvUGKGIFmIHjBsqyz0+sFGZETOT1vy1fsHABBtTiED3FjAFo98
-         GByttBE6nd4vOvb9mUxNml0mvuhxEL4XagmX88SY=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IDctfZ061556;
-        Wed, 18 Sep 2019 08:38:55 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 08:38:51 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 08:38:52 -0500
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IDcocD047879;
-        Wed, 18 Sep 2019 08:38:51 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <jejb@linux.ibm.com>,
-        Martin K Petersen <martin.petersen@oracle.com>
-CC:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        Janek Kotas <jank@cadence.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <nsekhar@ti.com>
-Subject: [PATCH 0/2] scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
-Date:   Wed, 18 Sep 2019 19:09:19 +0530
-Message-ID: <20190918133921.25844-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 18 Sep 2019 09:39:15 -0400
+Received: by mail-pl1-f194.google.com with SMTP id 4so3179945pld.10;
+        Wed, 18 Sep 2019 06:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3coPOKz829YesHs8WeDQ/ai4YhjPoVLGbSy497MH0Io=;
+        b=qS7h3ZDAoTFnRgGv1UvQCSos0CEKYa1Ol1rQOd4jzD/JiSP6N5vVOwdF3Z8RuVSoZr
+         1mDJJ7fYVFpPwIN02QXU82nX1V+QV9KrobEe4wkD83KdWXbj43Yh4BTcbIURV2Napwuy
+         IgdbW27UiEIT0qhx5u4WUTm62RgWNpl+ewghEdfF28M0X8pHIJn5YRfGbPLFERi2EzQh
+         uW5DYqh/4bV9ON4D8XGmAcLmkChMCsh/jlDakaMQu2SgxvoiopdjqpLss1xB9NPiOefk
+         2VRAUUDEYjHdTJ8B2l6jpzLuUONFWHhdDDGzYQSKQr8A3J3URqnCeq/KL0chK7/u1pRV
+         g+Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3coPOKz829YesHs8WeDQ/ai4YhjPoVLGbSy497MH0Io=;
+        b=Kltdnz/oPWoXL+8fZ1ElXfRLMvt1QFX9BCMRM2u596Q4cQQA5FW1pjYFogMKIYZQQA
+         25MCD0YeO7uitWmVrMwwSKGv8w63NLnPySf7LL1DQTVaElu2fv9AWc5QR7mNg3I8J2Dj
+         fxCtMFBWSj7COAUpuBVfuVU1I8GObVXotbUKMVYvvDuRfym+Ok5puktns4X02mJZeNfd
+         tjzVDQKZrCqEVpb3dduPzFbmCHorsby/7JMPZyVIENW6Wg/uvNOhZmTtcSJYWxAFGYJB
+         CgtttUA4/ucx/MA3UUcfVP4ELa2oBLwTdcjSv+9ckcmQR/ElyCfykuczeUJ8BIspwRmn
+         eGTg==
+X-Gm-Message-State: APjAAAVIlAkkwIbh8ZDCxbYl4EDLBd2Wii8cMFSeowV9ydGXIYbcCYtv
+        vR6+v0Bw2LIGmkzGsLLjpl5qIEJX
+X-Google-Smtp-Source: APXvYqx81mSybzdQj0FZPyN7+YBbDAJ170gLkLCt6Wq3XQvIapP6vM/UArMpEQXp4CHtzTBTBTmctA==
+X-Received: by 2002:a17:902:8f90:: with SMTP id z16mr4266870plo.138.1568813953713;
+        Wed, 18 Sep 2019 06:39:13 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 197sm18396233pge.39.2019.09.18.06.39.13
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Sep 2019 06:39:13 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 06:39:12 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Stanley <joel@jms.id.au>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH] hwmon: (aspeed-pwm-tacho) Use
+ devm_platform_ioremap_resource() in aspeed_pwm_tacho_probe()
+Message-ID: <20190918133912.GA14788@roeck-us.net>
+References: <cd5bab7b-9333-2a43-bcf0-a47bbbe719eb@web.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cd5bab7b-9333-2a43-bcf0-a47bbbe719eb@web.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series add DT bindings and driver for TI wrapper for Cadence UFS
-IP that is present on TI's J721e SoC
+On Wed, Sep 18, 2019 at 10:20:09AM +0200, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Wed, 18 Sep 2019 10:12:31 +0200
+> 
+> Simplify this function implementation by using a known wrapper function.
+> 
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
 
-Vignesh Raghavendra (2):
-  dt-bindings: ufs: ti,j721e-ufs.yaml: Add binding for TI UFS wrapper
-  scsi: ufs: Add driver for TI wrapper for Cadence UFS IP
+Applied to hwmon-next.
 
- .../devicetree/bindings/ufs/ti,j721e-ufs.yaml | 45 ++++++++++
- drivers/scsi/ufs/Kconfig                      | 10 +++
- drivers/scsi/ufs/Makefile                     |  1 +
- drivers/scsi/ufs/ti-j721e-ufs.c               | 90 +++++++++++++++++++
- 4 files changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/ti,j721e-ufs.yaml
- create mode 100644 drivers/scsi/ufs/ti-j721e-ufs.c
+Thanks,
+Guenter
 
--- 
-2.23.0
-
+> ---
+>  drivers/hwmon/aspeed-pwm-tacho.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
+> 
+> --
+> 2.23.0
+> 
+> diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-tacho.c
+> index 40c489be62ea..33fb54845bf6 100644
+> --- a/drivers/hwmon/aspeed-pwm-tacho.c
+> +++ b/drivers/hwmon/aspeed-pwm-tacho.c
+> @@ -891,17 +891,12 @@ static int aspeed_pwm_tacho_probe(struct platform_device *pdev)
+>  	struct device_node *np, *child;
+>  	struct aspeed_pwm_tacho_data *priv;
+>  	void __iomem *regs;
+> -	struct resource *res;
+>  	struct device *hwmon;
+>  	struct clk *clk;
+>  	int ret;
+> 
+>  	np = dev->of_node;
+> -
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (!res)
+> -		return -ENOENT;
+> -	regs = devm_ioremap_resource(dev, res);
+> +	regs = devm_platform_ioremap_resource(pdev, 0);
+>  	if (IS_ERR(regs))
+>  		return PTR_ERR(regs);
+>  	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
