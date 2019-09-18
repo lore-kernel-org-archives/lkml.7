@@ -2,96 +2,143 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6441BC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05499C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD58205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:23:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0K6bwiVH"
+	by mail.kernel.org (Postfix) with ESMTP id D254E205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbfIRMXC (ORCPT
+        id S1730719AbfIRMYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:23:02 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:43984 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726941AbfIRMXB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:23:01 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8ICLfKJ027959;
-        Wed, 18 Sep 2019 14:22:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=LGMEcDX91zZnE3TyD/A9U4RClm8f/2smtj92YAYq+2o=;
- b=0K6bwiVHEwKLgTOJwkIYgMkN+54fiRzj4hvD9GdFbfe344+RAFN0oQmhhL/QWhUtErXh
- wNr/ZTCSXKfjy/PEBovS5zlOzy5P+CoDyrzs75hoOCqTI8yhp/QDTJODYe8vDifQA393
- LQcHMr81M3HHFDJ+M6e26dB9SYaVrudeLYAzwzU+ubT1j9jPRX4vAnnVo9zmt+T9Nnyi
- 4ClYCJ/+CffzDxyiOnggSmBaAgCenoYQkmj/7nN1QwKP9mp5q39aRZIQQc1IVRUqviAI
- iJZc3/Yp5G0l4Sows3HEW38r49o10dUOkwAAvYQ3WSRL01rfr7fivmoWTk7ZmcU7S4ea +w== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2v37kmc3mq-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 18 Sep 2019 14:22:54 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 1289023;
-        Wed, 18 Sep 2019 12:22:51 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 713392C5B2F;
-        Wed, 18 Sep 2019 14:22:50 +0200 (CEST)
-Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep
- 2019 14:22:50 +0200
-Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
- Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep 2019 14:22:49 +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <vilhelm.gray@gmail.com>
-CC:     <jic23@kernel.org>, <alexandre.torgue@st.com>,
-        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] counter: stm32-lptimer-cnt: fix a kernel-doc warning
-Date:   Wed, 18 Sep 2019 14:22:41 +0200
-Message-ID: <1568809361-26157-1-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 18 Sep 2019 08:24:07 -0400
+Received: from mga05.intel.com ([192.55.52.43]:54551 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726941AbfIRMYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 08:24:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 05:24:06 -0700
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="387898031"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 05:24:04 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Gerd Hoffmann <kraxel@redhat.com>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v3 1/7] drm: add drm_print_bits
+In-Reply-To: <20190904054740.20817-2-kraxel@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190904054740.20817-1-kraxel@redhat.com> <20190904054740.20817-2-kraxel@redhat.com>
+Date:   Wed, 18 Sep 2019 15:24:01 +0300
+Message-ID: <87sgotx066.fsf@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.48.1.232]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-18_07:2019-09-17,2019-09-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the following warnings when documentation is built:
-drivers/counter/stm32-lptimer-cnt.c:354: warning: cannot understand
-function prototype: 'enum stm32_lptim_cnt_function'
+On Wed, 04 Sep 2019, Gerd Hoffmann <kraxel@redhat.com> wrote:
+> New helper to print named bits of some value (think flags fields).
+>
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  include/drm/drm_print.h     |  3 +++
+>  drivers/gpu/drm/drm_print.c | 33 +++++++++++++++++++++++++++++++++
+>  2 files changed, 36 insertions(+)
+>
+> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
+> index 112165d3195d..12d4916254b4 100644
+> --- a/include/drm/drm_print.h
+> +++ b/include/drm/drm_print.h
+> @@ -89,6 +89,9 @@ __printf(2, 3)
+>  void drm_printf(struct drm_printer *p, const char *f, ...);
+>  void drm_puts(struct drm_printer *p, const char *str);
+>  void drm_print_regset32(struct drm_printer *p, struct debugfs_regset32 *regset);
+> +void drm_print_bits(struct drm_printer *p,
+> +		    unsigned long value, const char *bits[],
+> +		    unsigned int from, unsigned int to);
+>  
+>  __printf(2, 0)
+>  /**
+> diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
+> index ad302d71eeee..dfa27367ebb8 100644
+> --- a/drivers/gpu/drm/drm_print.c
+> +++ b/drivers/gpu/drm/drm_print.c
+> @@ -185,6 +185,39 @@ void drm_printf(struct drm_printer *p, const char *f, ...)
+>  }
+>  EXPORT_SYMBOL(drm_printf);
+>  
+> +/**
+> + * drm_print_bits - print bits to a &drm_printer stream
+> + *
+> + * Print bits (in flag fields for example) in human readable form.
+> + * The first name in the @bits array is for the bit indexed by @from.
+> + *
+> + * @p: the &drm_printer
+> + * @value: field value.
+> + * @bits: Array with bit names.
+> + * @from: start of bit range to print (inclusive).
+> + * @to: end of bit range to print (exclusive).
+> + */
+> +void drm_print_bits(struct drm_printer *p,
+> +		    unsigned long value, const char *bits[],
+> +		    unsigned int from, unsigned int to)
+> +{
+> +	bool first = true;
+> +	unsigned int i;
+> +
+> +	for (i = from; i < to; i++) {
+> +		if (!(value & (1 << i)))
+> +			continue;
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/counter/stm32-lptimer-cnt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+for_each_set_bit from bitops.h?
 
-diff --git a/drivers/counter/stm32-lptimer-cnt.c b/drivers/counter/stm32-lptimer-cnt.c
-index bbc930a..28b6364 100644
---- a/drivers/counter/stm32-lptimer-cnt.c
-+++ b/drivers/counter/stm32-lptimer-cnt.c
-@@ -347,7 +347,7 @@ static const struct iio_chan_spec stm32_lptim_cnt_channels = {
- };
- 
- /**
-- * stm32_lptim_cnt_function - enumerates stm32 LPTimer counter & encoder modes
-+ * enum stm32_lptim_cnt_function - enumerates LPTimer counter & encoder modes
-  * @STM32_LPTIM_COUNTER_INCREASE: up count on IN1 rising, falling or both edges
-  * @STM32_LPTIM_ENCODER_BOTH_EDGE: count on both edges (IN1 & IN2 quadrature)
-  */
+> +		if (WARN_ON_ONCE(!bits[i-from]))
+> +			continue;
+> +		drm_printf(p, "%s%s", first ? "" : ",",
+> +			   bits[i-from]);
+
+I wonder about the usefulness of from and to, as well as indexing
+(i-from) for the strings.
+
+To limit the values to be printed in a more general way than range, you
+can use:
+
+	drm_print_bits(p, value & GENMASK(h, l), bits);
+
+And obviously to adjust the starting position:
+
+	drm_print_bits(p, value >> l, bits);
+
+Seems like a simple len parameter to indicate the ARRAY_SIZE() of bits
+would be more straighforward to guard against array overflow.
+
+	drm_print_bits(p, value, bits, ARRAY_SIZE(bits));
+
+
+BR,
+Jani.
+
+
+> +		first = false;
+> +	}
+> +	if (first)
+> +		drm_printf(p, "(none)");
+> +}
+> +EXPORT_SYMBOL(drm_print_bits);
+> +
+>  void drm_dev_printk(const struct device *dev, const char *level,
+>  		    const char *format, ...)
+>  {
+
 -- 
-2.7.4
-
+Jani Nikula, Intel Open Source Graphics Center
