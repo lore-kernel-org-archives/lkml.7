@@ -2,107 +2,80 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7C1C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 349D6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9016218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhyly7ev"
+	by mail.kernel.org (Postfix) with ESMTP id 1100B218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfIROcl (ORCPT
+        id S1731287AbfIROdK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:32:41 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40045 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728872AbfIROck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:32:40 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so4230376pgj.7;
-        Wed, 18 Sep 2019 07:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RkYCmzxFtZ+pNCP1urZOYVz3GVAlckblbbr0pEk0OxU=;
-        b=bhyly7evHYK8D39RoerQ8i88epE+rmfGrFFX4DRBzpghw/Jb+hj84/eQpNYESzVBtN
-         o6IdpmFaDGUiwlEwnY2dG+bD7PtM/PqCoaW7FagwKDUrWy11Q0LhV8RzEugwnuqoiZhU
-         vcUNo+Lx/N6L8gCm5NPY3wM3X2Z/3FDtkCgnqSTmBk/NMEgYNzy7nNi8MFHVOMtLLovZ
-         iA4C80k9pgu5DLGIe+7/e1C5G0UE2IngwsoP6k2in79eRuocbGHex3H4Fa1T3FaoxPkt
-         SqMKUloCVFX9Ptd/uMdfJ22FXVtobYBzucbQOCa/aBonTpNcXgUr4U5tEu/Nnz3FGNW6
-         hopQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RkYCmzxFtZ+pNCP1urZOYVz3GVAlckblbbr0pEk0OxU=;
-        b=J3vNHz20NuhaIVoJ+18e9jZfAffAY3un3DhtVA7L05GLc+LVRb+seZ3VYeU4QI9Klb
-         AiBIQERs4Q2bD6EIHYDinIxQWAo5B6Fm1VBiSO7F2D+UPxkQbjTuRClTfAZhgOFPMp8k
-         pRqWjgxNDb066lGOQicTFudRBiWFG4OEBrz/twYGlVl3hCQ4bSUVqV1rIDlIdaEMtMKX
-         au/dCl9CuCNYEPfGJD1QK9qFBkx2x1WrGxuhtnBr4tZ8r4XRBe9cTF8seKOoL8CwOC1l
-         GU32lI3zWFlnbOW20M+C5l3rs/rVPLMEhKJ/goHIrmVxu5uTU7vBEDF0IVGYccmoH70c
-         rznA==
-X-Gm-Message-State: APjAAAUoNDsrSaTH89NDzsuE7Pdk8YPwdP64jqzW+H7+FIKjAsGkraA1
-        6UAVCq0lhRGkIbj14h1wi70=
-X-Google-Smtp-Source: APXvYqwazQCFZ7Yaao5farneYpbtyoRqBJAd230ylGrXi5WWlD4zaOhxd06McA0fxf+puUthagPxRg==
-X-Received: by 2002:a62:ac02:: with SMTP id v2mr4393606pfe.109.1568817159880;
-        Wed, 18 Sep 2019 07:32:39 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::75fa])
-        by smtp.gmail.com with ESMTPSA id c9sm1774328pfd.100.2019.09.18.07.32.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:32:38 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 07:32:37 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Yonghong Song <yhs@fb.com>
-Cc:     "jinshan.xiong@gmail.com" <jinshan.xiong@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "jinshan.xiong@uber.com" <jinshan.xiong@uber.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH] staging: tracing/kprobe: filter kprobe based perf event
-Message-ID: <20190918143235.kpclo45eo7qye7fs@ast-mbp.dhcp.thefacebook.com>
-References: <20190918052406.21385-1-jinshan.xiong@gmail.com>
- <5302836c-a6a1-c160-2de2-6a5b3d2c4828@fb.com>
+        Wed, 18 Sep 2019 10:33:10 -0400
+Received: from mga11.intel.com ([192.55.52.93]:55750 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727056AbfIROdK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:33:10 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 07:33:09 -0700
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="194077289"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 07:33:07 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id C050720204;
+        Wed, 18 Sep 2019 17:33:05 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1iAb1K-0002LB-CE; Wed, 18 Sep 2019 17:33:26 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     James Smart <james.smart@broadcom.com>,
+        Dick Kennedy <dick.kennedy@broadcom.com>
+Cc:     linux-scsi@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH v8 09/13] lib/vsprintf: Add a note on re-using %pf or %pF
+Date:   Wed, 18 Sep 2019 17:33:26 +0300
+Message-Id: <20190918143326.8956-1-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190918133419.7969-10-sakari.ailus@linux.intel.com>
+References: <20190918133419.7969-10-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5302836c-a6a1-c160-2de2-6a5b3d2c4828@fb.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 05:51:10AM +0000, Yonghong Song wrote:
-> 
-> Adding cc to bpf@vger.kernel.org mailing list since this is really
-> bpf related.
-> 
-> On 9/17/19 10:24 PM, jinshan.xiong@gmail.com wrote:
-> > From: Jinshan Xiong <jinshan.xiong@gmail.com>
-> > 
-> > Invoking bpf program only if kprobe based perf_event has been added into
-> > the percpu list. This is essential to make event tracing for cgroup to work
-> > properly.
-> 
-> The issue actually exists for bpf programs with kprobe, uprobe, 
-> tracepoint and trace_syscall_enter/exit.
-> 
-> In all these places, bpf program is called regardless of
-> whether there are perf events or not on this cpu.
-> This provides bpf programs more opportunities to see
-> the events. I guess this is by design.
-> Alexei/Daniel, could you clarify?
+Add a note warning of re-use of obsolete %pf or %pF extensions.
 
-Yes. It is by design.
-When bpf is attached to kprobe it will fire on all cpus.
-Per-cpu or per-task or per-cgroup filtering is already done
-inside bpf programs.
-We cannot make this change now it will break all users.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Suggested-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ lib/vsprintf.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index b00b57f9f911f..ef094e6124798 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -2008,6 +2008,8 @@ static char *kobject_string(char *buf, char *end, void *ptr,
+  * - 'S' For symbolic direct pointers (or function descriptors) with offset
+  * - 's' For symbolic direct pointers (or function descriptors) without offset
+  * - '[Ss]R' as above with __builtin_extract_return_addr() translation
++ * - '[Ff]' Obsolete and now unsupported extension for printing direct pointers
++ *	    or function descriptors. Be careful when re-using %pf or %pF!
+  * - 'B' For backtraced symbolic direct pointers with offset
+  * - 'R' For decoded struct resource, e.g., [mem 0x0-0x1f 64bit pref]
+  * - 'r' For raw struct resource, e.g., [mem 0x0-0x1f flags 0x201]
+-- 
+2.20.1
 
