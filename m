@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E97C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACE4C4CED0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EE7214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50C6C21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788261;
-	bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
+	s=default; t=1568788266;
+	bh=NCc38KdKeBnKyP2Odg4PeFPlwltuIx2bv95xeUk0ld0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ryck7GDetpbJLKZpYzqR2ihVqto+FR9bU8BbOnGK/h/k0b3MF4aCkLhX1edeX6eLA
-	 3RMWnsJcddQMWtTktyxVH19FGLxB/yakMxUyGSABaAywSoY7jdabqgQVFhOIv28Irx
-	 a630fQIgb6oGPl6ixzqa68MoPzGRyAowrN257UjY=
+	b=C5rmaMKWCB784FcFuYzfVn5eybmtyRMUG54UGmiMfnHGL7LqMPM7pkzmW6Zszfkn9
+	 9fpynkL75U0oD4aMg/CR4rMtLDlk4gieQIjfBwG0UaG4Fn5+B0FOpGbbgiOf+1n8bb
+	 IhVMGl+ynTNPTUgm8LtqHG1MXmZtb3NyGx0TlOw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729739AbfIRGX7 (ORCPT
+        id S1729708AbfIRGXs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729732AbfIRGXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:55 -0400
+        id S1729696AbfIRGXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54FB721929;
-        Wed, 18 Sep 2019 06:23:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25DDB218AF;
+        Wed, 18 Sep 2019 06:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787834;
-        bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
+        s=default; t=1568787821;
+        bh=NCc38KdKeBnKyP2Odg4PeFPlwltuIx2bv95xeUk0ld0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UC8sJ8bJvHlHHR32gRnpXyWtX+sU4uaUVDZn3t55TrWxpHgb1mX7AoMsGKZxBcLnE
-         g2HK5SeYvmeRlDU/WAeqmEfARsd+R7XPgw/FsI3nGUcfP+IITHwiM0BZtxJF7sabas
-         Diuc49wT5VP6TG0few1Hil+IahxyyauwtaGuhRlc=
+        b=OkPXsJrJ3/HT0wBImwN3gVgo0XalafnPAKfF/bMGBLNsqbVsSugdnZjq7VN7RjUvm
+         nJ4/ThAanieNbMOPVacSUKUb5vvwZkK3gla99ZQE85jfHUeKz2WSNCRwpN5QgHiFna
+         zsHHLHwpQ4uSyW/lbL3oCc3mURWPgfZ51mQW2mSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 28/50] clk: rockchip: Dont yell about bad mmc phases when getting
-Date:   Wed, 18 Sep 2019 08:19:11 +0200
-Message-Id: <20190918061226.403676340@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
+        Jessica Yu <jeyu@kernel.org>
+Subject: [PATCH 4.19 46/50] modules: fix compile error if dont have strict module rwx
+Date:   Wed, 18 Sep 2019 08:19:29 +0200
+Message-Id: <20190918061228.274028936@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,48 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
+commit 93651f80dcb616b8c9115cdafc8e57a781af22d0 upstream.
 
-At boot time, my rk3288-veyron devices yell with 8 lines that look
-like this:
-  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
+If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
+we need stub for module_enable_nx() and module_enable_x().
 
-This is because the clock framework at clk_register() time tries to
-get the phase but we don't have a parent yet.
+If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
+CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
+module_enable_nx.
 
-While the errors appear to be harmless they are still ugly and, in
-general, we don't want yells like this in the log unless they are
-important.
+Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
+because it is needed anyway.
 
-There's no real reason to be yelling here.  We can still return
--EINVAL to indicate that the phase makes no sense without a parent.
-If someone really tries to do tuning and the clock is reported as 0
-then we'll see the yells in rockchip_mmc_set_phase().
-
-Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ kernel/module.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct
- 	u32 delay_num = 0;
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -1884,7 +1884,7 @@ static void mod_sysfs_teardown(struct mo
+ 	mod_sysfs_fini(mod);
+ }
  
- 	/* See the comment for rockchip_mmc_set_phase below */
--	if (!rate) {
--		pr_err("%s: invalid clk rate\n", __func__);
-+	if (!rate)
- 		return -EINVAL;
--	}
+-#ifdef CONFIG_STRICT_MODULE_RWX
++#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
+ /*
+  * LKM RO/NX protection: protect module's text/ro-data
+  * from modification and any data from execution.
+@@ -1907,6 +1907,7 @@ static void frob_text(const struct modul
+ 		   layout->text_size >> PAGE_SHIFT);
+ }
  
- 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
++#ifdef CONFIG_STRICT_MODULE_RWX
+ static void frob_rodata(const struct module_layout *layout,
+ 			int (*set_memory)(unsigned long start, int num_pages))
+ {
+@@ -2039,17 +2040,21 @@ static void disable_ro_nx(const struct m
+ 	frob_writable_data(layout, set_memory_x);
+ }
  
+-#else
++#else /* !CONFIG_STRICT_MODULE_RWX */
+ static void disable_ro_nx(const struct module_layout *layout) { }
+ static void module_enable_nx(const struct module *mod) { }
+ static void module_disable_nx(const struct module *mod) { }
+-#endif
++#endif /*  CONFIG_STRICT_MODULE_RWX */
+ 
+ static void module_enable_x(const struct module *mod)
+ {
+ 	frob_text(&mod->core_layout, set_memory_x);
+ 	frob_text(&mod->init_layout, set_memory_x);
+ }
++#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
++static void module_enable_nx(const struct module *mod) { }
++static void module_enable_x(const struct module *mod) { }
++#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
+ 
+ #ifdef CONFIG_LIVEPATCH
+ /*
 
 
