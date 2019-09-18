@@ -2,180 +2,142 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 396EDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0336BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8F621925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568786760;
-	bh=cOTYDpnncLk1nqJ9CPw74TOsuT1rEH9p0glwPosEhi4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LzefoS6Q8K1gyukI+Zh5d+XdyURgZMZc3y/Xr89WAMr32rjIAML8baJHRK+71X6Mp
-	 wT3L0Sme4s5/eDBO2QebfuBrSYxqQcTPzawrMWhI2je2FortVgu0J18sOJhGbx2K6e
-	 NbLq/yE0/1whdrLxGK9pfcDBODkSGHpS14ANGcrs=
+	by mail.kernel.org (Postfix) with ESMTP id CD80A20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCkLg44c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbfIRGF7 (ORCPT
+        id S1727820AbfIRGHE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:05:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36323 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfIRGF6 (ORCPT
+        Wed, 18 Sep 2019 02:07:04 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33460 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725820AbfIRGHD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:05:58 -0400
-Received: by mail-wm1-f68.google.com with SMTP id t3so974255wmj.1;
-        Tue, 17 Sep 2019 23:05:56 -0700 (PDT)
+        Wed, 18 Sep 2019 02:07:03 -0400
+Received: by mail-io1-f68.google.com with SMTP id m11so13491666ioo.0;
+        Tue, 17 Sep 2019 23:07:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hwWWOoPr234HCjC7JY+UqHTvhCpgrr6k759zSE0l9Nc=;
-        b=fwApwtqAnoy0yRKfmvfNRI066AJX7KH1aYgokaRt8oJPm/5zK1YLT9tx01FeMbnATQ
-         EANegG65/X/b3tLMAXJyNTp3Lh48MDMga6bm6prICG99UJFQEdDws/o+tmLU6umNI5DL
-         OAEELI+yqkt4rODG8pPsj/27h27M90NRvIIEL6Pdb9jSMz1nYsGEcF+hxDnclk3caihA
-         fWjWXsPhxnlzBzpnITKSPcToHQvf+c2rXU7i/6EfYawIO/ZPMRiKoBkwm+peP5s9cZnK
-         S6iAKFc9EwUpyMzl7OGU9wF+DWZJvSv5C1LBPM70U7py7NnXEKZCm+jYhhVT1O/A8q1d
-         xzxQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xalXB+zTcS0a+NMwK6if7JfXclkW8Yw6EeltTUmJSNA=;
+        b=mCkLg44cRp2Svoewt1KhkC3tid98DJttP2esBlzdQwhZPAWASBkiH611EYr5BePZdK
+         dJkuNmhANIrMB1391wJmKOXXRYjfpdr8hruc+oSEFgeyEslnz+zsYLBUrF09MxgaJi3T
+         vtQg//UME82O3yUgwA51hGLq2/gauIDCH3LTr8n4/iP3l/Sx3OYBvN/7+YgfxQsPf7RN
+         1vLnBoOZExYF25Ly6MSK3ErJsy5/VM/IrKbsqeNTuRe3kd4P2vyxJaDMi07u4fVDEhO6
+         NNczEq8AFqMlZaAITh0AseocEXNPXwsKNHGlAGjOJ+oq5ZdljvKUHlwVtMuv4SuYAu+N
+         /TRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=hwWWOoPr234HCjC7JY+UqHTvhCpgrr6k759zSE0l9Nc=;
-        b=PxiKmTvVsNfpwAQpQqmaPPQjwt5cQ5BciB2Y2x1RykUEUm98OkkpfZnD2aeLHsrr9T
-         oBcvb4kSX18k+NUhdfMUqbnAKbRS96uRWh5FLqtU82RHZw1Kj7uQLbbq2rte/AFIsWT9
-         Baj0VzqpEV4Ht1IrFgtThFoZvtuy8skcRIgYJTK6xz2QEmD7Ic/cItWKq8Z8Ufa9Gqgi
-         JeJgC2F7zIP6462raYFc620PR3jXGW5rSyUkONhbu6Hg9uUE+NpUW0jMcmdBS4ZXX5x6
-         zxquoXyFvAZ0fMBopAf7e5UOcLwDTgBiwESmuFVIgweNehZh0dsSywe1o/uQMRe+XcAZ
-         18GQ==
-X-Gm-Message-State: APjAAAVEPCxAF0eRnvZWunbmNs+Pi5DLXKaTJ7s9mybiUv9lnbpGWNnV
-        5Z3OwfDlcDvKEzjMZwK999U=
-X-Google-Smtp-Source: APXvYqwU0+e2HElYuzpSfzcE+GkiQ+aYFob/UzJgKWM7kOsJQF5Hz7OdHkC3zNnl3auyupNu142lyQ==
-X-Received: by 2002:a7b:cb0e:: with SMTP id u14mr1349728wmj.115.1568786755902;
-        Tue, 17 Sep 2019 23:05:55 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a13sm11311194wrf.73.2019.09.17.23.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 23:05:55 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 08:05:53 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Sep 16 (kernel/sched/core.c)
-Message-ID: <20190918060553.GA21173@gmail.com>
-References: <20190916223850.GQ4352@sirena.co.uk>
- <1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org>
- <20190917075242.GB49590@gmail.com>
- <8736gv2gbv.fsf@arm.com>
- <30eb4c83-a90d-21aa-3f9e-4da8e66769ef@infradead.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xalXB+zTcS0a+NMwK6if7JfXclkW8Yw6EeltTUmJSNA=;
+        b=jCCnAUsr5N6heen14Y3DH46Mzi9TNEPMErym+iLEP27hxCwSv8Oz/ewLcJ/pk8GDxd
+         y4n6Fx2XJ/xZ+DLOvZpVZ37wSwyBr/Br80xbIpr+iFbMXx2RdSLMeVREu6OTqAP/oUqq
+         nZDcRxhDeHCiMvJoDS7gvZfe2i2JNQXy9CQIFpxV/FeZqh9K7+/zurMWK0H6jFjTfPQm
+         WyL1IB9LaPalzJlU75yroFqQSUJN+4Oelt7OLb8LniI7o5KHrYiSsE39+GygQmCKhLJM
+         ww5UF3ELmA5yr2nwJiK2GeMoTGAHIWLFnrVB5IVw4QvPIyR+Kur4VJizfplhrSc+bFw6
+         jdgw==
+X-Gm-Message-State: APjAAAUjHLeOt2kwNb5zSaDQjkvrYA51J2lXHN8g3TDoVXPa0RjOBDjp
+        NKzWqbOVuYjvVeZnIt2GTkV5TtFjD09Tmm/0REJ3vucz
+X-Google-Smtp-Source: APXvYqzxMeequQiMeVWwi/Vg3pYCFtkRl+fqjNXDxgxDuKnQaDI8xt3/nmXnbaFmGcXXGukoHgRCqjNiWfa58icF464=
+X-Received: by 2002:a6b:f315:: with SMTP id m21mr1482025ioh.12.1568786822793;
+ Tue, 17 Sep 2019 23:07:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <30eb4c83-a90d-21aa-3f9e-4da8e66769ef@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
+ <20190904023515.7107-8-andrew.smirnov@gmail.com> <VI1PR0402MB3485C8B22FD2B66F8FD9653E98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+In-Reply-To: <VI1PR0402MB3485C8B22FD2B66F8FD9653E98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+Date:   Tue, 17 Sep 2019 23:06:50 -0700
+Message-ID: <CAHQ1cqFf+XS7Hcdsup0hBD-o3fF5JhUREmaCdnhJ2hUaiv7fLw@mail.gmail.com>
+Subject: Re: [PATCH 07/12] crypto: caam - use devres to de-initialize the RNG
+To:     Horia Geanta <horia.geanta@nxp.com>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Sep 9, 2019 at 8:39 AM Horia Geanta <horia.geanta@nxp.com> wrote:
+>
+> On 9/4/2019 5:35 AM, Andrey Smirnov wrote:
+> > Use devres to de-initialize the RNG and drop explicit de-initialization
+> > code in caam_remove().
+> >
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
+> > Cc: linux-crypto@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  drivers/crypto/caam/ctrl.c | 129 ++++++++++++++++++++-----------------
+> >  1 file changed, 70 insertions(+), 59 deletions(-)
+> >
+> > diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
+> > index 254963498abc..25f8f76551a5 100644
+> > --- a/drivers/crypto/caam/ctrl.c
+> > +++ b/drivers/crypto/caam/ctrl.c
+> > @@ -175,6 +175,73 @@ static inline int run_descriptor_deco0(struct devi=
+ce *ctrldev, u32 *desc,
+> >       return 0;
+> >  }
+> >
+> > +/*
+> > + * deinstantiate_rng - builds and executes a descriptor on DECO0,
+> > + *                  which deinitializes the RNG block.
+> > + * @ctrldev - pointer to device
+> > + * @state_handle_mask - bitmask containing the instantiation status
+> > + *                   for the RNG4 state handles which exist in
+> > + *                   the RNG4 block: 1 if it's been instantiated
+> > + *
+> > + * Return: - 0 if no error occurred
+> > + *      - -ENOMEM if there isn't enough memory to allocate the descrip=
+tor
+> > + *      - -ENODEV if DECO0 couldn't be acquired
+> > + *      - -EAGAIN if an error occurred when executing the descriptor
+> > + */
+> > +static int deinstantiate_rng(struct device *ctrldev, int state_handle_=
+mask)
+> I assume this function is not modified, only moved further up
+> to avoid forward declaration.
+>
 
-* Randy Dunlap <rdunlap@infradead.org> wrote:
+Correct.
 
-> On 9/17/19 6:38 AM, Patrick Bellasi wrote:
-> > 
-> > On Tue, Sep 17, 2019 at 08:52:42 +0100, Ingo Molnar wrote...
-> > 
-> >> * Randy Dunlap <rdunlap@infradead.org> wrote:
-> >>
-> >>> On 9/16/19 3:38 PM, Mark Brown wrote:
-> >>>> Hi all,
-> >>>>
-> >>>> Changes since 20190915:
-> >>>>
-> >>>
-> >>> on x86_64:
-> >>>
-> >>> when CONFIG_CGROUPS is not set:
-> > 
-> > Hi Randy,
-> > thanks for the report.
-> > 
-> >>>   CC      kernel/sched/core.o
-> >>> ../kernel/sched/core.c: In function ‘uclamp_update_active_tasks’:
-> >>> ../kernel/sched/core.c:1081:23: error: storage size of ‘it’ isn’t known
-> >>>   struct css_task_iter it;
-> >>>                        ^~
-> >>>   CC      kernel/printk/printk_safe.o
-> >>> ../kernel/sched/core.c:1084:2: error: implicit declaration of function ‘css_task_iter_start’; did you mean ‘__sg_page_iter_start’? [-Werror=implicit-function-declaration]
-> >>>   css_task_iter_start(css, 0, &it);
-> >>>   ^~~~~~~~~~~~~~~~~~~
-> >>>   __sg_page_iter_start
-> >>> ../kernel/sched/core.c:1085:14: error: implicit declaration of function ‘css_task_iter_next’; did you mean ‘__sg_page_iter_next’? [-Werror=implicit-function-declaration]
-> >>>   while ((p = css_task_iter_next(&it))) {
-> >>>               ^~~~~~~~~~~~~~~~~~
-> >>>               __sg_page_iter_next
-> >>> ../kernel/sched/core.c:1091:2: error: implicit declaration of function ‘css_task_iter_end’; did you mean ‘get_task_cred’? [-Werror=implicit-function-declaration]
-> >>>   css_task_iter_end(&it);
-> >>>   ^~~~~~~~~~~~~~~~~
-> >>>   get_task_cred
-> >>> ../kernel/sched/core.c:1081:23: warning: unused variable ‘it’ [-Wunused-variable]
-> >>>   struct css_task_iter it;
-> >>>                        ^~
-> >>>
-> >>
-> >> I cannot reproduce this build failue: I took Linus's latest which has all 
-> >> the -next scheduler commits included (ad062195731b), and an x86-64 "make 
-> >> defconfig" and a disabling of CONFIG_CGROUPS still resuls in a kernel 
-> >> that builds fine.
-> > 
-> > Same here Ingo, I cannot reproduce on arm64 and !CONFIG_CGROUPS and
-> > testing on tip/sched/core.
-> > 
-> > However, if you like, the following patch can make that code a
-> > bit more "robust".
-> > 
-> > Best,
-> > Patrick
-> > 
-> > ---8<---
-> > From 7e17b7bb08dd8dfc57e01c2a7b6875439eb47cbe Mon Sep 17 00:00:00 2001
-> > From: Patrick Bellasi <patrick.bellasi@arm.com>
-> > Date: Tue, 17 Sep 2019 14:12:10 +0100
-> > Subject: [PATCH 1/1] sched/core: uclamp: Fix compile error on !CONFIG_CGROUPS
-> > 
-> > Randy reported a compiler error on x86_64 and !CONFIG_CGROUPS which is due
-> > to uclamp_update_active_tasks() using the undefined css_task_iter().
-> > 
-> > Since uclamp_update_active_tasks() is used only when cgroup support is
-> > enabled, fix that by properly guarding that function at compile time.
-> > 
-> > Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-> > Link: https://lore.kernel.org/lkml/1898d3c9-1997-17ce-a022-a5e28c8dc115@infradead.org/
-> > Fixes: commit babbe170e05 ("sched/uclamp: Update CPU's refcount on TG's clamp changes")
-> 
-> Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
-> 
-> Thanks.
+> > +     if (!ret) {
+> > +             ret =3D devm_add_action_or_reset(ctrldev, devm_deinstanti=
+ate_rng,
+> > +                                            ctrldev);
+> >       }
+> Braces not needed.
+>
 
-Build failures like this one shouldn't depend on the compiler version - 
-and it's still a mystery how and why this build bug triggered - we cannot 
-apply the fix without knowing the answer to those questions.
+OK, will remove in next version.
 
-Can you reproduce the build bug with Linus's latest tree? If not, which 
-part of -next triggers the build failure?
+> Is there any guidance wrt. when *not* to use devres?
+>
+
+Not that I now of.
 
 Thanks,
-
-	Ingo
+Andrey Smirnov
