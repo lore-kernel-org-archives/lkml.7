@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B38C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68A8C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AFEE218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DF4A21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787749;
-	bh=E5qFM9JwfT/RlEFz5qXENUWs6QlfF4J6VVbZoYTgojM=;
+	s=default; t=1568787752;
+	bh=xCYf6H3BZ4UqZg17dDZOqY8hskqn5G7eCavzPOr6A7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1J8oZz3wJYjJWEYOrVDyb3jVGY+G5+MmdesJk0tckgh+2dbBNNHcocwoExIL1YuYr
-	 MsH5hlzDBiHtsGROSk6QMn51uxYEL/fWgRHHPC/kPF57kYKdrTtk86e8XXJSyGofhd
-	 wqCRc1IlnesLl9cnj3vnQsjNxUKvTLe2eInvAnq0=
+	b=o0Ur5Yv4NvyhS7VfbuNxXAhFvzQxywxAVuTD/OptlYKUfM0Zq39hxtNrcqkBSd8Us
+	 m9eZnxBXvQo0aMlnMgAU/6wbq5r6J8gLVnvIbPrXAqmV3l/PhYd/o8ncnZ2M2STvJl
+	 IsrH6mQ9L/yj1cC7GZIbdbTOTSiUfKvXWSpFO40s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfIRGW2 (ORCPT
+        id S1728739AbfIRGWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42308 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729390AbfIRGWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:22 -0400
+        id S1726038AbfIRGW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE8D21A4C;
-        Wed, 18 Sep 2019 06:22:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E95B218AE;
+        Wed, 18 Sep 2019 06:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787741;
-        bh=E5qFM9JwfT/RlEFz5qXENUWs6QlfF4J6VVbZoYTgojM=;
+        s=default; t=1568787746;
+        bh=xCYf6H3BZ4UqZg17dDZOqY8hskqn5G7eCavzPOr6A7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZX39OUdMG4AWaMDA6Lu42fEP5fCkx4DGdKuUeqIP4oCSS5KeDRPza4vxsWusjkFV
-         tX6Y75lnOB+ZYvRJ7LtEHiuWm3ZnbWEtuZwD4t2ppQ65Vro4AyVlVDe7UrEQ4HPQF9
-         /VaDCl7SlJawMW2YjHesA+UrggbvZEHXyR4Z9yaI=
+        b=PtJ5uvn5Saig9S2MPc411/6Nl2sxa4DfRPHUlcyHVGvxwKO8RaNA5aalPY2n5eXrZ
+         Vki0DD8XPk82XpFrGPBFojYw2k7L5nsUmg/MntkNKOMLpkFFSZ5tW3feCkPQJ9hGQ1
+         nuKc9Gc/axWzXx3gPPOTD7k4QrM+JwibJOdwhmPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 4.19 17/50] gpio: fix line flag validation in linehandle_create
-Date:   Wed, 18 Sep 2019 08:19:00 +0200
-Message-Id: <20190918061224.818165049@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Gregg Leventhal <gleventhal@janestreet.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 4.19 19/50] ixgbe: Prevent u8 wrapping of ITR value to something less than 10us
+Date:   Wed, 18 Sep 2019 08:19:02 +0200
+Message-Id: <20190918061225.140090286@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,39 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kent Gibson <warthog618@gmail.com>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-commit e95fbc130a162ba9ad956311b95aa0da269eea48 upstream.
+commit 377228accbbb8b9738f615d791aa803f41c067e0 upstream.
 
-linehandle_create should not allow both GPIOHANDLE_REQUEST_INPUT
-and GPIOHANDLE_REQUEST_OUTPUT to be set.
+There were a couple cases where the ITR value generated via the adaptive
+ITR scheme could exceed 126. This resulted in the value becoming either 0
+or something less than 10. Switching back and forth between a value less
+than 10 and a value greater than 10 can cause issues as certain hardware
+features such as RSC to not function well when the ITR value has dropped
+that low.
 
-Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+CC: stable@vger.kernel.org
+Fixes: b4ded8327fea ("ixgbe: Update adaptive ITR algorithm")
+Reported-by: Gregg Leventhal <gleventhal@janestreet.com>
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -525,6 +525,14 @@ static int linehandle_create(struct gpio
- 		return -EINVAL;
- 
- 	/*
-+	 * Do not allow both INPUT & OUTPUT flags to be set as they are
-+	 * contradictory.
-+	 */
-+	if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
-+	    (lflags & GPIOHANDLE_REQUEST_OUTPUT))
-+		return -EINVAL;
-+
-+	/*
- 	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
- 	 * the hardware actually supports enabling both at the same time the
- 	 * electrical result would be disastrous.
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2626,7 +2626,7 @@ adjust_by_size:
+ 		/* 16K ints/sec to 9.2K ints/sec */
+ 		avg_wire_size *= 15;
+ 		avg_wire_size += 11452;
+-	} else if (avg_wire_size <= 1980) {
++	} else if (avg_wire_size < 1968) {
+ 		/* 9.2K ints/sec to 8K ints/sec */
+ 		avg_wire_size *= 5;
+ 		avg_wire_size += 22420;
+@@ -2659,6 +2659,8 @@ adjust_by_size:
+ 	case IXGBE_LINK_SPEED_2_5GB_FULL:
+ 	case IXGBE_LINK_SPEED_1GB_FULL:
+ 	case IXGBE_LINK_SPEED_10_FULL:
++		if (avg_wire_size > 8064)
++			avg_wire_size = 8064;
+ 		itr += DIV_ROUND_UP(avg_wire_size,
+ 				    IXGBE_ITR_ADAPTIVE_MIN_INC * 64) *
+ 		       IXGBE_ITR_ADAPTIVE_MIN_INC;
 
 
