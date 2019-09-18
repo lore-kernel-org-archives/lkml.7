@@ -2,103 +2,216 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F31C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A415DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3883821924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568827743;
-	bh=M7SNZBXcCiFOmpNM1RhyX6kmDyGHg4qu/nFa+CO6J5k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=YZMT4M9TApxauIdmNDMB3ssofT6lQdRzJBRkcz2N5rhGYiy3dRJLpH8CRDzpEjXdt
-	 CyrHPq83qvhhzxxWHZjDJ6djcqpl07HyATI9uD8sDkQYDdI/Wi6SsFokGwajfcNleX
-	 U+LXX5EnjDUmwpSlSHxRFBinGFyR7X8qkT+hcwTA=
+	by mail.kernel.org (Postfix) with ESMTP id 72684208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:30:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MBFaKfnA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387536AbfIRR3C (ORCPT
+        id S2387808AbfIRRaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729319AbfIRR3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:29:02 -0400
-Received: from C02WT3WMHTD6 (unknown [8.36.226.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55BB208C0;
-        Wed, 18 Sep 2019 17:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568827741;
-        bh=M7SNZBXcCiFOmpNM1RhyX6kmDyGHg4qu/nFa+CO6J5k=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1t5g0jOYSizU0QAnxEcRb0YGK1Fa0yF/Sa4zBR6ZOzFbOJW1G32upZ9VbqXRgm/Ka
-         1lD6GlVA7SNvHCgqk3OKQmROEglF1emr5Fhs+z+T+69nfpPoMf6hw5RDNxKjQlSZfT
-         4RscS47PEHrlFiExw8REs7biCMuAUU/vO5SQBZLo=
-Date:   Wed, 18 Sep 2019 11:28:59 -0600
-From:   Keith Busch <kbusch@kernel.org>
-To:     Mario Limonciello <mario.limonciello@dell.com>
-Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-nvme@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
-        sjg@google.com, Jared Dominguez <jared.dominguez@dell.com>
-Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into
- deepest state
-Message-ID: <20190918172859.GA51420@C02WT3WMHTD6>
-References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
+        Wed, 18 Sep 2019 13:30:03 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36007 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729077AbfIRRaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:30:03 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f19so286134plr.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=GUxs3ppBWjO6MvWeEa5OPViHs5o2PNpYpDSgemqtMKU=;
+        b=MBFaKfnAunKPJzeuvir2VqnMxhnWK27CCeerc22oy+A19xqjzPiI7wD6vVQ6qYhOwK
+         kG5j6/le65zDAy6TKhXfvNwzVPleX2r+h3VC3w0Sdqs5smyn/1nloTqrLwVFivS3+Jw8
+         +tJdsaW2QjuFQxKripj59KUr7CgEEfadLTX6U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=GUxs3ppBWjO6MvWeEa5OPViHs5o2PNpYpDSgemqtMKU=;
+        b=AMdarGuROMz1J/RqmoT1d+JPhd3ZvdrAjw/FFsSyVSuVuTtblbZd4ZGc3+y5WTzV2N
+         1RO/ym9uI9OjdRDjzcLAQxP5I3IQoOktaVd3HaxAST9yMTF1oSk1TL/Vyeh/C2Agp/wT
+         WRtEWIQPsJC85fxnU3Z1RAn4UPfaNx0vk2cGyUf7+JygJhpEpC0xkLirzbNZ0uQO65M8
+         xgeGmJFvzBywIlY+kj0Xqppyd7n/YnikV7F6IVA3sXXBHOlBUO/ZIGyJQtmC8bvANoBg
+         snLT2Lji8oa2HcUoc4suusYl+OkUOc6kjITQpxB8PIfUiCzpaQIa4MQcqFdI+yx7ed87
+         NWGg==
+X-Gm-Message-State: APjAAAWNmO+68tyC9Ei7+8YlyiKYZRy9tsiVUVkRDNNmFVZr5g4cVzT8
+        FUHrzAcz7GxulNNnrqkSHHnWhKhpEro=
+X-Google-Smtp-Source: APXvYqz2fE+Or3qClARFl8tcu+gzAJlmtllJFa2j2ZTrTLIYt/MmOrrS7xSYwcMKS2c2wevFxCkkMg==
+X-Received: by 2002:a17:902:758a:: with SMTP id j10mr5397703pll.233.1568827802416;
+        Wed, 18 Sep 2019 10:30:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a29sm9816765pfr.152.2019.09.18.10.30.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 10:30:01 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:30:00 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     luto@amacapital.net, jannh@google.com, wad@chromium.org,
+        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: Re: [PATCH 1/4] seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
+Message-ID: <201909181018.E3CEC9A81@keescook>
+References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+ <20190918084833.9369-2-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190918084833.9369-2-christian.brauner@ubuntu.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 11, 2019 at 06:42:33PM -0500, Mario Limonciello wrote:
-> ---
->  drivers/nvme/host/pci.c | 13 +++++++------
->  1 file changed, 7 insertions(+), 6 deletions(-)
+On Wed, Sep 18, 2019 at 10:48:30AM +0200, Christian Brauner wrote:
+> This allows the seccomp notifier to continue a syscall. A positive
+> discussion about this feature was triggered by a post to the
+> ksummit-discuss mailing list (cf. [3]) and took place during KSummit
+> (cf. [1]) and again at the containers/checkpoint-restore
+> micro-conference at Linux Plumbers.
 > 
-> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-> index 732d5b6..9b3fed4 100644
-> --- a/drivers/nvme/host/pci.c
-> +++ b/drivers/nvme/host/pci.c
-> @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
->  	if (ret < 0)
->  		goto unfreeze;
+> Recently we landed seccomp support for SECCOMP_RET_USER_NOTIF (cf. [4])
+> which enables a process (watchee) to retrieve an fd for its seccomp
+> filter. This fd can then be handed to another (usually more privileged)
+> process (watcher). The watcher will then be able to receive seccomp
+> messages about the syscalls having been performed by the watchee.
+> 
+> This feature is heavily used in some userspace workloads. For example,
+> it is currently used to intercept mknod() syscalls in user namespaces
+> aka in containers.
+> The mknod() syscall can be easily filtered based on dev_t. This allows
+> us to only intercept a very specific subset of mknod() syscalls.
+> Furthermore, mknod() is not possible in user namespaces toto coelo and
+> so intercepting and denying syscalls that are not in the whitelist on
+> accident is not a big deal. The watchee won't notice a difference.
+> 
+> In contrast to mknod(), a lot of other syscall we intercept (e.g.
+> setxattr()) cannot be easily filtered like mknod() because they have
+> pointer arguments. Additionally, some of them might actually succeed in
+> user namespaces (e.g. setxattr() for all "user.*" xattrs). Since we
+> currently cannot tell seccomp to continue from a user notifier we are
+> stuck with performing all of the syscalls in lieu of the container. This
+> is a huge security liability since it is extremely difficult to
+> correctly assume all of the necessary privileges of the calling task
+> such that the syscall can be successfully emulated without escaping
+> other additional security restrictions (think missing CAP_MKNOD for
+> mknod(), or MS_NODEV on a filesystem etc.). This can be solved by
+> telling seccomp to resume the syscall.
+> 
+> One thing that came up in the discussion was the problem that another
+> thread could change the memory after userspace has decided to let the
+> syscall continue which is a well known TOCTOU with seccomp which is
+> present in other ways already.
+> The discussion showed that this feature is already very useful for any
+> syscall without pointer arguments. For any accidentally intercepted
+> non-pointer syscall it is safe to continue.
+> For syscalls with pointer arguments there is a race but for any cautious
+> userspace and the main usec cases the race doesn't matter. The notifier
+> is intended to be used in a scenario where a more privileged watcher
+> supervises the syscalls of lesser privileged watchee to allow it to get
+> around kernel-enforced limitations by performing the syscall for it
+> whenever deemed save by the watcher. Hence, if a user tricks the watcher
+> into allowing a syscall they will either get a deny based on
+> kernel-enforced restrictions later or they will have changed the
+> arguments in such a way that they manage to perform a syscall with
+> arguments that they would've been allowed to do anyway.
+> In general, it is good to point out again, that the notifier fd was not
+> intended to allow userspace to implement a security policy but rather to
+> work around kernel security mechanisms in cases where the watcher knows
+> that a given action is safe to perform.
+> 
+> /* References */
+> [1]: https://linuxplumbersconf.org/event/4/contributions/560
+> [2]: https://linuxplumbersconf.org/event/4/contributions/477
+> [3]: https://lore.kernel.org/r/20190719093538.dhyopljyr5ns33qx@brauner.io
+> [4]: commit 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+> 
+> Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Andy Lutomirski <luto@amacapital.net>
+> Cc: Will Drewry <wad@chromium.org>
+> Cc: Tycho Andersen <tycho@tycho.ws>
+> CC: Tyler Hicks <tyhicks@canonical.com>
+> Cc: Jann Horn <jannh@google.com>
+> ---
+>  include/uapi/linux/seccomp.h |  2 ++
+>  kernel/seccomp.c             | 24 ++++++++++++++++++++----
+>  2 files changed, 22 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> index 90734aa5aa36..2c23b9aa6383 100644
+> --- a/include/uapi/linux/seccomp.h
+> +++ b/include/uapi/linux/seccomp.h
+> @@ -76,6 +76,8 @@ struct seccomp_notif {
+>  	struct seccomp_data data;
+>  };
 >  
-> +	/*
-> +	 * A saved state prevents pci pm from generically controlling the
-> +	 * device's power. If we're using protocol specific settings, we don't
-> +	 * want pci interfering.
-> +	 */
-> +	pci_save_state(pdev);
+> +#define SECCOMP_RET_USER_NOTIF_ALLOW 0x00000001
+
+nit: I'd like to avoid confusion here about what "family" these flags
+belong to. "SECCOMP_RET_..." is used for the cBPF filter return action
+value, so let's instead call this:
+
+#define SECCOMP_USER_NOTIF_CONTINUE	BIT(0)
+
+I'm thinking of "continue" as slightly different from "allow", in the
+sense that I'd like to hint that this doesn't mean arguments could have
+been reliably "filtered" via user notification.
+
+And at the same time, please add a giant comment about this in the
+header that details the purpose ("check if I should do something on
+behalf of the process") and not "is this safe to allow?", due to the
+argument parsing ToCToU.
+
+> -static void seccomp_do_user_notification(int this_syscall,
+> +static bool seccomp_do_user_notification(int this_syscall,
+
+I'd prefer this stay an "int", just to keep it similar to the other
+functions that are checked in __seccomp_filter().
+
+> +	/* perform syscall */
+
+nit: expand this commit to something like "Userspace requests we
+continue and perform syscall".
+
+> +	if (flags & SECCOMP_RET_USER_NOTIF_ALLOW)
+> +		return false;
+
+return 0;
+
 > +
->  	ret = nvme_set_power_state(ctrl, ctrl->npss);
->  	if (ret < 0)
->  		goto unfreeze;
-> @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
->  		ret = 0;
->  		goto unfreeze;
+>  	syscall_set_return_value(current, task_pt_regs(current),
+>  				 err, ret);
+> +	return true;
 
-We would need to clear the saved state here, though. You can also
-infact remove the unfreeze label and goto.
+return -1;
 
->  	}
-> -	/*
-> -	 * A saved state prevents pci pm from generically controlling the
-> -	 * device's power. If we're using protocol specific settings, we don't
-> -	 * want pci interfering.
-> -	 */
-> -	pci_save_state(pdev);
->  unfreeze:
->  	nvme_unfreeze(ctrl);
->  	return ret;
-> -- 
+(This makes it look more like a "skip on failure")
+
+> +	if (resp.flags & ~SECCOMP_RET_USER_NOTIF_ALLOW)
+> +		return -EINVAL;
+> +
+> +	if ((resp.flags & SECCOMP_RET_USER_NOTIF_ALLOW) &&
+> +	    (resp.error || resp.val))
+>  		return -EINVAL;
+
+Ah yeah, good idea.
+
+Beyond these nits, yes, looks good and should help the usability of this
+feature. Thanks for getting it written and tested!
+
+-- 
+Kees Cook
