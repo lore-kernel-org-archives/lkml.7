@@ -2,171 +2,126 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4649AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D82C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183BD21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC539207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:00:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SEwIBnnF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fD4dVOhv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731825AbfIRQAX (ORCPT
+        id S1731838AbfIRQAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:00:23 -0400
-Received: from mail-lj1-f170.google.com ([209.85.208.170]:42770 "EHLO
-        mail-lj1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726653AbfIRQAX (ORCPT
+        Wed, 18 Sep 2019 12:00:41 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41679 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726653AbfIRQAk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:00:23 -0400
-Received: by mail-lj1-f170.google.com with SMTP id y23so440390lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:00:21 -0700 (PDT)
+        Wed, 18 Sep 2019 12:00:40 -0400
+Received: by mail-io1-f66.google.com with SMTP id r26so373790ioh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:00:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kB3klimaMBAXuxxPltf9dvAUon1ngAzWdJNC6nDa9xY=;
-        b=SEwIBnnFJgl52sap2TEUKcLV5i6OrZ8gthazapBPFC11qrkx8al/RlQOFWq8cpAbgo
-         Jk1LyASoAbErR2XwYxV95Qeh6Z+bHRUe/EEc6JS4w3eOjCLjLu6gqr3QpqRrzXKITZWr
-         9I6H2ZLlPy3OO0WTJEaUWqeAjATe5rjTdhvvLRjoQt4MGk/LpjAQQ4IVwFReu/WniU40
-         7S0iWJGXKNOKym4bdZauK54kJjRO0pUE2Mk+fxlew7yf9x9BnsERXbazf3KWpCAKZIqI
-         uM3Mzs4M7j53CMh1YVgtCLchSKzyKqzPKZeNLNMbNwp+kvGxjNMmcRdKb9luDzOZCS9O
-         VPRw==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=ywo1LWQXhtnnsGBUwqYVAp61PxHZGvXmpc5vAeqGshs=;
+        b=fD4dVOhvCor/5Hphh2dpZdcTGN3t4ew61AWnXg30rOVONDgrS2kl17CRRvhTnlMAC2
+         Okp97wGoZehoOmQGr3oztl8ywFGX5oQWiE0V3JOE2PIemrCt5tiYhOhVYNhMB7tcRW0y
+         Mj7kTRT7/ROIP+mBtRoQAQcICTVTKcAEbBqPhv18ohZGBlIcf+J7uzqlrFmnTnO1tESu
+         j0Q8Wu2rTwr2gca/9P1nAsoxSBNt9MzMTsauf/hqmajEq9f27klYeyiN8NUa9cKLe7nn
+         Uz2UiQiG+NVcA3EkvKBqcmQ22I9FLgOM03PL2Xmt5W4UfyOWCm7RGpDStVdz4gD/ycNL
+         GKdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kB3klimaMBAXuxxPltf9dvAUon1ngAzWdJNC6nDa9xY=;
-        b=LPwSRPRb8XcmrrLa5fctEXYoScL+7DovfydqwUndrb0/ckoSKqrzroW3wuoe0snKUg
-         4IL53ORKujsNT/ZPwpk3GbS57Ed5vWrQqskwh2MalfdCbUbB9T13LEfzy0r22jUH9OtA
-         wRMavflQtj/k3NBUui6kqionURWzkypNHtFLk9ZxHpSJuutSKqbIqo8hF8szT9NnTAOD
-         nODpolWYrr+/AKBe4w2Vfg4InCFA3LOfJbSVIaE61JfMEl5v5uEJCAGoRdNQReKRvXo9
-         wkKJTdFZ14L1MuB7qHsBAD4lxH4tHndVhns7mcaBb0gvDUVazvRdFAonE6W9jdvtkBKs
-         N90Q==
-X-Gm-Message-State: APjAAAXPJEAnCQec89QKmpQ9dI1zeKMlKi+Zru2Df1BdhAnwcBRiIMRE
-        P2U4Tt1nboLPvEpwCPSGFdg7+imvYhHdPJY7PDOyBg==
-X-Google-Smtp-Source: APXvYqyN/OD06ODukSbHqVsiGfnK/cppj65X3rgN2oL+cjzN4zUFVpJL8zdiSCoo5n9CR64gHVcmrxeRtqox+dTw+Qc=
-X-Received: by 2002:a2e:9689:: with SMTP id q9mr2724146lji.2.1568822420806;
- Wed, 18 Sep 2019 09:00:20 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ywo1LWQXhtnnsGBUwqYVAp61PxHZGvXmpc5vAeqGshs=;
+        b=EjLamfqstofyaYiGv07X/F9i5Lv6ttaeng5QHAWeTJSJTDBV7UOcEKteJbBBRc5bU3
+         v25J4V04jV35gN4mvViALFJRO8/xYy/k0JbhsW3pzhlST/vXe69haMlYcJ7t8tG+AIFW
+         sD8n+2+tjUBY7jCL855QTcHH0iOn3FMty/F3SViT4CuvW7T9Hib0Z0iLQYIWXmhOhvm0
+         UkDwItPP6pMR3xoGsy/Lwx405lM1hpeZG68DUerUC3TMHwcQDuP1qISW3BKUQrObLJEL
+         BxGmY3SP7TNVEmF/LLPmzdYJ2s+iIQFxjT3q/topIsFA6mAarhWbgyEwYl9H+CXW4ctu
+         iAxw==
+X-Gm-Message-State: APjAAAWwt4+iEvMUruC9ALapIjfqHwo+S3Lh2hUsQhwJtfyfjQqHhRkB
+        CO7Yh0mlcUNfn3TWlwhcHGWHihr+6H6COHWFPrE=
+X-Google-Smtp-Source: APXvYqwlDA2TnLSXNW06tUwHy0B3dJRlCrapRf8xAZ/mN9UXvrnbyEmFKppxSgak/3C49MDvyOqdxnVT5skiCpRUZbc=
+X-Received: by 2002:a6b:f319:: with SMTP id m25mr5535247ioh.33.1568822438949;
+ Wed, 18 Sep 2019 09:00:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
- <87woe51ydd.fsf@arm.com> <CAKfTPtAF1WM6tCktgyyj=SLfJGT0qT5e_2Fu+SVheyfrJ-pg2A@mail.gmail.com>
- <87v9tp1ub9.fsf@arm.com>
-In-Reply-To: <87v9tp1ub9.fsf@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 18 Sep 2019 18:00:09 +0200
-Message-ID: <CAKfTPtDck+J7f6tD8SJPbR99f3JTHxW6_LxtRjieHy8jufs=aw@mail.gmail.com>
-Subject: Re: Usecases for the per-task latency-nice attribute
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     Parth Shah <parth@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        subhra mazumdar <subhra.mazumdar@oracle.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 18 Sep 2019 11:00:28 -0500
+Message-ID: <CABb+yY2AFK4G8i765--h0D7h1xcsrhSP2fKzWmcza9OcrdT22g@mail.gmail.com>
+Subject: [GIT PULL] Mailbox changes for v5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 17:46, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
->
->
-> On Wed, Sep 18, 2019 at 16:22:32 +0100, Vincent Guittot wrote...
->
-> > On Wed, 18 Sep 2019 at 16:19, Patrick Bellasi <patrick.bellasi@arm.com> wrote:
->
-> [...]
->
-> >> $> Wakeup path tunings
-> >> ==========================
-> >>
-> >> Some additional possible use-cases was already discussed in [3]:
-> >>
-> >>  - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
-> >>    depending on crossing certain pre-configured threshold of latency
-> >>    niceness.
-> >>
-> >>  - dynamically bias the vruntime updates we do in place_entity()
-> >>    depending on the actual latency niceness of a task.
-> >>
-> >>    PeterZ thinks this is dangerous but that we can "(carefully) fumble a
-> >>    bit there."
-> >
-> > I agree with Peter that we can easily break the fairness if we bias vruntime
->
-> Just to be more precise here and also to better understand, here I'm
-> talking about turning the tweaks we already have for:
->
->  - START_DEBIT
->  - GENTLE_FAIR_SLEEPERS
+Hi Linus,
+The following changes since commit f74c2bb98776e2de508f4d607cd519873065118e:
 
-ok. So extending these 2 features could make sense
+  Linux 5.3-rc8 (2019-09-08 13:33:15 -0700)
 
->
-> a bit more parametric and proportional to the latency-nice of a task.
->
-> In principle, if a task declares a positive latency niceness, could we
-> not read this also as "I accept to be a bit penalised in terms of
-> fairness at wakeup time"?
+are available in the Git repository at:
 
-I would say no. It's not because you declare a positive latency
-niceness that you should lose some fairness and runtime. If task
-accept long latency because it's only care about throughput, it
-doesn't want to lost some running time
+  git://git.linaro.org/landing-teams/working/fujitsu/integration.git
+tags/mailbox-v5.4
 
->
-> Whatever tweaks we do there should affect anyway only one sched_latency
-> period... although I'm not yet sure if that's possible and how.
->
-> >>  - bias the decisions we take in check_preempt_tick() still depending
-> >>    on a relative comparison of the current and wakeup task latency
-> >>    niceness values.
-> >
-> > This one seems possible as it will mainly enable a task to preempt
-> > "earlier" the running task but will not break the fairness
-> > So the main impact will be the number of context switch between tasks
-> > to favor or not the scheduling latency
->
-> Preempting before is definitively a nice-to-have feature.
->
-> At the same time it's interesting a support where a low latency-nice
-> task (e.g. TOP_APP) RUNNABLE on a CPU has better chances to be executed
-> up to completion without being preempted by an high latency-nice task
-> (e.g. BACKGROUND) waking up on its CPU.
->
-> For that to happen, we need a mechanism to "delay" the execution of a
-> less important RUNNABLE task up to a certain period.
->
-> It's impacting the fairness, true, but latency-nice in this case will
-> means that we want to "complete faster", not just "start faster".
+for you to fetch changes up to 556a0964e28c4441dcdd50fb07596fd042246bd5:
 
-you TOP_APP task will have to set both nice and latency-nice  if it
-wants to make (almost) sure to have time to finish before BACKGROUND
+  mailbox: qcom-apcs: fix max_register value (2019-09-17 00:54:29 -0500)
 
+----------------------------------------------------------------
+- qcom : enable support for ipq8074, sm1850 and sm7180.
+         add child device node for qcs404.
+         misc fixes.
 
->
-> Is this definition something we can reason about?
->
-> Best,
-> Patrick
->
-> --
-> #include <best/regards.h>
->
-> Patrick Bellasi
+- mediatek : enable support for mt8183.
+          misc rejig of cmdq driver.
+          new client-reg dt property.
+
+- armada: use device-managed registration api
+
+----------------------------------------------------------------
+Bibby Hsieh (6):
+      dt-binding: gce: remove thread-num property
+      dt-binding: gce: add gce header file for mt8183
+      dt-binding: gce: add binding for gce client reg property
+      mailbox: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+      mailbox: mediatek: cmdq: support mt8183 gce function
+      mailbox: mediatek: cmdq: clear the event in cmdq initial flow
+
+Chuhong Yuan (1):
+      mailbox: armada-37xx-rwtm: Use device-managed registration API
+
+Gokul Sriram Palanisamy (2):
+      dt-bindings: mailbox: qom: Add ipq8074 APPS compatible
+      mailbox: qcom: Add support for IPQ8074 APCS
+
+Jorge Ramirez-Ortiz (3):
+      mbox: qcom: add APCS child device for QCS404
+      mbox: qcom: replace integer with valid macro
+      mailbox: qcom-apcs: fix max_register value
+
+Sibi Sankar (2):
+      dt-bindings: mailbox: Add APSS shared for SM8150 and SC7180 SoCs
+      mailbox: qcom: Add support for Qualcomm SM8150 and SC7180 SoCs
+
+ .../devicetree/bindings/mailbox/mtk-gce.txt        |  23 ++-
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   3 +
+ drivers/mailbox/armada-37xx-rwtm-mailbox.c         |  14 +-
+ drivers/mailbox/mtk-cmdq-mailbox.c                 |  18 ++-
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            |  16 +-
+ include/dt-bindings/gce/mt8183-gce.h               | 175 +++++++++++++++++++++
+ include/linux/mailbox/mtk-cmdq-mailbox.h           |   3 +
+ include/linux/soc/mediatek/mtk-cmdq.h              |   3 -
+ 8 files changed, 222 insertions(+), 33 deletions(-)
+ create mode 100644 include/dt-bindings/gce/mt8183-gce.h
