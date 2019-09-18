@@ -2,119 +2,74 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E600C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD91C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F91F218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788235;
-	bh=wN84EXygS75F4cZ+gLTyyU/BKie991M2OnFOKEEZc+4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uW/AUhlwJXg79mSWt5yPsQ2T2i/U99OYnkPWrmhR4QsUiTUdYZ08lw6IomLvSd8eO
-	 RCT9bYREDArBEtN5h4tHQhcPlVoT29Gr3FtWL2U6VOWM+CgC3R2l8hBwi5Ps8MYh9u
-	 LE1hYyRxfLzZKFeKzRVJiuuUEclv68VMi4B7mOEg=
+	by mail.kernel.org (Postfix) with ESMTP id 77E5321906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbfIRGae (ORCPT
+        id S1729838AbfIRGY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45028 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728763AbfIRGYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:30 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9CEA218AF;
-        Wed, 18 Sep 2019 06:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787869;
-        bh=wN84EXygS75F4cZ+gLTyyU/BKie991M2OnFOKEEZc+4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SF5tD3JgYeGDetwVxrmtVreh9iVgpXuTwAJjOFgLeEvmeoItp5ldq7HOVJ4LjEEAm
-         bFUHlIc4UojP8RD91BDgSJtEu32NcTCnCA52858vtbKSMW6mjruF285jbWduRSf3qT
-         nz1I2/C3a3IaAWS9HDrpUpN/ja3vQK1dk9SyKMRQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neal Cardwell <ncardwell@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 14/85] tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
-Date:   Wed, 18 Sep 2019 08:18:32 +0200
-Message-Id: <20190918061234.593793994@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
-References: <20190918061234.107708857@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 18 Sep 2019 02:24:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36094 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727790AbfIRGYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 11B00AF8E;
+        Wed, 18 Sep 2019 06:24:19 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 23:24:04 -0700
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] locking: locktorture: Do not include rwlock.h directly
+Message-ID: <20190918062404.hyk5p2gs4mtybl3t@linux-p48b>
+References: <20190916145404.bukcmlliequu77wk@linutronix.de>
+ <20190917071614.kcmux562y6wbskj5@linux-p48b>
+ <20190917170620.GC30224@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190917170620.GC30224@paulmck-ThinkPad-P72>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
+On Tue, 17 Sep 2019, Paul E. McKenney wrote:
 
-[ Upstream commit af38d07ed391b21f7405fa1f936ca9686787d6d2 ]
+>On Tue, Sep 17, 2019 at 12:16:14AM -0700, Davidlohr Bueso wrote:
+>> On Mon, 16 Sep 2019, Sebastian Andrzej Siewior wrote:
+>>
+>> > From: Wolfgang M. Reimer <linuxball@gmail.com>
+>> >
+>> > Including rwlock.h directly will cause kernel builds to fail
+>> > if CONFIG_PREEMPT_RT is defined. The correct header file
+>> > (rwlock_rt.h OR rwlock.h) will be included by spinlock.h which
+>> > is included by locktorture.c anyway.
+>> >
+>> > Remove the include of linux/rwlock.h.
+>> >
+>>
+>> Acked-by: Davidlohr Bueso <dbueso@suse.de>
+>
+>Applied, thank you!
+>
+>But does anyone actually run locktorture?
 
-Fix tcp_ecn_withdraw_cwr() to clear the correct bit:
-TCP_ECN_QUEUE_CWR.
+I do at least. I also know of cases of other folks making use of the
+"framework" to test/pound on custom tailored locks -- ie btrfs tree lock.
 
-Rationale: basically, TCP_ECN_DEMAND_CWR is a bit that is purely about
-the behavior of data receivers, and deciding whether to reflect
-incoming IP ECN CE marks as outgoing TCP th->ece marks. The
-TCP_ECN_QUEUE_CWR bit is purely about the behavior of data senders,
-and deciding whether to send CWR. The tcp_ecn_withdraw_cwr() function
-is only called from tcp_undo_cwnd_reduction() by data senders during
-an undo, so it should zero the sender-side state,
-TCP_ECN_QUEUE_CWR. It does not make sense to stop the reflection of
-incoming CE bits on incoming data packets just because outgoing
-packets were spuriously retransmitted.
+I've also seen it in one or two academic papers.
 
-The bug has been reproduced with packetdrill to manifest in a scenario
-with RFC3168 ECN, with an incoming data packet with CE bit set and
-carrying a TCP timestamp value that causes cwnd undo. Before this fix,
-the IP CE bit was ignored and not reflected in the TCP ECE header bit,
-and sender sent a TCP CWR ('W') bit on the next outgoing data packet,
-even though the cwnd reduction had been undone.  After this fix, the
-sender properly reflects the CE bit and does not set the W bit.
-
-Note: the bug actually predates 2005 git history; this Fixes footer is
-chosen to be the oldest SHA1 I have tested (from Sep 2007) for which
-the patch applies cleanly (since before this commit the code was in a
-.h file).
-
-Fixes: bdf1ee5d3bd3 ("[TCP]: Move code from tcp_ecn.h to tcp*.c and tcp.h & remove it")
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/ipv4/tcp_input.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -266,7 +266,7 @@ static void tcp_ecn_accept_cwr(struct so
- 
- static void tcp_ecn_withdraw_cwr(struct tcp_sock *tp)
- {
--	tp->ecn_flags &= ~TCP_ECN_DEMAND_CWR;
-+	tp->ecn_flags &= ~TCP_ECN_QUEUE_CWR;
- }
- 
- static void __tcp_ecn_check_ce(struct sock *sk, const struct sk_buff *skb)
-
-
+Thanks,
+Davidlohr
