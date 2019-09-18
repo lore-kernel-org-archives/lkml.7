@@ -2,141 +2,89 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907C8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC9EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32F8A21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154EA21848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:57:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V5PwamKr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfIRAwl (ORCPT
+        id S1727215AbfIRA5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 20:52:41 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7725 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728383AbfIRAwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 20:52:40 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 17:52:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,518,1559545200"; 
-   d="scan'208";a="386722934"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.254.43.68])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Sep 2019 17:52:40 -0700
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     andy.shevchenko@gmail.com, andriy.shevchenko@intel.com
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        prarit@redhat.com, darcari@redhat.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] tools/power/x86/intel-speed-select: Fix perf-profile command output
-Date:   Tue, 17 Sep 2019 17:52:37 -0700
-Message-Id: <20190918005237.32337-1-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.17.2
+        Tue, 17 Sep 2019 20:57:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36612 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725868AbfIRA5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 20:57:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id b136so12192054iof.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 17:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dwdc/YL4+bqs9bjjiQA5cxc9DWfp9aFFjJ7dv8TzkTw=;
+        b=V5PwamKr2mcRDjS6eB+xwZ8r4Pg+o93T8x9ZDzuiRGDg1d/qkZODp94AIjTaJdcT7m
+         j5HV98vbk4ywbXcqir31igTtgEvb545jl0QswRNVPCL9mATR/0hlXk95osj1f420ZHiu
+         FQTv/V+8xF1Y8KdBcNwKbcgz5Ph5Mf0ylKG51p8TmIfHUZSNt2gtp/ENqbFXWvg2a0XT
+         Mm8cQV18FUP0M23zCzHVjxKMkurBOBuFRRM085alA2xCsgnOxs4On+Pc33aRu/ycBXO3
+         fCYwyridy8XP+a0VO9uiLnvyBsqBf8Op7dcZ9m5TptZkdA7g2JAbVucBYyPXOsTlZu9e
+         mqng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dwdc/YL4+bqs9bjjiQA5cxc9DWfp9aFFjJ7dv8TzkTw=;
+        b=axKZMrfVP44ZMGHhfoWn4tn0NF9vtIcaOo/4emO4PekkMdJx1lWg4j+0oTvbpmk6ky
+         dbjSQD11FDgt/gsFKbDcCnchgR768veJJaHRFBv2PZ+eMFFirigRjwcDV/0tPZui0URT
+         kq9somjaCE3sXXoK8/l5Zn+ol0/LJkZeCLplh2HkaunucJgA/85AsxWmjkAXg/d2pvbX
+         aAkq1X8+Jj0QMM8rR0g+bYqRdIBCdu+ag7HVAi/G5y84EMhyzLaaUAc60oVvxHIkiBPO
+         6MU4amc6LN3WVdpw2M4yLj7PgzllZAy6fX0fGk0s7UGQ/43t5DHFO5AkQgS0qukbT3Sk
+         JTxg==
+X-Gm-Message-State: APjAAAUonhWmXAHmORSRICpPlfjuL4zz9PQM6B94ELS+dAKNfqjq99fK
+        EtPdXO4udfro33eEMDeOux570yR+FgSsEjuUiR4=
+X-Google-Smtp-Source: APXvYqyPDSKo9wB0laCujCdDMQIAv2E9jOorrck53i/PFZFoXXvmwRb7hwOWpK+i/RsqUsT5jW+qJLhPjLwZHlq6j/g=
+X-Received: by 2002:a5d:8f02:: with SMTP id f2mr2200851iof.272.1568768232970;
+ Tue, 17 Sep 2019 17:57:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190917154021.14693-1-m.felsch@pengutronix.de> <20190917154021.14693-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190917154021.14693-4-m.felsch@pengutronix.de>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Tue, 17 Sep 2019 17:57:01 -0700
+Message-ID: <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
+Subject: Re: [PATCH 3/3] regulator: core: make regulator_register()
+ EPROBE_DEFER aware
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     zhang.chunyan@linaro.org, Doug Anderson <dianders@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, ckeepax@opensource.cirrus.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit "c016ae8f9fa04d361efc8629de49ad3af12b5262
-"tools/power/x86/intel-speed-select: Output success/failed for command
-output" introduced a regression in perf-profile outputs. With this
-the result field is changed to string interpreting every non zero
-value as errors. But these commands display on zero (>0) result.
-For example before this commit the display was:
+On Tue, Sep 17, 2019 at 4:42 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> Sometimes it can happen that the regulator_of_get_init_data() can't
+> retrieve the config due to a not probed device the regulator depends on.
+> Fix that by checking the return value of of_parse_cb() and return
+> EPROBE_DEFER in such cases.
 
-package-1
-  die-0
-    cpu-14
-        get-config-levels:4
+Treating EPROBE_DEFER in a special way is usually wrong.
+regulator_of_get_init_data() may fail for multiple reasons (no memory,
+invalid DT, etc, etc). All of them should abort instantiating
+regulator.
 
-Here the get-config-levels is interpreted as error and displayed
-as error with the above commit:
+Thanks.
 
-package-1
-  die-0
-    cpu-14
-        get-config-levels:failed(error 4)
-
-Fix this issue by not using isst_display_result() to display such results,
-but define a new function which formats this data and prints.
-
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- .../x86/intel-speed-select/isst-config.c      |  4 ++--
- .../x86/intel-speed-select/isst-display.c     | 20 +++++++++++++++++++
- tools/power/x86/intel-speed-select/isst.h     |  3 ++-
- 3 files changed, 24 insertions(+), 3 deletions(-)
-
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 6a54e165672d..2a9890c8395a 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -673,8 +673,8 @@ static void exec_on_get_ctdp_cpu(int cpu, void *arg1, void *arg2, void *arg3,
- 	if (ret)
- 		perror("get_tdp_*");
- 	else
--		isst_display_result(cpu, outf, "perf-profile", (char *)arg3,
--				    *(unsigned int *)arg4);
-+		isst_ctdp_display_core_info(cpu, outf, arg3,
-+					    *(unsigned int *)arg4);
- }
- 
- #define _get_tdp_level(desc, suffix, object, help)                                \
-diff --git a/tools/power/x86/intel-speed-select/isst-display.c b/tools/power/x86/intel-speed-select/isst-display.c
-index 2e6e5fcdbd7c..40346d534f78 100644
---- a/tools/power/x86/intel-speed-select/isst-display.c
-+++ b/tools/power/x86/intel-speed-select/isst-display.c
-@@ -287,6 +287,26 @@ static void _isst_fact_display_information(int cpu, FILE *outf, int level,
- 	format_and_print(outf, base_level + 2, header, value);
- }
- 
-+void isst_ctdp_display_core_info(int cpu, FILE *outf, char *prefix,
-+				 unsigned int val)
-+{
-+	char header[256];
-+	char value[256];
-+
-+	snprintf(header, sizeof(header), "package-%d",
-+		 get_physical_package_id(cpu));
-+	format_and_print(outf, 1, header, NULL);
-+	snprintf(header, sizeof(header), "die-%d", get_physical_die_id(cpu));
-+	format_and_print(outf, 2, header, NULL);
-+	snprintf(header, sizeof(header), "cpu-%d", cpu);
-+	format_and_print(outf, 3, header, NULL);
-+
-+	snprintf(value, sizeof(value), "%u", val);
-+	format_and_print(outf, 4, prefix, value);
-+
-+	format_and_print(outf, 1, NULL, NULL);
-+}
-+
- void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 				   struct isst_pkg_ctdp *pkg_dev)
- {
-diff --git a/tools/power/x86/intel-speed-select/isst.h b/tools/power/x86/intel-speed-select/isst.h
-index 09e16a41b57c..d280b27d600d 100644
---- a/tools/power/x86/intel-speed-select/isst.h
-+++ b/tools/power/x86/intel-speed-select/isst.h
-@@ -195,6 +195,8 @@ extern void isst_get_process_ctdp_complete(int cpu,
- 					   struct isst_pkg_ctdp *pkg_dev);
- extern void isst_ctdp_display_information(int cpu, FILE *outf, int tdp_level,
- 					  struct isst_pkg_ctdp *pkg_dev);
-+extern void isst_ctdp_display_core_info(int cpu, FILE *outf, char *prefix,
-+					unsigned int val);
- extern void isst_ctdp_display_information_start(FILE *outf);
- extern void isst_ctdp_display_information_end(FILE *outf);
- extern void isst_pbf_display_information(int cpu, FILE *outf, int level,
-@@ -235,5 +237,4 @@ extern void isst_display_result(int cpu, FILE *outf, char *feature, char *cmd,
- extern int isst_clos_get_clos_information(int cpu, int *enable, int *type);
- extern void isst_clos_display_clos_information(int cpu, FILE *outf,
- 					       int clos_enable, int type);
--
- #endif
 -- 
-2.17.2
-
+Dmitry
