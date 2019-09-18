@@ -2,123 +2,167 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB62C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7166FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4591721928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3218D222D2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:56:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbfIRT4S (ORCPT
+        id S2388974AbfIRT4e convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:56:18 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:37647 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731994AbfIRT4Q (ORCPT
+        Wed, 18 Sep 2019 15:56:34 -0400
+Received: from out01.mta.xmission.com ([166.70.13.231]:34184 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388954AbfIRT4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:56:16 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M8Syu-1iF5tw2IvA-004RAk; Wed, 18 Sep 2019 21:56:08 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jason Baron <jbaron@akamai.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dynamic_debug: provide dynamic_hex_dump stub
-Date:   Wed, 18 Sep 2019 21:55:11 +0200
-Message-Id: <20190918195607.2080036-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 18 Sep 2019 15:56:33 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iAg3t-0002w3-EA; Wed, 18 Sep 2019 13:56:25 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iAg3r-0004Pl-25; Wed, 18 Sep 2019 13:56:25 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Lennart Poettering <mzxreary@0pointer.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+        <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+        <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
+        <20190917121156.GC6762@mit.edu>
+        <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+        <20190917160844.GC31567@gardel-login>
+        <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
+        <20190917174219.GD31798@gardel-login>
+Date:   Wed, 18 Sep 2019 14:56:00 -0500
+In-Reply-To: <20190917174219.GD31798@gardel-login> (Lennart Poettering's
+        message of "Tue, 17 Sep 2019 19:42:19 +0200")
+Message-ID: <87zhj15qgf.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ovq3juYvSxkhml2oJ/RZRmqQHrA4XE75uWc3u0KJ+V4KdWJOs6t
- i39PGmoo9NADZL/6Ekow8/e6SKCYQ1+jJJ2IO44y+GJgjYZZsdgFTYxJVuFWSKQv19igyDB
- ZRAZT2QKqwwTo5Ex3zkMdJByff/UrhSAeTFNeZmnOXoLgsqfcH/Bd7sE26aAYVYnIIOpLZF
- bs+dkOdwvqu0h7qATQJKg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jI2VMkCpF2U=:mAaUB4R8b+R4MeHwr9Ea99
- rJarNNaXKaH5L1aYOP+Zg/VFfUX5Hs+WYfsV6UApY+yKOxLR+uGs1arXHaRNHpz2o3j+DKk+i
- mgdv5/8KJOI5bp8iMvTTztmp4PieylIqTS5mgaG1XNNe59qYjSznaEQeOS0U8xGD9ou19q60c
- AlS6oqQXlhn9cXBiMuCy6PeiEQ4wIE4/I3/9RrziVpemcO8s6Ghe1+HmzcsAxQRy0UZYcD4Dn
- zaege8LbFSxoCE/eRi00eR5OFbERDpAx+z2/m68qluhQbBJIRESHBrH7ho5+pUZd4QBEqQl5l
- sMw97DaiVAh5zwDXEebys/8R/fjPqH/5TV/ksxtwAT2F4GED0/qOKGdBcXR3hqjq65n4WgFvO
- usK5ig18eKv7l6As9QX7hFG0+sZi6o5CqCLbbG8sFczYd+3O+pjc1XbGi83kC1Gj1KPTrfiX+
- Zc/BR7uE5khKV7bDu7xX8JXr0VSuyKN+tVj7llDBGgKJLFtJczR8ghgMia1LohHQuv9dbgIZ+
- Os0ufhGE83ukTvJGRKXjKVUAUEzxv9sRz/XJnPP6S8N7xE3J32tFppI6nx1ickJ2ppKC66t/U
- cGwKNhAS0s4XwIFgyfbSWV9Q/05BoKoFK0sHj+P972LCn845gxOvyT1k2SCHsdj2d5lAUfXo5
- KPMbsKrmsMeW6cM4Od2EFH1mG/kc4QFt1SOcs4R+xTnlKNRl/cMWi8sb8cDdtkNHuL1UV50wo
- o7SOhLuacXyM/O+MuVdQcXGu/QFaUo6GPtQ7ZvhUcnJgTXdi9k5sdmFnT5dHd29bBcq+X/2YJ
- 2rxBDKTZ2v/7JKpadl5GUsunYte6sAQEYlR66KVATrAQjxM0bUo1fuzC/BTMYhziQQ8kEXwzR
- U4CPNZl0BC3GFJsDba7w==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-XM-SPF: eid=1iAg3r-0004Pl-25;;;mid=<87zhj15qgf.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+wHfph00kxbMVDYzFA0Q6fsNypo8aTwNk=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: Linux 5.3-rc8
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ionic driver started using dymamic_hex_dump(), but
-that is not always defined:
+Lennart Poettering <mzxreary@0pointer.de> writes:
 
-drivers/net/ethernet/pensando/ionic/ionic_main.c:229:2: error: implicit declaration of function 'dynamic_hex_dump' [-Werror,-Wimplicit-function-declaration]
+> On Di, 17.09.19 09:23, Linus Torvalds (torvalds@linux-foundation.org) wrote:
+>
+>> On Tue, Sep 17, 2019 at 9:08 AM Lennart Poettering <mzxreary@0pointer.de> wrote:
+>> >
+>> > Here's what I'd propose:
+>>
+>> So I think this is ok, but I have another proposal. Before I post that
+>> one, though, I just wanted to point out:
+>>
+>> > 1) Add GRND_INSECURE to get those users of getrandom() who do not need
+>> >    high quality entropy off its use (systemd has uses for this, for
+>> >    seeding hash tables for example), thus reducing the places where
+>> >    things might block.
+>>
+>> I really think that trhe logic should be the other way around.
+>>
+>> The getrandom() users that don't need high quality entropy are the
+>> ones that don't really think about this, and so _they_ shouldn't be
+>> the ones that have to explicitly state anything. To those users,
+>> "random is random". By definition they don't much care, and quite
+>> possibly they don't even know what "entropy" really means in that
+>> context.
+>
+> So I think people nowadays prefer getrandom() over /dev/urandom
+> primarily because of the noisy logging the kernel does when you use
+> the latter on a non-initialized pool. If that'd be dropped then I am
+> pretty sure that the porting from /dev/urandom to getrandom() you see
+> in various projects (such as gdm/x11) would probably not take place.
+>
+> In fact, speaking for systemd: the noisy logging in the kernel is the
+> primary (actually: only) reason that we prefer using RDRAND (if
+> available) over /dev/urandom if we need "medium quality" random
+> numbers, for example to seed hash tables and such. If the log message
+> wasn't there we wouldn't be tempted to bother with RDRAND and would
+> just use /dev/urandom like we used to for that.
+>
+>> > 2) Add a kernel log message if a getrandom(0) client hung for 15s or
+>> >    more, explaining the situation briefly, but not otherwise changing
+>> >    behaviour.
+>>
+>> The problem is that when you have some graphical boot, you'll not even
+>> see the kernel messages ;(
+>
+> Well, but as mentioned, there's infrastructure for this, that's why I
+> suggested changing systemd-random-seed.service.
+>
+> We can make boot hang in "sane", discoverable way.
+>
+> The reason why I think this should also be logged by the kernel since
+> people use netconsole and pstore and whatnot and they should see this
+> there. If systemd with its infrastructure brings this to screen via
+> plymouth then this wouldn't help people who debug much more low-level.
+>
+> (I mean, there have been requests to add a logic to systemd that
+> refuses booting — or delays it — if the system has a battery and it is
+> nearly empty. I am pretty sure adding a cleanm discoverable concept of
+> "uh, i can't boot for a good reason which is this" wouldn't be the
+> worst of ideas)
 
-Add a dummy implementation to use when CONFIG_DYNAMIC_DEBUG
-is disabled, printing nothing.
+As I understand it the deep problem is that sometimes we have not
+observed enough random activity early in boot.
 
-Fixes: 938962d55229 ("ionic: Add adminq action")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/ethernet/pensando/ionic/ionic_lif.c  | 2 ++
- drivers/net/ethernet/pensando/ionic/ionic_main.c | 2 ++
- include/linux/dynamic_debug.h                    | 6 ++++++
- 3 files changed, 10 insertions(+)
+The cheap solution appears to be copying a random seed from a previous
+boot, and I think that will take care of many many cases, and has
+already been implemented.  Which reduces this to a system first
+boot issue.
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index db7c82742828..a255d24c8e40 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
- 
-+#include <linux/printk.h>
-+#include <linux/dynamic_debug.h>
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/rtnetlink.h>
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index 15e432386b35..aab311413412 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -1,6 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
- /* Copyright(c) 2017 - 2019 Pensando Systems, Inc */
- 
-+#include <linux/printk.h>
-+#include <linux/dynamic_debug.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
- #include <linux/utsname.h>
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 6c809440f319..4cf02ecd67de 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -204,6 +204,12 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
- 	do { if (0) printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__); } while (0)
- #define dynamic_dev_dbg(dev, fmt, ...)					\
- 	do { if (0) dev_printk(KERN_DEBUG, dev, fmt, ##__VA_ARGS__); } while (0)
-+#define dynamic_hex_dump(prefix_str, prefix_type, rowsize,		\
-+			 groupsize, buf, len, ascii)			\
-+	do { if (0)							\
-+		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
-+				rowsize, groupsize, buf, len, ascii);	\
-+	} while (0)
- #endif
- 
- #endif
--- 
-2.20.0
+So for first system boot can we take some special actions to make
+it possible to see randomness sooner.  An unconditional filesystem check
+of the filesystem perhaps.  Something that will initiate disk activity
+or other hardware activity that will generate interrupts and allow
+us to capture randomness.
 
+For many systems we could even have the installer capture some random
+data as a final stage of the installation, and use that to seed
+randomness on the first boot.
+
+Somewhere in installing the random seed we need to be careful about
+people just copying disk images from one system to another, and a
+replicated seed probably can not be considered very random.
+
+My sense is that by copying a random seed from one boot to the next
+and by initiating system activity to hurry along the process of
+having enough randomness we can have systems where we can almost
+always have good random numbers available.
+
+And if we almost always have good random numbers available we won't
+have to worry about people getting this wrong.
+
+Am I wrong or can we just solve random number availablity is practically
+all cases?
+
+Eric
