@@ -2,135 +2,115 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 632A4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B04C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4032120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EB2218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568787406;
+	bh=Yrmf/8Q3o0dao3sNh0zfCYToe0BxGZHFhPymplQQt+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wUkvi9jwvH0RJI4amRsDfT/vGe5Kfac9/G+QOdJ0rAF1ptkhkew11egsEDirvMnGL
+	 4YMD4z5gfaVSoG00Jj0UPdtNZr3+J9AjvaNort4YxdNJgJP0NEsAe2yDtYdKNWaZGa
+	 wx+iitc0eQ7TjT2yUbbu7nUZBmogX52Q7p6FT9F0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbfIRGQS (ORCPT
+        id S1727124AbfIRGQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:16:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40382 "EHLO mx1.redhat.com"
+        Wed, 18 Sep 2019 02:16:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfIRGQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:16:18 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727055AbfIRGQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:16:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8CB7846288;
-        Wed, 18 Sep 2019 06:16:16 +0000 (UTC)
-Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E971719C6A;
-        Wed, 18 Sep 2019 06:15:55 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/2] mdev: introduce device specific ops
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
-Cc:     "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "idos@mellanox.com" <idos@mellanox.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "pmorel@linux.ibm.com" <pmorel@linux.ibm.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>
-References: <20190912094012.29653-1-jasowang@redhat.com>
- <20190912094012.29653-3-jasowang@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D579F71@SHSMSX104.ccr.corp.intel.com>
- <6bb2c43c-25bb-16f9-1fa0-08cb08e42b94@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D57B49A@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <e3950e19-b815-1549-72b0-12b628fa2bc1@redhat.com>
-Date:   Wed, 18 Sep 2019 14:15:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 7426720678;
+        Wed, 18 Sep 2019 06:16:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568787405;
+        bh=Yrmf/8Q3o0dao3sNh0zfCYToe0BxGZHFhPymplQQt+s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1qpbCEyJTkKm/RO046p3/FT3nK06iQwI4utc74tQk7NLDvxMdvZLnClPyyo8QzMJK
+         AUUgSre9MPD4niFi+Nck1MUT/iMXtYgUWVK3Z/+CMcu1jos6ppVbsiYZqevZf4PKj+
+         0/zmLhDf6kqERoF8UgLORf8BZU3wBDk1N97AKiFQ=
+Date:   Wed, 18 Sep 2019 08:16:42 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gregory Nowak <greg@gregn.net>
+Cc:     devel@driverdev.osuosl.org,
+        Simon Dickson <simonhdickson@gmail.com>,
+        "Speakup is a screen review system for Linux." 
+        <speakup@linux-speakup.org>, linux-kernel@vger.kernel.org,
+        John Covici <covici@ccs.covici.com>,
+        Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        okash.khawaja@gmail.com
+Subject: Re: [HELP REQUESTED from the community] Was: Staging status of
+ speakup
+Message-ID: <20190918061642.GB1832786@kroah.com>
+References: <CAOtcWM0Jzo+wew-uiOmde+eZXEWZ310L8wXscWjJv5OXqXJe6Q@mail.gmail.com>
+ <20190909025429.GA4144@gregn.net>
+ <CAOtcWM0P=w-iBZzwekVrSpp7t2WO9RA5WP956zgDrNKvzA+4ZA@mail.gmail.com>
+ <20190915134300.GA552892@kroah.com>
+ <CAOtcWM2MD-Z1tg7gdgzrXiv7y62JrV7eHnTgXpv-LFW7zRApjg@mail.gmail.com>
+ <20190916134727.4gi6rvz4sm6znrqc@function>
+ <20190916141100.GA1595107@kroah.com>
+ <20190916223848.GA8679@gregn.net>
+ <20190917080118.GC2075173@kroah.com>
+ <20190918010351.GA10455@gregn.net>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D57B49A@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 18 Sep 2019 06:16:17 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918010351.GA10455@gregn.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 06:03:53PM -0700, Gregory Nowak wrote:
+> On Tue, Sep 17, 2019 at 10:01:18AM +0200, Greg Kroah-Hartman wrote:
+> > On Mon, Sep 16, 2019 at 03:38:48PM -0700, Gregory Nowak wrote:
+> > > On Mon, Sep 16, 2019 at 04:11:00PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Mon, Sep 16, 2019 at 03:47:28PM +0200, Samuel Thibault wrote:
+> > > > > Okash Khawaja, le dim. 15 sept. 2019 19:41:30 +0100, a ecrit:
+> > > > > > I have attached the descriptions.
+> > > > > 
+> > > > > Attachment is missing :)
+> > > > 
+> > > > I saw it :)
+> > > > 
+> > > > Anyway, please put the Description: lines without a blank after that,
+> > > > with the description text starting on that same line.
+> > > > 
+> > > > thanks!
+> > > > 
+> > > > greg k-h
+> > > 
+> > > It's attached. Hope the indentation is OK.
+> > 
+> > Alignment is a bit off, you forgot a tab after "Description:"
+> > 
+> > And you have some trailing whitespace in the document :(
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> I put in the tabs after "Description:" and did the best I could to fix
+> the alignment, and to find and get rid of the white space. If the
+> alignment is still off, or if there is still white space I missed,
+> could someone else please correct that? Thanks.
 
-On 2019/9/18 上午10:57, Tian, Kevin wrote:
->> From: Jason Wang [mailto:jasowang@redhat.com]
->> Sent: Tuesday, September 17, 2019 6:17 PM
->>
->> On 2019/9/17 下午4:09, Tian, Kevin wrote:
->>>> From: Jason Wang
->>>> Sent: Thursday, September 12, 2019 5:40 PM
->>>>
->>>> Currently, except for the crate and remove. The rest fields of
->>>> mdev_parent_ops is just designed for vfio-mdev driver and may not
->> help
->>>> for kernel mdev driver. So follow the device id support by previous
->>>> patch, this patch introduces device specific ops which points to
->>>> device specific ops (e.g vfio ops). This allows the future drivers
->>>> like virtio-mdev to implement its own device specific ops.
->>> Can you give an example about what ops might be required to support
->>> kernel mdev driver? I know you posted a link earlier, but putting a small
->>> example here can save time and avoid inconsistent understanding. Then
->>> it will help whether the proposed split makes sense or there is a
->>> possibility of redefining the callbacks to meet the both requirements.
->>> imo those callbacks fulfill some basic requirements when mediating
->>> a device...
->> I put it in the cover letter.
->>
->> The link ishttps://lkml.org/lkml/2019/9/10/135  which abuses the current
->> VFIO based mdev parent ops.
->>
->> Thanks
-> So the main problem is the handling of userspace pointers vs.
-> kernel space pointers. You still implement read/write/ioctl
-> callbacks which is a subset of current parent_ops definition.
-> In that regard is it better to introduce some helper to handle
-> the pointer difference in mdev core, while still keeping the
-> same set of parent ops (in whatever form suitable for both)?
+Extra line between each attribute (before the "What:" line) would be
+nice.
 
+Also fixing the TODO items :)
 
-Pointers is one of the issues. And read/write/ioctl is designed for 
-userspace API not kernel. Technically, we can use them for kernel but it 
-would not be as simple and straightforward a set of device specific 
-callbacks functions. The link above is just an example, e.g we can 
-simply pass the vring address through a dedicated API instead of 
-mandatory an offset of a file.
+thanks,
 
-Thanks
-
->
+greg k-h
