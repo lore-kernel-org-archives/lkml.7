@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF90C4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 086C0C4CED2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5614A21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24B221924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788054;
-	bh=6VhmvCa2PDTHML0sSxnDeIgYpRqkqlNJF0zD4anQsQU=;
+	s=default; t=1568788059;
+	bh=ql6h+HcwawHyRy276sJpNsFQFGRe1iBHEAJ5B3IWtIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYC0zZu9bi/iTpjGQk7FpsCerFQhFaP5b+kWFH7N+gFZhxbU2zDYpdzlUTJHlU+YK
-	 NNgSgF8QIyN5XQ+pEFzItTEGKG1m2Kcpdprcu3rLIsPrfZbMSHsGLlTJ+ywBfhjM7a
-	 6HEg+u7w0EA1kMT7t5lG3l/UrHx6Dsk38UiGaMLw=
+	b=ltEuRUqLLkufyDpL/x29OIqTAcUX0D8Jg/VGHWMPiX+QASH8VABb9vhdmouOJncXB
+	 tygYB4JQYqKBmZYfbgz+ZJJza8COuGooR7pefq9qIYnGF7c0OOz/pVxr5UfaIuos8i
+	 OKN5ewzx4HWbm0dQWy7L2nS4ccHwRP6JRgnch61g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfIRG1d (ORCPT
+        id S1729437AbfIRG1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49328 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730520AbfIRG10 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:26 -0400
+        id S1729403AbfIRG1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B358721925;
-        Wed, 18 Sep 2019 06:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C012C21924;
+        Wed, 18 Sep 2019 06:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788046;
-        bh=6VhmvCa2PDTHML0sSxnDeIgYpRqkqlNJF0zD4anQsQU=;
+        s=default; t=1568788051;
+        bh=ql6h+HcwawHyRy276sJpNsFQFGRe1iBHEAJ5B3IWtIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+hi3VEX13y5xx/ZJUUQmk6r53Pa5+jv5+EX15nn/B9gOFhIGupIiBni2QpA9Jt9S
-         Uj4f41i6sIYhVjk7nV8ed/dp6ObkNHNc0r8Vf5ey8QfgsRNc7ZuOie4vM/X20Xr2e4
-         9d6iijhQI27yMaEwRDe257dyv/iuEcJbUdBD5R5g=
+        b=bKWxzQSgAZxIGgVAzakUoGfYdzIeOMkePN34s8ne9N6ZkHVNoL3tKI38zGg60cn43
+         NWvyBGb9kp40dKSvnYFWaU9Y8GBwZVnr6Zi9hlCWjhIbQBwPjhPy/9/ZR9Xocc5Zmo
+         HZ/OVW+CkoQDSOwZatCh+R9OXD5FeBj5i/UjlNSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 5.2 78/85] modules: fix compile error if dont have strict module rwx
-Date:   Wed, 18 Sep 2019 08:19:36 +0200
-Message-Id: <20190918061237.853175081@linuxfoundation.org>
+        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
+        Xiao Guangrong <xiaoguangrong@linux.vnet.ibm.com>,
+        Nadav HarEl <nyh@il.ibm.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Xinhao Xu <xinhao.xu@intel.com>,
+        Yang Zhang <yang.z.zhang@Intel.com>,
+        Gleb Natapov <gleb@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH 5.2 80/85] kvm: nVMX: Remove unnecessary sync_roots from handle_invept
+Date:   Wed, 18 Sep 2019 08:19:38 +0200
+Message-Id: <20190918061237.910306483@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,70 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Jim Mattson <jmattson@google.com>
 
-commit 93651f80dcb616b8c9115cdafc8e57a781af22d0 upstream.
+commit b119019847fbcac36ed1384f166c91f177d070e7 upstream.
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
-we need stub for module_enable_nx() and module_enable_x().
+When L0 is executing handle_invept(), the TDP MMU is active. Emulating
+an L1 INVEPT does require synchronizing the appropriate shadow EPT
+root(s), but a call to kvm_mmu_sync_roots in this context won't do
+that. Similarly, the hardware TLB and paging-structure-cache entries
+associated with the appropriate shadow EPT root(s) must be flushed,
+but requesting a TLB_FLUSH from this context won't do that either.
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
-CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
-module_enable_nx.
+How did this ever work? KVM always does a sync_roots and TLB flush (in
+the correct context) when transitioning from L1 to L2. That isn't the
+best choice for nested VM performance, but it effectively papers over
+the mistakes here.
 
-Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
-because it is needed anyway.
+Remove the unnecessary operations and leave a comment to try to do
+better in the future.
 
-Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Reported-by: Junaid Shahid <junaids@google.com>
+Fixes: bfd0a56b90005f ("nEPT: Nested INVEPT")
+Cc: Xiao Guangrong <xiaoguangrong@linux.vnet.ibm.com>
+Cc: Nadav Har'El <nyh@il.ibm.com>
+Cc: Jun Nakajima <jun.nakajima@intel.com>
+Cc: Xinhao Xu <xinhao.xu@intel.com>
+Cc: Yang Zhang <yang.z.zhang@Intel.com>
+Cc: Gleb Natapov <gleb@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by Peter Shier <pshier@google.com>
+Reviewed-by: Junaid Shahid <junaids@google.com>
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ arch/x86/kvm/vmx/nested.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1887,7 +1887,7 @@ static void mod_sysfs_teardown(struct mo
- 	mod_sysfs_fini(mod);
- }
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4708,13 +4708,11 @@ static int handle_invept(struct kvm_vcpu
  
--#ifdef CONFIG_STRICT_MODULE_RWX
-+#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
- /*
-  * LKM RO/NX protection: protect module's text/ro-data
-  * from modification and any data from execution.
-@@ -1910,6 +1910,7 @@ static void frob_text(const struct modul
- 		   layout->text_size >> PAGE_SHIFT);
- }
- 
-+#ifdef CONFIG_STRICT_MODULE_RWX
- static void frob_rodata(const struct module_layout *layout,
- 			int (*set_memory)(unsigned long start, int num_pages))
- {
-@@ -2022,15 +2023,19 @@ void set_all_modules_text_ro(void)
- 	}
- 	mutex_unlock(&module_mutex);
- }
--#else
-+#else /* !CONFIG_STRICT_MODULE_RWX */
- static void module_enable_nx(const struct module *mod) { }
--#endif
--
-+#endif /*  CONFIG_STRICT_MODULE_RWX */
- static void module_enable_x(const struct module *mod)
- {
- 	frob_text(&mod->core_layout, set_memory_x);
- 	frob_text(&mod->init_layout, set_memory_x);
- }
-+#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
-+static void module_enable_nx(const struct module *mod) { }
-+static void module_enable_x(const struct module *mod) { }
-+#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
-+
- 
- #ifdef CONFIG_LIVEPATCH
- /*
+ 	switch (type) {
+ 	case VMX_EPT_EXTENT_GLOBAL:
++	case VMX_EPT_EXTENT_CONTEXT:
+ 	/*
+-	 * TODO: track mappings and invalidate
+-	 * single context requests appropriately
++	 * TODO: Sync the necessary shadow EPT roots here, rather than
++	 * at the next emulated VM-entry.
+ 	 */
+-	case VMX_EPT_EXTENT_CONTEXT:
+-		kvm_mmu_sync_roots(vcpu);
+-		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
+ 		break;
+ 	default:
+ 		BUG_ON(1);
 
 
