@@ -2,179 +2,115 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FC6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A11E2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEF6218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zmWiySxu"
+	by mail.kernel.org (Postfix) with ESMTP id 772FA218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568819995;
+	bh=x8WP2oP4JlgEfTy9voeEBqyi5z/eoUfmFxXzC2apt5M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Lo4ZtWyx2DB1UpHjPqcPoYro+zdtszFLBDs7AjlBjjlwGx5izzFR5ff25RYAbNyfU
+	 I/zQ/uOlXWX1ypN62Fbx80MxPrAbuxgmKv7t4V+xRUArZfv16ZQK/nPSwGnXnogQff
+	 E8Fy+1DkUd01o5tIJ6hsr1G3ZR6YDfJoJuHUgJKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731562AbfIRPRV (ORCPT
+        id S1731592AbfIRPTy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:17:21 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46095 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfIRPRU (ORCPT
+        Wed, 18 Sep 2019 11:19:54 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39328 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfIRPTy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:17:20 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f21so122397otl.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:17:19 -0700 (PDT)
+        Wed, 18 Sep 2019 11:19:54 -0400
+Received: by mail-qt1-f195.google.com with SMTP id n7so186084qtb.6;
+        Wed, 18 Sep 2019 08:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6lq0lYurINATpp8xIQUOgVFbmqCucWqO81bf2yKMZzk=;
-        b=zmWiySxu38lvbpVzLq/iiAlKXEyAd0um6EsiP6V+5xxldbnHiYcw8Jn8a+1EipvJVL
-         xZw6hcZWETvwpakGwb6LCIG4RkldEEWv0n+ArETs0WIuWcDDIOKynuXk8bHMmD+v5FKc
-         Z62iCUiZhnTMXsMFxMTar1NNaEbCCoj3+RDogMDt4P7sbYNUqMrmCzN1cMWujpOZUHTY
-         IQyWg5SUIpn2ZOqchcuqZ+GaaMAN3neDxE7pbN1MrZddrQp/P1yKF5+I7f25EzsQQ4Kb
-         T5DHiExKpIGrgmj16CuGdAbi2bmmO5jssJydd69aK7Wr6eT7mZF9S7avLTO1ZxkgQO+r
-         xu4Q==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4/ozkoPe7I7HBcRNmLxlm9zJ7nl+dZfk4PcCpSwHEE0=;
+        b=T2V++haNtE/r+StT15PyzM8Pcx6eaP5oSwCQUlyICnkOO9OKmWUetxLSpJ+zeMMVm4
+         Umui41NlalpMH08oCwjhUB8rcPoPnvb4O75FaSLSpzXsOC8AeDcEFpcwKgGoIrv8svQG
+         Rq6lvlestuw80aSnQEx6Bp8hEcJzMpt1xbUH732DypsleAg7F1jnT0gy2aTwuAuVwG5i
+         vG3D/JY8NyPMDOrlPAk9MoiOF/4w7Er3TI3dDYvtUxWooplJYAbrWZwmnWkbKkv2kZNJ
+         O9knfGLSvhfjDSDSr3jLBMun+UVHVSZO/V4bM/o9XlBnZMKtacHwgn6vG8Zd4liINg+A
+         vcKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6lq0lYurINATpp8xIQUOgVFbmqCucWqO81bf2yKMZzk=;
-        b=tFXv8jwXNGX1fTGi+EnUsQYSCm9PgGYtu0iXsv+qGNZQk5Xzy5WDRECOug3NkuzSeI
-         qoNl9bXN+yYIqJDL1JyVNWtm+MdDnUAUu0K3O6ycEdOAiXm2fOHs5MoNsDxtPtOTFxCI
-         n1hhKu5MyBhtCyF20bN61NogfqSXveZmt6SCHSK9lOyl5R1nykyBw+kG+l628i4MkHt9
-         DvoPi8VF2MBwivgT7dTCsna0GesGBw40LmEMOCzadw3S89FktuDHCuLRrIY41rv0tvx/
-         n7/vVqtyGikWQvWecIDUCf7/OXZpk2AbxVX4tskGOm68Lu0uncKr2EO0TvpotYKzTLKP
-         g1SQ==
-X-Gm-Message-State: APjAAAUiuHo0s+pk3dntoBaUeDANUqVfTZ1NV/Q/xpJgKHDb36kGDaLS
-        qx6ZwL14NfSwVjVpwaJjq+0UmzEOI+x1ep0IEie8jW/nHKU=
-X-Google-Smtp-Source: APXvYqz0QR6SJaNIhvSu/VkzRkNHOh8txTxt3D52o6x/Me+sYvw58nmTfgeRetj55l/Q48sryWr2/RjZyZxOOp9XaS8=
-X-Received: by 2002:a9d:7b4d:: with SMTP id f13mr3053903oto.365.1568819838147;
- Wed, 18 Sep 2019 08:17:18 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4/ozkoPe7I7HBcRNmLxlm9zJ7nl+dZfk4PcCpSwHEE0=;
+        b=HNj2Q43hlOubWboB/7iSXpUwuSUiU7YnnqcmaM4WzJrrPnmRKHdcgshnDCOx+zIJNQ
+         G64B9BcvWfifDNBE/VIBMCxX6AoPDoQBWLzFTNZIYWjxj4lq2Q+qRUWrWYLHqs56m2Rc
+         lRFK5yID/n3mhs9loBft6aNDuiSbCDCpi2E0P9VTQpB2/b9pkWkt6RD7jMCzIAZWeqFz
+         uFaLNOWORb1dOAjlt8WuT2lfqu5FaJ7Rt0IG5Oyq1KI+1uB7CVUHxF+dkO3iwycltt8M
+         sly5hzRww5QQW+EjDg301xc3QxpDmyMV37hfMyqfIy5cZ40pSG4WsHS7e7T6cztyjlJZ
+         jVtA==
+X-Gm-Message-State: APjAAAUDZdbQr+2ce++dwJeJIWfSpSTkqIlX2H4pZzHL6cD9xBAmL8t/
+        tmSk6vJB95k1mymHiiHkkHw=
+X-Google-Smtp-Source: APXvYqyUV3Moh52SBY0W8pItsBoyuN8/Tuoat2VePzXuwr1j0fiDdwfUdmD7qbDpiunmtNeODAgw2w==
+X-Received: by 2002:ad4:43c5:: with SMTP id o5mr3692951qvs.207.1568819992834;
+        Wed, 18 Sep 2019 08:19:52 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::fef0])
+        by smtp.gmail.com with ESMTPSA id e6sm340551qtr.25.2019.09.18.08.19.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 08:19:51 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 08:19:48 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
+        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
+        oleksandr@natalenko.name, cgroups@vger.kernel.org,
+        Angelo Ruocco <angeloruocco90@gmail.com>
+Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
+Message-ID: <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
+References: <20190917165148.19146-1-paolo.valente@linaro.org>
+ <20190917165148.19146-3-paolo.valente@linaro.org>
+ <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
+ <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
 MIME-Version: 1.0
-References: <20190918061234.107708857@linuxfoundation.org>
-In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 18 Sep 2019 20:47:06 +0530
-Message-ID: <CA+G9fYtke31TKiWz3UBmUT5EgUYcB4g47VURxvrWSz-jtF+=Gg@mail.gmail.com>
-Subject: Re: [PATCH 5.2 00/85] 5.2.16-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 at 11:56, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.2.16 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.2.16-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.2.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Hello,
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+On Wed, Sep 18, 2019 at 07:18:50AM +0200, Paolo Valente wrote:
+> A solution that both fulfills userspace request and doesn't break
+> anything for hypothetical users of the current interface already made
+> it to mainline, and Linus liked it too.  It is:
 
-Summary
-------------------------------------------------------------------------
+Linus didn't like it.  The implementation was a bit nasty.  That was
+why it became a subject in the first place.
 
-kernel: 5.2.16-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.2.y
-git commit: 2f63f02ef5061324ba168b1cb01c89fd89a0c593
-git describe: v5.2.15-86-g2f63f02ef506
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.2-oe/bui=
-ld/v5.2.15-86-g2f63f02ef506
+> 19e9da9e86c4 ("block, bfq: add weight symlink to the bfq.weight cgroup parameter")
+> 
+> But it was then reverted on Tejun's request to do exactly what we
+> don't want do any longer now:
+> cf8929885de3 ("cgroup/bfq: revert bfq.weight symlink change")
 
+Note that the interface was wrong at the time too.
 
-No regressions (compared to build v5.2.15)
+> So, Jens, Tejun, can we please just revert that revert?
 
+I think presenting both io.weight and io.bfq.weight interfaces are
+probably the best course of action at this point but why does it have
+to be a symlink?  What's wrong with just creating another file with
+the same backing function?
 
-No fixes (compared to build v5.2.15)
+Thanks.
 
-Ran 22511 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-fs-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+tejun
