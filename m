@@ -2,134 +2,185 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADFE4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2702C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8495921924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:53:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBsEGCLI"
+	by mail.kernel.org (Postfix) with ESMTP id 94F4C20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:55:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfIRHxt (ORCPT
+        id S1727616AbfIRHzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:53:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43061 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfIRHxq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:53:46 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a2so3815256pfo.10;
-        Wed, 18 Sep 2019 00:53:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wv4la6Y6FsJg+2v49trmGgdAwNGUcPB7OMZV54Bj2EQ=;
-        b=gBsEGCLIoG9yZOLSPABp5DkqpxUM9VPF+gft6+M58mitntGiBP2B8ZmrdxOFtVQXbn
-         Ri3QHHyEmNUfyQSyX52qq4D7m9tZmGEhy7E12ATGIl8xUL2fdr6MQC7B7UgLocy3qRN2
-         zKvq2O6kUZNUZUjYg9ZTnJLo1cAZ3DagU2gA6jbq1mM9d7b8TS+CBxCYv73a21JsSweL
-         YgDq8thCF1g0TVAs5oSjbcIWdTfUOK6BABgoT/pslldal2AWK0yke8OqcUmbkyBbntit
-         /xJdKQ99zJ/XgOU8AdprPj5kAjHHpD7e2Vrr4WeHEetM6hB5L+So+ClfGNokdxjz5+Vw
-         UwIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wv4la6Y6FsJg+2v49trmGgdAwNGUcPB7OMZV54Bj2EQ=;
-        b=KIiza3Ym0/Iek06nYuTC0Q+Bf8u1iGmn36aGRe9W/I1gIFUEfGsbleqvuPZIWT00W8
-         br3rJrR/2H39KU5IhPVo1sEoS98RJTcYpjA9f3EeDxdoY/ek4TKpCxnLhjJsYyDgs9mq
-         5UyMw1Z1JmGOsDBuuR6fTmhHEfUGP82+FFbQdSPJn+qMFX61MTp+H4BNXc2gytT9HWEQ
-         1Y0sX4b1szCVT7f6AAfDkTzFbdF7HZDF0g22BzyCJecpkgXSzjoiwdIDU4sLVryoCmXx
-         Um8Vc8hzUKg4zSwCI+dEH0xaHnhaohNcEAfu+DjaKEj+HDeeVgcQTJokCj/uSyGiMEdn
-         CEXQ==
-X-Gm-Message-State: APjAAAWawIb3dwoRrSj8hB0RHg4M+Rzf5isi7d/OB00dbZSdpyxZH8uN
-        TrkX7mwGsR40gJC5g820QCQ=
-X-Google-Smtp-Source: APXvYqyk7VLAQdjAwuVNeoLOS2lLrS99HPfR5mFLVgsHVxJ42p5JUMRjPPcgX6gO5Y/xqCH3Tv6Kyg==
-X-Received: by 2002:a17:90a:b108:: with SMTP id z8mr2370791pjq.64.1568793226157;
-        Wed, 18 Sep 2019 00:53:46 -0700 (PDT)
-Received: from localhost.localdomain ([2001:268:c147:d9df:f819:e399:825f:f2dc])
-        by smtp.gmail.com with ESMTPSA id h8sm5580715pfo.64.2019.09.18.00.53.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 00:53:45 -0700 (PDT)
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     jic23@jic23.retrosnub.co.uk
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
-        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: [PATCH v2 7/7] counter: stm32-timer-cnt: Update count_read and count_write callbacks
-Date:   Wed, 18 Sep 2019 16:52:48 +0900
-Message-Id: <327fe01b7ce4feb0fc3d854393691664a6a36b40.1568792697.git.vilhelm.gray@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1568792697.git.vilhelm.gray@gmail.com>
-References: <cover.1568792697.git.vilhelm.gray@gmail.com>
+        Wed, 18 Sep 2019 03:55:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43377 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726553AbfIRHzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 03:55:55 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8A78B10F2E85;
+        Wed, 18 Sep 2019 07:55:54 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-104.pek2.redhat.com [10.72.12.104])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BA99600C8;
+        Wed, 18 Sep 2019 07:55:50 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 15:55:46 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [PATCH v3 0/2] x86/kdump: Reserve extra memory when SME or SEV
+ is active
+Message-ID: <20190918075546.GA27186@dhcp-128-65.nay.redhat.com>
+References: <20190910151341.14986-1-kasong@redhat.com>
+ <20190910151341.14986-3-kasong@redhat.com>
+ <20190911055618.GA104115@gmail.com>
+ <CACPcB9cEE5eYWixkUvMeLVdRC5qhrru9PbjbLLxP3k1jsbRanQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPcB9cEE5eYWixkUvMeLVdRC5qhrru9PbjbLLxP3k1jsbRanQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 18 Sep 2019 07:55:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The count_read and count_write callbacks pass unsigned long now.
+On 09/12/19 at 12:23am, Kairui Song wrote:
+> On Wednesday, September 11, 2019, Ingo Molnar <mingo@kernel.org> wrote:
+> >
+> > * Kairui Song <kasong@redhat.com> wrote:
+> >
+> >> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption
+> support"),
+> >> SWIOTLB will be enabled even if there is less than 4G of memory when SME
+> >> is active, to support DMA of devices that not support address with the
+> >> encrypt bit.
+> >>
+> >> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
+> >> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
+> >>
+> >> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
+> >> encryption") will always force SWIOTLB to be enabled when SEV is active
+> >> in all cases.
+> >>
+> >> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
+> >> and this is also true for kdump kernel. As a result kdump kernel will
+> >> run out of already scarce pre-reserved memory easily.
+> >>
+> >> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
+> >> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
+> >> is specified or any offset is used. As for the high reservation case, an
+> >> extra low memory region will always be reserved and that is enough for
+> >> SWIOTLB. Else if the offset format is used, user should be fully aware
+> >> of any possible kdump kernel memory requirement and have to organize the
+> >> memory usage carefully.
+> >>
+> >> Signed-off-by: Kairui Song <kasong@redhat.com>
+> >> ---
+> >>  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
+> >>  1 file changed, 17 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> >> index 71f20bb18cb0..ee6a2f1e2226 100644
+> >> --- a/arch/x86/kernel/setup.c
+> >> +++ b/arch/x86/kernel/setup.c
+> >> @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned
+> long long *crash_base,
+> >>                                         unsigned long long *crash_size,
+> >>                                         bool high)
+> >>  {
+> >> -     unsigned long long base, size;
+> >> +     unsigned long long base, size, mem_enc_req = 0;
+> >>
+> >>       base = *crash_base;
+> >>       size = *crash_size;
+> >> @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned
+> long long *crash_base,
+> >>       if (high)
+> >>               goto high_reserve;
+> >>
+> >> +     /*
+> >> +      * When SME/SEV is active and not using high reserve,
+> >> +      * it will always required an extra SWIOTLB region.
+> >> +      */
+> >> +     if (mem_encrypt_active())
+> >> +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
+> >> +
+> >>       base = memblock_find_in_range(CRASH_ALIGN,
+> >> -                                   CRASH_ADDR_LOW_MAX, size,
+> >> +                                   CRASH_ADDR_LOW_MAX,
+> >> +                                   size + mem_enc_req,
+> >>                                     CRASH_ALIGN);
+> >
+> > What sizes are we talking about here?
+> >
+> > - What is the possible size range of swiotlb_size_or_default()
+> >
+> > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
+> >
+> > - Why do we replace one fixed limit with another fixed limit instead of
+> >   accurately sizing the area, with each required feature adding its own
+> >   requirement to the reservation size?
+> >
+> > I.e. please engineer this into a proper solution instead of just
+> > modifying it around the edges.
+> >
+> > For example have you considered adding some sort of
+> > kdump_memory_reserve(size) facility, which increases the reservation size
+> > as something like SWIOTLB gets activated? That would avoid the ugly
+> > mem_encrypt_active() flag, it would just automagically work.
+> 
+> Hi, thanks for the suggestions, actually I did try to workout a better
+> resolution, at least for SWIOTLB and crashkernel memory, like make
+> crashkernel reserve more memory as SWIOTLB get activated to be more
+> flexible and generic.
+> 
+> There are some problems:
+> 
+> - Usually, for SWIOTLB, even if the first booting kernel have SWIOTLB
+> activated, second kernel will most likely not need it. Currently, only the
+> high reservation case will still need SWIOTLB in second kernel, and it's
+> already reserving extra low memory automatically. SME/SEV systems is the
+> only other special case that will force both kernel to use it.
+> 
+> - There is a little complex procedure to judge whether SWIOTLB is required
+> (Depends on whether the system have >4G, if there is an iommu want to shut
+> down SWIOTLB, and some times iommu still expect SWIOTLB to exist, and
+> SWIOTLB could be activated first, then got closed later etc...). The crash
+> kernel reserve should happen very early to ensure the region is usable, but
+> kernel is not aware of if SWIOTLB is needed. Have to either move the
+> reservation to some later stage or always reserve extra memories early,
+> then release if not needed later. Neither sound a good solution, and after
+> all, as mentioned above, currently kernel need it doesn't mean kdump kernel
+> needs it.
+> 
+> - Also tried to reuse and improve the currently crashk_low_res facility to
+> reserve the memory in a different block at first, make the code simpler.
+> Didn't work well due to some other issue with all current version of user
+> space kexec-tools, which never expect there will be an extra memory region
+> for non-high reservation case, and failed to load the kernel for kdump.
+> Have to always make the another block in a lower position or rename the
+> memory resource. I think this will either break user space tools heavily,
+> or make the implementation even more complex and confusing.
 
-Cc: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
----
- drivers/counter/stm32-timer-cnt.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+Kairui, I remember you tried to reuse the swiotlb regions across kexec
+reboot, are you saying this as the 3rd problem above?
 
-diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-index 644ba18a72ad..839083543323 100644
---- a/drivers/counter/stm32-timer-cnt.c
-+++ b/drivers/counter/stm32-timer-cnt.c
-@@ -48,34 +48,27 @@ static enum counter_count_function stm32_count_functions[] = {
- };
- 
- static int stm32_count_read(struct counter_device *counter,
--			    struct counter_count *count,
--			    struct counter_count_read_value *val)
-+			    struct counter_count *count, unsigned long *val)
- {
- 	struct stm32_timer_cnt *const priv = counter->priv;
- 	u32 cnt;
- 
- 	regmap_read(priv->regmap, TIM_CNT, &cnt);
--	counter_count_read_value_set(val, COUNTER_COUNT_POSITION, &cnt);
-+	*val = cnt;
- 
- 	return 0;
- }
- 
- static int stm32_count_write(struct counter_device *counter,
- 			     struct counter_count *count,
--			     struct counter_count_write_value *val)
-+			     const unsigned long val)
- {
- 	struct stm32_timer_cnt *const priv = counter->priv;
--	u32 cnt;
--	int err;
--
--	err = counter_count_write_value_get(&cnt, COUNTER_COUNT_POSITION, val);
--	if (err)
--		return err;
- 
--	if (cnt > priv->ceiling)
-+	if (val > priv->ceiling)
- 		return -EINVAL;
- 
--	return regmap_write(priv->regmap, TIM_CNT, cnt);
-+	return regmap_write(priv->regmap, TIM_CNT, val);
- }
- 
- static int stm32_count_function_get(struct counter_device *counter,
--- 
-2.23.0
+It is not clear how you use crashk_low_res,  can you elaborate it I
+remember you mentioned some problem with this approach, maybe we can
+re-explore it.
 
+Thanks
+Dave
