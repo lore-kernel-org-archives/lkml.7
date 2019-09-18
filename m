@@ -2,185 +2,152 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2702C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EE0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94F4C20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:55:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7212054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="PBQnipt0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727616AbfIRHzz (ORCPT
+        id S1727653AbfIRH7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:55:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43377 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726553AbfIRHzz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:55:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A78B10F2E85;
-        Wed, 18 Sep 2019 07:55:54 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-104.pek2.redhat.com [10.72.12.104])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6BA99600C8;
-        Wed, 18 Sep 2019 07:55:50 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 15:55:46 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Subject: Re: [PATCH v3 0/2] x86/kdump: Reserve extra memory when SME or SEV
- is active
-Message-ID: <20190918075546.GA27186@dhcp-128-65.nay.redhat.com>
-References: <20190910151341.14986-1-kasong@redhat.com>
- <20190910151341.14986-3-kasong@redhat.com>
- <20190911055618.GA104115@gmail.com>
- <CACPcB9cEE5eYWixkUvMeLVdRC5qhrru9PbjbLLxP3k1jsbRanQ@mail.gmail.com>
+        Wed, 18 Sep 2019 03:59:45 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:36753 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfIRH7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 03:59:45 -0400
+Received: by mail-ed1-f65.google.com with SMTP id f2so5765589edw.3
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 00:59:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9RAAszLOpdIvDldweaPkNLOitxpBV3SI+NOvvapdMHQ=;
+        b=PBQnipt0tgT8m3MGkNMC7d8tYWy6wP232bRYATMSh+qc3+imbzkBvG6+QVXbpLsVT1
+         9+P0Opb9/LQtRo7XYHAubAsDrZCes7mJ3txtNBwfxnmvURclx9W1r2U7Wpfr1BUDZOBi
+         QGPIYb3ePJaZoKP2AsnoeSwkaSDB0F+TlyV68=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=9RAAszLOpdIvDldweaPkNLOitxpBV3SI+NOvvapdMHQ=;
+        b=PlgTCkcDhZBSlTroh0K4eBLslItfGHHDx0fs3k1d93yNJ1TXyBOgbhR9tdbbjU1y5d
+         E+4C3+c6XbKxWP75PiGaL7R38FohNrLzPBGBs1ZFIKzviBFXGGIB+rXZSeks9/X7qmex
+         UgMDpzPVP/+2309tj4xrlQFL4TCRPll04ApDwKGSbXcKNEDgEzvFb+R0kCcxrW67vCBu
+         iuta5dglIipk6mWIlL2pAgOY8C8BCaRE3jzzQqMbJTc0unqzWRjeGA5LoFZVTlm+THyl
+         N64O+agC/jhm/iS2OsncJfbj2i+8hBGRHehtLwtEDL7JAuUgfk/xG3hXWZWj7AqNplRP
+         QeIA==
+X-Gm-Message-State: APjAAAXcWKZ+xRfVe3QjHh5rv1rsGEIPzkCGdb43Am8E4qyOWzj35y77
+        6dh4LUBijibVoEj+NjK2recD6Q==
+X-Google-Smtp-Source: APXvYqwdTowkGcbqJWBiyUssJDPxqStLRSPXEVU9xDnvzaLO5HZLFcTS6gDV42cjcuNM5YUODE775Q==
+X-Received: by 2002:a17:906:d185:: with SMTP id c5mr7830673ejz.139.1568793583476;
+        Wed, 18 Sep 2019 00:59:43 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id b15sm894079edf.24.2019.09.18.00.59.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 00:59:42 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 09:59:39 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/komeda: Remove in-code use of ifdef
+Message-ID: <20190918075939.GZ3958@phenom.ffwll.local>
+Mail-Followup-To: Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
+ <20190917150314.20892-1-mihail.atanassov@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACPcB9cEE5eYWixkUvMeLVdRC5qhrru9PbjbLLxP3k1jsbRanQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 18 Sep 2019 07:55:54 +0000 (UTC)
+In-Reply-To: <20190917150314.20892-1-mihail.atanassov@arm.com>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/12/19 at 12:23am, Kairui Song wrote:
-> On Wednesday, September 11, 2019, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > * Kairui Song <kasong@redhat.com> wrote:
-> >
-> >> Since commit c7753208a94c ("x86, swiotlb: Add memory encryption
-> support"),
-> >> SWIOTLB will be enabled even if there is less than 4G of memory when SME
-> >> is active, to support DMA of devices that not support address with the
-> >> encrypt bit.
-> >>
-> >> And commit aba2d9a6385a ("iommu/amd: Do not disable SWIOTLB if SME is
-> >> active") make the kernel keep SWIOTLB enabled even if there is an IOMMU.
-> >>
-> >> Then commit d7b417fa08d1 ("x86/mm: Add DMA support for SEV memory
-> >> encryption") will always force SWIOTLB to be enabled when SEV is active
-> >> in all cases.
-> >>
-> >> Now, when either SME or SEV is active, SWIOTLB will be force enabled,
-> >> and this is also true for kdump kernel. As a result kdump kernel will
-> >> run out of already scarce pre-reserved memory easily.
-> >>
-> >> So when SME/SEV is active, reserve extra memory for SWIOTLB to ensure
-> >> kdump kernel have enough memory, except when "crashkernel=size[KMG],high"
-> >> is specified or any offset is used. As for the high reservation case, an
-> >> extra low memory region will always be reserved and that is enough for
-> >> SWIOTLB. Else if the offset format is used, user should be fully aware
-> >> of any possible kdump kernel memory requirement and have to organize the
-> >> memory usage carefully.
-> >>
-> >> Signed-off-by: Kairui Song <kasong@redhat.com>
-> >> ---
-> >>  arch/x86/kernel/setup.c | 20 +++++++++++++++++---
-> >>  1 file changed, 17 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> >> index 71f20bb18cb0..ee6a2f1e2226 100644
-> >> --- a/arch/x86/kernel/setup.c
-> >> +++ b/arch/x86/kernel/setup.c
-> >> @@ -530,7 +530,7 @@ static int __init crashkernel_find_region(unsigned
-> long long *crash_base,
-> >>                                         unsigned long long *crash_size,
-> >>                                         bool high)
-> >>  {
-> >> -     unsigned long long base, size;
-> >> +     unsigned long long base, size, mem_enc_req = 0;
-> >>
-> >>       base = *crash_base;
-> >>       size = *crash_size;
-> >> @@ -561,11 +561,25 @@ static int __init crashkernel_find_region(unsigned
-> long long *crash_base,
-> >>       if (high)
-> >>               goto high_reserve;
-> >>
-> >> +     /*
-> >> +      * When SME/SEV is active and not using high reserve,
-> >> +      * it will always required an extra SWIOTLB region.
-> >> +      */
-> >> +     if (mem_encrypt_active())
-> >> +             mem_enc_req = ALIGN(swiotlb_size_or_default(), SZ_1M);
-> >> +
-> >>       base = memblock_find_in_range(CRASH_ALIGN,
-> >> -                                   CRASH_ADDR_LOW_MAX, size,
-> >> +                                   CRASH_ADDR_LOW_MAX,
-> >> +                                   size + mem_enc_req,
-> >>                                     CRASH_ALIGN);
-> >
-> > What sizes are we talking about here?
-> >
-> > - What is the possible size range of swiotlb_size_or_default()
-> >
-> > - What is the size of CRASH_ADDR_LOW_MAX (the old limit)?
-> >
-> > - Why do we replace one fixed limit with another fixed limit instead of
-> >   accurately sizing the area, with each required feature adding its own
-> >   requirement to the reservation size?
-> >
-> > I.e. please engineer this into a proper solution instead of just
-> > modifying it around the edges.
-> >
-> > For example have you considered adding some sort of
-> > kdump_memory_reserve(size) facility, which increases the reservation size
-> > as something like SWIOTLB gets activated? That would avoid the ugly
-> > mem_encrypt_active() flag, it would just automagically work.
+On Tue, Sep 17, 2019 at 03:05:08PM +0000, Mihail Atanassov wrote:
+> Provide a dummy static inline function in the header instead.
 > 
-> Hi, thanks for the suggestions, actually I did try to workout a better
-> resolution, at least for SWIOTLB and crashkernel memory, like make
-> crashkernel reserve more memory as SWIOTLB get activated to be more
-> flexible and generic.
-> 
-> There are some problems:
-> 
-> - Usually, for SWIOTLB, even if the first booting kernel have SWIOTLB
-> activated, second kernel will most likely not need it. Currently, only the
-> high reservation case will still need SWIOTLB in second kernel, and it's
-> already reserving extra low memory automatically. SME/SEV systems is the
-> only other special case that will force both kernel to use it.
-> 
-> - There is a little complex procedure to judge whether SWIOTLB is required
-> (Depends on whether the system have >4G, if there is an iommu want to shut
-> down SWIOTLB, and some times iommu still expect SWIOTLB to exist, and
-> SWIOTLB could be activated first, then got closed later etc...). The crash
-> kernel reserve should happen very early to ensure the region is usable, but
-> kernel is not aware of if SWIOTLB is needed. Have to either move the
-> reservation to some later stage or always reserve extra memories early,
-> then release if not needed later. Neither sound a good solution, and after
-> all, as mentioned above, currently kernel need it doesn't mean kdump kernel
-> needs it.
-> 
-> - Also tried to reuse and improve the currently crashk_low_res facility to
-> reserve the memory in a different block at first, make the code simpler.
-> Didn't work well due to some other issue with all current version of user
-> space kexec-tools, which never expect there will be an extra memory region
-> for non-high reservation case, and failed to load the kernel for kdump.
-> Have to always make the another block in a lower position or rename the
-> memory resource. I think this will either break user space tools heavily,
-> or make the implementation even more complex and confusing.
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+> Cc: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+> Fixes: 4d74b25ee395 ("drm/komeda: Adds error event print functionality")
+> Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
 
-Kairui, I remember you tried to reuse the swiotlb regions across kexec
-reboot, are you saying this as the 3rd problem above?
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-It is not clear how you use crashk_low_res,  can you elaborate it I
-remember you mentioned some problem with this approach, maybe we can
-re-explore it.
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.h | 2 ++
+>  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 2 --
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> index e28e7e6563ab..8acf8c0601cc 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> @@ -220,6 +220,8 @@ struct komeda_dev *dev_to_mdev(struct device *dev);
+>  
+>  #ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+>  void komeda_print_events(struct komeda_events *evts);
+> +#else
+> +static inline void komeda_print_events(struct komeda_events *evts) {}
+>  #endif
+>  
+>  #endif /*_KOMEDA_DEV_H_*/
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> index 18d7e2520225..dc85c08e614d 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> @@ -47,9 +47,7 @@ static irqreturn_t komeda_kms_irq_handler(int irq, void *data)
+>  	memset(&evts, 0, sizeof(evts));
+>  	status = mdev->funcs->irq_handler(mdev, &evts);
+>  
+> -#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+>  	komeda_print_events(&evts);
+> -#endif
+>  
+>  	/* Notify the crtc to handle the events */
+>  	for (i = 0; i < kms->n_crtcs; i++)
+> -- 
+> 2.23.0
+> 
 
-Thanks
-Dave
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
