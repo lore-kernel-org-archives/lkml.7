@@ -2,62 +2,117 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C09C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:12:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F945218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:12:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEBE22067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568812552;
+	bh=wdv0YRFrnwocEp/J8v75uH7+80bZiAugwxHW/XSKkOQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=uVpb8MflG5PoOKGBuPRKvTlWec4QUEiluTGBcvuQ2lHb7drBhJwDKk+YJfVfsuC3n
+	 CDgD89dQen8Fxs34TfneY/eYauuqmlYcBwv9Vw7WyyjzU10tRV07iE2hLKtyuw9EBK
+	 GUJEFjJ+6ZovdyLnZ/L717z0r7aU4RkMRMkn3CLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729634AbfIRNMY (ORCPT
+        id S1729724AbfIRNPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:12:24 -0400
-Received: from out28-53.mail.aliyun.com ([115.124.28.53]:54000 "EHLO
-        out28-53.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727001AbfIRNMY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:12:24 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2977127|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.151228-0.00972801-0.839044;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16370;MF=liu.xiang@zlingsmart.com;NM=1;PH=DS;RN=3;RT=3;SR=0;TI=SMTPD_---.FX0WcNh_1568812325;
-Received: from localhost(mailfrom:liu.xiang@zlingsmart.com fp:SMTPD_---.FX0WcNh_1568812325)
-          by smtp.aliyun-inc.com(10.194.98.226);
-          Wed, 18 Sep 2019 21:12:05 +0800
-From:   Liu Xiang <liuxiang_1999@126.com>
-To:     linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org, liuxiang_1999@126.com
-Subject: [PATCH] mm: vmalloc: remove unnecessary highmem_mask from parameter of gfpflags_allow_blocking()
-Date:   Wed, 18 Sep 2019 21:11:59 +0800
-Message-Id: <1568812319-3467-1-git-send-email-liuxiang_1999@126.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 18 Sep 2019 09:15:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfIRNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:15:51 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFF972067B;
+        Wed, 18 Sep 2019 13:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568812551;
+        bh=wdv0YRFrnwocEp/J8v75uH7+80bZiAugwxHW/XSKkOQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WG8IjvxASneWPVKCuK2j4lojJ8lyWBz8byWFLNq4gLQ7fbZmRtmpSudO7gBlXgeCl
+         +FG7r+4UAC6/V1tGIvd4fodNE4EpwKRiKUdjUyo+UxcZnR86f34igN5JchBAfAA2ZN
+         Y8C20v+JzeegvOFcLwOEjuHHQLzTQ2ehwDhqXHOo=
+From:   Will Deacon <will@kernel.org>
+To:     kvm@vger.kernel.org
+Cc:     kernellwp@gmail.com, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "# 5 . 2 . y" <stable@kernel.org>
+Subject: [PATCH] kvm: Ensure writes to the coalesced MMIO ring are within bounds
+Date:   Wed, 18 Sep 2019 14:15:45 +0100
+Message-Id: <20190918131545.6405-1-will@kernel.org>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gfpflags_allow_blocking() does not care about __GFP_HIGHMEM,
-so highmem_mask can be removed.
+When records are written to the coalesced MMIO ring in response to a
+vCPU MMIO exit, the 'ring->last' field is used to index the ring buffer
+page. Although we hold the 'kvm->ring_lock' at this point, the ring
+structure is mapped directly into the host userspace and can therefore
+be modified to point at arbitrary pages within the kernel.
 
-Signed-off-by: Liu Xiang <liuxiang_1999@126.com>
+Since this shouldn't happen in normal operation, simply bound the index
+by KVM_COALESCED_MMIO_MAX to contain the accesses within the ring buffer
+page.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: <stable@kernel.org> # 5.2.y
+Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
+Reported-by: Bill Creasey <bcreasey@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- mm/vmalloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 7ba11e1..143c636 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -2432,7 +2432,7 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 			goto fail;
- 		}
- 		area->pages[i] = page;
--		if (gfpflags_allow_blocking(gfp_mask|highmem_mask))
-+		if (gfpflags_allow_blocking(gfp_mask))
- 			cond_resched();
+I think there are some other fixes kicking around for this, but they
+still rely on 'ring->last' being stable, which isn't necessarily the
+case. I'll send the -stable backport for kernels prior to 5.2 once this
+hits mainline.
+
+ virt/kvm/coalesced_mmio.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+index 5294abb3f178..09b3e4421550 100644
+--- a/virt/kvm/coalesced_mmio.c
++++ b/virt/kvm/coalesced_mmio.c
+@@ -67,6 +67,7 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
+ {
+ 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
+ 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
++	u32 last;
+ 
+ 	if (!coalesced_mmio_in_range(dev, addr, len))
+ 		return -EOPNOTSUPP;
+@@ -79,13 +80,13 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
  	}
- 	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
+ 
+ 	/* copy data in first free entry of the ring */
+-
+-	ring->coalesced_mmio[ring->last].phys_addr = addr;
+-	ring->coalesced_mmio[ring->last].len = len;
+-	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
+-	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
++	last = ring->last % KVM_COALESCED_MMIO_MAX;
++	ring->coalesced_mmio[last].phys_addr = addr;
++	ring->coalesced_mmio[last].len = len;
++	memcpy(ring->coalesced_mmio[last].data, val, len);
++	ring->coalesced_mmio[last].pio = dev->zone.pio;
+ 	smp_wmb();
+-	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
++	ring->last = (last + 1) % KVM_COALESCED_MMIO_MAX;
+ 	spin_unlock(&dev->kvm->ring_lock);
+ 	return 0;
+ }
 -- 
-1.9.1
+2.23.0.351.gc4317032e6-goog
 
