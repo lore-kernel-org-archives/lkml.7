@@ -2,192 +2,221 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81419C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C16C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50071218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KmopZsfO"
+	by mail.kernel.org (Postfix) with ESMTP id 15805218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:08:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbfIRPIP (ORCPT
+        id S1730953AbfIRPI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:08:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41483 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbfIRPIP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:08:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h7so7298653wrw.8
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:08:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ZHorGm2MuyyGCvKnYrvMqsguI6FU0r6Y2tWoWqD8t48=;
-        b=KmopZsfO0DLvPQQ41CYF1GC8GFYQ4oL214i1x8VV1ehxS6300Hwy0JLXi2aK35B3/A
-         82WZWek/QRLMAmOq6375s+h9VX595MKp7aKizeki7Mai8yzzykji5tWAs0aM7S6/GIOP
-         WmIWwvlbs+5XJgRjxkR7usL1BJu7IlFXSKl/s/plpK6b6O9Cih3pXNwDjBqZkKtX7PaF
-         7X7vRoxL8iv6TUhEovuYg9bSGYudFydeT0kyKO7bNkcOCX2tP+VXa6AgqoKD4w9BfP0J
-         L81aLMaQhnvx/T36HdH/BD5rHmkiiUUjhcqgeXxKfIzoAMBwKEuwLctkOBBoE1X1JJwz
-         nlzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ZHorGm2MuyyGCvKnYrvMqsguI6FU0r6Y2tWoWqD8t48=;
-        b=nK0GqDlst2gYShGgcienKRm55Adbli+mwS1lGM2a1U5LvysR9d0LEPIF4X3TTm4QGk
-         gNfjCYsiUGhtJtWzxPjMmYaKsdW7fbz/EPaa71iRrgBE7Y5m5IZiTA+wZFGPo5AjpKiw
-         0I9zYumDMK0peyaI9ZSqDJUXwYlWSZzg/ubUp/tpRdMFnRwLkIYI2Ia//OQg/g617kLn
-         XhOZptRdIiNvCjozGO6rl73lTZlwx3SI3dfDhplOrrL4+Mx7AxUpdReZkasuWPk+r+ii
-         2W06DQRH0oQ8pGt1LBujqpNOpJD3ftdRtitc2fFKQaFXtlmd+FHL5WfOXVSxY5pphb2e
-         Gduw==
-X-Gm-Message-State: APjAAAUOwzNsX/mcJLce64WZ4A257jkphPxGMG39lMc4jB3DPvLsnQKz
-        1J/hBqr8Qi24ko7oeO+nuGyLhA==
-X-Google-Smtp-Source: APXvYqxikggtthBynFvBdM6RFvgeSlc79Un78tPLbHaiowsQsBeHrMPReEdaJo26DwccO9KlAioQzQ==
-X-Received: by 2002:adf:e48a:: with SMTP id i10mr3434964wrm.311.1568819292364;
-        Wed, 18 Sep 2019 08:08:12 -0700 (PDT)
-Received: from localhost ([195.200.173.126])
-        by smtp.gmail.com with ESMTPSA id m16sm2042728wml.11.2019.09.18.08.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 08:08:11 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 08:08:10 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     greentime.hu@sifive.com
-cc:     green.hu@gmail.com, linux-hackers@sifive.com, palmer@sifive.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] RISC-V: Fix building error when
- CONFIG_SPARSEMEM_MANUAL=y
-In-Reply-To: <20190918103825.8694-1-greentime.hu@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1909180806310.13446@viisi.sifive.com>
-References: <20190918103825.8694-1-greentime.hu@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 18 Sep 2019 11:08:57 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:60502 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728330AbfIRPI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:08:57 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 8EF02206A6;
+        Wed, 18 Sep 2019 17:08:54 +0200 (CEST)
+Received: from [192.168.108.37] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 3BE1720840;
+        Wed, 18 Sep 2019 17:08:54 +0200 (CEST)
+Subject: Re: [PATCH v2 3/3] phy: qcom-qmp: Add SM8150 QMP UFS PHY support
+To:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+References: <20190906051017.26846-1-vkoul@kernel.org>
+ <20190906051017.26846-4-vkoul@kernel.org>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <ab149ba9-ab2e-5013-34ab-b01af51abc0a@free.fr>
+Date:   Wed, 18 Sep 2019 17:08:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-2123992612-1568819290=:13446"
+In-Reply-To: <20190906051017.26846-4-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Sep 18 17:08:54 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 06/09/2019 07:10, Vinod Koul wrote:
 
---8323329-2123992612-1568819290=:13446
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+> SM8150 UFS PHY is v4 of QMP phy. Add support for V4 QMP phy register
+> defines and support for SM8150 QMP UFS PHY.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/phy/qualcomm/phy-qcom-qmp.c | 125 ++++++++++++++++++++++++++++
+>  drivers/phy/qualcomm/phy-qcom-qmp.h |  96 +++++++++++++++++++++
+>  2 files changed, 221 insertions(+)
+> 
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 34ff6434da8f..92d3048f2b36 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -164,6 +164,11 @@ static const unsigned int sdm845_ufsphy_regs_layout[] = {
+>  	[QPHY_PCS_READY_STATUS]		= 0x160,
+>  };
+>  
+> +static const unsigned int sm8150_ufsphy_regs_layout[] = {
+> +	[QPHY_START_CTRL]		= 0x00,
+> +	[QPHY_PCS_READY_STATUS]		= 0x180,
+> +};
+> +
+>  static const struct qmp_phy_init_tbl msm8996_pcie_serdes_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x1c),
+>  	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+> @@ -878,6 +883,93 @@ static const struct qmp_phy_init_tbl msm8998_usb3_pcs_tbl[] = {
+>  	QMP_PHY_INIT_CFG(QPHY_V3_PCS_RXEQTRAINING_RUN_TIME, 0x13),
+>  };
+>  
+> +static const struct qmp_phy_init_tbl sm8150_ufsphy_serdes_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_POWER_DOWN_CONTROL, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_SYSCLK_EN_SEL, 0xd9),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_HSCLK_SEL, 0x11),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_HSCLK_HS_SWITCH_SEL, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP_EN, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_VCO_TUNE_MAP, 0x02),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_IVCO, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_VCO_TUNE_INITVAL2, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_HSCLK_SEL, 0x11),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_DEC_START_MODE0, 0x82),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_CP_CTRL_MODE0, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_RCTRL_MODE0, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_CCTRL_MODE0, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP1_MODE0, 0xff),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP2_MODE0, 0x0c),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_CMP_CODE1_MODE0, 0xac),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_CMP_CODE2_MODE0, 0x1e),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_DEC_START_MODE1, 0x98),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_CP_CTRL_MODE1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_RCTRL_MODE1, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_PLL_CCTRL_MODE1, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP1_MODE1, 0x32),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_LOCK_CMP2_MODE1, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_CMP_CODE1_MODE1, 0xdd),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_BIN_VCOCAL_CMP_CODE2_MODE1, 0x23),
+> +
+> +	/* Rate B */
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_V4_VCO_TUNE_MAP, 0x06),
 
-On Wed, 18 Sep 2019, greentime.hu@sifive.com wrote:
-
-> From: Greentime Hu <greentime.hu@sifive.com>
->=20
-> To adjust the place of VMALLOC_* and FIXADDR_* defined location to let VM=
-EMMAP_*
-> get it.
->=20
->   CC      init/main.o
-> In file included from ./include/linux/mm.h:99,
->                  from ./include/linux/ring_buffer.h:5,
->                  from ./include/linux/trace_events.h:6,
->                  from ./include/trace/syscall.h:7,
->                  from ./include/linux/syscalls.h:85,
->                  from init/main.c:21:
-> ./arch/riscv/include/asm/pgtable.h: In function =E2=80=98pmd_page=E2=80=
-=99:
-> ./arch/riscv/include/asm/pgtable.h:95:24: error: =E2=80=98VMALLOC_START=
-=E2=80=99 undeclared (first use in this function); did you mean =E2=80=98VM=
-EMMAP_START=E2=80=99?
->  #define VMEMMAP_START (VMALLOC_START - VMEMMAP_SIZE)
->                         ^~~~~~~~~~~~~
->=20
-> Fixes: d95f1a542c3d ("RISC-V: Implement sparsemem")
-> Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-
-Thanks, queued the following for v5.4-rc.
+IMO, the name of the symbolic constants should be QSERDES_V4_COM*
+(like below for QSERDES_V4_TX* and QSERDES_V4_RX*)
 
 
-- Paul
+> +static const struct qmp_phy_init_tbl sm8150_ufsphy_tx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_1_DIVIDER_BAND0_1, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_2_DIVIDER_BAND0_1, 0x03),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_3_DIVIDER_BAND0_1, 0x01),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_PWM_GEAR_4_DIVIDER_BAND0_1, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_LANE_MODE_1, 0x05),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_TX_TRAN_DRVR_EMP_EN, 0x0c),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8150_ufsphy_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_LVL, 0x24),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_CNTRL, 0x0f),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_SIGDET_DEGLITCH_CNTRL, 0x1e),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_BAND, 0x18),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_FO_GAIN, 0x0a),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CONTROLS, 0xf1),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FASTLOCK_COUNT_LOW, 0x80),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_PI_CTRL2, 0x80),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_FO_GAIN, 0x0c),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_UCDR_SO_GAIN, 0x04),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_TERM_BW, 0x1b),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL2, 0x06),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL3, 0x04),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_EQU_ADAPTOR_CNTRL4, 0x1d),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_OFFSET_ADAPTOR_CNTRL2, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_MEASURE_TIME, 0x10),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_LOW, 0xc0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_IDAC_TSETTLE_HIGH, 0x00),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_LOW, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH, 0x36),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH2, 0xf6),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH3, 0x3b),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_00_HIGH4, 0x3d),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_LOW, 0xe0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH, 0xc8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH2, 0xc8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH3, 0x3b),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_01_HIGH4, 0xb1),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_LOW, 0xe0),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH, 0xc8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH2, 0xc8),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH3, 0x3b),
+> +	QMP_PHY_INIT_CFG(QSERDES_V4_RX_RX_MODE_10_HIGH4, 0xb1),
+> +
+> +};
+> +
+> +static const struct qmp_phy_init_tbl sm8150_ufsphy_pcs_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_V4_RX_SIGDET_CTRL2, 0x6d),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_TX_LARGE_AMP_DRV_LVL, 0x0a),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_TX_SMALL_AMP_DRV_LVL, 0x02),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_TX_MID_TERM_CTRL1, 0x43),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_DEBUG_BUS_CLKSEL, 0x1f),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_RX_MIN_HIBERN8_TIME, 0xff),
+> +	QMP_PHY_INIT_CFG(QPHY_V4_MULTI_LANE_CTRL1, 0x02),
+> +};
+>  
+>  /* struct qmp_phy_cfg - per-PHY initialization config */
+>  struct qmp_phy_cfg {
+> @@ -1038,6 +1130,10 @@ static const char * const sdm845_ufs_phy_clk_l[] = {
+>  	"ref", "ref_aux",
+>  };
+>  
+> +static const char * const sm8150_ufs_phy_clk_l[] = {
+> +	"ref", "ref_aux",
+> +};
+> +
 
-From: Greentime Hu <greentime.hu@sifive.com>
-Date: Wed, 18 Sep 2019 18:38:24 +0800
-Subject: [PATCH] RISC-V: Fix building error when CONFIG_SPARSEMEM_MANUAL=3D=
-y
+Why not just reuse sdm845_ufs_phy_clk_l?
 
-Fix a build break by adjusting where VMALLOC_* and FIXADDR_* are
-defined.  This fixes the definition of the MEMMAP_* macros.
+>  /* list of resets */
+>  static const char * const msm8996_pciephy_reset_l[] = {
+>  	"phy", "common", "cfg",
+> @@ -1284,6 +1380,32 @@ static const struct qmp_phy_cfg msm8998_usb3phy_cfg = {
+>  	.is_dual_lane_phy       = true,
+>  };
+>  
+> +static const struct qmp_phy_cfg sm8150_ufsphy_cfg = {
+> +	.type			= PHY_TYPE_UFS,
+> +	.nlanes			= 2,
+> +
+> +	.serdes_tbl		= sm8150_ufsphy_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_serdes_tbl),
+> +	.tx_tbl			= sm8150_ufsphy_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_tx_tbl),
+> +	.rx_tbl			= sm8150_ufsphy_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_rx_tbl),
+> +	.pcs_tbl		= sm8150_ufsphy_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(sm8150_ufsphy_pcs_tbl),
+> +	.clk_list		= sm8150_ufs_phy_clk_l,
+> +	.num_clks		= ARRAY_SIZE(sm8150_ufs_phy_clk_l),
+> +	.vreg_list		= qmp_phy_vreg_l,
+> +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> +	.regs			= sm8150_ufsphy_regs_layout,
+> +
+> +	.start_ctrl		= SERDES_START,
+> +	.pwrdn_ctrl		= SW_PWRDN,
+> +	.mask_pcs_ready		= PCS_READY,
 
-  CC      init/main.o
-In file included from ./include/linux/mm.h:99,
-                 from ./include/linux/ring_buffer.h:5,
-                 from ./include/linux/trace_events.h:6,
-                 from ./include/trace/syscall.h:7,
-                 from ./include/linux/syscalls.h:85,
-                 from init/main.c:21:
-=2E/arch/riscv/include/asm/pgtable.h: In function =E2=80=98pmd_page=E2=80=
-=99:
-=2E/arch/riscv/include/asm/pgtable.h:95:24: error: =E2=80=98VMALLOC_START=
-=E2=80=99 undeclared (first use in this function); did you mean =E2=80=98VM=
-EMMAP_START=E2=80=99?
- #define VMEMMAP_START (VMALLOC_START - VMEMMAP_SIZE)
-                        ^~~~~~~~~~~~~
-
-Fixes: d95f1a542c3d ("RISC-V: Implement sparsemem")
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
-[paul.walmsley@sifive.com: fix patch description]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
----
- arch/riscv/include/asm/pgtable.h | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgta=
-ble.h
-index 80905b27ee98..4f4162d90586 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -83,6 +83,18 @@ extern pgd_t swapper_pg_dir[];
- #define __S110=09PAGE_SHARED_EXEC
- #define __S111=09PAGE_SHARED_EXEC
-=20
-+#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-+#define VMALLOC_END      (PAGE_OFFSET - 1)
-+#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-+
-+#define FIXADDR_TOP      VMALLOC_START
-+#ifdef CONFIG_64BIT
-+#define FIXADDR_SIZE     PMD_SIZE
-+#else
-+#define FIXADDR_SIZE     PGDIR_SIZE
-+#endif
-+#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-+
- /*
-  * Roughly size the vmemmap space to be large enough to fit enough
-  * struct pages to map half the virtual address space. Then
-@@ -429,18 +441,6 @@ static inline void pgtable_cache_init(void)
- =09/* No page table caches to initialize */
- }
-=20
--#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
--#define VMALLOC_END      (PAGE_OFFSET - 1)
--#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
--
--#define FIXADDR_TOP      VMALLOC_START
--#ifdef CONFIG_64BIT
--#define FIXADDR_SIZE     PMD_SIZE
--#else
--#define FIXADDR_SIZE     PGDIR_SIZE
--#endif
--#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
--
- /*
-  * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-  * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
---=20
-2.23.0
-
---8323329-2123992612-1568819290=:13446--
+I think you need to rework your patch on top of
+"phy: qcom-qmp: Correct ready status, again"
+(it removed this field)
