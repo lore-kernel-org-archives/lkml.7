@@ -2,130 +2,67 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	WEIRD_PORT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0B4EC4CECD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DDDC4CECD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A20214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:34:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="wf7QcMBA"
+	by mail.kernel.org (Postfix) with ESMTP id AF3F421855
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 00:35:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568766920;
+	bh=231tSAJpuA2jpDPF/dmFnuyIOzadfVzwTqHEgrCMei4=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=u0u7egt+tsX+PNyXhZJHsmDdSul78nazBULZkNd186efWkzey3Y0EmuU1ERBIIpuQ
+	 4YFi55QE4lAlTbo19guOFT4SWu5egcQ9mf5cNS5P5ezN1LJdowgY4FyapcLndbklVp
+	 nYfSBVUxy5CgYTrO6rsq9gjL7fDRKMYUpCQptnn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfIRAen (ORCPT
+        id S1727379AbfIRAfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 20:34:43 -0400
-Received: from forward105o.mail.yandex.net ([37.140.190.183]:58901 "EHLO
-        forward105o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726971AbfIRAen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 20:34:43 -0400
-Received: from mxback1g.mail.yandex.net (mxback1g.mail.yandex.net [IPv6:2a02:6b8:0:1472:2741:0:8b7:162])
-        by forward105o.mail.yandex.net (Yandex) with ESMTP id B52284200735;
-        Wed, 18 Sep 2019 03:34:38 +0300 (MSK)
-Received: from sas2-44d129ed7200.qloud-c.yandex.net (sas2-44d129ed7200.qloud-c.yandex.net [2a02:6b8:c08:ff0a:0:640:44d1:29ed])
-        by mxback1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id XWNVTDbIbC-YbRKrJBa;
-        Wed, 18 Sep 2019 03:34:38 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1568766878;
-        bh=Kij3Q0nxAJtBn/KMLLWc5IhgVDlVLSDmGkWny3ag4IU=;
-        h=In-Reply-To:Cc:To:Subject:From:Date:References:Message-ID;
-        b=wf7QcMBASD+rXFGYmfJ9aWi+OBk4VPX4Head61X/yck70Mte3nSBqcOoJly+J0c/1
-         vzd0CtmKaiHxHrQjUylIcgFajxhyPhWH74oV5ieUwrkVsLytTEVsQ7YPGAF8t5M/tS
-         U08EDH69uixwqo2UxYEY7Wc9R2ZGwnlNPYkAKZvQ=
-Authentication-Results: mxback1g.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by sas2-44d129ed7200.qloud-c.yandex.net (nwsmtp/Yandex) with ESMTPSA id RDO4Quqbdf-YIqG4kHW;
-        Wed, 18 Sep 2019 03:34:23 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH 00/13] Modernize Loongson64 Machine
-To:     Matt Turner <mattst88@gmail.com>
-Cc:     "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        Huacai Chen <chenhc@lemote.com>,
-        Paul Burton <paul.burton@mips.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?57O757ufLeeOi+a0quiZjg==?= <wanghonghu@loongson.cn>,
-        Paul Hua <paul.hua.gm@gmail.com>, wangxuerui@qiniu.com
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
- <CAEdQ38EbtBsmAU0D8VtNkp=AMLo9XN43v3-OaEN-2n6zfGDMkw@mail.gmail.com>
-Message-ID: <0491a5e9-1113-046d-b455-cd54f8cc8651@flygoat.com>
-Date:   Wed, 18 Sep 2019 08:33:48 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
-MIME-Version: 1.0
-In-Reply-To: <CAEdQ38EbtBsmAU0D8VtNkp=AMLo9XN43v3-OaEN-2n6zfGDMkw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 17 Sep 2019 20:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726971AbfIRAfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 20:35:19 -0400
+Subject: Re: [GIT PULL] MMC and MEMSTICK updates for v5.4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568766919;
+        bh=231tSAJpuA2jpDPF/dmFnuyIOzadfVzwTqHEgrCMei4=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=K04oOZCh4OC4BxH9GPqbbHPCsB3dC6KB11g7fFZ1fHN0IQCFkir0wbOw/uyteHu2R
+         PoIVWGv9d6bWx+rNvLHtzecEaeSqP+GOiBW9DnF+EdyioGtj+TWHFi23uVXNwLODa2
+         e+BdsSd+2RvVGpS0ZPVxft4Pg+RteZKnbTkhB6jM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190917090912.6758-1-ulf.hansson@linaro.org>
+References: <20190917090912.6758-1-ulf.hansson@linaro.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190917090912.6758-1-ulf.hansson@linaro.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.4
+X-PR-Tracked-Commit-Id: b46119796721301e410a357b91195eed46980ea6
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ea982ba7f79141d86eb7a440fcba6796ed718b9b
+Message-Id: <156876691917.9665.10106888397011727842.pr-tracker-bot@kernel.org>
+Date:   Wed, 18 Sep 2019 00:35:19 +0000
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The pull request you sent on Tue, 17 Sep 2019 11:09:12 +0200:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.4
 
-14:30, 2019年9月12日, Matt Turner <mattst88@gmail.com>:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ea982ba7f79141d86eb7a440fcba6796ed718b9b
 
-    On Tue, Aug 27, 2019 at 1:53 AM Jiaxun Yang <jiaxun.yang@flygoat.com
-    <mailto:jiaxun.yang@flygoat.com>> wrote:
-
-          Loongson have a long history of contributing their code to
-        mainline kernel.
-          However, it seems like recent years, they are focusing on
-        maintain a kernel by themselves
-          rather than contribute there code to the community.
-
-Hi Matt:
-
-    Do you know more about this? I have a Loongson 3A3000 system that I
-    have never been able to make stable. I tried pulling patches out of
-    the glibc, binutils, gcc, and Linux repos I found at
-    https://github.com/loongson-community but my system still hardlocks,
-
-What's the behaviour of hardlock? Kernel RCU stall? Or simply no response?
-
-    preventing me from doing much of anything with it.
-
-    Do we know why critical looking toolchain patches like "Added misses
-    sync in mips_process_sync_loop for add sync before ll sc" [0] and "Fix
-
-LLSC fixes have been mainlined in latest binutils.
-And GCC-9.1 have introduced march=gs464e for 3A3000.
-
-    loads for Loongson3 to promoting stability" [1] have not been
-    submitted upstream?
-
-Load issue only influence specified revisions of Loongson-3A2000, your 
-hardware shouldn't have that problem.
-
-    I'm interested in supporting Loongson 3 in Gentoo, and the hardware
-    that has been given to me would be extremely useful for Gentoo's MIPS
-    port in general, but it's just not usable at all currently.
-
-You can try Fedora 28 maintained by Lemote  which have been verified in 
-production environment for a period 
-[http://mirror.lemote.com:8000/fedora/fedora28-live/] if the hardware is 
-still unstable, then it might be a memory stability issue. You can try 
-to clean your DIMM solt and DDR golden finger, or even swap the memory 
-module.
-
-Btw: Xuerui Wang <wangxuerui@qiniu.com> had maintained his 3A3000 Gentoo 
-port [https://github.com/xen0n/loongson-overlay] for a long time. I'll 
-Cc him this email and probability he can give you further assistance.
-
-
-Thanks.
-
-
-    [0]
-    https://github.com/longson-community/gcc/commit/e7e3b0f956929f022caa01ed25a482495b11d575
-    <https://github.com/loongson-community/gcc/commit/e7e3b0f956929f022caa01ed25a482495b11d575>
-    [1]
-    https://github.com/loongson-community/binutils-gdb/commit/2f0e91d2af6093097202fae3adab624ffa86a156
-
-
+Thank you!
 
 -- 
-Jiaxun Yang
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
