@@ -2,118 +2,123 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C281C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E320C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39677208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D068C208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568822929;
+	bh=vVgvcGgEuELXUfXsbuvT7tuO6CbO0HHmAw6W9rp88VY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nTTQx8enhQREDWHjsFArk9kuXHHm0JOoSa01M032bUAaYAcjnv6BhS09YHOtDbCie
+	 sd4QdHfWMgYspmd1kWfjD7PnY2se93U3bS5EjlG0tgEwGj3iHbqQytJeK/g/9hb2nL
+	 2gdPnp/uiNZEO076cexBbWD50zmLk18VsVWafQO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731875AbfIRQGw (ORCPT
+        id S1731887AbfIRQIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:06:52 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60149 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfIRQGw (ORCPT
+        Wed, 18 Sep 2019 12:08:49 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53890 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730391AbfIRQIs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:06:52 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Wed, 18 Sep 2019 12:08:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=n+gt11BxFqFvJsr5YUiBJ0bn70lpyoWRNSeQgaOO+LA=; b=kHOn3wSYO6lgJ6X9PX38b/zU6
+        o2CfIJOtbtp2j9Ti6oiRiAOxwU+f09BrdDc6YpSX+6mWrJsRRqwqiCvTRn/rXCqkfKUxY39JmsRLl
+        qzQbGUhQvhZRMnRig0oLMGHqkZaPDXeGIj7PyY+eBgpNYSW0PSSPLQmJd+f8E9wkxPXTU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iAcTi-0006Tp-PI; Wed, 18 Sep 2019 18:06:50 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iAcTg-0006Ox-QO; Wed, 18 Sep 2019 18:06:48 +0200
-Date:   Wed, 18 Sep 2019 18:06:48 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAcVX-0006Dl-Fc; Wed, 18 Sep 2019 16:08:43 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 66D202742927; Wed, 18 Sep 2019 17:08:42 +0100 (BST)
+Date:   Wed, 18 Sep 2019 17:08:42 +0100
+From:   Mark Brown <broonie@kernel.org>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     ckeepax@opensource.cirrus.com, lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+Cc:     Marco Felsch <m.felsch@pengutronix.de>, zhang.chunyan@linaro.org,
         Doug Anderson <dianders@chromium.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>, zhang.chunyan@linaro.org
+        Liam Girdwood <lgirdwood@gmail.com>,
+        ckeepax@opensource.cirrus.com, lkml <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
 Subject: Re: [PATCH 3/3] regulator: core: make regulator_register()
  EPROBE_DEFER aware
-Message-ID: <20190918160648.6qvdzvnflyly5xft@pengutronix.de>
+Message-ID: <20190918160842.GS2596@sirena.co.uk>
 References: <20190917154021.14693-1-m.felsch@pengutronix.de>
  <20190917154021.14693-4-m.felsch@pengutronix.de>
  <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
  <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
  <CAKdAkRSneYYjcVe--P=m037aA1DaD+efbEcRGGKVk1hDeEw70A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="vkEkAx9hr54EJ73W"
 Content-Disposition: inline
 In-Reply-To: <CAKdAkRSneYYjcVe--P=m037aA1DaD+efbEcRGGKVk1hDeEw70A@mail.gmail.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 18:01:48 up 123 days, 22:19, 69 users,  load average: 0.13, 0.10,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-Cookie: The devil finds work for idle glands.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-09-18 08:53, Dmitry Torokhov wrote:
+
+--vkEkAx9hr54EJ73W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Sep 18, 2019 at 08:53:40AM -0700, Dmitry Torokhov wrote:
 > On Wed, Sep 18, 2019 at 1:18 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> >
-> > On 19-09-17 17:57, Dmitry Torokhov wrote:
-> > > On Tue, Sep 17, 2019 at 4:42 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
-> > > >
-> > > > Sometimes it can happen that the regulator_of_get_init_data() can't
-> > > > retrieve the config due to a not probed device the regulator depends on.
-> > > > Fix that by checking the return value of of_parse_cb() and return
-> > > > EPROBE_DEFER in such cases.
-> > >
-> > > Treating EPROBE_DEFER in a special way is usually wrong.
-> > > regulator_of_get_init_data() may fail for multiple reasons (no memory,
-> > > invalid DT, etc, etc). All of them should abort instantiating
-> > > regulator.
-> >
+
 > > Those errors are handled but the behaviour of this funciton is to return
 > > NULL in such errors which is fine for the caller of this function. I
 > > only want to handle EPROBE_DEFER special..
-> 
+
 > And I am saying it is wrong to handle only EPROBE_DEFER.
 > regulator_of_get_init_data() should always return ERR_PTR()-encoded
 > error code when parsing callback returns error, so that regulator core
 > does not mistakenly believe that there is no configuration/init data
 > when in fact there is, but we failed to handle it properly.
-> 
+
 > IOW I'm advocating for extending you patch so that it reads:
-> 
+
 > +               ret = desc->of_parse_cb(child, desc, config);
 > +               if (ret) {
 > +                       of_node_put(child);
 > +                       return ERR_PTR(ret);
 > +               }
 
-I know what you mean but I wanted to keep the core changes minimal and I
-tought that it was intentional by the core.
-
-Regards,
-  Marco
-
 > Thanks.
-> 
-> -- 
-> Dmitry
-> 
-> 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+That's a more invasive change and we do have a fallback after DT for
+configuration passed in when the regulator is registered, we want to
+distinguish between the valid case where there just wasn't anything
+there and the error case where we found something but it wasn't parsable
+which is always a bit annoying to do.  The logic around this could
+really do with a bigger refactoring TBH.
+
+--vkEkAx9hr54EJ73W
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2CVokACgkQJNaLcl1U
+h9CqRwf+KHS+U8s1VKLlEwSovXoS/ed/Rc0g51Ng+a4RbbbNR+99vPBqi0tfOVui
+JFVM11seetmRuEF7rOUXdQlwlzZ17d7MWiZoaPY9XvCowPto5n9G2w4s6qfF/6qb
+lf690jFG5a6C8vpFRhkM4cEbYG7nyS5Uz5QLHBgvmq6jMpytN0nyyiQtF6Ovg1cu
+qB39PqnfH/B9hDu59AdVjqUHydpMG2bAMjUXWZBIWbNJbnmfN8c9Yxk8746jS6DK
+89J7YQrLhUcWevS+k229/GXwVH/ktOVa6wRmEE5Jr5l0kgmG1bpUBdNZ73+LDlbt
+QC0b+CBAbMU7XHNaYWu80FfuQBaxxA==
+=t2uh
+-----END PGP SIGNATURE-----
+
+--vkEkAx9hr54EJ73W--
