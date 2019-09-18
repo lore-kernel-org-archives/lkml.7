@@ -2,461 +2,192 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49562C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451B2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12941218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BCA721907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="HvCk0AMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfIROP3 (ORCPT
+        id S1729986AbfIROQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:15:29 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19882 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726038AbfIROP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:15:28 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IE7IaF052405
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:15:27 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3m8md5qp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:15:26 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 18 Sep 2019 15:15:23 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Sep 2019 15:15:18 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IEFG6F51511340
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 14:15:17 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 79F3EAE045;
-        Wed, 18 Sep 2019 14:15:15 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B117AE064;
-        Wed, 18 Sep 2019 14:15:12 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.196.20])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 14:15:12 +0000 (GMT)
-Subject: Re: [RFC PATCH v1 1/1] Add support for arm64 to carry ima
- measurement log in kexec_file_load
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva@linux.microsoft.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-integrity@vger.kernel.org, kexec@lists.infradead.org
-Cc:     arnd@arndb.de, jean-philippe@linaro.org, allison@lohutok.net,
-        kristina.martsenko@arm.org, yamada.masahiro@socionext.com,
-        duwe@lst.de, mark.rutland@arm.com, tglx@linutronix.de,
-        takahiro.akashi@linaro.org, james.morse@arm.org,
-        catalin.marinas@arm.com, sboyd@kernel.org, bauerman@linux.ibm.com
-Date:   Wed, 18 Sep 2019 10:15:11 -0400
-In-Reply-To: <20190913225009.3406-2-prsriva@linux.microsoft.com>
-References: <20190913225009.3406-1-prsriva@linux.microsoft.com>
-         <20190913225009.3406-2-prsriva@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091814-0028-0000-0000-0000039F8474
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091814-0029-0000-0000-00002461883F
-Message-Id: <1568816111.16709.68.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180142
+        Wed, 18 Sep 2019 10:16:32 -0400
+Received: from mail-eopbgr720065.outbound.protection.outlook.com ([40.107.72.65]:25276
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbfIROQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:16:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j767ujQbE/MsC9Dqwi1KDjgfpM154MYP+2sdv2w4KD3qbiA6XVf+UlCgn4bvCvgzP2HxrB4dl6Bo8/cLTY1/QNf3S+ziJN9rHYd8qT770lHux3TnuN6LYZ2Ul3rJurGZM58V3atUmXDKeOUSMKVWAxEKoh6C2V0ueBKzSUmf5/RCaSmb4XiKOAKWaptFHiDcuATQkeZs3JQefVoL6AShHBIrcpwBOuy84b83jtalbesvaSptefVmXGiM9vFuIaUtPD9kZXL/wABKolqkPm+ti3sJvts3OrWkjqRv8Ds1krFOHslAYr2KNuij/JkJtOGFw0ppKchMFJ0dXK0HmZEEFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7oo/KUudxLbs4wIVfmcw1JSYG60uq/M5b0PW/CeAb0I=;
+ b=JkXCpLn0c98rG3MvpD7vKD4ia+1kxCJCtqMXe4NWDmiNciGi/RwHP/0ciWGv67e7rumBeKr6wIc44OjYLGrAQFiKjw9PwSr6fNJr9OK8f6iwgE6l31r+tkjrNp44X87DAbHaSF1nlPTEFLAt+qe4jejT0cuWG3XZJ4f/kcaGo/+GGxf4JOtvCOA5kISCT2jC8sh/gT2Xczj/Z1KSfdgnPdzkmZDRutO4fVnAHoJn0slvkHokhQlz5993BgXjZwZQIce1ECxY9JoZk7RJ2cZVRlVovrTtAbx4KUGDyxz2AToZ07vTRfJPuR06bcKEAqFa4WrgdM40GTKFsSurKq+7Tw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7oo/KUudxLbs4wIVfmcw1JSYG60uq/M5b0PW/CeAb0I=;
+ b=HvCk0AMy3NVt4i6LYsW9fbYoyDCBN5CLuXALH0pvZ/JzZFfZaoXsIU7EG3DYdlV/d+Z2LeA1EcqoBo/7rsoPzhmEMiQ1vRxGlAalsX0OmscIiNGJBDv5dec6ssiFU1ahk4IDdChUPsbKwNGtcpKLPeibYIRvf38dFL7QghNYduk=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6790.namprd02.prod.outlook.com (20.180.17.200) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20; Wed, 18 Sep 2019 14:16:23 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::3515:e3a7:8799:73bd%2]) with mapi id 15.20.2284.009; Wed, 18 Sep 2019
+ 14:16:23 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Hans Ulli Kroll <ulli.kroll@googlemail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Michal Simek <michals@xilinx.com>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Himanshu Jha <himanshujha199640@gmail.com>
+Subject: RE: [PATCH] ethernet: Use devm_platform_ioremap_resource() in three
+ functions
+Thread-Topic: [PATCH] ethernet: Use devm_platform_ioremap_resource() in three
+ functions
+Thread-Index: AQHVbiVJrMo9zt2XL0ayrq5tymaMB6cxduyg
+Date:   Wed, 18 Sep 2019 14:16:23 +0000
+Message-ID: <CH2PR02MB700047AFFFE08FE5FD563541C78E0@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <af65355e-c2f8-9142-4d0b-6903f23a98b2@web.de>
+In-Reply-To: <af65355e-c2f8-9142-4d0b-6903f23a98b2@web.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 077f8b97-4191-4492-4b33-08d73c42c94b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:CH2PR02MB6790;
+x-ms-traffictypediagnostic: CH2PR02MB6790:|CH2PR02MB6790:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB67905B69A0880457C2CB5A9DC78E0@CH2PR02MB6790.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:473;
+x-forefront-prvs: 01644DCF4A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(39860400002)(396003)(376002)(136003)(199004)(189003)(13464003)(2201001)(76176011)(2501003)(14454004)(14444005)(316002)(7696005)(33656002)(256004)(5660300002)(52536014)(76116006)(55016002)(99286004)(6246003)(54906003)(110136005)(9686003)(7416002)(6436002)(66556008)(64756008)(86362001)(71190400001)(6636002)(66066001)(66476007)(66446008)(74316002)(4326008)(229853002)(305945005)(7736002)(8676002)(66946007)(26005)(2906002)(71200400001)(476003)(478600001)(11346002)(186003)(486006)(8936002)(25786009)(102836004)(446003)(6116002)(3846002)(53546011)(81156014)(6506007)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6790;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 2rRvfyx/M+DWNtDBjMX7uzzSYdn6zxDwopAx+TxazxKfEaCkeg699M6Bkx5J55ooe1illxRyiScTk2F2gVKxgz7tXENtOJId4HaZyyd5ItBdBVnSbo4pLfxqqLH9TunHMK1IwhTcC2xpWIOq6I2XllQopVBxVgdFiFgMrH8JRhnEH1KuXD2qQS4TQ+VNXIFxDyM3qHG33rQz6x8KLNQ8zbh/hDh0FikkcZTRWLOHz7JYCMny4q8AvsUp8BswVavA2xLtnd/kSVnR3VetnRLo9eLDF5wU5fZvam+vP8ijJuG2Fa7IW7Rb/zrPUWfVQRioWP8sIxvrLty/fzfXfGuxxeMYpCuw1ZtCu7hGoWm/iXHAgqYBCFVEM5jWVsvGhFsAywkNAvwf3LgjqT35FksYXJQOWw/Jw2890sgatDLyeQI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 077f8b97-4191-4492-4b33-08d73c42c94b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 14:16:23.8006
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WeIqQ6VdYY/UFfgql0o2nNsC4IJHiEfqhAtjAKcLWIUxEMeZdivl6LEW/E09ifYQ5T1b98YP/epGELLeWO7rlg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6790
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prahkar,
-
-On Fri, 2019-09-13 at 15:50 -0700, Prakhar Srivastava wrote:
-> During kexec_file_load, carrying forward the ima measurement log allows
-> a verifying party to get the entire runtime event log since the last
-> full reboot since that is when PCRs were last reset.
-> 
-> Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-
-Missing is the Changelog between versions.  (v1 has now been posted 3
-times.)
-
-There's a number of trailing whitespaces, blanks before tabs, and
-other warnings.  Please use scripts/checkpatch.pl before posting
-patches.
-
-
-> ---
->  arch/arm64/Kconfig                     |   7 +
->  arch/arm64/include/asm/ima.h           |  29 ++++
->  arch/arm64/include/asm/kexec.h         |   5 +
->  arch/arm64/kernel/Makefile             |   3 +-
->  arch/arm64/kernel/ima_kexec.c          | 213 +++++++++++++++++++++++++
->  arch/arm64/kernel/machine_kexec_file.c |   6 +
->  6 files changed, 262 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm64/include/asm/ima.h
->  create mode 100644 arch/arm64/kernel/ima_kexec.c
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 3adcec05b1f6..f39b12dbf9e8 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -976,6 +976,13 @@ config KEXEC_VERIFY_SIG
->  	  verification for the corresponding kernel image type being
->  	  loaded in order for this to work.
->  
-> +config HAVE_IMA_KEXEC
-> +	bool "Carry over IMA measurement log during kexec_file_load() syscall"
-> +	depends on KEXEC_FILE
-> +	help
-> +	  Select this option to carry over IMA measurement log during
-> +	  kexec_file_load.
-> +
->  config KEXEC_IMAGE_VERIFY_SIG
->  	bool "Enable Image signature verification support"
->  	default y
-> diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
-> new file mode 100644
-> index 000000000000..e23cee84729f
-> --- /dev/null
-> +++ b/arch/arm64/include/asm/ima.h
-> @@ -0,0 +1,29 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_ARM64_IMA_H
-> +#define _ASM_ARM64_IMA_H
-> +
-> +struct kimage;
-> +
-> +int ima_get_kexec_buffer(void **addr, size_t *size);
-> +int ima_free_kexec_buffer(void);
-> +
-> +#ifdef CONFIG_IMA
-> +void remove_ima_buffer(void *fdt, int chosen_node);
-> +#else
-> +static inline void remove_ima_buffer(void *fdt, int chosen_node) {}
-> +#endif
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-> +			      size_t size);
-> +
-> +int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node);
-> +#else
-> +static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
-> +				   int chosen_node)
-> +{
-> +	remove_ima_buffer(fdt, chosen_node);
-> +	return 0;
-> +}
-> +#endif /* CONFIG_IMA_KEXEC */
-> +#endif /* _ASM_ARM64_IMA_H */
-> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 12a561a54128..e8d2412066e7 100644
-> --- a/arch/arm64/include/asm/kexec.h
-> +++ b/arch/arm64/include/asm/kexec.h
-> @@ -96,6 +96,11 @@ static inline void crash_post_resume(void) {}
->  struct kimage_arch {
->  	void *dtb;
->  	unsigned long dtb_mem;
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +	phys_addr_t ima_buffer_addr;
-> +	size_t ima_buffer_size;
-> +#endif
->  };
->  
->  extern const struct kexec_file_ops kexec_image_ops;
-> diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
-> index 478491f07b4f..580238f2e9a7 100644
-> --- a/arch/arm64/kernel/Makefile
-> +++ b/arch/arm64/kernel/Makefile
-> @@ -55,7 +55,8 @@ obj-$(CONFIG_RANDOMIZE_BASE)		+= kaslr.o
->  obj-$(CONFIG_HIBERNATION)		+= hibernate.o hibernate-asm.o
->  obj-$(CONFIG_KEXEC_CORE)		+= machine_kexec.o relocate_kernel.o	\
->  					   cpu-reset.o
-> -obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o
-> +obj-$(CONFIG_KEXEC_FILE)		+= machine_kexec_file.o kexec_image.o	\
-> +					   ima_kexec.o
-
-The kernel may be built with/without IMA enabled or without IMA_KEXEC
-support.  Here you're requiring both IMA and IMA_KEXEC to be
-configured.  Please refer to the powerpc example.
-
-
->  obj-$(CONFIG_ARM64_RELOC_TEST)		+= arm64-reloc-test.o
->  arm64-reloc-test-y := reloc_test_core.o reloc_test_syms.o
->  obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
-> diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
-> new file mode 100644
-> index 000000000000..b14326d541f3
-> --- /dev/null
-> +++ b/arch/arm64/kernel/ima_kexec.c
-> @@ -0,0 +1,213 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 Microsoft Corporation.
-> + *
-> + * Authors:
-> + * Prakhar Srivastava <prsriva@linux.microsoft.com>
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include <linux/kexec.h>
-> +#include <linux/of.h>
-> +#include <linux/memblock.h>
-> +#include <linux/libfdt.h>
-> +
-> +
-
-Extraneous blank line.
-
-> +/**
-> + * delete_fdt_mem_rsv - delete memory reservation with given address and size
-> + * @fdt - pointer to the fdt.
-> + * @start - start address of the memory.
-> + * @size - number of cells to be deletd.
-> + * 
-> + * Return: 0 on success, or negative errno on error.
-> + */
-> +int delete_fdt_mem_rsv(void *fdt, unsigned long start, unsigned long size)
-> +{
-> +	int i, ret, num_rsvs = fdt_num_mem_rsv(fdt);
-> +
-> +	for (i = 0; i < num_rsvs; i++) {
-> +		uint64_t rsv_start, rsv_size;
-> +
-> +		ret = fdt_get_mem_rsv(fdt, i, &rsv_start, &rsv_size);
-> +		if (ret) {
-> +			pr_err("Malformed device tree\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		if (rsv_start == start && rsv_size == size) {
-> +			ret = fdt_del_mem_rsv(fdt, i);
-> +			if (ret) {
-> +				pr_err("Error deleting device tree reservation\n");
-> +				return -EINVAL;
-> +			}
-> +
-> +			return 0;
-> +		}
-> +	}
-> +
-> +	return -ENOENT;
-> +}
-> +
-> +/**
-> + * remove_ima_buffer - remove the IMA buffer property and reservation
-> + * @fdt - pointer the fdt.
-> + * @chosen_node - node under which property can be found.
-> + * 
-> + * The IMA measurement buffer is either read by now and freeed or a kexec call
-> + * needs to replace the ima measurement buffer, clear the property and memory
-> + * reservation.
-> + */
-> +void remove_ima_buffer(void *fdt, int chosen_node)
-> +{
-> +	int ret, len;
-> +	const void *prop;
-> +	uint64_t tmp_start, tmp_end;
-> +
-> +	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-> +	if (prop) {
-> +		tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-> +
-> +		prop = fdt_getprop(fdt, chosen_node,
-> +				   "linux,ima-kexec-buffer-end", &len);
-> +		if (!prop)
-> +			return;
-> +
-> +		tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-> +
-> +		ret = delete_fdt_mem_rsv(fdt, tmp_start, tmp_end - tmp_start);
-> +
-> +		if (ret == 0)
-> +			pr_debug("Removed old IMA buffer reservation.\n");
-> +		else if (ret != -ENOENT)
-> +			return;
-> +
-> +		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +		fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer-end");
-> +	}
-> +}
-> +
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_get_kexec_buffer(void **addr, size_t *size)
-> +{
-> +	int len;
-> +	const void *prop;
-> +	uint64_t tmp_start, tmp_end;
-> +
-> +	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	tmp_start = fdt64_to_cpu(*((const fdt64_t *) prop));
-> +
-> +	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer-end", &len);
-> +	if (!prop)
-> +		return -ENOENT;
-> +
-> +	tmp_end = fdt64_to_cpu(*((const fdt64_t *) prop));
-> +
-> +	*addr = __va(tmp_start);
-> +	*size = tmp_end - tmp_start;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_free_kexec_buffer - free memory used by the IMA buffer
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_free_kexec_buffer(void)
-> +{
-> +	int ret;
-> +	void *propStart, *propEnd;
-
-Is there a reason for using mixed case variables?  Why does the
-variable need to be prefixed with "prop"?  Wouldn't ima_start/_stop,
- buffer_start/_stop, or even buf_start/_stop be fine?
-
-> +	uint64_t tmp_start, tmp_end;
-> +
-> +	propStart = of_find_property(of_chosen, "linux,ima-kexec-buffer",
-> +				     NULL);
-> +	if (propStart) {
-> +		tmp_start = fdt64_to_cpu(*((const fdt64_t *) propStart));
-> +		ret = of_remove_property(of_chosen, propStart);
-> +		if (!ret) {
-> +			return ret;
-> +		}
-> +
-> +		propEnd = of_find_property(of_chosen,
-> +					   "linux,ima-kexec-buffer-end", NULL);
-> +		if (!propEnd) {
-> +			return -EINVAL;
-> +		}
-> +
-> +		tmp_end = fdt64_to_cpu(*((const fdt64_t *) propEnd));
-> +
-> +		ret = of_remove_property(of_chosen, propEnd);
-> +		if (!ret) {
-> +			return ret;
-> +		}
-
-There seems to be quite a bit of code duplication in this function and
-in ima_get_kexec_buffer().  It could probably be cleaned up with some
-refactoring.
-
-Mimi
-
-> +
-> +		return memblock_free(tmp_start, tmp_end - tmp_start);
-> +	}
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +/**
-> + * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA
-> + * 	measurement log.
-> + * @image: - pointer to the kimage, to store the address and size of the 
-> + *	 IMA measurement log.
-> + * @load_addr: - the address where the IMA measurement log is stored.
-> + * @size - size of the IMA measurement log.
-> + * 
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
-> +			      size_t size)
-> +{
-> +	image->arch.ima_buffer_addr = load_addr;
-> +	image->arch.ima_buffer_size = size;
-> +	return 0;
-> +}
-> +
-> +/**
-> + * setup_ima_buffer - update the fdt to contain the ima mesasurement log
-> + * @image: - pointer to the kimage, containing the address and size of
-> + *	     the IMA measurement log.
-> + * @fdt: - pointer to the fdt.
-> + * @chosen_node: - node under which property is to be defined.
-> + *  
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int setup_ima_buffer(const struct kimage *image, void *fdt, int chosen_node)
-> +{
-> +	int ret;
-> +
-> +	remove_ima_buffer(fdt, chosen_node);
-> +
-> +	if (!image->arch.ima_buffer_size)
-> +		return 0;
-> +
-> +	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer",
-> +			      image->arch.ima_buffer_addr);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = fdt_setprop_u64(fdt, chosen_node, "linux,ima-kexec-buffer-end",
-> +			      image->arch.ima_buffer_addr +
-> +			      image->arch.ima_buffer_size);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = fdt_add_mem_rsv(fdt, image->arch.ima_buffer_addr,
-> +			      image->arch.ima_buffer_size);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_IMA_KEXEC */
-> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-> index 58871333737a..de5452539c67 100644
-> --- a/arch/arm64/kernel/machine_kexec_file.c
-> +++ b/arch/arm64/kernel/machine_kexec_file.c
-> @@ -21,6 +21,7 @@
->  #include <linux/types.h>
->  #include <linux/vmalloc.h>
->  #include <asm/byteorder.h>
-> +#include <asm/ima.h>
->  
->  /* relevant device tree properties */
->  #define FDT_PROP_INITRD_START	"linux,initrd-start"
-> @@ -85,6 +86,11 @@ static int setup_dtb(struct kimage *image,
->  			goto out;
->  	}
->  
-> +	/* add ima measuremnet log buffer */
-> +	ret = setup_ima_buffer(image, dtb, off);
-> +	if (ret)
-> +		goto out;
-> +
->  	/* add kaslr-seed */
->  	ret = fdt_delprop(dtb, off, FDT_PROP_KASLR_SEED);
->  	if  (ret == -FDT_ERR_NOTFOUND)
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNYXJrdXMgRWxmcmluZyA8TWFy
+a3VzLkVsZnJpbmdAd2ViLmRlPg0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAxOCwgMjAx
+OSA3OjAxIFBNDQo+IFRvOiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmc7IERhdmlkIFMuDQo+IE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0
+Lm5ldD47IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9sbEBnb29nbGVtYWlsLmNvbT47DQo+IEhh
+dWtlIE1laHJ0ZW5zIDxoYXVrZUBoYXVrZS1tLmRlPjsgTGludXMgV2FsbGVpag0KPiA8bGludXMu
+d2FsbGVpakBsaW5hcm8ub3JnPjsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+OyBS
+YWRoZXkNCj4gU2h5YW0gUGFuZGV5IDxyYWRoZXlzQHhpbGlueC5jb20+DQo+IENjOiBMS01MIDxs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsga2VybmVsLWphbml0b3JzQHZnZXIua2VybmVs
+Lm9yZzsNCj4gQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFzemV3c2tpQGJheWxpYnJlLmNvbT47
+IEhpbWFuc2h1IEpoYQ0KPiA8aGltYW5zaHVqaGExOTk2NDBAZ21haWwuY29tPg0KPiBTdWJqZWN0
+OiBbUEFUQ0hdIGV0aGVybmV0OiBVc2UgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkg
+aW4gdGhyZWUNCj4gZnVuY3Rpb25zDQoNClByZWZlciB1c2luZyBhIHNlcGFyYXRlIHBhdGNoIGZv
+ciBlYWNoIGRyaXZlci4gQWxzbyBza2lwIG1lbnRpb25pbmcNCiJ0aHJlZSBmdW5jdGlvbnMiIGlu
+IGNvbW1pdCBkZXNjcmlwdGlvbi4gIA0KDQo+IA0KPiBGcm9tOiBNYXJrdXMgRWxmcmluZyA8ZWxm
+cmluZ0B1c2Vycy5zb3VyY2Vmb3JnZS5uZXQ+DQo+IERhdGU6IFdlZCwgMTggU2VwIDIwMTkgMTU6
+MTU6MDYgKzAyMDANCj4gDQo+IFNpbXBsaWZ5IHRoZXNlIGZ1bmN0aW9uIGltcGxlbWVudGF0aW9u
+cyBieSB1c2luZyBhIGtub3duIHdyYXBwZXIgZnVuY3Rpb24uDQoNCk1pbm9yIG5pdC0gQmV0dGVy
+IHRvIG1lbnRpb24gYWJvdXQgdGhlc2UgZnVuY3MgaW4gY29tbWl0IGRlc2NyaXB0aW9uLg0KU29t
+ZXRoaW5nIGxpa2UtIHVzZXMgZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKCkgaW5zdGVh
+ZCBvZiB1c2luZw0KcGxhdGZvcm1fZ2V0X3Jlc291cmNlKCkgYW5kIGRldm1faW9yZW1hcF9yZXNv
+dXJjZSgpIHRvZ2V0aGVyIHRvIHNpbXBsaWZ5Lg0KDQo+IA0KPiBUaGlzIGlzc3VlIHdhcyBkZXRl
+Y3RlZCBieSB1c2luZyB0aGUgQ29jY2luZWxsZSBzb2Z0d2FyZS4NCj4gDQo+IFNpZ25lZC1vZmYt
+Ynk6IE1hcmt1cyBFbGZyaW5nIDxlbGZyaW5nQHVzZXJzLnNvdXJjZWZvcmdlLm5ldD4NCj4gLS0t
+DQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9jb3J0aW5hL2dlbWluaS5jICAgICAgICAgICAgIHwg
+IDYgKy0tLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9sYW50aXFfeHJ4MjAwLmMgICAgICAg
+ICAgICAgIHwgMTEgKy0tLS0tLS0tLS0NCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC94
+aWxpbnhfYXhpZW5ldF9tYWluLmMgfCAgOSArLS0tLS0tLS0NCj4gIDMgZmlsZXMgY2hhbmdlZCwg
+MyBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL25ldC9ldGhlcm5ldC9jb3J0aW5hL2dlbWluaS5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJu
+ZXQvY29ydGluYS9nZW1pbmkuYw0KPiBpbmRleCBlNzM2Y2UyYzU4Y2EuLmYwMDk0MTVlZTRkOCAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY29ydGluYS9nZW1pbmkuYw0KPiAr
+KysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jb3J0aW5hL2dlbWluaS5jDQo+IEBAIC0yNTQ5LDE3
+ICsyNTQ5LDEzIEBAIHN0YXRpYyBpbnQgZ2VtaW5pX2V0aGVybmV0X3Byb2JlKHN0cnVjdA0KPiBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRl
+djsNCj4gIAlzdHJ1Y3QgZ2VtaW5pX2V0aGVybmV0ICpnZXRoOw0KPiAgCXVuc2lnbmVkIGludCBy
+ZXRyeSA9IDU7DQo+IC0Jc3RydWN0IHJlc291cmNlICpyZXM7DQo+ICAJdTMyIHZhbDsNCj4gDQo+
+ICAJLyogR2xvYmFsIHJlZ2lzdGVycyAqLw0KPiAgCWdldGggPSBkZXZtX2t6YWxsb2MoZGV2LCBz
+aXplb2YoKmdldGgpLCBHRlBfS0VSTkVMKTsNCj4gIAlpZiAoIWdldGgpDQo+ICAJCXJldHVybiAt
+RU5PTUVNOw0KPiAtCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNF
+X01FTSwgMCk7DQo+IC0JaWYgKCFyZXMpDQo+IC0JCXJldHVybiAtRU5PREVWOw0KPiAtCWdldGgt
+PmJhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiArCWdldGgtPmJhc2Ug
+PSBkZXZtX3BsYXRmb3JtX2lvcmVtYXBfcmVzb3VyY2UocGRldiwgMCk7DQo+ICAJaWYgKElTX0VS
+UihnZXRoLT5iYXNlKSkNCj4gIAkJcmV0dXJuIFBUUl9FUlIoZ2V0aC0+YmFzZSk7DQo+ICAJZ2V0
+aC0+ZGV2ID0gZGV2Ow0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbGFudGlx
+X3hyeDIwMC5jDQo+IGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbGFudGlxX3hyeDIwMC5jDQo+IGlu
+ZGV4IDkwMGFmZmJkY2MwZS4uMGE3ZWE0NWI5ZTU5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25l
+dC9ldGhlcm5ldC9sYW50aXFfeHJ4MjAwLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+bGFudGlxX3hyeDIwMC5jDQo+IEBAIC00MjQsNyArNDI0LDYgQEAgc3RhdGljIGludCB4cngyMDBf
+cHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIHsNCj4gIAlzdHJ1Y3QgZGV2
+aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYt
+Pm9mX25vZGU7DQo+IC0Jc3RydWN0IHJlc291cmNlICpyZXM7DQo+ICAJc3RydWN0IHhyeDIwMF9w
+cml2ICpwcml2Ow0KPiAgCXN0cnVjdCBuZXRfZGV2aWNlICpuZXRfZGV2Ow0KPiAgCWNvbnN0IHU4
+ICptYWM7DQo+IEBAIC00NDMsMTUgKzQ0Miw3IEBAIHN0YXRpYyBpbnQgeHJ4MjAwX3Byb2JlKHN0
+cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAJU0VUX05FVERFVl9ERVYobmV0X2Rldiwg
+ZGV2KTsNCj4gIAluZXRfZGV2LT5taW5fbXR1ID0gRVRIX1pMRU47DQo+ICAJbmV0X2Rldi0+bWF4
+X210dSA9IFhSWDIwMF9ETUFfREFUQV9MRU47DQo+IC0NCj4gLQkvKiBsb2FkIHRoZSBtZW1vcnkg
+cmFuZ2VzICovDQo+IC0JcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VS
+Q0VfTUVNLCAwKTsNCj4gLQlpZiAoIXJlcykgew0KPiAtCQlkZXZfZXJyKGRldiwgImZhaWxlZCB0
+byBnZXQgcmVzb3VyY2VzXG4iKTsNCj4gLQkJcmV0dXJuIC1FTk9FTlQ7DQo+IC0JfQ0KPiAtDQo+
+IC0JcHJpdi0+cG1hY19yZWcgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCByZXMpOw0KPiAr
+CXByaXYtPnBtYWNfcmVnID0gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jlc291cmNlKHBkZXYsIDAp
+Ow0KPiAgCWlmIChJU19FUlIocHJpdi0+cG1hY19yZWcpKSB7DQo+ICAJCWRldl9lcnIoZGV2LCAi
+ZmFpbGVkIHRvIHJlcXVlc3QgYW5kIHJlbWFwIGlvIHJhbmdlc1xuIik7DQo+ICAJCXJldHVybiBQ
+VFJfRVJSKHByaXYtPnBtYWNfcmVnKTsNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVy
+bmV0L3hpbGlueC94aWxpbnhfYXhpZW5ldF9tYWluLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5l
+dC94aWxpbngveGlsaW54X2F4aWVuZXRfbWFpbi5jDQo+IGluZGV4IDRmYzYyN2ZiNGQxMS4uOTI3
+ODNhYWFhMGEyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC94aWxpbngveGls
+aW54X2F4aWVuZXRfbWFpbi5jDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L3hpbGlueC94
+aWxpbnhfYXhpZW5ldF9tYWluLmMNCj4gQEAgLTE3ODcsMTQgKzE3ODcsNyBAQCBzdGF0aWMgaW50
+IGF4aWVuZXRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikNCj4gIAkJb2Zf
+bm9kZV9wdXQobnApOw0KPiAgCQlscC0+ZXRoX2lycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwg
+MCk7DQo+ICAJfSBlbHNlIHsNCj4gLQkJLyogQ2hlY2sgZm9yIHRoZXNlIHJlc291cmNlcyBkaXJl
+Y3RseSBvbiB0aGUgRXRoZXJuZXQgbm9kZS4gKi8NCj4gLQkJc3RydWN0IHJlc291cmNlICpyZXMg
+PSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwNCj4gLQ0KPiBJT1JFU09VUkNFX01FTSwgMSk7
+DQo+IC0JCWlmICghcmVzKSB7DQo+IC0JCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJ1bmFibGUgdG8g
+Z2V0IERNQSBtZW1vcnkNCj4gcmVzb3VyY2VcbiIpOw0KPiAtCQkJZ290byBmcmVlX25ldGRldjsN
+Cj4gLQkJfQ0KPiAtCQlscC0+ZG1hX3JlZ3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJnBkZXYt
+PmRldiwgcmVzKTsNCj4gKwkJbHAtPmRtYV9yZWdzID0gZGV2bV9wbGF0Zm9ybV9pb3JlbWFwX3Jl
+c291cmNlKHBkZXYsIDEpOw0KPiAgCQlscC0+cnhfaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2
+LCAxKTsNCj4gIAkJbHAtPnR4X2lycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+ICAJ
+CWxwLT5ldGhfaXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAyKTsNCj4gLS0NCj4gMi4yMy4w
+DQoNCg==
