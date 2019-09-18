@@ -2,114 +2,133 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1852C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96557C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD6C21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FB0B21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:28:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V/QzljDL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732202AbfIRV13 (ORCPT
+        id S1732222AbfIRV2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:27:29 -0400
-Received: from mga18.intel.com ([134.134.136.126]:3450 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732187AbfIRV13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:27:29 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 14:27:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
-   d="scan'208";a="387044537"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Sep 2019 14:27:27 -0700
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Dario Faggioli <dfaggioli@suse.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
- <20190619183302.GA6775@sinkpad> <20190718100714.GA469@aaronlu>
- <CAERHkrtvLKxrpvfw04urAuougsYOWnNw4-H1vUDFx27Dvy0=Ww@mail.gmail.com>
- <20190725143003.GA992@aaronlu> <20190726152101.GA27884@sinkpad>
- <7dc86e3c-aa3f-905f-3745-01181a3b0dac@linux.intel.com>
- <20190802153715.GA18075@sinkpad>
- <eec72c2d533b7600c63de3c8001cc6ab9e915afe.camel@suse.com>
- <69cd9bca-da28-1d35-3913-1efefe0c1c22@linux.intel.com>
- <20190905014423.GA5234@sinkpad>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
+        Wed, 18 Sep 2019 17:28:04 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39413 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732187AbfIRV2E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 17:28:04 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v17so1577677wml.4;
+        Wed, 18 Sep 2019 14:28:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vidPzJs5EDqpMSpA+z4jj33ViK417dD+xVu8y3BDwoc=;
+        b=V/QzljDLmHMb9aFO5Zxy4PaJCAyEfX3MARh2dQwaRsnAvsr4SYGJfh/q9mrPp7MNEz
+         nfhlwtaYivtvbf/ScfAXW+kDPs6650ZS6QMDKaALp/EL7tbOwpinK8Vqup4LnN3q55vx
+         mYMdkn+l8xiohPVJ0RF+YQFyQr8do4u5Ccak1Eaf+Cl4egAA0gRsxWYysjcZ+O8NcaF6
+         Xy3ukFDiMlLDkoDb0q2weTrK5/smFUUmY/FZ/AtsezKajow2rhj6IBIMW+nejYejz7Ez
+         A8d6ogetkTNWicpJz3NY8eVRnGjDzrd7+6iauuu4FmbntV1ZWX4whE9oP1CfNw5tvr8k
+         azEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=vidPzJs5EDqpMSpA+z4jj33ViK417dD+xVu8y3BDwoc=;
+        b=NhzIcn25NfdyIGYgS8Pp7NZf2mXsm98mdkthfycCMhP8DGx8/6CrDEwD4d0DXqW6/O
+         qFbdtGb/Hbq/IqP/gsUMWK4pmHQqS9H7gO/KE9OA5jQyvQW6RFXz/li8iymvYJXFLB24
+         K53gEk0WfVSmAKs+636RdOL9pVLKxjixlO81IoVHOBuxS0kNJISr2LPmhDrd8gC0/Wro
+         QHbCM5kSMdwDI/rnqq6Y6MhJy0MUUVUIdjKQbXxB+xEAnNE27b6TT4Yi/NtcgieAtXMa
+         HMR2uclEe/KUBQQbusdiTRcbaJyLWP1UVJXTRspBrRgMb2FctOZjtyPhpCbeVoaSlB2A
+         Hr+Q==
+X-Gm-Message-State: APjAAAXHwbcBx/gS4vdAGOfysc4Td0Aj44K+Xlu0zabyq6L9vjY322M0
+        vHrKbgpN+dej9xMmNkfIDuWdyp37
+X-Google-Smtp-Source: APXvYqytW/oX0EBncxf8wLOs14F8vu+SwL04VHMsaEYBkVKNE9eK9Q1jWaY1I6tMGBYOFuzXmfzWUg==
+X-Received: by 2002:a1c:4846:: with SMTP id v67mr1263wma.120.1568842079994;
+        Wed, 18 Sep 2019 14:27:59 -0700 (PDT)
+Received: from [192.168.1.19] (dma211.neoplus.adsl.tpnet.pl. [83.24.56.211])
+        by smtp.gmail.com with ESMTPSA id r28sm9234816wrr.94.2019.09.18.14.27.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 14:27:59 -0700 (PDT)
+Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
+ definition
+To:     Dan Murphy <dmurphy@ti.com>, pavel@ucw.cz
+Cc:     linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190917175937.13872-1-dmurphy@ti.com>
+ <20190917175937.13872-6-dmurphy@ti.com>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <63f81e82-cd5b-9095-c153-cb638f5dde08@linux.intel.com>
-Date:   Wed, 18 Sep 2019 14:27:27 -0700
+Autocrypt: addr=jacek.anaszewski@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ff1d2ede-6bdf-8f73-9e89-0e990cce09a7@gmail.com>
+Date:   Wed, 18 Sep 2019 23:27:57 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190905014423.GA5234@sinkpad>
+In-Reply-To: <20190917175937.13872-6-dmurphy@ti.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -118,23 +137,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/4/19 6:44 PM, Julien Desfossez wrote:
+Hi Dan,
 
+I think Greg's guidance clarified everything nicely -
+we will avoid <color> sub-dirs in favour of prefixes
+to *intensity and *max_intensity.
+
+Before you will send an update I have some improvement
+ideas regarding the remnants after the previous approach,
+where single color intensity update resulted in updating
+hardware state. Now the update will happen only on write to
+brightness file, so we will not need color_set/color_get ops
+anymore.
+
+On 9/17/19 7:59 PM, Dan Murphy wrote:
+> Introduce a multicolor class that groups colored LEDs
+> within a LED node.
+> 
+> The framework allows for dynamically setting individual LEDs
+> or setting brightness levels of LEDs and updating them virtually
+> simultaneously.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v6 removed color_id and color_mix files, used sysfs_create_groups instead of
+> kobject call for LED color directory, kept kobject_create for the "colors" directory,
+> removed the calculate function, updated the export for the intensity calculations.
+> 
+> 
+>  drivers/leds/Kconfig                 |  10 +
+>  drivers/leds/Makefile                |   1 +
+>  drivers/leds/led-class-multicolor.c  | 306 +++++++++++++++++++++++++++
+>  include/linux/led-class-multicolor.h |  90 ++++++++
+>  4 files changed, 407 insertions(+)
+>  create mode 100644 drivers/leds/led-class-multicolor.c
+>  create mode 100644 include/linux/led-class-multicolor.h
+> 
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 1988de1d64c0..71e7fd4f6f15 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -30,6 +30,16 @@ config LEDS_CLASS_FLASH
+>  	  for the flash related features of a LED device. It can be built
+>  	  as a module.
+>  
+> +config LEDS_CLASS_MULTI_COLOR
+> +	tristate "LED Mulit Color LED Class Support"
+> +	depends on LEDS_CLASS
+> +	help
+> +	  This option enables the multicolor LED sysfs class in /sys/class/leds.
+> +	  It wraps LED class and adds multicolor LED specific sysfs attributes
+> +	  and kernel internal API to it. You'll need this to provide support
+> +	  for multicolor LEDs that are grouped together. This class is not
+> +	  intended for single color LEDs. It can be built as a module.
 > +
-> +static void coresched_idle_worker_fini(struct rq *rq)
+>  config LEDS_BRIGHTNESS_HW_CHANGED
+>  	bool "LED Class brightness_hw_changed attribute support"
+>  	depends on LEDS_CLASS
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 41fb073a39c1..897b810257dd 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -4,6 +4,7 @@
+>  obj-$(CONFIG_NEW_LEDS)			+= led-core.o
+>  obj-$(CONFIG_LEDS_CLASS)		+= led-class.o
+>  obj-$(CONFIG_LEDS_CLASS_FLASH)		+= led-class-flash.o
+> +obj-$(CONFIG_LEDS_CLASS_MULTI_COLOR)	+= led-class-multicolor.o
+>  obj-$(CONFIG_LEDS_TRIGGERS)		+= led-triggers.o
+>  
+>  # LED Platform Drivers
+> diff --git a/drivers/leds/led-class-multicolor.c b/drivers/leds/led-class-multicolor.c
+> new file mode 100644
+> index 000000000000..d43bd344ed4c
+> --- /dev/null
+> +++ b/drivers/leds/led-class-multicolor.c
+> @@ -0,0 +1,306 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// LED Multi Color class interface
+> +// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
+> +
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/led-class-multicolor.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/uaccess.h>
+> +
+> +#include "leds.h"
+> +
+> +struct led_mc_color_entry {
+> +	struct led_classdev_mc *mcled_cdev;
+> +
+> +	struct device_attribute max_intensity_attr;
+> +	struct device_attribute intensity_attr;
+> +
+> +	enum led_brightness max_intensity;
+> +	enum led_brightness intensity;
+> +
+> +	struct list_head list;
+> +
+> +	int led_color_id;
+> +};
+> +
+> +void led_mc_calc_brightness(struct led_classdev_mc *mcled_cdev,
+> +			    enum led_brightness brightness,
+> +			    int brightness_val[])
 > +{
-> +	if (rq->core_idle_task) {
-> +		kthread_stop(rq->core_idle_task);
-> +		rq->core_idle_task = NULL;
+> +	struct led_classdev_mc_data *data = mcled_cdev->data;
+> +	struct led_mc_color_entry *priv;
+> +	int i = 0;
+> +
+> +	list_for_each_entry(priv, &data->color_list, list) {
+> +		brightness_val[i] = brightness *
+> +				    priv->intensity / priv->max_intensity;
+> +		i++;
 > +	}
+> +}
+> +EXPORT_SYMBOL_GPL(led_mc_calc_brightness);
+> +
+> +static ssize_t intensity_store(struct device *dev,
+> +				struct device_attribute *intensity_attr,
+> +				const char *buf, size_t size)
+> +{
+> +	struct led_mc_color_entry *priv = container_of(intensity_attr,
+> +						    struct led_mc_color_entry,
+> +						      intensity_attr);
+> +	struct led_classdev_mc_data *data = priv->mcled_cdev->data;
+> +	struct led_classdev_mc *mcled_cdev = data->mcled_cdev;
+> +	struct led_classdev *led_cdev = priv->mcled_cdev->led_cdev;
+> +	unsigned long value;
+> +	ssize_t ret;
+> +
+> +	mutex_lock(&led_cdev->led_access);
+> +
+> +	ret = kstrtoul(buf, 10, &value);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	if (value > priv->max_intensity) {
+> +		ret = -EINVAL;
+> +		goto unlock;
+> +	}
+> +
+> +	priv->intensity = value;
+> +
+> +	if (mcled_cdev->ops) {
+> +		ret = mcled_cdev->ops->set_color_brightness(mcled_cdev,
+> +							    priv->led_color_id,
+> +							    priv->intensity);
 
-During testing, I have found access of rq->core_idle_task as
-NULL pointer from other cpus (other than the cpu executing the stop_machine
-function) when you toggle cpu.tag of the cgroup.
-Doing locking here is tricky because the rq lock is being
-transitioned from core lock to per run queue lock.  As a fix,
-I made coresched_idle_worker_fini a null function, and not
-to null out the core_idle_task.
+I don't think this is a good idea to update hw here now.
+As I proposed before - let's do the write only in brightness set.
+Otherwise any change of hue requiring alteration of more than one color
+component will be non-atomic w.r.t. hw state change. Just cache the
+intensity in the entry here.
 
-Tim
+[...]
 
+-- 
+Best regards,
+Jacek Anaszewski
