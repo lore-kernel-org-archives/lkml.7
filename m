@@ -4,64 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F10C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF64C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE54D21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C748821924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787859;
-	bh=kWBcST6419nHX84+TZFFq6BagVu7AxrrGNueaZTJ+kM=;
+	s=default; t=1568787863;
+	bh=A69Jht1zH/TeEhUEjrbF0DH5gnBHOQ+QcX81PPTzpYI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jeo5b3RrrJPDcBVbhZj8zgNI9Dy/U1/vr27zH6Z6xBKz44WuMW+czsC2yIRGQTr+w
-	 jvX6xrhpSgpxR8Vmv87liKJS6nZJB0ikEPNyUV6vpmqhIHeXohlrhZEBJPFuUR+DNC
-	 cT+cL2S3NnKBwgRBIrx/itj9pfiS3USl5nZsKJ0o=
+	b=nV3E4tC9vS0vesnn8PgaQVRn/Q9Eq8pW3yFWuRGnz921W9qTNhkHs5sjEpvNpvx9J
+	 0tRBFrZ5JiRSh0DAfVKVCfd5v8GESXHIRCgVG7CRzeiShD/Bf0C2wI78fDOZgVr0uH
+	 9+7FwkHm1wUOc57bgP3vQJqZudSkw7YMCs7RjsEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfIRGYS (ORCPT
+        id S1728662AbfIRGYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729800AbfIRGYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:14 -0400
+        id S1729815AbfIRGYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D972321928;
-        Wed, 18 Sep 2019 06:24:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9955821925;
+        Wed, 18 Sep 2019 06:24:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787853;
-        bh=kWBcST6419nHX84+TZFFq6BagVu7AxrrGNueaZTJ+kM=;
+        s=default; t=1568787856;
+        bh=A69Jht1zH/TeEhUEjrbF0DH5gnBHOQ+QcX81PPTzpYI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jcs8oGyvI54CeE0gx+jVdnd5AxVzHwviNB/L3Igu0F6AKLVnoI84d1oLdWFfUFet2
-         3UgLcDuNXyA3w1PVQZz7aFJdrjHIf0LLkeEoS2R3HRw14TGSzKAO2OVgYeAGoNB+nT
-         BkJQEt6yRff3PqVnnDW+vQi8K4AEguaXRCmyGyGA=
+        b=bmreQzRJ7xloIlpzlmxlNcNL5OBh0u4yb59R0pH0ciseoj/oOPlRQHHXR7EG2mJAV
+         Zuubxu1RGnoDFQkif4+H6PW6AGkcRqCD+HdYzUwgcsjwGTd41t6eMH1wPOsaUvYUVo
+         RFqei8th+77G6pM6MqeNtFy7seiuOS8rYD3l2ByU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vaibhav Rustagi <vaibhavrustagi@google.com>,
-        Andreas Smas <andreas@lonelycoder.com>,
-        Steve Wahl <steve.wahl@hpe.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        clang-built-linux@googlegroups.com, dimitri.sivanich@hpe.com,
-        mike.travis@hpe.com, russ.anderson@hpe.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 25/50] x86/purgatory: Change compiler flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
-Date:   Wed, 18 Sep 2019 08:19:08 +0200
-Message-Id: <20190918061225.707967704@linuxfoundation.org>
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.2 01/85] bridge/mdb: remove wrong use of NLM_F_MULTI
+Date:   Wed, 18 Sep 2019 08:18:19 +0200
+Message-Id: <20190918061234.167205349@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
-References: <20190918061223.116178343@linuxfoundation.org>
+In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
+References: <20190918061234.107708857@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -70,133 +63,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve Wahl <steve.wahl@hpe.com>
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-commit e16c2983fba0fa6763e43ad10916be35e3d8dc05 upstream.
+[ Upstream commit 94a72b3f024fc7e9ab640897a1e38583a470659d ]
 
-The last change to this Makefile caused relocation errors when loading
-a kdump kernel.  Restore -mcmodel=large (not -mcmodel=kernel),
--ffreestanding, and -fno-zero-initialized-bsss, without reverting to
-the former practice of resetting KBUILD_CFLAGS.
+NLM_F_MULTI must be used only when a NLMSG_DONE message is sent at the end.
+In fact, NLMSG_DONE is sent only at the end of a dump.
 
-Purgatory.ro is a standalone binary that is not linked against the
-rest of the kernel.  Its image is copied into an array that is linked
-to the kernel, and from there kexec relocates it wherever it desires.
+Libraries like libnl will wait forever for NLMSG_DONE.
 
-With the previous change to compiler flags, the error "kexec: Overflow
-in relocation type 11 value 0x11fffd000" was encountered when trying
-to load the crash kernel.  This is from kexec code trying to relocate
-the purgatory.ro object.
-
->From the error message, relocation type 11 is R_X86_64_32S.  The
-x86_64 ABI says:
-
-  "The R_X86_64_32 and R_X86_64_32S relocations truncate the
-   computed value to 32-bits.  The linker must verify that the
-   generated value for the R_X86_64_32 (R_X86_64_32S) relocation
-   zero-extends (sign-extends) to the original 64-bit value."
-
-This type of relocation doesn't work when kexec chooses to place the
-purgatory binary in memory that is not reachable with 32 bit
-addresses.
-
-The compiler flag -mcmodel=kernel allows those type of relocations to
-be emitted, so revert to using -mcmodel=large as was done before.
-
-Also restore the -ffreestanding and -fno-zero-initialized-bss flags
-because they are appropriate for a stand alone piece of object code
-which doesn't explicitly zero the bss, and one other report has said
-undefined symbols are encountered without -ffreestanding.
-
-These identical compiler flag changes need to happen for every object
-that becomes part of the purgatory.ro object, so gather them together
-first into PURGATORY_CFLAGS_REMOVE and PURGATORY_CFLAGS, and then
-apply them to each of the objects that have C source.  Do not apply
-any of these flags to kexec-purgatory.o, which is not part of the
-standalone object but part of the kernel proper.
-
-Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
-Tested-by: Andreas Smas <andreas@lonelycoder.com>
-Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: None
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: clang-built-linux@googlegroups.com
-Cc: dimitri.sivanich@hpe.com
-Cc: mike.travis@hpe.com
-Cc: russ.anderson@hpe.com
-Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
-Link: https://lkml.kernel.org/r/20190905202346.GA26595@swahl-linux
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andreas Smas <andreas@lonelycoder.com>
+Fixes: 949f1e39a617 ("bridge: mdb: notify on router port add and del")
+CC: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/x86/purgatory/Makefile |   35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ net/bridge/br_mdb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -18,37 +18,40 @@ targets += purgatory.ro
- KASAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
+--- a/net/bridge/br_mdb.c
++++ b/net/bridge/br_mdb.c
+@@ -437,7 +437,7 @@ static int nlmsg_populate_rtr_fill(struc
+ 	struct nlmsghdr *nlh;
+ 	struct nlattr *nest;
  
-+# These are adjustments to the compiler flags used for objects that
-+# make up the standalone purgatory.ro
-+
-+PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
-+PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
- # sure how to relocate those.
- ifdef CONFIG_FUNCTION_TRACER
--CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
-+PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_FTRACE)
- endif
- 
- ifdef CONFIG_STACKPROTECTOR
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
--CFLAGS_REMOVE_string.o		+= -fstack-protector
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector
- endif
- 
- ifdef CONFIG_STACKPROTECTOR_STRONG
--CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
--CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
--CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
-+PURGATORY_CFLAGS_REMOVE		+= -fstack-protector-strong
- endif
- 
- ifdef CONFIG_RETPOLINE
--CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
--CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
-+PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
- endif
- 
-+CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
-+
-+CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
-+CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
-+
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
+-	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), NLM_F_MULTI);
++	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), 0);
+ 	if (!nlh)
+ 		return -EMSGSIZE;
  
 
 
