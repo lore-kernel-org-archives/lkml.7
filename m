@@ -2,29 +2,29 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A396AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A59CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80FD3218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF7F321927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbfIRIsr (ORCPT
+        id S1730693AbfIRItK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:48:47 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:41703 "EHLO
+        Wed, 18 Sep 2019 04:49:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:41705 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730504AbfIRIsq (ORCPT
+        with ESMTP id S1730506AbfIRIsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:48:46 -0400
+        Wed, 18 Sep 2019 04:48:47 -0400
 Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iAVde-0004BF-Bx; Wed, 18 Sep 2019 08:48:38 +0000
+        id 1iAVdf-0004BF-SC; Wed, 18 Sep 2019 08:48:39 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     keescook@chromium.org, luto@amacapital.net
 Cc:     jannh@google.com, wad@chromium.org, shuah@kernel.org,
@@ -32,11 +32,15 @@ Cc:     jannh@google.com, wad@chromium.org, shuah@kernel.org,
         songliubraving@fb.com, yhs@fb.com, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
         bpf@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 0/4] seccomp: continue syscall from notifier
-Date:   Wed, 18 Sep 2019 10:48:29 +0200
-Message-Id: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Tyler Hicks <tyhicks@canonical.com>, stable@vger.kernel.org
+Subject: [PATCH 3/4] seccomp: avoid overflow in implicit constant conversion
+Date:   Wed, 18 Sep 2019 10:48:32 +0200
+Message-Id: <20190918084833.9369-4-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -45,39 +49,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey everyone,
+USER_NOTIF_MAGIC is assigned to int variables in this test so set it to INT_MAX
+to avoid warnings:
 
-This is the patchset coming out of the KSummit session Kees and I gave
-in Lisbon last week (cf. [3] which also contains slides with more
-details on related things such as deep argument inspection).
-The simple idea is to extend the seccomp notifier to allow for the
-continuation of a syscall. The rationale for this can be found in the
-commit message to [1]. For the curious there is more detail in [2].
-This patchset would unblock supervising an extended set of syscalls such
-as mount() where a privileged process is supervising the syscalls of a
-lesser privileged process and emulates the syscall for the latter in
-userspace.
-For more comments on security see [1].
+seccomp_bpf.c: In function ‘user_notification_continue’:
+seccomp_bpf.c:3088:26: warning: overflow in implicit constant conversion [-Woverflow]
+ #define USER_NOTIF_MAGIC 116983961184613L
+                          ^
+seccomp_bpf.c:3572:15: note: in expansion of macro ‘USER_NOTIF_MAGIC’
+  resp.error = USER_NOTIF_MAGIC;
+               ^~~~~~~~~~~~~~~~
 
-Thanks!
-Christian
+Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: Tycho Andersen <tycho@tycho.ws>
+CC: Tyler Hicks <tyhicks@canonical.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: stable@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: bpf@vger.kernel.org
+---
+ tools/testing/selftests/seccomp/seccomp_bpf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-/* References */
-[1]: [PATCH 1/4] seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
-[2]: https://lore.kernel.org/r/20190719093538.dhyopljyr5ns33qx@brauner.io
-[3]: https://linuxplumbersconf.org/event/4/contributions/560
-
-Christian Brauner (4):
-  seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
-  seccomp: add two missing ptrace ifdefines
-  seccomp: avoid overflow in implicit constant conversion
-  seccomp: test SECCOMP_RET_USER_NOTIF_ALLOW
-
- include/uapi/linux/seccomp.h                  |   2 +
- kernel/seccomp.c                              |  24 +++-
- tools/testing/selftests/seccomp/seccomp_bpf.c | 110 +++++++++++++++++-
- 3 files changed, 131 insertions(+), 5 deletions(-)
-
+diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+index ee52eab01800..921f0e26f835 100644
+--- a/tools/testing/selftests/seccomp/seccomp_bpf.c
++++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+@@ -35,6 +35,7 @@
+ #include <stdbool.h>
+ #include <string.h>
+ #include <time.h>
++#include <limits.h>
+ #include <linux/elf.h>
+ #include <sys/uio.h>
+ #include <sys/utsname.h>
+@@ -3080,7 +3081,7 @@ static int user_trap_syscall(int nr, unsigned int flags)
+ 	return seccomp(SECCOMP_SET_MODE_FILTER, flags, &prog);
+ }
+ 
+-#define USER_NOTIF_MAGIC 116983961184613L
++#define USER_NOTIF_MAGIC INT_MAX
+ TEST(user_notification_basic)
+ {
+ 	pid_t pid;
 -- 
 2.23.0
 
