@@ -2,142 +2,91 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0336BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1567C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD80A20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mCkLg44c"
+	by mail.kernel.org (Postfix) with ESMTP id 7D2BC218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568786845;
+	bh=AIGreTLnb6bk3q8joO9XO69tVeABHA7b5VsQxkJP7Qk=;
+	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
+	b=pxqozZ2m+E/3QNV1Ovl0p8Iimzl3KUPO3eluLbZut+JucbUjQMlV3vXxZ2b/45qWi
+	 drpjK5YKwWGHKUzWYgth9X4ND/RXzj92BC6tMearstmo/0K1dfk8F8xYRPGR6qxnTA
+	 Uh5HVmbYWG7c97h4/xhlCchmRf8jsTjVWnJscXig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727820AbfIRGHE (ORCPT
+        id S1727918AbfIRGHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:07:04 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:33460 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfIRGHD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:07:03 -0400
-Received: by mail-io1-f68.google.com with SMTP id m11so13491666ioo.0;
-        Tue, 17 Sep 2019 23:07:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=xalXB+zTcS0a+NMwK6if7JfXclkW8Yw6EeltTUmJSNA=;
-        b=mCkLg44cRp2Svoewt1KhkC3tid98DJttP2esBlzdQwhZPAWASBkiH611EYr5BePZdK
-         dJkuNmhANIrMB1391wJmKOXXRYjfpdr8hruc+oSEFgeyEslnz+zsYLBUrF09MxgaJi3T
-         vtQg//UME82O3yUgwA51hGLq2/gauIDCH3LTr8n4/iP3l/Sx3OYBvN/7+YgfxQsPf7RN
-         1vLnBoOZExYF25Ly6MSK3ErJsy5/VM/IrKbsqeNTuRe3kd4P2vyxJaDMi07u4fVDEhO6
-         NNczEq8AFqMlZaAITh0AseocEXNPXwsKNHGlAGjOJ+oq5ZdljvKUHlwVtMuv4SuYAu+N
-         /TRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=xalXB+zTcS0a+NMwK6if7JfXclkW8Yw6EeltTUmJSNA=;
-        b=jCCnAUsr5N6heen14Y3DH46Mzi9TNEPMErym+iLEP27hxCwSv8Oz/ewLcJ/pk8GDxd
-         y4n6Fx2XJ/xZ+DLOvZpVZ37wSwyBr/Br80xbIpr+iFbMXx2RdSLMeVREu6OTqAP/oUqq
-         nZDcRxhDeHCiMvJoDS7gvZfe2i2JNQXy9CQIFpxV/FeZqh9K7+/zurMWK0H6jFjTfPQm
-         WyL1IB9LaPalzJlU75yroFqQSUJN+4Oelt7OLb8LniI7o5KHrYiSsE39+GygQmCKhLJM
-         ww5UF3ELmA5yr2nwJiK2GeMoTGAHIWLFnrVB5IVw4QvPIyR+Kur4VJizfplhrSc+bFw6
-         jdgw==
-X-Gm-Message-State: APjAAAUjHLeOt2kwNb5zSaDQjkvrYA51J2lXHN8g3TDoVXPa0RjOBDjp
-        NKzWqbOVuYjvVeZnIt2GTkV5TtFjD09Tmm/0REJ3vucz
-X-Google-Smtp-Source: APXvYqzxMeequQiMeVWwi/Vg3pYCFtkRl+fqjNXDxgxDuKnQaDI8xt3/nmXnbaFmGcXXGukoHgRCqjNiWfa58icF464=
-X-Received: by 2002:a6b:f315:: with SMTP id m21mr1482025ioh.12.1568786822793;
- Tue, 17 Sep 2019 23:07:02 -0700 (PDT)
+        Wed, 18 Sep 2019 02:07:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34718 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfIRGHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:07:24 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E0120856;
+        Wed, 18 Sep 2019 06:07:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568786843;
+        bh=AIGreTLnb6bk3q8joO9XO69tVeABHA7b5VsQxkJP7Qk=;
+        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
+        b=PZgRV9uH68lZF9Yfar4tWWII27pZcPdHXgBuaRNuQVd1Cv+QPz6URLR2rzD/j6SpE
+         IT0b6IeHE4Dt5kthLM1AdLZ6iqgtXwu+HeYlILr/7u2q79rZUMs3zXR+e6qMGvBQyB
+         iGn39550ZKs89ndUK4QihxjtMXYMfKqoVkUshgB4=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190904023515.7107-1-andrew.smirnov@gmail.com>
- <20190904023515.7107-8-andrew.smirnov@gmail.com> <VI1PR0402MB3485C8B22FD2B66F8FD9653E98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR0402MB3485C8B22FD2B66F8FD9653E98B70@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Tue, 17 Sep 2019 23:06:50 -0700
-Message-ID: <CAHQ1cqFf+XS7Hcdsup0hBD-o3fF5JhUREmaCdnhJ2hUaiv7fLw@mail.gmail.com>
-Subject: Re: [PATCH 07/12] crypto: caam - use devres to de-initialize the RNG
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1568043491-20680-2-git-send-email-peng.fan@nxp.com>
+References: <1568043491-20680-1-git-send-email-peng.fan@nxp.com> <1568043491-20680-2-git-send-email-peng.fan@nxp.com>
+Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+To:     "festevam@gmail.com" <festevam@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH V3 1/4] clk: imx: pll14xx: avoid glitch when set rate
+User-Agent: alot/0.8.1
+Date:   Tue, 17 Sep 2019 23:07:22 -0700
+Message-Id: <20190918060723.61E0120856@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 9, 2019 at 8:39 AM Horia Geanta <horia.geanta@nxp.com> wrote:
->
-> On 9/4/2019 5:35 AM, Andrey Smirnov wrote:
-> > Use devres to de-initialize the RNG and drop explicit de-initialization
-> > code in caam_remove().
-> >
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Horia Geant=C4=83 <horia.geanta@nxp.com>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: Iuliana Prodan <iuliana.prodan@nxp.com>
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  drivers/crypto/caam/ctrl.c | 129 ++++++++++++++++++++-----------------
-> >  1 file changed, 70 insertions(+), 59 deletions(-)
-> >
-> > diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-> > index 254963498abc..25f8f76551a5 100644
-> > --- a/drivers/crypto/caam/ctrl.c
-> > +++ b/drivers/crypto/caam/ctrl.c
-> > @@ -175,6 +175,73 @@ static inline int run_descriptor_deco0(struct devi=
-ce *ctrldev, u32 *desc,
-> >       return 0;
-> >  }
-> >
-> > +/*
-> > + * deinstantiate_rng - builds and executes a descriptor on DECO0,
-> > + *                  which deinitializes the RNG block.
-> > + * @ctrldev - pointer to device
-> > + * @state_handle_mask - bitmask containing the instantiation status
-> > + *                   for the RNG4 state handles which exist in
-> > + *                   the RNG4 block: 1 if it's been instantiated
-> > + *
-> > + * Return: - 0 if no error occurred
-> > + *      - -ENOMEM if there isn't enough memory to allocate the descrip=
-tor
-> > + *      - -ENODEV if DECO0 couldn't be acquired
-> > + *      - -EAGAIN if an error occurred when executing the descriptor
-> > + */
-> > +static int deinstantiate_rng(struct device *ctrldev, int state_handle_=
-mask)
-> I assume this function is not modified, only moved further up
-> to avoid forward declaration.
->
+Quoting Peng Fan (2019-09-08 20:39:34)
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> According to PLL1443XA and PLL1416X spec,
+> "When BYPASS is 0 and RESETB is changed from 0 to 1, FOUT starts to
+> output unstable clock until lock time passes. PLL1416X/PLL1443XA may
+> generate a glitch at FOUT."
+>=20
+> So set BYPASS when RESETB is changed from 0 to 1 to avoid glitch.
+> In the end of set rate, BYPASS will be cleared.
+>=20
+> When prepare clock, also need to take care to avoid glitch. So
+> we also follow Spec to set BYPASS before RESETB changed from 0 to 1.
+> And add a check if the RESETB is already 0, directly return 0;
+>=20
+> Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
 
-Correct.
+Applied to clk-next
 
-> > +     if (!ret) {
-> > +             ret =3D devm_add_action_or_reset(ctrldev, devm_deinstanti=
-ate_rng,
-> > +                                            ctrldev);
-> >       }
-> Braces not needed.
->
-
-OK, will remove in next version.
-
-> Is there any guidance wrt. when *not* to use devres?
->
-
-Not that I now of.
-
-Thanks,
-Andrey Smirnov
