@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A8DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0611FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B38C207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC35C207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfIRM1i (ORCPT
+        id S1731101AbfIRM1k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:27:38 -0400
+        Wed, 18 Sep 2019 08:27:40 -0400
 Received: from mail-sz.amlogic.com ([211.162.65.117]:56694 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbfIRM1g (ORCPT
+        with ESMTP id S1728539AbfIRM1h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:27:36 -0400
+        Wed, 18 Sep 2019 08:27:37 -0400
 X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Sep 2019 08:27:32 EDT
 Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 18 Sep 2019
- 20:13:26 +0800
+ 20:13:27 +0800
 From:   Xingyu Chen <xingyu.chen@amlogic.com>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Kevin Hilman <khilman@baylibre.com>
@@ -36,13 +36,11 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         Jianxin Pan <jianxin.pan@amlogic.com>,
         <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
-Date:   Wed, 18 Sep 2019 20:12:26 +0800
-Message-ID: <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 3/3] reset: add support for the Meson-A1 SoC Reset Controller
+Date:   Wed, 18 Sep 2019 20:12:29 +0800
+Message-ID: <1568808749-1196-1-git-send-email-xingyu.chen@amlogic.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
-References: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.28.8.22]
@@ -51,97 +49,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT bindings for the Meson-A1 SoC Reset Controller include file,
-and also slightly update documentation.
+The number of RESET registers and offset of RESET_LEVEL register for
+Meson-A1 are different from previous SoCs, In order to describe these
+differences, we introduce the struct meson_reset_param.
 
 Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 ---
- .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
- include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
- 2 files changed, 61 insertions(+), 2 deletions(-)
- create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
+ drivers/reset/reset-meson.c | 35 ++++++++++++++++++++++++++++-------
+ 1 file changed, 28 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-index 28ef6c2..011151a 100644
---- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-+++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
-@@ -5,8 +5,8 @@ Please also refer to reset.txt in this directory for common reset
- controller binding usage.
+diff --git a/drivers/reset/reset-meson.c b/drivers/reset/reset-meson.c
+index 5242e06..d9541c1 100644
+--- a/drivers/reset/reset-meson.c
++++ b/drivers/reset/reset-meson.c
+@@ -64,12 +64,16 @@
+ #include <linux/types.h>
+ #include <linux/of_device.h>
  
- Required properties:
--- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
--	"amlogic,meson-axg-reset".
-+- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset",
-+	"amlogic,meson-axg-reset" or "amlogic,meson-a1-reset".
- - reg: should contain the register address base
- - #reset-cells: 1, see below
+-#define REG_COUNT	8
+ #define BITS_PER_REG	32
+-#define LEVEL_OFFSET	0x7c
++
++struct meson_reset_param {
++	int reg_count;
++	int level_offset;
++};
  
-diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-new file mode 100644
-index 00000000..8d76a47
---- /dev/null
-+++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ *
-+ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
-+ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
-+ *
-+ */
+ struct meson_reset {
+ 	void __iomem *reg_base;
++	const struct meson_reset_param *param;
+ 	struct reset_controller_dev rcdev;
+ 	spinlock_t lock;
+ };
+@@ -95,10 +99,12 @@ static int meson_reset_level(struct reset_controller_dev *rcdev,
+ 		container_of(rcdev, struct meson_reset, rcdev);
+ 	unsigned int bank = id / BITS_PER_REG;
+ 	unsigned int offset = id % BITS_PER_REG;
+-	void __iomem *reg_addr = data->reg_base + LEVEL_OFFSET + (bank << 2);
++	void __iomem *reg_addr;
+ 	unsigned long flags;
+ 	u32 reg;
+ 
++	reg_addr = data->reg_base + data->param->level_offset + (bank << 2);
 +
-+#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
-+#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
+ 	spin_lock_irqsave(&data->lock, flags);
+ 
+ 	reg = readl(reg_addr);
+@@ -130,10 +136,21 @@ static const struct reset_control_ops meson_reset_ops = {
+ 	.deassert	= meson_reset_deassert,
+ };
+ 
++static const struct meson_reset_param meson8b_param = {
++	.reg_count	= 8,
++	.level_offset	= 0x7c,
++};
 +
-+/* RESET0 */
-+#define RESET_AM2AXI_VAD		1
-+#define RESET_PSRAM			4
-+#define RESET_PAD_CTRL			5
-+#define RESET_TEMP_SENSOR		7
-+#define RESET_AM2AXI_DEV		8
-+#define RESET_SPICC_A			10
-+#define RESET_MSR_CLK			11
-+#define RESET_AUDIO			12
-+#define RESET_ANALOG_CTRL		13
-+#define RESET_SAR_ADC			14
-+#define RESET_AUDIO_VAD			15
-+#define RESET_CEC			16
-+#define RESET_PWM_EF			17
-+#define RESET_PWM_CD			18
-+#define RESET_PWM_AB			19
-+#define RESET_IR_CTRL			21
-+#define RESET_I2C_S_A			22
-+#define RESET_I2C_M_D			24
-+#define RESET_I2C_M_C			25
-+#define RESET_I2C_M_B			26
-+#define RESET_I2C_M_A			27
-+#define RESET_I2C_PROD_AHB		28
-+#define RESET_I2C_PROD			29
++static const struct meson_reset_param meson_a1_param = {
++	.reg_count	= 3,
++	.level_offset	= 0x40,
++};
 +
-+/* RESET1 */
-+#define RESET_ACODEC			32
-+#define RESET_DMA			33
-+#define RESET_SD_EMMC_A			34
-+#define RESET_USBCTRL			36
-+#define RESET_USBPHY			38
-+#define RESET_RSA			42
-+#define RESET_DMC			43
-+#define RESET_IRQ_CTRL			45
-+#define RESET_NIC_VAD			47
-+#define RESET_NIC_AXI			48
-+#define RESET_RAMA			49
-+#define RESET_RAMB			50
-+#define RESET_ROM			53
-+#define RESET_SPIFC			54
-+#define RESET_GIC			55
-+#define RESET_UART_C			56
-+#define RESET_UART_B			57
-+#define RESET_UART_A			58
-+#define RESET_OSC_RING			59
+ static const struct of_device_id meson_reset_dt_ids[] = {
+-	 { .compatible = "amlogic,meson8b-reset" },
+-	 { .compatible = "amlogic,meson-gxbb-reset" },
+-	 { .compatible = "amlogic,meson-axg-reset" },
++	 { .compatible = "amlogic,meson8b-reset",    .data = &meson8b_param},
++	 { .compatible = "amlogic,meson-gxbb-reset", .data = &meson8b_param},
++	 { .compatible = "amlogic,meson-axg-reset",  .data = &meson8b_param},
++	 { .compatible = "amlogic,meson-a1-reset",   .data = &meson_a1_param},
+ 	 { /* sentinel */ },
+ };
+ 
+@@ -151,12 +168,16 @@ static int meson_reset_probe(struct platform_device *pdev)
+ 	if (IS_ERR(data->reg_base))
+ 		return PTR_ERR(data->reg_base);
+ 
++	data->param = of_device_get_match_data(&pdev->dev);
++	if (!data->param)
++		return -ENODEV;
 +
-+/* RESET2 Reserved */
-+
-+#endif
+ 	platform_set_drvdata(pdev, data);
+ 
+ 	spin_lock_init(&data->lock);
+ 
+ 	data->rcdev.owner = THIS_MODULE;
+-	data->rcdev.nr_resets = REG_COUNT * BITS_PER_REG;
++	data->rcdev.nr_resets = data->param->reg_count * BITS_PER_REG;
+ 	data->rcdev.ops = &meson_reset_ops;
+ 	data->rcdev.of_node = pdev->dev.of_node;
+ 
 -- 
 2.7.4
 
