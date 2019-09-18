@@ -2,147 +2,122 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC5A6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C700C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75849222C5
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:02:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="rwrNAQC0"
+	by mail.kernel.org (Postfix) with ESMTP id E6FB2222C6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568833423;
+	bh=MVIkVs+UxQG8k163I4kCBuRT8zMWpUxjkZoWM4RnpiY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F7WLBqXGESDq0mhjYxF+oekGRMDusILLdu/yVnQTnhQVQBRTnNfFoae13GfpzYeTu
+	 JRcULucSp1Tuqr7nxDZit14+Jc2KZWGb1Xpi1QQ9WXKkArl2aJ+6mcKVz/2yH3ic/d
+	 Ys52mXnb6t7bjbTTphe5+94BoeV/cQGlvAumBv+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388895AbfIRTCC (ORCPT
+        id S2388901AbfIRTDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:02:02 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35012 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388697AbfIRTCC (ORCPT
+        Wed, 18 Sep 2019 15:03:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38461 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfIRTDl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:02:02 -0400
-Received: by mail-qk1-f193.google.com with SMTP id w2so613807qkf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 12:02:00 -0700 (PDT)
+        Wed, 18 Sep 2019 15:03:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id u28so471108lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 12:03:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=a/WiKfNYY1RN1LifdVmZHeCC2ZxnRzILsPvEYFEN+kY=;
-        b=rwrNAQC0qswaieiokaA6fijg6ESxtCtytuYveTzs3CY/5x3aFYekW+YT/ln6CPx9Iv
-         giq6WisFO9XKO8N4hRb/BrzNsgS/QRdlxzdO+N40uGtbE1yijV2rCVz2Hfaq2+YHAqFi
-         Cp+4CY2mieLd1UKau6/vkj04ucaAIGF/8VbP0llH+AFtaXPa+u2DdK2IuAus1f+sUfna
-         oWnt9yh9X+gIVf4njrIl0MwNP7HBf9Bh2asuvde5tTNrbVraUTOHzeR28gPXk7CJ8FD8
-         ESnpss3FcDtEG9aJsJyR5QuA0Khd5LWxOqSx1SR3uW3Or3G7pXDiraLkyD1rBQ3Ku/DE
-         yUAg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FIxcmAv8Po+czY66H7vvvtaXyWmCwGyyWI4O3j01+mA=;
+        b=EsmVEzq19JVOk1cxULtjZcJs4Iioe/J/ot0dhBe+67+Wr5xqdgNOOOV43ylIRXSwPW
+         RWYcYMVP0sfHCohLpBDidM7I6SBijQg1LVQ/B/7pSoAc+t/JKz6Z5HSOR4oP8Q04+rwA
+         ANqiISTCEEC4qcWcXT0n988u0ONPsMOZrgrd0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=a/WiKfNYY1RN1LifdVmZHeCC2ZxnRzILsPvEYFEN+kY=;
-        b=PRAXzc4NPn1ViwtfiT6lM1Cg766P1yK82aYV5G8ex9RyDmaTrXh80T7fR5PFluHwte
-         y5kbSloNdM+7N3m/NhMmVrLmzErICSjTaY4SvADWJHoCPBqx6lvt7HHIew+SFtjsrX2b
-         auYg78SUNmFar78grZ3jg7LhTD6XokgC/OJmGr9AMSu0/oqnYe+GWTCQ9UQBNyXW8T2a
-         9vP87J3nQxv7TiLtyno8jeyoDuxWpfjLSSkoBMnL/TcjHxO8j/RgDNEfIme9/dh8CMfv
-         7DRg3e3/+lwNOATiyjW8506AZtYdziaRvRlgXnZ52n1SA+bn7smWae71smo1zd7kVtlD
-         4Ksw==
-X-Gm-Message-State: APjAAAUd2V5KZ8lZjjw1HHmU81FzeJJKE/LNK7JaN7rqnwWlQKSpJ+ut
-        yD4g2pcXdOdH07BQs79ZtVHhBA==
-X-Google-Smtp-Source: APXvYqyxgKFeBRnm9TLCRp8UaKTqWg0loz3BQgNVMKpcsDFcZbc1kSKOBjbDcTQratTnmiSl0OEA3Q==
-X-Received: by 2002:a37:691:: with SMTP id 139mr5751571qkg.476.1568833319767;
-        Wed, 18 Sep 2019 12:01:59 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id k17sm4128260qtk.7.2019.09.18.12.01.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 12:01:58 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     mingo@redhat.com
-Cc:     peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        chiluk+linux@indeed.com, pauld@redhat.com,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] sched/fair: fix -Wunused-but-set-variable warnings
-Date:   Wed, 18 Sep 2019 15:01:44 -0400
-Message-Id: <1568833304-5148-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FIxcmAv8Po+czY66H7vvvtaXyWmCwGyyWI4O3j01+mA=;
+        b=UAMD/HY4CtwSCCzsS8jpzHaeiMmw8WoSTBcVAsmxTwyKIqSEVM/Wg0NXxM9TfZjrGT
+         nV7ibNuwbt2/u+JkByTEv7RuzwL9+BpLS3sOn18wj3zPUjN1jN+RmNGrRmt7cdqvErqR
+         qRqtwVfjq79+wNfyj33nBm1A8LGQD/MZQY6J9L+iBCeyFjMtekqrOJGIFXj9F+er995I
+         sEd5qzndBOSbCHOitTy/fcLk9KNEAn8g4ma0UV9g7jvJvrjHEv6PFG47VyLdEM+rKN03
+         c55Mpz4aOGG0blbNS0/Jnoh/ZhW5dRTP/hfieuE76/6rQ4iqQhVxuwBgFj2ZzNEeSJvZ
+         cSZg==
+X-Gm-Message-State: APjAAAWh/ycMpcbtVS6jcxj72BA+KJhpGYlRVZDv9eiMD25nlTKxm46G
+        nrD/AGzI4hdDmcNundSAYNCqZyG6oj4=
+X-Google-Smtp-Source: APXvYqxBettAUpqFmgvV8LvNVZiuylgOx0yFFKgPNTypiYmeqgWPfpHV9ptxydOQEp2gw2veVg2JFA==
+X-Received: by 2002:a19:ee02:: with SMTP id g2mr2886896lfb.113.1568833419573;
+        Wed, 18 Sep 2019 12:03:39 -0700 (PDT)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com. [209.85.208.182])
+        by smtp.gmail.com with ESMTPSA id o18sm1128114lfb.25.2019.09.18.12.03.34
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 12:03:39 -0700 (PDT)
+Received: by mail-lj1-f182.google.com with SMTP id l21so1041606lje.4
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 12:03:34 -0700 (PDT)
+X-Received: by 2002:a2e:8943:: with SMTP id b3mr3094106ljk.165.1568833413723;
+ Wed, 18 Sep 2019 12:03:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190918170952.GT2596@sirena.co.uk> <20190918185257.GC1933777@kroah.com>
+In-Reply-To: <20190918185257.GC1933777@kroah.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Sep 2019 12:03:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whreYmsU_AQtzDS5gd3yamYJ72gBo+YekYSyJLPQ1Qo-A@mail.gmail.com>
+Message-ID: <CAHk-=whreYmsU_AQtzDS5gd3yamYJ72gBo+YekYSyJLPQ1Qo-A@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the driver-core tree
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The commit de53fd7aedb1 ("sched/fair: Fix low cpu usage with high
-throttling by removing expiration of cpu-local slices") introduced a few
-compilation warnings:
+On Wed, Sep 18, 2019 at 11:53 AM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Sep 18, 2019 at 06:09:52PM +0100, Mark Brown wrote:
+> >
+> > After merging the driver-core tree, today's linux-next build
+> > for arm64 allmodconfig failed like this:
+>
+> Wait, I thought Linus said this fixup was now resolved.  What went
+> wrong?
 
-  kernel/sched/fair.c: In function '__refill_cfs_bandwidth_runtime':
-  kernel/sched/fair.c:4365:6: warning: variable 'now' set but not used
-    [-Wunused-but-set-variable]
-  kernel/sched/fair.c: In function 'start_cfs_bandwidth':
-  kernel/sched/fair.c:4992:6: warning: variable 'overrun' set but not
-    used [-Wunused-but-set-variable]
+I think this is purely a linux-next build failure.
 
-Also, __refill_cfs_bandwidth_runtime() does no longer update the
-expiration time, so fix the comments accordingly.
+I do full allmodconfig builds between each merge I do, and what
+happened is that as part of the LED merge, I removed the
+no-longer-used 'i2c_acpi_find_match_adapter()' to resolve that build
+warning.
 
-Fixes: de53fd7aedb1 ("sched/fair: Fix low cpu usage with high throttling by removing expiration of cpu-local slices")
-Reviewed-by: Ben Segall <bsegall@google.com>
-Reviewed-by: Dave Chiluk <chiluk+linux@indeed.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+Then linux-next presumably merged my tree with the driver-core tree,
+and that re-instated the use of i2c_acpi_find_match_adapter() - which
+was now gone.
 
-Resend it since the offensive commit is now in the mainline.
+But when *I* merged the driver-core tree, I did the merge fixup
+correctly to actually re-instate not only the use, but also re-instate
+the removed function that now had a use again.
 
- kernel/sched/fair.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
+> Linus, should I submit a fix for this?
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index d4bbf68c3161..b4fb016e3557 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4354,21 +4354,16 @@ static inline u64 sched_cfs_bandwidth_slice(void)
- }
- 
- /*
-- * Replenish runtime according to assigned quota and update expiration time.
-- * We use sched_clock_cpu directly instead of rq->clock to avoid adding
-- * additional synchronization around rq->lock.
-+ * Replenish runtime according to assigned quota. We use sched_clock_cpu
-+ * directly instead of rq->clock to avoid adding additional synchronization
-+ * around rq->lock.
-  *
-  * requires cfs_b->lock
-  */
- void __refill_cfs_bandwidth_runtime(struct cfs_bandwidth *cfs_b)
- {
--	u64 now;
--
--	if (cfs_b->quota == RUNTIME_INF)
--		return;
--
--	now = sched_clock_cpu(smp_processor_id());
--	cfs_b->runtime = cfs_b->quota;
-+	if (cfs_b->quota != RUNTIME_INF)
-+		cfs_b->runtime = cfs_b->quota;
- }
- 
- static inline struct cfs_bandwidth *tg_cfs_bandwidth(struct task_group *tg)
-@@ -4994,15 +4989,13 @@ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
- 
- void start_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
- {
--	u64 overrun;
--
- 	lockdep_assert_held(&cfs_b->lock);
- 
- 	if (cfs_b->period_active)
- 		return;
- 
- 	cfs_b->period_active = 1;
--	overrun = hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
-+	hrtimer_forward_now(&cfs_b->period_timer, cfs_b->period);
- 	hrtimer_start_expires(&cfs_b->period_timer, HRTIMER_MODE_ABS_PINNED);
- }
- 
--- 
-1.8.3.1
+My tree should be fine, and I really think this is just a temporary
+linux-next effect from the above. I think linux-next only handled the
+actual syntactic conflicts, not the semantic conflict of "function had
+been removed to avoid build error from previous merge, and needed to
+be brought back"
 
+Knock wood.
+
+              Linus
