@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB826C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF2B20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1F0C2053B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787659;
-	bh=8Oga840qT7mNdbKHWlniyreRrb6tdK+loARl/EV5NNI=;
+	s=default; t=1568787663;
+	bh=P92K7UGrqkcY/2Blsi5spREbdi6x27ourdQ4qkux7Is=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOeFDymhbsXo7hLRssGy7NDOhVVUwrl00pwRGHUjSFK4KBamGIB8YdeQ098YvLIMn
-	 M3BinWxKMGeV9YKhVoQWXX1HR/GpRlxM42efxcTGMA9+kxjy2mgu3QqBtbYVNpA9hD
-	 XIkHNal/SoUuCBH37iGcqhzo5X9j5FtfYX3oBIVI=
+	b=R1h9Lm0fBN/tCHhiRP4pCoZ2u89KWWSTNn16ZXNJI+nn/diw+QHQ872eXB/ms7JOV
+	 jZ7WX9CLP4g+n5DRJiJ8Sl7fXpE1jlIDX7YteePpEmitAeybZ2ttHD/0BXi879Sl6B
+	 6kw99eOP7yaxHjc5xrPS2E8fBmy9aPvEW5byEoGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfIRGU7 (ORCPT
+        id S1728915AbfIRGVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40040 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfIRGUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:54 -0400
+        id S1728883AbfIRGVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2C19222BD;
-        Wed, 18 Sep 2019 06:20:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 231002053B;
+        Wed, 18 Sep 2019 06:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787654;
-        bh=8Oga840qT7mNdbKHWlniyreRrb6tdK+loARl/EV5NNI=;
+        s=default; t=1568787659;
+        bh=P92K7UGrqkcY/2Blsi5spREbdi6x27ourdQ4qkux7Is=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2VkkYh535KMCMpb2uQ5ZXIMmnX9rDNiV/KCbXkKtuq0Ck8KstmsbZ2uDDZAi2lWRT
-         lFLQRXr8syQm96i13Vwy4mf8HM2yn2S8Bx83LkhVTimGmI8/zA5GUppBTfF+FZxFHY
-         iCr9n6w0dQT9qV/WEuaOv7iHWHA9Ii+bSUdEZVcI=
+        b=SlCZ5dS1f99yT2xnFx12gh2DTo+cqWqcPNMOb4GGoZMaAijW5txmvXh2FJJwyKSQK
+         k2sUVgdCtiXPLz3l1Hg6rLKdsG58AzG5bYYArVoxlOv0sRTJbvv3LxUPEKZWt4NdE5
+         7Zusg5Hhny9pZCv1ssPeYRJ3/EuJYC84PEzDdry0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.14 29/45] clk: rockchip: Dont yell about bad mmc phases when getting
-Date:   Wed, 18 Sep 2019 08:19:07 +0200
-Message-Id: <20190918061226.298005862@linuxfoundation.org>
+        stable@vger.kernel.org, Xiaolei Li <xiaolei.li@mediatek.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH 4.14 30/45] mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
+Date:   Wed, 18 Sep 2019 08:19:08 +0200
+Message-Id: <20190918061226.514138610@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -59,48 +59,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Douglas Anderson <dianders@chromium.org>
+From: Xiaolei Li <xiaolei.li@mediatek.com>
 
-commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
+commit 336d4b138be2dad372b67a2388e42805c48aaa38 upstream.
 
-At boot time, my rk3288-veyron devices yell with 8 lines that look
-like this:
-  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
+One main goal of the function mtk_nfc_update_ecc_stats is to check
+whether sectors are all empty. If they are empty, set these sectors's
+data buffer and OOB buffer as 0xff.
 
-This is because the clock framework at clk_register() time tries to
-get the phase but we don't have a parent yet.
+But now, the sector OOB buffer pointer is wrongly assigned. We always
+do memset from sector 0.
 
-While the errors appear to be harmless they are still ugly and, in
-general, we don't want yells like this in the log unless they are
-important.
+To fix this issue, pass start sector number to make OOB buffer pointer
+be properly assigned.
 
-There's no real reason to be yelling here.  We can still return
--EINVAL to indicate that the phase makes no sense without a parent.
-If someone really tries to do tuning and the clock is reported as 0
-then we'll see the yells in rockchip_mmc_set_phase().
-
-Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Fixes: 1d6b1e464950 ("mtd: mediatek: driver for MTK Smart Device")
+Signed-off-by: Xiaolei Li <xiaolei.li@mediatek.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/mtd/nand/mtk_nand.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/clk/rockchip/clk-mmc-phase.c
-+++ b/drivers/clk/rockchip/clk-mmc-phase.c
-@@ -59,10 +59,8 @@ static int rockchip_mmc_get_phase(struct
- 	u32 delay_num = 0;
+--- a/drivers/mtd/nand/mtk_nand.c
++++ b/drivers/mtd/nand/mtk_nand.c
+@@ -846,19 +846,21 @@ static int mtk_nfc_write_oob_std(struct
+ 	return ret & NAND_STATUS_FAIL ? -EIO : 0;
+ }
  
- 	/* See the comment for rockchip_mmc_set_phase below */
--	if (!rate) {
--		pr_err("%s: invalid clk rate\n", __func__);
-+	if (!rate)
- 		return -EINVAL;
--	}
+-static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 sectors)
++static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 start,
++				    u32 sectors)
+ {
+ 	struct nand_chip *chip = mtd_to_nand(mtd);
+ 	struct mtk_nfc *nfc = nand_get_controller_data(chip);
+ 	struct mtk_nfc_nand_chip *mtk_nand = to_mtk_nand(chip);
+ 	struct mtk_ecc_stats stats;
++	u32 reg_size = mtk_nand->fdm.reg_size;
+ 	int rc, i;
  
- 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
+ 	rc = nfi_readl(nfc, NFI_STA) & STA_EMP_PAGE;
+ 	if (rc) {
+ 		memset(buf, 0xff, sectors * chip->ecc.size);
+ 		for (i = 0; i < sectors; i++)
+-			memset(oob_ptr(chip, i), 0xff, mtk_nand->fdm.reg_size);
++			memset(oob_ptr(chip, start + i), 0xff, reg_size);
+ 		return 0;
+ 	}
  
+@@ -878,7 +880,7 @@ static int mtk_nfc_read_subpage(struct m
+ 	u32 spare = mtk_nand->spare_per_sector;
+ 	u32 column, sectors, start, end, reg;
+ 	dma_addr_t addr;
+-	int bitflips;
++	int bitflips = 0;
+ 	size_t len;
+ 	u8 *buf;
+ 	int rc;
+@@ -946,14 +948,11 @@ static int mtk_nfc_read_subpage(struct m
+ 	if (rc < 0) {
+ 		dev_err(nfc->dev, "subpage done timeout\n");
+ 		bitflips = -EIO;
+-	} else {
+-		bitflips = 0;
+-		if (!raw) {
+-			rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
+-			bitflips = rc < 0 ? -ETIMEDOUT :
+-				mtk_nfc_update_ecc_stats(mtd, buf, sectors);
+-			mtk_nfc_read_fdm(chip, start, sectors);
+-		}
++	} else if (!raw) {
++		rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
++		bitflips = rc < 0 ? -ETIMEDOUT :
++			mtk_nfc_update_ecc_stats(mtd, buf, start, sectors);
++		mtk_nfc_read_fdm(chip, start, sectors);
+ 	}
+ 
+ 	dma_unmap_single(nfc->dev, addr, len, DMA_FROM_DEVICE);
 
 
