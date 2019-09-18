@@ -2,169 +2,224 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 380D9C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:30:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 121D0C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0601321D6C
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:30:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568817018;
-	bh=n7hEc4U3JFOCFiwdHi6OxEy+MNo9Uxm6c6RnEDR8WCk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fuC+/8h900LtCwe0R/OfSCy8qD5resP45bgYMuG2hl16WMgT7Wq0o3Z1KGix/xRMJ
-	 GTyeDE/Oyj8Bl7HUAQKZEjCyG8l0qEj7Dv2f0kAKOGOBr28sSnr1UshSvHQZkaVrwn
-	 BXjzL/Lvsq2o9Rq8G1NWeeWjwkUl46/nzUkDzdBU=
+	by mail.kernel.org (Postfix) with ESMTP id E6E24218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbfIROaR (ORCPT
+        id S1731012AbfIRObj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42062 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbfIROaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:30:17 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BD8F218AE;
-        Wed, 18 Sep 2019 14:30:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568817015;
-        bh=n7hEc4U3JFOCFiwdHi6OxEy+MNo9Uxm6c6RnEDR8WCk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u0FC0ls3vLRORjqiIUVr1q5uIM4D5c4rEUU4iQtMFK+Zkh4h99Regs1s/KZ3GBhWq
-         Cl8vuE9rrla1mh+Y+QW3Vxw9p3O8xmlC2DfI34/YeRkgXBIDmStGfXKkhtIJ9zmCf2
-         EZ12GpdDZk3k7CnbMblC+5hiUGtkMC/B7Ps3/BLY=
-Date:   Wed, 18 Sep 2019 16:30:12 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 5/6] media: sun4i: Add H3 deinterlace driver
-Message-ID: <20190918143012.4o54doeauiv3j42z@gilmour>
-References: <20190912175132.411-1-jernej.skrabec@siol.net>
- <20190912175132.411-6-jernej.skrabec@siol.net>
- <20190912202647.wfcjur7yxhlelvd6@localhost.localdomain>
- <3227980.eWD6USAIP4@jernej-laptop>
+        Wed, 18 Sep 2019 10:31:39 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40985 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726671AbfIRObi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:31:38 -0400
+Received: by mail-ed1-f67.google.com with SMTP id f20so173553edv.8;
+        Wed, 18 Sep 2019 07:31:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=aBUovupIahAYGyBEbJJYQYWcKpMNigDli6Z35qgINDE=;
+        b=mjn3b2enW4qX6stNbo9qA/NxjOZ3QMb7e7LrrJOie2XYKHF567UrUnDDKgIz15xnOM
+         HksasiaeLUQD805q/Ehr5LPN7e7tQ6/vCtvf+ku2g9hTWAY8TUwrbsCGScqxUbS2/yUJ
+         gTzMvhM1V+cLM6zhxs8mpcxh/fUTgNAMFL/UMIzQjHy7DjFcL9G4ZiQWdJu8MIAw/+Bc
+         ujcTMZM/k7EaSAdrOm6chfAlJzBCdOafn5fT0RDtH/n1BfKmger5myUXBx8qDF3PXHXl
+         U+THzWNJhrwqMeza1khZkmNMOgmdHUUsR2H7RV7/zRfK4cHl0iI86WllAbycp6hKEhcA
+         T4pA==
+X-Gm-Message-State: APjAAAX5aOcTwpF7NDuwRulr+mIhruwTrgChErC5LidNu0aaby/Sq6la
+        v24KQXJSMofUrftHQ4YXcVo=
+X-Google-Smtp-Source: APXvYqzulPQd+vXUmWQEoMmxOk1mnx72mvpjn9QFdJLMa0AZcxKDkZ8k3fLyh2+OiPOCGjv4otwHNQ==
+X-Received: by 2002:aa7:cdd6:: with SMTP id h22mr8762631edw.132.1568817095172;
+        Wed, 18 Sep 2019 07:31:35 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id i7sm1065817edk.42.2019.09.18.07.31.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:31:34 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 17/26] vfio_pci: Loop using PCI_STD_NUM_BARS
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-18-efremov@linux.com>
+ <20190918091719.GA9720@e119886-lin.cambridge.arm.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <b2783460-1d70-f4f0-17fd-c7a901c41670@linux.com>
+Date:   Wed, 18 Sep 2019 17:31:33 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="murlg7gnizd4neyj"
-Content-Disposition: inline
-In-Reply-To: <3227980.eWD6USAIP4@jernej-laptop>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190918091719.GA9720@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 9/18/19 12:17 PM, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:49PM +0300, Denis Efremov wrote:
+>> Refactor loops to use idiomatic C style and avoid the fencepost error
+>> of using "i < PCI_STD_RESOURCE_END" when "i <= PCI_STD_RESOURCE_END"
+>> is required, e.g., commit 2f686f1d9bee ("PCI: Correct PCI_STD_RESOURCE_END
+>> usage").
+>>
+>> To iterate through all possible BARs, loop conditions changed to the
+>> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
+>> valid BAR "i <= PCI_STD_RESOURCE_END".
+>>
+>> Cc: Cornelia Huck <cohuck@redhat.com>
+>> Cc: Alex Williamson <alex.williamson@redhat.com>
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> ---
+>>  drivers/vfio/pci/vfio_pci.c         | 11 ++++++----
+>>  drivers/vfio/pci/vfio_pci_config.c  | 32 +++++++++++++++--------------
+>>  drivers/vfio/pci/vfio_pci_private.h |  4 ++--
+>>  3 files changed, 26 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+>> index 703948c9fbe1..cb7d220d3246 100644
+>> --- a/drivers/vfio/pci/vfio_pci.c
+>> +++ b/drivers/vfio/pci/vfio_pci.c
+>> @@ -110,13 +110,15 @@ static inline bool vfio_pci_is_vga(struct pci_dev *pdev)
+>>  static void vfio_pci_probe_mmaps(struct vfio_pci_device *vdev)
+>>  {
+>>  	struct resource *res;
+>> -	int bar;
+>> +	int i;
+>>  	struct vfio_pci_dummy_resource *dummy_res;
+>>  
+>>  	INIT_LIST_HEAD(&vdev->dummy_resources_list);
+>>  
+>> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
+>> -		res = vdev->pdev->resource + bar;
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>> +		int bar = i + PCI_STD_RESOURCES;
+>> +
+>> +		res = &vdev->pdev->resource[bar];
+> 
+> Why can't we just drop PCI_STD_RESOURCES and replace it was 0. I understand
+> the abstraction here, but we don't do it elsewhere across the kernel. Is this
+> necessary?
 
---murlg7gnizd4neyj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+There was a discussion about this particular case:
+https://lkml.org/lkml/2019/8/12/999
 
-Hi,
+It was decided to save the original style for vfio drivers.
 
-On Sat, Sep 14, 2019 at 08:42:22AM +0200, Jernej =C5=A0krabec wrote:
-> Dne =C4=8Detrtek, 12. september 2019 ob 22:26:47 CEST je Maxime Ripard na=
-pisal(a):
-> > Hi,
-> >
-> > On Thu, Sep 12, 2019 at 07:51:31PM +0200, Jernej Skrabec wrote:
-> > > +	dev->regmap =3D devm_regmap_init_mmio(dev->dev, dev->base,
-> > > +
-> &deinterlace_regmap_config);
-> > > +	if (IS_ERR(dev->regmap)) {
-> > > +		dev_err(dev->dev, "Couldn't create deinterlace
-> regmap\n");
-> > > +
-> > > +		return PTR_ERR(dev->regmap);
-> > > +	}
-> > > +
-> > > +	ret =3D clk_prepare_enable(dev->bus_clk);
-> > > +	if (ret) {
-> > > +		dev_err(dev->dev, "Failed to enable bus clock\n");
-> > > +
-> > > +		return ret;
-> > > +	}
-> >
-> > Do you need to keep the bus clock enabled all the time? Usually, for
-> > the SoCs that have a reset line, you only need it to read / write to
-> > the registers, not to have the controller actually running.
-> >
-> > If you don't, then regmap_init_mmio_clk will take care of that for
-> > you.
-> >
-> > > +	clk_set_rate(dev->mod_clk, 300000000);
-> > > +
-> > > +	ret =3D clk_prepare_enable(dev->mod_clk);
-> > > +	if (ret) {
-> > > +		dev_err(dev->dev, "Failed to enable mod clock\n");
-> > > +
-> > > +		goto err_bus_clk;
-> > > +	}
-> > > +
-> > > +	ret =3D clk_prepare_enable(dev->ram_clk);
-> > > +	if (ret) {
-> > > +		dev_err(dev->dev, "Failed to enable ram clock\n");
-> > > +
-> > > +		goto err_mod_clk;
-> > > +	}
-> > > +
-> > > +	ret =3D reset_control_reset(dev->rstc);
-> > > +	if (ret) {
-> > > +		dev_err(dev->dev, "Failed to apply reset\n");
-> > > +
-> > > +		goto err_ram_clk;
-> > > +	}
-> >
-> > This could be moved to a runtime_pm hook, with get_sync called in the
-> > open. That way you won't leave the device powered on if it's unused.
->
-> Currently I'm looking at sun4i_csi.c as an example of runtime ops, but it
-> seems a bit wrong to have suspend and resume function marked with
-> __maybe_unused because they are the only functions which enable needed cl=
-ocks.
-> If CONFIG_PM is not enabled, then this driver simply won't work, because
-> clocks will never get enabled. I guess I can implement runtime pm ops in =
-the
-> same way and add additional handling when CONFIG_PM is not enabled, right?
+> 
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>  
+>>  		if (!IS_ENABLED(CONFIG_VFIO_PCI_MMAP))
+>>  			goto no_mmap;
+>> @@ -399,7 +401,8 @@ static void vfio_pci_disable(struct vfio_pci_device *vdev)
+>>  
+>>  	vfio_config_free(vdev);
+>>  
+>> -	for (bar = PCI_STD_RESOURCES; bar <= PCI_STD_RESOURCE_END; bar++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>> +		bar = i + PCI_STD_RESOURCES;
+>>  		if (!vdev->barmap[bar])
+>>  			continue;
+>>  		pci_iounmap(pdev, vdev->barmap[bar]);
+>> diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+>> index f0891bd8444c..90c0b80f8acf 100644
+>> --- a/drivers/vfio/pci/vfio_pci_config.c
+>> +++ b/drivers/vfio/pci/vfio_pci_config.c
+>> @@ -450,30 +450,32 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
+>>  {
+>>  	struct pci_dev *pdev = vdev->pdev;
+>>  	int i;
+>> -	__le32 *bar;
+>> +	__le32 *vbar;
+>>  	u64 mask;
+>>  
+>> -	bar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
+>> +	vbar = (__le32 *)&vdev->vconfig[PCI_BASE_ADDRESS_0];
+>>  
+>> -	for (i = PCI_STD_RESOURCES; i <= PCI_STD_RESOURCE_END; i++, bar++) {
+>> -		if (!pci_resource_start(pdev, i)) {
+>> -			*bar = 0; /* Unmapped by host = unimplemented to user */
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++, vbar++) {
+>> +		int bar = i + PCI_STD_RESOURCES;
+>> +
+>> +		if (!pci_resource_start(pdev, bar)) {
+>> +			*vbar = 0; /* Unmapped by host = unimplemented to user */
+>>  			continue;
+>>  		}
+>>  
+>> -		mask = ~(pci_resource_len(pdev, i) - 1);
+>> +		mask = ~(pci_resource_len(pdev, bar) - 1);
+>>  
+>> -		*bar &= cpu_to_le32((u32)mask);
+>> -		*bar |= vfio_generate_bar_flags(pdev, i);
+>> +		*vbar &= cpu_to_le32((u32)mask);
+>> +		*vbar |= vfio_generate_bar_flags(pdev, bar);
+>>  
+>> -		if (*bar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
+>> -			bar++;
+>> -			*bar &= cpu_to_le32((u32)(mask >> 32));
+>> +		if (*vbar & cpu_to_le32(PCI_BASE_ADDRESS_MEM_TYPE_64)) {
+>> +			vbar++;
+>> +			*vbar &= cpu_to_le32((u32)(mask >> 32));
+>>  			i++;
+>>  		}
+>>  	}
+>>  
+>> -	bar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
+>> +	vbar = (__le32 *)&vdev->vconfig[PCI_ROM_ADDRESS];
+>>  
+>>  	/*
+>>  	 * NB. REGION_INFO will have reported zero size if we weren't able
+>> @@ -483,14 +485,14 @@ static void vfio_bar_fixup(struct vfio_pci_device *vdev)
+>>  	if (pci_resource_start(pdev, PCI_ROM_RESOURCE)) {
+>>  		mask = ~(pci_resource_len(pdev, PCI_ROM_RESOURCE) - 1);
+>>  		mask |= PCI_ROM_ADDRESS_ENABLE;
+>> -		*bar &= cpu_to_le32((u32)mask);
+>> +		*vbar &= cpu_to_le32((u32)mask);
+>>  	} else if (pdev->resource[PCI_ROM_RESOURCE].flags &
+>>  					IORESOURCE_ROM_SHADOW) {
+>>  		mask = ~(0x20000 - 1);
+>>  		mask |= PCI_ROM_ADDRESS_ENABLE;
+>> -		*bar &= cpu_to_le32((u32)mask);
+>> +		*vbar &= cpu_to_le32((u32)mask);
+>>  	} else
+>> -		*bar = 0;
+>> +		*vbar = 0;
+>>  
+>>  	vdev->bardirty = false;
+>>  }
+>> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+>> index ee6ee91718a4..8a2c7607d513 100644
+>> --- a/drivers/vfio/pci/vfio_pci_private.h
+>> +++ b/drivers/vfio/pci/vfio_pci_private.h
+>> @@ -86,8 +86,8 @@ struct vfio_pci_reflck {
+>>  
+>>  struct vfio_pci_device {
+>>  	struct pci_dev		*pdev;
+>> -	void __iomem		*barmap[PCI_STD_RESOURCE_END + 1];
+>> -	bool			bar_mmap_supported[PCI_STD_RESOURCE_END + 1];
+>> +	void __iomem		*barmap[PCI_STD_NUM_BARS];
+>> +	bool			bar_mmap_supported[PCI_STD_NUM_BARS];
+>>  	u8			*pci_config_map;
+>>  	u8			*vconfig;
+>>  	struct perm_bits	*msi_perm;
+>> -- 
+>> 2.21.0
+>>
 
-Ah, right. I guess you can either add a depends on PM, or you can call
-the function directly and use set_active like we're doing in the SPI
-driver.
-
-> BTW, which callback is get_sync? I don't see it in dev_pm_ops. I suppose I
-> need only runtime_suspend and runtime_resume.
-
-get_sync is the user facing API, ie what you call when you want the
-device to be powered up. This will call runtime_resume if needed
-(there were no users, and you become the first one), and on the parent
-devices if needed too (even though it's not our case).
-
-> Off topic: sun6i_csi.c includes linux/pm_runtime.h but it doesn't have an=
-y kind
-> of power management as far as I can see.
-
-That's probably something we can remove then
-
-Thanks!
-Maxime
-
---murlg7gnizd4neyj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYI/dAAKCRDj7w1vZxhR
-xevqAQCkxjBKYVgA/AYg52M5egxPmCw9EbU+dTVOFOS3HnL94wD8C/1DfMGYclzH
-K2NXT3v5e5dek4yjiUUAdMyPuzrn4gU=
-=xZgs
------END PGP SIGNATURE-----
-
---murlg7gnizd4neyj--
