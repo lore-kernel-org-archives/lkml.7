@@ -2,183 +2,82 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A012C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF323C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBC4F21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:06:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lrjHapFy"
+	by mail.kernel.org (Postfix) with ESMTP id 7388E21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:08:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568826490;
+	bh=G32la0/Uj46Si9JMGEgwbmCiq3XWbFpIxwtdy37oWGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uLBWzKB35ibEP/KNH8zM9CRhsff9EsbGJ9zJnHbmgeZHSpqCLdjN57q0n7L2vFjYk
+	 6H5mu4um8BahEvXjd6U8ACmnp/C+gn39RXdiFPDSpBscQKwBSnpLRzbrOr0FWZDZKH
+	 wL01QEJroVQoeYEIuRcgQ0hK+Ca+4oX1SCGTlJrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732065AbfIRRGu (ORCPT
+        id S1732068AbfIRRIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:06:50 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:46346 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726908AbfIRRGt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:06:49 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IH6iPq120554;
-        Wed, 18 Sep 2019 12:06:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568826404;
-        bh=uJVcOB+ch38YNMZP4f1rNkBv5jy24fM/dgvduX4wNqs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=lrjHapFy0Xjxm7F/eUB9mlxvptcXK8XzN2gbibV2r9SuxErIIHyA0mS3XYaHggLws
-         7CFXvQ0uxxjco0xex8PJ2NJbzxVpbLNorlzm3BrEhRW/hvDGt83GgUU6MYpYgTy+NC
-         ycxXTwO7YdgRBDBPeEzd1Hqh5GSqGDdvf9/24OEo=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IH6iSt029052
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Sep 2019 12:06:44 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 12:06:44 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 12:06:41 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IH6iBw084821;
-        Wed, 18 Sep 2019 12:06:44 -0500
-Subject: Re: [PATCH v6 6/9] leds: multicolor: Introduce a multicolor class
- definition
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-leds@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190917175937.13872-1-dmurphy@ti.com>
- <20190917175937.13872-6-dmurphy@ti.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <f5cf1fa4-c891-744c-6fa9-4b166b64f463@ti.com>
-Date:   Wed, 18 Sep 2019 12:09:12 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 13:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727243AbfIRRIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:08:09 -0400
+Received: from C02WT3WMHTD6 (unknown [8.36.226.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE93520665;
+        Wed, 18 Sep 2019 17:08:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568826489;
+        bh=G32la0/Uj46Si9JMGEgwbmCiq3XWbFpIxwtdy37oWGg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YP2Yqo7A+koYz2c0hxGZWLyAtwlLvVGPuowlGAe8Oxuzos29a5n15XvP2WSACUtF4
+         pM3ZQ7G/mmiXf5s9lQ1w+w+KmvZvV997vH2ORoIeMMda7cK13y0zwAoDXs5WviUnX5
+         /4C893hbfXv6atKsV30Y0YVVUZ6x1CmhNQNnC2RA=
+Date:   Wed, 18 Sep 2019 11:08:07 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Baldyga, Robert" <robert.baldyga@intel.com>,
+        "axboe@fb.com" <axboe@fb.com>,
+        "sagi@grimberg.me" <sagi@grimberg.me>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Rakowski, Michal" <michal.rakowski@intel.com>
+Subject: Re: [PATCH 0/2] nvme: Add kernel API for admin command
+Message-ID: <20190918170807.GA50966@C02WT3WMHTD6>
+References: <20190913111610.9958-1-robert.baldyga@intel.com>
+ <20190913143709.GA8525@lst.de>
+ <850977D77E4B5C41926C0A7E2DAC5E234F2C9C09@IRSMSX104.ger.corp.intel.com>
+ <20190916073455.GA25515@lst.de>
+ <850977D77E4B5C41926C0A7E2DAC5E234F2C9D03@IRSMSX104.ger.corp.intel.com>
+ <20190917163909.GB34045@C02WT3WMHTD6.wdl.wdc.com>
+ <20190918132611.GA16232@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190917175937.13872-6-dmurphy@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918132611.GA16232@lst.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg
+On Wed, Sep 18, 2019 at 03:26:11PM +0200, Christoph Hellwig wrote:
+> Even if we had a use case for that the bounce buffer is just too ugly
+> to live.  And I'm really sick and tired of Intel wasting our time for
+> their out of tree monster given that they haven't even tried helping
+> to improve the in-kernel write caching layers.
 
-<snip>
+Right, I don't have any stake in that out-of-tree caching either. I am
+more just interested in trying to get Linux to generically reach as many
+NVMe spec features as possible, and extended formats have been in-spec
+since the beginning of nvme.
 
-> +static int led_multicolor_init_color(struct led_classdev_mc_data *data,
-> +				     struct led_classdev_mc *mcled_cdev,
-> +				     int color_id, int color_index)
-> +{
-> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> +	struct led_mc_color_entry *mc_priv;
-> +	int ret;
-> +
-> +	mc_priv = devm_kzalloc(led_cdev->dev, sizeof(*mc_priv), GFP_KERNEL);
-> +	if (!mc_priv)
-> +		return -ENOMEM;
-> +
-> +	mc_priv->led_color_id = color_id;
-> +	mc_priv->mcled_cdev = mcled_cdev;
-> +
-> +	led_color_group.name = led_colors[color_id];
-> +	ret = sysfs_create_group(data->color_kobj, &led_color_group);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sysfs_attr_init(&mc_priv->intensity_attr.attr);
-> +	mc_priv->intensity_attr.attr.name = "intensity";
-> +	mc_priv->intensity_attr.attr.mode = 666;
-> +	mc_priv->intensity_attr.store = intensity_store;
-> +	mc_priv->intensity_attr.show = intensity_show;
-> +	ret = sysfs_add_file_to_group(data->color_kobj,
-> +				      &mc_priv->intensity_attr.attr,
-> +				      led_color_group.name);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sysfs_attr_init(&mc_priv->max_intensity_attr.attr);
-> +	mc_priv->max_intensity_attr.attr.name = "max_intensity";
-> +	mc_priv->max_intensity_attr.attr.mode = 444;
-> +	mc_priv->max_intensity_attr.show = max_intensity_show;
-> +	ret = sysfs_add_file_to_group(data->color_kobj,
-> +				      &mc_priv->max_intensity_attr.attr,
-> +				      led_color_group.name);
-> +	if (ret)
-> +		goto err_out;
-> +
-> +	mc_priv->max_intensity = LED_FULL;
-> +	list_add_tail(&mc_priv->list, &data->color_list);
-> +
-> +err_out:
-> +	return ret;
-> +}
-> +
-> +static int led_multicolor_init_color_dir(struct led_classdev_mc_data *data,
-> +					 struct led_classdev_mc *mcled_cdev)
-> +{
-> +	struct led_classdev *led_cdev = mcled_cdev->led_cdev;
-> +	u32 color_id;
-> +	int ret;
-> +	int i, j = 0;
-> +
-> +	data->color_kobj = kobject_create_and_add("colors",
-> +						  &led_cdev->dev->kobj);
-
-We need some guidance here on how to properly create sub directories 
-more then 1 level deep.
-
-In short under the LED class device parent directory we want to create a 
-directory called "colors".
-
-Under that directory we want to create a directory corresponding to the 
-monochrome LED color.
-Under that directory we have the files to for intensity and 
-max_intensity for the monochrome LED.
-
-We can use the LED class kobject to create the colors directory using 
-the sysfs calls but the issue comes when creating the LED color 
-directory.  We don't have a kobj for colors to associate those 
-directories to.  The only API we see to use the kobject_create_and_add 
-which then gives us the colors directory kobj.
-
-So the directory structure would look like this which is explained in 
-this patch https://lore.kernel.org/patchwork/patch/1128444/
-
-Directory Layout Example
-========================
-root:/sys/class/leds/rgb:grouped_leds# ls -lR colors/
-colors/:
-drwxr-xr-x    2 root     root             0 Jun 28 20:21 blue
-rwxr-xr-x    2 root     root             0 Jun 28 20:21 green
-drwxr-xr-x    2 root     root             0 Jun 28 20:21 red
-
-colors/blue:
--rw-------    1 root     root          4096 Jun 28 20:21 intensity
--r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-+colors/green:
--rw-------    1 root     root          4096 Jun 28 20:22 intensity
--r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-
-colors/red:
--rw-------    1 root     root          4096 Jun 28 20:21 intensity
--r--------    1 root     root          4096 Jun 28 20:27 max_intensity
-
-I have reviewed your example code and read your blogs and papers on the 
-subject but nothing really talks about sub-sub directories.
-
-Now if this is a no-no in the kernel that is fine we can adjust but 
-Jacek wanted to get your opinon/guidance on this topic.
-
-Dan
-
-<snip>
+And yes, that bouncing is really nasty, but it's really only needed for
+PRP, so maybe let's just not ignore that transfer mode and support
+extended metadata iff the controller supports SGLs. We just need a
+special SGL setup routine to weave the data and metadata.
