@@ -2,120 +2,108 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE450C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE473C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA3EB20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ABFB20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:38:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbfIRNfq (ORCPT
+        id S1727821AbfIRNiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:35:46 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2421 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726562AbfIRNfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:35:45 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 543DB72AE6EC9CD72CCF;
-        Wed, 18 Sep 2019 21:35:41 +0800 (CST)
-Received: from dggeme704-chm.china.huawei.com (10.1.199.100) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 18 Sep 2019 21:35:41 +0800
-Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
- dggeme704-chm.china.huawei.com (10.1.199.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Wed, 18 Sep 2019 21:35:40 +0800
-Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
- dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1713.004;
- Wed, 18 Sep 2019 21:35:40 +0800
-From:   "zhangsha (A)" <zhangsha.zhang@huawei.com>
-To:     "jay.vosburgh@canonical.com" <jay.vosburgh@canonical.com>,
-        "vfalico@gmail.com" <vfalico@gmail.com>,
-        "andy@greyhouse.net" <andy@greyhouse.net>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        yuehaibing <yuehaibing@huawei.com>,
-        hunongda <hunongda@huawei.com>,
-        "Chenzhendong (alex)" <alex.chen@huawei.com>
-Subject: RE: [PATCH v3] bonding: force enable lacp port after link state
- recovery for 802.3ad
-Thread-Topic: [PATCH v3] bonding: force enable lacp port after link state
- recovery for 802.3ad
-Thread-Index: AQHVbiHhj1lgrT2osES7x4pU2JseVqcxaH3A
-Date:   Wed, 18 Sep 2019 13:35:40 +0000
-Message-ID: <e333c8d2f3624a898a378eb1073f5f29@huawei.com>
-References: <20190918130620.8556-1-zhangsha.zhang@huawei.com>
-In-Reply-To: <20190918130620.8556-1-zhangsha.zhang@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.220.209]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 18 Sep 2019 09:38:09 -0400
+Received: from gardel.0pointer.net ([85.214.157.71]:41602 "EHLO
+        gardel.0pointer.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfIRNiJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:38:09 -0400
+Received: from gardel-login.0pointer.net (gardel.0pointer.net [85.214.157.71])
+        by gardel.0pointer.net (Postfix) with ESMTP id 81113E80FFC;
+        Wed, 18 Sep 2019 15:38:07 +0200 (CEST)
+Received: by gardel-login.0pointer.net (Postfix, from userid 1000)
+        id 0B989160ADC; Wed, 18 Sep 2019 15:38:06 +0200 (CEST)
+Date:   Wed, 18 Sep 2019 15:38:06 +0200
+From:   Lennart Poettering <mzxreary@0pointer.de>
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: Linux 5.3-rc8
+Message-ID: <20190918133806.GA32346@gardel-login>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu>
+ <2508489.jOnZlRuxVn@merkaba>
+ <20190917121156.GC6762@mit.edu>
+ <20190917155743.GB31567@gardel-login>
+ <20190917162137.GA27921@1wt.eu>
+ <20190917171328.GA31798@gardel-login>
+ <20190917172929.GD27999@1wt.eu>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917172929.GD27999@1wt.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogemhhbmdzaGEgKEEpDQo+
-IFNlbnQ6IDIwMTnE6jnUwjE4yNUgMjE6MDYNCj4gVG86IGpheS52b3NidXJnaEBjYW5vbmljYWwu
-Y29tOyB2ZmFsaWNvQGdtYWlsLmNvbTsgYW5keUBncmV5aG91c2UubmV0Ow0KPiBkYXZlbUBkYXZl
-bWxvZnQubmV0OyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnOw0KPiB5dWVoYWliaW5nIDx5dWVoYWliaW5nQGh1YXdlaS5jb20+OyBodW5vbmdkYSA8
-aHVub25nZGFAaHVhd2VpLmNvbT47DQo+IENoZW56aGVuZG9uZyAoYWxleCkgPGFsZXguY2hlbkBo
-dWF3ZWkuY29tPjsgemhhbmdzaGEgKEEpDQo+IDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWkuY29tPg0K
-PiBTdWJqZWN0OiBbUEFUQ0ggdjNdIGJvbmRpbmc6IGZvcmNlIGVuYWJsZSBsYWNwIHBvcnQgYWZ0
-ZXIgbGluayBzdGF0ZSByZWNvdmVyeSBmb3INCj4gODAyLjNhZA0KPiANCj4gRnJvbTogU2hhIFpo
-YW5nIDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWkuY29tPg0KPiANCj4gQWZ0ZXIgdGhlIGNvbW1pdCAz
-MzQwMzEyMTlhODQgKCJib25kaW5nLzgwMi4zYWQ6IGZpeCBzbGF2ZSBsaW5rIGluaXRpYWxpemF0
-aW9uDQo+IHRyYW5zaXRpb24gc3RhdGVzIikgbWVyZ2VkLCB0aGUgc2xhdmUncyBsaW5rIHN0YXR1
-cyB3aWxsIGJlIGNoYW5nZWQgdG8NCj4gQk9ORF9MSU5LX0ZBSUwgZnJvbSBCT05EX0xJTktfRE9X
-TiBpbiB0aGUgZm9sbG93aW5nIHNjZW5hcmlvOg0KPiAtIERyaXZlciByZXBvcnRzIGxvc3Mgb2Yg
-Y2FycmllciBhbmQNCj4gICBib25kaW5nIGRyaXZlciByZWNlaXZlcyBORVRERVZfRE9XTiBub3Rp
-Zmllcg0KPiAtIHNsYXZlJ3MgZHVwbGV4IGFuZCBzcGVlZCBpcyB6ZXJvZCBhbmQNCj4gICBpdHMg
-cG9ydC0+aXNfZW5hYmxlZCBpcyBjbGVhcmQgdG8gJ2ZhbHNlJzsNCj4gLSBEcml2ZXIgcmVwb3J0
-cyBsaW5rIHJlY292ZXJ5IGFuZA0KPiAgIGJvbmRpbmcgZHJpdmVyIHJlY2VpdmVzIE5FVERFVl9V
-UCBub3RpZmllcjsNCj4gLSBJZiBzcGVlZC9kdXBsZXggZ2V0dGluZyBmYWlsZWQgaGVyZSwgdGhl
-IGxpbmsgc3RhdHVzDQo+ICAgd2lsbCBiZSBjaGFuZ2VkIHRvIEJPTkRfTElOS19GQUlMOw0KPiAt
-IFRoZSBNSUkgbW9ub3RvciBsYXRlciByZWNvdmVyIHRoZSBzbGF2ZSdzIHNwZWVkL2R1cGxleA0K
-PiAgIGFuZCBzZXQgbGluayBzdGF0dXMgdG8gQk9ORF9MSU5LX1VQLCBidXQgcmVtYWlucw0KPiAg
-IHRoZSAncG9ydC0+aXNfZW5hYmxlZCcgdG8gJ2ZhbHNlJy4NCj4gDQo+IEluIHRoaXMgc2NlbmFy
-aW8sIHRoZSBsYWNwIHBvcnQgd2lsbCBub3QgYmUgZW5hYmxlZCBldmVuIGl0cyBzcGVlZCBhbmQg
-ZHVwbGV4IGFyZQ0KPiB2YWxpZC4gVGhlIGJvbmQgd2lsbCBub3Qgc2VuZCBMQUNQRFUncywgYW5k
-IGl0cyBzdGF0ZSBpcyAnQURfU1RBVEVfREVGQVVMVEVEJw0KPiBmb3JldmVyLiBUaGUgc2ltcGxl
-c3QgZml4IEkgdGhpbmsgaXMgdG8gY2FsbCBib25kXzNhZF9oYW5kbGVfbGlua19jaGFuZ2UoKSBp
-bg0KPiBib25kX21paW1vbl9jb21taXQsIHRoaXMgZnVuY3Rpb24gY2FuIGVuYWJsZSBsYWNwIGFm
-dGVyIHBvcnQgc2xhdmUgc3BlZWQNCj4gY2hlY2suDQo+IEFzIGVuYWJsZWQsIHRoZSBsYWNwIHBv
-cnQgY2FuIHJ1biBpdHMgc3RhdGUgbWFjaGluZSBub3JtYWxseSBhZnRlciBsaW5rIHJlY292ZXJ5
-Lg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU2hhIFpoYW5nIDx6aGFuZ3NoYS56aGFuZ0BodWF3ZWku
-Y29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMgfCAzICsrLQ0K
-PiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMNCj4gYi9kcml2ZXJz
-L25ldC9ib25kaW5nL2JvbmRfbWFpbi5jIGluZGV4IDkzMWQ5ZDkuLjc2MzI0YTUgMTAwNjQ0DQo+
-IC0tLSBhL2RyaXZlcnMvbmV0L2JvbmRpbmcvYm9uZF9tYWluLmMNCj4gKysrIGIvZHJpdmVycy9u
-ZXQvYm9uZGluZy9ib25kX21haW4uYw0KPiBAQCAtMjIwNiw3ICsyMjA2LDggQEAgc3RhdGljIHZv
-aWQgYm9uZF9taWltb25fY29tbWl0KHN0cnVjdCBib25kaW5nDQo+ICpib25kKQ0KPiAgCQkJICov
-DQo+ICAJCQlpZiAoQk9ORF9NT0RFKGJvbmQpID09IEJPTkRfTU9ERV84MDIzQUQgJiYNCj4gIAkJ
-CSAgICBzbGF2ZS0+bGluayA9PSBCT05EX0xJTktfVVApDQo+IC0NCj4gCWJvbmRfM2FkX2FkYXB0
-ZXJfc3BlZWRfZHVwbGV4X2NoYW5nZWQoc2xhdmUpOw0KPiArCQkJCWJvbmRfM2FkX2hhbmRsZV9s
-aW5rX2NoYW5nZShzbGF2ZSwNCj4gKwkJCQkJCQkgICAgQk9ORF9MSU5LX1VQKTsNCj4gIAkJCWNv
-bnRpbnVlOw0KPiANCj4gIAkJY2FzZSBCT05EX0xJTktfVVA6DQoNCkhpLCBEYXZpZCwNCkkgaGF2
-ZSByZXBsaWVkIHlvdXIgZW1haWwgZm9yIGEgd2hpbGUsICBJIGd1ZXNzIHlvdSBtYXkgbWlzcyBt
-eSBlbWFpbCwgc28gSSByZXNlbmQgaXQuDQpUaGUgZm9sbG93aW5nIGxpbmsgYWRkcmVzcyBpcyB0
-aGUgbGFzdCBlbWFpbCwgcGxlYXNlIHJldmlldyB0aGUgbmV3IG9uZSBhZ2FpbiwgdGhhbmsgeW91
-Lg0KaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJzLm9yZy9wYXRjaC8xMTUxOTE1Lw0KDQpMYXN0IHRp
-bWUsIHlvdSBkb3VidGVkIHRoaXMgaXMgYSBkcml2ZXIgc3BlY2lmaWMgcHJvYmxlbSwNCkkgcHJl
-ZmVyIHRvIGJlbGlldmUgaXQncyBub3QgYmVjYXVzZSBJIGZpbmQgdGhlIGNvbW1pdCA0ZDJjMGNk
-YSwNCml0cyBsb2cgc2F5cyAiIFNvbWUgTklDIGRyaXZlcnMgZG9uJ3QgaGF2ZSBjb3JyZWN0IHNw
-ZWVkL2R1cGxleCANCnNldHRpbmdzIGF0IHRoZSB0aW1lIHRoZXkgc2VuZCBORVRERVZfVVAgbm90
-aWZpY2F0aW9uIC4uLiIuDQoNCkFueXdheSwgSSB0aGluayB0aGUgbGFjcCBzdGF0dXMgc2hvdWxk
-IGJlIGZpeGVkIGNvcnJlY3RseSwNCnNpbmNlIGxpbmstbW9uaXRvcmluZyAobWlpbW9uKSBzZXQg
-U1BFRUQvRFVQTEVYIHJpZ2h0IGhlcmUuDQoNCj4gLS0NCj4gMS44LjMuMQ0KDQoNCg==
+On Di, 17.09.19 19:29, Willy Tarreau (w@1wt.eu) wrote:
+
+> > What do you expect these systems to do though?
+> >
+> > I mean, think about general purpose distros: they put together live
+> > images that are supposed to work on a myriad of similar (as in: same
+> > arch) but otherwise very different systems (i.e. VMs that might lack
+> > any form of RNG source the same as beefy servers with muliple sources
+> > the same as older netbooks with few and crappy sources, ...). They can't
+> > know what the specific hw will provide or won't. It's not their
+> > incompetence that they build the image like that. It's a common, very
+> > common usecase to install a system via SSH, and it's also very common
+> > to have very generic images for a large number varied systems to run
+> > on.
+>
+> I'm totally file with installing the system via SSH, using a temporary
+> SSH key. I do make a strong distinction between the installation phase
+> and the final deployment. The SSH key used *for installation* doesn't
+> need to the be same as the final one. And very often at the end of the
+> installation we'll have produced enough entropy to produce a correct
+> key.
+
+That's not how systems are built today though. And I am not sure they
+should be. I mean, the majority of systems at this point probably have
+some form of hardware (or virtualized) RNG available (even raspi has
+one these days!), so generating these keys once at boot is totally
+OK. Probably a number of others need just a few seconds to get the
+entropy needed, where things are totally OK too. The only problem is
+systems that lack any reasonable source of entropy and where
+initialization of the pool will take overly long.
+
+I figure we can reduce the number of systems where entropy is scarce
+quite a bit if we'd start crediting entropy by default from various hw
+rngs we currently don't credit entropy for. For example, the TPM and
+older intel/amd chipsets. You currently have to specify
+rng_core.default_quality=1000 on the kernel cmdline to make them
+credit entropy. I am pretty sure this should be the default now, in a
+world where CONFIG_RANDOM_TRUST_CPU=y is set anyway. i.e. why say
+RDRAND is fine but those chipsets are not? That makes no sense to me.
+
+I am very sure that crediting entropy to chipset hwrngs is a much
+better way to solve the issue on those systems than to just hand out
+rubbish randomness.
+
+Lennart
+
+--
+Lennart Poettering, Berlin
