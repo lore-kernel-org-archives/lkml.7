@@ -2,183 +2,127 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C8CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31643C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201FE21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NBkUq176"
+	by mail.kernel.org (Postfix) with ESMTP id 0BDCD21897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbfIRKX4 (ORCPT
+        id S1729915AbfIRKX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 18 Sep 2019 06:23:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41904 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729855AbfIRKX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Sep 2019 06:23:56 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24031 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729713AbfIRKXz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:23:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568802233;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PzJJIzaT+H0i65urk/DowU+Nu1kZ2zWoYZTl/vMnWsA=;
-        b=NBkUq176kVQSB9vtvsFK2KbuEdUGO/D6ecCpIunhu82G0jzJrck64DsaduzznUKbWzDhwU
-        8eAFdHBni7jK1MVlmentoyiTGEslp4iHuc+R8VZoGy42x6OdjNifUK7+5D2JHjoFjpQwhK
-        Ny9T2LxyAXpzD/wAGi6RkHcLm50mRVo=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-202-ob8Hl-fgPmKLiPY9wB2YSg-1; Wed, 18 Sep 2019 06:23:50 -0400
-Received: by mail-wr1-f69.google.com with SMTP id j2so2190817wre.1
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 03:23:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/BXfx7jonw/Kdws8cuIdF1uOWxKnVxEGGX2roqyV5/g=;
-        b=F8S1mZXciBZZH4ChZ4TD2bu7BNJ53Qv3QtGSdNWo87kilL7hM9u02XcqbKz7ZeruOn
-         RgsVxG81Ks3NDSC8rOChC1NKNhTrLBS5sLb3Zgu+cqyLbvOL/HP6M6v6eHlMlqpT62KW
-         XUgt7mOlgEtug84gUvHtfiPUKUq2HRUEnyCQX+znyUjfx9oACvVpeV5wdxnaYQ02gXWk
-         lbOwoekZOq4WEhdEqgQx348JlzcNKercaG0+NuBfGAUR0NvdYngo4h1oxh94MOiSTcq3
-         9XvHL9+JmD2LFOHqOvwO9vs6b4V/RBFITVOglsriYFBkJwYedaKByyPk6Z6qVbbvsHo0
-         tQ5g==
-X-Gm-Message-State: APjAAAXV62N8+mw0ffb0luuZ0Xl+ZwMm4YB0tbIZGAbKTZiN8eBKQcjD
-        aBduQ37t9kPEzeC0pTPEtHdxIkTOwRlMxzPnNHJEtTUe36ZCTe6DRrrlcA7jqD/Revbw6RDLIXP
-        s8B5qbNYoKN67+nHiAqgNJWHN
-X-Received: by 2002:adf:e443:: with SMTP id t3mr2384766wrm.181.1568802229667;
-        Wed, 18 Sep 2019 03:23:49 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwfxmTc5Fm4ZBlmRxUIGfYmFyau7KO9p53RPlq/ZJeTwvrFxtmEzKYq4y8POaEPkTSmkwUKyg==
-X-Received: by 2002:adf:e443:: with SMTP id t3mr2384734wrm.181.1568802229356;
-        Wed, 18 Sep 2019 03:23:49 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id h125sm2260481wmf.31.2019.09.18.03.23.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 03:23:48 -0700 (PDT)
-Subject: Re: [RFC PATCH v3 4/6] psci: Add hvc call service for ptp_kvm.
-To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "maz@kernel.org" <maz@kernel.org>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
-        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
-        nd <nd@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190918080716.64242-1-jianyong.wu@arm.com>
- <20190918080716.64242-5-jianyong.wu@arm.com>
- <83ed7fac-277f-a31e-af37-8ec134f39d26@redhat.com>
- <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <629538ea-13fb-e666-8df6-8ad23f114755@redhat.com>
-Date:   Wed, 18 Sep 2019 12:23:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52D8A197BCE4;
+        Wed, 18 Sep 2019 10:23:56 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 54AC460872;
+        Wed, 18 Sep 2019 10:23:51 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id x8IANohg030335;
+        Wed, 18 Sep 2019 06:23:50 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id x8IANoxE030331;
+        Wed, 18 Sep 2019 06:23:50 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Wed, 18 Sep 2019 06:23:50 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Huaisheng HS1 Ye <yehs1@lenovo.com>
+cc:     "snitzer@redhat.com" <snitzer@redhat.com>,
+        "agk@redhat.com" <agk@redhat.com>,
+        "prarit@redhat.com" <prarit@redhat.com>,
+        Tzu ting Yu1 <tyu1@lenovo.com>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Huaisheng Ye <yehs2007@zoho.com>
+Subject: Re: [PATCH] dm writecache: skip writecache_wait for pmem mode
+In-Reply-To: <HK2PR03MB4418CB96B9E7B640B8B9CFB192BB0@HK2PR03MB4418.apcprd03.prod.outlook.com>
+Message-ID: <alpine.LRH.2.02.1909180621001.29703@file01.intranet.prod.int.rdu2.redhat.com>
+References: <HK2PR03MB4418CB96B9E7B640B8B9CFB192BB0@HK2PR03MB4418.apcprd03.prod.outlook.com>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-In-Reply-To: <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Content-Language: en-US
-X-MC-Unique: ob8Hl-fgPmKLiPY9wB2YSg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 18 Sep 2019 10:23:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/19 11:57, Jianyong Wu (Arm Technology China) wrote:
-> Hi Paolo,
->=20
->> On 18/09/19 10:07, Jianyong Wu wrote:
->>> +=09case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
->>> +=09=09getnstimeofday(ts);
->>
->> This is not Y2038-safe.  Please use ktime_get_real_ts64 instead, and spl=
-it the
->> 64-bit seconds value between val[0] and val[1].
->>
-> As far as I know, y2038-safe will only affect signed 32-bit integer,
-> how does it affect 64-bit integer?
-> And why split 64-bit number into two blocks is necessary?
 
-val is an u32, not an u64.  (And val[0], where you store the seconds, is
-best treated as signed, since val[0] =3D=3D -1 is returned for
-SMCCC_RET_NOT_SUPPORTED).
 
->> However, it seems to me that the new function is not needed and you can
->> just use ktime_get_snapshot.  You'll get the time in systime_snapshot->r=
-eal
->> and the cycles value in systime_snapshot->cycles.
->=20
-> See patch 5/6, I need both counter cycle and clocksource, ktime_get_snaps=
-hot seems only offer cycles.
+On Thu, 5 Sep 2019, Huaisheng HS1 Ye wrote:
 
-No, patch 5/6 only needs the current clock (ptp_sc.cycles is never
-accessed).  So you could just use READ_ONCE(tk->tkr_mono.clock).
+> > -----Original Message-----
+> > From: Mikulas Patocka <mpatocka@redhat.com>
+> > Sent: Wednesday, September 4, 2019 11:36 PM
+> > On Wed, 4 Sep 2019, Huaisheng HS1 Ye wrote:
+> > 
+> > >
+> > > Hi Mikulas,
+> > >
+> > > Thanks for your reply, I see what you mean, but I can't agree with you.
+> > >
+> > > For pmem mode, this code path (writecache_flush) is much more hot than
+> > > SSD mode. Because in the code, the AUTOCOMMIT_BLOCKS_PMEM has been
+> > > defined to 64, which means if more than 64 blocks have been inserted
+> > > to cache device, also called uncommitted, writecache_flush would be called.
+> > > Otherwise, there is a timer callback function will be called every
+> > > 1000 milliseconds.
+> > >
+> > > #define AUTOCOMMIT_BLOCKS_SSD		65536
+> > > #define AUTOCOMMIT_BLOCKS_PMEM		64
+> > > #define AUTOCOMMIT_MSEC			1000
+> > >
+> > > So when dm-writecache running in working mode, there are continuous
+> > > WRITE operations has been mapped to writecache_map, writecache_flush
+> > > will be used much more often than SSD mode.
+> > >
+> > > Cheers,
+> > > Huaisheng Ye
+> > 
+> > So, you save one instruction cache line for every 64*4096 bytes written to
+> > persistent memory.
+> > 
+> > If you insist on it, I can acknowledge it, but I think it is really an
+> > over-optimization.
+> > 
+> > Acked-By: Mikulas Patocka <mpatocka@redhat.com>
+> > 
+> > Mikulas
+> 
+> Thanks for your Acked-by, I have learned so much from your code.
+> 
+> And I have another question about the LRU.
+> 
+> Current code only put the last written blocks into the front of list 
+> wc->lru, READ hit doesn't affect the position of block in wc->lru. That 
+> is to say, if a block has been written to cache device, even there would 
+> be a lot of READ operation for that block next but without WRITE hit, 
+> which still would flow to the end of wc->lru, and eventually it would be 
+> written back.
+> 
+> I am not sure whether this behavior disobeys LRU principle or not. But 
+> if this situation above appears, that would lead to some HOT blocks 
+> (without WRITE hit) had been written back, even READ hit many times. Is 
+> it worth submitting patch to adjust the position of blocks when READ 
+> hit? Just a discussion, I want to know your design idea.
+> 
+> Cheers,
+> Huaisheng Ye
 
-However, even then I don't think it is correct to use ptp_sc.cs blindly
-in patch 5.  I think there is a misunderstanding on the meaning of
-system_counterval.cs as passed to get_device_system_crosststamp.
-system_counterval.cs is not the active clocksource; it's the clocksource
-on which system_counterval.cycles is based.
+The dm-writecache target is supposed to optimize writes, not reads. 
+Normally, there won't be any reads following a write, because the data 
+would be stored in the cache in RAM.
 
-Hypothetically, the clocksource could be one for which ptp_sc.cycles is
-_not_ a cycle value.  If you set system_counterval.cs to the system
-clocksource, get_device_system_crosststamp will return a bogus value.
-So system_counterval.cs should be set to something like
-&clocksource_counter (from drivers/clocksource/arm_arch_timer.c).
-Perhaps the right place to define kvm_arch_ptp_get_clock_fn is in that file=
-?
-
->>> +=09=09get_current_counterval(&sc);
->>> +=09=09val[0] =3D ts->tv_sec;
->>> +=09=09val[1] =3D ts->tv_nsec;
->>> +=09=09val[2] =3D sc.cycles;
->>> +=09=09val[3] =3D 0;
->>> +=09=09break;
->>
->> This should return a guest-cycles value.  If the cycles values always th=
-e same
->> between the host and the guest on ARM, then okay.  If not, you have to
->> apply whatever offset exists.
->>
-> In my opinion, when use ptp_kvm as clock sources to sync time
-> between host and guest, user should promise the guest and host has no
-> clock offset.
-
-What would be the adverse effect of having a fixed offset between guest
-and host?  If there were one, you'd have to check that and fail the
-hypercall if there is an offset.  But again, I think it's enough to
-subtract vcpu_vtimer(vcpu)->cntvoff or something like that.
-
-You also have to check here that the clocksource is based on the ARM
-architectural timer.  Again, maybe you could place the implementation in
-drivers/clocksource/arm_arch_timer.c, and make it return -ENODEV if the
-active clocksource is not clocksource_counter.  Then KVM can look for
-errors and return SMCCC_RET_NOT_SUPPORTED in that case.
-
-Thanks,
-
-Paolo
-
-> So we can be sure that the cycle between guest and
-> host should be keep consistent. But I need check it.
-> I think host cycle should be returned to guest as we should promise
-> we get clock and counter in the same time.
-
+Mikulas
