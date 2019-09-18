@@ -3,164 +3,234 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37001C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFFDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25CB20640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:20:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9B320640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="kmdmc3/a"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="UjMlD6D3";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="EEqJyMgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfIRIU7 (ORCPT
+        id S1730168AbfIRIXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:20:59 -0400
-Received: from mout.web.de ([212.227.15.3]:55841 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbfIRIU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:20:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568794814;
-        bh=kl3+5d55kYmOUszrkbFC3X73LvbxfWH1DxtIwtNLNjU=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=kmdmc3/aLDz67yHqHKf/aFEPQH6B16k83DlRDe0pnxEo9oxWm71VfoshcXcwqLVll
-         ouOxIw26pTAJOb6mY6jZYR/8/5zKsLyETE1P5/oiYwBMPKSxFBjJAuxTc96eciCF0x
-         K6+HpCfz/NWlUGtHLCSqD1UrIO9NAD1B5ChjXCn4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.2.101]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MI6F4-1iELkB3BGQ-003rsn; Wed, 18
- Sep 2019 10:20:13 +0200
-To:     linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>,
-        =?UTF-8?B?R8O8bnRlciBSw7Zjaw==?= <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>, Joel Stanley <joel@jms.id.au>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] hwmon: (aspeed-pwm-tacho) Use
- devm_platform_ioremap_resource() in aspeed_pwm_tacho_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Message-ID: <cd5bab7b-9333-2a43-bcf0-a47bbbe719eb@web.de>
-Date:   Wed, 18 Sep 2019 10:20:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Wed, 18 Sep 2019 04:23:52 -0400
+Received: from mail-eopbgr150079.outbound.protection.outlook.com ([40.107.15.79]:44963
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726131AbfIRIXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 04:23:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i2ZoNr+Ou/ZJOL/24jH+rFnDSrD7x8dMNOCdJ+10V6Q=;
+ b=UjMlD6D3OoNonz9imPErCGI81iwVhHXc1elrTKa3MKkRcmVIoETBCKxCa2L9Mfq9A7u/vxUdcKe4aMt9yfMYFyLYoA6YKMrr+i7C/AvytRMf+tRhmkxsXBt51Z+D1dAXPZ94hUjYDTaO6dwf5/rO4rBOig0Mu46nsIbZF7A+0SM=
+Received: from VI1PR0801CA0078.eurprd08.prod.outlook.com
+ (2603:10a6:800:7d::22) by DBBPR08MB4331.eurprd08.prod.outlook.com
+ (2603:10a6:10:c7::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.21; Wed, 18 Sep
+ 2019 08:23:41 +0000
+Received: from VE1EUR03FT044.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e09::201) by VI1PR0801CA0078.outlook.office365.com
+ (2603:10a6:800:7d::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2284.19 via Frontend
+ Transport; Wed, 18 Sep 2019 08:23:41 +0000
+Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT044.mail.protection.outlook.com (10.152.19.106) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.20 via Frontend Transport; Wed, 18 Sep 2019 08:23:40 +0000
+Received: ("Tessian outbound 968ab6b62146:v31"); Wed, 18 Sep 2019 08:23:36 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 16f3fff491149b4d
+X-CR-MTA-TID: 64aa7808
+Received: from eceba24666ae.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.10.52])
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id E9046880-420B-46B2-9BF4-DE19991287FC.1;
+        Wed, 18 Sep 2019 08:23:31 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (mail-db5eur03lp2052.outbound.protection.outlook.com [104.47.10.52])
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id eceba24666ae.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 18 Sep 2019 08:23:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XTNCJB+/f+F6gNgAuYynWkBbuLm0ISChu4FtNQYxQaLuFjiWhDtV6cOW5KZWjB/CZWeokEcr2OTWQcFy9sdqeUVaE+//8vaKpRyz/12c22ltV7hmsjWFXA8vbe6zWvhFj6zxrSFP/6lqIS6Rac7Z91hdURoi5UlaPreJpy9DDOAPgPCmTNAvnwzdmxHIx7SQHzZ+naiROzm2/AKs5GJHc6KUaerTZWzCPoV0Jue/drEJA6p9C2oWtIw/xxLVlV5jhB0HN2Yq7i9teLjjHjWNQT+yvTgIAeXJDJe8OU+Oj7yPkyRMdt3cfHd++lBKg8/du/C7tJzQDj9sG4Pkb98/pg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1DqFiMYBmjpxkd1u3CIiau0OWaG9keBuqDN/odWzY5c=;
+ b=D2F8bLs+lVX7SqF+5P95aqlNTJv3MoxBX2qsKZFj0sprd/7egEoiHxm7AD+ICs92vrJFUExmBnU/bV4wW0aeXLVEDNgJRPnTvC7ombPOwKZYIMX6aZf5mLQsR5y3ixCQ/YufAE6GM/NA77otGH+F/61hDA+o/wvlbMdLKai91dt4e7FJ+lGXixqz86EQTuaO9txA20FB/QbRBV6ukbLNKmNq9xsPXg38D0rv/WZ257i/aK6R4nc1bGsde+9YvbsBx+hyngg4R1M61SsMee3bmInZbBPKX/vsUdSwsSfhZhtCK1H0AZy31by/kcAkLj53IS2pl6WWd9/iSyZOURhCRA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1DqFiMYBmjpxkd1u3CIiau0OWaG9keBuqDN/odWzY5c=;
+ b=EEqJyMgZCdrS5HwLiwayURjBYFukqAodOPFbY7lGw9Ob1rxLkuHVOq+e6mP4BYfosFAuUJciC0zIUZzhl9jMGFhlStyf56z5egwk1S2dBIuS7AaRE9Xhr3z3asxbM0J/vL9yLwEZUonxpowrZCGa1XJeV07+TKx1UOjslkSehlU=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB5230.eurprd08.prod.outlook.com (10.255.27.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.20; Wed, 18 Sep 2019 08:23:28 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.009; Wed, 18 Sep 2019
+ 08:23:28 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Mihail Atanassov <Mihail.Atanassov@arm.com>,
+        Liviu Dudau <Liviu.Dudau@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        nd <nd@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/komeda: Remove in-code use of ifdef
+Thread-Topic: [PATCH] drm/komeda: Remove in-code use of ifdef
+Thread-Index: AQHVbWlTUdep0ag1GkKUK45fY3+NxacxEzeAgAAGoQA=
+Date:   Wed, 18 Sep 2019 08:23:28 +0000
+Message-ID: <20190918082322.GA16813@jamwan02-TSP300>
+References: <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
+ <20190917150314.20892-1-mihail.atanassov@arm.com>
+ <20190918075939.GZ3958@phenom.ffwll.local>
+In-Reply-To: <20190918075939.GZ3958@phenom.ffwll.local>
+Accept-Language: en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mutt/1.10.1 (2018-07-13)
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0207.apcprd02.prod.outlook.com
+ (2603:1096:201:20::19) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-Correlation-Id: 1a6bc1bd-db0d-4983-dc3f-08d73c11832f
+X-MS-Office365-Filtering-HT: Tenant
+X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR08MB5230;
+X-MS-TrafficTypeDiagnostic: VE1PR08MB5230:|VE1PR08MB5230:|DBBPR08MB4331:
+X-MS-Exchange-PUrlCount: 1
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <DBBPR08MB43313F166776670214D83EB3B38E0@DBBPR08MB4331.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+x-ms-oob-tlc-oobclassifiers: OLM:3631;OLM:3631;
+x-forefront-prvs: 01644DCF4A
+X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(396003)(346002)(366004)(376002)(136003)(39860400002)(199004)(189003)(305945005)(6246003)(8936002)(14454004)(229853002)(66556008)(81156014)(256004)(476003)(6506007)(2501003)(76176011)(446003)(81166006)(316002)(8676002)(1076003)(386003)(966005)(99286004)(33656002)(6436002)(2906002)(9686003)(33716001)(6512007)(186003)(6486002)(11346002)(3846002)(52116002)(26005)(58126008)(66946007)(64756008)(55236004)(102836004)(110136005)(86362001)(6306002)(25786009)(486006)(7736002)(71190400001)(71200400001)(5660300002)(478600001)(66066001)(2201001)(66476007)(6116002)(66446008)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5230;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info-Original: MH/ysoNtl7qmQnCcsgqlGHuoWz8pwgVyUxK+PI1qphNHJOjKBwLcMl1jjZxd6QeE5RURkSSaVrTB3qCkCJ6v/BoqeP6pJO4lwsVhbxvFasALI2hlZDKNEtETTh+uy+15rzEOhJVeDcHYgGiGbqApA46I6FoLIkHI1D1cZgcu6S52Qwk1es080BmnqNpB+wGWwCM/yYvm5i34+2OaTxyJjfQdM0/UGYIcJUazby3NYJ5RXaFCdDspMPeidv8RS9VcU1aJCWtv2FZYy/KLocOw+WlXUiOgJcP0w4EHNrLj62uLHNkRlXmlDr2+Wtf6eUMM+leT0cMJ2a+sKWC6DNE4CQqQZVEp1WWCsjDUTi3M+eiOAxSaFQw5hIdvQKXxLFWdK+n7HFaOq34ddceST2YWJu9brq6MvC2oJQvacdnI+XM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3733FE332526344DB26E4F8ABE8F68DA@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YMH6mg5kaUBoVv5GIonZBw2R5Sy5Htur1qU8tdIJrLkDBp0mvJq
- vQbHswXf8bSTtwFt+rNDn6rqLKFm2hgwvSwQVKPLFBhFKc9HWUv7QDVrGinL5bpRulYoczJ
- 90Vs1FYYA9TDXaS84R5WRJlCtBV+Kgdups8L6ARUR9VJEb1c447SEjPNI+o2wpa3oKWWrXW
- qgbksN600FHMU5mp/e2Zw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:BTQOmjhTucs=:xhbddetTM6aK/WxSnm2mMs
- o/fjSY374/ChhA7C2IN86A85PLDnEyiFTRzfDAW90r/ABxoJkgFHl/FsIf3xR3AkEXOd3Lgoo
- HlG+KAVUdzC+jORMxuyBOspI7IJGrN5mjzVxykuO23mcCr0Srp0oVaRsZlaHQ+tf36z+n7L/o
- eXwVgioDvec2QW39CeGZ2g4ERVcH6oVmHb8KJhCNR3FTTvH65Tpdv/P1SYvWvxz0jkwECpH0k
- VtgIeMDjnsOTsOyNh2Bhk/0d0XDHNX9IQtPhqaHiN7B+J5u8LAQksH0XqrodCiMnIQdSnior+
- feNbAsHq+2E6hSfnQEBSLcknNIFtSs2hVbYFmxJvHUFooe6XN96UoCrwOI39Ljne7Nig5ej5m
- 8OkKtu0uTEvWao++m1AHfaKlXeDea5ZESTUPFEYLi6QrCV9qbeVndxLQ5Lm5U6smM7byH5cUr
- AkjT1RN+TAPN9BEKVJS4w2OMTeAjTyQafTzblHpvYHZTdW41JgGROAIRpiXjbfc3xjVUqOXNr
- yljUVK8eGP7EXOl1FjEraOUIXzDA2BKMl4bexWhVyh5REkifcQJr10BlehROkllKndx2AYogI
- yQfYcROWEmCPd5PkvAHuQ5TLAjexyRaGAvP3EZ1kmY4Bn19odLAPnHD12tf260dtnd7+JTMlI
- i4zvTCKP54Bm1sMWS8lX5AKSEXdfOcrkpj1dRvzGXEcRhSBMa6E+QiQRJHSLfy6j4YHNGfn2o
- vmcTf0PdtPWIYDXkDak1BtBQW4QWat5vNNhz/rY+COgNOmPV4bQxORSZ2K1PB/RvjfGihNUqk
- pveprS68926uK9s3smXscWmg9FsYBuAaI+zyosTt5X7vZRhMMH4HY0KBkGUg/BNFbdENEe3Sh
- WkUOkouSik104WQrZdXezbbkfK8AxTyvfyHuuCUwK7BGpqX1p/56ee6zRzCqvZahfXDPGxXaz
- Oa51NkVErWfJqq75Dgz5wAgHzvOO0IGe6TLFhHduleV2mtnlBjV3EYObW2IxK1Qm7NMyL8LSu
- C9uPt1czKiEQ7YJm/jqUZuliiIPoWX+f4lvcd7FUuVGpW6jM6OGYfpFkGpFh55B0Cv+J4UAQV
- ah8WnGaad1UlqEOPoph5H1G36PfhxMsg69+R/VysFpOLVedDhkebBozUg1rWeuUd9DcRYjnki
- 3lqMLjwvvRt5/wrCaj+ipjC1mnnfFik26ejkoV/ant4Q0tNlLuxmwM7MCaV2I53UBdHyoLzpx
- EGdlwrafxexMXK9a/ZHuaz4weNco4Hr9H2cfidr+TzauOymI11pEe0rRjYRA=
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5230
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT044.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(376002)(396003)(39860400002)(346002)(40434004)(189003)(199004)(8676002)(81166006)(8746002)(81156014)(8936002)(336012)(22756006)(6116002)(47776003)(3846002)(25786009)(23726003)(2906002)(7736002)(66066001)(6512007)(97756001)(6246003)(1076003)(356004)(58126008)(5660300002)(305945005)(316002)(110136005)(36906005)(9686003)(46406003)(6306002)(26826003)(229853002)(76130400001)(70206006)(70586007)(478600001)(33656002)(486006)(126002)(966005)(14454004)(587094005)(86362001)(2501003)(2201001)(5024004)(14444005)(76176011)(386003)(6506007)(50466002)(11346002)(63350400001)(26005)(476003)(446003)(186003)(99286004)(33716001)(102836004)(6486002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4331;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;MX:1;A:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 89b63ca2-aa69-4f2e-c0ea-08d73c117bcb
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DBBPR08MB4331;
+X-Forefront-PRVS: 01644DCF4A
+X-Microsoft-Antispam-Message-Info: rUBTNauTirtcxRjWvu20AQRG52qQha9wmv0EoM88o73hcmC24FCBohcsGC/4xypQbp6Hn1oUjV3h9doa6b7viVVLClLqW7rFIh0pwear0Q0RtaV1Mn0ZIPf5mgx4s32pGPXk/JB9Hn2tO3GN6HF825uk8dkhFB0c0RTWnBvQaIZ29T9wF038oIe8lO+sQcv9KABndJPoMxq8nYVhocjTKmTckeQSS1zISlI9dx1O0WdGp4MSQXNncR4RtMSVH9md+QJTEFZFQ1nVC8l80RfW5C3eGxksP/Qw7MyYQzIyzWQWgKxQpFk7aCF0ATfXtp5P86YwLgCpWXrzcAQeb97JmPI8rLGaS8/xiMq/3yZ0NPuRfSXio3XBBzIwqxQPasGGaEaEUzMa6b+dIM2Ed4O6+ZDBTKTeSeS3GpucI9BuSAU=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2019 08:23:40.8256
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a6bc1bd-db0d-4983-dc3f-08d73c11832f
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4331
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 18 Sep 2019 10:12:31 +0200
+On Wed, Sep 18, 2019 at 09:59:39AM +0200, Daniel Vetter wrote:
+> On Tue, Sep 17, 2019 at 03:05:08PM +0000, Mihail Atanassov wrote:
+> > Provide a dummy static inline function in the header instead.
+> >
+> > Cc: Daniel Vetter <daniel@ffwll.ch>
+> > Cc: Lowry Li (Arm Technology China) <Lowry.Li@arm.com>
+> > Cc: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+> > Fixes: 4d74b25ee395 ("drm/komeda: Adds error event print functionality"=
+)
+> > Signed-off-by: Mihail Atanassov <mihail.atanassov@arm.com>
+>
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+>
 
-Simplify this function implementation by using a known wrapper function.
+Hi Mihail:
 
-This issue was detected by using the Coccinelle software.
+Thank you for the patch, and I'll push it to drm-misc
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/hwmon/aspeed-pwm-tacho.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
+m>
 
-diff --git a/drivers/hwmon/aspeed-pwm-tacho.c b/drivers/hwmon/aspeed-pwm-t=
-acho.c
-index 40c489be62ea..33fb54845bf6 100644
-=2D-- a/drivers/hwmon/aspeed-pwm-tacho.c
-+++ b/drivers/hwmon/aspeed-pwm-tacho.c
-@@ -891,17 +891,12 @@ static int aspeed_pwm_tacho_probe(struct platform_de=
-vice *pdev)
- 	struct device_node *np, *child;
- 	struct aspeed_pwm_tacho_data *priv;
- 	void __iomem *regs;
--	struct resource *res;
- 	struct device *hwmon;
- 	struct clk *clk;
- 	int ret;
+Thanks
+James
 
- 	np =3D dev->of_node;
--
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res)
--		return -ENOENT;
--	regs =3D devm_ioremap_resource(dev, res);
-+	regs =3D devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(regs))
- 		return PTR_ERR(regs);
- 	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-=2D-
-2.23.0
-
+> > ---
+> >  drivers/gpu/drm/arm/display/komeda/komeda_dev.h | 2 ++
+> >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 2 --
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/=
+gpu/drm/arm/display/komeda/komeda_dev.h
+> > index e28e7e6563ab..8acf8c0601cc 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> > @@ -220,6 +220,8 @@ struct komeda_dev *dev_to_mdev(struct device *dev);
+> >
+> >  #ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+> >  void komeda_print_events(struct komeda_events *evts);
+> > +#else
+> > +static inline void komeda_print_events(struct komeda_events *evts) {}
+> >  #endif
+> >
+> >  #endif /*_KOMEDA_DEV_H_*/
+> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/=
+gpu/drm/arm/display/komeda/komeda_kms.c
+> > index 18d7e2520225..dc85c08e614d 100644
+> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
+> > @@ -47,9 +47,7 @@ static irqreturn_t komeda_kms_irq_handler(int irq, vo=
+id *data)
+> >     memset(&evts, 0, sizeof(evts));
+> >     status =3D mdev->funcs->irq_handler(mdev, &evts);
+> >
+> > -#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
+> >     komeda_print_events(&evts);
+> > -#endif
+> >
+> >     /* Notify the crtc to handle the events */
+> >     for (i =3D 0; i < kms->n_crtcs; i++)
+> > --
+> > 2.23.0
+> >
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
