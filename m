@@ -2,251 +2,117 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA192C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1833DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A859218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE27D21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:27:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfIRO1E (ORCPT
+        id S1730457AbfIRO1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:27:04 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38951 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbfIRO1D (ORCPT
+        Wed, 18 Sep 2019 10:27:15 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45107 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfIRO1O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:27:03 -0400
-Received: by mail-ed1-f67.google.com with SMTP id g12so169063eds.6;
-        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
+        Wed, 18 Sep 2019 10:27:14 -0400
+Received: by mail-oi1-f194.google.com with SMTP id o205so6088924oib.12;
+        Wed, 18 Sep 2019 07:27:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=400pvBocvt0a62SbRKwLyz08gWO35MVfJMPe2DLlqA0=;
-        b=fnSwKR1VJeE3F4JaJydrKtOeTPqp12dpwM77BCPXUDdhvzgmHccXKrq/oCsmCq1FLG
-         U+mYI5xbw8JaZlT8Qg9Mp/FaMkYY3gQ/Wu+ZEBiBxtifdCyrqD28gXbMnesNP9VARrRN
-         0gVzbNehBj9OquvfHZl39p101gmIvuyvvUBW9S03klJuoyBTwJ/dR9gBVYotIhxIXTcU
-         tmc+VareCVxtjos5vNuGij/Eq+QSJAdUJnjTPJN3i1++vBt3tf2FH8m4m+TQT7qBpi09
-         PRNw6ZMrcGqXD740MgcdBjYDVIRDyT8o9Iy30OpiENexqd0HasM8c3XGR8Gpavjouu9p
-         BJ1Q==
-X-Gm-Message-State: APjAAAV3IIUAZgB/qHmtN5XuMfpK0KewUSoFlIIv/aRuvRdzArrQG2cm
-        NUHNX73V9DShikFFPsLm2U0=
-X-Google-Smtp-Source: APXvYqzaqGgg6lGItFTRHXIHvJvgJImWaglUXeJ4fzHPGSK/ke3TXsUH8vLlYYf5nYcHTun3x2qjAg==
-X-Received: by 2002:a17:906:493:: with SMTP id f19mr9629887eja.285.1568816821022;
-        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id ci8sm245279ejb.71.2019.09.18.07.27.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:27:00 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-7-efremov@linux.com>
- <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
-Date:   Wed, 18 Sep 2019 17:26:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BHV/5Y+4+cCMm6daXLOGdlbWIRWLheVwhv0/ivXbcAE=;
+        b=nq4h3v3EIBQhp3sB2ecGD04KWW1+dbvayQTY5UyWMQ+3juIbkpnBrygYDCalljWovR
+         BvjDKzzATCSkJxy2GEqac0D8zGjlWecYPftUoq1WULP6PW4GhnQ5sE5etzsbI9IPKvR4
+         o3BYxgC+y4qec1jlnFJOB3lpVv8ugn28PWdU3dBVkKk4aXbdAZm5E+/VkGENzNFiz3d6
+         tavhTNupDYcH1G1Cf5bOWge+usJFTC9JuWx6znSigkrXTyr5pN0aNJ5Z1dtpiHiuzL4b
+         M7qBNYwv+nOXFUyFNQ3Vy5dY2lgCIov5rsm4SMrINGfamBstelOuQ1bDmFFouNvKI7v7
+         Ckcg==
+X-Gm-Message-State: APjAAAVCNIARJtLNjEMbxFT9W2r/SwIpro32+yuvyek2ftlB8BEfRzdD
+        ndhFsWCuQ9yzp7BY9RIdkHmLxj4ikmeAYV89r/M=
+X-Google-Smtp-Source: APXvYqzTTZhnmal8UUl1l4fGKNj0vwH/8ztgh2Jwww8ltwigjgo6QuJG49rHLYVXKdkoJ0D+Bgnwc/c/39GCFzhd/4s=
+X-Received: by 2002:aca:f305:: with SMTP id r5mr2285556oih.131.1568816833580;
+ Wed, 18 Sep 2019 07:27:13 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <278d9706-162d-28a4-4640-31b697924473@physik.fu-berlin.de>
+ <c5acb1c0-7a5b-ce42-8b2f-5fd30cbdab6e@physik.fu-berlin.de>
+ <6304acd1-7b71-b1fb-f8d8-298cb3025e69@physik.fu-berlin.de>
+ <6725b972-05d4-fed4-7094-16401e86b452@gmail.com> <578d8a91-aaee-087f-1742-65e64001b8fa@physik.fu-berlin.de>
+ <CAMuHMdUU6ejc168-ksqXrkE+PjCXFJumaRaWjRtj12NjG_TFSg@mail.gmail.com>
+ <CAMuHMdWfTrx8VuJoifEEBc1n+3MiiuwKNWcRnUw+TgWJCtOWag@mail.gmail.com>
+ <fea74ca3-4b24-780f-af74-a786646b1668@physik.fu-berlin.de> <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
+In-Reply-To: <CAMuHMdVeedJZE6mrGdYqRgawUtfu_ww5p-Qg1rLXNmGWiY7Nxg@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 18 Sep 2019 16:27:02 +0200
+Message-ID: <CAMuHMdVHZ9srJcK+PY=YoP55z1NSjBAtkSr2ROA8i84C75v0zQ@mail.gmail.com>
+Subject: Can KEY_DH_OPERATIONS become tristate? (was: Re: Kernel 5.3.0 stuck
+ during boot on Amiga)
+To:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Cc:     Michael Schmitz <schmitzmic@gmail.com>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 11:58 AM, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
->> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
->> global one PCI_STD_NUM_BARS instead.
->>
->> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
->> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
->> ---
->>  arch/s390/include/asm/pci.h     |  5 +----
->>  arch/s390/include/asm/pci_clp.h |  6 +++---
->>  arch/s390/pci/pci.c             | 16 ++++++++--------
->>  arch/s390/pci/pci_clp.c         |  6 +++---
->>  4 files changed, 15 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
->> index a2399eff84ca..3a06c264ea53 100644
->> --- a/arch/s390/include/asm/pci.h
->> +++ b/arch/s390/include/asm/pci.h
->> @@ -2,9 +2,6 @@
->>  #ifndef __ASM_S390_PCI_H
->>  #define __ASM_S390_PCI_H
->>  
->> -/* must be set before including pci_clp.h */
->> -#define PCI_BAR_COUNT	6
->> -
->>  #include <linux/pci.h>
->>  #include <linux/mutex.h>
->>  #include <linux/iommu.h>
->> @@ -138,7 +135,7 @@ struct zpci_dev {
->>  
->>  	char res_name[16];
->>  	bool mio_capable;
->> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
->> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
->>  
->>  	u64		start_dma;	/* Start of available DMA addresses */
->>  	u64		end_dma;	/* End of available DMA addresses */
->> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
->> index 50359172cc48..bd2cb4ea7d93 100644
->> --- a/arch/s390/include/asm/pci_clp.h
->> +++ b/arch/s390/include/asm/pci_clp.h
->> @@ -77,7 +77,7 @@ struct mio_info {
->>  	struct {
->>  		u64 wb;
->>  		u64 wt;
->> -	} addr[PCI_BAR_COUNT];
->> +	} addr[PCI_STD_NUM_BARS];
->>  	u32 reserved[6];
->>  } __packed;
->>  
->> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
->>  	u16 util_str_avail	:  1;	/* utility string available? */
->>  	u16 pfgid		:  8;	/* pci function group id */
->>  	u32 fid;			/* pci function id */
->> -	u8 bar_size[PCI_BAR_COUNT];
->> +	u8 bar_size[PCI_STD_NUM_BARS];
->>  	u16 pchid;
->> -	__le32 bar[PCI_BAR_COUNT];
->> +	__le32 bar[PCI_STD_NUM_BARS];
->>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
->>  	u32			: 16;
->>  	u8 fmb_len;
->> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
->> index b0e3b9a0e488..aca372c8e34f 100644
->> --- a/arch/s390/pci/pci.c
->> +++ b/arch/s390/pci/pci.c
->> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
->>  static DEFINE_SPINLOCK(zpci_domain_lock);
->>  
->>  #define ZPCI_IOMAP_ENTRIES						\
->> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
->> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
->>  	    ZPCI_IOMAP_MAX_ENTRIES)
->>  
->>  static DEFINE_SPINLOCK(zpci_iomap_lock);
->> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
->>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
->>  			      unsigned long offset, unsigned long max)
->>  {
->> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
->> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
->>  		return NULL;
->>  
->>  	if (static_branch_likely(&have_mio))
->> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
->>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
->>  				 unsigned long offset, unsigned long max)
->>  {
->> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
->> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
->>  		return NULL;
-> 
-> This looks like a latent bug fix here. If 'bar' is out of range we return
-> NULL instead accessing an invalid item of an array. Should this not be
-> a separate patch and tagged as stable?
-> 
+CC crypto keys people
 
-This fix was suggested by Bjorn in v1 review:
-https://lkml.org/lkml/2019/8/12/997
+TL;DR: CONFIG_CRYPTO_DH=y is reported to cause boot delays of several
+minutes on old and slow machines. Can KEY_DH_OPERATIONS be made tristate?
 
+On Wed, Sep 18, 2019 at 4:08 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Wed, Sep 18, 2019 at 3:57 PM John Paul Adrian Glaubitz
+> <glaubitz@physik.fu-berlin.de> wrote:
+> > On 9/18/19 3:48 PM, Geert Uytterhoeven wrote:
+> > >> Diffie-Hellman doing some heavy crypto lifting on a poor m68k CPU?
+> > >>
+> > >> Disable CONFIG_CRYPTO_DH?
+> > >
+> > > See also https://lists.debian.org/debian-68k/2019/04/msg00033.html
+> > >
+> > > CRYPTO_DH is selected by CRYPTO_DEV_QAT and KEY_DH_OPERATIONS.
+> > > The latter is bool, forcing CRYPTO_DH builtin.
+> > >
+> > > If KEY_DH_OPERATIONS needs to be enabled in a Debian kernel, perhaps
+> > > it can be made tristate?
+> > It was enabled in [1] as it's required for certain WiFi drivers [2].
+> >
+> > So, should it be fixed as you suggest or should we selectively disable it on m68k?
+>
+> Disabling it on m68k could be a first step (any WiFi drivers supported
+> on m68k yet?).
+>
+> Making it tristate is non-trivial, as there are some interdependencies:
+>
+>     security/keys/Makefile:compat-obj-$(CONFIG_KEY_DH_OPERATIONS) += compat_dh.o
+>     security/keys/Makefile:obj-$(CONFIG_KEY_DH_OPERATIONS) += dh.o
+>     security/keys/internal.h:#ifdef CONFIG_KEY_DH_OPERATIONS
+>     security/keys/keyctl.c:
+> (IS_ENABLED(CONFIG_KEY_DH_OPERATIONS)    ? KEYCTL_CAPS0_DIFFIE_HELLMAN
+> : 0) |
+>
+> > > [1] https://salsa.debian.org/kernel-team/linux/commit/88f44cb9eb34098138c79bdab5fae434492866d1
+> > > [2] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911998
 
-> Thanks,
-> 
-> Andrew Murray
-> 
->>  
->>  	if (static_branch_likely(&have_mio))
->> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
->>  	resource_size_t len;
->>  	int i;
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		len = pci_resource_len(pdev, i);
->>  		if (!len)
->>  			continue;
->> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
->>  	if (zpci_use_mio(zdev))
->>  		return;
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		len = pci_resource_len(pdev, i);
->>  		if (!len)
->>  			continue;
->> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
->>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
->>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		if (!zdev->bars[i].size)
->>  			continue;
->>  		entry = zpci_alloc_iomap(zdev);
->> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
->>  {
->>  	int i;
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
->>  			continue;
->>  
->> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
->>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
->>  	zpci_map_resources(pdev);
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		res = &pdev->resource[i];
->>  		if (res->parent || !res->flags)
->>  			continue;
->> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
->> index 9bdff4defef1..8b729b5f2972 100644
->> --- a/arch/s390/pci/pci_clp.c
->> +++ b/arch/s390/pci/pci_clp.c
->> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->>  {
->>  	int i;
->>  
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
->>  		zdev->bars[i].size = response->bar_size[i];
->>  	}
->> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->>  		       sizeof(zdev->util_str));
->>  	}
->>  	zdev->mio_capable = response->mio_addr_avail;
->> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
->> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
->>  			continue;
->>  
->>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
->> -- 
->> 2.21.0
->>
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
