@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17107C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E97C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD79A214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10EE7214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788256;
-	bh=QOxXkJkf0lgWhFXbB6frbCnUEx5vNP5l5Woxfs2KXIw=;
+	s=default; t=1568788261;
+	bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wK8YEJa5rI8Xp8oRkmdjkb9VTro6+1RxUB7RWtHwMpd//llTtpR2o2CotOhRjj6hB
-	 FEpE6iydXNrthn2rgMLR6amjvzWFKwj3H1l/lg4xcqWnU5jmFbCnNvyCbUsd9GVnlv
-	 qMtEnlIYt01H8p3w7wALx1s1GBHLbO1KvxG34tDc=
+	b=ryck7GDetpbJLKZpYzqR2ihVqto+FR9bU8BbOnGK/h/k0b3MF4aCkLhX1edeX6eLA
+	 3RMWnsJcddQMWtTktyxVH19FGLxB/yakMxUyGSABaAywSoY7jdabqgQVFhOIv28Irx
+	 a630fQIgb6oGPl6ixzqa68MoPzGRyAowrN257UjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730284AbfIRGa4 (ORCPT
+        id S1729739AbfIRGX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:30:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44488 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727585AbfIRGYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:06 -0400
+        id S1729732AbfIRGXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1072921928;
-        Wed, 18 Sep 2019 06:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54FB721929;
+        Wed, 18 Sep 2019 06:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787845;
-        bh=QOxXkJkf0lgWhFXbB6frbCnUEx5vNP5l5Woxfs2KXIw=;
+        s=default; t=1568787834;
+        bh=acqf8iWr/flWMhoJlMX9Rq4SnUZG25hjg5RNHePwK0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDLu5qIde0a7NLaJJAunFJ60CU6fEgt697KqQ0twb8cruz73NPfKGnVKm2kPVdI21
-         DVNcTvfZhwbzWzXV2pyRqQ7us+Y79hI3d7zYVtNaiW28tKPr+k8OAieplBfQQXO1zK
-         SSvoNdACls7p4SB7/0juiGqZlz5Z3ZWPOYwU/mbU=
+        b=UC8sJ8bJvHlHHR32gRnpXyWtX+sU4uaUVDZn3t55TrWxpHgb1mX7AoMsGKZxBcLnE
+         g2HK5SeYvmeRlDU/WAeqmEfARsd+R7XPgw/FsI3nGUcfP+IITHwiM0BZtxJF7sabas
+         Diuc49wT5VP6TG0few1Hil+IahxyyauwtaGuhRlc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hyunchul Lee <hyc.lee@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.19 32/50] ubifs: Correctly use tnc_next() in search_dh_cookie()
-Date:   Wed, 18 Sep 2019 08:19:15 +0200
-Message-Id: <20190918061226.817080996@linuxfoundation.org>
+        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 4.19 28/50] clk: rockchip: Dont yell about bad mmc phases when getting
+Date:   Wed, 18 Sep 2019 08:19:11 +0200
+Message-Id: <20190918061226.403676340@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,85 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Weinberger <richard@nod.at>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit bacfa94b08027b9f66ede7044972e3b066766b3e upstream.
+commit 6943b839721ad4a31ad2bacf6e71b21f2dfe3134 upstream.
 
-Commit c877154d307f fixed an uninitialized variable and optimized
-the function to not call tnc_next() in the first iteration of the
-loop. While this seemed perfectly legit and wise, it turned out to
-be illegal.
-If the lookup function does not find an exact match it will rewind
-the cursor by 1.
-The rewinded cursor will not match the name hash we are looking for
-and this results in a spurious -ENOENT.
-So we need to move to the next entry in case of an non-exact match,
-but not if the match was exact.
+At boot time, my rk3288-veyron devices yell with 8 lines that look
+like this:
+  [    0.000000] rockchip_mmc_get_phase: invalid clk rate
 
-While we are here, update the documentation to avoid further confusion.
+This is because the clock framework at clk_register() time tries to
+get the phase but we don't have a parent yet.
 
-Cc: Hyunchul Lee <hyc.lee@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Fixes: c877154d307f ("ubifs: Fix uninitialized variable in search_dh_cookie()")
-Fixes: 781f675e2d7e ("ubifs: Fix unlink code wrt. double hash lookups")
-Signed-off-by: Richard Weinberger <richard@nod.at>
+While the errors appear to be harmless they are still ugly and, in
+general, we don't want yells like this in the log unless they are
+important.
+
+There's no real reason to be yelling here.  We can still return
+-EINVAL to indicate that the phase makes no sense without a parent.
+If someone really tries to do tuning and the clock is reported as 0
+then we'll see the yells in rockchip_mmc_set_phase().
+
+Fixes: 4bf59902b500 ("clk: rockchip: Prevent calculating mmc phase if clock rate is zero")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/tnc.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ drivers/clk/rockchip/clk-mmc-phase.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/fs/ubifs/tnc.c
-+++ b/fs/ubifs/tnc.c
-@@ -1165,8 +1165,8 @@ static struct ubifs_znode *dirty_cow_bot
-  *   o exact match, i.e. the found zero-level znode contains key @key, then %1
-  *     is returned and slot number of the matched branch is stored in @n;
-  *   o not exact match, which means that zero-level znode does not contain
-- *     @key, then %0 is returned and slot number of the closest branch is stored
-- *     in @n;
-+ *     @key, then %0 is returned and slot number of the closest branch or %-1
-+ *     is stored in @n; In this case calling tnc_next() is mandatory.
-  *   o @key is so small that it is even less than the lowest key of the
-  *     leftmost zero-level node, then %0 is returned and %0 is stored in @n.
-  *
-@@ -1883,13 +1883,19 @@ int ubifs_tnc_lookup_nm(struct ubifs_inf
+--- a/drivers/clk/rockchip/clk-mmc-phase.c
++++ b/drivers/clk/rockchip/clk-mmc-phase.c
+@@ -61,10 +61,8 @@ static int rockchip_mmc_get_phase(struct
+ 	u32 delay_num = 0;
  
- static int search_dh_cookie(struct ubifs_info *c, const union ubifs_key *key,
- 			    struct ubifs_dent_node *dent, uint32_t cookie,
--			    struct ubifs_znode **zn, int *n)
-+			    struct ubifs_znode **zn, int *n, int exact)
- {
- 	int err;
- 	struct ubifs_znode *znode = *zn;
- 	struct ubifs_zbranch *zbr;
- 	union ubifs_key *dkey;
+ 	/* See the comment for rockchip_mmc_set_phase below */
+-	if (!rate) {
+-		pr_err("%s: invalid clk rate\n", __func__);
++	if (!rate)
+ 		return -EINVAL;
+-	}
  
-+	if (!exact) {
-+		err = tnc_next(c, &znode, n);
-+		if (err)
-+			return err;
-+	}
-+
- 	for (;;) {
- 		zbr = &znode->zbranch[*n];
- 		dkey = &zbr->key;
-@@ -1931,7 +1937,7 @@ static int do_lookup_dh(struct ubifs_inf
- 	if (unlikely(err < 0))
- 		goto out_unlock;
+ 	raw_value = readl(mmc_clock->reg) >> (mmc_clock->shift);
  
--	err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
-+	err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
- 
- out_unlock:
- 	mutex_unlock(&c->tnc_mutex);
-@@ -2718,7 +2724,7 @@ int ubifs_tnc_remove_dh(struct ubifs_inf
- 		if (unlikely(err < 0))
- 			goto out_free;
- 
--		err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
-+		err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
- 		if (err)
- 			goto out_free;
- 	}
 
 
