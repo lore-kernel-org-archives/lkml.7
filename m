@@ -2,119 +2,167 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733B8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A87CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4980A218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lMkuL9E2"
+	by mail.kernel.org (Postfix) with ESMTP id 42C2821907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:28:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbfIRJ1T (ORCPT
+        id S1728963AbfIRJ2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:27:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:52220 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfIRJ1T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:27:19 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8I98uK0036001;
-        Wed, 18 Sep 2019 09:27:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=5W1fcvEd99/AIOIxEczHb9EgxxrI9ZKCVn9mLpgE1DY=;
- b=lMkuL9E22/fDHGZGYGdq4UeC5SmsvGJPm1jemC461wOrRlCJRuuu/+/JcgNExra+s8Mf
- Z/tF3XlJX6OyYs2M7n7ZaUo2Z5fZgUgou5AYx75K0JBluBD3nmV1ot/5EEKrIUJV6esR
- dD/0NnDsuB6Duc2+tQrLR79ZpIcpuENYTvDGuvJfYFVWswA5ALy/O9+jdGXfFzRo2raa
- 4tv4hudsFVUcsQd47Wwf0ZX90JmZXCOtKpR/pWEp8zA2e/CqqoT0piBKKTps2IMbCvRA
- wjd4xIIL6HUeWEKOxR3ffNdvNazYCzbbkwvM2MM9y6mi9ZLva+mZ8s9zuW1GvvLMWWw1 fA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2v385dtj58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 09:27:09 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8I994QC176154;
-        Wed, 18 Sep 2019 09:25:08 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2v37mm8fts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 09:25:08 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8I9P56v026455;
-        Wed, 18 Sep 2019 09:25:05 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 02:25:04 -0700
-Date:   Wed, 18 Sep 2019 12:24:06 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ju Hyung Park <qkrwngud825@gmail.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
-        linkinjeon@gmail.com, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
-        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-Message-ID: <20190918092405.GC2959@kadam>
-References: <8998.1568693976@turing-police>
- <20190917053134.27926-1-qkrwngud825@gmail.com>
- <20190917054726.GA2058532@kroah.com>
- <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
- <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
- <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
- <20190918061605.GA1832786@kroah.com>
- <20190918063304.GA8354@jagdpanzerIV>
- <20190918082658.GA1861850@kroah.com>
- <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
+        Wed, 18 Sep 2019 05:28:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:38130 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfIRJ2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:28:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23566337;
+        Wed, 18 Sep 2019 02:28:34 -0700 (PDT)
+Received: from [10.162.40.136] (p8cg001049571a15.blr.arm.com [10.162.40.136])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A134F3F59C;
+        Wed, 18 Sep 2019 02:28:26 -0700 (PDT)
+Subject: Re: [PATCH V7 1/3] mm/hotplug: Reorder memblock_[free|remove]() calls
+ in try_remove_memory()
+To:     Balbir Singh <bsingharora@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, catalin.marinas@arm.com, will@kernel.org
+Cc:     mark.rutland@arm.com, mhocko@suse.com, ira.weiny@intel.com,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        cpandya@codeaurora.org, arunks@codeaurora.org,
+        dan.j.williams@intel.com, mgorman@techsingularity.net,
+        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
+        broonie@kernel.org, valentin.schneider@arm.com,
+        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com
+References: <1567503958-25831-1-git-send-email-anshuman.khandual@arm.com>
+ <1567503958-25831-2-git-send-email-anshuman.khandual@arm.com>
+ <74bcbd36-3bec-be67-917d-60cd74cbcef0@gmail.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <91efada2-23e3-1982-47bc-82fb93ce944a@arm.com>
+Date:   Wed, 18 Sep 2019 14:58:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909180094
+In-Reply-To: <74bcbd36-3bec-be67-917d-60cd74cbcef0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 06:01:09PM +0900, Ju Hyung Park wrote:
-> On Wed, Sep 18, 2019 at 5:33 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > He did?  I do not see a patch anywhere, what is the message-id of it?
+
+
+On 09/16/2019 07:14 AM, Balbir Singh wrote:
 > 
-> I'm just repeating myself at this point, but again, I'm more than
-> willing to work on a patch.
-> I just want to make it clear on how should I.
+> 
+> On 3/9/19 7:45 pm, Anshuman Khandual wrote:
+>> Memory hot remove uses get_nid_for_pfn() while tearing down linked sysfs
+> 
+> I could not find this path in the code, the only called for get_nid_for_pfn()
+> was register_mem_sect_under_node() when the system is under boot.
+> 
+>> entries between memory block and node. It first checks pfn validity with
+>> pfn_valid_within() before fetching nid. With CONFIG_HOLES_IN_ZONE config
+>> (arm64 has this enabled) pfn_valid_within() calls pfn_valid().
+>>
+>> pfn_valid() is an arch implementation on arm64 (CONFIG_HAVE_ARCH_PFN_VALID)
+>> which scans all mapped memblock regions with memblock_is_map_memory(). This
+>> creates a problem in memory hot remove path which has already removed given
+>> memory range from memory block with memblock_[remove|free] before arriving
+>> at unregister_mem_sect_under_nodes(). Hence get_nid_for_pfn() returns -1
+>> skipping subsequent sysfs_remove_link() calls leaving node <-> memory block
+>> sysfs entries as is. Subsequent memory add operation hits BUG_ON() because
+>> of existing sysfs entries.
+>>
+>> [   62.007176] NUMA: Unknown node for memory at 0x680000000, assuming node 0
+>> [   62.052517] ------------[ cut here ]------------
+> 
+> This seems like arm64 is not ready for probe_store() via drivers/base/memory.c/ode.c
+> 
+>> [   62.053211] kernel BUG at mm/memory_hotplug.c:1143!
+> 
+> 
+> 
+>> [   62.053868] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+>> [   62.054589] Modules linked in:
+>> [   62.054999] CPU: 19 PID: 3275 Comm: bash Not tainted 5.1.0-rc2-00004-g28cea40b2683 #41
+>> [   62.056274] Hardware name: linux,dummy-virt (DT)
+>> [   62.057166] pstate: 40400005 (nZcv daif +PAN -UAO)
+>> [   62.058083] pc : add_memory_resource+0x1cc/0x1d8
+>> [   62.058961] lr : add_memory_resource+0x10c/0x1d8
+>> [   62.059842] sp : ffff0000168b3ce0
+>> [   62.060477] x29: ffff0000168b3ce0 x28: ffff8005db546c00
+>> [   62.061501] x27: 0000000000000000 x26: 0000000000000000
+>> [   62.062509] x25: ffff0000111ef000 x24: ffff0000111ef5d0
+>> [   62.063520] x23: 0000000000000000 x22: 00000006bfffffff
+>> [   62.064540] x21: 00000000ffffffef x20: 00000000006c0000
+>> [   62.065558] x19: 0000000000680000 x18: 0000000000000024
+>> [   62.066566] x17: 0000000000000000 x16: 0000000000000000
+>> [   62.067579] x15: ffffffffffffffff x14: ffff8005e412e890
+>> [   62.068588] x13: ffff8005d6b105d8 x12: 0000000000000000
+>> [   62.069610] x11: ffff8005d6b10490 x10: 0000000000000040
+>> [   62.070615] x9 : ffff8005e412e898 x8 : ffff8005e412e890
+>> [   62.071631] x7 : ffff8005d6b105d8 x6 : ffff8005db546c00
+>> [   62.072640] x5 : 0000000000000001 x4 : 0000000000000002
+>> [   62.073654] x3 : ffff8005d7049480 x2 : 0000000000000002
+>> [   62.074666] x1 : 0000000000000003 x0 : 00000000ffffffef
+>> [   62.075685] Process bash (pid: 3275, stack limit = 0x00000000d754280f)
+>> [   62.076930] Call trace:
+>> [   62.077411]  add_memory_resource+0x1cc/0x1d8
+>> [   62.078227]  __add_memory+0x70/0xa8
+>> [   62.078901]  probe_store+0xa4/0xc8
+>> [   62.079561]  dev_attr_store+0x18/0x28
+>> [   62.080270]  sysfs_kf_write+0x40/0x58
+>> [   62.080992]  kernfs_fop_write+0xcc/0x1d8
+>> [   62.081744]  __vfs_write+0x18/0x40
+>> [   62.082400]  vfs_write+0xa4/0x1b0
+>> [   62.083037]  ksys_write+0x5c/0xc0
+>> [   62.083681]  __arm64_sys_write+0x18/0x20
+>> [   62.084432]  el0_svc_handler+0x88/0x100
+>> [   62.085177]  el0_svc+0x8/0xc
+>>
+>> Re-ordering memblock_[free|remove]() with arch_remove_memory() solves the
+>> problem on arm64 as pfn_valid() behaves correctly and returns positive
+>> as memblock for the address range still exists. arch_remove_memory()
+>> removes applicable memory sections from zone with __remove_pages() and
+>> tears down kernel linear mapping. Removing memblock regions afterwards
+>> is safe because there is no other memblock (bootmem) allocator user that
+>> late. So nobody is going to allocate from the removed range just to blow
+>> up later. Also nobody should be using the bootmem allocated range else
+>> we wouldn't allow to remove it. So reordering is indeed safe.
+>>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> Reviewed-by: Oscar Salvador <osalvador@suse.de>
+>> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>> Acked-by: Michal Hocko <mhocko@suse.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+> 
+> Honestly, the issue is not clear from the changelog, largely
+> because I can't find the use of get_nid_for_pfn()  being used
+> in memory hotunplug. I can see why using pfn_valid() after
+> memblock_free/remove is bad on the architecture.
+> 
+> I think the checks to pfn_valid() can be avoided from the
+> remove paths if we did the following
+> 
+> memblock_isolate_regions()
+> for each isolate_region {
+> 	memblock_free
+> 	memblock_remove
+> 	arch_memory_remove
+> 
+> 	# ensure that __remove_memory can avoid calling pfn_valid
+> }
+> 
+> Having said that, your patch is easier and if your assumption
+> about not using the memblocks is valid (after arch_memory_remove())
+> then might be the least resistant way forward
 
-Put it in drivers/staging/sdfat/.
-
-But really we want someone from Samsung to say that they will treat
-the staging version as upstream.  It doesn't work when people apply
-fixes to their version and a year later back port the fixes into
-staging.  The staging tree is going to have tons and tons of white space
-fixes so backports are a pain.  All development needs to be upstream
-first where the staging driver is upstream.  Otherwise we should just
-wait for Samsung to get it read to be merged in fs/ and not through the
-staging tree.
-
-regards,
-dan carpenter
-
-
+The context for this patch has changed a bit which now reflects in
+it's current posting (https://patchwork.kernel.org/patch/11146361/)
