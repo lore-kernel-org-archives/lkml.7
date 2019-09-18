@@ -2,135 +2,169 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC22C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCD5C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D88A218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:16:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568837782;
-	bh=0jWrdETYu7QZ6nLUVrv66CQvk9+vFSveR8OObhBCino=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=yI2uauoCFOGvYPlowGDCjDGfzQiJQNopQsgsGNuI3OYKKDxbd4lTKUG2SZCx/68dw
-	 ZiTCgM/aZqBdmVbcq2kgAu86OCRNZC7+vc2sKOeQce0t8lD8yMyYDHcB3YigiaQgtw
-	 JqAbijUt3kceAVuuxkQ/nb/S0UVTf46ya3djHiJg=
+	by mail.kernel.org (Postfix) with ESMTP id E656D21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391228AbfIRUQV (ORCPT
+        id S1729363AbfIRUUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:16:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391193AbfIRUQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:16:21 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B2B321927;
-        Wed, 18 Sep 2019 20:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568837780;
-        bh=0jWrdETYu7QZ6nLUVrv66CQvk9+vFSveR8OObhBCino=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=EFgyMRfQj+z7INZY4gk4LkQGc+RqodGEvpbG64mfh86DvbU+un9q2XvuNyMSJF19y
-         e7Ms4hV+8A+0wJ156gguMKhnJ0q197TzBP95/NqDL3Q7DmZbXJH85EiV1q6ETqnWB0
-         xuMTzwPMSHKmqEeyaaPIfA8e1RwymHwPmxOuWJ/4=
-Date:   Wed, 18 Sep 2019 22:16:17 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm: sun8i-ui/vi: Fix layer zpos change/atomic
- modesetting
-Message-ID: <20190918201617.5gwzmshoxbcxbmrx@gilmour>
-References: <20190914220337.646719-1-megous@megous.com>
- <20190918141734.kerdbbaynwutrxf6@gilmour>
- <20190918152309.j2dbu63jaru6jn2t@core.my.home>
+        Wed, 18 Sep 2019 16:20:04 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:37979 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbfIRUUD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 16:20:03 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iAgQe-0000Mf-W0; Wed, 18 Sep 2019 22:19:56 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iAgQc-0005uR-DN; Wed, 18 Sep 2019 22:19:54 +0200
+Date:   Wed, 18 Sep 2019 22:19:54 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Will Deacon <will@kernel.org>, Joerg Roedel <joro@8bytes.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Peter Rosin <peda@axentia.se>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2] of: restore old handling of cells_name=NULL in
+ of_*_phandle_with_args()
+Message-ID: <20190918201954.2phyqxqhoj5jwklt@pengutronix.de>
+References: <20190918063837.8196-1-u.kleine-koenig@pengutronix.de>
+ <b00ca30f-2c06-7722-96b2-123d15751cb6@axentia.se>
+ <20190918084748.hnjkiq7wc5b35wjh@pengutronix.de>
+ <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tk4bbuln473dg4yq"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190918152309.j2dbu63jaru6jn2t@core.my.home>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJuJrOj+D4xkGACC1=zaB5OUkt=SNzCOiOiTVtM9E9z+A@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---tk4bbuln473dg4yq
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Sep 18, 2019 at 05:23:09PM +0200, Ond=C5=99ej Jirman wrote:
-> Hi,
->
-> On Wed, Sep 18, 2019 at 04:17:34PM +0200, Maxime Ripard wrote:
-> > Hi,
+On Wed, Sep 18, 2019 at 03:09:06PM -0500, Rob Herring wrote:
+> On Wed, Sep 18, 2019 at 3:47 AM Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
 > >
-> > On Sun, Sep 15, 2019 at 12:03:37AM +0200, megous@megous.com wrote:
-> > > From: Ondrej Jirman <megous@megous.com>
-> > >
-> > > There are various issues that this re-work of sun8i_[uv]i_layer_enable
-> > > function fixes:
-> > >
-> > > - Make sure that we re-initialize zpos on reset
-> > > - Minimize register updates by doing them only when state changes
-> > > - Fix issue where DE pipe might get disabled even if it is no longer
-> > >   used by the layer that's currently calling sun8i_ui_layer_enable
-> > > - .atomic_disable callback is not really needed because .atomic_update
-> > >   can do the disable too, so drop the duplicate code
-> > >
-> > > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > Before commit e42ee61017f5 ("of: Let of_for_each_phandle fallback to
+> > non-negative cell_count") the iterator functions calling
+> > of_for_each_phandle assumed a cell count of 0 if cells_name was NULL.
+> > This corner case was missed when implementing the fallback logic in
+> > e42ee61017f5 and resulted in an endless loop.
 > >
-> > It looks like these fixes should be in separate patches. Is there any
-> > reason it's not the case?
->
-> Bullet points just describe the resulting effect/benefits of the change t=
-o fix
-> the pipe control register update issue (see the referenced e-mail).
+> > Restore the old behaviour of of_count_phandle_with_args() and
+> > of_parse_phandle_with_args() and add a check to
+> > of_phandle_iterator_init() to prevent a similar failure as a safety
+> > precaution. of_parse_phandle_with_args_map() doesn't need a similar fix
+> > as cells_name isn't NULL there.
+> >
+> > Affected drivers are:
+> >  - drivers/base/power/domain.c
+> >  - drivers/base/power/domain.c
+> >  - drivers/clk/ti/clk-dra7-atl.c
+> >  - drivers/hwmon/ibmpowernv.c
+> >  - drivers/i2c/muxes/i2c-demux-pinctrl.c
+> >  - drivers/iommu/mtk_iommu.c
+> >  - drivers/net/ethernet/freescale/fman/mac.c
+> >  - drivers/opp/of.c
+> >  - drivers/perf/arm_dsu_pmu.c
+> >  - drivers/regulator/of_regulator.c
+> >  - drivers/remoteproc/imx_rproc.c
+> >  - drivers/soc/rockchip/pm_domains.c
+> >  - sound/soc/fsl/imx-audmix.c
+> >  - sound/soc/fsl/imx-audmix.c
+> >  - sound/soc/meson/axg-card.c
+> >  - sound/soc/samsung/tm2_wm5110.c
+> >  - sound/soc/samsung/tm2_wm5110.c
+> >
+> > Thanks to Geert Uytterhoeven for reporting the issue, Peter Rosin for
+> > helping pinpoint the actual problem and the testers for confirming this
+> > fix.
+> >
+> > Fixes: e42ee61017f5 ("of: Let of_for_each_phandle fallback to non-negative cell_count")
+> > Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+> > ---
+> >
+> > On Wed, Sep 18, 2019 at 08:01:05AM +0000, Peter Rosin wrote:
+> > > On 2019-09-18 08:38, Uwe Kleine-König wrote:
+> > > >  EXPORT_SYMBOL(of_parse_phandle_with_args);
+> > > >
+> > > > @@ -1765,6 +1779,18 @@ int of_count_phandle_with_args(const struct device_node *np, const char *list_na
+> > > >     struct of_phandle_iterator it;
+> > > >     int rc, cur_index = 0;
+> > > >
+> > > > +   /* If cells_name is NULL we assume a cell count of 0 */
+> > > > +   if (cells_name == NULL) {
+> > >
+> > > A couple of nits.
+> > >
+> > > I don't know if there are other considerations, but in the previous two
+> > > hunks you use !cells_name instead of comparing explicitly with NULL.
+> > > Personally, I find the shorter form more readable, and in the name of
+> > > consistency bla bla...
+> >
+> > Ack, changed to !cells_name here, too.
+> >
+> > >
+> > > Also, the comment explaining this NULL-check didn't really make sense
+> > > to me until I realized that knowing the cell count to be zero makes
+> > > counting trivial. Something along those lines should perhaps be in the
+> > > comment?
+> >
+> > You're right, I extended the comment a bit.
+> >
+> > > But as I said, these are nits. Feel free to ignore.
+> >
+> > I considered resending already anyhow as I fatfingerd my email address.
+> > this is fixed now, too. Additionally I fixed a typo in one of the
+> > comments.
+> >
+> > Thanks for your feedback.
+> >
+> > Best regards
+> > Uwe
+> >
+> >  drivers/of/base.c | 35 +++++++++++++++++++++++++++++++++--
+> >  1 file changed, 33 insertions(+), 2 deletions(-)
+> 
+> Can I get a proper patch please.
 
-It's definitely ok to have multiple patches needed to address a single
-perceived issue.
+I don't understand what is wrong with my patch. Can you please expand
+what you are missing? I just tried to git-am it and the result looks
+fine.
 
-A commit is not about what you're fixing but what you're changing. And
-the fact that you have tha bullet list in the first place proves that
-you have multiple logical changes in your patch.
+Best regards
+Uwe
 
-And even then, your commit log mentions that you're fixing multiple
-issues (without explaining them).
-
-> I can maybe split off the first bullet point into a separate patch. But
-> I can't guarantee it will not make the original issue worse, because it m=
-ight
-> have been hiding the other issue with register updates.
->
-> The rest is just a result of the single logical change. It doesn't work
-> individually, it all has the goal of fixing the issue as a whole.
->
-> If I were to split it I would have to actually re-implement .atomic_disab=
-le
-> callback only to remove it in the next patch. I don't see the benefit.
-
-Your commit log says that you remove atomic_disable. Why would you
-remove it, to add it back, to remove it again?
-
-Maxime
-
---tk4bbuln473dg4yq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYKQkQAKCRDj7w1vZxhR
-xf8DAP9GfuXKiu3V08w0e+632ZjU7AktNEcXwFiyue0LwCXXDQEAhgjDhYaEmgtB
-PS6Q2gQ7ymKhYKJ1fiSUPtE0JM/QOQA=
-=Yn7Q
------END PGP SIGNATURE-----
-
---tk4bbuln473dg4yq--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
