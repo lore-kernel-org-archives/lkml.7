@@ -2,125 +2,135 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B32DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632A4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFE621848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787371;
-	bh=9+1j0c62Hdp93RT/nCYlXl4BZbarkBUvvEVoQsUdB98=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DPisCnoMFzOfOxvn1KhkQRAR7ecTtvLiLcOuDgMgn5CAKId66HrRdUG98yZhu7FXU
-	 blBzqRvCm4m13HaKFda8/9sqv1SiMF+cyg8qYBpoxJotfzKt3qD6wxGoYQvzhFxRwN
-	 HyKVwJ0IEPSFn2QgJ/0zKck7ToyzFiHi6PSDGVPo=
+	by mail.kernel.org (Postfix) with ESMTP id 4032120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:16:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726996AbfIRGQK (ORCPT
+        id S1727048AbfIRGQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:16:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37520 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:16:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40382 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfIRGQK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:16:10 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726081AbfIRGQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:16:18 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 909B020665;
-        Wed, 18 Sep 2019 06:16:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787368;
-        bh=9+1j0c62Hdp93RT/nCYlXl4BZbarkBUvvEVoQsUdB98=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e78QY50bO1zk1qhLTUZ4na4y+XJ5QC2JI4yWEgWDi95tgwJ7SnwgNwCAFJ3U5olf7
-         CtLelPy8QitXliWD8n00wTIFEgLJi0V3uC/5sXg6vABNiTpYZ9z73dgKvPZyRt0WAS
-         Vu1aW1z50LFLOPIXVfDUr05WdZPXCo4CheBLMPOY=
-Date:   Wed, 18 Sep 2019 08:16:05 +0200
-From:   'Greg KH' <gregkh@linuxfoundation.org>
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     'Ju Hyung Park' <qkrwngud825@gmail.com>,
-        'Valdis Kletnieks' <valdis.kletnieks@vt.edu>,
-        devel@driverdev.osuosl.org, linkinjeon@gmail.com,
-        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
-        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-Message-ID: <20190918061605.GA1832786@kroah.com>
-References: <8998.1568693976@turing-police>
- <20190917053134.27926-1-qkrwngud825@gmail.com>
- <20190917054726.GA2058532@kroah.com>
- <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
- <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
- <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 8CB7846288;
+        Wed, 18 Sep 2019 06:16:16 +0000 (UTC)
+Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E971719C6A;
+        Wed, 18 Sep 2019 06:15:55 +0000 (UTC)
+Subject: Re: [RFC PATCH 2/2] mdev: introduce device specific ops
+To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>
+Cc:     "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "idos@mellanox.com" <idos@mellanox.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "freude@linux.ibm.com" <freude@linux.ibm.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "pmorel@linux.ibm.com" <pmorel@linux.ibm.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>
+References: <20190912094012.29653-1-jasowang@redhat.com>
+ <20190912094012.29653-3-jasowang@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D579F71@SHSMSX104.ccr.corp.intel.com>
+ <6bb2c43c-25bb-16f9-1fa0-08cb08e42b94@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D57B49A@SHSMSX104.ccr.corp.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e3950e19-b815-1549-72b0-12b628fa2bc1@redhat.com>
+Date:   Wed, 18 Sep 2019 14:15:54 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D57B49A@SHSMSX104.ccr.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 18 Sep 2019 06:16:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A: http://en.wikipedia.org/wiki/Top_post
-Q: Were do I find info about this thing called top-posting?
-A: Because it messes up the order in which people normally read text.
-Q: Why is top-posting such a bad thing?
-A: Top-posting.
-Q: What is the most annoying thing in e-mail?
 
-A: No.
-Q: Should I include quotations after my reply?
+On 2019/9/18 上午10:57, Tian, Kevin wrote:
+>> From: Jason Wang [mailto:jasowang@redhat.com]
+>> Sent: Tuesday, September 17, 2019 6:17 PM
+>>
+>> On 2019/9/17 下午4:09, Tian, Kevin wrote:
+>>>> From: Jason Wang
+>>>> Sent: Thursday, September 12, 2019 5:40 PM
+>>>>
+>>>> Currently, except for the crate and remove. The rest fields of
+>>>> mdev_parent_ops is just designed for vfio-mdev driver and may not
+>> help
+>>>> for kernel mdev driver. So follow the device id support by previous
+>>>> patch, this patch introduces device specific ops which points to
+>>>> device specific ops (e.g vfio ops). This allows the future drivers
+>>>> like virtio-mdev to implement its own device specific ops.
+>>> Can you give an example about what ops might be required to support
+>>> kernel mdev driver? I know you posted a link earlier, but putting a small
+>>> example here can save time and avoid inconsistent understanding. Then
+>>> it will help whether the proposed split makes sense or there is a
+>>> possibility of redefining the callbacks to meet the both requirements.
+>>> imo those callbacks fulfill some basic requirements when mediating
+>>> a device...
+>> I put it in the cover letter.
+>>
+>> The link ishttps://lkml.org/lkml/2019/9/10/135  which abuses the current
+>> VFIO based mdev parent ops.
+>>
+>> Thanks
+> So the main problem is the handling of userspace pointers vs.
+> kernel space pointers. You still implement read/write/ioctl
+> callbacks which is a subset of current parent_ops definition.
+> In that regard is it better to introduce some helper to handle
+> the pointer difference in mdev core, while still keeping the
+> same set of parent ops (in whatever form suitable for both)?
 
-http://daringfireball.net/2007/07/on_top
 
-On Wed, Sep 18, 2019 at 11:35:08AM +0900, Namjae Jeon wrote:
-> I've summarized some of the big differences between sdfat and exfat
-> in linux-next.
-> 
-> 1. sdfat has been refactored to improve compatibility, readability and
-> to be linux friendly.(included support mass storages larger than 2TB.)
-> 
-> 2. sdfat has been optimized for the performance of SD-cards.
->   - Support SD-card friendly block allocation and delayed allocation
->     for vfat-fs only.
->   - Support aligned_mpage_write for both vfat-fs and exfat-fs
-> 
-> 3. sdfat has been optimized for the performance of general operations
->     like create,lookup and readdir.
-> 
-> 4. Fix many critical and minor bugs
->  - Handle many kinds of error conditions gracefully to prevent panic.
->  - Fix critical bugs related to rmdir, truncate behavior and so on...
-> 
-> 5. Fix NLS functions
+Pointers is one of the issues. And read/write/ioctl is designed for 
+userspace API not kernel. Technically, we can use them for kernel but it 
+would not be as simple and straightforward a set of device specific 
+callbacks functions. The link above is just an example, e.g we can 
+simply pass the vring address through a dedicated API instead of 
+mandatory an offset of a file.
 
-Those are all wonderful things, any chances you can point out the
-individual commits that reflect these bugfixes?
+Thanks
 
-> Note, that Samsung is still improving sdfat driver. For instance,
-> what will be realeased soon is sdfat v2.3.0, which will include support
-> for "UtcOffset" of "File Directory Entry", in order to satisfy
-> exFAT specification 7.4.
-
-If Samsung is going to continue to keep its internal tree for this
-driver, there's no way we can take a code dump today and expect things
-to keep in sync.
-
-If Samsung agrees to do development of this codebase upstream in the
-kernel tree, I will be glad to consider moving to this codebase instead
-and working together on it.  Otherwise it makes no sense as things
-instantly diverge with no way of keeping in sync (we only can commit to
-one tree, while you can in both.)
-
-If Samsung wishes to use their sdfat codebase as the "seed" to work from
-for this, please submit a patch adding the latest version to the kernel
-tree and we can compare and work from there.
-
-thanks,
-
-greg k-h
+>
