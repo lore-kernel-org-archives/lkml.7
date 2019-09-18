@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4F6C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB98C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF95921927
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0199F21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787803;
-	bh=MWUV2b6QxsbPsvTZ3TNr/yspJoRscZir+Gd6EwbVJdA=;
+	s=default; t=1568787805;
+	bh=Fq2fkoFSAcVTjHQtKzIz3yYAqH2AFm1WloMqH9Y8xp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pn7O0JtnhtGpl3mfBw9GVDqhD64MD/J+s2fOaJxx3DF4r9nWKnaU9SQP3VWhnntlg
-	 MYt7OWm5mbgPQB7avVdjxM7HWd6ZHWgvPu2QxuOhGfldCph2TSdtwa7tK8BYAzB7Xd
-	 wkH41aTJqU6iEK7l802GIWNe6VNaqufm9GAfNnyw=
+	b=TzVa38zN5ehPOpkCS+/5ukmrRFhJmYZJAm8zmA3iwnIKY1pxLx+uS7p4CEh4/tyIW
+	 hvWm8PYqLVgo2I9dbmX2ElOs/0Q9Q2VI/3DsD1zPgTsksC7qsQY5SJgs3RpcV55Nog
+	 VUvAlKru8BHWwCSThya86aVNapXIsnSwLAejgxzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfIRGXW (ORCPT
+        id S1729590AbfIRGXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43308 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbfIRGXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:07 -0400
+        id S1727542AbfIRGXM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 404F621920;
-        Wed, 18 Sep 2019 06:23:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94AA221920;
+        Wed, 18 Sep 2019 06:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787786;
-        bh=MWUV2b6QxsbPsvTZ3TNr/yspJoRscZir+Gd6EwbVJdA=;
+        s=default; t=1568787792;
+        bh=Fq2fkoFSAcVTjHQtKzIz3yYAqH2AFm1WloMqH9Y8xp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C/tRwCxBgYfbqnZMCwEw7td0jzjaBMAR+oICaNtUYuzHanpGeEcQyVSkRVgk+vtcx
-         p0UpGDX1yKG7W6aSEROitgMZ94XUcNOLLiiAiU2wnnXh93K1CSzoEcgGeFIsnZyjU3
-         rvJZ2wFHv5xjnwHrwp36b8+Vyprm+EVVeeUwQZeY=
+        b=KqbJ+Q5lci8w58asNexeYfXjsNxKrJV5eJnFzvakqLamwAKjPM7isqm10t0dJYXGb
+         wFS1pH9bjJHNOKBRdGwKBiUQk2nrCHLAAWgXxYOLMm0YcnvWO9gTkvgW3FT0E1ZdT0
+         3zRfeat4anC/zokaYV9rxtGlVHAwB6DAosgCbok8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 26/50] powerpc: Add barrier_nospec to raw_copy_in_user()
-Date:   Wed, 18 Sep 2019 08:19:09 +0200
-Message-Id: <20190918061225.846518448@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 36/50] crypto: talitos - check data blocksize in ablkcipher.
+Date:   Wed, 18 Sep 2019 08:19:19 +0200
+Message-Id: <20190918061227.285930559@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,37 +59,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6fbcdd59094ade30db63f32316e9502425d7b256 upstream.
+commit ee483d32ee1a1a7f7d7e918fbc350c790a5af64a upstream.
 
-Commit ddf35cf3764b ("powerpc: Use barrier_nospec in copy_from_user()")
-Added barrier_nospec before loading from user-controlled pointers. The
-intention was to order the load from the potentially user-controlled
-pointer vs a previous branch based on an access_ok() check or similar.
+When data size is not a multiple of the alg's block size,
+the SEC generates an error interrupt and dumps the registers.
+And for NULL size, the SEC does just nothing and the interrupt
+is awaited forever.
 
-In order to achieve the same result, add a barrier_nospec to the
-raw_copy_in_user() function before loading from such a user-controlled
-pointer.
+This patch ensures the data size is correct before submitting
+the request to the SEC engine.
 
-Fixes: ddf35cf3764b ("powerpc: Use barrier_nospec in copy_from_user()")
-Signed-off-by: Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/uaccess.h |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/crypto/talitos.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
---- a/arch/powerpc/include/asm/uaccess.h
-+++ b/arch/powerpc/include/asm/uaccess.h
-@@ -306,6 +306,7 @@ extern unsigned long __copy_tofrom_user(
- static inline unsigned long
- raw_copy_in_user(void __user *to, const void __user *from, unsigned long n)
- {
-+	barrier_nospec();
- 	return __copy_tofrom_user(to, from, n);
- }
- #endif /* __powerpc64__ */
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -1672,6 +1672,14 @@ static int ablkcipher_encrypt(struct abl
+ 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
+ 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
+ 	struct talitos_edesc *edesc;
++	unsigned int blocksize =
++			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
++
++	if (!areq->nbytes)
++		return 0;
++
++	if (areq->nbytes % blocksize)
++		return -EINVAL;
+ 
+ 	/* allocate extended descriptor */
+ 	edesc = ablkcipher_edesc_alloc(areq, true);
+@@ -1689,6 +1697,14 @@ static int ablkcipher_decrypt(struct abl
+ 	struct crypto_ablkcipher *cipher = crypto_ablkcipher_reqtfm(areq);
+ 	struct talitos_ctx *ctx = crypto_ablkcipher_ctx(cipher);
+ 	struct talitos_edesc *edesc;
++	unsigned int blocksize =
++			crypto_tfm_alg_blocksize(crypto_ablkcipher_tfm(cipher));
++
++	if (!areq->nbytes)
++		return 0;
++
++	if (areq->nbytes % blocksize)
++		return -EINVAL;
+ 
+ 	/* allocate extended descriptor */
+ 	edesc = ablkcipher_edesc_alloc(areq, false);
 
 
