@@ -2,116 +2,87 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B52C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627A1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852C421897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:04:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HMJ/Xs+F"
+	by mail.kernel.org (Postfix) with ESMTP id 3691021920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:05:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfIRSEv (ORCPT
+        id S2387449AbfIRSFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:04:51 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34180 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfIRSEv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:04:51 -0400
-Received: by mail-io1-f67.google.com with SMTP id q1so1421185ion.1;
-        Wed, 18 Sep 2019 11:04:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=upqoC8c2rSOEKiJW1ZDEjgjfH9qm+uaVc0P9OeAP7Hc=;
-        b=HMJ/Xs+F/Jz81h1wXx16MJIjcONMtaLJl29Wci2Qi/GJPzK/I+rAXs/+B9YVaHUdjZ
-         5/fF7OyepHwhNpnaiDkR/Pc1Adts0SnIrZVhdcPsAFvK3U/d5EVQee6e/Ma3AsQTwNI5
-         SD2Rz7W4Qi012mc4eDiyBeMKcaQNDa4R7nDjjSnbgakvBCVLO8J7o5J0SMiEZi+2zArs
-         XM0QKCip2qg5AA/D4S4gKHhir4UwW+hNlRGEv5MdNTmQ7GzBqmJCJ7feSRUxVyFAC3/t
-         eDJfQPs37rpL7Fp8lqJAIcyzvMTSuaVQtg9RIJXNa850jrwpYH56JeUYKwpihg2d8QrH
-         xxww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=upqoC8c2rSOEKiJW1ZDEjgjfH9qm+uaVc0P9OeAP7Hc=;
-        b=XpEaJpO2SDTt0kilP4b4bXRPGn+tKdama3n3KQef8dD6CXkULflUBbY8RBS50kcRbM
-         db1wPCu0ZpM4ArBCePvl3Z4SxlSg7W2v7ueFKe2ZyoDY1awKKjG4caksiq98VvtAMJPk
-         Q8s/JcVQmGmOqqghgziQu84cUmLg4jT2U/rbs3AfHWlUWvQg7hyat+6ttE/5k6KP8DBe
-         qXyaWA/kaUGSpUAy1tdgqmXHCfHIy+yjnRhz1qfMcSOY/30PHWIwOVBYdJpDFy0MNWmo
-         ot4dxcTLHgQnOk8QrvfXMrQvXuYMJ4eeBhiDeJg3cqSegwVYu1OKkggqnOuQtddu8eSK
-         8mIA==
-X-Gm-Message-State: APjAAAWIbGciqo1seYPFgme5VXA8/0zysT8E9bwCFWFoyMwjBBKk1pQE
-        rY+TWzdFefPVGc357bP9Twr44KTZiL8=
-X-Google-Smtp-Source: APXvYqwHs7c0OLT+gaaqTz2saOmiZoGr8G5n1g5ahrJeKQJo+RfAJ5OskK9SLwyF9bQhwlmMk3puuA==
-X-Received: by 2002:a5d:8415:: with SMTP id i21mr6605162ion.86.1568829888964;
-        Wed, 18 Sep 2019 11:04:48 -0700 (PDT)
-Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
-        by smtp.googlemail.com with ESMTPSA id s5sm4931032iol.71.2019.09.18.11.04.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 11:04:48 -0700 (PDT)
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-To:     andrew@lunn.ch
-Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2] net: dsa: sja1105: prevent leaking memory
-Date:   Wed, 18 Sep 2019 13:04:38 -0500
-Message-Id: <20190918180439.12441-1-navid.emamdoost@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190918172106.GN9591@lunn.ch>
-References: <20190918172106.GN9591@lunn.ch>
+        Wed, 18 Sep 2019 14:05:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:59253 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbfIRSFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 14:05:12 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 11:05:11 -0700
+X-IronPort-AV: E=Sophos;i="5.64,521,1559545200"; 
+   d="scan'208";a="338407459"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 11:05:10 -0700
+Message-ID: <38429bdb416bdb33f3c7f740f903380af3129a36.camel@linux.intel.com>
+Subject: Re: [PATCH v10 5/6] virtio-balloon: Pull page poisoning config out
+ of free page hinting
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
+        david@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        mhocko@kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
+        yang.zhang.wz@gmail.com, pagupta@redhat.com,
+        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com
+Date:   Wed, 18 Sep 2019 11:05:10 -0700
+In-Reply-To: <20190918135833-mutt-send-email-mst@kernel.org>
+References: <20190918175109.23474.67039.stgit@localhost.localdomain>
+         <20190918175305.23474.34783.stgit@localhost.localdomain>
+         <20190918135833-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In sja1105_static_config_upload, in two cases memory is leaked: when
-static_config_buf_prepare_for_upload fails and when sja1105_inhibit_tx
-fails. In both cases config_buf should be released.
+On Wed, 2019-09-18 at 13:58 -0400, Michael S. Tsirkin wrote:
+> On Wed, Sep 18, 2019 at 10:53:05AM -0700, Alexander Duyck wrote:
+> > From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> > 
+> > Currently the page poisoning setting wasn't being enabled unless free page
+> > hinting was enabled. However we will need the page poisoning tracking logic
+> > as well for unused page reporting. As such pull it out and make it a
+> > separate bit of config in the probe function.
+> > 
+> > In addition we can actually wrap the code in a check for NO_SANITY. If we
+> > don't care what is actually in the page we can just default to 0 and leave
+> > it there.
+> > 
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+> 
+> I think this one can go in directly. Do you want me to merge it now?
 
-Fixes: 8aa9ebccae876 (avoid leaking config_buf)
-Fixes: 1a4c69406cc1c (avoid leaking config_buf)
+That sounds good to me.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
----
- drivers/net/dsa/sja1105/sja1105_spi.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Do you know if you can also pull in QEMU 1/3 into QEMU as well since the
+feature wasn't pulled into QEMU originally?
+https://lore.kernel.org/lkml/20190918175342.23606.12400.stgit@localhost.localdomain/
 
-diff --git a/drivers/net/dsa/sja1105/sja1105_spi.c b/drivers/net/dsa/sja1105/sja1105_spi.c
-index 84dc603138cf..58dd37ecde17 100644
---- a/drivers/net/dsa/sja1105/sja1105_spi.c
-+++ b/drivers/net/dsa/sja1105/sja1105_spi.c
-@@ -409,7 +409,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
- 	rc = static_config_buf_prepare_for_upload(priv, config_buf, buf_len);
- 	if (rc < 0) {
- 		dev_err(dev, "Invalid config, cannot upload\n");
--		return -EINVAL;
-+		rc = -EINVAL;
-+		goto out;
- 	}
- 	/* Prevent PHY jabbering during switch reset by inhibiting
- 	 * Tx on all ports and waiting for current packet to drain.
-@@ -418,7 +419,8 @@ int sja1105_static_config_upload(struct sja1105_private *priv)
- 	rc = sja1105_inhibit_tx(priv, port_bitmap, true);
- 	if (rc < 0) {
- 		dev_err(dev, "Failed to inhibit Tx on ports\n");
--		return -ENXIO;
-+		rc = -ENXIO;
-+		goto out;
- 	}
- 	/* Wait for an eventual egress packet to finish transmission
- 	 * (reach IFG). It is guaranteed that a second one will not
--- 
-2.17.1
+Thanks.
+
+- Alex
+
 
