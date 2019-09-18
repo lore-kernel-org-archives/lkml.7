@@ -2,140 +2,176 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE1AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ADACC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A74E321920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568802505;
-	bh=NU/XZq0YjEUS1CaZjiEgjV/Mv/zFt98RSp0oEKn6bpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=R5D6bkBbRjpHq+HkCHttyCthVxElML2I/UbTZtSldhvB8cPpXW1TNh7bu0XXpE/zR
-	 CPEc/F4WuDybD4aBGjLezmWK3OEFXZlFJ1IM3pPxf3TOzTElKTOii0h9C0VGDqBKNS
-	 Zo98Gy1q1lzpM915Lk3n7kyTT5XAKT7y7AgdSu6k=
+	by mail.kernel.org (Postfix) with ESMTP id 402A921906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:35:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WO9H67nV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729703AbfIRK2Z (ORCPT
+        id S1729325AbfIRKfP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:28:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725298AbfIRK2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:28:24 -0400
-Received: from localhost (unknown [122.178.229.153])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 295DB205F4;
-        Wed, 18 Sep 2019 10:28:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568802503;
-        bh=NU/XZq0YjEUS1CaZjiEgjV/Mv/zFt98RSp0oEKn6bpU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OlpbDhJc/XVCrrvg80yx1mZCdGbXBOUYMa6om5ZKj5YNXWraiyble4+RQQF+k50ac
-         Fivo3B1hhAenmy4QvJ2sGPlVggOT300c09DPVsaXnDC51oj3rHZCq1BaRSqn6mJyGJ
-         fwADBKoOoMi18cBYp4pLnmel2LVxaTHjcDaV/P6U=
-Date:   Wed, 18 Sep 2019 15:57:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Satendra Singh Thakur <sst2005@gmail.com>
-Cc:     dan.j.williams@intel.com, jun.nie@linaro.org, shawnguo@kernel.org,
-        agross@kernel.org, sean.wang@mediatek.com, matthias.bgg@gmail.com,
-        maxime.ripard@bootlin.com, wens@csie.org, lars@metafoo.de,
-        afaerber@suse.de, manivannan.sadhasivam@linaro.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, satendrasingh.thakur@hcl.com
-Subject: Re: [PATCH 0/9] added helper macros to remove duplicate code from
- probe functions of the platform drivers
-Message-ID: <20190918102715.GO4392@vkoul-mobl>
-References: <20190915070003.21260-1-sst2005@gmail.com>
+        Wed, 18 Sep 2019 06:35:15 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45160 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbfIRKfO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:35:14 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r134so5259884lff.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 03:35:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5IKevHxYE8kJAT6rh5UWN+J7usw4VjwCKVPryNseZJE=;
+        b=WO9H67nVw2fT4Z2j/RPZzKh1muXV7mcGA8J1lk2RWGs2FHPWhOPkyl1I1sCSpysElI
+         Ktq8U63s20pJSpRtGo7OAL2AeKJZJoOPcq5cj8K3VgFbFnZTUXN9N0V0x3Bk2LcTA7ux
+         UFDOVVCgrhdUR0gYw1X80XO+Vf2YOSoRce39mhb0indSnYQ7dd5T/RfIutn5iXyqqsuA
+         AU1pwvN86k0TXLLx1hTjvdx9HKGYUw+/ToZFyPCDd2/dk9vGOYYROCSxkK1RNWczW9pm
+         eR5+0UrUO/AmkDcbiPYVDy0Il64EmQXeE+g5poMQtgiVyMyzJ1pU78Y0vs9R/ywO3cYh
+         1Zbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=5IKevHxYE8kJAT6rh5UWN+J7usw4VjwCKVPryNseZJE=;
+        b=QkdWjfKaZJIrkzmfYcoG2eWpdW6Ig9Ffg/WJAlTFXEEuVa+TMPOlE+Qs+jvFrQwO/V
+         Cp5LlodZq/AjuwqSuEBpQKrmzwv0IUCuaqrNZNO/4y9QAnLpLhZF1sQ/U7dOq5+xpv9g
+         kp/jLiKTOviT4+iEJAMttNmNF3SI4zIwkF/IxJOqfc6svCJWtcInIo4sz15pQcw3TVI4
+         FFdP5ADPXtvvUPaaiaFLT++Qm/T+jK5pnfdHoF6eEvSoZ35zLUXGYv2HOQ3I5glntUW8
+         ocjfGM7EOk+KHUfFzQgslG3YpHhUA+sx5Wmg7FBuZpeNUtDZ4o4IDXQvR6NMo9LBW5rc
+         QOQA==
+X-Gm-Message-State: APjAAAW+eItxrXvLCKjpSKzvgHgQwDrDoC6QywMN9kiNFoBmYj+EWzeV
+        3Vs+Z8lAPn7f1nT8DdHk8XQqGg==
+X-Google-Smtp-Source: APXvYqyL7ppVAzsU/nQPvrrwKm85aNB1UxdDF5l/HMW6KLOQWEly82ds/7WozGXkgR1luXbXHPwaMw==
+X-Received: by 2002:a19:6a09:: with SMTP id u9mr1673963lfu.91.1568802912601;
+        Wed, 18 Sep 2019 03:35:12 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id p9sm955453lji.107.2019.09.18.03.35.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Sep 2019 03:35:11 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 13:35:09 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 09/14] samples: bpf: makefile: use own flags
+ but not host when cross compile
+Message-ID: <20190918103508.GC2908@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-10-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzbuPnxAs0A=w60q0jTCy5pb2R-h0uEuT2tmvjsaj4DH4A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190915070003.21260-1-sst2005@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAEf4BzbuPnxAs0A=w60q0jTCy5pb2R-h0uEuT2tmvjsaj4DH4A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-09-19, 12:30, Satendra Singh Thakur wrote:
-> 1. For most of the platform drivers's probe include following steps
-> 
-> -memory allocation for driver's private structure
-> -getting io resources
-> -io remapping resources
-> -getting irq number
-> -registering irq
-> -setting driver's private data
-> -getting clock
-> -preparing and enabling clock
+On Tue, Sep 17, 2019 at 04:42:07PM -0700, Andrii Nakryiko wrote:
+>On Mon, Sep 16, 2019 at 3:59 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> While compile natively, the hosts cflags and ldflags are equal to ones
+>> used from HOSTCFLAGS and HOSTLDFLAGS. When cross compiling it should
+>> have own, used for target arch. While verification, for arm, arm64 and
+>> x86_64 the following flags were used alsways:
+>>
+>> -Wall
+>> -O2
+>> -fomit-frame-pointer
+>> -Wmissing-prototypes
+>> -Wstrict-prototypes
+>>
+>> So, add them as they were verified and used before adding
+>> Makefile.target, but anyway limit it only for cross compile options as
+>> for host can be some configurations when another options can be used,
+>> So, for host arch samples left all as is, it allows to avoid potential
+>> option mistmatches for existent environments.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  samples/bpf/Makefile | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
+>> index 1579cc16a1c2..b5c87a8b8b51 100644
+>> --- a/samples/bpf/Makefile
+>> +++ b/samples/bpf/Makefile
+>> @@ -178,8 +178,17 @@ CLANG_EXTRA_CFLAGS := $(ARM_ARCH_SELECTOR)
+>>  TPROGS_CFLAGS += $(ARM_ARCH_SELECTOR)
+>>  endif
+>>
+>> +ifdef CROSS_COMPILE
+>> +TPROGS_CFLAGS += -Wall
+>> +TPROGS_CFLAGS += -O2
+>
+>Specifying one arg per line seems like overkill, put them in one line?
+Will combine.
 
-And we have perfect set of APIs for these tasks!
+>
+>> +TPROGS_CFLAGS += -fomit-frame-pointer
+>
+>Why this one?
+I've explained in commit msg. The logic is to have as much as close options
+to have smiliar binaries. As those options are used before for hosts and kinda
+cross builds - better follow same way.
 
-> 2. We have defined a set of macros to combine some or all of
-> the above mentioned steps. This will remove redundant/duplicate
-> code in drivers' probe functions of platform drivers.
+>
+>> +TPROGS_CFLAGS += -Wmissing-prototypes
+>> +TPROGS_CFLAGS += -Wstrict-prototypes
+>
+>Are these in some way special that we want them in cross-compile mode only?
+>
+>All of those flags seem useful regardless of cross-compilation or not,
+>shouldn't they be common? I'm a bit lost about the intent here...
+They are common but split is needed to expose it at least. Also host for
+different arches can have some own opts already used that shouldn't be present
+for cross, better not mix it for safety.
 
-Why, how does it help and you do realize it also introduces bugs
-
-> devm_platform_probe_helper(pdev, priv, clk_name);
-> devm_platform_probe_helper_clk(pdev, priv, clk_name);
-> devm_platform_probe_helper_irq(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
-> devm_platform_probe_helper_all(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
-> devm_platform_probe_helper_all_data(pdev, priv, clk_name,
-> irq_hndlr, irq_flags, irq_name, irq_devid);
-> 
-> 3. Code is made devres compatible (wherever required)
-> The functions: clk_get, request_irq, kzalloc, platform_get_resource
-> are replaced with their devm_* counterparts.
-
-We already have devres APIs for people to use!
-> 
-> 4. Few bugs are also fixed.
-
-Which ones..?
-
-> 
-> Satendra Singh Thakur (9):
->   probe/dma : added helper macros to remove redundant/duplicate code
->     from probe functions of the dma controller drivers
->   probe/dma/jz4740: removed redundant code from jz4740 dma controller's 
->        probe function
->   probe/dma/zx: removed redundant code from zx dma controller's probe
->     function
->   probe/dma/qcom-bam: removed redundant code from qcom bam dma
->     controller's probe function
->   probe/dma/mtk-hs: removed redundant code from mediatek hs dma
->     controller's probe function
->   probe/dma/sun6i: removed redundant code from sun6i dma controller's
->     probe function
->   probe/dma/sun4i: removed redundant code from sun4i dma controller's
->     probe function
->   probe/dma/axi: removed redundant code from axi dma controller's probe
->     function
->   probe/dma/owl: removed redundant code from owl dma controller's probe
->     function
-> 
->  drivers/dma/dma-axi-dmac.c       |  28 ++---
->  drivers/dma/dma-jz4740.c         |  33 +++---
->  drivers/dma/mediatek/mtk-hsdma.c |  38 +++----
->  drivers/dma/owl-dma.c            |  29 ++---
->  drivers/dma/qcom/bam_dma.c       |  71 +++++-------
->  drivers/dma/sun4i-dma.c          |  30 ++----
->  drivers/dma/sun6i-dma.c          |  30 ++----
->  drivers/dma/zx_dma.c             |  35 ++----
->  include/linux/probe-helper.h     | 179 +++++++++++++++++++++++++++++++
->  9 files changed, 280 insertions(+), 193 deletions(-)
->  create mode 100644 include/linux/probe-helper.h
-> 
-> -- 
-> 2.17.1
+>
+>> +else
+>>  TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
+>>  TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
+>> +endif
+>> +
+>>  TPROGS_CFLAGS += -I$(objtree)/usr/include
+>>  TPROGS_CFLAGS += -I$(srctree)/tools/lib/bpf/
+>>  TPROGS_CFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
+>> --
+>> 2.17.1
+>>
 
 -- 
-~Vinod
+Regards,
+Ivan Khoronzhuk
