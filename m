@@ -2,180 +2,103 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAB3C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D53E4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED2E208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6487208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="EN5mzTyE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YNxcge2f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfIRSHS (ORCPT
+        id S1729753AbfIRSN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:07:18 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:36862 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbfIRSHR (ORCPT
+        Wed, 18 Sep 2019 14:13:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:41532 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfIRSN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:07:17 -0400
-Received: by mail-pf1-f193.google.com with SMTP id y22so516316pfr.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 11:07:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=NDosSDmfQjatkG4wkOQpAvxMT8eQlYv0n1egSYiYo8Y=;
-        b=EN5mzTyEKz0R+OYR61O7os0/JLlPH83xppejWSOkUPIn46QgYTUPmqZIMXkF2cHNzg
-         iR6ospTXDHB8OcZCQYxzRQRG6RlaQ0V4PyCF4/sdrVnPy8T6J0bhnsx/JHjVAM+XnwuK
-         cM5JD4COPmLVJpo33P+fFQ9rDSj8bJVAYyfZtr3YNW6/GJpEFj8tC/Kg7wgOhZKMzLoR
-         mDUIcAi/oVSJJDbdU98Qlji0rz6+bnWIrPO8sYCFcR2yZP7/J1KAkJdSvvOglHrCHULs
-         FDAG/UI75sYwfJNKANtZfNac4SYid/yiDqBj65b8lqRAmbewotNQLmxkgYsWvY+AXfsm
-         Fqjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NDosSDmfQjatkG4wkOQpAvxMT8eQlYv0n1egSYiYo8Y=;
-        b=GU8sE9Ooqy2UaVCsAh1bP6qRWaSRnQOjzoBAkdjJSUeNfgDiUwzXGCO1gwFrCpYzaR
-         bfYMz11E8MDI40URqaTqvC4VHf5BeAedNk7vWE3xLLNs2E+iw5JGalbagINwI210PNlu
-         enx4PO1ro/u7L7+EIhdfhA6WEEAGjqfoVV3csy9DvOZhBDc+BIyqk5UW95U2EeCoSmgB
-         gAUVon8D68vtvIc0ZX9Zt+vzoRILTyZqg1tpF+SWtECVdPhbhZrAEbdhSoju7Vb3rO5I
-         d2Wy0wjaM/w2UGlWs5HvQYqJj+EKr0sVWDNmwykO3wmEfwKuUPrpwT1xEi4WVKTXy2Tg
-         d7xQ==
-X-Gm-Message-State: APjAAAVHRUPCw4CwvaQtE3CxpjiP+PX0BBc2PEm53TNsVqZ7+vntdrbD
-        E8BSOlhGlkL/JLJb+siAMZUxOg==
-X-Google-Smtp-Source: APXvYqw1h+7+kJ3we2X7NX1MFJSWR3g+cC7SHypeuSUCcWEQ1a6wmTUaYa5Obud1oCLZjDB+QdBtUw==
-X-Received: by 2002:a62:1a4d:: with SMTP id a74mr5583249pfa.179.1568830036523;
-        Wed, 18 Sep 2019 11:07:16 -0700 (PDT)
-Received: from cisco ([2601:282:901:dd7b:8ca:f826:700:a6])
-        by smtp.gmail.com with ESMTPSA id d10sm9540877pfn.50.2019.09.18.11.07.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 11:07:15 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 12:07:12 -0600
-From:   Tycho Andersen <tycho@tycho.ws>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        luto@amacapital.net, jannh@google.com, wad@chromium.org,
-        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Tyler Hicks <tyhicks@canonical.com>
-Subject: Re: [PATCH 1/4] seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
-Message-ID: <20190918180712.GG3835@cisco>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
- <20190918084833.9369-2-christian.brauner@ubuntu.com>
- <201909181018.E3CEC9A81@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201909181018.E3CEC9A81@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Sep 2019 14:13:29 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IHx8DJ064916;
+        Wed, 18 Sep 2019 18:13:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=UjgOSjTYHKYQ3BViNdA+1Pbt5OtO2DhITkMO0ccXbsE=;
+ b=YNxcge2fE7Jf9NrE4p+pVvJxPpd0rJjk0uwx7Tbp/f7hgyjAIO2KSBUG44QXgsaamU8D
+ jHZVZgST4X7qOj+gi8GFM6t/WOiU/uybel2RdsYS46a2MCMEcFVF8Xe/6LDP1eiHPuQV
+ DINp+SGZ/XIXIbb/lyzQ2bpbn3t1AoN3tppko0FU5rIUBzuAPQs5E4pdHFPcAU3+N9Hr
+ 6tlR7v9WpfPtGjdf8OzX0uuFmTPdA1cRY/0+25UsbUUYLa8I8B88JYOCVUabQiXdQCLZ
+ YWN+7ntzC9CC5TK6D05ZlwOE0dKwUh8UHbPGufp1nwPoMROqx5bc1LxcXQ3WwWH9uIWe Jw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2v385e5p0t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 18:13:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8II4I1Y116899;
+        Wed, 18 Sep 2019 18:11:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2v37mb055b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 18:11:18 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IIBFZo005891;
+        Wed, 18 Sep 2019 18:11:15 GMT
+Received: from x250.idc.oracle.com (/10.191.241.104)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Sep 2019 11:11:14 -0700
+From:   Allen Pais <allen.pais@oracle.com>
+To:     kvalo@codeaurora.org
+Cc:     davem@davemloft.net, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] iwlwifi: fix a potential NULL pointer dereference
+Date:   Wed, 18 Sep 2019 23:41:02 +0530
+Message-Id: <1568830262-5529-1-git-send-email-allen.pais@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=998
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909180161
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9384 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909180161
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:30:00AM -0700, Kees Cook wrote:
-> On Wed, Sep 18, 2019 at 10:48:30AM +0200, Christian Brauner wrote:
-> > This allows the seccomp notifier to continue a syscall. A positive
-> > discussion about this feature was triggered by a post to the
-> > ksummit-discuss mailing list (cf. [3]) and took place during KSummit
-> > (cf. [1]) and again at the containers/checkpoint-restore
-> > micro-conference at Linux Plumbers.
-> > 
-> > Recently we landed seccomp support for SECCOMP_RET_USER_NOTIF (cf. [4])
-> > which enables a process (watchee) to retrieve an fd for its seccomp
-> > filter. This fd can then be handed to another (usually more privileged)
-> > process (watcher). The watcher will then be able to receive seccomp
-> > messages about the syscalls having been performed by the watchee.
-> > 
-> > This feature is heavily used in some userspace workloads. For example,
-> > it is currently used to intercept mknod() syscalls in user namespaces
-> > aka in containers.
-> > The mknod() syscall can be easily filtered based on dev_t. This allows
-> > us to only intercept a very specific subset of mknod() syscalls.
-> > Furthermore, mknod() is not possible in user namespaces toto coelo and
-> > so intercepting and denying syscalls that are not in the whitelist on
-> > accident is not a big deal. The watchee won't notice a difference.
-> > 
-> > In contrast to mknod(), a lot of other syscall we intercept (e.g.
-> > setxattr()) cannot be easily filtered like mknod() because they have
-> > pointer arguments. Additionally, some of them might actually succeed in
-> > user namespaces (e.g. setxattr() for all "user.*" xattrs). Since we
-> > currently cannot tell seccomp to continue from a user notifier we are
-> > stuck with performing all of the syscalls in lieu of the container. This
-> > is a huge security liability since it is extremely difficult to
-> > correctly assume all of the necessary privileges of the calling task
-> > such that the syscall can be successfully emulated without escaping
-> > other additional security restrictions (think missing CAP_MKNOD for
-> > mknod(), or MS_NODEV on a filesystem etc.). This can be solved by
-> > telling seccomp to resume the syscall.
-> > 
-> > One thing that came up in the discussion was the problem that another
-> > thread could change the memory after userspace has decided to let the
-> > syscall continue which is a well known TOCTOU with seccomp which is
-> > present in other ways already.
-> > The discussion showed that this feature is already very useful for any
-> > syscall without pointer arguments. For any accidentally intercepted
-> > non-pointer syscall it is safe to continue.
-> > For syscalls with pointer arguments there is a race but for any cautious
-> > userspace and the main usec cases the race doesn't matter. The notifier
-> > is intended to be used in a scenario where a more privileged watcher
-> > supervises the syscalls of lesser privileged watchee to allow it to get
-> > around kernel-enforced limitations by performing the syscall for it
-> > whenever deemed save by the watcher. Hence, if a user tricks the watcher
-> > into allowing a syscall they will either get a deny based on
-> > kernel-enforced restrictions later or they will have changed the
-> > arguments in such a way that they manage to perform a syscall with
-> > arguments that they would've been allowed to do anyway.
-> > In general, it is good to point out again, that the notifier fd was not
-> > intended to allow userspace to implement a security policy but rather to
-> > work around kernel security mechanisms in cases where the watcher knows
-> > that a given action is safe to perform.
-> > 
-> > /* References */
-> > [1]: https://linuxplumbersconf.org/event/4/contributions/560
-> > [2]: https://linuxplumbersconf.org/event/4/contributions/477
-> > [3]: https://lore.kernel.org/r/20190719093538.dhyopljyr5ns33qx@brauner.io
-> > [4]: commit 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> > 
-> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Andy Lutomirski <luto@amacapital.net>
-> > Cc: Will Drewry <wad@chromium.org>
-> > Cc: Tycho Andersen <tycho@tycho.ws>
-> > CC: Tyler Hicks <tyhicks@canonical.com>
-> > Cc: Jann Horn <jannh@google.com>
-> > ---
-> >  include/uapi/linux/seccomp.h |  2 ++
-> >  kernel/seccomp.c             | 24 ++++++++++++++++++++----
-> >  2 files changed, 22 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > index 90734aa5aa36..2c23b9aa6383 100644
-> > --- a/include/uapi/linux/seccomp.h
-> > +++ b/include/uapi/linux/seccomp.h
-> > @@ -76,6 +76,8 @@ struct seccomp_notif {
-> >  	struct seccomp_data data;
-> >  };
-> >  
-> > +#define SECCOMP_RET_USER_NOTIF_ALLOW 0x00000001
-> 
-> nit: I'd like to avoid confusion here about what "family" these flags
-> belong to. "SECCOMP_RET_..." is used for the cBPF filter return action
-> value, so let's instead call this:
-> 
-> #define SECCOMP_USER_NOTIF_CONTINUE	BIT(0)
+alloc_workqueue is not checked for errors and as a result,
+a potential NULL dereference could occur.
 
-+1, I was thinking maybe even SECCOMP_USER_NOTIF_FLAG_CONTINUE.
+Signed-off-by: Allen Pais <allen.pais@oracle.com>
+---
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-But the whole series (minus the patch that already exists) looks good
-to me if we make this change:
+diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+index db62c83..276c26b 100644
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+@@ -3655,6 +3655,11 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+ 
+ 	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
+ 						   WQ_HIGHPRI | WQ_UNBOUND, 1);
++	if (unlikely(!trans_pcie->rba.alloc_wq)) {
++		return -ENOMEM;
++		goto out_free_ict;
++	}
++
+ 	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
+ 
+ #ifdef CONFIG_IWLWIFI_PCIE_RTPM
+-- 
+1.9.1
 
-Reviewed-by: Tycho Andersen <tycho@tycho.ws>
