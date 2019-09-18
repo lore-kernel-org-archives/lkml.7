@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F8DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98FBC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F83C21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756BD21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787814;
-	bh=syF/NkzhqfS112J6XOsusEe1N3OzXqgGHojgwJ3CdSA=;
+	s=default; t=1568787818;
+	bh=L0NefyNw+fmLtrMwBX9dMweJMjwLec/5MmMyXvZSIBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B616J8137gjTKeke2QEyDGpE8Drf07RIVY9i7p6ByYwna3A9t8h2kZEVF3GANjIIE
-	 FWV9QWfty+b4/qLQGVV7MoIUHdwuVEzMyPuKeWOcV44EywEXNt2N810z/G6UCE/I6S
-	 kBsIV+xVyFvivFoQNz1tZLRpwwF3wfmEevCqxu2A=
+	b=uBANiMQJkLSgBwC/ZMMH7JYWdYk849J29yRb2XjzoaauGigzvbK0OP7EZIRGM7RRr
+	 3HRQyXA4vvF/OC0DVKy8+ynJXPqOrdU6x/DS1TWD1IyNFwabgWovmxPu+nIxNbyqNA
+	 mcLwYGQs9RaemfB0KE9gQT3AwvXZsRPs3P/LbYxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729654AbfIRGXc (ORCPT
+        id S1729681AbfIRGXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43698 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729616AbfIRGX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:28 -0400
+        id S1728146AbfIRGXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7F1421920;
-        Wed, 18 Sep 2019 06:23:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C6ED218AF;
+        Wed, 18 Sep 2019 06:23:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787808;
-        bh=syF/NkzhqfS112J6XOsusEe1N3OzXqgGHojgwJ3CdSA=;
+        s=default; t=1568787813;
+        bh=L0NefyNw+fmLtrMwBX9dMweJMjwLec/5MmMyXvZSIBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXdcSuCeLw40gsigEBvKbc6F2LgMvxbocLcxReUPSwlhJvLXE5SGYyiMH3QMnLTQm
-         1RWVVcaeC8puibihYQ05+D3WB1/BXNFs48h8zF30oMAKxnAFYrK6gWGVr5oDyBzzXY
-         U1dcadwOqiX1YuThXIc7sk1KBrIXUDCQRyDByB0I=
+        b=ydqJAI5vF4FxWm0WCnO/dFRqydPNaRKWjHEOylfeKTTteMTKxGwhVusGd1R11E/xq
+         GXK66+0h9kcd3FJck31NPJN8aAY8QrP2yy7N4eke0jzwmPgLZYafFlaziXZTzwNkPS
+         dAgU6L2eTXVabgVVdVHzy97vA84HVj+BsjSA92hg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        CK Hu <ck.hu@mediatek.com>
-Subject: [PATCH 4.19 42/50] drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
-Date:   Wed, 18 Sep 2019 08:19:25 +0200
-Message-Id: <20190918061227.875064172@linuxfoundation.org>
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 4.19 44/50] iio: adc: stm32-dfsdm: fix data type
+Date:   Wed, 18 Sep 2019 08:19:27 +0200
+Message-Id: <20190918061228.175134274@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,44 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nishka Dasgupta <nishkadg.linux@gmail.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-commit 165d42c012be69900f0e2f8545626cb9e7d4a832 upstream.
+commit c6013bf50e2a2a94ab3d012e191096432aa50c6f upstream.
 
-Each iteration of for_each_child_of_node puts the previous
-node, but in the case of a goto from the middle of the loop, there is
-no put, thus causing a memory leak. Hence add an of_node_put before the
-goto in two places.
-Issue found with Coccinelle.
+Fix the data type as DFSDM raw output is complements 2,
+24bits left aligned in a 32-bit register.
+This change does not affect AUDIO path
+- Set data as signed for IIO (as for AUDIO)
+- Set 8 bit right shift for IIO.
+The 8 LSBs bits of data contains channel info and are masked.
 
-Fixes: 119f5173628a (drm/mediatek: Add DRM Driver for Mediatek SoC MT8173)
-
-Signed-off-by: Nishka Dasgupta <nishkadg.linux@gmail.com>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
+Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/iio/adc/stm32-dfsdm-adc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
-@@ -566,12 +566,15 @@ static int mtk_drm_probe(struct platform
- 			comp = devm_kzalloc(dev, sizeof(*comp), GFP_KERNEL);
- 			if (!comp) {
- 				ret = -ENOMEM;
-+				of_node_put(node);
- 				goto err_node;
- 			}
+--- a/drivers/iio/adc/stm32-dfsdm-adc.c
++++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+@@ -981,11 +981,11 @@ static int stm32_dfsdm_adc_chan_init_one
+ 	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO);
  
- 			ret = mtk_ddp_comp_init(dev, node, comp, comp_id, NULL);
--			if (ret)
-+			if (ret) {
-+				of_node_put(node);
- 				goto err_node;
-+			}
+ 	if (adc->dev_data->type == DFSDM_AUDIO) {
+-		ch->scan_type.sign = 's';
+ 		ch->ext_info = dfsdm_adc_audio_ext_info;
+ 	} else {
+-		ch->scan_type.sign = 'u';
++		ch->scan_type.shift = 8;
+ 	}
++	ch->scan_type.sign = 's';
+ 	ch->scan_type.realbits = 24;
+ 	ch->scan_type.storagebits = 32;
  
- 			private->ddp_comp[comp_id] = comp;
- 		}
 
 
