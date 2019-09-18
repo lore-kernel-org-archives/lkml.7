@@ -2,185 +2,158 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17F7C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29B88C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830CA21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F405F218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:21:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568816501;
+	bh=wXgtDQ2Bk9vjBzgeHu+dOpDd3lEyXdo3Em4I00Qq0go=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=AiOh5ItQswasAZAL3SK1N2V+JzkWbk5GyuCk0Qn28WjGpMm+IN445aGmn0GaLaoX8
+	 WR1V6rW1YgQ6HQVGHoRNxUiN5UEsp37PpTcCHmH/YTBBfQTVANgCb6TK5T7bCFjf3m
+	 kASJJ7zQX4W6CQI27LCx0pvV7oJreH35Mr4m4dyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfIROUv (ORCPT
+        id S1731242AbfIROVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:20:51 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33953 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbfIROUv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:20:51 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p10so182618edq.1;
-        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=mF9N/s8ILweTSnVuSXM/o539kT2v3tCxIskY2MUP33U=;
-        b=eI0UxDDFmeG5F7FW0s4aWFs/ez3fkEWLJEM58BXk/ZxJwLx1N5JNRSuYC4B+V/L2La
-         FwAcGEhsMae9AY7fWQlfsKhFWEPNx/8CLE4BLq0tid4cU/LqfP0kVWuNJ5ZT0iVPrmzm
-         uo9rgISzlZVnTeI993mKeExh/UA5T8xjhNp4xeID3yX57PcM9zyaRD1f0qZ5FY8jTMuo
-         5vy4Fq2U2GJij5gOgmZHEzB8LOatpQbArgkhPArU0oLIoZcQKMQjgGvbzVrYcplDhHyW
-         yS6Ef03YbY9N8gplT3Up8O5EjAjHKY0LL6FdLiU6feecfgf53T/duMZckPjeD34Eb0/m
-         GvVg==
-X-Gm-Message-State: APjAAAVflRj8DS/gJKWh4C5mPLDFNP9uO/yuGKIwJAjkqkvUxErjuTdh
-        yxuW37/OS+F5GgsgP0M5+Ic=
-X-Google-Smtp-Source: APXvYqxEijz/O+lgao2zenADPGmdrJHVUVPIC96IalBeKZkWKA2EF6b3MDX1hA/RuzkecmAalMxBfQ==
-X-Received: by 2002:a17:906:4890:: with SMTP id v16mr9837570ejq.3.1568816449140;
-        Wed, 18 Sep 2019 07:20:49 -0700 (PDT)
-Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
-        by smtp.gmail.com with ESMTPSA id g6sm1070532edk.40.2019.09.18.07.20.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:20:48 -0700 (PDT)
-Reply-To: efremov@linux.com
-Subject: Re: [PATCH v3 04/26] PCI: endpoint: Use PCI_STD_NUM_BARS
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-5-efremov@linux.com>
- <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <2c5fa911-3aca-216f-7c38-e970840af26a@linux.com>
-Date:   Wed, 18 Sep 2019 17:20:47 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 10:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727056AbfIROVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:21:40 -0400
+Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com [209.85.161.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DC762067B;
+        Wed, 18 Sep 2019 14:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568816498;
+        bh=wXgtDQ2Bk9vjBzgeHu+dOpDd3lEyXdo3Em4I00Qq0go=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GD8v6IR4n4ZFgYbHm4vs9fdVL0NBUorWvqvJHWa6MP0LPCqjmy/PtK6aRVG5s2IqP
+         GYXzm9YSypo9MsFMZfRbqMm38/8YmfgHGKiuzKo5iqlZV6wgW0sZ0dsm8lGJBWEamP
+         rjAfeX4yXPpsQjqB4lUUpEJvtiPfe9EBUsi7diQg=
+Received: by mail-yw1-f51.google.com with SMTP id j128so11153ywf.0;
+        Wed, 18 Sep 2019 07:21:38 -0700 (PDT)
+X-Gm-Message-State: APjAAAVEMhh0WkQjAtmwE3Eb/AI8yqm8p/GbO3inhJlmddEZM9fL0gwf
+        +Kc3ou6/fdeCj5xTEZXhZL0ZVAMd9gVrIOPPIA==
+X-Google-Smtp-Source: APXvYqzliDG2Xy58F978kJGtp6vQ1A2AyEZNr8e3uVSmktEs+lZEJgI2FWH3qKtnlcumLLeZFhha8AUbhOFoHfMVSDo=
+X-Received: by 2002:a81:9182:: with SMTP id i124mr3466623ywg.279.1568816497852;
+ Wed, 18 Sep 2019 07:21:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190918091949.GB9720@e119886-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190910114559.22810-1-peter.ujfalusi@ti.com> <20190910114559.22810-2-peter.ujfalusi@ti.com>
+ <20190918132835.GA4527@bogus> <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
+In-Reply-To: <d76ffc38-8e68-656a-325b-37de9b01e015@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 18 Sep 2019 09:21:26 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
+Message-ID: <CAL_JsqLJn4dmnjU=7kVgiosAU=o+fSJNH6578D92fGbdOR8Zfw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: dmaengine: dma-common: Change
+ dma-channel-mask to uint32-array
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     Vinod <vkoul@kernel.org>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 12:19 PM, Andrew Murray wrote:
-> On Mon, Sep 16, 2019 at 11:41:36PM +0300, Denis Efremov wrote:
->> To iterate through all possible BARs, loop conditions refactored to the
->> *number* of BARs "i < PCI_STD_NUM_BARS", instead of the index of the last
->> valid BAR "i <= BAR_5". This is more idiomatic C style and allows to avoid
->> the fencepost error. Array definitions changed to PCI_STD_NUM_BARS where
->> appropriate.
->>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> Signed-off-by: Denis Efremov <efremov@linux.com>
->> ---
->>  drivers/pci/endpoint/functions/pci-epf-test.c | 10 +++++-----
->>  include/linux/pci-epc.h                       |  2 +-
->>  2 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->> index 1cfe3687a211..5d74f81ddfe4 100644
->> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->> @@ -44,7 +44,7 @@
->>  static struct workqueue_struct *kpcitest_workqueue;
->>  
->>  struct pci_epf_test {
->> -	void			*reg[6];
->> +	void			*reg[PCI_STD_NUM_BARS];
->>  	struct pci_epf		*epf;
->>  	enum pci_barno		test_reg_bar;
->>  	struct delayed_work	cmd_handler;
->> @@ -377,7 +377,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->>  
->>  	cancel_delayed_work(&epf_test->cmd_handler);
->>  	pci_epc_stop(epc);
->> -	for (bar = BAR_0; bar <= BAR_5; bar++) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->>  		epf_bar = &epf->bar[bar];
->>  
->>  		if (epf_test->reg[bar]) {
->> @@ -400,7 +400,7 @@ static int pci_epf_test_set_bar(struct pci_epf *epf)
->>  
->>  	epc_features = epf_test->epc_features;
->>  
->> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
-> 
-> Is it possible to completely remove the BAR_x macros, or are there exsiting
-> users after this patchset?
+On Wed, Sep 18, 2019 at 9:04 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
+e:
+>
+>
+>
+> On 18/09/2019 16.28, Rob Herring wrote:
+> > On Tue, Sep 10, 2019 at 02:45:57PM +0300, Peter Ujfalusi wrote:
+> >> Make the dma-channel-mask to be usable for controllers with more than =
+32
+> >> channels.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/dma/dma-common.yaml | 10 +++++++++-
+> >>  1 file changed, 9 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/dma/dma-common.yaml b/D=
+ocumentation/devicetree/bindings/dma/dma-common.yaml
+> >> index ed0a49a6f020..41460946be64 100644
+> >> --- a/Documentation/devicetree/bindings/dma/dma-common.yaml
+> >> +++ b/Documentation/devicetree/bindings/dma/dma-common.yaml
+> >> @@ -25,11 +25,19 @@ properties:
+> >>        Used to provide DMA controller specific information.
+> >>
+> >>    dma-channel-mask:
+> >> -    $ref: /schemas/types.yaml#definitions/uint32
+> >>      description:
+> >>        Bitmask of available DMA channels in ascending order that are
+> >>        not reserved by firmware and are available to the
+> >>        kernel. i.e. first channel corresponds to LSB.
+> >> +    allOf:
+> >> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> >> +        items:
+> >> +          minItems =3D 1
+> >
+> > '=3D'? Just making up the syntax?
+>
+> Opps, sorry.
+>
+> >
+> >> +          maxItems =3D 255 # Should be enough
+> >> +          - description: Mask of channels 0-31
+> >> +          - description: Mask of channels 32-63
+> >
+> > You are mixing a schema and list here...
+>
+> Should I extend the description with something like this:
+> "The first item in the array is for channels 0-31, the second is for
+> channels 32-63, etc."
+>
+> To make sure that it is used in a correct and consistent manner.
 
-They are still used in other parts of the code. So, I've decided to preserve
-the defines in this case.
+Sure.
 
-pci-epc-core.c
-400:        (epf_bar->barno == BAR_5 &&
-429:        (epf_bar->barno == BAR_5 &&
-functions/pci-epf-test.c
-497:    enum pci_barno test_reg_bar = BAR_0;
+>
+> >> +          ...
+> >
+> > That's end of doc marker in YAML...
+>
+> I believe I need some reading to do for YAML..
+>
+> >
+> >> +          - description: Mask of chnanels X-(X+31)
+> >
+> > Obviously, this was not validated with 'make dt_binding_check'.
+> make dt_bindings_check
+> make: *** No rule to make target 'dt_bindings_check'.  Stop.
 
-> 
-> As your patchset replaces BAR_0 with 0 and BAR_1 with 1, does this suggest
-> that other users of BAR_x should be removed and also replaced with a number?
+Read Documentation/devicetree/writing-schema.md (or .rst in next).
 
-I changed BAR_0 to 0 in order to not mix different notions, i.e. the number
-of bars and the concrete bar.
+Either your config doesn't have DTC enabled or you don't have
+dt-schema installed.
 
-> 
-> Apologies if you this doesn't fall in the remit of this patchset.
-
-I don't know what is better here. It's simple enough to remove these defines.
-However, I would prefer to wait for the endpoint developers opinion.
-
-Thanks for the review!
-Denis
-
-> 
-> Thanks,
-> 
-> Andrew Murray
-> 
->>  		epf_bar = &epf->bar[bar];
->>  		/*
->>  		 * pci_epc_set_bar() sets PCI_BASE_ADDRESS_MEM_TYPE_64
->> @@ -450,7 +450,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->>  	}
->>  	epf_test->reg[test_reg_bar] = base;
->>  
->> -	for (bar = BAR_0; bar <= BAR_5; bar += add) {
->> +	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
->>  		epf_bar = &epf->bar[bar];
->>  		add = (epf_bar->flags & PCI_BASE_ADDRESS_MEM_TYPE_64) ? 2 : 1;
->>  
->> @@ -478,7 +478,7 @@ static void pci_epf_configure_bar(struct pci_epf *epf,
->>  	bool bar_fixed_64bit;
->>  	int i;
->>  
->> -	for (i = BAR_0; i <= BAR_5; i++) {
->> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
->>  		epf_bar = &epf->bar[i];
->>  		bar_fixed_64bit = !!(epc_features->bar_fixed_64bit & (1 << i));
->>  		if (bar_fixed_64bit)
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index f641badc2c61..56f1846b9d39 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -117,7 +117,7 @@ struct pci_epc_features {
->>  	unsigned int	msix_capable : 1;
->>  	u8	reserved_bar;
->>  	u8	bar_fixed_64bit;
->> -	u64	bar_fixed_size[BAR_5 + 1];
->> +	u64	bar_fixed_size[PCI_STD_NUM_BARS];
->>  	size_t	align;
->>  };
->>  
->> -- 
->> 2.21.0
->>
-
+>
+> > What you  want is:
+> >
+> >     allOf:
+> >       - $ref: /schemas/types.yaml#/definitions/uint32-array
+> >       - minItems: 1
+> >         maxItems: 255 # Should be enough
+>
+> OK and thanks for the comments.
+>
+> - P=C3=A9ter
+>
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
