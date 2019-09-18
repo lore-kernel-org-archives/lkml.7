@@ -2,262 +2,133 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 069F5C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA28721897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5F8221897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:44:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n8C5E2rW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728260AbfIRJoD (ORCPT
+        id S1728473AbfIRJoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:44:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:38316 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726591AbfIRJoC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:44:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBF02337;
-        Wed, 18 Sep 2019 02:44:01 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 621BB3F59C;
-        Wed, 18 Sep 2019 02:44:00 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 10:43:47 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the
- ARM SMC/HVC mailbox
-Message-ID: <20190918104347.285bd7ad@donnerap.cambridge.arm.com>
-In-Reply-To: <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
-        <1568626884-5189-2-git-send-email-peng.fan@nxp.com>
-        <20190917183115.3e40180f@donnerap.cambridge.arm.com>
-        <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Wed, 18 Sep 2019 05:44:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42522 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726591AbfIRJoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:44:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n14so5268997wrw.9;
+        Wed, 18 Sep 2019 02:44:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v8YSQLFy7mi0y7GPIl5MMvWVppKyDodjvZc0MIFH8E8=;
+        b=n8C5E2rWnglaX5nCXksoDHQCq1NAX+PgfC7glCxBe5jC59VjBNbXeK+kNenXeEMkjO
+         luY0AAropdWXhPSA6Gbes7FHMW80iFF1htllfawIr6TqOyTKwh7v5k2evvVXtMyp3Wu/
+         yBmkEP4vyUAkAfEjvWeEQaIGfAsX+bg5Bvhv3eNOHd2RIB3YK+eBmL9QIWeRYV+rcrPg
+         FUiThL90az14LREiFMF++v0WR06hQkmsOP2fQ9NyZfpPeBQqZWdB6+u1Ns5ytDmWDBnf
+         TzydNmqM1R6CVS4leCy6VR9vQDk2Nx/TsWCS6jBV2GWmjYq/dHZAYkmyYr0iJWSGu4lZ
+         fuuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=v8YSQLFy7mi0y7GPIl5MMvWVppKyDodjvZc0MIFH8E8=;
+        b=OcNSZvO33NrOMBoBy8F30mmqSE4DJzhwpG1xZ0sVNoBn/p6mChMPVR86PC5/GBHqB5
+         ScSiU0Sg6nxYvpKSNH1Tbt5dmR5ys28IFL7wssQgJvYj8QjrBGw7E00oiJW9wg7uq0w4
+         spUaJFyy95vLvN8JdaJUPSvfKmdbSHQdNjSrwzZWLRwg/ih5FgjPO41JUQy04INKo0s6
+         1qwK+WN4FUA4wvkztjfIRuf9t1FeNE1LC1ig5S/xa3r/gVcIIYUtTZyJ9U3QmZQ1W5WI
+         b9wI2Q7w943nBVYa7bNRPhRLV8zDNvg2dWyakksWlYa0Mav+x3QCv4Tsog4Wwcb+ydyR
+         pE0Q==
+X-Gm-Message-State: APjAAAXuOiZ6SR+KAW1ZsEmqkVD2k2tXcG/8YLkMGQVxKkWrDgoNIX/x
+        GKALngdj0dIf7K8LdozMDZmWHA68REdt0Q==
+X-Google-Smtp-Source: APXvYqwU5IdvzFQBkU7pqi4Mu8QuW9BHd4yE9S2clgrCKiq64M+0O0QIg1AmPlgJd/Ys2x0VKdz9XQ==
+X-Received: by 2002:a5d:6846:: with SMTP id o6mr2122745wrw.73.1568799876364;
+        Wed, 18 Sep 2019 02:44:36 -0700 (PDT)
+Received: from t1700.criteois.lan ([91.199.242.236])
+        by smtp.gmail.com with ESMTPSA id t8sm3776341wrx.76.2019.09.18.02.44.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 02:44:35 -0700 (PDT)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+Cc:     Erwan Velu <e.velu@criteo.com>, Jean Delvare <jdelvare@suse.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "Robert P. J. Day" <rpjday@crashcourse.ca>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: [PATCH 1/3] firmware/dmi_scan: Add dmi_save_release to save releases fields
+Date:   Wed, 18 Sep 2019 11:43:19 +0200
+Message-Id: <20190918094323.17515-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 00:27:00 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
+In DMI type 0, there is several fields that encodes a release.
+The dmi_save_release() function have the logic to check if the field is valid.
+If so, it reports the actual value.
 
-Hi,
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ drivers/firmware/dmi_scan.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-> On Tue, Sep 17, 2019 at 12:31 PM Andre Przywara <andre.przywara@arm.com> wrote:
-> >
-> > On Mon, 16 Sep 2019 09:44:37 +0000
-> > Peng Fan <peng.fan@nxp.com> wrote:
-> >
-> > Hi,
-> >  
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > The ARM SMC/HVC mailbox binding describes a firmware interface to trigger
-> > > actions in software layers running in the EL2 or EL3 exception levels.
-> > > The term "ARM" here relates to the SMC instruction as part of the ARM
-> > > instruction set, not as a standard endorsed by ARM Ltd.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/mailbox/arm-smc.yaml       | 96 ++++++++++++++++++++++
-> > >  1 file changed, 96 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.yaml b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > > new file mode 100644
-> > > index 000000000000..bf01bec035fc
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.yaml
-> > > @@ -0,0 +1,96 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/mailbox/arm-smc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: ARM SMC Mailbox Interface
-> > > +
-> > > +maintainers:
-> > > +  - Peng Fan <peng.fan@nxp.com>
-> > > +
-> > > +description: |
-> > > +  This mailbox uses the ARM smc (secure monitor call) and hvc (hypervisor  
-> >
-> > I think "or" instead of "and" is less confusing.
-> >  
-> > > +  call) instruction to trigger a mailbox-connected activity in firmware,
-> > > +  executing on the very same core as the caller. The value of r0/w0/x0
-> > > +  the firmware returns after the smc call is delivered as a received
-> > > +  message to the mailbox framework, so synchronous communication can be
-> > > +  established. The exact meaning of the action the mailbox triggers as
-> > > +  well as the return value is defined by their users and is not subject
-> > > +  to this binding.
-> > > +
-> > > +  One use case of this mailbox is the SCMI interface, which uses shared  
-> >
-> >      One example use case of this mailbox ...
-> > (to make it more obvious that it's not restricted to this)
-> >  
-> > > +  memory to transfer commands and parameters, and a mailbox to trigger a
-> > > +  function call. This allows SoCs without a separate management processor
-> > > +  (or when such a processor is not available or used) to use this
-> > > +  standardized interface anyway.
-> > > +
-> > > +  This binding describes no hardware, but establishes a firmware interface.
-> > > +  Upon receiving an SMC using one of the described SMC function identifiers,  
-> >
-> >                              ... the described SMC function identifier,
-> >  
-> > > +  the firmware is expected to trigger some mailbox connected functionality.
-> > > +  The communication follows the ARM SMC calling convention.
-> > > +  Firmware expects an SMC function identifier in r0 or w0. The supported
-> > > +  identifiers are passed from consumers,  
-> >
-> >      identifier
-> >
-> > "passed from consumers": How? Where?
-> > But I want to repeat: We should not allow this.
-> > This is a binding for a mailbox controller driver, not a generic firmware backdoor.
-> >  
-> Exactly. The mailbox controller here is the  SMC/HVC instruction,
-
-No, the mailbox controller is an *SMCCC compliant* smc/hvc call, targeting a very specific function ID. SMC calls are used for PSCI already, for instance, and you don't want to mess with that. Also some platforms define a vendor specific smc interface, again using a well constructed function ID complying to SMCCC.
-So we definitely need to stay within SMCCC for this kind of generic interface, *and* to let firmware specify the function ID via the DT, to not clash with any other function ID.
-
-> which needs 9 arguments to work. The fact that the fist argument is
-> always going to be same on a platform is just the way we use this
-> instruction.
-> 
-> > We should be as strict as possible to avoid any security issues.
-> >  
-> Any example of such a security issue?
-
-Someone finds a way to trick some mailbox client to send a crafted message to the mailbox.
-
-Do you have any example of a use case where the mailbox client needs to provide the function ID?
-
-> > The firmware certainly knows the function ID it implements. The firmware controls the DT. So it is straight-forward to put the ID into the DT. The firmware could even do this at boot time, dynamically, before passing on the DT to the non-secure world (bootloader or kernel).
-> >
-> > What would be the use case of this functionality?
-> >  
-> At least for flexibility and consistency.
-
-I appreciate the flexibility idea, but when creating an interface, especially a generic one to any kind of firmware, you should be as strict as possible, to avoid clashes in the future.
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 35ed56b9c34f..202bd2c69d0f 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -181,6 +181,32 @@ static void __init dmi_save_ident(const struct dmi_header *dm, int slot,
+ 	dmi_ident[slot] = p;
+ }
  
-> > > or listed in the the arm,func-ids  
-> >
-> >                        arm,func-id
-> >  
-> > > +  properties as described below. The firmware can return one value in  
-> >
-> >      property
-> >  
-> > > +  the first SMC result register, it is expected to be an error value,
-> > > +  which shall be propagated to the mailbox client.
-> > > +
-> > > +  Any core which supports the SMC or HVC instruction can be used, as long
-> > > +  as a firmware component running in EL3 or EL2 is handling these calls.
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    oneOf:
-> > > +      - description:
-> > > +          For implementations using ARM SMC instruction.
-> > > +        const: arm,smc-mbox
-> > > +
-> > > +      - description:
-> > > +          For implementations using ARM HVC instruction.
-> > > +        const: arm,hvc-mbox  
-> >
-> > I am not particularly happy with this, but well ...
-> >  
-> > > +
-> > > +  "#mbox-cells":
-> > > +    const: 1  
-> >
-> > Why is this "1"? What is this number used for? It used to be the channel ID, but since you are describing a single channel controller only, this should be 0 now.
-> >  
-> Yes. I overlooked it and actually queued the patch for pull request.
-> But I think the bindings should not carry a 'fix' patch later. Also I
-> realise this revision of binding hasn't been reviewed by Rob. Maybe I
-> should drop the patch for now.
++static void __init dmi_save_release(const struct dmi_header *dm, int slot,
++		int index)
++{
++	const u8 *d;
++	char *s;
++
++	// If the table doesn't have the field, let's return
++	if (dmi_ident[slot] || dm->length < index)
++		return;
++
++	d = (u8 *) dm + index;
++
++	// As per the specification,
++	// if the system doesn't have the field, the value is FF
++	if (d[0] == 0xFF)
++		return;
++
++	s = dmi_alloc(4);
++	if (!s)
++		return;
++
++	sprintf(s, "%u", d[0]);
++
++	dmi_ident[slot] = s;
++}
++
+ static void __init dmi_save_uuid(const struct dmi_header *dm, int slot,
+ 		int index)
+ {
+-- 
+2.21.0
 
-Yes, please do. I would like to make sure that the binding is correct, as it serves as a specification for people implementing both firmware services and other drivers (like *BSD).
-
-> > > +
-> > > +  arm,func-id:
-> > > +    description: |
-> > > +      An 32-bit value specifying the function ID used by the mailbox.  
-> >
-> >          A single 32-bit value ...
-> >  
-> > > +      The function ID follow the ARM SMC calling convention standard [1].  
-> >
-> >                          follows
-> >  
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > +
-> > > +required:
-> > > +  - compatible
-> > > +  - "#mbox-cells"
-> > > +
-> > > +examples:
-> > > +  - |
-> > > +    sram@93f000 {
-> > > +      compatible = "mmio-sram";
-> > > +      reg = <0x0 0x93f000 0x0 0x1000>;
-> > > +      #address-cells = <1>;
-> > > +      #size-cells = <1>;
-> > > +      ranges = <0x0 0x93f000 0x1000>;
-> > > +
-> > > +      cpu_scp_lpri: scp-shmem@0 {
-> > > +        compatible = "arm,scmi-shmem";
-> > > +        reg = <0x0 0x200>;
-> > > +      };
-> > > +    };
-> > > +
-> > > +    smc_tx_mbox: tx_mbox {
-> > > +      #mbox-cells = <1>;  
-> >
-> > As mentioned above, should be 0.
-> >  
-> > > +      compatible = "arm,smc-mbox";
-> > > +      /* optional */  
-> >
-> > First: having "optional" in a specific example is not helpful, just confusing.
-> > Second: It is actually *not* optional in this case, as there is no other way of propagating the function ID. The SCMI driver as the mailbox client has certainly no clue about this.
-> > I think I said this previously: Relying on the mailbox client to pass the function ID sounds broken, as this is a property of the mailbox controller driver. The mailbox client does not care about this mailbox communication detail, it just wants to trigger the mailbox.
-> >  
-> Again, the mailbox controller here is the SMC/HVC _instruction_, which
-> doesn't care what value the first argument carry.
-
-That is not true. Just check Peng's example implementation he mentioned in the cover letter:
-#define FSL_SIP_SCMI_1			0xc20000fe
-#define FSL_SIP_SCMI_2			0xc20000ff
-....
-	case FSL_SIP_SCMI_1:
-	case FSL_SIP_SCMI_2:
-		SMC_RET1(handle, scmi_handler(smc_fid, x1, x2, x3));
-
-Definitely the function ID is crucial here.
-
-Cheers,
-Andre.
