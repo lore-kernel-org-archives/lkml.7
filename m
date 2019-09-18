@@ -2,263 +2,134 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD7EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC7AC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 987F6208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568827981;
-	bh=NfJ9sRleyQQ5tZgP4QFSZEUinJ+3DSTjk/BekNqpBzg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U3B74fm4aD2MYsGnlJ79uKVdxM84te+WP/3/F91lC0Sxp7u5fYTLMxdDvr+q3eOFS
-	 5oTMRMAbc2fwAyY9tUNgeCBYjJpgJGn0Z4+DQvtw9Jw4ZZJPSWH/EP1NgLVqQXctiS
-	 5t2D/JaguqENErORmqRn4Aogw9szD0UoLfiTnbFA=
+	by mail.kernel.org (Postfix) with ESMTP id 192F2208C0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:33:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lNaWea2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387954AbfIRRdA (ORCPT
+        id S2387974AbfIRRdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:33:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387890AbfIRRc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:32:58 -0400
-Received: from localhost.localdomain (unknown [194.230.155.145])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F47621925;
-        Wed, 18 Sep 2019 17:32:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568827977;
-        bh=NfJ9sRleyQQ5tZgP4QFSZEUinJ+3DSTjk/BekNqpBzg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DvkvvauWtTZxYAuzUUBqMADQXEYtupsymGMZ9i8bCRI0eD4uxwy9Mrekx+m7lo608
-         xXOoC18wwUbAVnB6tbyj6CivJ990xXRyTxbCl/ehV5A+YCwzqW6gWTAS6TYIk27B/m
-         t5v6muzQDp89MsyDGgmfGZt6jDCemAvG/Z7pkoDA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2 8/8] dt-bindings: pwm: Convert Samsung PWM bindings to json-schema
-Date:   Wed, 18 Sep 2019 19:31:41 +0200
-Message-Id: <20190918173141.4314-8-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190918173141.4314-1-krzk@kernel.org>
-References: <20190918173141.4314-1-krzk@kernel.org>
+        Wed, 18 Sep 2019 13:33:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42327 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387890AbfIRRdM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:33:12 -0400
+Received: by mail-pg1-f193.google.com with SMTP id z12so232663pgp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=StXZgvnpam5WSnONqlrjqogHFGTPbRU5H/9svC301oA=;
+        b=lNaWea2wHOahDQ2SfFBEJNTwvRJljZ4vfQbq1ncbftO9Zkv25xpQBvDpPyJodgNuw4
+         mHq+zrLWIxf7vRwCCMTLqRdnOgqg2cZ4AT/l55ydHN4lfLuZSWD07dTf9gpzVZQl6Mm1
+         Kgu4GZVwHJ54b9H1o6YWs1PVGML1cN4NkWxFE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=StXZgvnpam5WSnONqlrjqogHFGTPbRU5H/9svC301oA=;
+        b=EBkYccRGo/0dV6m+0PXfBLYK0K/GfhdhfK3rXE4l4dQnrpIxRFtmC4EUsqVa3CCq/4
+         lhbBBJDb35ZBZwknJK6zKbBAIxYniztVhdEiGse7qa6hoEerOYK2SptDrU1Z37dvWB0j
+         wZaOWbVAAom77XsAWYaW8j1g1pMHmWdNmpPijA11OP76Pg/dXEni6M/7xJGjBB0G4QG1
+         SrhaBbtzgglAw5uR6Fodyz7jr5JjeHCOX/S/CJ1NYiof3dSlzCboOQbpJDy0d9ihsM/M
+         p/yU+I8w3URYUD+8xtUr3e/rYSt0mjc5ZeHNtjwa9hsQ/RdO/wobmtsH7u0gPzcCXr5z
+         5emA==
+X-Gm-Message-State: APjAAAXprxz0MwOAhXKfEzAFT1f24bC3cfMsQ67CpB05PTJDdan1zqVF
+        DvrefMBngYD8JuKFI/oTkfC00Q==
+X-Google-Smtp-Source: APXvYqxrOTpzIrp2OPEtn9cpjFNxJvtrf/xJEOP7epK4jBWFUlgjdtb/SPs45Kv0fjkV9EwxrCQXJw==
+X-Received: by 2002:a17:90a:b309:: with SMTP id d9mr5124022pjr.8.1568827991873;
+        Wed, 18 Sep 2019 10:33:11 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id z19sm5832575pgv.35.2019.09.18.10.33.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 10:33:10 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:33:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tyler Hicks <tyhicks@canonical.com>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        luto@amacapital.net, jannh@google.com, wad@chromium.org,
+        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/4] seccomp: add two missing ptrace ifdefines
+Message-ID: <201909181031.1EE73B4@keescook>
+References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+ <20190918084833.9369-3-christian.brauner@ubuntu.com>
+ <20190918091512.GA5088@elm>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190918091512.GA5088@elm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Samsung PWM (S3C, S5P and Exynos SoCs) bindings to DT schema
-format using json-schema.
+On Wed, Sep 18, 2019 at 11:15:12AM +0200, Tyler Hicks wrote:
+> On 2019-09-18 10:48:31, Christian Brauner wrote:
+> > Add tw missing ptrace ifdefines to avoid compilation errors on systems
+> > that do not provide PTRACE_EVENTMSG_SYSCALL_ENTRY or
+> > PTRACE_EVENTMSG_SYSCALL_EXIT or:
+> > 
+> > gcc -Wl,-no-as-needed -Wall  seccomp_bpf.c -lpthread -o seccomp_bpf
+> > In file included from seccomp_bpf.c:52:0:
+> > seccomp_bpf.c: In function ‘tracer_ptrace’:
+> > seccomp_bpf.c:1792:20: error: ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’ undeclared (first use in this function); did you mean ‘PTRACE_EVENT_CLONE’?
+> >   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+> >                     ^
+> > ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+> >   __typeof__(_expected) __exp = (_expected); \
+> >              ^~~~~~~~~
+> > seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
+> >   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+> >   ^~~~~~~~~
+> > seccomp_bpf.c:1792:20: note: each undeclared identifier is reported only once for each function it appears in
+> >   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+> >                     ^
+> > ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+> >   __typeof__(_expected) __exp = (_expected); \
+> >              ^~~~~~~~~
+> > seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
+> >   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+> >   ^~~~~~~~~
+> > seccomp_bpf.c:1793:6: error: ‘PTRACE_EVENTMSG_SYSCALL_EXIT’ undeclared (first use in this function); did you mean ‘PTRACE_EVENTMSG_SYSCALL_ENTRY’?
+> >     : PTRACE_EVENTMSG_SYSCALL_EXIT, msg);
+> >       ^
+> > ../kselftest_harness.h:608:13: note: in definition of macro ‘__EXPECT’
+> >   __typeof__(_expected) __exp = (_expected); \
+> >              ^~~~~~~~~
+> > seccomp_bpf.c:1792:2: note: in expansion of macro ‘EXPECT_EQ’
+> >   EXPECT_EQ(entry ? PTRACE_EVENTMSG_SYSCALL_ENTRY
+> >   ^~~~~~~~~
+> > 
+> > Fixes: 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+> 
+> I think this Fixes line is incorrect and should be changed to:
+> 
+> Fixes: 201766a20e30 ("ptrace: add PTRACE_GET_SYSCALL_INFO request")
+> 
+> With that changed,
+> 
+> Reviewed-by: Tyler Hicks <tyhicks@canonical.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This is actually fixed in -next already (and, yes, with the Fixes line
+Tyler has mentioned):
 
----
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/commit/?h=next&id=69b2d3c5924273a0ae968d3818210fc57a1b9d07
 
-Changes since v1:
-1. Indent example with four spaces (more readable),
-2. Fix samsung,pwm-outputs after review,
-3. Remove double-quotes from clock names.
----
- .../devicetree/bindings/pwm/pwm-samsung.txt   |  51 ---------
- .../devicetree/bindings/pwm/pwm-samsung.yaml  | 107 ++++++++++++++++++
- 2 files changed, 107 insertions(+), 51 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt b/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-deleted file mode 100644
-index 5538de9c2007..000000000000
---- a/Documentation/devicetree/bindings/pwm/pwm-samsung.txt
-+++ /dev/null
-@@ -1,51 +0,0 @@
--* Samsung PWM timers
--
--Samsung SoCs contain PWM timer blocks which can be used for system clock source
--and clock event timers, as well as to drive SoC outputs with PWM signal. Each
--PWM timer block provides 5 PWM channels (not all of them can drive physical
--outputs - see SoC and board manual).
--
--Be aware that the clocksource driver supports only uniprocessor systems.
--
--Required properties:
--- compatible : should be one of following:
--    samsung,s3c2410-pwm - for 16-bit timers present on S3C24xx SoCs
--    samsung,s3c6400-pwm - for 32-bit timers present on S3C64xx SoCs
--    samsung,s5p6440-pwm - for 32-bit timers present on S5P64x0 SoCs
--    samsung,s5pc100-pwm - for 32-bit timers present on S5PC100, S5PV210,
--			  Exynos4210 rev0 SoCs
--    samsung,exynos4210-pwm - for 32-bit timers present on Exynos4210,
--                          Exynos4x12, Exynos5250 and Exynos5420 SoCs
--- reg: base address and size of register area
--- interrupts: list of timer interrupts (one interrupt per timer, starting at
--  timer 0)
--- clock-names: should contain all following required clock names:
--    - "timers" - PWM base clock used to generate PWM signals,
--  and any subset of following optional clock names:
--    - "pwm-tclk0" - first external PWM clock source,
--    - "pwm-tclk1" - second external PWM clock source.
--  Note that not all IP variants allow using all external clock sources.
--  Refer to SoC documentation to learn which clock source configurations
--  are available.
--- clocks: should contain clock specifiers of all clocks, which input names
--  have been specified in clock-names property, in same order.
--- #pwm-cells: should be 3. See pwm.txt in this directory for a description of
--  the cells format. The only third cell flag supported by this binding is
--  PWM_POLARITY_INVERTED.
--
--Optional properties:
--- samsung,pwm-outputs: list of PWM channels used as PWM outputs on particular
--    platform - an array of up to 5 elements being indices of PWM channels
--    (from 0 to 4), the order does not matter.
--
--Example:
--	pwm@7f006000 {
--		compatible = "samsung,s3c6400-pwm";
--		reg = <0x7f006000 0x1000>;
--		interrupt-parent = <&vic0>;
--		interrupts = <23>, <24>, <25>, <27>, <28>;
--		clocks = <&clock 67>;
--		clock-names = "timers";
--		samsung,pwm-outputs = <0>, <1>;
--		#pwm-cells = <3>;
--	}
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-new file mode 100644
-index 000000000000..06d11faabff6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-samsung.yaml
-@@ -0,0 +1,107 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/pwm-samsung.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Samsung SoC PWM timers
-+
-+maintainers:
-+  - Thierry Reding <thierry.reding@gmail.com>
-+  - Krzysztof Kozlowski <krzk@kernel.org>
-+
-+description: |+
-+  Samsung SoCs contain PWM timer blocks which can be used for system clock source
-+  and clock event timers, as well as to drive SoC outputs with PWM signal. Each
-+  PWM timer block provides 5 PWM channels (not all of them can drive physical
-+  outputs - see SoC and board manual).
-+
-+  Be aware that the clocksource driver supports only uniprocessor systems.
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - samsung,s3c2410-pwm             # 16-bit, S3C24xx
-+      - samsung,s3c6400-pwm             # 32-bit, S3C64xx
-+      - samsung,s5p6440-pwm             # 32-bit, S5P64x0
-+      - samsung,s5pc100-pwm             # 32-bit, S5PC100, S5PV210, Exynos4210 rev0 SoCs
-+      - samsung,exynos4210-pwm          # 32-bit, Exynos
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    minItems: 1
-+    maxItems: 3
-+
-+  clock-names:
-+    description: |
-+      Should contain all following required clock names:
-+      - "timers" - PWM base clock used to generate PWM signals,
-+      and any subset of following optional clock names:
-+      - "pwm-tclk0" - first external PWM clock source,
-+      - "pwm-tclk1" - second external PWM clock source.
-+      Note that not all IP variants allow using all external clock sources.
-+      Refer to SoC documentation to learn which clock source configurations
-+      are available.
-+    oneOf:
-+      - items:
-+        - const: timers
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk0
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk1
-+      - items:
-+        - const: timers
-+        - const: pwm-tclk0
-+        - const: pwm-tclk1
-+
-+  interrupts:
-+    description:
-+      One interrupt per timer, starting at timer 0.
-+    minItems: 1
-+    maxItems: 5
-+
-+  "#pwm-cells":
-+    description:
-+      The only third cell flag supported by this binding
-+      is PWM_POLARITY_INVERTED.
-+    const: 3
-+
-+  samsung,pwm-outputs:
-+    description:
-+      A list of PWM channels used as PWM outputs on particular platform.
-+      It is an array of up to 5 elements being indices of PWM channels
-+      (from 0 to 4), the order does not matter.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - uniqueItems: true
-+      - items:
-+          minimum: 0
-+          maximum: 4
-+
-+required:
-+  - clocks
-+  - clock-names
-+  - compatible
-+  - interrupts
-+  - "#pwm-cells"
-+  - reg
-+
-+examples:
-+  - |
-+    pwm@7f006000 {
-+        compatible = "samsung,s3c6400-pwm";
-+        reg = <0x7f006000 0x1000>;
-+        interrupt-parent = <&vic0>;
-+        interrupts = <23>, <24>, <25>, <27>, <28>;
-+        clocks = <&clock 67>;
-+        clock-names = "timers";
-+        samsung,pwm-outputs = <0>, <1>;
-+        #pwm-cells = <3>;
-+    };
 -- 
-2.17.1
-
+Kees Cook
