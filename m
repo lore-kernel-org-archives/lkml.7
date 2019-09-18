@@ -2,155 +2,111 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EF3C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE272C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7176E21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C7121907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:45:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OAguUzqo";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Ao+QsFJR"
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="bNa8B5zM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731036AbfIRWcQ (ORCPT
+        id S1731038AbfIRWos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 18:32:16 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:44830 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730847AbfIRWcQ (ORCPT
+        Wed, 18 Sep 2019 18:44:48 -0400
+Received: from sonic302-22.consmr.mail.gq1.yahoo.com ([98.137.68.148]:39299
+        "EHLO sonic302-22.consmr.mail.gq1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726714AbfIRWor (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 18:32:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 38CC5611CE; Wed, 18 Sep 2019 22:32:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568845935;
-        bh=Nn2KgLmrM9Q93wmCCCAjiSFicJ0JbQsJ0LmX1D/4XY4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OAguUzqoK/ugGzIxirfunhIKhnIlkT+D9gy4gHfSTFf2DXUhLi0oTF6RaF05r3bR3
-         EF9YncIT19x/peVRYwf8G6mV+OYESM4wNEgf3C1EDPk/AVDV8CohnV7vgKYKMbsIWx
-         K9cW7dcD5AGirHlvN3Wn/PldRxmJ+hIduVZITdYY=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id B039260A60;
-        Wed, 18 Sep 2019 22:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568845934;
-        bh=Nn2KgLmrM9Q93wmCCCAjiSFicJ0JbQsJ0LmX1D/4XY4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ao+QsFJRbm18x3FwzvGWCr36fGLRBW8Tq84u71Fz3Jtcyn1ve5EkHYdhE/0yM/Dk9
-         HQC/WeCQ69LpHM5D3Y6Jmd4SuvmzjDswaN0BehE/dHlYbmE8nu1NW9TOUkeGX2FYwx
-         bmzukqqanpxSU0TWMx+uVyL2EwaaP7tERM5f5P/M=
+        Wed, 18 Sep 2019 18:44:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1568846686; bh=qeWM3clNU3uJNRLTBgPkz0oq23aWLhRpnv07nYVU28A=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=bNa8B5zMNrhPfbC8eYyT9//9+mIlw8wpsDjvtdrD5IsaAetmdK6fWPrZtrzm2bAvTRreurVTOg1zJhintRJEeGhGf47vgysXD+cHMi6YFI5H3svEZ+LzZ3t/B+BhhXXCD6dsSyMBXPqXlOXnXsGWwgUfjHbb8xZTJ/RwZhLRHSggnCiUys9x599xgfuRiijCOURe8cqnjM+wXNngYp1wYdt2c10q1sZo5cGSeNI9+NUmsoevY+wdeThFE931s6AKBqfEEkC7yyijtl1l7j62A4x5Qx0IGNwrmuGkoni+n77qyBQUBvHL3/9Izymjrb/U7i45oHsYxaZs3IYa5X6QXg==
+X-YMail-OSG: 3BwkIqwVM1kY_qtQ.9X84HAiACEg9mMdyPXHUG9kqjWOJZPdJMknKXzAYSlJXE0
+ Y4mH79kc1pjtuJCp7t_KRm4yC2bJxjP.WPfoNtFKsoEoJQz4C7nCCk_evUoTHXAZO7_6C_kwLRR9
+ qHgv9WjRbd9wy8MXRmltBEBDdgZ1RDbFIh_SE0H3UD_GHy1sNbl2pVNO6UsORsPxHhTBX2eagRpY
+ 6jQyVlw21bVJYEDQDv4B3Lv0f6BWf15aEv7.It7UvTIwZS11143Fd63_htwV0xXXXhuXqo8iwEMk
+ vfBjkHRqfbVMKGIlFHs8BzKRIZ3a7vG3BfHSBZ7536AWJNNHLf3epV3TC41Zf8FevnHBYWRwSZzB
+ hC9pGeNY1G3sGNRc0TeTwtWyNcNGag8GR48EX2f7_DecfELx54fKqJOLwHAj44M47mj2n0QBO2LU
+ DTziHVxkK48cECb5thoMdilFmaTNPGxES08B.ooGINds.GhmDOcvClqwYXca2sphU8jPOyAz1U9N
+ MIi1iUg3xpBxoBIR3499h2vSRwCRQHuqpjvczVW_Hiotl._Ueh9Pkup3t92lwUSgtUxMBVV3dXqP
+ QiCIUBIOWIVhbCgXIj_WvF.spJM.WWc2eDbtCArRBSRbIYopUqEr5fIW1HQwSZVedc.4AXOjNvAK
+ soT5_uYj6pmBBiWYK12Dweo51K4D0KLi1WL7EkVTv_WC.8KcQ9LByWWo7.B94I6vYo1Wij4h1L.W
+ NKo9gaxJRSR1xtqbK0V2dpZBhLpTk2MYxvsCABIJV.gR8IQYY2IUWp_cZULzmQkA_jXIL37NkbIl
+ pYqYNGDLqHS9LeEQ11naxMz8Q8ADyxX3zgQlLMmE3NLJ.niuJkkCLP4mkS49dvKQbSEf.C3zeB6M
+ l3z2kiqdG5izpKlifH3xYKS7fANnvmNtqFf4PCqLY4Bf1zgVtr95ynhY0SCV.R_3ErfGBDkg9JIE
+ hZEqpsfDqa1aLTSLX_ajISNuFI81wBEa7rvtyyHiiDWY6evP5J50lyImALLWctR53cbvAKblysMr
+ onRMP4KmMeUzLainlUsu6Suu4kLVJw1qFmIF5vGl8jAUJ5qLyRBtuozE4gX817Y0EngbWOkS.ume
+ kYQdeYfB51zXhbDBWXI6XnozeA_ZRzsNFK_HS0sX.a8_7HypdC9S1XxeV.wUfYh9CWr8RgBZ8peb
+ owUVeOUdozwoUtuzWX2ENyw43cQPWp4SIe3TUUnOwVAJCVe0j62MlRfceb3K393VWSf9S77DiWQd
+ 3qBOygO6qKtMhkW7gnrARGwMJTuSO_CVoWdDukbe8PrRmE3LYuvQnkzruGiggw44awI7XXRpGN1P
+ oBrtCbUJ.pJUdKljyFTcTrQGYAqXKIHiW3d8rL4Y-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.gq1.yahoo.com with HTTP; Wed, 18 Sep 2019 22:44:46 +0000
+Received: by smtp431.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 70c22b09dff901a0cf446ffa2243c519;
+          Wed, 18 Sep 2019 22:44:44 +0000 (UTC)
+Date:   Thu, 19 Sep 2019 06:44:39 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, devel@linuxdriverproject.org
+Subject: Re: [GIT PULL] Staging/IIO driver patches for 5.4-rc1
+Message-ID: <20190918224435.GA25175@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20190918114754.GA1899504@kroah.com>
+ <20190918182412.GA9924@infradead.org>
+ <20190918211123.GA22600@hsiangkao-HP-ZHAN-66-Pro-G1>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 18 Sep 2019 15:32:14 -0700
-From:   rananta@codeaurora.org
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Trilok Soni <tsoni@codeaurora.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] of: Add of_get_memory_prop()
-In-Reply-To: <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
-References: <20190918184656.7633-1-rananta@codeaurora.org>
- <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
-Message-ID: <19d727bbfce08e59294920ba8097be7a@codeaurora.org>
-X-Sender: rananta@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918211123.GA22600@hsiangkao-HP-ZHAN-66-Pro-G1>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Mailer: WebService/1.1.14303 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-09-18 13:13, Rob Herring wrote:
-> On Wed, Sep 18, 2019 at 1:47 PM Raghavendra Rao Ananta
-> <rananta@codeaurora.org> wrote:
->> 
->> On some embedded systems, the '/memory' dt-property gets updated
->> by the bootloader (for example, the DDR configuration) and then
->> gets passed onto the kernel. The device drivers may have to read
->> the properties at runtime to make decisions. Hence, add
->> of_get_memory_prop() for the device drivers to query the requested
+On Thu, Sep 19, 2019 at 05:11:28AM +0800, Gao Xiang wrote:
+> Hi Christoph,
 > 
-> Function name doesn't match. Device drivers don't need to access the 
-> FDT.
+> On Wed, Sep 18, 2019 at 11:24:12AM -0700, Christoph Hellwig wrote:
+> > Just as a note of record:  I don't think either file system move
+> > is a good idea.  erofs still needs a lot of work, especially in
+> > interacting with the mm code like abusing page->mapping.
 > 
->> properties.
->> 
->> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
->> ---
->>  drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
->>  include/linux/of_fdt.h |  1 +
->>  2 files changed, 28 insertions(+)
+> I know what you mean, that is a known stuff in the TODO list,
+> Z_EROFS_MAPPING_STAGING page->mapping just be used as a temporary
+> page mark since page->private is already pointed to another
+> structure, It's now be marked as an non-movable and anon pseudo
+> mapping and most mm code just skip this case.
+
+Add a word, these pages are all non-LRU and short lifetime temporary
+pages (and need to differentiate with other NULL mapping pages [a lot
+of different type pages could have this intermediate state]).
+
+Alternate way is to use some page flag but that is what I really
+want to avoid this limited resource.
+
+For EROFS, it's widely deployment on each new HUAWEI mobile phones
+on the market this year and all old HUAWEI modile phones are still
+supported by upgrading to EROFS version and there are many pending
+new features for EROFS and a mature fixed-sized output compression
+subsystem in the future if more fs users have interested in that
+and I think it's good for whole linux ecosystem not just on a single
+filesystem upstreaming basis and we will continue working on this area.
+
+Thanks,
+Gao Xiang
+
 > 
-> We don't add kernel api's without users.
+> I think a better way is to use a real address_space structure for
+> page->mapping to point. It's easy to update but I need some time
+> to verify. If I am wrong, please point it out...
 > 
->> 
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 223d617ecfe1..925cf2852433 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
->>         }
->>  }
->> 
->> +/**
->> + * of_fdt_get_memory_prop - Return the requested property from the 
->> /memory node
->> + *
->> + * On match, returns a non-zero positive value which represents the 
->> property
->> + * value. Otherwise returns -ENOENT.
->> + */
->> +int of_fdt_get_memory_prop(const char *pname)
->> +{
->> +       int memory;
->> +       int len;
->> +       fdt32_t *prop = NULL;
->> +
->> +       if (!pname)
->> +               return -EINVAL;
->> +
->> +       memory = fdt_path_offset(initial_boot_params, "/memory");
+> Thanks,
+> Gao Xiang
 > 
-> Memory nodes should have a unit-address, so this won't work frequently.
-Sorry, can you please elaborate more on this? What do you mean by 
-unit-address and working frequently?
-> 
->> +       if (memory > 0)
->> +               prop = fdt_getprop_w(initial_boot_params, memory,
->> +                                 pname, &len);
->> +
->> +       if (!prop || len != sizeof(u32))
->> +               return -ENOENT;
->> +
->> +       return fdt32_to_cpu(*prop);
->> +}
->> +EXPORT_SYMBOL_GPL(of_fdt_get_memory_prop);
->> +
->>  static bool of_fdt_device_is_available(const void *blob, unsigned 
->> long node)
->>  {
->>         const char *status = fdt_getprop(blob, node, "status", NULL);
->> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
->> index acf820e88952..537f29373358 100644
->> --- a/include/linux/of_fdt.h
->> +++ b/include/linux/of_fdt.h
->> @@ -38,6 +38,7 @@ extern char __dtb_end[];
->>  /* Other Prototypes */
->>  extern u64 of_flat_dt_translate_address(unsigned long node);
->>  extern void of_fdt_limit_memory(int limit);
->> +extern int of_fdt_get_memory_prop(const char *pname);
->>  #endif /* CONFIG_OF_FLATTREE */
->> 
->>  #ifdef CONFIG_OF_EARLY_FLATTREE
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
-- Raghavendra
