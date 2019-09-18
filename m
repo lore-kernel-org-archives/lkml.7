@@ -2,117 +2,182 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68259C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D700C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B81C218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:11:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VNIxg56/"
+	by mail.kernel.org (Postfix) with ESMTP id 4DDEE218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:13:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfIROLk (ORCPT
+        id S1729139AbfIRONp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:11:40 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36583 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729301AbfIROLk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:11:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1568815898;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=eYfolJm2ctgBFFzn1+Uof+Aznt2DY6/Wj6EoPA4iY/8=;
-        b=VNIxg56/J01TI5FBfLcMlLZEgmJ76faD0zu7xfSlGAXTJ0xwCfi/9cxfqwm0jxlvWvzTtx
-        NLMVNuMjFpqSXaA94y4abF9tB9hIcSa5+xbgdHeSZX+bvrbjvxsO4iMdmyVqpwFRciGhEa
-        cndN8vWSm/jFZ3DUz6JwqsBlFXEdzU8=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-130-AGTjRJn5PGOHWlh4FqOzkA-1; Wed, 18 Sep 2019 10:11:37 -0400
-Received: by mail-wm1-f69.google.com with SMTP id d10so84309wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 07:11:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gU04MhQdP4BkI/L+RLwBCZzg4I06FO6JtiKrPkqToDk=;
-        b=B6F8mDFFKNgIg8po+7d29gC0S91wSD+Vl3hkoiJI5MF0b3FmrdTlYASsG40Z4P65fo
-         Gsrr5CdpHnUTaT8VdFTcHv6Dq2R6mKBuzfFLe2IyG3NTYR2OHbpIAn926BBZDBnqPvX5
-         wRXACRe8kWRO7zA5lsoMl6+HFT+6pWw7yz1yenuH51WlpWkP9yBwuzq6gMXC2R1shMk3
-         xU2Doov23sWLitYCFcS7Y3P/q7Z4OKFvTlC7LTcqyJ+/okL2ZTFK219Cj0744HBjiqIq
-         u2NuCmUsKP1wc3YEeXILjzf4NzYWE/y7UOXBGeIuXROVbIquhV0VI+3U7M/GUhVfn0ld
-         I/ag==
-X-Gm-Message-State: APjAAAW5FyY7dwRUFM+EnKxZMoYG4ARR4BdYg3c3SnUOlGdrGUfPcfFz
-        UCP+Om/tMzSScvbPUDe8mLjFjpxg4aLBW5hlszz/LNU718GS4cyL7OiYMcAdRbECr7w4++Oh40O
-        1HrK99SUOkDbffcBXAKVTfumw
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr2919684wmj.110.1568815895841;
-        Wed, 18 Sep 2019 07:11:35 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqwQ7SmyPYoi9WAyE6yYB72cOtIdytEHLz51MBDl9qoydpi05HPbf1c9N+yvJBiOtjRJNGI5XQ==
-X-Received: by 2002:a05:600c:248:: with SMTP id 8mr2919664wmj.110.1568815895603;
-        Wed, 18 Sep 2019 07:11:35 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
-        by smtp.gmail.com with ESMTPSA id q25sm2592045wmq.27.2019.09.18.07.11.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:11:35 -0700 (PDT)
-Subject: Re: [PATCH] kvm: Ensure writes to the coalesced MMIO ring are within
- bounds
-To:     Will Deacon <will@kernel.org>
-Cc:     kvm@vger.kernel.org, kernellwp@gmail.com,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "# 5 . 2 . y" <stable@kernel.org>
-References: <20190918131545.6405-1-will@kernel.org>
- <9d993b71-4f2d-4d6e-39c9-f2ef849f5e5f@redhat.com>
- <20190918135932.aitmvncwujmjnwyr@willie-the-truck>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <281758dd-e400-f99c-b2e2-d32bca9f371e@redhat.com>
-Date:   Wed, 18 Sep 2019 16:11:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190918135932.aitmvncwujmjnwyr@willie-the-truck>
+        Wed, 18 Sep 2019 10:13:45 -0400
+Received: from mga01.intel.com ([192.55.52.88]:52925 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfIRONp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:13:45 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 07:13:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="338341341"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga004.jf.intel.com with ESMTP; 18 Sep 2019 07:13:44 -0700
+Received: from orsmsx159.amr.corp.intel.com (10.22.240.24) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 18 Sep 2019 07:13:44 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.139]) by
+ ORSMSX159.amr.corp.intel.com ([169.254.11.209]) with mapi id 14.03.0439.000;
+ Wed, 18 Sep 2019 07:13:44 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+CC:     Ferry Toth <fntoth@gmail.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Jacek Anaszewski" <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, "Dan Murphy" <dmurphy@ti.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
+Thread-Topic: [PATCH] ACPICA: make acpi_load_table() return table index
+Thread-Index: AQHVaUE6M44QnoJV0UqVXW85SrAmnKcoFnTQgAGaZwD///c2gIAAhhUAgAAa0gD//5ht0IAEqKwAgAL5tVA=
+Date:   Wed, 18 Sep 2019 14:13:43 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B968327D@ORSMSX110.amr.corp.intel.com>
+References: <20190906174605.GY2680@smile.fi.intel.com>
+ <20190912080742.24642-1-nikolaus.voss@loewensteinmedical.de>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B9679CE8@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909130911180.20316@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B967ADF6@ORSMSX110.amr.corp.intel.com>
+ <20190913151228.GT2680@smile.fi.intel.com>
+ <7625fe37-1710-056d-fb9e-39c33fd962a1@gmail.com>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B967AEC9@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1909161134070.2910@fox.voss.local>
+In-Reply-To: <alpine.DEB.2.20.1909161134070.2910@fox.voss.local>
+Accept-Language: en-US
 Content-Language: en-US
-X-MC-Unique: AGTjRJn5PGOHWlh4FqOzkA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDFmYTRjMTctYTAwZi00Zjg3LWE2YmYtOWNhMDgwNWViZmEzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiQXBUZG53R3dPZ0Q0amZjdXQxQlFNVUVFZ3NvV3liM3FlRjc3YWljRFprRXpKT2tMZnBWS01wSjJmYXRvdkZWUiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/19 15:59, Will Deacon wrote:
-> Okey doke, as long as it gets fixed! My minor concerns with the error-che=
-cking
-> variant are:
->=20
->   * Whether or not you need a READ_ONCE to prevent the compiler potential=
-ly
->     reloading 'ring->last' after validation
 
-Yes, it certainly needs READ_ONCE.  I had already added it locally, indeed.
 
->   * Whether or not this could be part of a spectre-v1 gadget
+-----Original Message-----
+From: Nikolaus Voss [mailto:nv@vosn.de] 
+Sent: Monday, September 16, 2019 2:47 AM
+To: Moore, Robert <robert.moore@intel.com>
+Cc: Ferry Toth <fntoth@gmail.com>; Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; linux-kernel@vger.kernel.org; Jan Kiszka <jan.kiszka@siemens.com>
+Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table index
 
-I think not, the spectrev1 gadget require a load that is indexed from
-the contents of ring->coalesced_mmio[insert], but there's none.
+On Fri, 13 Sep 2019, Moore, Robert wrote:
+>
+>
+> -----Original Message-----
+> From: Ferry Toth [mailto:fntoth@gmail.com]
+> Sent: Friday, September 13, 2019 9:48 AM
+> To: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Moore, Robert 
+> <robert.moore@intel.com>
+> Cc: Nikolaus Voss <nv@vosn.de>; Schmauss, Erik 
+> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; Len 
+> Brown <lenb@kernel.org>; Jacek Anaszewski 
+> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy 
+> <dmurphy@ti.com>; linux-acpi@vger.kernel.org; devel@acpica.org; 
+> linux-kernel@vger.kernel.org; nikolaus.voss@loewensteinmedical.de; Jan 
+> Kiszka <jan.kiszka@siemens.com>
+> Subject: Re: [PATCH] ACPICA: make acpi_load_table() return table index
+>
+> Hello all,
+>
+> Sorry to have sent our message with cancelled e-mail address. I have correct this now.
+>
+> Op 13-09-19 om 17:12 schreef Shevchenko, Andriy:
+>> On Fri, Sep 13, 2019 at 05:20:21PM +0300, Moore, Robert wrote:
+>>> -----Original Message-----
+>>> From: Nikolaus Voss [mailto:nv@vosn.de]
+>>> Sent: Friday, September 13, 2019 12:44 AM
+>>> To: Moore, Robert <robert.moore@intel.com>
+>>> Cc: Shevchenko, Andriy <andriy.shevchenko@intel.com>; Schmauss, Erik 
+>>> <erik.schmauss@intel.com>; Rafael J. Wysocki <rjw@rjwysocki.net>; 
+>>> Len Brown <lenb@kernel.org>; Jacek Anaszewski 
+>>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan 
+>>> Murphy <dmurphy@ti.com>; linux-acpi@vger.kernel.org; 
+>>> devel@acpica.org; linux-kernel@vger.kernel.org; Ferry Toth 
+>>> <ftoth@telfort.nl>; nikolaus.voss@loewensteinmedical.de
+>>> Subject: RE: [PATCH] ACPICA: make acpi_load_table() return table 
+>>> index
+>>>
+>>> Bob,
+>>>
+>>> On Thu, 12 Sep 2019, Moore, Robert wrote:
+>>>> The ability to unload an ACPI table (especially AML tables such as
+>>>> SSDTs) is in the process of being deprecated in ACPICA -- since it 
+>>>> is also deprecated in the current ACPI specification. This is being 
+>>>> done because of the difficulty of deleting the namespace entries 
+>>>> for the table.  FYI, Windows does not properly support this function either.
+>>>
+>>> ok, I see it can be a problem to unload an AML table with all it's 
+>>> consequences e.g. with respect to driver unregistering in setups 
+>>> with complex dependencies. It will only work properly under certain 
+>>> conditions
+>>> - nevertheless acpi_tb_unload_table() is still exported in ACPICA and we should get this working as it worked before.
+>>>
+>>> AcpiTbUnloadTable is not exported, it is an internal interface only
+>>> -- as recognized by the "AcpiTb".
+>>
+>> In Linux it became a part of ABI when the
+>>
+>> commit 772bf1e2878ecfca0d1f332071c83e021dd9cf01
+>> Author: Jan Kiszka <jan.kiszka@siemens.com>
+>> Date:   Fri Jun 9 20:36:31 2017 +0200
+>>
+>>      ACPI: configfs: Unload SSDT on configfs entry removal
+>>
+>> appeared in the kernel.
+>
+> And the commit message explains quite well why it is an important feature:
+>
+> "This allows to change SSDTs without rebooting the system.
+> It also allows to destroy devices again that a dynamically loaded SSDT created.
+>
+> The biggest problem AFAIK is that under linux, many drivers cannot be unloaded. Also, there are many race conditions as the namespace entries "owned" by an SSDT being unloaded are deleted (out from underneath a driver).
+>
+> This is widely similar to the DT overlay behavior."
+>
+>>> I'm not sure that I want to change the interface to AcpiLoadTable 
+>>> just for something that is being deprecated. Already, we throw an 
+>>> ACPI_EXCEPTION if the Unload operator is encountered in the AML byte 
+>>> stream. The same thing with AcpiUnloadParentTable - it is being deprecated.
+>>>
+>>>      ACPI_EXCEPTION ((AE_INFO, AE_NOT_IMPLEMENTED,
+>>>          "AML Unload operator is not supported"));
 
-Paolo
+Bob, what is your suggestion to fix the regression then?
 
-> so, given that I don't think the malicious host deserves an error code if=
- it
-> starts writing the 'last' index, I went with the "obviously safe" version=
-.
-> But up to you.
->=20
-> Will
->=20
+We could revert acpi_configfs.c to use acpi_tb_install_and_load_table() instead of acpi_load_table(), leaving loaded APCI objects uninitalized, but at least, unloading will work again.
 
+I guess my next question is: why do you want to unload a table in the first place?
+
+
+Do we have any other options?
+
+Niko
