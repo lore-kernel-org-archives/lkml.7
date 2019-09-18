@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC01C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3434FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76BAF20678
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05EEC2196E
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787758;
-	bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
+	s=default; t=1568787760;
+	bh=AmPdtI6h8tH+deO2N2hCo9hOkNSyZkeuv+vl8Qg+icg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwbqH2Q2MsPg/7A+SQ4v0Lcmk5A3g1q1ERXCPV/Xy7knYEZ5QWHlJkeZIPhB9Dwqx
-	 uPyyXj7Iphlb3YnpqyR6dJEtgHp6ffNk/3RotyvNjUuHHOTHLDnAp/++Oqnxes3e+P
-	 1OTy3AuCuzItenA9PrtBgXlTtUnHBuGwb5wum9Zw=
+	b=Ax491qRMLbdS9zDfTU80qlm4yasLutUSt/bI9H2YymmwmWkDpPMYRXMxtw8h3NPxU
+	 qArjsnOKABbWLnbYNJlILFyGsFUIPubIDqJfFoOwUs9nOTiw/MZve1q3hi1XNLlO12
+	 ty3iWPDdLBV/B8JN5RcXFcH/vMBcHF7vrWkQk0G0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfIRGWh (ORCPT
+        id S1729457AbfIRGWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42500 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbfIRGWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:32 -0400
+        id S1728184AbfIRGWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6712218AE;
-        Wed, 18 Sep 2019 06:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CE9B21906;
+        Wed, 18 Sep 2019 06:22:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787752;
-        bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
+        s=default; t=1568787755;
+        bh=AmPdtI6h8tH+deO2N2hCo9hOkNSyZkeuv+vl8Qg+icg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hayv3+kMdPGpveIKttQrw0NgHK2I2VLkvb5uY3Ef/0uQVtJlptDZoM/gZC72X8zuy
-         Y9ONNJP05k9DZJBL/LWCj0e5qCONRQD9jrQIKBQmYKlO97AWgPhBkwfec5/k+P0g7o
-         XJy34JwvCBzW3qXGmop+zw5RJplf6eoUtH8HEozo=
+        b=kwvMmjOH7dVmLdGn2V2u7pBK6Srlzm+WHB0BqLte0WJIMLomnMWxtCMdDoXpCYO17
+         vDIZnlAuB7+XIJN6Gce++GWWZjgAvM55fyKzNYs3EgmN0K2G7D/4Zsr8mcm4q2rvQy
+         AchMP9wTgI3xQGYh8nm+L5qNHsJNbZeVlyMK1oLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH 4.19 20/50] genirq: Prevent NULL pointer dereference in resend_irqs()
-Date:   Wed, 18 Sep 2019 08:19:03 +0200
-Message-Id: <20190918061225.268093210@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Mammedov <imammedo@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: [PATCH 4.19 21/50] KVM: s390: kvm_s390_vm_start_migration: check dirty_bitmap before using it as target for memset()
+Date:   Wed, 18 Sep 2019 08:19:04 +0200
+Message-Id: <20190918061225.325572504@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,76 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Igor Mammedov <imammedo@redhat.com>
 
-commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
+commit 13a17cc0526f08d1df9507f7484176371cd263a0 upstream.
 
-The following crash was observed:
+If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+kvm_s390_vm_start_migration(), kernel will oops with:
 
-  Unable to handle kernel NULL pointer dereference at 0000000000000158
-  Internal error: Oops: 96000004 [#1] SMP
-  pc : resend_irqs+0x68/0xb0
-  lr : resend_irqs+0x64/0xb0
+  Unable to handle kernel pointer dereference in virtual kernel address space
+  Failing address: 0000000000000000 TEID: 0000000000000483
+  Fault in home space mode while using kernel ASCE.
+  AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+  Oops: 0004 ilc:2 [#1] SMP
   ...
-  Call trace:
-   resend_irqs+0x68/0xb0
-   tasklet_action_common.isra.6+0x84/0x138
-   tasklet_action+0x2c/0x38
-   __do_softirq+0x120/0x324
-   run_ksoftirqd+0x44/0x60
-   smpboot_thread_fn+0x1ac/0x1e8
-   kthread+0x134/0x138
-   ret_from_fork+0x10/0x18
+  Call Trace:
+  ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+   [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+   [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+   [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+   [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+   [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+   [<000000000175552c>] system_call+0x2b8/0x2d8
+  INFO: lockdep is turned off.
+  Last Breaking-Event-Address:
+   [<0000000000dbaf60>] __memset+0xc/0xa0
 
-The reason for this is that the interrupt resend mechanism happens in soft
-interrupt context, which is a asynchronous mechanism versus other
-operations on interrupts. free_irq() does not take resend handling into
-account. Thus, the irq descriptor might be already freed before the resend
-tasklet is executed. resend_irqs() does not check the return value of the
-interrupt descriptor lookup and derefences the return value
-unconditionally.
+due to ms->dirty_bitmap being NULL, which might crash the host.
 
-  1):
-  __setup_irq
-    irq_startup
-      check_irq_resend  // activate softirq to handle resend irq
-  2):
-  irq_domain_free_irqs
-    irq_free_descs
-      free_desc
-        call_rcu(&desc->rcu, delayed_free_desc)
-  3):
-  __do_softirq
-    tasklet_action
-      resend_irqs
-        desc = irq_to_desc(irq)
-        desc->handle_irq(desc)  // desc is NULL --> Ooops
+Make sure that ms->dirty_bitmap is set before using it or
+return -EINVAL otherwise.
 
-Fix this by adding a NULL pointer check in resend_irqs() before derefencing
-the irq descriptor.
-
-Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
+Cc: <stable@vger.kernel.org>
+Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Link: https://lore.kernel.org/kvm/20190911075218.29153-1-imammedo@redhat.com/
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/resend.c |    2 ++
+ arch/s390/kvm/kvm-s390.c |    2 ++
  1 file changed, 2 insertions(+)
 
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -36,6 +36,8 @@ static void resend_irqs(unsigned long ar
- 		irq = find_first_bit(irqs_resend, nr_irqs);
- 		clear_bit(irq, irqs_resend);
- 		desc = irq_to_desc(irq);
-+		if (!desc)
-+			continue;
- 		local_irq_disable();
- 		desc->handle_irq(desc);
- 		local_irq_enable();
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -928,6 +928,8 @@ static int kvm_s390_vm_start_migration(s
+ 	/* mark all the pages in active slots as dirty */
+ 	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+ 		ms = slots->memslots + slotnr;
++		if (!ms->dirty_bitmap)
++			return -EINVAL;
+ 		/*
+ 		 * The second half of the bitmap is only used on x86,
+ 		 * and would be wasted otherwise, so we put it to good
 
 
