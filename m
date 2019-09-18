@@ -2,57 +2,52 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC18EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B4CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87C7221906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E97321928
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788243;
-	bh=wi4Cfyhc5EMTiYmrakDGIzbIOsQrdbs/a584aA+7zOY=;
+	s=default; t=1568788249;
+	bh=QX/ODPROnjlsW3TmwXUDdR+0VJvtH9gWlChsXjJEceg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ic+89+WEdDHjDiOEL9AZSrQmscl4g9KH+V6z3wyusIyBh5wNGhuuiISfOlM7UQABb
-	 GJjFFI5TfFI+PpQLdEWgRFtIjVXFb0o1TXG3qt7/UwJFBeYw5q/47O+qBu+knXdTuH
-	 N1RJssIS1Fivsfg68A00KrVLAMSPupbJoXTa8r8o=
+	b=zMHDhX6ls3DJzNCnxPHJTCZCcf3GvAv7hpYqhZnIjkk0+7/9YBAw9PIxUtNP2mlWh
+	 LnCzK3uJ7lAc84/D/bc9UklDNkp2HGoylrfS53VuFJWYWOPe877vBddMmk0fRBefov
+	 7WEjiwNOxHjEAgu0rDTdqGPlSwvehQ5Mxw9oHNcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbfIRGan (ORCPT
+        id S1729802AbfIRGas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:30:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44838 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729820AbfIRGYV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:21 -0400
+        id S1728510AbfIRGYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B117D21924;
-        Wed, 18 Sep 2019 06:24:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 413BD21920;
+        Wed, 18 Sep 2019 06:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787861;
-        bh=wi4Cfyhc5EMTiYmrakDGIzbIOsQrdbs/a584aA+7zOY=;
+        s=default; t=1568787858;
+        bh=QX/ODPROnjlsW3TmwXUDdR+0VJvtH9gWlChsXjJEceg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RLkuLJK8ksGK/JJ+5IYBCStkGsQVp46QBn2sISeVuYYfCFdlN0fChGil1dJ/CoNc2
-         y+pRZMLmC9DhC2m+K80Pn3urstCZbTA2u0kYh0gGXsICAxmdB4nSOOjNBLCU7Oiau8
-         gZjWVFa2J9GgzML5expJzlphaUYJ7nQS0u+06d1U=
+        b=asga7kpF6+EzMTm/etNTLuRky8/wegQbz1qb2UnSGTeikJIGTDdXlBa5govZnvcy6
+         EIi/57elGMOdvPyY1JX+6TJmWxVujfyFmCcJBqJcD6uBwtYt21EwHo2pVHe3l9et1x
+         HfrDWfMxqDz1oPk8Wy/ibrWyaPHeRgMM+Frle7gI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
-        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
-        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>, Terry Lam <vtlam@google.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 11/85] sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
-Date:   Wed, 18 Sep 2019 08:18:29 +0200
-Message-Id: <20190918061234.493420947@linuxfoundation.org>
+Subject: [PATCH 5.2 10/85] net: sched: fix reordering issues
+Date:   Wed, 18 Sep 2019 08:18:28 +0200
+Message-Id: <20190918061234.460383725@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -65,40 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit d4d6ec6dac07f263f06d847d6f732d6855522845 ]
+[ Upstream commit b88dd52c62bb5c5d58f0963287f41fd084352c57 ]
 
-In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
-it would make no progress inside the loop in hhf_dequeue() thus
-kernel would get stuck.
+Whenever MQ is not used on a multiqueue device, we experience
+serious reordering problems. Bisection found the cited
+commit.
 
-Fix this by checking this corner case in hhf_change().
+The issue can be described this way :
 
-Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
-Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
-Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
-Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Terry Lam <vtlam@google.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+- A single qdisc hierarchy is shared by all transmit queues.
+  (eg : tc qdisc replace dev eth0 root fq_codel)
+
+- When/if try_bulk_dequeue_skb_slow() dequeues a packet targetting
+  a different transmit queue than the one used to build a packet train,
+  we stop building the current list and save the 'bad' skb (P1) in a
+  special queue. (bad_txq)
+
+- When dequeue_skb() calls qdisc_dequeue_skb_bad_txq() and finds this
+  skb (P1), it checks if the associated transmit queues is still in frozen
+  state. If the queue is still blocked (by BQL or NIC tx ring full),
+  we leave the skb in bad_txq and return NULL.
+
+- dequeue_skb() calls q->dequeue() to get another packet (P2)
+
+  The other packet can target the problematic queue (that we found
+  in frozen state for the bad_txq packet), but another cpu just ran
+  TX completion and made room in the txq that is now ready to accept
+  new packets.
+
+- Packet P2 is sent while P1 is still held in bad_txq, P1 might be sent
+  at next round. In practice P2 is the lead of a big packet train
+  (P2,P3,P4 ...) filling the BQL budget and delaying P1 by many packets :/
+
+To solve this problem, we have to block the dequeue process as long
+as the first packet in bad_txq can not be sent. Reordering issues
+disappear and no side effects have been seen.
+
+Fixes: a53851e2c321 ("net: sched: explicit locking in gso_cpu fallback")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_hhf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_generic.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_hhf.c
-+++ b/net/sched/sch_hhf.c
-@@ -531,7 +531,7 @@ static int hhf_change(struct Qdisc *sch,
- 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -46,6 +46,8 @@ EXPORT_SYMBOL(default_qdisc_ops);
+  * - updates to tree and tree walking are only done under the rtnl mutex.
+  */
  
- 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
--	if (non_hh_quantum > INT_MAX)
-+	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
- 		return -EINVAL;
++#define SKB_XOFF_MAGIC ((struct sk_buff *)1UL)
++
+ static inline struct sk_buff *__skb_dequeue_bad_txq(struct Qdisc *q)
+ {
+ 	const struct netdev_queue *txq = q->dev_queue;
+@@ -71,7 +73,7 @@ static inline struct sk_buff *__skb_dequ
+ 				q->q.qlen--;
+ 			}
+ 		} else {
+-			skb = NULL;
++			skb = SKB_XOFF_MAGIC;
+ 		}
+ 	}
  
- 	sch_tree_lock(sch);
+@@ -253,8 +255,11 @@ validate:
+ 		return skb;
+ 
+ 	skb = qdisc_dequeue_skb_bad_txq(q);
+-	if (unlikely(skb))
++	if (unlikely(skb)) {
++		if (skb == SKB_XOFF_MAGIC)
++			return NULL;
+ 		goto bulk;
++	}
+ 	skb = q->dequeue(q);
+ 	if (skb) {
+ bulk:
 
 
