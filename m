@@ -2,138 +2,187 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=FROM_EXCESS_BASE64,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC8CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B213FC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6088E20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:20:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V80UfxZj"
+	by mail.kernel.org (Postfix) with ESMTP id 9312320856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:21:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbfIRFUs (ORCPT
+        id S1727518AbfIRFVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:20:48 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36732 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726444AbfIRFUs (ORCPT
+        Wed, 18 Sep 2019 01:21:08 -0400
+Received: from mailoutvs58.siol.net ([185.57.226.249]:39601 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726444AbfIRFVH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:20:48 -0400
-Received: by mail-qt1-f196.google.com with SMTP id o12so7458957qtf.3;
-        Tue, 17 Sep 2019 22:20:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b0tfdb5P9pk3INZ0jESPpPCfhjoXmj1Um+iTci+rVkE=;
-        b=V80UfxZjBcDfIXajIUQ7i8Zezif4y2s7wulSTqX+DeD2RFQNK4r6iXFEPGKv2sWG+d
-         m4Z9ZnLo1Sx7MrC5HwWn2A7rBtGzMlTlpe2+nCipjvPyRnKDXKArTZK/s+VMZSkNevbK
-         kb398rQVGj7rBVexy7RMQxD5ek1biD2OxhuX0xubh+W0s5zaxXFwlTPeUlh/SQSzPt2x
-         cG40OQg68RdDu/8JYD0wAxLKffg5OdusX/Juwg5e8ZwIWz4mDMy4KHvOCvau7y5fB3cs
-         8UjYInnqg1JgKXox6zdv7f2oEDMQmohuvPbTwIK8vjCP9ktcnAPACr4mhdFaGtJNOwAV
-         NtrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b0tfdb5P9pk3INZ0jESPpPCfhjoXmj1Um+iTci+rVkE=;
-        b=HeOJ23yOMnnkeOvVX5Ho4U+eAeBA8024eJqS7E/ZKKUszSsUULz82+5l7XT2MMo4TR
-         KCpMXCkufA1Cw/AMtAAkB0/AzSjF0UAbFtXHXMIi382kpi59vBldqdIkFp4thyA5MVbH
-         iOUCPx0NPuqTtYeEoeOaVoTg7A1jVbvS0xGE8ToDDj1wAt3R3hVwc4m7NlDFTD6ArrEu
-         ikoPB5u2YPG/wrJgr51RU9g3PMmCFFxlyFShot+sz8uumrbouMQlEC6j1Yw03rCPMN9R
-         HxGWOO5b2L+eNRGKi/dQ+IPiZDfahqA4LfKiIR5vO+4tlYsw9ctbr3s0t9ODE2oqrzhA
-         3ysQ==
-X-Gm-Message-State: APjAAAUFZd0lC5jSVRovS7Xk7a6EwNBJ8rpDe3UIQZ++cQCx3Eg4GgsI
-        20muMASjXIyT2tamLg1aSFFwwg1QLWwt4SGLrWxlxhpn
-X-Google-Smtp-Source: APXvYqyiGCU4Ricj1Y4vswBQ9IX10oS11lMrz7mDmwnUs5mDtv1rTuXbOW1ujctbRNSAAs5VawEcVHrXEA4uWbcJukI=
-X-Received: by 2002:ac8:7401:: with SMTP id p1mr2351489qtq.141.1568784047221;
- Tue, 17 Sep 2019 22:20:47 -0700 (PDT)
+        Wed, 18 Sep 2019 01:21:07 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 05404521C39;
+        Wed, 18 Sep 2019 07:21:03 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 67akXHG-VlNw; Wed, 18 Sep 2019 07:21:02 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 6C995521C5B;
+        Wed, 18 Sep 2019 07:21:02 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-59-25.static.triera.net [86.58.59.25])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id CB081521C73;
+        Wed, 18 Sep 2019 07:21:01 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <mripard@kernel.org>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [linux-sunxi] [PATCH] clk: sunxi-ng: h6: Use sigma-delta modulation for audio PLL
+Date:   Wed, 18 Sep 2019 07:21:00 +0200
+Message-ID: <8129141.yvSaxnLE4m@jernej-laptop>
+In-Reply-To: <CAGb2v640R7edA3EJvC=aJQZXGcfqot50O3-PFyrYj767pUEYrQ@mail.gmail.com>
+References: <20190914135100.327412-1-jernej.skrabec@siol.net> <CAGb2v640R7edA3EJvC=aJQZXGcfqot50O3-PFyrYj767pUEYrQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org> <20190916105433.11404-13-ivan.khoronzhuk@linaro.org>
-In-Reply-To: <20190916105433.11404-13-ivan.khoronzhuk@linaro.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 17 Sep 2019 22:20:36 -0700
-Message-ID: <CAEf4Bzbwdy7qokjHAM7smgiAE=NS2kxc99X2qytaaoWbbYhNjA@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 12/14] samples: bpf: makefile: provide
- C/CXX/LD flags to libbpf
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 16, 2019 at 3:58 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> In order to build libs using C/CXX/LD flags of target arch,
-> provide them to libbpf make.
->
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> ---
->  samples/bpf/Makefile | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->
-> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
-> index 18ec22e7b444..133123d4c7d7 100644
-> --- a/samples/bpf/Makefile
-> +++ b/samples/bpf/Makefile
-> @@ -182,8 +182,6 @@ ifdef CROSS_COMPILE
->  TPROGS_CFLAGS += -Wall
->  TPROGS_CFLAGS += -O2
->  TPROGS_CFLAGS += -fomit-frame-pointer
-> -TPROGS_CFLAGS += -Wmissing-prototypes
-> -TPROGS_CFLAGS += -Wstrict-prototypes
->  else
->  TPROGS_LDLIBS := $(KBUILD_HOSTLDLIBS)
->  TPROGS_CFLAGS += $(KBUILD_HOSTCFLAGS) $(HOST_EXTRACFLAGS)
-> @@ -196,6 +194,14 @@ TPROGS_CFLAGS += -I$(srctree)/tools/lib/
->  TPROGS_CFLAGS += -I$(srctree)/tools/include
->  TPROGS_CFLAGS += -I$(srctree)/tools/perf
->
-> +EXTRA_CXXFLAGS := $(TPROGS_CFLAGS)
-> +
-> +# options not valid for C++
-> +ifdef CROSS_COMPILE
-> +$(TPROGS_CFLAGS) += -Wmissing-prototypes
-> +$(TPROGS_CFLAGS) += -Wstrict-prototypes
-> +endif
-> +
+Dne torek, 17. september 2019 ob 08:54:08 CEST je Chen-Yu Tsai napisal(a):
+> On Sat, Sep 14, 2019 at 9:51 PM Jernej Skrabec <jernej.skrabec@siol.net> 
+wrote:
+> > Audio devices needs exact clock rates in order to correctly reproduce
+> > the sound. Until now, only integer factors were used to configure H6
+> > audio PLL which resulted in inexact rates. Fix that by adding support
+> > for fractional factors using sigma-delta modulation look-up table. It
+> > contains values for two most commonly used audio base frequencies.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/clk/sunxi-ng/ccu-sun50i-h6.c | 21 +++++++++++++++------
+> >  1 file changed, 15 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> > b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c index d89353a3cdec..ed6338d74474
+> > 100644
+> > --- a/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun50i-h6.c
+> > @@ -203,12 +203,21 @@ static struct ccu_nkmp pll_hsic_clk = {
+> > 
+> >   * hardcode it to match with the clock names.
+> >   */
+> >  
+> >  #define SUN50I_H6_PLL_AUDIO_REG                0x078
+> > 
+> > +
+> > +static struct ccu_sdm_setting pll_audio_sdm_table[] = {
+> > +       { .rate = 541900800, .pattern = 0xc001288d, .m = 1, .n = 22 },
+> > +       { .rate = 589824000, .pattern = 0xc00126e9, .m = 1, .n = 24 },
+> > +};
+> > +
+> > 
+> >  static struct ccu_nm pll_audio_base_clk = {
+> >  
+> >         .enable         = BIT(31),
+> >         .lock           = BIT(28),
+> >         .n              = _SUNXI_CCU_MULT_MIN(8, 8, 12),
+> >         .m              = _SUNXI_CCU_DIV(1, 1), /* input divider */
+> > 
+> > +       .sdm            = _SUNXI_CCU_SDM(pll_audio_sdm_table,
+> > +                                        BIT(24), 0x178, BIT(31)),
+> > 
+> >         .common         = {
+> > 
+> > +               .features       = CCU_FEATURE_SIGMA_DELTA_MOD,
+> > 
+> >                 .reg            = 0x078,
+> >                 .hw.init        = CLK_HW_INIT("pll-audio-base", "osc24M",
+> >                 
+> >                                               &ccu_nm_ops,
+> > 
+> > @@ -753,12 +762,12 @@ static const struct clk_hw *clk_parent_pll_audio[] =
+> > {> 
+> >  };
+> >  
+> >  /*
+> > 
+> > - * The divider of pll-audio is fixed to 8 now, as pll-audio-4x has a
+> > - * fixed post-divider 2.
+> > + * The divider of pll-audio is fixed to 24 for now, so 24576000 and
+> > 22579200 + * rates can be set exactly in conjunction with sigma-delta
+> > modulation.> 
+> >   */
+> >  
+> >  static CLK_FIXED_FACTOR_HWS(pll_audio_clk, "pll-audio",
+> >  
+> >                             clk_parent_pll_audio,
+> > 
+> > -                           8, 1, CLK_SET_RATE_PARENT);
+> > +                           24, 1, CLK_SET_RATE_PARENT);
+> > 
+> >  static CLK_FIXED_FACTOR_HWS(pll_audio_2x_clk, "pll-audio-2x",
+> >  
+> >                             clk_parent_pll_audio,
+> >                             4, 1, CLK_SET_RATE_PARENT);
+> 
+> You need to fix the factors for the other two outputs as well, since all
+> three are derived from pll-audio-base.
 
-ugh, let's really get rid of dependency on C++ compiler, as suggested
-for previous patch.
+Fix how? pll-audio-2x and pll-audio-4x clocks have fixed divider in regards to 
+pll-audio-base, while pll-audio has not. Unless you mean changing their name?
+
+Best regards,
+Jernej
+
+> 
+> ChenYu
+> 
+> > @@ -1215,12 +1224,12 @@ static int sun50i_h6_ccu_probe(struct
+> > platform_device *pdev)> 
+> >         }
+> >         
+> >         /*
+> > 
+> > -        * Force the post-divider of pll-audio to 8 and the output divider
+> > -        * of it to 1, to make the clock name represents the real
+> > frequency. +        * Force the post-divider of pll-audio to 12 and the
+> > output divider +        * of it to 2, so 24576000 and 22579200 rates can
+> > be set exactly.> 
+> >          */
+> >         
+> >         val = readl(reg + SUN50I_H6_PLL_AUDIO_REG);
+> >         val &= ~(GENMASK(21, 16) | BIT(0));
+> > 
+> > -       writel(val | (7 << 16), reg + SUN50I_H6_PLL_AUDIO_REG);
+> > +       writel(val | (11 << 16) | BIT(0), reg + SUN50I_H6_PLL_AUDIO_REG);
+> > 
+> >         /*
+> >         
+> >          * First clock parent (osc32K) is unusable for CEC. But since
+> >          there
+> > 
+> > --
+> > 2.23.0
+> > 
+> > --
+> > You received this message because you are subscribed to the Google Groups
+> > "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> > emails from it, send an email to
+> > linux-sunxi+unsubscribe@googlegroups.com. To view this discussion on the
+> > web, visit
+> > https://groups.google.com/d/msgid/linux-sunxi/20190914135100.327412-1-jer
+> > nej.skrabec%40siol.net.
 
 
->  TPROGCFLAGS_bpf_load.o += -Wno-unused-variable
->
->  TPROGS_LDLIBS                  += $(LIBBPF) -lelf
-> @@ -257,7 +263,9 @@ clean:
->
->  $(LIBBPF): FORCE
->  # Fix up variables inherited from Kbuild that tools/ build system won't like
-> -       $(MAKE) -C $(dir $@) RM='rm -rf' LDFLAGS= srctree=$(BPF_SAMPLES_PATH)/../../ O=
-> +       $(MAKE) -C $(dir $@) RM='rm -rf' EXTRA_CFLAGS="$(TPROGS_CFLAGS)" \
-> +               EXTRA_CXXFLAGS="$(EXTRA_CXXFLAGS)" LDFLAGS=$(TPROGS_LDFLAGS) \
-> +               srctree=$(BPF_SAMPLES_PATH)/../../ O=
->
->  $(obj)/syscall_nrs.h:  $(obj)/syscall_nrs.s FORCE
->         $(call filechk,offsets,__SYSCALL_NRS_H__)
-> --
-> 2.17.1
->
+
+
