@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 005D5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBBE1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EF821929
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60CA21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788073;
-	bh=e2SKe0d1r0FnPGDKgUrqxsSyXHcE1lOe8ABJ4w+dG7Q=;
+	s=default; t=1568788078;
+	bh=d4yD91ADl544vrJ6Eea/cuMH4wfMBHfq2yQvkY5yNMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eD3weMJ+/sWszhTBkkjyEJmkJdLwhLhYUjTNZR+p6c/JwCOJMTyCQZ9ZgLp1Mwnhk
-	 +O6DpR5/nif2yFbbsTcGOJiIXGo+t3pH5GNum/N2fWJX2OQKX66eKTGIUoRpU9iihQ
-	 d8/bXCWP9Ky1XrAdpzv/xu9QK4CP/prtr6INl6QQ=
+	b=10QTxeny0SXsHntEHgggqoPqIxz96zDU9G/CbnaLYUBsOxph7XeCSiAjt1NfkVQt6
+	 noih9XdyIlJT9jUGXLJl8yOMh4IGBNOBNpqYOfDEOy2vyIMMNWXMq30jB7yzy0EA7m
+	 RsTGyamtGEMsJZLteoFs0PMLKdUNrUfAC6UFKBWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfIRG1w (ORCPT
+        id S1730629AbfIRG16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49836 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730588AbfIRG1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:47 -0400
+        id S1726444AbfIRG1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9730521925;
-        Wed, 18 Sep 2019 06:27:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C698B21925;
+        Wed, 18 Sep 2019 06:27:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788067;
-        bh=e2SKe0d1r0FnPGDKgUrqxsSyXHcE1lOe8ABJ4w+dG7Q=;
+        s=default; t=1568788072;
+        bh=d4yD91ADl544vrJ6Eea/cuMH4wfMBHfq2yQvkY5yNMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2U4Jq5ePWUSTggBIv5o+bg5NkD9BR151A7f4NGyxOzBe6279k6kiIHLa/W99UCsJG
-         skD156epGJ6GG2hdRaOPgA9PNhqhdttdct+4i3l0uNZXlrWc0gFd0AaryibxTJxKas
-         K66ZJXaH2ySnxycf1CYkXjzYBjUprjugZDS+dhFk=
+        b=mkPZQeJoI7oVp3jfxvBp347peVfZIOrgIDhzR2HaF5vZQpLXy+/ErRS/a6Bn91heT
+         EqmqGDJuqtsVV1gcfVgEZSLW6HjBXw7xAv5TxXnRSHVks3ooSCcBZWRWZ+jjTT/MGz
+         HrQ2quGxi/G4oj3pt5UA2sSCBUpsgOCYCFNnvUGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.2 47/85] KVM: nVMX: handle page fault in vmread
-Date:   Wed, 18 Sep 2019 08:19:05 +0200
-Message-Id: <20190918061235.619611195@linuxfoundation.org>
+        stable@vger.kernel.org, Enrico Weigelt <info@metux.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.2 83/85] platform/x86: pcengines-apuv2: use KEY_RESTART for front button
+Date:   Wed, 18 Sep 2019 08:19:41 +0200
+Message-Id: <20190918061237.997258176@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -58,40 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Enrico Weigelt <info@metux.net>
 
-commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
+commit f14312a93b34b9350dc33ff0b4215c24f4c82617 upstream.
 
-The implementation of vmread to memory is still incomplete, as it
-lacks the ability to do vmread to I/O memory just like vmptrst.
+The keycode KEY_RESTART is more appropriate for the front button,
+as most people use it for things like restart or factory reset.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Enrico Weigelt <info@metux.net>
+Fixes: f8eb0235f659 ("x86: pcengines apuv2 gpio/leds/keys platform driver")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/platform/x86/pcengines-apuv2.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4411,6 +4411,7 @@ static int handle_vmread(struct kvm_vcpu
- 	int len;
- 	gva_t gva = 0;
- 	struct vmcs12 *vmcs12;
-+	struct x86_exception e;
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -93,7 +93,7 @@ struct gpiod_lookup_table gpios_led_tabl
  
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
-@@ -4451,7 +4452,8 @@ static int handle_vmread(struct kvm_vcpu
- 				vmx_instruction_info, true, len, &gva))
- 			return 1;
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
--		kvm_write_guest_virt_system(vcpu, gva, &field_value, len, NULL);
-+		if (kvm_write_guest_virt_system(vcpu, gva, &field_value, len, &e))
-+			kvm_inject_page_fault(vcpu, &e);
- 	}
- 
- 	return nested_vmx_succeed(vcpu);
+ static struct gpio_keys_button apu2_keys_buttons[] = {
+ 	{
+-		.code			= KEY_SETUP,
++		.code			= KEY_RESTART,
+ 		.active_low		= 1,
+ 		.desc			= "front button",
+ 		.type			= EV_KEY,
 
 
