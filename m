@@ -2,64 +2,56 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD7EC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540E0C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44D9321920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D4152196F
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787697;
-	bh=haGvU4cRIPrpLQcehFbPxG/rTQsMSNW4FF/ONfaKT30=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=bsYpy0uDwbEA9r4b7NIhXMox7zNH/985NtO7VWpispKhm8y5XTCFRFTY5yqQILzfX
-	 dihbzjkUaWnlfODIgY4HiiQpzICnVHHBoaeH9/YwuDe9MJxyawVuv/mbD21VSHh051
-	 1sMS0azqICTEmPw5ajAELmhh9qK2fjVJQOKzkUVA=
+	s=default; t=1568787701;
+	bh=8ZsyCqdCQYULk/KZ2gU6zijVGHecZMDT7Cgm36fRpKE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xWLGJwxAbI2JRq7CFjdSqaWK2lwP48unw2cWySRVtvebajFMT2gcsPxcNZlfJQHUU
+	 0H20TQJl7VE8ra9A8PoOGvV021WpjRKWoq3VRQx+o86HvCD+h9LOzMIRcqbe+AiTAT
+	 KHkXgnzdyYKXOB4EdOpQhMQ6mXF8LyfjWy+qH7Ro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729182AbfIRGVg (ORCPT
+        id S1729195AbfIRGVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41064 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729162AbfIRGVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:21:34 -0400
+        id S1727357AbfIRGVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83303218AF;
-        Wed, 18 Sep 2019 06:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3502320678;
+        Wed, 18 Sep 2019 06:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787694;
-        bh=haGvU4cRIPrpLQcehFbPxG/rTQsMSNW4FF/ONfaKT30=;
-        h=From:To:Cc:Subject:Date:From;
-        b=BHsg8vevtcte7kf2F5fpsGoseawP9Zz1fdKMQevQ0BPb7zj3QOdqVErB04V6n2hMI
-         GSQm71X7ZXr96+7dkMAZKqvk1ffEfNRivJ6m9MksoYfJ7PTrAsqJbv1oVw/L6eg1Io
-         87LnAPTg+YVzeeZ596DUd3YZ/+qldW05wZ8ooxfY=
+        s=default; t=1568787696;
+        bh=8ZsyCqdCQYULk/KZ2gU6zijVGHecZMDT7Cgm36fRpKE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zidtfSSZZPxaKKQdgtCM2zsyiUQ4B6JY2KF4m5Mk+zC8IIoOmBK6jv418d0vpPuaU
+         VTb0LI935Kb76+FNnI5VYocfbvyznd5xMO3MaIEkadTfTYqLqEQbMeV6AVkac6Tj2v
+         VOYe4hVEdys+3r2necB3mRoXfWWXuPiUpMiJNT3I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/45] 4.14.145-stable review
-Date:   Wed, 18 Sep 2019 08:18:38 +0200
-Message-Id: <20190918061222.854132812@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.14 38/45] crypto: talitos - Do not modify req->cryptlen on decryption.
+Date:   Wed, 18 Sep 2019 08:19:16 +0200
+Message-Id: <20190918061227.478661559@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
+In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
+References: <20190918061222.854132812@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.145-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.145-rc1
-X-KernelTest-Deadline: 2019-09-20T06:12+00:00
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,215 +59,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.145 release.
-There are 45 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
-Anything received after that time might be too late.
+commit 7ede4c36cf7c6516986ee9d75b197c8bf73ea96f upstream.
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.145-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+For decrypt, req->cryptlen includes the size of the authentication
+part while all functions of the driver expect cryptlen to be
+the size of the encrypted data.
 
-thanks,
+As it is not expected to change req->cryptlen, this patch
+implements local calculation of cryptlen.
 
-greg k-h
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 9c4a79653b35 ("crypto: talitos - Freescale integrated security engine (SEC) driver")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
--------------
-Pseudo-Shortlog of commits:
+---
+ drivers/crypto/talitos.c |   31 +++++++++++++++++--------------
+ 1 file changed, 17 insertions(+), 14 deletions(-)
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.145-rc1
-
-Linus Torvalds <torvalds@linux-foundation.org>
-    x86/build: Add -Wnoaddress-of-packed-member to REALMODE_CFLAGS, to silence GCC9 build warning
-
-Jean Delvare <jdelvare@suse.de>
-    nvmem: Use the same permissions for eeprom as for nvmem
-
-Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-    platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
-
-Mario Limonciello <mario.limonciello@dell.com>
-    Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
-
-Nishka Dasgupta <nishkadg.linux@gmail.com>
-    drm/mediatek: mtk_drm_drv.c: Add of_node_put() before goto
-
-Andrew F. Davis <afd@ti.com>
-    firmware: ti_sci: Always request response from firmware
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - HMAC SNOOP NO AFEU mode requires SW icv checking.
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - Do not modify req->cryptlen on decryption.
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - fix ECB algs ivsize
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - check data blocksize in ablkcipher.
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - fix CTR alg blocksize
-
-Christophe Leroy <christophe.leroy@c-s.fr>
-    crypto: talitos - check AES key size
-
-Muchun Song <smuchun@gmail.com>
-    driver core: Fix use-after-free and double free on glue directory
-
-Richard Weinberger <richard@nod.at>
-    ubifs: Correctly use tnc_next() in search_dh_cookie()
-
-Alex Williamson <alex.williamson@redhat.com>
-    PCI: Always allow probing with driver_override
-
-Xiaolei Li <xiaolei.li@mediatek.com>
-    mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
-
-Douglas Anderson <dianders@chromium.org>
-    clk: rockchip: Don't yell about bad mmc phases when getting
-
-Neil Armstrong <narmstrong@baylibre.com>
-    drm/meson: Add support for XBGR8888 & ABGR8888 formats
-
-Suraj Jitindar Singh <sjitindarsingh@gmail.com>
-    powerpc: Add barrier_nospec to raw_copy_in_user()
-
-Paul Burton <paul.burton@mips.com>
-    MIPS: VDSO: Use same -m%-float cflag as the kernel proper
-
-Paul Burton <paul.burton@mips.com>
-    MIPS: VDSO: Prevent use of smp_processor_id()
-
-Paolo Bonzini <pbonzini@redhat.com>
-    KVM: nVMX: handle page fault in vmread
-
-Fuqian Huang <huangfq.daxian@gmail.com>
-    KVM: x86: work around leak of uninitialized stack contents
-
-Thomas Huth <thuth@redhat.com>
-    KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
-
-Yunfeng Ye <yeyunfeng@huawei.com>
-    genirq: Prevent NULL pointer dereference in resend_irqs()
-
-Filipe Manana <fdmanana@suse.com>
-    Btrfs: fix assertion failure during fsync and use of stale transaction
-
-Kent Gibson <warthog618@gmail.com>
-    gpio: fix line flag validation in lineevent_create
-
-Kent Gibson <warthog618@gmail.com>
-    gpio: fix line flag validation in linehandle_create
-
-Hans de Goede <hdegoede@redhat.com>
-    gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
-
-Johannes Thumshirn <jthumshirn@suse.de>
-    btrfs: correctly validate compression type
-
-David Sterba <dsterba@suse.com>
-    btrfs: compression: add helper for type to string conversion
-
-Yang Yingliang <yangyingliang@huawei.com>
-    tun: fix use-after-free when register netdev failed
-
-Xin Long <lucien.xin@gmail.com>
-    tipc: add NULL pointer check before calling kfree_rcu
-
-Neal Cardwell <ncardwell@google.com>
-    tcp: fix tcp_ecn_withdraw_cwr() to clear TCP_ECN_QUEUE_CWR
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: use transport pf_retrans in sctp_do_8_2_transport_strike
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    sctp: Fix the link time qualifier of 'sctp_ctrlsock_exit()'
-
-Cong Wang <xiyou.wangcong@gmail.com>
-    sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
-
-Stefan Chulski <stefanc@marvell.com>
-    net: phylink: Fix flow control resolution
-
-Shmulik Ladkani <shmulik@metanetworks.com>
-    net: gso: Fix skb_segment splat when splitting gso_size mangled skb having linear-headed frag_list
-
-Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-    net: Fix null de-reference of device refcount
-
-Eric Biggers <ebiggers@google.com>
-    isdn/capi: check message length in capi_write()
-
-Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-    ipv6: Fix the link time qualifier of 'ping_v6_proc_exit_net()'
-
-Bjørn Mork <bjorn@mork.no>
-    cdc_ether: fix rndis support for Mediatek based smartphones
-
-Nicolas Dichtel <nicolas.dichtel@6wind.com>
-    bridge/mdb: remove wrong use of NLM_F_MULTI
-
-
--------------
-
-Diffstat:
-
- Makefile                               |  4 +-
- arch/mips/Kconfig                      |  3 --
- arch/mips/include/asm/smp.h            | 12 +++++-
- arch/mips/sibyte/common/Makefile       |  1 -
- arch/mips/sibyte/common/dma.c          | 14 -------
- arch/mips/vdso/Makefile                |  4 +-
- arch/powerpc/include/asm/uaccess.h     |  1 +
- arch/s390/kvm/interrupt.c              | 10 +++++
- arch/s390/kvm/kvm-s390.c               |  2 +-
- arch/x86/Makefile                      |  1 +
- arch/x86/kvm/vmx.c                     |  7 +++-
- arch/x86/kvm/x86.c                     |  7 ++++
- drivers/base/core.c                    | 53 ++++++++++++++++++++++++++-
- drivers/bluetooth/btusb.c              |  5 ---
- drivers/clk/rockchip/clk-mmc-phase.c   |  4 +-
- drivers/crypto/talitos.c               | 67 +++++++++++++++++++++++++---------
- drivers/firmware/ti_sci.c              |  8 ++--
- drivers/gpio/gpiolib-acpi.c            | 42 +++++++++++++++++++--
- drivers/gpio/gpiolib.c                 | 20 +++++++---
- drivers/gpu/drm/mediatek/mtk_drm_drv.c |  5 ++-
- drivers/gpu/drm/meson/meson_plane.c    | 16 ++++++++
- drivers/isdn/capi/capi.c               | 10 ++++-
- drivers/mtd/nand/mtk_nand.c            | 21 +++++------
- drivers/net/phy/phylink.c              |  6 +--
- drivers/net/tun.c                      | 16 +++++---
- drivers/net/usb/cdc_ether.c            | 13 +++++--
- drivers/nvmem/core.c                   | 15 ++++++--
- drivers/pci/pci-driver.c               |  3 +-
- drivers/platform/x86/pmc_atom.c        |  8 ++++
- fs/btrfs/compression.c                 | 31 ++++++++++++++++
- fs/btrfs/compression.h                 |  3 ++
- fs/btrfs/props.c                       |  6 +--
- fs/btrfs/tree-log.c                    |  8 ++--
- fs/ubifs/tnc.c                         | 16 +++++---
- include/uapi/linux/isdn/capicmd.h      |  1 +
- kernel/irq/resend.c                    |  2 +
- net/bridge/br_mdb.c                    |  2 +-
- net/core/dev.c                         |  2 +
- net/core/skbuff.c                      | 19 ++++++++++
- net/ipv4/tcp_input.c                   |  2 +-
- net/ipv6/ping.c                        |  2 +-
- net/sched/sch_hhf.c                    |  2 +-
- net/sctp/protocol.c                    |  2 +-
- net/sctp/sm_sideeffect.c               |  2 +-
- net/tipc/name_distr.c                  |  3 +-
- 45 files changed, 366 insertions(+), 115 deletions(-)
+--- a/drivers/crypto/talitos.c
++++ b/drivers/crypto/talitos.c
+@@ -943,11 +943,13 @@ static void talitos_sg_unmap(struct devi
+ 
+ static void ipsec_esp_unmap(struct device *dev,
+ 			    struct talitos_edesc *edesc,
+-			    struct aead_request *areq)
++			    struct aead_request *areq, bool encrypt)
+ {
+ 	struct crypto_aead *aead = crypto_aead_reqtfm(areq);
+ 	struct talitos_ctx *ctx = crypto_aead_ctx(aead);
+ 	unsigned int ivsize = crypto_aead_ivsize(aead);
++	unsigned int authsize = crypto_aead_authsize(aead);
++	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
+ 
+ 	if (edesc->desc.hdr & DESC_HDR_TYPE_IPSEC_ESP)
+ 		unmap_single_talitos_ptr(dev, &edesc->desc.ptr[6],
+@@ -956,7 +958,7 @@ static void ipsec_esp_unmap(struct devic
+ 	unmap_single_talitos_ptr(dev, &edesc->desc.ptr[2], DMA_TO_DEVICE);
+ 	unmap_single_talitos_ptr(dev, &edesc->desc.ptr[0], DMA_TO_DEVICE);
+ 
+-	talitos_sg_unmap(dev, edesc, areq->src, areq->dst, areq->cryptlen,
++	talitos_sg_unmap(dev, edesc, areq->src, areq->dst, cryptlen,
+ 			 areq->assoclen);
+ 
+ 	if (edesc->dma_len)
+@@ -967,7 +969,7 @@ static void ipsec_esp_unmap(struct devic
+ 		unsigned int dst_nents = edesc->dst_nents ? : 1;
+ 
+ 		sg_pcopy_to_buffer(areq->dst, dst_nents, ctx->iv, ivsize,
+-				   areq->assoclen + areq->cryptlen - ivsize);
++				   areq->assoclen + cryptlen - ivsize);
+ 	}
+ }
+ 
+@@ -988,7 +990,7 @@ static void ipsec_esp_encrypt_done(struc
+ 
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+-	ipsec_esp_unmap(dev, edesc, areq);
++	ipsec_esp_unmap(dev, edesc, areq, true);
+ 
+ 	/* copy the generated ICV to dst */
+ 	if (edesc->icv_ool) {
+@@ -1020,7 +1022,7 @@ static void ipsec_esp_decrypt_swauth_don
+ 
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+-	ipsec_esp_unmap(dev, edesc, req);
++	ipsec_esp_unmap(dev, edesc, req, false);
+ 
+ 	if (!err) {
+ 		char icvdata[SHA512_DIGEST_SIZE];
+@@ -1066,7 +1068,7 @@ static void ipsec_esp_decrypt_hwauth_don
+ 
+ 	edesc = container_of(desc, struct talitos_edesc, desc);
+ 
+-	ipsec_esp_unmap(dev, edesc, req);
++	ipsec_esp_unmap(dev, edesc, req, false);
+ 
+ 	/* check ICV auth status */
+ 	if (!err && ((desc->hdr_lo & DESC_HDR_LO_ICCR1_MASK) !=
+@@ -1173,6 +1175,7 @@ static int talitos_sg_map(struct device
+  * fill in and submit ipsec_esp descriptor
+  */
+ static int ipsec_esp(struct talitos_edesc *edesc, struct aead_request *areq,
++		     bool encrypt,
+ 		     void (*callback)(struct device *dev,
+ 				      struct talitos_desc *desc,
+ 				      void *context, int error))
+@@ -1182,7 +1185,7 @@ static int ipsec_esp(struct talitos_edes
+ 	struct talitos_ctx *ctx = crypto_aead_ctx(aead);
+ 	struct device *dev = ctx->dev;
+ 	struct talitos_desc *desc = &edesc->desc;
+-	unsigned int cryptlen = areq->cryptlen;
++	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
+ 	unsigned int ivsize = crypto_aead_ivsize(aead);
+ 	int tbl_off = 0;
+ 	int sg_count, ret;
+@@ -1324,7 +1327,7 @@ static int ipsec_esp(struct talitos_edes
+ 
+ 	ret = talitos_submit(dev, ctx->ch, desc, callback, areq);
+ 	if (ret != -EINPROGRESS) {
+-		ipsec_esp_unmap(dev, edesc, areq);
++		ipsec_esp_unmap(dev, edesc, areq, encrypt);
+ 		kfree(edesc);
+ 	}
+ 	return ret;
+@@ -1433,9 +1436,10 @@ static struct talitos_edesc *aead_edesc_
+ 	unsigned int authsize = crypto_aead_authsize(authenc);
+ 	struct talitos_ctx *ctx = crypto_aead_ctx(authenc);
+ 	unsigned int ivsize = crypto_aead_ivsize(authenc);
++	unsigned int cryptlen = areq->cryptlen - (encrypt ? 0 : authsize);
+ 
+ 	return talitos_edesc_alloc(ctx->dev, areq->src, areq->dst,
+-				   iv, areq->assoclen, areq->cryptlen,
++				   iv, areq->assoclen, cryptlen,
+ 				   authsize, ivsize, icv_stashing,
+ 				   areq->base.flags, encrypt);
+ }
+@@ -1454,7 +1458,7 @@ static int aead_encrypt(struct aead_requ
+ 	/* set encrypt */
+ 	edesc->desc.hdr = ctx->desc_hdr_template | DESC_HDR_MODE0_ENCRYPT;
+ 
+-	return ipsec_esp(edesc, req, ipsec_esp_encrypt_done);
++	return ipsec_esp(edesc, req, true, ipsec_esp_encrypt_done);
+ }
+ 
+ static int aead_decrypt(struct aead_request *req)
+@@ -1466,8 +1470,6 @@ static int aead_decrypt(struct aead_requ
+ 	struct talitos_edesc *edesc;
+ 	void *icvdata;
+ 
+-	req->cryptlen -= authsize;
+-
+ 	/* allocate extended descriptor */
+ 	edesc = aead_edesc_alloc(req, req->iv, 1, false);
+ 	if (IS_ERR(edesc))
+@@ -1485,7 +1487,8 @@ static int aead_decrypt(struct aead_requ
+ 		/* reset integrity check result bits */
+ 		edesc->desc.hdr_lo = 0;
+ 
+-		return ipsec_esp(edesc, req, ipsec_esp_decrypt_hwauth_done);
++		return ipsec_esp(edesc, req, false,
++				 ipsec_esp_decrypt_hwauth_done);
+ 	}
+ 
+ 	/* Have to check the ICV with software */
+@@ -1501,7 +1504,7 @@ static int aead_decrypt(struct aead_requ
+ 	sg_pcopy_to_buffer(req->src, edesc->src_nents ? : 1, icvdata, authsize,
+ 			   req->assoclen + req->cryptlen - authsize);
+ 
+-	return ipsec_esp(edesc, req, ipsec_esp_decrypt_swauth_done);
++	return ipsec_esp(edesc, req, false, ipsec_esp_decrypt_swauth_done);
+ }
+ 
+ static int ablkcipher_setkey(struct crypto_ablkcipher *cipher,
 
 
