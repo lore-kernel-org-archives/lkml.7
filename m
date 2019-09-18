@@ -2,126 +2,141 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2871C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEDC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C53B62196F
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:08:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568808537;
-	bh=v/O1vQyFg91tO+lwaFy2hfNRYez6+HEBoAAgdfI/LfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=okOZTkstH1CsJG45sqqBeq/IcfR827elZbNfikKCjFSR4RKS1jCzQQ/RmDTStbV+r
-	 gMdefabj4MtVocRA7U+U/39N0L0UgtEZIaIMuoKxD6Ye6A/8uzhA8tZOh1j+7vbCyv
-	 Xbq29RcNpCs9aFHz7EoQaV1aPjUCRWd98XymHAHo=
+	by mail.kernel.org (Postfix) with ESMTP id AFFC121920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:10:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kll2SosY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730740AbfIRMI5 (ORCPT
+        id S1730760AbfIRMK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:08:57 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50852 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727095AbfIRMI5 (ORCPT
+        Wed, 18 Sep 2019 08:10:28 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41830 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727637AbfIRMK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:08:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=I7ZSOi9ERNuZrChF34ftkmrACUOOUkBVRRUL3bpwH6o=; b=TQP/YZlPrlIkySDwC3drCix1O
-        hwRZOzuquGyFRmD9PNjZmRRzuhtuhOg53TcDFEsDarrFSCdkzBMr3clRGAectqgAtXY1gtMsq08ij
-        YT+0Ykfrw8x1yTAVr0YRBK8LCVOVz3ME1MjXGshCHaBeIrDoJPzdqmg5g6Qtdo3MUunhQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iAYlM-00054e-LJ; Wed, 18 Sep 2019 12:08:48 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2DAC92742927; Wed, 18 Sep 2019 13:08:48 +0100 (BST)
-Date:   Wed, 18 Sep 2019 13:08:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Ramuthevar, Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com
-Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
- SoC
-Message-ID: <20190918120846.GH2596@sirena.co.uk>
-References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20190916113255.GA4352@sirena.co.uk>
- <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
- <20190917153650.GF3524@sirena.co.uk>
- <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
+        Wed, 18 Sep 2019 08:10:27 -0400
+Received: by mail-lf1-f68.google.com with SMTP id r2so5491706lfn.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 05:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lgsq7iFzYE3p4qDNyeZTJM4NoqtMyN3PGzAwf47vS5Y=;
+        b=kll2SosYbc0+jOOjTIjs3nGzOgS353meTeCupvJ6SglAWgtWsbbUA5eVSM2H1IVJ17
+         MGYEJWeLcMfWEnV+V9ZocM6AJwn0t3zCoS/TZH8ko4Sbkg7JtH+VxD2v4Dn+mktaxos0
+         b78OYABpy7cExoY2lS6pVPRwDlTsVY2HmwGL9vkNSIXHaD+smxNe9UzrVJpftUwI72uv
+         HnP5GT5NIMy7k2Swa1O0iIKObK61d1fBV60pHKZ/bxwRGdZe97x5yDOnx21vkjB0M5HD
+         oYFEk4tlIIizwbfqM1dXcgSF8mrDF/uaJMRffm5TlIa1af5YPbqQ4GYBy/JEcb2rCjQM
+         B5/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lgsq7iFzYE3p4qDNyeZTJM4NoqtMyN3PGzAwf47vS5Y=;
+        b=eaLglMMrf10vtuCn8nQ91kkjYQMj22yaabR5npl3EhxcqYZ5e/FkQuzwUR9okMMzvn
+         SmkbEzi94alGgJr5JsGl/MssojvZam9GtAAvjz4w3rwWJShRoh2uvyTQOKIznXXJg7Xu
+         E242tFpqCGljetWTYjhB/hwr7r9qjX1+gI2wh5QOVtMzZN+jqyDGpwR8B3JJbAY2j+Mt
+         gzChZhTm9DuxKAHqIT/SKkPz42D3Mzx5OZPgGcd+t2AFVgXJzjD7y58yfiRGgSOpKiX+
+         RQPGU+K/JRRH+cNJ8NR8lyMqKQxs/YlNcGH+5T2oFQGJprd48gmmUJ7oJ/ynVwHHerUZ
+         KjxA==
+X-Gm-Message-State: APjAAAWyOUMMBqVOWJBtV+9XOi3Zge7yMh/gJ2ILQ5567TnsY2QUxm6I
+        1f112dJFqRR6o4ThqqpB0CZyAUF5Hpvkcy7+3gHEMQ==
+X-Google-Smtp-Source: APXvYqzCo4K57KXCvQEu7a2DuEENyDip3qHR7LfJn3E3cAkgXs50OhSYkam339Ci1qXPsZbmTEmm0tZkZ+VHelQdRjk=
+X-Received: by 2002:a19:3f47:: with SMTP id m68mr1934908lfa.108.1568808625711;
+ Wed, 18 Sep 2019 05:10:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oPmsXEqKQNHCSXW7"
-Content-Disposition: inline
-In-Reply-To: <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
-X-Cookie: The devil finds work for idle glands.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <a634860d9194cc235298d6d8bbd2282bf6f853c4.1568793195.git.liuhhome@gmail.com>
+In-Reply-To: <a634860d9194cc235298d6d8bbd2282bf6f853c4.1568793195.git.liuhhome@gmail.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 18 Sep 2019 20:10:14 +0800
+Message-ID: <CAMz4kuLrAWDaZj2Am452BX+aVO0yCQB_cCiNUx4FAamoX6KWtA@mail.gmail.com>
+Subject: Re: [PATCH] serial: sprd: Add polling IO support
+To:     Lanqing Liu <liuhhome@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>,
+        lanqing.liu@unisoc.com, linux-serial@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Lanqing,
 
---oPmsXEqKQNHCSXW7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 18 Sep 2019 at 16:16, Lanqing Liu <liuhhome@gmail.com> wrote:
+>
+> In order to access the UART without the interrupts, the kernel uses
+> the basic polling methods for IO with the device. With these methods
+> implemented, it is now possible to enable kgdb during early boot over serial.
+>
+> Signed-off-by: Lanqing Liu <liuhhome@gmail.com>
+> ---
+>  drivers/tty/serial/sprd_serial.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>
+> diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
+> index 73d71a4..579ab41 100644
+> --- a/drivers/tty/serial/sprd_serial.c
+> +++ b/drivers/tty/serial/sprd_serial.c
+> @@ -911,6 +911,24 @@ static void sprd_pm(struct uart_port *port, unsigned int state,
+>         }
+>  }
+>
+> +#ifdef CONFIG_CONSOLE_POLL
+> +static int sprd_poll_get_char(struct uart_port *port)
+> +{
+> +       while (!(serial_in(port, SPRD_STS1) & SPRD_RX_FIFO_CNT_MASK))
+> +               cpu_relax();
+> +
+> +       return serial_in(port, SPRD_RXD);
+> +}
+> +
+> +static void sprd_poll_put_char(struct uart_port *port, unsigned char ch)
+> +{
+> +       while (serial_in(port, SPRD_STS1) & SPRD_TX_FIFO_CNT_MASK)
+> +               cpu_relax();
+> +
+> +       serial_out(port, SPRD_TXD, ch);
+> +}
+> +#endif
 
-On Wed, Sep 18, 2019 at 01:59:06PM +0800, Ramuthevar, Vadivel MuruganX wrot=
-e:
-> On 17/9/2019 11:36 PM, Mark Brown wrote:
-> > On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX =
-wrote:
+When I tested your patch, I found only one case can work if the port
+used by KGDB is same with the port selected as console, which means
+this port will be powered on all the time. We had implemented the
+power management for the UART ports, so I think you should enable the
+clock for the port used by KGDB in poll_init(), then other ports can
+be used by KGDB.
 
-> > > *=A0=A0=A0 spi-cadence.c* in *drivers/spi/*, which supports very old =
-legacy
-> > > cadence-spi based devices(normal)
-> > > *=A0=A0=A0 cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific suppor=
-t to SPI-NOR
-> > > flash with new spi-nor layer.
-> > >  =A0=A0=A0 all the API's in this driver purely on spi-nor specific, s=
-o couldn't
-> > > proceed to adapt.
+> +
+>  static const struct uart_ops serial_sprd_ops = {
+>         .tx_empty = sprd_tx_empty,
+>         .get_mctrl = sprd_get_mctrl,
+> @@ -928,6 +946,10 @@ static void sprd_pm(struct uart_port *port, unsigned int state,
+>         .config_port = sprd_config_port,
+>         .verify_port = sprd_verify_port,
+>         .pm = sprd_pm,
+> +#ifdef CONFIG_CONSOLE_POLL
+> +       .poll_get_char  = sprd_poll_get_char,
+> +       .poll_put_char  = sprd_poll_put_char,
+> +#endif
+>  };
+>
+>  #ifdef CONFIG_SERIAL_SPRD_CONSOLE
+> --
+> 1.9.1
+>
 
-> > Are these completely separate IPs or are they just different versions of
-> > the same IP?
 
-> These are same IPs , but different features Enabled/Disabled depends upon
-> the SoC vendors.
-
-> for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct access
-> controller.
-
-> also dedicated support to flash devices.
-
-If it's different versions of the same IP then everything should be in
-one driver with the optional features enabled depending on what's in a
-given system.
-
---oPmsXEqKQNHCSXW7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2CHk0ACgkQJNaLcl1U
-h9Duggf/UlIeAX6UQNcW0YdFNuwqat0JWT+iz9wojEIWynEPLQj26Zh5zXSa6B4F
-tIJd1JvLU9o7A2VFxTUf2H3WZCYoWuHLXKIKWZfutmabb87KoPRI7B8QaOKy1bGe
-oJEsKY4AjDv+UnEZo6kNZN7+i7VzpHtBjjg/huoyvLhcVe16a5ScecMKNSA8paQj
-JusD7wK1Iub9V+h6Px1n+lb/y+AUc4VXFtzSb/sEgrVAzLBxkoTID5RDFTBRQK0P
-K/U30jwLyJjYxD6HBz0Dq8CBdXhg1FYUSURWo/tSSSb+8aSNO3yW2NNZ50BnHVSo
-NaPNX7zL7BebDSOMEYBZCGNv8XRFYQ==
-=b6Nh
------END PGP SIGNATURE-----
-
---oPmsXEqKQNHCSXW7--
+-- 
+Baolin Wang
+Best Regards
