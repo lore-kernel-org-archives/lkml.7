@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150F9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F70C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA63421925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C45E218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787830;
-	bh=wurMpU2luWZUkpq18BV/CBskZggapk4cqunxM/1szqE=;
+	s=default; t=1568787834;
+	bh=f3pz0wBcdIZTPNDTsokruoT4VSOl8JlnLUNWPpj3bv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZIHVvLzHF03b0EDcT71hUhUDbxQZSmCPOaAHr5vj+wgn7CvklHZvI1zdWniFR5C6g
-	 lRqXv1yTCGSQ7687xDmdso55HvdIgneV7amuChNLC0yPRfwlr90pw+60eL0OkGSfV+
-	 DihARa/n4yegJdurnVZq3VQELkOLAY8Atfiuc27E=
+	b=KNJ0UQB2eKWuyU1cJcDyhwnF28Xrh1pD96JpcvfNtrM6qfewev2pwJhEgNGju3/dt
+	 9ZX69WU1Eyf96mhv95MIGat3PjBFsguOD6r9tHjXlh4wH2Y89nUxQqNsgx2TyDSu+Z
+	 waMvHfR/gBB8+kDHcXOt4tq1/DB44sDTJmEQbJLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbfIRGXu (ORCPT
+        id S1729727AbfIRGXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729706AbfIRGXr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:47 -0400
+        id S1729706AbfIRGXu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55FA221920;
-        Wed, 18 Sep 2019 06:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8AAA218AF;
+        Wed, 18 Sep 2019 06:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787826;
-        bh=wurMpU2luWZUkpq18BV/CBskZggapk4cqunxM/1szqE=;
+        s=default; t=1568787829;
+        bh=f3pz0wBcdIZTPNDTsokruoT4VSOl8JlnLUNWPpj3bv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WB0W1n2HZFLRzCqk0dcs1p5GU05+XmJ0HamPo1+lYAyFFb11nnAzmaNBLaaS38nJ8
-         txTmuL6jF+3OAgpUanvMysa0BF3CiL8Qe5rfVLJay8OrBiUcoFA1fHOW4VSwkgYxBk
-         eRqKW7YqSCYDXJ0xz0cYxROV4k7+LeAdNOTvlwwo=
+        b=CZWewUhQsV92SGuQm8xVxytAwnHxhUeZGYW3dT0ORB6lcMEIEi9e+LIFQv5NJWtPB
+         k30lcXsjT7+eky+98GoWkozl+M3Do+xCK96Eii+34wCyDxfjN1/7wBpgNi7mu5++cP
+         6Al1XQzqDqidfDbpxJRZngfPuEWHB8liIEgZwhVU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 48/50] rsi: fix a double free bug in rsi_91x_deinit()
-Date:   Wed, 18 Sep 2019 08:19:31 +0200
-Message-Id: <20190918061228.569674860@linuxfoundation.org>
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 4.19 49/50] nvmem: Use the same permissions for eeprom as for nvmem
+Date:   Wed, 18 Sep 2019 08:19:32 +0200
+Message-Id: <20190918061228.737809169@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -61,46 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Peng <benquike@gmail.com>
+From: Jean Delvare <jdelvare@suse.de>
 
-commit 8b51dc7291473093c821195c4b6af85fadedbc2f upstream.
+commit e70d8b287301eb6d7c7761c6171c56af62110ea3 upstream.
 
-`dev` (struct rsi_91x_usbdev *) field of adapter
-(struct rsi_91x_usbdev *) is allocated  and initialized in
-`rsi_init_usb_interface`. If any error is detected in information
-read from the device side,  `rsi_init_usb_interface` will be
-freed. However, in the higher level error handling code in
-`rsi_probe`, if error is detected, `rsi_91x_deinit` is called
-again, in which `dev` will be freed again, resulting double free.
+The compatibility "eeprom" attribute is currently root-only no
+matter what the configuration says. The "nvmem" attribute does
+respect the setting of the root_only configuration bit, so do the
+same for "eeprom".
 
-This patch fixes the double free by removing the free operation on
-`dev` in `rsi_init_usb_interface`, because `rsi_91x_deinit` is also
-used in `rsi_disconnect`, in that code path, the `dev` field is not
- (and thus needs to be) freed.
-
-This bug was found in v4.19, but is also present in the latest version
-of kernel. Fixes CVE-2019-15504.
-
-Reported-by: Hui Peng <benquike@gmail.com>
-Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
-Signed-off-by: Hui Peng <benquike@gmail.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Jean Delvare <jdelvare@suse.de>
+Fixes: b6c217ab9be6 ("nvmem: Add backwards compatibility support for older EEPROM drivers.")
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Link: https://lore.kernel.org/r/20190728184255.563332e6@endymion
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/rsi/rsi_91x_usb.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/nvmem/core.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -643,7 +643,6 @@ fail_rx:
- 	kfree(rsi_dev->tx_buffer);
+--- a/drivers/nvmem/core.c
++++ b/drivers/nvmem/core.c
+@@ -415,10 +415,17 @@ static int nvmem_setup_compat(struct nvm
+ 	if (!config->base_dev)
+ 		return -EINVAL;
  
- fail_eps:
--	kfree(rsi_dev);
- 
- 	return status;
- }
+-	if (nvmem->read_only)
+-		nvmem->eeprom = bin_attr_ro_root_nvmem;
+-	else
+-		nvmem->eeprom = bin_attr_rw_root_nvmem;
++	if (nvmem->read_only) {
++		if (config->root_only)
++			nvmem->eeprom = bin_attr_ro_root_nvmem;
++		else
++			nvmem->eeprom = bin_attr_ro_nvmem;
++	} else {
++		if (config->root_only)
++			nvmem->eeprom = bin_attr_rw_root_nvmem;
++		else
++			nvmem->eeprom = bin_attr_rw_nvmem;
++	}
+ 	nvmem->eeprom.attr.name = "eeprom";
+ 	nvmem->eeprom.size = nvmem->size;
+ #ifdef CONFIG_DEBUG_LOCK_ALLOC
 
 
