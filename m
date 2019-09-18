@@ -2,118 +2,191 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967C2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A350C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 726A020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CB1720665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvA/At6K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731103AbfIROhs (ORCPT
+        id S1731213AbfIROjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:37:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34886 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725902AbfIROhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:37:48 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB26AA3D38D;
-        Wed, 18 Sep 2019 14:37:47 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FA5A1001B36;
-        Wed, 18 Sep 2019 14:37:37 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 22:37:33 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Sagi Grimberg <sagi@grimberg.me>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Long Li <longli@microsoft.com>,
-        John Garry <john.garry@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
-Message-ID: <20190918143732.GA19364@ming.t460p>
-References: <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
- <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
- <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
- <20190905090617.GB4432@ming.t460p>
- <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
- <20190906014819.GB27116@ming.t460p>
- <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
- <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
- <20190907000100.GC12290@ming.t460p>
- <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 18 Sep 2019 14:37:48 +0000 (UTC)
+        Wed, 18 Sep 2019 10:39:03 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:40321 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfIROjD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:39:03 -0400
+Received: by mail-pf1-f196.google.com with SMTP id x127so88788pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 07:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=9JcxK53FZm41dsdkmHTZFxMR9/ow92BRA5QtCOLMTqI=;
+        b=JvA/At6KxqCIT2TkoRxJhIZ86JYauc/e8toiz53hGvSovTZjhRC211Umhm+C25x+S1
+         SU6xXohKCmUHeyjMSJFUG3GPgiOd/PSVFybFzW0MeCCVWTOa8Y5RrpNI+l9ibK0m5Aen
+         2HWyL1+h505SyniP6JFrNFbLH90S3lhMAWp2cqFexLRzvF9HRElf6Z0S2cATFjFKCnqk
+         MvWCwPwH7I1u2fRJ8C/CV6YPcd9b1HX1MDYpC8vxS2el13F5bidZbmmj/NrlCjXKndLJ
+         UXNam3idKXVS5RX0Turo8c257XITRSjPirXsIjOwx24VUvnBwqGNgpesHBcGRBasDBm7
+         rQhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9JcxK53FZm41dsdkmHTZFxMR9/ow92BRA5QtCOLMTqI=;
+        b=lWMluEHkQPzkcP3N5C7eKy0/xr/mldExMu+zlSWBQxcafw9Ha8oDXL+DW5bhn+B+fP
+         awZ9vgb5fa1FN/GoyG1zrPwRnQn8i3z0I8sOXIn3J3E5FHiFMsFvP+8StWK6SjFM1hc6
+         md7bSBj0C940IKRtqYPOXQp7AJupAzMPTY8cLTzeBc+p3oK+tkKiv+uHKup9hV0y6Mq0
+         qdrdwuIKHL9BlblQ+hCDuHG3U9LzmKesEJZKLsPE6a/+Gwg+anbgWcA+xNyVBXwV7vK2
+         cyj+CMxWL+RfKXuaN8NL56NC6TODErsKGDBzgMe6YBF4qKW0RP9fGxliUYx1DEYpDSbA
+         C9lA==
+X-Gm-Message-State: APjAAAXhPkAS5ekl8hkkNqEHLy9UDRkThs1I/h80tUSGQ5421X3J/j/f
+        YfAEGuId7VXUx+bNcMqxr4o=
+X-Google-Smtp-Source: APXvYqxC0zahmUi6NqLYM3uVLJyt7dyjxoLxaQX/Y2vEFda5iT3k1vD2Lkdzl42Q9qBHYNb4BdSEpg==
+X-Received: by 2002:a62:1cf:: with SMTP id 198mr4689068pfb.31.1568817542266;
+        Wed, 18 Sep 2019 07:39:02 -0700 (PDT)
+Received: from dev.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id l11sm5272197pgq.58.2019.09.18.07.38.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:39:01 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        jolsa@redhat.com, namhyung@kernel.org, akpm@linux-foundation.org
+Cc:     tonyj@suse.com, florian.schmidt@nutanix.com,
+        daniel.m.jordan@oracle.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH 0/2] introduce new perf-script page-reclaim
+Date:   Wed, 18 Sep 2019 10:38:40 -0400
+Message-Id: <1568817522-8754-1-git-send-email-laoar.shao@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 09, 2019 at 08:10:07PM -0700, Sagi Grimberg wrote:
-> Hey Ming,
-> 
-> > > > Ok, so the real problem is per-cpu bounded tasks.
-> > > > 
-> > > > I share Thomas opinion about a NAPI like approach.
-> > > 
-> > > We already have that, its irq_poll, but it seems that for this
-> > > use-case, we get lower performance for some reason. I'm not
-> > > entirely sure why that is, maybe its because we need to mask interrupts
-> > > because we don't have an "arm" register in nvme like network devices
-> > > have?
-> > 
-> > Long observed that IOPS drops much too by switching to threaded irq. If
-> > softirqd is waken up for handing softirq, the performance shouldn't
-> > be better than threaded irq.
-> 
-> Its true that it shouldn't be any faster, but what irqpoll already has
-> and we don't need to reinvent is a proper budgeting mechanism that
-> needs to occur when multiple devices map irq vectors to the same cpu
-> core.
-> 
-> irqpoll already maintains a percpu list and dispatch the ->poll with
-> a budget that the backend enforces and irqpoll multiplexes between them.
-> Having this mechanism in irq (hard or threaded) context sounds
-> unnecessary a bit.
-> 
-> It seems like we're attempting to stay in irq context for as long as we
-> can instead of scheduling to softirq/thread context if we have more than
-> a minimal amount of work to do. Without at least understanding why
-> softirq/thread degrades us so much this code seems like the wrong
-> approach to me. Interrupt context will always be faster, but it is
-> not a sufficient reason to spend as much time as possible there, is it?
+A new perf script page-reclaim is introduced in this patchset.
+This new script is used to report the page reclaim details. The possible
+usage of this script is as bellow,
+- identify latency spike caused by direct reclaim
+- whehter the latency spike is relevant with pageout
+- why is page reclaim requested, i.e. whether it is because of memory
+  fragmentation
+- page reclaim efficiency
+etc
+In the future we may also enhance it to analyze the memcg reclaim.
 
-If extra latency is added in IO completion path, this latency will be
-introduced in the submission path, because the hw queue depth is fixed,
-which is often small. Especially in case of multiple submission vs.
-single(shared) completion, the whole hw queue tags can be exhausted
-easily. 
+Bellow is how to use this script,
+    # Record, one of the following
+    $ perf record -e 'vmscan:mm_vmscan_*' ./workload
+    $ perf script record page-reclaim
 
-I guess no such effect for networking IO.
+    # Report
+    $ perf script report page-reclaim
 
-> 
-> We should also keep in mind, that the networking stack has been doing
-> this for years, I would try to understand why this cannot work for nvme
-> before dismissing.
+    # Report per process latency
+    $ perf script report page-reclaim -- -p
 
-The above may be one reason.
+    # Report per process latency details. At what time and how long it
+    # stalls at each time.
+    $ perf script report page-reclaim -- -v
 
-Thanks,
-Ming
+An example of the script's report,
+    $ perf script report page-reclaim
+    Direct reclaims: 4924
+    Direct latency (ms)        total         max         avg         min
+                          177823.211    6378.977      36.114       0.051
+    Direct file reclaimed 22920
+    Direct file scanned 28306
+    Direct file sync write I/O 0
+    Direct file async write I/O 0
+    Direct anon reclaimed 212567
+    Direct anon scanned 1446854
+    Direct anon sync write I/O 0
+    Direct anon async write I/O 278325
+    Direct order      0     1     3
+                   4870    23    31
+    Wake kswapd requests 716
+    Wake order      0     1
+                  715     1
+
+    Kswapd reclaims: 9
+    Kswapd latency (ms)        total         max         avg         min
+                           86353.046   42128.816    9594.783     120.736
+    Kswapd file reclaimed 366461
+    Kswapd file scanned 369554
+    Kswapd file sync write I/O 0
+    Kswapd file async write I/O 0
+    Kswapd anon reclaimed 362594
+    Kswapd anon scanned 693938
+    Kswapd anon sync write I/O 0
+    Kswapd anon async write I/O 330663
+    Kswapd order      0     1     3
+                      3     1     5
+    Kswapd re-wakes 705
+
+    Per process latency (ms):
+         pid[comm]             total         max         avg         min
+               timestamp  latency(ns)
+           1[systemd]        276.764     248.933       21.29       0.293
+           3406860552338: 16819800
+           3406877381650: 5532855
+           3407458799399: 929517
+           3407459796042: 916682
+           3407460763220: 418989
+           3407461250236: 332355
+           3407461637534: 401731
+           3407462092234: 449219
+           3407462605855: 292857
+           3407462952343: 372700
+           3407463364947: 414880
+           3407463829547: 949162
+           3407464813883: 248933444
+         163[kswapd0]      86353.046   42128.816    9594.783     120.736
+           3357637025977: 1026962745
+           3358915619888: 41268642175
+           3400239664127: 42128816204
+           3443784780373: 679641989
+           3444847948969: 120735792
+           3445001978784: 342713657
+           3445835850664: 316851589
+           3446865035476: 247457873
+           3449355401352: 221223878
+          ...
+
+This script must be in sync with bellow vmscan tracepoints,
+        mm_vmscan_direct_reclaim_begin
+        mm_vmscan_direct_reclaim_end
+        mm_vmscan_kswapd_wake
+        mm_vmscan_kswapd_sleep
+        mm_vmscan_wakeup_kswapd
+        mm_vmscan_lru_shrink_inactive
+        mm_vmscan_writepage
+
+Currently there's no easy way to make perf scripts in sync with
+tracepoints. One possible way is to run perf's tests regularly, another way
+is once we changes the definitions of tracepoints we must keep in mind that
+the perf scripts which are using these tracepoints must be changed as well.
+So I add some comment for the new introduced page-reclaim script as a
+reminder.
+
+Yafang Shao (2):
+  perf script python: integrate page reclaim analyze script
+  tracing, vmscan: add comments for perf script page-reclaim
+
+ include/trace/events/vmscan.h                     |  15 +-
+ tools/perf/scripts/python/bin/page-reclaim-record |   2 +
+ tools/perf/scripts/python/bin/page-reclaim-report |   4 +
+ tools/perf/scripts/python/page-reclaim.py         | 378 ++++++++++++++++++++++
+ 4 files changed, 398 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/scripts/python/bin/page-reclaim-record
+ create mode 100644 tools/perf/scripts/python/bin/page-reclaim-report
+ create mode 100644 tools/perf/scripts/python/page-reclaim.py
+
+-- 
+1.8.3.1
+
