@@ -2,180 +2,137 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2BCDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827C8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69512189D
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50B9521848
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:40:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbfIRD1K (ORCPT
+        id S1728355AbfIRDkZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 23:27:10 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726538AbfIRD1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 23:27:10 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CBBD1E842C024FB08F9E;
-        Wed, 18 Sep 2019 11:27:08 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep
- 2019 11:27:03 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
- again
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190909012532.20454-1-jaegeuk@kernel.org>
- <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
- <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
- <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
- <20190909120443.GA31108@jaegeuk-macbookpro.roam.corp.google.com>
- <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
- <20190916153736.GA2493@jaegeuk-macbookpro.roam.corp.google.com>
- <ab9561c9-db27-2967-e6fc-accd9bc58747@huawei.com>
- <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
- <e823b534-f4de-7f59-0c26-ff2c463260d1@huawei.com>
- <20190918031257.GA82722@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b4f3f571-debc-c900-9ce7-d4326b3d8038@huawei.com>
-Date:   Wed, 18 Sep 2019 11:26:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 17 Sep 2019 23:40:25 -0400
+Received: from aliyun-cloud.icoremail.net ([47.90.73.12]:25624 "HELO
+        aliyun-sdnproxy-4.icoremail.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with SMTP id S1728106AbfIRDkZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 23:40:25 -0400
+X-Greylist: delayed 719 seconds by postgrey-1.27 at vger.kernel.org; Tue, 17 Sep 2019 23:40:21 EDT
+Received: from [10.8.148.37] (unknown [218.85.123.226])
+        by app1 (Coremail) with SMTP id xjNnewCHZ9CgooFdnSR5AA--.80S2;
+        Wed, 18 Sep 2019 11:21:06 +0800 (CST)
+Subject: Re: [PATCH] [RFC] vmscan.c: add a sysctl entry for controlling memory
+ reclaim IO congestion_wait length
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     corbet@lwn.net, mcgrof@kernel.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        keescook@chromium.org, mchehab+samsung@kernel.org,
+        mgorman@techsingularity.net, vbabka@suse.cz, mhocko@suse.com,
+        ktkhai@virtuozzo.com, hannes@cmpxchg.org
+References: <20190917115824.16990-1-linf@wangsu.com>
+ <20190917120646.GT29434@bombadil.infradead.org>
+From:   Lin Feng <linf@wangsu.com>
+Message-ID: <3fbb428e-9466-b56b-0be8-c0f510e3aa99@wangsu.com>
+Date:   Wed, 18 Sep 2019 11:21:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190918031257.GA82722@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20190917120646.GT29434@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-CM-TRANSID: xjNnewCHZ9CgooFdnSR5AA--.80S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWF1UKw15Zw48ury3ZF1xuFg_yoW5urykpF
+        WxKFZ3Ka1UAry3tFs2y3Zrur1Fqay8Ary3Jr98Wry5Ary5ZF1IkFWfKF4YvFyxCrn3Cr9I
+        vr45u3srur4YyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvKb7Iv0xC_Kw4lb4IE77IF4wAFc2x0x2IEx4CE42xK8VAvwI8I
+        cIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjx
+        v20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2
+        z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcV
+        Aq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6x8ErcxFaVAv8VW8GwAv
+        7VCY1x0262k0Y48FwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4
+        IIrI8v6xkF7I0E8cxan2IY04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21lc2xSY4AK67AK6r48
+        MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_Gr4l4I8I3I0E4IkC6x0Yz7v_Jr
+        0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+        17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+        C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF
+        0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxh
+        VjvjDU0xZFpf9x07j_XocUUUUU=
+X-CM-SenderInfo: holqwq5zdqw23xof0z/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/18 11:12, Jaegeuk Kim wrote:
-> On 09/18, Chao Yu wrote:
->> On 2019/9/18 4:55, Jaegeuk Kim wrote:
->>> On 09/17, Chao Yu wrote:
->>>> On 2019/9/16 23:37, Jaegeuk Kim wrote:
->>>>> On 09/16, Chao Yu wrote:
->>>>>> On 2019/9/9 20:04, Jaegeuk Kim wrote:
->>>>>>> On 09/09, Chao Yu wrote:
->>>>>>>> On 2019/9/9 16:06, Jaegeuk Kim wrote:
->>>>>>>>> On 09/09, Chao Yu wrote:
->>>>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
->>>>>>>>>>> GC must avoid select the same victim again.
->>>>>>>>>>
->>>>>>>>>> Blocks in previous victim will occupy addition free segment, I doubt after this
->>>>>>>>>> change, FGGC may encounter out-of-free space issue more frequently.
->>>>>>>>>
->>>>>>>>> Hmm, actually this change seems wrong by sec_usage_check().
->>>>>>>>> We may be able to avoid this only in the suspicious loop?
->>>>>>>>>
->>>>>>>>> ---
->>>>>>>>>  fs/f2fs/gc.c | 2 +-
->>>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>>>>
->>>>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>>>>>>> index e88f98ddf396..5877bd729689 100644
->>>>>>>>> --- a/fs/f2fs/gc.c
->>>>>>>>> +++ b/fs/f2fs/gc.c
->>>>>>>>> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
->>>>>>>>>  		round++;
->>>>>>>>>  	}
->>>>>>>>>  
->>>>>>>>> -	if (gc_type == FG_GC)
->>>>>>>>> +	if (gc_type == FG_GC && seg_freed)
->>>>>>>>
->>>>>>>> That's original solution Sahitya provided to avoid infinite loop of GC, but I
->>>>>>>> suggest to find the root cause first, then we added .invalid_segmap for that
->>>>>>>> purpose.
->>>>>>>
->>>>>>> I've checked the Sahitya's patch. So, it seems the problem can happen due to
->>>>>>> is_alive or atomic_file.
->>>>>>
->>>>>> For some conditions, this doesn't help, for example, two sections contain the
->>>>>> same fewest valid blocks, it will cause to loop selecting them if it fails to
->>>>>> migrate blocks.
->>>>>>
->>>>>> How about keeping it as it is to find potential bug.
->>>>>
->>>>> I think it'd be fine to merge this. Could you check the above scenario in more
->>>>> detail?
->>>>
->>>> I haven't saw this in real scenario yet.
->>>>
->>>> What I mean is if there is a bug (maybe in is_alive()) failing us to GC on one
->>>> section, when that bug happens in two candidates, there could be the same
->>>> condition that GC will run into loop (select A, fail to migrate; select B, fail
->>>> to migrate, select A...).
->>>>
->>>> But I guess the benefit of this change is, if FGGC fails to migrate block due to
->>>> i_gc_rwsem race, selecting another section and later retrying previous one may
->>>> avoid lock race, right?
->>>
->>> In any case, I think this can avoid potenial GC loop. At least to me, it'd be
->>> quite risky, if we remain this just for debugging purpose only.
+
+
+On 9/17/19 20:06, Matthew Wilcox wrote:
+> On Tue, Sep 17, 2019 at 07:58:24PM +0800, Lin Feng wrote:
+>> In direct and background(kswapd) pages reclaim paths both may fall into
+>> calling msleep(100) or congestion_wait(HZ/10) or wait_iff_congested(HZ/10)
+>> while under IO pressure, and the sleep length is hard-coded and the later
+>> two will introduce 100ms iowait length per time.
 >>
->> Yup,
+>> So if pages reclaim is relatively active in some circumstances such as high
+>> order pages reappings, it's possible to see a lot of iowait introduced by
+>> congestion_wait(HZ/10) and wait_iff_congested(HZ/10).
 >>
->> One more concern is would this cur_victim_sec remain after FGGC? then BGGC/SSR
->> will always skip the section cur_victim_sec points to.
+>> The 100ms sleep length is proper if the backing drivers are slow like
+>> traditionnal rotation disks. While if the backing drivers are high-end
+>> storages such as high iops ssds or even faster drivers, the high iowait
+>> inroduced by pages reclaim is really misleading, because the storage IO
+>> utils seen by iostat is quite low, in this case the congestion_wait time
+>> modified to 1ms is likely enough for high-end ssds.
+>>
+>> Another benifit is that it's potentially shorter the direct reclaim blocked
+>> time when kernel falls into sync reclaim path, which may improve user
+>> applications response time.
 > 
-> Then, we can get another loop before using it by BGGC/SSR.
-
-I guess I didn't catch your point, do you mean, if we reset it in the end of
-FGGC, we may encounter the loop during BGGC/SSR?
-
-I meant:
-
-f2fs_gc()
-...
-
-+	if (gc_type == FG_GC)
-+		sbi->cur_victim_sec = NULL_SEGNO;
-
-	mutex_unlock(&sbi->gc_mutex);
-
-	put_gc_inode(&gc_list);
-...
-
-Thanks,
+> This is a great description of the problem.
+The always 100ms blocked time sometimes is not necessary :)
 
 > 
->>
->> So could we reset cur_victim_sec in the end of FGGC?
->>
->> Thanks,
->>
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>> Thanks,
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>
->>>>>>>>
->>>>>>>> Thanks,
->>>>>>>>
->>>>>>>>>  		sbi->cur_victim_sec = NULL_SEGNO;
->>>>>>>>>  
->>>>>>>>>  	if (sync)
->>>>>>>>>
->>>>>>> .
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
+>> +mm_reclaim_congestion_wait_jiffies
+>> +==========
+>> +
+>> +This control is used to define how long kernel will wait/sleep while
+>> +system memory is under pressure and memroy reclaim is relatively active.
+>> +Lower values will decrease the kernel wait/sleep time.
+>> +
+>> +It's suggested to lower this value on high-end box that system is under memory
+>> +pressure but with low storage IO utils and high CPU iowait, which could also
+>> +potentially decrease user application response time in this case.
+>> +
+>> +Keep this control as it were if your box are not above case.
+>> +
+>> +The default value is HZ/10, which is of equal value to 100ms independ of how
+>> +many HZ is defined.
 > 
+> Adding a new tunable is not the right solution.  The right way is
+> to make Linux auto-tune itself to avoid the problem.  For example,
+> bdi_writeback contains an estimated write bandwidth (calculated by the
+> memory management layer).  Given that, we should be able to make an
+> estimate for how long to wait for the queues to drain.
+> 
+
+Yes, I had ever considered that, auto-tuning is definitely the senior AI way.
+While considering all kinds of production environments hybird storage solution
+is also common today, servers' dirty pages' bdi drivers can span from high end
+ssds to low end sata disk, so we have to think of a *formula(AI core)* by using
+the factors of dirty pages' amount and bdis' write bandwidth, and this AI-core
+will depend on if the estimated write bandwidth is sane and moreover the to be
+written back dirty pages is sequential or random if the bdi is rotational disk,
+it's likey to give a not-sane number and hurt guys who dont't want that, while
+if only consider ssd is relatively simple.
+
+So IMHO it's not sane to brute force add a guessing logic into memory writeback
+codes and pray on inventing a formula that caters everyone's need.
+Add a sysctl entry may be a right choice that give people who need it and
+doesn't hurt people who don't want it.
+
+thanks,
+linfeng
+
