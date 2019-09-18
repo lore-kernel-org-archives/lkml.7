@@ -2,61 +2,91 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
+	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F452C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462C4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69A0821897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 08:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DEC121907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbfIRI7K (ORCPT
+        id S1730743AbfIRJAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 04:59:10 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59804 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725909AbfIRI7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 04:59:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C0C55AF4C;
-        Wed, 18 Sep 2019 08:59:08 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 09:59:05 +0100
-From:   Mel Gorman <mgorman@suse.de>
-To:     Qian Cai <cai@lca.pw>
-Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: fix an unused function "node_cpu" warning
-Message-ID: <20190918085905.GC3605@suse.de>
-References: <1568730894-10483-1-git-send-email-cai@lca.pw>
+        Wed, 18 Sep 2019 05:00:34 -0400
+Received: from ns.iliad.fr ([212.27.33.1]:40740 "EHLO ns.iliad.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfIRJAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:00:34 -0400
+Received: from ns.iliad.fr (localhost [127.0.0.1])
+        by ns.iliad.fr (Postfix) with ESMTP id 3517A206A6;
+        Wed, 18 Sep 2019 11:00:32 +0200 (CEST)
+Received: from [192.168.108.37] (freebox.vlq16.iliad.fr [213.36.7.13])
+        by ns.iliad.fr (Postfix) with ESMTP id 1D65120186;
+        Wed, 18 Sep 2019 11:00:32 +0200 (CEST)
+Subject: Re: [PATCH v2 2/3] i2c: qup: Remove dev_err() log after
+ platform_get_irq*() failure
+To:     Saiyam Doshi <saiyamdoshi.in@gmail.com>
+Cc:     MSM <linux-arm-msm@vger.kernel.org>,
+        I2C <linux-i2c@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20190917172120.GA11581@SD>
+From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
+Message-ID: <4e65aeeb-40da-7856-a22e-ce7aac21ae46@free.fr>
+Date:   Wed, 18 Sep 2019 11:00:32 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <1568730894-10483-1-git-send-email-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190917172120.GA11581@SD>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Sep 18 11:00:32 2019 +0200 (CEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:34:54AM -0400, Qian Cai wrote:
-> Clang reports a warning,
-> 
-> kernel/locking/osq_lock.c:25:19: warning: unused function 'node_cpu'
-> [-Wunused-function]
-> 
-> due to osq_lock() calls vcpu_is_preempted(node_cpu(node->prev))), but
-> vcpu_is_preempted() is compiled away. Fix it by converting the dummy
-> vcpu_is_preempted() from a macro to a proper static inline function.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+On 17/09/2019 19:21, Saiyam Doshi wrote:
 
-Acked-by: Mel Gorman <mgorman@suse.de>
+> The debug message after platform_get_irq() failure is redundant
+> because platform_get_irq() already prints an error. Thus remove it.
+> 
+> Generated by: scripts/coccinelle/api/platform_get_irq.cocci
+> 
+> Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
+> ---
+> Changes in v2:
+> Updated changelog and removed unnecessary braces after if condition.
+> 
+>  drivers/i2c/busses/i2c-qup.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+> index 5519c19bfd9c..ed09a59066b2 100644
+> --- a/drivers/i2c/busses/i2c-qup.c
+> +++ b/drivers/i2c/busses/i2c-qup.c
+> @@ -1766,10 +1766,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
+>  		return PTR_ERR(qup->base);
+> 
+>  	qup->irq = platform_get_irq(pdev, 0);
+> -	if (qup->irq < 0) {
+> -		dev_err(qup->dev, "No IRQ defined\n");
+> +	if (qup->irq < 0)
+>  		return qup->irq;
+> -	}
 
--- 
-Mel Gorman
-SUSE Labs
+As far as I understand, platform_get_irq() == 0 is also an error condition.
+
+I think the typical way to handle this peculiarity is:
+(Maybe the IRQ maintainers will correct me)
+
+	qup->irq = platform_get_irq(pdev, 0);
+	if (qup->irq <= 0)
+		return qup->irq ? : -ENXIO;
+
+Regards.
