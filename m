@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF1CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50EEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16459218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9687B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788104;
-	bh=4SwofskaSHYuvkVfB214BR3wKFsV/3vSkW+uR2+8i4U=;
+	s=default; t=1568788107;
+	bh=gxS9ZUbbvVVkzsG5z+wVfzyHSZCRFBRYBIGeGuEaGog=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AcWZjbYS5t/YQbYX5jWdXeS3G54uRk8eNjmPbdDOj4maSdVG9AIAReFrlwpE4T8o2
-	 8aXLuRb1i2XqtjHJ9iZXjNmpU1h8NCJo0gTqFUrPFjzXgRowLELbsHhea+eQdrIcAU
-	 Wu1jNiHuXvoVpTookE5uNEgYAn2FZN8WLhr/2HGk=
+	b=iwoID6SFDI88Z3JbaoomPJuqpYObXfXsP1Hi2DYpwBY7seE2FMVDSvbS7ZoiF85aR
+	 EjXAJmi45IO7dcYcENsW+wC1G9LM2HPt4lHnbrpGdh5RXC7lFrY5Xu4iJNb6XqP5aT
+	 p77kS1bxu+3ABu5KMjYMGi/IDk3V+dOzFZm/4DgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730588AbfIRG2W (ORCPT
+        id S1730564AbfIRG1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49772 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730580AbfIRG1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:46 -0400
+        id S1727936AbfIRG1f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2005C21924;
-        Wed, 18 Sep 2019 06:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7784121D56;
+        Wed, 18 Sep 2019 06:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788064;
-        bh=4SwofskaSHYuvkVfB214BR3wKFsV/3vSkW+uR2+8i4U=;
+        s=default; t=1568788054;
+        bh=gxS9ZUbbvVVkzsG5z+wVfzyHSZCRFBRYBIGeGuEaGog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DUI9jIYmU56/kPQPbWYtdf5QCG6KwWCdaBUvXxWHreZo2VqlNbQmZT+B9S2TN/uWU
-         88y97tO03bCmHdH0Dal5RuWRvFdgH25N0NtW4F4HQF7eztHjxIisA41W/p8UQJZHSJ
-         vNwzH2UvztsRN8teyHbOcr4/nSlwM5WjjaZxYDes=
+        b=Fy02PPBIYXRIj8qFuA26TGmESYPB/vCq+Km4C+xj5nV8N8PsKpIQB1J8n2cLRMGqV
+         8Rp/PM9Ds8LGP6WztgYERgPK1l34R6XOx7WKAJJHfJNQ5JjrRCgIvpvE+Y0+Ns7vC/
+         UI0HQlzZYbyWiOS2RQqQjX3/0COZ55gxELHMNWqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Harvey <jamespharvey20@gmail.com>,
-        Alex Willamson <alex.williamson@redhat.com>,
+        stable@vger.kernel.org, Singh Brijesh <brijesh.singh@amd.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 5.2 46/85] KVM: x86/mmu: Reintroduce fast invalidate/zap for flushing memslot
-Date:   Wed, 18 Sep 2019 08:19:04 +0200
-Message-Id: <20190918061235.590472144@linuxfoundation.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Liran Alon <liran.alon@oracle.com>
+Subject: [PATCH 5.2 81/85] KVM: SVM: Fix detection of AMD Errata 1096
+Date:   Wed, 18 Sep 2019 08:19:39 +0200
+Message-Id: <20190918061237.939407203@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,228 +62,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Liran Alon <liran.alon@oracle.com>
 
-commit 002c5f73c508f7df5681bda339831c27f3c1aef4 upstream.
+commit 118154bdf54ca79e4b5f3ce6d4a8a7c6b7c2c76f upstream.
 
-James Harvey reported a livelock that was introduced by commit
-d012a06ab1d23 ("Revert "KVM: x86/mmu: Zap only the relevant pages when
-removing a memslot"").
+When CPU raise #NPF on guest data access and guest CR4.SMAP=1, it is
+possible that CPU microcode implementing DecodeAssist will fail
+to read bytes of instruction which caused #NPF. This is AMD errata
+1096 and it happens because CPU microcode reading instruction bytes
+incorrectly attempts to read code as implicit supervisor-mode data
+accesses (that is, just like it would read e.g. a TSS), which are
+susceptible to SMAP faults. The microcode reads CS:RIP and if it is
+a user-mode address according to the page tables, the processor
+gives up and returns no instruction bytes.  In this case,
+GuestIntrBytes field of the VMCB on a VMEXIT will incorrectly
+return 0 instead of the correct guest instruction bytes.
 
-The livelock occurs because kvm_mmu_zap_all() as it exists today will
-voluntarily reschedule and drop KVM's mmu_lock, which allows other vCPUs
-to add shadow pages.  With enough vCPUs, kvm_mmu_zap_all() can get stuck
-in an infinite loop as it can never zap all pages before observing lock
-contention or the need to reschedule.  The equivalent of kvm_mmu_zap_all()
-that was in use at the time of the reverted commit (4e103134b8623, "KVM:
-x86/mmu: Zap only the relevant pages when removing a memslot") employed
-a fast invalidate mechanism and was not susceptible to the above livelock.
+Current KVM code attemps to detect and workaround this errata, but it
+has multiple issues:
 
-There are three ways to fix the livelock:
+1) It mistakenly checks if guest CR4.SMAP=0 instead of guest CR4.SMAP=1,
+which is required for encountering a SMAP fault.
 
-- Reverting the revert (commit d012a06ab1d23) is not a viable option as
-  the revert is needed to fix a regression that occurs when the guest has
-  one or more assigned devices.  It's unlikely we'll root cause the device
-  assignment regression soon enough to fix the regression timely.
+2) It assumes SMAP faults can only occur when guest CPL==3.
+However, in case guest CR4.SMEP=0, the guest can execute an instruction
+which reside in a user-accessible page with CPL<3 priviledge. If this
+instruction raise a #NPF on it's data access, then CPU DecodeAssist
+microcode will still encounter a SMAP violation.  Even though no sane
+OS will do so (as it's an obvious priviledge escalation vulnerability),
+we still need to handle this semanticly correct in KVM side.
 
-- Remove the conditional reschedule from kvm_mmu_zap_all().  However, although
-  removing the reschedule would be a smaller code change, it's less safe
-  in the sense that the resulting kvm_mmu_zap_all() hasn't been used in
-  the wild for flushing memslots since the fast invalidate mechanism was
-  introduced by commit 6ca18b6950f8d ("KVM: x86: use the fast way to
-  invalidate all pages"), back in 2013.
+Note that (2) *is* a useful optimization, because CR4.SMAP=1 is an easy
+triggerable condition and guests usually enable SMAP together with SMEP.
+If the vCPU has CR4.SMEP=1, the errata could indeed be encountered onlt
+at guest CPL==3; otherwise, the CPU would raise a SMEP fault to guest
+instead of #NPF.  We keep this condition to avoid false positives in
+the detection of the errata.
 
-- Reintroduce the fast invalidate mechanism and use it when zapping shadow
-  pages in response to a memslot being deleted/moved, which is what this
-  patch does.
+In addition, to avoid future confusion and improve code readbility,
+include details of the errata in code and not just in commit message.
 
-For all intents and purposes, this is a revert of commit ea145aacf4ae8
-("Revert "KVM: MMU: fast invalidate all pages"") and a partial revert of
-commit 7390de1e99a70 ("Revert "KVM: x86: use the fast way to invalidate
-all pages""), i.e. restores the behavior of commit 5304b8d37c2a5 ("KVM:
-MMU: fast invalidate all pages") and commit 6ca18b6950f8d ("KVM: x86:
-use the fast way to invalidate all pages") respectively.
-
-Fixes: d012a06ab1d23 ("Revert "KVM: x86/mmu: Zap only the relevant pages when removing a memslot"")
-Reported-by: James Harvey <jamespharvey20@gmail.com>
-Cc: Alex Willamson <alex.williamson@redhat.com>
+Fixes: 05d5a4863525 ("KVM: SVM: Workaround errata#1096 (insn_len maybe zero on SMAP violation)")
+Cc: Singh Brijesh <brijesh.singh@amd.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+Reviewed-by: Brijesh Singh <brijesh.singh@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    2 
- arch/x86/kvm/mmu.c              |  101 +++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 101 insertions(+), 2 deletions(-)
+ arch/x86/kvm/svm.c |   42 +++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 35 insertions(+), 7 deletions(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -333,6 +333,7 @@ struct kvm_mmu_page {
- 	int root_count;          /* Currently serving as active root */
- 	unsigned int unsync_children;
- 	struct kvm_rmap_head parent_ptes; /* rmap pointers to parent sptes */
-+	unsigned long mmu_valid_gen;
- 	DECLARE_BITMAP(unsync_child_bitmap, 512);
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -7116,13 +7116,41 @@ static int nested_enable_evmcs(struct kv
  
- #ifdef CONFIG_X86_32
-@@ -851,6 +852,7 @@ struct kvm_arch {
- 	unsigned long n_requested_mmu_pages;
- 	unsigned long n_max_mmu_pages;
- 	unsigned int indirect_shadow_pages;
-+	unsigned long mmu_valid_gen;
- 	struct hlist_head mmu_page_hash[KVM_NUM_MMU_PAGES];
+ static bool svm_need_emulation_on_page_fault(struct kvm_vcpu *vcpu)
+ {
+-	bool is_user, smap;
+-
+-	is_user = svm_get_cpl(vcpu) == 3;
+-	smap = !kvm_read_cr4_bits(vcpu, X86_CR4_SMAP);
++	unsigned long cr4 = kvm_read_cr4(vcpu);
++	bool smep = cr4 & X86_CR4_SMEP;
++	bool smap = cr4 & X86_CR4_SMAP;
++	bool is_user = svm_get_cpl(vcpu) == 3;
+ 
  	/*
- 	 * Hash table of struct kvm_mmu_page.
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -2066,6 +2066,12 @@ static struct kvm_mmu_page *kvm_mmu_allo
- 	if (!direct)
- 		sp->gfns = mmu_memory_cache_alloc(&vcpu->arch.mmu_page_cache);
- 	set_page_private(virt_to_page(sp->spt), (unsigned long)sp);
-+
-+	/*
-+	 * active_mmu_pages must be a FIFO list, as kvm_zap_obsolete_pages()
-+	 * depends on valid pages being added to the head of the list.  See
-+	 * comments in kvm_zap_obsolete_pages().
-+	 */
- 	list_add(&sp->link, &vcpu->kvm->arch.active_mmu_pages);
- 	kvm_mod_used_mmu_pages(vcpu->kvm, +1);
- 	return sp;
-@@ -2215,7 +2221,7 @@ static void kvm_mmu_commit_zap_page(stru
- #define for_each_valid_sp(_kvm, _sp, _gfn)				\
- 	hlist_for_each_entry(_sp,					\
- 	  &(_kvm)->arch.mmu_page_hash[kvm_page_table_hashfn(_gfn)], hash_link) \
--		if ((_sp)->role.invalid) {    \
-+		if (is_obsolete_sp((_kvm), (_sp)) || (_sp)->role.invalid) {    \
- 		} else
+-	 * Detect and workaround Errata 1096 Fam_17h_00_0Fh
++	 * Detect and workaround Errata 1096 Fam_17h_00_0Fh.
++	 *
++	 * Errata:
++	 * When CPU raise #NPF on guest data access and vCPU CR4.SMAP=1, it is
++	 * possible that CPU microcode implementing DecodeAssist will fail
++	 * to read bytes of instruction which caused #NPF. In this case,
++	 * GuestIntrBytes field of the VMCB on a VMEXIT will incorrectly
++	 * return 0 instead of the correct guest instruction bytes.
++	 *
++	 * This happens because CPU microcode reading instruction bytes
++	 * uses a special opcode which attempts to read data using CPL=0
++	 * priviledges. The microcode reads CS:RIP and if it hits a SMAP
++	 * fault, it gives up and returns no instruction bytes.
++	 *
++	 * Detection:
++	 * We reach here in case CPU supports DecodeAssist, raised #NPF and
++	 * returned 0 in GuestIntrBytes field of the VMCB.
++	 * First, errata can only be triggered in case vCPU CR4.SMAP=1.
++	 * Second, if vCPU CR4.SMEP=1, errata could only be triggered
++	 * in case vCPU CPL==3 (Because otherwise guest would have triggered
++	 * a SMEP fault instead of #NPF).
++	 * Otherwise, vCPU CR4.SMEP=0, errata could be triggered by any vCPU CPL.
++	 * As most guests enable SMAP if they have also enabled SMEP, use above
++	 * logic in order to attempt minimize false-positive of detecting errata
++	 * while still preserving all cases semantic correctness.
++	 *
++	 * Workaround:
++	 * To determine what instruction the guest was executing, the hypervisor
++	 * will have to decode the instruction at the instruction pointer.
+ 	 *
+ 	 * In non SEV guest, hypervisor will be able to read the guest
+ 	 * memory to decode the instruction pointer when insn_len is zero
+@@ -7133,11 +7161,11 @@ static bool svm_need_emulation_on_page_f
+ 	 * instruction pointer so we will not able to workaround it. Lets
+ 	 * print the error and request to kill the guest.
+ 	 */
+-	if (is_user && smap) {
++	if (smap && (!smep || is_user)) {
+ 		if (!sev_guest(vcpu->kvm))
+ 			return true;
  
- #define for_each_gfn_indirect_valid_sp(_kvm, _sp, _gfn)			\
-@@ -2272,6 +2278,11 @@ static void kvm_mmu_audit(struct kvm_vcp
- static void mmu_audit_disable(void) { }
- #endif
- 
-+static bool is_obsolete_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
-+{
-+	return unlikely(sp->mmu_valid_gen != kvm->arch.mmu_valid_gen);
-+}
-+
- static bool kvm_sync_page(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
- 			 struct list_head *invalid_list)
- {
-@@ -2496,6 +2507,7 @@ static struct kvm_mmu_page *kvm_mmu_get_
- 		if (level > PT_PAGE_TABLE_LEVEL && need_sync)
- 			flush |= kvm_sync_pages(vcpu, gfn, &invalid_list);
+-		pr_err_ratelimited("KVM: Guest triggered AMD Erratum 1096\n");
++		pr_err_ratelimited("KVM: SEV Guest triggered AMD Erratum 1096\n");
+ 		kvm_make_request(KVM_REQ_TRIPLE_FAULT, vcpu);
  	}
-+	sp->mmu_valid_gen = vcpu->kvm->arch.mmu_valid_gen;
- 	clear_page(sp->spt);
- 	trace_kvm_mmu_get_page(sp, true);
  
-@@ -4229,6 +4241,13 @@ static bool fast_cr3_switch(struct kvm_v
- 			return false;
- 
- 		if (cached_root_available(vcpu, new_cr3, new_role)) {
-+			/*
-+			 * It is possible that the cached previous root page is
-+			 * obsolete because of a change in the MMU generation
-+			 * number. However, changing the generation number is
-+			 * accompanied by KVM_REQ_MMU_RELOAD, which will free
-+			 * the root set here and allocate a new one.
-+			 */
- 			kvm_make_request(KVM_REQ_LOAD_CR3, vcpu);
- 			if (!skip_tlb_flush) {
- 				kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
-@@ -5645,11 +5664,89 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu
- 	return alloc_mmu_pages(vcpu);
- }
- 
-+
-+static void kvm_zap_obsolete_pages(struct kvm *kvm)
-+{
-+	struct kvm_mmu_page *sp, *node;
-+	LIST_HEAD(invalid_list);
-+	int ign;
-+
-+restart:
-+	list_for_each_entry_safe_reverse(sp, node,
-+	      &kvm->arch.active_mmu_pages, link) {
-+		/*
-+		 * No obsolete valid page exists before a newly created page
-+		 * since active_mmu_pages is a FIFO list.
-+		 */
-+		if (!is_obsolete_sp(kvm, sp))
-+			break;
-+
-+		/*
-+		 * Do not repeatedly zap a root page to avoid unnecessary
-+		 * KVM_REQ_MMU_RELOAD, otherwise we may not be able to
-+		 * progress:
-+		 *    vcpu 0                        vcpu 1
-+		 *                         call vcpu_enter_guest():
-+		 *                            1): handle KVM_REQ_MMU_RELOAD
-+		 *                                and require mmu-lock to
-+		 *                                load mmu
-+		 * repeat:
-+		 *    1): zap root page and
-+		 *        send KVM_REQ_MMU_RELOAD
-+		 *
-+		 *    2): if (cond_resched_lock(mmu-lock))
-+		 *
-+		 *                            2): hold mmu-lock and load mmu
-+		 *
-+		 *                            3): see KVM_REQ_MMU_RELOAD bit
-+		 *                                on vcpu->requests is set
-+		 *                                then return 1 to call
-+		 *                                vcpu_enter_guest() again.
-+		 *            goto repeat;
-+		 *
-+		 * Since we are reversely walking the list and the invalid
-+		 * list will be moved to the head, skip the invalid page
-+		 * can help us to avoid the infinity list walking.
-+		 */
-+		if (sp->role.invalid)
-+			continue;
-+
-+		if (need_resched() || spin_needbreak(&kvm->mmu_lock)) {
-+			kvm_mmu_commit_zap_page(kvm, &invalid_list);
-+			cond_resched_lock(&kvm->mmu_lock);
-+			goto restart;
-+		}
-+
-+		if (__kvm_mmu_prepare_zap_page(kvm, sp, &invalid_list, &ign))
-+			goto restart;
-+	}
-+
-+	kvm_mmu_commit_zap_page(kvm, &invalid_list);
-+}
-+
-+/*
-+ * Fast invalidate all shadow pages and use lock-break technique
-+ * to zap obsolete pages.
-+ *
-+ * It's required when memslot is being deleted or VM is being
-+ * destroyed, in these cases, we should ensure that KVM MMU does
-+ * not use any resource of the being-deleted slot or all slots
-+ * after calling the function.
-+ */
-+static void kvm_mmu_zap_all_fast(struct kvm *kvm)
-+{
-+	spin_lock(&kvm->mmu_lock);
-+	kvm->arch.mmu_valid_gen++;
-+
-+	kvm_zap_obsolete_pages(kvm);
-+	spin_unlock(&kvm->mmu_lock);
-+}
-+
- static void kvm_mmu_invalidate_zap_pages_in_memslot(struct kvm *kvm,
- 			struct kvm_memory_slot *slot,
- 			struct kvm_page_track_notifier_node *node)
- {
--	kvm_mmu_zap_all(kvm);
-+	kvm_mmu_zap_all_fast(kvm);
- }
- 
- void kvm_mmu_init_vm(struct kvm *kvm)
 
 
