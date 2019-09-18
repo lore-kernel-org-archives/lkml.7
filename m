@@ -2,109 +2,190 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C30DAC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9E6C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91AAC21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:51:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aN54ur3K"
+	by mail.kernel.org (Postfix) with ESMTP id F1C1221906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568803995;
+	bh=O/UvnMFn8YkjpKy9CUgVCFPtQ1p7llhMtTCerndVpDI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=imBpDhaPrLg/AD/uoz7gzTu4yU6Ri+gBPGe9/WvX8cO2WcPs0OrhX2lhqMBof/j51
+	 hhHhA2Iu5pwx1KR5uok4agE2Vz0178dKmMsUTPUf3LGAP3GleydX4SBAB3zRkuFc7O
+	 BTdTbi20jxB5Y5aycMwVCu/HPPsfA9bqOH/bW1kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbfIRKv0 (ORCPT
+        id S1728100AbfIRKxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:51:26 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53768 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfIRKv0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:51:26 -0400
-Received: by mail-wm1-f68.google.com with SMTP id i16so2040001wmd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 03:51:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=JVv4hk+4LU2vJDNGx2vhcqczhQQUoh+G5X8X8U4GwqU=;
-        b=aN54ur3KkGtiC4fj7yimPdv3HMIqVFRGOoft8l/i5fSPRMHOl6JF75HJ+lIa5ZziJ8
-         RpsbkaIIBtKmy61Qdqb6kOnPGvn7aOa+mA80690Va+YRVEJEpeSHxAs1QitJbyILr0Wq
-         Dogw/YfoTbqr2t49fLFqf+op6bbImPUmhB56ApM56rYzYjcbjYrbKcOwe63HQ49fNOX9
-         v2eBs6gzhjqPk4MC/v9S6LNHPtmhCOgrr7pagTSIiN+jCTSo6cqRGUVI+3dSMabL6QqG
-         3/ED38tescn9RMzor1s4ww0BTPBVP0DFqwO0LCJUxOaSAN+LGlt0zUahPjSwQTjq92hz
-         4LvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=JVv4hk+4LU2vJDNGx2vhcqczhQQUoh+G5X8X8U4GwqU=;
-        b=HPJc9/58YwAgmbFPwWvaQtLa6KCe4vP+KwWd/YjT5f6fAfuPOWK7Dp0GItS/E/v2lb
-         LrIGseRx7znZYTSVGBAY2yxwPaXC27RNvUnMYFJy0CWsQPSCvwxbJKTS5GgEzs7g4yi6
-         q3oZ35gdGdyiblqyXkyM5mC5zC5eqp/bxmFyRP2TaVxGD3iA7RcyJfDxvNYLgX0Q1b+m
-         xCXYbBtK7OHCCpATXPyq//oolxWSyWpdZ86et9OaVFq93kzAFM/Y65Q/bRb3Ndhn9IOG
-         i6CBY0a8gvn6qhMZf7vWR4SDoN7hDnPSAQGemioMTFpxzgkt1bo34sjYpWCybBDhJvNV
-         2f1Q==
-X-Gm-Message-State: APjAAAXFiMg72JlNtciz15rzE3xFRrGwqoxBB3tS/bEDqQKE4PV4hmG9
-        2CrWTX3Mlet+ZDRECang8BI3Kw==
-X-Google-Smtp-Source: APXvYqynJXkScyO65ZwXnbjbsK5K7mcXL60yrXfJxXtICcR1O2he7LJfJ7TjzExD6/kawj+vRoCG2w==
-X-Received: by 2002:a7b:c398:: with SMTP id s24mr2381161wmj.78.1568803883055;
-        Wed, 18 Sep 2019 03:51:23 -0700 (PDT)
-Received: from dell ([2.27.167.122])
-        by smtp.gmail.com with ESMTPSA id j1sm8055902wrg.24.2019.09.18.03.51.22
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 03:51:22 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 11:51:21 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Gene Chen <gene.chen.richtek@gmail.com>
-Cc:     matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com
-Subject: Re: [PATCH] mfd: mt6360: add pmic mt6360 driver
-Message-ID: <20190918105121.GB5016@dell>
-References: <1568801744-21380-1-git-send-email-gene.chen.richtek@gmail.com>
+        Wed, 18 Sep 2019 06:53:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727057AbfIRKxN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:53:13 -0400
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D2021924;
+        Wed, 18 Sep 2019 10:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568803992;
+        bh=O/UvnMFn8YkjpKy9CUgVCFPtQ1p7llhMtTCerndVpDI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=GzIBcwuX1dvo6+Pib7AeQw8CBUzIQPKX7uNfyw4hHGhEqegb49iD3QP7KKqDgIhJb
+         H0mbtt+3dJxeu4aNw6rwQvLAf0a2UdPPOBU3dBTpP6C2EET6YLiFEO0S21+OFRQuz3
+         +Dkr+xho6TvqN0tKlcAzModpSLrhyz2oPpTQPcl8=
+Received: by mail-lj1-f175.google.com with SMTP id l21so5006866lje.4;
+        Wed, 18 Sep 2019 03:53:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAVgxFo6ybhKEG/59calrgIzER1uV4v15kZPC/T4foyKTOJ4Ksk4
+        McHTfjwYvTLPRH6gI1J0Pd3Xx6VlRxXb9SSqGrw=
+X-Google-Smtp-Source: APXvYqzmTpbs4iMQpuYHlKIv22TczIe3FZwf5lGn1IC17g2fsgJ8tEyfhDTtkZdvKFCSK1xWqaUtSieVDoazmPngEGY=
+X-Received: by 2002:a2e:3806:: with SMTP id f6mr1870674lja.143.1568803990188;
+ Wed, 18 Sep 2019 03:53:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1568801744-21380-1-git-send-email-gene.chen.richtek@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CGME20190913094136eucas1p1fd424b5f5a6f0a97b31af54e55fe28c1@eucas1p1.samsung.com>
+ <20190913094123.23169-1-m.falkowski@samsung.com>
+In-Reply-To: <20190913094123.23169-1-m.falkowski@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Wed, 18 Sep 2019 12:52:58 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPcDWtT0RbqmpmjDAZw-gCWppSbZqAjOgcbZUaraT5ethA@mail.gmail.com>
+Message-ID: <CAJKOXPcDWtT0RbqmpmjDAZw-gCWppSbZqAjOgcbZUaraT5ethA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpu: Convert Samsung Image Scaler to dt-schema
+To:     Maciej Falkowski <m.falkowski@samsung.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie,
+        daniel@ffwll.ch, robh+dt@kernel.org, mark.rutland@arm.com,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019, Gene Chen wrote:
-
-> From: Gene Chen <gene_chen@richtek.com>
-> 
-> Add mfd driver for mt6360 pmic chip include
-> Battery Charger/USB_PD/Flash LED/RGB LED/LDO/Buck
-> 
-> Signed-off-by: Gene Chen <gene_chen@richtek.com
+On Fri, 13 Sep 2019 at 11:41, Maciej Falkowski <m.falkowski@samsung.com> wrote:
+>
+> Convert Samsung Image Scaler to newer dt-schema format.
+>
+> Signed-off-by: Maciej Falkowski <m.falkowski@samsung.com>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
+>  .../bindings/gpu/samsung-scaler.txt           | 27 ---------
+>  .../bindings/gpu/samsung-scaler.yaml          | 57 +++++++++++++++++++
+>  2 files changed, 57 insertions(+), 27 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt b/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> deleted file mode 100644
+> index 9c3d98105dfd..000000000000
+> --- a/Documentation/devicetree/bindings/gpu/samsung-scaler.txt
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -* Samsung Exynos Image Scaler
+> -
+> -Required properties:
+> -  - compatible : value should be one of the following:
+> -       (a) "samsung,exynos5420-scaler" for Scaler IP in Exynos5420
+> -       (b) "samsung,exynos5433-scaler" for Scaler IP in Exynos5433
+> -
+> -  - reg : Physical base address of the IP registers and length of memory
+> -         mapped region.
+> -
+> -  - interrupts : Interrupt specifier for scaler interrupt, according to format
+> -                specific to interrupt parent.
+> -
+> -  - clocks : Clock specifier for scaler clock, according to generic clock
+> -            bindings. (See Documentation/devicetree/bindings/clock/exynos*.txt)
+> -
+> -  - clock-names : Names of clocks. For exynos scaler, it should be "mscl"
+> -                 on 5420 and "pclk", "aclk" and "aclk_xiu" on 5433.
+> -
+> -Example:
+> -       scaler@12800000 {
+> -               compatible = "samsung,exynos5420-scaler";
+> -               reg = <0x12800000 0x1294>;
+> -               interrupts = <0 220 IRQ_TYPE_LEVEL_HIGH>;
+> -               clocks = <&clock CLK_MSCL0>;
+> -               clock-names = "mscl";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> new file mode 100644
+> index 000000000000..ee2caab22977
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-scaler.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpu/samsung-scaler.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung Exynos SoC Image Scaler
+> +
+> +maintainers:
+> +  - Inki Dae <inki.dae@samsung.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - "samsung,exynos5420-scaler"
+> +      - "samsung,exynos5433-scaler"
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +
+> +  clock-names:
+> +    oneOf:
+> +      - items:
+> +          - const: mscl
+> +      - items:
+> +          - const: pclk
+> +          - const: aclk
+> +          - const: aclk_xiu
+> +    description: |
+> +      For exynos scaler it should be:
+> +      - "mscl" on Exynos5420
+> +      - "pclk", "aclk", "aclk_xiu" on Exynos5433
 
-This looks different from the one you sent before, but I don't see a
-version bump or any changelog in this space.  Please re-submit with
-the differences noted.
+Hi,
 
->  drivers/mfd/Kconfig                |  12 +
->  drivers/mfd/Makefile               |   1 +
->  drivers/mfd/mt6360-core.c          | 463 +++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6360-private.h | 279 ++++++++++++++++++++++
->  include/linux/mfd/mt6360.h         |  33 +++
->  5 files changed, 788 insertions(+)
->  create mode 100644 drivers/mfd/mt6360-core.c
->  create mode 100644 include/linux/mfd/mt6360-private.h
->  create mode 100644 include/linux/mfd/mt6360.h
+This should be customized with proper if in allOf section.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Best regards,
+Krzysztof
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    scaler@12800000 {
+> +        compatible = "samsung,exynos5420-scaler";
+> +        reg = <0x12800000 0x1294>;
+> +        interrupts = <0 220 4>; // IRQ_TYPE_LEVEL_HIGH
+> +        clocks = <&clock 0>; // CLK_MSCL0
+> +        clock-names = "mscl";
+> +    };
+> +
+> --
+> 2.17.1
+>
