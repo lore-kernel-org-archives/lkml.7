@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1926C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E521DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E68821906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9C8521927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787988;
-	bh=2Rhxi2ltz1jn8ido4NNuE6OMfLR8wk+kLgKNquYOYH0=;
+	s=default; t=1568787992;
+	bh=YMHAW1um3kPGkQPFDMT9+zWRXA3Plklg/FXqtu4qDWA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cFrljA/mTvpQKYfam+KAqav5d55S4M+xY/RGE8bZ3lix8IBNN3+7sM1JEmb1dcwWP
-	 oap6y0r76KGoIs17xmP2l/WVQlLisibEDmW8bRubdsMmsxIH8gMoy140SeSODQyZ51
-	 VfSZ3Onzk97k2GNhc98dv9W9IhVdmo2o5cBo4djU=
+	b=l98W79wNrySk7rrZg252Mu35/jWaoXW7PiOtLiLM9zXTgFVKey+7hhyIwZMg8H+oq
+	 Vl8tZdhb5Fdm55T0qqKOmvhmdF36yW6FENO0f/bOS0FYs+N4iq/h9ggBQ0pKo+uecH
+	 qQ5mzB8bYiG37YUyVKX/m2agheospd1e3gcldtY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbfIRG01 (ORCPT
+        id S1728926AbfIRG0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47790 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbfIRG0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:23 -0400
+        id S1728781AbfIRG0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 236F3218AF;
-        Wed, 18 Sep 2019 06:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3A0321924;
+        Wed, 18 Sep 2019 06:26:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787982;
-        bh=2Rhxi2ltz1jn8ido4NNuE6OMfLR8wk+kLgKNquYOYH0=;
+        s=default; t=1568787985;
+        bh=YMHAW1um3kPGkQPFDMT9+zWRXA3Plklg/FXqtu4qDWA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAKuEauRprcy26jykmIRlSbm4QW910voQiE724STMuGyHdwjrIBZwiJRpyiTCmfh8
-         H+A/GIn1yxKrMaV0hhuihwTVbyC8RUVqHC+H1s0mrZYYDWL2eWkx4coF9GxMLz8CO1
-         kQ52BsT+a/W+MQynVt137pkrgH8RgU4JTTZfuegg=
+        b=davbHvmnaORL06STAhsDH40K0l54gJb1KiT8Q9YOfFwlIyFhc/Hy0NnGLQndZHaJY
+         FwfXZ7Rh9t54fvMBvTYJlkLeeP91oXJnGUnYBkFIS8FD9xawP4OR/dYyWZnf13n/Jr
+         jFDrK3Nt8ntvlIKLhMz+ydFh+mvKAwYRrUF6hBvc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Felix Fietkau <nbd@nbd.name>
-Subject: [PATCH 5.2 57/85] mt76: mt7615: Use after free in mt7615_mcu_set_bcn()
-Date:   Wed, 18 Sep 2019 08:19:15 +0200
-Message-Id: <20190918061235.909909051@linuxfoundation.org>
+        stable@vger.kernel.org, Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.2 40/85] mt76: mt76x0e: disable 5GHz band for MT7630E
+Date:   Wed, 18 Sep 2019 08:18:58 +0200
+Message-Id: <20190918061235.404229511@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,44 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Stanislaw Gruszka <sgruszka@redhat.com>
 
-commit 9db1aec0c2d72a3b7b115ba56e8dbb5b46855333 upstream.
+commit 70702265a04aa0ce5a7bde77d13456209992b32f upstream.
 
-We dereference "skb" when we assign:
+MT7630E hardware does support 5GHz, but we do not properly configure phy
+for 5GHz channels. Scanning at this band not only do not show any APs
+but also can hang the firmware.
 
-	req.pkt_len = cpu_to_le16(MT_TXD_SIZE + skb->len);
-                                                ^^^^^^^^
-So this patch just moves the dev_kfree_skb() down a bit to avoid the
-use after free.
+Since vendor reference driver do not support 5GHz we don't know how
+properly configure 5GHz channels. So disable this band for MT7630E .
 
-Fixes: 04b8e65922f6 ("mt76: add mac80211 driver for MT7615 PCIe-based chipsets")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: Felix Fietkau <nbd@nbd.name>
+Cc: stable@vger.kernel.org
+Signed-off-by: Stanislaw Gruszka <sgruszka@redhat.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mediatek/mt76/mt7615/mcu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
-@@ -1270,7 +1270,6 @@ int mt7615_mcu_set_bcn(struct mt7615_dev
- 	mt7615_mac_write_txwi(dev, (__le32 *)(req.pkt), skb, wcid, NULL,
- 			      0, NULL);
- 	memcpy(req.pkt + MT_TXD_SIZE, skb->data, skb->len);
--	dev_kfree_skb(skb);
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/eeprom.c
+@@ -59,6 +59,11 @@ static void mt76x0_set_chip_cap(struct m
+ 		dev_dbg(dev->mt76.dev, "mask out 2GHz support\n");
+ 	}
  
- 	req.omac_idx = mvif->omac_idx;
- 	req.enable = en;
-@@ -1281,6 +1280,7 @@ int mt7615_mcu_set_bcn(struct mt7615_dev
- 	req.pkt_len = cpu_to_le16(MT_TXD_SIZE + skb->len);
- 	req.tim_ie_pos = cpu_to_le16(MT_TXD_SIZE + tim_off);
++	if (is_mt7630(dev)) {
++		dev->mt76.cap.has_5ghz = false;
++		dev_dbg(dev->mt76.dev, "mask out 5GHz support\n");
++	}
++
+ 	if (!mt76x02_field_valid(nic_conf1 & 0xff))
+ 		nic_conf1 &= 0xff00;
  
-+	dev_kfree_skb(skb);
- 	skb = mt7615_mcu_msg_alloc(&req, sizeof(req));
- 
- 	return mt7615_mcu_msg_send(dev, skb, MCU_EXT_CMD_BCN_OFFLOAD,
 
 
