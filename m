@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BD8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE3E8218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE1721925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787639;
-	bh=Z80W4BwS0WZgyYd2/w06g/vN6qTi8Oy8NeveaXoQSZ8=;
+	s=default; t=1568787644;
+	bh=xItjJk21um48QSG8Cuzllh+TXH0xwu64qQfvRLOtT4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mi+f1257Vdmsd+JaTMGAr3lFl88ax0yMYcOkS8IGBMUcY6UdY36G/OdNxS7P/TQax
-	 CHYOzfcepbeVDGZ9h/AhEap6nQ6rJqPn/XWXhc2aik/9lBpDh9KeVCg//UTXXl7laX
-	 7RYjMNt9/yn01TiEXOmvZw2xPkKu0KUhO+2EDQOQ=
+	b=znjkIHEr4nrM0W1KjRlGiYpHCrfB5OqY0kx3vUUem8KncKtSSCQTIj1tUb0sgmU4V
+	 hoAU6GCSgb5y8DOge00/RrnOuWWKl5sP8Am3tSXM190jY7p/kkD8U3C6tC9OJt+JMR
+	 PcjQxlhKRl0MGqTcyuU6JxufXWa3sGcZxnFEJECQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728554AbfIRGUi (ORCPT
+        id S1728772AbfIRGUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39436 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728440AbfIRGUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:33 -0400
+        id S1728502AbfIRGUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9316E21928;
-        Wed, 18 Sep 2019 06:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37AE921927;
+        Wed, 18 Sep 2019 06:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787633;
-        bh=Z80W4BwS0WZgyYd2/w06g/vN6qTi8Oy8NeveaXoQSZ8=;
+        s=default; t=1568787635;
+        bh=xItjJk21um48QSG8Cuzllh+TXH0xwu64qQfvRLOtT4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfUa+zofCd3GchakDvI8e16foymsrvOJYKbWbxNcpW0OrZCpc+FgfBusfThvxtEtG
-         B7whcd0QyAQm9/X8teXRHZRpcFT1QkzC14lGEEQtJJk96pvTLLyFH9+DOr/LCid2lm
-         D48LC+iopVTmREtoeXxMe/sduM/RReamsi2JHUFI=
+        b=tb3nDnVIMBYKctZhhz2bby7Xn/je9N2lBhdvOF8HuWHGt4Y8E/uOZGvr1VYTpe5PS
+         ZmCCaABOCRd2Op37slk0LecptrUU61qh4KVwqlqeDQEULYKZkdj6zq9NhEkLExWb1+
+         d6eTz48ZUdHb003z0j2ypMz/Mk84ilQumP4vxCv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH 4.14 21/45] genirq: Prevent NULL pointer dereference in resend_irqs()
-Date:   Wed, 18 Sep 2019 08:18:59 +0200
-Message-Id: <20190918061225.239795165@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: [PATCH 4.14 22/45] KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
+Date:   Wed, 18 Sep 2019 08:19:00 +0200
+Message-Id: <20190918061225.314367870@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -60,76 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Thomas Huth <thuth@redhat.com>
 
-commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
+commit 53936b5bf35e140ae27e4bbf0447a61063f400da upstream.
 
-The following crash was observed:
+When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
+an interrupt, we convert them from the legacy struct kvm_s390_interrupt
+to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
+However, this function does not take care of all types of interrupts
+that we can inject into the guest later (see do_inject_vcpu()). Since we
+do not clear out the s390irq values before calling s390int_to_s390irq(),
+there is a chance that we copy random data from the kernel stack which
+could be leaked to the userspace later.
 
-  Unable to handle kernel NULL pointer dereference at 0000000000000158
-  Internal error: Oops: 96000004 [#1] SMP
-  pc : resend_irqs+0x68/0xb0
-  lr : resend_irqs+0x64/0xb0
-  ...
-  Call trace:
-   resend_irqs+0x68/0xb0
-   tasklet_action_common.isra.6+0x84/0x138
-   tasklet_action+0x2c/0x38
-   __do_softirq+0x120/0x324
-   run_ksoftirqd+0x44/0x60
-   smpboot_thread_fn+0x1ac/0x1e8
-   kthread+0x134/0x138
-   ret_from_fork+0x10/0x18
+Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
+interrupt: s390int_to_s390irq() does not handle it, and the function
+__inject_pfault_init() later copies irq->u.ext which contains the
+random kernel stack data. This data can then be leaked either to
+the guest memory in __deliver_pfault_init(), or the userspace might
+retrieve it directly with the KVM_S390_GET_IRQ_STATE ioctl.
 
-The reason for this is that the interrupt resend mechanism happens in soft
-interrupt context, which is a asynchronous mechanism versus other
-operations on interrupts. free_irq() does not take resend handling into
-account. Thus, the irq descriptor might be already freed before the resend
-tasklet is executed. resend_irqs() does not check the return value of the
-interrupt descriptor lookup and derefences the return value
-unconditionally.
+Fix it by handling that interrupt type in s390int_to_s390irq(), too,
+and by making sure that the s390irq struct is properly pre-initialized.
+And while we're at it, make sure that s390int_to_s390irq() now
+directly returns -EINVAL for unknown interrupt types, so that we
+immediately get a proper error code in case we add more interrupt
+types to do_inject_vcpu() without updating s390int_to_s390irq()
+sometime in the future.
 
-  1):
-  __setup_irq
-    irq_startup
-      check_irq_resend  // activate softirq to handle resend irq
-  2):
-  irq_domain_free_irqs
-    irq_free_descs
-      free_desc
-        call_rcu(&desc->rcu, delayed_free_desc)
-  3):
-  __do_softirq
-    tasklet_action
-      resend_irqs
-        desc = irq_to_desc(irq)
-        desc->handle_irq(desc)  // desc is NULL --> Ooops
-
-Fix this by adding a NULL pointer check in resend_irqs() before derefencing
-the irq descriptor.
-
-Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+Link: https://lore.kernel.org/kvm/20190912115438.25761-1-thuth@redhat.com
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/resend.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/s390/kvm/interrupt.c |   10 ++++++++++
+ arch/s390/kvm/kvm-s390.c  |    2 +-
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/resend.c
-+++ b/kernel/irq/resend.c
-@@ -38,6 +38,8 @@ static void resend_irqs(unsigned long ar
- 		irq = find_first_bit(irqs_resend, nr_irqs);
- 		clear_bit(irq, irqs_resend);
- 		desc = irq_to_desc(irq);
-+		if (!desc)
-+			continue;
- 		local_irq_disable();
- 		desc->handle_irq(desc);
- 		local_irq_enable();
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -1701,6 +1701,16 @@ int s390int_to_s390irq(struct kvm_s390_i
+ 	case KVM_S390_MCHK:
+ 		irq->u.mchk.mcic = s390int->parm64;
+ 		break;
++	case KVM_S390_INT_PFAULT_INIT:
++		irq->u.ext.ext_params = s390int->parm;
++		irq->u.ext.ext_params2 = s390int->parm64;
++		break;
++	case KVM_S390_RESTART:
++	case KVM_S390_INT_CLOCK_COMP:
++	case KVM_S390_INT_CPU_TIMER:
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 	return 0;
+ }
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3730,7 +3730,7 @@ long kvm_arch_vcpu_ioctl(struct file *fi
+ 	}
+ 	case KVM_S390_INTERRUPT: {
+ 		struct kvm_s390_interrupt s390int;
+-		struct kvm_s390_irq s390irq;
++		struct kvm_s390_irq s390irq = {};
+ 
+ 		r = -EFAULT;
+ 		if (copy_from_user(&s390int, argp, sizeof(s390int)))
 
 
