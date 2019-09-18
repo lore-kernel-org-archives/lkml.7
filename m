@@ -2,173 +2,173 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D480DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96CF6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9CF21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B623205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:05:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NiK+MLka"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9PsKe2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfIRLEc (ORCPT
+        id S1729419AbfIRLFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:04:32 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35109 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728204AbfIRLEb (ORCPT
+        Wed, 18 Sep 2019 07:05:25 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47058 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728103AbfIRLFZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:04:31 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 205so4204334pfw.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:04:30 -0700 (PDT)
+        Wed, 18 Sep 2019 07:05:25 -0400
+Received: by mail-lj1-f193.google.com with SMTP id e17so6705900ljf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:05:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oSDsY/hDm2eeYEnq9WTa9wXPHp0ZxF/gk9i7RQwPo3g=;
-        b=NiK+MLkaMkniiMcmS86T3kt+8oQbT16PG8Q90AyR+2mPy/omovQc1hSJ+vwDJgaBiX
-         oVav6do24xQQ5hQxLaZFtOazYcByGF3qYemyfsUtySy4V3Hmeq/agngv9HWfas62s6En
-         4MAIDY5jX7eYGuTyetX+jR6wbBtgRUup+ClfT0iaXl4ELRGaKIMtuffafuFJOkcXEAz9
-         XUuFWwJZEoXmzPEqKEiQ6wDSKkVUekPtFmQAJ0uV8H0wOG5u/R7fww907Aa5jl/Wd3hT
-         6ouQoA58hep+orkHOdq1dQ9QvrbUd7+fQFXlsXLoonVjLS8WycjAX24w73ey/1r6Mrxz
-         vupQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JNIOOCl1FIlLK8OEQrCWm+4MRTLInoFaM8HwgPYRrSI=;
+        b=x9PsKe2lWSxm5YFoGrE7b1TTrtwP4ymR5aHH9sHEKViQA3aCR2IMzJ2aBGzYvIdJ17
+         OtiILmKAN0rwR0GwJFAJy5PwRZwXAemG0uob3Zz1kWZLO8HzXikGDYheeGh9XwMxZS/d
+         1zxWeZ4SDo0Y2AqIc/XMLu1xhSXcxP0qU0RdRalMXVHAiRHTuoqsaB4EXKrhfagz9qyc
+         6yeAvnu4eEoRjkGR1NbBOc+2f31Lbpk3CrBYvLHmDs9uFCPkcSXTh/ZzzcNQ3BXng9gA
+         GaCTr+J1gFHg2F27Zy0MkLOEU7YoJ3XFLbNPSeyu15FWT50wATdLXZbv7LCG/gCEx7Dv
+         AAaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oSDsY/hDm2eeYEnq9WTa9wXPHp0ZxF/gk9i7RQwPo3g=;
-        b=VrDPHBEmQpoMNYv/qPybG+90EbqNDPHLIdmNj9JQggEHFA5wv9D3kmBxpU4EBUMtJx
-         LYrjDxqQyziyUNgAKHbDcmLkuIt3W143F16UlhD8eHsuamKeUVeAoTnK6pZlBoUOdJMN
-         Q6gqzBD5SY43k992p1C/I19cswQvTPMnXGrAVdba0ZGJ9Foa487g5T7Gr+q3iBBKGUzV
-         KcN/WoiIQTvc/2jxclOaKgqMTGr7V7AOcPAmQSZ26QeOz1CKfLBh+9XRiani7uy1iTM2
-         OcuwfjikZEF7PVRoI+cAVUxFG25K1jytE+CqFP27BhQ7NpnJNcDsc3GPBCtHWK4YA2FQ
-         z7iw==
-X-Gm-Message-State: APjAAAVu3pj+1MD0ZUjGLyVlrEPEija90OVRBFDOtfA/6oiWHAMXenC6
-        ETCMhjRPCJWYC4s5xWqNZ/cdi/05RX95ZeB9wk4qyA==
-X-Google-Smtp-Source: APXvYqxfkV9EERZ0pfDrC6A7v4+K7jWGyBCkUR+CMb+w5uGlu3/Gqyg3ntbKCMmM+RZc3cAsVQbfEjsBxL2fmasjsTA=
-X-Received: by 2002:aa7:8bcc:: with SMTP id s12mr3451353pfd.93.1568804670111;
- Wed, 18 Sep 2019 04:04:30 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=JNIOOCl1FIlLK8OEQrCWm+4MRTLInoFaM8HwgPYRrSI=;
+        b=lsLYNB6qd51rceNG5jGW/IYahBQonNmmjh0U0B1BHLdX9M6JwvmQWcxYYmBPHaLd+x
+         s2N4REGXNL4ugO83RWWOHLyq5hroCYUKdzjF+TVGQXJvmtBJFsbyKH9wX8moSVzDUPJI
+         zKqWwJhxGRzSD4JFPGk5AOlIP3X7j868oAwl+kW+gR/Jxi7eDHIUr9CBmBw3RINw4a+Q
+         +CbSP6kci5hgB/ezgzXg3SSunf4usT9cz0j+TbpKTmiTfzV001vK2phR+5P1aHLNRcgU
+         w5/57083nZtw7SzjB6H9b62cY19twmRzIAvaCh/jnwR64RNdl/pLHAMAR6fYxatx5Oz0
+         tGvQ==
+X-Gm-Message-State: APjAAAVZTxBVSZm+vH63sYDRnYWNzDHxckaFUgmOjDvABgSYXi0TakAB
+        AiQx2qG9+gNidN9KVro4XgT6QA==
+X-Google-Smtp-Source: APXvYqwhzGaNYWRfqqbacjV8ivacocjE8Zel8keZadSmB9WJFdU54IEBfsuyRvZlrIEaM1mB7lZcrg==
+X-Received: by 2002:a2e:9ac4:: with SMTP id p4mr1793545ljj.206.1568804721863;
+        Wed, 18 Sep 2019 04:05:21 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id s7sm959288ljs.16.2019.09.18.04.05.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Sep 2019 04:05:20 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 14:05:18 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 11/14] libbpf: makefile: add C/CXX/LDFLAGS to
+ libbpf.so and test_libpf targets
+Message-ID: <20190918110517.GD2908@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-12-ivan.khoronzhuk@linaro.org>
+ <CAEf4BzZXNN_dhs=jUjtfCqtuV1bk9H=q5b07kVDQQsysjhF4cQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <00000000000044408c0592b00ff5@google.com> <CAJZ5v0j5-Jg8Wi_hEfM3DhzmY3sEwmrFjC2bTjyGgZ2afOKBEQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0j5-Jg8Wi_hEfM3DhzmY3sEwmrFjC2bTjyGgZ2afOKBEQ@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 18 Sep 2019 13:04:18 +0200
-Message-ID: <CAAeHK+xrFhG=Lirn_hPboH98EFCToyD0cWMJqRmAewgDLUo_6A@mail.gmail.com>
-Subject: Re: KASAN: global-out-of-bounds Read in __pm_runtime_resume
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     syzbot <syzbot+cd157359d82e8d98c17b@syzkaller.appspotmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" 
-        <linux-usb@vger.kernel.org>, Pavel Machek <pavel@ucw.cz>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4BzZXNN_dhs=jUjtfCqtuV1bk9H=q5b07kVDQQsysjhF4cQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 11:44 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+On Tue, Sep 17, 2019 at 10:19:22PM -0700, Andrii Nakryiko wrote:
+>On Mon, Sep 16, 2019 at 4:00 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> In case of LDFLAGS and EXTRA_CC/CXX flags there is no way to pass them
+>> correctly to build command, for instance when --sysroot is used or
+>> external libraries are used, like -lelf, wich can be absent in
+>> toolchain. This can be used for samples/bpf cross-compiling allowing
+>> to get elf lib from sysroot.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  tools/lib/bpf/Makefile | 11 ++++++++---
+>>  1 file changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+>> index c6f94cffe06e..bccfa556ef4e 100644
+>> --- a/tools/lib/bpf/Makefile
+>> +++ b/tools/lib/bpf/Makefile
+>> @@ -94,6 +94,10 @@ else
+>>    CFLAGS := -g -Wall
+>>  endif
+>>
+>> +ifdef EXTRA_CXXFLAGS
+>> +  CXXFLAGS := $(EXTRA_CXXFLAGS)
+>> +endif
+>> +
+>>  ifeq ($(feature-libelf-mmap), 1)
+>>    override CFLAGS += -DHAVE_LIBELF_MMAP_SUPPORT
+>>  endif
+>> @@ -176,8 +180,9 @@ $(BPF_IN): force elfdep bpfdep
+>>  $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
+>>
+>>  $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
+>> -       $(QUIET_LINK)$(CC) --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+>> -                                   -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
+>> +       $(QUIET_LINK)$(CC) $(LDFLAGS) \
+>> +               --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
+>> +               -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
+>>         @ln -sf $(@F) $(OUTPUT)libbpf.so
+>>         @ln -sf $(@F) $(OUTPUT)libbpf.so.$(LIBBPF_MAJOR_VERSION)
+>>
+>> @@ -185,7 +190,7 @@ $(OUTPUT)libbpf.a: $(BPF_IN)
+>>         $(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
+>>
+>>  $(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
+>> -       $(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
+>> +       $(QUIET_LINK)$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^ -lelf -o $@
 >
-> On Mon, Sep 16, 2019 at 8:49 PM syzbot
-> <syzbot+cd157359d82e8d98c17b@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f0df5c1b usb-fuzzer: main usb gadget fuzzer driver
-> > git tree:       https://github.com/google/kasan.git usb-fuzzer
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=10efb5fa600000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c6633fa4ed00be5
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=cd157359d82e8d98c17b
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+cd157359d82e8d98c17b@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KASAN: global-out-of-bounds in __pm_runtime_resume+0x162/0x180
-> > drivers/base/power/runtime.c:1069
->
-> This means that the caller of __pm_runtime_resume() did something odd.
->
-> > Read of size 1 at addr ffffffff863d87b1 by task syz-executor.2/13622
-> >
-> > CPU: 0 PID: 13622 Comm: syz-executor.2 Not tainted 5.3.0-rc7+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xca/0x13e lib/dump_stack.c:113
-> >   print_address_description+0x6a/0x32c mm/kasan/report.c:351
-> >   __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:482
-> >   kasan_report+0xe/0x12 mm/kasan/common.c:618
-> >   __pm_runtime_resume+0x162/0x180 drivers/base/power/runtime.c:1069
-> >   pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
-> >   usb_autopm_get_interface+0x1b/0x50 drivers/usb/core/driver.c:1709
-> >   usbhid_power+0x7c/0xe0 drivers/hid/usbhid/hid-core.c:1234
->
-> In this particular case usbhid_power() probably shouldn't have called
-> pm_runtime_get_sync() or it shouldn't have been called itself or
-> similar.
+>Instead of doing ifdef EXTRA_CXXFLAGS bit above, you can just include
+>both $(CXXFLAGS) and $(EXTRA_CXXFLAGS), which will do the right thing
+>(and is actually recommended my make documentation way to do this).
+It's good practice to follow existent style, I've done similar way as for
+CFLAGS + EXTRACFLAGS here, didn't want to verify it can impact on
+smth else. And my goal is not to correct everything but embed my
+functionality, series tool large w/o it.
 
-Hi Rafael,
-
-This report is caused by a major memory corruption that can lead to
-all kinds of weird things. Let's wait for the fix to be in the
-mainline and then see if these bugs are still occurring.
-
-Thanks!
+>
+>But actually, there is no need to use C++ compiler here,
+>test_libbpf.cpp can just be plain C. Do you mind renaming it to .c and
+>using C compiler instead?
+Seems like, will try in next v.
 
 >
-> >   hid_hw_power include/linux/hid.h:1038 [inline]
-> >   hidraw_open+0x20d/0x740 drivers/hid/hidraw.c:282
-> >   chrdev_open+0x219/0x5c0 fs/char_dev.c:414
-> >   do_dentry_open+0x494/0x1120 fs/open.c:797
-> >   do_last fs/namei.c:3416 [inline]
-> >   path_openat+0x1430/0x3f50 fs/namei.c:3533
-> >   do_filp_open+0x1a1/0x280 fs/namei.c:3563
-> >   do_sys_open+0x3c0/0x580 fs/open.c:1089
-> >   do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:296
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x4137d1
-> > Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 19 00 00 c3 48
-> > 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f 05 <48> 8b 3c 24 48
-> > 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d 01
-> > RSP: 002b:00007faea59927a0 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-> > RAX: ffffffffffffffda RBX: 6666666666666667 RCX: 00000000004137d1
-> > RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007faea5992850
-> > RBP: 000000000075bf20 R08: 000000000000000f R09: 0000000000000000
-> > R10: 0000000000000000 R11: 0000000000000293 R12: 00007faea59936d4
-> > R13: 00000000004c8cbf R14: 00000000004dfc90 R15: 00000000ffffffff
-> >
-> > The buggy address belongs to the variable:
-> >   __param_str_xfer_debug+0x91/0x4a0
-> >
-> > Memory state around the buggy address:
-> >   ffffffff863d8680: fa fa fa fa 00 00 00 02 fa fa fa fa 00 00 00 00
-> >   ffffffff863d8700: fa fa fa fa 00 00 00 02 fa fa fa fa 00 07 fa fa
-> > > ffffffff863d8780: fa fa fa fa 00 00 fa fa fa fa fa fa 00 00 07 fa
-> >                                       ^
-> >   ffffffff863d8800: fa fa fa fa 00 00 00 00 00 00 fa fa fa fa fa fa
-> >   ffffffff863d8880: 00 07 fa fa fa fa fa fa 00 00 06 fa fa fa fa fa
-> > ==================================================================
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>>
+>>  $(OUTPUT)libbpf.pc:
+>>         $(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
+>> --
+>> 2.17.1
+>>
+
+-- 
+Regards,
+Ivan Khoronzhuk
