@@ -2,144 +2,244 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D3AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76771C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513B121848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3679C21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SYD1i/89"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="nSSdgw+6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfIRPkI (ORCPT
+        id S1731716AbfIRPmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:40:08 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37102 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727609AbfIRPkI (ORCPT
+        Wed, 18 Sep 2019 11:42:08 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34673 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728896AbfIRPmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:40:08 -0400
-Received: by mail-lj1-f195.google.com with SMTP id l21so408452lje.4;
-        Wed, 18 Sep 2019 08:40:06 -0700 (PDT)
+        Wed, 18 Sep 2019 11:42:08 -0400
+Received: by mail-qk1-f193.google.com with SMTP id q203so8536755qke.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:42:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7XkoLICcoVg3xNydqf6sD/sVuORqqcpyFXgJUDYstHs=;
-        b=SYD1i/894hBQ4pSRvbwodu1FTgcGr8PyJR0IX1MX28JW0UTLHS67zDoCfWFi/CnCnu
-         WRfSo4eN4rHJLtS1KExCqQXC9IwgXJXNB+Nwn/x7cquWzqLgVR15a06LchJEtzcQ/lWh
-         s1pFHqX8dXXqVKgpMCdjMJFdeHaSUbeJ4HbBZ4EnzthjcEZU78+8O4Ap/bfp3hsvLdj3
-         QSZd20AHPM9K0NQpF19s+p8yZFynPwWed7W18DJINz7KHWxFTt8CNmWKdDJDRsx/AXM2
-         gecObI4YJ+dnpMu7LtYYghR/cWN91Lsfw58ms6QXgSZK5VaLcwrrvdHoZna2u+9VSi2m
-         rEKA==
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MxoYLfyiBUzPhqlCM4w4PwBwFKu/jtqQR2cCGb9YBT4=;
+        b=nSSdgw+6FYaaStUyX2sA8rUkMZXoeQQ1Bhj98GeF7Gz7fo9nVGjBG+6KdBsfdcv5RB
+         A34NyTjV5lYd/E//bk1eHCio4Y9+zd6V8vjqmhVzMVJgvx+ByAf2yrCUZtwkU8cOZgXO
+         aMU83MmPolqXpB6/osYDW0cz5mf0aYSufpWrYJmFXoPR9+ZRrRozpVBP94KeBGHhpu20
+         WN0SVFkgwuSDTkpCTSVtl3ieYTtGqEDj+JZHhWqnMrlilD7DCh1zsb5vtBGzIL/Vjr8H
+         C17TB7sqDGFLObwXy71/6DeZR9PMN1q3y/MX/0MsB919oVmtLH6WRPbyq2ZWD9zCDc2D
+         Spaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7XkoLICcoVg3xNydqf6sD/sVuORqqcpyFXgJUDYstHs=;
-        b=DST3WSMwbQ8EIcB1MUQWXUwXj1LyfATaiVYmokjGWaev52vmRv8QcHzmScY2wrrRW7
-         wXrHzuTaSD0inz/xefcKpci10vM62dxe4FfbvEqJEURr545MgMNyaoNXG38g4qz351yV
-         izz5DVHX5wCYOxx07xghmKRa55jrZuMj2ElnMDf3ur7psW1a5Zy5pPR/cF25K7gaMk1Y
-         vfCXKXy2qwNnFhvqSIIzaI4CMGBxSt6x4ax3YMx77imVMptlbDUkut4tU1h7n9HAje8W
-         E6DFozriPKsI7LWfkq4Pqk8VK5vz4R0VS5aN3PQczTBBRj9PCEq9mHCZRMfBf6GBkUId
-         v6aA==
-X-Gm-Message-State: APjAAAUi5hA1Vx+pcGHPVLHRohCwwAGs+7nYClrIt5rWsLL7maZ4+Ozu
-        YldQ1fKFCo3Q2dJ575O6vOU=
-X-Google-Smtp-Source: APXvYqyQO8EqyJhUu47Su+eqj4a08VUFUdk2tFTIYsVOzXynUhSOGpqk975Yqz6jFFBklHjjg7Hdow==
-X-Received: by 2002:a2e:b1d0:: with SMTP id e16mr2715998lja.0.1568821205917;
-        Wed, 18 Sep 2019 08:40:05 -0700 (PDT)
-Received: from localhost.localdomain (t109.niisi.ras.ru. [193.232.173.109])
-        by smtp.gmail.com with ESMTPSA id q1sm1063390lfb.30.2019.09.18.08.40.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 08:40:05 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 18:40:03 +0300
-From:   Peter Mamonov <pmamonov@gmail.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] net/phy: fix DP83865 10 Mbps HDX loopback disable
- function
-Message-ID: <20190918154003.GB2493@localhost.localdomain>
-References: <20190918141931.GK9591@lunn.ch>
- <20190918144825.23285-1-pmamonov@gmail.com>
- <20190918152646.GL9591@lunn.ch>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918152646.GL9591@lunn.ch>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MxoYLfyiBUzPhqlCM4w4PwBwFKu/jtqQR2cCGb9YBT4=;
+        b=nDyRxBLGNg6gXrUOja96HPt0p+JipBSoI6BNNqAJF9t84ZszXLSVfKiMFl41gYJizT
+         uy5rdQmE58zofj1KUhyzbmWJMzdgNljY/sxqdpRMmqqp/d/xSmK2rWZkybmB38yk4Qng
+         Dn0QIYlCMCqszw7n29ZtMKsx006GCHCSTMqU0zrM7R8MJJzibSy8atSKvUBDBoGdtxoz
+         h+X5tu0lVHYjzmhy57PPgGgS4ciQ9fVUk9Hc0yLyTUduDodnaDHhOTBdjBNfQEMTAzjI
+         FjNKjHIR6laI3rgyI5b/KK11q1csWTU8jmOeu2/RzeUULI9Zn5JUw+wh2/8PggS97PFn
+         BS7w==
+X-Gm-Message-State: APjAAAXAqjyKwIBpH44gOGPb5A2xbVG6wEqKh8G0sPzTizRfS29e38oJ
+        Jw9TMnudfwTkHuOLHD6UHtcO2Kth0zg=
+X-Google-Smtp-Source: APXvYqwRPQBIvBID8wxxk+kHKEOudHk1TuWjSNq51em4yTV73znC4lOPaseqqlTF0JNOe7fXWkP9Tw==
+X-Received: by 2002:a37:67c6:: with SMTP id b189mr4597177qkc.472.1568821326580;
+        Wed, 18 Sep 2019 08:42:06 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id n65sm2937218qkb.19.2019.09.18.08.42.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 08:42:05 -0700 (PDT)
+Message-ID: <1568821324.5576.174.camel@lca.pw>
+Subject: Re: [PATCH v4] powerpc/setup_64: fix -Wempty-body warnings
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au
+Cc:     paulus@samba.org, benh@kernel.crashing.org,
+        tyreld@linux.vnet.ibm.com, joe@perches.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Date:   Wed, 18 Sep 2019 11:42:04 -0400
+In-Reply-To: <1563215552-8166-1-git-send-email-cai@lca.pw>
+References: <1563215552-8166-1-git-send-email-cai@lca.pw>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+Michael, ping in case that you might forget this one forever as well.
 
-On Wed, Sep 18, 2019 at 05:26:46PM +0200, Andrew Lunn wrote:
-> On Wed, Sep 18, 2019 at 05:48:25PM +0300, Peter Mamonov wrote:
-> > According to the DP83865 datasheet "The 10 Mbps HDX loopback can be
-> > disabled in the expanded memory register 0x1C0.1." The driver erroneously
-> > used bit 0 instead of bit 1.
+On Mon, 2019-07-15 at 14:32 -0400, Qian Cai wrote:
+> At the beginning of setup_64.c, it has,
 > 
-> Hi Peter
+>   #ifdef DEBUG
+>   #define DBG(fmt...) udbg_printf(fmt)
+>   #else
+>   #define DBG(fmt...)
+>   #endif
 > 
-> This is version 2, not 1. Or if you want to start counting from 0, it
-> would be good to put v0 in your first patch :-)
+> where DBG() could be compiled away, and generate warnings,
 > 
-> It is also normal to put in the commit message what changed from the
-> previous version.
+> arch/powerpc/kernel/setup_64.c: In function 'initialize_cache_info':
+> arch/powerpc/kernel/setup_64.c:579:49: warning: suggest braces around
+> empty body in an 'if' statement [-Wempty-body]
+>     DBG("Argh, can't find dcache properties !\n");
+>                                                  ^
+> arch/powerpc/kernel/setup_64.c:582:49: warning: suggest braces around
+> empty body in an 'if' statement [-Wempty-body]
+>     DBG("Argh, can't find icache properties !\n");
 > 
-> This is a fix. So please add a Fixes: tag, with the hash of the commit
-> which introduced the problem.
+> Fix it by using the suggestions from Michael:
 > 
-> And since this is a fix, it should be against DaveM net tree, and you
-> indicate this in the subject line with [PATCH net v3].
-
-Thanks for the tips! Will submit new version soon.
-
-Regards,
-Peter
-
+> "Neither of those sites should use DBG(), that's not really early boot
+> code, they should just use pr_warn().
 > 
-> Thanks
-> 	Andrew
+> And the other uses of DBG() in initialize_cache_info() should just be
+> removed.
 > 
-> > 
-> > Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
-> > ---
-> >  drivers/net/phy/national.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-> > index 2addf1d3f619..3aa910b3dc89 100644
-> > --- a/drivers/net/phy/national.c
-> > +++ b/drivers/net/phy/national.c
-> > @@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
-> >  
-> >  static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
-> >  {
-> > +	u16 lb_dis = BIT(1);
-> > +
-> >  	if (disable)
-> > -		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-> > +		ns_exp_write(phydev, 0x1c0,
-> > +			     ns_exp_read(phydev, 0x1c0) | lb_dis);
-> >  	else
-> >  		ns_exp_write(phydev, 0x1c0,
-> > -			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-> > +			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
-> >  
-> >  	pr_debug("10BASE-T HDX loopback %s\n",
-> > -		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-> > +		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
-> >  }
-> >  
-> >  static int ns_config_init(struct phy_device *phydev)
-> > -- 
-> > 2.23.0
-> > 
+> In smp_release_cpus() the entry/exit DBG's should just be removed, and
+> the spinning_secondaries line should just be pr_debug().
+> 
+> That would just leave the two calls in early_setup(). If we taught
+> udbg_printf() to return early when udbg_putc is NULL, then we could just
+> call udbg_printf() unconditionally and get rid of the DBG macro
+> entirely."
+> 
+> Suggested-by: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v4: Use the suggestions from Michael and __func__ per checkpatch.
+> v3: Use no_printk() macro, and make sure that format and argument are always
+>     verified by the compiler using a more generic form ##__VA_ARGS__ per Joe.
+> v2: Fix it by using a NOP while loop per Tyrel.
+> 
+>  arch/powerpc/kernel/setup_64.c | 26 ++++++--------------------
+>  arch/powerpc/kernel/udbg.c     | 14 ++++++++------
+>  2 files changed, 14 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
+> index 44b4c432a273..d2af4c228970 100644
+> --- a/arch/powerpc/kernel/setup_64.c
+> +++ b/arch/powerpc/kernel/setup_64.c
+> @@ -68,12 +68,6 @@
+>  
+>  #include "setup.h"
+>  
+> -#ifdef DEBUG
+> -#define DBG(fmt...) udbg_printf(fmt)
+> -#else
+> -#define DBG(fmt...)
+> -#endif
+> -
+>  int spinning_secondaries;
+>  u64 ppc64_pft_size;
+>  
+> @@ -305,7 +299,7 @@ void __init early_setup(unsigned long dt_ptr)
+>  	/* Enable early debugging if any specified (see udbg.h) */
+>  	udbg_early_init();
+>  
+> - 	DBG(" -> early_setup(), dt_ptr: 0x%lx\n", dt_ptr);
+> +	udbg_printf(" -> %s(), dt_ptr: 0x%lx\n", __func__, dt_ptr);
+>  
+>  	/*
+>  	 * Do early initialization using the flattened device
+> @@ -362,11 +356,11 @@ void __init early_setup(unsigned long dt_ptr)
+>  	 */
+>  	this_cpu_enable_ftrace();
+>  
+> -	DBG(" <- early_setup()\n");
+> +	udbg_printf(" <- %s()\n", __func__);
+>  
+>  #ifdef CONFIG_PPC_EARLY_DEBUG_BOOTX
+>  	/*
+> -	 * This needs to be done *last* (after the above DBG() even)
+> +	 * This needs to be done *last* (after the above udbg_printf() even)
+>  	 *
+>  	 * Right after we return from this function, we turn on the MMU
+>  	 * which means the real-mode access trick that btext does will
+> @@ -436,8 +430,6 @@ void smp_release_cpus(void)
+>  	if (!use_spinloop())
+>  		return;
+>  
+> -	DBG(" -> smp_release_cpus()\n");
+> -
+>  	/* All secondary cpus are spinning on a common spinloop, release them
+>  	 * all now so they can start to spin on their individual paca
+>  	 * spinloops. For non SMP kernels, the secondary cpus never get out
+> @@ -456,9 +448,7 @@ void smp_release_cpus(void)
+>  			break;
+>  		udelay(1);
+>  	}
+> -	DBG("spinning_secondaries = %d\n", spinning_secondaries);
+> -
+> -	DBG(" <- smp_release_cpus()\n");
+> +	pr_debug("spinning_secondaries = %d\n", spinning_secondaries);
+>  }
+>  #endif /* CONFIG_SMP || CONFIG_KEXEC_CORE */
+>  
+> @@ -551,8 +541,6 @@ void __init initialize_cache_info(void)
+>  	struct device_node *cpu = NULL, *l2, *l3 = NULL;
+>  	u32 pvr;
+>  
+> -	DBG(" -> initialize_cache_info()\n");
+> -
+>  	/*
+>  	 * All shipping POWER8 machines have a firmware bug that
+>  	 * puts incorrect information in the device-tree. This will
+> @@ -576,10 +564,10 @@ void __init initialize_cache_info(void)
+>  	 */
+>  	if (cpu) {
+>  		if (!parse_cache_info(cpu, false, &ppc64_caches.l1d))
+> -			DBG("Argh, can't find dcache properties !\n");
+> +			pr_warn("Argh, can't find dcache properties !\n");
+>  
+>  		if (!parse_cache_info(cpu, true, &ppc64_caches.l1i))
+> -			DBG("Argh, can't find icache properties !\n");
+> +			pr_warn("Argh, can't find icache properties !\n");
+>  
+>  		/*
+>  		 * Try to find the L2 and L3 if any. Assume they are
+> @@ -604,8 +592,6 @@ void __init initialize_cache_info(void)
+>  
+>  	cur_cpu_spec->dcache_bsize = dcache_bsize;
+>  	cur_cpu_spec->icache_bsize = icache_bsize;
+> -
+> -	DBG(" <- initialize_cache_info()\n");
+>  }
+>  
+>  /*
+> diff --git a/arch/powerpc/kernel/udbg.c b/arch/powerpc/kernel/udbg.c
+> index a384e7c8b01c..01595e8cafe7 100644
+> --- a/arch/powerpc/kernel/udbg.c
+> +++ b/arch/powerpc/kernel/udbg.c
+> @@ -120,13 +120,15 @@ int udbg_write(const char *s, int n)
+>  #define UDBG_BUFSIZE 256
+>  void udbg_printf(const char *fmt, ...)
+>  {
+> -	char buf[UDBG_BUFSIZE];
+> -	va_list args;
+> +	if (udbg_putc) {
+> +		char buf[UDBG_BUFSIZE];
+> +		va_list args;
+>  
+> -	va_start(args, fmt);
+> -	vsnprintf(buf, UDBG_BUFSIZE, fmt, args);
+> -	udbg_puts(buf);
+> -	va_end(args);
+> +		va_start(args, fmt);
+> +		vsnprintf(buf, UDBG_BUFSIZE, fmt, args);
+> +		udbg_puts(buf);
+> +		va_end(args);
+> +	}
+>  }
+>  
+>  void __init udbg_progress(char *s, unsigned short hex)
