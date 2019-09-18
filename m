@@ -2,155 +2,108 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E7CC4CEC9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B223C4CECD
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2609521855
+	by mail.kernel.org (Postfix) with ESMTP id 51D5D218AC
 	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:09:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6I1NeEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfIRDJm (ORCPT
+        id S1728236AbfIRDJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 23:09:42 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33858 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfIRDJl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 23:09:41 -0400
-Received: by mail-pg1-f194.google.com with SMTP id n9so3148730pgc.1;
-        Tue, 17 Sep 2019 20:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=V4dfqH9cr9ZOJT5sqm0l8wJAHrLJRz9FaSLp2042uos=;
-        b=f6I1NeEXkGZ+sI1W6vqQ3Y/3dEuWWik83da25RFn9o23iJAJ/oxK6RznhDlnmGWuPQ
-         KYPplaJOfndptEX4em+UyRRA7HNyI0AvLFeBA7Efhceyxu7a0rrZYB8FXprX/68MHror
-         6P5Ly+AgT6+J5GoDvw2Pb27ZGkJYRF4Ek1fvVuGw4Ap82Nbtb9FRu9sRpVSRo1hKqNBU
-         w4ulOuC+PlO/zqCZrHvFqegyvXHahAIllsa0IHCk1lwoygBuOzS4xsrunM8esMDTq4YF
-         EW34I87wYZBxvia7KmbkDgq3tlToYtEjN4eXYTgJ0KO1xsOhmxAzvcnZDE62keJ2HkfU
-         PNRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=V4dfqH9cr9ZOJT5sqm0l8wJAHrLJRz9FaSLp2042uos=;
-        b=jj40HEmZWrQDmqHu7GMrUyBAU7KkuEGI10yVbgJm8/CFSLqigciew62VPFefQaWgEc
-         YpRmfJP/vfTfcKpDx+7MIpcIPTtheps+AUZEbxRt/gC75pCpNIV7i4KF75GkHQbJqu+u
-         dkVBPeurHPLeFbQiiigos8jD6kOYeGV8Kyhm6cY0EO5YBVXZuWLKqon4Ko9E6vsnGkGG
-         +YRH8w1v0MT8UZqVGZPL8mVvMm/O8N0uBfAN6mD/zY8Zahsir4o0kdn1U+vp1skgHAbp
-         t4Uum9WKtBYxzyEeM7rkO+YT01CILz2+HNQkrgKeNy0acygK/UqYjo6smvyYh72ZjNtV
-         Ql5g==
-X-Gm-Message-State: APjAAAUq0kpMgUdEaDB/EAzTJnv19LEaqDwkJs8FUCc9W4TFF2ZUt6bg
-        KjXwJ9zs+s1ElVQLxo9fkag=
-X-Google-Smtp-Source: APXvYqy+Sb0cPBxaiBO8RFeDBF74xOQD0n4XvdxcLRptPZpeHmV77/W8sr/JsMMNn+hDCC6hEN0oXg==
-X-Received: by 2002:a63:c0d:: with SMTP id b13mr1900935pgl.420.1568776180514;
-        Tue, 17 Sep 2019 20:09:40 -0700 (PDT)
-Received: from localhost.localdomain ([106.51.108.240])
-        by smtp.gmail.com with ESMTPSA id x68sm4234116pfd.183.2019.09.17.20.09.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 17 Sep 2019 20:09:40 -0700 (PDT)
-From:   Rishi Gupta <gupt21@gmail.com>
-To:     jic23@kernel.org
-Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        allison@lohutok.net, alexios.zavras@intel.com, angus@akkea.ca,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rishi Gupta <gupt21@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: iio: light: add veml6030 ALS bindings
-Date:   Wed, 18 Sep 2019 08:39:17 +0530
-Message-Id: <1568776157-5373-3-git-send-email-gupt21@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568776157-5373-1-git-send-email-gupt21@gmail.com>
-References: <1568776157-5373-1-git-send-email-gupt21@gmail.com>
+        Tue, 17 Sep 2019 23:09:47 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:33988 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728206AbfIRDJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 23:09:46 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5335DCD535D0C4A99B76;
+        Wed, 18 Sep 2019 11:09:44 +0800 (CST)
+Received: from use12-sp2.huawei.com (10.67.189.177) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 18 Sep 2019 11:09:36 +0800
+From:   chenzefeng <chenzefeng2@huawei.com>
+To:     <linux@armlinux.org.uk>, <matthias.schiffer@ew.tq-group.com>,
+        <tglx@linutronix.de>, <info@metux.net>,
+        <gregkh@linuxfoundation.org>
+CC:     <chenzefeng2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <nixiaoming@huawei.com>,
+        <liucheng32@huawei.com>, <cj.chengjian@huawei.com>
+Subject: [PATCH] arm:unwind: fix incorrect backtrace with unwind_table
+Date:   Wed, 18 Sep 2019 11:09:34 +0800
+Message-ID: <1568776174-84980-1-git-send-email-chenzefeng2@huawei.com>
+X-Mailer: git-send-email 1.8.5.6
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.67.189.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds device tree bindings for veml6030 ambient
-light sensor.
+For arm, if the CONFIG_ARM_UNWIND is open, when insmod a module,
+the init section add to the unwind_table, the code path as follow:
+	load_module
+	--->post_relocation
+	------->module_finalize
+	----------->maps[ARM_SEC_INIT].txt_sec = s
+	----------->unwind_table_add
 
-Signed-off-by: Rishi Gupta <gupt21@gmail.com>
+Later if load_module success, the init section's memory will be
+vfree, the code path as follow:
+	load_module
+	--->do_init_module
+	------->freeinit->module_init = mod->init_layout.base
+	------->schedule_work(&init_free_wq)
+	----------->do_free_init
+	--------------->vfree(freeinit->module_init)
+
+But after the init section's had been vfree, but it's unwind_table
+is not removed.
+
+The issue as follow:
+When insmod module A, the system alloc the "Addr1" for it's init
+text section, and add it to the unwind_table list, after insmod
+success, the "Addr1" would be vfreed.
+Unfortunately, later insmod module B, the system alloc the "Addr1"
+for it's text section, and add it to the unwind_table list, too.
+And we dumpstack in module B, we may get a incorrect backtrace.
+
+Signed-off-by: chenzefeng <chenzefeng2@huawei.com>
 ---
- .../devicetree/bindings/iio/light/veml6030.yaml    | 62 ++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/light/veml6030.yaml
+ arch/arm/kernel/module.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/light/veml6030.yaml b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-new file mode 100644
-index 0000000..d92684a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/veml6030.yaml
-@@ -0,0 +1,62 @@
-+# SPDX-License-Identifier: GPL-2.0+
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/light/veml6030.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/arch/arm/kernel/module.c b/arch/arm/kernel/module.c
+index deef17f..438ed67 100644
+--- a/arch/arm/kernel/module.c
++++ b/arch/arm/kernel/module.c
+@@ -410,7 +410,20 @@ int module_finalize(const Elf32_Ehdr *hdr, const Elf_Shdr *sechdrs,
+ 	int i;
+ 
+ 	for (i = 0; i < ARM_SEC_MAX; i++)
+-		if (mod->arch.unwind[i])
++		if (mod->arch.unwind[i]) {
+ 			unwind_table_del(mod->arch.unwind[i]);
++			mod->arch.unwind[i] = NULL;
++		}
++#endif
++}
 +
-+title: VEML6030 Ambient Light Sensor (ALS)
-+
-+maintainers:
-+  - Rishi Gupta <gupt21@gmail.com>
-+
-+description: |
-+  Bindings for the ambient light sensor veml6030 from Vishay
-+  Semiconductors over an i2c interface.
-+
-+  Irrespective of whether interrupt is used or not, application
-+  can get the ALS and White channel reading from IIO raw interface.
-+
-+  If the interrupts is used, application will receive an IIO event
-+  whenever configured threshold is crossed.
-+
-+  Specifications about the sensor can be found at:
-+    https://www.vishay.com/docs/84366/veml6030.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - vishay,veml6030
-+
-+  reg:
-+    description:
-+      I2C address of the device. If the ADDR pin on veml6030
-+      is pulled up, this address is 0x48. If the ADDR pin is
-+      pulled down, this address is 0x10.
-+    maxItems: 1
-+
-+  interrupts:
-+    description:
-+      interrupt mapping for IRQ. Configure with IRQ_TYPE_LEVEL_LOW.
-+      Refer to interrupt-controller/interrupts.txt for generic
-+      interrupt client node bindings.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+
-+        light-sensor@10 {
-+                compatible = "vishay,veml6030";
-+                reg = <0x10>;
-+                interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-+        };
-+    };
-+...
++void
++module_arch_freeing_init(struct module *mod)
++{
++#ifdef CONFIG_ARM_UNWIND
++	if (mod->arch.unwind[ARM_SEC_INIT]) {
++		unwind_table_del(mod->arch.unwind[ARM_SEC_INIT]);
++		mod->arch.unwind[ARM_SEC_INIT] = NULL;
++	}
+ #endif
+ }
 -- 
-2.7.4
+1.8.5.6
 
