@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A4BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CA9C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1968421925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A25921906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787941;
-	bh=U9DpG53GL6w9YrFfEY8N076J1h21axkip3hX3GgBUDA=;
+	s=default; t=1568787944;
+	bh=TDQtsNsNqnnTlw/BrxgM+zecyV9TXa5Q7nNcLGbRio8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pzNLYY0uTvIBRdN3idIlaYBIS2nwThLLlatwpIvut+h3s7oiJBUpKgBdo9iYcYjr2
-	 +CTcXlqBpBkgaMq7Rn29PBXToypJwlyZR0HgxF85KfGInFWtvshTT5xcTeqzzWoSiX
-	 FfB7T1MQIPdA423Rrn9yGiPFF/qeVy1DQd/r4WRo=
+	b=xfeT6JNduInw1ThuEBG8hqNKuibr0+yIZdsd0d0FKHNMwDCBJ4/OVJ8c14TeGfKHa
+	 0MFdXjtucTcdGL2rYEksoOWcUCE7N1Sq5qEaS/hNzPwAkM6hGaUVhhQFS92sOi0Xa/
+	 8uvk+CTLN37rutbAKDY1AK3w84yitvySPzLXWTvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfIRGZk (ORCPT
+        id S1728274AbfIRGZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730152AbfIRGZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:36 -0400
+        id S1729428AbfIRGZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E004521925;
-        Wed, 18 Sep 2019 06:25:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C3CE21920;
+        Wed, 18 Sep 2019 06:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787935;
-        bh=U9DpG53GL6w9YrFfEY8N076J1h21axkip3hX3GgBUDA=;
+        s=default; t=1568787938;
+        bh=TDQtsNsNqnnTlw/BrxgM+zecyV9TXa5Q7nNcLGbRio8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbrMWmBv1Vkw1YdQ80SNx5A92qAp/XNi6QALGm3o+wfEfQvWRFN88egPFDPG8kjIU
-         EHMeUtyAkQhqOLjAXXbiX1gGPGN6l+VzXXfUT2PW9usCPI7iO91VP/laCcJO6ZoKGz
-         xPb14jzgvOqP8NQvmgmwgEEV6eesJlwhqSAuHMDg=
+        b=vrjtyfyPdjjtYNWhrTVDLGvOf1KKfFVAeVUoJIZNrRqI4uRYpigG66s1iO7PZdG4J
+         JdIOOC/aAF2Lth68lfBQT/XxcFbI3812U9b1tUTGPnCSarl3tTeUPIGV9GAzqK+R/S
+         ecQNzc9B8VmMPdizPoo6LWawRje/5tZuAmZSpAUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Maximets <i.maximets@samsung.com>,
-        William Tu <u9012063@gmail.com>,
-        Eelco Chaudron <echaudro@redhat.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Subject: [PATCH 5.2 37/85] ixgbe: fix double clean of Tx descriptors with xdp
-Date:   Wed, 18 Sep 2019 08:18:55 +0200
-Message-Id: <20190918061235.318662150@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
+Subject: [PATCH 5.2 04/85] isdn/capi: check message length in capi_write()
+Date:   Wed, 18 Sep 2019 08:18:22 +0200
+Message-Id: <20190918061234.266484082@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,98 +60,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Maximets <i.maximets@samsung.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit bf280c0387ebbf8eebad1036fca8f7b85ebfde32 upstream.
+[ Upstream commit fe163e534e5eecdfd7b5920b0dfd24c458ee85d6 ]
 
-Tx code doesn't clear the descriptors' status after cleaning.
-So, if the budget is larger than number of used elems in a ring, some
-descriptors will be accounted twice and xsk_umem_complete_tx will move
-prod_tail far beyond the prod_head breaking the completion queue ring.
+syzbot reported:
 
-Fix that by limiting the number of descriptors to clean by the number
-of used descriptors in the Tx ring.
+    BUG: KMSAN: uninit-value in capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
+    CPU: 0 PID: 10025 Comm: syz-executor379 Not tainted 4.20.0-rc7+ #2
+    Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+    Call Trace:
+      __dump_stack lib/dump_stack.c:77 [inline]
+      dump_stack+0x173/0x1d0 lib/dump_stack.c:113
+      kmsan_report+0x12e/0x2a0 mm/kmsan/kmsan.c:613
+      __msan_warning+0x82/0xf0 mm/kmsan/kmsan_instr.c:313
+      capi_write+0x791/0xa90 drivers/isdn/capi/capi.c:700
+      do_loop_readv_writev fs/read_write.c:703 [inline]
+      do_iter_write+0x83e/0xd80 fs/read_write.c:961
+      vfs_writev fs/read_write.c:1004 [inline]
+      do_writev+0x397/0x840 fs/read_write.c:1039
+      __do_sys_writev fs/read_write.c:1112 [inline]
+      __se_sys_writev+0x9b/0xb0 fs/read_write.c:1109
+      __x64_sys_writev+0x4a/0x70 fs/read_write.c:1109
+      do_syscall_64+0xbc/0xf0 arch/x86/entry/common.c:291
+      entry_SYSCALL_64_after_hwframe+0x63/0xe7
+    [...]
 
-'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
-'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
-'next_to_clean' and 'next_to_use' indexes.
+The problem is that capi_write() is reading past the end of the message.
+Fix it by checking the message's length in the needed places.
 
-CC: stable@vger.kernel.org
-Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
-Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
-Tested-by: William Tu <u9012063@gmail.com>
-Tested-by: Eelco Chaudron <echaudro@redhat.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Reported-and-tested-by: syzbot+0849c524d9c634f5ae66@syzkaller.appspotmail.com
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c |   29 ++++++++++-----------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+ drivers/isdn/capi/capi.c          |   10 +++++++++-
+ include/uapi/linux/isdn/capicmd.h |    1 +
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
-@@ -679,19 +679,17 @@ static void ixgbe_clean_xdp_tx_buffer(st
- bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
- 			    struct ixgbe_ring *tx_ring, int napi_budget)
- {
-+	u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
- 	unsigned int total_packets = 0, total_bytes = 0;
--	u32 i = tx_ring->next_to_clean, xsk_frames = 0;
--	unsigned int budget = q_vector->tx.work_limit;
- 	struct xdp_umem *umem = tx_ring->xsk_umem;
- 	union ixgbe_adv_tx_desc *tx_desc;
- 	struct ixgbe_tx_buffer *tx_bi;
--	bool xmit_done;
-+	u32 xsk_frames = 0;
+--- a/drivers/isdn/capi/capi.c
++++ b/drivers/isdn/capi/capi.c
+@@ -688,6 +688,9 @@ capi_write(struct file *file, const char
+ 	if (!cdev->ap.applid)
+ 		return -ENODEV;
  
--	tx_bi = &tx_ring->tx_buffer_info[i];
--	tx_desc = IXGBE_TX_DESC(tx_ring, i);
--	i -= tx_ring->count;
-+	tx_bi = &tx_ring->tx_buffer_info[ntc];
-+	tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
- 
--	do {
-+	while (ntc != ntu) {
- 		if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
- 			break;
- 
-@@ -708,22 +706,18 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe
- 
- 		tx_bi++;
- 		tx_desc++;
--		i++;
--		if (unlikely(!i)) {
--			i -= tx_ring->count;
-+		ntc++;
-+		if (unlikely(ntc == tx_ring->count)) {
-+			ntc = 0;
- 			tx_bi = tx_ring->tx_buffer_info;
- 			tx_desc = IXGBE_TX_DESC(tx_ring, 0);
++	if (count < CAPIMSG_BASELEN)
++		return -EINVAL;
++
+ 	skb = alloc_skb(count, GFP_USER);
+ 	if (!skb)
+ 		return -ENOMEM;
+@@ -698,7 +701,8 @@ capi_write(struct file *file, const char
+ 	}
+ 	mlen = CAPIMSG_LEN(skb->data);
+ 	if (CAPIMSG_CMD(skb->data) == CAPI_DATA_B3_REQ) {
+-		if ((size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
++		if (count < CAPI_DATA_B3_REQ_LEN ||
++		    (size_t)(mlen + CAPIMSG_DATALEN(skb->data)) != count) {
+ 			kfree_skb(skb);
+ 			return -EINVAL;
  		}
+@@ -711,6 +715,10 @@ capi_write(struct file *file, const char
+ 	CAPIMSG_SETAPPID(skb->data, cdev->ap.applid);
  
- 		/* issue prefetch for next Tx descriptor */
- 		prefetch(tx_desc);
-+	}
+ 	if (CAPIMSG_CMD(skb->data) == CAPI_DISCONNECT_B3_RESP) {
++		if (count < CAPI_DISCONNECT_B3_RESP_LEN) {
++			kfree_skb(skb);
++			return -EINVAL;
++		}
+ 		mutex_lock(&cdev->lock);
+ 		capincci_free(cdev, CAPIMSG_NCCI(skb->data));
+ 		mutex_unlock(&cdev->lock);
+--- a/include/uapi/linux/isdn/capicmd.h
++++ b/include/uapi/linux/isdn/capicmd.h
+@@ -16,6 +16,7 @@
+ #define CAPI_MSG_BASELEN		8
+ #define CAPI_DATA_B3_REQ_LEN		(CAPI_MSG_BASELEN+4+4+2+2+2)
+ #define CAPI_DATA_B3_RESP_LEN		(CAPI_MSG_BASELEN+4+2)
++#define CAPI_DISCONNECT_B3_RESP_LEN	(CAPI_MSG_BASELEN+4)
  
--		/* update budget accounting */
--		budget--;
--	} while (likely(budget));
--
--	i += tx_ring->count;
--	tx_ring->next_to_clean = i;
-+	tx_ring->next_to_clean = ntc;
- 
- 	u64_stats_update_begin(&tx_ring->syncp);
- 	tx_ring->stats.bytes += total_bytes;
-@@ -735,8 +729,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe
- 	if (xsk_frames)
- 		xsk_umem_complete_tx(umem, xsk_frames);
- 
--	xmit_done = ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
--	return budget > 0 && xmit_done;
-+	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
- }
- 
- int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
+ /*----- CAPI commands -----*/
+ #define CAPI_ALERT		    0x01
 
 
