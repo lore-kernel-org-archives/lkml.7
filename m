@@ -2,102 +2,121 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E48DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7033DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF90222D0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3939F222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:00:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xl1Qun6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389203AbfIRT7n (ORCPT
+        id S2389256AbfIRUAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:59:43 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:34911 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389179AbfIRT7m (ORCPT
+        Wed, 18 Sep 2019 16:00:03 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38871 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389243AbfIRUAC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:59:42 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mn2eH-1hl04i4Alz-00k3oy; Wed, 18 Sep 2019 21:59:24 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Alex Lu <alex_lu@realsil.com.cn>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajat Jain <rajatja@google.com>,
-        Raghuram Hegde <raghuram.hegde@intel.com>,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: btusb: avoid unused function warning
-Date:   Wed, 18 Sep 2019 21:59:02 +0200
-Message-Id: <20190918195918.2190556-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-MIME-Version: 1.0
+        Wed, 18 Sep 2019 16:00:02 -0400
+Received: by mail-qt1-f196.google.com with SMTP id j31so1281245qta.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=TgQ/PSk6s69IhIN3kvOl/nhDuvC2PFBPkZWWeBSDsGs=;
+        b=Xl1Qun6EPEyvqTdKGERpDMNRYpTRFOq7YiV8XD0S2EmdmsptfOtLQd53pPMRs40OsP
+         Zfy9SjE2m8yQ9aWYolH6euB+a9FwQpsK7Y2+IMqatO6MEdnrnCphSqpamfRBRAwMa/nW
+         8vU3taJ1EUfiqL3F/p7jpVoT241bFVBCtNH22U5s8Ej7yj7vaQABp30uutX/vzYonf9A
+         9lietmj1MbgOxYk5/tAT+6ERo8V7SOxyrePvTp4zvn3KLSn+JgvNajPuc5CGITRKlQjg
+         yF174PcmWCm0KjNteIID1GoKRcbgW+VoVImpMVdVv2Pcx4CtCLT6ViBXF8Y8z5y6CXU/
+         5IKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=TgQ/PSk6s69IhIN3kvOl/nhDuvC2PFBPkZWWeBSDsGs=;
+        b=EAe+99SKIA0LuT7C197Wpm35QK+T/HggXhQYRF1CHgrG5Ka2//UiAhHbQXijEGO/Nj
+         /eBCk76yJ4PEBjI7nuFLzFXmEJmmzpV3m0gJlM5HSCDO3tPjlyd7uqtcVZOozuVXjUR2
+         sQhnY2rLE4CJV+doyGAhPS6ZVkKDxkaAYZlwyUnnsWUG5cPhdDLiGPHUiTb+wG9yGyyW
+         I17KSbna5hSF2fxtdMvsk264D8lC70WTZMPIX3Nk3flJUQlqiq/CvsoQoGdS3rfGxnWV
+         6C1YsEhkcPIO8/qMk7Y2XgBI/z0L2mQ33H/kIX9VlmxJ0KEJApe8WjW2bd87U+dv5k7F
+         b3dw==
+X-Gm-Message-State: APjAAAXeB+BFsH2fJwxqv+spjHlgop7htpaQ5xcas2orC9vyjnxqBf7M
+        dh0yN2m1cN/KUp2VbGg2gUYnHw==
+X-Google-Smtp-Source: APXvYqx7ylgOdwTwai485piXcLjFj5zgpjU/OumbjBfWNGW3uR90d7CFqs4O9RiBxseGmXqWFaFurw==
+X-Received: by 2002:ac8:16e2:: with SMTP id y31mr5909119qtk.370.1568836800501;
+        Wed, 18 Sep 2019 13:00:00 -0700 (PDT)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id q207sm3616779qke.98.2019.09.18.12.59.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 12:59:59 -0700 (PDT)
+Message-ID: <1568836797.5576.182.camel@lca.pw>
+Subject: Re: [PATCH] mm/slub: fix a deadlock in shuffle_freelist()
+From:   Qian Cai <cai@lca.pw>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     peterz@infradead.org, mingo@redhat.com, akpm@linux-foundation.org,
+        tglx@linutronix.de, thgarnie@google.com, tytso@mit.edu,
+        cl@linux.com, penberg@kernel.org, rientjes@google.com,
+        will@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        keescook@chromium.org
+Date:   Wed, 18 Sep 2019 15:59:57 -0400
+In-Reply-To: <20190917071634.c7i3i6jg676ejiw5@linutronix.de>
+References: <1568392064-3052-1-git-send-email-cai@lca.pw>
+         <20190916090336.2mugbds4rrwxh6uz@linutronix.de>
+         <1568642487.5576.152.camel@lca.pw>
+         <20190916195115.g4hj3j3wstofpsdr@linutronix.de>
+         <1568669494.5576.157.camel@lca.pw>
+         <20190917071634.c7i3i6jg676ejiw5@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:V9UkgJWPr+oQDUKlZDpC/V5IuPfRkDiGAUbYndfxVz2FSuR/60M
- AOmNix9PbnZdckGDpVOk+MA6SjDiLwv8rFSfPx/KjN2lgpK+fVbCTi1l/5C1PtSPO/rj15F
- YrEtNgJxsOgW6GHrcId568mc2JglzR/EhDgBEha1+uYg95WjEDJ4r0N6JeU6tODxJg6Ay/m
- 16LCKM+tJjGlw6ux1TO5Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XGM5hiqQ4oQ=:McT85o77EouwbgvZ4DbKlb
- BArsKptu4Hav7SUMtrGjZpi/3qIAze3LYNXi+sT/JDUdnlZ86uqRt+XtGjRbFFMfpdS2VLOUa
- ofqiQIQJvjvxnO+dF5gLNLpYxq8/A2u+nKltCRfIhloFoOjcp62jxE5bVGNXrKlLvMi/74jti
- mhFqr7wIpsGyQwatY73Igd3XbmmwdeKJq8gNItFJ50Kdi6UgBrcb5hrHVbTp5IdEy85qgrBLO
- bxjNqWAIzAK1OUX00GKRuOoR4oioe/49y13aR6d6Wq3ueJ0ANAMUE4IvQnTwo+kNDc9FTkWoc
- i8T4xze7NeWt2ASNHBshd8I6q2JhJrmCYcscBpinjm8L772MhDSLtZt4J4beOFTEpqo2NO3I4
- FffGroBAmN89M+d8a3jJB6DF6vHvtdcabs2Khl3am8l55WW28UX5R8vFhSzeZ//SLW/hhI9Rp
- 3Su+1IVK2dMVoAv8Q19S/djclNQwUaeZpZmNx29oSYXzvhwVsMzyY9EEHk7dDQG1dzPiEqBzZ
- TqGDjP3CNocq1SLwukaaiBP/Ks2kWKWQ5Z6tvcnRJ5a2uqw86ilCXzOL/4qktXoUeTany053S
- eSqFD44NCGz1rcyXprL+87qTGUSx60raizAX8F5AUeDMtTK0GOeFVnaepL7YZr57yAhQzoUh3
- fZMObq1ZtF3HiV9wJHCFXjjXf7xyUjQM0McnH0dn9w0yP274ayn1cwv6DBBtJ4/yCZ3TdX6Fn
- Af+g/0fAlLqtBUKMVTmzWTNr05dGNXc6nNkGJCq5VZS+H386kdS+/Sax1IOfl6DRltDBUjUk4
- ilULa3rqOfk4iwkzhiAsxolZBubiDnghG9nHvfbtJrOZFOwAFtogIo6oWa3+wAxJ0vnGTYNCx
- oFRE/tYwe7nEYMegqNhg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The btusb_rtl_cmd_timeout() function is used inside of an
-ifdef, leading to a warning when this part is hidden
-from the compiler:
+On Tue, 2019-09-17 at 09:16 +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-09-16 17:31:34 [-0400], Qian Cai wrote:
+> …
+> > get_random_u64() is also busted.
+> 
+> …
+> > [  753.486588]  Possible unsafe locking scenario:
+> > 
+> > [  753.493890]        CPU0                    CPU1
+> > [  753.499108]        ----                    ----
+> > [  753.504324]   lock(batched_entropy_u64.lock);
+> > [  753.509372]                                lock(&(&zone->lock)->rlock);
+> > [  753.516675]                                lock(batched_entropy_u64.lock);
+> > [  753.524238]   lock(random_write_wait.lock);
+> > [  753.529113] 
+> >                 *** DEADLOCK ***
+> 
+> This is the same scenario as the previous one in regard to the
+> batched_entropy_….lock.
 
-drivers/bluetooth/btusb.c:530:13: error: unused function 'btusb_rtl_cmd_timeout' [-Werror,-Wunused-function]
+The commit 383776fa7527 ("locking/lockdep: Handle statically initialized percpu
+locks properly") which increased the chance of false positives for percpu locks
+significantly especially for large systems like in those examples since it makes
+all of them the same class. Once there happens a false positive, lockdep will
+become useless.
 
-Use an IS_ENABLED() check instead so the compiler can see
-the code and then discard it silently.
+In reality, each percpu lock is a different lock as we have seen in those
+examples where each CPU only take a local one. The only thing that should worry
+about is the path that another CPU could take a non-local percpu lock. For
+example, invalidate_batched_entropy() which is a for_each_possible_cpu() call.
+Is there any other place that another CPU could take a non-local percpu lock but
+not a for_each_possible_cpu() or similar iterator?
 
-Fixes: d7ef0d1e3968 ("Bluetooth: btusb: Use cmd_timeout to reset Realtek device")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/bluetooth/btusb.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Even before the above commit, if the system is running long enough, it could
+still catch a deadlock from those percpu lock iterators since it will register
+each percpu lock usage in lockdep
 
-diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-index a9c35ebb30f8..23e606aaaea4 100644
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3807,8 +3807,8 @@ static int btusb_probe(struct usb_interface *intf,
- 		btusb_check_needs_reset_resume(intf);
- 	}
- 
--#ifdef CONFIG_BT_HCIBTUSB_RTL
--	if (id->driver_info & BTUSB_REALTEK) {
-+	if (IS_ENABLED(CONFIG_BT_HCIBTUSB_RTL) &&
-+	    (id->driver_info & BTUSB_REALTEK)) {
- 		hdev->setup = btrtl_setup_realtek;
- 		hdev->shutdown = btrtl_shutdown_realtek;
- 		hdev->cmd_timeout = btusb_rtl_cmd_timeout;
-@@ -3819,7 +3819,6 @@ static int btusb_probe(struct usb_interface *intf,
- 		 */
- 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
- 	}
--#endif
- 
- 	if (id->driver_info & BTUSB_AMP) {
- 		/* AMP controllers do not support SCO packets */
--- 
-2.20.0
-
+Overall, it sounds to me the side-effects of commit 383776fa7527 outweight the
+benefits, and should be reverted. Do I miss anything?
