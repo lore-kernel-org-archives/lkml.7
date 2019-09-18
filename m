@@ -2,143 +2,108 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05499C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D8BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D254E205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E22AB205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730719AbfIRMYH (ORCPT
+        id S1730949AbfIRMYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:24:07 -0400
-Received: from mga05.intel.com ([192.55.52.43]:54551 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726941AbfIRMYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:24:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 05:24:06 -0700
-X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="387898031"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 05:24:04 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Gerd Hoffmann <kraxel@redhat.com>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v3 1/7] drm: add drm_print_bits
-In-Reply-To: <20190904054740.20817-2-kraxel@redhat.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190904054740.20817-1-kraxel@redhat.com> <20190904054740.20817-2-kraxel@redhat.com>
-Date:   Wed, 18 Sep 2019 15:24:01 +0300
-Message-ID: <87sgotx066.fsf@intel.com>
+        Wed, 18 Sep 2019 08:24:39 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:54207 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726941AbfIRMYj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 08:24:39 -0400
+X-UUID: ceaf95881f31479ea99cadeabc7693a5-20190918
+X-UUID: ceaf95881f31479ea99cadeabc7693a5-20190918
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 411472176; Wed, 18 Sep 2019 20:24:26 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 18 Sep
+ 2019 20:24:23 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
+ MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Wed, 18 Sep 2019 20:24:22 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <linux-mediatek@lists.infradead.org>,
+        <ck.hu@mediatek.com>, <stonea168@163.com>,
+        Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH v6 0/8] add driver for "boe, tv101wum-nl6", "boe, tv101wum-n53", "auo, kd101n80-45na" and "auo, b101uan08.3" panels
+Date:   Wed, 18 Sep 2019 20:24:14 +0800
+Message-ID: <20190918122422.17339-1-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-TM-SNTS-SMTP: 3D3638C9865A7E2EAAD19D70A1240530FBA96708D19439D0F3519DFF0DE5CAEA2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Sep 2019, Gerd Hoffmann <kraxel@redhat.com> wrote:
-> New helper to print named bits of some value (think flags fields).
->
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  include/drm/drm_print.h     |  3 +++
->  drivers/gpu/drm/drm_print.c | 33 +++++++++++++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/include/drm/drm_print.h b/include/drm/drm_print.h
-> index 112165d3195d..12d4916254b4 100644
-> --- a/include/drm/drm_print.h
-> +++ b/include/drm/drm_print.h
-> @@ -89,6 +89,9 @@ __printf(2, 3)
->  void drm_printf(struct drm_printer *p, const char *f, ...);
->  void drm_puts(struct drm_printer *p, const char *str);
->  void drm_print_regset32(struct drm_printer *p, struct debugfs_regset32 *regset);
-> +void drm_print_bits(struct drm_printer *p,
-> +		    unsigned long value, const char *bits[],
-> +		    unsigned int from, unsigned int to);
->  
->  __printf(2, 0)
->  /**
-> diff --git a/drivers/gpu/drm/drm_print.c b/drivers/gpu/drm/drm_print.c
-> index ad302d71eeee..dfa27367ebb8 100644
-> --- a/drivers/gpu/drm/drm_print.c
-> +++ b/drivers/gpu/drm/drm_print.c
-> @@ -185,6 +185,39 @@ void drm_printf(struct drm_printer *p, const char *f, ...)
->  }
->  EXPORT_SYMBOL(drm_printf);
->  
-> +/**
-> + * drm_print_bits - print bits to a &drm_printer stream
-> + *
-> + * Print bits (in flag fields for example) in human readable form.
-> + * The first name in the @bits array is for the bit indexed by @from.
-> + *
-> + * @p: the &drm_printer
-> + * @value: field value.
-> + * @bits: Array with bit names.
-> + * @from: start of bit range to print (inclusive).
-> + * @to: end of bit range to print (exclusive).
-> + */
-> +void drm_print_bits(struct drm_printer *p,
-> +		    unsigned long value, const char *bits[],
-> +		    unsigned int from, unsigned int to)
-> +{
-> +	bool first = true;
-> +	unsigned int i;
-> +
-> +	for (i = from; i < to; i++) {
-> +		if (!(value & (1 << i)))
-> +			continue;
+Changes since v5:
+ - covert the documents to yaml
+ - fine tune boe, tv101wum-n53 panel video timine
 
-for_each_set_bit from bitops.h?
+Changes since v4:
+ - add auo,b101uan08.3 panel for this driver.
+ - add boe,tv101wum-n53 panel for this driver.
 
-> +		if (WARN_ON_ONCE(!bits[i-from]))
-> +			continue;
-> +		drm_printf(p, "%s%s", first ? "" : ",",
-> +			   bits[i-from]);
+Changes since v3:
+ - remove check enable_gpio.
+ - fine tune the auo,kd101n80-45na panel's power on timing.
 
-I wonder about the usefulness of from and to, as well as indexing
-(i-from) for the strings.
+Changes since v2:
+ - correct the panel size
+ - remove blank line in Kconfig
+ - move auo,kd101n80-45na panel driver in this series.
 
-To limit the values to be printed in a more general way than range, you
-can use:
+Changes since v1:
 
-	drm_print_bits(p, value & GENMASK(h, l), bits);
+ - update typo nl6 -> n16.
+ - update new panel config and makefile are added in alphabetically order.
+ - add the panel mode and panel info in driver data.
+ - merge auo,kd101n80-45a and boe,tv101wum-nl6 in one driver
 
-And obviously to adjust the starting position:
+Jitao Shi (8):
+  dt-bindings: display: panel: Add BOE tv101wum-n16 panel bindings
+  drm/panel: support for BOE tv101wum-nl6 wuxga dsi video mode panel
+  dt-bindings: display: panel: add auo kd101n80-45na panel bindings
+  drm/panel: support for auo,kd101n80-45na wuxga dsi video mode panel
+  dt-bindings: display: panel: add boe tv101wum-n53 panel documentation
+  drm/panel: support for boe,tv101wum-n53 wuxga dsi video mode panel
+  dt-bindings: display: panel: add AUO auo,b101uan08.3 panel
+    documentation
+  drm/panel: support for auo,b101uan08.3 wuxga dsi video mode panel
 
-	drm_print_bits(p, value >> l, bits);
-
-Seems like a simple len parameter to indicate the ARRAY_SIZE() of bits
-would be more straighforward to guard against array overflow.
-
-	drm_print_bits(p, value, bits, ARRAY_SIZE(bits));
-
-
-BR,
-Jani.
-
-
-> +		first = false;
-> +	}
-> +	if (first)
-> +		drm_printf(p, "(none)");
-> +}
-> +EXPORT_SYMBOL(drm_print_bits);
-> +
->  void drm_dev_printk(const struct device *dev, const char *level,
->  		    const char *format, ...)
->  {
+ .../display/panel/auo,b101uan08.3.yaml        |  67 ++
+ .../display/panel/auo,kd101n80-45na.yaml      |  67 ++
+ .../display/panel/boe,tv101wum-n53.yaml       |  67 ++
+ .../display/panel/boe,tv101wum-nl6.yaml       |  67 ++
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 876 ++++++++++++++++++
+ 7 files changed, 1154 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,b101uan08.3.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/panel/auo,kd101n80-45na.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-n53.yaml
+ create mode 100644 Documentation/devicetree/bindings/display/panel/boe,tv101wum-nl6.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.21.0
+
