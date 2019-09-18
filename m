@@ -2,86 +2,135 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A1DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BD4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681D020882
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:49:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C183D20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfIRGtH (ORCPT
+        id S1727786AbfIRGwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:49:07 -0400
-Received: from mga06.intel.com ([134.134.136.31]:50715 "EHLO mga06.intel.com"
+        Wed, 18 Sep 2019 02:52:04 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34618 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725842AbfIRGtE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:49:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1725842AbfIRGwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:52:03 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 23:49:03 -0700
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 23:52:02 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.64,519,1559545200"; 
-   d="scan'208";a="193978467"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Sep 2019 23:49:02 -0700
-Received: from [10.226.39.42] (unknown [10.226.39.42])
-        by linux.intel.com (Postfix) with ESMTP id C29B758012D;
-        Tue, 17 Sep 2019 23:48:58 -0700 (PDT)
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
- PCIe RC controller
-To:     Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        lorenzo.pieralisi@arm.com, linux-pci@vger.kernel.org,
-        hch@infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
-        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
-References: <cover.1567585181.git.eswara.kota@linux.intel.com>
- <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
- <CAFBinCC5SH5OSUqOkLQhE2o7g5OhSuB_PBjsv93U2P=FNS5oPw@mail.gmail.com>
- <20190906091950.GJ2680@smile.fi.intel.com> <20190917183306.GA24684@bogus>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <f0d8e899-e881-f1ee-22fc-a286796f093b@linux.intel.com>
-Date:   Wed, 18 Sep 2019 14:48:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+   d="scan'208";a="216842807"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 17 Sep 2019 23:51:59 -0700
+Date:   Wed, 18 Sep 2019 14:51:40 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     rppt@linux.ibm.com, akpm@linux-foundation.org, osalvador@suse.de,
+        mhocko@suse.co, dan.j.williams@intel.com, david@redhat.com,
+        richardw.yang@linux.intel.com, cai@lca.pw, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+Message-ID: <20190918065140.GA5446@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190917183306.GA24684@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-On 9/18/2019 2:33 AM, Rob Herring wrote:
-> On Fri, Sep 06, 2019 at 12:19:50PM +0300, Andy Shevchenko wrote:
->> On Thu, Sep 05, 2019 at 10:31:29PM +0200, Martin Blumenstingl wrote:
->>> On Wed, Sep 4, 2019 at 12:11 PM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->>>> +  phy-names:
->>>> +    const: pciephy
->>> the most popular choice in Documentation/devicetree/bindings/pci/ is "pcie-phy"
->>> if Rob is happy with "pciephy" (which is already part of two other
->>> bindings) then I'm happy with "pciephy" as well
->> I'm not Rob, though I consider more practical to have a hyphenated variant.
-> *-names is kind of pointless when there is only one entry and 'foo' in
-> the values of 'foo-names' is redundant.
-
-Ok, i will change it to:
-
-     phy-name:
-         const: pcie
-
-Regards,
-Dilip
-
+On Wed, Sep 18, 2019 at 12:22:29PM +0800, Yunfeng Ye wrote:
+>Currently, when memblock_find_in_range_node() fail on the exact node, it
+>will use %NUMA_NO_NODE to find memblock from other nodes. At present,
+>the work is good, but when the large memory is insufficient and the
+>small memory is enough, we want to allocate the small memory of this
+>node first, and do not need to allocate large memory from other nodes.
 >
-> Rob
+>In sparse_buffer_init(), it will prepare large chunks of memory for page
+>structure. The page management structure requires a lot of memory, but
+>if the node does not have enough memory, it can be converted to a small
+>memory allocation without having to allocate it from other nodes.
+>
+>Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
+>behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
+>not allocate from other nodes when a single node fails to allocate.
+>
+>If large contiguous block memory allocated fail in sparse_buffer_init(),
+>it will allocates small block memmory section by section later.
+>
+
+Looks this changes current behavior even it fall back to section based
+allocation.
+
+>Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>---
+> include/linux/memblock.h | 1 +
+> mm/memblock.c            | 3 ++-
+> mm/sparse.c              | 2 +-
+> 3 files changed, 4 insertions(+), 2 deletions(-)
+>
+>diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>index f491690..9a81d9c 100644
+>--- a/include/linux/memblock.h
+>+++ b/include/linux/memblock.h
+>@@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+> #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
+> #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+> #define MEMBLOCK_ALLOC_KASAN		1
+>+#define MEMBLOCK_ALLOC_EXACT_NODE	2
+>
+> /* We are using top down, so it is safe to use 0 here */
+> #define MEMBLOCK_LOW_LIMIT 0
+>diff --git a/mm/memblock.c b/mm/memblock.c
+>index 7d4f61a..dbd52c3c 100644
+>--- a/mm/memblock.c
+>+++ b/mm/memblock.c
+>@@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+>
+> 	/* pump up @end */
+> 	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
+>+	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
+> 	    end == MEMBLOCK_ALLOC_KASAN)
+> 		end = memblock.current_limit;
+>
+>@@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+> 	if (found && !memblock_reserve(found, size))
+> 		goto done;
+>
+>-	if (nid != NUMA_NO_NODE) {
+>+	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
+> 		found = memblock_find_in_range_node(size, align, start,
+> 						    end, NUMA_NO_NODE,
+> 						    flags);
+>diff --git a/mm/sparse.c b/mm/sparse.c
+>index 72f010d..828db46 100644
+>--- a/mm/sparse.c
+>+++ b/mm/sparse.c
+>@@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+> 	sparsemap_buf =
+> 		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+> 						addr,
+>-						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+>+						MEMBLOCK_ALLOC_EXACT_NODE, nid);
+> 	sparsemap_buf_end = sparsemap_buf + size;
+> }
+>
+>-- 
+>2.7.4.huawei.3
+>
+
+-- 
+Wei Yang
+Help you, Help me
