@@ -2,152 +2,164 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04469C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DB8C4CECD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D618C2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52FE8218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726229AbfIRBoQ (ORCPT
+        id S1726339AbfIRBoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:44:16 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51846 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfIRBoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:44:15 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id EE4D627F15D75F8A9203;
-        Wed, 18 Sep 2019 09:44:11 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.212) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep
- 2019 09:44:08 +0800
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: do not select same victim right
- again
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190909012532.20454-1-jaegeuk@kernel.org>
- <69933b7f-48cc-47f9-ba6f-b5ca8f733cba@huawei.com>
- <20190909080654.GD21625@jaegeuk-macbookpro.roam.corp.google.com>
- <97237da2-897a-8420-94de-812e94aa751f@huawei.com>
- <20190909120443.GA31108@jaegeuk-macbookpro.roam.corp.google.com>
- <27725e65-53fe-5731-0201-9959b8ef6b49@huawei.com>
- <20190916153736.GA2493@jaegeuk-macbookpro.roam.corp.google.com>
- <ab9561c9-db27-2967-e6fc-accd9bc58747@huawei.com>
- <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <e823b534-f4de-7f59-0c26-ff2c463260d1@huawei.com>
-Date:   Wed, 18 Sep 2019 09:43:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190917205501.GA60683@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
+        Tue, 17 Sep 2019 21:44:24 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3615 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725943AbfIRBoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 21:44:24 -0400
+X-UUID: ea1a39deb5f24d4bb57402fa54c802a7-20190918
+X-UUID: ea1a39deb5f24d4bb57402fa54c802a7-20190918
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1909629750; Wed, 18 Sep 2019 09:44:18 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 18 Sep 2019 09:44:16 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 18 Sep 2019 09:44:16 +0800
+Message-ID: <1568771054.21700.7.camel@mtkswgap22>
+Subject: Re: [PATCH v4 2/3] dt-bindings: rng: add bindings for MediaTek
+ ARMv8 SoCs
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        wsd_upstream <wsd_upstream@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Crystal Guo =?UTF-8?Q?=28=E9=83=AD=E6=99=B6=29?= 
+        <Crystal.Guo@mediatek.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Matt Mackall <mpm@selenic.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Neal Liu <neal.liu@mediatek.com>
+Date:   Wed, 18 Sep 2019 09:44:14 +0800
+In-Reply-To: <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+References: <1561361052-13072-1-git-send-email-neal.liu@mediatek.com>
+         <1561361052-13072-3-git-send-email-neal.liu@mediatek.com>
+         <20190722171320.GA9806@bogus> <1563848465.31451.4.camel@mtkswgap22>
+         <CAL_Jsq+SRhd=-5O2G_CMfJX9Z188kvA05MQOXaU1J8iExwUixQ@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+MIME-Version: 1.0
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/9/18 4:55, Jaegeuk Kim wrote:
-> On 09/17, Chao Yu wrote:
->> On 2019/9/16 23:37, Jaegeuk Kim wrote:
->>> On 09/16, Chao Yu wrote:
->>>> On 2019/9/9 20:04, Jaegeuk Kim wrote:
->>>>> On 09/09, Chao Yu wrote:
->>>>>> On 2019/9/9 16:06, Jaegeuk Kim wrote:
->>>>>>> On 09/09, Chao Yu wrote:
->>>>>>>> On 2019/9/9 9:25, Jaegeuk Kim wrote:
->>>>>>>>> GC must avoid select the same victim again.
->>>>>>>>
->>>>>>>> Blocks in previous victim will occupy addition free segment, I doubt after this
->>>>>>>> change, FGGC may encounter out-of-free space issue more frequently.
->>>>>>>
->>>>>>> Hmm, actually this change seems wrong by sec_usage_check().
->>>>>>> We may be able to avoid this only in the suspicious loop?
->>>>>>>
->>>>>>> ---
->>>>>>>  fs/f2fs/gc.c | 2 +-
->>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>>
->>>>>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>>>>> index e88f98ddf396..5877bd729689 100644
->>>>>>> --- a/fs/f2fs/gc.c
->>>>>>> +++ b/fs/f2fs/gc.c
->>>>>>> @@ -1326,7 +1326,7 @@ int f2fs_gc(struct f2fs_sb_info *sbi, bool sync,
->>>>>>>  		round++;
->>>>>>>  	}
->>>>>>>  
->>>>>>> -	if (gc_type == FG_GC)
->>>>>>> +	if (gc_type == FG_GC && seg_freed)
->>>>>>
->>>>>> That's original solution Sahitya provided to avoid infinite loop of GC, but I
->>>>>> suggest to find the root cause first, then we added .invalid_segmap for that
->>>>>> purpose.
->>>>>
->>>>> I've checked the Sahitya's patch. So, it seems the problem can happen due to
->>>>> is_alive or atomic_file.
->>>>
->>>> For some conditions, this doesn't help, for example, two sections contain the
->>>> same fewest valid blocks, it will cause to loop selecting them if it fails to
->>>> migrate blocks.
->>>>
->>>> How about keeping it as it is to find potential bug.
->>>
->>> I think it'd be fine to merge this. Could you check the above scenario in more
->>> detail?
->>
->> I haven't saw this in real scenario yet.
->>
->> What I mean is if there is a bug (maybe in is_alive()) failing us to GC on one
->> section, when that bug happens in two candidates, there could be the same
->> condition that GC will run into loop (select A, fail to migrate; select B, fail
->> to migrate, select A...).
->>
->> But I guess the benefit of this change is, if FGGC fails to migrate block due to
->> i_gc_rwsem race, selecting another section and later retrying previous one may
->> avoid lock race, right?
+On Tue, 2019-07-23 at 22:35 +0800, Rob Herring wrote:
+> On Mon, Jul 22, 2019 at 8:21 PM Neal Liu <neal.liu@mediatek.com> wrote:
+> >
 > 
-> In any case, I think this can avoid potenial GC loop. At least to me, it'd be
-> quite risky, if we remain this just for debugging purpose only.
-
-Yup,
-
-One more concern is would this cur_victim_sec remain after FGGC? then BGGC/SSR
-will always skip the section cur_victim_sec points to.
-
-So could we reset cur_victim_sec in the end of FGGC?
-
-Thanks,
-
+> Please don't top post to lists.
 > 
->>
->> Thanks,
->>
->>>
->>> Thanks,
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>>
->>>>>>>  		sbi->cur_victim_sec = NULL_SEGNO;
->>>>>>>  
->>>>>>>  	if (sync)
->>>>>>>
->>>>> .
->>>>>
->>> .
->>>
-> .
+> > Dear Rob,
+> >         You can check my driver for detail:
+> >         http://patchwork.kernel.org/patch/11012475/ or patchset 3/3
 > 
+> I could, or you could just answer my question.
+> 
+> >
+> >         This driver is registered as hardware random number generator, and
+> > combines with rng-core.
+> >         We want to add one rng hw based on the dts. Is this proper or do you
+> > have other suggestion to meet this requirement?
+> 
+> It depends. There doesn't appear to be any resource configuration, so
+> why does it need to be in DT. DT is not the only way instantiate
+> drivers.
+> 
+> Rob
+> 
+
+We would like to consult more about this patch.
+We cannot figure out what method should be used instead of DT.
+The interface to access firmware is "smc" and firmware function only
+exists on certain platforms.
+Some DT has similar way, like:
+http://github.com/torvalds/linux/blob/master/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts#L470
+
+	firmware {
+		optee {
+			compatible = "linaro,optee-tz";
+			method = "smc";
+		};
+	};
+
+Is there any way to instantiate driver on certain platforms without DT?
+Could you give us some examples?
+Thanks
+
+> >
+> >         Thanks
+> >
+> >
+> > On Tue, 2019-07-23 at 01:13 +0800, Rob Herring wrote:
+> > > On Mon, Jun 24, 2019 at 03:24:11PM +0800, Neal Liu wrote:
+> > > > Document the binding used by the MediaTek ARMv8 SoCs random
+> > > > number generator with TrustZone enabled.
+> > > >
+> > > > Signed-off-by: Neal Liu <neal.liu@mediatek.com>
+> > > > ---
+> > > >  .../devicetree/bindings/rng/mtk-sec-rng.txt        |   10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > new file mode 100644
+> > > > index 0000000..c04ce15
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/rng/mtk-sec-rng.txt
+> > > > @@ -0,0 +1,10 @@
+> > > > +MediaTek random number generator with TrustZone enabled
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible : Should be "mediatek,mtk-sec-rng"
+> > >
+> > > What's the interface to access this?
+> > >
+> > > A node with a 'compatible' and nothing else is a sign of something that
+> > > a parent device should instantiate and doesn't need to be in DT. IOW,
+> > > what do complete bindings for firmware functions look like?
+> > >
+> > > > +
+> > > > +Example:
+> > > > +
+> > > > +hwrng: hwrng {
+> > > > +   compatible = "mediatek,mtk-sec-rng";
+> > > > +}
+> > > > --
+> > > > 1.7.9.5
+> > > >
+> > >
+> > > _______________________________________________
+> > > Linux-mediatek mailing list
+> > > Linux-mediatek@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> >
+> >
+
+
