@@ -2,53 +2,50 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2CCC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F37D3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5B021907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4F6821924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:59:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfIRN6i (ORCPT
+        id S1730616AbfIRN7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:58:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:42352 "EHLO foss.arm.com"
+        Wed, 18 Sep 2019 09:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbfIRN6i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:58:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 331341000;
-        Wed, 18 Sep 2019 06:58:37 -0700 (PDT)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFDE23F67D;
-        Wed, 18 Sep 2019 06:58:35 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 14:58:32 +0100
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20190918145832.0bb72e16@donnerap.cambridge.arm.com>
-In-Reply-To: <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
-        <1568626884-5189-3-git-send-email-peng.fan@nxp.com>
-        <20190917183856.2342beed@donnerap.cambridge.arm.com>
-        <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-        <20190918110037.4edefb2f@donnerap.cambridge.arm.com>
-        <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        id S1726038AbfIRN7B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:59:01 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1941D21907;
+        Wed, 18 Sep 2019 13:59:00 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 09:58:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc:     Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Joe Perches <joe@perches.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        linux-trace-devel@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v7 01/13] tools lib traceevent: Convert remaining %p[fF]
+ users to %p[sS]
+Message-ID: <20190918095858.58d9d949@gandalf.local.home>
+In-Reply-To: <20190918133419.7969-2-sakari.ailus@linux.intel.com>
+References: <20190918133419.7969-1-sakari.ailus@linux.intel.com>
+        <20190918133419.7969-2-sakari.ailus@linux.intel.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -57,153 +54,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 08:31:57 -0500
-Jassi Brar <jassisinghbrar@gmail.com> wrote:
+On Wed, 18 Sep 2019 16:34:07 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
 
-Hi,
-
-> On Wed, Sep 18, 2019 at 5:00 AM Andre Przywara <andre.przywara@arm.com> wrote:
+> There are no in-kernel %p[fF] users left. Convert the traceevent tool,
+> too, to align with the kernel.
 > 
-> > >  
-> > > >  
-> > > > > + };
-> > > > > +};  
-> > > >
-> > > > If this is the data structure that this mailbox controller uses, I would expect
-> > > > this to be documented somewhere, or even exported.  
-> > >
-> > > Export this structure in include/linux/mailbox/smc-mailbox.h?  
-> >
-> > For instance, even though I am not sure this is really desired or helpful, since we expect a generic mailbox client (the SCPI or SCMI driver) to deal with that mailbox.
-> >
-> > But at least the expected format should be documented, which could just be in writing, not necessarily in code.
-> >  
-> Yes, the packet format is specified by the controller and defined in
-> some header for clients to include. Other platforms do that already.
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+> Cc: linux-trace-devel@vger.kernel.org
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  .../Documentation/libtraceevent-func_apis.txt  | 10 +++++-----
+>  tools/lib/traceevent/event-parse.c             | 18 ++++++++++++++----
+>  2 files changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+> index 38bfea30a5f64..f6aca0df2151a 100644
+> --- a/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+> +++ b/tools/lib/traceevent/Documentation/libtraceevent-func_apis.txt
+> @@ -59,12 +59,12 @@ parser context.
+>  
+>  The _tep_register_function()_ function registers a function name mapped to an
+>  address and (optional) module. This mapping is used in case the function tracer
+> -or events have "%pF" or "%pS" parameter in its format string. It is common to
+> -pass in the kallsyms function names with their corresponding addresses with this
+> +or events have "%pS" parameter in its format string. It is common to pass in
+> +the kallsyms function names with their corresponding addresses with this
+>  function. The _tep_ argument is the trace event parser context. The _name_ is
+> -the name of the function, the string is copied internally. The _addr_ is
+> -the start address of the function. The _mod_ is the kernel module
+> -the function may be in (NULL for none).
+> +the name of the function, the string is copied internally. The _addr_ is the
+> +start address of the function. The _mod_ is the kernel module the function may
+> +be in (NULL for none).
+>  
+>  The _tep_register_print_string()_ function  registers a string by the address
+>  it was stored in the kernel. Some strings internal to the kernel with static
+> diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+> index b36b536a9fcba..2189621b616bc 100644
+> --- a/tools/lib/traceevent/event-parse.c
+> +++ b/tools/lib/traceevent/event-parse.c
+> @@ -4335,10 +4335,20 @@ static struct tep_print_arg *make_bprint_args(char *fmt, void *data, int size, s
+>  					switch (*ptr) {
+>  					case 's':
+>  					case 'S':
+> -					case 'f':
+> -					case 'F':
+>  					case 'x':
+>  						break;
+> +					case 'f':
+> +					case 'F':
+> +						/*
+> +						 * Pre-5.5 kernels use %pf and
+> +						 * %pF for printing symbols
+> +						 * while kernels since 5.5 use
+> +						 * %pfw for fwnodes. So check
+> +						 * %p[fF] isn't followed by 'w'.
+> +						 */
 
-Yeah, I saw some examples as well, but not every driver was following this apparently.
-I guess since we have a fixed data format we should export the struct then, maybe with a remark that the actual usage of registers is up to the protocol (within the SMCCC limits), so is optional.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-> > > > > +
-> > > > > +typedef unsigned long (smc_mbox_fn)(unsigned int, unsigned long,
-> > > > > +                             unsigned long, unsigned long,
-> > > > > +                             unsigned long, unsigned long,
-> > > > > +                             unsigned long);
-> > > > > +static smc_mbox_fn *invoke_smc_mbox_fn;
-> > > > > +
-> > > > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
-> > > > > + struct arm_smc_chan_data *chan_data = link->con_priv;
-> > > > > + struct arm_smccc_mbox_cmd *cmd = data;
-> > > > > + unsigned long ret;
-> > > > > + u32 function_id;
-> > > > > +
-> > > > > + function_id = chan_data->function_id;
-> > > > > + if (!function_id)
-> > > > > +         function_id = cmd->function_id;
-> > > > > +
-> > > > > + if (function_id & BIT(30)) {  
-> > > >
-> > > >     if (ARM_SMCCC_IS_64(function_id)) {  
-> > >
-> > > ok
-> > >  
-> > > >  
-> > > > > +         ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc64[0],
-> > > > > +                                  cmd->args_smccc64[1],
-> > > > > +                                  cmd->args_smccc64[2],
-> > > > > +                                  cmd->args_smccc64[3],
-> > > > > +                                  cmd->args_smccc64[4],
-> > > > > +                                  cmd->args_smccc64[5]);
-> > > > > + } else {
-> > > > > +         ret = invoke_smc_mbox_fn(function_id, cmd->args_smccc32[0],
-> > > > > +                                  cmd->args_smccc32[1],
-> > > > > +                                  cmd->args_smccc32[2],
-> > > > > +                                  cmd->args_smccc32[3],
-> > > > > +                                  cmd->args_smccc32[4],
-> > > > > +                                  cmd->args_smccc32[5]);
-> > > > > + }
-> > > > > +
-> > > > > + mbox_chan_received_data(link, (void *)ret);
-> > > > > +
-> > > > > + return 0;
-> > > > > +}
-> > > > > +
-> > > > > +static unsigned long __invoke_fn_hvc(unsigned int function_id,
-> > > > > +                              unsigned long arg0, unsigned long arg1,
-> > > > > +                              unsigned long arg2, unsigned long arg3,
-> > > > > +                              unsigned long arg4, unsigned long arg5) {
-> > > > > + struct arm_smccc_res res;
-> > > > > +
-> > > > > + arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4,
-> > > > > +               arg5, 0, &res);
-> > > > > + return res.a0;
-> > > > > +}
-> > > > > +
-> > > > > +static unsigned long __invoke_fn_smc(unsigned int function_id,
-> > > > > +                              unsigned long arg0, unsigned long arg1,
-> > > > > +                              unsigned long arg2, unsigned long arg3,
-> > > > > +                              unsigned long arg4, unsigned long arg5) {
-> > > > > + struct arm_smccc_res res;
-> > > > > +
-> > > > > + arm_smccc_smc(function_id, arg0, arg1, arg2, arg3, arg4,
-> > > > > +               arg5, 0, &res);
-> > > > > + return res.a0;
-> > > > > +}
-> > > > > +
-> > > > > +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
-> > > > > + .send_data      = arm_smc_send_data,
-> > > > > +};
-> > > > > +
-> > > > > +static int arm_smc_mbox_probe(struct platform_device *pdev) {
-> > > > > + struct device *dev = &pdev->dev;
-> > > > > + struct mbox_controller *mbox;
-> > > > > + struct arm_smc_chan_data *chan_data;
-> > > > > + int ret;
-> > > > > + u32 function_id = 0;
-> > > > > +
-> > > > > + if (of_device_is_compatible(dev->of_node, "arm,smc-mbox"))
-> > > > > +         invoke_smc_mbox_fn = __invoke_fn_smc;
-> > > > > + else
-> > > > > +         invoke_smc_mbox_fn = __invoke_fn_hvc;
-> > > > > +
-> > > > > + mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> > > > > + if (!mbox)
-> > > > > +         return -ENOMEM;
-> > > > > +
-> > > > > + mbox->num_chans = 1;
-> > > > > + mbox->chans = devm_kzalloc(dev, sizeof(*mbox->chans), GFP_KERNEL);
-> > > > > + if (!mbox->chans)
-> > > > > +         return -ENOMEM;
-> > > > > +
-> > > > > + chan_data = devm_kzalloc(dev, sizeof(*chan_data), GFP_KERNEL);
-> > > > > + if (!chan_data)
-> > > > > +         return -ENOMEM;
-> > > > > +
-> > > > > + of_property_read_u32(dev->of_node, "arm,func-id", &function_id);
-> > > > > + chan_data->function_id = function_id;
-> > > > > +
-> > > > > + mbox->chans->con_priv = chan_data;
-> > > > > +
-> > > > > + mbox->txdone_poll = false;
-> > > > > + mbox->txdone_irq = false;  
-> > > >
-> > > > Don't we need to provide something to confirm reception to the client? In our
-> > > > case we can set this as soon as the smc/hvc returns.  
-> > >
-> > > As smc/hvc returns, it means the transfer is over and receive is done.  
-> >
-> > I understand that, but was wondering if the Linux mailbox framework knows about that? In my older version I was calling mbox_chan_received_data() after the smc call returned.
-> >  
-> The code already does that at the end of  send_data
+-- Steve
 
-True, for some reason I totally missed that line, sorry for that.
- 
-> > Also there is mbox_chan_txdone() with which a controller driver can signal TX completion explicitly.
-> >  
-> No. Controller can use that only if it has specified txdone_irq, which
-> is not the case here.
+> +						if (ptr[1] != 'w')
+> +							break;
+> +						/* fall through */
+>  					default:
+>  						/*
+>  						 * Older kernels do not process
+> @@ -4455,12 +4465,12 @@ get_bprint_format(void *data, int size __maybe_unused,
+>  
+>  	printk = find_printk(tep, addr);
+>  	if (!printk) {
+> -		if (asprintf(&format, "%%pf: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+> +		if (asprintf(&format, "%%ps: (NO FORMAT FOUND at %llx)\n", addr) < 0)
+>  			return NULL;
+>  		return format;
+>  	}
+>  
+> -	if (asprintf(&format, "%s: %s", "%pf", printk->printk) < 0)
+> +	if (asprintf(&format, "%s: %s", "%ps", printk->printk) < 0)
+>  		return NULL;
+>  
+>  	return format;
 
-I see. So does the framework handle the case where both txdone_poll and txdone_irq are false?
-
-Cheers,
-Andre.
