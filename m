@@ -2,149 +2,94 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D66C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C23C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A346B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8382067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XgiMB28S"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Ij8XBoy6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfIROBs (ORCPT
+        id S1730539AbfIROCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:01:48 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:35753 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfIROBs (ORCPT
+        Wed, 18 Sep 2019 10:02:41 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33083 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726038AbfIROCk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:01:48 -0400
-Received: by mail-wm1-f67.google.com with SMTP id y21so207668wmi.0;
-        Wed, 18 Sep 2019 07:01:46 -0700 (PDT)
+        Wed, 18 Sep 2019 10:02:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n190so4190417pgn.0
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 07:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=sIYpPV0gwYoKAB5S6WKsIvLkhM2b1flwKz65XoEniwc=;
-        b=XgiMB28SY8wROslEuzRRNotbmYHYT9AJlCfFHcf7rriCyJKEi10dDd4yXKJFmMGlSp
-         XL0V5RK/nWqO4twAvYM1D6fURQWDSzpIL6Oh8jlRly74iueAWptAEqFVEBDujCYrmXJv
-         tfg9KsUEWuepePhXPrKU7hC7BOkpuMQfOos/urLJ42FckYo+ojfqQcSCn8JmnOFobD5p
-         ck6veQ5rqAN8jjRbfI5cR3iaX2ntZIqMPYTNLeluHFu+VE4FsPZk9PzK2uh9ngofTn3t
-         y4Y97zzjg6aLAZpY75/c5ZfiRZg+Z4Kt6of4CaFU+DgwzfFIk+o0BnfVKRY2UahRnWg4
-         Co+w==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9uv9WJmkyWh3Ol07uAv2gA7QZ2Mt6wbtwrT18jPSdYA=;
+        b=Ij8XBoy64zJB59li8mRwfos5AZiZq/bhaMYwAFtzpw2TerX05vOBCwlLEGz/r8wmBu
+         68P8I5yl5temyhrfxvfjw8mk9ivIPJYWVjUQIPyRtDdfTsjzGqHsi2jA1EM1Qm60Zh5O
+         fLhzpbt7B4t3hGysjU0YzgOBS9PHZEmYz46cvmbL7a26Tuz/spnI0a6vjAGodRbgZRJN
+         um95iF55LFumhhNTbBTGXKviqenv8SGgGM8UQS5VLp3OQek43mYRzKua0Dy05bldQ2KT
+         O3pYdsfz3stM3BhJ5WzmaSaISON16gv4c1aI5UZJ4lIwGzwO/wNkJoRo7P+VpwyAP0fe
+         tBQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=sIYpPV0gwYoKAB5S6WKsIvLkhM2b1flwKz65XoEniwc=;
-        b=SWcH00m1wzKA4kBl8sn47iwHp1KYJ9G/Mf9WbzKAScHY+DuhiErWPvaEH3bgfxtcRM
-         Pxt3Yry1hmTxpypeuxRHKw7rLXtqA4G+e3CpGoQaBc/1b/y+j2sfa13D1VORKLf3Nmq0
-         /8JGL7YDWYLf7qJr1dhEE+DFRIuMgkQHFOI4c7bXHgnhAXmJ4MJEu9FW/KJCfUe3T3w6
-         qoXBwiA2AvEvLHi1CJbL8Gp+1zVezbYu4MuqtxEMjcIfq3Vp8zRyAKbQA3avgIaS4Vsr
-         Mxh5ydNZJ2I3TANBQ4aQulov+gJYW5yY3C3xso9VFnKC2IowuuxukjK//8GO7qAoiuLL
-         n+5w==
-X-Gm-Message-State: APjAAAXvF3Pl1yr2IwiHKo6+50gCkX1vyN/BzU9dlzZ19zBPo37+akM9
-        tHSipuytYBD7kakEnc4EgRlxgKVt
-X-Google-Smtp-Source: APXvYqwjPp6K7bF9k3yhxybpD/fzOc9ct3mAUrtnxNYLvvW/bLkgaizftrHvDWLgszNtQcvTaqzsAA==
-X-Received: by 2002:a1c:a8d8:: with SMTP id r207mr2985299wme.135.1568815304882;
-        Wed, 18 Sep 2019 07:01:44 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id f143sm4030710wme.40.2019.09.18.07.01.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:01:43 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     will@kernel.org, kernellwp@gmail.com, gregkh@linuxfoundation.org,
-        Matt Delco <delco@chromium.org>, stable@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH] KVM: coalesced_mmio: add bounds checking
-Date:   Wed, 18 Sep 2019 16:01:42 +0200
-Message-Id: <1568815302-21319-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9uv9WJmkyWh3Ol07uAv2gA7QZ2Mt6wbtwrT18jPSdYA=;
+        b=en1Xh32LTJXGTYED859ysXEN/hKd/UjZS8IrdmUFLhVsbfxBweaiT3xA1e9Q3HoIqk
+         BSmtHr924RKMTCNrnB6vs3fk9kuCnjeWzb2VuTptNkwG4EBjzDJuoA46/+XUCIWBYmQp
+         0p4fG9YIMmSNZNBp9kiK4Eb3b9Bu1XXG6YtrLVgibp/BsCQBdYYEAZZEsqt3eaDdLuYx
+         6fKM3GCYYmUgSAGrnJ8hCy3S6DfhetXqO3pNW79TdM7/HdJViCf1KajASFsmdgnmlqsv
+         UWN4LwaewlFEcE1ixts0ZEz2W2qF7VGfMNlm5T00xvU0fm7bqwPy2/JSDoLXYuqVECLp
+         ZJkg==
+X-Gm-Message-State: APjAAAVgyFEfa3T+5QSgzZwUmybZmNCrjy7ujhhMISlcjpHcHINpoheZ
+        NajgnYw6isKRm7fOC3kYoQa7yg==
+X-Google-Smtp-Source: APXvYqwRs2W2y+LsdNpF08kKHByzKPteo0HkzNstmY51s/FeXDp5kqA3g06Ou020dsUj7oXalJ973w==
+X-Received: by 2002:a65:6786:: with SMTP id e6mr4196361pgr.257.1568815360240;
+        Wed, 18 Sep 2019 07:02:40 -0700 (PDT)
+Received: from pragneshp.open-silicon.com ([114.143.65.226])
+        by smtp.gmail.com with ESMTPSA id c14sm9058590pfm.179.2019.09.18.07.02.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 18 Sep 2019 07:02:39 -0700 (PDT)
+From:   Pragnesh Patel <pragnesh.patel@sifive.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     Pragnesh Patel <pragnesh.patel@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: [PATCH] regulator: dt-bindings: Fix building error for dt_binding_check
+Date:   Wed, 18 Sep 2019 19:32:20 +0530
+Message-Id: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Delco <delco@chromium.org>
+Compatible property is not of type 'string' so replace enum
+with items.
 
-The first/last indexes are typically shared with a user app.
-The app can change the 'last' index that the kernel uses
-to store the next result.  This change sanity checks the index
-before using it for writing to a potentially arbitrary address.
-
-This fixes CVE-2019-14821.
-
-Cc: stable@vger.kernel.org
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Signed-off-by: Matt Delco <delco@chromium.org>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
-[Use READ_ONCE. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
 ---
- virt/kvm/coalesced_mmio.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-index 5294abb3f178..8ffd07e2a160 100644
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -40,7 +40,7 @@ static int coalesced_mmio_in_range(struct kvm_coalesced_mmio_dev *dev,
- 	return 1;
- }
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+index a78150c..8d4a7b2 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
+@@ -29,7 +29,7 @@ if:
  
--static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
-+static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev, u32 last)
- {
- 	struct kvm_coalesced_mmio_ring *ring;
- 	unsigned avail;
-@@ -52,7 +52,7 @@ static int coalesced_mmio_has_room(struct kvm_coalesced_mmio_dev *dev)
- 	 * there is always one unused entry in the buffer
- 	 */
- 	ring = dev->kvm->coalesced_mmio_ring;
--	avail = (ring->first - ring->last - 1) % KVM_COALESCED_MMIO_MAX;
-+	avail = (ring->first - last - 1) % KVM_COALESCED_MMIO_MAX;
- 	if (avail == 0) {
- 		/* full */
- 		return 0;
-@@ -67,25 +67,28 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
- {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	__u32 insert;
+ properties:
+   compatible:
+-    enum:
++    items:
+       - const: regulator-fixed
+       - const: regulator-fixed-clock
  
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
- 
- 	spin_lock(&dev->kvm->ring_lock);
- 
--	if (!coalesced_mmio_has_room(dev)) {
-+	insert = READ_ONCE(ring->last);
-+	if (!coalesced_mmio_has_room(dev, insert) ||
-+	    insert >= KVM_COALESCED_MMIO_MAX) {
- 		spin_unlock(&dev->kvm->ring_lock);
- 		return -EOPNOTSUPP;
- 	}
- 
- 	/* copy data in first free entry of the ring */
- 
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
--	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
-+	ring->coalesced_mmio[insert].phys_addr = addr;
-+	ring->coalesced_mmio[insert].len = len;
-+	memcpy(ring->coalesced_mmio[insert].data, val, len);
-+	ring->coalesced_mmio[insert].pio = dev->zone.pio;
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (insert + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
- 	return 0;
- }
 -- 
-1.8.3.1
+2.7.4
 
