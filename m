@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F29C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECAFD21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6663621925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787896;
-	bh=EZNyax7R31/fUpxWagzOXKRSCF27HvnrImbZpRsL8sY=;
+	s=default; t=1568787899;
+	bh=6np+q82s1Nx0TkE0BdOMt7YqZ8YXCMzUpWHwV+6xJDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WK2JL24two+BimXscAj6bucEHnCP6FwM8/hyTsiKO3K/WVPhfohKqo/mMGiyGMc7f
-	 HsWJGMwbbI/K6ZhfNzYisYR2xVfjfguPgYoISwV7z81AM5kBp9IUrSictjaWtAG2my
-	 e+qbiASC0MIl6n1m3t9q+UBwINM3HpOQurHtVk1w=
+	b=Awt03eMoOUr0l/tdfHpGZyQnUdbLkf0JBW2BiPQZf+M5O+uuUWj0ARk5qGTRqNREk
+	 f0lREojJU9DgyD/GlS0zF12p6mplKU2LWCupS5Lnkc0UXrV2my8uNpxMSlNB2pjJG3
+	 8K35r3J2xZdpQxoW1rKJjLRKgWfxWd5J2H5mnavc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729939AbfIRGYy (ORCPT
+        id S1729949AbfIRGY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45358 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:24:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729914AbfIRGYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:46 -0400
+        id S1729151AbfIRGY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE809218AF;
-        Wed, 18 Sep 2019 06:24:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A311218AF;
+        Wed, 18 Sep 2019 06:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787885;
-        bh=EZNyax7R31/fUpxWagzOXKRSCF27HvnrImbZpRsL8sY=;
+        s=default; t=1568787896;
+        bh=6np+q82s1Nx0TkE0BdOMt7YqZ8YXCMzUpWHwV+6xJDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0od94pKX+gYwSXchVGSqT/7QT6rSEzJw7awGnx5vxMmDmdNZvDRwoNWlMAyovB7or
-         IAxqAYZBBDcnxlD4tGxzuH+WEkpQk3DY2T/7cPxObVBWSJ2UQ/R3njfbNZnsZ3IMBs
-         4eiu54gV5ECtKp1RxHCnz6pjZg37IxbfAMFUDQiA=
+        b=oLZTUBsgYehAenyBbNkhwS6tayxPGhyQn6L4bltg2WoSIr1KQCCRwDEQyerxuTMSa
+         rJoGxGvJYdUO/UGP8mBAhooeHudwNEyGFhNTuY6BOo096aOmDx2C3eR/V8jsEXGGUM
+         LJP/qXIVcHcJ7ctz35XG+i/w1S1GdzAtTxGLKEFo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 02/85] cdc_ether: fix rndis support for Mediatek based smartphones
-Date:   Wed, 18 Sep 2019 08:18:20 +0200
-Message-Id: <20190918061234.200486731@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 5.2 23/85] gpio: mockup: add missing single_release()
+Date:   Wed, 18 Sep 2019 08:18:41 +0200
+Message-Id: <20190918061234.890530260@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,102 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Bjørn Mork" <bjorn@mork.no>
+From: Wei Yongjun <weiyongjun1@huawei.com>
 
-[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
+commit 59929d3a2eb6c4abafc5b61a20c98aa8728ec378 upstream.
 
-A Mediatek based smartphone owner reports problems with USB
-tethering in Linux.  The verbose USB listing shows a rndis_host
-interface pair (e0/01/03 + 10/00/00), but the driver fails to
-bind with
+When using single_open() for opening, single_release() should be
+used instead of seq_release(), otherwise there is a memory leak.
 
-[  355.960428] usb 1-4: bad CDC descriptors
-
-The problem is a failsafe test intended to filter out ACM serial
-functions using the same 02/02/ff class/subclass/protocol as RNDIS.
-The serial functions are recognized by their non-zero bmCapabilities.
-
-No RNDIS function with non-zero bmCapabilities were known at the time
-this failsafe was added. But it turns out that some Wireless class
-RNDIS functions are using the bmCapabilities field. These functions
-are uniquely identified as RNDIS by their class/subclass/protocol, so
-the failing test can safely be disabled.  The same applies to the two
-types of Misc class RNDIS functions.
-
-Applying the failsafe to Communication class functions only retains
-the original functionality, and fixes the problem for the Mediatek based
-smartphone.
-
-Tow examples of CDC functional descriptors with non-zero bmCapabilities
-from Wireless class RNDIS functions are:
-
-0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x0f
-          connection notifications
-          sends break
-          line coding and serial state
-          get/set/clear comm features
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-
-and
-
-19d2:1023  ZTE K4201-z
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x02
-          line coding and serial state
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-
-The Mediatek example is believed to apply to most smartphones with
-Mediatek firmware.  The ZTE example is most likely also part of a larger
-family of devices/firmwares.
-
-Suggested-by: Lars Melin <larsm17@gmail.com>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/cdc_ether.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -206,7 +206,15 @@ int usbnet_generic_cdc_bind(struct usbne
- 		goto bad_desc;
- 	}
- skip:
--	if (rndis && header.usb_cdc_acm_descriptor &&
-+	/* Communcation class functions with bmCapabilities are not
-+	 * RNDIS.  But some Wireless class RNDIS functions use
-+	 * bmCapabilities for their own purpose. The failsafe is
-+	 * therefore applied only to Communication class RNDIS
-+	 * functions.  The rndis test is redundant, but a cheap
-+	 * optimization.
-+	 */
-+	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
-+	    header.usb_cdc_acm_descriptor &&
- 	    header.usb_cdc_acm_descriptor->bmCapabilities) {
- 		dev_dbg(&intf->dev,
- 			"ACM capabilities %02x, not really RNDIS?\n",
+---
+ drivers/gpio/gpio-mockup.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/gpio/gpio-mockup.c
++++ b/drivers/gpio/gpio-mockup.c
+@@ -309,6 +309,7 @@ static const struct file_operations gpio
+ 	.read = gpio_mockup_debugfs_read,
+ 	.write = gpio_mockup_debugfs_write,
+ 	.llseek = no_llseek,
++	.release = single_release,
+ };
+ 
+ static void gpio_mockup_debugfs_setup(struct device *dev,
 
 
