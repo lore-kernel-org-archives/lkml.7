@@ -2,235 +2,152 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7565FC4CECD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5D8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B30214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBE4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 02:37:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V1xa2vhA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNr5fPgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfIRCfQ (ORCPT
+        id S1727263AbfIRCg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 22:35:16 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:60230 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfIRCfO (ORCPT
+        Tue, 17 Sep 2019 22:36:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45273 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726666AbfIRCg7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 22:35:14 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190918023511epoutp016a2875d22d4b5afcb559b5ee6db384a6~FZ74X80HP1697316973epoutp01W
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:35:11 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190918023511epoutp016a2875d22d4b5afcb559b5ee6db384a6~FZ74X80HP1697316973epoutp01W
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1568774111;
-        bh=Z8B4t6x2SThW7y10AxlkdXvg/95O7AxZFmJlnEcGh/E=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=V1xa2vhAHd2HeXrf8KlughqQfLSj4soigQcNIBfwqP/6T9MioVCPypQLRsq4FnUmr
-         x1Mx9CmK4y8f5FW7JW9soR5LVfBcesSGkuFu2yzcs/S3H1/56Wh8vjMzTup/vddxLN
-         hbIW5ijOEfHyXeWxa64T5lA4budaFHMO/7lxAaLs=
-Received: from epsnrtp6.localdomain (unknown [182.195.42.167]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190918023510epcas1p2a0ad8f9794f47da39fdaf11820901605~FZ73tUebs1969819698epcas1p2s;
-        Wed, 18 Sep 2019 02:35:10 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.160]) by
-        epsnrtp6.localdomain (Postfix) with ESMTP id 46Y3ws3mHjzMqYkf; Wed, 18 Sep
-        2019 02:35:09 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        F2.27.04088.DD7918D5; Wed, 18 Sep 2019 11:35:09 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190918023508epcas1p1940b2b59fce55f7c1332b7d2aefd2bd4~FZ72DcvP52200622006epcas1p1j;
-        Wed, 18 Sep 2019 02:35:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190918023508epsmtrp289a18dc9cc88b153781a6a2d0f3be25b~FZ72CnLmL0361903619epsmtrp2b;
-        Wed, 18 Sep 2019 02:35:08 +0000 (GMT)
-X-AuditID: b6c32a35-845ff70000000ff8-42-5d8197dd36d8
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5F.C4.03706.CD7918D5; Wed, 18 Sep 2019 11:35:08 +0900 (KST)
-Received: from DONAMJAEJEO06 (unknown [10.88.104.63]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190918023508epsmtip103e760208fab5fe6118943268f992655~FZ71387dc3265732657epsmtip1k;
-        Wed, 18 Sep 2019 02:35:08 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Ju Hyung Park'" <qkrwngud825@gmail.com>,
-        "'Greg KH'" <gregkh@linuxfoundation.org>,
-        "'Valdis Kletnieks'" <valdis.kletnieks@vt.edu>
-Cc:     <devel@driverdev.osuosl.org>, <linkinjeon@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <alexander.levin@microsoft.com>,
-        <sergey.senozhatsky@gmail.com>, <linux-fsdevel@vger.kernel.org>,
-        <sj1557.seo@samsung.com>
-In-Reply-To: <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
-Subject: RE: [PATCH] staging: exfat: add exfat filesystem code to
-Date:   Wed, 18 Sep 2019 11:35:08 +0900
-Message-ID: <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
+        Tue, 17 Sep 2019 22:36:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 4so3066413pgm.12
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 19:36:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8wpxxTUuGVsmgpbrkwQXSwnsj5db54LEf/di0DULFjk=;
+        b=ZNr5fPgNdzS2J5NPV+kZEQC//guguQKQWma09goV6KF6vw4ujTy8073g/95XHe9Tn3
+         xXb1hL8xhE2To2tJiN+GryhRq2jfs8Kv0+crhnIgNAT7nk5sWvypSgAuItdPTEY5skuc
+         S9328xDog+2IWzO+1rkLqsRfvn3P9rglGId9hW3ym8vp9uvVG0D/+E1D7ZmQZHtcTWSC
+         fDCcqSCDZTPXBLafEgjoFeIpWPaTLnsvhPEE1gU5UuPtTWS66ccZ4QJm10gzk+VZomUM
+         QKFZZrP7IZymuwu/72T31zIXPJ6d6mZ23fTg2NvDK+Yr2lNeIEJDapnw2dN1sCW8RBdu
+         SPgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8wpxxTUuGVsmgpbrkwQXSwnsj5db54LEf/di0DULFjk=;
+        b=Bl78vCfgeYKbTjpmfIC4zTKmDGvTzVH0PyD7nnJpE8UFYe0uMbLCJbC6d0PaSIL04c
+         PJM5lqyJ3kEyKuBV/AtVPEWKAQKw2u/Nou1EoSFdC+tIBZUnz+BMZdWlDa5I7hDzeaQ6
+         /5Lkpr/b/HcDdUY4eGjxamWF9/xGXIOIqJ6zpXtjGJ9hE8rHp3iPqHzm81+pUuq9Idu8
+         eO+utLmHFAlz7/2RjKsIhTeM9wQLkJ5SuCGqWEyqkq045xM6kEWVK7hEddvAsGUrJSFK
+         EehHuxoRqAKJ68G/R9nzA+CwxEBByO3LG44nVJ4ZjAPop87eAF5WJWlZrjRytBjIPOav
+         MzxQ==
+X-Gm-Message-State: APjAAAVnwOD3jpo0RMVwU2eC804OFWFUpAtVGuCDFwSdfQgY7tvvK/me
+        ZXfAktV1+7HGM9cKKLKnjiE=
+X-Google-Smtp-Source: APXvYqywr4IpH4ZAVXbIkbRu4Xaau9yiGf1J8MNrnWB6W4W3NbOInOZ850iu8om7wPMrvsoNFZvKhw==
+X-Received: by 2002:a62:83cb:: with SMTP id h194mr1676102pfe.66.1568774218716;
+        Tue, 17 Sep 2019 19:36:58 -0700 (PDT)
+Received: from localhost ([175.223.34.14])
+        by smtp.gmail.com with ESMTPSA id a29sm6437181pfr.152.2019.09.17.19.36.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 19:36:57 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 11:36:54 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: printk meeting at LPC
+Message-ID: <20190918023654.GB15380@jagdpanzerIV>
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+ <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+ <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+ <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+ <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+ <20190905121101.60c78422@oasis.local.home>
+ <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+ <87k1acz5rx.fsf@linutronix.de>
+ <20190918012546.GA12090@jagdpanzerIV>
+ <20190917220849.17a1226a@oasis.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 14.0
-Thread-Index: AQGT5RAmYrUvbIdPV5wSdu6UWeOkRAHEPqcjASg+jxcBWaTXGQHGgTvdp4Nh1VA=
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TWUwTURTNY9qZQqx5VMRLTbSO4UMj2KEWBwPELWaIxGD8MSqpE5i0hG52
-        WiMYYxULAu5LxApG8MMlGggSrChLwCUQVAJG1Agad1FxAXdFp50a+Tv33nPuPfctKkLTSmpV
-        eXa34LLzVpqMUjR2zEpMGDiyLVt/ujGWbTnynGCvdP+g2KKTtSTbP/BACps7FWxfUyXJXnta
-        TbLnR55SbMPYVSXb+/6DYmEUN9jSoeAu+QcorrXqHMX5Ar8pbk/DWcSN1E/j2i++JbOoNdZU
-        i8DnCi6dYM9x5ObZzWn08lWmJSZjsp5JYFLY+bTOztuENHppZlbCsjyr5I/WbeStHimVxYsi
-        PTc91eXwuAWdxSG602jBmWt1MnpnosjbRI/dnJjjsC1g9Poko8Rcb7Uc9Q4SztIZm3ZUPCK8
-        qCauDEWqAM+D7y87I8pQlEqDAwj+eL3h4BOC4Y8V4eALguPl9Yp/Ep+vm5ALzQgOj/YogwUN
-        HkLQ25QRxCROgLFfrWSQFINLEVwuv6wMBgR+gODr6DAKsiLxSmipbAqpJ+FF8K2vLSKIFTge
-        GlveUUGsxinQ96REKeNo6Dz6LGSDwNPh4rtKQrakg8DNN6GeMXgF/PAdJGVODBwrLQ5ZBbyX
-        gsf+IkoWLIXdgwfD4kkwdKMhnNfCyHCzJFZJeDN8bA1TdiJ49TVNxga4X1unDFIIPAtqm+bK
-        6Rlw6WcVksdOhOHPu5RyFzXsLNbIlHjY09sRIeOpUFbygdqHaP+4xfzjFvOPW8D/f9gJpDiL
-        YgWnaDMLIuNkxt92PQo93tnGADp0K7MdYRWiJ6jhpjdbo+Q3igW2dgQqgo5RZ23Zmq1R5/IF
-        hYLLYXJ5rILYjozSue8ntJNzHNJXsLtNjDHJYDCw85LnJxsN9BQ1Z5b6YDPvFvIFwSm4/uki
-        VJFaL1pQXHKhKuXcAX9PYeWK8rGJkTWmfh+Xaquv+xYdZyF9p3YXBl4M7f9SvWn1J+0Ep2P5
-        4q7E6qk1a69Pi5vye3AkI920t2JHz7qcz0xbXeztwLU7PeaMzDNzGpO2d42emf42n79379X5
-        As+VaEdg5kM+fZ3tLj49Z8PJ1wP9Re/Tb3e30QrRwjOzCZfI/wVKHiGF0gMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrNIsWRmVeSWpSXmKPExsWy7bCSnO6d6Y2xBicaDCz2TX/KbLHnzC92
-        i+bF69ksrt+9BeTuPclicXnXHDaLo48Xslms/fyY3WLLvyOsFpfef2Bx4PK4t+8wi8fOWXfZ
-        PfbPXcPu0brjL7tH35ZVjB6fN8l5HNr+hi2APYrLJiU1J7MstUjfLoErY2bDPeaCTsWKlhn3
-        mRsYF0l2MXJySAiYSLS2nmHuYuTiEBLYzSixdvleFoiEtMSxEyAJDiBbWOLw4WKImheMElfa
-        PzGB1LAJ6Er8+7OfDSQhItANlJj7mAXEYRZ4wCjxds8UdoiWaUwSH1u2g7VwCgRK7JuzixXE
-        FhZwlPhx+QBYnEVAVWLbvrfsIDavgKXE5UftrBC2oMTJmU/ATmIW0JbofdjKCGHLS2x/O4cZ
-        4lQFiR1nX4PFRQT8JH61TmaDqBGRmN3ZxjyBUXgWklGzkIyahWTULCQtCxhZVjFKphYU56bn
-        FhsWGOallusVJ+YWl+al6yXn525iBEehluYOxstL4g8xCnAwKvHwHjjVECvEmlhWXJl7iFGC
-        g1lJhDegtj5WiDclsbIqtSg/vqg0J7X4EKM0B4uSOO/TvGORQgLpiSWp2ampBalFMFkmDk6p
-        BsZIUW22xo1y6XavUyapa7xQzdzRxzsrv4351JS4zc7liyv4d573bNQoOZRuu+DpJbdVL6Wq
-        inRfl1aWh1lM05ij+ZXPjeHjm+89rf4cCYcmHGn6+KstoLJ0y005/tB5Zx9q/FRor266l9/7
-        KmL3zKjHffkrb8zKV4nVdAjqu6Pyuu7m4xz5YCWW4oxEQy3mouJEADULHNW+AgAA
-X-CMS-MailID: 20190918023508epcas1p1940b2b59fce55f7c1332b7d2aefd2bd4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a
-References: <8998.1568693976@turing-police>
-        <20190917053134.27926-1-qkrwngud825@gmail.com>
-        <20190917054726.GA2058532@kroah.com>
-        <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
-        <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917220849.17a1226a@oasis.local.home>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've summarized some of the big differences between sdfat and exfat
-in linux-next.
+On (09/17/19 22:08), Steven Rostedt wrote:
+> > On (09/13/19 15:26), John Ogness wrote:
+> > > 2. A kernel thread will be created for each registered console, each
+> > > responsible for being the sole printers to their respective
+> > > consoles. With this, console printing is _fully_ decoupled from printk()
+> > > callers.  
+> > 
+> > sysrq over serial?
+> > 
+> > What we currently have is hacky, but, as usual, is a "best effort":
+> > 
+> > 	>> serial driver IRQ  
+> > 
+> > 	serial_handle_irq()		[console driver]
+> > 	 uart_handle_sysrq_char()
+> > 	  handle_sysrq()
+> > 	   printk()
+> > 	    call_console_drivers()
+> > 	     serial_write()		[re-enter console driver]
+> > 
+> > offloading this to kthread may be unreliable.
+> 
+> But we also talked about an "emergency flush" which will not wait for
+> the kthreads to finish and just output everything it can find in the
+> printk buffers (expecting that the consoles have an "emergency"
+> handler. We can add a sysrq to do an emergency flush.
 
-1. sdfat has been refactored to improve compatibility, readability and
-to be linux friendly.(included support mass storages larger than 2TB.)
+I'm sorry, I wasn't there, so I'm surely is missing on some details.
 
-2. sdfat has been optimized for the performance of SD-cards.
-  - Support SD-card friendly block allocation and delayed allocation
-    for vfat-fs only.
-  - Support aligned_mpage_write for both vfat-fs and exfat-fs
+I agree that when consoles have ->atomic_write then it surely makes sense
+to switch to emergency mode. I like the emergency state approach, but I'm
+not sure how it can be completely invisible to the rest of the system.
+Quoting John:
 
-3. sdfat has been optimized for the performance of general operations
-    like create,lookup and readdir.
+    : Unlike oops_in_progress, this state will not be visible to
+    : anything outside of the printk infrastructure.
 
-4. Fix many critical and minor bugs
- - Handle many kinds of error conditions gracefully to prevent panic.
- - Fix critical bugs related to rmdir, truncate behavior and so on...
+For instance, tty/sysrq must be able to switch printk emergency on/off.
+That already means that printk emergency knob should be visible to the
+rest of the kernel. A long time ago, we had printk_emergency_begin_sync()
+and printk_emergency_end_sync(), which would define reentrable
+printk_emergency blocks [1]:
 
-5. Fix NLS functions
+	printk_emergency_begin_sync();
+	handle_sysrq();
+	printk_emergency_end_sync();
 
-Note, that Samsung is still improving sdfat driver. For instance,
-what will be realeased soon is sdfat v2.3.0, which will include support
-for "UtcOffset" of "File Directory Entry", in order to satisfy
-exFAT specification 7.4.
+We also figured out that some PM (hibernation/suspend/etc.) stages (very
+early and/or very late ones) [2] also should have printk in emergency mode,
+plus some other parts of the kernel [3].
 
-Thanks!
+[1] https://lore.kernel.org/lkml/20170815025625.1977-4-sergey.senozhatsky@gmail.com/
+[2] https://lore.kernel.org/lkml/20170815025625.1977-7-sergey.senozhatsky@gmail.com/
+[3] https://lore.kernel.org/lkml/20170815025625.1977-8-sergey.senozhatsky@gmail.com/
 
-> -----Original Message-----
-> From: Ju Hyung Park [mailto:qkrwngud825@gmail.com]
-> Sent: Tuesday, September 17, 2019 3:04 PM
-> To: Greg KH; namjae.jeon@samsung.com; Valdis Kletnieks
-> Cc: devel@driverdev.osuosl.org; linkinjeon@gmail.com; linux-
-> kernel@vger.kernel.org; alexander.levin@microsoft.com;
-> sergey.senozhatsky@gmail.com; linux-fsdevel@vger.kernel.org
-> Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-> 
-> On Tue, Sep 17, 2019 at 2:47 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > It's the fact that it actually was in a form that could be merged, no
-> > one has done that with the sdfat code :)
-> 
-> Well, I'm more than happy to help if you guys are happy with merging
-> the new base.
-> 
-> > What fixes?  That's what I'm asking here.
-> 
-> I gave this as an example in my previous email:
-> https://github.com/MotorolaMobilityLLC/kernel-msm/commit/7ab1657
-> 
-> > How do we "know" that this is better than what we currently have today?
-> > We don't, so it's a bit hard to tell someone, "delete the work you did
-> > and replace it with this other random chunk of code, causing you a bunch
-> > more work in the process for no specific reason other than it looks
-> > 'newer'." :(
-> 
-> The new sdFAT base I'm suggesting, is just as "random" as the one
-> staging tree is based on.
-> 
-> If exFAT gets merged to Torvald's tree, there will be a lot more eyes
-> interested in it.
-> If there's a better base, we better switch to it now and prevent
-> further headaches long-term.
-> 
-> It's really hard to compare those 2 drivers base and extract
-> meaningful changelogs.
-> 
-> But regardless, here are some diff stats:
-> <Full diff stat>
->  Kconfig      |   79 +-
->  Makefile     |   46 +-
->  api.c        |  423 ----
->  api.h        |  310 ---
->  blkdev.c     |  409 +---
->  cache.c      | 1142 ++++-----
->  config.h     |   49 -
->  core.c       | 5583 ++++++++++++++++++++++++--------------------
->  core.h       |  196 --
->  core_exfat.c | 1553 ------------
->  exfat.h      | 1309 +++++++----
->  exfat_fs.h   |  417 ----
->  extent.c     |  351 ---
->  fatent.c     |  182 --
->  misc.c       |  401 ----
->  nls.c        |  490 ++--
->  super.c      | 5103 +++++++++++++++++++++-------------------
->  upcase.c     |  740 ++++++
->  upcase.h     |  407 ----
->  version.h    |   29 -
->  xattr.c      |  136 --
->  21 files changed, 8186 insertions(+), 11169 deletions(-)
-> 
-> <diff-filter=M>
->  Kconfig  |   79 +-
->  Makefile |   46 +-
->  blkdev.c |  409 +---
->  cache.c  | 1142 +++++-----
->  core.c   | 5583 ++++++++++++++++++++++++++----------------------
->  exfat.h  | 1309 ++++++++----
->  nls.c    |  490 ++---
->  super.c  | 5103 ++++++++++++++++++++++---------------------
->  8 files changed, 7446 insertions(+), 6715 deletions(-)
-> 
-> > I recommend looking at what we have in the tree now, and seeing what is
-> > missing compared to "sdfat".  I know a lot of places in the exfat code
-> > that needs to be fixed up, odds are they are the same stuff that needs
-> > to be resolved in sdfat as well.
-> 
-> Would there be any more data that I can provide?
-> It's really hard to go through the full diff :(
-> 
-> Thanks.
-
+	-ss
