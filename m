@@ -2,134 +2,138 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29930C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D97C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 066B820640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51ED0218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:02:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568797368;
+	bh=lwmhaKk2DoGcG7qzZtBauVEYaJWZpkGPIgrTEbpVuHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I77WAFaAVDTNnafTRAZlyHbkwW+1D7RQQlekjDQSo1GWyMQiibMq5DmFuTSvbIFp7
+	 ciW6JEQjRMwUzdDf5NGN1/ycCyrhsNp9/RsXKsjqi30bD8RnONqnSO0YWDMiS6qm5X
+	 c9EBCidsKpN8XCKgks0kg+qGaVPB3RTchuDh7bRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfIRJCd (ORCPT
+        id S1730808AbfIRJCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:02:33 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:44076 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727518AbfIRJCc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:02:32 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 95ADCC1B10D767F6B8F0;
-        Wed, 18 Sep 2019 17:02:30 +0800 (CST)
-Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Sep 2019
- 17:02:28 +0800
-Subject: Re: [PATCH stable 4.4 net] net: rds: Fix NULL ptr use in
- rds_tcp_kill_sock
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <chien.yen@oracle.com>, <davem@davemloft.net>,
-        <stable@vger.kernel.org>, <rds-devel@oss.oracle.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-References: <20190918083733.50266-1-maowenan@huawei.com>
- <20190918083253.GA1862222@kroah.com>
-From:   maowenan <maowenan@huawei.com>
-Message-ID: <c8953355-2b98-c4d0-2af2-4a69ad3e2d2d@huawei.com>
-Date:   Wed, 18 Sep 2019 17:02:26 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.0
+        Wed, 18 Sep 2019 05:02:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbfIRJCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 05:02:47 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7842820640;
+        Wed, 18 Sep 2019 09:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568797366;
+        bh=lwmhaKk2DoGcG7qzZtBauVEYaJWZpkGPIgrTEbpVuHQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=2YY6sB07c+zPpM3Ky3Ceb7ZrPsrPh6bkuh5bowYMqToN8uhTjr/3QNmPYvYtIS57O
+         fRtbK2HpOaY/qgA5TFGRP5mokdfIaJ3jJJr29UIbtWcGjURXb4gkKfofYo5gtPZTO8
+         U5ssMpNg7yE2zY4VNZvOgun7tkA9t3Ep9oLe9GB4=
+Date:   Wed, 18 Sep 2019 10:02:41 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] [v2] arm64: fix unreachable code issue with cmpxchg
+Message-ID: <20190918090240.5cc3rfcuenefisgr@willie-the-truck>
+References: <20190910115643.391995-1-arnd@arndb.de>
+ <20190917203425.GA31423@archlinux-threadripper>
 MIME-Version: 1.0
-In-Reply-To: <20190918083253.GA1862222@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.96.96]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917203425.GA31423@archlinux-threadripper>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 17, 2019 at 01:34:25PM -0700, Nathan Chancellor wrote:
+> On Tue, Sep 10, 2019 at 01:56:22PM +0200, Arnd Bergmann wrote:
+> > On arm64 build with clang, sometimes the __cmpxchg_mb is not inlined
+> > when CONFIG_OPTIMIZE_INLINING is set.
+> > Clang then fails a compile-time assertion, because it cannot tell at
+> > compile time what the size of the argument is:
+> > 
+> > mm/memcontrol.o: In function `__cmpxchg_mb':
+> > memcontrol.c:(.text+0x1a4c): undefined reference to `__compiletime_assert_175'
+> > memcontrol.c:(.text+0x1a4c): relocation truncated to fit: R_AARCH64_CALL26 against undefined symbol `__compiletime_assert_175'
+> > 
+> > Mark all of the cmpxchg() style functions as __always_inline to
+> > ensure that the compiler can see the result.
+> > 
+> > Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/648
+> > Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+> > Tested-by: Andrew Murray <andrew.murray@arm.com>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> > v2: skip unneeded changes, as suggested by Andrew Murray
+> > ---
+> >  arch/arm64/include/asm/cmpxchg.h | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/asm/cmpxchg.h b/arch/arm64/include/asm/cmpxchg.h
+> > index a1398f2f9994..f9bef42c1411 100644
+> > --- a/arch/arm64/include/asm/cmpxchg.h
+> > +++ b/arch/arm64/include/asm/cmpxchg.h
+> > @@ -62,7 +62,7 @@ __XCHG_CASE( ,  ,  mb_, 64, dmb ish, nop,  , a, l, "memory")
+> >  #undef __XCHG_CASE
+> >  
+> >  #define __XCHG_GEN(sfx)							\
+> > -static inline unsigned long __xchg##sfx(unsigned long x,		\
+> > +static __always_inline  unsigned long __xchg##sfx(unsigned long x,	\
+> >  					volatile void *ptr,		\
+> >  					int size)			\
+> >  {									\
+> > @@ -148,7 +148,7 @@ __CMPXCHG_DBL(_mb)
+> >  #undef __CMPXCHG_DBL
+> >  
+> >  #define __CMPXCHG_GEN(sfx)						\
+> > -static inline unsigned long __cmpxchg##sfx(volatile void *ptr,		\
+> > +static __always_inline unsigned long __cmpxchg##sfx(volatile void *ptr,	\
+> >  					   unsigned long old,		\
+> >  					   unsigned long new,		\
+> >  					   int size)			\
+> > @@ -255,7 +255,7 @@ __CMPWAIT_CASE( ,  , 64);
+> >  #undef __CMPWAIT_CASE
+> >  
+> >  #define __CMPWAIT_GEN(sfx)						\
+> > -static inline void __cmpwait##sfx(volatile void *ptr,			\
+> > +static __always_inline void __cmpwait##sfx(volatile void *ptr,		\
+> >  				  unsigned long val,			\
+> >  				  int size)				\
+> >  {									\
+> > -- 
+> > 2.20.0
+> > 
+> 
+> Looks like the arm64 pull request happened without this patch so clang
+> all{mod,yes}config builds are broken. Did the maintainers have any
+> further comments on it or could this make it in with the next one?
 
+Fear not! I plan to send this with some other fixes we've got for -rc1.
+I just to get my CI scripts going again (new machine), but that shouldn't
+take long.
 
-On 2019/9/18 16:32, Greg KH wrote:
-> On Wed, Sep 18, 2019 at 04:37:33PM +0800, Mao Wenan wrote:
->> After the commit c4e97b06cfdc ("net: rds: force to destroy
->> connection if t_sock is NULL in rds_tcp_kill_sock()."),
->> it introduced null-ptr-deref in rds_tcp_kill_sock as below:
->>
->> BUG: KASAN: null-ptr-deref on address 0000000000000020
->> Read of size 8 by task kworker/u16:10/910
->> CPU: 3 PID: 910 Comm: kworker/u16:10 Not tainted 4.4.178+ #3
->> Hardware name: linux,dummy-virt (DT)
->> Workqueue: netns cleanup_net
->> Call trace:
->> [<ffffff90080abb50>] dump_backtrace+0x0/0x618
->> [<ffffff90080ac1a0>] show_stack+0x38/0x60
->> [<ffffff9008c42b78>] dump_stack+0x1a8/0x230
->> [<ffffff90085d469c>] kasan_report_error+0xc8c/0xfc0
->> [<ffffff90085d54a4>] kasan_report+0x94/0xd8
->> [<ffffff90085d1b28>] __asan_load8+0x88/0x150
->> [<ffffff9009c9cc2c>] rds_tcp_dev_event+0x734/0xb48
->> [<ffffff90081eacb0>] raw_notifier_call_chain+0x150/0x1e8
->> [<ffffff900973fec0>] call_netdevice_notifiers_info+0x90/0x110
->> [<ffffff9009764874>] netdev_run_todo+0x2f4/0xb08
->> [<ffffff9009796d34>] rtnl_unlock+0x2c/0x48
->> [<ffffff9009756484>] default_device_exit_batch+0x444/0x528
->> [<ffffff9009720498>] ops_exit_list+0x1c0/0x240
->> [<ffffff9009724a80>] cleanup_net+0x738/0xbf8
->> [<ffffff90081ca6cc>] process_one_work+0x96c/0x13e0
->> [<ffffff90081cf370>] worker_thread+0x7e0/0x1910
->> [<ffffff90081e7174>] kthread+0x304/0x390
->> [<ffffff9008094280>] ret_from_fork+0x10/0x50
->>
->> If the first loop add the tc->t_sock = NULL to the tmp_list,
->> 1). list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node)
->>
->> then the second loop is to find connections to destroy, tc->t_sock
->> might equal NULL, and tc->t_sock->sk happens null-ptr-deref.
->> 2). list_for_each_entry_safe(tc, _tc, &tmp_list, t_tcp_node)
->>
->> Fixes: c4e97b06cfdc ("net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().")
->> Signed-off-by: Mao Wenan <maowenan@huawei.com>
->> ---
->>  net/rds/tcp.c | 8 +++++---
->>  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> Why is this not needed upstream as well?
-Upstream does not use tc->t_sock in the second loop after below two patches.
-afb4164d91c7 ("RDS: TCP: Refactor connection destruction to handle multiple paths") and
-2d746c93b6e5 ("rds: tcp: remove redundant function rds_tcp_conn_paths_destroy()")
-
-> 
-> 4.9.y?  4.14.y?  anything else?
-4.19.y and 4.14.y exist rds_tcp_conn_paths_destroy()
-to guarantee that.
-+static void rds_tcp_conn_paths_destroy(struct rds_connection *conn)
-+{
-+       struct rds_conn_path *cp;
-+       struct rds_tcp_connection *tc;
-+       int i;
-+       struct sock *sk;
-+
-+       for (i = 0; i < RDS_MPATH_WORKERS; i++) {
-+               cp = &conn->c_path[i];
-+               tc = cp->cp_transport_data;
-+               if (!tc->t_sock)
-+                       continue;
-+               sk = tc->t_sock->sk;
-+               sk->sk_prot->disconnect(sk, 0);
-+               tcp_done(sk);
-+       }
-+}
-+
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> .
-> 
-
+Will
