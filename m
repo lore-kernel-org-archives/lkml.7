@@ -2,108 +2,124 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B69C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20854C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F48B218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788288;
-	bh=MPecN1z7vc91+2Cgwuyp6cqCPNut/TxFlHXhIbxhVzE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QRut9OCF4bADyOQ9cBhE4aM7YqrOuWiRYbiCFn/+HEC6+ZMKT9F0eP3HpkWJAL73O
-	 dsLcCJDOGigsCJQl+2Fdm9ore78mNFEgiZTQX+bf6XfGO0710+EiiaqgX+KORTSDTg
-	 mnJCK9O6ZIx8FJym/D+4uj7bVxErpOvmZS5Dq9lI=
+	by mail.kernel.org (Postfix) with ESMTP id E837E218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xv6lI474"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfIRGb1 (ORCPT
+        id S1730220AbfIRGbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43670 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729601AbfIRGX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 023EF21927;
-        Wed, 18 Sep 2019 06:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787805;
-        bh=MPecN1z7vc91+2Cgwuyp6cqCPNut/TxFlHXhIbxhVzE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=etN2fxQhSRnJZ3rxMy/vPRaXLPwfsQuTeMOA48k3OZ+1Be5FsQEjgeukdILloUoYg
-         qkR42TX2WexFXeqEYyWtS6nwyXX6bvDdj8QdUheiDdR2QKTZ/SPhr+H9u3huSTTrBO
-         4XufUJKnsCc1UVqF6k4WkvXUmIg0DoPiPwrDnDpA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.19 41/50] drm: panel-orientation-quirks: Add extra quirk table entry for GPD MicroPC
-Date:   Wed, 18 Sep 2019 08:19:24 +0200
-Message-Id: <20190918061227.841458313@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
-References: <20190918061223.116178343@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Wed, 18 Sep 2019 02:31:35 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44611 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729571AbfIRGXV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 21so5289352otj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 23:23:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wK9VKPT5PALGow0s1AD18j7lV+EvX5g7BMBWsTpeIng=;
+        b=xv6lI474DYSgaSu5RV4eJEBRp8AAJwvehRoTTpWaCo2J8ub7oPk4fmWmvkg1ZEyHq+
+         TtxFAJNA+CkO15cIf36iqqP9X57G/JNY3Jb2I187WuFFnZsD/6zxHIOCkgH6EgYA1jfH
+         YFSSbCekS/IoziCPiLuxaZHnZq5wzOhwRethzETOZxKFgUsGwW/D4ZLudka0rLN2bOSj
+         SAypaAGTp5bpQL5XY1Q813yX/HmVuGih8Q5wEvBX1r4lbpI+8QupHhP+fcbRFrASg2mL
+         7pMs60vrA8DXbpmTG++BM1jE99VkeCVDR9xwYrqoLW/I0P3yuAd+Xz5+qsRpoB02XtZC
+         WfkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wK9VKPT5PALGow0s1AD18j7lV+EvX5g7BMBWsTpeIng=;
+        b=IIzI+3mt9PuonFD4vAM9DXtoJeYW1/9+0Q/BRs/276PeJvwuHCCQILpxpILxvO+XqJ
+         LLHyWCFPCCBmSr2CcP0HcDD4MRw9/hJGt+IB/7KZBXo+gawpy9QUUlD/FE/5ovARopPV
+         7chvFcONDldQ4mkwj5Ly/q9ugAzt1mOP7w/CRgVerPr6BtrK3rHyJHkxflOkSIVmEV7W
+         ZquXwJAARedTxQ1lXTle5EyCeQZfx6jhsVAHOOvCHg1Hb4ZB/3ZHBHHi41A6+QL7rN1D
+         ePsWt9EU8S+svNuH8YvPUGq6LaDmDyLW56VlxW5ppqN3l2a/OSVq+AL5WC3p9nRgk/ea
+         Iabw==
+X-Gm-Message-State: APjAAAVv4DSOpa1/x1PfEj7qLmScaY3+DyGVpvEueowfmo78aYbGb90h
+        p0cl9hfCIKEWwAs7N4rgIGApZiY4m6X/hoko9DlNgA==
+X-Google-Smtp-Source: APXvYqyy689jL78FRCBaToum4k1f1kK7Ku7U2vf7SNBEYUwL9xj0w29sOcLAmo488CIy0XySfEE42rIulH1rHL8wJvo=
+X-Received: by 2002:a9d:24e4:: with SMTP id z91mr1722754ota.41.1568787800000;
+ Tue, 17 Sep 2019 23:23:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1568630064-14887-1-git-send-email-sumit.garg@linaro.org>
+ <1568630064-14887-5-git-send-email-sumit.garg@linaro.org> <20190917181415.GA8472@linux.intel.com>
+ <20190917181507.GB8472@linux.intel.com>
+In-Reply-To: <20190917181507.GB8472@linux.intel.com>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Wed, 18 Sep 2019 11:53:08 +0530
+Message-ID: <CAFA6WYMbUGQ6+-XvR9_qSc=oVe1QSTg4kB-+y6rBmQLq+B6skg@mail.gmail.com>
+Subject: Re: [Patch v6 4/4] KEYS: trusted: Move TPM2 trusted keys code
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     dhowells@redhat.com, peterhuewe@gmx.de, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
+        jgg@ziepe.ca, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        jejb@linux.ibm.com, Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jerry Snitselaar <jsnitsel@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+On Tue, 17 Sep 2019 at 23:45, Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> On Tue, Sep 17, 2019 at 09:14:15PM +0300, Jarkko Sakkinen wrote:
+> > On Mon, Sep 16, 2019 at 04:04:24PM +0530, Sumit Garg wrote:
+> > > Move TPM2 trusted keys code to trusted keys subsystem. The reason
+> > > being it's better to consolidate all the trusted keys code to a single
+> > > location so that it can be maintained sanely.
+> > >
+> > > Suggested-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> >
+> > This commit has couple of issues that I only noticed when looking into
+> > bug reported by Mimi.
+> >
+> > Right now tpm_send() is the exported function that is used by other
+> > subsystems. tpm_transmit_cmd() is an internal function. This commit adds
+> > two unrelated code paths to send TPM commands, which is unacceptable.
 
-commit dae1ccee012ea7514af8e4a88429844157aca7dc upstream.
+Makes sense, will update.
 
-Newer GPD MicroPC BIOS versions have proper DMI strings, add an extra quirk
-table entry for these new strings. This is good news, as this means that we
-no longer have to update the BIOS dates list with every BIOS update.
+> >
+> > You should make tpm2 functionality to use tpm_send() instead and remove
+> > tpm_seal_trusted() and tpm_unseal_trusted() completely in this commit.
 
-Fixes: 652b8b086538("drm: panel-orientation-quirks: Add quirk for GPD MicroPC")
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190624154014.8557-2-hdegoede@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Okay.
 
----
- drivers/gpu/drm/drm_panel_orientation_quirks.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+>
+> The consequence is that the result needs unfortunately re-review. Sorry
+> about that, just took this time to notice this glitch.
 
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -82,6 +82,12 @@ static const struct drm_dmi_panel_orient
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
- 
-+static const struct drm_dmi_panel_orientation_data lcd720x1280_rightside_up = {
-+	.width = 720,
-+	.height = 1280,
-+	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
-+};
-+
- static const struct drm_dmi_panel_orientation_data lcd800x1280_rightside_up = {
- 	.width = 800,
- 	.height = 1280,
-@@ -109,6 +115,12 @@ static const struct dmi_system_id orient
- 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
- 		},
- 		.driver_data = (void *)&gpd_micropc,
-+	}, {	/* GPD MicroPC (later BIOS versions with proper DMI strings) */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "GPD"),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MicroPC"),
-+		},
-+		.driver_data = (void *)&lcd720x1280_rightside_up,
- 	}, {	/*
- 		 * GPD Pocket, note that the the DMI data is less generic then
- 		 * it seems, devices with a board-vendor of "AMI Corporation"
+No worries :). I will send next version of patch-set.
 
+FYI, I will be travelling for Linaro Connect next week so you could
+expect some delays in my responses.
 
+-Sumit
+
+>
+> /Jarkko
