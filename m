@@ -4,86 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171D7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9114BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC093222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645BB222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732092AbfIRT5G (ORCPT
+        id S2389019AbfIRT5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:57:06 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:35733 "EHLO
+        Wed, 18 Sep 2019 15:57:33 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:48215 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732061AbfIRT5F (ORCPT
+        with ESMTP id S1732189AbfIRT5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:57:05 -0400
+        Wed, 18 Sep 2019 15:57:31 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mdf3x-1hbcQw3R8z-00Zf3m; Wed, 18 Sep 2019 21:56:55 +0200
+ 1MsJXG-1huedC0a0w-00toR3; Wed, 18 Sep 2019 21:57:24 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
 Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] platform/x86: asus-wmi: add ACPI_BATTERY dependency
-Date:   Wed, 18 Sep 2019 21:56:33 +0200
-Message-Id: <20190918195652.2137765-1-arnd@arndb.de>
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/msm: include linux/sched/task.h
+Date:   Wed, 18 Sep 2019 21:57:07 +0200
+Message-Id: <20190918195722.2149227-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:O4l6j5E53fiS3NN7w2ynvgGmADBDg09qZ6Ikaebg4TXBbztuYwu
- ZJcxEY8zVsmmdUVpjTv4v71iGFcK0IjfTbmZDhwoWQTxgDRrBhf58rIMM0DP3w0jC6ifpWK
- ZP+2+pZO3r5IsFdJhur9hODjKZncOUkij/TqA5VOR8i8ct7LgtD1ub33RUDb5MJtdmshSt2
- czNXVxTV2wKKtgskuF/vA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:liiCRNrxY+4=:Y1cLuZg1twLvNKlKtXbzw0
- e9P0nXAdcBf63E1+/oCa/5cHEHsgfGbVorYdZypyghDrcRzC9f6S+BtC2EmcpGwiz7au9ih5D
- wDj2euRw2aUDZ5LIggIGXjPl4ra65mr2h9Naacb9GQkokoNnJd6NLnm1xyEzMtF2XDJNDpyBu
- VSqoBgnzF4A/j/QF1ekM3TnDfvVpj8y0WyeXdNcEQIE4Zkye9YnG4ag689NaupbkYAVTBz5sX
- GOzjOPNy4s5KoOYrOwEk2x6JT+i1l1pj/E5/jPFGsqmA7MRJOg4JD3odffxpdG16yI6of3fqy
- FjGMfCFG69UBzpm8G/5c7yGl0TTfWKSJvjeXdp+4UjogmRn6DEsGRr4RDU94nAa9Rz/MiQyoJ
- iddDLi8GgECx0JHwkfpne2nahd5z0ngv0WKjJPRA/UiLuHeudq5ieS+aOx/5rw6d7EsXlqfeH
- eYQ0CxPnOgiKrAASv07Mww4uqRb+Qs5JOtR9KWXZtcfJflPqHU5vqRDGkmeAGGXdpYL+vCFlz
- /+outmFmbTofWGHBDk98ios7oKhcxUMjmlrBLumWOHPF7iCU2NKFI778xUkbv6RAHFn0CsKwj
- iTLk46zpNPN6Bs5JlYjZ8rWI5iQFEp+l1GKRiCZcboVUPf6NUgRVfmZ6aEhL9w1EY3oQ3Nfq2
- DVnkis4LUZAnV8hw1+xiaj31485nH0lhZMOYnpoAHXwyI5PPlGZ9EfreA5GMmE3U9Fple7e+Y
- jLUnLXU3u09QjzNtyad5lfwVmhVxy7Z9Sy/dGgoCG572w0Y2aZ1jwkp19KtlfhpdeViD9qYMd
- r+KLtk9ZnPbdD0rDTNsEn+BIZgbHs0JJMcrVoubONDW90bqhaBROnNPbkGbe6jnEUBVchxdZO
- NLy28pjecwaShHEVvtXg==
+X-Provags-ID: V03:K1:Ej872YyO7HXEU8CNXRPtHdXeVnbz9zTySP1CA1k40z1LeTXe3mj
+ agyhpv74Sl7wE8DAVanhlat0KMZliMe8R8ywGa67hfQhJYGlR+KRVMvUxU/wHEUWlUxmbnd
+ 9LiD638HHbaqYm7Qb6ls3EkcaK//pUD4Q7Dq8hcNQ+MCYIoyM8I2gxs7mCOKKzlOfD8Omq3
+ TMgBP/SonrzP8n2XsRq7Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:e7/P3QW3qJ0=:4PgFN+vYMMVxcGiM7azlrg
+ HmWI/oIY0J7/xNdK8ONeJ9EYEXiDVKb2hl/JoBQZe5rboU26hT9Xp/ALIBW3W/I3YY63G3Ze8
+ ZCYiGaV27/3R1WZHzprA0w1/WwxED4IcNZbnyxibmi2n8wk6/6P3lSeZk1T/owvKUePSUGy3T
+ 87rvpUy1PQIM+Zft6TpQHdUHU5doc7UXOTEXr4vokcYRskxEJOTJR60kq57eFlLOWw2hIH1ej
+ Zw3mOjS0S7fjufGM4aF8CwVzxwQj03NMN6SQBCjcFIc9Mo4JU73flTCp36cqoTRg5MZWnEwyA
+ 4i6kQ3jWReHHvvxa7jsX4M7NToo+gTpRxGO5uYohsS+L5JUmFdyji2MMxiQIiLfTpYl83nmcE
+ fqJTvYuYD2coj1h+iZY6iSYejtHX52aihBUZqCzkr8fX+ZWTIz4mGbH3zPixdCr2daAf6hKcj
+ iN/t9Sco/HQ5T7IDAYaADkrMKogyCZ/6xGsW8J8jdNJcjC9pOXPOBMII/p/BPA6wihlomN9Ak
+ SItRQ7pmDGv3+SHitfUK+cU1Vcc9ORtLmt0VWwI+orvw8oqSIcJs+etB63o9eiqhz/FPC19vP
+ Z1klxsnRTmUto/4Z+BF0keJpPtSjUO6V86kc1xEtiBnH+vMWZZv4AWg9Ady+H6Ejy8XeDqI6L
+ A5RA8zGdM16qBmkKsWGZGcsP1awNHBWBcw4UlqnNomzpgbI2c4DlTu2wFRFoGDGa18n9MccTg
+ N37Sc6kShmA+Zjl3PhKVikXFDQ2amduC6eE+iXrLx0O7UY/LXNghESDaCmj9M35oxqnHlDCHW
+ GVWTI4F0StjbEcK5dA+clzgvhoVyLq+Pvgm8MORS7FkwtJBD//rnC/bbTHvrNcE0MFPXkAgAo
+ XV1BYLMMM0tkY7n4UWkQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this dependency, we can run into a link failure:
+Without this header file, compile-testing may run into a missing
+declaration:
 
-drivers/platform/x86/asus-wmi.o: In function `asus_wmi_remove':
-asus-wmi.c:(.text+0x430): undefined reference to `battery_hook_unregister'
-drivers/platform/x86/asus-wmi.o: In function `asus_wmi_probe':
-asus-wmi.c:(.text+0x2c6f): undefined reference to `battery_hook_register'
+drivers/gpu/drm/msm/msm_gpu.c:444:4: error: implicit declaration of function 'put_task_struct' [-Werror,-Wimplicit-function-declaration]
 
-Fixes: 7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
+Fixes: 482f96324a4e ("drm/msm: Fix task dump in gpu recovery")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/platform/x86/Kconfig | 1 +
+ drivers/gpu/drm/msm/msm_gpu.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1b67bb578f9f..d81de3f4f72e 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -680,6 +680,7 @@ config ASUS_WMI
- 	depends on RFKILL || RFKILL = n
- 	depends on HOTPLUG_PCI
- 	depends on ACPI_VIDEO || ACPI_VIDEO = n
-+	depends on ACPI_BATTERY
- 	select INPUT_SPARSEKMAP
- 	select LEDS_CLASS
- 	select NEW_LEDS
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index a052364a5d74..edd45f434ccd 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -16,6 +16,7 @@
+ #include <linux/pm_opp.h>
+ #include <linux/devfreq.h>
+ #include <linux/devcoredump.h>
++#include <linux/sched/task.h>
+ 
+ /*
+  * Power Management:
 -- 
 2.20.0
 
