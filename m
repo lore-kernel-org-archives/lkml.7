@@ -2,148 +2,207 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A6FFC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726B2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0154D21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:31:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="ycKfHT7X"
+	by mail.kernel.org (Postfix) with ESMTP id 488FB21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730994AbfIRRbz (ORCPT
+        id S1731365AbfIRRcB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:31:55 -0400
-Received: from mail-eopbgr760041.outbound.protection.outlook.com ([40.107.76.41]:62787
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfIRRby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:31:54 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I5wqiLQaieEjBKMwlcvEt/qn2xoEd8640ahWjYxKhb8FfPAIsna9613zOruO6AX0/sooY3WLz4QoGm1xPAHV7B9XbSsplzwtTgR7Y1rpjQawM+H1F4V8MVTJXkpDumZE2/M3sgyJvhN4SayelBNcehPIfsYKyQYP5xbCET17mX7kTLp13EtAhRJcPD/SeFetTSMwldyWKlAdrHSE2X+RUokvJr9Z9EDMZvg4KJIKIdzzENnDQ73So4wvdXg5XQTChBRi67LOMHyArJ2AFpAQkYbRjFSk7mVwY9OlbWRYS16a8khJj9Frw3ndRXxIQgt3RZPbwS/f2n4Vhc5XpUa4NA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3y/oRCuyq14oEYLl96e8p1ZW5mOoAD13REJc4BRDPU=;
- b=IPMAhtMrW/r0RE9MI35MckB/93CQ1TDk89JuVWkDjI7i5GqpBhGIpnAEaHzT4DwJ5AAkexdpxFwBHZYj9bf8+R/x5P/+vDW4CRpCdLB5Cl9b3U+nElW/qzktH2chdiHyZIHD3xgy4kiw+gYQAJUHWlJBWS1R76FqXICft+SrV3+J7OetJv1rmuLyum4rjMcVAXTkbJAbgYJickCNfVOKLNUDAxXO7JDFi4LKO1jmiTNX4OpcTkorbZeMisSS+HyKBaHp6SS5wzw/fhpHxFh8BBLSixmQroofAc3qryS8cLzS32gzXdeJ0ehagCPgAkrk5OqSadRIjG8Q6jgfJnQFFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z3y/oRCuyq14oEYLl96e8p1ZW5mOoAD13REJc4BRDPU=;
- b=ycKfHT7XgDhWlHrTGk4VcRUVtCEZu6sINy0bxkhmGacZrE3PoT1x9+CiyDF1GAzSSXHwlGxJI1rbTIXlD3PoXQWW0/KPE0JwxDCS/atwLxNiZruO6RAFSw/N/y/3MS8PNQXH1HlMCBZ9SAyPP2gwmUtPwY+SspBGv0+9yh/4Bxo=
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
- DM5PR12MB1627.namprd12.prod.outlook.com (10.172.40.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.15; Wed, 18 Sep 2019 17:31:49 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::9d43:b3d4:9ef:29fc%8]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
- 17:31:49 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Navid Emamdoost <navid.emamdoost@gmail.com>
-CC:     "emamd001@umn.edu" <emamd001@umn.edu>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Rex Zhu <Rex.Zhu@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/amdgpu: fix multiple memory leaks
-Thread-Topic: [PATCH] drm/amdgpu: fix multiple memory leaks
-Thread-Index: AQHVbjuE/MfZwEKPBUCH6bgJ2zCCjKcxsWcA
-Date:   Wed, 18 Sep 2019 17:31:49 +0000
-Message-ID: <7bab24ff-ded7-9f76-ba25-efd07cdd30dd@amd.com>
-References: <20190918160943.14105-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190918160943.14105-1-navid.emamdoost@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM3PR07CA0058.eurprd07.prod.outlook.com
- (2603:10a6:207:4::16) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c656e406-b8d0-4a70-f2e4-08d73c5e1615
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:DM5PR12MB1627;
-x-ms-traffictypediagnostic: DM5PR12MB1627:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB162710F0B6DCA61B9AE61EE6838E0@DM5PR12MB1627.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 01644DCF4A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(136003)(366004)(376002)(396003)(189003)(199004)(14444005)(4326008)(256004)(305945005)(6506007)(58126008)(229853002)(7736002)(102836004)(64756008)(76176011)(65956001)(66446008)(71190400001)(31696002)(71200400001)(66476007)(52116002)(7416002)(476003)(25786009)(386003)(11346002)(66946007)(14454004)(6486002)(54906003)(31686004)(99286004)(316002)(81166006)(2616005)(36756003)(6436002)(5660300002)(2906002)(65806001)(66556008)(8676002)(86362001)(6916009)(6246003)(186003)(478600001)(486006)(8936002)(446003)(6116002)(6512007)(81156014)(46003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1627;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: kjs2I2AVO3ktgX/o2TJ0kEzZX+TmZhxyp1DCbeE8Sjqty8DLh9ni90tDgcrcJeaDkfZlhGlcf+7APRIUjmzRimIcOeTzwnmMWjiCuZja6sif3jwuK1pjKaKr+9gsPXwYYRfk7e8IdKS97tpI4twcTASrdgWvOyiuzDc/vtS5OkJRIHsRv3vmyaAzrTXgNES9oSw5LLh/73nJUY+JRxlqL5MbvbSSpbN0pF13k4crxEOjNax7BGmveb1fERVU26kWdFtnzLAHPu4xsAz2BfGFXkR7jAZ0d7LLbeT/LJf2CQHJUL2KeBLLeN7oCrvtoFI1fBJILDlEuNLQsDdVCu36najEWKXci+0Oe5xL7E9fMqwlpBSKB+h5w36+8AJ0kGMcKGXI+Q+k8QGXFSm+FXoLs1KeHMaQJPmzRMS2zCnP2XA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A1D71F5F5C135646B97850C5FC00E050@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 18 Sep 2019 13:32:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37494 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727056AbfIRRcA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:32:00 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IHM13G138918
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:31:59 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3r2e21w7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:31:59 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Wed, 18 Sep 2019 18:31:57 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Sep 2019 18:31:55 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IHVsBP8192024
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 17:31:54 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C1F2AE058;
+        Wed, 18 Sep 2019 17:31:54 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AAF8BAE045;
+        Wed, 18 Sep 2019 17:31:53 +0000 (GMT)
+Received: from localhost (unknown [9.85.70.166])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 18 Sep 2019 17:31:53 +0000 (GMT)
+Date:   Wed, 18 Sep 2019 21:54:09 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
+ cede_offline
+To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>
+Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Kamalesh Babulal <kamaleshb@in.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
+References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
+        <87r24ew5i0.fsf@mpe.ellerman.id.au>
+        <1568788924.kxcnnog4r7.naveen@linux.ibm.com>
+        <877e65x2lk.fsf@mpe.ellerman.id.au>
+In-Reply-To: <877e65x2lk.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c656e406-b8d0-4a70-f2e4-08d73c5e1615
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 17:31:49.4502
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: DOOMeh0k3509s2NT3XU298xigJwBTV/4VIVcJ0dasiq36rFIcgXrMOdWCuhvCBdG
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1627
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19091817-0016-0000-0000-000002ADAAD4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091817-0017-0000-0000-0000330E564A
+Message-Id: <1568822623.nyl7ya1i16.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909180159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMTguMDkuMTkgdW0gMTg6MDkgc2NocmllYiBOYXZpZCBFbWFtZG9vc3Q6DQo+IEluIGFjcF9o
-d19pbml0IHRoZXJlIGFyZSBzb21lIGFsbG9jYXRpb25zIHRoYXQgbmVlZHMgdG8gYmUgcmVsZWFz
-ZWQgaW4NCj4gY2FzZSBvZiBmYWlsdXJlOg0KPg0KPiAxLSBhZGV2LT5hY3AuYWNwX2dlbnBkIHNo
-b3VsZCBiZSByZWxlYXNlZCBpZiBhbnkgYWxsb2NhdGlvbiBhdHRlbXAgZm9yDQo+IGFkZXYtPmFj
-cC5hY3BfY2VsbCwgYWRldi0+YWNwLmFjcF9yZXMgb3IgaTJzX3BkYXRhIGZhaWxzLg0KPiAyLSBh
-bGwgb2YgdGhvc2UgYWxsb2NhdGlvbnMgc2hvdWxkIGJlIHJlbGVhc2VkIGlmIHBtX2dlbnBkX2Fk
-ZF9kZXZpY2UNCj4gZmFpbHMuDQoNCkdvb2QgY2F0Y2gsIGJ1dCBwbGVhc2UgdXNlIGdvdG8gZXJy
-b3IgaGFuZGxpbmcgaW5zdGVhZCBvZiBhZGRpbmcgbW9yZSANCmFuZCBtb3JlIGtmcmVlIGNhbGxz
-Lg0KDQpSZWdhcmRzLA0KQ2hyaXN0aWFuLg0KDQo+DQo+IFNpZ25lZC1vZmYtYnk6IE5hdmlkIEVt
-YW1kb29zdCA8bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9n
-cHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FjcC5jIHwgMTAgKysrKysrKysrLQ0KPiAgIDEgZmls
-ZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4NCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hY3AuYyBiL2RyaXZlcnMvZ3B1
-L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hY3AuYw0KPiBpbmRleCBlYmE0MmM3NTJiY2EuLmRkM2Zh
-ODViMTFjNSAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1
-X2FjcC5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hY3AuYw0K
-PiBAQCAtMjMxLDE3ICsyMzEsMjEgQEAgc3RhdGljIGludCBhY3BfaHdfaW5pdCh2b2lkICpoYW5k
-bGUpDQo+ICAgCWFkZXYtPmFjcC5hY3BfY2VsbCA9IGtjYWxsb2MoQUNQX0RFVlMsIHNpemVvZihz
-dHJ1Y3QgbWZkX2NlbGwpLA0KPiAgIAkJCQkJCQlHRlBfS0VSTkVMKTsNCj4gICANCj4gLQlpZiAo
-YWRldi0+YWNwLmFjcF9jZWxsID09IE5VTEwpDQo+ICsJaWYgKGFkZXYtPmFjcC5hY3BfY2VsbCA9
-PSBOVUxMKSB7DQo+ICsJCWtmcmVlKGFkZXYtPmFjcC5hY3BfZ2VucGQpOw0KPiAgIAkJcmV0dXJu
-IC1FTk9NRU07DQo+ICsJfQ0KPiAgIA0KPiAgIAlhZGV2LT5hY3AuYWNwX3JlcyA9IGtjYWxsb2Mo
-NSwgc2l6ZW9mKHN0cnVjdCByZXNvdXJjZSksIEdGUF9LRVJORUwpOw0KPiAgIAlpZiAoYWRldi0+
-YWNwLmFjcF9yZXMgPT0gTlVMTCkgew0KPiArCQlrZnJlZShhZGV2LT5hY3AuYWNwX2dlbnBkKTsN
-Cj4gICAJCWtmcmVlKGFkZXYtPmFjcC5hY3BfY2VsbCk7DQo+ICAgCQlyZXR1cm4gLUVOT01FTTsN
-Cj4gICAJfQ0KPiAgIA0KPiAgIAlpMnNfcGRhdGEgPSBrY2FsbG9jKDMsIHNpemVvZihzdHJ1Y3Qg
-aTJzX3BsYXRmb3JtX2RhdGEpLCBHRlBfS0VSTkVMKTsNCj4gICAJaWYgKGkyc19wZGF0YSA9PSBO
-VUxMKSB7DQo+ICsJCWtmcmVlKGFkZXYtPmFjcC5hY3BfZ2VucGQpOw0KPiAgIAkJa2ZyZWUoYWRl
-di0+YWNwLmFjcF9yZXMpOw0KPiAgIAkJa2ZyZWUoYWRldi0+YWNwLmFjcF9jZWxsKTsNCj4gICAJ
-CXJldHVybiAtRU5PTUVNOw0KPiBAQCAtMzQ4LDYgKzM1MiwxMCBAQCBzdGF0aWMgaW50IGFjcF9o
-d19pbml0KHZvaWQgKmhhbmRsZSkNCj4gICAJCXIgPSBwbV9nZW5wZF9hZGRfZGV2aWNlKCZhZGV2
-LT5hY3AuYWNwX2dlbnBkLT5ncGQsIGRldik7DQo+ICAgCQlpZiAocikgew0KPiAgIAkJCWRldl9l
-cnIoZGV2LCAiRmFpbGVkIHRvIGFkZCBkZXYgdG8gZ2VucGRcbiIpOw0KPiArCQkJa2ZyZWUoYWRl
-di0+YWNwLmFjcF9nZW5wZCk7DQo+ICsJCQlrZnJlZShhZGV2LT5hY3AuYWNwX3Jlcyk7DQo+ICsJ
-CQlrZnJlZShhZGV2LT5hY3AuYWNwX2NlbGwpOw0KPiArCQkJa2ZyZWUoaTJzX3BkYXRhKTsNCj4g
-ICAJCQlyZXR1cm4gcjsNCj4gICAJCX0NCj4gICAJfQ0KDQo=
+Michael Ellerman wrote:
+> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
+>> Michael Ellerman wrote:
+>>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+>>>> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+>>>>
+>>>> Currently on Pseries Linux Guests, the offlined CPU can be put to one
+>>>> of the following two states:
+>>>>    - Long term processor cede (also called extended cede)
+>>>>    - Returned to the Hypervisor via RTAS "stop-self" call.
+>>>>
+>>>> This is controlled by the kernel boot parameter "cede_offline=on/off".
+>>>>
+>>>> By default the offlined CPUs enter extended cede.
+>>> 
+>>> Since commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU into an appropriate offline state") (Nov 2009)
+>>> 
+>>> Which you wrote :)
+>>> 
+>>> Why was that wrong?
+>>> 
+>>>> The PHYP hypervisor considers CPUs in extended cede to be "active"
+>>>> since the CPUs are still under the control fo the Linux Guests. Hence, when we change the
+>>>> SMT modes by offlining the secondary CPUs, the PURR and the RWMR SPRs
+>>>> will continue to count the values for offlined CPUs in extended cede
+>>>> as if they are online.
+>>>>
+>>>> One of the expectations with PURR is that the for an interval of time,
+>>>> the sum of the PURR increments across the online CPUs of a core should
+>>>> equal the number of timebase ticks for that interval.
+>>>>
+>>>> This is currently not the case.
+>>> 
+>>> But why does that matter? It's just some accounting stuff, does it
+>>> actually break something meaningful?
+>>
+>> Yes, this broke lparstat at the very least (though its quite unfortunate 
+>> we took so long to notice).
+> 
+> By "so long" you mean 10 years?
+> 
+> Also I've never heard of lparstat, but I assume it's one of these tools
+> that's meant to behave like the AIX equivalent?
+
+Yes, and yes. lparstat is part of powerpc-utils.
+
+> 
+> If it's been "broken" for 10 years and no one noticed, I'd argue the
+> current behaviour is now "correct" and fixing it would actually be a
+> breakage :)
+
+:)
+More on this below...
+
+> 
+>> With SMT disabled, and under load:
+>>   $ sudo lparstat 1 10
+>>
+>>   System Configuration
+>>   type=Shared mode=Uncapped smt=Off lcpu=2 mem=7759616 kB cpus=6 ent=1.00 
+>>
+>>   %user  %sys %wait    %idle    physc %entc lbusy  vcsw phint
+>>   ----- ----- -----    -----    ----- ----- ----- ----- -----
+>>   100.00  0.00  0.00     0.00     1.10 110.00 100.00 128784460     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128784860     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128785260     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128785662     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786062     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786462     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786862     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128787262     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128787664     0
+>>   100.00  0.00  0.00     0.00     1.07 107.00 100.00 128788064     0
+> 
+> What about that is wrong?
+
+The 'physc' column represents cpu usage in units of physical cores.  
+With 2 virtual cores ('lcpu=2') in uncapped, shared processor mode, we 
+expect this to be closer to 2 when fully loaded (and spare capacity 
+elsewhere in the system).
+
+> 
+>> With cede_offline=off:
+>>   $ sudo lparstat 1 10
+>>
+>>   System Configuration
+>>   type=Shared mode=Uncapped smt=Off lcpu=2 mem=7759616 kB cpus=6 ent=1.00 
+>>
+>>   %user  %sys %wait    %idle    physc %entc lbusy  vcsw phint
+>>   ----- ----- -----    -----    ----- ----- ----- ----- -----
+>>   100.00  0.00  0.00     0.00     1.94 194.00 100.00 128961588     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128961988     0
+>>   100.00  0.00  0.00     0.00      inf   inf 100.00 128962392     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128962792     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963192     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963592     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963992     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128964392     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128964792     0
+>>   100.00  0.00  0.00     0.00     1.91 191.00 100.00 128965194     0
+>>
+>> [The 'inf' values there show a different bug]
+>>
+>> Also, since we expose [S]PURR through sysfs, any tools that make use of 
+>> that directly are also affected due to this.
+> 
+> But again if we've had the current behaviour for 10 years then arguably
+> that's now the correct behaviour.
+
+That's a fair point, and probably again points to this area getting less 
+tested. One of the main reasons for this being caught now though, is 
+that there are workloads being tested under lower SMT levels now. So, I 
+suspect no one has been relying on this behavior and we can consider 
+this to be a bug.
+
+
+Thanks,
+Naveen
+
