@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CC1C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E4ABC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57427218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33605218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788273;
-	bh=P2jkNYRLfUzzTKbaT5lBb357nOuaUdw3XhA7ZngbgrQ=;
+	s=default; t=1568788277;
+	bh=BzxIUKoOvnNYHEWya8UXFU0IIsq/pDGqaOcvKpkqZTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MvJIhGJrvWfadTGjzuzvwl/wNbDFHls2NZC4V4liurKrhWsiKeMMhpVu4zz2P+tpi
-	 z0tHGotWR5JvhNFB+JKlsrYq2ZQJ/GVCTLxgkgcY3pClECdL38gPY58xupL7062GmZ
-	 Za9FcbJKdGqcXKgDJ9kvEqngNebIeUbN3ekiRBTM=
+	b=RtjcEOiCvIBiTYdW73b4EPwLKMDK0ve3f6UpP5jTZptVqnRq/ozzXhHfcnsXHLE7E
+	 nSz0GcfgMrrgDkzCLpgoGEZRy+peBT3aCYmWMOdu9eo1ATUecbtvRnXYQqrdchACRL
+	 FpWq5A2T4MDSzfOjUPOG2kvMyAmWhRSHsSDByr0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729691AbfIRGXl (ORCPT
+        id S1729669AbfIRGXg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43882 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729670AbfIRGXg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 18 Sep 2019 02:23:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43734 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729647AbfIRGXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C311B21920;
-        Wed, 18 Sep 2019 06:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EA24218AF;
+        Wed, 18 Sep 2019 06:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787816;
-        bh=P2jkNYRLfUzzTKbaT5lBb357nOuaUdw3XhA7ZngbgrQ=;
+        s=default; t=1568787810;
+        bh=BzxIUKoOvnNYHEWya8UXFU0IIsq/pDGqaOcvKpkqZTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HqgMlhkfz9TEwlFqWhfrgldhCQebJAvr8sGtnVtTvJeQhxeHIM0jG0r58Y20w4Ygf
-         fr83Fwr0pLNXEjiUHE+tD/mEo8UVGEMvHf4tYgzhbQAcehSU9gzWQtfzom6I/xp/jT
-         +Qrc6CNyZuV+9xoR5dS5J5neU6uWBF+e9pYVmc0o=
+        b=uPT+Tw9MhsbL4p9AX4eWySkTEVpK6JPS8aqfv82HoJMTHJEZRv1cuzunZ0fkAbTos
+         pfUwCtu5AZNlCEoy4qUbPaWfrP1aGcnBx4y1tBY4NANhT1fsva85RdjbTtUVK/QLVp
+         JLJ/54wLeOCe+4km7r1nN0ERQmC6l9w8Y1vCzID8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 4.19 27/50] drm/meson: Add support for XBGR8888 & ABGR8888 formats
-Date:   Wed, 18 Sep 2019 08:19:10 +0200
-Message-Id: <20190918061226.059082737@linuxfoundation.org>
+        stable@vger.kernel.org, Bastien Nocera <hadess@hadess.net>,
+        Christian Kellner <ckellner@redhat.com>,
+        Sukumar Ghorai <sukumar.ghorai@intel.com>,
+        Mario Limonciello <mario.limonciello@dell.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.19 43/50] Revert "Bluetooth: btusb: driver to enable the usb-wakeup feature"
+Date:   Wed, 18 Sep 2019 08:19:26 +0200
+Message-Id: <20190918061228.003282962@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,61 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+From: Mario Limonciello <mario.limonciello@dell.com>
 
-commit 5ffff4415f9eeae834960226770963e2947e17eb upstream.
+commit 1ffdb51f28e8ec6be0a2b812c1765b5cf5c44a8f upstream.
 
-Add missing XBGR8888 & ABGR8888 formats variants from the primary plane.
+This reverts commit a0085f2510e8976614ad8f766b209448b385492f.
 
-Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Kevin Hilman <khilman@baylibre.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190429075238.7884-1-narmstrong@baylibre.com
+This commit has caused regressions in notebooks that support suspend
+to idle such as the XPS 9360, XPS 9370 and XPS 9380.
+
+These notebooks will wakeup from suspend to idle from an unsolicited
+advertising packet from an unpaired BLE device.
+
+In a bug report it was sugggested that this is caused by a generic
+lack of LE privacy support.  Revert this commit until that behavior
+can be avoided by the kernel.
+
+Fixes: a0085f2510e8 ("Bluetooth: btusb: driver to enable the usb-wakeup feature")
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=200039
+Link: https://marc.info/?l=linux-bluetooth&m=156441081612627&w=2
+Link: https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/750073/
+CC: Bastien Nocera <hadess@hadess.net>
+CC: Christian Kellner <ckellner@redhat.com>
+CC: Sukumar Ghorai <sukumar.ghorai@intel.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/meson/meson_plane.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/bluetooth/btusb.c |    5 -----
+ 1 file changed, 5 deletions(-)
 
---- a/drivers/gpu/drm/meson/meson_plane.c
-+++ b/drivers/gpu/drm/meson/meson_plane.c
-@@ -120,6 +120,13 @@ static void meson_plane_atomic_update(st
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
- 					      OSD_COLOR_MATRIX_32_ARGB;
- 		break;
-+	case DRM_FORMAT_XBGR8888:
-+		/* For XRGB, replace the pixel's alpha by 0xFF */
-+		writel_bits_relaxed(OSD_REPLACE_EN, OSD_REPLACE_EN,
-+				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
-+		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
-+					      OSD_COLOR_MATRIX_32_ABGR;
-+		break;
- 	case DRM_FORMAT_ARGB8888:
- 		/* For ARGB, use the pixel's alpha */
- 		writel_bits_relaxed(OSD_REPLACE_EN, 0,
-@@ -127,6 +134,13 @@ static void meson_plane_atomic_update(st
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
- 					      OSD_COLOR_MATRIX_32_ARGB;
- 		break;
-+	case DRM_FORMAT_ABGR8888:
-+		/* For ARGB, use the pixel's alpha */
-+		writel_bits_relaxed(OSD_REPLACE_EN, 0,
-+				    priv->io_base + _REG(VIU_OSD1_CTRL_STAT2));
-+		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_32 |
-+					      OSD_COLOR_MATRIX_32_ABGR;
-+		break;
- 	case DRM_FORMAT_RGB888:
- 		priv->viu.osd1_blk0_cfg[0] |= OSD_BLK_MODE_24 |
- 					      OSD_COLOR_MATRIX_24_RGB;
-@@ -196,7 +210,9 @@ static const struct drm_plane_funcs meso
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1139,10 +1139,6 @@ static int btusb_open(struct hci_dev *hd
+ 	}
  
- static const uint32_t supported_drm_formats[] = {
- 	DRM_FORMAT_ARGB8888,
-+	DRM_FORMAT_ABGR8888,
- 	DRM_FORMAT_XRGB8888,
-+	DRM_FORMAT_XBGR8888,
- 	DRM_FORMAT_RGB888,
- 	DRM_FORMAT_RGB565,
- };
+ 	data->intf->needs_remote_wakeup = 1;
+-	/* device specific wakeup source enabled and required for USB
+-	 * remote wakeup while host is suspended
+-	 */
+-	device_wakeup_enable(&data->udev->dev);
+ 
+ 	if (test_and_set_bit(BTUSB_INTR_RUNNING, &data->flags))
+ 		goto done;
+@@ -1206,7 +1202,6 @@ static int btusb_close(struct hci_dev *h
+ 		goto failed;
+ 
+ 	data->intf->needs_remote_wakeup = 0;
+-	device_wakeup_disable(&data->udev->dev);
+ 	usb_autopm_put_interface(data->intf);
+ 
+ failed:
 
 
