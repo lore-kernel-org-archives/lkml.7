@@ -2,114 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.4 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15034C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104B2C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F2C20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0D99218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:18:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pBaXb5JT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuhATGSN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbfIRFRY (ORCPT
+        id S1727315AbfIRFSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:17:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:49763 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727016AbfIRFRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:17:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Y7Wz5hV6z9sN1;
-        Wed, 18 Sep 2019 15:17:19 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1568783839;
-        bh=/G/fMfo51L2IBi/WqzEf1ncwXWFlf5xXJj8Kcg+tBLs=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pBaXb5JT5/LGMp5V8e7fZYMzDPBQkbj5nI8GkykF6Lfn2Vo9pTA+1C3V5s5GoptL6
-         0L4fisKhr9F1HGascSZ4bO6dvpkErkmihyAwiVevfnDan3k1NGOqxA6+7MfddZbhgX
-         0mB2gz0VtHykybFI5m2gE1LA5MwoEgAjhYJk4m5kMaXf/BmQ+AV4hrslKucWQ/Blan
-         xBnwhRfXZ0cDryWgkubdhn+PtE1Thac7caJ58g2mEtFq2xZC2q88F5bE3E9qG9FyYQ
-         p1giKEdrwuWULEWJe0Q95hmP95QyjgBRdWFehgi31xhhc5HjFTUV7XuSbOSEcSLj7V
-         Lly8Yuhg2lwCA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nathan Lynch <nathanl@linux.ibm.com>,
-        Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of cede_offline
-In-Reply-To: <87a7b2rfj0.fsf@linux.ibm.com>
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com> <87impxr0am.fsf@linux.ibm.com> <20190915074217.GA943@in.ibm.com> <87a7b2rfj0.fsf@linux.ibm.com>
-Date:   Wed, 18 Sep 2019 15:17:19 +1000
-Message-ID: <87o8ziw5cw.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 18 Sep 2019 01:18:11 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:43034 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726444AbfIRFSK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:18:10 -0400
+Received: by mail-io1-f67.google.com with SMTP id v2so13136107iob.10;
+        Tue, 17 Sep 2019 22:18:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=hsEZeGzMmik1nF5cEz0wbkGKUHu+pMKAnWIyuh68h1o=;
+        b=CuhATGSNTggc1boGxczlcFdvvJB8SlQmvbqHc3SXKLYzHnH7O5b0FTvQ2dVhAvZtyU
+         jNDjI6FPxo1HohLRTErUqeNhipcaXCk3/mMpXRL3XBrcmFxknZbWnpEPfvG7ow0Aon+v
+         kE4Clwy4lAEmkzqPqPWzWEYJt7cpw+sUTU6f4pHMXpjpEPMspCwO8xmR3GdilOIPkv0r
+         mSIs+uPPIMIvijVWONDT6NAo8CzD1WTzokt5zpZckXLZFn7xq3gSBsW/rKQN7VrcpnWr
+         xbvsZwGLvn2Og1oDUdzJqGiggDG+QcCH0hqegKLI+TZMB0cD3ZefLRrAIF8Mpzj0ENYh
+         d//A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=hsEZeGzMmik1nF5cEz0wbkGKUHu+pMKAnWIyuh68h1o=;
+        b=hhhWDhLLxCaEIwPIOGVsT3nzmonHe99o23vdVuW72CFXs2Kh75eztyKmgYBal4e5f5
+         T/8WchvMvA9gDfM5MAUZKJo6aDCFY06uDXEhWSx2C2+OUAjn1MSB6ZGhJX+psFRTZeIC
+         z6IYVu7iNBKzrA1pyWSPikL0pTBLwbL+EL4emR0kiB0g0bgGwHLmp18XH9MN/XINbb2i
+         ZX2wwwLavle709cCiJWK1A5iv8fUgrt6gakDzZ0nbkFTHPKGVh/BzUOCZ+WY80jtH4Ep
+         +HXcCQOqRjlb0NVjLYpK63iZVJmr7mW0ptKFAacjdGX9MiWaT/UWW/xrwII239sIDdh4
+         XrNA==
+X-Gm-Message-State: APjAAAXSCOrVHmH2dms6bBhNT8aUuJ29KNXFWUWeV0MdGGObKyYD2e5k
+        oFlJUuqn+8zBm8cnv9vk78fQi7BR9Do=
+X-Google-Smtp-Source: APXvYqwDYJfv+C6cXnFMDzSVIBdz6YfXIw/z6Or2FY41AC3LLl2ZQkAUoygqnEJ+6j43xYEvqxifcQ==
+X-Received: by 2002:a6b:7d02:: with SMTP id c2mr2423948ioq.262.1568783889740;
+        Tue, 17 Sep 2019 22:18:09 -0700 (PDT)
+Received: from cs-dulles.cs.umn.edu (cs-dulles.cs.umn.edu. [128.101.35.54])
+        by smtp.googlemail.com with ESMTPSA id p26sm109882iob.50.2019.09.17.22.18.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 22:18:08 -0700 (PDT)
+From:   Navid Emamdoost <navid.emamdoost@gmail.com>
+Cc:     emamd001@umn.edu, smccaman@umn.edu, kjlu@umn.edu,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] RDMA: release allocated skb
+Date:   Wed, 18 Sep 2019 00:17:55 -0500
+Message-Id: <20190918051756.10238-1-navid.emamdoost@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nathan Lynch <nathanl@linux.ibm.com> writes:
-> Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
->> On Thu, Sep 12, 2019 at 10:39:45AM -0500, Nathan Lynch wrote:
->>> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
->>> > The patchset also defines a new sysfs attribute
->>> > "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
->>> > to allow userspace programs to change the state into which the
->>> > offlined CPU need to be put to at runtime.
->>> 
->>> A boolean sysfs interface will become awkward if we need to add another
->>> mode in the future.
->>> 
->>> What do you think about naming the attribute something like
->>> 'offline_mode', with the possible values 'extended-cede' and
->>> 'rtas-stopped'?
->>
->> We can do that. However, IMHO in the longer term, on PSeries guests,
->> we should have only one offline state - rtas-stopped.  The reason for
->> this being, that on Linux, SMT switch is brought into effect through
->> the CPU Hotplug interface. The only state in which the SMT switch will
->> recognized by the hypervisors such as PHYP is rtas-stopped.
->
-> OK. Why "longer term" though, instead of doing it now?
->
->
->> All other states (such as extended-cede) should in the long-term be
->> exposed via the cpuidle interface.
->>
->> With this in mind, I made the sysfs interface boolean to mirror the
->> current "cede_offline" commandline parameter. Eventually when we have
->> only one offline-state, we can deprecate the commandline parameter as
->> well as the sysfs interface.
->
-> I don't care for adding a sysfs interface that is intended from the
-> beginning to become vestigial...
->
-> This strikes me as unnecessarily incremental if you're changing the
-> default offline state. Any user space programs depending on the current
-> behavior will have to change anyway (and why is it OK to break them?)
->
-> Why isn't the plan:
->
->   1. Add extended cede support to the pseries cpuidle driver
->   2. Make stop-self the only cpu offline state for pseries (no sysfs
->      interface necessary)
+In create_cq, the allocated skb buffer needs to be released on error
+path.
 
-I agree, that would be preferable. Adding more sysfs tunables sucks,
-especially if they're going to be deprecated in the not too distant
-future.
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+---
+ drivers/infiniband/hw/cxgb4/cq.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Another option would be to add extended cede to the cpuidle driver,
-and retain the cede_offline boot parameter but make it false by default.
+diff --git a/drivers/infiniband/hw/cxgb4/cq.c b/drivers/infiniband/hw/cxgb4/cq.c
+index b1bb61c65f4f..841a395d9896 100644
+--- a/drivers/infiniband/hw/cxgb4/cq.c
++++ b/drivers/infiniband/hw/cxgb4/cq.c
+@@ -166,6 +166,7 @@ static int create_cq(struct c4iw_rdev *rdev, struct t4_cq *cq,
+ 	if (user && !cq->bar2_pa) {
+ 		pr_warn("%s: cqid %u not in BAR2 range\n",
+ 			pci_name(rdev->lldi.pdev), cq->cqid);
++		kfree_skb(skb);
+ 		ret = -EINVAL;
+ 		goto err4;
+ 	}
+-- 
+2.17.1
 
-cheers
