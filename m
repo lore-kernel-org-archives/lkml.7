@@ -2,254 +2,118 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43815C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F00DC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C32F21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pdsTmTy+"
+	by mail.kernel.org (Postfix) with ESMTP id 586CE21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfIRHcb (ORCPT
+        id S1729274AbfIRHdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:32:31 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41652 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729228AbfIRHc1 (ORCPT
+        Wed, 18 Sep 2019 03:33:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45063 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725298AbfIRHdN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:32:27 -0400
-Received: by mail-ed1-f65.google.com with SMTP id f20so3233652edv.8;
-        Wed, 18 Sep 2019 00:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pMRyAAMSr25/uzv+iFU0HHBkFg5lhH7YB2umT/GPFT8=;
-        b=pdsTmTy+6+Q3KzW0EazEZ7g19GTKEQLaHIJig5o32uIL90WCyNluMmi7IgiSgABr/K
-         85of6LhqmoZeOXauE8IiDpegNb4jX5/WL6/EOnzeO1wUYamA2npdwvgWBAPBlGT0fRah
-         KYOpf/yVBIyDsiz/Xmt/BB78+je7ODtw7VZcbNCt3a+P+ixY2zimr/wX864Htkf5sXSv
-         p+lj32iVfIetG1hGab8bFUL0Are93w7mb7QkoQzUCUideCbABBENUuqeqtmjpBoMTOCe
-         AhFAeNYr7KJ8DfO+hdsMnqICvSUJCgrKpFjOQtknuhqh7hjeRf/eaDHMqqCKh12M0AMR
-         dRWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pMRyAAMSr25/uzv+iFU0HHBkFg5lhH7YB2umT/GPFT8=;
-        b=JmuCg5bnNkFbPxq1jy2MAH4e+7Ug4NvCNSY4Z9ktHZTjbSFFzs92gUgCUS4peDGZj7
-         OqIpQLZzbEVXoocs5OROE8pnRAaGMAvLDhp+ycuHtD92R/zWAqUBgNiaQKnP3Hfrs04r
-         BZ3D9OgKt4jff9YHFj7/RY+rWkU7Yiw+KS1ECBYQlTOasH4BHD/mnzMtztNiL6UxCv/E
-         qlnw8vuHde2RHg1qCld5oXWCufX41NJUNewZ2KSRLOoe8kymi2gVMoZhs/j5Dxc8+F7A
-         x9fAG+m6eehL5CVmnLo5m3/h2xqCEyhcZdkhWEkM54iRy1p5BOBPH8r1J7r1zIfC2O9R
-         zXbA==
-X-Gm-Message-State: APjAAAUqsDlapWTOkTqHjCIN/9eDWVEWXX7UoOYFqSE9nTut1w6hefJW
-        DBKAScp7kS9wv3SHrvGuKsbwjogwq4fXleCOxtPmug==
-X-Google-Smtp-Source: APXvYqyjOF4Xb7nN31Q4FJYCioLbEXzRNdb/lNTMgmuOKR4VZGLQk0dI9XEY+6dnC7SllFvnYzEwM3ZvHGLZ33JzL1Q=
-X-Received: by 2002:a17:906:4a19:: with SMTP id w25mr8286817eju.239.1568791944801;
- Wed, 18 Sep 2019 00:32:24 -0700 (PDT)
+        Wed, 18 Sep 2019 03:33:13 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1iAUSU-0008LA-Tw; Wed, 18 Sep 2019 09:33:03 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>, Paul Turner <pjt@google.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Prarit Bhargava <prarit@redhat.com>
+Subject: Re: printk meeting at LPC
+References: <20190807222634.1723-1-john.ogness@linutronix.de>
+        <20190904123531.GA2369@hirez.programming.kicks-ass.net>
+        <20190905130513.4fru6yvjx73pjx7p@pathway.suse.cz>
+        <20190905143118.GP2349@hirez.programming.kicks-ass.net>
+        <alpine.DEB.2.21.1909051736410.1902@nanos.tec.linutronix.de>
+        <20190905121101.60c78422@oasis.local.home>
+        <alpine.DEB.2.21.1909091507540.1791@nanos.tec.linutronix.de>
+        <87k1acz5rx.fsf@linutronix.de> <20190918012546.GA12090@jagdpanzerIV>
+        <20190917220849.17a1226a@oasis.local.home>
+        <20190918023654.GB15380@jagdpanzerIV>
+Date:   Wed, 18 Sep 2019 09:33:01 +0200
+In-Reply-To: <20190918023654.GB15380@jagdpanzerIV> (Sergey Senozhatsky's
+        message of "Wed, 18 Sep 2019 11:36:54 +0900")
+Message-ID: <87lfumnjo2.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
- <1539111085-25502-5-git-send-email-atish.patra@wdc.com> <CACRpkdaoBwqQ4V5Hm9f_G5_jrdkvjT5anhBK1_HoFTj6=cba-Q@mail.gmail.com>
- <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
-In-Reply-To: <d8fe9a17-283c-e2ad-9e01-2754b35699b4@wdc.com>
-From:   Bin Meng <bmeng.cn@gmail.com>
-Date:   Wed, 18 Sep 2019 15:32:13 +0800
-Message-ID: <CAEUhbmWmWr+dDEqtfwO8U1nXOOzfJ_1L+omVZEU=cZbnWgJpDw@mail.gmail.com>
-Subject: Re: [RFC 4/4] gpio: sifive: Add GPIO driver for SiFive SoCs
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2019-09-18, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>>>> 2. A kernel thread will be created for each registered console,
+>>>> each responsible for being the sole printers to their respective
+>>>> consoles. With this, console printing is _fully_ decoupled from
+>>>> printk() callers.
+>>> 
+>>> sysrq over serial?
+>>> 
+>>> offloading this to kthread may be unreliable.
+>> 
+>> But we also talked about an "emergency flush" which will not wait for
+>> the kthreads to finish and just output everything it can find in the
+>> printk buffers (expecting that the consoles have an "emergency"
+>> handler. We can add a sysrq to do an emergency flush.
 
-On Wed, Oct 17, 2018 at 9:01 AM Atish Patra <atish.patra@wdc.com> wrote:
->
-> On 10/10/18 5:35 AM, Linus Walleij wrote:
-> > Hi Atish,
-> >
-> > thanks for your patch!
-> >
-> > On Tue, Oct 9, 2018 at 8:51 PM Atish Patra <atish.patra@wdc.com> wrote:
-> >
-> >> From: "Wesley W. Terpstra" <wesley@sifive.com>
-> >>
-> >> Adds the GPIO driver for SiFive RISC-V SoCs.
-> >>
-> >> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> >> [Atish: Various fixes and code cleanup]
-> >> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> >
-> > (...)
-> >
-> >> +config GPIO_SIFIVE
-> >> +       bool "SiFive GPIO support"
-> >> +       depends on OF_GPIO
-> >> +       select GPIOLIB_IRQCHIP
-> >
-> > I suggest to add
-> > select GPIO_GENERIC as per below.
-> >
-> > Maybe select REGMAP_MMIO as well.
->
-> ok.
->
-> >
-> >> +       help
-> >> +         Say yes here to support the GPIO device on SiFive SoCs.
-> >> +
-> >
-> >> +#include <linux/of_irq.h>
-> >> +#include <linux/irqchip/chained_irq.h>
-> >
-> > Do you need these two? I think <linux/gpio/driver.h>
-> > will bring them in for you.
-> >
->
-> driver.h only brings chained_irq.h. of_irq.h is still required. Right ?
->
-> >> +#include <linux/pinctrl/consumer.h>
-> >
-> > Are you using this?
->
-> My bad. Left over from the old code. I will remove it.
->
-> >
-> >> +struct sifive_gpio {
-> >> +       raw_spinlock_t          lock;
-> >> +       void __iomem            *base;
-> >> +       struct gpio_chip        gc;
-> >> +       unsigned long           enabled;
-> >
-> > Since max GPIO is 32 why not use an u32 for this?
-> >
->
-> Sure.
->
-> >> +       unsigned int            trigger[MAX_GPIO];
-> >> +       unsigned int            irq_parent[MAX_GPIO];
-> >> +       struct sifive_gpio      *self_ptr[MAX_GPIO];
-> >> +};
-> >> +
-> >> +static void sifive_assign_bit(void __iomem *ptr, unsigned int offset, int value)
-> >> +{
-> >> +       /*
-> >> +        * It's frustrating that we are not allowed to use the device atomics
-> >> +        * which are GUARANTEED to be supported by this device on RISC-V
-> >> +        */
-> >> +       u32 bit = BIT(offset), old = ioread32(ptr);
-> >> +
-> >> +       if (value)
-> >> +               iowrite32(old | bit, ptr);
-> >> +       else
-> >> +               iowrite32(old & ~bit, ptr);
-> >> +}
-> >
-> > This looks like a mask and set implementation, you are
-> > essentially reinventing regmap MMIO and the
-> > regmap_update_bits() call. Could you look into
-> > just using regmap MMIO in that case?
-> >
-> > If you need examples, look at gpio-mvebu.c that calls
-> > devm_regmap_init_mmio() for example.
-> >
->
-> That's really cool. Sorry, for not checking that earlier.
-> I am pretty new to this.
->
-> >> +static int sifive_direction_input(struct gpio_chip *gc, unsigned int offset)
-> >> +static int sifive_direction_output(struct gpio_chip *gc, unsigned int offset,
-> >> +static int sifive_get_direction(struct gpio_chip *gc, unsigned int offset)
-> >> +static int sifive_get_value(struct gpio_chip *gc, unsigned int offset)
-> >> +static void sifive_set_value(struct gpio_chip *gc, unsigned int offset,
-> >
-> > These functions look like a typical hardware that can use
-> >
-> > GPIOLIB_GENERIC and bgpio_init() to set up the accessors.
-> >
-> > See gpio-ftgpio010.c for an example.
-> >
-> > As a bonus you will get .get/.set_multiple implemented by
-> > the generic GPIO.
-> >
->
-> Great. This will reduce the driver a code by a big factor.
-> Thanks for the pointer.
->
->
-> >> +static void sifive_irq_enable(struct irq_data *d)
-> >> +static void sifive_irq_disable(struct irq_data *d)
-> > (...)
-> >> +static struct irq_chip sifive_irqchip = {
-> >> +       .name           = "sifive-gpio",
-> >> +       .irq_set_type   = sifive_irq_set_type,
-> >> +       .irq_mask       = sifive_irq_mask,
-> >> +       .irq_unmask     = sifive_irq_unmask,
-> >> +       .irq_enable     = sifive_irq_enable,
-> >> +       .irq_disable    = sifive_irq_disable,
-> >
-> > The handling of .irq_enable and .irq_disable has
-> > changed upstream. Please align with the new codebase
-> > as changed by Hans Verkuil:
-> >
-> > commit 461c1a7d4733d1dfd5c47b040cf32a5e7eefbc6c
-> > "gpiolib: override irq_enable/disable"
-> > commit 4e9439ddacea06f35acce4d374bf6bd0acf99bc8
-> > "gpiolib: add flag to indicate if the irq is disabled"
-> >
-> > You will need to rebase your work on the v4.20-rc1 once it is
-> > out. Right now the changes are on linux-next or my devel
-> > branch.
->
-> Will do.
->
-> >
-> >> +       ngpio = of_irq_count(node);
-> >> +       if (ngpio >= MAX_GPIO) {
-> >> +               dev_err(dev, "Too many GPIO interrupts (max=%d)\n", MAX_GPIO);
-> >> +               return -ENXIO;
-> >> +       }
-> > (...)
-> >> +       for (gpio = 0; gpio < ngpio; ++gpio) {
-> >> +               irq = platform_get_irq(pdev, gpio);
-> >> +               if (irq < 0) {
-> >> +                       dev_err(dev, "invalid IRQ\n");
-> >> +                       gpiochip_remove(&chip->gc);
-> >> +                       return -ENODEV;
-> >> +               }
-> >
-> > This is an hierarchical IRQ so it should use an hierarchical
-> > irqdomain.
-> >
-> > I am discussing with Thierry to make more generic irq domains
-> > for hierarchical IRQ GPIOs, until then you have to look at
-> > gpio-thunderx.c, gpio-uniphier.c or gpio-xgene-sb.c that all
-> > use hierarchical IRQs.
-> >
->
-> Thanks. I will convert them to hierarchical IRQ.
->
+The problem with only a flush here is that the sysrq output may not fit
+in the ringbuffer (ftrace, for example). It probably makes more sense to
+have a switch to enter/exit "synchronous state", where all atomic
+consoles are flushed upon enter and all future printk's are synchronous
+on atomic consoles until exit.
 
-When will this series get respun and upstreamed?
+I expect sysrq to be the only valid use of "synchronous state" other
+than oops/panic. Although I suppose PeterZ would like a boot argument to
+always run the consoles in this state.
 
-Regards,
-Bin
+> I agree that when consoles have ->atomic_write then it surely makes
+> sense to switch to emergency mode. I like the emergency state
+> approach, but I'm not sure how it can be completely invisible to the
+> rest of the system.  Quoting John:
+>
+>     : Unlike oops_in_progress, this state will not be visible to
+>     : anything outside of the printk infrastructure.
+>
+> For instance, tty/sysrq must be able to switch printk emergency
+> on/off.
+
+The switch/flush _will_ be visible. But not the state. So, for example,
+it won't be possible for some random driver to determine if we are in an
+emergency state. (Well, I don't know if oops_in_progress will really
+disappear. But at least the printk/console stuff will no longer rely on
+it.)
+
+> We also figured out that some PM (hibernation/suspend/etc.) stages
+> (very early and/or very late ones) [2] also should have printk in
+> emergency mode, plus some other parts of the kernel [3].
+>
+> [1] https://lore.kernel.org/lkml/20170815025625.1977-4-sergey.senozhatsky@gmail.com/
+> [2] https://lore.kernel.org/lkml/20170815025625.1977-7-sergey.senozhatsky@gmail.com/
+> [3] https://lore.kernel.org/lkml/20170815025625.1977-8-sergey.senozhatsky@gmail.com/
+
+Thanks for bringing up that RFC thread again. I haven't looked at it in
+over a year. I will go through it again to see if there is anything I've
+overlooked. Particularly the suspend stuff.
+
+John Ogness
