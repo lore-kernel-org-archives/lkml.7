@@ -7,56 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A4BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD5C21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1968421925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787937;
-	bh=wauRTjmGo+4c67cB3j2p7Ym9wqqe6uvtDzztz9dU+UE=;
+	s=default; t=1568787941;
+	bh=U9DpG53GL6w9YrFfEY8N076J1h21axkip3hX3GgBUDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cflvhW+YpHW13RIFqxvRmZVuGFHFnyTz15vY1Np3xMy2j1Cs8q0j9/qIt/zmV5BCe
-	 WarHPBsbrXSnN3s7TP0rRJoD/v1rfEz19p9isJWKQ9BU9lwe07XiNKfjwiMliZeC4E
-	 i2VfAcbTA966R/ZxAaUOQ9Kcn8ZQ9eHTTkqGjUpU=
+	b=pzNLYY0uTvIBRdN3idIlaYBIS2nwThLLlatwpIvut+h3s7oiJBUpKgBdo9iYcYjr2
+	 +CTcXlqBpBkgaMq7Rn29PBXToypJwlyZR0HgxF85KfGInFWtvshTT5xcTeqzzWoSiX
+	 FfB7T1MQIPdA423Rrn9yGiPFF/qeVy1DQd/r4WRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730151AbfIRGZf (ORCPT
+        id S1730171AbfIRGZk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727374AbfIRGZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:30 -0400
+        id S1730152AbfIRGZg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9836E21924;
-        Wed, 18 Sep 2019 06:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E004521925;
+        Wed, 18 Sep 2019 06:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787930;
-        bh=wauRTjmGo+4c67cB3j2p7Ym9wqqe6uvtDzztz9dU+UE=;
+        s=default; t=1568787935;
+        bh=U9DpG53GL6w9YrFfEY8N076J1h21axkip3hX3GgBUDA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifcxeVZnhR7JWelXAyZzUTqgjHH+zPH2Fhbum2O7Gqc9vTQ+G/SaGZRmy9uNH8cKe
-         FHPfwhNk+qq+VH7JSQ8L162+6IijnwanJl4s1f9lk2v1AAtfAzfplQwZ6g8rEsxoxC
-         I2u1ApMt/pRBoQ1adsHNnpyU4nYqGT9+X61oGSBU=
+        b=TbrMWmBv1Vkw1YdQ80SNx5A92qAp/XNi6QALGm3o+wfEfQvWRFN88egPFDPG8kjIU
+         EHMeUtyAkQhqOLjAXXbiX1gGPGN6l+VzXXfUT2PW9usCPI7iO91VP/laCcJO6ZoKGz
+         xPb14jzgvOqP8NQvmgmwgEEV6eesJlwhqSAuHMDg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Stafford Horne <shorne@gmail.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Ley Foon Tan <lftan@altera.com>,
-        Richard Kuo <rkuo@codeaurora.org>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
-        Guo Ren <guoren@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.2 35/85] ipc: fix semtimedop for generic 32-bit architectures
-Date:   Wed, 18 Sep 2019 08:18:53 +0200
-Message-Id: <20190918061235.256229463@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Maximets <i.maximets@samsung.com>,
+        William Tu <u9012063@gmail.com>,
+        Eelco Chaudron <echaudro@redhat.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.2 37/85] ixgbe: fix double clean of Tx descriptors with xdp
+Date:   Wed, 18 Sep 2019 08:18:55 +0200
+Message-Id: <20190918061235.318662150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -69,54 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Ilya Maximets <i.maximets@samsung.com>
 
-commit 78e05972c5e6c8e9ca4c00ccc6985409da69f904 upstream.
+commit bf280c0387ebbf8eebad1036fca8f7b85ebfde32 upstream.
 
-As Vincent noticed, the y2038 conversion of semtimedop in linux-5.1
-broke when commit 00bf25d693e7 ("y2038: use time32 syscall names on
-32-bit") changed all system calls on all architectures that take
-a 32-bit time_t to point to the _time32 implementation, but left out
-semtimedop in the asm-generic header.
+Tx code doesn't clear the descriptors' status after cleaning.
+So, if the budget is larger than number of used elems in a ring, some
+descriptors will be accounted twice and xsk_umem_complete_tx will move
+prod_tail far beyond the prod_head breaking the completion queue ring.
 
-This affects all 32-bit architectures using asm-generic/unistd.h:
-h8300, unicore32, openrisc, nios2, hexagon, c6x, arc, nds32 and csky.
+Fix that by limiting the number of descriptors to clean by the number
+of used descriptors in the Tx ring.
 
-The notable exception is riscv32, which has dropped support for the
-time32 system calls entirely.
+'ixgbe_clean_xdp_tx_irq()' function refactored to look more like
+'ixgbe_xsk_clean_tx_ring()' since we're allowed to directly use
+'next_to_clean' and 'next_to_use' indexes.
 
-Reported-by: Vincent Chen <deanbo422@gmail.com>
-Cc: stable@vger.kernel.org
-Cc: Vincent Chen <deanbo422@gmail.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
-Cc: Stafford Horne <shorne@gmail.com>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: Richard Kuo <rkuo@codeaurora.org>
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Cc: Guo Ren <guoren@kernel.org>
-Fixes: 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+CC: stable@vger.kernel.org
+Fixes: 8221c5eba8c1 ("ixgbe: add AF_XDP zero-copy Tx support")
+Signed-off-by: Ilya Maximets <i.maximets@samsung.com>
+Tested-by: William Tu <u9012063@gmail.com>
+Tested-by: Eelco Chaudron <echaudro@redhat.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/uapi/asm-generic/unistd.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c |   29 ++++++++++-----------------
+ 1 file changed, 11 insertions(+), 18 deletions(-)
 
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -569,7 +569,7 @@ __SYSCALL(__NR_semget, sys_semget)
- __SC_COMP(__NR_semctl, sys_semctl, compat_sys_semctl)
- #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
- #define __NR_semtimedop 192
--__SC_COMP(__NR_semtimedop, sys_semtimedop, sys_semtimedop_time32)
-+__SC_3264(__NR_semtimedop, sys_semtimedop_time32, sys_semtimedop)
- #endif
- #define __NR_semop 193
- __SYSCALL(__NR_semop, sys_semop)
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+@@ -679,19 +679,17 @@ static void ixgbe_clean_xdp_tx_buffer(st
+ bool ixgbe_clean_xdp_tx_irq(struct ixgbe_q_vector *q_vector,
+ 			    struct ixgbe_ring *tx_ring, int napi_budget)
+ {
++	u16 ntc = tx_ring->next_to_clean, ntu = tx_ring->next_to_use;
+ 	unsigned int total_packets = 0, total_bytes = 0;
+-	u32 i = tx_ring->next_to_clean, xsk_frames = 0;
+-	unsigned int budget = q_vector->tx.work_limit;
+ 	struct xdp_umem *umem = tx_ring->xsk_umem;
+ 	union ixgbe_adv_tx_desc *tx_desc;
+ 	struct ixgbe_tx_buffer *tx_bi;
+-	bool xmit_done;
++	u32 xsk_frames = 0;
+ 
+-	tx_bi = &tx_ring->tx_buffer_info[i];
+-	tx_desc = IXGBE_TX_DESC(tx_ring, i);
+-	i -= tx_ring->count;
++	tx_bi = &tx_ring->tx_buffer_info[ntc];
++	tx_desc = IXGBE_TX_DESC(tx_ring, ntc);
+ 
+-	do {
++	while (ntc != ntu) {
+ 		if (!(tx_desc->wb.status & cpu_to_le32(IXGBE_TXD_STAT_DD)))
+ 			break;
+ 
+@@ -708,22 +706,18 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe
+ 
+ 		tx_bi++;
+ 		tx_desc++;
+-		i++;
+-		if (unlikely(!i)) {
+-			i -= tx_ring->count;
++		ntc++;
++		if (unlikely(ntc == tx_ring->count)) {
++			ntc = 0;
+ 			tx_bi = tx_ring->tx_buffer_info;
+ 			tx_desc = IXGBE_TX_DESC(tx_ring, 0);
+ 		}
+ 
+ 		/* issue prefetch for next Tx descriptor */
+ 		prefetch(tx_desc);
++	}
+ 
+-		/* update budget accounting */
+-		budget--;
+-	} while (likely(budget));
+-
+-	i += tx_ring->count;
+-	tx_ring->next_to_clean = i;
++	tx_ring->next_to_clean = ntc;
+ 
+ 	u64_stats_update_begin(&tx_ring->syncp);
+ 	tx_ring->stats.bytes += total_bytes;
+@@ -735,8 +729,7 @@ bool ixgbe_clean_xdp_tx_irq(struct ixgbe
+ 	if (xsk_frames)
+ 		xsk_umem_complete_tx(umem, xsk_frames);
+ 
+-	xmit_done = ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+-	return budget > 0 && xmit_done;
++	return ixgbe_xmit_zc(tx_ring, q_vector->tx.work_limit);
+ }
+ 
+ int ixgbe_xsk_async_xmit(struct net_device *dev, u32 qid)
 
 
