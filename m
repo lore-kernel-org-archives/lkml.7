@@ -2,116 +2,127 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BD7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043DC21897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="B8nbCdz6"
+	by mail.kernel.org (Postfix) with ESMTP id EE93820578
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:36:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729300AbfIRJdo (ORCPT
+        id S1729272AbfIRJgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:33:44 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45400 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727337AbfIRJdo (ORCPT
+        Wed, 18 Sep 2019 05:36:14 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44815 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727278AbfIRJgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:33:44 -0400
-Received: by mail-lj1-f193.google.com with SMTP id q64so6460065ljb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:33:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oVhNis/dF5C/JXuxrb6BPz9PriRAlEp0NTIbkhZyp5o=;
-        b=B8nbCdz6S1ldEQ7bMIDaDYAD9/FFZKl5H5tbiDBQgmM5mtEzL5Cb++ud3waqdB5AvI
-         S3Bt8fKcaZu1KgPR9x/Vr093cICdeFVV8pNrgQVbFj3uO36dphq6M9k5EED/V7cBmhZY
-         mxM5PZXwLLiQmyK0n1Q9SyO0M587jTWg3fBvs=
+        Wed, 18 Sep 2019 05:36:13 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w6so5370668oie.11;
+        Wed, 18 Sep 2019 02:36:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oVhNis/dF5C/JXuxrb6BPz9PriRAlEp0NTIbkhZyp5o=;
-        b=NpatgJQgOOYK4p5VFA7nvMKqfVaygO+4Pi+9kbB8YqqPh+WbF4+V7sw/u+nXUxk4Wg
-         yeSu5KyUYlZSUNTZTjGEKkgWyJR2cOtGRvsCgiTEYfpOVrXN6I9f5Fdf2HHKKe4JOjQj
-         y/03xrqLSbb/MlnYVEWPu4ahDAwTxoq9cY2/NH1NPpPzAFxRsJ6Mbdvk9qxIvSJGUbUb
-         0u1MvzD0slAAsa5COXc17NjpqnvYDFyIjZ8cfCz8eQfW1MXS6olmYXvVzdWq5mi43VYR
-         IKkf/Dz5Y+qm1PuzRPL81AmSqGw+LJ2wMz6NOG12BI7X/cBKXQ3416LnjrsxI13bmksF
-         Z2/w==
-X-Gm-Message-State: APjAAAUYUkeZ+zDyQxVNlXI8Hf/EY8B7sZacUOJ1QdBlBdHiNbrFmiuh
-        2fiYBJ8ah4JjFuO4lqnkUZfhjVFQnKefzQza
-X-Google-Smtp-Source: APXvYqwCRUNGp9YjvKH9IT59/6e8Y9GI5BZxn5DL8YUvWDvFixN1V1BGI/eSwpRdUjWLkC64Q+YKOA==
-X-Received: by 2002:a2e:5dc3:: with SMTP id v64mr1722222lje.118.1568799221748;
-        Wed, 18 Sep 2019 02:33:41 -0700 (PDT)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id f21sm1083158lfm.90.2019.09.18.02.33.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 02:33:41 -0700 (PDT)
-Subject: Re: Linux 5.3-rc8
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Lennart Poettering <mzxreary@0pointer.de>
-Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
- <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
- <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
- <20190917121156.GC6762@mit.edu>
- <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
- <20190917160844.GC31567@gardel-login>
- <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
- <20190917174219.GD31798@gardel-login>
- <CAHk-=wjABG3+daJFr4w3a+OWuraVcZpi=SMUg=pnZ+7+O0E2FA@mail.gmail.com>
- <CAHk-=wgOCv2eOT2M8Vw9GD_yOpsTwF364-hkeADyEu9erHgMGw@mail.gmail.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <89aeae9d-0bca-2a59-5ce2-1e18f6479936@rasmusvillemoes.dk>
-Date:   Wed, 18 Sep 2019 11:33:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=647EZl6hgInflOJEBtnbSt2bfFi2MO4rtXW6zyd4Yx4=;
+        b=DwmAzO+BtZSiTJNJ+oK/jqQb7ZlCkFCwR/NQYoDLYJVTNRV6dd8g4MKiulY/Qtfhe5
+         +igIgp9JoOzVuRY7Ko124F+0fns5rL8JXbdrh3jBAMe+KwlZIpV8ObrETfqyo88yULyj
+         scHfr02h2kWjta2ZGR6m34tNFkUtv6Lq2MiTcEJFE8ZzZJ15S6sbufw1Qxj+cFkRp9R4
+         +j96KMA3tfqKnLOjaCJaK8VkMaIARHz99On+gRy9UdV9tWbmbMgfgE4iVtFkHmCksjPQ
+         PetOSoBu1uEP+CLPHFpBIWxMX6cPHUTWdlaiK9OztjOHIdt8cbJgcRYQSAExWyinOZEJ
+         euIQ==
+X-Gm-Message-State: APjAAAWwCf5eBsj3xuzs/6me+nRdLFvT6e3gV9zKDqKXiuxJaha7fFuH
+        dkjH9T9Z/NBS2UpGArFavesZF6UhEdXn4dQxxhA=
+X-Google-Smtp-Source: APXvYqwVy+ggT271kz8K67E78u+yWVnRd+tPQmMl9bAs0J4PyqnskwqPDXeOxfcqTF0LYMnIctvgq+NoJw6VlSf2Oek=
+X-Received: by 2002:aca:3908:: with SMTP id g8mr1598684oia.54.1568799372300;
+ Wed, 18 Sep 2019 02:36:12 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wgOCv2eOT2M8Vw9GD_yOpsTwF364-hkeADyEu9erHgMGw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190821124850.9592-1-yuehaibing@huawei.com> <CAMuHMdXdd4oiHqTpFTYBTSeCB6A78_gSGmwPy5EgPRZXibOqZw@mail.gmail.com>
+ <12c00786-980f-5761-3117-3e741e63d7b3@ti.com>
+In-Reply-To: <12c00786-980f-5761-3117-3e741e63d7b3@ti.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 18 Sep 2019 11:35:59 +0200
+Message-ID: <CAMuHMdW4Yzd6tMP=mTWvcVdeCbKiDE+Nm2V=73Wsbc5rG6uYNQ@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: ethernet: ti: use devm_platform_ioremap_resource()
+ to simplify code
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        ivan.khoronzhuk@linaro.org, Andrew Lunn <andrew@lunn.ch>,
+        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "open list:TI ETHERNET SWITCH DRIVER (CPSW)" 
+        <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/09/2019 22.58, Linus Torvalds wrote:
-> Side note, and entirely unrelated to this particular problem, but
-> _because_ I was looking at the entropy init and sources of randomness
-> we have, I notice that we still don't use the ToD clock as a source.
+Hi Grygorii,
 
-And unrelated to the non-use of the RTC (which I agree seems weird), but
-because there's no better place in this thread: How "random" is the
-contents of RAM after boot? Sure, for virtualized environments one
-probably always gets zeroed pages from the host (otherwise the host has
-a problem...), and on PCs maybe the BIOS interferes.
+On Wed, Sep 18, 2019 at 11:29 AM Grygorii Strashko
+<grygorii.strashko@ti.com> wrote:
+> On 17/09/2019 21:35, Geert Uytterhoeven wrote:
+> > On Wed, Aug 21, 2019 at 2:51 PM YueHaibing <yuehaibing@huawei.com> wrote:
+> >> Use devm_platform_ioremap_resource() to simplify the code a bit.
+> >> This is detected by coccinelle.
+> >>
+> >> Reported-by: Hulk Robot <hulkci@huawei.com>
+> >> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> >> ---
+> >>   drivers/net/ethernet/ti/cpsw.c | 5 ++---
+> >>   1 file changed, 2 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
+> >> index 32a8974..5401095 100644
+> >> --- a/drivers/net/ethernet/ti/cpsw.c
+> >> +++ b/drivers/net/ethernet/ti/cpsw.c
+> >> @@ -2764,7 +2764,7 @@ static int cpsw_probe(struct platform_device *pdev)
+> >>          struct net_device               *ndev;
+> >>          struct cpsw_priv                *priv;
+> >>          void __iomem                    *ss_regs;
+> >> -       struct resource                 *res, *ss_res;
+> >> +       struct resource                 *ss_res;
+> >>          struct gpio_descs               *mode;
+> >>          const struct soc_device_attribute *soc;
+> >>          struct cpsw_common              *cpsw;
+> >> @@ -2798,8 +2798,7 @@ static int cpsw_probe(struct platform_device *pdev)
+> >
+> > And just out-of-context, we also have:
+> >
+> >          ss_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >          ss_regs = devm_ioremap_resource(dev, ss_res);
+> >          if (IS_ERR(ss_regs))
+> >
+> > which was not detected as being the same pattern?
+> >
+> > Interesting...
+>
+> ss_res is used below to determine phys address of CPPI RAM.
 
-But for cheap embedded devices with non-ECC RAM and not a lot of
-value-add firmware between power-on and start_kernel(), would it make
-sense to read a few MB of memory outside of where the kernel was loaded
-and feed those to add_device_randomness() (of course, doing it as early
-as possible, maybe first thing in start_kernel())? Or do the reading in
-the bootloader and pass on the sha256() in the DT/rng-seed property?
+Right, thanks, I missed that.
 
-A quick "kitchen-table" experiment with the board I have on my desk
-shows that there are at least some randomness to be had after a cold boot.
+> >
+> >>                  return PTR_ERR(ss_regs);
+> >>          cpsw->regs = ss_regs;
+> >>
+> >> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> >> -       cpsw->wr_regs = devm_ioremap_resource(dev, res);
+> >> +       cpsw->wr_regs = devm_platform_ioremap_resource(pdev, 1);
+> >>          if (IS_ERR(cpsw->wr_regs))
+> >>                  return PTR_ERR(cpsw->wr_regs);
 
-Maybe this has already been suggested and rejected?
+Gr{oetje,eeting}s,
 
-Rasmus
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
