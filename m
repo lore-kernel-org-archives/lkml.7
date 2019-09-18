@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3258CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5830C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0789E21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC12221920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787845;
-	bh=pNjQlHwmYnMq2l7APwROzUARrPp84X47aBsz4iOvu9Q=;
+	s=default; t=1568787849;
+	bh=pAUTJC5wqLfsT9L0OAx6PZQXQLHUTTEDnyAZBYt62T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xv5XJ+dNCnDpXwhuMUhYgdmlBHjfaLgOOquAFPu1iKPpPalHxrflfqc4INhFv6d+Z
-	 oQHncXhGT5tNWPeRtu16AmrbTjvybGkms+9GQwlqWCVYmwMLYHkrEQSnaXYj6UeHwe
-	 FroFdA+axGo0y4C9twnP25WD/uudqoZWuqMFps60=
+	b=yIXXFS0pZrHb9jNXdQP6dEKnKgzbsrvZy2gq/l4/RRTkkPyU17DePFf5byF3qerGA
+	 WeLlbX7h0IJFKtpG5WD3zJiS3yU3PFen+dAuu/Oee63zKKbvCrBjGqtBtqUNqP3gHv
+	 5yuF6Xw9kr/VaVvVL7D3WHxMWBPm23gHaAsF3764=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfIRGYD (ORCPT
+        id S1729772AbfIRGYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44364 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:24:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbfIRGYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:00 -0400
+        id S1727496AbfIRGYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C3C21925;
-        Wed, 18 Sep 2019 06:23:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B08821928;
+        Wed, 18 Sep 2019 06:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787840;
-        bh=pNjQlHwmYnMq2l7APwROzUARrPp84X47aBsz4iOvu9Q=;
+        s=default; t=1568787842;
+        bh=pAUTJC5wqLfsT9L0OAx6PZQXQLHUTTEDnyAZBYt62T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0JrTKDHM2bkWUSNNOB8jnoROBjp5l9sH5OOvmP7CbbO7HewjWl2uJL23rwxu2voIE
-         e94sQZPTkrpjwhC0hQsXvzEZFRIrWME1MRFNrdYkqAB43yPsLHw9+JfhrnqXnCaLHP
-         fmCrUOaCQWSt6PCElCkczEmZNwcModkcWnif8yEE=
+        b=finSDRgsTVX9vnT50TfxHJEJAenf8U1Heu963rvLAGCyyV0NQRqzW8E42bMMmvpkC
+         9TfVhE+VrIIIVEDI3HvxOVzYQoobBbW2MmCPgTRM3RzvN6AsRqAxWXgHb+TJ3a+qIc
+         AwUDxNOYsmgCU5jm7cEpv/9M1PZmKQx8pHAd0SYY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.19 30/50] PCI: Always allow probing with driver_override
-Date:   Wed, 18 Sep 2019 08:19:13 +0200
-Message-Id: <20190918061226.640775776@linuxfoundation.org>
+        stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.19 31/50] gpio: fix line flag validation in lineevent_create
+Date:   Wed, 18 Sep 2019 08:19:14 +0200
+Message-Id: <20190918061226.681398811@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,51 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Kent Gibson <warthog618@gmail.com>
 
-commit 2d2f4273cbe9058d1f5a518e5e880d27d7b3b30f upstream.
+commit 5ca2f54b597c816df54ff1b28eb99cf7262b955d upstream.
 
-Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
-VF driver binding") introduced the sriov_drivers_autoprobe attribute
-which allows users to prevent the kernel from automatically probing a
-driver for new VFs as they are created.  This allows VFs to be spawned
-without automatically binding the new device to a host driver, such as
-in cases where the user intends to use the device only with a meta
-driver like vfio-pci.  However, the current implementation prevents any
-use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
-blocks the now current general practice of setting driver_override
-followed by using drivers_probe to bind a device to a specified driver.
+lineevent_create should not allow any of GPIOHANDLE_REQUEST_OUTPUT,
+GPIOHANDLE_REQUEST_OPEN_DRAIN or GPIOHANDLE_REQUEST_OPEN_SOURCE to be set.
 
-The kernel never automatically sets a driver_override therefore it seems
-we can assume a driver_override reflects the intent of the user.  Also,
-probing a device using a driver_override match seems outside the scope
-of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
-driver_override matches regardless of sriov_drivers_autoprobe, which we
-can do by simply testing if a driver_override is set for a device as a
-'can probe' condition.
-
-Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
-Link: https://lore.kernel.org/lkml/155742996741.21878.569845487290798703.stgit@gimli.home
-Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/pci-driver.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -399,7 +399,8 @@ void __weak pcibios_free_irq(struct pci_
- #ifdef CONFIG_PCI_IOV
- static inline bool pci_device_can_probe(struct pci_dev *pdev)
- {
--	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
-+	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
-+		pdev->driver_override);
- }
- #else
- static inline bool pci_device_can_probe(struct pci_dev *pdev)
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -924,7 +924,9 @@ static int lineevent_create(struct gpio_
+ 	}
+ 
+ 	/* This is just wrong: we don't look for events on output lines */
+-	if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
++	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
+ 		ret = -EINVAL;
+ 		goto out_free_label;
+ 	}
+@@ -938,10 +940,6 @@ static int lineevent_create(struct gpio_
+ 
+ 	if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+ 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+-	if (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN)
+-		set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+-	if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
+-		set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+ 
+ 	ret = gpiod_direction_input(desc);
+ 	if (ret)
 
 
