@@ -2,50 +2,50 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0704EC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8996C4CED0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A380721924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99B13207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:59:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Aru0W2Yg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="L9GUFdT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbfIRM7f (ORCPT
+        id S1731290AbfIRM7i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:59:35 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:60818 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727410AbfIRM7d (ORCPT
+        Wed, 18 Sep 2019 08:59:38 -0400
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:49790 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731089AbfIRM7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:59:33 -0400
+        Wed, 18 Sep 2019 08:59:35 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 30CD23F6DC;
-        Wed, 18 Sep 2019 14:59:30 +0200 (CEST)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=Aru0W2Yg;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 52BE43FBB0;
+        Wed, 18 Sep 2019 14:59:28 +0200 (CEST)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=L9GUFdT6;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id xiRUd--qyrav; Wed, 18 Sep 2019 14:59:28 +0200 (CEST)
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id J6g-nBY-BBV3; Wed, 18 Sep 2019 14:59:27 +0200 (CEST)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 4F6C33F247;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id AAB473F746;
         Wed, 18 Sep 2019 14:59:24 +0200 (CEST)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 6407E360326;
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 18D413602D9;
         Wed, 18 Sep 2019 14:59:24 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1568811564; bh=uMSGH2llUf0g/5IIoIoj2eeW+M0du8bxg9TfkDKQh5Q=;
+        t=1568811564; bh=8endBo4LYeRXjKpQW+eclcRDwX2DG11DoosCTAG8UE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aru0W2Ygo/WXRRZlOXyYkAMlfPAOVVMc5lsIlkOv3UNx/D+Dek3O8RNELJxDKOa7q
-         Ox4U2io+QoTysr3p3CYhqcsHuXCJK55HFiA7wCySzYpLvxFwUMGnayrPwYv+whlR4y
-         +QDD3Cx+btbMqTy5FIa7yooKowVp9D9+rbshP3Z8=
+        b=L9GUFdT6PefsBIiZsfCr9qPb1w/PpHYQ2WRSZi1zMMn55SxVWMIdnNaO7Vbs5y0qP
+         qfN0To//3d1Rit4sPvLhpO15DQnew7ORKTsQrwVjlJALXDaqs3pJaO2aTIzZMjUzsY
+         e+1uzuDjV2GxMtg49NJOxESG8d8iVnRQBq6Vccso=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
@@ -62,11 +62,10 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         Huang Ying <ying.huang@intel.com>,
         Souptick Joarder <jrdr.linux@gmail.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH 3/7] drm/ttm: Convert vm callbacks to helpers
-Date:   Wed, 18 Sep 2019 14:59:10 +0200
-Message-Id: <20190918125914.38497-4-thomas_os@shipmail.org>
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH 1/7] mm: Add write-protect and clean utilities for address space ranges
+Date:   Wed, 18 Sep 2019 14:59:08 +0200
+Message-Id: <20190918125914.38497-2-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190918125914.38497-1-thomas_os@shipmail.org>
 References: <20190918125914.38497-1-thomas_os@shipmail.org>
@@ -80,15 +79,20 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-With the vmwgfx dirty tracking, the default TTM fault handler is not
-completely sufficient (vmwgfx need to modify the vma->vm_flags member,
-and also needs to restrict the number of prefaults).
+Add two utilities to a) write-protect and b) clean all ptes pointing into
+a range of an address space.
+The utilities are intended to aid in tracking dirty pages (either
+driver-allocated system memory or pci device memory).
+The write-protect utility should be used in conjunction with
+page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
+accesses. Typically one would want to use this on sparse accesses into
+large memory regions. The clean utility should be used to utilize
+hardware dirtying functionality and avoid the overhead of page-faults,
+typically on large accesses into small memory regions.
 
-We also want to replicate the new ttm_bo_vm_reserve() functionality
-
-So start turning the TTM vm code into helpers: ttm_bo_vm_fault_reserved()
-and ttm_bo_vm_reserve(), and provide a default TTM fault handler for other
-drivers to use.
+The added file "as_dirty_helpers.c" is initially listed as maintained by
+VMware under our DRM driver. If somebody would like it elsewhere,
+that's of course no problem.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Matthew Wilcox <willy@infradead.org>
@@ -100,301 +104,481 @@ Cc: Michal Hocko <mhocko@suse.com>
 Cc: Huang Ying <ying.huang@intel.com>
 Cc: Souptick Joarder <jrdr.linux@gmail.com>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- drivers/gpu/drm/ttm/ttm_bo_vm.c | 168 ++++++++++++++++++++------------
- include/drm/ttm/ttm_bo_api.h    |  14 +++
- 2 files changed, 119 insertions(+), 63 deletions(-)
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/gpu/drm/ttm/ttm_bo_vm.c b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-index 8963546bf245..0ac11837533f 100644
---- a/drivers/gpu/drm/ttm/ttm_bo_vm.c
-+++ b/drivers/gpu/drm/ttm/ttm_bo_vm.c
-@@ -42,8 +42,6 @@
- #include <linux/uaccess.h>
- #include <linux/mem_encrypt.h>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Ralph Campbell <rcampbell@nvidia.com> #v1
+---
+ MAINTAINERS           |   1 +
+ include/linux/mm.h    |  13 +-
+ mm/Kconfig            |   3 +
+ mm/Makefile           |   1 +
+ mm/as_dirty_helpers.c | 392 ++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 409 insertions(+), 1 deletion(-)
+ create mode 100644 mm/as_dirty_helpers.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c2d975da561f..b596c7cf4a85 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5287,6 +5287,7 @@ T:	git git://people.freedesktop.org/~thomash/linux
+ S:	Supported
+ F:	drivers/gpu/drm/vmwgfx/
+ F:	include/uapi/drm/vmwgfx_drm.h
++F:	mm/as_dirty_helpers.c
  
--#define TTM_BO_VM_NUM_PREFAULT 16
+ DRM DRIVERS
+ M:	David Airlie <airlied@linux.ie>
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 0334ca97c584..27ff341ecbdc 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2657,7 +2657,6 @@ typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
+ extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+ 			       unsigned long size, pte_fn_t fn, void *data);
+ 
 -
- static vm_fault_t ttm_bo_vm_fault_idle(struct ttm_buffer_object *bo,
- 				struct vm_fault *vmf)
- {
-@@ -106,24 +104,30 @@ static unsigned long ttm_bo_io_mem_pfn(struct ttm_buffer_object *bo,
- 		+ page_offset;
- }
+ #ifdef CONFIG_PAGE_POISONING
+ extern bool page_poisoning_enabled(void);
+ extern void kernel_poison_pages(struct page *page, int numpages, int enable);
+@@ -2891,5 +2890,17 @@ void __init setup_nr_node_ids(void);
+ static inline void setup_nr_node_ids(void) {}
+ #endif
  
--static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
-+/**
-+ * ttm_bo_vm_reserve - Reserve a buffer object in a retryable vm callback
-+ * @bo: The buffer object
-+ * @vmf: The fault structure handed to the callback
-+ *
-+ * vm callbacks like fault() and *_mkwrite() allow for the mm_sem to be dropped
-+ * during long waits, and after the wait the callback will be restarted. This
-+ * is to allow other threads using the same virtual memory space concurrent
-+ * access to map(), unmap() completely unrelated buffer objects. TTM buffer
-+ * object reservations sometimes wait for GPU and should therefore be
-+ * considered long waits. This function reserves the buffer object interruptibly
-+ * taking this into account. Starvation is avoided by the vm system not
-+ * allowing too many repeated restarts.
-+ * This function is intended to be used in customized fault() and _mkwrite()
-+ * handlers.
-+ *
-+ * Return:
-+ *    0 on success and the bo was reserved.
-+ *    VM_FAULT_RETRY if blocking wait.
-+ *    VM_FAULT_NOPAGE if blocking wait and retrying was not allowed.
-+ */
-+vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
-+			     struct vm_fault *vmf)
- {
--	struct vm_area_struct *vma = vmf->vma;
--	struct ttm_buffer_object *bo = vma->vm_private_data;
--	struct ttm_bo_device *bdev = bo->bdev;
--	unsigned long page_offset;
--	unsigned long page_last;
--	unsigned long pfn;
--	struct ttm_tt *ttm = NULL;
--	struct page *page;
--	int err;
--	int i;
--	vm_fault_t ret = VM_FAULT_NOPAGE;
--	unsigned long address = vmf->address;
--	struct ttm_mem_type_manager *man =
--		&bdev->man[bo->mem.mem_type];
--	struct vm_area_struct cvma;
--
- 	/*
- 	 * Work around locking order reversal in fault / nopfn
- 	 * between mmap_sem and bo_reserve: Perform a trylock operation
-@@ -150,14 +154,54 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 		return VM_FAULT_NOPAGE;
- 	}
++#ifdef CONFIG_AS_DIRTY_HELPERS
++unsigned long apply_as_clean(struct address_space *mapping,
++			     pgoff_t first_index, pgoff_t nr,
++			     pgoff_t bitmap_pgoff,
++			     unsigned long *bitmap,
++			     pgoff_t *start,
++			     pgoff_t *end);
++
++unsigned long apply_as_wrprotect(struct address_space *mapping,
++				 pgoff_t first_index, pgoff_t nr);
++#endif
++
+ #endif /* __KERNEL__ */
+ #endif /* _LINUX_MM_H */
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 56cec636a1fc..594350e9d78e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -736,4 +736,7 @@ config ARCH_HAS_PTE_SPECIAL
+ config ARCH_HAS_HUGEPD
+ 	bool
  
-+	return 0;
-+}
-+EXPORT_SYMBOL(ttm_bo_vm_reserve);
++config AS_DIRTY_HELPERS
++        bool
++
+ endmenu
+diff --git a/mm/Makefile b/mm/Makefile
+index d0b295c3b764..4086f1eefbc6 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -105,3 +105,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+ obj-$(CONFIG_ZONE_DEVICE) += memremap.o
+ obj-$(CONFIG_HMM_MIRROR) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
++obj-$(CONFIG_AS_DIRTY_HELPERS) += as_dirty_helpers.o
+diff --git a/mm/as_dirty_helpers.c b/mm/as_dirty_helpers.c
+new file mode 100644
+index 000000000000..d4cc37dcb144
+--- /dev/null
++++ b/mm/as_dirty_helpers.c
+@@ -0,0 +1,392 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/mm.h>
++#include <linux/mm_types.h>
++#include <linux/hugetlb.h>
++#include <linux/bitops.h>
++#include <linux/mmu_notifier.h>
++#include <asm/cacheflush.h>
++#include <asm/tlbflush.h>
 +
 +/**
-+ * ttm_bo_vm_fault_reserved - TTM fault helper
-+ * @vmf: The struct vm_fault given as argument to the fault callback
-+ * @prot: The page protection to be used for this memory area.
-+ * @num_prefault: Maximum number of prefault pages. The caller may want to
-+ * specify this based on madvice settings and the size of the GPU object
-+ * backed by the memory.
++ * struct as_walk - Argument to struct as_walk_ops callbacks.
++ * @vma: Pointer to the struct vmw_area_struct currently being walked.
 + *
-+ * This function inserts one or more page table entries pointing to the
-+ * memory backing the buffer object, and then returns a return code
-+ * instructing the caller to retry the page access.
-+ *
-+ * Return:
-+ *   VM_FAULT_NOPAGE on success or pending signal
-+ *   VM_FAULT_SIGBUS on unspecified error
-+ *   VM_FAULT_OOM on out-of-memory
-+ *   VM_FAULT_RETRY if retryable wait
++ * Embeddable argument to struct as_walk_ops callbacks.
 + */
-+vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
-+				    pgprot_t prot,
-+				    pgoff_t num_prefault)
++struct as_walk {
++	struct vm_area_struct *vma;
++};
++
++/**
++ * struct as_walk_ops - Callbacks for entries of various page table levels.
++ * extend for additional level support.
++ */
++struct as_walk_ops {
++	/**
++	 * pte-entry: Callback for PTEs
++	 * @pte: Pointer to the PTE.
++	 * @addr: Virtual address.
++	 * @asw: Struct as_walk argument for the walk. Embed for additional
++	 * data.
++	 */
++	void (*const pte_entry) (pte_t *pte, unsigned long addr,
++				 struct as_walk *asw);
++};
++
++/* Page-walking code */
++static void walk_as_pte_range(pmd_t *pmd, unsigned long addr, unsigned long end,
++			      const struct as_walk_ops *ops,
++			      struct as_walk *asw)
 +{
-+	struct vm_area_struct *vma = vmf->vma;
-+	struct vm_area_struct cvma = *vma;
-+	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	struct ttm_bo_device *bdev = bo->bdev;
-+	unsigned long page_offset;
-+	unsigned long page_last;
-+	unsigned long pfn;
-+	struct ttm_tt *ttm = NULL;
-+	struct page *page;
-+	int err;
-+	pgoff_t i;
-+	vm_fault_t ret = VM_FAULT_NOPAGE;
-+	unsigned long address = vmf->address;
-+	struct ttm_mem_type_manager *man =
-+		&bdev->man[bo->mem.mem_type];
++	struct mm_struct *mm = asw->vma->vm_mm;
++	pte_t *pte;
++	spinlock_t *ptl;
 +
- 	/*
- 	 * Refuse to fault imported pages. This should be handled
- 	 * (if at all) by redirecting mmap to the exporter.
- 	 */
--	if (bo->ttm && (bo->ttm->page_flags & TTM_PAGE_FLAG_SG)) {
--		ret = VM_FAULT_SIGBUS;
--		goto out_unlock;
--	}
-+	if (bo->ttm && (bo->ttm->page_flags & TTM_PAGE_FLAG_SG))
-+		return VM_FAULT_SIGBUS;
- 
- 	if (bdev->driver->fault_reserve_notify) {
- 		struct dma_fence *moving = dma_fence_get(bo->moving);
-@@ -168,11 +212,9 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 			break;
- 		case -EBUSY:
- 		case -ERESTARTSYS:
--			ret = VM_FAULT_NOPAGE;
--			goto out_unlock;
-+			return VM_FAULT_NOPAGE;
- 		default:
--			ret = VM_FAULT_SIGBUS;
--			goto out_unlock;
-+			return VM_FAULT_SIGBUS;
- 		}
- 
- 		if (bo->moving != moving) {
-@@ -188,21 +230,12 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 	 * move.
- 	 */
- 	ret = ttm_bo_vm_fault_idle(bo, vmf);
--	if (unlikely(ret != 0)) {
--		if (ret == VM_FAULT_RETRY &&
--		    !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT)) {
--			/* The BO has already been unreserved. */
--			return ret;
--		}
--
--		goto out_unlock;
--	}
-+	if (unlikely(ret != 0))
-+		return ret;
- 
- 	err = ttm_mem_io_lock(man, true);
--	if (unlikely(err != 0)) {
--		ret = VM_FAULT_NOPAGE;
--		goto out_unlock;
--	}
-+	if (unlikely(err != 0))
-+		return VM_FAULT_NOPAGE;
- 	err = ttm_mem_io_reserve_vm(bo);
- 	if (unlikely(err != 0)) {
- 		ret = VM_FAULT_SIGBUS;
-@@ -219,18 +252,8 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 		goto out_io_unlock;
- 	}
- 
--	/*
--	 * Make a local vma copy to modify the page_prot member
--	 * and vm_flags if necessary. The vma parameter is protected
--	 * by mmap_sem in write mode.
--	 */
--	cvma = *vma;
--	cvma.vm_page_prot = vm_get_page_prot(cvma.vm_flags);
--
--	if (bo->mem.bus.is_iomem) {
--		cvma.vm_page_prot = ttm_io_prot(bo->mem.placement,
--						cvma.vm_page_prot);
--	} else {
-+	cvma.vm_page_prot = ttm_io_prot(bo->mem.placement, prot);
-+	if (!bo->mem.bus.is_iomem) {
- 		struct ttm_operation_ctx ctx = {
- 			.interruptible = false,
- 			.no_wait_gpu = false,
-@@ -239,24 +262,21 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 		};
- 
- 		ttm = bo->ttm;
--		cvma.vm_page_prot = ttm_io_prot(bo->mem.placement,
--						cvma.vm_page_prot);
--
--		/* Allocate all page at once, most common usage */
--		if (ttm_tt_populate(ttm, &ctx)) {
-+		if (ttm_tt_populate(bo->ttm, &ctx)) {
- 			ret = VM_FAULT_OOM;
- 			goto out_io_unlock;
- 		}
-+	} else {
-+		/* Iomem should not be marked encrypted */
-+		cvma.vm_page_prot = pgprot_decrypted(cvma.vm_page_prot);
- 	}
- 
- 	/*
- 	 * Speculatively prefault a number of pages. Only error on
- 	 * first page.
- 	 */
--	for (i = 0; i < TTM_BO_VM_NUM_PREFAULT; ++i) {
-+	for (i = 0; i < num_prefault; ++i) {
- 		if (bo->mem.bus.is_iomem) {
--			/* Iomem should not be marked encrypted */
--			cvma.vm_page_prot = pgprot_decrypted(cvma.vm_page_prot);
- 			pfn = ttm_bo_io_mem_pfn(bo, page_offset);
- 		} else {
- 			page = ttm->pages[page_offset];
-@@ -294,12 +314,32 @@ static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
- 	ret = VM_FAULT_NOPAGE;
- out_io_unlock:
- 	ttm_mem_io_unlock(man);
--out_unlock:
++	pte = (mm == &init_mm) ?
++		pte_offset_kernel(pmd, addr) :
++		pte_offset_map_lock(mm, pmd, addr, &ptl);
++
++	arch_enter_lazy_mmu_mode();
++
++	do {
++		ops->pte_entry(pte++, addr, asw);
++	} while (addr += PAGE_SIZE, addr != end);
++
++	arch_leave_lazy_mmu_mode();
++
++	if (mm != &init_mm)
++		pte_unmap_unlock(pte - 1, ptl);
++}
++
++static void walk_as_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
++			      const struct as_walk_ops *ops,
++			      struct as_walk *asw)
++{
++	pmd_t *pmd = pmd_offset(pud, addr);
++	unsigned long next;
++
++	do {
++		next = pmd_addr_end(addr, end);
++		if (pmd_none_or_clear_bad(pmd))
++			continue;
++		if (WARN_ON(pmd_huge(*pmd)))
++			continue;
++		walk_as_pte_range(pmd, addr, next, ops, asw);
++	} while (pmd++, addr = next, addr != end);
++}
++
++static void walk_as_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
++			      const struct as_walk_ops *ops,
++			      struct as_walk *asw)
++{
++	pud_t *pud = pud_offset(p4d, addr);
++	unsigned long next;
++
++	do {
++		next = pud_addr_end(addr, end);
++		if (pud_none_or_clear_bad(pud))
++			continue;
++		if (WARN_ON(pud_huge(*pud)))
++			continue;
++		walk_as_pmd_range(pud, addr, next, ops, asw);
++	} while (pud++, addr = next, addr != end);
++}
++
++static void walk_as_p4d_range(pgd_t *pgd, unsigned long addr, unsigned long end,
++			      const struct as_walk_ops *ops,
++			      struct as_walk *asw)
++{
++	p4d_t *p4d = p4d_offset(pgd, addr);
++	unsigned long next;
++
++	do {
++		next = p4d_addr_end(addr, end);
++		if (p4d_none_or_clear_bad(p4d))
++			continue;
++		walk_as_pud_range(p4d, addr, next, ops, asw);
++	} while (p4d++, addr = next, addr != end);
++}
++
++static void walk_as_pfn_range(unsigned long addr, unsigned long end,
++			      const struct as_walk_ops *ops,
++			      struct as_walk *asw)
++{
++	pgd_t *pgd = pgd_offset(asw->vma->vm_mm, addr);
++	unsigned long next;
++
++	do {
++		next = pgd_addr_end(addr, end);
++		if (pgd_none_or_clear_bad(pgd))
++			continue;
++		walk_as_p4d_range(pgd, addr, next, ops, asw);
++	} while (pgd++, addr = next, addr != end);
++}
++
++
++/**
++ * struct as_walk_range - Argument for apply_as_range
++ * @asw: The struct as_walk we embed for the page walk
++ * @start: Address of first modified pte
++ * @end: Address of last modified pte + 1
++ * @total: Total number of modified ptes
++ */
++struct as_walk_range {
++	struct as_walk base;
++	unsigned long start;
++	unsigned long end;
++	unsigned long total;
++};
++
++#define to_as_walk_range(_asw) container_of(_asw, struct as_walk_range, base)
++
++/**
++ * apply_pt_wrprotect - Leaf pte callback to write-protect a pte
++ * @pte: Pointer to the pte
++ * @addr: The virtual page address
++ * @asw: Pointer to a struct as_walk embedded in a struct as_walk_range
++ *
++ * The function write-protects a pte and records the range in
++ * virtual address space of touched ptes for efficient range TLB flushes.
++ */
++static void apply_pt_wrprotect(pte_t *pte, unsigned long addr,
++			       struct as_walk *asw)
++{
++	struct as_walk_range *awr = to_as_walk_range(asw);
++	pte_t ptent = *pte;
++
++	if (pte_write(ptent)) {
++		pte_t old_pte = ptep_modify_prot_start(asw->vma, addr, pte);
++
++		ptent = pte_wrprotect(old_pte);
++		ptep_modify_prot_commit(asw->vma, addr, pte, old_pte, ptent);
++		awr->total++;
++		awr->start = min(awr->start, addr);
++		awr->end = max(awr->end, addr + PAGE_SIZE);
++	}
++}
++
++/**
++ * struct as_walk_clean - Argument structure for apply_pt_clean
++ * @base: struct as_walk we derive from
++ * @bitmap_pgoff: Address_space Page offset of the first bit in @bitmap
++ * @bitmap: Bitmap with one bit for each page offset in the address_space range
++ * covered.
++ * @start: Address_space page offset of first modified pte relative
++ * to @bitmap_pgoff
++ * @end: Address_space page offset of last modified pte relative
++ * to @bitmap_pgoff
++ */
++struct as_walk_clean {
++	struct as_walk_range base;
++	pgoff_t bitmap_pgoff;
++	unsigned long *bitmap;
++	pgoff_t start;
++	pgoff_t end;
++};
++
++#define to_as_walk_clean(_awr) container_of(_awr, struct as_walk_clean, base)
++
++/**
++ * apply_pt_clean - Leaf pte callback to clean a pte
++ * @pte: Pointer to the pte
++ * @addr: The virtual page address
++ * @asw: Pointer to a struct as_walk embedded in a struct as_walk_clean
++ *
++ * The function cleans a pte and records the range in
++ * virtual address space of touched ptes for efficient TLB flushes.
++ * It also records dirty ptes in a bitmap representing page offsets
++ * in the address_space, as well as the first and last of the bits
++ * touched.
++ */
++static void apply_pt_clean(pte_t *pte, unsigned long addr, struct as_walk *asw)
++{
++	struct as_walk_range *awr = to_as_walk_range(asw);
++	struct as_walk_clean *clean = to_as_walk_clean(awr);
++	pte_t ptent = *pte;
++
++	if (pte_dirty(ptent)) {
++		pgoff_t pgoff = ((addr - asw->vma->vm_start) >> PAGE_SHIFT) +
++			asw->vma->vm_pgoff - clean->bitmap_pgoff;
++		pte_t old_pte = ptep_modify_prot_start(asw->vma, addr, pte);
++
++		ptent = pte_mkclean(old_pte);
++		ptep_modify_prot_commit(asw->vma, addr, pte, old_pte, ptent);
++
++		awr->total++;
++		awr->start = min(awr->start, addr);
++		awr->end = max(awr->end, addr + PAGE_SIZE);
++
++		__set_bit(pgoff, clean->bitmap);
++		clean->start = min(clean->start, pgoff);
++		clean->end = max(clean->end, pgoff + 1);
++	}
++}
++
++/**
++ * apply_as_range - Apply a pte callback to all PTEs pointing into a range
++ * of an address_space.
++ * @mapping: Pointer to the struct address_space
++ * @aas: Closure structure
++ * @first_index: First page offset in the address_space
++ * @nr: Number of incremental page offsets to cover
++ *
++ * Return: Number of ptes touched. Note that this number might be larger
++ * than @nr if there are overlapping vmas
++ */
++static unsigned long apply_as_range(struct address_space *mapping,
++				    pgoff_t first_index, pgoff_t nr,
++				    const struct as_walk_ops *ops,
++				    struct as_walk_range *awr)
++{
++	struct vm_area_struct *vma;
++	pgoff_t vba, vea, cba, cea;
++	unsigned long start_addr, end_addr;
++	struct mmu_notifier_range range;
++
++	i_mmap_lock_read(mapping);
++	vma_interval_tree_foreach(vma, &mapping->i_mmap, first_index,
++				  first_index + nr - 1) {
++		unsigned long vm_flags = READ_ONCE(vma->vm_flags);
++
++		/*
++		 * We can only do advisory flag tests below, since we can't
++		 * require the mm's mmap_sem to be held to protect the flags.
++		 * Therefore, callers that strictly depend on specific vm_flags
++		 * to remain constant throughout the operation must ensure
++		 * those flags are immutable for all relevant vmas or can't use
++		 * this function. Fixing this properly would require the
++		 * vm_flags to be protected by a separate lock taken after the
++		 * i_mmap_lock
++		 */
++
++		/* Skip non-applicable VMAs */
++		if ((vm_flags & (VM_SHARED | VM_WRITE)) !=
++		    (VM_SHARED | VM_WRITE))
++			continue;
++
++		/* Warn on and skip VMAs whose flags indicate illegal usage */
++		if (WARN_ON((vm_flags & (VM_HUGETLB | VM_IO)) != VM_IO))
++			continue;
++
++		/* Clip to the vma */
++		vba = vma->vm_pgoff;
++		vea = vba + vma_pages(vma);
++		cba = first_index;
++		cba = max(cba, vba);
++		cea = first_index + nr;
++		cea = min(cea, vea);
++
++		/* Translate to virtual address */
++		start_addr = ((cba - vba) << PAGE_SHIFT) + vma->vm_start;
++		end_addr = ((cea - vba) << PAGE_SHIFT) + vma->vm_start;
++		if (start_addr >= end_addr)
++			continue;
++
++		awr->base.vma = vma;
++		awr->start = end_addr;
++		awr->end = start_addr;
++
++		mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE, 0,
++					vma, vma->vm_mm, start_addr, end_addr);
++		mmu_notifier_invalidate_range_start(&range);
++
++		/* Is this needed when we only change protection? */
++		flush_cache_range(vma, start_addr, end_addr);
++
++		/*
++		 * We're not using tlb_gather_mmu() since typically
++		 * only a small subrange of PTEs are affected, whereas
++		 * tlb_gather_mmu() records the full range.
++		 */
++		inc_tlb_flush_pending(vma->vm_mm);
++		walk_as_pfn_range(start_addr, end_addr, ops, &awr->base);
++		if (awr->end > awr->start)
++			flush_tlb_range(vma, awr->start, awr->end);
++
++		mmu_notifier_invalidate_range_end(&range);
++		dec_tlb_flush_pending(vma->vm_mm);
++	}
++	i_mmap_unlock_read(mapping);
++
++	return awr->total;
++}
++
++/**
++ * apply_as_wrprotect - Write-protect all ptes in an address_space range
++ * @mapping: The address_space we want to write protect
++ * @first_index: The first page offset in the range
++ * @nr: Number of incremental page offsets to cover
++ *
++ * WARNING: This function should only be used for address spaces whose
++ * vmas are marked VM_IO and that do not contain huge pages.
++ * To avoid interference with COW'd pages, vmas not marked VM_SHARED are
++ * simply skipped.
++ *
++ * Return: The number of ptes actually write-protected. Note that
++ * already write-protected ptes are not counted.
++ */
++unsigned long apply_as_wrprotect(struct address_space *mapping,
++				 pgoff_t first_index, pgoff_t nr)
++{
++	static const struct as_walk_ops ops = {
++		.pte_entry = apply_pt_wrprotect
++	};
++	struct as_walk_range awr = { .total = 0 };
++
++	return apply_as_range(mapping, first_index, nr, &ops, &awr);
++}
++EXPORT_SYMBOL_GPL(apply_as_wrprotect);
++
++/**
++ * apply_as_clean - Clean all ptes in an address_space range
++ * @mapping: The address_space we want to clean
++ * @first_index: The first page offset in the range
++ * @nr: Number of incremental page offsets to cover
++ * @bitmap_pgoff: The page offset of the first bit in @bitmap
++ * @bitmap: Pointer to a bitmap of at least @nr bits. The bitmap needs to
++ * cover the whole range @first_index..@first_index + @nr.
++ * @start: Pointer to number of the first set bit in @bitmap.
++ * is modified as new bits are set by the function.
++ * @end: Pointer to the number of the last set bit in @bitmap.
++ * none set. The value is modified as new bits are set by the function.
++ *
++ * Note: When this function returns there is no guarantee that a CPU has
++ * not already dirtied new ptes. However it will not clean any ptes not
++ * reported in the bitmap.
++ *
++ * If a caller needs to make sure all dirty ptes are picked up and none
++ * additional are added, it first needs to write-protect the address-space
++ * range and make sure new writers are blocked in page_mkwrite() or
++ * pfn_mkwrite(). And then after a TLB flush following the write-protection
++ * pick up all dirty bits.
++ *
++ * WARNING: This function should only be used for address spaces whose
++ * vmas are marked VM_IO and that do not contain huge pages.
++ * To avoid interference with COW'd pages, vmas not marked VM_SHARED are
++ * simply skipped.
++ *
++ * Return: The number of dirty ptes actually cleaned.
++ */
++unsigned long apply_as_clean(struct address_space *mapping,
++			     pgoff_t first_index, pgoff_t nr,
++			     pgoff_t bitmap_pgoff,
++			     unsigned long *bitmap,
++			     pgoff_t *start,
++			     pgoff_t *end)
++{
++	bool none_set = (*start >= *end);
++	static const struct as_walk_ops ops = { .pte_entry = apply_pt_clean };
++	struct as_walk_clean clean = {
++		.base = { .total = 0, },
++		.bitmap_pgoff = bitmap_pgoff,
++		.bitmap = bitmap,
++		.start = none_set ? nr : *start,
++		.end = none_set ? 0 : *end,
++	};
++	unsigned long ret = apply_as_range(mapping, first_index, nr, &ops,
++					   &clean.base);
++	*start = clean.start;
++	*end = clean.end;
 +	return ret;
 +}
-+EXPORT_SYMBOL(ttm_bo_vm_fault_reserved);
-+
-+static vm_fault_t ttm_bo_vm_fault(struct vm_fault *vmf)
-+{
-+	struct vm_area_struct *vma = vmf->vma;
-+	pgprot_t prot;
-+	struct ttm_buffer_object *bo = vma->vm_private_data;
-+	vm_fault_t ret;
-+
-+	ret = ttm_bo_vm_reserve(bo, vmf);
-+	if (ret)
-+		return ret;
-+
-+	prot = vm_get_page_prot(vma->vm_flags);
-+	ret = ttm_bo_vm_fault_reserved(vmf, prot, TTM_BO_VM_NUM_PREFAULT);
-+	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
-+		return ret;
-+
- 	dma_resv_unlock(bo->base.resv);
-+
- 	return ret;
- }
- 
--static void ttm_bo_vm_open(struct vm_area_struct *vma)
-+void ttm_bo_vm_open(struct vm_area_struct *vma)
- {
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
- 
-@@ -307,14 +347,16 @@ static void ttm_bo_vm_open(struct vm_area_struct *vma)
- 
- 	ttm_bo_get(bo);
- }
-+EXPORT_SYMBOL(ttm_bo_vm_open);
- 
--static void ttm_bo_vm_close(struct vm_area_struct *vma)
-+void ttm_bo_vm_close(struct vm_area_struct *vma)
- {
- 	struct ttm_buffer_object *bo = vma->vm_private_data;
- 
- 	ttm_bo_put(bo);
- 	vma->vm_private_data = NULL;
- }
-+EXPORT_SYMBOL(ttm_bo_vm_close);
- 
- static int ttm_bo_vm_access_kmap(struct ttm_buffer_object *bo,
- 				 unsigned long offset,
-diff --git a/include/drm/ttm/ttm_bo_api.h b/include/drm/ttm/ttm_bo_api.h
-index 43c4929a2171..851260cbbb2f 100644
---- a/include/drm/ttm/ttm_bo_api.h
-+++ b/include/drm/ttm/ttm_bo_api.h
-@@ -785,4 +785,18 @@ static inline bool ttm_bo_uses_embedded_gem_object(struct ttm_buffer_object *bo)
- {
- 	return bo->base.dev != NULL;
- }
-+
-+/* Default number of pre-faulted pages in the TTM fault handler */
-+#define TTM_BO_VM_NUM_PREFAULT 16
-+
-+vm_fault_t ttm_bo_vm_reserve(struct ttm_buffer_object *bo,
-+			     struct vm_fault *vmf);
-+
-+vm_fault_t ttm_bo_vm_fault_reserved(struct vm_fault *vmf,
-+				    pgprot_t prot,
-+				    pgoff_t num_prefault);
-+
-+void ttm_bo_vm_open(struct vm_area_struct *vma);
-+
-+void ttm_bo_vm_close(struct vm_area_struct *vma);
- #endif
++EXPORT_SYMBOL_GPL(apply_as_clean);
 -- 
 2.20.1
 
