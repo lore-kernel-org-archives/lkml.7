@@ -2,176 +2,145 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DBDC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45BA3C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F31218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="McTxWX1a"
+	by mail.kernel.org (Postfix) with ESMTP id 15DA221D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:13:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568837599;
+	bh=7yqTiFhnfOQD1ehV4j3dV3361bQH6KOjLCmrP9XuYao=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CUTAVaW412L+im4s2zp219T9T7mtwqnqfS4+A0zERNunUz53wSAqtzpmMNc9PhfWG
+	 2S/+0BP+rTUiwF1LLd6RTOmtQf5nN7GnGmJomRRKLYLMM4BY5C1FFMNMmwQxq2RoB3
+	 ExBTsNfyhXBFc0XxLf64wFnsGUsXZO4iautFUfWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391166AbfIRUNN (ORCPT
+        id S2391181AbfIRUNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:13:13 -0400
-Received: from mout.web.de ([212.227.15.3]:50099 "EHLO mout.web.de"
+        Wed, 18 Sep 2019 16:13:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391137AbfIRUNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:13:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1568837565;
-        bh=Mp/Sp993s+Pq9hGkpPGsUTRxMV/puPWC2MnlUBBr208=;
-        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
-        b=McTxWX1al/lp/s/v4ZQeZASdwV2S3pUkuqwKYg3vfs58ism6GECaUM07JPZXvSokO
-         6F1PIaw5TTmxdIDlGFT3vHOkmSkzaynlNnjjh9SSJ9FgefBX3V6rn2H6Eauj74jbsj
-         haBUQyeFlYEoPq/LgoqYOdfjsA+x6gRBvojCF9/4=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.2.101]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0Mef0K-1iYxQT1ytU-00OGMb; Wed, 18
- Sep 2019 22:12:45 +0200
-To:     linux-serial@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Martin Sperl <kernel@martin.sperl.org>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Stefan Wahren <wahrenst@gmx.net>,
-        Stephen Boyd <swboyd@chromium.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] serial: bcm2835: Use devm_platform_ioremap_resource() in
- bcm2835aux_serial_probe()
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Message-ID: <fcb34c72-89c7-9993-fc0a-ba3a61708bec@web.de>
-Date:   Wed, 18 Sep 2019 22:12:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        id S2391137AbfIRUNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 16:13:18 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6F3021BE5;
+        Wed, 18 Sep 2019 20:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568837596;
+        bh=7yqTiFhnfOQD1ehV4j3dV3361bQH6KOjLCmrP9XuYao=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JlSwulvYPbZcQ+Kx888pCMj/MpNfLeCJBzzVzKM5RgftKgq6k71CdfOnqLUo9c7v2
+         zaRIwbkhoyGSeG9Ok/bo6UpgUj5JM8xcoOORRd4RDTt+Uv+WA9x+dWc/dNRazg+RE6
+         fZH2fI/pqosb98SZEuYG16sh8Y6wBh1hFuZdcXk0=
+Received: by mail-qt1-f175.google.com with SMTP id n7so1327947qtb.6;
+        Wed, 18 Sep 2019 13:13:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAVWA/bSjuIL9eKGR67EXJKuca7+p+/1dwNBPKuRaUvuxVx4e0Fa
+        paJaFEopBlOMaLAvIee5AxVRocj+jnB+72CF9g==
+X-Google-Smtp-Source: APXvYqzp8jEBWLktbjqa8bVQ9eRqJy+dpg6cUJktk5xlfJC86kD0oRlkwkg/pklVSZjObNEm5xalq1A+S1M86ezXcdE=
+X-Received: by 2002:ac8:100d:: with SMTP id z13mr6081504qti.224.1568837595963;
+ Wed, 18 Sep 2019 13:13:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Uc/+VrkchqSRfhOA5ddy0dBO+fZXjPD4PJMt88+y188b9L0lizJ
- agNnt9ZTudVLpAOAYtZYeBVq0olzLlcRR4Pm+OBMD0C7vBMc739NthmGujNynfRhXiAbYKA
- auyoYOFRTId4JAyIu3CYumv8mSByvtR5pSlamV0Dzn9+2i56rFUKbKvldQL13TkptAKKZCS
- NxBe8SEdvesR/ovk2Hhtg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7iO9rjYmu+M=:JBqVrv39cTFySguKp38A5c
- hE5Wh9L/pb/2vLlAEM5Vszf0f8lPh9LO23KT8XFk4eEwUjHr3CD/CDSExY7iFpIsk+wuIpu0M
- 3TWVDvhLC38ngsN8mybiIZOHC/Fgj/6gN+NpRFj4h/m6ETwECGMpbY484ah8hhWYi0ZV8eeA3
- oJNa1XI7PhUKbqcfMD5sPuEgHTznZwKSRcqP/4UlwHub/N5ELEgvfYO1pwBFSsvNayAWFgCug
- 8eHAPu5y+Kk6LTGs9Wrjt912KBpsYHhYjzYye5+5FG9R6ACy8cegZzujf8gDSE0tUk9BvNkmV
- UWwcGydFsuvTel5AWAIVCN8uMwGqZaxA7dtRaEfBycqO6E2akgwfT/lfBeWYL7I4it+eCVsAn
- N94abohs2GlQTgOEqRtUpyxjmVomtf0hLDw0R9paGuyz/wPc0ReZrMEJKjPB1lCoamx/CApcI
- baSKIEElcpgtswhrnPe2EEPn/wGq8aB0g+s3OwL6mjAJEll9JO65HC2e05Ytlyvt/NLiivs4/
- 31HMa6SvF53YNxRkYn7c/7QMwFy9gFRjfXUJ1ektZ7fBjs2FrT+qUoAudoERlOfYMAjD1GTgc
- nA8X3JmVR7bYzDrJaDDmgEmJ6J43orKNcP8bJbS4rqVGdN15Ykh5dgBuJdR0W3N0LO6iwb5rj
- Gnz6rT0wN0h1dOaQRm/1/duJyU2XgLKgKFJnQ+DAQsTjiJ18/Mvp3vTHy1KYGHgrSMiiiOIjP
- 6haEZUmZsSUB6I6o322GEVIfNDUqjGL4e9Q59kZxkwmfzh4WBg+bUULjnqRXg2Zxu+CPviuaf
- hmXRDft6SzxWEJgMHJTYKBbVytv4sSX5l7T5cZTIKyGjizIARHM8c0PQVLCYY6SI5tGce/DR1
- LBrupDlfmFs8ToB1bWmFTACnijZtPSbT2Sb0+twW6XS8R8hBVWD7/2xKp1oFFBgmYthcqLPJD
- +nJB4H6yS9m5uMaUnxnDpVjB/jwK13Gt38JK7YsS8I76mLQnPbhSt19vvqtHHqD4wzbtF0zWR
- i+HOxW3jsNssHTeugDe2ou2DGGimctXzjT+F02COtqgOHuZVkLi1Zn1aKbskrohAOjIFW+Dyx
- oPdva6F8jNyGxdMzGCtPnOcawy47ZokOgk2oYL7zgP9yctG9wy43djOoQAyUfKgYHzF++CAGo
- D32A/hDwJY5oFajzQ8MqbcxBiz2rfA7XBSMN0SmBfZROMH8GU3Mk1HaAXV9ewNx0+/KULLyUg
- 5yuvr0w4SPxPwamELrldzjKSqBvUwgvW4s+LvSnqlvcvfM6WNqM5WzwzDHQk=
+References: <20190918184656.7633-1-rananta@codeaurora.org>
+In-Reply-To: <20190918184656.7633-1-rananta@codeaurora.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Sep 2019 15:13:04 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
+Message-ID: <CAL_JsqJ2WeW0JHSHZuvo9bbc7JSFBr_qCuOp97i=b6Q+OPY7Cg@mail.gmail.com>
+Subject: Re: [PATCH] of: Add of_get_memory_prop()
+To:     Raghavendra Rao Ananta <rananta@codeaurora.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Trilok Soni <tsoni@codeaurora.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 18 Sep 2019 22:00:14 +0200
+On Wed, Sep 18, 2019 at 1:47 PM Raghavendra Rao Ananta
+<rananta@codeaurora.org> wrote:
+>
+> On some embedded systems, the '/memory' dt-property gets updated
+> by the bootloader (for example, the DDR configuration) and then
+> gets passed onto the kernel. The device drivers may have to read
+> the properties at runtime to make decisions. Hence, add
+> of_get_memory_prop() for the device drivers to query the requested
 
-Simplify this function implementation by using a known wrapper function.
+Function name doesn't match. Device drivers don't need to access the FDT.
 
-This issue was detected by using the Coccinelle software.
+> properties.
+>
+> Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
+> ---
+>  drivers/of/fdt.c       | 27 +++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  1 +
+>  2 files changed, 28 insertions(+)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/tty/serial/8250/8250_bcm2835aux.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+We don't add kernel api's without users.
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/seria=
-l/8250/8250_bcm2835aux.c
-index 8ce700c1a7fc..e2c9d19fc8e9 100644
-=2D-- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -25,7 +25,6 @@ struct bcm2835aux_data {
- static int bcm2835aux_serial_probe(struct platform_device *pdev)
- {
- 	struct bcm2835aux_data *data;
--	struct resource *res;
- 	int ret;
+>
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 223d617ecfe1..925cf2852433 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -79,6 +79,33 @@ void __init of_fdt_limit_memory(int limit)
+>         }
+>  }
+>
+> +/**
+> + * of_fdt_get_memory_prop - Return the requested property from the /memory node
+> + *
+> + * On match, returns a non-zero positive value which represents the property
+> + * value. Otherwise returns -ENOENT.
+> + */
+> +int of_fdt_get_memory_prop(const char *pname)
+> +{
+> +       int memory;
+> +       int len;
+> +       fdt32_t *prop = NULL;
+> +
+> +       if (!pname)
+> +               return -EINVAL;
+> +
+> +       memory = fdt_path_offset(initial_boot_params, "/memory");
 
- 	/* allocate the custom structure */
-@@ -61,12 +60,7 @@ static int bcm2835aux_serial_probe(struct platform_devi=
-ce *pdev)
- 	data->uart.port.irq =3D ret;
+Memory nodes should have a unit-address, so this won't work frequently.
 
- 	/* map the main registers */
--	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!res) {
--		dev_err(&pdev->dev, "memory resource not found");
--		return -EINVAL;
--	}
--	data->uart.port.membase =3D devm_ioremap_resource(&pdev->dev, res);
-+	data->uart.port.membase =3D devm_platform_ioremap_resource(pdev, 0);
- 	ret =3D PTR_ERR_OR_ZERO(data->uart.port.membase);
- 	if (ret)
- 		return ret;
-=2D-
-2.23.0
-
+> +       if (memory > 0)
+> +               prop = fdt_getprop_w(initial_boot_params, memory,
+> +                                 pname, &len);
+> +
+> +       if (!prop || len != sizeof(u32))
+> +               return -ENOENT;
+> +
+> +       return fdt32_to_cpu(*prop);
+> +}
+> +EXPORT_SYMBOL_GPL(of_fdt_get_memory_prop);
+> +
+>  static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+>  {
+>         const char *status = fdt_getprop(blob, node, "status", NULL);
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index acf820e88952..537f29373358 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -38,6 +38,7 @@ extern char __dtb_end[];
+>  /* Other Prototypes */
+>  extern u64 of_flat_dt_translate_address(unsigned long node);
+>  extern void of_fdt_limit_memory(int limit);
+> +extern int of_fdt_get_memory_prop(const char *pname);
+>  #endif /* CONFIG_OF_FLATTREE */
+>
+>  #ifdef CONFIG_OF_EARLY_FLATTREE
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
