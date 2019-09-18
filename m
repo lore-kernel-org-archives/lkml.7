@@ -4,56 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 086C0C4CED2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A792EC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24B221924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A26E21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788059;
-	bh=ql6h+HcwawHyRy276sJpNsFQFGRe1iBHEAJ5B3IWtIs=;
+	s=default; t=1568788065;
+	bh=IgSnfBbKKt8oz4nntcGvxalcdOG1q6RWhwQOHW/Yhn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltEuRUqLLkufyDpL/x29OIqTAcUX0D8Jg/VGHWMPiX+QASH8VABb9vhdmouOJncXB
-	 tygYB4JQYqKBmZYfbgz+ZJJza8COuGooR7pefq9qIYnGF7c0OOz/pVxr5UfaIuos8i
-	 OKN5ewzx4HWbm0dQWy7L2nS4ccHwRP6JRgnch61g=
+	b=IMTF1T63jFTg1H96JEWElZuIrPMGdwgSyViuxQNkvfR25Ds2AhCeuF/cBW3uD6Nod
+	 UBZ56x0sLXgCjMiqMHVto+/THGJiH4HnzeLfaeabnspjVwBjxdAxIH+dGjhjk3XQch
+	 NG96ODQ00LZ5pbFkebRJy59q35El95Z43V0E0Jho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfIRG1i (ORCPT
+        id S1730578AbfIRG1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49452 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729403AbfIRG1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:32 -0400
+        id S1730546AbfIRG1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C012C21924;
-        Wed, 18 Sep 2019 06:27:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3727D21924;
+        Wed, 18 Sep 2019 06:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788051;
-        bh=ql6h+HcwawHyRy276sJpNsFQFGRe1iBHEAJ5B3IWtIs=;
+        s=default; t=1568788056;
+        bh=IgSnfBbKKt8oz4nntcGvxalcdOG1q6RWhwQOHW/Yhn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bKWxzQSgAZxIGgVAzakUoGfYdzIeOMkePN34s8ne9N6ZkHVNoL3tKI38zGg60cn43
-         NWvyBGb9kp40dKSvnYFWaU9Y8GBwZVnr6Zi9hlCWjhIbQBwPjhPy/9/ZR9Xocc5Zmo
-         HZ/OVW+CkoQDSOwZatCh+R9OXD5FeBj5i/UjlNSE=
+        b=gJX8JX/TsP0C6hp8ZghMvZIlMj5YkyNeMrbwUoLK0sfhNxgF9Lqv1KqAHlYWbBEXO
+         BPtg587MecaWmxFqY1uQe6DvIfsPdRVxsUIBvtVuFp+8ZAv0uEMvCW39mbxTuwnhCF
+         67UV/YlfVL3ltoW3Tg8Quugxji7jzeRM4zkOC6sM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junaid Shahid <junaids@google.com>,
-        Xiao Guangrong <xiaoguangrong@linux.vnet.ibm.com>,
-        Nadav HarEl <nyh@il.ibm.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Xinhao Xu <xinhao.xu@intel.com>,
-        Yang Zhang <yang.z.zhang@Intel.com>,
-        Gleb Natapov <gleb@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH 5.2 80/85] kvm: nVMX: Remove unnecessary sync_roots from handle_invept
-Date:   Wed, 18 Sep 2019 08:19:38 +0200
-Message-Id: <20190918061237.910306483@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Mammedov <imammedo@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: [PATCH 5.2 43/85] KVM: s390: kvm_s390_vm_start_migration: check dirty_bitmap before using it as target for memset()
+Date:   Wed, 18 Sep 2019 08:19:01 +0200
+Message-Id: <20190918061235.499343564@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -66,62 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Igor Mammedov <imammedo@redhat.com>
 
-commit b119019847fbcac36ed1384f166c91f177d070e7 upstream.
+commit 13a17cc0526f08d1df9507f7484176371cd263a0 upstream.
 
-When L0 is executing handle_invept(), the TDP MMU is active. Emulating
-an L1 INVEPT does require synchronizing the appropriate shadow EPT
-root(s), but a call to kvm_mmu_sync_roots in this context won't do
-that. Similarly, the hardware TLB and paging-structure-cache entries
-associated with the appropriate shadow EPT root(s) must be flushed,
-but requesting a TLB_FLUSH from this context won't do that either.
+If userspace doesn't set KVM_MEM_LOG_DIRTY_PAGES on memslot before calling
+kvm_s390_vm_start_migration(), kernel will oops with:
 
-How did this ever work? KVM always does a sync_roots and TLB flush (in
-the correct context) when transitioning from L1 to L2. That isn't the
-best choice for nested VM performance, but it effectively papers over
-the mistakes here.
+  Unable to handle kernel pointer dereference in virtual kernel address space
+  Failing address: 0000000000000000 TEID: 0000000000000483
+  Fault in home space mode while using kernel ASCE.
+  AS:0000000002a2000b R2:00000001bff8c00b R3:00000001bff88007 S:00000001bff91000 P:000000000000003d
+  Oops: 0004 ilc:2 [#1] SMP
+  ...
+  Call Trace:
+  ([<001fffff804ec552>] kvm_s390_vm_set_attr+0x347a/0x3828 [kvm])
+   [<001fffff804ecfc0>] kvm_arch_vm_ioctl+0x6c0/0x1998 [kvm]
+   [<001fffff804b67e4>] kvm_vm_ioctl+0x51c/0x11a8 [kvm]
+   [<00000000008ba572>] do_vfs_ioctl+0x1d2/0xe58
+   [<00000000008bb284>] ksys_ioctl+0x8c/0xb8
+   [<00000000008bb2e2>] sys_ioctl+0x32/0x40
+   [<000000000175552c>] system_call+0x2b8/0x2d8
+  INFO: lockdep is turned off.
+  Last Breaking-Event-Address:
+   [<0000000000dbaf60>] __memset+0xc/0xa0
 
-Remove the unnecessary operations and leave a comment to try to do
-better in the future.
+due to ms->dirty_bitmap being NULL, which might crash the host.
 
-Reported-by: Junaid Shahid <junaids@google.com>
-Fixes: bfd0a56b90005f ("nEPT: Nested INVEPT")
-Cc: Xiao Guangrong <xiaoguangrong@linux.vnet.ibm.com>
-Cc: Nadav Har'El <nyh@il.ibm.com>
-Cc: Jun Nakajima <jun.nakajima@intel.com>
-Cc: Xinhao Xu <xinhao.xu@intel.com>
-Cc: Yang Zhang <yang.z.zhang@Intel.com>
-Cc: Gleb Natapov <gleb@redhat.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by Peter Shier <pshier@google.com>
-Reviewed-by: Junaid Shahid <junaids@google.com>
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Make sure that ms->dirty_bitmap is set before using it or
+return -EINVAL otherwise.
+
+Cc: <stable@vger.kernel.org>
+Fixes: afdad61615cc ("KVM: s390: Fix storage attributes migration with memory slots")
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Link: https://lore.kernel.org/kvm/20190911075218.29153-1-imammedo@redhat.com/
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/s390/kvm/kvm-s390.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4708,13 +4708,11 @@ static int handle_invept(struct kvm_vcpu
- 
- 	switch (type) {
- 	case VMX_EPT_EXTENT_GLOBAL:
-+	case VMX_EPT_EXTENT_CONTEXT:
- 	/*
--	 * TODO: track mappings and invalidate
--	 * single context requests appropriately
-+	 * TODO: Sync the necessary shadow EPT roots here, rather than
-+	 * at the next emulated VM-entry.
- 	 */
--	case VMX_EPT_EXTENT_CONTEXT:
--		kvm_mmu_sync_roots(vcpu);
--		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
- 		break;
- 	default:
- 		BUG_ON(1);
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -1013,6 +1013,8 @@ static int kvm_s390_vm_start_migration(s
+ 	/* mark all the pages in active slots as dirty */
+ 	for (slotnr = 0; slotnr < slots->used_slots; slotnr++) {
+ 		ms = slots->memslots + slotnr;
++		if (!ms->dirty_bitmap)
++			return -EINVAL;
+ 		/*
+ 		 * The second half of the bitmap is only used on x86,
+ 		 * and would be wasted otherwise, so we put it to good
 
 
