@@ -2,215 +2,88 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78E7C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:42:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FA4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B56208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:42:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="paPlI2qJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2D07221920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:44:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568814295;
+	bh=NsTNEQ9pNzRNy7TB1KzHS8aqTaRQ1Xa/uYBY9oHJ228=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=jlRqf49rSbo0hykma5xpWnapVVguRuINw9MKsRzQOSw/FfqpDy6QkilOUBE8DUVQ/
+	 Zso8gn1TlTYknHPAhrqomUfogv25mDrhvO0yOY6z4RtwMviXv8cpS3jG798olycuZb
+	 6+RgRzjReG+QeCpKpG02Zp0VxlfaKp2c6copnCU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbfIRNms (ORCPT
+        id S1728360AbfIRNoy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:42:48 -0400
-Received: from ozlabs.org ([203.11.71.1]:55359 "EHLO ozlabs.org"
+        Wed, 18 Sep 2019 09:44:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbfIRNms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:42:48 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727123AbfIRNoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:44:54 -0400
+Received: from mail-yw1-f46.google.com (mail-yw1-f46.google.com [209.85.161.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46YLl50rVzz9sPn;
-        Wed, 18 Sep 2019 23:42:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1568814161;
-        bh=D8YIHepWtPUot38WklW/7Wnlevl86vyDaDypmrulSRY=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=paPlI2qJr/e5wAY23txTv0pB73maGGVU6z3G30HEE1kCrJ2RTyYkgOcnn6KixcV6X
-         vUnhyN8qMoF6gn3h1/Ur12fBUyHUScZMlz/9w/ReJPT1nqzMSDqjw8DOwakLga/B98
-         DVdFEv0oSrNgchhwZXEtn0U1mLg4Igspm3ogSGlaSWV5LVc6FXEHCOqcMwo5ImPmXs
-         cHx5FSmYGXbSa6rl2usFDYCOxSVj68oMMupZE0I+GvT/zI5e9dTyQAoGh109yE297I
-         FqmIrSQEryZDKlpLlkCpVgBCNOMLGw7+z1ZHCEfHVCX7JDgovX5T+LkBTZVAUaxVHn
-         oKwAIGb9VBazw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Laurent Dufour <ldufour@linux.ibm.com>, benh@kernel.crashing.org,
-        paulus@samba.org, aneesh.kumar@linux.ibm.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] powerpc/mm: call H_BLOCK_REMOVE when supported
-In-Reply-To: <20190916095543.17496-3-ldufour@linux.ibm.com>
-References: <20190916095543.17496-1-ldufour@linux.ibm.com> <20190916095543.17496-3-ldufour@linux.ibm.com>
-Date:   Wed, 18 Sep 2019 23:42:39 +1000
-Message-ID: <87y2ylvhyo.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A7C21925;
+        Wed, 18 Sep 2019 13:44:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568814293;
+        bh=NsTNEQ9pNzRNy7TB1KzHS8aqTaRQ1Xa/uYBY9oHJ228=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pFhYuyuXLzsolpe52rmJvLGjKw+WqQHA+IXHkmK3FQY5OJW6t8t5r513QDLen1/A8
+         8Bl4ZRpXnW5TB9BM15e37DNN2AcaofIOB3kFt4OonPv9/3t5Pc8vH5FyvEnVgQ4Sde
+         ideuQ5H2ClWdR+Vs9SwvJ/hq9qYksSqwwxI5i3n0=
+Received: by mail-yw1-f46.google.com with SMTP id x82so2461689ywd.12;
+        Wed, 18 Sep 2019 06:44:53 -0700 (PDT)
+X-Gm-Message-State: APjAAAW7nCJjmlGA4rOUZW+SBtyIlxwtnO4hViMiUOLm+8vW4wqhbKMN
+        N/nQ7imcNE78jrBlEwEcPFYX0zjkWVYRR6BsJg==
+X-Google-Smtp-Source: APXvYqzAWf80PXPbYa5YFe71i5C6DTZvSwAPx2GlseUyJKphr7cVsIZ3oHwMTHgheYaO/eC4h5CybbQoMaq3TLVKRw4=
+X-Received: by 2002:a81:9182:: with SMTP id i124mr3297116ywg.279.1568814292316;
+ Wed, 18 Sep 2019 06:44:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
+In-Reply-To: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 18 Sep 2019 08:44:39 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqJhH2x6xto9yJ+0V5YiYn9J_Y_bABG4_N6MK0M3XFCPqg@mail.gmail.com>
+Message-ID: <CAL_JsqJhH2x6xto9yJ+0V5YiYn9J_Y_bABG4_N6MK0M3XFCPqg@mail.gmail.com>
+Subject: Re: [PATCH v2] spi: dt-bindings: Convert spi-sifive binding to json-schema
+To:     Pragnesh Patel <pragnesh.patel@sifive.com>
+Cc:     Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-Few comments ...
-
-Laurent Dufour <ldufour@linux.ibm.com> writes:
-> Now we do not call _BLOCK_REMOVE all the time when the feature is
-> exhibited.
-
-This isn't true until after the patch is applied, ie. the tense is
-wrong. The rest of the change log explains things fine, so just drop
-that sentence I think.
-
-Can you include the info about the oops in here.
-
-> Depending on the hardware and the hypervisor, the hcall H_BLOCK_REMOVE may
-> not be able to process all the page size for a segment base page size, as
-                                      ^
-                                      sizes
-> reported by the TLB Invalidate Characteristics.o
-                                                 ^
-                                                 stray "o"
+On Wed, Sep 18, 2019 at 6:10 AM Pragnesh Patel
+<pragnesh.patel@sifive.com> wrote:
 >
-> For each couple base segment page size and actual page size, this
-           ^
-           "pair of"
-> characteristic is telling the size of the block the hcall is supporting.
-                 ^                                          ^
-                 "tells us"                                 supports
+> Convert the spi-sifive binding to DT schema format.
 >
-> Due to the involve complexity in do_block_remove() and call_block_remove(),
-             ^
-             "required" is better I think
-> and the fact currently a 8 size block is returned by the hypervisor,  we
-              ^          ^
-              that       "block of size 8"
-> are only supporting 8 size block to the H_BLOCK_REMOVE hcall.
->
-> Furthermore a warning message is displayed at boot time in the case of an
-> unsupported block size.
-
-I'm not sure we should be doing that? It could be unnecessarily spammy.
-
-> In order to identify this limitation easily in the code,a local define
-> HBLKR_SUPPORTED_SIZE defining the currently supported block size, and a
-> dedicated checking helper is_supported_hlbkr() are introduced.
->
-> For regular pages and hugetlb, the assumption is made that the page size is
-> equal to the base page size. For THP the page size is assumed to be 16M.
->
-> Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
+> Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
 > ---
->  arch/powerpc/platforms/pseries/lpar.c | 35 +++++++++++++++++++++++++--
->  1 file changed, 33 insertions(+), 2 deletions(-)
 >
-> diff --git a/arch/powerpc/platforms/pseries/lpar.c b/arch/powerpc/platforms/pseries/lpar.c
-> index 98a5c2ff9a0b..e2ad9b3b1097 100644
-> --- a/arch/powerpc/platforms/pseries/lpar.c
-> +++ b/arch/powerpc/platforms/pseries/lpar.c
-> @@ -65,6 +65,13 @@ EXPORT_SYMBOL(plpar_hcall_norets);
->   */
->  static int hblkr_size[MMU_PAGE_COUNT][MMU_PAGE_COUNT];
->  
-> +/*
-> + * Due to the involved complexity, and that the current hypervisor is only
-> + * returning this value or 0, we are limiting the support of the H_BLOCK_REMOVE
-> + * buffer size to 8 size block.
-> + */
-> +#define HBLKR_SUPPORTED_BLOCK_SIZE 8
-> +
->  #ifdef CONFIG_VIRT_CPU_ACCOUNTING_NATIVE
->  static u8 dtl_mask = DTL_LOG_PREEMPT;
->  #else
-> @@ -993,6 +1000,15 @@ static void pSeries_lpar_hpte_invalidate(unsigned long slot, unsigned long vpn,
->  #define HBLKR_CTRL_ERRNOTFOUND	0x8800000000000000UL
->  #define HBLKR_CTRL_ERRBUSY	0xa000000000000000UL
->  
-> +/*
-> + * Returned true if we are supporting this block size for the specified segment
-> + * base page size and actual page size.
-> + */
-> +static inline bool is_supported_hlbkr(int bpsize, int psize)
-> +{
-> +	return (hblkr_size[bpsize][psize] == HBLKR_SUPPORTED_BLOCK_SIZE);
-> +}
-> +
->  /**
->   * H_BLOCK_REMOVE caller.
->   * @idx should point to the latest @param entry set with a PTEX.
-> @@ -1152,7 +1168,11 @@ static inline void __pSeries_lpar_hugepage_invalidate(unsigned long *slot,
->  	if (lock_tlbie)
->  		spin_lock_irqsave(&pSeries_lpar_tlbie_lock, flags);
->  
-> -	if (firmware_has_feature(FW_FEATURE_BLOCK_REMOVE))
-> +	/*
-> +	 * Assuming THP size is 16M, and we only support 8 bytes size buffer
-> +	 * for the momment.
-> +	 */
-> +	if (is_supported_hlbkr(psize, MMU_PAGE_16M))
+> Changes in v2:
+> - Remove address-cells and size-cells property
+> - Added valid values for sifive,fifo-depth and sifive,max-bits-per-word
+>   property
+>
+>  .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
+>  .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
+>  2 files changed, 86 insertions(+), 37 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
 
-It's not very clear that this is correct in all cases. ie. how do we
-know we're being called for THP and not regular huge page?
-
-I think we're only called via:
-  flush_hash_hugepage()
-  -> mmu_hash_ops.hugepage_invalidate()
-     pSeries_lpar_hugepage_invalidate()
-     -> __pSeries_lpar_hugepage_invalidate()
-
-And flush_hash_hugepage() is called via:
-  __hash_page_thp()
-  and
-  hpte_do_hugepage_flush()
-
-The first is presumably fine, the 2nd is called in a few places:
-  __flush_hash_table_range() under if (is_thp)
-  hash__pmd_hugepage_update()
-
-
-But it's a little bit fragile if the code ever evolves. Not sure if
-there's a better solution, other than just documenting it.
-
->  		hugepage_block_invalidate(slot, vpn, count, psize, ssize);
->  	else
->  		hugepage_bulk_invalidate(slot, vpn, count, psize, ssize);
-> @@ -1437,6 +1457,14 @@ void __init pseries_lpar_read_hblkr_characteristics(void)
->  
->  		block_size = 1 << block_size;
->  
-> +		/*
-> +		 * If the block size is not supported by the kernel, report it,
-> +		 * but continue reading the values, and the following blocks.
-> +		 */
-> +		if (block_size != HBLKR_SUPPORTED_BLOCK_SIZE)
-> +			pr_warn("Unsupported H_BLOCK_REMOVE block size : %d\n",
-> +				block_size);
-
-Does this need a printk? I'm worried it could end up triggering and
-scaring people unnecessarily.
-
-> +
->  		for (npsize = local_buffer[idx++];  npsize > 0; npsize--)
->  			check_lp_set_hblk((unsigned int) local_buffer[idx++],
->  					  block_size);
-> @@ -1468,7 +1496,10 @@ static void pSeries_lpar_flush_hash_range(unsigned long number, int local)
->  	if (lock_tlbie)
->  		spin_lock_irqsave(&pSeries_lpar_tlbie_lock, flags);
->  
-> -	if (firmware_has_feature(FW_FEATURE_BLOCK_REMOVE)) {
-> +	/*
-> +	 * Currently, we only support 8 bytes size buffer in do_block_remove().
-> +	 */
-> +	if (is_supported_hlbkr(batch->psize, batch->psize)) {
->  		do_block_remove(number, batch, param);
->  		goto out;
->  	}
-> -- 
-> 2.23.0
-
-cheers
+Reviewed-by: Rob Herring <robh@kernel.org>
