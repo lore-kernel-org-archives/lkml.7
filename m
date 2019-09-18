@@ -2,96 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFA3AC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F9C1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C34B62067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:22:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 502B52067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sHvaxBqP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tiaefsAe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbfIROWi (ORCPT
+        id S1729768AbfIROXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:22:38 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36588 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726484AbfIROWh (ORCPT
+        Wed, 18 Sep 2019 10:23:06 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33938 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfIROXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:22:37 -0400
-Received: by mail-wm1-f67.google.com with SMTP id t3so285986wmj.1;
-        Wed, 18 Sep 2019 07:22:36 -0700 (PDT)
+        Wed, 18 Sep 2019 10:23:06 -0400
+Received: by mail-io1-f67.google.com with SMTP id q1so16638767ion.1;
+        Wed, 18 Sep 2019 07:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=6nKowSJkmj6y8SDyX3nXm1VDFEY4+KARvCaZgONZgTY=;
-        b=sHvaxBqPoh9HdPutDdOHYNG2SiQafQqOoadtmSUHyz4TErj7HkOAVFdD3fLxc1PVw1
-         lpqaAH51OsWTKx8X84zmbkSqZgFQhhFGjJqKE1ov9OuP6FIXbGEBwQQhqy8+1Ce5pAf3
-         VUaUWu3i8/CW+QmemKXDsJM/WfwkC/bBbjxlz9kKSZgeMwwINkDivaEp/HfTCGuvTU14
-         4jB4VoH5Wqsfbf+Xqg3kURDJ4nT6Xjkv1KHFx0VF1wgXnjlXpclZbq4U6UVvmz/qKd3Z
-         JbGq8HyiiCxAtqGObSJ2bAXe6jge6XbJrNNTO5AmIu41RCgeXFXFN8BYojJddSg1kv8v
-         poUA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8hOkftNxCx/aWELaDJaTVsr1hHwRKS/6DkQyi3nkXNo=;
+        b=tiaefsAejMqIgoXecf2HVZ6uIEzJD89WgVfxPiUxd2wHa6nLzUze9o9GVpjummntml
+         7WwLZ0MXTA59q4jDtNtRrYrkAdCLRVZ7nfYDR58y4svtOoPHkCSLbXxcbMkyCtErkmIM
+         9gCBiErpQ8rA/lOYi6jn6wu0tl86UdRkk8Fjaxyw97vvX2IbE/bIqTs+43mniCCVwgd+
+         QDgVKIeAchxQSDqjl8U6m2m7i4mRywfVhQtu6dcanIX09OKAWLNWNlIdwhJ1n/DJ9fmM
+         MlLOjQwo40B4150GKMdJgMsYej5F+af/4uNUWja8Nd9FAsf9r+cuTOBrXeABpjfrgzue
+         LKqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=6nKowSJkmj6y8SDyX3nXm1VDFEY4+KARvCaZgONZgTY=;
-        b=SDCwECkup0cPakP6adTzco2rnMk4zoPguBFBEpQVKJT9ztkYhIi7zq/14TQwZNVP6M
-         DcNWxNZpBQDdSAiBgTZIwDNTh9HBs+wehvpB0dUwKBr+Xw9z99l371SqBasnulrDvprq
-         ACjZBwessEHjnGcqwajR6OtH8jnigiwqsTbYRD985zBQRRjspakqWER4Oi7hUXgG/tQf
-         2GFJKx5AoaAWJGUHHYIynHDZ83SkBMejBuSfbfTMpXtHDUpCClrCY1tkVwaLrMJ1MjVZ
-         WFcoVysgCTJZuHfKeJl9IjLdaCtSPWdSRdrW9IqSUAdEUlL2b8b/MhkZDt7DpES4rZs/
-         4BLg==
-X-Gm-Message-State: APjAAAVSXOrFSk7xxAXOuBmPKkf9qzn86mrA6T3f9JsV9ttonVwSVJv8
-        MCZXY15juoYa6AjolEGPklpHtV9A
-X-Google-Smtp-Source: APXvYqzCiXXfMRBxI/rS2G2gjm1hhgWe8jjxTZ2GV+783JJXtxbjxzg3RbvVoB2WwI7yT9MKS+K5RA==
-X-Received: by 2002:a1c:1d85:: with SMTP id d127mr3358148wmd.14.1568816555351;
-        Wed, 18 Sep 2019 07:22:35 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q19sm10849959wra.89.2019.09.18.07.22.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 07:22:34 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] Urgent KVM fix
-Date:   Wed, 18 Sep 2019 16:22:33 +0200
-Message-Id: <1568816553-26210-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8hOkftNxCx/aWELaDJaTVsr1hHwRKS/6DkQyi3nkXNo=;
+        b=GMCLneJzFp1hfcWNHqqTBDymWpfJdq7O9FQ/RbBNJSt69Q/ZFhLVDs56SxwWNJQdtQ
+         g2HE9FB81/ONwdOtuvC/tK6DZ+v7lzW4UY0kGleTFQ5KjXlreSj1/w45nVb5rDJQlJsq
+         hB7b0SpzD40g14wkz0oh0DxSeVohk6AMZbhCwrTLzRipWpDqagjnzbizfLbSp9DSno5o
+         cnZ5OMHF8ckUZUoV4TWMRguHvbsRcMOelDL9A02xXv0Vi8qW1uF3PEoOTBeWLY3acUiA
+         EXSeZt+K9D2Vt+9TB2eeD/nBbUlSsMhRJCT/aNdFYgE3qFxwIdv2flhWJTY73RcplbfK
+         HWfQ==
+X-Gm-Message-State: APjAAAW3J9l3xcNJAbfe1sL2wqOQeu27K64IH27RUszcfMFq9JRWlhbg
+        RL99qPHdYiI037v9SCiOtUw5RcABgeGd2/+hV1V74sxq
+X-Google-Smtp-Source: APXvYqxiBAlP+n9Q7FILgic2xGszsDwFKNDSkihvLtOowMxpoCcjP8dfA+h9rXTnJorshM46ixQcptHHt7Al/USCw3Y=
+X-Received: by 2002:a5d:8a0f:: with SMTP id w15mr5572006iod.239.1568816585433;
+ Wed, 18 Sep 2019 07:23:05 -0700 (PDT)
+MIME-Version: 1.0
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-3-git-send-email-peng.fan@nxp.com> <20190917183856.2342beed@donnerap.cambridge.arm.com>
+ <AM0PR04MB44813D62FF7E6762BB17460E888E0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20190918110037.4edefb2f@donnerap.cambridge.arm.com> <CABb+yY2G8s9gV8Pu+f__8-bubjCJsVQrQikbVMZXmpTwSMBxiQ@mail.gmail.com>
+ <20190918145832.0bb72e16@donnerap.cambridge.arm.com>
+In-Reply-To: <20190918145832.0bb72e16@donnerap.cambridge.arm.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 18 Sep 2019 09:22:54 -0500
+Message-ID: <CABb+yY3irsE0U-bex4G60Lwpewea6=pE1vSzi72Z+5DafmC8Xg@mail.gmail.com>
+Subject: Re: [PATCH V6 2/2] mailbox: introduce ARM SMC based mailbox
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Wed, Sep 18, 2019 at 8:58 AM Andre Przywara <andre.przywara@arm.com> wrote:
+>
 
-this pull request is independent of the merge window.  Please pull it as it
-fixes a longstanding bug that was recently found by both Google humans
-and bots (syzkaller).
+> > > Also there is mbox_chan_txdone() with which a controller driver can signal TX completion explicitly.
+> > >
+> > No. Controller can use that only if it has specified txdone_irq, which
+> > is not the case here.
+>
+> I see. So does the framework handle the case where both txdone_poll and txdone_irq are false?
+>
+Of course. If there is no IRQ or POLL mechanism for controller to
+detect tx-done, the only way left is for client driver to know by some
+'ack' response (if any). The client should call mbox_client_txdone()
 
-The following changes since commit a9c20bb0206ae9384bd470a6832dd8913730add9:
-
-  Merge tag 'kvm-s390-master-5.3-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into kvm-master (2019-09-14 09:25:30 +0200)
-
-are available in the git repository at:
-
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus-urgent
-
-for you to fetch changes up to b60fe990c6b07ef6d4df67bc0530c7c90a62623a:
-
-  KVM: coalesced_mmio: add bounds checking (2019-09-18 15:56:55 +0200)
-
-----------------------------------------------------------------
-Fix missing bounds-checking in coalesced_mmio (CVE-2019-14821).
-
-----------------------------------------------------------------
-Matt Delco (1):
-      KVM: coalesced_mmio: add bounds checking
-
- virt/kvm/coalesced_mmio.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+Thanks
