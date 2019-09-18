@@ -2,129 +2,165 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27025C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33497C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0A3D222CE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:15:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jIJuwHz8"
+	by mail.kernel.org (Postfix) with ESMTP id 13A50222E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:16:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731266AbfIRTPo (ORCPT
+        id S1730184AbfIRTQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:15:44 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45428 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbfIRTPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:15:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id y72so599902pfb.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 12:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QznQIsPmRQMTWr3DobEVwSUb3hfFyooPIqDVOigxW3s=;
-        b=jIJuwHz8AdTaWAM5jnpAzJ02psVnIIc4slG2c/uH5RccAy8CfRpIJanIH4RBdZ/+Si
-         Mn/wuxFm/JTNz/xOGFzK/qKIcQD8/JL+6H1BN+qdGp7HFiclukD7wuyDMwkZSOXb6DmR
-         7PQ8sZ0wrD8g2jvaht5ukMjhTk/YXFwZz+Tp0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QznQIsPmRQMTWr3DobEVwSUb3hfFyooPIqDVOigxW3s=;
-        b=OBRWYeaziYHeer+44RvlVFI0zUTMzH3vSfZ/TfEyOIrmOeJ4C1qnY7g07IYRc7yUly
-         SHepTCeN9a+gNGnSbfKETD6yAXeYD+atBpeJD569CMZa7PdTDflx6UMTw+r14+t0ANS6
-         p/PE5WiWC6niaHumGC5uOdCwCUU+qLWdQR0xPrtp0mO1r2DC/Ufh1tDwYcJDW2SepOtI
-         deodZ+I0NlzDep1TKJ432wDnIKSQLRPUdP4RxYHceeXrpe8xGfKvnE511BcMZoWUelgu
-         Rv/aRt26/zeWWSduqpNMBfql9YxncTuUUoOAlFs9o9t3WsOhTJXopOyUFqHf6Pa4Itm3
-         85+w==
-X-Gm-Message-State: APjAAAXaa1nQ36lseGvBG7yTNkAWieb772xfv/hhWORunhYqJ0aoRTB3
-        g/w5eaj61730UFS+1cafwA5qNQ==
-X-Google-Smtp-Source: APXvYqzIQRCO49+6U77cxewbCNKEeb29tgMkR0EvOQ6K/XWN59+iP3LwRtrnuP6dmDLPhgjsXewdGw==
-X-Received: by 2002:a62:7646:: with SMTP id r67mr5940551pfc.116.1568834143043;
-        Wed, 18 Sep 2019 12:15:43 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id 195sm8847705pfz.103.2019.09.18.12.15.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 12:15:42 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] devfreq: Add tracepoint for frequency changes
-Date:   Wed, 18 Sep 2019 12:15:37 -0700
-Message-Id: <20190918191537.48837-1-mka@chromium.org>
-X-Mailer: git-send-email 2.23.0.237.gc6a4ce50a0-goog
+        Wed, 18 Sep 2019 15:16:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56470 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbfIRTQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 15:16:35 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4CAFE197BCE0;
+        Wed, 18 Sep 2019 19:16:35 +0000 (UTC)
+Received: from cantor.redhat.com (ovpn-117-18.phx2.redhat.com [10.3.117.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C99DF100194E;
+        Wed, 18 Sep 2019 19:16:34 +0000 (UTC)
+From:   Jerry Snitselaar <jsnitsel@redhat.com>
+To:     linux-efi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Matthew Garrett <mjg59@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: [RFC PATCH] tpm: only set efi_tpm_final_log_size after successful event log parsing
+Date:   Wed, 18 Sep 2019 12:16:26 -0700
+Message-Id: <20190918191626.5741-1-jsnitsel@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Wed, 18 Sep 2019 19:16:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a tracepoint for frequency changes of devfreq devices and
-use it.
+If __calc_tpm2_event_size fails to parse an event it will return 0,
+resulting tpm2_calc_event_log_size returning -1. Currently
+there is no check of this return value, and efi_tpm_final_log_size
+can end up being set to this negative value resulting
+in a panic like the following:
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+[    0.774340] BUG: unable to handle page fault for address: ffffbc8fc00866ad
+[    0.774788] #PF: supervisor read access in kernel mode
+[    0.774788] #PF: error_code(0x0000) - not-present page
+[    0.774788] PGD 107d36067 P4D 107d36067 PUD 107d37067 PMD 107d38067 PTE 0
+[    0.774788] Oops: 0000 [#1] SMP PTI
+[    0.774788] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.3.0-0.rc2.1.elrdy.x86_64 #1
+[    0.774788] Hardware name: LENOVO 20HGS22D0W/20HGS22D0W, BIOS N1WET51W (1.30 ) 09/14/2018
+[    0.774788] RIP: 0010:memcpy_erms+0x6/0x10
+[    0.774788] Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+[    0.774788] RSP: 0000:ffffbc8fc0073b30 EFLAGS: 00010286
+[    0.774788] RAX: ffff9b1fc7c5b367 RBX: ffff9b1fc8390000 RCX: ffffffffffffe962
+[    0.774788] RDX: ffffffffffffe962 RSI: ffffbc8fc00866ad RDI: ffff9b1fc7c5b367
+[    0.774788] RBP: ffff9b1c10ca7018 R08: ffffbc8fc0085fff R09: 8000000000000063
+[    0.774788] R10: 0000000000001000 R11: 000fffffffe00000 R12: 0000000000003367
+[    0.774788] R13: ffff9b1fcc47c010 R14: ffffbc8fc0085000 R15: 0000000000000002
+[    0.774788] FS:  0000000000000000(0000) GS:ffff9b1fce200000(0000) knlGS:0000000000000000
+[    0.774788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.774788] CR2: ffffbc8fc00866ad CR3: 000000029f60a001 CR4: 00000000003606f0
+[    0.774788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    0.774788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    0.774788] Call Trace:
+[    0.774788]  tpm_read_log_efi+0x156/0x1a0
+[    0.774788]  tpm_bios_log_setup+0xc8/0x190
+[    0.774788]  tpm_chip_register+0x50/0x1c0
+[    0.774788]  tpm_tis_core_init.cold.9+0x28c/0x466
+[    0.774788]  tpm_tis_plat_probe+0xcc/0xea
+[    0.774788]  platform_drv_probe+0x35/0x80
+[    0.774788]  really_probe+0xef/0x390
+[    0.774788]  driver_probe_device+0xb4/0x100
+[    0.774788]  device_driver_attach+0x4f/0x60
+[    0.774788]  __driver_attach+0x86/0x140
+[    0.774788]  ? device_driver_attach+0x60/0x60
+[    0.774788]  bus_for_each_dev+0x76/0xc0
+[    0.774788]  ? klist_add_tail+0x3b/0x70
+[    0.774788]  bus_add_driver+0x14a/0x1e0
+[    0.774788]  ? tpm_init+0xea/0xea
+[    0.774788]  ? do_early_param+0x8e/0x8e
+[    0.774788]  driver_register+0x6b/0xb0
+[    0.774788]  ? tpm_init+0xea/0xea
+[    0.774788]  init_tis+0x86/0xd8
+[    0.774788]  ? do_early_param+0x8e/0x8e
+[    0.774788]  ? driver_register+0x94/0xb0
+[    0.774788]  do_one_initcall+0x46/0x1e4
+[    0.774788]  ? do_early_param+0x8e/0x8e
+[    0.774788]  kernel_init_freeable+0x199/0x242
+[    0.774788]  ? rest_init+0xaa/0xaa
+[    0.774788]  kernel_init+0xa/0x106
+[    0.774788]  ret_from_fork+0x35/0x40
+[    0.774788] Modules linked in:
+[    0.774788] CR2: ffffbc8fc00866ad
+[    0.774788] ---[ end trace 42930799f8d6eaea ]---
+[    0.774788] RIP: 0010:memcpy_erms+0x6/0x10
+[    0.774788] Code: 90 90 90 90 eb 1e 0f 1f 00 48 89 f8 48 89 d1 48 c1 e9 03 83 e2 07 f3 48 a5 89 d1 f3 a4 c3 66 0f 1f 44 00 00 48 89 f8 48 89 d1 <f3> a4 c3 0f 1f 80 00 00 00 00 48 89 f8 48 83 fa 20 72 7e 40 38 fe
+[    0.774788] RSP: 0000:ffffbc8fc0073b30 EFLAGS: 00010286
+[    0.774788] RAX: ffff9b1fc7c5b367 RBX: ffff9b1fc8390000 RCX: ffffffffffffe962
+[    0.774788] RDX: ffffffffffffe962 RSI: ffffbc8fc00866ad RDI: ffff9b1fc7c5b367
+[    0.774788] RBP: ffff9b1c10ca7018 R08: ffffbc8fc0085fff R09: 8000000000000063
+[    0.774788] R10: 0000000000001000 R11: 000fffffffe00000 R12: 0000000000003367
+[    0.774788] R13: ffff9b1fcc47c010 R14: ffffbc8fc0085000 R15: 0000000000000002
+[    0.774788] FS:  0000000000000000(0000) GS:ffff9b1fce200000(0000) knlGS:0000000000000000
+[    0.774788] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.774788] CR2: ffffbc8fc00866ad CR3: 000000029f60a001 CR4: 00000000003606f0
+[    0.774788] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[    0.774788] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[    0.774788] Kernel panic - not syncing: Fatal exception
+[    0.774788] Kernel Offset: 0x1d000000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+[    0.774788] ---[ end Kernel panic - not syncing: Fatal exception ]---
+
+Fixes: c46f3405692de ("tpm: Reserve the TPM final events table")
+Cc: Matthew Garrett <mjg59@google.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Signed-off-by: Jerry Snitselaar <jsnitsel@redhat.com>
 ---
- drivers/devfreq/devfreq.c      |  3 +++
- include/trace/events/devfreq.h | 18 ++++++++++++++++++
- 2 files changed, 21 insertions(+)
+ drivers/firmware/efi/tpm.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index ab22bf8a12d6..32de1f6ac776 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -317,6 +317,9 @@ static int devfreq_set_target(struct devfreq *devfreq, unsigned long new_freq,
+diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
+index 1d3f5ca3eaaf..5cd00a7833c2 100644
+--- a/drivers/firmware/efi/tpm.c
++++ b/drivers/firmware/efi/tpm.c
+@@ -40,8 +40,7 @@ int __init efi_tpm_eventlog_init(void)
+ {
+ 	struct linux_efi_tpm_eventlog *log_tbl;
+ 	struct efi_tcg2_final_events_table *final_tbl;
+-	unsigned int tbl_size;
+-	int ret = 0;
++	int tbl_size, ret = 0;
  
- 	devfreq->previous_freq = new_freq;
+ 	if (efi.tpm_log == EFI_INVALID_TABLE_ADDR) {
+ 		/*
+@@ -80,11 +79,17 @@ int __init efi_tpm_eventlog_init(void)
+ 					    + sizeof(final_tbl->nr_events),
+ 					    final_tbl->nr_events,
+ 					    log_tbl->log);
++	if (tbl_size < 0) {
++		pr_err("Failed to parse event in TPM Final Event log\n");
++		goto calc_out;
++	}
++
+ 	memblock_reserve((unsigned long)final_tbl,
+ 			 tbl_size + sizeof(*final_tbl));
+-	early_memunmap(final_tbl, sizeof(*final_tbl));
+ 	efi_tpm_final_log_size = tbl_size;
  
-+	if (new_freq != cur_freq)
-+		trace_devfreq_frequency(devfreq, new_freq);
-+
- 	if (devfreq->suspend_freq)
- 		devfreq->resume_freq = cur_freq;
- 
-diff --git a/include/trace/events/devfreq.h b/include/trace/events/devfreq.h
-index cf5b8772175d..a62d32fe3c33 100644
---- a/include/trace/events/devfreq.h
-+++ b/include/trace/events/devfreq.h
-@@ -8,6 +8,24 @@
- #include <linux/devfreq.h>
- #include <linux/tracepoint.h>
- 
-+TRACE_EVENT(devfreq_frequency,
-+	TP_PROTO(struct devfreq *devfreq, unsigned long freq),
-+
-+	TP_ARGS(devfreq, freq),
-+
-+	TP_STRUCT__entry(
-+		__string(dev_name, dev_name(&devfreq->dev))
-+		__field(unsigned long, freq)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(dev_name, dev_name(&devfreq->dev));
-+		__entry->freq = freq;
-+	),
-+
-+	TP_printk("dev_name=%s freq=%lu", __get_str(dev_name), __entry->freq)
-+);
-+
- TRACE_EVENT(devfreq_monitor,
- 	TP_PROTO(struct devfreq *devfreq),
- 
++calc_out:
++	early_memunmap(final_tbl, sizeof(*final_tbl));
+ out:
+ 	early_memunmap(log_tbl, sizeof(*log_tbl));
+ 	return ret;
 -- 
-2.23.0.237.gc6a4ce50a0-goog
+2.23.0
 
