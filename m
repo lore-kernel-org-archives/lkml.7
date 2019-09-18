@@ -2,589 +2,479 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB90C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FBBC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B26218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6857121907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="szrFfRRr"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Wi5BdfkB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfIRWxo (ORCPT
+        id S1730828AbfIRWzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 18:53:44 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:40640 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbfIRWxm (ORCPT
+        Wed, 18 Sep 2019 18:55:48 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:44306 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbfIRWzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 18:53:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 7so1564320ljw.7;
-        Wed, 18 Sep 2019 15:53:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Fj9E3xdk20mfBmQkKIyxlFTT6iliG1h7LRlmtKZPSgI=;
-        b=szrFfRRrz+EHPSvTfJS1RZFGLLmdKb5jj56ugq1JOAMZVuE7UnFvtimFzZarS+AHod
-         RZhTU+lT0nSi2/UjoIjt0L/dkvagEftCcjPZH8YmBDBZ7SR6B2bfwxM6neOiH+Ce4H71
-         r5aGsKFWpLcNVhr+CLqK1sH0Yy84aSihX4R1bS0lmbTDtH1vPGF2caAC2gZ9y+W8U6AG
-         nzzfZAKvhfaToIC4hCsqHNCeQcEKEY/rFSYT3XpLKBXIDrtJvBZQ7xDY5NdqOHc3AM3j
-         rWseKDGf720jkNdo06DWXa2sxB+Qt971wahIEbTQWey0zVJFt7R+onhhx8mI73nyhHVp
-         SN+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Fj9E3xdk20mfBmQkKIyxlFTT6iliG1h7LRlmtKZPSgI=;
-        b=uexVcCe73GK/+Ml7jDL1uFL4ucgmYxYM7PmnsQLPd+IgYknPOPSmGUB0RJ1QUppWZ8
-         ASvMKep9yUnmW4ss1fWaUrJJYvWLUu2+UMDi30s19I4TN6VoBM06cu6OACzWS2lKlRZu
-         stlV7Be64Dh0XdMaP+b2Rk/mgvniLnGchSTouE7S5JU6UY7AN9SgGs8ABwTxMk1FLMmv
-         JCmn8i24tHzJMW1MzqbzfIPTgzVF6039TLaUQHFox2x8HQflKiAXhE6QWEWjXuqHn3iQ
-         KR5R2OYisfZDkfir43XEd0t8DXvH/cyNq2937zYccmPf7EdMf7iwCZzoY1xEGrQsMxKX
-         uXZQ==
-X-Gm-Message-State: APjAAAXyV67r32pDmxSAalWLb1FMB4Bk5SVpcc985zBfj+UvkNMmo6o7
-        mcHJO8X3lbxgEggWwkpMW3c=
-X-Google-Smtp-Source: APXvYqzFFhvmH5E8p/MEYr1JTOcogljq7eQfKqzCSP45U023cwj9zDIR3kLRH1sYKTelx+OH4IImxQ==
-X-Received: by 2002:a2e:b0f4:: with SMTP id h20mr3617721ljl.10.1568847219209;
-        Wed, 18 Sep 2019 15:53:39 -0700 (PDT)
-Received: from localhost.localdomain ([46.216.138.44])
-        by smtp.gmail.com with ESMTPSA id z1sm726985ljh.88.2019.09.18.15.53.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 15:53:38 -0700 (PDT)
-Received: from jek by localhost.localdomain with local (Exim 4.92.1)
-        (envelope-from <jekhor@gmail.com>)
-        id 1iAipP-0002Zo-B8; Thu, 19 Sep 2019 01:53:39 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: [PATCH v4 1/1] platform/x86/intel_cht_int33fe: Split code to USB Micro-B and Type-C variants
-Date:   Thu, 19 Sep 2019 01:53:37 +0300
-Message-Id: <20190918225337.9860-2-jekhor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190918225337.9860-1-jekhor@gmail.com>
-References: <20190918225337.9860-1-jekhor@gmail.com>
+        Wed, 18 Sep 2019 18:55:48 -0400
+Received: from pendragon.ideasonboard.com (unknown [62.28.174.186])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 334EB325;
+        Thu, 19 Sep 2019 00:55:44 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1568847344;
+        bh=zjElB/2z+iUYvyV4ZOZiaMfWcot6GJHRp+aUbYLHRJA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wi5BdfkBOnQJrDlA5pQXyU0kn9KOqoenLbBgF3wYi1qGX9M7lAfjUZazapGb2NkKm
+         aGsxw0dhNDPnMaiXILYh9KeqUTUUgTU9yoT7nGTUFo83H9d25WnFuSKVsRIyRBlNls
+         dh6/UIEacx6JIdLvViWnVMWPmL3oZGEhn4z1p5uA=
+Date:   Thu, 19 Sep 2019 01:55:35 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jacopo Mondi <jacopo+renesas@jmondi.org>
+Cc:     kieran.bingham+renesas@ideasonboard.com, geert@linux-m68k.org,
+        horms@verge.net.au, uli+renesas@fpond.eu,
+        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/9] drm: rcar-du: Add support for CMM
+Message-ID: <20190918225534.GA11474@pendragon.ideasonboard.com>
+References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
+ <20190906135436.10622-4-jacopo+renesas@jmondi.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190906135436.10622-4-jacopo+renesas@jmondi.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-hardware has Type-C connector and register related devices described as
-I2C connections in the _CRS resource.
+Hi Jacopo,
 
-There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
-USB connector exists. It has INT33FE device in the DSDT table but
-there are only two I2C connection described: PMIC and BQ27452 battery
-fuel gauge.
+Thank you for the patch.
 
-Splitting existing INT33FE driver allow to maintain code for USB Micro-B
-(AB) connector variant separately and make it simpler.
+On Fri, Sep 06, 2019 at 03:54:30PM +0200, Jacopo Mondi wrote:
+> Add a driver for the R-Car Display Unit Color Correction Module.
+> 
+> In most of Gen3 SoCs, each DU output channel is provided with a CMM unit
+> to perform image enhancement and color correction.
+> 
+> Add support for CMM through a driver that supports configuration of
+> the 1-dimensional LUT table. More advanced CMM feature will be
+> implemented on top of this basic one.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> ---
+>  drivers/gpu/drm/rcar-du/Kconfig    |   7 +
+>  drivers/gpu/drm/rcar-du/Makefile   |   1 +
+>  drivers/gpu/drm/rcar-du/rcar_cmm.c | 251 +++++++++++++++++++++++++++++
+>  drivers/gpu/drm/rcar-du/rcar_cmm.h |  61 +++++++
+>  4 files changed, 320 insertions(+)
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.c
+>  create mode 100644 drivers/gpu/drm/rcar-du/rcar_cmm.h
+> 
+> diff --git a/drivers/gpu/drm/rcar-du/Kconfig b/drivers/gpu/drm/rcar-du/Kconfig
+> index 1529849e217e..539d232790d1 100644
+> --- a/drivers/gpu/drm/rcar-du/Kconfig
+> +++ b/drivers/gpu/drm/rcar-du/Kconfig
+> @@ -13,6 +13,13 @@ config DRM_RCAR_DU
+>  	  Choose this option if you have an R-Car chipset.
+>  	  If M is selected the module will be called rcar-du-drm.
+>  
+> +config DRM_RCAR_CMM
+> +	bool "R-Car DU Color Management Module (CMM) Support"
+> +	depends on DRM && OF
+> +	depends on DRM_RCAR_DU
+> +	help
+> +	  Enable support for R-Car Color Management Module (CMM).
+> +
+>  config DRM_RCAR_DW_HDMI
+>  	tristate "R-Car DU Gen3 HDMI Encoder Support"
+>  	depends on DRM && OF
+> diff --git a/drivers/gpu/drm/rcar-du/Makefile b/drivers/gpu/drm/rcar-du/Makefile
+> index 6c2ed9c46467..4d1187ccc3e5 100644
+> --- a/drivers/gpu/drm/rcar-du/Makefile
+> +++ b/drivers/gpu/drm/rcar-du/Makefile
+> @@ -15,6 +15,7 @@ rcar-du-drm-$(CONFIG_DRM_RCAR_LVDS)	+= rcar_du_of.o \
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_VSP)	+= rcar_du_vsp.o
+>  rcar-du-drm-$(CONFIG_DRM_RCAR_WRITEBACK) += rcar_du_writeback.o
+>  
+> +obj-$(CONFIG_DRM_RCAR_CMM)		+= rcar_cmm.o
+>  obj-$(CONFIG_DRM_RCAR_DU)		+= rcar-du-drm.o
+>  obj-$(CONFIG_DRM_RCAR_DW_HDMI)		+= rcar_dw_hdmi.o
+>  obj-$(CONFIG_DRM_RCAR_LVDS)		+= rcar_lvds.o
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.c b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> new file mode 100644
+> index 000000000000..3cacdc4474c7
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.c
+> @@ -0,0 +1,251 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * rcar_cmm.c -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include <drm/drm_color_mgmt.h>
+> +
+> +#include "rcar_cmm.h"
+> +
+> +#define CM2_LUT_CTRL		0x0000
+> +#define CM2_LUT_CTRL_LUT_EN	BIT(0)
+> +#define CM2_LUT_TBL_BASE	0x0600
+> +#define CM2_LUT_TBL(__i)	(CM2_LUT_TBL_BASE + (__i) * 4)
+> +
+> +struct rcar_cmm {
+> +	void __iomem *base;
+> +	bool enabled;
+> +
+> +	/*
+> +	 * @lut:		1D-LUT status
+> +	 * @lut.enabled:	1D-LUT enabled flag
+> +	 * @lut.table:		Table of 1D-LUT entries scaled to hardware
+> +	 *			precision (8-bits per color component)
+> +	 */
+> +	struct {
+> +		bool enabled;
+> +		u32 table[CM2_LUT_SIZE];
+> +	} lut;
+> +};
+> +
+> +static inline int rcar_cmm_read(struct rcar_cmm *rcmm, u32 reg)
+> +{
+> +	return ioread32(rcmm->base + reg);
+> +}
+> +
+> +static inline void rcar_cmm_write(struct rcar_cmm *rcmm, u32 reg, u32 data)
+> +{
+> +	iowrite32(data, rcmm->base + reg);
+> +}
+> +
+> +/*
+> + * rcar_cmm_lut_extract() - Scale down to hardware precision the DRM LUT table
+> + *			    entries and store them.
 
-Split driver to intel_cht_int33fe_common.c and
-intel_cht_int33fe_{typeb,typec}.c. Compile all this sources to one .ko
-module to make user experience easier.
+"Scale the DRM LUT table entries to hardware precision and store them."
 
-Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
----
- drivers/platform/x86/Kconfig                  |  12 +-
- drivers/platform/x86/Makefile                 |   4 +
- .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
- .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
- .../platform/x86/intel_cht_int33fe_microb.c   |  67 ++++++++
- ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  78 +---------
- 6 files changed, 276 insertions(+), 73 deletions(-)
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
- rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (82%)
+> + * @rcmm: Pointer to the CMM device
+> + * @drm_lut: Pointer to the DRM LUT table
+> + */
+> +static void rcar_cmm_lut_extract(struct rcar_cmm *rcmm,
+> +				 const struct drm_color_lut *drm_lut)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < CM2_LUT_SIZE; ++i) {
+> +		const struct drm_color_lut *lut = &drm_lut[i];
+> +
+> +		rcmm->lut.table[i] = drm_color_lut_extract(lut->red, 8) << 16
+> +				   | drm_color_lut_extract(lut->green, 8) << 8
+> +				   | drm_color_lut_extract(lut->blue, 8);
+> +	}
+> +}
+> +
+> +/*
+> + * rcar_cmm_lut_write() - Write to hardware the LUT table entries from the
+> + *			  local table.
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1b67bb578f9f..2537885c933f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -926,18 +926,24 @@ config INTEL_CHT_INT33FE
- 	depends on CHARGER_BQ24190=y || (CHARGER_BQ24190=m && m)
- 	depends on USB_ROLES_INTEL_XHCI=y || (USB_ROLES_INTEL_XHCI=m && m)
- 	depends on TYPEC_MUX_PI3USB30532=y || (TYPEC_MUX_PI3USB30532=m && m)
--	---help---
-+	help
- 	  This driver add support for the INT33FE ACPI device found on
- 	  some Intel Cherry Trail devices.
- 
-+	  There are two kinds of INT33FE ACPI device possible: for hardware
-+	  with USB Type-C and Micro-B connectors. This driver supports both.
-+
- 	  The INT33FE ACPI device has a CRS table with I2cSerialBusV2
--	  resources for 3 devices: Maxim MAX17047 Fuel Gauge Controller,
-+	  resources for Fuel Gauge Controller and (in the Type-C variant)
- 	  FUSB302 USB Type-C Controller and PI3USB30532 USB switch.
- 	  This driver instantiates i2c-clients for these, so that standard
- 	  i2c drivers for these chips can bind to the them.
- 
- 	  If you enable this driver it is advised to also select
--	  CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m.
-+	  CONFIG_BATTERY_BQ27XXX=m and CONFIG_BATTERY_BQ27XXX_I2C=m for Micro-B
-+	  device and CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m
-+	  for Type-C device.
-+
- 
- config INTEL_INT0002_VGPIO
- 	tristate "Intel ACPI INT0002 Virtual GPIO driver"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 415104033060..216d3b6fd6a7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -61,6 +61,10 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
- obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- obj-$(CONFIG_INTEL_CHT_INT33FE)	+= intel_cht_int33fe.o
-+intel_cht_int33fe-objs		:= intel_cht_int33fe_common.o \
-+				   intel_cht_int33fe_typec.o \
-+				   intel_cht_int33fe_microb.o
-+
- obj-$(CONFIG_INTEL_INT0002_VGPIO) += intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
- obj-$(CONFIG_INTEL_VBTN)	+= intel-vbtn.o
-diff --git a/drivers/platform/x86/intel_cht_int33fe_common.c b/drivers/platform/x86/intel_cht_int33fe_common.c
-new file mode 100644
-index 000000000000..42dd11623f56
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_common.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
-+ * (USB Micro-B and Type-C connector variants).
-+ *
-+ * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "intel_cht_int33fe_common.h"
-+
-+#define EXPECTED_PTYPE		4
-+
-+static int cht_int33fe_i2c_res_filter(struct acpi_resource *ares, void *data)
-+{
-+	struct acpi_resource_i2c_serialbus *sb;
-+	int *count = data;
-+
-+	if (i2c_acpi_get_i2c_resource(ares, &sb))
-+		(*count)++;
-+
-+	return 1;
-+}
-+
-+static int cht_int33fe_count_i2c_clients(struct device *dev)
-+{
-+	struct acpi_device *adev;
-+	LIST_HEAD(resource_list);
-+	int count = 0;
-+
-+	adev = ACPI_COMPANION(dev);
-+	if (!adev)
-+		return -EINVAL;
-+
-+	acpi_dev_get_resources(adev, &resource_list,
-+			       cht_int33fe_i2c_res_filter, &count);
-+
-+	acpi_dev_free_resource_list(&resource_list);
-+
-+	return count;
-+}
-+
-+static int cht_int33fe_check_hw_type(struct device *dev)
-+{
-+	unsigned long long ptyp;
-+	acpi_status status;
-+	int ret;
-+
-+	status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "Error getting PTYPE\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * The same ACPI HID is used for different configurations check PTYP
-+	 * to ensure that we are dealing with the expected config.
-+	 */
-+	if (ptyp != EXPECTED_PTYPE)
-+		return -ENODEV;
-+
-+	/* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
-+	if (!acpi_dev_present("INT34D3", "1", 3)) {
-+		dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
-+			EXPECTED_PTYPE);
-+		return -ENODEV;
-+	}
-+
-+	ret = cht_int33fe_count_i2c_clients(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
-+	case 2:
-+		return INT33FE_HW_MICROB;
-+	case 4:
-+		return INT33FE_HW_TYPEC;
-+	default:
-+		return -ENODEV;
-+	}
-+}
-+
-+static int cht_int33fe_probe(struct platform_device *pdev)
-+{
-+	struct cht_int33fe_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	ret = cht_int33fe_check_hw_type(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->dev = dev;
-+
-+	switch (ret) {
-+	case INT33FE_HW_MICROB:
-+		data->probe = cht_int33fe_microb_probe;
-+		data->remove = cht_int33fe_microb_remove;
-+		break;
-+
-+	case INT33FE_HW_TYPEC:
-+		data->probe = cht_int33fe_typec_probe;
-+		data->remove = cht_int33fe_typec_remove;
-+		break;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return data->probe(data);
-+}
-+
-+static int cht_int33fe_remove(struct platform_device *pdev)
-+{
-+	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
-+
-+	return data->remove(data);
-+}
-+
-+static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
-+	{ "INT33FE", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
-+
-+static struct platform_driver cht_int33fe_driver = {
-+	.driver	= {
-+		.name = "Intel Cherry Trail ACPI INT33FE driver",
-+		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
-+	},
-+	.probe = cht_int33fe_probe,
-+	.remove = cht_int33fe_remove,
-+};
-+
-+module_platform_driver(cht_int33fe_driver);
-+
-+MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver");
-+MODULE_AUTHOR("Yauhen Kharuzhy <jekhor@gmail.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel_cht_int33fe_common.h b/drivers/platform/x86/intel_cht_int33fe_common.h
-new file mode 100644
-index 000000000000..03cd45f4e8cb
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_common.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
-+ * (USB Micro-B and Type-C connector variants), header file
-+ *
-+ * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ */
-+
-+#ifndef _INTEL_CHT_INT33FE_COMMON_H
-+#define _INTEL_CHT_INT33FE_COMMON_H
-+
-+#include <linux/device.h>
-+#include <linux/fwnode.h>
-+#include <linux/i2c.h>
-+
-+enum int33fe_hw_type {
-+	INT33FE_HW_MICROB,
-+	INT33FE_HW_TYPEC,
-+};
-+
-+struct cht_int33fe_data {
-+	struct device *dev;
-+
-+	int (*probe)(struct cht_int33fe_data *data);
-+	int (*remove)(struct cht_int33fe_data *data);
-+
-+	struct i2c_client *battery_fg;
-+
-+	/* Type-C only */
-+	struct i2c_client *fusb302;
-+	struct i2c_client *pi3usb30532;
-+
-+	struct fwnode_handle *dp;
-+};
-+
-+int cht_int33fe_microb_probe(struct cht_int33fe_data *data);
-+int cht_int33fe_microb_remove(struct cht_int33fe_data *data);
-+int cht_int33fe_typec_probe(struct cht_int33fe_data *data);
-+int cht_int33fe_typec_remove(struct cht_int33fe_data *data);
-+
-+#endif /* _INTEL_CHT_INT33FE_COMMON_H */
-diff --git a/drivers/platform/x86/intel_cht_int33fe_microb.c b/drivers/platform/x86/intel_cht_int33fe_microb.c
-new file mode 100644
-index 000000000000..127ee0f59dfc
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_microb.c
-@@ -0,0 +1,67 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Cherry Trail ACPI INT33FE pseudo device driver for devices with
-+ * USB Micro-B connector (e.g. without of FUSB302 USB Type-C controller)
-+ *
-+ * Copyright (C) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ *
-+ * At least one Intel Cherry Trail based device which ship with Windows 10
-+ * (Lenovo YogaBook YB1-X91L/F tablet), have this weird INT33FE ACPI device
-+ * with a CRS table with 2 I2cSerialBusV2 resources, for 2 different chips
-+ * attached to various i2c busses:
-+ * 1. The Whiskey Cove pmic, which is also described by the INT34D3 ACPI device
-+ * 2. TI BQ27542 Fuel Gauge Controller
-+ *
-+ * So this driver is a stub / pseudo driver whose only purpose is to
-+ * instantiate i2c-client for battery fuel gauge, so that standard i2c driver
-+ * for these chip can bind to the it.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/usb/pd.h>
-+
-+#include "intel_cht_int33fe_common.h"
-+
-+static const char * const bq27xxx_suppliers[] = { "bq25890-charger" };
-+
-+static const struct property_entry bq27xxx_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq27xxx_suppliers),
-+	{ }
-+};
-+
-+int cht_int33fe_microb_probe(struct cht_int33fe_data *data)
-+{
-+	struct device *dev = data->dev;
-+	struct i2c_board_info board_info;
-+
-+	memset(&board_info, 0, sizeof(board_info));
-+	strscpy(board_info.type, "bq27542", ARRAY_SIZE(board_info.type));
-+	board_info.dev_name = "bq27542";
-+	board_info.properties = bq27xxx_props;
-+	data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
-+
-+	if (IS_ERR(data->battery_fg)) {
-+		int err = PTR_ERR(data->battery_fg);
-+
-+		if (err != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"Failed to register battery fuel gauge: %d\n",
-+				err);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+int cht_int33fe_microb_remove(struct cht_int33fe_data *data)
-+{
-+	i2c_unregister_device(data->battery_fg);
-+
-+	return 0;
-+}
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-similarity index 82%
-rename from drivers/platform/x86/intel_cht_int33fe.c
-rename to drivers/platform/x86/intel_cht_int33fe_typec.c
-index 1d5d877b9582..2d097fc2dd46 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -17,17 +17,15 @@
-  * for these chips can bind to the them.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
--#include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/usb/pd.h>
- 
--#define EXPECTED_PTYPE		4
-+#include "intel_cht_int33fe_common.h"
- 
- enum {
- 	INT33FE_NODE_FUSB302,
-@@ -38,14 +36,6 @@ enum {
- 	INT33FE_NODE_MAX,
- };
- 
--struct cht_int33fe_data {
--	struct i2c_client *max17047;
--	struct i2c_client *fusb302;
--	struct i2c_client *pi3usb30532;
--
--	struct fwnode_handle *dp;
--};
--
- static const struct software_node nodes[];
- 
- static const struct software_node_ref_args pi3usb30532_ref = {
-@@ -251,43 +241,20 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
- 	strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
- 	board_info.dev_name = "max17047";
- 	board_info.fwnode = fwnode;
--	data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
-+	data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
- 
--	return PTR_ERR_OR_ZERO(data->max17047);
-+	return PTR_ERR_OR_ZERO(data->battery_fg);
- }
- 
--static int cht_int33fe_probe(struct platform_device *pdev)
-+int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
- {
--	struct device *dev = &pdev->dev;
-+	struct device *dev = data->dev;
- 	struct i2c_board_info board_info;
--	struct cht_int33fe_data *data;
- 	struct fwnode_handle *fwnode;
- 	struct regulator *regulator;
--	unsigned long long ptyp;
--	acpi_status status;
- 	int fusb302_irq;
- 	int ret;
- 
--	status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
--	if (ACPI_FAILURE(status)) {
--		dev_err(dev, "Error getting PTYPE\n");
--		return -ENODEV;
--	}
--
--	/*
--	 * The same ACPI HID is used for different configurations check PTYP
--	 * to ensure that we are dealing with the expected config.
--	 */
--	if (ptyp != EXPECTED_PTYPE)
--		return -ENODEV;
--
--	/* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
--	if (!acpi_dev_present("INT34D3", "1", 3)) {
--		dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
--			EXPECTED_PTYPE);
--		return -ENODEV;
--	}
--
- 	/*
- 	 * We expect the WC PMIC to be paired with a TI bq24292i charger-IC.
- 	 * We check for the bq24292i vbus regulator here, this has 2 purposes:
-@@ -317,10 +284,6 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		return fusb302_irq;
- 	}
- 
--	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
--	if (!data)
--		return -ENOMEM;
--
- 	ret = cht_int33fe_add_nodes(data);
- 	if (ret)
- 		return ret;
-@@ -365,15 +328,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		goto out_unregister_fusb302;
- 	}
- 
--	platform_set_drvdata(pdev, data);
--
- 	return 0;
- 
- out_unregister_fusb302:
- 	i2c_unregister_device(data->fusb302);
- 
- out_unregister_max17047:
--	i2c_unregister_device(data->max17047);
-+	i2c_unregister_device(data->battery_fg);
- 
- out_remove_nodes:
- 	cht_int33fe_remove_nodes(data);
-@@ -381,36 +342,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int cht_int33fe_remove(struct platform_device *pdev)
-+int cht_int33fe_typec_remove(struct cht_int33fe_data *data)
- {
--	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
--
- 	i2c_unregister_device(data->pi3usb30532);
- 	i2c_unregister_device(data->fusb302);
--	i2c_unregister_device(data->max17047);
-+	i2c_unregister_device(data->battery_fg);
- 
- 	cht_int33fe_remove_nodes(data);
- 
- 	return 0;
- }
--
--static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
--	{ "INT33FE", },
--	{ }
--};
--MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
--
--static struct platform_driver cht_int33fe_driver = {
--	.driver	= {
--		.name = "Intel Cherry Trail ACPI INT33FE driver",
--		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
--	},
--	.probe = cht_int33fe_probe,
--	.remove = cht_int33fe_remove,
--};
--
--module_platform_driver(cht_int33fe_driver);
--
--MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver");
--MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
--MODULE_LICENSE("GPL v2");
+"Write the LUT table entries from the local table to the hardware."
+
+> + * @rcmm: Pointer to the CMM device
+> + */
+> +static void rcar_cmm_lut_write(struct rcar_cmm *rcmm)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < CM2_LUT_SIZE; ++i)
+> +		rcar_cmm_write(rcmm, CM2_LUT_TBL(i), rcmm->lut.table[i]);
+> +}
+> +
+> +/*
+> + * rcar_cmm_setup() - Configure the CMM unit.
+> + * @pdev: The platform device associated with the CMM instance
+> + * @config: The CRTC-provided configuration.
+> + *
+> + * Configure the CMM unit with the CRTC-provided configuration.
+> + * Currently enabling, disabling and programming of the 1-D LUT unit is
+> + * supported.
+> + */
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	/*
+> +	 * As rcar_cmm_setup() is called by atomic commit tail helper, it might
+> +	 * be called when the CMM is disabled. As we can't program the hardware
+> +	 * in that case, store the configuration internally and apply it when
+> +	 * the CMM will be enabled by the CRTC through rcar_cmm_enable().
+> +	 */
+> +	if (!rcmm->enabled) {
+> +		if (!config->lut.enable)
+> +			return 0;
+> +
+> +		rcar_cmm_lut_extract(rcmm, config->lut.table);
+> +		rcmm->lut.enabled = true;
+> +
+> +		return 0;
+> +	}
+> +
+> +	/* Stop LUT operations if requested. */
+> +	if (!config->lut.enable) {
+> +		if (rcmm->lut.enabled) {
+> +			rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +			rcmm->lut.enabled = false;
+> +		}
+> +
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Enable LUT and program the new gamma table values.
+> +	 *
+> +	 * FIXME: In order to have stable operations it is required to first
+> +	 * enable the 1D-LUT and then program its table entries. This seems to
+> +	 * contradict what the chip manual reports, and will have to be
+> +	 * reconsidered when implementing support for double buffering.
+> +	 */
+> +	if (!rcmm->lut.enabled) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+> +		rcmm->lut.enabled = true;
+> +	}
+> +
+> +	rcar_cmm_lut_extract(rcmm, config->lut.table);
+> +	rcar_cmm_lut_write(rcmm);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_setup);
+> +
+> +/*
+> + * rcar_cmm_enable() - Enable the CMM unit.
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * Enable the CMM unit by enabling the parent clock and enabling the CMM
+> + * components, such as 1-D LUT, if requested.
+> + */
+> +int rcar_cmm_enable(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +	int ret;
+> +
+> +	ret = pm_runtime_get_sync(&pdev->dev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Apply the LUT table values saved at rcar_cmm_setup() time. */
+> +	if (rcmm->lut.enabled) {
+> +		rcar_cmm_write(rcmm, CM2_LUT_CTRL, CM2_LUT_CTRL_LUT_EN);
+> +		rcar_cmm_lut_write(rcmm);
+> +	}
+> +
+> +	rcmm->enabled = true;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_enable);
+> +
+> +/*
+> + * rcar_cmm_disable() - Disable the CMM unit.
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * Disable the CMM unit by stopping the parent clock.
+> + */
+> +void rcar_cmm_disable(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	rcar_cmm_write(rcmm, CM2_LUT_CTRL, 0);
+> +
+> +	pm_runtime_put(&pdev->dev);
+> +
+> +	rcmm->lut.enabled = false;
+> +	rcmm->enabled = false;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_disable);
+> +
+> +/*
+> + * rcar_cmm_init() - Make sure the CMM has probed.
+
+I would document this as "Intialize the CMM" to match the function name.
+We may add more initialization in the future.
+
+> + * @pdev: The platform device associated with the CMM instance
+> + *
+> + * Return: 0 if the CMM has probed, -EPROBE_DEFER otherwise
+
+0 on success, -EPROBE_DEFER is the CMM isn't availablet yet
+
+> + */
+> +int rcar_cmm_init(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm = platform_get_drvdata(pdev);
+> +
+> +	if (!rcmm)
+> +		return -EPROBE_DEFER;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(rcar_cmm_init);
+> +
+> +static int rcar_cmm_probe(struct platform_device *pdev)
+> +{
+> +	struct rcar_cmm *rcmm;
+> +
+> +	rcmm = devm_kzalloc(&pdev->dev, sizeof(*rcmm), GFP_KERNEL);
+> +	if (!rcmm)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, rcmm);
+> +
+> +	rcmm->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(rcmm->base))
+> +		return PTR_ERR(rcmm->base);
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rcar_cmm_remove(struct platform_device *pdev)
+> +{
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id rcar_cmm_of_table[] = {
+> +	{ .compatible = "renesas,rcar-gen3-cmm", },
+> +	{ .compatible = "renesas,rcar-gen2-cmm", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, rcar_cmm_of_table);
+> +
+> +static struct platform_driver rcar_cmm_platform_driver = {
+> +	.probe		= rcar_cmm_probe,
+> +	.remove		= rcar_cmm_remove,
+> +	.driver		= {
+> +		.name	= "rcar-cmm",
+> +		.of_match_table = rcar_cmm_of_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(rcar_cmm_platform_driver);
+> +
+> +MODULE_AUTHOR("Jacopo Mondi <jacopo+renesas@jmondi.org>");
+> +MODULE_DESCRIPTION("Renesas R-Car CMM Driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/gpu/drm/rcar-du/rcar_cmm.h b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> new file mode 100644
+> index 000000000000..15a2c874b6a6
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rcar-du/rcar_cmm.h
+> @@ -0,0 +1,61 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * rcar_cmm.h -- R-Car Display Unit Color Management Module
+> + *
+> + * Copyright (C) 2019 Jacopo Mondi <jacopo+renesas@jmondi.org>
+> + */
+> +
+> +#ifndef __RCAR_CMM_H__
+> +#define __RCAR_CMM_H__
+> +
+> +#define CM2_LUT_SIZE		256
+> +
+> +struct drm_color_lut;
+> +struct platform_device;
+> +
+> +/**
+> + * struct rcar_cmm_config - CMM configuration
+> + *
+> + * @lut:	1D-LUT configuration
+> + * @lut.enable:	1D-LUT enable flag
+> + * @lut.table:	1D-LUT table entries. Might be set to NULL when the CMM has to
+> + *		be re-enabled but not re=programmed.
+
+s/re=programmed/re-programmed/
+
+As discussed offline this can't really happen as far as I can tell.
+However, it will still be useful when we'll add CLU support, as then a
+CLU reprogramming without a LUT reprogramming could happen.
+
+I think we should make the documentation a bit clearer:
+
+"1D-LUT table entries. Only valid when lut.enable is true, shall be NULL
+otherwise. When non-NULL, the LUT table will be programmed with the new
+values. Otherwise the LUT table will retain its previously programmed
+values."
+
+This being said, the code in rcar_cmm_setup() will crash if table is
+NULL. I would either drop the option of table being NULL (and thus
+update the documentation here) if you don't need this yet in the DU
+driver, or fix rcar_cmm_setup(). You've posted enough versions of this
+series in my opinion, so please pick the easiest option, and we'll
+rework the code when adding CLU support anyway.
+
+With those small issues fixes,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> + */
+> +struct rcar_cmm_config {
+> +	struct {
+> +		bool enable;
+> +		struct drm_color_lut *table;
+> +	} lut;
+> +};
+> +
+> +#if IS_ENABLED(CONFIG_DRM_RCAR_CMM)
+> +int rcar_cmm_init(struct platform_device *pdev);
+> +
+> +int rcar_cmm_enable(struct platform_device *pdev);
+> +void rcar_cmm_disable(struct platform_device *pdev);
+> +
+> +int rcar_cmm_setup(struct platform_device *pdev,
+> +		   const struct rcar_cmm_config *config);
+> +#else
+> +static inline int rcar_cmm_init(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int rcar_cmm_enable(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void rcar_cmm_disable(struct platform_device *pdev)
+> +{
+> +}
+> +
+> +static int rcar_cmm_setup(struct platform_device *pdev,
+> +			  const struct rcar_cmm_config *config)
+> +{
+> +	return 0;
+> +}
+> +#endif /* IS_ENABLED(CONFIG_DRM_RCAR_CMM) */
+> +
+> +#endif /* __RCAR_CMM_H__ */
+
 -- 
-2.23.0.rc1
+Regards,
 
+Laurent Pinchart
