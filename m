@@ -2,59 +2,61 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741B2C4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7E4C4CED0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B41820678
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D11218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787724;
-	bh=qKc9hFuApt77yOaD7f+h92ICXvsOaXgo5AkSeczts0w=;
+	s=default; t=1568787726;
+	bh=i427g0CEtQZCKEb4ywZ/dXHo8XdFkz7u9FVi6bsR9Xo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wi2QmV+HNEc+oG7A1nWpw/7JQk/xxpMCZQ6yJ2j0MQSnt4YmteOYOAnM02XNvXRZv
-	 uGFN0L93jlDphW3Hs8fE2lWy0LVPr7DmsO2ZV03KdmnnQ4r+mAnHRW57hgBkxZWtIY
-	 PMRRRvfLvFC3XZWaB/76Cgr2//4YgTUqwfego3Ag=
+	b=LTpmh+Ey9cXZxcaADu5PWFNlJEpUoVeXzvx/CUjyzqTv27Tl+GnZ2Iv3WHfSK9E0D
+	 pwkummdMJuNkFUgkuf5XfEGcc7389vXGHZunktvQS1nwcdfpzuCjq8oGKq/f/oYCuD
+	 sWlDhDZv5WE+v+BkGcoz4i57e+KIfO2cH5uQHrGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfIRGWD (ORCPT
+        id S1729325AbfIRGWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41798 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbfIRGWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:01 -0400
+        id S1728446AbfIRGWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DDB8218AF;
-        Wed, 18 Sep 2019 06:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A929A21924;
+        Wed, 18 Sep 2019 06:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787720;
-        bh=qKc9hFuApt77yOaD7f+h92ICXvsOaXgo5AkSeczts0w=;
+        s=default; t=1568787723;
+        bh=i427g0CEtQZCKEb4ywZ/dXHo8XdFkz7u9FVi6bsR9Xo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4GF8ZMsiO0rQsbEZI4smpoSHZM7zV/5K5P91EGMFM7QqZKs+nKAOkOFyp5Zuvkyw
-         Ajwfinhz9RQL3V20nzD6uN6v8f3RgWtsrYC3ZEUsZfyeR0Z9KhV1LLqt80zbQEOMR/
-         09cW6fZ1ZZ94QXwGdYe1+iVuq3XwgAz+Nv7NLbZI=
+        b=Pyg3NvCYS5M8zNHIIUr2omoSn4/4OurTgX4ksUcGL8ADZgHup85TNu6wG70nEViKr
+         BbmYqTZq2F8N0bsq5jsounfJVnJ4Q9tGEAqHhdnT/rmrmb4Zwsw5b9jrQxbDy8C91d
+         Gi5IxdC8UuAKcGL/pANxpylgt01vYr4gLoOEhWO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com,
+        syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com,
+        syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>, Terry Lam <vtlam@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 01/50] bridge/mdb: remove wrong use of NLM_F_MULTI
-Date:   Wed, 18 Sep 2019 08:18:44 +0200
-Message-Id: <20190918061223.328227452@linuxfoundation.org>
+Subject: [PATCH 4.19 10/50] sch_hhf: ensure quantum and hhf_non_hh_weight are non-zero
+Date:   Wed, 18 Sep 2019 08:18:53 +0200
+Message-Id: <20190918061223.977323020@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,35 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 94a72b3f024fc7e9ab640897a1e38583a470659d ]
+[ Upstream commit d4d6ec6dac07f263f06d847d6f732d6855522845 ]
 
-NLM_F_MULTI must be used only when a NLMSG_DONE message is sent at the end.
-In fact, NLMSG_DONE is sent only at the end of a dump.
+In case of TCA_HHF_NON_HH_WEIGHT or TCA_HHF_QUANTUM is zero,
+it would make no progress inside the loop in hhf_dequeue() thus
+kernel would get stuck.
 
-Libraries like libnl will wait forever for NLMSG_DONE.
+Fix this by checking this corner case in hhf_change().
 
-Fixes: 949f1e39a617 ("bridge: mdb: notify on router port add and del")
-CC: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Fixes: 10239edf86f1 ("net-qdisc-hhf: Heavy-Hitter Filter (HHF) qdisc")
+Reported-by: syzbot+bc6297c11f19ee807dc2@syzkaller.appspotmail.com
+Reported-by: syzbot+041483004a7f45f1f20a@syzkaller.appspotmail.com
+Reported-by: syzbot+55be5f513bed37fc4367@syzkaller.appspotmail.com
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Terry Lam <vtlam@google.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_mdb.c |    2 +-
+ net/sched/sch_hhf.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bridge/br_mdb.c
-+++ b/net/bridge/br_mdb.c
-@@ -419,7 +419,7 @@ static int nlmsg_populate_rtr_fill(struc
- 	struct nlmsghdr *nlh;
- 	struct nlattr *nest;
+--- a/net/sched/sch_hhf.c
++++ b/net/sched/sch_hhf.c
+@@ -529,7 +529,7 @@ static int hhf_change(struct Qdisc *sch,
+ 		new_hhf_non_hh_weight = nla_get_u32(tb[TCA_HHF_NON_HH_WEIGHT]);
  
--	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), NLM_F_MULTI);
-+	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), 0);
- 	if (!nlh)
- 		return -EMSGSIZE;
+ 	non_hh_quantum = (u64)new_quantum * new_hhf_non_hh_weight;
+-	if (non_hh_quantum > INT_MAX)
++	if (non_hh_quantum == 0 || non_hh_quantum > INT_MAX)
+ 		return -EINVAL;
  
+ 	sch_tree_lock(sch);
 
 
