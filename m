@@ -2,616 +2,535 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D375C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA743C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5D6B21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983BD21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hXK6gWJS"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kKksnrzJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387411AbfIRRxC (ORCPT
+        id S2387480AbfIRRxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:53:02 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35404 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726369AbfIRRxB (ORCPT
+        Wed, 18 Sep 2019 13:53:06 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42381 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387428AbfIRRxE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:53:01 -0400
-Received: by mail-oi1-f193.google.com with SMTP id x3so396860oig.2;
-        Wed, 18 Sep 2019 10:53:00 -0700 (PDT)
+        Wed, 18 Sep 2019 13:53:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id q12so462421pff.9
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:53:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=AhRgakU0MKQRR6cibd3J7rx7XiKVe3yFDUh+nL02+OU=;
-        b=hXK6gWJSwJAbm43T7vAw0Lk5NiQNKKHOKVPzjtVAII4vLjAzb/FsL6WBNI70+e/Bxg
-         MbApfP31XVX46SKEWHLvQmUANP1BgvMIfjjjk+jgs6ZfbQjrvc9Dyl+5iYVBGpm6WO4d
-         yiFgPCy3JWFrkgoHX81/tacMzaTYGXwAzx0sBmB9C2riFZNi5C+ZwdI1R7LKHr3FTddL
-         BeEpGAiKin6u0z5B3LMWUdhZID+aJVfzSQqNGlJQ6gNAssJu5vjs6DKpn2GwTH/8VdzR
-         L95CDpMHMbud+UEn4Zl4Xbv+x7fPVob+VeBEj2EUYUafwgqXj9kYTSm2E1e/eUZ5Qdol
-         AVpw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zPkmWhTEOgVWyMbCMBPQIeNFinodsP7S1cmh7eh7uPg=;
+        b=kKksnrzJRE5Gj39bk/xIPqJyuWBFe9meU0J2qB10Qq7kZbI2oF9/Ys8VNFMj3LAt24
+         W1ilCkKo9MwiKaaoOOCcmgDHSCqjUjKeO8/UF43QaipA17lQdfdLoFkOGJ88RrRF6Omh
+         SKCY3/se9We+H6LJSp7OhUHe8ps5g/0juIqLE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=AhRgakU0MKQRR6cibd3J7rx7XiKVe3yFDUh+nL02+OU=;
-        b=R6zGstCInG37CGId1qK67pQXiaXIGHndtmnE0RRucg/UXHW5heTy0KJf+QMep6f9i2
-         ACwdMjwCh5Z1WckF5PpKjMs2p/x3yiC2MfEKXsWBOPGvwQ333ZhAo7cm00i+WDsM0rFu
-         SwMQl+1wHt41n2Co8eovz1vA/xw4tYyH7D3DYHcBsP1xfVAtCX973TusnRzyd2CHmuGU
-         UkLT8XYg8cmOAPOr3p3GSmlLXUwtzSjkrB/eelcyK38BM7E7W3PLUx4qxq7g34WZ+vV2
-         rU/2sWU0XD8FWARwNRe8lqL5pxed+OGyfNNlDw+n7qOoFouAIlf/nOaI+k3eubN9nZiO
-         mnNQ==
-X-Gm-Message-State: APjAAAWCCAqMaUWfkGy9VgtwkaX6WUYJIuvdllE7jjgfs5ka66VelPwW
-        6d9MZ7gHArMocBzTx591FKbrwUzleyOM8w==
-X-Google-Smtp-Source: APXvYqzE2EGl7PiThZPVTqLhVx5ehyPxdcY4JGRIHF9S8G2ToMQjPgx935E65AXQrj45hWOTteTNaA==
-X-Received: by 2002:aca:5856:: with SMTP id m83mr2955719oib.90.1568829180351;
-        Wed, 18 Sep 2019 10:53:00 -0700 (PDT)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id v12sm1848407oiv.58.2019.09.18.10.52.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 10:52:59 -0700 (PDT)
-Subject: [PATCH v10 4/6] mm: Add device side and notifier for unused page
- reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     virtio-dev@lists.oasis-open.org, kvm@vger.kernel.org,
-        mst@redhat.com, david@redhat.com, dave.hansen@intel.com,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        mhocko@kernel.org, linux-mm@kvack.org, vbabka@suse.cz,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de
-Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com,
-        konrad.wilk@oracle.com, nitesh@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, wei.w.wang@intel.com, aarcange@redhat.com,
-        pbonzini@redhat.com, dan.j.williams@intel.com,
-        alexander.h.duyck@linux.intel.com
-Date:   Wed, 18 Sep 2019 10:52:57 -0700
-Message-ID: <20190918175257.23474.73638.stgit@localhost.localdomain>
-In-Reply-To: <20190918175109.23474.67039.stgit@localhost.localdomain>
-References: <20190918175109.23474.67039.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zPkmWhTEOgVWyMbCMBPQIeNFinodsP7S1cmh7eh7uPg=;
+        b=johbJ21xdOrzMRAJAjQ07iOqbbD8jFqoshU+EZnlQbSKn5dGqVpH9mh2ZDLbif81co
+         RQ2XIIuMYgaZrAO49Aj6Nh3UoBkiWjgjtjDBpbT/N2G9DN5Q+NnYWx7JskEfJckEGQUB
+         D0SpE53potX49+3yYMt7oTLc7fFSobpKRtxrDKvM9a3jw+Gfcm8N62ENfKRk9gVelp/3
+         53Vca7Q6Ljq1Bd8Xn9OcYtOtHLAEd3wYm4l45RiP90V8ipnSvnnLBP4e5xvxUMCH9DiZ
+         A5yl/Z/eyUCMZGFvVVra2oUAAl7gFeCprV4MIatGKfUM5eFgXlV2cWUtG+LKBGKJqrh5
+         e9kA==
+X-Gm-Message-State: APjAAAVebcEP/APaQieeYM5XJkC7ReHTzOGb7SSldm7HZHLOqJh2R82/
+        XQGWrc9Fmx/gymQpDoW8VUw48A==
+X-Google-Smtp-Source: APXvYqyDSDByYnU4omzQnLNajzuNIdwyaNrSFDYZ1pBp+EJgXvKHvtAUw74sz6Jl20YLNOQBgDyfIQ==
+X-Received: by 2002:a63:c09:: with SMTP id b9mr4985093pgl.245.1568829183014;
+        Wed, 18 Sep 2019 10:53:03 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id 69sm8362930pfb.145.2019.09.18.10.53.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 10:53:02 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:52:56 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?utf-8?B?wqA=?= <mturquette@baylibre.com>,
+        robh+dt@kernel.org, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: clk: qcom: Add YAML schemas for the
+ GCC clock bindings
+Message-ID: <20190918175256.GM133864@google.com>
+References: <20190918095018.17979-1-tdas@codeaurora.org>
+ <20190918095018.17979-3-tdas@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190918095018.17979-3-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Hi Taniya,
 
-With this patch we are adding the pieces needed to enable the reporting of
-pages to a specific device. That device needs to register a page reporting
-device that can be used to handle notifications that that pages are unused.
+not a full review, just a couple of things I noticed, comments inline.
 
-Registering the device will in turn enable the notifications and allow page
-reporting to be active. When the the device is unregistered it will disable
-page reporting notifications. For now we only allow one page reporting
-device to be registered at a time.
+On Wed, Sep 18, 2019 at 03:20:17PM +0530, Taniya Das wrote:
+> The GCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those. Also update
+> the compatible for SC7180 along with example for clocks & clock-names.
 
-The determination of when to start reporting is based on the tracking of
-the number of free pages in a given area versus the number of reported
-pages in that area. We keep track of the number of reported pages per
-free_area in a separate zone specific area. We do this to avoid modifying
-the free_area structure as this can lead to false sharing for the highest
-order with the zone lock which leads to a noticeable performance
-degradation.
+I would suggest to split this in two:
 
-Once reporting has started get_unreported_pages will use the
-reported_boundary pointers to track where it should resume processing the
-free lists. It will go through and either set the index if it finds a
-reported page, or it will attempt to isolate the page so that it can be
-reported.
+1. conversion to YAML
+2. add SC7180 header and example
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- include/linux/page_reporting.h |   31 ++++
- mm/Makefile                    |    1 
- mm/page_alloc.c                |   10 +
- mm/page_reporting.c            |  350 ++++++++++++++++++++++++++++++++++++++++
- mm/page_reporting.h            |   46 +++++
- 5 files changed, 436 insertions(+), 2 deletions(-)
- create mode 100644 include/linux/page_reporting.h
- create mode 100644 mm/page_reporting.c
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt    |  94 -----------
+>  .../devicetree/bindings/clock/qcom,gcc.yaml   | 157 ++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sc7180.h   | 155 +++++++++++++++++
+>  3 files changed, 312 insertions(+), 94 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sc7180.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> deleted file mode 100644
+> index d14362ad4132..000000000000
+> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
+> +++ /dev/null
+> @@ -1,94 +0,0 @@
+> -Qualcomm Global Clock & Reset Controller Binding
+> -------------------------------------------------
+> -
+> -Required properties :
+> -- compatible : shall contain only one of the following:
+> -
+> -			"qcom,gcc-apq8064"
+> -			"qcom,gcc-apq8084"
+> -			"qcom,gcc-ipq8064"
+> -			"qcom,gcc-ipq4019"
+> -			"qcom,gcc-ipq8074"
+> -			"qcom,gcc-msm8660"
+> -			"qcom,gcc-msm8916"
+> -			"qcom,gcc-msm8960"
+> -			"qcom,gcc-msm8974"
+> -			"qcom,gcc-msm8974pro"
+> -			"qcom,gcc-msm8974pro-ac"
+> -			"qcom,gcc-msm8994"
+> -			"qcom,gcc-msm8996"
+> -			"qcom,gcc-msm8998"
+> -			"qcom,gcc-mdm9615"
+> -			"qcom,gcc-qcs404"
+> -			"qcom,gcc-sdm630"
+> -			"qcom,gcc-sdm660"
+> -			"qcom,gcc-sdm845"
+> -			"qcom,gcc-sm8150"
+> -
+> -- reg : shall contain base register location and length
+> -- #clock-cells : shall contain 1
+> -- #reset-cells : shall contain 1
+> -
+> -Optional properties :
+> -- #power-domain-cells : shall contain 1
+> -- Qualcomm TSENS (thermal sensor device) on some devices can
+> -be part of GCC and hence the TSENS properties can also be
+> -part of the GCC/clock-controller node.
+> -For more details on the TSENS properties please refer
+> -Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> -- protected-clocks : Protected clock specifier list as per common clock
+> - binding.
+> -
+> -For SM8150 only:
+> -       - clocks: a list of phandles and clock-specifier pairs,
+> -                 one for each entry in clock-names.
+> -       - clock-names: "bi_tcxo" (required)
+> -                      "sleep_clk" (optional)
+> -                      "aud_ref_clock" (optional)
+> -
+> -Example:
+> -	clock-controller@900000 {
+> -		compatible = "qcom,gcc-msm8960";
+> -		reg = <0x900000 0x4000>;
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -		#power-domain-cells = <1>;
+> -	};
+> -
+> -Example of GCC with TSENS properties:
+> -	clock-controller@900000 {
+> -		compatible = "qcom,gcc-apq8064";
+> -		reg = <0x00900000 0x4000>;
+> -		nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+> -		nvmem-cell-names = "calib", "calib_backup";
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -		#thermal-sensor-cells = <1>;
+> -	};
+> -
+> -Example of GCC with protected-clocks properties:
+> -	clock-controller@100000 {
+> -		compatible = "qcom,gcc-sdm845";
+> -		reg = <0x100000 0x1f0000>;
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -		#power-domain-cells = <1>;
+> -		protected-clocks = <GCC_QSPI_CORE_CLK>,
+> -				   <GCC_QSPI_CORE_CLK_SRC>,
+> -				   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> -				   <GCC_LPASS_Q6_AXI_CLK>,
+> -				   <GCC_LPASS_SWAY_CLK>;
+> -	};
+> -
+> -Example of GCC with clocks
+> -	gcc: clock-controller@100000 {
+> -		compatible = "qcom,gcc-sm8150";
+> -		reg = <0x00100000 0x1f0000>;
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -		#power-domain-cells = <1>;
+> -		clock-names = "bi_tcxo",
+> -		              "sleep_clk";
+> -		clocks = <&rpmcc RPM_SMD_XO_CLK_SRC>,
+> -			 <&sleep_clk>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.yaml b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> new file mode 100644
+> index 000000000000..056a7977c458
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.yaml
+> @@ -0,0 +1,157 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/qcom,gcc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Global Clock & Reset Controller Binding
+> +
+> +maintainers:
+> +  - Stephen Boyd <sboyd@kernel.org>
+> +
+> +properties:
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  "#reset-cells":
+> +    const: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  compatible :
+> +     enum:
+> +       - qcom,gcc-apq8064
+> +       - qcom,gcc-apq8084
+> +       - qcom,gcc-ipq8064
+> +       - qcom,gcc-ipq4019
+> +       - qcom,gcc-ipq8074
+> +       - qcom,gcc-msm8660
+> +       - qcom,gcc-msm8916
+> +       - qcom,gcc-msm8960
+> +       - qcom,gcc-msm8974
+> +       - qcom,gcc-msm8974pro
+> +       - qcom,gcc-msm8974pro-ac
+> +       - qcom,gcc-msm8994
+> +       - qcom,gcc-msm8996
+> +       - qcom,gcc-msm8998
+> +       - qcom,gcc-mdm9615
+> +       - qcom,gcc-qcs404
+> +       - qcom,gcc-sdm630
+> +       - qcom,gcc-sdm660
+> +       - qcom,gcc-sdm845
+> +       - qcom,gcc-sm8150
+> +       - qcom,gcc-sc7180
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - description: Board XO source
+> +      - description: Board active XO source
+> +      - description: Sleep clock source(optional)
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 3
+> +    items:
+> +      - const: bi_tcxo
+> +      - const: bi_tcxo_ao
+> +      - const: sleep_clk
+> +
+> +  nvmem-cells:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Qualcomm TSENS (thermal sensor device) on some devices can
+> +      be part of GCC and hence the TSENS properties can also be part
+> +      of the GCC/clock-controller node.
+> +      For more details on the TSENS properties please refer
+> +      Documentation/devicetree/bindings/thermal/qcom-tsens.txt
+> +
+> +  nvmem-cell-names:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description:
+> +      Names for each nvmem-cells specified.
+> +    items:
+> +      - const: calib
+> +      - const: calib_backup
+> +
+> +  "#thermal-sensor-cells":
+> +    const: 1
+> +
+> +  "#power-domain-cells":
+> +    const: 1
+> +
+> +  protected-clocks:
+> +    description:
+> +       Protected clock specifier list as per common clock binding
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - "#reset-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    // Example:
+> +    clock-controller@900000 {
+> +      compatible = "qcom,gcc-msm8960";
+> +      reg = <0x900000 0x4000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +
+> +
+> +  - |
+> +    // Example of GCC with TSENS properties:
+> +    clock-controller@900000 {
+> +      compatible = "qcom,gcc-apq8064";
+> +      reg = <0x00900000 0x4000>;
+> +      nvmem-cells = <&tsens_calib>, <&tsens_backup>;
+> +      nvmem-cell-names = "calib", "calib_backup";
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #thermal-sensor-cells = <1>;
+> +    };
+> +
+> +  - |
+> +    //Example of GCC with protected-clocks properties:
+> +    clock-controller@100000 {
+> +      compatible = "qcom,gcc-sdm845";
+> +      reg = <0x100000 0x1f0000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +      protected-clocks = <187>, <188>, <189>, <190>, <191>;
+> +    };
+> +
+> +  - |
+> +    //Example of GCC with clock node properties for SM8150:
+> +    clock-controller@100000 {
+> +      compatible = "qcom,gcc-sm8150";
+> +      reg = <0x00100000 0x1f0000>;
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>, <&sleep_clk>;
+> +      clock-names = "bi_tcxo", "bi_tcxo_ao", "sleep_clk";
+> +     };
+> +
+> +  - |
+> +    //Example of GCC with clock nodes properties:
 
-diff --git a/include/linux/page_reporting.h b/include/linux/page_reporting.h
-new file mode 100644
-index 000000000000..afa214f7beaf
---- /dev/null
-+++ b/include/linux/page_reporting.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PAGE_REPORTING_H
-+#define _LINUX_PAGE_REPORTING_H
-+
-+#include <linux/mmzone.h>
-+
-+struct page_reporting_dev_info {
-+	/* function that alters pages to make them "reported" */
-+	void (*report)(struct page_reporting_dev_info *phdev,
-+		       unsigned int nents);
-+
-+	/* scatterlist containing pages to be processed */
-+	struct scatterlist *sg;
-+
-+	/*
-+	 * Upper limit on the number of pages that the react function
-+	 * expects to be placed into the batch list to be processed.
-+	 */
-+	unsigned long capacity;
-+
-+	/* work struct for processing reports */
-+	struct delayed_work work;
-+
-+	/* The number of zones requesting reporting */
-+	atomic_t refcnt;
-+};
-+
-+/* Tear-down and bring-up for page reporting devices */
-+void page_reporting_unregister(struct page_reporting_dev_info *phdev);
-+int page_reporting_register(struct page_reporting_dev_info *phdev);
-+#endif /*_LINUX_PAGE_REPORTING_H */
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..fc4fa17b6c83 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
- obj-$(CONFIG_ZONE_DEVICE) += memremap.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-+obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index ed0128c65936..b4189d9cc729 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1073,6 +1073,14 @@ static inline void __free_one_page(struct page *page,
- 		add_to_free_list_tail(page, zone, order, migratetype);
- 	else
- 		add_to_free_list(page, zone, order, migratetype);
-+
-+	/*
-+	 * No need to notify on a reported page as the total count of
-+	 * unreported pages will not have increased since we have essentially
-+	 * merged the reported page with one or more unreported pages.
-+	 */
-+	if (!reported)
-+		page_reporting_notify_free(zone, order);
- }
- 
- /*
-@@ -2262,8 +2270,6 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
- }
- 
- #ifdef CONFIG_PAGE_REPORTING
--struct list_head **reported_boundary __read_mostly;
--
- /**
-  * free_reported_page - Return a now-reported page back where we got it
-  * @page: Page that was reported
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-new file mode 100644
-index 000000000000..3e36f250d2d6
---- /dev/null
-+++ b/mm/page_reporting.c
-@@ -0,0 +1,350 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/mm.h>
-+#include <linux/mmzone.h>
-+#include <linux/page_reporting.h>
-+#include <linux/gfp.h>
-+#include <linux/export.h>
-+#include <linux/delay.h>
-+#include <linux/scatterlist.h>
-+
-+#include "page_reporting.h"
-+#include "internal.h"
-+
-+static struct page_reporting_dev_info __rcu *ph_dev_info __read_mostly;
-+struct list_head **reported_boundary __read_mostly;
-+
-+#define for_each_reporting_migratetype_order(_order, _type) \
-+	for (_order = MAX_ORDER; _order-- != PAGE_REPORTING_MIN_ORDER;) \
-+		for (_type = MIGRATE_TYPES; _type--;) \
-+			if (!is_migrate_isolate(_type))
-+
-+static void page_reporting_populate_metadata(struct zone *zone)
-+{
-+	size_t size;
-+	int node;
-+
-+	/*
-+	 * We need to make sure we have somewhere to store the tracking
-+	 * data for how many reported pages are in the zone. To do that
-+	 * we need to make certain zone->reported_pages is populated.
-+	 */
-+	if (zone->reported_pages)
-+		return;
-+
-+	node = zone_to_nid(zone);
-+	size = (MAX_ORDER - PAGE_REPORTING_MIN_ORDER) * sizeof(unsigned long);
-+	zone->reported_pages = kzalloc_node(size, GFP_KERNEL, node);
-+}
-+
-+static void page_reporting_reset_all_boundaries(struct zone *zone)
-+{
-+	unsigned int order, mt;
-+
-+	/* Update boundary data to reflect the zone we are currently working */
-+	for_each_reporting_migratetype_order(order, mt)
-+		page_reporting_reset_boundary(zone, order, mt);
-+}
-+
-+static struct page *
-+get_unreported_page(struct zone *zone, unsigned int order, int mt)
-+{
-+	struct list_head *list = &zone->free_area[order].free_list[mt];
-+	struct list_head *tail = get_unreported_tail(zone, order, mt);
-+	unsigned long index = get_reporting_index(order, mt);
-+	struct page *page;
-+
-+	/* Find a page of the appropriate size in the preferred list */
-+	page = list_last_entry(tail, struct page, lru);
-+	list_for_each_entry_from_reverse(page, list, lru) {
-+		/* If we entered this loop then the "raw" list isn't empty */
-+
-+		/*
-+		 * We are going to skip over the reported pages. Make
-+		 * certain that the index of those pages are correct
-+		 * as we will later be moving the boundary into place
-+		 * above them.
-+		 */
-+		if (PageReported(page)) {
-+			page->index = index;
-+			tail = &page->lru;
-+			continue;
-+		}
-+
-+		/* Drop reference to page if isolate fails */
-+		if (__isolate_free_page(page, order))
-+			goto out;
-+
-+		break;
-+	}
-+
-+	page = NULL;
-+out:
-+	/* Update the boundary */
-+	reported_boundary[index] = tail;
-+
-+	return page;
-+}
-+
-+static void
-+__page_reporting_cancel(struct zone *zone,
-+			struct page_reporting_dev_info *phdev)
-+{
-+	/* processing of the zone is complete, we can disable boundaries */
-+	page_reporting_disable_boundaries(zone);
-+
-+	/*
-+	 * If there are no longer enough free pages to fully populate
-+	 * the scatterlist, then we can just shut it down for this zone.
-+	 */
-+	__clear_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
-+	atomic_dec(&phdev->refcnt);
-+}
-+
-+static unsigned int
-+page_reporting_fill(struct zone *zone, struct page_reporting_dev_info *phdev)
-+{
-+	struct scatterlist *sg = phdev->sg;
-+	unsigned int order, mt, count = 0;
-+
-+	sg_init_table(phdev->sg, phdev->capacity);
-+
-+	/* Make sure the boundaries are enabled */
-+	if (!__test_and_set_bit(ZONE_PAGE_REPORTING_ACTIVE, &zone->flags))
-+		page_reporting_reset_all_boundaries(zone);
-+
-+	for_each_reporting_migratetype_order(order, mt) {
-+		struct page *page;
-+
-+		/*
-+		 * Pull pages from free list until we have drained
-+		 * it or we have reached capacity.
-+		 */
-+		while ((page = get_unreported_page(zone, order, mt))) {
-+			sg_set_page(&sg[count], page, PAGE_SIZE << order, 0);
-+
-+			if (++count == phdev->capacity)
-+				return phdev->capacity;
-+		}
-+	}
-+
-+	/* mark end of scatterlist due to underflow */
-+	if (count)
-+		sg_mark_end(&sg[count - 1]);
-+
-+	/* We ran out of pages so we can stop now */
-+	__page_reporting_cancel(zone, phdev);
-+
-+	return count;
-+}
-+
-+static void page_reporting_drain(struct page_reporting_dev_info *phdev)
-+{
-+	struct scatterlist *sg = phdev->sg;
-+
-+	/*
-+	 * Drain the now reported pages back into their respective
-+	 * free lists/areas. We assume at least one page is populated.
-+	 */
-+	do {
-+		free_reported_page(sg_page(sg), get_order(sg->length));
-+	} while (!sg_is_last(sg++));
-+}
-+
-+/*
-+ * The page reporting cycle consists of 4 stages, fill, report, drain, and
-+ * idle. We will cycle through the first 3 stages until we fail to obtain any
-+ * pages, in that case we will switch to idle.
-+ */
-+static void
-+page_reporting_cycle(struct zone *zone, struct page_reporting_dev_info *phdev)
-+{
-+	/*
-+	 * Guarantee boundaries and stats are populated before we
-+	 * start placing reported pages in the zone.
-+	 */
-+	page_reporting_populate_metadata(zone);
-+
-+	spin_lock_irq(&zone->lock);
-+
-+	/* Cancel the request if we failed to populate zone metadata */
-+	if (!zone->reported_pages) {
-+		__page_reporting_cancel(zone, phdev);
-+		goto zone_not_ready;
-+	}
-+
-+	do {
-+		/* Pull pages out of allocator into a scaterlist */
-+		unsigned int nents = page_reporting_fill(zone, phdev);
-+
-+		/* no pages were acquired, give up */
-+		if (!nents)
-+			break;
-+
-+		spin_unlock_irq(&zone->lock);
-+
-+		/* begin processing pages in local list */
-+		phdev->report(phdev, nents);
-+
-+		spin_lock_irq(&zone->lock);
-+
-+		/*
-+		 * We should have a scatterlist of pages that have been
-+		 * processed. Return them to their original free lists.
-+		 */
-+		page_reporting_drain(phdev);
-+
-+		/* keep pulling pages till there are none to pull */
-+	} while (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags));
-+zone_not_ready:
-+	spin_unlock_irq(&zone->lock);
-+}
-+
-+static void page_reporting_process(struct work_struct *work)
-+{
-+	struct delayed_work *d_work = to_delayed_work(work);
-+	struct page_reporting_dev_info *phdev =
-+		container_of(d_work, struct page_reporting_dev_info, work);
-+	struct zone *zone = first_online_pgdat()->node_zones;
-+
-+	do {
-+		if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
-+			page_reporting_cycle(zone, phdev);
-+
-+		/* Move to next zone, if at end of list start over */
-+		zone = next_zone(zone) ? : first_online_pgdat()->node_zones;
-+
-+		/*
-+		 * As long as refcnt has not reached zero there are still
-+		 * zones to be processed.
-+		 */
-+	} while (atomic_read(&phdev->refcnt));
-+}
-+
-+/* request page reporting on this zone */
-+void __page_reporting_request(struct zone *zone)
-+{
-+	struct page_reporting_dev_info *phdev;
-+
-+	rcu_read_lock();
-+
-+	/*
-+	 * We use RCU to protect the ph_dev_info pointer. In almost all
-+	 * cases this should be present, however in the unlikely case of
-+	 * a shutdown this will be NULL and we should exit.
-+	 */
-+	phdev = rcu_dereference(ph_dev_info);
-+	if (unlikely(!phdev))
-+		goto out;
-+
-+	/*
-+	 * We can use separate test and set operations here as there
-+	 * is nothing else that can set or clear this bit while we are
-+	 * holding the zone lock. The advantage to doing it this way is
-+	 * that we don't have to dirty the cacheline unless we are
-+	 * changing the value.
-+	 */
-+	__set_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags);
-+
-+	/*
-+	 * Delay the start of work to allow a sizable queue to
-+	 * build. For now we are limiting this to running no more
-+	 * than 10 times per second.
-+	 */
-+	if (!atomic_fetch_inc(&phdev->refcnt))
-+		schedule_delayed_work(&phdev->work, HZ / 10);
-+out:
-+	rcu_read_unlock();
-+}
-+
-+static DEFINE_MUTEX(page_reporting_mutex);
-+DEFINE_STATIC_KEY_FALSE(page_reporting_notify_enabled);
-+
-+void page_reporting_unregister(struct page_reporting_dev_info *phdev)
-+{
-+	mutex_lock(&page_reporting_mutex);
-+
-+	if (rcu_access_pointer(ph_dev_info) == phdev) {
-+		/* Disable page reporting notification */
-+		static_branch_disable(&page_reporting_notify_enabled);
-+		RCU_INIT_POINTER(ph_dev_info, NULL);
-+		synchronize_rcu();
-+
-+		/* Flush any existing work, and lock it out */
-+		cancel_delayed_work_sync(&phdev->work);
-+
-+		/* Free scatterlist */
-+		kfree(phdev->sg);
-+		phdev->sg = NULL;
-+
-+		/* Free boundaries */
-+		kfree(reported_boundary);
-+		reported_boundary = NULL;
-+	}
-+
-+	mutex_unlock(&page_reporting_mutex);
-+}
-+EXPORT_SYMBOL_GPL(page_reporting_unregister);
-+
-+int page_reporting_register(struct page_reporting_dev_info *phdev)
-+{
-+	struct zone *zone;
-+	int err = 0;
-+
-+	/* No point in enabling this if it cannot handle any pages */
-+	if (WARN_ON(!phdev->capacity))
-+		return -EINVAL;
-+
-+	mutex_lock(&page_reporting_mutex);
-+
-+	/* nothing to do if already in use */
-+	if (rcu_access_pointer(ph_dev_info)) {
-+		err = -EBUSY;
-+		goto err_out;
-+	}
-+
-+	/*
-+	 * Allocate space to store the boundaries for the zone we are
-+	 * actively reporting on. We will need to store one boundary
-+	 * pointer per migratetype, and then we need to have one of these
-+	 * arrays per order for orders greater than or equal to
-+	 * PAGE_REPORTING_MIN_ORDER.
-+	 */
-+	reported_boundary = kcalloc(get_reporting_index(MAX_ORDER, 0),
-+				    sizeof(struct list_head *), GFP_KERNEL);
-+	if (!reported_boundary) {
-+		err = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+	/* allocate scatterlist to store pages being reported on */
-+	phdev->sg = kcalloc(phdev->capacity, sizeof(*phdev->sg), GFP_KERNEL);
-+	if (!phdev->sg) {
-+		err = -ENOMEM;
-+
-+		kfree(reported_boundary);
-+		reported_boundary = NULL;
-+
-+		goto err_out;
-+	}
-+
-+
-+	/* initialize refcnt and work structures */
-+	atomic_set(&phdev->refcnt, 0);
-+	INIT_DELAYED_WORK(&phdev->work, &page_reporting_process);
-+
-+	/* assign device, and begin initial flush of populated zones */
-+	rcu_assign_pointer(ph_dev_info, phdev);
-+	for_each_populated_zone(zone) {
-+		spin_lock_irq(&zone->lock);
-+		__page_reporting_request(zone);
-+		spin_unlock_irq(&zone->lock);
-+	}
-+
-+	/* enable page reporting notification */
-+	static_branch_enable(&page_reporting_notify_enabled);
-+err_out:
-+	mutex_unlock(&page_reporting_mutex);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(page_reporting_register);
-diff --git a/mm/page_reporting.h b/mm/page_reporting.h
-index c5e1bb58ad96..acc6dafc74a1 100644
---- a/mm/page_reporting.h
-+++ b/mm/page_reporting.h
-@@ -23,6 +23,48 @@ static inline void page_reporting_reset_zone(struct zone *zone)
- 	zone->reported_pages = NULL;
- }
- 
-+DECLARE_STATIC_KEY_FALSE(page_reporting_notify_enabled);
-+void __page_reporting_request(struct zone *zone);
-+
-+/**
-+ * page_reporting_notify_free - Free page notification to start page processing
-+ * @zone: Pointer to current zone of last page processed
-+ * @order: Order of last page added to zone
-+ *
-+ * This function is meant to act as a screener for __page_reporting_request
-+ * which will determine if a give zone has crossed over the high-water mark
-+ * that will justify us beginning page treatment. If we have crossed that
-+ * threshold then it will start the process of pulling some pages and
-+ * placing them in the batch list for treatment.
-+ */
-+static inline void page_reporting_notify_free(struct zone *zone, int order)
-+{
-+	unsigned long nr_reported;
-+
-+	/* Called from hot path in __free_one_page() */
-+	if (!static_branch_unlikely(&page_reporting_notify_enabled))
-+		return;
-+
-+	/* Limit notifications only to higher order pages */
-+	if (order < PAGE_REPORTING_MIN_ORDER)
-+		return;
-+
-+	/* Do not bother with tests if we have already requested reporting */
-+	if (test_bit(ZONE_PAGE_REPORTING_REQUESTED, &zone->flags))
-+		return;
-+
-+	/* If reported_pages is not populated, assume 0 */
-+	nr_reported = zone->reported_pages ?
-+		    zone->reported_pages[order - PAGE_REPORTING_MIN_ORDER] : 0;
-+
-+	/* Only request it if we have enough to begin the page reporting */
-+	if (zone->free_area[order].nr_free < nr_reported + PAGE_REPORTING_HWM)
-+		return;
-+
-+	/* This is slow, but should be called very rarely */
-+	__page_reporting_request(zone);
-+}
-+
- /* Boundary functions */
- static inline pgoff_t
- get_reporting_index(unsigned int order, unsigned int migratetype)
-@@ -142,6 +184,10 @@ static inline void page_reporting_reset_zone(struct zone *zone)
- {
- }
- 
-+static inline void page_reporting_notify_free(struct zone *zone, int order)
-+{
-+}
-+
- static inline void
- page_reporting_free_area_release(struct zone *zone, unsigned int order, int mt)
- {
+add "for SC7180"
 
+> +    clock-controller@100000 {
+> +      compatible = "qcom,gcc-sc7180";
+> +      reg = <0x100000 0x1f0000>;
+> +      clocks = <&rpmhcc 0>, <&rpmhcc 1>;
+
+IIUC the ids correspond to GCC_GPLL0_MAIN_DIV_CDIV and GPLL0. If
+that is correct I guess the intention is to use the constants in the
+DT?
+
+> +      clock-names = "bi_tcxo", "bi_tcxo_ao";
+> +      #clock-cells = <1>;
+> +      #reset-cells = <1>;
+> +      #power-domain-cells = <1>;
+> +    };
+> +...
+> diff --git a/include/dt-bindings/clock/qcom,gcc-sc7180.h b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> new file mode 100644
+> index 000000000000..d76b061f6a4e
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/qcom,gcc-sc7180.h
+> @@ -0,0 +1,155 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
+> +#define _DT_BINDINGS_CLK_QCOM_GCC_SC7180_H
+> +
+> +/* GCC clocks */
+> +#define GCC_GPLL0_MAIN_DIV_CDIV					0
+> +#define GPLL0							1
+> +#define GPLL0_OUT_EVEN						2
+> +#define GPLL1							3
+> +#define GPLL4							4
+> +#define GPLL6							5
+> +#define GPLL7							6
+> +#define GCC_AGGRE_UFS_PHY_AXI_CLK				7
+> +#define GCC_AGGRE_USB3_PRIM_AXI_CLK				8
+> +#define GCC_BOOT_ROM_AHB_CLK					9
+> +#define GCC_CAMERA_AHB_CLK					10
+> +#define GCC_CAMERA_HF_AXI_CLK					11
+> +#define GCC_CAMERA_THROTTLE_HF_AXI_CLK				12
+> +#define GCC_CAMERA_XO_CLK					13
+> +#define GCC_CE1_AHB_CLK						14
+> +#define GCC_CE1_AXI_CLK						15
+> +#define GCC_CE1_CLK						16
+> +#define GCC_CFG_NOC_USB3_PRIM_AXI_CLK				17
+> +#define GCC_CPUSS_AHB_CLK					18
+> +#define GCC_CPUSS_AHB_CLK_SRC					19
+> +#define GCC_CPUSS_GNOC_CLK					20
+> +#define GCC_CPUSS_RBCPR_CLK					21
+> +#define GCC_DDRSS_GPU_AXI_CLK					22
+> +#define GCC_DISP_AHB_CLK					23
+> +#define GCC_DISP_GPLL0_CLK_SRC					24
+> +#define GCC_DISP_GPLL0_DIV_CLK_SRC				25
+> +#define GCC_DISP_HF_AXI_CLK					26
+> +#define GCC_DISP_THROTTLE_HF_AXI_CLK				27
+> +#define GCC_DISP_XO_CLK						28
+> +#define GCC_GP1_CLK						29
+> +#define GCC_GP1_CLK_SRC						30
+> +#define GCC_GP2_CLK						31
+> +#define GCC_GP2_CLK_SRC						32
+> +#define GCC_GP3_CLK						33
+> +#define GCC_GP3_CLK_SRC						34
+> +#define GCC_GPU_CFG_AHB_CLK					35
+> +#define GCC_GPU_GPLL0_CLK_SRC					36
+> +#define GCC_GPU_GPLL0_DIV_CLK_SRC				37
+> +#define GCC_GPU_MEMNOC_GFX_CLK					38
+> +#define GCC_GPU_SNOC_DVM_GFX_CLK				39
+> +#define GCC_NPU_AXI_CLK						40
+> +#define GCC_NPU_BWMON_AXI_CLK					41
+> +#define GCC_NPU_BWMON_DMA_CFG_AHB_CLK				42
+> +#define GCC_NPU_BWMON_DSP_CFG_AHB_CLK				43
+> +#define GCC_NPU_CFG_AHB_CLK					44
+> +#define GCC_NPU_DMA_CLK						45
+> +#define GCC_NPU_GPLL0_CLK_SRC					46
+> +#define GCC_NPU_GPLL0_DIV_CLK_SRC				47
+> +#define GCC_PDM2_CLK						48
+> +#define GCC_PDM2_CLK_SRC					49
+> +#define GCC_PDM_AHB_CLK						50
+> +#define GCC_PDM_XO4_CLK						51
+> +#define GCC_PRNG_AHB_CLK					52
+> +#define GCC_QSPI_CNOC_PERIPH_AHB_CLK				53
+> +#define GCC_QSPI_CORE_CLK					54
+> +#define GCC_QSPI_CORE_CLK_SRC					55
+> +#define GCC_QUPV3_WRAP0_CORE_2X_CLK				56
+> +#define GCC_QUPV3_WRAP0_CORE_CLK				57
+> +#define GCC_QUPV3_WRAP0_S0_CLK					58
+> +#define GCC_QUPV3_WRAP0_S0_CLK_SRC				59
+> +#define GCC_QUPV3_WRAP0_S1_CLK					60
+> +#define GCC_QUPV3_WRAP0_S1_CLK_SRC				61
+> +#define GCC_QUPV3_WRAP0_S2_CLK					62
+> +#define GCC_QUPV3_WRAP0_S2_CLK_SRC				63
+> +#define GCC_QUPV3_WRAP0_S3_CLK					64
+> +#define GCC_QUPV3_WRAP0_S3_CLK_SRC				65
+> +#define GCC_QUPV3_WRAP0_S4_CLK					66
+> +#define GCC_QUPV3_WRAP0_S4_CLK_SRC				67
+> +#define GCC_QUPV3_WRAP0_S5_CLK					68
+> +#define GCC_QUPV3_WRAP0_S5_CLK_SRC				69
+> +#define GCC_QUPV3_WRAP1_CORE_2X_CLK				70
+> +#define GCC_QUPV3_WRAP1_CORE_CLK				71
+> +#define GCC_QUPV3_WRAP1_S0_CLK					72
+> +#define GCC_QUPV3_WRAP1_S0_CLK_SRC				73
+> +#define GCC_QUPV3_WRAP1_S1_CLK					74
+> +#define GCC_QUPV3_WRAP1_S1_CLK_SRC				75
+> +#define GCC_QUPV3_WRAP1_S2_CLK					76
+> +#define GCC_QUPV3_WRAP1_S2_CLK_SRC				77
+> +#define GCC_QUPV3_WRAP1_S3_CLK					78
+> +#define GCC_QUPV3_WRAP1_S3_CLK_SRC				79
+> +#define GCC_QUPV3_WRAP1_S4_CLK					80
+> +#define GCC_QUPV3_WRAP1_S4_CLK_SRC				81
+> +#define GCC_QUPV3_WRAP1_S5_CLK					82
+> +#define GCC_QUPV3_WRAP1_S5_CLK_SRC				83
+> +#define GCC_QUPV3_WRAP_0_M_AHB_CLK				84
+> +#define GCC_QUPV3_WRAP_0_S_AHB_CLK				85
+> +#define GCC_QUPV3_WRAP_1_M_AHB_CLK				86
+> +#define GCC_QUPV3_WRAP_1_S_AHB_CLK				87
+> +#define GCC_SDCC1_AHB_CLK					88
+> +#define GCC_SDCC1_APPS_CLK					89
+> +#define GCC_SDCC1_APPS_CLK_SRC					90
+> +#define GCC_SDCC1_ICE_CORE_CLK					91
+> +#define GCC_SDCC1_ICE_CORE_CLK_SRC				92
+> +#define GCC_SDCC2_AHB_CLK					93
+> +#define GCC_SDCC2_APPS_CLK					94
+> +#define GCC_SDCC2_APPS_CLK_SRC					95
+> +#define GCC_SYS_NOC_CPUSS_AHB_CLK				96
+> +#define GCC_UFS_MEM_CLKREF_CLK					97
+> +#define GCC_UFS_PHY_AHB_CLK					98
+> +#define GCC_UFS_PHY_AXI_CLK					99
+> +#define GCC_UFS_PHY_AXI_CLK_SRC					100
+> +#define GCC_UFS_PHY_ICE_CORE_CLK				101
+> +#define GCC_UFS_PHY_ICE_CORE_CLK_SRC				102
+> +#define GCC_UFS_PHY_PHY_AUX_CLK					103
+> +#define GCC_UFS_PHY_PHY_AUX_CLK_SRC				104
+> +#define GCC_UFS_PHY_RX_SYMBOL_0_CLK				105
+> +#define GCC_UFS_PHY_TX_SYMBOL_0_CLK				106
+> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK				107
+> +#define GCC_UFS_PHY_UNIPRO_CORE_CLK_SRC				108
+> +#define GCC_USB30_PRIM_MASTER_CLK				109
+> +#define GCC_USB30_PRIM_MASTER_CLK_SRC				110
+> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK				111
+> +#define GCC_USB30_PRIM_MOCK_UTMI_CLK_SRC			112
+> +#define GCC_USB30_PRIM_SLEEP_CLK				113
+> +#define GCC_USB3_PRIM_CLKREF_CLK				114
+> +#define GCC_USB3_PRIM_PHY_AUX_CLK				115
+> +#define GCC_USB3_PRIM_PHY_AUX_CLK_SRC				116
+> +#define GCC_USB3_PRIM_PHY_COM_AUX_CLK				117
+> +#define GCC_USB3_PRIM_PHY_PIPE_CLK				118
+> +#define GCC_USB_PHY_CFG_AHB2PHY_CLK				119
+> +#define GCC_VIDEO_AHB_CLK					120
+> +#define GCC_VIDEO_AXI_CLK					121
+> +#define GCC_VIDEO_GPLL0_DIV_CLK_SRC				122
+> +#define GCC_VIDEO_THROTTLE_AXI_CLK				123
+> +#define GCC_VIDEO_XO_CLK					124
+> +
+> +/* GCC resets */
+> +#define GCC_QUSB2PHY_PRIM_BCR					0
+> +#define GCC_QUSB2PHY_SEC_BCR					1
+> +#define GCC_UFS_PHY_BCR						2
+> +#define GCC_USB30_PRIM_BCR					3
+> +#define GCC_USB3_DP_PHY_PRIM_BCR				4
+> +#define GCC_USB3_DP_PHY_SEC_BCR					5
+> +#define GCC_USB3_PHY_PRIM_BCR					6
+> +#define GCC_USB3_PHY_SEC_BCR					7
+> +#define GCC_USB3PHY_PHY_PRIM_BCR				8
+> +#define GCC_USB3PHY_PHY_SEC_BCR					9
+> +#define GCC_USB_PHY_CFG_AHB2PHY_BCR				10
+> +
+> +/* GCC GDSCRs */
+> +#define UFS_PHY_GDSC						0
+> +#define USB30_PRIM_GDSC						1
+> +#define HLOS1_VOTE_MMNOC_MMU_TBU_HF0_GDSC			2
+> +#define HLOS1_VOTE_MMNOC_MMU_TBU_SF_GDSC			3
+> +
+> +#endif
