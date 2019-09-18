@@ -2,152 +2,90 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F86C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34B0C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DC621907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A15EC21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbfIRLhF (ORCPT
+        id S1730276AbfIRLil (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:37:05 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:45793 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727401AbfIRLhF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:37:05 -0400
-X-Originating-IP: 86.207.98.53
-Received: from localhost (aclermont-ferrand-651-1-259-53.w86-207.abo.wanadoo.fr [86.207.98.53])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 98CC920007;
-        Wed, 18 Sep 2019 11:37:01 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Claudiu.Beznea@microchip.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v3] pinctrl: at91-pio4: implement .get_multiple and .set_multiple
-Date:   Wed, 18 Sep 2019 13:36:57 +0200
-Message-Id: <20190918113657.25998-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 18 Sep 2019 07:38:41 -0400
+Received: from mga03.intel.com ([134.134.136.65]:51956 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727401AbfIRLik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 07:38:40 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 04:38:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="202041528"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 18 Sep 2019 04:38:36 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 18 Sep 2019 14:38:35 +0300
+Date:   Wed, 18 Sep 2019 14:38:35 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Yauhen Kharuzhy <jekhor@gmail.com>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>
+Subject: Re: [PATCH v2 1/1] platform/x86/intel_cht_int33fe: Split code to USB
+ TypeB and TypeC variants
+Message-ID: <20190918113835.GA16243@kuha.fi.intel.com>
+References: <20190917194507.14771-1-jekhor@gmail.com>
+ <20190917194507.14771-2-jekhor@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917194507.14771-2-jekhor@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement .get_multiple and .set_multiple to allow reading or setting
-multiple pins simultaneously. Pins in the same bank will all be switched at
-the same time, improving synchronization and performances.
+On Tue, Sep 17, 2019 at 10:45:07PM +0300, Yauhen Kharuzhy wrote:
+> Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
+> hardware has TypeC connector and register related devices described as
+> I2C connections in the _CRS resource.
+> 
+> There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with micro
+> USB B connector exists. It has INT33FE device in the DSDT table but
+> there are only two I2C connection described: PMIC and BQ27452 battery
+> fuel gauge.
+> 
+> Splitting existing INT33FE driver allow to maintain code for USB type B
+> (AB) connector variant separately and make it simpler.
 
-Keep the driver future proof by allowing its use on 64bits platforms if
-they ever appear with this IP and we end up with a mismatch between
-ATMEL_PIO_NPINS_PER_BANK and BITS_PER_LONG.
+Sorry, but "Type B" is even more confusing here. Type B refers to the
+Standard-B USB connector, so _not_ the micro connector family. You can
+check the connector definitions from the latest USB 3.2 specification.
+The standard-b definition goes something like this:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-by: Ludovic Desroches <ludovic.desroches@microchip.com>
----
+        "The standard _Type-B_ connector defined by the USB x specification."
 
-Changes in v3:
- - Add ack from ludovic
- - add comment and amend commit message to explain the ifdefd
+Note that all the five supported connectors are listed in ch5
+"Mechanical":
 
- drivers/pinctrl/pinctrl-at91-pio4.c | 62 +++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+        Standard-A
+        Standard-B
+        Micro-B
+        Micro-AB
+        Type-C
 
-diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
-index d6de4d360cd4..e380202eb86a 100644
---- a/drivers/pinctrl/pinctrl-at91-pio4.c
-+++ b/drivers/pinctrl/pinctrl-at91-pio4.c
-@@ -328,6 +328,33 @@ static int atmel_gpio_get(struct gpio_chip *chip, unsigned offset)
- 	return !!(reg & BIT(pin->line));
- }
- 
-+static int atmel_gpio_get_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				   unsigned long *bits)
-+{
-+	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-+	unsigned int bank;
-+
-+	bitmap_zero(bits, atmel_pioctrl->npins);
-+
-+	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-+		unsigned int word = bank;
-+		unsigned int offset = 0;
-+		unsigned int reg;
-+
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-+		offset = bank * ATMEL_PIO_NPINS_PER_BANK % BITS_PER_LONG;
-+#endif
-+		if (!mask[word])
-+			continue;
-+
-+		reg = atmel_gpio_read(atmel_pioctrl, bank, ATMEL_PIO_PDSR);
-+		bits[word] |= mask[word] & (reg << offset);
-+	}
-+
-+	return 0;
-+}
-+
- static int atmel_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
- 				       int value)
- {
-@@ -358,11 +385,46 @@ static void atmel_gpio_set(struct gpio_chip *chip, unsigned offset, int val)
- 			 BIT(pin->line));
- }
- 
-+static void atmel_gpio_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				    unsigned long *bits)
-+{
-+	struct atmel_pioctrl *atmel_pioctrl = gpiochip_get_data(chip);
-+	unsigned int bank;
-+
-+	for (bank = 0; bank < atmel_pioctrl->nbanks; bank++) {
-+		unsigned int bitmask;
-+		unsigned int word = bank;
-+
-+/*
-+ * On a 64-bit platform, BITS_PER_LONG is 64 so it is necessary to iterate over
-+ * two 32bit words to handle the whole  bitmask
-+ */
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		word = BIT_WORD(bank * ATMEL_PIO_NPINS_PER_BANK);
-+#endif
-+		if (!mask[word])
-+			continue;
-+
-+		bitmask = mask[word] & bits[word];
-+		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_SODR, bitmask);
-+
-+		bitmask = mask[word] & ~bits[word];
-+		atmel_gpio_write(atmel_pioctrl, bank, ATMEL_PIO_CODR, bitmask);
-+
-+#if ATMEL_PIO_NPINS_PER_BANK != BITS_PER_LONG
-+		mask[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-+		bits[word] >>= ATMEL_PIO_NPINS_PER_BANK;
-+#endif
-+	}
-+}
-+
- static struct gpio_chip atmel_gpio_chip = {
- 	.direction_input        = atmel_gpio_direction_input,
- 	.get                    = atmel_gpio_get,
-+	.get_multiple           = atmel_gpio_get_multiple,
- 	.direction_output       = atmel_gpio_direction_output,
- 	.set                    = atmel_gpio_set,
-+	.set_multiple           = atmel_gpio_set_multiple,
- 	.to_irq                 = atmel_gpio_to_irq,
- 	.base                   = 0,
- };
+So what was the problem with names that refer to the micro connector
+family, for example "micro-ab" or "micro-b"?
+
+
+thanks,
+
 -- 
-2.21.0
-
+heikki
