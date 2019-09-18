@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EB0C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE7EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C92820644
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C05C221924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:26:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787978;
-	bh=pr6Kep4VyWjboAQB5tBFUKdvb1ggzp2wNkWBcOBWZyY=;
+	s=default; t=1568787980;
+	bh=rwEA9Q0a06XgOshyqVw2qobUN8dbpfreOZ0k15eEyTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BYgvg5U/bPHXNRuGHorv9KKph33DBYVfQd2sTusBOlYERTnziMxlb/833I53G66nW
-	 q21CWL12keY5aSGeIh1N7hyTUVkeCxQQwuiLx9bMrurGD9gBPRES0g7+z9puDQJuWC
-	 XlP//e2U5NdYcJN7xwFoZBbjEO6Z4xb+7J6st4uE=
+	b=jdE5x3ZUFQhziCJ0UZxHwAAUMUuwaRlmyjS2TTngP4VF35fcqC7lZj3UKPa2YBRmt
+	 zRCLd5dsf5Xs+iao3yt4nZs0nKxQCht4EH9PVZXgt/GMp8fKytLK0AcrLLUxqL/a/N
+	 oCxgIaAhnysH3m/nkdXQUy5lJa1A854Q6SWEEAKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730063AbfIRG0N (ORCPT
+        id S1730276AbfIRG0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47352 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:26:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730243AbfIRG0I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:26:08 -0400
+        id S1728534AbfIRG0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:26:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C1E7218AF;
-        Wed, 18 Sep 2019 06:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A17920644;
+        Wed, 18 Sep 2019 06:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787966;
-        bh=pr6Kep4VyWjboAQB5tBFUKdvb1ggzp2wNkWBcOBWZyY=;
+        s=default; t=1568787974;
+        bh=rwEA9Q0a06XgOshyqVw2qobUN8dbpfreOZ0k15eEyTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IkJEXWCiFX8UUxqb2sQUtejixzG+umb/5ohAnZl5NEXBIAVe/BqBiT5ABkqF3GXIr
-         oUGe7Dd2sIBJC/PFu57WQ5njf/u+6Ve2+jNV6DzgoEV2NLgUztLXUJjV1h2Ab3QjhI
-         vlg99LK2Hklpu5TOMRRvYYVUnvH8aTOTHIikMOys=
+        b=AkgMlKEgBGr1frH1l5NJpA5TAvObNMr8gS2aBtDdeLjjyygdTv7dJf23opfQxOAfQ
+         Xqn/esteLShH1mrIDANIV4I3xwO91s2MriwV/WgkmMdq3xgj2Pj+Pi+JIj3LZ1rZmX
+         vDsoOq11Jk+o74FIgRES4z13dvlA5D3pYhiH7XHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Borislav Petkov <bp@suse.de>,
-        Dirk van der Merwe <dirk.vandermerwe@netronome.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Dave Young <dyoung@redhat.com>
-Subject: [PATCH 5.2 51/85] x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernels
-Date:   Wed, 18 Sep 2019 08:19:09 +0200
-Message-Id: <20190918061235.736976524@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 5.2 54/85] clk: Fix debugfs clk_possible_parents for clks without parent string names
+Date:   Wed, 18 Sep 2019 08:19:12 +0200
+Message-Id: <20190918061235.821904087@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -62,224 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junichi Nomura <j-nomura@ce.jp.nec.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 0a23ebc66a46786769dd68bfdaa3102345819b9c upstream.
+commit 2d156b78ce8febf15cd58a025d7d9d7b7577126a upstream.
 
-Commit
+Following the commit fc0c209c147f ("clk: Allow parents to be specified
+without string names"), the parent name string is not always populated.
 
-  3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Instead, fetch the parents clk_core struct using the appropriate helper,
+and read its name directly. If that fails, go through the possible
+sources of parent names. The order in which they are used is different
+from how parents are looked up, with the global name having precedence
+over local fw_name and indices. This makes more sense as a) the
+parent_maps structure does not differentiate between legacy global names
+and fallback global names, and b) global names likely provide more
+information than local fw_names.
 
-broke kexec boot on EFI systems. efi_get_rsdp_addr() in the early
-parsing code tries to search RSDP from the EFI tables but that will
-crash because the table address is virtual when the kernel was booted by
-kexec (set_virtual_address_map() has run in the first kernel and cannot
-be run again in the second kernel).
-
-In the case of kexec, the physical address of EFI tables is provided via
-efi_setup_data in boot_params, which is set up by kexec(1).
-
-Factor out the table parsing code and use different pointers depending
-on whether the kernel is booted by kexec or not.
-
- [ bp: Massage. ]
-
-Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
-Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Tested-by: Dirk van der Merwe <dirk.vandermerwe@netronome.com>
-Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
-Cc: Dave Young <dyoung@redhat.com>
-Link: https://lkml.kernel.org/r/20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp
+Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/boot/compressed/acpi.c |  143 +++++++++++++++++++++++++++++-----------
- 1 file changed, 107 insertions(+), 36 deletions(-)
+ drivers/clk/clk.c |   44 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 41 insertions(+), 3 deletions(-)
 
---- a/arch/x86/boot/compressed/acpi.c
-+++ b/arch/x86/boot/compressed/acpi.c
-@@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rs
- 	return addr;
- }
- 
--/* Search EFI system tables for RSDP. */
--static acpi_physical_address efi_get_rsdp_addr(void)
-+/*
-+ * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
-+ * ACPI_TABLE_GUID are found, take the former, which has more features.
-+ */
-+static acpi_physical_address
-+__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
-+		    bool efi_64)
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3023,12 +3023,50 @@ DEFINE_SHOW_ATTRIBUTE(clk_flags);
+ static int possible_parents_show(struct seq_file *s, void *data)
  {
- 	acpi_physical_address rsdp_addr = 0;
+ 	struct clk_core *core = s->private;
++	struct clk_core *parent;
+ 	int i;
  
- #ifdef CONFIG_EFI
--	unsigned long systab, systab_tables, config_tables;
-+	int i;
-+
-+	/* Get EFI tables from systab. */
-+	for (i = 0; i < nr_tables; i++) {
-+		acpi_physical_address table;
-+		efi_guid_t guid;
-+
-+		if (efi_64) {
-+			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables + i;
-+
-+			guid  = tbl->guid;
-+			table = tbl->table;
-+
-+			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
-+				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
-+				return 0;
-+			}
-+		} else {
-+			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables + i;
-+
-+			guid  = tbl->guid;
-+			table = tbl->table;
-+		}
-+
-+		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
-+			rsdp_addr = table;
-+		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
-+			return table;
-+	}
-+#endif
-+	return rsdp_addr;
-+}
-+
-+/* EFI/kexec support is 64-bit only. */
-+#ifdef CONFIG_X86_64
-+static struct efi_setup_data *get_kexec_setup_data_addr(void)
-+{
-+	struct setup_data *data;
-+	u64 pa_data;
-+
-+	pa_data = boot_params->hdr.setup_data;
-+	while (pa_data) {
-+		data = (struct setup_data *)pa_data;
-+		if (data->type == SETUP_EFI)
-+			return (struct efi_setup_data *)(pa_data + sizeof(struct setup_data));
-+
-+		pa_data = data->next;
-+	}
-+	return NULL;
-+}
-+
-+static acpi_physical_address kexec_get_rsdp_addr(void)
-+{
-+	efi_system_table_64_t *systab;
-+	struct efi_setup_data *esd;
-+	struct efi_info *ei;
-+	char *sig;
-+
-+	esd = (struct efi_setup_data *)get_kexec_setup_data_addr();
-+	if (!esd)
-+		return 0;
-+
-+	if (!esd->tables) {
-+		debug_putstr("Wrong kexec SETUP_EFI data.\n");
-+		return 0;
-+	}
-+
-+	ei = &boot_params->efi_info;
-+	sig = (char *)&ei->efi_loader_signature;
-+	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
-+		debug_putstr("Wrong kexec EFI loader signature.\n");
-+		return 0;
-+	}
-+
-+	/* Get systab from boot params. */
-+	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
-+	if (!systab)
-+		error("EFI system table not found in kexec boot_params.");
-+
-+	return __efi_get_rsdp_addr((unsigned long)esd->tables, systab->nr_tables, true);
-+}
-+#else
-+static acpi_physical_address kexec_get_rsdp_addr(void) { return 0; }
-+#endif /* CONFIG_X86_64 */
-+
-+static acpi_physical_address efi_get_rsdp_addr(void)
-+{
-+#ifdef CONFIG_EFI
-+	unsigned long systab, config_tables;
- 	unsigned int nr_tables;
- 	struct efi_info *ei;
- 	bool efi_64;
--	int size, i;
- 	char *sig;
- 
- 	ei = &boot_params->efi_info;
-@@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsd
- 
- 		config_tables	= stbl->tables;
- 		nr_tables	= stbl->nr_tables;
--		size		= sizeof(efi_config_table_64_t);
- 	} else {
- 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
- 
- 		config_tables	= stbl->tables;
- 		nr_tables	= stbl->nr_tables;
--		size		= sizeof(efi_config_table_32_t);
- 	}
- 
- 	if (!config_tables)
- 		error("EFI config tables not found.");
- 
--	/* Get EFI tables from systab. */
--	for (i = 0; i < nr_tables; i++) {
--		acpi_physical_address table;
--		efi_guid_t guid;
--
--		config_tables += size;
--
--		if (efi_64) {
--			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
--
--			guid  = tbl->guid;
--			table = tbl->table;
--
--			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
--				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
--				return 0;
--			}
--		} else {
--			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
--
--			guid  = tbl->guid;
--			table = tbl->table;
--		}
--
--		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
--			rsdp_addr = table;
--		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
--			return table;
--	}
-+	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
-+#else
-+	return 0;
- #endif
--	return rsdp_addr;
- }
- 
- static u8 compute_checksum(u8 *buffer, u32 length)
-@@ -220,6 +283,14 @@ acpi_physical_address get_rsdp_addr(void
- 	if (!pa)
- 		pa = boot_params->acpi_rsdp_addr;
- 
+-	for (i = 0; i < core->num_parents - 1; i++)
+-		seq_printf(s, "%s ", core->parents[i].name);
 +	/*
-+	 * Try to get EFI data from setup_data. This can happen when we're a
-+	 * kexec'ed kernel and kexec(1) has passed all the required EFI info to
-+	 * us.
++	 * Go through the following options to fetch a parent's name.
++	 *
++	 * 1. Fetch the registered parent clock and use its name
++	 * 2. Use the global (fallback) name if specified
++	 * 3. Use the local fw_name if provided
++	 * 4. Fetch parent clock's clock-output-name if DT index was set
++	 *
++	 * This may still fail in some cases, such as when the parent is
++	 * specified directly via a struct clk_hw pointer, but it isn't
++	 * registered (yet).
 +	 */
-+	if (!pa)
-+		pa = kexec_get_rsdp_addr();
-+
- 	if (!pa)
- 		pa = efi_get_rsdp_addr();
++	for (i = 0; i < core->num_parents - 1; i++) {
++		parent = clk_core_get_parent_by_index(core, i);
++		if (parent)
++			seq_printf(s, "%s ", parent->name);
++		else if (core->parents[i].name)
++			seq_printf(s, "%s ", core->parents[i].name);
++		else if (core->parents[i].fw_name)
++			seq_printf(s, "<%s>(fw) ", core->parents[i].fw_name);
++		else if (core->parents[i].index >= 0)
++			seq_printf(s, "%s ",
++				   of_clk_get_parent_name(core->of_node,
++							  core->parents[i].index));
++		else
++			seq_puts(s, "(missing) ");
++	}
  
+-	seq_printf(s, "%s\n", core->parents[i].name);
++	parent = clk_core_get_parent_by_index(core, i);
++	if (parent)
++		seq_printf(s, "%s", parent->name);
++	else if (core->parents[i].name)
++		seq_printf(s, "%s", core->parents[i].name);
++	else if (core->parents[i].fw_name)
++		seq_printf(s, "<%s>(fw)", core->parents[i].fw_name);
++	else if (core->parents[i].index >= 0)
++		seq_printf(s, "%s",
++			   of_clk_get_parent_name(core->of_node,
++						  core->parents[i].index));
++	else
++		seq_puts(s, "(missing)");
+ 
+ 	return 0;
+ }
 
 
