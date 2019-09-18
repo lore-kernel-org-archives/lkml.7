@@ -2,196 +2,111 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B65C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D02C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF08620665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:26:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFAB5207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:26:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fRknr0n7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FDHL+zPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbfIRP0Q (ORCPT
+        id S2387483AbfIRP0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:26:16 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:35762 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728784AbfIRP0O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:26:14 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IFQAoG096245;
-        Wed, 18 Sep 2019 10:26:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568820370;
-        bh=VsiXL+zAxe9QV+2PwF448UVgiwJxHtymmgfX/kQ2kxQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=fRknr0n71HwWWhJuAm9fHL7KGHMOD//XuK7+LZdI1oWMbjCpeFIRSXTm9c4jGAWKq
-         PRZR1Rb6heeGHeXc9su6mxZWiZDs+mr6vxQVRgmrWK+aNyaoHRvO/8II/TW5JU1Ez9
-         f9DOA08xx3qYQmfLHUqj23IDgaZ4jkzS3WauI3gY=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IFQAu3038154
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Sep 2019 10:26:10 -0500
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 10:26:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 10:26:10 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IFQ94H003144;
-        Wed, 18 Sep 2019 10:26:10 -0500
-From:   Jean-Jacques Hiblot <jjhiblot@ti.com>
-To:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <dmurphy@ti.com>
-CC:     <tomi.valkeinen@ti.com>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Jean-Jacques Hiblot <jjhiblot@ti.com>
-Subject: [PATCH v3 1/2] leds: tlc591xx: simplify driver by using the managed led API
-Date:   Wed, 18 Sep 2019 17:25:55 +0200
-Message-ID: <20190918152556.9925-2-jjhiblot@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190918152556.9925-1-jjhiblot@ti.com>
-References: <20190918152556.9925-1-jjhiblot@ti.com>
+        Wed, 18 Sep 2019 11:26:49 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:53102 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387466AbfIRP0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:26:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=rMO0GB74u208w0s9L1VnSEFBd3xoiYe5Pq/uI+rk3S0=; b=FDHL+zPdkSSTK1yefcMu++bUaV
+        2MEPOKNDY4FiLOA7T1fZyniUXD93BrNkcWXoL++GKNKvn9DZbveT17bWjpEJibQD9t2ArathPRpKc
+        N1AHEsHKVG0T8hJzFnrdauCIhyg+Rjm8PsmxFw3Ls01MV+zzEtm3A2TnmYi0Vk0pc82w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iAbqw-0008UG-WA; Wed, 18 Sep 2019 17:26:46 +0200
+Date:   Wed, 18 Sep 2019 17:26:46 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Peter Mamonov <pmamonov@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] net/phy: fix DP83865 10 Mbps HDX loopback disable
+ function
+Message-ID: <20190918152646.GL9591@lunn.ch>
+References: <20190918141931.GK9591@lunn.ch>
+ <20190918144825.23285-1-pmamonov@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918144825.23285-1-pmamonov@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the managed API of the LED class (devm_led_classdev_register()
-instead of led_classdev_register()).
-This allows us to remove the code used to track-and-destroy the LED devices
+On Wed, Sep 18, 2019 at 05:48:25PM +0300, Peter Mamonov wrote:
+> According to the DP83865 datasheet "The 10 Mbps HDX loopback can be
+> disabled in the expanded memory register 0x1C0.1." The driver erroneously
+> used bit 0 instead of bit 1.
 
-Signed-off-by: Jean-Jacques Hiblot <jjhiblot@ti.com>
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
----
- drivers/leds/leds-tlc591xx.c | 79 +++++++++---------------------------
- 1 file changed, 20 insertions(+), 59 deletions(-)
+Hi Peter
 
-diff --git a/drivers/leds/leds-tlc591xx.c b/drivers/leds/leds-tlc591xx.c
-index 59ff088c7d75..3d5a4b92f016 100644
---- a/drivers/leds/leds-tlc591xx.c
-+++ b/drivers/leds/leds-tlc591xx.c
-@@ -128,51 +128,6 @@ tlc591xx_brightness_set(struct led_classdev *led_cdev,
- 	return err;
- }
- 
--static void
--tlc591xx_destroy_devices(struct tlc591xx_priv *priv, unsigned int j)
--{
--	int i = j;
--
--	while (--i >= 0) {
--		if (priv->leds[i].active)
--			led_classdev_unregister(&priv->leds[i].ldev);
--	}
--}
--
--static int
--tlc591xx_configure(struct device *dev,
--		   struct tlc591xx_priv *priv,
--		   const struct tlc591xx *tlc591xx)
--{
--	unsigned int i;
--	int err = 0;
--
--	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
--	for (i = 0; i < TLC591XX_MAX_LEDS; i++) {
--		struct tlc591xx_led *led = &priv->leds[i];
--
--		if (!led->active)
--			continue;
--
--		led->priv = priv;
--		led->led_no = i;
--		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
--		led->ldev.max_brightness = LED_FULL;
--		err = led_classdev_register(dev, &led->ldev);
--		if (err < 0) {
--			dev_err(dev, "couldn't register LED %s\n",
--				led->ldev.name);
--			goto exit;
--		}
--	}
--
--	return 0;
--
--exit:
--	tlc591xx_destroy_devices(priv, i);
--	return err;
--}
--
- static const struct regmap_config tlc591xx_regmap = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -225,7 +180,11 @@ tlc591xx_probe(struct i2c_client *client,
- 
- 	i2c_set_clientdata(client, priv);
- 
-+	tlc591xx_set_mode(priv->regmap, MODE2_DIM);
-+
- 	for_each_child_of_node(np, child) {
-+		struct tlc591xx_led *led;
-+
- 		err = of_property_read_u32(child, "reg", &reg);
- 		if (err) {
- 			of_node_put(child);
-@@ -236,22 +195,25 @@ tlc591xx_probe(struct i2c_client *client,
- 			of_node_put(child);
- 			return -EINVAL;
- 		}
--		priv->leds[reg].active = true;
--		priv->leds[reg].ldev.name =
-+		led = &priv->leds[reg];
-+
-+		led->active = true;
-+		led->ldev.name =
- 			of_get_property(child, "label", NULL) ? : child->name;
--		priv->leds[reg].ldev.default_trigger =
-+		led->ldev.default_trigger =
- 			of_get_property(child, "linux,default-trigger", NULL);
--	}
--	return tlc591xx_configure(dev, priv, tlc591xx);
--}
--
--static int
--tlc591xx_remove(struct i2c_client *client)
--{
--	struct tlc591xx_priv *priv = i2c_get_clientdata(client);
--
--	tlc591xx_destroy_devices(priv, TLC591XX_MAX_LEDS);
- 
-+		led->priv = priv;
-+		led->led_no = reg;
-+		led->ldev.brightness_set_blocking = tlc591xx_brightness_set;
-+		led->ldev.max_brightness = LED_FULL;
-+		err = devm_led_classdev_register(dev, &led->ldev);
-+		if (err < 0) {
-+			dev_err(dev, "couldn't register LED %s\n",
-+				led->ldev.name);
-+			return err;
-+		}
-+	}
- 	return 0;
- }
- 
-@@ -268,7 +230,6 @@ static struct i2c_driver tlc591xx_driver = {
- 		.of_match_table = of_match_ptr(of_tlc591xx_leds_match),
- 	},
- 	.probe = tlc591xx_probe,
--	.remove = tlc591xx_remove,
- 	.id_table = tlc591xx_id,
- };
- 
--- 
-2.17.1
+This is version 2, not 1. Or if you want to start counting from 0, it
+would be good to put v0 in your first patch :-)
 
+It is also normal to put in the commit message what changed from the
+previous version.
+
+This is a fix. So please add a Fixes: tag, with the hash of the commit
+which introduced the problem.
+
+And since this is a fix, it should be against DaveM net tree, and you
+indicate this in the subject line with [PATCH net v3].
+
+Thanks
+	Andrew
+
+> 
+> Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+> ---
+>  drivers/net/phy/national.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+> index 2addf1d3f619..3aa910b3dc89 100644
+> --- a/drivers/net/phy/national.c
+> +++ b/drivers/net/phy/national.c
+> @@ -110,14 +110,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+>  
+>  static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+>  {
+> +	u16 lb_dis = BIT(1);
+> +
+>  	if (disable)
+> -		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
+> +		ns_exp_write(phydev, 0x1c0,
+> +			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+>  	else
+>  		ns_exp_write(phydev, 0x1c0,
+> -			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
+> +			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+>  
+>  	pr_debug("10BASE-T HDX loopback %s\n",
+> -		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
+> +		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+>  }
+>  
+>  static int ns_config_init(struct phy_device *phydev)
+> -- 
+> 2.23.0
+> 
