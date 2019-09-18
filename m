@@ -2,112 +2,121 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23E2C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F393C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8F11206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5490B206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="F5vU4NQo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6O8OoOR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387588AbfIRQ2z (ORCPT
+        id S2387619AbfIRQ25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:28:55 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:16373 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387578AbfIRQ2y (ORCPT
+        Wed, 18 Sep 2019 12:28:57 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46753 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387520AbfIRQ2z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:28:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d825b4b0000>; Wed, 18 Sep 2019 09:28:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 18 Sep 2019 09:28:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 18 Sep 2019 09:28:54 -0700
-Received: from DRHQMAIL107.nvidia.com (10.27.9.16) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Sep
- 2019 16:28:53 +0000
-Received: from [10.21.132.148] (172.20.13.39) by DRHQMAIL107.nvidia.com
- (10.27.9.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Sep
- 2019 16:28:51 +0000
-Subject: Re: [PATCH 5.2 00/85] 5.2.16-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190918061234.107708857@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <5492c75f-de7c-9fe7-d3f7-3af5f3b3b6ce@nvidia.com>
-Date:   Wed, 18 Sep 2019 17:28:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 12:28:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id o18so43845wrv.13;
+        Wed, 18 Sep 2019 09:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+0ntiwXvSESB7iaOoEKUuKoBv5qu2y9dPZxgAsEks4E=;
+        b=j6O8OoORqIJ+c0lJiu2c0OGPlmDy8cgQxd+S7wBYq/FYyzcR6HqvTzfPGNAAmF0LzZ
+         xJQlouhwYeHYD04CjRw/xergiWhEqN5sCG7UsEMr2/voKxYCmw9lyK7z4lytRKhbR4DV
+         PemaPb9jBUkuK4/mtg/oB/F8Bqc2mX43MHnLsSzRbkUDeokIVGpgSVIMyx8hdU9MX7P1
+         lCRUjZmozXQZ0SLXlHSJRoGFind96cnphL2WyyFIxEunuaT/SgtjBOGcNF7mjgW8pFoQ
+         bU4X0T03b9hTDi9z9se2KZ6m67rxguHeNSm4o92Far5TP/mKg3VDC4SB5JA70aJlfl10
+         6pmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+0ntiwXvSESB7iaOoEKUuKoBv5qu2y9dPZxgAsEks4E=;
+        b=kBDbE+rT9GL15soSBwcIMcnZS7Ro7ZrDpO98Q7oK/w7uPDcGoAdmE8jz39tXVSG7aA
+         3Q+d7o00lZKAav3mqwHDN21ZIQIFXSAqX2hCYUQpojRrbkMkvFp8gMHIAU8KI+YQoHoZ
+         nNlIft2xJlfBZm6OV9Z4JjYcmqMFGEkcZ93mBGJd3ICOy1GComrwy5FAcbVpDdAJj+FW
+         7phNtyibiA0wLD8sqoEjyteRsLtvwUtiBg1UK+hvky890g7vAusTio9T3g5Bv8yMeckI
+         nW2SOGr2y9wldJvp13T3F2376If8+KbbtB26eQZqAgtKirE0yFOp5N3pKhXe4C3eId+j
+         E1gA==
+X-Gm-Message-State: APjAAAXn6WRFuzFyG5mExgzFWupJFgwSW6uvC74c6p8yefzdmd0FCjaM
+        7R2nhwP9+iQZtiLOAd8Pw2A=
+X-Google-Smtp-Source: APXvYqxbwdaVzV2zUxqpvvbAC/gTxl28+HYZmjcG5MkZXAtHbqI8L3SfMIAUypBWLrwxDsvMzfKAoQ==
+X-Received: by 2002:a5d:49c3:: with SMTP id t3mr3940934wrs.151.1568824132964;
+        Wed, 18 Sep 2019 09:28:52 -0700 (PDT)
+Received: from bfk-3-vm8-e4.cs.niisi.ras.ru (t109.niisi.ras.ru. [193.232.173.109])
+        by smtp.gmail.com with ESMTPSA id q19sm11468214wra.89.2019.09.18.09.28.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 09:28:52 -0700 (PDT)
+From:   Peter Mamonov <pmamonov@gmail.com>
+To:     andrew@lunn.ch
+Cc:     Peter Mamonov <pmamonov@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net v3] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Wed, 18 Sep 2019 19:27:55 +0300
+Message-Id: <20190918162755.24024-1-pmamonov@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- DRHQMAIL107.nvidia.com (10.27.9.16)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1568824139; bh=HkirmnflytftAuwEqDORh7tOB032Tyt4Pw7BdB70+nw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=F5vU4NQo/sC7Uj5Y4Wvus6s3Qlz0UE3P4nLo+ZrrDFOxmXyjv9cV7QG7mjXNO+m//
-         vDlcljeZ6lvqeBXPlY6NJdN2NneKwK4OXYbUGRMGanZdfhiIPP3E32S/fGNyZBq0rz
-         tVz5A+gKsosZPugVCuK/il8hvKIMvWGWjzOUQCzgw+M1Yu0OVpQXjvMALfLFKcT2m0
-         ZtmwMiVqFksaiFY14E7weWDhky4Iu6XZlLtqoGOtQBGzi8uehctIEx8Pbwi5XpDFVs
-         NXvn7Ciy8tAAmlgzWj8xxHhsGM7VBmttSXmiBUTTpBVrXt/tkAp8Jwu7I65nDWT94S
-         /EWQ77OMe9/xw==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1". The driver erroneously
+used bit 0 instead of bit 1.
 
-On 18/09/2019 07:18, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.2.16 release.
-> There are 85 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Fri 20 Sep 2019 06:09:47 AM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.2.16-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.2.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+---
+Changes since v2:
+- None
 
-All tests are passing for Tegra ...
+Changes since v1:
+- use BIT() macro
+- fix debug message as well
 
-Test results for stable-v5.2:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
+ drivers/net/phy/national.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-Linux version:	5.2.16-rc1-g2f63f02ef506
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
+diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+index a221dd552c3c..a5bf0874c7d8 100644
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -105,14 +105,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+ 
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = BIT(1);
++
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+-		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
++		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
+ }
+ 
+ static int ns_config_init(struct phy_device *phydev)
 -- 
-nvpublic
+2.23.0
+
