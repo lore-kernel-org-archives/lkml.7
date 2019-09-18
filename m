@@ -2,90 +2,261 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970FEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99893C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F4E4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58AF6214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cFV6lZrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfIRKMB (ORCPT
+        id S1729582AbfIRKMX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:12:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:44519 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728672AbfIRKMB (ORCPT
+        Wed, 18 Sep 2019 06:12:23 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:45960 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728649AbfIRKMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:12:01 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iAWwG-0002Zr-Ek; Wed, 18 Sep 2019 10:11:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Robin van der Gracht <robin@protonic.nl>,
-        Oleksij Rempel <linux@rempel-privat.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] can: fix resource leak of skb on error return paths
-Date:   Wed, 18 Sep 2019 11:11:56 +0100
-Message-Id: <20190918101156.24370-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 18 Sep 2019 06:12:23 -0400
+Received: by mail-lf1-f66.google.com with SMTP id r134so5210450lff.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 03:12:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=JzNHZht1bd6w8WtrKX6lmZo1NhKQxsQQoKxRAfLfPag=;
+        b=cFV6lZrPn1Mcf4EtX5AxtvIqIB1Qk4sGu9JQlMv9h7FqQpBqv/aXUI+14JI21629HA
+         lkOuieXLAl/nkeBUyxDgGxcI1rwy2EvvU59BVBmKIN+cpFE1Uw+42ItVzXATDn/Vdtxd
+         iQuMqn9GMssOl1d4JRTjpsiS5u/Pwfs1rnpSsCoigwBi89ovKKwmAPhnULg1PPfp3Clv
+         xWvFgOiCbBH+oAe2OiwCm9MwC2HYhsRxBcbHl6pnb5uTBr8etIffKratODyx5yz4NHp3
+         ikvmSAsrEy8FN2AzOhNVNxuQm1CtCiRqloW8AZFIMLAJAm2xuZroldu5PFrMj+TiTzvJ
+         sWYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=JzNHZht1bd6w8WtrKX6lmZo1NhKQxsQQoKxRAfLfPag=;
+        b=S7/cn8220bk7TRApa84ZsQwOZeEZm7fDb9JQrbtSm1XX6te7aSaYebIH8rrGJD8svO
+         w8QURDITxni/i/ec+uyb0CH5/1H2yhQ2SZnbSv4yBCIpGjTZOXXYYvb7+z8p+DTezPRT
+         76Qz6jGIcdAK1NqgUPhIkEWVeQVtQYgjhwQKCZfum4eD92eofSUsJcDtMLGiKpPy/3cT
+         gY5bN6PyOb2qMq5h/Q6OYu5l06GC8rSrVxsL1+WtcntRQh58DHC8Pynba7VmBbGgkxFY
+         DSkMTAvA00JFYYw0gs+QjmtoHrHqOJmQrECjcufduH9AoszRIiY25YNLGowEAqL/rDGJ
+         IawQ==
+X-Gm-Message-State: APjAAAVoVSfhs8gyd+lxmrKoJD/09lKt6B68xosDMsOXw0U0F7/FLF4k
+        3Ya4pLTb3WpxqIWpzEwULmuROg==
+X-Google-Smtp-Source: APXvYqwwcnWx7o1Se4k8YtBfuMRVpPQNz/bjMByXwDKLlJMYEddmufdN8gJLgcO37T1JynR5hVhoOw==
+X-Received: by 2002:ac2:4308:: with SMTP id l8mr1641108lfh.25.1568801540147;
+        Wed, 18 Sep 2019 03:12:20 -0700 (PDT)
+Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
+        by smtp.gmail.com with ESMTPSA id 77sm951751ljf.85.2019.09.18.03.12.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 18 Sep 2019 03:12:19 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 13:12:17 +0300
+From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+Subject: Re: [PATCH v3 bpf-next 07/14] samples: bpf: add makefile.target for
+ separate CC target build
+Message-ID: <20190918101216.GA2908@khorivan>
+Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        clang-built-linux@googlegroups.com,
+        sergei.shtylyov@cogentembedded.com
+References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
+ <20190916105433.11404-8-ivan.khoronzhuk@linaro.org>
+ <CAEf4Bzaidog3n0YP6F5dL2rCrHtKCOBXS0as7usymk8Twdro4w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAEf4Bzaidog3n0YP6F5dL2rCrHtKCOBXS0as7usymk8Twdro4w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Sep 17, 2019 at 04:19:40PM -0700, Andrii Nakryiko wrote:
+>On Mon, Sep 16, 2019 at 3:58 AM Ivan Khoronzhuk
+><ivan.khoronzhuk@linaro.org> wrote:
+>>
+>> The makefile.target is added only and will be used in
+>
+>typo: Makefile
+>
+>> sample/bpf/Makefile later in order to switch cross-compiling on CC
+>
+>on -> to
+>
+>> from HOSTCC environment.
+>>
+>> The HOSTCC is supposed to build binaries and tools running on the host
+>> afterwards, in order to simplify build or so, like "fixdep" or else.
+>> In case of cross compiling "fixdep" is executed on host when the rest
+>> samples should run on target arch. In order to build binaries for
+>> target arch with CC and tools running on host with HOSTCC, lets add
+>> Makefile.target for simplicity, having definition and routines similar
+>> to ones, used in script/Makefile.host. This allows later add
+>> cross-compilation to samples/bpf with minimum changes.
+>>
+>> The tprog stands for target programs built with CC.
+>
+>Why tprog? Could we just use prog: hostprog vs prog.
+Prev. version was with prog, but Yonghong Song found it ambiguous.
+As prog can be bpf also. So, decision was made to follow logic:
+* target prog - non bpf progs
+* bpf prog = bpf prog, that can be later smth similar, providing build options
+  for each bpf object separately.
 
-Currently the error return paths do not free skb and this results
-in a memory leak. Fix this by freeing them before the return.
+Details here:
+https://lkml.org/lkml/2019/9/13/1037
 
-Addresses-Coverity: ("Resource leak")
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- net/can/j1939/socket.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+>
+>>
+>> Makefile.target contains only stuff needed for samples/bpf, potentially
+>> can be reused later and now needed only for unblocking tricky
+>> samples/bpf cross compilation.
+>>
+>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+>> ---
+>>  samples/bpf/Makefile.target | 75 +++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 75 insertions(+)
+>>  create mode 100644 samples/bpf/Makefile.target
+>>
+>> diff --git a/samples/bpf/Makefile.target b/samples/bpf/Makefile.target
+>> new file mode 100644
+>> index 000000000000..fb6de63f7d2f
+>> --- /dev/null
+>> +++ b/samples/bpf/Makefile.target
+>> @@ -0,0 +1,75 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +# ==========================================================================
+>> +# Building binaries on the host system
+>> +# Binaries are not used during the compilation of the kernel, and intendent
+>
+>typo: intended
+>
+>> +# to be build for target board, target board can be host ofc. Added to build
+>
+>What's ofc, is it "of course"?
+yes, ofc )
 
-diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
-index 37c1040bcb9c..5c6eabcb5df1 100644
---- a/net/can/j1939/socket.c
-+++ b/net/can/j1939/socket.c
-@@ -909,8 +909,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
- 	memset(serr, 0, sizeof(*serr));
- 	switch (type) {
- 	case J1939_ERRQUEUE_ACK:
--		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK))
-+		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK)) {
-+			kfree_skb(skb);
- 			return;
-+		}
- 
- 		serr->ee.ee_errno = ENOMSG;
- 		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
-@@ -918,8 +920,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
- 		state = "ACK";
- 		break;
- 	case J1939_ERRQUEUE_SCHED:
--		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED))
-+		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED)) {
-+			kfree_skb(skb);
- 			return;
-+		}
- 
- 		serr->ee.ee_errno = ENOMSG;
- 		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
+>
+>> +# binaries to run not on host system.
+>> +#
+>> +# Sample syntax (see Documentation/kbuild/makefiles.rst for reference)
+>> +# tprogs-y := xsk_example
+>> +# Will compile xdpsock_example.c and create an executable named xsk_example
+>
+>You mix references to xsk_example and xdpsock_example, which is very
+>confusing. I'm guessing you meant to use xdpsock_example consistently.
+Oh, yes. Thanks.
+
+>
+>> +#
+>> +# tprogs-y    := xdpsock
+>> +# xdpsock-objs := xdpsock_1.o xdpsock_2.o
+>> +# Will compile xdpsock_1.c and xdpsock_2.c, and then link the executable
+>> +# xdpsock, based on xdpsock_1.o and xdpsock_2.o
+>> +#
+>> +# Inherited from scripts/Makefile.host
+>
+>"Inspired by" or "Derived from" would be probably more appropriate term :)
+I will replace with "Derived from", looks better.
+
+>
+>> +#
+>> +__tprogs := $(sort $(tprogs-y))
+>> +
+>> +# C code
+>> +# Executables compiled from a single .c file
+>> +tprog-csingle  := $(foreach m,$(__tprogs), \
+>> +                       $(if $($(m)-objs),,$(m)))
+>> +
+>> +# C executables linked based on several .o files
+>> +tprog-cmulti   := $(foreach m,$(__tprogs),\
+>> +                       $(if $($(m)-objs),$(m)))
+>> +
+>> +# Object (.o) files compiled from .c files
+>> +tprog-cobjs    := $(sort $(foreach m,$(__tprogs),$($(m)-objs)))
+>> +
+>> +tprog-csingle  := $(addprefix $(obj)/,$(tprog-csingle))
+>> +tprog-cmulti   := $(addprefix $(obj)/,$(tprog-cmulti))
+>> +tprog-cobjs    := $(addprefix $(obj)/,$(tprog-cobjs))
+>> +
+>> +#####
+>> +# Handle options to gcc. Support building with separate output directory
+>> +
+>> +_tprogc_flags   = $(TPROGS_CFLAGS) \
+>> +                 $(TPROGCFLAGS_$(basetarget).o)
+>> +
+>> +# $(objtree)/$(obj) for including generated headers from checkin source files
+>> +ifeq ($(KBUILD_EXTMOD),)
+>> +ifdef building_out_of_srctree
+>> +_tprogc_flags   += -I $(objtree)/$(obj)
+>> +endif
+>> +endif
+>> +
+>> +tprogc_flags    = -Wp,-MD,$(depfile) $(_tprogc_flags)
+>> +
+>> +# Create executable from a single .c file
+>> +# tprog-csingle -> Executable
+>> +quiet_cmd_tprog-csingle        = CC  $@
+>> +      cmd_tprog-csingle        = $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ $< \
+>> +               $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
+>> +$(tprog-csingle): $(obj)/%: $(src)/%.c FORCE
+>> +       $(call if_changed_dep,tprog-csingle)
+>> +
+>> +# Link an executable based on list of .o files, all plain c
+>> +# tprog-cmulti -> executable
+>> +quiet_cmd_tprog-cmulti = LD  $@
+>> +      cmd_tprog-cmulti = $(CC) $(tprogc_flags) $(TPROGS_LDFLAGS) -o $@ \
+>> +                         $(addprefix $(obj)/,$($(@F)-objs)) \
+>> +                         $(TPROGS_LDLIBS) $(TPROGLDLIBS_$(@F))
+>> +$(tprog-cmulti): $(tprog-cobjs) FORCE
+>> +       $(call if_changed,tprog-cmulti)
+>> +$(call multi_depend, $(tprog-cmulti), , -objs)
+>> +
+>> +# Create .o file from a single .c file
+>> +# tprog-cobjs -> .o
+>> +quiet_cmd_tprog-cobjs  = CC  $@
+>> +      cmd_tprog-cobjs  = $(CC) $(tprogc_flags) -c -o $@ $<
+>> +$(tprog-cobjs): $(obj)/%.o: $(src)/%.c FORCE
+>> +       $(call if_changed_dep,tprog-cobjs)
+>> --
+>> 2.17.1
+>>
+>
+>tprogs is quite confusing, but overall looks good to me.
+I tend to leave it as tprogs, unless it's going to be progs and agreed with
+Yonghong.
+
+It follows logic:
+- tprogs for bins
+- bpfprogs or bojs or bprogs (could be) for bpf obj
+
 -- 
-2.20.1
-
+Regards,
+Ivan Khoronzhuk
