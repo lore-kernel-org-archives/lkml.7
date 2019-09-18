@@ -2,353 +2,136 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02832C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE4F7218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3F6218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I1Zy9RDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731015AbfIRJbG (ORCPT
+        id S1728227AbfIRJdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:31:06 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:22447 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730848AbfIRJab (ORCPT
+        Wed, 18 Sep 2019 05:33:32 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50884 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726818AbfIRJdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:30:31 -0400
-X-UUID: ebc26ffac48f43208be315467b22ee69-20190918
-X-UUID: ebc26ffac48f43208be315467b22ee69-20190918
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <sam.shih@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1619889434; Wed, 18 Sep 2019 17:30:24 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs05n2.mediatek.inc (172.21.101.140) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Sep 2019 17:30:22 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Sep 2019 17:30:20 +0800
-From:   Sam Shih <sam.shih@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>
-CC:     Ryder Lee <ryder.lee@mediatek.com>,
-        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Sam Shih <sam.shih@mediatek.com>
-Subject: [PATCH v8 05/11] pwm: mediatek: use pwm_mediatek as common prefix
-Date:   Wed, 18 Sep 2019 17:28:53 +0800
-Message-ID: <1568798939-16038-6-git-send-email-sam.shih@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1568798939-16038-1-git-send-email-sam.shih@mediatek.com>
-References: <1568798939-16038-1-git-send-email-sam.shih@mediatek.com>
+        Wed, 18 Sep 2019 05:33:32 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8I9LiLC012659;
+        Wed, 18 Sep 2019 11:33:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=w2DW76qUSewnb1/9cIUq9BbK5Drmqq+tMdxCCn/J9V8=;
+ b=I1Zy9RDpW/qOpImzeliSW2ZhFKIYE8lxtzo/CF1AWxe4+MUxtIhUp3wyGNcWHCcEuJIv
+ 9aJCw9kB3R88uCEbYslFaKO/y7xUYyFSggCKFamcvKDhSiTijdJ249Pbb+pBRxumeHgc
+ 3htuC9vMVKdNB9dMsXDwjm7qFub3LaFR2E8c4hlb4ng4ojoTKCCXb2CK2Buva2JntihK
+ yaO6OEPgYskuDPWU8YSTw4G81dYeer/pCoJNwFSqWjJ4XU2GFRa/jG/3y9jhYDtq/cA2
+ 3dMHqy6mART+qbblqv5hqPxboPsTrna8U0+k49PX5fBvBfX8JOdeD3701d8x79NWS2xn Cg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v37kh39fw-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 18 Sep 2019 11:33:17 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2783951;
+        Wed, 18 Sep 2019 09:33:10 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D249C2B06B4;
+        Wed, 18 Sep 2019 11:33:09 +0200 (CEST)
+Received: from lmecxl0923.lme.st.com (10.75.127.51) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Sep
+ 2019 11:33:09 +0200
+Subject: Re: [PATCH V6 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20190905122112.29672-1-ludovic.Barre@st.com>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
+Date:   Wed, 18 Sep 2019 11:33:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190905122112.29672-1-ludovic.Barre@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
-X-MTK:  N
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-18_06:2019-09-17,2019-09-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use pwm_mediatek as common prefix to match the filename.
-No functional change intended.
+hi Ulf
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Sam Shih <sam.shih@mediatek.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
-Changes since v6:
-Add an Acked-by tag
+Just a "gentleman ping" about this series and
+https://lkml.org/lkml/2019/9/4/747
 
-Changes since v5:
-- Follow reviewers's comments
-The license stuff is a separate change
+Regards
+Ludo
 
----
- drivers/pwm/pwm-mediatek.c | 116 +++++++++++++++++++------------------
- 1 file changed, 59 insertions(+), 57 deletions(-)
-
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index c234b8fa65e7..d2e0f4692de1 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -34,14 +34,13 @@
- #define PWM45THRES_FIXUP	0x34
- 
- #define PWM_CLK_DIV_MAX		7
--
--struct mtk_pwm_platform_data {
-+struct pwm_mediatek_of_data {
- 	unsigned int fallback_npwms;
- 	bool pwm45_fixup;
- };
- 
- /**
-- * struct mtk_pwm_chip - struct representing PWM chip
-+ * struct pwm_mediatek_chip - struct representing PWM chip
-  * @chip: linux PWM chip representation
-  * @regs: base address of PWM chip
-  * @clk_top: the top clock generator
-@@ -49,27 +48,29 @@ struct mtk_pwm_platform_data {
-  * @clk_pwms: the clock used by each PWM channel
-  * @clk_freq: the fix clock frequency of legacy MIPS SoC
-  */
--struct mtk_pwm_chip {
-+struct pwm_mediatek_chip {
- 	struct pwm_chip chip;
- 	void __iomem *regs;
- 	struct clk *clk_top;
- 	struct clk *clk_main;
- 	struct clk **clk_pwms;
--	const struct mtk_pwm_platform_data *soc;
-+	const struct pwm_mediatek_of_data *soc;
- };
- 
--static const unsigned int mtk_pwm_reg_offset[] = {
-+static const unsigned int pwm_mediatek_reg_offset[] = {
- 	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
- };
- 
--static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
-+static inline struct pwm_mediatek_chip *
-+to_pwm_mediatek_chip(struct pwm_chip *chip)
- {
--	return container_of(chip, struct mtk_pwm_chip, chip);
-+	return container_of(chip, struct pwm_mediatek_chip, chip);
- }
- 
--static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static int pwm_mediatek_clk_enable(struct pwm_chip *chip,
-+				   struct pwm_device *pwm)
- {
--	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	int ret;
- 
- 	ret = clk_prepare_enable(pc->clk_top);
-@@ -94,45 +95,46 @@ static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	return ret;
- }
- 
--static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static void pwm_mediatek_clk_disable(struct pwm_chip *chip,
-+				     struct pwm_device *pwm)
- {
--	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 
- 	clk_disable_unprepare(pc->clk_pwms[pwm->hwpwm]);
- 	clk_disable_unprepare(pc->clk_main);
- 	clk_disable_unprepare(pc->clk_top);
- }
- 
--static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
--				unsigned int offset)
-+static inline u32 pwm_mediatek_readl(struct pwm_mediatek_chip *chip,
-+				     unsigned int num, unsigned int offset)
- {
--	return readl(chip->regs + mtk_pwm_reg_offset[num] + offset);
-+	return readl(chip->regs + pwm_mediatek_reg_offset[num] + offset);
- }
- 
--static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
--				  unsigned int num, unsigned int offset,
--				  u32 value)
-+static inline void pwm_mediatek_writel(struct pwm_mediatek_chip *chip,
-+				       unsigned int num, unsigned int offset,
-+				       u32 value)
- {
--	writel(value, chip->regs + mtk_pwm_reg_offset[num] + offset);
-+	writel(value, chip->regs + pwm_mediatek_reg_offset[num] + offset);
- }
- 
--static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			  int duty_ns, int period_ns)
-+static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			       int duty_ns, int period_ns)
- {
--	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
--	struct clk *clk = pc->clk_pwms[pwm->hwpwm];
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	u32 clkdiv = 0, cnt_period, cnt_duty, reg_width = PWMDWIDTH,
- 	    reg_thres = PWMTHRES;
- 	u64 resolution;
- 	int ret;
- 
--	ret = mtk_pwm_clk_enable(chip, pwm);
-+	ret = pwm_mediatek_clk_enable(chip, pwm);
-+
- 	if (ret < 0)
- 		return ret;
- 
- 	/* Using resolution in picosecond gets accuracy higher */
- 	resolution = (u64)NSEC_PER_SEC * 1000;
--	do_div(resolution, clk_get_rate(clk));
-+	do_div(resolution, clk_get_rate(pc->clk_pwms[pwm->hwpwm]));
- 
- 	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
- 	while (cnt_period > 8191) {
-@@ -143,7 +145,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	if (clkdiv > PWM_CLK_DIV_MAX) {
--		mtk_pwm_clk_disable(chip, pwm);
-+		pwm_mediatek_clk_disable(chip, pwm);
- 		dev_err(chip->dev, "period %d not supported\n", period_ns);
- 		return -EINVAL;
- 	}
-@@ -158,22 +160,22 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	}
- 
- 	cnt_duty = DIV_ROUND_CLOSEST_ULL((u64)duty_ns * 1000, resolution);
--	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
--	mtk_pwm_writel(pc, pwm->hwpwm, reg_width, cnt_period);
--	mtk_pwm_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
-+	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
-+	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
-+	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
- 
--	mtk_pwm_clk_disable(chip, pwm);
-+	pwm_mediatek_clk_disable(chip, pwm);
- 
- 	return 0;
- }
- 
--static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static int pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	u32 value;
- 	int ret;
- 
--	ret = mtk_pwm_clk_enable(chip, pwm);
-+	ret = pwm_mediatek_clk_enable(chip, pwm);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -184,29 +186,29 @@ static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	return 0;
- }
- 
--static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	u32 value;
- 
- 	value = readl(pc->regs);
- 	value &= ~BIT(pwm->hwpwm);
- 	writel(value, pc->regs);
- 
--	mtk_pwm_clk_disable(chip, pwm);
-+	pwm_mediatek_clk_disable(chip, pwm);
- }
- 
--static const struct pwm_ops mtk_pwm_ops = {
--	.config = mtk_pwm_config,
--	.enable = mtk_pwm_enable,
--	.disable = mtk_pwm_disable,
-+static const struct pwm_ops pwm_mediatek_ops = {
-+	.config = pwm_mediatek_config,
-+	.enable = pwm_mediatek_enable,
-+	.disable = pwm_mediatek_disable,
- 	.owner = THIS_MODULE,
- };
- 
--static int mtk_pwm_probe(struct platform_device *pdev)
-+static int pwm_mediatek_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node;
--	struct mtk_pwm_chip *pc;
-+	struct pwm_mediatek_chip *pc;
- 	struct resource *res;
- 	unsigned int npwms;
- 	int ret;
-@@ -268,7 +270,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pc);
- 
- 	pc->chip.dev = &pdev->dev;
--	pc->chip.ops = &mtk_pwm_ops;
-+	pc->chip.ops = &pwm_mediatek_ops;
- 	pc->chip.base = -1;
- 	pc->chip.npwm = npwms;
- 
-@@ -281,51 +283,51 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int mtk_pwm_remove(struct platform_device *pdev)
-+static int pwm_mediatek_remove(struct platform_device *pdev)
- {
--	struct mtk_pwm_chip *pc = platform_get_drvdata(pdev);
-+	struct pwm_mediatek_chip *pc = platform_get_drvdata(pdev);
- 
- 	return pwmchip_remove(&pc->chip);
- }
- 
--static const struct mtk_pwm_platform_data mt2712_pwm_data = {
-+static const struct pwm_mediatek_of_data mt2712_pwm_data = {
- 	.fallback_npwms = 8,
- 	.pwm45_fixup = false,
- };
- 
--static const struct mtk_pwm_platform_data mt7622_pwm_data = {
-+static const struct pwm_mediatek_of_data mt7622_pwm_data = {
- 	.fallback_npwms = 6,
- 	.pwm45_fixup = false,
- };
- 
--static const struct mtk_pwm_platform_data mt7623_pwm_data = {
-+static const struct pwm_mediatek_of_data mt7623_pwm_data = {
- 	.fallback_npwms = 5,
- 	.pwm45_fixup = true,
- };
- 
--static const struct mtk_pwm_platform_data mt7628_pwm_data = {
-+static const struct pwm_mediatek_of_data mt7628_pwm_data = {
- 	.fallback_npwms = 4,
- 	.pwm45_fixup = true,
- };
- 
--static const struct of_device_id mtk_pwm_of_match[] = {
-+static const struct of_device_id pwm_mediatek_of_match[] = {
- 	{ .compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data },
- 	{ .compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data },
- 	{ .compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data },
- 	{ .compatible = "mediatek,mt7628-pwm", .data = &mt7628_pwm_data },
- 	{ },
- };
--MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
-+MODULE_DEVICE_TABLE(of, pwm_mediatek_of_match);
- 
--static struct platform_driver mtk_pwm_driver = {
-+static struct platform_driver pwm_mediatek_driver = {
- 	.driver = {
--		.name = "mtk-pwm",
--		.of_match_table = mtk_pwm_of_match,
-+		.name = "pwm-mediatek",
-+		.of_match_table = pwm_mediatek_of_match,
- 	},
--	.probe = mtk_pwm_probe,
--	.remove = mtk_pwm_remove,
-+	.probe = pwm_mediatek_probe,
-+	.remove = pwm_mediatek_remove,
- };
--module_platform_driver(mtk_pwm_driver);
-+module_platform_driver(pwm_mediatek_driver);
- 
- MODULE_AUTHOR("John Crispin <blogic@openwrt.org>");
- MODULE_LICENSE("GPL");
--- 
-2.17.1
-
+Le 9/5/19 à 2:21 PM, Ludovic Barre a écrit :
+> From: Ludovic Barre <ludovic.barre@st.com>
+> 
+> This patch series adds busy detect for stm32 sdmmc variant.
+> Some adaptations are required:
+> -On sdmmc the data timer is started on data transfert
+> and busy state, so we must add hardware busy timeout support.
+> -Add busy_complete callback at mmci_host_ops to allow to define
+> a specific busy completion by variant.
+> -Add sdmmc busy_complete callback.
+> 
+> V6:
+> -mmci_start_command: set datatimer only on rsp_busy flag
+> (remove host->mrq->data).
+> -move max_busy_timeout in set_ios callback.
+> -typo fix: err_msk, clks on one lines.
+> 
+> V5:
+> -Replaces !cmd->data to !host->mrq->data to avoid overwrite
+>   of datatimer register by the first command (cmd23, without data) of
+>   SBC request.
+> 
+> V4:
+> -Re-work with busy_complete callback
+> -In series, move "mmc: mmci: add hardware busy timeout feature" in
+> first to simplify busy_complete prototype with err_msk parameter.
+> 
+> V3:
+> -rebase on latest mmc next
+> -replace re-read by status parameter.
+> 
+> V2:
+> -mmci_cmd_irq cleanup in separate patch.
+> -simplify the busy_detect_flag exclude
+> -replace sdmmc specific comment in
+> "mmc: mmci: avoid fake busy polling in mmci_irq"
+> to focus on common behavior
+> 
+> Ludovic Barre (3):
+>    mmc: mmci: add hardware busy timeout feature
+>    mmc: mmci: add busy_complete callback
+>    mmc: mmci: sdmmc: add busy_complete callback
+> 
+>   drivers/mmc/host/mmci.c             | 183 +++++++++++++++++-----------
+>   drivers/mmc/host/mmci.h             |   7 +-
+>   drivers/mmc/host/mmci_stm32_sdmmc.c |  38 ++++++
+>   3 files changed, 156 insertions(+), 72 deletions(-)
+> 
