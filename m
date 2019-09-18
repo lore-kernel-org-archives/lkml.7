@@ -2,145 +2,118 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C77C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967C2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EA2218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:34:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="WIpKRiWP"
+	by mail.kernel.org (Postfix) with ESMTP id 726A020665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbfIROeJ (ORCPT
+        id S1731103AbfIROhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:34:09 -0400
-Received: from mail-eopbgr1320121.outbound.protection.outlook.com ([40.107.132.121]:60336
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727056AbfIROeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:34:08 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fgpWR20cFw7I8bAMYVlC82vr23+t8f5PG8Kw4Ud/P8j/4UEdefuOE4HUKOV2R/6PuMOuifdzfvQnhcRx25fo3qc1mD1oPDfR+6CHjUQoApMwWN2PCCB4gdw1DmHkeYYzi6yl9zjQA7TplywkSEs8x0yj8Wx+O6ppRrLTc2N1hYCHGTdNjcClAw6m3hrpkOAJro5QkjD629gm0hyiRPF6C31YvUEaKg2JbZu6Nxh1ZcwebfQ/5DLW6g97Ycu2AvvsZ1d5qYojAIPv3DEYpFiI3HHSxg5/jmQWhS+CwyUjji9JF+gP89izrNf6jl6L0VAebCnXTISroOCqk2RjfPcJiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6YUooBcRdihS5xFS/3EQ5gOkc0Ng1eOm7f7IlkZggvg=;
- b=FdIoEB/RKB14HLIRW+xRRmr6xsCyjLkOrdj0jjsowV3obYeiDCb2k7Z2zPDV/nE2H2KQXR7X2I3onxn4PLZ7xauS7+k2ABdBJjdcOpXQIeyT9++xtKE/VA1w2R/VUt5cPQxZILx0n2pvStpRF2mJWKCzqzuq2Ui0uUyMzZtcvvQ7LaUdqpa1SlQNtYId5hcDPOrLMDbcJjDTtwdupzdvwf5YPEgrQc6GEaE9dLhwGskzEjr8M1E9YYBayggfYU1hksiiziOAPEutk0QQ2JFRL3D3mIcbMZXYWDb5GJnqROo77OxAzmh52OMvWzechTk2WQ/ltVx7/PBl67b1b6d5CA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6YUooBcRdihS5xFS/3EQ5gOkc0Ng1eOm7f7IlkZggvg=;
- b=WIpKRiWPmaGmFYoY0QaIroWqyRbyxnrsdMCGsHlZmj0M8XnN9JNhTwtZ4Y5IY3P99XzOZ1qVc0IhCDG+4Z9TAcpO0U78eDaj8F8Z1q6K1BlkGGQEDvcV9MsxGZKrSTQpET74utWrVAJvNv/VGXcCiz5Bf4ES+sMuCFzMIDewLbo=
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com (20.177.98.81) by
- TY2PR01MB2810.jpnprd01.prod.outlook.com (20.177.100.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2263.24; Wed, 18 Sep 2019 14:34:04 +0000
-Received: from TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a]) by TY2PR01MB2924.jpnprd01.prod.outlook.com
- ([fe80::7ce4:f502:8430:51a%7]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
- 14:34:04 +0000
-From:   Gareth Williams <gareth.williams.jx@renesas.com>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-CC:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>
-Subject: RE: DRM Driver implementation question
-Thread-Topic: DRM Driver implementation question
-Thread-Index: AdVslX1ZBzegHzojRVS64lgG04s8jgAenS2AABbmTEAALXtJgAAC+tRg
-Date:   Wed, 18 Sep 2019 14:34:04 +0000
-Message-ID: <TY2PR01MB2924FAE6E54718ED44E0E4ABDF8E0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-References: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
- <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <TY2PR01MB292423C617848A66F61B1027DF8F0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
- <20190918130331.GD6306@pendragon.ideasonboard.com>
-In-Reply-To: <20190918130331.GD6306@pendragon.ideasonboard.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=gareth.williams.jx@renesas.com; 
-x-originating-ip: [193.141.220.21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 192bd398-f14a-4b5e-93ed-08d73c4541a2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:TY2PR01MB2810;
-x-ms-traffictypediagnostic: TY2PR01MB2810:|TY2PR01MB2810:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB28109C96DF28036177A44E07DF8E0@TY2PR01MB2810.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 01644DCF4A
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(199004)(51444003)(189003)(7696005)(86362001)(6246003)(6916009)(3846002)(76176011)(99286004)(316002)(25786009)(486006)(6506007)(2906002)(26005)(102836004)(66946007)(6116002)(54906003)(66556008)(66446008)(64756008)(5660300002)(6436002)(476003)(186003)(55016002)(9686003)(71200400001)(4326008)(52536014)(3480700005)(305945005)(74316002)(8936002)(33656002)(256004)(478600001)(71190400001)(81166006)(14454004)(76116006)(81156014)(66476007)(229853002)(7736002)(446003)(66066001)(11346002)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:TY2PR01MB2810;H:TY2PR01MB2924.jpnprd01.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: renesas.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V4OZMMhzxQgh86xI8uI2/yCEfd4Au5/shb44840SGwbs/3FO2lauSL18d2Npjvok69ekvKqs/7XKO7I6IZuFxh6FDftu6ACDj24kL7TLZ+4kniS1ZdBdSFkjFWzAr92HhcvhvgpUrdFpcidPcbJO6tLJc0kNI0WYWRj84UwYtyfYeEIOHVaG8me3qFuLe/snBp+BDN7JvV34p0Ai14Cl/l7gM4O0wgpDuH8uLXALZ6hA5jsHsi1UBHwVyhj0M9HGm5dJFZ/muEN+SfyAsBt3HHgs9oHu5NqEkg1cmMIXHKwyDUmKtyMPGBplBeIY5/LqCfkPjij0sJSIzAblJ6DzusThaSkodXIhvvo7ZC4ir98VP6Kp+VTbYihJ9JlgsZh7KxKKebsjcdr8e2Ys3FqyGODGN6zFrkjpfFv7bJhcK1A=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Wed, 18 Sep 2019 10:37:48 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34886 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725902AbfIROhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:37:48 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BB26AA3D38D;
+        Wed, 18 Sep 2019 14:37:47 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5FA5A1001B36;
+        Wed, 18 Sep 2019 14:37:37 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 22:37:33 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Sagi Grimberg <sagi@grimberg.me>
+Cc:     Keith Busch <keith.busch@intel.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-scsi@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Long Li <longli@microsoft.com>,
+        John Garry <john.garry@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Jens Axboe <axboe@fb.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 1/4] softirq: implement IRQ flood detection mechanism
+Message-ID: <20190918143732.GA19364@ming.t460p>
+References: <dd96def4-1121-afbe-2431-9e516a06850c@linaro.org>
+ <6f3b6557-1767-8c80-f786-1ea667179b39@acm.org>
+ <2a8bd278-5384-d82f-c09b-4fce236d2d95@linaro.org>
+ <20190905090617.GB4432@ming.t460p>
+ <6a36ccc7-24cd-1d92-fef1-2c5e0f798c36@linaro.org>
+ <20190906014819.GB27116@ming.t460p>
+ <ffefcfa0-09b6-9af5-f94e-8e7ddd2eef16@linaro.org>
+ <6eb2a745-7b92-73ce-46f5-cc6a5ef08abc@grimberg.me>
+ <20190907000100.GC12290@ming.t460p>
+ <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 192bd398-f14a-4b5e-93ed-08d73c4541a2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 14:34:04.5589
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HT+0cdxqkahTPYmJcH3H6lCPMONBRI02HruhZe/C77F2Y7GNGGa/JXHnQGURXsqiaq81L1HwFpmJLOreL6w043Tgx9FRTWU33vvvHgVy93I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB2810
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5685543-8cd5-6c6a-5b80-c77ef09c6b3b@grimberg.me>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.68]); Wed, 18 Sep 2019 14:37:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTGF1cmVudCwNCg0KT24gV2VkLCBTZXAgMTgsIDIwMTkgYXQgMDQ6MDQ6MzRQTSArMDAwMCwg
-TGF1cmVudCBQaW5jaGFydCB3cm90ZToNCj4gDQo+IEhpIEdhcmV0aCwNCj4gDQo+IFNvcnJ5IGZv
-ciB0aGUgZGVsYXllZCByZXNwb25zZSwgSSB3YXMgdHJhdmVsbGluZyBmb3IgdGhlIExpbnV4IA0K
-PiBQbHVtYmVycyBDb25mZXJlbmNlIGZvbGxvd2VkIGJ5IGEgY29kZSBjYW1wLg0KPiANCj4gT24g
-VHVlLCBTZXAgMTcsIDIwMTkgYXQgMDM6Mjc6MzRQTSArMDAwMCwgR2FyZXRoIFdpbGxpYW1zIHdy
-b3RlOg0KPiA+IEhpIFlvc2hpaGlybywNCj4gPg0KPiA+IFRoaXMgbG9va3MgbGlrZSBhbiBlbGVn
-YW50IHNvbHV0aW9uIHRoYXQgSSBjYW4gaW1wbGVtZW50Lg0KPiA+IE1hbnkgdGhhbmtzIGZvciBw
-b2ludGluZyBtZSBpbiBhIGdvb2QgZGlyZWN0aW9uLg0KPiA+DQo+ID4gPiBGcm9tOiBZb3NoaWhp
-cm8gU2hpbW9kYSwgU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDE3LCAyMDE5IDA1OjM5IA0KPiA+
-ID4gUE0NCj4gPiA+DQo+ID4gPiBIaSBHYXJldGgsDQo+ID4gPg0KPiA+ID4gPiBGcm9tOiBHYXJl
-dGggV2lsbGlhbXMsIFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDE2LCAyMDE5IDEwOjU2IFBNDQo+
-ID4gPiA+DQo+ID4gPiA+IEhpIExhdXJlbnQvS2llcmFuLA0KPiA+ID4gPg0KPiA+ID4gPiBJIG5l
-ZWQgdG8gdXBzdHJlYW0gYSBkcml2ZXIgZm9yIGEgZGlzcGxheSBjb250cm9sbGVyIHRoYXQgd2l0
-aGluIA0KPiA+ID4gPiBpdHMgcmVnaXN0ZXJzIG1lbW9yeSByZWdpb24gY29udGFpbnMgcmVnaXN0
-ZXJzIHJlbGF0ZWQgdG8gYSBQV00gDQo+ID4gPiA+IGRldmljZS4gVGhlIFBXTSBkZXZpY2UgaXMg
-Zm9yIGNvbnRyb2xsaW5nIHRoZSBiYWNrbGlnaHQgb2YgdGhlIA0KPiA+ID4gPiBkaXNwbGF5Lg0K
-PiA+ID4gPg0KPiA+ID4gPiBJZGVhbGx5LCBJIHdvdWxkIGxpa2UgdG8gY3JlYXRlIGEgc2VwYXJh
-dGVkIGRyaXZlciBmb3IgdGhlIFBXTSwgDQo+ID4gPiA+IHNvIHRoYXQgSSBjYW4gcmUtdXNlICJw
-d20tYmFja2xpZ2h0IiwgYnV0IHNpbmNlIHRoZSByZWdpc3RlcnMgDQo+ID4gPiA+IGZvciB0aGUg
-UFdNIGFyZSByaWdodCBpbiB0aGUgbWlkZGxlIG9mIHRoZSByZWdpc3RlcnMgZm9yIHRoZSANCj4g
-PiA+ID4gZGlzcGxheSBjb250cm9sbGVyIEkgd291bGQgbmVlZCB0byBpb3JlbWFwIHRoZSBtZW1v
-cnkgcmVnaW9uIGZvciANCj4gPiA+ID4gdGhlIFBXTSByZWdpc3RlcnMgcmVnaW9uIHR3aWNlLCBv
-bmNlIGZyb20gdGhlIGRpc3BsYXkgY29udHJvbGxlciANCj4gPiA+ID4gZHJpdmVyLCBhbmQgb25j
-ZSBmcm9tIHRoZSBQV00gZHJpdmVyLg0KPiA+ID4gPg0KPiA+ID4gPiBEbyB5b3UgdGhpbmsgdGhh
-dCB0aGUgZG91YmxlIGlvcmVtYXAgd291bGQgYmUgYWNjZXB0YWJsZSB1cHN0cmVhbT8NCj4gPiA+
-DQo+ID4gPiBJIHRoaW5rIHRoYXQgYW4gTUZEIGRyaXZlciBjYW4gc3VwcG9ydCBzdWNoIGhhcmR3
-YXJlLiBJIGNoZWNrZWQgDQo+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bWZkIHJvdWdobHksIGFuZCB0aGVuIA0KPiA+ID4gYXRtZWwtaGxjZGMudHh0IHNlZW1zIHRvIGhh
-dmUgYSBkaXNwbGF5IGNvbnRyb2xsZXIgYW5kIGEgUFdNIGRldmljZS4NCj4gDQo+IFdoaWxlIE1G
-RCBzaG91bGQgdGVjaG5pY2FsbHkgd29yaywgSSB0aGluayBpdCdzIHF1aXRlIG92ZXJraWxsLiBZ
-b3UgDQo+IGNvdWxkIGluc3RlYWQgYnVuZGxlIGJvdGggdGhlIGRpc3BsYXkgY29udHJvbGxlciBh
-bmQgdGhlIFBXTSANCj4gY29udHJvbGxlciBpbiB0aGUgc2FtZSBkcml2ZXIuIFRoZSBkcml2ZXIg
-d291bGQgY3JlYXRlIGJvdGggYSBEUk0vS01TIA0KPiBkZXZpY2UgYW5kIGEgUFdNIGRldmljZS4g
-VGhlIERUIG5vZGUgZm9yIHlvdXIgZGV2aWNlIHdvdWxkIGNvbnRhaW4gYSANCj4gI3B3bS1jZWxs
-cyBwcm9wZXJ0eSBhbmQgY291bGQgdGh1cyBiZSByZWZlcmVuY2VkIGFzIGEgUFdNIGNvbnRyb2xs
-ZXIgDQo+IGJ5IHRoZSBiYWNrbGlnaHQgdXNpbmcgdGhlIHB3bXMgcHJvcGVydHkuDQpUaGlzIG1h
-a2VzIHNlbnNlLCBtYW55IHRoYW5rcyBmb3IgcG9pbnRpbmcgbWUgaW4gdGhlIGRpcmVjdGlvbi4N
-Cg0KPiANCj4gLS0NCj4gUmVnYXJkcywNCj4gDQo+IExhdXJlbnQgUGluY2hhcnQNCg0KS2luZCBS
-ZWdhcmRzLA0KDQpHYXJldGggV2lsbGlhbXMNCg==
+On Mon, Sep 09, 2019 at 08:10:07PM -0700, Sagi Grimberg wrote:
+> Hey Ming,
+> 
+> > > > Ok, so the real problem is per-cpu bounded tasks.
+> > > > 
+> > > > I share Thomas opinion about a NAPI like approach.
+> > > 
+> > > We already have that, its irq_poll, but it seems that for this
+> > > use-case, we get lower performance for some reason. I'm not
+> > > entirely sure why that is, maybe its because we need to mask interrupts
+> > > because we don't have an "arm" register in nvme like network devices
+> > > have?
+> > 
+> > Long observed that IOPS drops much too by switching to threaded irq. If
+> > softirqd is waken up for handing softirq, the performance shouldn't
+> > be better than threaded irq.
+> 
+> Its true that it shouldn't be any faster, but what irqpoll already has
+> and we don't need to reinvent is a proper budgeting mechanism that
+> needs to occur when multiple devices map irq vectors to the same cpu
+> core.
+> 
+> irqpoll already maintains a percpu list and dispatch the ->poll with
+> a budget that the backend enforces and irqpoll multiplexes between them.
+> Having this mechanism in irq (hard or threaded) context sounds
+> unnecessary a bit.
+> 
+> It seems like we're attempting to stay in irq context for as long as we
+> can instead of scheduling to softirq/thread context if we have more than
+> a minimal amount of work to do. Without at least understanding why
+> softirq/thread degrades us so much this code seems like the wrong
+> approach to me. Interrupt context will always be faster, but it is
+> not a sufficient reason to spend as much time as possible there, is it?
+
+If extra latency is added in IO completion path, this latency will be
+introduced in the submission path, because the hw queue depth is fixed,
+which is often small. Especially in case of multiple submission vs.
+single(shared) completion, the whole hw queue tags can be exhausted
+easily. 
+
+I guess no such effect for networking IO.
+
+> 
+> We should also keep in mind, that the networking stack has been doing
+> this for years, I would try to understand why this cannot work for nvme
+> before dismissing.
+
+The above may be one reason.
+
+Thanks,
+Ming
