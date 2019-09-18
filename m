@@ -2,157 +2,232 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC172C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2520C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317C20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:13:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880E420665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:16:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C75JTDZp"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YhdXqXno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731177AbfIRRNE (ORCPT
+        id S1732065AbfIRRQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:13:04 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40046 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727329AbfIRRNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:13:04 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x127so397114pfb.7;
-        Wed, 18 Sep 2019 10:13:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z3AG3hy/5dpx2Yp8USWggSMlQzBStZTVzhzTj060Iy0=;
-        b=C75JTDZpiXZnsmMy/ZO7GjGKIRHgbgGlm+eEpB2AP93cikxGsrYhxO2UUAIgeNdyPO
-         v3F+ipqiptbfe3wY6OuqzfJLF1ZKfAnF1unIOqEHHB1kntycULtOVKJ+k/1PIhptPuM1
-         7qdE86eS0UcioOKCGAKXiyLDLiofpvt53DEzZdA8y6HqkKTfepe4ORWYwSoSLEQmV/ZX
-         zxM1dPUR2dwksSoo5lmPTljdHJU+qbCWf8pFx2sV6x6rBptNSmlo/bxhm6b6q1FNZlEo
-         dHkcGjy45zp/Yh7KqmwqkZ3s6yNBruF4CCJE/YzV47E3z80hs+hTAbvfBOrGu12XQTJf
-         Fi6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Z3AG3hy/5dpx2Yp8USWggSMlQzBStZTVzhzTj060Iy0=;
-        b=Kubwpvv7NMnHiQGH5mGMCRS5GwyWNRL8E0AxlIggmP+VcrnzU48ZvxKjHxbJEb5Nz2
-         eZI4R2Ao5TwkRwH/hTjxQHmgx5a765BngxFL+HTfc+AZEqATOqala0HxCZfgMrVfrcUo
-         bC59P+wP1XUAfCxVRpZC0/R+KYRB7u0w4xKLSo3HZHOUH5gbN1fwA7aOPVLvkIMZxm0A
-         6j1udsU+j7B/xH7CFo7ZLcKpFKZDLzEpMhSWHlO77FR5qHDod+fX1cHXmZ373zAN1S1U
-         Q3zKrGb2SZ5ktyfhV/n8is58gZNsF5JRvyLVVnql5sAS2Yc2sbdhTDqWn3ddIXeQubA1
-         ofjQ==
-X-Gm-Message-State: APjAAAXpmSF1OWPeDb1EKwSA0c3g7cYOD3FHLBm1xpM6BTiDt3He4uj3
-        CdO6kvQI/r8q11za1R1MLqA=
-X-Google-Smtp-Source: APXvYqz/ROs7/NJEQOqgMTCGydxxZ8UBYhcp2YW/POUcVgZJgNDWBVWbDzApbrtP2x/MJ4zmQkWCRQ==
-X-Received: by 2002:a62:1c97:: with SMTP id c145mr3132447pfc.168.1568826782983;
-        Wed, 18 Sep 2019 10:13:02 -0700 (PDT)
-Received: from [10.67.49.31] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id 127sm10899226pfc.115.2019.09.18.10.13.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 10:13:02 -0700 (PDT)
-Subject: Re: [PATCH] hwrng: iproc-rng200 - Use
- devm_platform_ioremap_resource() in iproc_rng200_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Matt Mackall <mpm@selenic.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-References: <0ecb0679-0558-6cbe-af2f-6ee9122a4a7e@web.de>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <22a01133-be69-e13b-b382-f44ac61020e1@gmail.com>
-Date:   Wed, 18 Sep 2019 10:13:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <0ecb0679-0558-6cbe-af2f-6ee9122a4a7e@web.de>
-Content-Type: text/plain; charset=utf-8
+        Wed, 18 Sep 2019 13:16:03 -0400
+Received: from mail-eopbgr60083.outbound.protection.outlook.com ([40.107.6.83]:6305
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726799AbfIRRQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:16:03 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VFck5S15JJiV7PN/BFJJ8s3cr3UVgDoVqWOL7+c03XssBrZCpox3OTZG/Oi/6Bid6Kk7osy4qmzkBhEGl+E5+OOp+H3wbmuT2X6PqBiv0g7YA+UAm6Fi2SzymtucehCiXwxaa+V089iOOHPbpVTxngfLhBMdp+2mydjSe0d91ZAAtiWwvStK/m2mOhUdsNbT8foDvVxGnId2EA6FPIIe3y0kjgJykF2guxSD59EYzx4Rfvin7d7+l62Gjb3Ab65U1eEakR83/KVMo5vWuwL5XinfzHARMDuCgquz/zZD49S5WLhB0G1Ed82/IgY8FRnoxh59FeVfumdxbBBbFev/zQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y9dczobqtw8rbBsi6y3LaHyll5Q64WXKqJNZRuiPQ5U=;
+ b=WXhF6DHdmKLeQfzZ12IeuSB2XlM/9uwZJ0oF2SRCpPiZhAqzmfEB8UGH0HJU/nV/df8ldGUzypmbAq4y+gp/9+6Iu6EypIAC4ClufxY/b7FXZ8AuQuz4NHfA/rU2cmgJZSH9VefAHANI3NLk7hDPIgpUQsMe4D5jkgbyzyMvKxKg+oiiUaLxYsQG7sKFRJs7JxBUslBtO73B27Mf7psSpL9hYurSBeKxzptB1hNIbtWbBgZ9SBP48j4baQc36ZarQI56Ph5T/OEdz6jQ4/IwVzhSGeo/BFuNGLSnYTFArO0Up8/ATbtFuMQja9JRpX660HvtXEC/XLtgN78YYUdLVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y9dczobqtw8rbBsi6y3LaHyll5Q64WXKqJNZRuiPQ5U=;
+ b=YhdXqXnoJ2DeVUi99LPNQzCj9j+VwjJShrMCxSNQCdvPCm33itUthSeQ8Qo5EHgDzHELDwBGxmZysqoh3/TwWFdRrCnB1LyVU8ZMh9mX8jO3XOaXXp8P1BGLKwy2a42Vn1Kbhe9+sGmFSwsHE60Z7cdyYBizGoovT6tr3/xXF5U=
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
+ AM0PR05MB6388.eurprd05.prod.outlook.com (20.179.35.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.18; Wed, 18 Sep 2019 17:15:58 +0000
+Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::bc4c:7c4c:d3e2:8b28]) by AM0PR05MB4866.eurprd05.prod.outlook.com
+ ([fe80::bc4c:7c4c:d3e2:8b28%6]) with mapi id 15.20.2263.023; Wed, 18 Sep 2019
+ 17:15:58 +0000
+From:   Parav Pandit <parav@mellanox.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] Introduce variable length mdev alias
+Thread-Topic: [PATCH v3 0/5] Introduce variable length mdev alias
+Thread-Index: AQHVYUZdAS6KYIr8SUO1vQ8myuXcNacvvq6AgAIHUSA=
+Date:   Wed, 18 Sep 2019 17:15:58 +0000
+Message-ID: <AM0PR05MB4866EA74D8C47F28C7435B0CD18E0@AM0PR05MB4866.eurprd05.prod.outlook.com>
+References: <20190826204119.54386-1-parav@mellanox.com>
+        <20190902042436.23294-1-parav@mellanox.com>
+ <20190917121357.02480c09.cohuck@redhat.com>
+In-Reply-To: <20190917121357.02480c09.cohuck@redhat.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=parav@mellanox.com; 
+x-originating-ip: [208.176.44.194]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 068a336b-8ebb-44bc-6ad9-08d73c5bdf70
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB6388;
+x-ms-traffictypediagnostic: AM0PR05MB6388:|AM0PR05MB6388:
+x-ms-exchange-purlcount: 3
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR05MB6388F295205372DD6C405C71D18E0@AM0PR05MB6388.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2582;
+x-forefront-prvs: 01644DCF4A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(39860400002)(366004)(376002)(136003)(189003)(199004)(13464003)(54534003)(51914003)(8936002)(7736002)(66946007)(478600001)(66446008)(486006)(8676002)(66066001)(316002)(33656002)(476003)(25786009)(54906003)(4326008)(229853002)(81156014)(81166006)(52536014)(2906002)(6306002)(55016002)(76176011)(3846002)(86362001)(26005)(446003)(11346002)(102836004)(186003)(305945005)(6246003)(6506007)(74316002)(53546011)(71190400001)(9686003)(66476007)(6916009)(14444005)(256004)(64756008)(966005)(66556008)(71200400001)(76116006)(99286004)(7696005)(5660300002)(6436002)(6116002)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6388;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: H/LqQOlhkHlsgw0qbJE2eUi/Q+f9X06e0HoQvGfm7fGlAAkV+wub+sCnuOEooUEpcD29OBQqpl3M66LVLZV7rhODtouCUIMkmRb6hnJ07nyOWZ3sV2mXtWIyKT16UpVEMteg9e2E7vYVJbzUt5VLqZGSgpZzSQ5SLJPtZbAmHiG/5YWOUVGSOIXWnojwizbcX5XLFtjs3OV2VZTQaimXp7FGWuzPMeNk4bTwZEyePDcUa6/JYc+rPw14JjGTO10U5egE4QyCl7Li9xdBU/VmZlksPTIrH7Hf5f9jGIdLIHnHEQtJml7u6+ce3UNICT5ExwZzCaj3LqCCCartzlXlesF6mQzfcqWKOqzC1sA3yFkhgBdNpY/c17+XfWyYtTlTMO/Ct1I0AMDKxKtMYgIbOs9PUpmIYAmbg68OK8Lw8+8=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 068a336b-8ebb-44bc-6ad9-08d73c5bdf70
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Sep 2019 17:15:58.3332
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Xlz5265V5Pji2UY6vs5lkpsGIzxkgwfOvTAsxtvEeL42MPxeZ/kGWbZ6QPM+hwUId9Xk8bhJMtVygGhBKngelQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6388
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/18/19 12:19 AM, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 18 Sep 2019 09:09:22 +0200
-> 
-> Simplify this function implementation by using a known wrapper function.
-> 
-> This issue was detected by using the Coccinelle software.
-> 
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Hi Cornelia,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+> -----Original Message-----
+> From: Cornelia Huck <cohuck@redhat.com>
+> Sent: Tuesday, September 17, 2019 5:14 AM
+> To: Parav Pandit <parav@mellanox.com>
+> Cc: alex.williamson@redhat.com; Jiri Pirko <jiri@mellanox.com>;
+> kwankhede@nvidia.com; davem@davemloft.net; kvm@vger.kernel.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org
+> Subject: Re: [PATCH v3 0/5] Introduce variable length mdev alias
+>=20
+> On Sun,  1 Sep 2019 23:24:31 -0500
+> Parav Pandit <parav@mellanox.com> wrote:
+>=20
+> > To have consistent naming for the netdevice of a mdev and to have
+> > consistent naming of the devlink port [1] of a mdev, which is formed
+> > using phys_port_name of the devlink port, current UUID is not usable
+> > because UUID is too long.
+> >
+> > UUID in string format is 36-characters long and in binary 128-bit.
+> > Both formats are not able to fit within 15 characters limit of netdev
+> > name.
+> >
+> > It is desired to have mdev device naming consistent using UUID.
+> > So that widely used user space framework such as ovs [2] can make use
+> > of mdev representor in similar way as PCIe SR-IOV VF and PF representor=
+s.
+> >
+> > Hence,
+> > (a) mdev alias is created which is derived using sha1 from the mdev nam=
+e.
+> > (b) Vendor driver describes how long an alias should be for the child
+> > mdev created for a given parent.
+> > (c) Mdev aliases are unique at system level.
+> > (d) alias is created optionally whenever parent requested.
+> > This ensures that non networking mdev parents can function without
+> > alias creation overhead.
+> >
+> > This design is discussed at [3].
+> >
+> > An example systemd/udev extension will have,
+> >
+> > 1. netdev name created using mdev alias available in sysfs.
+> >
+> > mdev UUID=3D83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
+> > mdev 12 character alias=3Dcd5b146a80a5
+> >
+> > netdev name of this mdev =3D enmcd5b146a80a5 Here en =3D Ethernet link =
+m =3D
+> > mediated device
+> >
+> > 2. devlink port phys_port_name created using mdev alias.
+> > devlink phys_port_name=3Dpcd5b146a80a5
+> >
+> > This patchset enables mdev core to maintain unique alias for a mdev.
+> >
+> > Patch-1 Introduces mdev alias using sha1.
+> > Patch-2 Ensures that mdev alias is unique in a system.
+> > Patch-3 Exposes mdev alias in a sysfs hirerchy, update Documentation
+> > Patch-4 Introduces mdev_alias() API.
+> > Patch-5 Extends mtty driver to optionally provide alias generation.
+> > This also enables to test UUID based sha1 collision and trigger error
+> > handling for duplicate sha1 results.
+> >
+> > [1] http://man7.org/linux/man-pages/man8/devlink-port.8.html
+> > [2] https://docs.openstack.org/os-vif/latest/user/plugins/ovs.html
+> > [3] https://patchwork.kernel.org/cover/11084231/
+> >
+> > ---
+> > Changelog:
+> > v2->v3:
+> >  - Addressed comment from Yunsheng Lin
+> >  - Changed strcmp() =3D=3D0 to !strcmp()
+> >  - Addressed comment from Cornelia Hunk
+> >  - Merged sysfs Documentation patch with syfs patch
+> >  - Added more description for alias return value
+> > v1->v2:
+> >  - Corrected a typo from 'and' to 'an'
+> >  - Addressed comments from Alex Williamson
+> >  - Kept mdev_device naturally aligned
+> >  - Added error checking for crypt_*() calls
+> >  - Moved alias NULL check at beginning
+> >  - Added mdev_alias() API
+> >  - Updated mtty driver to show example mdev_alias() usage
+> >  - Changed return type of generate_alias() from int to char*
+> > v0->v1:
+> >  - Addressed comments from Alex Williamson, Cornelia Hunk and Mark
+> > Bloch
+> >  - Moved alias length check outside of the parent lock
+> >  - Moved alias and digest allocation from kvzalloc to kzalloc
+> >  - &alias[0] changed to alias
+> >  - alias_length check is nested under get_alias_length callback check
+> >  - Changed comments to start with an empty line
+> >  - Added comment where alias memory ownership is handed over to mdev
+> > device
+> >  - Fixed cleaunup of hash if mdev_bus_register() fails
+> >  - Updated documentation for new sysfs alias file
+> >  - Improved commit logs to make description more clear
+> >  - Fixed inclusiong of alias for NULL check
+> >  - Added ratelimited debug print for sha1 hash collision error
+> >
+> > Parav Pandit (5):
+> >   mdev: Introduce sha1 based mdev alias
+> >   mdev: Make mdev alias unique among all mdevs
+> >   mdev: Expose mdev alias in sysfs tree
+> >   mdev: Introduce an API mdev_alias
+> >   mtty: Optionally support mtty alias
+> >
+> >  .../driver-api/vfio-mediated-device.rst       |   9 ++
+> >  drivers/vfio/mdev/mdev_core.c                 | 142 +++++++++++++++++-
+> >  drivers/vfio/mdev/mdev_private.h              |   5 +-
+> >  drivers/vfio/mdev/mdev_sysfs.c                |  26 +++-
+> >  include/linux/mdev.h                          |   5 +
+> >  samples/vfio-mdev/mtty.c                      |  13 ++
+> >  6 files changed, 190 insertions(+), 10 deletions(-)
+> >
+>=20
+> The patches on their own look sane (and I gave my R-b), but the consumer =
+of
+> this new API should be ready before this is merged, as already discussed =
+below.
+
+Thanks for the review. I will send v4 here to address all comments and to a=
+dd your R-b tag.
+I am waiting for Saeed to post other prep series of mlx5_core to be merged =
+before I post actual consumer series, as it depends on it.
+I will also drop the mtty sample patch and change-log to avoid confusion wi=
+th versions when I combine them with consumer series.
+
