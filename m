@@ -2,100 +2,214 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CEBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16AECC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F377A21848
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA0F20856
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 03:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXmh30TE"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="IBk+WLtp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbfIRDmk (ORCPT
+        id S1728355AbfIRD52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 23:42:40 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:35898 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728301AbfIRDmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 23:42:39 -0400
-Received: by mail-pf1-f195.google.com with SMTP id y22so3456252pfr.3;
-        Tue, 17 Sep 2019 20:42:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GbKlbpTFe+CN6SKqbKlc9mQcgb7sBfZRnKgAQN3AI1c=;
-        b=BXmh30TEdIEExjRnV42l+vfzdAPAD/riGCZ7IGy53Z0oadUQcEpZgqiw024GpCiSq8
-         NcizBJivS4lGx4OFb7vZPgLvHK8tM/KgFGWseCGnc0Jq7rALDywN/Inxh+NR32tUJKby
-         7+cbX14kBGQ/C+JTIUDbxcnQeYbv9b7du5xjArn7Fz9gc52iX0hXQXy91a7hKR6vhP4i
-         eCQTiL+hpsslW1kg5MoLRgQu61dcQnBf/X0i+dg7irCtegc7acCSboWsHkp4rNTnpyx3
-         lG9ZuPq4a8uvsV+nEI8o2dvsvrGxw67x10BLJLSJCEbnqe9/zZ7HKZnVXiKCaAnNrCJc
-         n/Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GbKlbpTFe+CN6SKqbKlc9mQcgb7sBfZRnKgAQN3AI1c=;
-        b=IjVFzYBBlE2VIZ32C2wxPLjRQc1hBoExXRtDUuuda29moJ44rmFn+Fm6OlDV3JSuMf
-         S+siG5xEBTXEd1+TItfktoW7jfmrLIiHWin3yiq0Lsh/LyIXrA86dhOzCXPbS36hAORv
-         yUhgnIj95jxsBLtErl2mYzJq1e0XGD3+jleSu3O4r1QKxYIdqiski8Li5lfjoRmH40VM
-         Se4b627V6r5M6cPPk1q71N8Q5v7nFrXSDqmpRptUaQeP0OItijZ1PjWaP75RhihQnEfL
-         6mjpyYj9Yk6I4eO+3P7JTFCu/FHGx4PC3Y9uYIh+GuWvvtuk1mbkgZ5ZgRBiS1PrXpNN
-         pnJA==
-X-Gm-Message-State: APjAAAX4jWAAenDJEZSNqV6iyBRcpaJ0kEPJs0iafV+Y0ZS/eS5OdrCa
-        /ZMv/JV6DNUxfjGApuYOjWU=
-X-Google-Smtp-Source: APXvYqy08BeDDvIm2kVHdHR9PG1EFVLBSMzaosfyRmNnZq/cEClwPDdxo8DDn68lUaEDauBJgWoLBw==
-X-Received: by 2002:a62:1402:: with SMTP id 2mr1920506pfu.226.1568778159141;
-        Tue, 17 Sep 2019 20:42:39 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id n21sm652294pjo.21.2019.09.17.20.42.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Sep 2019 20:42:38 -0700 (PDT)
-Date:   Tue, 17 Sep 2019 20:42:35 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Jianyong Wu <jianyong.wu@arm.com>
-Cc:     netdev@vger.kernel.org, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, maz@kernel.org,
-        Mark.Rutland@arm.com, Will.Deacon@arm.com, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, Steve.Capper@arm.com,
-        Kaly.Xin@arm.com, justin.he@arm.com, nd@arm.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 3/6] Timer: expose monotonic clock and counter value
-Message-ID: <20190918034235.GA1469@localhost>
-References: <20190917112430.45680-1-jianyong.wu@arm.com>
- <20190917112430.45680-4-jianyong.wu@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190917112430.45680-4-jianyong.wu@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 17 Sep 2019 23:57:28 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:40749 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbfIRD51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 23:57:27 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 46Y5ln1MXGz9txbC;
+        Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=IBk+WLtp; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id uanmfOwyGgga; Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 46Y5ln0JPqz9txbB;
+        Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1568779045; bh=DjjxeW86C0ODfIJF5VKp+Ofb5qrXApWjbAdSnJK9NbQ=;
+        h=From:Subject:To:Cc:Date:From;
+        b=IBk+WLtphV7YYSvDCMT1vA2PqR1dsebxFCxrfH3DLntUXV3SoH7Z6ijMixukKnuop
+         Xhx1ib8rV8kQCPzjmxlGQJZsSnH0InLncMRO7pE1BarKfCEUrG++ZYOogtAdlzHyB3
+         oC572I+TzM8MX9aT/wxBdPgRV8Qd7rEmAsprnw8I=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AC4C68B7B4;
+        Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id RE9OmZD8u0Ta; Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+Received: from pc16032vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6B87C8B7B0;
+        Wed, 18 Sep 2019 05:57:25 +0200 (CEST)
+Received: by pc16032vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 2A83B69881; Wed, 18 Sep 2019 03:57:25 +0000 (UTC)
+Message-Id: <54e363e268a5b391ed69ca71ee01403d186d37a6.1568778945.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 1/2] powerpc/irq: bring back ksp_limit management in C
+ functions.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        segher@kernel.crashing.org, npiggin@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Wed, 18 Sep 2019 03:57:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 07:24:27AM -0400, Jianyong Wu wrote:
-> A number of PTP drivers (such as ptp-kvm) are assuming what the
-> current clock source is, which could lead to interesting effects on
-> systems where the clocksource can change depending on external events.
-> 
-> For this purpose, add a new API that retrives both the current
-> monotonic clock as well as its counter value.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> ---
->  include/linux/timekeeping.h |  3 +++
->  kernel/time/timekeeping.c   | 13 +++++++++++++
->  2 files changed, 16 insertions(+)
+Commit cbc9565ee826 ("powerpc: Remove ksp_limit on ppc64") moved
+PPC32 ksp_limit handling in assembly functions call_do_softirq()
+and call_do_irq() as they are different for PPC32 and PPC64.
 
-For core time keeping changes, you must CC lkml, tglx, and John Stultz.
+In preparation of replacing these functions by inline assembly,
+partialy revert that commit to bring back ksp_limit assignment
+in the callers.
 
-Thanks,
-Richard
+To get and set ksp_limit without a forest of #ifdefs CONFIG_PPC32,
+use helpers that will void on PPC64.
+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+---
+v2: added forward declaration of struct task_struct to avoid build failure.
+---
+ arch/powerpc/include/asm/irq.h | 23 +++++++++++++++++++++++
+ arch/powerpc/kernel/irq.c      | 14 +++++++++++++-
+ arch/powerpc/kernel/misc_32.S  | 14 --------------
+ 3 files changed, 36 insertions(+), 15 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index 814dfab7e392..70922661450e 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -64,5 +64,28 @@ extern void __do_irq(struct pt_regs *regs);
+ 
+ int irq_choose_cpu(const struct cpumask *mask);
+ 
++struct task_struct;
++
++#ifdef CONFIG_PPC32
++static inline unsigned long get_ksp_limit(struct task_struct *tsk)
++{
++	return tsk->thread.ksp_limit;
++}
++
++static inline void set_ksp_limit(struct task_struct *tsk, unsigned long limit)
++{
++	tsk->thread.ksp_limit = limit;
++}
++#else
++static inline unsigned long get_ksp_limit(struct task_struct *tsk)
++{
++	return 0;
++}
++
++static inline void set_ksp_limit(struct task_struct *tsk, unsigned long limit)
++{
++}
++#endif
++
+ #endif /* _ASM_IRQ_H */
+ #endif /* __KERNEL__ */
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index 5645bc9cbc09..04204be49577 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -646,6 +646,7 @@ void do_IRQ(struct pt_regs *regs)
+ {
+ 	struct pt_regs *old_regs = set_irq_regs(regs);
+ 	void *cursp, *irqsp, *sirqsp;
++	unsigned long saved_ksp_limit = get_ksp_limit(current);
+ 
+ 	/* Switch to the irq stack to handle this */
+ 	cursp = (void *)(current_stack_pointer() & ~(THREAD_SIZE - 1));
+@@ -658,9 +659,15 @@ void do_IRQ(struct pt_regs *regs)
+ 		set_irq_regs(old_regs);
+ 		return;
+ 	}
++	/* Adjust the stack limit */
++	set_ksp_limit(current, (unsigned long)irqsp);
++
+ 	/* Switch stack and call */
+ 	call_do_irq(regs, irqsp);
+ 
++	/* Restore stack limit */
++	set_ksp_limit(current, saved_ksp_limit);
++
+ 	set_irq_regs(old_regs);
+ }
+ 
+@@ -681,7 +688,12 @@ void *hardirq_ctx[NR_CPUS] __read_mostly;
+ 
+ void do_softirq_own_stack(void)
+ {
+-	call_do_softirq(softirq_ctx[smp_processor_id()]);
++	void *irqsp = softirq_ctx[smp_processor_id()];
++	unsigned long saved_ksp_limit = get_ksp_limit(current);
++
++	set_ksp_limit(current, (unsigned long)irqsp);
++	call_do_softirq(irqsp);
++	set_ksp_limit(current, saved_ksp_limit);
+ }
+ 
+ irq_hw_number_t virq_to_hw(unsigned int virq)
+diff --git a/arch/powerpc/kernel/misc_32.S b/arch/powerpc/kernel/misc_32.S
+index 82df4b09e79f..a5422f7782b3 100644
+--- a/arch/powerpc/kernel/misc_32.S
++++ b/arch/powerpc/kernel/misc_32.S
+@@ -33,23 +33,14 @@
+ 
+ 	.text
+ 
+-/*
+- * We store the saved ksp_limit in the unused part
+- * of the STACK_FRAME_OVERHEAD
+- */
+ _GLOBAL(call_do_softirq)
+ 	mflr	r0
+ 	stw	r0,4(r1)
+-	lwz	r10,THREAD+KSP_LIMIT(r2)
+-	stw	r3, THREAD+KSP_LIMIT(r2)
+ 	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r3)
+ 	mr	r1,r3
+-	stw	r10,8(r1)
+ 	bl	__do_softirq
+-	lwz	r10,8(r1)
+ 	lwz	r1,0(r1)
+ 	lwz	r0,4(r1)
+-	stw	r10,THREAD+KSP_LIMIT(r2)
+ 	mtlr	r0
+ 	blr
+ 
+@@ -59,16 +50,11 @@ _GLOBAL(call_do_softirq)
+ _GLOBAL(call_do_irq)
+ 	mflr	r0
+ 	stw	r0,4(r1)
+-	lwz	r10,THREAD+KSP_LIMIT(r2)
+-	stw	r4, THREAD+KSP_LIMIT(r2)
+ 	stwu	r1,THREAD_SIZE-STACK_FRAME_OVERHEAD(r4)
+ 	mr	r1,r4
+-	stw	r10,8(r1)
+ 	bl	__do_irq
+-	lwz	r10,8(r1)
+ 	lwz	r1,0(r1)
+ 	lwz	r0,4(r1)
+-	stw	r10,THREAD+KSP_LIMIT(r2)
+ 	mtlr	r0
+ 	blr
+ 
+-- 
+2.13.3
+
