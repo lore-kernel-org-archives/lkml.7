@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B87C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB07C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C70FB21927
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EB521906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787646;
-	bh=gZ8a0o55VbNtlcpNUMcUSQywJuCz9aqnY0tE686ZAJ4=;
+	s=default; t=1568787651;
+	bh=i2uhVoobwgcY3wczFCTJwDYUidkYyrusQvKFiPPZeso=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vT+ZTwcqzqLH3j0RFzgk66vHnsKF0TpuiiOqTjoMeteQmWOVQ+RFfoGzOTBuP/YCi
-	 26jypC36kklCjBWncxtXKCGHkSia5s+qr+vLV52vLd95CHuNdqNaCf+JKnlWCp3svB
-	 R1JqF4iX8vrFeekz8f4lMWxvRV3flK5ynUcQ5qeU=
+	b=AYzFeKtoPdCXZ7Yf4X9a+bH2pt/PxChMnh3lucmai33e0LKTwUtBxiNpa+P97RZ+G
+	 5inTWnZF/eeMLcKygBO3HiSzRTWUtGPhMxH+rMLN5LElu7M/C6yMqWtMYS55AM7Yus
+	 65Z48LiIwgONKNAH7vrg8cyX1DfsSmkX8JYKHYno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfIRGUq (ORCPT
+        id S1728821AbfIRGUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728700AbfIRGUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:41 -0400
+        id S1728774AbfIRGUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 756CF218AF;
-        Wed, 18 Sep 2019 06:20:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16EB6218AF;
+        Wed, 18 Sep 2019 06:20:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787641;
-        bh=gZ8a0o55VbNtlcpNUMcUSQywJuCz9aqnY0tE686ZAJ4=;
+        s=default; t=1568787643;
+        bh=i2uhVoobwgcY3wczFCTJwDYUidkYyrusQvKFiPPZeso=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmO7R2B9W57+jcCU1mrkkc2cxoFMg1js/FB/FkO3PuZ6SfBUWi0Jl7z7aR5EcHlI9
-         JsE2dm9+dPepUfZ0RWjSTrkG9vSHJ5wk1Wlwn/L4hJZv/3eKGOapt2c4ym8KacrzWP
-         4HtXTwzSTOro1L5pZORtwefb+IfQOIjhB5KKmdv0=
+        b=nP5DD9L4GI0F/pIYAYAmNMsGe0xCv1Bd7ygSgnz8w7QOEHO7w6TCchVOGzHMGaiIf
+         r2vbaBdToSIK5NLFNOf1rMWl6NJAtJjW1LL7nhtc8OCxOhPFr+P9Ld+8W4HQbYTS9R
+         Ce7EFaXoxnc14AbxBCYB4oipOpz5iQ/vQRttDpr8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.14 24/45] KVM: nVMX: handle page fault in vmread
-Date:   Wed, 18 Sep 2019 08:19:02 +0200
-Message-Id: <20190918061225.491402324@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.14 25/45] MIPS: VDSO: Prevent use of smp_processor_id()
+Date:   Wed, 18 Sep 2019 08:19:03 +0200
+Message-Id: <20190918061225.619232350@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -58,43 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Paul Burton <paul.burton@mips.com>
 
-commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
+commit 351fdddd366245c0fb4636f32edfb4198c8d6b8c upstream.
 
-The implementation of vmread to memory is still incomplete, as it
-lacks the ability to do vmread to I/O memory just like vmptrst.
+VDSO code should not be using smp_processor_id(), since it is executed
+in user mode.
+Introduce a VDSO-specific path which will cause a compile-time
+or link-time error (depending upon support for __compiletime_error) if
+the VDSO ever incorrectly attempts to use smp_processor_id().
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+[Matt Redfearn <matt.redfearn@imgtec.com>: Move before change to
+smp_processor_id in series]
+
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Signed-off-by: Matt Redfearn <matt.redfearn@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/17932/
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@linux-mips.org
+Cc: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/smp.h |   12 +++++++++++-
+ arch/mips/vdso/Makefile     |    3 ++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -7996,6 +7996,7 @@ static int handle_vmread(struct kvm_vcpu
- 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
- 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
- 	gva_t gva = 0;
-+	struct x86_exception e;
+--- a/arch/mips/include/asm/smp.h
++++ b/arch/mips/include/asm/smp.h
+@@ -25,7 +25,17 @@ extern cpumask_t cpu_sibling_map[];
+ extern cpumask_t cpu_core_map[];
+ extern cpumask_t cpu_foreign_map[];
  
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
-@@ -8023,8 +8024,10 @@ static int handle_vmread(struct kvm_vcpu
- 				vmx_instruction_info, true, &gva))
- 			return 1;
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
--		kvm_write_guest_virt_system(vcpu, gva, &field_value,
--					    (is_long_mode(vcpu) ? 8 : 4), NULL);
-+		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
-+						(is_long_mode(vcpu) ? 8 : 4),
-+						NULL))
-+			kvm_inject_page_fault(vcpu, &e);
- 	}
+-#define raw_smp_processor_id() (current_thread_info()->cpu)
++static inline int raw_smp_processor_id(void)
++{
++#if defined(__VDSO__)
++	extern int vdso_smp_processor_id(void)
++		__compiletime_error("VDSO should not call smp_processor_id()");
++	return vdso_smp_processor_id();
++#else
++	return current_thread_info()->cpu;
++#endif
++}
++#define raw_smp_processor_id raw_smp_processor_id
  
- 	nested_vmx_succeed(vcpu);
+ /* Map from cpu id to sequential logical cpu number.  This will only
+    not be idempotent when cpus failed to come on-line.	*/
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -7,7 +7,8 @@ ccflags-vdso := \
+ 	$(filter -I%,$(KBUILD_CFLAGS)) \
+ 	$(filter -E%,$(KBUILD_CFLAGS)) \
+ 	$(filter -mmicromips,$(KBUILD_CFLAGS)) \
+-	$(filter -march=%,$(KBUILD_CFLAGS))
++	$(filter -march=%,$(KBUILD_CFLAGS)) \
++	-D__VDSO__
+ cflags-vdso := $(ccflags-vdso) \
+ 	$(filter -W%,$(filter-out -Wa$(comma)%,$(KBUILD_CFLAGS))) \
+ 	-O2 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
 
 
