@@ -5,118 +5,114 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F393C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5431EC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5490B206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21FCA21924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:29:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6O8OoOR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOpifsaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387619AbfIRQ25 (ORCPT
+        id S1731970AbfIRQ3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:28:57 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46753 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387520AbfIRQ2z (ORCPT
+        Wed, 18 Sep 2019 12:29:32 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41828 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726369AbfIRQ3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:28:55 -0400
-Received: by mail-wr1-f68.google.com with SMTP id o18so43845wrv.13;
-        Wed, 18 Sep 2019 09:28:53 -0700 (PDT)
+        Wed, 18 Sep 2019 12:29:32 -0400
+Received: by mail-pl1-f196.google.com with SMTP id t10so187046plr.8;
+        Wed, 18 Sep 2019 09:29:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+0ntiwXvSESB7iaOoEKUuKoBv5qu2y9dPZxgAsEks4E=;
-        b=j6O8OoORqIJ+c0lJiu2c0OGPlmDy8cgQxd+S7wBYq/FYyzcR6HqvTzfPGNAAmF0LzZ
-         xJQlouhwYeHYD04CjRw/xergiWhEqN5sCG7UsEMr2/voKxYCmw9lyK7z4lytRKhbR4DV
-         PemaPb9jBUkuK4/mtg/oB/F8Bqc2mX43MHnLsSzRbkUDeokIVGpgSVIMyx8hdU9MX7P1
-         lCRUjZmozXQZ0SLXlHSJRoGFind96cnphL2WyyFIxEunuaT/SgtjBOGcNF7mjgW8pFoQ
-         bU4X0T03b9hTDi9z9se2KZ6m67rxguHeNSm4o92Far5TP/mKg3VDC4SB5JA70aJlfl10
-         6pmA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=LgH/ZwMWdwKceO+DTTPhpRDYUttfSih6SgTkxTt1Xfk=;
+        b=VOpifsafjSIcwqi0QMLWPEJ6f4zF3EZWMzfCkWRWqN4bgvtxKEnjdz7z31KEPm7fms
+         4QASqUhFy5awtmgAEcmFP0kk81ZMQpuZrzUrqvC4lBMA1HSKAOD0Mo2QIWfzwZzHLuhg
+         Tv3WWTwwdz893rldnbVbhN7EBlfRwrsVxPeqo6o29WjIoWLP75r05ZVWjx0HV6N92BF/
+         vlHEC86LAjm5LYvREUWZOvSEcqjcZL9CnpFHUyOG4LILzgVs7+EvviL+Qgfh+f9uwPiW
+         K7LJsE8GCckE7juYnEuT8/CLz/dMElygVRz9/InPR4VtWLGsnL5mP4Czl7HmO0DirP18
+         gihA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=+0ntiwXvSESB7iaOoEKUuKoBv5qu2y9dPZxgAsEks4E=;
-        b=kBDbE+rT9GL15soSBwcIMcnZS7Ro7ZrDpO98Q7oK/w7uPDcGoAdmE8jz39tXVSG7aA
-         3Q+d7o00lZKAav3mqwHDN21ZIQIFXSAqX2hCYUQpojRrbkMkvFp8gMHIAU8KI+YQoHoZ
-         nNlIft2xJlfBZm6OV9Z4JjYcmqMFGEkcZ93mBGJd3ICOy1GComrwy5FAcbVpDdAJj+FW
-         7phNtyibiA0wLD8sqoEjyteRsLtvwUtiBg1UK+hvky890g7vAusTio9T3g5Bv8yMeckI
-         nW2SOGr2y9wldJvp13T3F2376If8+KbbtB26eQZqAgtKirE0yFOp5N3pKhXe4C3eId+j
-         E1gA==
-X-Gm-Message-State: APjAAAXn6WRFuzFyG5mExgzFWupJFgwSW6uvC74c6p8yefzdmd0FCjaM
-        7R2nhwP9+iQZtiLOAd8Pw2A=
-X-Google-Smtp-Source: APXvYqxbwdaVzV2zUxqpvvbAC/gTxl28+HYZmjcG5MkZXAtHbqI8L3SfMIAUypBWLrwxDsvMzfKAoQ==
-X-Received: by 2002:a5d:49c3:: with SMTP id t3mr3940934wrs.151.1568824132964;
-        Wed, 18 Sep 2019 09:28:52 -0700 (PDT)
-Received: from bfk-3-vm8-e4.cs.niisi.ras.ru (t109.niisi.ras.ru. [193.232.173.109])
-        by smtp.gmail.com with ESMTPSA id q19sm11468214wra.89.2019.09.18.09.28.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 09:28:52 -0700 (PDT)
-From:   Peter Mamonov <pmamonov@gmail.com>
-To:     andrew@lunn.ch
-Cc:     Peter Mamonov <pmamonov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH net v3] net/phy: fix DP83865 10 Mbps HDX loopback disable function
-Date:   Wed, 18 Sep 2019 19:27:55 +0300
-Message-Id: <20190918162755.24024-1-pmamonov@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=LgH/ZwMWdwKceO+DTTPhpRDYUttfSih6SgTkxTt1Xfk=;
+        b=CvaHq4yr+NyXk6dhrhDsNzJLgazZChGx6Vhf5s6/Bx8Y8ZXp4mftmsCgxf5N3S38Cn
+         8lVcHJFFb0MDm5CmEY5YyaD01JVOmRdgKyRgZhA5Qp2IRVUiUJTiYVwzMxMKBlBLcCPQ
+         CW4P2PSvyMG3mnDTDDMLHruWqnUeC/jOacwGy5lIp5SK2QR6XgVJyc6R5w6VQvG/JR1S
+         LwGrTMuL8/HAP6n/ck74K2FXqCc9UiFgLcQ5UDK7t2la+32U6HoU4Z227dClJDc4X+Fn
+         weSRXrrWYYGBylqflQyuX56wHcgThJyhEl+7zH513OT2kEVKRCujOxksdv5PH7cIo6vB
+         4M6Q==
+X-Gm-Message-State: APjAAAVsfr2XRrduo22G1pi4q/X++mFWDe7A1yM5RPxsCCaVJZPtFzAO
+        weSlOycAbbNm5xUTLwey3GM=
+X-Google-Smtp-Source: APXvYqx1UIM3/8Nji+DD2WgS6NY8R9IirFIx14s8+laAK8nwbFGsr/WLx/R6LHpe2fpnBILoCLPvtA==
+X-Received: by 2002:a17:902:8d98:: with SMTP id v24mr2973155plo.265.1568824171177;
+        Wed, 18 Sep 2019 09:29:31 -0700 (PDT)
+Received: from localhost.localdomain ([106.51.104.129])
+        by smtp.gmail.com with ESMTPSA id s73sm2744560pjb.15.2019.09.18.09.29.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 18 Sep 2019 09:29:30 -0700 (PDT)
+From:   Rishi Gupta <gupt21@gmail.com>
+To:     dmitry.torokhov@gmail.com
+Cc:     jikos@kernel.org, benjamin.tissoires@redhat.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rishi Gupta <gupt21@gmail.com>
+Subject: [PATCH v2] HID: hidraw: replace printk() with corresponding pr_xx() variant
+Date:   Wed, 18 Sep 2019 21:59:11 +0530
+Message-Id: <1568824151-12668-1-git-send-email-gupt21@gmail.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20190912203119.GC636@penguin>
+References: <20190912203119.GC636@penguin>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the DP83865 datasheet "the 10 Mbps HDX loopback can be
-disabled in the expanded memory register 0x1C0.1". The driver erroneously
-used bit 0 instead of bit 1.
+This commit replaces direct invocations of printk with
+their appropriate pr_info/warn() variant.
 
-Fixes: 4621bf129856 ("phy: Add file missed in previous commit.")
-Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+Signed-off-by: Rishi Gupta <gupt21@gmail.com>
 ---
-Changes since v2:
-- None
+Changes in v2:
+- Removed manually adding prefix "hidraw:".
 
-Changes since v1:
-- use BIT() macro
-- fix debug message as well
+ drivers/hid/hidraw.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/net/phy/national.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
-index a221dd552c3c..a5bf0874c7d8 100644
---- a/drivers/net/phy/national.c
-+++ b/drivers/net/phy/national.c
-@@ -105,14 +105,17 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+diff --git a/drivers/hid/hidraw.c b/drivers/hid/hidraw.c
+index 006bd6f..2d082f3 100644
+--- a/drivers/hid/hidraw.c
++++ b/drivers/hid/hidraw.c
+@@ -197,14 +197,14 @@ static ssize_t hidraw_get_report(struct file *file, char __user *buffer, size_t
+ 	}
  
- static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
- {
-+	u16 lb_dis = BIT(1);
-+
- 	if (disable)
--		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
-+		ns_exp_write(phydev, 0x1c0,
-+			     ns_exp_read(phydev, 0x1c0) | lb_dis);
- 	else
- 		ns_exp_write(phydev, 0x1c0,
--			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
-+			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 	if (count > HID_MAX_BUFFER_SIZE) {
+-		printk(KERN_WARNING "hidraw: pid %d passed too large report\n",
++		pr_warn("pid %d passed too large report\n",
+ 				task_pid_nr(current));
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
  
- 	pr_debug("10BASE-T HDX loopback %s\n",
--		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
-+		 (ns_exp_read(phydev, 0x1c0) & lb_dis) ? "off" : "on");
- }
+ 	if (count < 2) {
+-		printk(KERN_WARNING "hidraw: pid %d passed too short report\n",
++		pr_warn("pid %d passed too short report\n",
+ 				task_pid_nr(current));
+ 		ret = -EINVAL;
+ 		goto out;
+@@ -597,7 +597,7 @@ int __init hidraw_init(void)
+ 	if (result < 0)
+ 		goto error_class;
  
- static int ns_config_init(struct phy_device *phydev)
+-	printk(KERN_INFO "hidraw: raw HID events driver (C) Jiri Kosina\n");
++	pr_info("raw HID events driver (C) Jiri Kosina\n");
+ out:
+ 	return result;
+ 
 -- 
-2.23.0
+2.7.4
 
