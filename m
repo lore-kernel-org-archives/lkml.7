@@ -2,150 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF14C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA1C1C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBD921925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F95218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568787601;
+	bh=9b64Q7luG20J3yoGxGL9zwCpfms6M+EEzPZ+Il1iNUs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ijVPgrlOSo27sVAFKmDWk6/mFNT0AvtBpNXiCRFMAF6ceNkkDRe4c/A4obbx6VceO
+	 PFVXqBHYh0yEC6Zr4IKv80Aq6AIv0Wb7vOtRZh18S1hX5JJT5J1kb960cV97r6m8Sk
+	 +U+RtS/Veo7zPAbOInDTSK1xdWkmnFRhjJo5KFMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfIRGTv (ORCPT
+        id S1727439AbfIRGUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:19:51 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:45789 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725842AbfIRGTo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:19:44 -0400
-Received: from zxbjmbx2.zhaoxin.com (10.29.252.164) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 18 Sep
- 2019 14:19:39 +0800
-Received: from tony-HX002EA.zhaoxin.com (10.32.64.46) by zxbjmbx2.zhaoxin.com
- (10.29.252.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Wed, 18 Sep
- 2019 14:19:38 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     <tony.luck@intel.com>, <bp@alien8.de>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <hpa@zytor.com>, <x86@kernel.org>,
-        <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <yazen.ghannam@amd.com>, <vishal.l.verma@intel.com>,
-        <qiuxu.zhuo@intel.com>
-CC:     <DavidWang@zhaoxin.com>, <CooperYan@zhaoxin.com>,
-        <QiyuanWang@zhaoxin.com>, <HerryYang@zhaoxin.com>
-Subject: [PATCH v4 1/4] x86/mce: Add Zhaoxin MCE support
-Date:   Wed, 18 Sep 2019 14:19:30 +0800
-Message-ID: <1568787573-1297-2-git-send-email-TonyWWang-oc@zhaoxin.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
-References: <1568787573-1297-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+        Wed, 18 Sep 2019 02:20:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725842AbfIRGT7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:19:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D2D420678;
+        Wed, 18 Sep 2019 06:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568787598;
+        bh=9b64Q7luG20J3yoGxGL9zwCpfms6M+EEzPZ+Il1iNUs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C1xgm8UL4OJEtshiI581l0QfXE/J+GZjl2UA/RG19PqSLDDXchHcbhfFIvuWcyQN+
+         ntxrcbrJT/6rL7DK8QtJAsMc61IOkaObYMj+zRSAVLmdfCC12DbIo6adEBcES3iMbk
+         WisJwC0UlmuvJ7o8K7Q5mCMNVVxPwUwGp2acrLts=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 01/45] bridge/mdb: remove wrong use of NLM_F_MULTI
+Date:   Wed, 18 Sep 2019 08:18:39 +0200
+Message-Id: <20190918061223.039718513@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
+References: <20190918061222.854132812@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.32.64.46]
-X-ClientProxiedBy: zxbjmbx1.zhaoxin.com (10.29.252.163) To
- zxbjmbx2.zhaoxin.com (10.29.252.164)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All Zhaoxin newer CPUs support MCE that compatible with Intel's
-"Machine-Check Architecture", so add support for Zhaoxin MCE in
-mce/core.c.
+From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+[ Upstream commit 94a72b3f024fc7e9ab640897a1e38583a470659d ]
+
+NLM_F_MULTI must be used only when a NLMSG_DONE message is sent at the end.
+In fact, NLMSG_DONE is sent only at the end of a dump.
+
+Libraries like libnl will wait forever for NLMSG_DONE.
+
+Fixes: 949f1e39a617 ("bridge: mdb: notify on router port add and del")
+CC: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/kernel/cpu/mce/core.c | 38 ++++++++++++++++++++++++++++----------
- 1 file changed, 28 insertions(+), 10 deletions(-)
+ net/bridge/br_mdb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 743370e..7bcd8c1 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -488,8 +488,9 @@ int mce_usable_address(struct mce *m)
- 	if (!(m->status & MCI_STATUS_ADDRV))
- 		return 0;
+--- a/net/bridge/br_mdb.c
++++ b/net/bridge/br_mdb.c
+@@ -373,7 +373,7 @@ static int nlmsg_populate_rtr_fill(struc
+ 	struct nlmsghdr *nlh;
+ 	struct nlattr *nest;
  
--	/* Checks after this one are Intel-specific: */
--	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
-+	/* Checks after this one are Intel/Zhaoxin-specific: */
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL &&
-+	    boot_cpu_data.x86_vendor != X86_VENDOR_ZHAOXIN)
- 		return 1;
+-	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), NLM_F_MULTI);
++	nlh = nlmsg_put(skb, pid, seq, type, sizeof(*bpm), 0);
+ 	if (!nlh)
+ 		return -EMSGSIZE;
  
- 	if (!(m->status & MCI_STATUS_MISCV))
-@@ -507,10 +508,13 @@ EXPORT_SYMBOL_GPL(mce_usable_address);
- 
- bool mce_is_memory_error(struct mce *m)
- {
--	if (m->cpuvendor == X86_VENDOR_AMD ||
--	    m->cpuvendor == X86_VENDOR_HYGON) {
-+	switch (m->cpuvendor) {
-+	case X86_VENDOR_AMD:
-+	case X86_VENDOR_HYGON:
- 		return amd_mce_is_memory_error(m);
--	} else if (m->cpuvendor == X86_VENDOR_INTEL) {
-+
-+	case X86_VENDOR_INTEL:
-+	case X86_VENDOR_ZHAOXIN:
- 		/*
- 		 * Intel SDM Volume 3B - 15.9.2 Compound Error Codes
- 		 *
-@@ -527,9 +531,10 @@ bool mce_is_memory_error(struct mce *m)
- 		return (m->status & 0xef80) == BIT(7) ||
- 		       (m->status & 0xef00) == BIT(8) ||
- 		       (m->status & 0xeffc) == 0xc;
--	}
- 
--	return false;
-+	default:
-+		return false;
-+	}
- }
- EXPORT_SYMBOL_GPL(mce_is_memory_error);
- 
-@@ -1697,6 +1702,18 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
- 		if (c->x86 == 6 && c->x86_model == 45)
- 			quirk_no_way_out = quirk_sandybridge_ifu;
- 	}
-+
-+	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
-+		/*
-+		 * All newer Zhaoxin CPUs support MCE broadcasting. Enable
-+		 * synchronization with a one second timeout.
-+		 */
-+		if (c->x86 > 6 || (c->x86_model == 0x19 || c->x86_model == 0x1f)) {
-+			if (cfg->monarch_timeout < 0)
-+				cfg->monarch_timeout = USEC_PER_SEC;
-+		}
-+	}
-+
- 	if (cfg->monarch_timeout < 0)
- 		cfg->monarch_timeout = 0;
- 	if (cfg->bootlog != 0)
-@@ -2014,15 +2031,16 @@ static void mce_disable_error_reporting(void)
- static void vendor_disable_error_reporting(void)
- {
- 	/*
--	 * Don't clear on Intel or AMD or Hygon CPUs. Some of these MSRs
--	 * are socket-wide.
-+	 * Don't clear on Intel or AMD or Hygon or Zhaoxin CPUs. Some of these
-+	 * MSRs are socket-wide.
- 	 * Disabling them for just a single offlined CPU is bad, since it will
- 	 * inhibit reporting for all shared resources on the socket like the
- 	 * last level cache (LLC), the integrated memory controller (iMC), etc.
- 	 */
- 	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL ||
- 	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ||
--	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD)
-+	    boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
-+	    boot_cpu_data.x86_vendor == X86_VENDOR_ZHAOXIN)
- 		return;
- 
- 	mce_disable_error_reporting();
--- 
-2.7.4
+
 
