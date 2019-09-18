@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2F9C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039D1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D9821928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB6B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787903;
-	bh=OiFWf4eOdlYnzji0Ydxi9BHjYxXgfE1aWMbf64l7xUc=;
+	s=default; t=1568787905;
+	bh=7KlmHso4sOglABOnIDkOem+DzQc816ftuqxxIAYaDbg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=elhMROGpAQc2XGB6Db7PDklG3C0mVjeO6kC4e5tWxQ016z8P1d4GybvuQHyAWvdNd
-	 9FnsYhYjeJcSX9QKl4iRuqQXZjyfSSGVKSSJhyTxw+vVJEcKCYGDLXXj14i0+/TmVK
-	 WW8A7TLhOeBU0nQybfbntEw5iYfPOS1zUWykDU38=
+	b=z4n0wRYYKy683j7GvjWH6qvWDcyv6xu+UDnHLUFWSAFsP718PKQh3iXAvCT0KFAoo
+	 IhIwMgb5dJYbdskUN9NgcOcqTo6LJNppsP8ny3G8H81mPpB3klaYPLULfeDROpaWgz
+	 PLtske/0cx8swaT4u7H9ZU19gM7hAkwmXcHR9o84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfIRGZC (ORCPT
+        id S1729996AbfIRGZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45668 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728817AbfIRGY7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:59 -0400
+        id S1729969AbfIRGZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34C5121925;
-        Wed, 18 Sep 2019 06:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7BD521928;
+        Wed, 18 Sep 2019 06:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787898;
-        bh=OiFWf4eOdlYnzji0Ydxi9BHjYxXgfE1aWMbf64l7xUc=;
+        s=default; t=1568787901;
+        bh=7KlmHso4sOglABOnIDkOem+DzQc816ftuqxxIAYaDbg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YrmrDo9QcBKXUkQxLJIoMdQ6lZ+OchyBnFKOgcF4eBPmRaJO/3nLyjJ2FjG8CZSbj
-         cgDuaYJoNuc8lywFnaaz/w/KmQ7NV6iDcYVflZqKyNPMXQUd4N/Q1FJbXfMa5ZDayW
-         uVMxHI8WcT0IFh5x5o0vS1yCoJ8SjR/OakqWVllA=
+        b=r4+hV3Ejtt34siQvgLvV42KoH1FRTpOdhIf1qvrrNEVxTDvgOuE4+LQ4fQJHaCEzf
+         3qWkqH3koCSGl5GB370qOV+RAKI3NYXAh1zxNvRfdaLmEerDaIaA8t5vqQqPuVxIjk
+         ZiSfz1DuJVZLmzknltSVWVnZyHyxMz9yU1WVs2dE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kent Gibson <warthog618@gmail.com>,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.2 24/85] gpio: fix line flag validation in linehandle_create
-Date:   Wed, 18 Sep 2019 08:18:42 +0200
-Message-Id: <20190918061234.924147200@linuxfoundation.org>
+Subject: [PATCH 5.2 25/85] gpio: fix line flag validation in lineevent_create
+Date:   Wed, 18 Sep 2019 08:18:43 +0200
+Message-Id: <20190918061234.952756789@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,10 +61,10 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kent Gibson <warthog618@gmail.com>
 
-commit e95fbc130a162ba9ad956311b95aa0da269eea48 upstream.
+commit 5ca2f54b597c816df54ff1b28eb99cf7262b955d upstream.
 
-linehandle_create should not allow both GPIOHANDLE_REQUEST_INPUT
-and GPIOHANDLE_REQUEST_OUTPUT to be set.
+lineevent_create should not allow any of GPIOHANDLE_REQUEST_OUTPUT,
+GPIOHANDLE_REQUEST_OPEN_DRAIN or GPIOHANDLE_REQUEST_OPEN_SOURCE to be set.
 
 Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines")
 Cc: stable <stable@vger.kernel.org>
@@ -73,25 +73,32 @@ Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpiolib.c |    8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -536,6 +536,14 @@ static int linehandle_create(struct gpio
- 		return -EINVAL;
+@@ -934,7 +934,9 @@ static int lineevent_create(struct gpio_
+ 	}
  
- 	/*
-+	 * Do not allow both INPUT & OUTPUT flags to be set as they are
-+	 * contradictory.
-+	 */
-+	if ((lflags & GPIOHANDLE_REQUEST_INPUT) &&
-+	    (lflags & GPIOHANDLE_REQUEST_OUTPUT))
-+		return -EINVAL;
-+
-+	/*
- 	 * Do not allow OPEN_SOURCE & OPEN_DRAIN flags in a single request. If
- 	 * the hardware actually supports enabling both at the same time the
- 	 * electrical result would be disastrous.
+ 	/* This is just wrong: we don't look for events on output lines */
+-	if (lflags & GPIOHANDLE_REQUEST_OUTPUT) {
++	if ((lflags & GPIOHANDLE_REQUEST_OUTPUT) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN) ||
++	    (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)) {
+ 		ret = -EINVAL;
+ 		goto out_free_label;
+ 	}
+@@ -948,10 +950,6 @@ static int lineevent_create(struct gpio_
+ 
+ 	if (lflags & GPIOHANDLE_REQUEST_ACTIVE_LOW)
+ 		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
+-	if (lflags & GPIOHANDLE_REQUEST_OPEN_DRAIN)
+-		set_bit(FLAG_OPEN_DRAIN, &desc->flags);
+-	if (lflags & GPIOHANDLE_REQUEST_OPEN_SOURCE)
+-		set_bit(FLAG_OPEN_SOURCE, &desc->flags);
+ 
+ 	ret = gpiod_direction_input(desc);
+ 	if (ret)
 
 
