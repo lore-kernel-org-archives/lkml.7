@@ -2,172 +2,128 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392ADC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B529C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE7A21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I0USsfmH"
+	by mail.kernel.org (Postfix) with ESMTP id E994A21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 21:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388037AbfIRVmp (ORCPT
+        id S2388059AbfIRVmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 17:42:45 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42628 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387521AbfIRVmo (ORCPT
+        Wed, 18 Sep 2019 17:42:47 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52759 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388034AbfIRVmq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 17:42:44 -0400
-Received: by mail-qk1-f196.google.com with SMTP id f16so1066160qkl.9;
-        Wed, 18 Sep 2019 14:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6P902L7LJNPT4ssJNWdrSjXG2av0wc4klnUEBzyUx6c=;
-        b=I0USsfmHkX8/IosUABXUcAOvs0CABxoOv10rCj4DZH6xCHdY2L4yQblg6NZYhHguX2
-         MsA6e++yIPq7eRMJfOF0+5ORua+JGZQPZ35gb1IFeep1EFUYMoo06xlPuVJ4kdRzbTLk
-         PBO+Nl9u2hQIl6+su6TFrtXNe+RqK/AnWBXsfIz6yh08lEsPuswLbY/MT8CNOcd3mAJX
-         sV1GGSl3zT58PUKSY5Z9K8Mw/GTb5W8kR7XzdlCkaOwV7F9ZyBnxDaAD3pIOUJpxNR2O
-         5aNKuurKLuISXsII48WI+gCkrY1ViQd8AVJ2Sthn0YJEhJNuj3bV3cPWxKw8zLAEOtQv
-         Scbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6P902L7LJNPT4ssJNWdrSjXG2av0wc4klnUEBzyUx6c=;
-        b=UQiTVCu9bpQFlKkwWTehfjJNHfx9mMFhupDSn4g64A2FL8WpjoXpiWk8BzjCOhaq12
-         YP3wFq3J96mpeCQYclX13Ial7Emig7L4ZI3HAdK6SSKQr99iMs6y8asi8NjmSUdfwXIe
-         VTU6WjPy0zYyC2QZMLvje94oZsPd+J1qMfGZ8RvJjZuRkz6zB3SbZdpaoNOyRsB/AVLu
-         jyDlmZcbA6Va9wJtQDWJ8/PHc8gUSJQCs1JyOeRcySVraHBvgnA6SkUhsipLFM68RjaB
-         k/vt5HIc0y03dcm8bZj5juw0pObqFgwIH0BBkrbwuMgpjss+/GJuACCLtmyagZI21lGG
-         oDgQ==
-X-Gm-Message-State: APjAAAUb6aFDjWai3TQKhRKTQz5vNiVDyYU6uGAV9nqIG2iZMvSkqTOf
-        n+GH3Nqyu8opZkJ1SdwxgSBawAByqbUFz/FtQ6o=
-X-Google-Smtp-Source: APXvYqxbyXdn7X09SO/uvw7jxw77KPpPDng4/aylfzh22FrvFV2/QOqwmEfv3d7BmUzwno/aB5HcDaVFYVjEU4Wo0iE=
-X-Received: by 2002:a37:98f:: with SMTP id 137mr6695305qkj.449.1568842963752;
- Wed, 18 Sep 2019 14:42:43 -0700 (PDT)
+        Wed, 18 Sep 2019 17:42:46 -0400
+Received: from 79.184.255.25.ipv4.supernova.orange.pl (79.184.255.25) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 3c431064e5c516d5; Wed, 18 Sep 2019 23:42:44 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mario Limonciello <mario.limonciello@dell.com>,
+        Keith Busch <kbusch@kernel.org>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        sjg@google.com, Jared Dominguez <jared.dominguez@dell.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into deepest state
+Date:   Wed, 18 Sep 2019 23:42:44 +0200
+Message-ID: <9775216.kg7gRTdaXr@kreacher>
+In-Reply-To: <4858057.cjDlXVALXj@kreacher>
+References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com> <4858057.cjDlXVALXj@kreacher>
 MIME-Version: 1.0
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
- <20190916105433.11404-12-ivan.khoronzhuk@linaro.org> <CAEf4BzZXNN_dhs=jUjtfCqtuV1bk9H=q5b07kVDQQsysjhF4cQ@mail.gmail.com>
- <20190918110517.GD2908@khorivan>
-In-Reply-To: <20190918110517.GD2908@khorivan>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 18 Sep 2019 14:42:32 -0700
-Message-ID: <CAEf4BzZndo1z0A83MmcwtYdstkYKSa9Kzfmf1PRuUtS-D49oeg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 11/14] libbpf: makefile: add C/CXX/LDFLAGS to
- libbpf.so and test_libpf targets
-To:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 4:05 AM Ivan Khoronzhuk
-<ivan.khoronzhuk@linaro.org> wrote:
->
-> On Tue, Sep 17, 2019 at 10:19:22PM -0700, Andrii Nakryiko wrote:
-> >On Mon, Sep 16, 2019 at 4:00 AM Ivan Khoronzhuk
-> ><ivan.khoronzhuk@linaro.org> wrote:
-> >>
-> >> In case of LDFLAGS and EXTRA_CC/CXX flags there is no way to pass them
-> >> correctly to build command, for instance when --sysroot is used or
-> >> external libraries are used, like -lelf, wich can be absent in
-> >> toolchain. This can be used for samples/bpf cross-compiling allowing
-> >> to get elf lib from sysroot.
-> >>
-> >> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-> >> ---
-> >>  tools/lib/bpf/Makefile | 11 ++++++++---
-> >>  1 file changed, 8 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
-> >> index c6f94cffe06e..bccfa556ef4e 100644
-> >> --- a/tools/lib/bpf/Makefile
-> >> +++ b/tools/lib/bpf/Makefile
-> >> @@ -94,6 +94,10 @@ else
-> >>    CFLAGS := -g -Wall
-> >>  endif
-> >>
-> >> +ifdef EXTRA_CXXFLAGS
-> >> +  CXXFLAGS := $(EXTRA_CXXFLAGS)
-> >> +endif
-> >> +
-> >>  ifeq ($(feature-libelf-mmap), 1)
-> >>    override CFLAGS += -DHAVE_LIBELF_MMAP_SUPPORT
-> >>  endif
-> >> @@ -176,8 +180,9 @@ $(BPF_IN): force elfdep bpfdep
-> >>  $(OUTPUT)libbpf.so: $(OUTPUT)libbpf.so.$(LIBBPF_VERSION)
-> >>
-> >>  $(OUTPUT)libbpf.so.$(LIBBPF_VERSION): $(BPF_IN)
-> >> -       $(QUIET_LINK)$(CC) --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
-> >> -                                   -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
-> >> +       $(QUIET_LINK)$(CC) $(LDFLAGS) \
-> >> +               --shared -Wl,-soname,libbpf.so.$(LIBBPF_MAJOR_VERSION) \
-> >> +               -Wl,--version-script=$(VERSION_SCRIPT) $^ -lelf -o $@
-> >>         @ln -sf $(@F) $(OUTPUT)libbpf.so
-> >>         @ln -sf $(@F) $(OUTPUT)libbpf.so.$(LIBBPF_MAJOR_VERSION)
-> >>
-> >> @@ -185,7 +190,7 @@ $(OUTPUT)libbpf.a: $(BPF_IN)
-> >>         $(QUIET_LINK)$(RM) $@; $(AR) rcs $@ $^
-> >>
-> >>  $(OUTPUT)test_libbpf: test_libbpf.cpp $(OUTPUT)libbpf.a
-> >> -       $(QUIET_LINK)$(CXX) $(INCLUDES) $^ -lelf -o $@
-> >> +       $(QUIET_LINK)$(CXX) $(CXXFLAGS) $(LDFLAGS) $(INCLUDES) $^ -lelf -o $@
-> >
-> >Instead of doing ifdef EXTRA_CXXFLAGS bit above, you can just include
-> >both $(CXXFLAGS) and $(EXTRA_CXXFLAGS), which will do the right thing
-> >(and is actually recommended my make documentation way to do this).
-> It's good practice to follow existent style, I've done similar way as for
-> CFLAGS + EXTRACFLAGS here, didn't want to verify it can impact on
-> smth else. And my goal is not to correct everything but embed my
-> functionality, series tool large w/o it.
+On Wednesday, September 18, 2019 11:31:19 PM CEST Rafael J. Wysocki wrote:
+> On Thursday, September 12, 2019 1:42:33 AM CEST Mario Limonciello wrote:
+> > The action of saving the PCI state will cause numerous PCI configuration
+> > space reads which depending upon the vendor implementation may cause
+> > the drive to exit the deepest NVMe state.
+> > 
+> > In these cases ASPM will typically resolve the PCIe link state and APST
+> > may resolve the NVMe power state.  However it has also been observed
+> > that this register access after quiesced will cause PC10 failure
+> > on some device combinations.
+> > 
+> > To resolve this, move the PCI state saving to before SetFeatures has been
+> > called.  This has been proven to resolve the issue across a 5000 sample
+> > test on previously failing disk/system combinations.
+> 
+> This sounds reasonable to me, but it would be nice to CC that to linux-pm
+> and/or linux-pci too.
+> 
+> > Signed-off-by: Mario Limonciello <mario.limonciello@dell.com>
+> > ---
+> >  drivers/nvme/host/pci.c | 13 +++++++------
+> >  1 file changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> > index 732d5b6..9b3fed4 100644
+> > --- a/drivers/nvme/host/pci.c
+> > +++ b/drivers/nvme/host/pci.c
+> > @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
+> >  	if (ret < 0)
+> >  		goto unfreeze;
+> >  
+> > +	/*
+> > +	 * A saved state prevents pci pm from generically controlling the
+> > +	 * device's power. If we're using protocol specific settings, we don't
+> > +	 * want pci interfering.
+> > +	 */
+> > +	pci_save_state(pdev);
+> > +
+> >  	ret = nvme_set_power_state(ctrl, ctrl->npss);
+> >  	if (ret < 0)
+> >  		goto unfreeze;
+> > @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
+> 
+> This is the case in which the PCI layer is expected to put the device into
+> D3, so you need
+> 
+> pdev->state_saved = 0;
+> 
+> at this point, because you have saved the config space already.
+> 
+> >  		ret = 0;
+> >  		goto unfreeze;
+> 
+> And here you don't need to jump to "unfreeze" any more.
 
-Alright, we'll have to eventually clean up this Makefile. What we do
-with EXTRA_CFLAGS is not exactly correct, as in this Makefile
-EXTRA_CFLAGS are overriding CFLAGS, instead of extending them, which
-doesn't seem correct to me. BTW, bpftool does += instead of :=. All
-this is avoided by just keeping CFLAGS and EXTRA_CFLAGS separate and
-specifying both of them in $(CC)/$(CLANG) invocations. But feel free
-to ignore this for now.
+BTW, doing nvme_dev_disable() before nvme_unfreeze() looks odd to me.
+
+Maybe it would be better to do "unfreeze" and then "disable" in this case?
+
+> 
+> >  	}
+> > -	/*
+> > -	 * A saved state prevents pci pm from generically controlling the
+> > -	 * device's power. If we're using protocol specific settings, we don't
+> > -	 * want pci interfering.
+> > -	 */
+> > -	pci_save_state(pdev);
+> >  unfreeze:
+> >  	nvme_unfreeze(ctrl);
+> >  	return ret;
+> > 
+> 
+> 
+> 
+> 
+> 
 
 
->
-> >
-> >But actually, there is no need to use C++ compiler here,
-> >test_libbpf.cpp can just be plain C. Do you mind renaming it to .c and
-> >using C compiler instead?
-> Seems like, will try in next v.
 
-Thanks!
 
->
-> >
-> >>
-> >>  $(OUTPUT)libbpf.pc:
-> >>         $(QUIET_GEN)sed -e "s|@PREFIX@|$(prefix)|" \
-> >> --
-> >> 2.17.1
-> >>
->
-> --
-> Regards,
-> Ivan Khoronzhuk
