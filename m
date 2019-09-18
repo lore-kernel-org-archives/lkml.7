@@ -2,114 +2,90 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F886C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 970FEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53ACE214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:09:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IAAvkT9k"
+	by mail.kernel.org (Postfix) with ESMTP id 6F4E4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:12:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729381AbfIRKJx (ORCPT
+        id S1729493AbfIRKMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:09:53 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:33760 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfIRKJx (ORCPT
+        Wed, 18 Sep 2019 06:12:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:44519 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728672AbfIRKMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:09:53 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IA91qw071434;
-        Wed, 18 Sep 2019 10:09:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=rYcBK7hatZdKCsYqkvz3edbzREwu8CmSdT12sO28VM8=;
- b=IAAvkT9k9gncB1kSfB9glKjwd7zbO4DrV6e56Qi7Qk5Kp4AT74+j9mrhJPhZsmnaLTBD
- frZZmx8MA0su9vC7uufn9JXR8iBtVu2XIjYbB4dYrSTO81DZMzgZyZ33LcZa6C7sFYOI
- cuhtSIU6lJTmc2djgpiWn81TFDp8zoXPcK/i6+Vg0h03KlrZFHiWOC8pHk/orh8PloUp
- weXPvvXLDVmajGe9ULjXvMlr399Mm7EOn9W9Z3oadbDVVd+ecbvMcuiDeu4mBfAL5e6W
- veoxjuqV0ke7Lj288tIM8zkLQSwG3KKQuZ9FS3zBAUnWK/sEqKfmkGuDCBXzK7q8K/9L GQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2v385dtsur-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 10:09:39 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8IA9QvV006927;
-        Wed, 18 Sep 2019 10:09:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2v37mmhwms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 10:09:38 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8IA8FDa020420;
-        Wed, 18 Sep 2019 10:08:16 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 18 Sep 2019 03:08:14 -0700
-Date:   Wed, 18 Sep 2019 13:08:03 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Ju Hyung Park <qkrwngud825@gmail.com>
-Cc:     devel@driverdev.osuosl.org, linkinjeon@gmail.com,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Namjae Jeon <namjae.jeon@samsung.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
-        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
-        sj1557.seo@samsung.com
-Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
-Message-ID: <20190918100803.GD2959@kadam>
-References: <20190917054726.GA2058532@kroah.com>
- <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
- <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
- <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
- <20190918061605.GA1832786@kroah.com>
- <20190918063304.GA8354@jagdpanzerIV>
- <20190918082658.GA1861850@kroah.com>
- <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
- <20190918092405.GC2959@kadam>
- <CAD14+f1yQWoZH4onJwbt1kezxyoHW147HA-1p+U0dVo3r=mqBw@mail.gmail.com>
+        Wed, 18 Sep 2019 06:12:01 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iAWwG-0002Zr-Ek; Wed, 18 Sep 2019 10:11:56 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Robin van der Gracht <robin@protonic.nl>,
+        Oleksij Rempel <linux@rempel-privat.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] can: fix resource leak of skb on error return paths
+Date:   Wed, 18 Sep 2019 11:11:56 +0100
+Message-Id: <20190918101156.24370-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD14+f1yQWoZH4onJwbt1kezxyoHW147HA-1p+U0dVo3r=mqBw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1909180101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1909180101
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 06:53:49PM +0900, Ju Hyung Park wrote:
-> Hi Dan,
-> 
-> On Wed, Sep 18, 2019 at 6:27 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
-> > Put it in drivers/staging/sdfat/.
-> 
-> It'll conflict with the current exfat staging drivers.
+From: Colin Ian King <colin.king@canonical.com>
 
-Use Kconfig.
+Currently the error return paths do not free skb and this results
+in a memory leak. Fix this by freeing them before the return.
 
-> And moreover, I don't think it makes sense to use sdfat naming in mainline.
+Addresses-Coverity: ("Resource leak")
+Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ net/can/j1939/socket.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-The directory doesn't need to be permanent.
-
-regards,
-dan carpenter
+diff --git a/net/can/j1939/socket.c b/net/can/j1939/socket.c
+index 37c1040bcb9c..5c6eabcb5df1 100644
+--- a/net/can/j1939/socket.c
++++ b/net/can/j1939/socket.c
+@@ -909,8 +909,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
+ 	memset(serr, 0, sizeof(*serr));
+ 	switch (type) {
+ 	case J1939_ERRQUEUE_ACK:
+-		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK))
++		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_ACK)) {
++			kfree_skb(skb);
+ 			return;
++		}
+ 
+ 		serr->ee.ee_errno = ENOMSG;
+ 		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
+@@ -918,8 +920,10 @@ void j1939_sk_errqueue(struct j1939_session *session,
+ 		state = "ACK";
+ 		break;
+ 	case J1939_ERRQUEUE_SCHED:
+-		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED))
++		if (!(sk->sk_tsflags & SOF_TIMESTAMPING_TX_SCHED)) {
++			kfree_skb(skb);
+ 			return;
++		}
+ 
+ 		serr->ee.ee_errno = ENOMSG;
+ 		serr->ee.ee_origin = SO_EE_ORIGIN_TIMESTAMPING;
+-- 
+2.20.1
 
