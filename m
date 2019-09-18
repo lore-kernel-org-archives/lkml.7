@@ -4,88 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9114BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F090C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645BB222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E2DB222CD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389019AbfIRT5d (ORCPT
+        id S2389039AbfIRT5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:57:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:48215 "EHLO
+        Wed, 18 Sep 2019 15:57:54 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:38151 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732189AbfIRT5b (ORCPT
+        with ESMTP id S1732201AbfIRT5x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:57:31 -0400
+        Wed, 18 Sep 2019 15:57:53 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MsJXG-1huedC0a0w-00toR3; Wed, 18 Sep 2019 21:57:24 +0200
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MBUZr-1iMWhv1hy3-00CwcX; Wed, 18 Sep 2019 21:57:48 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/msm: include linux/sched/task.h
-Date:   Wed, 18 Sep 2019 21:57:07 +0200
-Message-Id: <20190918195722.2149227-1-arnd@arndb.de>
+To:     Shannon Nelson <snelson@pensando.io>,
+        Pensando Drivers <drivers@pensando.io>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: [PATCH] ionic: remove useless return code
+Date:   Wed, 18 Sep 2019 21:57:35 +0200
+Message-Id: <20190918195745.2158829-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Ej872YyO7HXEU8CNXRPtHdXeVnbz9zTySP1CA1k40z1LeTXe3mj
- agyhpv74Sl7wE8DAVanhlat0KMZliMe8R8ywGa67hfQhJYGlR+KRVMvUxU/wHEUWlUxmbnd
- 9LiD638HHbaqYm7Qb6ls3EkcaK//pUD4Q7Dq8hcNQ+MCYIoyM8I2gxs7mCOKKzlOfD8Omq3
- TMgBP/SonrzP8n2XsRq7Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:e7/P3QW3qJ0=:4PgFN+vYMMVxcGiM7azlrg
- HmWI/oIY0J7/xNdK8ONeJ9EYEXiDVKb2hl/JoBQZe5rboU26hT9Xp/ALIBW3W/I3YY63G3Ze8
- ZCYiGaV27/3R1WZHzprA0w1/WwxED4IcNZbnyxibmi2n8wk6/6P3lSeZk1T/owvKUePSUGy3T
- 87rvpUy1PQIM+Zft6TpQHdUHU5doc7UXOTEXr4vokcYRskxEJOTJR60kq57eFlLOWw2hIH1ej
- Zw3mOjS0S7fjufGM4aF8CwVzxwQj03NMN6SQBCjcFIc9Mo4JU73flTCp36cqoTRg5MZWnEwyA
- 4i6kQ3jWReHHvvxa7jsX4M7NToo+gTpRxGO5uYohsS+L5JUmFdyji2MMxiQIiLfTpYl83nmcE
- fqJTvYuYD2coj1h+iZY6iSYejtHX52aihBUZqCzkr8fX+ZWTIz4mGbH3zPixdCr2daAf6hKcj
- iN/t9Sco/HQ5T7IDAYaADkrMKogyCZ/6xGsW8J8jdNJcjC9pOXPOBMII/p/BPA6wihlomN9Ak
- SItRQ7pmDGv3+SHitfUK+cU1Vcc9ORtLmt0VWwI+orvw8oqSIcJs+etB63o9eiqhz/FPC19vP
- Z1klxsnRTmUto/4Z+BF0keJpPtSjUO6V86kc1xEtiBnH+vMWZZv4AWg9Ady+H6Ejy8XeDqI6L
- A5RA8zGdM16qBmkKsWGZGcsP1awNHBWBcw4UlqnNomzpgbI2c4DlTu2wFRFoGDGa18n9MccTg
- N37Sc6kShmA+Zjl3PhKVikXFDQ2amduC6eE+iXrLx0O7UY/LXNghESDaCmj9M35oxqnHlDCHW
- GVWTI4F0StjbEcK5dA+clzgvhoVyLq+Pvgm8MORS7FkwtJBD//rnC/bbTHvrNcE0MFPXkAgAo
- XV1BYLMMM0tkY7n4UWkQ==
+X-Provags-ID: V03:K1:tGFs0j53Jb1jMYkS2hCvPmKoxnLZMVIP3N3je8VWvQ5S2zgKuOG
+ eRLzmZZRrnOViO/Nb+KEwoZQfjnNaRv4CBfx6fajZLUXaHleqA/VqQfmdYphluD3TZYl9z5
+ Yfm3r1ze9i5irbHYscYwYmHHInCXbyzQgM92NJz4YuwaYdvF/K+aKiOG2LMYsKheRJCPHa2
+ qNGClUNe8K3p3SkrFcxzg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:luKqPByHVkE=:opdo+VkX6Q+A/eJ1A6bg2i
+ HKHF/nTEQZgnlDKLcYSraBMPoydxMYmpSm9xXpCxAecESwcR68I1YakaJbZI/mTqg+97ixphp
+ PDsicnKNxxMDqFFRHrJDOf89sDZ+LqKSswowLtLLX72FIY/rDNUe8QbwHKqc65IPgVCh+BAhW
+ DhP4FYOSQeuQgLg71++ec6edSlFuLpO5Tle6oDOVwhh9B1jwdf7eB2B3r6mCTZ2daguflSY0B
+ 17yyXEZgwENwt/tE9zRsYZK1ivcmOd6gOa/o9eIhSOZI12VOpQ1mqdYFi6BB3VIrWm2TRo9Xy
+ PfrXkBcCvi0u0jeV6xcf4RWsI6zdW9s/D663ohUgBEM1I745TCg8g4pBnlNZRfIcdg3FYcs3g
+ e/bvTpQOtYnOGcBI34gVeb/GBhkYukpkx6l/OkduA2Tg3BmzCj/+Ma7wdPMRCqzZ/8RCXi04K
+ f0bPh4E1DS/Ez5FXjMst0BAHjs0Hm6FLbsDDrR9NlkjglTFpuN2s28PbD/z+0IFBDVd9R/leD
+ 4NO5K3AdbGqBUYPz18992nkrGUIRWzhFGeBiwXpxEwomjPqjwzy/V4o9IX0MfnttMtP+LzrmO
+ yr4lGtB/atE68UviXuZb7MMX5CC0RkL3bKDFXOjjCM3g59MSAjvH5M5tDDukuY6mUm/BEUAll
+ t4pxdss4cRaPApB7zdTp/21CGS+8uyhxeF8uhbDr7Q/LfmHMsjzdQyNJZDJNqZkBmoZTt2kRk
+ YDTx9YcZxeo/AC+pBOu3dl+JSiyi2OFtTcGTv1AaFgiSg0ztB+67SRpBGB70TWAMFq3t3KCWT
+ 3iBUWKgxmDrWQGqjrKuqdGJzeSV15u7i7K2cq4bCw7urLEItHvqrtNmp4yEyRMVhdLJ8YmKxn
+ Hq1f+6loHFbXxxloKZsg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this header file, compile-testing may run into a missing
-declaration:
+The debugfs function was apparently changed from returning an error code
+to a void return, but the return code left in place, causing a warning
+from clang:
 
-drivers/gpu/drm/msm/msm_gpu.c:444:4: error: implicit declaration of function 'put_task_struct' [-Werror,-Wimplicit-function-declaration]
+drivers/net/ethernet/pensando/ionic/ionic_debugfs.c:60:37: error: expression result unused [-Werror,-Wunused-value]
+                            ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
+                                                         ^~~~~~~~~~~
 
-Fixes: 482f96324a4e ("drm/msm: Fix task dump in gpu recovery")
+Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/msm/msm_gpu.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/pensando/ionic/ionic_debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index a052364a5d74..edd45f434ccd 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -16,6 +16,7 @@
- #include <linux/pm_opp.h>
- #include <linux/devfreq.h>
- #include <linux/devcoredump.h>
-+#include <linux/sched/task.h>
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
+index 7afc4a365b75..bc03cecf80cc 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
+@@ -57,7 +57,7 @@ DEFINE_SHOW_ATTRIBUTE(identity);
+ void ionic_debugfs_add_ident(struct ionic *ionic)
+ {
+ 	debugfs_create_file("identity", 0400, ionic->dentry,
+-			    ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
++			    ionic, &identity_fops);
+ }
  
- /*
-  * Power Management:
+ void ionic_debugfs_add_sizes(struct ionic *ionic)
 -- 
 2.20.0
 
