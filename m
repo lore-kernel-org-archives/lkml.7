@@ -2,131 +2,59 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB5EC4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58771C4CECD
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4C1821881
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O67gS0zN"
+	by mail.kernel.org (Postfix) with ESMTP id 36283214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfIRBWW (ORCPT
+        id S1728523AbfIRBXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:22:22 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36118 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfIRBWV (ORCPT
+        Tue, 17 Sep 2019 21:23:13 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:51854 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725834AbfIRBXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:22:21 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f2so5088846edw.3;
-        Tue, 17 Sep 2019 18:22:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jmVlm1jUulhRNDWUAIDhxEV+UjKaBeH5ZgS3p3eH2ow=;
-        b=O67gS0zNNb8AG6ODEGN1OqAHrHAVixyyp79QI70EvE0Mpcom7nT8hlTFb3xh8Waekp
-         Kamy8iwHkC+j8VfD47sRSZ8jeTbKa7J9hZ4+2hZXtJzr06YsrHb48h5IIidbdP9ndnzE
-         ARzB1fGVVCCsSWutrt8/Csnqwe0ONOvnp+x8g9sxUIzqpnWiCj3U5e1csb+kPMSzV9o2
-         hudZldSg0qndlVl9qfldI4mOcdWOm1orjNzZwsV4wu6YUxUkPn8WSozxskq+NDgxNqRG
-         aaFB+QAanF7yaWNGbmsLVDMUJSaSk1NiY25ElsbPsSzGeJxCYMjClfAmgjj2JOYxwLUT
-         mCKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jmVlm1jUulhRNDWUAIDhxEV+UjKaBeH5ZgS3p3eH2ow=;
-        b=WFdnJxN8TIQB+viPmGzgce/yOopWC3SbQZT24Z4UhQ1v1WX0yMeGab3AAzSAioK67O
-         5Y3yHuQKgB/dDZHV41Y/gY8Us1HXkcNkCBvdfMHgWijGn/6jjgogCr3lZmqnWzbhCTc3
-         NhMcsmVHIunrsbnTM1YSO7QhCSWvLZQtXIbd1RkwHBVMLHBRuAPNEdaABmOL5lNnhNTz
-         JOYbXXpRBIkrErJlVEbAmUBOJz99Iw20EkWSKiSQWyiTFLfOn+oy6IDGij/cKm9nbBHk
-         2YRtnkdY5JYOZH6e/1Ckso6SLv9BDPQIkck8CZd3RpFI8/sGzuS4/KjrPjf+f5IKQ7PZ
-         CEVQ==
-X-Gm-Message-State: APjAAAWuGwcjyia3pTC1uuaBAPRC5fal69mzTwCEidBqGJVhdwZkYBbE
-        x0Dbye3mP3Tj4dTDZ7v3TrQEw43xe3nltmzBznw=
-X-Google-Smtp-Source: APXvYqwhWXpzktRd+5vRWfk9UpsttS+IpYu81FG1a3dXaB1RHhj8YAh4LwU6mfV0UMe9SGhJOT6fCHKgk1AqdPdkgZ4=
-X-Received: by 2002:a17:906:c79a:: with SMTP id cw26mr7214469ejb.265.1568769739678;
- Tue, 17 Sep 2019 18:22:19 -0700 (PDT)
+        Tue, 17 Sep 2019 21:23:13 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iAOgO-00039C-Vh; Wed, 18 Sep 2019 01:23:01 +0000
+Date:   Wed, 18 Sep 2019 02:23:00 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     kernel test robot <rong.a.chen@intel.com>
+Cc:     "zhengbin (A)" <zhengbin13@huawei.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, lkp@01.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: c25aa432ff:  aim9.dir_rtns_1.ops_per_sec -24.5% regression
+Message-ID: <20190918012300.GI1131@ZenIV.linux.org.uk>
+References: <20190918001736.GK15734@shao2-debian>
 MIME-Version: 1.0
-References: <20190916201154.212465-1-ddavenport@chromium.org>
- <CAF6AEGurXuCMj=bc5=9CwBqzNM_BKEaJupk+-V7=aYou=wgmDQ@mail.gmail.com> <20190917171420.GB25762@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20190917171420.GB25762@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 17 Sep 2019 18:22:06 -0700
-Message-ID: <CAF6AEGt_isMOiC6NL_xorUSnAEK5YnrzGanQrPV0YP=E5hV0VQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm: Remove unused function arguments
-To:     Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     Drew Davenport <ddavenport@chromium.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
-        Enrico Weigelt <info@metux.net>,
-        Bruce Wang <bzwang@chromium.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918001736.GK15734@shao2-debian>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:14 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Mon, Sep 16, 2019 at 01:34:55PM -0700, Rob Clark wrote:
-> > On Mon, Sep 16, 2019 at 1:12 PM Drew Davenport <ddavenport@chromium.org> wrote:
-> > >
-> > > The arguments related to IOMMU port name have been unused since
-> > > commit 944fc36c31ed ("drm/msm: use upstream iommu") and can be removed.
-> > >
-> > > Signed-off-by: Drew Davenport <ddavenport@chromium.org>
-> > > ---
-> > > Rob, in the original commit the port name stuff was left intentionally.
-> > > Would it be alright to remove it now?
-> >
-> > Upstream support for snapdragon has improved considerably since then,
-> > it's been at least a couple years since I've had to backport drm to a
-> > downstream android vendor kernel.  (And I think the downstream vendor
-> > kernel is getting closer to upstream.)  So I think we can drop things
-> > that were originally left in place to simplify backporting to vendor
-> > kernel.
->
-> Downstream has gotten close enough to the IOMMU API over the last few LTS
-> cycles and nearly everything outside of a2xx that can work on a modern
-> kernel will likely be using a arm-smmu-v2 or a MMU-500.  This code can happily
-> go.
->
-> > (Also, some of the regulator usage falls into this category.. at one
-> > point the downstream kernel modeled gdsc's as regulators, but upstream
-> > uses genpd.)
->
-> Downstream still uses regulators. If we ever needed to use a downstream kernel
-> for whatever reason we could easily hack them back in but I don't feel like this
-> is a likely scenario.
+On Wed, Sep 18, 2019 at 08:17:36AM +0800, kernel test robot wrote:
+> Greeting,
+> 
+> FYI, we noticed a -24.5% regression of aim9.dir_rtns_1.ops_per_sec due to commit:
+> 
+> 
+> commit: c25aa432ff56e179bf5414edff3aa430d2b260c0 ("Fix the locking in dcache_readdir() and friends")
+> https://kernel.googlesource.com/pub/scm/linux/kernel/git/next/linux-next.git master
 
-ok, maybe we can keep the regulator cruft for a bit longer until
-downstream moves to genpd.. with dummy-regulator, it doesn't really
-hurt anything.
+... and that, folks, is ->d_lock on the parent.  I.e. the original reason for
+trying to do the damn thing lockless.
 
-Do let me know if future downstream rebase moves to genpd, I suppose
-after the next LTS after that would be a good time to garbage-collect
-the regulator related gdsc management
-
-BR,
--R
+I'd really like to do a lockless variant, properly.  First we'd need to sort
+the misuses of d_subdirs/d_child, though - there are several outright bugs
+in the mainline.  And right now it looks like it wants to grow a series of
+cleanups in autofs.  Oh, well...
