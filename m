@@ -2,585 +2,233 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D11C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E454C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988F921907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F3A218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pR43bnh6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Iu7nhtAa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731657AbfIRP1O (ORCPT
+        id S1731668AbfIRP1t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:27:14 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39934 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731644AbfIRP1N (ORCPT
+        Wed, 18 Sep 2019 11:27:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34646 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727057AbfIRP1t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:27:13 -0400
-Received: by mail-lf1-f66.google.com with SMTP id 72so6015621lfh.6;
-        Wed, 18 Sep 2019 08:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7kdDzBkxjwMqVk3SYkXYkX2ruGJ9wrgVvGs/tigGtMU=;
-        b=pR43bnh6C2LA6+hpy/41kQJsm+jhwKpZn2AxQp5/ed8JMiUjA1bhBhVSpmDGoepOc2
-         17yRvM/MIGGfy3PK0QzCJswn3ILwV0jfi0cmKeKYq0otqkoePoxRvF8SSnJlijxzuBZu
-         GfG6g6+gONKkPC9vufK9s3m5oggiXR0mYiIYeSBfkzptLjhDNAA89FTKy8lWygk2s7Ci
-         e2/Wi94pz0K48w2iveHFDoWlrPvH2XjgZo8cfVCbqnQatBL0rWOeNg8bU8IM80j91HiC
-         bjT2TeC+neY5LeWY3mFGZqLzWxe4VuxEp9l41c4j9/SNscDSlhh1npKQYH5qgwuvwyMW
-         e18A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7kdDzBkxjwMqVk3SYkXYkX2ruGJ9wrgVvGs/tigGtMU=;
-        b=Qc6LMqS1YOh5zmp9a5vMoDhJulxwCDDTRkvYQ4/vYNJrj018ZeKQsrJga8TxmIj4bf
-         Z2we1LK7hSMixkE6FGwkx36qEd8I9Yj1Fb5bBCOQQuzLs85pfCT73VmYIkxv13xwHReb
-         FjZiZZqORP7IdtY2eibhsSil03Bwkm/72ADLZb+zMrcexYl5NLy+JpGYeszV+64DbSXL
-         3f00ahBGHLPZeWLy7PGDaRbhzVAAv038t6aAFhOlOD9ZHwd4u5lNhyMwb/TYkYEASveG
-         yHvzSx58rjkq9i6tOck+lPDYUJ9T8e71UAQvieJrr5jeoCO2dU0qFBzTEkeJMRW1Zo5r
-         xwqg==
-X-Gm-Message-State: APjAAAXBKwzn2pSKkm06Gzc5l3OdRLF98Si9P3YSrHRbDnB07qxNfvak
-        OHKWQ39Gnxb/seA9Ih09VqU=
-X-Google-Smtp-Source: APXvYqzs0pvPySIZlm9w0OycmZe5C1qEBFXhcqLtzvZYpmlGknsab9ImllItt4LlylTyHFgicjVrvQ==
-X-Received: by 2002:ac2:43a1:: with SMTP id t1mr2149808lfl.164.1568820430348;
-        Wed, 18 Sep 2019 08:27:10 -0700 (PDT)
-Received: from localhost.localdomain (dynamic-vpdn-93-125-15-224.telecom.by. [93.125.15.224])
-        by smtp.gmail.com with ESMTPSA id c10sm1068599lfp.65.2019.09.18.08.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 08:27:09 -0700 (PDT)
-Received: from jek by localhost.localdomain with local (Exim 4.92.1)
-        (envelope-from <jekhor@gmail.com>)
-        id 1iAbrG-0000rV-Rl; Wed, 18 Sep 2019 18:27:06 +0300
-From:   Yauhen Kharuzhy <jekhor@gmail.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
-        Yauhen Kharuzhy <jekhor@gmail.com>
-Subject: [PATCH v3 1/1] platform/x86/intel_cht_int33fe: Split code to USB Micro-B and Type-C variants
-Date:   Wed, 18 Sep 2019 18:27:05 +0300
-Message-Id: <20190918152705.3267-2-jekhor@gmail.com>
-X-Mailer: git-send-email 2.23.0.rc1
-In-Reply-To: <20190918152705.3267-1-jekhor@gmail.com>
-References: <20190918152705.3267-1-jekhor@gmail.com>
+        Wed, 18 Sep 2019 11:27:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gdFHiFVbMqVJw3CBF4SoBjQ/uM5M5qm+KSwdRCShL1k=; b=Iu7nhtAaql/og2GAvnceGjKAbq
+        Cbk8RrS9C1NwKD+UZKy/Y6zws/CMAR/gkDf4wy5Ad3gAAsROwXmfJBW3O3v+X3dOpptf4lMrcN2Ti
+        nhGfQbKKerTGgc00UBSp72uBLs8wbgfuHhUjQj/fugE8nLWb6jbQP7ynshgbYgvChydIsmKhSvE5c
+        BJV3aRwJG6gFty8IsVQ7rMzVkHZ4SjuKLCG9OuaOynHJMVpqHPbcC9GlCR6cU3GO+IfP0zXKnXNPP
+        we1cBUhF6TcK3anK7/mjHxi+KrV/YpV7TTBUSBKUoRxrdihfJ5/mmOO09Uwa2UVW8LEIRa9Aa8o0L
+        NlH5q1jQ==;
+Received: from [12.1.75.136] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iAbrw-0002Ft-Bj; Wed, 18 Sep 2019 15:27:48 +0000
+Date:   Wed, 18 Sep 2019 08:27:48 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-mmc@vger.kernel.org, iommu@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] dma-mapping updates for 5.4
+Message-ID: <20190918152748.GA21241@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Existing intel_cht_int33fe ACPI pseudo-device driver assumes that
-hardware has Type-C connector and register related devices described as
-I2C connections in the _CRS resource.
+Hi Linus,
 
-There is at least one hardware (Lenovo Yoga Book YB1-91L/F) with Micro-B
-USB connector exists. It has INT33FE device in the DSDT table but
-there are only two I2C connection described: PMIC and BQ27452 battery
-fuel gauge.
+please pull the dma-mapping updates for 5.4.
 
-Splitting existing INT33FE driver allow to maintain code for USB Micro-B
-(AB) connector variant separately and make it simpler.
+In addition to the usual Kconfig conflics where you just want to keep
+both edits there are a few more interesting merge issues this time:
+ 
+ - most importanly powerpc and microblaze add new callers of
+   dma_atomic_pool_init, while this tree marks the function static
+   and calls it from a common postcore_initcall().  The trivial
+   functions added in powerpc and microblaze adding the calls
+   need to be removed for the code to compile.  This will not show up
+   as a merge conflict and needs to be dealt with manually!
+ - the csky tree has edits close to edits from this tree in
+   arch/csky/mm/dma-mapping.c, keep both edits as there are no
+   functional conflicts.
+ - for ia64 keep the removal of arch/ia64/sn/pci/pci_dma.c from the
+   ia64 tree.  The ia64 tree moves sba_dma_ops around a bit.  Keep
+   the move and the wiring up of ->mmap and ->get_sgtable from this
+   tree.
+ - the -mm tree adds a new compound_nr helper that some of the Xen
+   code removed in this pull request removes.  Keep the removal from
+   this tree.
+ - the block tree adds a new helper next to the new block helpers from
+   this tree, keep both
+ - the arm64 tree removes a __KERNEL__ ifdef from
+   arch/arm64/include/asm/dma-mapping.h, which is removed in this tree.
+   Keep the removal.
 
-Split driver to intel_cht_int33fe_common.c and
-intel_cht_int33fe_{typeb,typec}.c. Compile all this sources to one .ko
-module to make user experience easier.
+The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-Signed-off-by: Yauhen Kharuzhy <jekhor@gmail.com>
----
- drivers/platform/x86/Kconfig                  |  12 +-
- drivers/platform/x86/Makefile                 |   4 +
- .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
- .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
- .../platform/x86/intel_cht_int33fe_microb.c   |  63 ++++++++
- ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  78 +---------
- 6 files changed, 272 insertions(+), 73 deletions(-)
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
- create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
- rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (82%)
+  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 1b67bb578f9f..2537885c933f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -926,18 +926,24 @@ config INTEL_CHT_INT33FE
- 	depends on CHARGER_BQ24190=y || (CHARGER_BQ24190=m && m)
- 	depends on USB_ROLES_INTEL_XHCI=y || (USB_ROLES_INTEL_XHCI=m && m)
- 	depends on TYPEC_MUX_PI3USB30532=y || (TYPEC_MUX_PI3USB30532=m && m)
--	---help---
-+	help
- 	  This driver add support for the INT33FE ACPI device found on
- 	  some Intel Cherry Trail devices.
- 
-+	  There are two kinds of INT33FE ACPI device possible: for hardware
-+	  with USB Type-C and Micro-B connectors. This driver supports both.
-+
- 	  The INT33FE ACPI device has a CRS table with I2cSerialBusV2
--	  resources for 3 devices: Maxim MAX17047 Fuel Gauge Controller,
-+	  resources for Fuel Gauge Controller and (in the Type-C variant)
- 	  FUSB302 USB Type-C Controller and PI3USB30532 USB switch.
- 	  This driver instantiates i2c-clients for these, so that standard
- 	  i2c drivers for these chips can bind to the them.
- 
- 	  If you enable this driver it is advised to also select
--	  CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m.
-+	  CONFIG_BATTERY_BQ27XXX=m and CONFIG_BATTERY_BQ27XXX_I2C=m for Micro-B
-+	  device and CONFIG_TYPEC_FUSB302=m and CONFIG_BATTERY_MAX17042=m
-+	  for Type-C device.
-+
- 
- config INTEL_INT0002_VGPIO
- 	tristate "Intel ACPI INT0002 Virtual GPIO driver"
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 415104033060..216d3b6fd6a7 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -61,6 +61,10 @@ obj-$(CONFIG_TOSHIBA_BT_RFKILL)	+= toshiba_bluetooth.o
- obj-$(CONFIG_TOSHIBA_HAPS)	+= toshiba_haps.o
- obj-$(CONFIG_TOSHIBA_WMI)	+= toshiba-wmi.o
- obj-$(CONFIG_INTEL_CHT_INT33FE)	+= intel_cht_int33fe.o
-+intel_cht_int33fe-objs		:= intel_cht_int33fe_common.o \
-+				   intel_cht_int33fe_typec.o \
-+				   intel_cht_int33fe_microb.o
-+
- obj-$(CONFIG_INTEL_INT0002_VGPIO) += intel_int0002_vgpio.o
- obj-$(CONFIG_INTEL_HID_EVENT)	+= intel-hid.o
- obj-$(CONFIG_INTEL_VBTN)	+= intel-vbtn.o
-diff --git a/drivers/platform/x86/intel_cht_int33fe_common.c b/drivers/platform/x86/intel_cht_int33fe_common.c
-new file mode 100644
-index 000000000000..42dd11623f56
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_common.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
-+ * (USB Micro-B and Type-C connector variants).
-+ *
-+ * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+
-+#include "intel_cht_int33fe_common.h"
-+
-+#define EXPECTED_PTYPE		4
-+
-+static int cht_int33fe_i2c_res_filter(struct acpi_resource *ares, void *data)
-+{
-+	struct acpi_resource_i2c_serialbus *sb;
-+	int *count = data;
-+
-+	if (i2c_acpi_get_i2c_resource(ares, &sb))
-+		(*count)++;
-+
-+	return 1;
-+}
-+
-+static int cht_int33fe_count_i2c_clients(struct device *dev)
-+{
-+	struct acpi_device *adev;
-+	LIST_HEAD(resource_list);
-+	int count = 0;
-+
-+	adev = ACPI_COMPANION(dev);
-+	if (!adev)
-+		return -EINVAL;
-+
-+	acpi_dev_get_resources(adev, &resource_list,
-+			       cht_int33fe_i2c_res_filter, &count);
-+
-+	acpi_dev_free_resource_list(&resource_list);
-+
-+	return count;
-+}
-+
-+static int cht_int33fe_check_hw_type(struct device *dev)
-+{
-+	unsigned long long ptyp;
-+	acpi_status status;
-+	int ret;
-+
-+	status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
-+	if (ACPI_FAILURE(status)) {
-+		dev_err(dev, "Error getting PTYPE\n");
-+		return -ENODEV;
-+	}
-+
-+	/*
-+	 * The same ACPI HID is used for different configurations check PTYP
-+	 * to ensure that we are dealing with the expected config.
-+	 */
-+	if (ptyp != EXPECTED_PTYPE)
-+		return -ENODEV;
-+
-+	/* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
-+	if (!acpi_dev_present("INT34D3", "1", 3)) {
-+		dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
-+			EXPECTED_PTYPE);
-+		return -ENODEV;
-+	}
-+
-+	ret = cht_int33fe_count_i2c_clients(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (ret) {
-+	case 2:
-+		return INT33FE_HW_MICROB;
-+	case 4:
-+		return INT33FE_HW_TYPEC;
-+	default:
-+		return -ENODEV;
-+	}
-+}
-+
-+static int cht_int33fe_probe(struct platform_device *pdev)
-+{
-+	struct cht_int33fe_data *data;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	ret = cht_int33fe_check_hw_type(dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->dev = dev;
-+
-+	switch (ret) {
-+	case INT33FE_HW_MICROB:
-+		data->probe = cht_int33fe_microb_probe;
-+		data->remove = cht_int33fe_microb_remove;
-+		break;
-+
-+	case INT33FE_HW_TYPEC:
-+		data->probe = cht_int33fe_typec_probe;
-+		data->remove = cht_int33fe_typec_remove;
-+		break;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	return data->probe(data);
-+}
-+
-+static int cht_int33fe_remove(struct platform_device *pdev)
-+{
-+	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
-+
-+	return data->remove(data);
-+}
-+
-+static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
-+	{ "INT33FE", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
-+
-+static struct platform_driver cht_int33fe_driver = {
-+	.driver	= {
-+		.name = "Intel Cherry Trail ACPI INT33FE driver",
-+		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
-+	},
-+	.probe = cht_int33fe_probe,
-+	.remove = cht_int33fe_remove,
-+};
-+
-+module_platform_driver(cht_int33fe_driver);
-+
-+MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver");
-+MODULE_AUTHOR("Yauhen Kharuzhy <jekhor@gmail.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/platform/x86/intel_cht_int33fe_common.h b/drivers/platform/x86/intel_cht_int33fe_common.h
-new file mode 100644
-index 000000000000..03cd45f4e8cb
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_common.h
-@@ -0,0 +1,41 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Common code for Intel Cherry Trail ACPI INT33FE pseudo device drivers
-+ * (USB Micro-B and Type-C connector variants), header file
-+ *
-+ * Copyright (c) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ */
-+
-+#ifndef _INTEL_CHT_INT33FE_COMMON_H
-+#define _INTEL_CHT_INT33FE_COMMON_H
-+
-+#include <linux/device.h>
-+#include <linux/fwnode.h>
-+#include <linux/i2c.h>
-+
-+enum int33fe_hw_type {
-+	INT33FE_HW_MICROB,
-+	INT33FE_HW_TYPEC,
-+};
-+
-+struct cht_int33fe_data {
-+	struct device *dev;
-+
-+	int (*probe)(struct cht_int33fe_data *data);
-+	int (*remove)(struct cht_int33fe_data *data);
-+
-+	struct i2c_client *battery_fg;
-+
-+	/* Type-C only */
-+	struct i2c_client *fusb302;
-+	struct i2c_client *pi3usb30532;
-+
-+	struct fwnode_handle *dp;
-+};
-+
-+int cht_int33fe_microb_probe(struct cht_int33fe_data *data);
-+int cht_int33fe_microb_remove(struct cht_int33fe_data *data);
-+int cht_int33fe_typec_probe(struct cht_int33fe_data *data);
-+int cht_int33fe_typec_remove(struct cht_int33fe_data *data);
-+
-+#endif /* _INTEL_CHT_INT33FE_COMMON_H */
-diff --git a/drivers/platform/x86/intel_cht_int33fe_microb.c b/drivers/platform/x86/intel_cht_int33fe_microb.c
-new file mode 100644
-index 000000000000..6b3f66065d5c
---- /dev/null
-+++ b/drivers/platform/x86/intel_cht_int33fe_microb.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Cherry Trail ACPI INT33FE pseudo device driver for devices with
-+ * USB Micro-B connector (e.g. without of FUSB302 USB Type-C controller)
-+ *
-+ * Copyright (C) 2019 Yauhen Kharuzhy <jekhor@gmail.com>
-+ *
-+ * At least one Intel Cherry Trail based device which ship with Windows 10
-+ * (Lenovo YogaBook YB1-X91L/F tablet), have this weird INT33FE ACPI device
-+ * with a CRS table with 2 I2cSerialBusV2 resources, for 2 different chips
-+ * attached to various i2c busses:
-+ * 1. The Whiskey Cove pmic, which is also described by the INT34D3 ACPI device
-+ * 2. TI BQ27542 Fuel Gauge Controller
-+ *
-+ * So this driver is a stub / pseudo driver whose only purpose is to
-+ * instantiate i2c-client for battery fuel gauge, so that standard i2c driver
-+ * for these chip can bind to the it.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/slab.h>
-+#include <linux/usb/pd.h>
-+
-+#include "intel_cht_int33fe_common.h"
-+
-+static const char * const bq27xxx_suppliers[] = { "bq25890-charger" };
-+
-+static const struct property_entry bq27xxx_props[] = {
-+	PROPERTY_ENTRY_STRING_ARRAY("supplied-from", bq27xxx_suppliers),
-+	{ }
-+};
-+
-+int cht_int33fe_microb_probe(struct cht_int33fe_data *data)
-+{
-+	struct device *dev = data->dev;
-+	struct i2c_board_info board_info;
-+
-+	memset(&board_info, 0, sizeof(board_info));
-+	strscpy(board_info.type, "bq27542", ARRAY_SIZE(board_info.type));
-+	board_info.dev_name = "bq27542";
-+	board_info.properties = bq27xxx_props;
-+	data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
-+
-+	if (IS_ERR(data->battery_fg)) {
-+		dev_err(dev, "Failed to register battery fuel gauge: %ld\n",
-+			PTR_ERR(data->battery_fg));
-+		return PTR_ERR(data->battery_fg);
-+	}
-+
-+	return 0;
-+}
-+
-+int cht_int33fe_microb_remove(struct cht_int33fe_data *data)
-+{
-+	i2c_unregister_device(data->battery_fg);
-+
-+	return 0;
-+}
-diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe_typec.c
-similarity index 82%
-rename from drivers/platform/x86/intel_cht_int33fe.c
-rename to drivers/platform/x86/intel_cht_int33fe_typec.c
-index 1d5d877b9582..2d097fc2dd46 100644
---- a/drivers/platform/x86/intel_cht_int33fe.c
-+++ b/drivers/platform/x86/intel_cht_int33fe_typec.c
-@@ -17,17 +17,15 @@
-  * for these chips can bind to the them.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
--#include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
- #include <linux/regulator/consumer.h>
- #include <linux/slab.h>
- #include <linux/usb/pd.h>
- 
--#define EXPECTED_PTYPE		4
-+#include "intel_cht_int33fe_common.h"
- 
- enum {
- 	INT33FE_NODE_FUSB302,
-@@ -38,14 +36,6 @@ enum {
- 	INT33FE_NODE_MAX,
- };
- 
--struct cht_int33fe_data {
--	struct i2c_client *max17047;
--	struct i2c_client *fusb302;
--	struct i2c_client *pi3usb30532;
--
--	struct fwnode_handle *dp;
--};
--
- static const struct software_node nodes[];
- 
- static const struct software_node_ref_args pi3usb30532_ref = {
-@@ -251,43 +241,20 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
- 	strlcpy(board_info.type, "max17047", I2C_NAME_SIZE);
- 	board_info.dev_name = "max17047";
- 	board_info.fwnode = fwnode;
--	data->max17047 = i2c_acpi_new_device(dev, 1, &board_info);
-+	data->battery_fg = i2c_acpi_new_device(dev, 1, &board_info);
- 
--	return PTR_ERR_OR_ZERO(data->max17047);
-+	return PTR_ERR_OR_ZERO(data->battery_fg);
- }
- 
--static int cht_int33fe_probe(struct platform_device *pdev)
-+int cht_int33fe_typec_probe(struct cht_int33fe_data *data)
- {
--	struct device *dev = &pdev->dev;
-+	struct device *dev = data->dev;
- 	struct i2c_board_info board_info;
--	struct cht_int33fe_data *data;
- 	struct fwnode_handle *fwnode;
- 	struct regulator *regulator;
--	unsigned long long ptyp;
--	acpi_status status;
- 	int fusb302_irq;
- 	int ret;
- 
--	status = acpi_evaluate_integer(ACPI_HANDLE(dev), "PTYP", NULL, &ptyp);
--	if (ACPI_FAILURE(status)) {
--		dev_err(dev, "Error getting PTYPE\n");
--		return -ENODEV;
--	}
--
--	/*
--	 * The same ACPI HID is used for different configurations check PTYP
--	 * to ensure that we are dealing with the expected config.
--	 */
--	if (ptyp != EXPECTED_PTYPE)
--		return -ENODEV;
--
--	/* Check presence of INT34D3 (hardware-rev 3) expected for ptype == 4 */
--	if (!acpi_dev_present("INT34D3", "1", 3)) {
--		dev_err(dev, "Error PTYPE == %d, but no INT34D3 device\n",
--			EXPECTED_PTYPE);
--		return -ENODEV;
--	}
--
- 	/*
- 	 * We expect the WC PMIC to be paired with a TI bq24292i charger-IC.
- 	 * We check for the bq24292i vbus regulator here, this has 2 purposes:
-@@ -317,10 +284,6 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		return fusb302_irq;
- 	}
- 
--	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
--	if (!data)
--		return -ENOMEM;
--
- 	ret = cht_int33fe_add_nodes(data);
- 	if (ret)
- 		return ret;
-@@ -365,15 +328,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 		goto out_unregister_fusb302;
- 	}
- 
--	platform_set_drvdata(pdev, data);
--
- 	return 0;
- 
- out_unregister_fusb302:
- 	i2c_unregister_device(data->fusb302);
- 
- out_unregister_max17047:
--	i2c_unregister_device(data->max17047);
-+	i2c_unregister_device(data->battery_fg);
- 
- out_remove_nodes:
- 	cht_int33fe_remove_nodes(data);
-@@ -381,36 +342,13 @@ static int cht_int33fe_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static int cht_int33fe_remove(struct platform_device *pdev)
-+int cht_int33fe_typec_remove(struct cht_int33fe_data *data)
- {
--	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
--
- 	i2c_unregister_device(data->pi3usb30532);
- 	i2c_unregister_device(data->fusb302);
--	i2c_unregister_device(data->max17047);
-+	i2c_unregister_device(data->battery_fg);
- 
- 	cht_int33fe_remove_nodes(data);
- 
- 	return 0;
- }
--
--static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
--	{ "INT33FE", },
--	{ }
--};
--MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
--
--static struct platform_driver cht_int33fe_driver = {
--	.driver	= {
--		.name = "Intel Cherry Trail ACPI INT33FE driver",
--		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
--	},
--	.probe = cht_int33fe_probe,
--	.remove = cht_int33fe_remove,
--};
--
--module_platform_driver(cht_int33fe_driver);
--
--MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver");
--MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");
--MODULE_LICENSE("GPL v2");
--- 
-2.23.0.rc1
+are available in the Git repository at:
 
+  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.4
+
+for you to fetch changes up to c7d9eccb3c1e802c5cbb2a764eb0eb9807d9f12e:
+
+  mmc: renesas_sdhi_internal_dmac: Add MMC_CAP2_MERGE_CAPABLE (2019-09-12 13:14:09 +0100)
+
+----------------------------------------------------------------
+dma-mapping updates for 5.4:
+
+ - add dma-mapping and block layer helpers to take care of IOMMU
+   merging for mmc plus subsequent fixups (Yoshihiro Shimoda)
+ - rework handling of the pgprot bits for remapping (me)
+ - take care of the dma direct infrastructure for swiotlb-xen (me)
+ - improve the dma noncoherent remapping infrastructure (me)
+ - better defaults for ->mmap, ->get_sgtable and ->get_required_mask (me)
+ - cleanup mmaping of coherent DMA allocations (me)
+ - various misc cleanups (Andy Shevchenko, me)
+
+----------------------------------------------------------------
+Andy Shevchenko (1):
+      dma-mapping: fix filename references
+
+Christoph Hellwig (34):
+      unicore32: remove the unused pgprot_dmacoherent define
+      arm-nommu: remove the unused pgprot_dmacoherent define
+      dma-mapping: remove arch_dma_mmap_pgprot
+      dma-mapping: make dma_atomic_pool_init self-contained
+      arm64: document the choice of page attributes for pgprot_dmacoherent
+      MIPS: document mixing "slightly different CCAs"
+      dma-mapping: move the dma_get_sgtable API comments from arm to common code
+      dma-mapping: explicitly wire up ->mmap and ->get_sgtable
+      dma-mapping: add a dma_can_mmap helper
+      ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*
+      arm-nommu: call dma_mmap_from_dev_coherent directly
+      parisc: don't set ARCH_NO_COHERENT_DMA_MMAP
+      dma-mapping: remove CONFIG_ARCH_NO_COHERENT_DMA_MMAP
+      dma-mapping: remove dma_{alloc,free,mmap}_writecombine
+      dma-mapping: remove dma_release_declared_memory
+      dma-mapping: remove the dma_mmap_from_dev_coherent export
+      remoteproc: don't allow modular build
+      dma-mapping: remove the dma_declare_coherent_memory export
+      dma-mapping: provide a better default ->get_required_mask
+      vmalloc: lift the arm flag for coherent mappings to common code
+      dma-mapping: always use VM_DMA_COHERENT for generic DMA remap
+      dma-mapping: introduce a dma_common_find_pages helper
+      arm: remove wrappers for the generic dma remap helpers
+      xen/arm: use dma-noncoherent.h calls for xen-swiotlb cache maintainance
+      xen/arm: consolidate page-coherent.h
+      xen/arm: use dev_is_dma_coherent
+      xen/arm: simplify dma_cache_maint
+      xen/arm: remove xen_dma_ops
+      xen: remove the exports for xen_{create,destroy}_contiguous_region
+      swiotlb-xen: remove xen_swiotlb_dma_mmap and xen_swiotlb_dma_get_sgtable
+      swiotlb-xen: use the same foreign page check everywhere
+      swiotlb-xen: simplify cache maintainance
+      swiotlb-xen: merge xen_unmap_single into xen_swiotlb_unmap_page
+      arm64: use asm-generic/dma-mapping.h
+
+Yoshihiro Shimoda (6):
+      block: add a helper function to merge the segments
+      mmc: queue: use bigger segments if DMA MAP layer can merge the segments
+      dma-mapping: introduce dma_get_merge_boundary()
+      iommu/dma: add a new dma_map_ops of get_merge_boundary()
+      mmc: queue: Fix bigger segments usage
+      mmc: renesas_sdhi_internal_dmac: Add MMC_CAP2_MERGE_CAPABLE
+
+ Documentation/DMA-API.txt                     |  19 ++--
+ Documentation/x86/x86_64/boot-options.rst     |   2 +-
+ arch/Kconfig                                  |   3 -
+ arch/alpha/kernel/pci_iommu.c                 |   2 +
+ arch/arc/mm/dma.c                             |   6 --
+ arch/arm/Kconfig                              |   2 +-
+ arch/arm/include/asm/device.h                 |   3 -
+ arch/arm/include/asm/dma-mapping.h            |   6 --
+ arch/arm/include/asm/pgtable-nommu.h          |   1 -
+ arch/arm/include/asm/xen/page-coherent.h      |  93 -------------------
+ arch/arm/mm/dma-mapping-nommu.c               |   5 +-
+ arch/arm/mm/dma-mapping.c                     |  84 +++--------------
+ arch/arm/mm/mm.h                              |   3 -
+ arch/arm/xen/mm.c                             | 129 ++++++++------------------
+ arch/arm64/Kconfig                            |   1 -
+ arch/arm64/include/asm/Kbuild                 |   1 +
+ arch/arm64/include/asm/dma-mapping.h          |  31 -------
+ arch/arm64/include/asm/pgtable.h              |  12 +++
+ arch/arm64/include/asm/xen/page-coherent.h    |  75 ---------------
+ arch/arm64/mm/dma-mapping.c                   |  16 +---
+ arch/c6x/Kconfig                              |   1 -
+ arch/csky/mm/dma-mapping.c                    |   6 --
+ arch/ia64/hp/common/sba_iommu.c               |   2 +
+ arch/ia64/kernel/setup.c                      |   2 +-
+ arch/ia64/sn/pci/pci_dma.c                    |   2 +
+ arch/m68k/Kconfig                             |   2 -
+ arch/m68k/include/asm/pgtable_mm.h            |   3 +
+ arch/m68k/kernel/dma.c                        |   3 +-
+ arch/microblaze/Kconfig                       |   1 -
+ arch/mips/Kconfig                             |   9 +-
+ arch/mips/jazz/jazzdma.c                      |   2 +
+ arch/mips/mm/dma-noncoherent.c                |   8 --
+ arch/nds32/kernel/dma.c                       |   6 --
+ arch/parisc/Kconfig                           |   1 -
+ arch/powerpc/kernel/dma-iommu.c               |   2 +
+ arch/powerpc/platforms/ps3/system-bus.c       |  11 +--
+ arch/powerpc/platforms/pseries/vio.c          |   2 +
+ arch/s390/pci/pci_dma.c                       |   2 +
+ arch/sh/Kconfig                               |   1 -
+ arch/unicore32/include/asm/pgtable.h          |   2 -
+ arch/x86/include/asm/xen/page-coherent.h      |  14 ---
+ arch/x86/kernel/amd_gart_64.c                 |   3 +
+ arch/x86/kernel/pci-calgary_64.c              |   2 +
+ arch/x86/kernel/pci-swiotlb.c                 |   1 -
+ arch/x86/kernel/setup.c                       |   2 +-
+ arch/x86/pci/sta2x11-fixup.c                  |   4 +-
+ arch/x86/xen/mmu_pv.c                         |   2 -
+ arch/xtensa/Kconfig                           |   1 -
+ arch/xtensa/kernel/pci-dma.c                  |   4 +-
+ block/blk-settings.c                          |  23 +++++
+ drivers/gpu/drm/omapdrm/dss/dispc.c           |  11 +--
+ drivers/iommu/amd_iommu.c                     |   2 +
+ drivers/iommu/dma-iommu.c                     |  29 +++---
+ drivers/iommu/intel-iommu.c                   |   2 +
+ drivers/mmc/core/queue.c                      |  41 +++++++-
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c |   2 +-
+ drivers/parisc/ccio-dma.c                     |   1 +
+ drivers/parisc/sba_iommu.c                    |   1 +
+ drivers/remoteproc/Kconfig                    |   2 +-
+ drivers/xen/swiotlb-xen.c                     |  84 ++++-------------
+ include/linux/blkdev.h                        |   2 +
+ include/linux/dma-mapping.h                   |  34 +++----
+ include/linux/dma-noncoherent.h               |  13 ++-
+ include/linux/mmc/host.h                      |   2 +
+ include/linux/vmalloc.h                       |   2 +
+ include/xen/arm/hypervisor.h                  |   2 -
+ include/xen/arm/page-coherent.h               |  24 +++--
+ include/xen/swiotlb-xen.h                     |   5 +
+ kernel/dma/Kconfig                            |  12 ++-
+ kernel/dma/coherent.c                         |  13 ---
+ kernel/dma/mapping.c                          | 105 ++++++++++++++-------
+ kernel/dma/remap.c                            |  51 ++++++----
+ mm/vmalloc.c                                  |   5 +-
+ sound/core/pcm_native.c                       |  13 ++-
+ 74 files changed, 399 insertions(+), 677 deletions(-)
+ delete mode 100644 arch/arm64/include/asm/dma-mapping.h
