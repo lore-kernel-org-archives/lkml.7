@@ -4,49 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468ADC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F10C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 189A821920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE54D21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787856;
-	bh=KpG27z8qyjIzkETdoVwHuerL4Qj7YTrZv6XUUnfjGhc=;
+	s=default; t=1568787859;
+	bh=kWBcST6419nHX84+TZFFq6BagVu7AxrrGNueaZTJ+kM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RNvRYwKe0NHkqIOd6U2rPIo9uL6ZsPGyHCFIoOBhTFn0I9DxIoKzAzdrXu2mW+9rc
-	 jeW5u4qjuvn4XMo4XfxPdSqNwwL4TF4UqaCA6O4zDGY2t3ls6dmcxn0mZeeerpgPfi
-	 OWPLv/3DEXLcu6naMVeWzMaIVB4FvevYTFUw4dac=
+	b=jeo5b3RrrJPDcBVbhZj8zgNI9Dy/U1/vr27zH6Z6xBKz44WuMW+czsC2yIRGQTr+w
+	 jvX6xrhpSgpxR8Vmv87liKJS6nZJB0ikEPNyUV6vpmqhIHeXohlrhZEBJPFuUR+DNC
+	 cT+cL2S3NnKBwgRBIrx/itj9pfiS3USl5nZsKJ0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbfIRGYP (ORCPT
+        id S1728478AbfIRGYS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:24:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbfIRGYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:11 -0400
+        id S1729800AbfIRGYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E1621920;
-        Wed, 18 Sep 2019 06:24:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D972321928;
+        Wed, 18 Sep 2019 06:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787850;
-        bh=KpG27z8qyjIzkETdoVwHuerL4Qj7YTrZv6XUUnfjGhc=;
+        s=default; t=1568787853;
+        bh=kWBcST6419nHX84+TZFFq6BagVu7AxrrGNueaZTJ+kM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHfF8Oot8/ufJQqA4GSNyIQDz2Oto7oi8MR92i2IeNyu1KRkXhto+Gm6wEksQ4cr4
-         t+hRvhX2zUAOeL+HQDCZPQfT6Cpe7lHA6cpALZPkHRyNYwLDohYtgLnjk8wbJ/4hop
-         XpEs4gYMoRaL0GZkS2etwPodkLUtiMhBHr9eTXGw=
+        b=Jcs8oGyvI54CeE0gx+jVdnd5AxVzHwviNB/L3Igu0F6AKLVnoI84d1oLdWFfUFet2
+         3UgLcDuNXyA3w1PVQZz7aFJdrjHIf0LLkeEoS2R3HRw14TGSzKAO2OVgYeAGoNB+nT
+         BkJQEt6yRff3PqVnnDW+vQi8K4AEguaXRCmyGyGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 34/50] crypto: talitos - check AES key size
-Date:   Wed, 18 Sep 2019 08:19:17 +0200
-Message-Id: <20190918061227.187874847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vaibhav Rustagi <vaibhavrustagi@google.com>,
+        Andreas Smas <andreas@lonelycoder.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        clang-built-linux@googlegroups.com, dimitri.sivanich@hpe.com,
+        mike.travis@hpe.com, russ.anderson@hpe.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 4.19 25/50] x86/purgatory: Change compiler flags from -mcmodel=kernel to -mcmodel=large to fix kexec relocation errors
+Date:   Wed, 18 Sep 2019 08:19:08 +0200
+Message-Id: <20190918061225.707967704@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,59 +70,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Steve Wahl <steve.wahl@hpe.com>
 
-commit 1ba34e71e9e56ac29a52e0d42b6290f3dc5bfd90 upstream.
+commit e16c2983fba0fa6763e43ad10916be35e3d8dc05 upstream.
 
-Although the HW accepts any size and silently truncates
-it to the correct length, the extra tests expects EINVAL
-to be returned when the key size is not valid.
+The last change to this Makefile caused relocation errors when loading
+a kdump kernel.  Restore -mcmodel=large (not -mcmodel=kernel),
+-ffreestanding, and -fno-zero-initialized-bsss, without reverting to
+the former practice of resetting KBUILD_CFLAGS.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 4de9d0b547b9 ("crypto: talitos - Add ablkcipher algorithms")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Purgatory.ro is a standalone binary that is not linked against the
+rest of the kernel.  Its image is copied into an array that is linked
+to the kernel, and from there kexec relocates it wherever it desires.
+
+With the previous change to compiler flags, the error "kexec: Overflow
+in relocation type 11 value 0x11fffd000" was encountered when trying
+to load the crash kernel.  This is from kexec code trying to relocate
+the purgatory.ro object.
+
+>From the error message, relocation type 11 is R_X86_64_32S.  The
+x86_64 ABI says:
+
+  "The R_X86_64_32 and R_X86_64_32S relocations truncate the
+   computed value to 32-bits.  The linker must verify that the
+   generated value for the R_X86_64_32 (R_X86_64_32S) relocation
+   zero-extends (sign-extends) to the original 64-bit value."
+
+This type of relocation doesn't work when kexec chooses to place the
+purgatory binary in memory that is not reachable with 32 bit
+addresses.
+
+The compiler flag -mcmodel=kernel allows those type of relocations to
+be emitted, so revert to using -mcmodel=large as was done before.
+
+Also restore the -ffreestanding and -fno-zero-initialized-bss flags
+because they are appropriate for a stand alone piece of object code
+which doesn't explicitly zero the bss, and one other report has said
+undefined symbols are encountered without -ffreestanding.
+
+These identical compiler flag changes need to happen for every object
+that becomes part of the purgatory.ro object, so gather them together
+first into PURGATORY_CFLAGS_REMOVE and PURGATORY_CFLAGS, and then
+apply them to each of the objects that have C source.  Do not apply
+any of these flags to kexec-purgatory.o, which is not part of the
+standalone object but part of the kernel proper.
+
+Tested-by: Vaibhav Rustagi <vaibhavrustagi@google.com>
+Tested-by: Andreas Smas <andreas@lonelycoder.com>
+Signed-off-by: Steve Wahl <steve.wahl@hpe.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: None
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: clang-built-linux@googlegroups.com
+Cc: dimitri.sivanich@hpe.com
+Cc: mike.travis@hpe.com
+Cc: russ.anderson@hpe.com
+Fixes: b059f801a937 ("x86/purgatory: Use CFLAGS_REMOVE rather than reset KBUILD_CFLAGS")
+Link: https://lkml.kernel.org/r/20190905202346.GA26595@swahl-linux
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Andreas Smas <andreas@lonelycoder.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/x86/purgatory/Makefile |   35 +++++++++++++++++++----------------
+ 1 file changed, 19 insertions(+), 16 deletions(-)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -1538,6 +1538,18 @@ static int ablkcipher_setkey(struct cryp
- 	return 0;
- }
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -18,37 +18,40 @@ targets += purgatory.ro
+ KASAN_SANITIZE	:= n
+ KCOV_INSTRUMENT := n
  
-+static int ablkcipher_aes_setkey(struct crypto_ablkcipher *cipher,
-+				  const u8 *key, unsigned int keylen)
-+{
-+	if (keylen == AES_KEYSIZE_128 || keylen == AES_KEYSIZE_192 ||
-+	    keylen == AES_KEYSIZE_256)
-+		return ablkcipher_setkey(cipher, key, keylen);
++# These are adjustments to the compiler flags used for objects that
++# make up the standalone purgatory.ro
 +
-+	crypto_ablkcipher_set_flags(cipher, CRYPTO_TFM_RES_BAD_KEY_LEN);
++PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
++PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
 +
-+	return -EINVAL;
-+}
+ # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
+ # in turn leaves some undefined symbols like __fentry__ in purgatory and not
+ # sure how to relocate those.
+ ifdef CONFIG_FUNCTION_TRACER
+-CFLAGS_REMOVE_sha256.o		+= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_purgatory.o	+= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_string.o		+= $(CC_FLAGS_FTRACE)
+-CFLAGS_REMOVE_kexec-purgatory.o	+= $(CC_FLAGS_FTRACE)
++PURGATORY_CFLAGS_REMOVE		+= $(CC_FLAGS_FTRACE)
+ endif
+ 
+ ifdef CONFIG_STACKPROTECTOR
+-CFLAGS_REMOVE_sha256.o		+= -fstack-protector
+-CFLAGS_REMOVE_purgatory.o	+= -fstack-protector
+-CFLAGS_REMOVE_string.o		+= -fstack-protector
+-CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector
++PURGATORY_CFLAGS_REMOVE		+= -fstack-protector
+ endif
+ 
+ ifdef CONFIG_STACKPROTECTOR_STRONG
+-CFLAGS_REMOVE_sha256.o		+= -fstack-protector-strong
+-CFLAGS_REMOVE_purgatory.o	+= -fstack-protector-strong
+-CFLAGS_REMOVE_string.o		+= -fstack-protector-strong
+-CFLAGS_REMOVE_kexec-purgatory.o	+= -fstack-protector-strong
++PURGATORY_CFLAGS_REMOVE		+= -fstack-protector-strong
+ endif
+ 
+ ifdef CONFIG_RETPOLINE
+-CFLAGS_REMOVE_sha256.o		+= $(RETPOLINE_CFLAGS)
+-CFLAGS_REMOVE_purgatory.o	+= $(RETPOLINE_CFLAGS)
+-CFLAGS_REMOVE_string.o		+= $(RETPOLINE_CFLAGS)
+-CFLAGS_REMOVE_kexec-purgatory.o	+= $(RETPOLINE_CFLAGS)
++PURGATORY_CFLAGS_REMOVE		+= $(RETPOLINE_CFLAGS)
+ endif
+ 
++CFLAGS_REMOVE_purgatory.o	+= $(PURGATORY_CFLAGS_REMOVE)
++CFLAGS_purgatory.o		+= $(PURGATORY_CFLAGS)
 +
- static void common_nonsnoop_unmap(struct device *dev,
- 				  struct talitos_edesc *edesc,
- 				  struct ablkcipher_request *areq)
-@@ -2705,6 +2717,7 @@ static struct talitos_alg_template drive
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
- 				.ivsize = AES_BLOCK_SIZE,
-+				.setkey = ablkcipher_aes_setkey,
- 			}
- 		},
- 		.desc_hdr_template = DESC_HDR_TYPE_COMMON_NONSNOOP_NO_AFEU |
-@@ -2722,6 +2735,7 @@ static struct talitos_alg_template drive
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
- 				.ivsize = AES_BLOCK_SIZE,
-+				.setkey = ablkcipher_aes_setkey,
- 			}
- 		},
- 		.desc_hdr_template = DESC_HDR_TYPE_AESU_CTR_NONSNOOP |
++CFLAGS_REMOVE_sha256.o		+= $(PURGATORY_CFLAGS_REMOVE)
++CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
++
++CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
++CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
++
+ $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+ 
 
 
