@@ -2,80 +2,183 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C0ADC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C8CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A46121897
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568802198;
-	bh=/Zfr/QtjxEv0/rdG9JlMCZnPD4M+CijN9S/GYk/RM/s=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=pW/sE5nQzFTjpsx0jsWH5ZWK8NzAoTXrosbDbN5dFKDR0JFBBhFlJnIU8Qa6Pj6w1
-	 RfkaUYvRVqhkm+KGVgyzu5xrzfWGqS3j1VKMd0giIgVnBAPJmLcJ9KlXnD1c6KWkId
-	 m1cLQiTkcDJjt0dKvm4H9W0Pgoto746RMsqG8Pm8=
+	by mail.kernel.org (Postfix) with ESMTP id 201FE21897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 10:23:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NBkUq176"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfIRKXR (ORCPT
+        id S1729852AbfIRKX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 06:23:17 -0400
-Received: from foss.arm.com ([217.140.110.172]:38712 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728507AbfIRKXR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 06:23:17 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFA0F337;
-        Wed, 18 Sep 2019 03:23:16 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E209F3F59C;
-        Wed, 18 Sep 2019 03:23:15 -0700 (PDT)
-Subject: Re: [PATCH] irqchip/gic-v3: Fix GIC_LINE_NR accessor
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     tglx@linutronix.de, jason@lakedaemon.net,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wanghaibin.wang@huawei.com
-References: <1568789850-14080-1-git-send-email-yuzenghui@huawei.com>
-From:   Marc Zyngier <maz@kernel.org>
-Organization: Approximate
-Message-ID: <89645aea-70d4-8456-cb47-5a11846fa934@kernel.org>
-Date:   Wed, 18 Sep 2019 11:23:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 18 Sep 2019 06:23:56 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24031 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729713AbfIRKXz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 06:23:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1568802233;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PzJJIzaT+H0i65urk/DowU+Nu1kZ2zWoYZTl/vMnWsA=;
+        b=NBkUq176kVQSB9vtvsFK2KbuEdUGO/D6ecCpIunhu82G0jzJrck64DsaduzznUKbWzDhwU
+        8eAFdHBni7jK1MVlmentoyiTGEslp4iHuc+R8VZoGy42x6OdjNifUK7+5D2JHjoFjpQwhK
+        Ny9T2LxyAXpzD/wAGi6RkHcLm50mRVo=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-202-ob8Hl-fgPmKLiPY9wB2YSg-1; Wed, 18 Sep 2019 06:23:50 -0400
+Received: by mail-wr1-f69.google.com with SMTP id j2so2190817wre.1
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 03:23:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/BXfx7jonw/Kdws8cuIdF1uOWxKnVxEGGX2roqyV5/g=;
+        b=F8S1mZXciBZZH4ChZ4TD2bu7BNJ53Qv3QtGSdNWo87kilL7hM9u02XcqbKz7ZeruOn
+         RgsVxG81Ks3NDSC8rOChC1NKNhTrLBS5sLb3Zgu+cqyLbvOL/HP6M6v6eHlMlqpT62KW
+         XUgt7mOlgEtug84gUvHtfiPUKUq2HRUEnyCQX+znyUjfx9oACvVpeV5wdxnaYQ02gXWk
+         lbOwoekZOq4WEhdEqgQx348JlzcNKercaG0+NuBfGAUR0NvdYngo4h1oxh94MOiSTcq3
+         9XvHL9+JmD2LFOHqOvwO9vs6b4V/RBFITVOglsriYFBkJwYedaKByyPk6Z6qVbbvsHo0
+         tQ5g==
+X-Gm-Message-State: APjAAAXV62N8+mw0ffb0luuZ0Xl+ZwMm4YB0tbIZGAbKTZiN8eBKQcjD
+        aBduQ37t9kPEzeC0pTPEtHdxIkTOwRlMxzPnNHJEtTUe36ZCTe6DRrrlcA7jqD/Revbw6RDLIXP
+        s8B5qbNYoKN67+nHiAqgNJWHN
+X-Received: by 2002:adf:e443:: with SMTP id t3mr2384766wrm.181.1568802229667;
+        Wed, 18 Sep 2019 03:23:49 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqwfxmTc5Fm4ZBlmRxUIGfYmFyau7KO9p53RPlq/ZJeTwvrFxtmEzKYq4y8POaEPkTSmkwUKyg==
+X-Received: by 2002:adf:e443:: with SMTP id t3mr2384734wrm.181.1568802229356;
+        Wed, 18 Sep 2019 03:23:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:c46c:2acb:d8d2:21d8? ([2001:b07:6468:f312:c46c:2acb:d8d2:21d8])
+        by smtp.gmail.com with ESMTPSA id h125sm2260481wmf.31.2019.09.18.03.23.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 03:23:48 -0700 (PDT)
+Subject: Re: [RFC PATCH v3 4/6] psci: Add hvc call service for ptp_kvm.
+To:     "Jianyong Wu (Arm Technology China)" <Jianyong.Wu@arm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
+        "john.stultz@linaro.org" <john.stultz@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "richardcochran@gmail.com" <richardcochran@gmail.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "Kaly Xin (Arm Technology China)" <Kaly.Xin@arm.com>,
+        "Justin He (Arm Technology China)" <Justin.He@arm.com>,
+        nd <nd@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190918080716.64242-1-jianyong.wu@arm.com>
+ <20190918080716.64242-5-jianyong.wu@arm.com>
+ <83ed7fac-277f-a31e-af37-8ec134f39d26@redhat.com>
+ <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <629538ea-13fb-e666-8df6-8ad23f114755@redhat.com>
+Date:   Wed, 18 Sep 2019 12:23:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1568789850-14080-1-git-send-email-yuzenghui@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <HE1PR0801MB1676F57B317AE85E3B934B32F48E0@HE1PR0801MB1676.eurprd08.prod.outlook.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MC-Unique: ob8Hl-fgPmKLiPY9wB2YSg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/2019 07:57, Zenghui Yu wrote:
-> As per GIC spec, ITLinesNumber indicates the maximum SPI INTID that
-> the GIC implementation supports. And the maximum SPI INTID an
-> implementation might support is 1019 (field value 11111).
-> 
-> max(GICD_TYPER_SPIS(...), 1020) is not what we actually want for
-> GIC_LINE_NR. Fix it to min(GICD_TYPER_SPIS(...), 1020).
-> 
-> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
-> ---
-> 
-> Hi Marc,
-> 
-> I still see "GICv3: 992 SPIs implemented" on the host. I go back to
-> https://patchwork.kernel.org/patch/11078623/ and it seems that we
-> failed to make the GIC_LINE_NR correct at that time.
+On 18/09/19 11:57, Jianyong Wu (Arm Technology China) wrote:
+> Hi Paolo,
+>=20
+>> On 18/09/19 10:07, Jianyong Wu wrote:
+>>> +=09case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
+>>> +=09=09getnstimeofday(ts);
+>>
+>> This is not Y2038-safe.  Please use ktime_get_real_ts64 instead, and spl=
+it the
+>> 64-bit seconds value between val[0] and val[1].
+>>
+> As far as I know, y2038-safe will only affect signed 32-bit integer,
+> how does it affect 64-bit integer?
+> And why split 64-bit number into two blocks is necessary?
 
-Ah, nice catch. Clearly, I didn't have my head screwed on properly when
-I wrote this. I'll take this in for the next round of fixes.
+val is an u32, not an u64.  (And val[0], where you store the seconds, is
+best treated as signed, since val[0] =3D=3D -1 is returned for
+SMCCC_RET_NOT_SUPPORTED).
+
+>> However, it seems to me that the new function is not needed and you can
+>> just use ktime_get_snapshot.  You'll get the time in systime_snapshot->r=
+eal
+>> and the cycles value in systime_snapshot->cycles.
+>=20
+> See patch 5/6, I need both counter cycle and clocksource, ktime_get_snaps=
+hot seems only offer cycles.
+
+No, patch 5/6 only needs the current clock (ptp_sc.cycles is never
+accessed).  So you could just use READ_ONCE(tk->tkr_mono.clock).
+
+However, even then I don't think it is correct to use ptp_sc.cs blindly
+in patch 5.  I think there is a misunderstanding on the meaning of
+system_counterval.cs as passed to get_device_system_crosststamp.
+system_counterval.cs is not the active clocksource; it's the clocksource
+on which system_counterval.cycles is based.
+
+Hypothetically, the clocksource could be one for which ptp_sc.cycles is
+_not_ a cycle value.  If you set system_counterval.cs to the system
+clocksource, get_device_system_crosststamp will return a bogus value.
+So system_counterval.cs should be set to something like
+&clocksource_counter (from drivers/clocksource/arm_arch_timer.c).
+Perhaps the right place to define kvm_arch_ptp_get_clock_fn is in that file=
+?
+
+>>> +=09=09get_current_counterval(&sc);
+>>> +=09=09val[0] =3D ts->tv_sec;
+>>> +=09=09val[1] =3D ts->tv_nsec;
+>>> +=09=09val[2] =3D sc.cycles;
+>>> +=09=09val[3] =3D 0;
+>>> +=09=09break;
+>>
+>> This should return a guest-cycles value.  If the cycles values always th=
+e same
+>> between the host and the guest on ARM, then okay.  If not, you have to
+>> apply whatever offset exists.
+>>
+> In my opinion, when use ptp_kvm as clock sources to sync time
+> between host and guest, user should promise the guest and host has no
+> clock offset.
+
+What would be the adverse effect of having a fixed offset between guest
+and host?  If there were one, you'd have to check that and fail the
+hypercall if there is an offset.  But again, I think it's enough to
+subtract vcpu_vtimer(vcpu)->cntvoff or something like that.
+
+You also have to check here that the clocksource is based on the ARM
+architectural timer.  Again, maybe you could place the implementation in
+drivers/clocksource/arm_arch_timer.c, and make it return -ENODEV if the
+active clocksource is not clocksource_counter.  Then KVM can look for
+errors and return SMCCC_RET_NOT_SUPPORTED in that case.
 
 Thanks,
 
-	M.
--- 
-Jazz is not dead, it just smells funny...
+Paolo
+
+> So we can be sure that the cycle between guest and
+> host should be keep consistent. But I need check it.
+> I think host cycle should be returned to guest as we should promise
+> we get clock and counter in the same time.
+
