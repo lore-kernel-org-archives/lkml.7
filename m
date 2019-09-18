@@ -2,257 +2,136 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 629C7C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F17C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A577218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="NaC6eGGn"
+	by mail.kernel.org (Postfix) with ESMTP id E1382214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbfIRFwA (ORCPT
+        id S1728734AbfIRFwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:52:00 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38335 "EHLO ozlabs.org"
+        Wed, 18 Sep 2019 01:52:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59378 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbfIRFv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:51:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725904AbfIRFwn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:52:43 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 46Y8Ht6yBgz9sPK;
-        Wed, 18 Sep 2019 15:51:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1568785916;
-        bh=QAFbzdw2vnSZDQUXwV7YNxQAM2aphYQykkvqG9wUYLM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=NaC6eGGnbleVGw4GycFoqaW3sdLe0yR9FbdH2m9+8pE8xu8c4Ikt1FU0Uq6UxsqHH
-         tMmVJJCxbjmojxHCOEttD8WhBBBKHRB0+RmB+N0HEeSS8Sdjd6m1jpzk3123nVxpJ5
-         iBH/r5PVb5wzDf+CIVccbU+YsGRePUix7o9Ne+k/91e5AT03J8GEw7cKqhZ/0XLZin
-         5uwy1C+hgCFUOhloXyyD0q+Kq36GoETfIprzA3Uc4NkdY8QF2J7pJlpXcLgx5tR8Jl
-         8Kl7XDlcAL68uS1knOKAahi6dvOGK/kZFdjzk9jsinUjJsH7Dq7Sn8XLJM5ZflU7ay
-         7sso523PH8EsA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/8] powerpc/32: Add VDSO version of getcpu
-In-Reply-To: <27d699092118ee8d21741c08a6ff7e4c65effdf2.1566491310.git.christophe.leroy@c-s.fr>
-References: <cover.1566491310.git.christophe.leroy@c-s.fr> <27d699092118ee8d21741c08a6ff7e4c65effdf2.1566491310.git.christophe.leroy@c-s.fr>
-Date:   Wed, 18 Sep 2019 15:51:54 +1000
-Message-ID: <87h85aw3r9.fsf@mpe.ellerman.id.au>
+        by mx1.redhat.com (Postfix) with ESMTPS id B33AE30821BF;
+        Wed, 18 Sep 2019 05:52:42 +0000 (UTC)
+Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3BAA60872;
+        Wed, 18 Sep 2019 05:52:18 +0000 (UTC)
+Subject: Re: [RFC PATCH 1/2] mdev: device id support
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com
+References: <20190912094012.29653-1-jasowang@redhat.com>
+ <20190912094012.29653-2-jasowang@redhat.com>
+ <20190917140720.3686e0cc.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e53b38be-bc2a-785f-12d2-951805f3395f@redhat.com>
+Date:   Wed, 18 Sep 2019 13:52:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190917140720.3686e0cc.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 18 Sep 2019 05:52:43 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
 
-Sorry I'm late replying to this.
-
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> Commit 18ad51dd342a ("powerpc: Add VDSO version of getcpu") added
-> getcpu() for PPC64 only, by making use of a user readable general
-> purpose SPR.
+On 2019/9/17 下午8:07, Cornelia Huck wrote:
+> On Thu, 12 Sep 2019 17:40:11 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
 >
-> PPC32 doesn't have any such SPR, a full system call can still be
-> avoided by implementing a fast system call which reads the CPU id
-> in the task struct and returns immediately without going back in
-> virtual mode.
+>> Mdev bus only support vfio driver right now, so it doesn't implement
+>> match method. But in the future, we may add drivers other than vfio,
+>> one example is virtio-mdev[1] driver. This means we need to add device
+>> id support in bus match method to pair the mdev device and mdev driver
+>> correctly.
+> Sounds reasonable.
 >
-> Before the patch, vdsotest reported:
-> getcpu: syscall: 1572 nsec/call
-> getcpu:    libc: 1787 nsec/call
-> getcpu:    vdso: not tested
+>> So this patch add id_table to mdev_driver and id for mdev parent, and
+>> implement the match method for mdev bus.
+>>
+>> [1] https://lkml.org/lkml/2019/9/10/135
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/gpu/drm/i915/gvt/kvmgt.c  |  2 +-
+>>   drivers/s390/cio/vfio_ccw_ops.c   |  2 +-
+>>   drivers/s390/crypto/vfio_ap_ops.c |  3 ++-
+>>   drivers/vfio/mdev/mdev_core.c     | 14 ++++++++++++--
+>>   drivers/vfio/mdev/mdev_driver.c   | 14 ++++++++++++++
+>>   drivers/vfio/mdev/mdev_private.h  |  1 +
+>>   drivers/vfio/mdev/vfio_mdev.c     |  6 ++++++
+>>   include/linux/mdev.h              |  6 +++++-
+>>   include/linux/mod_devicetable.h   |  6 ++++++
+>>   samples/vfio-mdev/mbochs.c        |  2 +-
+>>   samples/vfio-mdev/mdpy.c          |  2 +-
+>>   samples/vfio-mdev/mtty.c          |  2 +-
+>>   12 files changed, 51 insertions(+), 9 deletions(-)
+> (...)
 >
-> Now, vdsotest reports:
-> getcpu: syscall: 1582 nsec/call
-> getcpu:    libc: 667 nsec/call
-> getcpu:    vdso: 368 nsec/call
+> The transformations of the vendor drivers and the new interface look
+> sane.
 >
-> For non SMP, just return CPU id 0 from the VDSO directly.
+> (...)
 >
-> PPC32 doesn't support CONFIG_NUMA so NUMA node is always 0.
+>> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+>> index 5714fd35a83c..f1fc143df042 100644
+>> --- a/include/linux/mod_devicetable.h
+>> +++ b/include/linux/mod_devicetable.h
+>> @@ -821,4 +821,10 @@ struct wmi_device_id {
+>>   	const void *context;
+>>   };
+>>   
+>> +/* MDEV */
+>> +
+> Maybe add some kerneldoc and give vfio as an example of what we're
+> matching here?
+
+
+Will add when posting a non RFC patch.
+
+
 >
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> +struct mdev_device_id {
+>> +	__u8 id;
+> I agree with the suggestion to rename this to 'class_id'.
 >
-> ---
-> v2: fixed build error in getcpu.S
-> ---
->  arch/powerpc/include/asm/vdso.h         |  2 ++
->  arch/powerpc/kernel/head_32.h           | 13 +++++++++++++
->  arch/powerpc/kernel/head_booke.h        | 11 +++++++++++
->  arch/powerpc/kernel/vdso32/Makefile     |  4 +---
->  arch/powerpc/kernel/vdso32/getcpu.S     |  7 +++++++
->  arch/powerpc/kernel/vdso32/vdso32.lds.S |  2 --
->  6 files changed, 34 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
-> index b5e1f8f8a05c..adb54782df5f 100644
-> --- a/arch/powerpc/include/asm/vdso.h
-> +++ b/arch/powerpc/include/asm/vdso.h
-> @@ -16,6 +16,8 @@
->  /* Define if 64 bits VDSO has procedure descriptors */
->  #undef VDS64_HAS_DESCRIPTORS
->  
-> +#define NR_MAGIC_FAST_VDSO_SYSCALL	0x789a
 
-We are still in the middle of the years long process of removing the
-"magic" syscall on 64-bit:
+Let me change it.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/powerpc/kernel/exceptions-64s.S?commit=4d856f72c10ecb060868ed10ff1b1453943fc6c8#n1578
- 
-
-Can we not add another one on 32-bit?
-
-Is it really such a fast path that it's worth putting a wart in the
-syscall entry like that?
-
-Is there some other method? On s390 they have a per-cpu VDSO page, that
-would be a nice option. How we do that would be specific to a particular
-MMU, and maybe not even possible with some MMUs. So maybe that's not
-feasible.
-
-If you do want to add a fastpath syscall then please just add it as a
-regular syscall number, that way it's at least a bit less of a wart.
-It's still not visible via tracing/ptrace etc. which is a pain but at
-least the number is not "magical" too.
-
-cheers
+Thanks
 
 
->  /* Offsets relative to thread->vdso_base */
-> diff --git a/arch/powerpc/kernel/head_32.h b/arch/powerpc/kernel/head_32.h
-> index 4a692553651f..a2e38b59785a 100644
-> --- a/arch/powerpc/kernel/head_32.h
-> +++ b/arch/powerpc/kernel/head_32.h
-> @@ -3,6 +3,8 @@
->  #define __HEAD_32_H__
->  
->  #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-> +#include <asm/vdso.h>
-> +#include <asm/asm-offsets.h>
->  
->  /*
->   * MSR_KERNEL is > 0x8000 on 4xx/Book-E since it include MSR_CE.
-> @@ -74,7 +76,13 @@
->  .endm
->  
->  .macro SYSCALL_ENTRY trapno
-> +#ifdef CONFIG_SMP
-> +	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-> +#endif
->  	mfspr	r12,SPRN_SPRG_THREAD
-> +#ifdef CONFIG_SMP
-> +	beq-	1f
-> +#endif
->  	mfcr	r10
->  	lwz	r11,TASK_STACK-THREAD(r12)
->  	mflr	r9
-> @@ -152,6 +160,11 @@
->  	mtspr	SPRN_SRR0,r11
->  	SYNC
->  	RFI				/* jump to handler, enable MMU */
-> +#ifdef CONFIG_SMP
-> +1:
-> +	lwz	r5, TASK_CPU - THREAD(r12)
-> +	RFI
-> +#endif
->  .endm
->  
->  /*
-> diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
-> index 2ae635df9026..c534e87cac84 100644
-> --- a/arch/powerpc/kernel/head_booke.h
-> +++ b/arch/powerpc/kernel/head_booke.h
-> @@ -3,6 +3,8 @@
->  #define __HEAD_BOOKE_H__
->  
->  #include <asm/ptrace.h>	/* for STACK_FRAME_REGS_MARKER */
-> +#include <asm/vdso.h>
-> +#include <asm/asm-offsets.h>
->  #include <asm/kvm_asm.h>
->  #include <asm/kvm_booke_hv_asm.h>
->  
-> @@ -104,6 +106,10 @@ FTR_SECTION_ELSE
->  #ifdef CONFIG_KVM_BOOKE_HV
->  ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
->  #endif
-> +#ifdef CONFIG_SMP
-> +	cmplwi	cr0, r0, NR_MAGIC_FAST_VDSO_SYSCALL
-> +	beq-	1f
-> +#endif
->  	BOOKE_CLEAR_BTB(r11)
->  	lwz	r11, TASK_STACK - THREAD(r10)
->  	rlwinm	r12,r12,0,4,2	/* Clear SO bit in CR */
-> @@ -176,6 +182,11 @@ ALT_FTR_SECTION_END_IFSET(CPU_FTR_EMB_HV)
->  	mtspr	SPRN_SRR0,r11
->  	SYNC
->  	RFI				/* jump to handler, enable MMU */
-> +#ifdef CONFIG_SMP
-> +1:
-> +	lwz	r5, TASK_CPU - THREAD(r10)
-> +	RFI
-> +#endif
->  .endm
->  
->  /* To handle the additional exception priority levels on 40x and Book-E
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
-> index 06f54d947057..e147bbdc12cd 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -2,9 +2,7 @@
->  
->  # List of files in the vdso, has to be asm only for now
->  
-> -obj-vdso32-$(CONFIG_PPC64) = getcpu.o
-> -obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o \
-> -		$(obj-vdso32-y)
-> +obj-vdso32 = sigtramp.o gettimeofday.o datapage.o cacheflush.o note.o getcpu.o
->  
->  # Build rules
->  
-> diff --git a/arch/powerpc/kernel/vdso32/getcpu.S b/arch/powerpc/kernel/vdso32/getcpu.S
-> index 63e914539e1a..bde226ad904d 100644
-> --- a/arch/powerpc/kernel/vdso32/getcpu.S
-> +++ b/arch/powerpc/kernel/vdso32/getcpu.S
-> @@ -17,7 +17,14 @@
->   */
->  V_FUNCTION_BEGIN(__kernel_getcpu)
->    .cfi_startproc
-> +#if defined(CONFIG_PPC64)
->  	mfspr	r5,SPRN_SPRG_VDSO_READ
-> +#elif defined(CONFIG_SMP)
-> +	li	r0, NR_MAGIC_FAST_VDSO_SYSCALL
-> +	sc	/* returns cpuid in r5, clobbers cr0 and r10-r13 */
-> +#else
-> +	li	r5, 0
-> +#endif
->  	cmpwi	cr0,r3,0
->  	cmpwi	cr1,r4,0
->  	clrlwi  r6,r5,16
-> diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> index 099a6db14e67..663880671e20 100644
-> --- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> +++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
-> @@ -152,9 +152,7 @@ VERSION
->  		__kernel_sync_dicache_p5;
->  		__kernel_sigtramp32;
->  		__kernel_sigtramp_rt32;
-> -#ifdef CONFIG_PPC64
->  		__kernel_getcpu;
-> -#endif
->  		__kernel_time;
->  
->  	local: *;
-> -- 
-> 2.13.3
+>> +};
+>> +
+>>   #endif /* LINUX_MOD_DEVICETABLE_H */
