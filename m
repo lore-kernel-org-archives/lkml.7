@@ -2,116 +2,120 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA544C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B63C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:30:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B081B21907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA47421920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KS7mlFR2"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OJX2Ulre"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388810AbfIRSYv (ORCPT
+        id S2388513AbfIRSai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:24:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35408 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388789AbfIRSYu (ORCPT
+        Wed, 18 Sep 2019 14:30:38 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48302 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387434AbfIRSah (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:24:50 -0400
-Received: by mail-io1-f68.google.com with SMTP id q10so1554090iop.2
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 11:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9gPHsl5MGafDizMhJaXlJwLXsMzDh1ZKR3owfwW7eEw=;
-        b=KS7mlFR2kYZtKZLYic9KTEy8y8YhqrWC5gUb9WrC/SSt6dH2xLi5fyfB/IM9nURwQz
-         DUekaLCyNL1i8ITYPCZLY8Flwm/fzYSvKtMI9KJT+w8tPLuuwJ3zJICqSBQTqXISknro
-         ew4MTUtCP5sGGMDVAKzpG040d6oFFUAVnLJMxMJw0rUoOY9zZx0IsLwegNvTjEiVy3fL
-         U4zN7gPCjvhfmtqjm37dJwPBXyTpyWZ0aTz7xeBwpfKePUwCanSzWXODZg3khJTvtznz
-         lQNOy8kDW5X+A9BKks9UgwPd43GkXChYA+gH+RdTqg5nOG6eLwvA4IBQAaN3rRT3mgA7
-         evSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9gPHsl5MGafDizMhJaXlJwLXsMzDh1ZKR3owfwW7eEw=;
-        b=oDW2alp19GJPyVId87U1dfbbpHY/HaRBB+THoeGDcW0tlZm7/zGOr/q+weDZrxNBQr
-         mBHlij+Q4vluC8Y7RcR1zlfI2BzrGFAt5LW321Vb2MxyKY2vE7DnQHEMsDoyi+zngQoM
-         n+cido/pkYbYLvZr2kjkpGYV/GIO2+6FHIylPaBLr9ylLGqiW/cxD8vPiVyoanQEXURF
-         wKVQyIJ1k/+peq7x7DSHusjjycbrryB97jobdoewJAaR426y8BVvg3JsKLGOxDBW6tHl
-         cteQmr4eGaejDQRkwzvxqy5GYjoZktXc12xQKWiWtq67J+biXxZVvp62h2J+TB42nX3e
-         P9Pw==
-X-Gm-Message-State: APjAAAVm2QU9ilHPzh+nGaN9rXVQom+N3iIMG1ilzS03X4Ek7yTCv8D6
-        JJDRRAGVfQSGxYydgUjfk4zbQoApp26/g8bZ3dQOiA==
-X-Google-Smtp-Source: APXvYqwTNqNxGkvhQrvIve8ulxfhIJR74fxSNr+7tatQwwBPQBCBy+Miqdmsa3o8F93SsRvO4dlzQ+KDmRdNEzHO5z0=
-X-Received: by 2002:a5d:8b07:: with SMTP id k7mr740866ion.20.1568831089859;
- Wed, 18 Sep 2019 11:24:49 -0700 (PDT)
+        Wed, 18 Sep 2019 14:30:37 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IIUVnp035705;
+        Wed, 18 Sep 2019 13:30:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1568831431;
+        bh=xT70Ic3Q3uDE1FLFpIsErlC8zGyZTIsPhLdtMKcdpRI=;
+        h=Subject:To:References:From:Date:In-Reply-To;
+        b=OJX2UlrePFOPwMzAwF2m2pWVDdjcUBzP+P4kQ20CMK4l4+SRs+DeV2IocjIyCMN9a
+         D5GMaFhDRFqDDFz6BIsH5FsHOMIo5b44HuXXdJ/MJZLZtrPuQyStlgKh27Qfbmwlu5
+         HZn7RESXRY651BeM3WjAvXwLvSDkFVIjeaQGccS8=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IIUVZB002263
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Sep 2019 13:30:31 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
+ Sep 2019 13:30:31 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 18 Sep 2019 13:30:28 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IIUUAf103570;
+        Wed, 18 Sep 2019 13:30:30 -0500
+Subject: Re: [PATCH 2/5] leds: lm3692x: Don't overwrite return value in error
+ path
+To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <cover.1568772964.git.agx@sigxcpu.org>
+ <bc1a6e64da58d65b61c7e9358c745b0d467fc24c.1568772964.git.agx@sigxcpu.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <4a6b8df3-92f3-0f93-9327-36154daa06d8@ti.com>
+Date:   Wed, 18 Sep 2019 13:33:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1568815340-30401-1-git-send-email-pragnesh.patel@sifive.com> <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
-In-Reply-To: <CAL_JsqJwsLkQGjjoS_RvBXjSq4irrVPEpwrwTv7wL732YHM4dg@mail.gmail.com>
-From:   Pragnesh Patel <pragnesh.patel@sifive.com>
-Date:   Wed, 18 Sep 2019 23:54:36 +0530
-Message-ID: <CAN8ut8LObxfEEQbhmncToG8u=Ec6rESLYHcriT5cu7RAHxbDqw@mail.gmail.com>
-Subject: Re: [PATCH] regulator: dt-bindings: Fix building error for dt_binding_check
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <bc1a6e64da58d65b61c7e9358c745b0d467fc24c.1568772964.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 7:58 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Wed, Sep 18, 2019 at 9:02 AM Pragnesh Patel
-> <pragnesh.patel@sifive.com> wrote:
-> >
->
-> The subject could be more specific rather than being one that applies
-> to any dt_binding_check breakage in regulators.
->
+Guido
 
-Thanks for pointing me out, I will take care this in future patches.
+On 9/17/19 9:19 PM, Guido Günther wrote:
+> The driver currently reports successful initialization on every failure
+> as long as it's able to power off the regulator. Don't check the return
+> value of regulator_disable to avoid that.
+>
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>   drivers/leds/leds-lm3692x.c | 9 +++------
+>   1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
+> index 487228c2bed2..f394669ad8f2 100644
+> --- a/drivers/leds/leds-lm3692x.c
+> +++ b/drivers/leds/leds-lm3692x.c
+> @@ -312,15 +312,12 @@ static int lm3692x_init(struct lm3692x_led *led)
+>   	if (led->enable_gpio)
+>   		gpiod_direction_output(led->enable_gpio, 0);
+>   
+> -	if (led->regulator) {
+> -		ret = regulator_disable(led->regulator);
+> -		if (ret)
+> -			dev_err(&led->client->dev,
+> -				"Failed to disable regulator\n");
+> -	}
+> +	if (led->regulator)
+> +		regulator_disable(led->regulator);
 
-> > Compatible property is not of type 'string' so replace enum
-> > with items.
-> >
-> > Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
-> > ---
-> >  Documentation/devicetree/bindings/regulator/fixed-regulator.yaml | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > index a78150c..8d4a7b2 100644
-> > --- a/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > +++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.yaml
-> > @@ -29,7 +29,7 @@ if:
-> >
-> >  properties:
-> >    compatible:
-> > -    enum:
-> > +    items:
-> >        - const: regulator-fixed
-> >        - const: regulator-fixed-clock
->
-> This means you expect: compatible = "regulator-fixed", "regulator-fixed-clock";
->
-> Did you actually run 'dt_binding_check' because it should fail on the example?
->
-> I gave you exact change to make. Just remove 'const: ' on each entry.
+The change is ok and makes sense but I believe that if the regulator was 
+not properly disabled there needs to be some error message t0o.
 
-Thanks for correcting me, i rechecked "make dt_binding_check" and it's failed.
-I will send the patch again with the updated subject line.
+If the code got here then there is either a fault or an I/O issue not a 
+regulator issue.
 
->
-> Rob
+The regulator failing to disable should be logged.
+
+Dan
+
+
+>   
+>   	return ret;
+>   }
+> +
+>   static int lm3692x_probe_dt(struct lm3692x_led *led)
+>   {
+>   	struct fwnode_handle *child = NULL;
