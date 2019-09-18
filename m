@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1A8C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B87C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE1721925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70FB21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787644;
-	bh=xItjJk21um48QSG8Cuzllh+TXH0xwu64qQfvRLOtT4E=;
+	s=default; t=1568787646;
+	bh=gZ8a0o55VbNtlcpNUMcUSQywJuCz9aqnY0tE686ZAJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znjkIHEr4nrM0W1KjRlGiYpHCrfB5OqY0kx3vUUem8KncKtSSCQTIj1tUb0sgmU4V
-	 hoAU6GCSgb5y8DOge00/RrnOuWWKl5sP8Am3tSXM190jY7p/kkD8U3C6tC9OJt+JMR
-	 PcjQxlhKRl0MGqTcyuU6JxufXWa3sGcZxnFEJECQ=
+	b=vT+ZTwcqzqLH3j0RFzgk66vHnsKF0TpuiiOqTjoMeteQmWOVQ+RFfoGzOTBuP/YCi
+	 26jypC36kklCjBWncxtXKCGHkSia5s+qr+vLV52vLd95CHuNdqNaCf+JKnlWCp3svB
+	 R1JqF4iX8vrFeekz8f4lMWxvRV3flK5ynUcQ5qeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728772AbfIRGUn (ORCPT
+        id S1728793AbfIRGUq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:20:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39520 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:20:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbfIRGUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:20:36 -0400
+        id S1728700AbfIRGUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:20:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37AE921927;
-        Wed, 18 Sep 2019 06:20:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 756CF218AF;
+        Wed, 18 Sep 2019 06:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787635;
-        bh=xItjJk21um48QSG8Cuzllh+TXH0xwu64qQfvRLOtT4E=;
+        s=default; t=1568787641;
+        bh=gZ8a0o55VbNtlcpNUMcUSQywJuCz9aqnY0tE686ZAJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tb3nDnVIMBYKctZhhz2bby7Xn/je9N2lBhdvOF8HuWHGt4Y8E/uOZGvr1VYTpe5PS
-         ZmCCaABOCRd2Op37slk0LecptrUU61qh4KVwqlqeDQEULYKZkdj6zq9NhEkLExWb1+
-         d6eTz48ZUdHb003z0j2ypMz/Mk84ilQumP4vxCv0=
+        b=PmO7R2B9W57+jcCU1mrkkc2cxoFMg1js/FB/FkO3PuZ6SfBUWi0Jl7z7aR5EcHlI9
+         JsE2dm9+dPepUfZ0RWjSTrkG9vSHJ5wk1Wlwn/L4hJZv/3eKGOapt2c4ym8KacrzWP
+         4HtXTwzSTOro1L5pZORtwefb+IfQOIjhB5KKmdv0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: [PATCH 4.14 22/45] KVM: s390: Do not leak kernel stack data in the KVM_S390_INTERRUPT ioctl
-Date:   Wed, 18 Sep 2019 08:19:00 +0200
-Message-Id: <20190918061225.314367870@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.14 24/45] KVM: nVMX: handle page fault in vmread
+Date:   Wed, 18 Sep 2019 08:19:02 +0200
+Message-Id: <20190918061225.491402324@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -61,77 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Huth <thuth@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit 53936b5bf35e140ae27e4bbf0447a61063f400da upstream.
+commit f7eea636c3d505fe6f1d1066234f1aaf7171b681 upstream.
 
-When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
-an interrupt, we convert them from the legacy struct kvm_s390_interrupt
-to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
-However, this function does not take care of all types of interrupts
-that we can inject into the guest later (see do_inject_vcpu()). Since we
-do not clear out the s390irq values before calling s390int_to_s390irq(),
-there is a chance that we copy random data from the kernel stack which
-could be leaked to the userspace later.
-
-Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
-interrupt: s390int_to_s390irq() does not handle it, and the function
-__inject_pfault_init() later copies irq->u.ext which contains the
-random kernel stack data. This data can then be leaked either to
-the guest memory in __deliver_pfault_init(), or the userspace might
-retrieve it directly with the KVM_S390_GET_IRQ_STATE ioctl.
-
-Fix it by handling that interrupt type in s390int_to_s390irq(), too,
-and by making sure that the s390irq struct is properly pre-initialized.
-And while we're at it, make sure that s390int_to_s390irq() now
-directly returns -EINVAL for unknown interrupt types, so that we
-immediately get a proper error code in case we add more interrupt
-types to do_inject_vcpu() without updating s390int_to_s390irq()
-sometime in the future.
+The implementation of vmread to memory is still incomplete, as it
+lacks the ability to do vmread to I/O memory just like vmptrst.
 
 Cc: stable@vger.kernel.org
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
-Link: https://lore.kernel.org/kvm/20190912115438.25761-1-thuth@redhat.com
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kvm/interrupt.c |   10 ++++++++++
- arch/s390/kvm/kvm-s390.c  |    2 +-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/x86/kvm/vmx.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -1701,6 +1701,16 @@ int s390int_to_s390irq(struct kvm_s390_i
- 	case KVM_S390_MCHK:
- 		irq->u.mchk.mcic = s390int->parm64;
- 		break;
-+	case KVM_S390_INT_PFAULT_INIT:
-+		irq->u.ext.ext_params = s390int->parm;
-+		irq->u.ext.ext_params2 = s390int->parm64;
-+		break;
-+	case KVM_S390_RESTART:
-+	case KVM_S390_INT_CLOCK_COMP:
-+	case KVM_S390_INT_CPU_TIMER:
-+		break;
-+	default:
-+		return -EINVAL;
- 	}
- 	return 0;
- }
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3730,7 +3730,7 @@ long kvm_arch_vcpu_ioctl(struct file *fi
- 	}
- 	case KVM_S390_INTERRUPT: {
- 		struct kvm_s390_interrupt s390int;
--		struct kvm_s390_irq s390irq;
-+		struct kvm_s390_irq s390irq = {};
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -7996,6 +7996,7 @@ static int handle_vmread(struct kvm_vcpu
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+ 	gva_t gva = 0;
++	struct x86_exception e;
  
- 		r = -EFAULT;
- 		if (copy_from_user(&s390int, argp, sizeof(s390int)))
+ 	if (!nested_vmx_check_permission(vcpu))
+ 		return 1;
+@@ -8023,8 +8024,10 @@ static int handle_vmread(struct kvm_vcpu
+ 				vmx_instruction_info, true, &gva))
+ 			return 1;
+ 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
+-		kvm_write_guest_virt_system(vcpu, gva, &field_value,
+-					    (is_long_mode(vcpu) ? 8 : 4), NULL);
++		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
++						(is_long_mode(vcpu) ? 8 : 4),
++						NULL))
++			kvm_inject_page_fault(vcpu, &e);
+ 	}
+ 
+ 	nested_vmx_succeed(vcpu);
 
 
