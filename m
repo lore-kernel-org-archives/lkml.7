@@ -2,115 +2,84 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A11E2C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE4BC4CED0
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772FA218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:19:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A881B218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568819995;
-	bh=x8WP2oP4JlgEfTy9voeEBqyi5z/eoUfmFxXzC2apt5M=;
+	s=default; t=1568820049;
+	bh=3aLYvdE+34rtwhZUbphrzRj9DwPp9/Pn2+viAXCPVjg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Lo4ZtWyx2DB1UpHjPqcPoYro+zdtszFLBDs7AjlBjjlwGx5izzFR5ff25RYAbNyfU
-	 I/zQ/uOlXWX1ypN62Fbx80MxPrAbuxgmKv7t4V+xRUArZfv16ZQK/nPSwGnXnogQff
-	 E8Fy+1DkUd01o5tIJ6hsr1G3ZR6YDfJoJuHUgJKw=
+	b=zXdNwnyEKGGmm/XXQzxgfml+2gEVN9TVigGlk1F0T2Q6mzF+Xdm6RyUVbY6gPJD4t
+	 vZkyvMn8PzH9/hmaSgegrvBNsvbdYPlGS2fRArxVzrKjFm8So434BOOUlB++Okldiv
+	 2ggAENfIi/LT56OsLva7D8HusGnlqydnjo0ac+Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbfIRPTy (ORCPT
+        id S1731606AbfIRPUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:19:54 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39328 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfIRPTy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:19:54 -0400
-Received: by mail-qt1-f195.google.com with SMTP id n7so186084qtb.6;
-        Wed, 18 Sep 2019 08:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4/ozkoPe7I7HBcRNmLxlm9zJ7nl+dZfk4PcCpSwHEE0=;
-        b=T2V++haNtE/r+StT15PyzM8Pcx6eaP5oSwCQUlyICnkOO9OKmWUetxLSpJ+zeMMVm4
-         Umui41NlalpMH08oCwjhUB8rcPoPnvb4O75FaSLSpzXsOC8AeDcEFpcwKgGoIrv8svQG
-         Rq6lvlestuw80aSnQEx6Bp8hEcJzMpt1xbUH732DypsleAg7F1jnT0gy2aTwuAuVwG5i
-         vG3D/JY8NyPMDOrlPAk9MoiOF/4w7Er3TI3dDYvtUxWooplJYAbrWZwmnWkbKkv2kZNJ
-         O9knfGLSvhfjDSDSr3jLBMun+UVHVSZO/V4bM/o9XlBnZMKtacHwgn6vG8Zd4liINg+A
-         vcKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4/ozkoPe7I7HBcRNmLxlm9zJ7nl+dZfk4PcCpSwHEE0=;
-        b=HNj2Q43hlOubWboB/7iSXpUwuSUiU7YnnqcmaM4WzJrrPnmRKHdcgshnDCOx+zIJNQ
-         G64B9BcvWfifDNBE/VIBMCxX6AoPDoQBWLzFTNZIYWjxj4lq2Q+qRUWrWYLHqs56m2Rc
-         lRFK5yID/n3mhs9loBft6aNDuiSbCDCpi2E0P9VTQpB2/b9pkWkt6RD7jMCzIAZWeqFz
-         uFaLNOWORb1dOAjlt8WuT2lfqu5FaJ7Rt0IG5Oyq1KI+1uB7CVUHxF+dkO3iwycltt8M
-         sly5hzRww5QQW+EjDg301xc3QxpDmyMV37hfMyqfIy5cZ40pSG4WsHS7e7T6cztyjlJZ
-         jVtA==
-X-Gm-Message-State: APjAAAUDZdbQr+2ce++dwJeJIWfSpSTkqIlX2H4pZzHL6cD9xBAmL8t/
-        tmSk6vJB95k1mymHiiHkkHw=
-X-Google-Smtp-Source: APXvYqyUV3Moh52SBY0W8pItsBoyuN8/Tuoat2VePzXuwr1j0fiDdwfUdmD7qbDpiunmtNeODAgw2w==
-X-Received: by 2002:ad4:43c5:: with SMTP id o5mr3692951qvs.207.1568819992834;
-        Wed, 18 Sep 2019 08:19:52 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::fef0])
-        by smtp.gmail.com with ESMTPSA id e6sm340551qtr.25.2019.09.18.08.19.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 18 Sep 2019 08:19:51 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 08:19:48 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Paolo Valente <paolo.valente@linaro.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, ulf.hansson@linaro.org,
-        linus.walleij@linaro.org, bfq-iosched@googlegroups.com,
-        oleksandr@natalenko.name, cgroups@vger.kernel.org,
-        Angelo Ruocco <angeloruocco90@gmail.com>
-Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
-Message-ID: <20190918151948.GL3084169@devbig004.ftw2.facebook.com>
-References: <20190917165148.19146-1-paolo.valente@linaro.org>
- <20190917165148.19146-3-paolo.valente@linaro.org>
- <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
- <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
+        Wed, 18 Sep 2019 11:20:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727273AbfIRPUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:20:48 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED7721907;
+        Wed, 18 Sep 2019 15:20:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568820048;
+        bh=3aLYvdE+34rtwhZUbphrzRj9DwPp9/Pn2+viAXCPVjg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l6RpybC3Ta/Bs/8FqrVs/SFQGrRAhnj6n20ADappmPVwye0wHsM+0aUpwgtO97rGa
+         mc/sZZEatPYv3ot2rg01M9Xaf8Pfy2TuuQlAbCq1fbZAFfEkEXJIKw1E/HWaBHLOaZ
+         1Le4EmBT8uOpiSHBaPsTCL53ioD73yqTv8ttszO4=
+Date:   Wed, 18 Sep 2019 16:20:43 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        kernellwp@gmail.com, gregkh@linuxfoundation.org,
+        Matt Delco <delco@chromium.org>, stable@vger.kernel.org,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH] KVM: coalesced_mmio: add bounds checking
+Message-ID: <20190918152042.de4gxtaf3ddfyhyt@willie-the-truck>
+References: <1568815302-21319-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4D39D2FA-A487-4FAD-A67E-B90750CE0BD4@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1568815302-21319-1-git-send-email-pbonzini@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Sep 18, 2019 at 07:18:50AM +0200, Paolo Valente wrote:
-> A solution that both fulfills userspace request and doesn't break
-> anything for hypothetical users of the current interface already made
-> it to mainline, and Linus liked it too.  It is:
-
-Linus didn't like it.  The implementation was a bit nasty.  That was
-why it became a subject in the first place.
-
-> 19e9da9e86c4 ("block, bfq: add weight symlink to the bfq.weight cgroup parameter")
+On Wed, Sep 18, 2019 at 04:01:42PM +0200, Paolo Bonzini wrote:
+> From: Matt Delco <delco@chromium.org>
 > 
-> But it was then reverted on Tejun's request to do exactly what we
-> don't want do any longer now:
-> cf8929885de3 ("cgroup/bfq: revert bfq.weight symlink change")
+> The first/last indexes are typically shared with a user app.
+> The app can change the 'last' index that the kernel uses
+> to store the next result.  This change sanity checks the index
+> before using it for writing to a potentially arbitrary address.
+> 
+> This fixes CVE-2019-14821.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
+> Signed-off-by: Matt Delco <delco@chromium.org>
+> Signed-off-by: Jim Mattson <jmattson@google.com>
+> Reported-by: syzbot+983c866c3dd6efa3662a@syzkaller.appspotmail.com
+> [Use READ_ONCE. - Paolo]
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>  virt/kvm/coalesced_mmio.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
 
-Note that the interface was wrong at the time too.
+Acked-by: Will Deacon <will@kernel.org>
 
-> So, Jens, Tejun, can we please just revert that revert?
-
-I think presenting both io.weight and io.bfq.weight interfaces are
-probably the best course of action at this point but why does it have
-to be a symlink?  What's wrong with just creating another file with
-the same backing function?
-
-Thanks.
-
--- 
-tejun
+Will
