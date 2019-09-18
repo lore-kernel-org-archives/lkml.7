@@ -2,299 +2,83 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D03C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B050BC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 495C321925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FCB21906
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfIRFvi (ORCPT
+        id S1728453AbfIRFvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:51:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59050 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbfIRFvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:51:35 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 08FEA30821AE;
-        Wed, 18 Sep 2019 05:51:35 +0000 (UTC)
-Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0A7285D6A5;
-        Wed, 18 Sep 2019 05:51:23 +0000 (UTC)
-Subject: Re: [RFC v4 0/3] vhost: introduce mdev based hardware backend
-To:     Tiwei Bie <tiwei.bie@intel.com>
-Cc:     mst@redhat.com, alex.williamson@redhat.com,
-        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        lingshan.zhu@intel.com
-References: <20190917010204.30376-1-tiwei.bie@intel.com>
- <993841ed-942e-c90b-8016-8e7dc76bf13a@redhat.com>
- <20190917105801.GA24855@___>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <fa6957f3-19ad-f351-8c43-65bc8342b82e@redhat.com>
-Date:   Wed, 18 Sep 2019 13:51:21 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 18 Sep 2019 01:51:25 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:21495 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728355AbfIRFvW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:51:22 -0400
+X-UUID: acb52b50edd1492d9c01fab375910697-20190918
+X-UUID: acb52b50edd1492d9c01fab375910697-20190918
+Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 491667828; Wed, 18 Sep 2019 13:51:18 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 18 Sep 2019 13:51:12 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 18 Sep 2019 13:51:12 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>
+CC:     Ryder Lee <ryder.lee@mediatek.com>,
+        John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [RESEND, PATCH v7 08/11] arm64: dts: mt7622: add a property "num-pwms" for PWM
+Date:   Wed, 18 Sep 2019 13:50:08 +0800
+Message-ID: <1568785811-9577-9-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
+References: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20190917105801.GA24855@___>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 18 Sep 2019 05:51:35 +0000 (UTC)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-On 2019/9/17 下午6:58, Tiwei Bie wrote:
-> On Tue, Sep 17, 2019 at 11:32:03AM +0800, Jason Wang wrote:
->> On 2019/9/17 上午9:02, Tiwei Bie wrote:
->>> This RFC is to demonstrate below ideas,
->>>
->>> a) Build vhost-mdev on top of the same abstraction defined in
->>>      the virtio-mdev series [1];
->>>
->>> b) Introduce /dev/vhost-mdev to do vhost ioctls and support
->>>      setting mdev device as backend;
->>>
->>> Now the userspace API looks like this:
->>>
->>> - Userspace generates a compatible mdev device;
->>>
->>> - Userspace opens this mdev device with VFIO API (including
->>>     doing IOMMU programming for this mdev device with VFIO's
->>>     container/group based interface);
->>>
->>> - Userspace opens /dev/vhost-mdev and gets vhost fd;
->>>
->>> - Userspace uses vhost ioctls to setup vhost (userspace should
->>>     do VHOST_MDEV_SET_BACKEND ioctl with VFIO group fd and device
->>>     fd first before doing other vhost ioctls);
->>>
->>> Only compile test has been done for this series for now.
->>
->> Have a hard thought on the architecture:
-> Thanks a lot! Do appreciate it!
->
->> 1) Create a vhost char device and pass vfio mdev device fd to it as a
->> backend and translate vhost-mdev ioctl to virtio mdev transport (e.g
->> read/write). DMA was done through the VFIO DMA mapping on the container that
->> is attached.
-> Yeah, that's what we are doing in this series.
->
->> We have two more choices:
->>
->> 2) Use vfio-mdev but do not create vhost-mdev device, instead, just
->> implement vhost ioctl on vfio_device_ops, and translate them into
->> virtio-mdev transport or just pass ioctl to parent.
-> Yeah. Instead of introducing /dev/vhost-mdev char device, do
-> vhost ioctls on VFIO device fd directly. That's what we did
-> in RFC v3.
->
->> 3) Don't use vfio-mdev, create a new vhost-mdev driver, during probe still
->> try to add dev to vfio group and talk to parent with device specific ops
-> If my understanding is correct, this means we need to introduce
-> a new VFIO device driver to replace the existing vfio-mdev driver
-> in our case. Below is a quick draft just to show my understanding:
->
-> #include <linux/init.h>
-> #include <linux/module.h>
-> #include <linux/device.h>
-> #include <linux/kernel.h>
-> #include <linux/slab.h>
-> #include <linux/vfio.h>
-> #include <linux/mdev.h>
->
-> #include "mdev_private.h"
->
-> /* XXX: we need a proper way to include below vhost header. */
-> #include "../../vhost/vhost.h"
->
-> static int vfio_vhost_mdev_open(void *device_data)
-> {
-> 	if (!try_module_get(THIS_MODULE))
-> 		return -ENODEV;
->
-> 	/* ... */
-> 	vhost_dev_init(...);
->
-> 	return 0;
-> }
->
-> static void vfio_vhost_mdev_release(void *device_data)
-> {
-> 	/* ... */
-> 	module_put(THIS_MODULE);
-> }
->
-> static long vfio_vhost_mdev_unlocked_ioctl(void *device_data,
-> 					   unsigned int cmd, unsigned long arg)
-> {
-> 	struct mdev_device *mdev = device_data;
-> 	struct mdev_parent *parent = mdev->parent;
->
-> 	/*
-> 	 * Use vhost ioctls.
-> 	 *
-> 	 * We will have a different parent_ops design.
-> 	 * And potentially, we can share the same parent_ops
-> 	 * with virtio_mdev.
-> 	 */
-> 	switch (cmd) {
-> 	case VHOST_GET_FEATURES:
-> 		parent->ops->get_features(mdev, ...);
-> 		break;
-> 	/* ... */
-> 	}
->
-> 	return 0;
-> }
->
-> static ssize_t vfio_vhost_mdev_read(void *device_data, char __user *buf,
-> 				    size_t count, loff_t *ppos)
-> {
-> 	/* ... */
-> 	return 0;
-> }
->
-> static ssize_t vfio_vhost_mdev_write(void *device_data, const char __user *buf,
-> 				     size_t count, loff_t *ppos)
-> {
-> 	/* ... */
-> 	return 0;
-> }
->
-> static int vfio_vhost_mdev_mmap(void *device_data, struct vm_area_struct *vma)
-> {
-> 	/* ... */
-> 	return 0;
-> }
->
-> static const struct vfio_device_ops vfio_vhost_mdev_dev_ops = {
-> 	.name		= "vfio-vhost-mdev",
-> 	.open		= vfio_vhost_mdev_open,
-> 	.release	= vfio_vhost_mdev_release,
-> 	.ioctl		= vfio_vhost_mdev_unlocked_ioctl,
-> 	.read		= vfio_vhost_mdev_read,
-> 	.write		= vfio_vhost_mdev_write,
-> 	.mmap		= vfio_vhost_mdev_mmap,
-> };
->
-> static int vfio_vhost_mdev_probe(struct device *dev)
-> {
-> 	struct mdev_device *mdev = to_mdev_device(dev);
->
-> 	/* ... */
-> 	return vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, mdev);
-> }
->
-> static void vfio_vhost_mdev_remove(struct device *dev)
-> {
-> 	/* ... */
-> 	vfio_del_group_dev(dev);
-> }
->
-> static struct mdev_driver vfio_vhost_mdev_driver = {
-> 	.name	= "vfio_vhost_mdev",
-> 	.probe	= vfio_vhost_mdev_probe,
-> 	.remove	= vfio_vhost_mdev_remove,
-> };
->
-> static int __init vfio_vhost_mdev_init(void)
-> {
-> 	return mdev_register_driver(&vfio_vhost_mdev_driver, THIS_MODULE);
-> }
-> module_init(vfio_vhost_mdev_init)
->
-> static void __exit vfio_vhost_mdev_exit(void)
-> {
-> 	mdev_unregister_driver(&vfio_vhost_mdev_driver);
-> }
-> module_exit(vfio_vhost_mdev_exit)
+This adds a property "num-pwms" for PWM controller.
 
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Yes, something like this basically.
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+index d1e13d340e26..9a043938881f 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -439,6 +439,7 @@
+ 			 <&pericfg CLK_PERI_PWM6_PD>;
+ 		clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4",
+ 			      "pwm5", "pwm6";
++		num-pwms = <6>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.17.1
 
-
->> So I have some questions:
->>
->> 1) Compared to method 2, what's the advantage of creating a new vhost char
->> device? I guess it's for keep the API compatibility?
-> One benefit is that we can avoid doing vhost ioctls on
-> VFIO device fd.
-
-
-Yes, but any benefit from doing this?
-
-
->
->> 2) For method 2, is there any easy way for user/admin to distinguish e.g
->> ordinary vfio-mdev for vhost from ordinary vfio-mdev?
-> I think device-api could be a choice.
-
-
-Ok.
-
-
->
->> I saw you introduce
->> ops matching helper but it's not friendly to management.
-> The ops matching helper is just to check whether a given
-> vfio-device is based on a mdev device.
->
->> 3) A drawback of 1) and 2) is that it must follow vfio_device_ops that
->> assumes the parameter comes from userspace, it prevents support kernel
->> virtio drivers.
->>
->> 4) So comes the idea of method 3, since it register a new vhost-mdev driver,
->> we can use device specific ops instead of VFIO ones, then we can have a
->> common API between vDPA parent and vhost-mdev/virtio-mdev drivers.
-> As the above draft shows, this requires introducing a new
-> VFIO device driver. I think Alex's opinion matters here.
-
-
-Yes, it is.
-
-Thanks
-
-
-> Thanks,
-> Tiwei
->
->> What's your thoughts?
->>
->> Thanks
->>
->>
->>> RFCv3: https://patchwork.kernel.org/patch/11117785/
->>>
->>> [1] https://lkml.org/lkml/2019/9/10/135
->>>
->>> Tiwei Bie (3):
->>>     vfio: support getting vfio device from device fd
->>>     vfio: support checking vfio driver by device ops
->>>     vhost: introduce mdev based hardware backend
->>>
->>>    drivers/vfio/mdev/vfio_mdev.c    |   3 +-
->>>    drivers/vfio/vfio.c              |  32 +++
->>>    drivers/vhost/Kconfig            |   9 +
->>>    drivers/vhost/Makefile           |   3 +
->>>    drivers/vhost/mdev.c             | 462 +++++++++++++++++++++++++++++++
->>>    drivers/vhost/vhost.c            |  39 ++-
->>>    drivers/vhost/vhost.h            |   6 +
->>>    include/linux/vfio.h             |  11 +
->>>    include/uapi/linux/vhost.h       |  10 +
->>>    include/uapi/linux/vhost_types.h |   5 +
->>>    10 files changed, 573 insertions(+), 7 deletions(-)
->>>    create mode 100644 drivers/vhost/mdev.c
->>>
