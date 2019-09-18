@@ -2,118 +2,115 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DA0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C6BC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D63AE218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E703218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 22:53:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sGF7SBye"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731901AbfIRWuI (ORCPT
+        id S1730305AbfIRWxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 18:50:08 -0400
-Received: from 6.mo179.mail-out.ovh.net ([46.105.56.76]:47269 "EHLO
-        6.mo179.mail-out.ovh.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727100AbfIRWuH (ORCPT
+        Wed, 18 Sep 2019 18:53:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38465 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727231AbfIRWxl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 18:50:07 -0400
-X-Greylist: delayed 3599 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Sep 2019 18:50:07 EDT
-Received: from player758.ha.ovh.net (unknown [10.109.146.175])
-        by mo179.mail-out.ovh.net (Postfix) with ESMTP id C16C7140DA4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 22:55:06 +0200 (CEST)
-Received: from kaod.org (lns-bzn-46-82-253-208-248.adsl.proxad.net [82.253.208.248])
-        (Authenticated sender: groug@kaod.org)
-        by player758.ha.ovh.net (Postfix) with ESMTPSA id C6E4AA0042D8;
-        Wed, 18 Sep 2019 20:55:00 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 22:54:59 +0200
-From:   Greg Kurz <groug@kaod.org>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Paul Mackerras <paulus@ozlabs.org>, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Jiri Kosina <trivial@kernel.org>
-Subject: Re: [PATCH trivial] KVM: PPC: Remove superfluous check for non-zero
- return value
-Message-ID: <20190918225459.0f1091ad@bahia.lan>
-In-Reply-To: <20190918184436.5323298d@bahia.lan>
-References: <20190911195235.29048-1-thuth@redhat.com>
-        <20190918184436.5323298d@bahia.lan>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 18 Sep 2019 18:53:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id y23so1579908ljn.5;
+        Wed, 18 Sep 2019 15:53:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBgEya19hkEV6u+IP0CcpkXVerH5sJM8TP+gqDzEHfQ=;
+        b=sGF7SByeWkmwTSt89TwX6PEEYbnVkTyi7zN86tFEKtvEQ4X1h4dlnKfyeiOFOIKRl8
+         wNMSgPu6y2mLNvO+OjTO+dwkW32JSaBVrWhROw5Qtff2VoDcTGBgddIYBhCEXd3l8NbW
+         ARJfiuxqhYMrDuT1v2XBJJA5kr4Ifq3UAkhk9ubgBzfuaaoqCqmTmAI7yQe6cjB/26BY
+         PrK/EszhIAo8uP2wG8ZkY0CyHIJYLBR024PJyC20H65lF91rLofeaamJGf695TWrGASd
+         DcvO1XNOfKX4CttQyrK4i5LnttMrSyTESV7qZ497TbXQV3Z3KzTgTKf1b+eCMMFmG4Rx
+         Byqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oBgEya19hkEV6u+IP0CcpkXVerH5sJM8TP+gqDzEHfQ=;
+        b=YwmFv7tFYAy125enCP/tRXWXmOt5yMFroWQvRbwylNaPFRWIbBbhAZSval4hUo9SOE
+         uyM0L1phKs5e9oMJLlHQYIzEDq/q7QFBAZALxWxAefDeRtcI1DVxRi+1OBpv41JJch6J
+         4rDPBFUOBAsF6GlQChXmK3MFJJXYASlgYGCRVgrUMKPixd+YeaNA2DxeDwdsi7Qo022I
+         3laBozQTNiq7YMO11+SQ7ELyzXETlna8ZIcPMy1sqtnf8U7YBbDbmh+UMvS04XaF6g0h
+         OJAwcbNF/f65vjnXy+OKbZeImu+UH0TQpRN6/nmKjz6F1lKn/fgJUpisTZ4rdn8QVP+D
+         hGnA==
+X-Gm-Message-State: APjAAAU/LxME/vwwRADIMMNk0WwIOOtU6ZNu94V7sKyUdL3YlSsRUGC8
+        LXC/P3+6wtiVdDbM2wZ9Eko=
+X-Google-Smtp-Source: APXvYqwURpuQHxwmBffmdsH6T9Z3poSOmMBqYa9uspzpXbyr1FDBHcph73ubKoYufzj6gBHOD3B6Yw==
+X-Received: by 2002:a2e:9e8f:: with SMTP id f15mr3352776ljk.212.1568847218817;
+        Wed, 18 Sep 2019 15:53:38 -0700 (PDT)
+Received: from localhost.localdomain ([46.216.138.44])
+        by smtp.gmail.com with ESMTPSA id k15sm1275327ljg.65.2019.09.18.15.53.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 15:53:37 -0700 (PDT)
+Received: from jek by localhost.localdomain with local (Exim 4.92.1)
+        (envelope-from <jekhor@gmail.com>)
+        id 1iAipP-0002Zm-AN; Thu, 19 Sep 2019 01:53:39 +0300
+From:   Yauhen Kharuzhy <jekhor@gmail.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Andy Shevchenko <andy@infradead.org>,
+        Yauhen Kharuzhy <jekhor@gmail.com>
+Subject: [PATCH v3 0/1] intel_cht_int33fe: Split code to USB Micro-B and Type-C variants
+Date:   Thu, 19 Sep 2019 01:53:36 +0300
+Message-Id: <20190918225337.9860-1-jekhor@gmail.com>
+X-Mailer: git-send-email 2.23.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Ovh-Tracer-Id: 11072662635729164594
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedufedrudekgdduheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddm
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Sep 2019 18:44:36 +0200
-Greg Kurz <groug@kaod.org> wrote:
+Patch to support INT33FE ACPI pseudo-device on hardware with USB Micro-B
+connector.
 
-> On Wed, 11 Sep 2019 21:52:35 +0200
-> Thomas Huth <thuth@redhat.com> wrote:
-> 
-> > After the kfree()s haven been removed in the previous
-> > commit 9798f4ea71ea ("fix rollback when kvmppc_xive_create fails"),
-> > the code can be simplified even more to simply always "return ret"
-> > now.
-> > 
-> > Signed-off-by: Thomas Huth <thuth@redhat.com>
-> > ---
-> 
-> This looks like a good candidate for trivial, hence Cc'ing Jiri
-> and adding trivial keyword in subject.
-> 
-> Reviewed-by: Greg Kurz <groug@kaod.org>
-> 
+v4:
+- Micro-B variant: Don't print error to the kernel log if i2c_acpi_new_device()
+  has returned -EPROBE_DEFER.
 
-Oops, the patch is correct but there are some fixes that require
-the return 0 to stay around...
+v3:
+- Rename TypeB variant to Micro-B (we have only one such device for now and it
+  has Micro-B connector)
+- Rebase on current linus/master
+- Remove empty lines and replace "TypeC" by "Type-C"
 
-https://patchwork.ozlabs.org/project/kvm-ppc/list/?series=129957
+v2:
+Instead of defining two separated modules with two separated config
+options, compile {common,typeb,typec} sources into one .ko module.
+Call needed variant-specific probe function based after of hardware type
+detection in common code.
 
-> >  arch/powerpc/kvm/book3s_xive.c        | 5 +----
-> >  arch/powerpc/kvm/book3s_xive_native.c | 5 +----
-> >  2 files changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/powerpc/kvm/book3s_xive.c b/arch/powerpc/kvm/book3s_xive.c
-> > index e3ba67095895..2f6f463fcdfb 100644
-> > --- a/arch/powerpc/kvm/book3s_xive.c
-> > +++ b/arch/powerpc/kvm/book3s_xive.c
-> > @@ -1986,10 +1986,7 @@ static int kvmppc_xive_create(struct kvm_device *dev, u32 type)
-> >  
-> >  	xive->single_escalation = xive_native_has_single_escalation();
-> >  
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > -	return 0;
-> > +	return ret;
-> >  }
-> >  
-> >  int kvmppc_xive_debug_show_queues(struct seq_file *m, struct kvm_vcpu *vcpu)
-> > diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-> > index a998823f68a3..7a50772f26fe 100644
-> > --- a/arch/powerpc/kvm/book3s_xive_native.c
-> > +++ b/arch/powerpc/kvm/book3s_xive_native.c
-> > @@ -1089,10 +1089,7 @@ static int kvmppc_xive_native_create(struct kvm_device *dev, u32 type)
-> >  	xive->single_escalation = xive_native_has_single_escalation();
-> >  	xive->ops = &kvmppc_xive_native_ops;
-> >  
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > -	return 0;
-> > +	return ret;
-> >  }
-> >  
-> >  /*
-> 
+Yauhen Kharuzhy (1):
+  platform/x86/intel_cht_int33fe: Split code to USB Micro-B and Type-C
+    variants
+
+ drivers/platform/x86/Kconfig                  |  12 +-
+ drivers/platform/x86/Makefile                 |   4 +
+ .../platform/x86/intel_cht_int33fe_common.c   | 147 ++++++++++++++++++
+ .../platform/x86/intel_cht_int33fe_common.h   |  41 +++++
+ .../platform/x86/intel_cht_int33fe_microb.c   |  67 ++++++++
+ ...ht_int33fe.c => intel_cht_int33fe_typec.c} |  78 +---------
+ 6 files changed, 276 insertions(+), 73 deletions(-)
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.c
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_common.h
+ create mode 100644 drivers/platform/x86/intel_cht_int33fe_microb.c
+ rename drivers/platform/x86/{intel_cht_int33fe.c => intel_cht_int33fe_typec.c} (82%)
+
+-- 
+2.23.0.rc1
 
