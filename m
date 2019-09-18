@@ -2,454 +2,204 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EA0C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E51C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD83214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B004D20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 01:34:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MRnLx3s0";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="MRnLx3s0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwaEKlPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfIRBaJ (ORCPT
+        id S1728662AbfIRBah (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 17 Sep 2019 21:30:09 -0400
-Received: from mail-eopbgr60052.outbound.protection.outlook.com ([40.107.6.52]:22755
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726653AbfIRBaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 17 Sep 2019 21:30:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwFHRkWQwDjACHJD6UFNiXvEq5CHQM80FKgd9kUZbDE=;
- b=MRnLx3s0Me3dNQQuM84bAx6lRVURTWGbL0PBRgIwhpu4U7QXlxklowBWe8hSgA1vClAO50yaqfnn4X0pFcyCs8gm/AuGotFh7G5paAEkpIgCje69mZLsw92nG/Y1/VpBWbyYbDwQxKefomc/NsJEmndlNXK1r1ZXK6DRVbHTNEI=
-Received: from DB6PR0801CA0053.eurprd08.prod.outlook.com (2603:10a6:4:2b::21)
- by VI1PR08MB3120.eurprd08.prod.outlook.com (2603:10a6:803:46::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.21; Wed, 18 Sep
- 2019 01:30:00 +0000
-Received: from AM5EUR03FT056.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::205) by DB6PR0801CA0053.outlook.office365.com
- (2603:10a6:4:2b::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2284.18 via Frontend
- Transport; Wed, 18 Sep 2019 01:30:00 +0000
-Authentication-Results: spf=temperror (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=none action=none
- header.from=arm.com;
-Received-SPF: TempError (protection.outlook.com: error in processing during
- lookup of arm.com: DNS Timeout)
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT056.mail.protection.outlook.com (10.152.17.224) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2263.14 via Frontend Transport; Wed, 18 Sep 2019 01:29:59 +0000
-Received: ("Tessian outbound 0d576b67b9f5:v31"); Wed, 18 Sep 2019 01:29:52 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: d1d1f021b1bc3165
-X-CR-MTA-TID: 64aa7808
-Received: from e846aa42bed5.2 (ip-172-16-0-2.eu-west-1.compute.internal [104.47.4.52])
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 173B670D-BDF2-4F36-B354-9A39C838CFCD.1;
-        Wed, 18 Sep 2019 01:29:47 +0000
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com (mail-am5eur02lp2052.outbound.protection.outlook.com [104.47.4.52])
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e846aa42bed5.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 18 Sep 2019 01:29:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M9QUVp+n2VwxibBDs7otWhA+/ozrcsGhD7XhCRNl00VEEpl/9ZOt4yjEIW/yRpja80gbO7D4jYza/o4JJlqH6mSOWbhPkUzF5b+erRgAa73liFpU8ftIyarO3+U9YTVg1WBmDGtI/m0GoDEe/TUl+uea8vLw1LSy+zvTr75SoprQq9PExbSVRnxnZu4sOFcUcRhnLLFYidrReREMUGDkNhp/4ynzmpYxz4byaq20fjP7ikEvzIAvCfl4GS8tAWJWWVOXMgIEI/EmohzxOaeim1MdQGLiiGk6IQGdnn48MbMbbq69nBc4qtP+FvEx3n4hww6zJk0m7SbIdKRuYkvMVQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwFHRkWQwDjACHJD6UFNiXvEq5CHQM80FKgd9kUZbDE=;
- b=Zgel834TwbUYZ4VwxlKqhQPg05e4WKu7Xki+SZu8Dskf8wy5HFRmn29LgMFyYoYyqiUq1BPOJrRWs29cNP5B57bw/ebJ0y7ruebJmkZz6IL8GiLlXqqEafocQsMqRHMwgsr8iYA2W+ZLrmA4NEikH+oWVeb8VwBHoDvVoxoDntRfCTNnkreJog9pPncm5qrEpi1YaoM7M3EDEOhpbCENrOKICF+z8gGReyN9kWyxUXEC47jqb9/UO1pGspYidaa8jzyPPInA2AxpM1TfTieMGpABgfrBJrxKyqfDb2oW5JGkoblXBhMp1E9XJKv7ORfTQrk87qGtdct5P6fzgU8t0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HwFHRkWQwDjACHJD6UFNiXvEq5CHQM80FKgd9kUZbDE=;
- b=MRnLx3s0Me3dNQQuM84bAx6lRVURTWGbL0PBRgIwhpu4U7QXlxklowBWe8hSgA1vClAO50yaqfnn4X0pFcyCs8gm/AuGotFh7G5paAEkpIgCje69mZLsw92nG/Y1/VpBWbyYbDwQxKefomc/NsJEmndlNXK1r1ZXK6DRVbHTNEI=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5007.eurprd08.prod.outlook.com (10.255.159.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.19; Wed, 18 Sep 2019 01:29:45 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::a0a6:ad4c:b7a7:f879]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::a0a6:ad4c:b7a7:f879%5]) with mapi id 15.20.2284.009; Wed, 18 Sep 2019
- 01:29:45 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Daniel Vetter <daniel@ffwll.ch>
-CC:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Liviu Dudau <Liviu.Dudau@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "seanpaul@chromium.org" <seanpaul@chromium.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Mihail Atanassov <Mihail.Atanassov@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Topic: [PATCH] drm/komeda: Adds error event print functionality
-Thread-Index: AQHVSRayAboXOjuz1kKxLGlCvtrW0acwIKWAgADOPoA=
-Date:   Wed, 18 Sep 2019 01:29:45 +0000
-Message-ID: <20190918012937.GA11084@jamwan02-TSP300>
-References: <1564738954-6101-1-git-send-email-lowry.li@arm.com>
- <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
-In-Reply-To: <CAKMK7uECMr46Ag8E=eqTKdZxgt_4M42t7GEyNGv0gxpv-TL3Pg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.10.1 (2018-07-13)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR04CA0083.apcprd04.prod.outlook.com
- (2603:1096:202:15::27) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: a8228192-88f3-4aa8-c5d3-08d73bd7b853
-X-MS-Office365-Filtering-HT: Tenant
-X-Microsoft-Antispam-Untrusted: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5007;
-X-MS-TrafficTypeDiagnostic: VE1PR08MB5007:|VE1PR08MB5007:|VI1PR08MB3120:
-X-MS-Exchange-PUrlCount: 2
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR08MB312012D24075E39E6957179FB38E0@VI1PR08MB3120.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-x-ms-oob-tlc-oobclassifiers: OLM:6108;OLM:6108;
-x-forefront-prvs: 01644DCF4A
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(376002)(136003)(346002)(396003)(366004)(39860400002)(199004)(189003)(4326008)(6916009)(5660300002)(33656002)(6436002)(1076003)(6486002)(6116002)(3846002)(71200400001)(71190400001)(256004)(14444005)(2906002)(86362001)(33716001)(486006)(446003)(229853002)(316002)(66446008)(9686003)(54906003)(66946007)(66476007)(66556008)(64756008)(76176011)(52116002)(186003)(99286004)(58126008)(386003)(55236004)(11346002)(476003)(66066001)(102836004)(26005)(966005)(478600001)(14454004)(25786009)(8936002)(6246003)(8676002)(81156014)(81166006)(6306002)(7736002)(6512007)(6506007)(53546011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5007;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info-Original: VZuvJ3Jw3L8z2lsPIrl+lfTInUrY9Ajdy5PSSgf5Fv89tCVorUb69NTdQugMlBmLb12OmUf6i4QFNvjOHNgF3d+8Rut02rxGtN2isLHXgEOTrlugCJadbRx3unjQPf6KEAYVZkzoWBb3J5QkpS7df41aRX9U+b/BQVRtag0Kz1xJ2e/p50AcheaPiRwa9CyzEZMll1pcEQKodn2Cpgy4sQWA7MEf1qv8/bZFMoZC+2hlvmzg5SGelgTj/cmj6IANnf7ZPcK5nlLB+jw1Qk70iUY12FBh+1FPwG52j2j72lMXFpGKUrsA5mPdQlFVIzfeSxJrtdaZVfdnwlnhc4Zqz7t5rgf0A1m3uVzqK2zyLO+c0AxHntZrsEMw9V/fLrCMGLnYyRi2O/h+ne+Rci008UI+huFJLHGM1blZoWF0qso=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6837C2F5BB3AF941B5C73E15440B616B@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 17 Sep 2019 21:30:37 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40714 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728628AbfIRBah (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 17 Sep 2019 21:30:37 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d22so2335651pll.7
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 18:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=33HTI06KrYihGCLmTdOTJ2bFANdV8foxW+4RD7RD/Xc=;
+        b=DwaEKlPKJqyulqtleaOqVOomI2ti3y98zNUKheFHpcFrLoD0VpS3UXXrXKkemIkxX8
+         uiC7GHehMljmtwdBglEjtPEX3MsNehgqWJMJRBJYw97NlR92bfad1bh0w3hNmoVjJyZ3
+         MkRvKjEGoWHdJtl/ci8dN2+mRw/Hy/qlnxTuIhnHC1Aivy0x+v+Ma5fuz/5LQrMT99d/
+         uzvR5TKacwSgrS+JFBmY1qhkYkH4YWSP7a86Xd5wZ07SRHLzNXYJf6INfeQOdjYFl4kW
+         rRb+EHxh3FFSmya+PmRa1ureN94iSctc0FhNUnnutYCgY60zS05juBvCaxAgNxPe/Zhr
+         dvyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=33HTI06KrYihGCLmTdOTJ2bFANdV8foxW+4RD7RD/Xc=;
+        b=ODxqDRvuCgqy86Cr6i0XDFYz1mseA+4NPOXv46D24TKhxOMDZrxtSJaJOzYYGMqdQu
+         7pAYDysfm+fFhVcSHUspZoPDug+XnVEWCizWTy5vTJFzlDXwTPrCZ5tGyjNOAt8pLrmL
+         +oChmQ9J8OgMpL/GzqXEu+mj/TT6e1TwS4E1aF1B4qOOA7D1vyJApITJ4dr7Y7D1G6h9
+         UJN5CQvKwtp1GSodQyb17CbD34WMX+inr357RDZRX2A8cmCdEymf1kpwzREHytjQNLiy
+         pQxdELuZncUkP0OMj9acEEsNvr3sSPF9ku1Wns9zCrKD2RemahXtD8XYIzJWjdxi+OqO
+         wvfQ==
+X-Gm-Message-State: APjAAAX7pWnKCmk9+Xw4bpd8Jn5+F1DzjbSaYjeutbwOB6pFvr6VzC22
+        fFSUVPUnIyr6rcyhpkrwZgA=
+X-Google-Smtp-Source: APXvYqyItSbjwB5NcNJk5Qx+expovKiT4H393ccaoUu0H9iaQqyIDAwY4aX602YQcUuCcwLEfjJDHg==
+X-Received: by 2002:a17:902:aa87:: with SMTP id d7mr1560745plr.203.1568770236125;
+        Tue, 17 Sep 2019 18:30:36 -0700 (PDT)
+Received: from localhost ([175.223.34.14])
+        by smtp.gmail.com with ESMTPSA id u7sm3323938pgr.94.2019.09.17.18.30.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 17 Sep 2019 18:30:35 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 10:30:32 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Petr Mladek <pmladek@suse.com>, linux-kernel@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: Regression in fd5f7cde1b85 ("printk: Never set
+ console_may_schedule in console_trylock()")
+Message-ID: <20190918013032.GA2895@jagdpanzerIV>
+References: <20190917141034.gvjg7bgylqbbxyv7@pengutronix.de>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5007
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT056.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(7916004)(376002)(346002)(39860400002)(136003)(396003)(199004)(189003)(8746002)(186003)(22756006)(446003)(11346002)(1076003)(6486002)(53546011)(76176011)(478600001)(6116002)(23726003)(5660300002)(486006)(7736002)(305945005)(4326008)(2906002)(6862004)(54906003)(3846002)(9686003)(14454004)(58126008)(966005)(63350400001)(99286004)(476003)(26005)(86362001)(126002)(356004)(386003)(26826003)(97756001)(6506007)(47776003)(36906005)(25786009)(336012)(14444005)(102836004)(8676002)(316002)(70586007)(8936002)(50466002)(81166006)(6512007)(81156014)(76130400001)(46406003)(70206006)(6246003)(229853002)(6306002)(33716001)(66066001)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3120;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:TempError;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 91d5e5b1-5bab-45ee-b338-08d73bd7afb8
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(710020)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR08MB3120;
-NoDisclaimer: True
-X-Forefront-PRVS: 01644DCF4A
-X-Microsoft-Antispam-Message-Info: LKMOonBznbu5nN7jAX7m2GUGB6WeDh8/VNagVMiyn2DfaQzP4r4++8KDkeMPBIn3A0eJVDfQ1b4tRsdLD5GsW1gyg6P5qc2IjYSawbTaEoUo2xwVNtcTJPOVa+a2rOxTf2sxmpxMxzyWo5brijA43qm3xE3IMss/Imh1buFaUJtBAnZpl5f8hcPmBxrNdUfpIgwAOsgTV8f/LwndSdVCONGR1XRWBMX/v/SbWaEkjU+0N7UAt5MljzihyzEa+DJb3iqTprx5PI/ztot2zcnPrzM8CeUluoJejBNpjfzBbSprnB8/Gogx5wXA83L2Kx7kIfAw3LQjSfIyvxzPZhiL1kK0j1aD0zEoE+0JfxWVYTX/d6UVi01DkZyBMQKroDdZpou0w5H1FJ4V3qsd/wlTZotCTr8jYkegXd+5hnLqKG0=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2019 01:29:59.1979
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8228192-88f3-4aa8-c5d3-08d73bd7b853
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3120
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190917141034.gvjg7bgylqbbxyv7@pengutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 03:11:27PM +0200, Daniel Vetter wrote:
-> On Fri, Aug 2, 2019 at 11:43 AM Lowry Li (Arm Technology China)
-> <Lowry.Li@arm.com> wrote:
-> >
-> > From: "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
-> >
-> > Adds to print the event message when error happens and the same event
-> > will not be printed until next vsync.
-> >
-> > Changes since v2:
-> > 1. Refine komeda_sprintf();
-> > 2. Not using STR_SZ macro for the string size in komeda_print_events().
-> >
-> > Changes since v1:
-> > 1. Handling the event print by CONFIG_KOMEDA_ERROR_PRINT;
-> > 2. Changing the max string size to 256.
-> >
-> > Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
-> > ---
-> >  drivers/gpu/drm/arm/display/Kconfig               |   6 +
-> >  drivers/gpu/drm/arm/display/komeda/Makefile       |   2 +
-> >  drivers/gpu/drm/arm/display/komeda/komeda_dev.h   |  15 +++
-> >  drivers/gpu/drm/arm/display/komeda/komeda_event.c | 140 ++++++++++++++=
-++++++++
-> >  drivers/gpu/drm/arm/display/komeda/komeda_kms.c   |   4 +
-> >  5 files changed, 167 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_event.c
-> >
-> > diff --git a/drivers/gpu/drm/arm/display/Kconfig b/drivers/gpu/drm/arm/=
-display/Kconfig
-> > index cec0639..e87ff86 100644
-> > --- a/drivers/gpu/drm/arm/display/Kconfig
-> > +++ b/drivers/gpu/drm/arm/display/Kconfig
-> > @@ -12,3 +12,9 @@ config DRM_KOMEDA
-> >           Processor driver. It supports the D71 variants of the hardwar=
-e.
-> >
-> >           If compiled as a module it will be called komeda.
-> > +
-> > +config DRM_KOMEDA_ERROR_PRINT
-> > +       bool "Enable komeda error print"
-> > +       depends on DRM_KOMEDA
-> > +       help
-> > +         Choose this option to enable error printing.
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/=
-drm/arm/display/komeda/Makefile
-> > index 5c3900c..f095a1c 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/Makefile
-> > +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-> > @@ -22,4 +22,6 @@ komeda-y +=3D \
-> >         d71/d71_dev.o \
-> >         d71/d71_component.o
-> >
-> > +komeda-$(CONFIG_DRM_KOMEDA_ERROR_PRINT) +=3D komeda_event.o
-> > +
-> >  obj-$(CONFIG_DRM_KOMEDA) +=3D komeda.o
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/=
-gpu/drm/arm/display/komeda/komeda_dev.h
-> > index d1c86b6..e28e7e6 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> > @@ -40,6 +40,17 @@
-> >  #define KOMEDA_ERR_TTNG                        BIT_ULL(30)
-> >  #define KOMEDA_ERR_TTF                 BIT_ULL(31)
-> >
-> > +#define KOMEDA_ERR_EVENTS      \
-> > +       (KOMEDA_EVENT_URUN      | KOMEDA_EVENT_IBSY     | KOMEDA_EVENT_=
-OVR |\
-> > +       KOMEDA_ERR_TETO         | KOMEDA_ERR_TEMR       | KOMEDA_ERR_TI=
-TR |\
-> > +       KOMEDA_ERR_CPE          | KOMEDA_ERR_CFGE       | KOMEDA_ERR_AX=
-IE |\
-> > +       KOMEDA_ERR_ACE0         | KOMEDA_ERR_ACE1       | KOMEDA_ERR_AC=
-E2 |\
-> > +       KOMEDA_ERR_ACE3         | KOMEDA_ERR_DRIFTTO    | KOMEDA_ERR_FR=
-AMETO |\
-> > +       KOMEDA_ERR_ZME          | KOMEDA_ERR_MERR       | KOMEDA_ERR_TC=
-F |\
-> > +       KOMEDA_ERR_TTNG         | KOMEDA_ERR_TTF)
-> > +
-> > +#define KOMEDA_WARN_EVENTS     KOMEDA_ERR_CSCE
-> > +
-> >  /* malidp device id */
-> >  enum {
-> >         MALI_D71 =3D 0,
-> > @@ -207,4 +218,8 @@ struct komeda_dev {
-> >
-> >  struct komeda_dev *dev_to_mdev(struct device *dev);
-> >
-> > +#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
-> > +void komeda_print_events(struct komeda_events *evts);
-> > +#endif
-> > +
-> >  #endif /*_KOMEDA_DEV_H_*/
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_event.c b/driver=
-s/gpu/drm/arm/display/komeda/komeda_event.c
-> > new file mode 100644
-> > index 0000000..a36fb86
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_event.c
-> > @@ -0,0 +1,140 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * (C) COPYRIGHT 2019 ARM Limited. All rights reserved.
-> > + * Author: James.Qian.Wang <james.qian.wang@arm.com>
-> > + *
-> > + */
-> > +#include <drm/drm_print.h>
-> > +
-> > +#include "komeda_dev.h"
-> > +
-> > +struct komeda_str {
-> > +       char *str;
-> > +       u32 sz;
-> > +       u32 len;
-> > +};
-> > +
-> > +/* return 0 on success,  < 0 on no space.
-> > + */
-> > +static int komeda_sprintf(struct komeda_str *str, const char *fmt, ...=
-)
-> > +{
-> > +       va_list args;
-> > +       int num, free_sz;
-> > +       int err;
-> > +
-> > +       free_sz =3D str->sz - str->len - 1;
-> > +       if (free_sz <=3D 0)
-> > +               return -ENOSPC;
-> > +
-> > +       va_start(args, fmt);
-> > +
-> > +       num =3D vsnprintf(str->str + str->len, free_sz, fmt, args);
-> > +
-> > +       va_end(args);
-> > +
-> > +       if (num < free_sz) {
-> > +               str->len +=3D num;
-> > +               err =3D 0;
-> > +       } else {
-> > +               str->len =3D str->sz - 1;
-> > +               err =3D -ENOSPC;
-> > +       }
-> > +
-> > +       return err;
-> > +}
-> > +
-> > +static void evt_sprintf(struct komeda_str *str, u64 evt, const char *m=
-sg)
-> > +{
-> > +       if (evt)
-> > +               komeda_sprintf(str, msg);
-> > +}
-> > +
-> > +static void evt_str(struct komeda_str *str, u64 events)
-> > +{
-> > +       if (events =3D=3D 0ULL) {
-> > +               komeda_sprintf(str, "None");
-> > +               return;
-> > +       }
-> > +
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_VSYNC, "VSYNC|");
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_FLIP, "FLIP|");
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_EOW, "EOW|");
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_MODE, "OP-MODE|");
-> > +
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_URUN, "UNDERRUN|");
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_OVR, "OVERRUN|");
-> > +
-> > +       /* GLB error */
-> > +       evt_sprintf(str, events & KOMEDA_ERR_MERR, "MERR|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-> > +
-> > +       /* DOU error */
-> > +       evt_sprintf(str, events & KOMEDA_ERR_DRIFTTO, "DRIFTTO|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_FRAMETO, "FRAMETO|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TETO, "TETO|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_CSCE, "CSCE|");
-> > +
-> > +       /* LPU errors or events */
-> > +       evt_sprintf(str, events & KOMEDA_EVENT_IBSY, "IBSY|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_AXIE, "AXIE|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_ACE0, "ACE0|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_ACE1, "ACE1|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_ACE2, "ACE2|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_ACE3, "ACE3|");
-> > +
-> > +       /* LPU TBU errors*/
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TCF, "TCF|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TTNG, "TTNG|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TITR, "TITR|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TTF, "TTF|");
-> > +
-> > +       /* CU errors*/
-> > +       evt_sprintf(str, events & KOMEDA_ERR_CPE, "COPROC|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_ZME, "ZME|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_CFGE, "CFGE|");
-> > +       evt_sprintf(str, events & KOMEDA_ERR_TEMR, "TEMR|");
-> > +
-> > +       if (str->len > 0 && (str->str[str->len - 1] =3D=3D '|')) {
-> > +               str->str[str->len - 1] =3D 0;
-> > +               str->len--;
-> > +       }
-> > +}
-> > +
-> > +static bool is_new_frame(struct komeda_events *a)
-> > +{
-> > +       return (a->pipes[0] | a->pipes[1]) &
-> > +              (KOMEDA_EVENT_FLIP | KOMEDA_EVENT_EOW);
-> > +}
-> > +
-> > +void komeda_print_events(struct komeda_events *evts)
-> > +{
-> > +       u64 print_evts =3D KOMEDA_ERR_EVENTS;
-> > +       static bool en_print =3D true;
-> > +
-> > +       /* reduce the same msg print, only print the first evt for one =
-frame */
-> > +       if (evts->global || is_new_frame(evts))
-> > +               en_print =3D true;
-> > +       if (!en_print)
-> > +               return;
-> > +
-> > +       if ((evts->global | evts->pipes[0] | evts->pipes[1]) & print_ev=
-ts) {
-> > +               char msg[256];
-> > +               struct komeda_str str;
-> > +
-> > +               str.str =3D msg;
-> > +               str.sz  =3D sizeof(msg);
-> > +               str.len =3D 0;
-> > +
-> > +               komeda_sprintf(&str, "gcu: ");
-> > +               evt_str(&str, evts->global);
-> > +               komeda_sprintf(&str, ", pipes[0]: ");
-> > +               evt_str(&str, evts->pipes[0]);
-> > +               komeda_sprintf(&str, ", pipes[1]: ");
-> > +               evt_str(&str, evts->pipes[1]);
-> > +
-> > +               DRM_ERROR("err detect: %s\n", msg);
-> > +
-> > +               en_print =3D false;
-> > +       }
-> > +}
-> > diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/=
-gpu/drm/arm/display/komeda/komeda_kms.c
-> > index 419a8b0..0fafc36 100644
-> > --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> > @@ -47,6 +47,10 @@ static irqreturn_t komeda_kms_irq_handler(int irq, v=
-oid *data)
-> >         memset(&evts, 0, sizeof(evts));
-> >         status =3D mdev->funcs->irq_handler(mdev, &evts);
-> >
-> > +#ifdef CONFIG_DRM_KOMEDA_ERROR_PRINT
-> > +       komeda_print_events(&evts);
-> > +#endif
->=20
-> #ifdef in code is discouraged, the usual way we handle these cases is
-> by having a dummy static inline function which does nothing in the
-> headers for the case a config option isn't enabled.
-> -Daniel
+On (09/17/19 16:10), Uwe Kleine-König wrote:
+> Hello,
+>
+> Today it saw sysrq on an UART driven by drivers/tty/serial/imx.c report
+> a lockdep issue. Bisecting pointed to
+>
+> 	fd5f7cde1b85 ("printk: Never set console_may_schedule in console_trylock()")
 
-Hi Daniel&Mihail:
+Hmmm...
 
-If so, since this CONFIG is always enabled for komeda, I'd like to
-delete this CONFIG option directly.
+I don't see how this patch can affect anything. It simply
+disables preemption in printk().
 
-thanks
-james
+> When I type <break>t I get:
+> 
+> [   87.940104] sysrq: SysRq : This sysrq operation is disabled.
+> [   87.948752] 
+> [   87.948772] ======================================================
+> [   87.948787] WARNING: possible circular locking dependency detected
+> [   87.948798] 4.14.0-12954-gfd5f7cde1b85 #26 Not tainted
+> [   87.948813] ------------------------------------------------------
+> [   87.948822] swapper/0 is trying to acquire lock:
+> [   87.948829]  (console_owner){-...}, at: [<c015e438>] console_unlock+0x110/0x598
+> [   87.948861] 
+> [   87.948869] but task is already holding lock:
+> [   87.948874]  (&port_lock_key){-.-.}, at: [<c048d5b0>] imx_rxint+0x2c/0x290
+> [   87.948902] 
+> [   87.948911] which lock already depends on the new lock.
+> [   87.948917] 
+> [   87.948923] 
+> [   87.948932] the existing dependency chain (in reverse order) is:
+> [   87.948938] 
+> [   87.948943] -> #1 (&port_lock_key){-.-.}:
+> [   87.948975]        _raw_spin_lock_irqsave+0x5c/0x70
+> [   87.948983]        imx_console_write+0x138/0x15c
+> [   87.948991]        console_unlock+0x204/0x598
+> [   87.949000]        register_console+0x21c/0x3e8
+> [   87.949008]        uart_add_one_port+0x3e4/0x4dc
+> [   87.949019]        platform_drv_probe+0x3c/0x78
+> [   87.949027]        driver_probe_device+0x25c/0x47c
+> [   87.949035]        __driver_attach+0xec/0x114
+> [   87.949044]        bus_for_each_dev+0x80/0xb0
+> [   87.949054]        bus_add_driver+0x1d4/0x264
+> [   87.949062]        driver_register+0x80/0xfc
+> [   87.949069]        imx_serial_init+0x28/0x48
+> [   87.949078]        do_one_initcall+0x44/0x18c
+> [   87.949087]        kernel_init_freeable+0x11c/0x1cc
+> [   87.949095]        kernel_init+0x10/0x114
+> [   87.949103]        ret_from_fork+0x14/0x30
 
-> > +
-> >         /* Notify the crtc to handle the events */
-> >         for (i =3D 0; i < kms->n_crtcs; i++)
-> >                 komeda_crtc_handle_event(&kms->crtcs[i], &evts);
-> > --
-> > 1.9.1
-> >
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
->=20
->=20
->=20
-> --=20
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+This is "normal" locking path
+
+	console_sem -> port->lock
+
+	printk()
+	 lock console_sem
+	  imx_console_write()
+	   lock port->lock
+
+> [   87.949113] -> #0 (console_owner){-...}:
+> [   87.949145]        lock_acquire+0x100/0x23c
+> [   87.949154]        console_unlock+0x1a4/0x598
+> [   87.949162]        vprintk_emit+0x1a4/0x45c
+> [   87.949171]        vprintk_default+0x28/0x30
+> [   87.949180]        printk+0x28/0x38
+> [   87.949189]        __handle_sysrq+0x1c4/0x244
+> [   87.949196]        imx_rxint+0x258/0x290
+> [   87.949206]        imx_int+0x170/0x178
+> [   87.949216]        __handle_irq_event_percpu+0x78/0x418
+> [   87.949225]        handle_irq_event_percpu+0x24/0x6c
+> [   87.949233]        handle_irq_event+0x40/0x64
+> [   87.949242]        handle_level_irq+0xb4/0x138
+> [   87.949252]        generic_handle_irq+0x28/0x3c
+> [   87.949261]        __handle_domain_irq+0x50/0xb0
+> [   87.949269]        avic_handle_irq+0x3c/0x5c
+> [   87.949277]        __irq_svc+0x6c/0xa4
+> [   87.949287]        arch_cpu_idle+0x30/0x40
+> [   87.949297]        arch_cpu_idle+0x30/0x40
+> [   87.949305]        do_idle+0xa0/0x104
+> [   87.949313]        cpu_startup_entry+0x14/0x18
+> [   87.949323]        start_kernel+0x30c/0x368
+
+This one is a "reverse" locking path...
+
+	port->lock -> console_sem
+
+There is more to it:
+
+ imxint()
+  lock port->lock
+   uart_handle_sysrq_char()
+    handle_sysrq()
+     printk()
+      lock conosole_sem
+       imx_console_write()
+        lock port->lock			[boom]
+
+This path re-enters serial driver. But it doesn't deadlock, because
+uart_handle_sysrq_char() sets a special flag port->sysrq, and serial
+consoles are expected to make sure that they don't lock port->lock
+in this case. Otherwise we will kill the system:
+
+	void serial_console_write(...)
+	{
+	...
+          if (sport->port.sysrq)
+                  locked = 0;
+          else if (oops_in_progress)
+                  locked = spin_trylock_irqsave(&sport->port.lock, flags);
+          else
+                  spin_lock_irqsave(&sport->port.lock, flags);
+ 	...
+	}
+
+So I'd say that lockdep is correct, but there are several hacks which
+prevent actual deadlock.
+
+No idea why bisection has pointed at fd5f7cde1b85, it really doesn't
+change the locking patterns.
+
+	-ss
