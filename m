@@ -2,120 +2,108 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B63C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3787EC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA47421920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03197205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:35:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OJX2Ulre"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c5kYpaBg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388513AbfIRSai (ORCPT
+        id S2388212AbfIRSf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:30:38 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48302 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387434AbfIRSah (ORCPT
+        Wed, 18 Sep 2019 14:35:58 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36178 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387586AbfIRSf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:30:37 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x8IIUVnp035705;
-        Wed, 18 Sep 2019 13:30:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1568831431;
-        bh=xT70Ic3Q3uDE1FLFpIsErlC8zGyZTIsPhLdtMKcdpRI=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=OJX2UlrePFOPwMzAwF2m2pWVDdjcUBzP+P4kQ20CMK4l4+SRs+DeV2IocjIyCMN9a
-         D5GMaFhDRFqDDFz6BIsH5FsHOMIo5b44HuXXdJ/MJZLZtrPuQyStlgKh27Qfbmwlu5
-         HZn7RESXRY651BeM3WjAvXwLvSDkFVIjeaQGccS8=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x8IIUVZB002263
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 18 Sep 2019 13:30:31 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 18
- Sep 2019 13:30:31 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 18 Sep 2019 13:30:28 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x8IIUUAf103570;
-        Wed, 18 Sep 2019 13:30:30 -0500
-Subject: Re: [PATCH 2/5] leds: lm3692x: Don't overwrite return value in error
- path
-To:     =?UTF-8?Q?Guido_G=c3=bcnther?= <agx@sigxcpu.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <cover.1568772964.git.agx@sigxcpu.org>
- <bc1a6e64da58d65b61c7e9358c745b0d467fc24c.1568772964.git.agx@sigxcpu.org>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <4a6b8df3-92f3-0f93-9327-36154daa06d8@ti.com>
-Date:   Wed, 18 Sep 2019 13:33:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <bc1a6e64da58d65b61c7e9358c745b0d467fc24c.1568772964.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 18 Sep 2019 14:35:57 -0400
+Received: by mail-io1-f65.google.com with SMTP id b136so1608888iof.3;
+        Wed, 18 Sep 2019 11:35:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Y0ZbiMWzuVtjfJ0MNgVp3pIWOMCNszyb+paLaeLgqw4=;
+        b=c5kYpaBgC6qnxcLnl7dtDuyJM/ucCt1IkUpvlTkAdWDjn+4HMtSvqQ6dddidNimYKz
+         4ct9O28YUvl61Na+RTnvpkNffJE/M5cAZrpExdaWZcpXeXnlh+rdY1Mcz2njV4sp3CLd
+         O/IdPNH8uDyauOI1s7O7/Fd4mW3KBUmNvjVU8h3bWgaS9kEap/sS1HHoJksGxxmG/OyJ
+         CtoR37RY2sJJVlNdj3CwmzXNDvw5X8nu9FPGGJ9tVg8sZ+KTrQMlmTygzM1oSb7SVVZr
+         EWr0wznTMX/PmgiFF8muKq9vDgctYSC1mz+1gAZmnE8enOd5uZaH6FchzDch7KRYeJJA
+         8Xig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Y0ZbiMWzuVtjfJ0MNgVp3pIWOMCNszyb+paLaeLgqw4=;
+        b=J5CKglWPBQDYl2QREer9wOiXcEcar6sloqZ8E+tnBWSzU2ZYpUkMijMmqL2IMn8HLa
+         6BorbyRlRAbyhYxhnMmoCbKOfGBpXN0s4RD98COam87FM58BwFPtIIZoFJ9GQUv/ECSe
+         MT3YIIm87LJapW0imdvzTkzg8Jgu0OvkRBMqZDcnbihWxKO8u9i8l+LLaE7aJWLSwJOZ
+         /N9fuwoDFkRpN2/h0GizEwpt7xlddh3BTjBlkJPJzMo0bqNZiPYHfUOonKwwsbVc/ay8
+         +Txp1M+2D6hiy4eRh1qw6flMNJkMYjdDmW4tUIL2pFYuY399NwZOkOYVC22wcw2oSRAI
+         NF8Q==
+X-Gm-Message-State: APjAAAV+jwza5oK+xc7RycH2H4fjxGf6G4fbngjET5XizZzOOdYmgjhF
+        IzDKoSNRkxLsbGisLuckTqA=
+X-Google-Smtp-Source: APXvYqwXcHDLbgxIHjLUqk9wNbIjPqYoLXb3R/BN/hRqZrhTEDPjIzDGSbJmh8ZF+w3D3DJTkyUu7A==
+X-Received: by 2002:a6b:acc5:: with SMTP id v188mr6875202ioe.268.1568831756719;
+        Wed, 18 Sep 2019 11:35:56 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id s201sm8348190ios.83.2019.09.18.11.35.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 11:35:56 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Enrico Weigelt <lkml@metux.net>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        jan.kiszka@siemens.com, Frank Iwanitz <friw@hms-networks.de>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v1 0/5] Introduce fieldbus_dev configuration interface
+Date:   Wed, 18 Sep 2019 14:35:47 -0400
+Message-Id: <20190918183552.28959-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Guido
+Introduce a (userspace) config interface for fieldbus_dev.
+Add support for the HMS FL-NET controller, which requires config support, and
+	is its first in-kernel user.
 
-On 9/17/19 9:19 PM, Guido Günther wrote:
-> The driver currently reports successful initialization on every failure
-> as long as it's able to power off the regulator. Don't check the return
-> value of regulator_disable to avoid that.
->
-> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> ---
->   drivers/leds/leds-lm3692x.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/leds/leds-lm3692x.c b/drivers/leds/leds-lm3692x.c
-> index 487228c2bed2..f394669ad8f2 100644
-> --- a/drivers/leds/leds-lm3692x.c
-> +++ b/drivers/leds/leds-lm3692x.c
-> @@ -312,15 +312,12 @@ static int lm3692x_init(struct lm3692x_led *led)
->   	if (led->enable_gpio)
->   		gpiod_direction_output(led->enable_gpio, 0);
->   
-> -	if (led->regulator) {
-> -		ret = regulator_disable(led->regulator);
-> -		if (ret)
-> -			dev_err(&led->client->dev,
-> -				"Failed to disable regulator\n");
-> -	}
-> +	if (led->regulator)
-> +		regulator_disable(led->regulator);
+Sven Van Asbroeck (5):
+  staging: fieldbus core: remove unused strings
+  staging: fieldbus: move "offline mode" definition to fieldbus core
+  staging: fieldbus core: add support for device configuration
+  staging: fieldbus core: add support for FL-NET devices
+  staging: fieldbus: add support for HMS FL-NET industrial controller
 
-The change is ok and makes sense but I believe that if the regulator was 
-not properly disabled there needs to be some error message t0o.
+ .../Documentation/ABI/configfs-fieldbus-dev   |  90 +++
+ .../ABI/sysfs-class-fieldbus-dev              |   1 +
+ .../fieldbus/Documentation/fieldbus_dev.txt   |  60 +-
+ drivers/staging/fieldbus/Kconfig              |  14 +
+ drivers/staging/fieldbus/Makefile             |   5 +-
+ drivers/staging/fieldbus/anybuss/Kconfig      |  17 +
+ drivers/staging/fieldbus/anybuss/Makefile     |   1 +
+ .../staging/fieldbus/anybuss/anybuss-client.h |  11 +-
+ drivers/staging/fieldbus/anybuss/hms-flnet.c  | 520 ++++++++++++++++++
+ .../staging/fieldbus/anybuss/hms-profinet.c   |   2 +-
+ drivers/staging/fieldbus/anybuss/host.c       |   6 +-
+ drivers/staging/fieldbus/dev_config.c         | 383 +++++++++++++
+ drivers/staging/fieldbus/dev_config.h         |  41 ++
+ drivers/staging/fieldbus/dev_core.c           |  28 +-
+ drivers/staging/fieldbus/fieldbus_dev.h       |  56 ++
+ 15 files changed, 1211 insertions(+), 24 deletions(-)
+ create mode 100644 drivers/staging/fieldbus/Documentation/ABI/configfs-fieldbus-dev
+ create mode 100644 drivers/staging/fieldbus/anybuss/hms-flnet.c
+ create mode 100644 drivers/staging/fieldbus/dev_config.c
+ create mode 100644 drivers/staging/fieldbus/dev_config.h
 
-If the code got here then there is either a fault or an I/O issue not a 
-regulator issue.
+-- 
+2.17.1
 
-The regulator failing to disable should be logged.
-
-Dan
-
-
->   
->   	return ret;
->   }
-> +
->   static int lm3692x_probe_dt(struct lm3692x_led *led)
->   {
->   	struct fwnode_handle *child = NULL;
