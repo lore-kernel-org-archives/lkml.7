@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E84C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9DAC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAE821925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78944218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788086;
-	bh=/lpqxF3W5ulSSnclEQAdOp2a40KVO+knoaImbThtG6M=;
+	s=default; t=1568788093;
+	bh=CapMQcwz8Xsl+NfwobmOyBqf7rfL3JT1Ov3A4rA6++E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+uN7LvJTF2AaWf0qmcWNQwmoD+gi+tEd4BtSMFsACsAtcyZJISKpaoVhF58szzRo
-	 eSpjN5+S1/SJBJtOX/5yzFDo2WdMgJnMjXlLCzGnuSX/89rB/uZ3bMMooWsDJu71Qn
-	 s5x0s/cbQKVLbpx32Ba5eK5v+BRK2MXUU4n3w2T0=
+	b=W1GdNDsSebxBPAtosskxDmuRyH+E//HNa6cjwOvoo6H5bm5fFIW35FAj2rcSFwl4Q
+	 VufySQ6Ep0RU0Gr+HAv3rWkPZi8+hA4D8BhVdkmufyiN/hjt6QQCVxQ4acb3lkEbaI
+	 CdOfjVXXcwEOOZFLhre7tUrnd7NHuxgrVpXgcogU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728910AbfIRG2F (ORCPT
+        id S1730617AbfIRG14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:28:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730640AbfIRG2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:28:01 -0400
+        id S1729777AbfIRG1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C6021929;
-        Wed, 18 Sep 2019 06:27:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C6D721924;
+        Wed, 18 Sep 2019 06:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788080;
-        bh=/lpqxF3W5ulSSnclEQAdOp2a40KVO+knoaImbThtG6M=;
+        s=default; t=1568788069;
+        bh=CapMQcwz8Xsl+NfwobmOyBqf7rfL3JT1Ov3A4rA6++E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ot3nAdt8ujCPILt/1bnsNCg2jDf8AVNZkFudH7imDs2aD0Jql5GscMv6TixeAhDNb
-         neQAcWc4KFh8wKVNZo+4YTXlSMlTA/pNzhsKuy488cpY3LpkvDRuY2llMrDvXw7Y95
-         RKwbh96B/ib6XWIsHa/9MYEALp1NisKeUZ34ce4w=
+        b=X5QvFyFBDWOhTxtIFcdPuiUI3Qd1TJ2fsg7jH49Ir3UqYBO19E364GYL+Oa5zoBhn
+         ueCyzehsRvM1sf2Yjbxg6fb3Fa2iaGBgKwNe0wCamtjVfMxuzG/+8hiX2nJNPzwFMm
+         NH40EfiX7c3iI6P8R+SHClLuhzaS6zkQTbyDEP0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.2 82/85] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
-Date:   Wed, 18 Sep 2019 08:19:40 +0200
-Message-Id: <20190918061237.967689191@linuxfoundation.org>
+        Gregg Leventhal <gleventhal@janestreet.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Subject: [PATCH 5.2 38/85] ixgbe: Prevent u8 wrapping of ITR value to something less than 10us
+Date:   Wed, 18 Sep 2019 08:18:56 +0200
+Message-Id: <20190918061235.347046644@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -60,39 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-commit 9452fbf5c6cf5f470e0748fe7a14a683e7765f7a upstream.
+commit 377228accbbb8b9738f615d791aa803f41c067e0 upstream.
 
-The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
-adds it to the critclk_systems DMI table so the clocks are marked as
-CLK_CRITICAL and not turned off.
+There were a couple cases where the ITR value generated via the adaptive
+ITR scheme could exceed 126. This resulted in the value becoming either 0
+or something less than 10. Switching back and forth between a value less
+than 10 and a value greater than 10 can cause issues as certain hardware
+features such as RSC to not function well when the ITR value has dropped
+that low.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: stable@vger.kernel.org
+Fixes: b4ded8327fea ("ixgbe: Update adaptive ITR algorithm")
+Reported-by: Gregg Leventhal <gleventhal@janestreet.com>
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/pmc_atom.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -414,6 +414,14 @@ static const struct dmi_system_id critcl
- 	},
- 	{
- 		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB4063",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
- 		.ident = "Beckhoff CB6263",
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -2622,7 +2622,7 @@ adjust_by_size:
+ 		/* 16K ints/sec to 9.2K ints/sec */
+ 		avg_wire_size *= 15;
+ 		avg_wire_size += 11452;
+-	} else if (avg_wire_size <= 1980) {
++	} else if (avg_wire_size < 1968) {
+ 		/* 9.2K ints/sec to 8K ints/sec */
+ 		avg_wire_size *= 5;
+ 		avg_wire_size += 22420;
+@@ -2655,6 +2655,8 @@ adjust_by_size:
+ 	case IXGBE_LINK_SPEED_2_5GB_FULL:
+ 	case IXGBE_LINK_SPEED_1GB_FULL:
+ 	case IXGBE_LINK_SPEED_10_FULL:
++		if (avg_wire_size > 8064)
++			avg_wire_size = 8064;
+ 		itr += DIV_ROUND_UP(avg_wire_size,
+ 				    IXGBE_ITR_ADAPTIVE_MIN_INC * 64) *
+ 		       IXGBE_ITR_ADAPTIVE_MIN_INC;
 
 
