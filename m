@@ -2,177 +2,119 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDCBC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733B8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3923218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:26:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4980A218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:27:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQyCXC4u"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lMkuL9E2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbfIRJ0R (ORCPT
+        id S1728941AbfIRJ1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:26:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45853 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbfIRJ0Q (ORCPT
+        Wed, 18 Sep 2019 05:27:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52220 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbfIRJ1T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:26:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id u12so143758pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:26:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=TP5u6Ukr8naGDCwUgGDGagSd1luSKaVAHPd6/hA2Lxc=;
-        b=BQyCXC4uNCAIjoc6ev5sISLgargq7BoavxCTsf+ZXZA/3MRVJm6DE8cNuUu1er+7LE
-         g/uRuoy5CYC0InQssHzLPQdsPpqdDOFBC2ETNyaiJgR5JIbtEzXrer/bfNK3fgtO74WY
-         TWCHxcgI63IHQFZKGU5l3NNMYrBlSSndSIyO0hbjBMDFtrxbVBfNTD7F2Dfyu+CH6zN/
-         uDEZC0HHw+uSO0meiDOucKi5DYimCHKvbUWFE/Ju886VeMe4GEXm1duuQ35P1cAvvs8F
-         hbyvqDGWtmXdvz9KdsUQmA6EpSxpspLfxkObA8Ev5bFTbMN7Whp/NmFRDWXfvZDfArRq
-         pXSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=TP5u6Ukr8naGDCwUgGDGagSd1luSKaVAHPd6/hA2Lxc=;
-        b=XmoSaGH7iDABBLQzYeO2vAl9bwEp16qHLnmwlPBIi9BzGx0UT6Q/RTNf4O+2aJR31Y
-         XwYoxayOgZDv3+r+SYb+obb1zSqLcS/BcE/io2PMOsDtlBGnu7GMg+hR0j0nLIFYXtjO
-         Qcz3j9KMBn1kqJvEqHro542QMb8XQ3CPuBFRxnrRZRD9zuHhsiVwWZqvthFjPGeTxCg0
-         Jlzk0awuiAfaJtswYkINugzVhZP/3M5iNo0uUheJZzeo0FSGvDVFk+hY0FaZWZAv89RX
-         M8FF0kNWLMq6EO3sUcKIK7yD4CwkzHz5U4wqIR6HdHkJfSZLUXE/HLP1kh+XcV0sBIhe
-         AF/g==
-X-Gm-Message-State: APjAAAXJe3n6O8g6QGfHfS8MBEdZOCNsx2lxveYVMNDLpCyWze/ioGau
-        a0TE6ncKAyp4LqbSy9ZcK00=
-X-Google-Smtp-Source: APXvYqxxS5VPHg7voF/W/ZYyqfHN3XOErQ3eBbbKzxzjP8Q+m9zU5TQ5ykTgwHCm2au4U5JqDnIBsg==
-X-Received: by 2002:a17:902:9698:: with SMTP id n24mr3268424plp.238.1568798775771;
-        Wed, 18 Sep 2019 02:26:15 -0700 (PDT)
-Received: from localhost.localdomain ([2401:4900:1951:77d6:5858:909b:a968:2d14])
-        by smtp.gmail.com with ESMTPSA id m12sm9270654pff.66.2019.09.18.02.26.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 02:26:14 -0700 (PDT)
-From:   Aliasgar Surti <aliasgar.surti500@gmail.com>
-X-Google-Original-From: Aliasgar Surti
-To:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Cc:     Aliasgar Surti <aliasgar.surti500@gmail.com>
-Subject: [PATCH v2] drivers:staging:rtl8723bs: Removed unneeded variables
-Date:   Wed, 18 Sep 2019 14:55:49 +0530
-Message-Id: <1568798749-9855-1-git-send-email-aliasgar.surti500@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 18 Sep 2019 05:27:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8I98uK0036001;
+        Wed, 18 Sep 2019 09:27:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=5W1fcvEd99/AIOIxEczHb9EgxxrI9ZKCVn9mLpgE1DY=;
+ b=lMkuL9E22/fDHGZGYGdq4UeC5SmsvGJPm1jemC461wOrRlCJRuuu/+/JcgNExra+s8Mf
+ Z/tF3XlJX6OyYs2M7n7ZaUo2Z5fZgUgou5AYx75K0JBluBD3nmV1ot/5EEKrIUJV6esR
+ dD/0NnDsuB6Duc2+tQrLR79ZpIcpuENYTvDGuvJfYFVWswA5ALy/O9+jdGXfFzRo2raa
+ 4tv4hudsFVUcsQd47Wwf0ZX90JmZXCOtKpR/pWEp8zA2e/CqqoT0piBKKTps2IMbCvRA
+ wjd4xIIL6HUeWEKOxR3ffNdvNazYCzbbkwvM2MM9y6mi9ZLva+mZ8s9zuW1GvvLMWWw1 fA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2v385dtj58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 09:27:09 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x8I994QC176154;
+        Wed, 18 Sep 2019 09:25:08 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2v37mm8fts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 09:25:08 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x8I9P56v026455;
+        Wed, 18 Sep 2019 09:25:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Sep 2019 02:25:04 -0700
+Date:   Wed, 18 Sep 2019 12:24:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Ju Hyung Park <qkrwngud825@gmail.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org,
+        linkinjeon@gmail.com, Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>,
+        linux-kernel@vger.kernel.org, alexander.levin@microsoft.com,
+        sergey.senozhatsky@gmail.com, linux-fsdevel@vger.kernel.org,
+        sj1557.seo@samsung.com
+Subject: Re: [PATCH] staging: exfat: add exfat filesystem code to
+Message-ID: <20190918092405.GC2959@kadam>
+References: <8998.1568693976@turing-police>
+ <20190917053134.27926-1-qkrwngud825@gmail.com>
+ <20190917054726.GA2058532@kroah.com>
+ <CGME20190917060433epcas2p4b12d7581d0ac5477d8f26ec74e634f0a@epcas2p4.samsung.com>
+ <CAD14+f1adJPRTvk8awgPJwCoHXSngqoKcAze1xbHVVvrhSMGrQ@mail.gmail.com>
+ <004401d56dc9$b00fd7a0$102f86e0$@samsung.com>
+ <20190918061605.GA1832786@kroah.com>
+ <20190918063304.GA8354@jagdpanzerIV>
+ <20190918082658.GA1861850@kroah.com>
+ <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD14+f24gujg3S41ARYn3CvfCq9_v+M2kot=RR3u7sNsBGte0Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1909180094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9383 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1909180094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aliasgar Surti <aliasgar.surti500@gmail.com>
+On Wed, Sep 18, 2019 at 06:01:09PM +0900, Ju Hyung Park wrote:
+> On Wed, Sep 18, 2019 at 5:33 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > He did?  I do not see a patch anywhere, what is the message-id of it?
+> 
+> I'm just repeating myself at this point, but again, I'm more than
+> willing to work on a patch.
+> I just want to make it clear on how should I.
 
-coccicheck reported warning for unneeded variable used.
+Put it in drivers/staging/sdfat/.
 
-This patch removes the unneeded variables.
+But really we want someone from Samsung to say that they will treat
+the staging version as upstream.  It doesn't work when people apply
+fixes to their version and a year later back port the fixes into
+staging.  The staging tree is going to have tons and tons of white space
+fixes so backports are a pain.  All development needs to be upstream
+first where the staging driver is upstream.  Otherwise we should just
+wait for Samsung to get it read to be merged in fs/ and not through the
+staging tree.
 
-Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
----
-v2: removed unneeded functions and replaced them with NULL in function array.
----
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 54 +++-----------------------
- 1 file changed, 5 insertions(+), 49 deletions(-)
+regards,
+dan carpenter
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index d1b199e..55c6e45 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -2425,13 +2425,6 @@ static  int rtw_drvext_hdl(struct net_device *dev, struct iw_request_info *info,
- 	return 0;
- }
- 
--static int rtw_mp_ioctl_hdl(struct net_device *dev, struct iw_request_info *info,
--						union iwreq_data *wrqu, char *extra)
--{
--	int ret = 0;
--	return ret;
--}
--
- static int rtw_get_ap_info(struct net_device *dev,
-                                struct iw_request_info *info,
-                                union iwreq_data *wrqu, char *extra)
-@@ -4458,43 +4451,6 @@ static int rtw_pm_set(struct net_device *dev,
- 	return ret;
- }
- 
--static int rtw_mp_efuse_get(struct net_device *dev,
--			struct iw_request_info *info,
--			union iwreq_data *wdata, char *extra)
--{
--	int err = 0;
--	return err;
--}
--
--static int rtw_mp_efuse_set(struct net_device *dev,
--			struct iw_request_info *info,
--			union iwreq_data *wdata, char *extra)
--{
--	int err = 0;
--	return err;
--}
--
--static int rtw_tdls(struct net_device *dev,
--				struct iw_request_info *info,
--				union iwreq_data *wrqu, char *extra)
--{
--	int ret = 0;
--	return ret;
--}
--
--
--static int rtw_tdls_get(struct net_device *dev,
--				struct iw_request_info *info,
--				union iwreq_data *wrqu, char *extra)
--{
--	int ret = 0;
--	return ret;
--}
--
--
--
--
--
- static int rtw_test(
- 	struct net_device *dev,
- 	struct iw_request_info *info,
-@@ -4744,7 +4700,7 @@ static iw_handler rtw_private_handler[] = {
- 	rtw_wx_write32,					/* 0x00 */
- 	rtw_wx_read32,					/* 0x01 */
- 	rtw_drvext_hdl,					/* 0x02 */
--	rtw_mp_ioctl_hdl,				/* 0x03 */
-+	NULL,						/* 0x03 */
- 
- /*  for MM DTV platform */
- 	rtw_get_ap_info,					/* 0x04 */
-@@ -4771,15 +4727,15 @@ static iw_handler rtw_private_handler[] = {
- 	NULL,							/* 0x12 */
- 	rtw_p2p_get2,					/* 0x13 */
- 
--	rtw_tdls,						/* 0x14 */
--	rtw_tdls_get,					/* 0x15 */
-+	NULL,						/* 0x14 */
-+	NULL,						/* 0x15 */
- 
- 	rtw_pm_set,						/* 0x16 */
- 	rtw_wx_priv_null,				/* 0x17 */
- 	rtw_rereg_nd_name,				/* 0x18 */
- 	rtw_wx_priv_null,				/* 0x19 */
--	rtw_mp_efuse_set,				/* 0x1A */
--	rtw_mp_efuse_get,				/* 0x1B */
-+	NULL,						/* 0x1A */
-+	NULL,						/* 0x1B */
- 	NULL,							/*  0x1C is reserved for hostapd */
- 	rtw_test,						/*  0x1D */
- };
--- 
-2.7.4
 
