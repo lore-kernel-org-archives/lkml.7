@@ -2,126 +2,101 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99590C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CA4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C52421928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:52:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="edyaNwt+"
+	by mail.kernel.org (Postfix) with ESMTP id 2656721BE5
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 18:53:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568832782;
+	bh=XnWKNr8fD5TWt/S5fVeOFVQXajauDkjPGe0OfujFr1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xULLx4Db+NUEIXtNHsg/2mitsgrnehUZSikSGEXk/TycFt4m1kVYuGU+7yU0qogTU
+	 OUXkI3ygtfSDcU0o20QJdJK9eVV8f+n7tjLtk9ADQFt5aQx2LCMiwJsYt7fwwImqGD
+	 d+IuTVan849SkBXbKX4uSL67cuwSBYxiSZG6wFRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388890AbfIRSwZ (ORCPT
+        id S2388905AbfIRSxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 14:52:25 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44195 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387624AbfIRSwY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 14:52:24 -0400
-Received: by mail-pg1-f196.google.com with SMTP id i18so350087pgl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 11:52:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Okiu/elfIgaQjLf/NcyUs2b0iC336LxObVGspA2lzqA=;
-        b=edyaNwt+eE1B1lgdsf/YGnTJT7plTJ12j36UTrWUO/FNne2Cz4e3Jsmk0R1p+1RuKI
-         wxis/VxbSyAsbRssjpJ8QEihlf90LcB+Eol37VpQzbP4CzHi7fjm0o4HFYGnT/NS3sth
-         M5x4sS9d9PtxDr7DSNWf6FftE21sx5C2KZ3I0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Okiu/elfIgaQjLf/NcyUs2b0iC336LxObVGspA2lzqA=;
-        b=iOj+A9ZpfRSnJsVFLfRXbua7RHVPw2sQocH5PmxkcjiOwWulZvGfy91IyGOnP2XH2p
-         1Bwnumw9hUtwuNztm+MUny/drZk6PFWzXK/euJkaYig2fp2LXfgdkQvuYzRO+YX9QKk+
-         mCARIwQ73e36ooU1eKw/aS2bCaKoszQNcyNNc7wbCOguzzAV4bs6uY6BOLLlzuSTTYW6
-         pHntN6MNBqueBAP3xhxae02MfnvR4SA1A5fRioLt7j+DegnsZE1T5DnJHVdtL/1ZC5F+
-         yR/hsS8T3z93AwqMC8v5mMOjnps0SARFgnR/2FJiMsvryn0czPYccv1Gns9Bz1QUVuy9
-         Jnkg==
-X-Gm-Message-State: APjAAAWCIwXGpm22v6F7IEDASx3PH+tLoUd97JPJXzOfiD46P9W+mJB7
-        weti7Syn8ReTVs2d+OfpR15d6A==
-X-Google-Smtp-Source: APXvYqzEryEbvffH4fIUESAvKGyMWpAjiAWue/Z8tPbRhL3fkmz6diIJu/4RxieSqZDIvsTOUIGGJQ==
-X-Received: by 2002:aa7:9835:: with SMTP id q21mr5970232pfl.122.1568832742624;
-        Wed, 18 Sep 2019 11:52:22 -0700 (PDT)
-Received: from shitalt.dhcp.broadcom.net ([192.19.234.250])
-        by smtp.gmail.com with ESMTPSA id o42sm3745010pjo.32.2019.09.18.11.52.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 18 Sep 2019 11:52:22 -0700 (PDT)
-From:   Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-To:     Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Vikram Prakash <vikram.prakash@broadcom.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
-        Vikas Gupta <vikas.gupta@broadcom.com>,
-        Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Subject: [PATCH] devlink: add devlink notification for recovery
-Date:   Thu, 19 Sep 2019 00:22:21 +0530
-Message-Id: <1568832741-20850-1-git-send-email-sheetal.tigadoli@broadcom.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 18 Sep 2019 14:53:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387624AbfIRSxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 14:53:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8ADB21BE5;
+        Wed, 18 Sep 2019 18:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568832780;
+        bh=XnWKNr8fD5TWt/S5fVeOFVQXajauDkjPGe0OfujFr1w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GIxs9qR8hxJUxzi6UiyuSzkgHXc032YMT6nCtH4b+VUeIejNKHqsNBkjWto7TOPWK
+         VNOx94pB2c1KsjZyXrOOXZZ9xl16CZFp2azipMV1kG5bTk9wQs6rGbKuzPe6Jh/R63
+         u/GnmOnm6nFFonBbZQmhPLWcnPiFZYmuufSQgHbg=
+Date:   Wed, 18 Sep 2019 20:52:57 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-i2c@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the driver-core tree
+Message-ID: <20190918185257.GC1933777@kroah.com>
+References: <20190918170952.GT2596@sirena.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918170952.GT2596@sirena.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vikas Gupta <vikas.gupta@broadcom.com>
+On Wed, Sep 18, 2019 at 06:09:52PM +0100, Mark Brown wrote:
+> Hi all,
+> 
+> After merging the driver-core tree, today's linux-next build
+> for arm64 allmodconfig failed like this:
+> 
+> /home/broonie/next/next/drivers/i2c/i2c-core-acpi.c: In function 'i2c_acpi_find_adapter_by_handle':
+> /home/broonie/next/next/drivers/i2c/i2c-core-acpi.c:352:10: error: 'i2c_acpi_find_match_adapter' undeclared (first use in this function); did you mean 'i2c_acpi_find_bus_speed'?
+>           i2c_acpi_find_match_adapter);
+>           ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+>           i2c_acpi_find_bus_speed
+> /home/broonie/next/next/drivers/i2c/i2c-core-acpi.c:352:10: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> Caused by commit
+> 
+>   644bf600889554210 ("i2c: Revert incorrect conversion to use generic helper")
+> 
+> In yesterday's -next that function existed but it appears to have been
+> removed in Linus' tree as part of the merge:
+> 
+>   4feaab05dc1eda3 ("Merge tag 'leds-for-5.4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds")
+> 
+> by the commit
+> 
+>   00500147cbd3fc5 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
+> 
+> (ie, the commit that the failing commit was trying to revert.)  I
+> suspect this is confusion caused by things going into Linus' tree in
+> different orders.  I've fixed this up by re-adding the function.
 
-Add a devlink notification for reporter recovery
+Wait, I thought Linus said this fixup was now resolved.  What went
+wrong?
 
-Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
-Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
----
- net/core/devlink.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Linus, should I submit a fix for this?
 
-diff --git a/net/core/devlink.c b/net/core/devlink.c
-index e48680e..42909fb 100644
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -4730,6 +4730,28 @@ struct devlink_health_reporter *
- }
- EXPORT_SYMBOL_GPL(devlink_health_reporter_state_update);
- 
-+static void __devlink_recover_notify(struct devlink *devlink,
-+				     enum devlink_command cmd)
-+{
-+	struct sk_buff *msg;
-+	int err;
-+
-+	WARN_ON(cmd != DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return;
-+
-+	err = devlink_nl_fill(msg, devlink, cmd, 0, 0, 0);
-+	if (err) {
-+		nlmsg_free(msg);
-+		return;
-+	}
-+
-+	genlmsg_multicast_netns(&devlink_nl_family, devlink_net(devlink),
-+				msg, 0, DEVLINK_MCGRP_CONFIG, GFP_KERNEL);
-+}
-+
- static int
- devlink_health_reporter_recover(struct devlink_health_reporter *reporter,
- 				void *priv_ctx)
-@@ -4747,6 +4769,9 @@ struct devlink_health_reporter *
- 	reporter->health_state = DEVLINK_HEALTH_REPORTER_STATE_HEALTHY;
- 	reporter->last_recovery_ts = jiffies;
- 
-+	__devlink_recover_notify(reporter->devlink,
-+				 DEVLINK_CMD_HEALTH_REPORTER_RECOVER);
-+
- 	return 0;
- }
- 
--- 
-1.9.1
+thanks,
 
+greg k-h
