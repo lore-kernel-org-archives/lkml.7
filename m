@@ -2,103 +2,112 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F7CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB313C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:53:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2645F21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA97207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:53:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2bS6Mx9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbfIRPvN (ORCPT
+        id S1731779AbfIRPxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:51:13 -0400
-Received: from muru.com ([72.249.23.125]:33664 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387526AbfIRPvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:51:13 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 19871806C;
-        Wed, 18 Sep 2019 15:51:42 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 08:51:08 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Suman Anna <s-anna@ti.com>, linux-omap@vger.kernel.org,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 5/8] ARM: dts: Drop bogus ahclkr clocks for dra7 mcasp 3
- to 8
-Message-ID: <20190918155108.GD5610@atomide.com>
-References: <20190723112811.44381-1-tony@atomide.com>
- <20190723112811.44381-6-tony@atomide.com>
- <2c750847-700e-c835-ee53-a656b363c36c@ti.com>
- <20190724064758.GU5447@atomide.com>
- <931eb0e1-8024-3003-1fb3-6f6ad8b74bf9@ti.com>
+        Wed, 18 Sep 2019 11:53:54 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40022 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbfIRPxx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:53:53 -0400
+Received: by mail-io1-f66.google.com with SMTP id h144so337504iof.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:53:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EQ45BCpmBEKnvHqL4KeZ85PzFZcYZhlr4Gvwwx3a9LE=;
+        b=j2bS6Mx9kJZxs5QQ/AlKQfbUAJAopRKCyfWwar9orN24zdcVYndxvCB5AKm4Xw9Iy3
+         mkYKHguyY0lxca6Paj1/bv2TbuAUVjkO3Cct9gNV1gKXQnbdLJVMsvdhSLqB/5Uzqa2J
+         9eM3gTS2OK1kbrI50Z34hKXMl6OadhAbrdNWjtdRBv3KEAEPPNx3xISZodzOqihnl9i2
+         pWJEuFZ2v+3aOuiU15uiX3/ejzcYXoNsFi2wRBv8L7Xm4TZH9BDV/ylYz8bgZLZrI2TP
+         jyWyqr8dEfMzXv2ocZu9qw9ynx/+OhhdaxjQQez0J48xng6b+dbXMBccljkJDt/mGMXk
+         NOJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EQ45BCpmBEKnvHqL4KeZ85PzFZcYZhlr4Gvwwx3a9LE=;
+        b=JRNyY0umjGPOyTZ0GTx7Koa071HPU6vabTIaFrQlSm9gG54McQm+ns5VANliUEaRI9
+         j1X+4JRlZ+enU3NYs8lcaM5+EzERotaadCj1V2r0DAG8JuGeDZR1SUsy/mRKAuoM4LfH
+         dRpKgWMyRMUo/nAbAH3oOlwdHWnhX4zcX+ZhEcwCX0zcNTgHjAvj2SdZfV+ikamMLaWJ
+         WwyGrXqsdrS5/84ngQ4knJSZZdyb5Z6MbeV/HJVRTKwbHyZlQaehpuc+3fbeMdBzpQYQ
+         TDVChiCq7iz9J6jxwwQTwYxw1P/yjbs1lHVmiOmNvuQSZXssOOneW/R2bJVm9eZMjSas
+         Dfrw==
+X-Gm-Message-State: APjAAAV84H5gWvzFcJYK29rSlBrptDt+ACRZIu0n3wVdAjWAn4A0aL5p
+        fX/B49XU72V3VYw7bR9zaKzbf5L1HxWZI2l6Irs=
+X-Google-Smtp-Source: APXvYqzWWtP7F3fhmYl9ngvjNxdw3ntiC8EMP+BaJfsXqc8gnQIUrrrgG1lqoXIvvsa4AUuT0Qb0x4xEk0eT5KqrDDw=
+X-Received: by 2002:a02:69cd:: with SMTP id e196mr5969184jac.84.1568822032590;
+ Wed, 18 Sep 2019 08:53:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <931eb0e1-8024-3003-1fb3-6f6ad8b74bf9@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190917154021.14693-1-m.felsch@pengutronix.de>
+ <20190917154021.14693-4-m.felsch@pengutronix.de> <CAKdAkRSi+d0AXwXaxc4wx+p2kAf=+_P8HZnq-sJAKmbwuuKH4Q@mail.gmail.com>
+ <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
+In-Reply-To: <20190918081807.yl4lkjgosq5bhow3@pengutronix.de>
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Date:   Wed, 18 Sep 2019 08:53:40 -0700
+Message-ID: <CAKdAkRSneYYjcVe--P=m037aA1DaD+efbEcRGGKVk1hDeEw70A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] regulator: core: make regulator_register()
+ EPROBE_DEFER aware
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     zhang.chunyan@linaro.org, Doug Anderson <dianders@chromium.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, ckeepax@opensource.cirrus.com,
+        lkml <linux-kernel@vger.kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [190917 07:22]:
-> On 24/07/2019 09:47, Tony Lindgren wrote:
-> > * Suman Anna <s-anna@ti.com> [190723 21:02]:
-> > > Hi Tony,
-> > > 
-> > > On 7/23/19 6:28 AM, Tony Lindgren wrote:
-> > > > The ahclkr clkctrl clock bit 28 only exists for mcasp 1 and 2 on dra7.
-> > > > Otherwise we get the following warning on beagle-x15:
-> > ...
-> > > > @@ -2962,9 +2958,8 @@
-> > > >   					<SYSC_IDLE_SMART>;
-> > > >   			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-> > > >   			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>,
-> > > > -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>,
-> > > > -				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 28>;
-> > > > -			clock-names = "fck", "ahclkx", "ahclkr";
-> > > > +				 <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 24>;
-> > > > +			clock-names = "fck", "ahclkx";
-> > > 
-> > > The equivalent change to MCASP8 is missing.
-> > 
-> > Thanks for spotting it, probably should be set up the same way as
-> > MCASP4 too looking at the TRM.
-> > 
-> > Tero, care to check the dra7 mcasp clocks we have defined?
-> 
-> Sorry, missed this earlier.
-> 
-> > 
-> > $ grep MCASP drivers/clk/ti/clk-7xx.c
-> >          { DRA7_IPU_MCASP1_CLKCTRL, dra7_mcasp1_bit_data, CLKF_SW_SUP, "ipu-clkctrl:0000:22" },
-> >          { DRA7_L4PER2_MCASP2_CLKCTRL, dra7_mcasp2_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0154:22" },
-> >          { DRA7_L4PER2_MCASP3_CLKCTRL, dra7_mcasp3_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:015c:22" },
-> >          { DRA7_L4PER2_MCASP5_CLKCTRL, dra7_mcasp5_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:016c:22" },
-> >          { DRA7_L4PER2_MCASP8_CLKCTRL, dra7_mcasp8_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:0184:24" },
-> >          { DRA7_L4PER2_MCASP4_CLKCTRL, dra7_mcasp4_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:018c:22" },
-> >          { DRA7_L4PER2_MCASP6_CLKCTRL, dra7_mcasp6_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01f8:22" },
-> >          { DRA7_L4PER2_MCASP7_CLKCTRL, dra7_mcasp7_bit_data, CLKF_SW_SUP, "l4per2-clkctrl:01fc:22" },
-> > 
-> > Is bit 24 above correct for MCASP8 or should it too be 22 like
-> > adjacent MCASP4 in the TRM?
-> 
-> So yeah, mcasp8 is wrong here, should be 22 as rest of them. I did fix
-> mcasp8 clocks partially when doing the conversion but missed the parenting
-> here; it was completely broken before.
+On Wed, Sep 18, 2019 at 1:18 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> On 19-09-17 17:57, Dmitry Torokhov wrote:
+> > On Tue, Sep 17, 2019 at 4:42 PM Marco Felsch <m.felsch@pengutronix.de> wrote:
+> > >
+> > > Sometimes it can happen that the regulator_of_get_init_data() can't
+> > > retrieve the config due to a not probed device the regulator depends on.
+> > > Fix that by checking the return value of of_parse_cb() and return
+> > > EPROBE_DEFER in such cases.
+> >
+> > Treating EPROBE_DEFER in a special way is usually wrong.
+> > regulator_of_get_init_data() may fail for multiple reasons (no memory,
+> > invalid DT, etc, etc). All of them should abort instantiating
+> > regulator.
+>
+> Those errors are handled but the behaviour of this funciton is to return
+> NULL in such errors which is fine for the caller of this function. I
+> only want to handle EPROBE_DEFER special..
 
-OK thanks, I'll post a patch to fix that and an updated mcasp dts fix.
+And I am saying it is wrong to handle only EPROBE_DEFER.
+regulator_of_get_init_data() should always return ERR_PTR()-encoded
+error code when parsing callback returns error, so that regulator core
+does not mistakenly believe that there is no configuration/init data
+when in fact there is, but we failed to handle it properly.
 
-Regards,
+IOW I'm advocating for extending you patch so that it reads:
 
-Tony
++               ret = desc->of_parse_cb(child, desc, config);
++               if (ret) {
++                       of_node_put(child);
++                       return ERR_PTR(ret);
++               }
+
+Thanks.
+
+-- 
+Dmitry
