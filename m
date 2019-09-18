@@ -2,116 +2,121 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57151C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD4CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E56A20856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A6B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568813374;
-	bh=cooyzMDiQ3PQH+yW8p+FAU41+zjJrpgnf/jnFnqcHrM=;
+	s=default; t=1568813451;
+	bh=RbC4fN4+WoQJjBQGTdi17JBf/Ifl1VTx05MBsOOyhtM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O/ceCmJO09FzjmMc+AGCMlAQgtybckqQ/sj8Mg4Ld7FfSIc/7AkgGBXisC1k8/JY3
-	 CKMwn1EruCxulV6PPk7zy4yr4NQpld9RtsMvUCtiCoVv2rDiOcBlOWmm/v4qG2W9xE
-	 NazDG9A0+HNO3vfUtQe31kJUsf8tCS2CLhOoqIZo=
+	b=1eE6S6MPjZdX+TJD3POwRh0jz2HKNtJlYgAm07ZIj18jD1gdc+TSlIS2h7uxJG28o
+	 KVeajXB/rKduqrlquJS2UPMZIu2RtRHsjN0/y7C0ANRR1CV55alEAfLRMG6zcdZg0+
+	 emNTHHutVOncQ3G+cBG9ba4VmkQCvbv3wvgHQybw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729421AbfIRN3d (ORCPT
+        id S1730134AbfIRNau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:29:33 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46320 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728499AbfIRN3d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:29:33 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f21so3156280otl.13;
-        Wed, 18 Sep 2019 06:29:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HZTDpZB0FWhOuAxtm2xHOiTF/T4Pop64d8ZGOTckqTQ=;
-        b=gnlChRSmR7/ZO6HxDRhLJ8Q2JST2UiBHvjFFpccfNtgNZJI+gG2cIAJvraM/5Rht5B
-         isuMSGOou5GqcFY/REM52HL78Je7RlzAyNwE3+qbt/UxaZbqCV9Kje0GS1bnBVQesC33
-         7riMSsqt74fWLTVkDgSOaFH53zdwJLPLHZ4CMrgUXDLGqpecptBnThC/xuEJuH3nm9FK
-         nkSz0zPyJGgpFYnGCkK8lfVp0goXqX6o4eLvSUikpdCPocYLCkY1P9VpTFHBcOVd54eB
-         px0nkzqvZn9+S3ZAu+WM0Tr3+hgxft1Cz/1fVn/jnQOG+3bjt/oBaivRCRhAAr31svBi
-         SDPw==
-X-Gm-Message-State: APjAAAVPcU1G9o8dDFUVSOZHIqO96dLvAGc4VW87+EiK1brVbYzJ9B6B
-        zowiMT9a617fI/61l4BrLQ==
-X-Google-Smtp-Source: APXvYqwoXBXNAJkYbclAQeVhMjyqJzab480msbLIYPOESQiLgnhUmsr2Z5ieZuNUI0ieLl+Lutec3w==
-X-Received: by 2002:a05:6830:138a:: with SMTP id d10mr2902533otq.316.1568813372427;
-        Wed, 18 Sep 2019 06:29:32 -0700 (PDT)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id x6sm1808647ote.69.2019.09.18.06.29.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 06:29:31 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 08:29:31 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: dma: ti-edma: Document
- dma-channel-mask for EDMA
-Message-ID: <20190918132931.GA14832@bogus>
-References: <20190910114559.22810-1-peter.ujfalusi@ti.com>
- <20190910114559.22810-3-peter.ujfalusi@ti.com>
+        Wed, 18 Sep 2019 09:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbfIRNau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:30:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDB420856;
+        Wed, 18 Sep 2019 13:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568813449;
+        bh=RbC4fN4+WoQJjBQGTdi17JBf/Ifl1VTx05MBsOOyhtM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HMU51kJ2hcS415mcVYxqXJCb3ohmmTf0wzhM8CN3+/4v/NSDHTsAOLEaOwN/+5MSM
+         wJxD3jlSeGhDsjlhp4AvyxSnO/rdHwxmr/MhjBQFfwpH+aT+Dr12+hwhjj3/t56QHQ
+         YGR4sLeV25BoxLU77UgArb8CNxjJAn+yAeuBYBuQ=
+Date:   Wed, 18 Sep 2019 15:30:47 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     kvm@vger.kernel.org, kernellwp@gmail.com,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        "# 5 . 2 . y" <stable@kernel.org>
+Subject: Re: [PATCH] kvm: Ensure writes to the coalesced MMIO ring are within
+ bounds
+Message-ID: <20190918133047.GC1908968@kroah.com>
+References: <20190918131545.6405-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190910114559.22810-3-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190918131545.6405-1-will@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 02:45:58PM +0300, Peter Ujfalusi wrote:
-> Similarly to paRAM slots, channels can be used by other cores.
+On Wed, Sep 18, 2019 at 02:15:45PM +0100, Will Deacon wrote:
+> When records are written to the coalesced MMIO ring in response to a
+> vCPU MMIO exit, the 'ring->last' field is used to index the ring buffer
+> page. Although we hold the 'kvm->ring_lock' at this point, the ring
+> structure is mapped directly into the host userspace and can therefore
+> be modified to point at arbitrary pages within the kernel.
 > 
-> The common dma-channel-mask property can be used for specifying the
-> available channels.
+> Since this shouldn't happen in normal operation, simply bound the index
+> by KVM_COALESCED_MMIO_MAX to contain the accesses within the ring buffer
+> page.
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: <stable@kernel.org> # 5.2.y
+> Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
+> Reported-by: Bill Creasey <bcreasey@google.com>
+> Signed-off-by: Will Deacon <will@kernel.org>
 > ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> index 4bbc94d829c8..3c7736246354 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -42,6 +42,9 @@ Optional properties:
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be used by
->  		the driver, they are allocated to be used by for example the
->  		DSP. See example.
-> +- dma-channel-mask: Mask of usable channels, see
-> +		Documentation/devicetree/bindings/dma/dma-common.yaml
-> +
-
-What's the size? 2 cells?
-
+> I think there are some other fixes kicking around for this, but they
+> still rely on 'ring->last' being stable, which isn't necessarily the
+> case. I'll send the -stable backport for kernels prior to 5.2 once this
+> hits mainline.
+> 
+>  virt/kvm/coalesced_mmio.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
+> index 5294abb3f178..09b3e4421550 100644
+> --- a/virt/kvm/coalesced_mmio.c
+> +++ b/virt/kvm/coalesced_mmio.c
+> @@ -67,6 +67,7 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
+>  {
+>  	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
+>  	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
+> +	u32 last;
 >  
->  ------------------------------------------------------------------------------
->  eDMA3 Transfer Controller
-> @@ -91,6 +94,9 @@ edma: edma@49000000 {
->  	ti,edma-memcpy-channels = <20 21>;
->  	/* The following PaRAM slots are reserved: 35-44 and 100-109 */
->  	ti,edma-reserved-slot-ranges = <35 10>, <100 10>;
-> +	/* The following channels are reserved: 35-44 */
-> +	dma-channel-mask = <0xffffffff>, /* Channel 0-31 */
-> +			   <0xffffe007>; /* Channel 32-63 */
->  };
+>  	if (!coalesced_mmio_in_range(dev, addr, len))
+>  		return -EOPNOTSUPP;
+> @@ -79,13 +80,13 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
+>  	}
 >  
->  edma_tptc0: tptc@49800000 {
-> -- 
-> Peter
-> 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+>  	/* copy data in first free entry of the ring */
+> -
+> -	ring->coalesced_mmio[ring->last].phys_addr = addr;
+> -	ring->coalesced_mmio[ring->last].len = len;
+> -	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
+> -	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
+> +	last = ring->last % KVM_COALESCED_MMIO_MAX;
+> +	ring->coalesced_mmio[last].phys_addr = addr;
+> +	ring->coalesced_mmio[last].len = len;
+> +	memcpy(ring->coalesced_mmio[last].data, val, len);
+> +	ring->coalesced_mmio[last].pio = dev->zone.pio;
+>  	smp_wmb();
+> -	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
+> +	ring->last = (last + 1) % KVM_COALESCED_MMIO_MAX;
+>  	spin_unlock(&dev->kvm->ring_lock);
+>  	return 0;
+>  }
+
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
