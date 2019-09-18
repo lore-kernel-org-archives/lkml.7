@@ -2,102 +2,133 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19B1C4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C59C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73AFA214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMIKcF3V"
+	by mail.kernel.org (Postfix) with ESMTP id EF050214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:29:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568798976;
+	bh=kEn+18SY70aKjBGPk51sBtFUKs+qo2Iz2Lz91jz4Uo8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Sb1+idu5Fwncbeze8aeTsIzDoIgsHDatKU2pEFEVIgy5naxn+fwPAYQAs+NukW15h
+	 lxoH7VWaliDrhWdEKj7CWzBUNCXi6uoqXKSBMq0qMA1GlKi89m8xOPjkH1cMrtjSlC
+	 p/n5/EuXRK3QP1e+FFFw90zdf7kvzHfvpLPddD24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730496AbfIRJ3a (ORCPT
+        id S1730764AbfIRJ3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:29:30 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35967 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729256AbfIRJ3a (ORCPT
+        Wed, 18 Sep 2019 05:29:35 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34206 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730500AbfIRJ3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:29:30 -0400
-Received: by mail-pg1-f193.google.com with SMTP id m29so3693675pgc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XGfSZf6zpqugWLz9E/ECTaAWk5AflbcZNfQrHqcfJiI=;
-        b=tMIKcF3VViDMpKj4XKmRBULjrjqaQ3bDWghhbjeJPdxAI1tGEJH+Dd1yUsdxorGzCU
-         vX1pls9dszPLX9gZQtzLNbplTyPa9bkOieccxfMinLHCoQwgzD71ejncb9sDa3oZ/cOg
-         yS2/hctP+HmUBJZvrUFp0MWC7o6Kb8PwlsW55EiUB++a0T4VExjmE6VRDWTlFa+L0pz0
-         OHYUXbMiWJMAUC8zKjTMZIpRA7rkoKzf1jKCf3K9VIb+sqK9BzQses2ZbQatt0gUt2Zh
-         rDGwvgQiyId1Lzm0DtBjV3JiXPSpb2Ymjn903sOwMOiOwPL3pp4hgwNNuSqtyazFLr9q
-         pS4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XGfSZf6zpqugWLz9E/ECTaAWk5AflbcZNfQrHqcfJiI=;
-        b=PU/jkV0eaqyfA0yzy/rWIw2zxFfKnuG7FE3amQBYIwzcHEDuT8aN+lauemqom/5U7Q
-         IsLIlpXexzcBmDtwDJpPOcdQIA29rjqQL/tfcg63DTSFH5lNzjqXAEnkH3cXZuVkXaqw
-         2ZRRWZ9Wbzahg7oD4wTD+r3X6Hl/6HU9abnrFBsyVTQtGPoctgEFpUMZvsLhC4QxksCC
-         m4ND5E5TXIFLy/Q9C4zVnV4lkHSqJ0NwbxVP0RUh+bEc6XdVZRqGugIOdrUDreIY6JG9
-         g5Xw3Cwn2a+z7uX6nVwMORreF+ICju0h3uPmozODkVOOhEvRxatGS7yFHYZb1Hcj/Fct
-         Ou9g==
-X-Gm-Message-State: APjAAAVZ2dfdwlLgsyzI6Y3ovZg+as1M/WYVnjw/7vsqGUN/Meg1+yLa
-        ZsJF0RARBfkjcV/k0RFM8mRhGw==
-X-Google-Smtp-Source: APXvYqyYA7P3uo4EMeZ0CyHqcdj3f3idzeWXRKKFvYXjT1q3TSTfQLukJan+2vTt2Z1VXThtAF4SmQ==
-X-Received: by 2002:aa7:955d:: with SMTP id w29mr3107878pfq.60.1568798967721;
-        Wed, 18 Sep 2019 02:29:27 -0700 (PDT)
-Received: from localhost ([122.172.73.172])
-        by smtp.gmail.com with ESMTPSA id c11sm10674911pfj.114.2019.09.18.02.29.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 02:29:26 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 14:59:25 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Amit Kucheria <amit.kucheria@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, edubezval@gmail.com, agross@kernel.org,
-        tdas@codeaurora.org, swboyd@chromium.org, ilina@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 5/5] cpufreq: qcom-hw: Move driver initialisation earlier
-Message-ID: <20190918092925.5hrvbcdorm2qw2j4@vireshk-mac-ubuntu>
-References: <cover.1568240476.git.amit.kucheria@linaro.org>
- <b731b713d8738239c26361ece7f5cadea035b353.1568240476.git.amit.kucheria@linaro.org>
- <20190917093412.GA24757@bogus>
- <20190918090938.b2fj5uk3h6t56t2p@vireshk-mac-ubuntu>
- <20190918091747.GA18121@bogus>
+        Wed, 18 Sep 2019 05:29:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LiGR9XEMuBTajmH0xruBSTvxCoSQ4vfmQBJv25M7LJI=; b=DVR8G598sToMaI10QegOpsYQ7
+        fyjy1Fz1Hjo9Z2qXx4j0WrMIev2OM0KpolYP8JjrqGQ8YKQQ4PtRtTtNyOMUCrQt97kTpE9TT0znO
+        FvZLXsJ5SRhDj80w/h0d9sHuYoQaeb/WG9ID4JWeRsSXoN53oKG+Gp0PRzrv0hLaRfBl5gcoa3yYE
+        GmxN0qfMxZ0RDvM/JJ4cHsqe08t/DfkyoqOlbHs9ETf2foQJbCaOHZmne6OGdK+nyoRU4MvheH0Tx
+        l/YOZ9dw9zNv5JP8A058hHdZzH6U40+UUJdzrW/pfo0XYZfJ1/L3tBDi2aUBvJ/fhSxwdFO+GAjb5
+        S417fKJOw==;
+Received: from 177.96.192.152.dynamic.adsl.gvt.net.br ([177.96.192.152] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iAWH8-0003yc-Kw; Wed, 18 Sep 2019 09:29:27 +0000
+Date:   Wed, 18 Sep 2019 06:29:21 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     corbet@lwn.net, rppt@linux.ibm.com, rfontana@redhat.com,
+        kstewart@linuxfoundation.org, bhelgaas@google.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts/sphinx-pre-install: add how to exit virtualenv
+ usage message
+Message-ID: <20190918062921.73a45f2d@coco.lan>
+In-Reply-To: <20190917224805.2762-1-skhan@linuxfoundation.org>
+References: <20190917224805.2762-1-skhan@linuxfoundation.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918091747.GA18121@bogus>
-User-Agent: NeoMutt/20170609 (1.8.3)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18-09-19, 10:17, Sudeep Holla wrote:
-> Ah no, I am not referring to building as module. As you mention, that may
-> work just fine. I was referring to timing dependency during boot. The idea
-> is minimize the number of such initcall dependency. They should all work
-> fine even as modules and should have least dependency on initcall sequence.
+Hi Shuah,
 
-Yeah, so things work fine for them right now but that can be improved by
-changing the sequence of boot here. And that's what Amit is trying to do here.
+Em Tue, 17 Sep 2019 16:48:05 -0600
+Shuah Khan <skhan@linuxfoundation.org> escreveu:
 
-Even if android builds this as a module later, things will continue to work but
-that may not be the best performance/boot-time wise.
+> Add usage message on how to exit the virtualenv after documentation
+> work is done.
 
-When I had a discussion about this with Amit earlier, I asked him to send
-patches even if he doesn't have any performance numbers for it as this is a
-platform driver and I find it okay for them to decide the boot sequence that
-they think is the best :)
+Good idea.
 
--- 
-viresh
+> 
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+> ---
+>  scripts/sphinx-pre-install | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
+> index 3b638c0e1a4f..932547791e3c 100755
+> --- a/scripts/sphinx-pre-install
+> +++ b/scripts/sphinx-pre-install
+> @@ -645,6 +645,12 @@ sub check_distros()
+>  # Common dependencies
+>  #
+>  
+> +sub deactivate_help()
+> +{
+> +	printf "\tWhen work is done exit the virtualenv:\n";
+> +	printf "\tdeactivate\n";
+
+I would change the message to something like:
+
+	If you want to exit the virtualenv, you can use:
+
+		deactivate
+
+Btw, at least here, I recently noticed a conflict between the
+virtenv and scripts/spdxcheck.py. Running deactivate solves it.
+
+Regards,
+Mauro
+
+
+
+> +}
+> +
+>  sub check_needs()
+>  {
+>  	# Check for needed programs/tools
+> @@ -686,6 +692,7 @@ sub check_needs()
+>  		if ($need_sphinx && scalar @activates > 0 && $activates[0] ge $min_activate) {
+>  			printf "\nNeed to activate a compatible Sphinx version on virtualenv with:\n";
+>  			printf "\t. $activates[0]\n";
+> +			deactivate_help();
+>  			exit (1);
+>  		} else {
+>  			my $rec_activate = "$virtenv_dir/bin/activate";
+> @@ -697,6 +704,7 @@ sub check_needs()
+>  			printf "\t$virtualenv $virtenv_dir\n";
+>  			printf "\t. $rec_activate\n";
+>  			printf "\tpip install -r $requirement_file\n";
+> +			deactivate_help();
+>  
+>  			$need++ if (!$rec_sphinx_upgrade);
+>  		}
+
+
+
+Thanks,
+Mauro
