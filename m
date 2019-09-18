@@ -2,92 +2,177 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8D8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340B9C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:36:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2CA205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07FDF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568810218;
+	bh=RdQZEfeMFKu0I6mDDaWkWdy7JCYuPRNzmxE/+F8/Y6Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Eoz5btLj9eWci0RpFoLbatncrKwVHZTR9KQXNBgvmD7pOghZqfPnyrgYfbwtGyA63
+	 UNlAxETPtsdULPy3Jd+Q8t4ESmkoJhQaxXJXIi6bqNI7rfXnIUZGjZC93NUKbDPEBJ
+	 ZdGcaO1YxYxZvYtu8yyQw7dSZK/JMFeLmreemhzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfIRMfD (ORCPT
+        id S1731177AbfIRMg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:35:03 -0400
-Received: from kirsty.vergenet.net ([202.4.237.240]:44648 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfIRMfD (ORCPT
+        Wed, 18 Sep 2019 08:36:57 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41169 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725902AbfIRMg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:35:03 -0400
-Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
-        by kirsty.vergenet.net (Postfix) with ESMTPA id C1C8B25AF19;
-        Wed, 18 Sep 2019 22:35:00 +1000 (AEST)
-Received: by reginn.horms.nl (Postfix, from userid 7100)
-        id EBCA9942C13; Wed, 18 Sep 2019 14:34:57 +0200 (CEST)
-Date:   Wed, 18 Sep 2019 14:34:57 +0200
-From:   Simon Horman <horms@verge.net.au>
-To:     Lars Poeschel <poeschel@lemonage.de>
-Cc:     Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jilayne Lovejoy <opensource@jilayne.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:NFC SUBSYSTEM" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v7 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
-Message-ID: <20190918123457.wg6mtygr6cboqsp6@verge.net.au>
-References: <20190910093129.1844-1-poeschel@lemonage.de>
+        Wed, 18 Sep 2019 08:36:57 -0400
+Received: by mail-oi1-f193.google.com with SMTP id w17so5784798oiw.8;
+        Wed, 18 Sep 2019 05:36:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TGvS6AhUHn5wf4afwTlLa7uTvF5Onr61XOQ/Aq65EDw=;
+        b=qTUvkhvx0YzDWQob2m2Am5cOXu0qOELP3yBP4mrRnlZMMEM+xC60K3AknmBOXvplyE
+         RPWeTFERbp1PRuXBwVKSopP/md8IRUArYuvONXcgigljRiMPGOCPN58PBTHQsruXDV4B
+         eZnuTN1NYN5u1XAZNE6Bmg2r8r5pdOZxND9Ij8gKdtHEKbabCY7LJYau6Lf5qRs0tX4d
+         W6rs79OVmocBJovwLJPO1d9MFmLq+9fsrkmW4O8x0mIX/49RxL8BMO21cCY4lDJp6P4J
+         RnEkg23MKEWiN+h2v86DdCQ8DtVV3YQ4Cyq0CapZUVarg4KMC/acbp5+WpMhKFraLwbj
+         Qn/A==
+X-Gm-Message-State: APjAAAWhyGk00785u5sPIE7jqLYYJF3RAdlz76v4+DvwMIWVHpQo+Lxl
+        uhw6GDwAlP2IrTPPy/RqVw==
+X-Google-Smtp-Source: APXvYqwHsTIV2zcgkEiykj1HNn8414Z7SeIjp6LokpIJB26rTRdmqxJN2riKchid6WJKJLxLC/bZ5Q==
+X-Received: by 2002:aca:1303:: with SMTP id e3mr1821190oii.6.1568810215772;
+        Wed, 18 Sep 2019 05:36:55 -0700 (PDT)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c12sm1616286otp.49.2019.09.18.05.36.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 05:36:55 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 07:36:54 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 08/11] dt-bindings: arm: samsung: Convert Exynos
+ System Registers bindings to json-schema
+Message-ID: <20190918123654.GA318@bogus>
+References: <20190907092007.9946-1-krzk@kernel.org>
+ <20190907092007.9946-8-krzk@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190910093129.1844-1-poeschel@lemonage.de>
-Organisation: Horms Solutions BV
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190907092007.9946-8-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 10, 2019 at 11:31:21AM +0200, Lars Poeschel wrote:
-> It is favourable to have one unified compatible string for devices that
-> have multiple interfaces. So this adds simply "pn532" as the devicetree
-> binding compatible string and makes a note that the old ones are
-> deprecated.
-
-Do you also need to update
-Documentation/devicetree/bindings/net/nfc/pn533-i2c.txt
-to both document the new compat string and deprecate the old ones?
-
-> Cc: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+On Sat, Sep 07, 2019 at 11:20:04AM +0200, Krzysztof Kozlowski wrote:
+> Convert Samsung Exynos System Registers (SYSREG) bindings to DT schema
+> format using json-schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
-> Changes in v6:
-> - Rebased the patch series on v5.3-rc5
 > 
-> Changes in v3:
-> - This patch is new in v3
+> Example somehow fails:
+> Documentation/devicetree/bindings/arm/samsung/pmu.example.dt.yaml:
+> system-controller@10040000: compatible:0: 'samsung,exynos5250-pmu' is
+> not one of ['samsung,exynos4-sysreg', 'samsung,exynos5-sysreg']
 > 
->  drivers/nfc/pn533/i2c.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> It seems that PMU schema is applied to sysreq nodes (and vice-versa).
+> ---
+>  .../bindings/arm/samsung/sysreg.txt           | 19 -----------
+>  .../bindings/arm/samsung/sysreg.yaml          | 33 +++++++++++++++++++
+>  2 files changed, 33 insertions(+), 19 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
 > 
-> diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-> index 1832cd921ea7..1abd40398a5a 100644
-> --- a/drivers/nfc/pn533/i2c.c
-> +++ b/drivers/nfc/pn533/i2c.c
-> @@ -245,6 +245,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
->  }
->  
->  static const struct of_device_id of_pn533_i2c_match[] = {
-> +	{ .compatible = "nxp,pn532", },
-> +	/*
-> +	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
-> +	 * deprecated and will be removed.
-> +	 */
->  	{ .compatible = "nxp,pn533-i2c", },
->  	{ .compatible = "nxp,pn532-i2c", },
->  	{},
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> deleted file mode 100644
+> index 4fced6e9d5e4..000000000000
+> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+> -
+> -Properties:
+> - - compatible : should contain two values. First value must be one from following list:
+> -		- "samsung,exynos4-sysreg" - for Exynos4 based SoCs,
+> -		- "samsung,exynos5-sysreg" - for Exynos5 based SoCs.
+> -		second value must be always "syscon".
+> - - reg : offset and length of the register set.
+> -
+> -Example:
+> -	syscon@10010000 {
+> -		compatible = "samsung,exynos4-sysreg", "syscon";
+> -		reg = <0x10010000 0x400>;
+> -	};
+> -
+> -	syscon@10050000 {
+> -		compatible = "samsung,exynos5-sysreg", "syscon";
+> -		reg = <0x10050000 0x5000>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+> new file mode 100644
+> index 000000000000..a3d44646e441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.yaml
+> @@ -0,0 +1,33 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/samsung/sysreg.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Samsung S5P/Exynos SoC series System Registers (SYSREG)
+> +
+> +maintainers:
+> +  - Krzysztof Kozlowski <krzk@kernel.org>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +          - samsung,exynos4-sysreg
+> +          - samsung,exynos5-sysreg
+> +      - const: syscon
+
+The problem is this will by default match any node with 'syscon'. You 
+have to add a custom 'select' entry. See the LVDS panel bindings for an 
+example.
+
+I'd like to kill off 'syscon'...
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +examples:
+> +  - |
+> +    syscon@10010000 {
+> +      compatible = "samsung,exynos4-sysreg", "syscon";
+> +      reg = <0x10010000 0x400>;
+> +    };
+> +
+> +    syscon@10050000 {
+> +      compatible = "samsung,exynos5-sysreg", "syscon";
+> +      reg = <0x10050000 0x5000>;
+> +    };
 > -- 
-> 2.23.0
+> 2.17.1
 > 
