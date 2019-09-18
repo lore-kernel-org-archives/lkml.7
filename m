@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9966CC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61C8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6663621925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A458321929
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787899;
-	bh=6np+q82s1Nx0TkE0BdOMt7YqZ8YXCMzUpWHwV+6xJDM=;
+	s=default; t=1568787901;
+	bh=Kf4pKTh2YzX0quCJ+zHpTjeK/sT8pzWlaS2kqku8Ay8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Awt03eMoOUr0l/tdfHpGZyQnUdbLkf0JBW2BiPQZf+M5O+uuUWj0ARk5qGTRqNREk
-	 f0lREojJU9DgyD/GlS0zF12p6mplKU2LWCupS5Lnkc0UXrV2my8uNpxMSlNB2pjJG3
-	 8K35r3J2xZdpQxoW1rKJjLRKgWfxWd5J2H5mnavc=
+	b=ryBKHTagkEzAqOX5FgIGSnPu7wKDlX48P7hFMniTMYqJHzMe0d2BQxV3nI07tP0MM
+	 VusEeUkay+tKzC/J/Md6lechJunRMRT5P3TYRSzqOvxgkUooRZbImQ0lERwk6D9gyW
+	 IUDeR+pMvf29NDrNph+KXkLSOFovC+2wfTQcw+Ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbfIRGY6 (ORCPT
+        id S1729963AbfIRGZA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:24:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45640 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729151AbfIRGY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:56 -0400
+        id S1728521AbfIRGYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A311218AF;
-        Wed, 18 Sep 2019 06:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3A3E21925;
+        Wed, 18 Sep 2019 06:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787896;
-        bh=6np+q82s1Nx0TkE0BdOMt7YqZ8YXCMzUpWHwV+6xJDM=;
+        s=default; t=1568787893;
+        bh=Kf4pKTh2YzX0quCJ+zHpTjeK/sT8pzWlaS2kqku8Ay8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLZTUBsgYehAenyBbNkhwS6tayxPGhyQn6L4bltg2WoSIr1KQCCRwDEQyerxuTMSa
-         rJoGxGvJYdUO/UGP8mBAhooeHudwNEyGFhNTuY6BOo096aOmDx2C3eR/V8jsEXGGUM
-         LJP/qXIVcHcJ7ctz35XG+i/w1S1GdzAtTxGLKEFo=
+        b=xWKebVcTTVo3+tZgPGGr3ZARVcq6bUtmKLwHaxP1uNvaOImvQ///rlevNUYlrg1EP
+         ckXBbhxk+Xfr8btbCGx4W+ereRIjx2KOkL670xE51ffaWKKSZgNnf8m8APIm4b5L8l
+         0bMWGAx8nYDtBZs1skD++9iToMPGRo2LSSj6HBvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Yongjun <weiyongjun1@huawei.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 5.2 23/85] gpio: mockup: add missing single_release()
-Date:   Wed, 18 Sep 2019 08:18:41 +0200
-Message-Id: <20190918061234.890530260@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
+        Ian W MORRISON <ianwmorrison@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 5.2 22/85] gpiolib: acpi: Add gpiolib_acpi_run_edge_events_on_boot option and blacklist
+Date:   Wed, 18 Sep 2019 08:18:40 +0200
+Message-Id: <20190918061234.856795767@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,32 +63,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 59929d3a2eb6c4abafc5b61a20c98aa8728ec378 upstream.
+commit 61f7f7c8f978b1c0d80e43c83b7d110ca0496eb4 upstream.
 
-When using single_open() for opening, single_release() should be
-used instead of seq_release(), otherwise there is a memory leak.
+Another day; another DSDT bug we need to workaround...
 
-Fixes: 2a9e27408e12 ("gpio: mockup: rework debugfs interface")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Since commit ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events
+at least once on boot") we call _AEI edge handlers at boot.
+
+In some rare cases this causes problems. One example of this is the Minix
+Neo Z83-4 mini PC, this device has a clear DSDT bug where it has some copy
+and pasted code for dealing with Micro USB-B connector host/device role
+switching, while the mini PC does not even have a micro-USB connector.
+This code, which should not be there, messes with the DDC data pin from
+the HDMI connector (switching it to GPIO mode) breaking HDMI support.
+
+To avoid problems like this, this commit adds a new
+gpiolib_acpi.run_edge_events_on_boot kernel commandline option, which
+allows disabling the running of _AEI edge event handlers at boot.
+
+The default value is -1/auto which uses a DMI based blacklist, the initial
+version of this blacklist contains the Neo Z83-4 fixing the HDMI breakage.
+
+Cc: stable@vger.kernel.org
+Cc: Daniel Drake <drake@endlessm.com>
+Cc: Ian W MORRISON <ianwmorrison@gmail.com>
+Reported-by: Ian W MORRISON <ianwmorrison@gmail.com>
+Suggested-by: Ian W MORRISON <ianwmorrison@gmail.com>
+Fixes: ca876c7483b6 ("gpiolib-acpi: make sure we trigger edge events at least once on boot")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20190827202835.213456-1-hdegoede@redhat.com
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Tested-by: Ian W MORRISON <ianwmorrison@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpio-mockup.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpio/gpiolib-acpi.c |   42 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
---- a/drivers/gpio/gpio-mockup.c
-+++ b/drivers/gpio/gpio-mockup.c
-@@ -309,6 +309,7 @@ static const struct file_operations gpio
- 	.read = gpio_mockup_debugfs_read,
- 	.write = gpio_mockup_debugfs_write,
- 	.llseek = no_llseek,
-+	.release = single_release,
- };
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -7,6 +7,7 @@
+  *          Mika Westerberg <mika.westerberg@linux.intel.com>
+  */
  
- static void gpio_mockup_debugfs_setup(struct device *dev,
++#include <linux/dmi.h>
+ #include <linux/errno.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/gpio/driver.h>
+@@ -19,6 +20,11 @@
+ 
+ #include "gpiolib.h"
+ 
++static int run_edge_events_on_boot = -1;
++module_param(run_edge_events_on_boot, int, 0444);
++MODULE_PARM_DESC(run_edge_events_on_boot,
++		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -170,10 +176,13 @@ static void acpi_gpiochip_request_irq(st
+ 	event->irq_requested = true;
+ 
+ 	/* Make sure we trigger the initial state of edge-triggered IRQs */
+-	value = gpiod_get_raw_value_cansleep(event->desc);
+-	if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
+-	    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
+-		event->handler(event->irq, event);
++	if (run_edge_events_on_boot &&
++	    (event->irqflags & (IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING))) {
++		value = gpiod_get_raw_value_cansleep(event->desc);
++		if (((event->irqflags & IRQF_TRIGGER_RISING) && value == 1) ||
++		    ((event->irqflags & IRQF_TRIGGER_FALLING) && value == 0))
++			event->handler(event->irq, event);
++	}
+ }
+ 
+ static void acpi_gpiochip_request_irqs(struct acpi_gpio_chip *acpi_gpio)
+@@ -1283,3 +1292,28 @@ static int acpi_gpio_handle_deferred_req
+ }
+ /* We must use _sync so that this runs after the first deferred_probe run */
+ late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
++
++static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
++		}
++	},
++	{} /* Terminating entry */
++};
++
++static int acpi_gpio_setup_params(void)
++{
++	if (run_edge_events_on_boot < 0) {
++		if (dmi_check_system(run_edge_events_on_boot_blacklist))
++			run_edge_events_on_boot = 0;
++		else
++			run_edge_events_on_boot = 1;
++	}
++
++	return 0;
++}
++
++/* Directly after dmi_setup() which runs as core_initcall() */
++postcore_initcall(acpi_gpio_setup_params);
 
 
