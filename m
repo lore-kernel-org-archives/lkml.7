@@ -2,163 +2,133 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77D4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B353FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EEE5218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A01F21907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YGgeI6B0"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="OpcRnCZT";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EA/X6sJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbfIRPcL (ORCPT
+        id S1730256AbfIRPcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:32:11 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33649 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726983AbfIRPcL (ORCPT
+        Wed, 18 Sep 2019 11:32:52 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34820 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfIRPcw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:32:11 -0400
-Received: by mail-io1-f65.google.com with SMTP id m11so284822ioo.0;
-        Wed, 18 Sep 2019 08:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5hHyYF5L2cgk61bB7AKoE7ghGd7YLktDIb71RXFYwSY=;
-        b=YGgeI6B01Qbog0Pa8A7w51DPvf6RmdRxnRonGsnP62fuwGd88IDN4UG+lpD6Ddc7xq
-         M+ty3J2sAtJwaP6/ch1pJsoyndUWaw/Ub+pS5MixJO1WTrlL/g85/PgB0AqOHxZWJ5ku
-         UB6/nJVXTJ4SNxqv1vkhVLB4nAr7no1B5Ux7DR973UTvJ6+Xm5eOQCi3hQryWMqWP4dL
-         ggJZqKslPKINu2g/xR4e0Ot7fATqFIXXCz0oQO2mKQudImW1IKjISqfz99SjP9wc8r0j
-         cy2m4J16+7lqIDur6yQhPftxjN8F7DpVh6DLNoGvCHae2IbITtYI5w12iOuM9KILqSX0
-         yPsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5hHyYF5L2cgk61bB7AKoE7ghGd7YLktDIb71RXFYwSY=;
-        b=qe2eXOVczynb5tFNJNHPDxL0i2o5xiNcVFcQuW2FGmMFQ6wb53bRnPr/yJEzb5+kN1
-         kgLLWvM5Gh+wFt7vc9jefHQiKJft3h53litQcQ76TcrKuzwU58DdN01OSHVeQ0Uisty5
-         8bx63o9WlGcD8nalCQWv937dyu6yc4ytrHeVrdz+iNJBlfwCwYpCIIJWyI3AmEUpCkSi
-         /9GZ+rZfN7Ot92yDO7gPiGSbbqt2DAmRJIvGPdXcGkziLA/PonLYpV1d+kdRwhzfUFrA
-         szdO4TApgt5Z+fjNnI3dlcAVPZGM+SbGdEin1a8phHMClcZzMaU50CMu3Ie9lUrO0R+I
-         M/Lg==
-X-Gm-Message-State: APjAAAX0KKmgAsIOtltv78EpVCOR3I8YwGxWbzI5FPWWP3AOM62OtCA6
-        FUB4u/C79vNJCFPHXR9Axv55p0vATU/hzlzgXclSJOoK
-X-Google-Smtp-Source: APXvYqwk4f9W7fDif2wT0qTh3jeOw9SsTKj3pGjsr5Z9tYewP5UlYXoB5pDU86HPHtHxIvu0cXMLbgMMc0CrPu6wwAI=
-X-Received: by 2002:a5e:c749:: with SMTP id g9mr5644589iop.7.1568820728787;
- Wed, 18 Sep 2019 08:32:08 -0700 (PDT)
+        Wed, 18 Sep 2019 11:32:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1153B611BE; Wed, 18 Sep 2019 15:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568820771;
+        bh=TNmAPCB7e2qEqf6X6jXwm3UGb2yqNQTB+ZXg9tdTpQ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OpcRnCZTCW6E4/7RqkverZwxbwC+kRsF1qSbrSw1RD+WyM+CbiBtNIOXl2/W5zXZF
+         jmFKPyA79C0l+w6zXXmy4VzHZ9bpAPdsindefawaxQYadfzqWbUPAIfaOEcgBQemsK
+         ihUXknr5Lw/NRp9zhrdnrciufcF6j4pMcYaQeA2g=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11D456034D;
+        Wed, 18 Sep 2019 15:32:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1568820770;
+        bh=TNmAPCB7e2qEqf6X6jXwm3UGb2yqNQTB+ZXg9tdTpQ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EA/X6sJt/OwsZs68vHUGHAlVHrrFC1qbanywuabEu6rk/6VZRkIkegBN+AhImTk3z
+         /Yl/GAiL6XrIQhn3wa9+BHtW39EGDE2MASsOjlzYtvQJLMhzmjXpbo74EY4rIUpPsl
+         76sHfF/0JMocsmg6t9j8PrvYOfwA0AQ245+Pmt1c=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11D456034D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 18 Sep 2019 09:32:48 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] idr: Prevent unintended underflow for the idr index
+Message-ID: <20190918153248.GC25762@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Matthew Wilcox <willy@infradead.org>,
+        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1568756922-2829-1-git-send-email-jcrouse@codeaurora.org>
+ <20190918115058.GB9880@bombadil.infradead.org>
 MIME-Version: 1.0
-References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
- <1568626884-5189-2-git-send-email-peng.fan@nxp.com> <20190917183115.3e40180f@donnerap.cambridge.arm.com>
- <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
- <20190918104347.285bd7ad@donnerap.cambridge.arm.com> <CABb+yY3drgYHk2_SZMgGhgSisB7wMVKFSx8VVabCcXkGByvgwg@mail.gmail.com>
- <20190918154654.6fb7e7f5@donnerap.cambridge.arm.com>
-In-Reply-To: <20190918154654.6fb7e7f5@donnerap.cambridge.arm.com>
-From:   Jassi Brar <jassisinghbrar@gmail.com>
-Date:   Wed, 18 Sep 2019 10:31:57 -0500
-Message-ID: <CABb+yY3gJpK5ghS1u-e=f-msO+=oVvX=zDNj3Jg2i0-uJHrLiA@mail.gmail.com>
-Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
- SMC/HVC mailbox
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Peng Fan <peng.fan@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918115058.GB9880@bombadil.infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 9:46 AM Andre Przywara <andre.przywara@arm.com> wro=
-te:
->
-> On Wed, 18 Sep 2019 09:19:46 -0500
-> Jassi Brar <jassisinghbrar@gmail.com> wrote:
->
-> Hi,
->
-> > On Wed, Sep 18, 2019 at 4:44 AM Andre Przywara <andre.przywara@arm.com>=
- wrote:
-> >
-> > >
-> > > > which needs 9 arguments to work. The fact that the fist argument is
-> > > > always going to be same on a platform is just the way we use this
-> > > > instruction.
-> > > >
-> > > > > We should be as strict as possible to avoid any security issues.
-> > > > >
-> > > > Any example of such a security issue?
-> > >
-> > > Someone finds a way to trick some mailbox client to send a crafted me=
-ssage to the mailbox.
-> > >
-> > What if someone finds a way to trick the block layer to erase 'sda' ?
->
-> Yes, the Linux block driver control the whole block device, it can do wha=
-tever it wants.
->
-Sorry, it doesn't make any sense.
+On Wed, Sep 18, 2019 at 04:50:58AM -0700, Matthew Wilcox wrote:
+> On Tue, Sep 17, 2019 at 03:48:42PM -0600, Jordan Crouse wrote:
+> > It is possible for unaware callers of several idr functions to accidentally
+> > underflow the index by specifying a id that is less than the idr base.
+> 
+> Hi Jordan.  Thanks for the patch, but this seems like a distinction
+> without a difference.
+> 
+> >  void *idr_remove(struct idr *idr, unsigned long id)
+> >  {
+> > +	if (id < idr->idr_base)
+> > +		return NULL;
+> > +
+> >  	return radix_tree_delete_item(&idr->idr_rt, id - idr->idr_base, NULL);
+> 
+> If this underflows, we'll try to delete an index which doesn't exist,
+> which will return NULL.
+> 
+> >  void *idr_find(const struct idr *idr, unsigned long id)
+> >  {
+> > +	if (id < idr->idr_base)
+> > +		return NULL;
+> > +
+> >  	return radix_tree_lookup(&idr->idr_rt, id - idr->idr_base);
+> 
+> If this underflows, we'll look up an entry which doesn't exist, which
+> will return NULL.
+> 
+> > @@ -302,6 +308,9 @@ void *idr_replace(struct idr *idr, void *ptr, unsigned long id)
+> >  	void __rcu **slot = NULL;
+> >  	void *entry;
+> >  
+> > +	if (id < idr->idr_base)
+> > +		return ERR_PTR(-ENOENT);
+> > +
+> >  	id -= idr->idr_base;
+> >  
+> >  	entry = __radix_tree_lookup(&idr->idr_rt, id, &node, &slot);
+> 
+> ... just outside the context is this line:
+>         if (!slot || radix_tree_tag_get(&idr->idr_rt, id, IDR_FREE))
+>                 return ERR_PTR(-ENOENT);
+> 
+> Looking up an index which doesn't exist gets you a NULL slot, so you get
+> -ENOENT anyway.
+> 
+> I did think about these possibilities when I was writing the code and
+> convinced myself I didn't need them.  If you have an example of a case
+> where I got thast wrong, I'd love to see it.
+> 
+> More generally, the IDR is deprecated; I'm trying to convert users to
+> the XArray.  If you're adding a new user, can you use the XArray API
+> instead?
 
-> >  That is called "bug in the code".
-> > It does happen in every subsystem but we don't stop implementing new
-> > features .... we write flexible code and then fix any bug.
-> >
-> >
-> > > Do you have any example of a use case where the mailbox client needs =
-to provide the function ID?
-> > >
-> > FSL_SIP_SCMI_1/2 ?
->
-> Huh? Where does the SCPI or SCMI driver provide this? Those clients don't=
- even provide any arguments. Adding some would defeat the whole point of ha=
-ving this mailbox in the first place, which was to provide a drop-in replac=
-ement for a hardware mailbox device used on other platforms.
->
-SCPI/SCMI implementation is broken. I did NAK it.
-With the 'smc' mailbox you may get away without have to program the
-channel before transmit, but not every controller is natively so.
+Thanks for the explanation. I happened to walk by while code inspecting an
+existing out-of-tree user and thought there might be a small hole to fill
+but I agree it is unlikely that the underflow is likely to be a valid id.
 
-> > But that is not the main point, which is to be consistent (not
-> > ignoring first argument because someone may find a bug to exploit) and
-> > flexible.
->
-> Please read the SMCCC[1]: The first argument is in r1/w1/x1. r0/w0 is the=
- function ID, and this is a specific value (fixed by the firmware implement=
-ation, see Peng's ATF patch) and not up to be guessed by a client.
->
-The first argument of smc call is the function-id
-  arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, arg5, 0, &res);
-
-
->
-> That's why I think the function ID (which is part of the SMCCC protocol, =
-not of the mailbox service!) should just be set in the controller DT node a=
-nd nowhere else.
->
-Actually that is the very reason func-id should be a client thing and
-passed via client's DT node :)
-It is general understanding that protocol specific bits should not be
-a part of controller driver, but the client(protocol) driver.
-
-Page-7 Function-ID specifies :-
-1) The service to be invoked.
-2) The function to be invoked.
-3) The calling convention (32-bit or 64-bit) that is in use.
-4) The call type (fast or yielding) that is in use.
-
-Even if we turn blind to 2,3 & 4, but (1) shouts like a runtime property.
-
-Thanks.
+Jordan
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
