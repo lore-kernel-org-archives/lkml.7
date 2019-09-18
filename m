@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6FEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E20CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5688A218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43AE5218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788222;
-	bh=qT6LTeB0Y8DjWsOQHhfaBy5k5TFm7jjY4GU5576E+2Y=;
+	s=default; t=1568788228;
+	bh=BIqPyxDhQFWcJ1fCOfLaBJ1+/q0tWDGLpDzbeYHGRMc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g3TaLvAnkBQgVPmT1R82M+tFfq9DmyIHPWICJ5wGYv0FD8HRG5NUb191OmZCd3/p5
-	 kMwy5+vbLvkApQBsO4XJU2lWs55UNuVr70JTCvCHEkxRn/tjp0sedT3SthR4mgx7eH
-	 zcF9H5QB5evursOWm5QZAPPxPYXmsH8Oo/hoxhBE=
+	b=JsYtyvFkt65OnNOAzk9lkXDaz4FYl9c4AaU/TSG6qmBJnvF6IfuXmcTFqLAcdyvWw
+	 fZW9ugpESBpIA2vZ2vw1/ob2YhXLtveJd2fDOT3JH0GnjCcdodKsieFRrMT83GXOC+
+	 wh17mJ43Vz9K8EwpS4+071C7lkbnoqoRNjzUycr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbfIRGaU (ORCPT
+        id S1730052AbfIRGa1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45500 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:30:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729918AbfIRGYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:51 -0400
+        id S1729883AbfIRGYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28EFF21925;
-        Wed, 18 Sep 2019 06:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C271021920;
+        Wed, 18 Sep 2019 06:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787890;
-        bh=qT6LTeB0Y8DjWsOQHhfaBy5k5TFm7jjY4GU5576E+2Y=;
+        s=default; t=1568787877;
+        bh=BIqPyxDhQFWcJ1fCOfLaBJ1+/q0tWDGLpDzbeYHGRMc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DhoR1MDKRyowUUBVgfiPVssDit9vsVED6KUEPeIAqCIYXbTxF6tOcy/tWMPs/9/8H
-         VWlzyPRapKBoTVgZpiHHCva8mNWkroHhyoVaTwYOmQ6OAlJXmirxxjH+MqhzLXNWXU
-         trjsXLc4XdSC6SC4/PDJciatEvJvsat2Sj/DAcYg=
+        b=BPswLC3UBUWUmRnxGF7ry8ihLmOLj6NgmGuaJ0bvNgxWdOppGsPie/Le1LyUg7cV8
+         1YYdpwPA3u92m6ce14AViXVUWb9wcfIBwFaBNjtZHOM7e3vH6+tqbRNxtHtmtS0Bot
+         9BFU4TsbZcsyEgsH6W7IVIvfuj62Yr+AbmFY/ULA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com,
-        John Fastabend <john.fastabend@gmail.com>,
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Lorenzo Colitti <lorenzo@google.com>,
+        =?UTF-8?q?Maciej=20=C5=BBenczykowski?= <maze@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 21/85] net: sock_map, fix missing ulp check in sock hash case
-Date:   Wed, 18 Sep 2019 08:18:39 +0200
-Message-Id: <20190918061234.827446278@linuxfoundation.org>
+Subject: [PATCH 5.2 17/85] net-ipv6: fix excessive RTF_ADDRCONF flag on ::1/128 local route (and others)
+Date:   Wed, 18 Sep 2019 08:18:35 +0200
+Message-Id: <20190918061234.695483315@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -61,44 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Fastabend <john.fastabend@gmail.com>
+From: "Maciej Żenczykowski" <maze@google.com>
 
-[ Upstream commit 44580a0118d3ede95fec4dce32df5f75f73cd663 ]
+[ Upstream commit d55a2e374a94fa34a3048c6a2be535266e506d97 ]
 
-sock_map and ULP only work together when ULP is loaded after the sock
-map is loaded. In the sock_map case we added a check for this to fail
-the load if ULP is already set. However, we missed the check on the
-sock_hash side.
+There is a subtle change in behaviour introduced by:
+  commit c7a1ce397adacaf5d4bb2eab0a738b5f80dc3e43
+  'ipv6: Change addrconf_f6i_alloc to use ip6_route_info_create'
 
-Add a ULP check to the sock_hash update path.
+Before that patch /proc/net/ipv6_route includes:
+00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000003 00000000 80200001 lo
 
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Reported-by: syzbot+7a6ee4d0078eac6bf782@syzkaller.appspotmail.com
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Afterwards /proc/net/ipv6_route includes:
+00000000000000000000000000000001 80 00000000000000000000000000000000 00 00000000000000000000000000000000 00000000 00000002 00000000 80240001 lo
+
+ie. the above commit causes the ::1/128 local (automatic) route to be flagged with RTF_ADDRCONF (0x040000).
+
+AFAICT, this is incorrect since these routes are *not* coming from RA's.
+
+As such, this patch restores the old behaviour.
+
+Fixes: c7a1ce397ada ("ipv6: Change addrconf_f6i_alloc to use ip6_route_info_create")
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Lorenzo Colitti <lorenzo@google.com>
+Signed-off-by: Maciej Żenczykowski <maze@google.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/sock_map.c |    3 +++
- 1 file changed, 3 insertions(+)
+ net/ipv6/route.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -661,6 +661,7 @@ static int sock_hash_update_common(struc
- 				   struct sock *sk, u64 flags)
- {
- 	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
-+	struct inet_connection_sock *icsk = inet_csk(sk);
- 	u32 key_size = map->key_size, hash;
- 	struct bpf_htab_elem *elem, *elem_new;
- 	struct bpf_htab_bucket *bucket;
-@@ -671,6 +672,8 @@ static int sock_hash_update_common(struc
- 	WARN_ON_ONCE(!rcu_read_lock_held());
- 	if (unlikely(flags > BPF_EXIST))
- 		return -EINVAL;
-+	if (unlikely(icsk->icsk_ulp_data))
-+		return -EINVAL;
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -3841,13 +3841,14 @@ struct fib6_info *addrconf_f6i_alloc(str
+ 	struct fib6_config cfg = {
+ 		.fc_table = l3mdev_fib_table(idev->dev) ? : RT6_TABLE_LOCAL,
+ 		.fc_ifindex = idev->dev->ifindex,
+-		.fc_flags = RTF_UP | RTF_ADDRCONF | RTF_NONEXTHOP,
++		.fc_flags = RTF_UP | RTF_NONEXTHOP,
+ 		.fc_dst = *addr,
+ 		.fc_dst_len = 128,
+ 		.fc_protocol = RTPROT_KERNEL,
+ 		.fc_nlinfo.nl_net = net,
+ 		.fc_ignore_dev_down = true,
+ 	};
++	struct fib6_info *f6i;
  
- 	link = sk_psock_init_link();
- 	if (!link)
+ 	if (anycast) {
+ 		cfg.fc_type = RTN_ANYCAST;
+@@ -3857,7 +3858,10 @@ struct fib6_info *addrconf_f6i_alloc(str
+ 		cfg.fc_flags |= RTF_LOCAL;
+ 	}
+ 
+-	return ip6_route_info_create(&cfg, gfp_flags, NULL);
++	f6i = ip6_route_info_create(&cfg, gfp_flags, NULL);
++	if (f6i)
++		f6i->dst_nocount = true;
++	return f6i;
+ }
+ 
+ /* remove deleted ip from prefsrc entries */
 
 
