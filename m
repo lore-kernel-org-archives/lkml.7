@@ -2,225 +2,109 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAE5C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80317C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C70D218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56D8721907
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ammdUUjN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731457AbfIROwj (ORCPT
+        id S1731435AbfIROzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:52:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:43432 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731141AbfIROwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:52:39 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B5A51000;
-        Wed, 18 Sep 2019 07:52:38 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.194.52])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73CFE3F67D;
-        Wed, 18 Sep 2019 07:52:37 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 15:52:35 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Alessio Balsini <balsini@android.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched: rt: Make RT capacity aware
-Message-ID: <20190918145233.kgntor5nb2gmnczd@e107158-lin.cambridge.arm.com>
-References: <20190903103329.24961-1-qais.yousef@arm.com>
- <20190904072524.09de28aa@oasis.local.home>
- <20190904154052.ygbhtduzkfj3xs5d@e107158-lin.cambridge.arm.com>
- <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
+        Wed, 18 Sep 2019 10:55:15 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:2736 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731139AbfIROzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:55:15 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8IEpeiv022237;
+        Wed, 18 Sep 2019 16:55:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=9JOJ2TsRWVhbIDBX7FANflmQ/WbPtN42tDZpO1ACUm8=;
+ b=ammdUUjNhFmB7C61NGAV2eBct2GpEeJnt181h53rEp/0Y6pIpzgIXtRbdAh3gFyM0chF
+ j06LwrJA5uHbJ3JnF4iitCvp8ISzrGnYZfV4OL8XPAKAsxectRpNaYyA3IqlpaAOKfvv
+ IEnedujShI1RAKLYb2AYCuVnmg4l8igQJbk6MMpFK+Scj3HeiKG1eacO5NHYu/IrYiQv
+ XnoIosHgPthm1GLUuxtJZ6LmU/Rgkfh1UWPUjqoSLVLD8XDOQyY86Yt95x0dj0ntYsr/
+ It6wgohabQZ2lZXa6/RbwG0IQU7N3SJygrZPdqIaUBRhiW+5wUC7DdPdQ7fy4Zd0rWXq yg== 
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2v37kjcx1u-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Wed, 18 Sep 2019 16:55:01 +0200
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 8013923;
+        Wed, 18 Sep 2019 14:54:57 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B39562A822D;
+        Wed, 18 Sep 2019 16:54:56 +0200 (CEST)
+Received: from SAFEX1HUBCAS22.st.com (10.75.90.92) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep
+ 2019 16:54:56 +0200
+Received: from localhost (10.48.1.232) by Webmail-ga.st.com (10.75.90.48) with
+ Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 18 Sep 2019 16:54:56 +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <thierry.reding@gmail.com>
+CC:     <u.kleine-koenig@pengutronix.de>, <alexandre.torgue@st.com>,
+        <fabrice.gasnier@st.com>, <linux-pwm@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2] pwm: stm32-lp: add check in case requested period cannot be achieved
+Date:   Wed, 18 Sep 2019 16:54:21 +0200
+Message-ID: <1568818461-19995-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f25c1f61-f246-22c7-e627-4c4d39301af2@arm.com>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain
+X-Originating-IP: [10.48.1.232]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-18_08:2019-09-18,2019-09-18 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/13/19 14:30, Dietmar Eggemann wrote:
-> On 9/4/19 4:40 PM, Qais Yousef wrote:
-> > On 09/04/19 07:25, Steven Rostedt wrote:
-> >> On Tue,  3 Sep 2019 11:33:29 +0100
-> >> Qais Yousef <qais.yousef@arm.com> wrote:
-> 
-> [...]
-> 
-> >>> @@ -1614,7 +1660,8 @@ static void put_prev_task_rt(struct rq *rq, struct task_struct *p)
-> >>>  static int pick_rt_task(struct rq *rq, struct task_struct *p, int cpu)
-> >>>  {
-> >>>  	if (!task_running(rq, p) &&
-> >>> -	    cpumask_test_cpu(cpu, p->cpus_ptr))
-> >>> +	    cpumask_test_cpu(cpu, p->cpus_ptr) &&
-> >>> +	    rt_task_fits_capacity(p, cpu))
-> >>
-> >> Hmm, so if a CPU goes idle, and looks for CPUS with more than one RT
-> >> task queued (overloaded), it will skip pulling RT tasks if they are
-> >> below capacity. Is that the desired effect? I think we could end up
-> >> with a small idle CPUs with RT tasks waiting to run.
-> > 
-> > The intention was not to pull this task that doesn't fit. But not to abort the
-> > whole pull operation. pick_highest_pushable_task() should still iterate through
-> > the remaining tasks, or did I miss something?
-> 
-> On a big.LITTLE system (6 CPUs with [446 1024 1024 446 466 466] CPU
-> capacity vector) I try to trace the handling of the 3rd big task
-> (big2-2, util_min: 800, util_max: 1024) of an rt-app workload running 3
-> of them.
-> 
-> rt_task_fits_capacity() call in:
-> 
-> tag 1: select_task_rq_rt(), 3-7: 1st till 5th in find_lowest_rq()
-> 
-> [   37.505325] rt_task_fits_capacity: CPU3 tag=1 [big2-2 285] ret=0
-> [   37.505882] find_lowest_rq: CPU3 [big2-2 285] tag=1 find_lowest_rq
-> [   37.506509] CPU3 [big2-2 285] lowest_mask=0,3-5
-> [   37.507971] rt_task_fits_capacity: CPU3 tag=3 [big2-2 285] ret=0
-> [   37.508200] rt_task_fits_capacity: CPU3 tag=4 [big2-2 285] ret=0
-> [   37.509486] rt_task_fits_capacity: CPU0 tag=5 [big2-2 285] ret=0
-> [   37.510191] rt_task_fits_capacity: CPU3 tag=5 [big2-2 285] ret=0
-> [   37.511334] rt_task_fits_capacity: CPU4 tag=5 [big2-2 285] ret=0
-> [   37.512194] rt_task_fits_capacity: CPU5 tag=5 [big2-2 285] ret=0
-> [   37.513210] rt_task_fits_capacity: CPU0 tag=6 [big2-2 285] ret=0
-> [   37.514085] rt_task_fits_capacity: CPU3 tag=7 [big2-2 285] ret=0
-> [   37.514732] --> select_task_rq_rt: CPU3 [big2-2 285] cpu=0
-> 
-> Since CPU 0,3-5 can't run big2-2, it takes up to the test that the
-> fitness hasn't changed. In case a capacity-aware (with fallback CPU)
-> cpupri_find() would have returned a suitable lowest_mask, less work
-> would have been needed.
+LPTimer can use a 32KHz clock for counting. It depends on clock tree
+configuration. In such a case, PWM output frequency range is limited.
+Although unlikely, nothing prevents user from requesting a PWM frequency
+above counting clock (32KHz for instance):
+- This causes (prd - 1) = 0xffff to be written in ARR register later in
+the apply() routine.
+This results in badly configured PWM period (and also duty_cycle).
+Add a check to report an error is such a case.
 
-rt_task_fits_capacity() is inlined and I'd expect all the data it accesses to
-be cache hot, so it should be fast.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- remarks from Uwe: update the comment, use dev_dbg() and print period that
+  cannot be reached
+---
+ drivers/pwm/pwm-stm32-lp.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I had 2 concerns with using cpupri_find()
+diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
+index 2211a64..97a9afa 100644
+--- a/drivers/pwm/pwm-stm32-lp.c
++++ b/drivers/pwm/pwm-stm32-lp.c
+@@ -59,6 +59,12 @@ static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* Calculate the period and prescaler value */
+ 	div = (unsigned long long)clk_get_rate(priv->clk) * state->period;
+ 	do_div(div, NSEC_PER_SEC);
++	if (!div) {
++		/* Clock is too slow to achieve requested period. */
++		dev_dbg(priv->chip.dev, "Can't reach %u ns\n",	state->period);
++		return -EINVAL;
++	}
++
+ 	prd = div;
+ 	while (div > STM32_LPTIM_MAX_ARR) {
+ 		presc++;
+-- 
+2.7.4
 
-	1. find_lowest_rq() is not the only user
-
-	2. The fallback mechanism means we either have to call cpupri_find()
-	   twice once to find filtered lowest_rq and the other to return the
-	   none filtered version.
-
-	   ie:
-
-		cpupri_find(..., check_fitness = true);
-		// returns lowest_mask that is filtered for cap fitness
-
-		fallback:
-			cpupri_find(..., check_fitness = false);
-			// returns lowest_mask without check for cap fitness
-
-	   Or we can pass 2 masks to cpupri_find() so that we fill the filtered
-	   and non-filtered results in one go and use the one that is
-	   relevant.
-
-	   ie:
-
-	   	cpupri_find(... , struct cpumask *lowest_mask,
-	   			  struct cpumask *lowest_mask_filtered)
-		// Use lowest_mask_filtered
-
-		fallback:
-			// Use lowest_mask
-
-So the way I see it it's not actually making things neater and in my eyes looks
-more involved/complex.
-
-Happy to explore this path further if maintainers advocate for it too though.
-
-> 
-> The snippet is repeating itself for the whole run of the workload since
-> all the rt-tasks run for the same time and I'm only faking big.LITTLE on
-> qemu.
-> 
-> [...]
-> 
-> >>>  	rcu_read_lock();
-> >>>  	for_each_domain(cpu, sd) {
-> >>> @@ -1692,11 +1747,15 @@ static int find_lowest_rq(struct task_struct *task)
-> >>>  				return this_cpu;
-> >>>  			}
-> >>>  
-> >>> -			best_cpu = cpumask_first_and(lowest_mask,
-> >>> -						     sched_domain_span(sd));
-> >>> -			if (best_cpu < nr_cpu_ids) {
-> >>> -				rcu_read_unlock();
-> >>> -				return best_cpu;
-> >>> +			for_each_cpu_and(best_cpu, lowest_mask,
-> >>> +					 sched_domain_span(sd)) {
-> >>> +				if (best_cpu >= nr_cpu_ids)
-> >>
-> >> Can that happen in this loop?
-> > 
-> > I kept the condition that was originally here but inverted the logic so we
-> > don't mindlessly iterate through the rest of the CPUs. IOW, tried to retain the
-> > original behavior of `if (best_cpu < nr_cpu_ids)` logic.
-> > 
-> > Whether we can remove this check I don't know to be honest. Similar check exist
-> > below and I did wonder under what conditions this could happen but didn't try
-> > to follow the thread.
-> > 
-> > The only case I can think about is if we set nr_cpu_ids through command line
-> > to a lower value. Then if cpu_possible_mask and family aren't updated
-> > accordingly then yeah this check will protect against scheduling on cpus the
-> > users said they don't want to use? Just guessing.
-> 
-> Why don't you build the capacity awareness into cpupri_find(...,
-> lowest_mask)?
-
-Hopefully my answer above covered this.
-
-> You would have to add a fallback strategy in case p doesn't fit on any
-> CPUs cpupri_find() returns today as lowest_mask. (return the CPU with
-> the max capacity).
-> 
-> Luca proposed something like this for SCHED_DEADLINE in "[RFC PATCH 0/6]
-> Capacity awareness for SCHED_DEADLINE" (patch 2/6 and 5/6)
-> 
-> https://lkml.kernel.org/r/20190506044836.2914-1-luca.abeni@santannapisa.it
-
-It would be nice to keep implementation the similar. I haven't looked closely
-at deadline code. I'm not sure if it has similar complexities like RT or not.
-I'll have a closer look to see if I can borrow ideas from there.
-
-> 
-> In this case you could get rid of all the newly introduced
-> rt_task_fits_capacity() logic in find_lowest_rq().
-> 
-> ---
-> 
-> I can't see the
-> 
-> for_each_domain(cpu, sd) {
-> 	for_each_cpu_and(best_cpu, lowest_mask, sched_domain_span(sd)) {
->                 ...
-> 	}
-> }
-> 
-> other than we want to pick a CPU from the lowest_mask first which is
-> closer to task_cpu(task).
-> 
-> Qemu doesn't give me cluster:
-> 
-> # cat /proc/sys/kernel/sched_domain/cpu0/domain*/name
-> MC
-
-I'm not sure I get what you're trying to get at here. Can you please elaborate
-more?
-
-Thanks!
-
---
-Qais Yousef
