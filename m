@@ -2,101 +2,117 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C231C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32212C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6A220665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0670A20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:10:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568826600;
+	bh=PzwFzyGDYDE5WdDQ3kzTjOJyoANbm3sL6gC2f5rt9pk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uJPeP4MsyaExn1YyZIiqYrV0rOWYul10yz93gTjUC+1s7ELgsfFWdrHYVWmUNNGRX
+	 Qd3C7tF1PY+0401IGIQCRfQ5FJ6bxfkoKz2+NwTdhLzg9U6dOYMzMrmnMQ6xvzJSgA
+	 4yWDylpLY40mR8ngjIB9YVWExCSg/EmjSyqxMGbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfIRRI6 (ORCPT
+        id S1731323AbfIRRJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:08:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727243AbfIRRI6 (ORCPT
+        Wed, 18 Sep 2019 13:09:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43762 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727243AbfIRRJ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:08:58 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IH22vn038322;
-        Wed, 18 Sep 2019 13:08:47 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3rdbrpk4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 13:08:47 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8IH3QWk042500;
-        Wed, 18 Sep 2019 13:08:47 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3rdbrpja-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 13:08:47 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8IGxX68002888;
-        Wed, 18 Sep 2019 17:08:46 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v37jw6xmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 17:08:45 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IH8i9a60293628
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 17:08:44 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4DF3E136067;
-        Wed, 18 Sep 2019 17:08:44 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3436B136059;
-        Wed, 18 Sep 2019 17:08:44 +0000 (GMT)
-Received: from localhost (unknown [9.41.179.186])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 17:08:44 +0000 (GMT)
-From:   Nathan Lynch <nathanl@linux.ibm.com>
-To:     Gautham R Shenoy <ego@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of cede_offline
-In-Reply-To: <20190918123039.GA12534@in.ibm.com>
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com> <87impxr0am.fsf@linux.ibm.com> <20190915074217.GA943@in.ibm.com> <87a7b2rfj0.fsf@linux.ibm.com> <20190918123039.GA12534@in.ibm.com>
-Date:   Wed, 18 Sep 2019 12:08:43 -0500
-Message-ID: <874l19r0pw.fsf@linux.ibm.com>
+        Wed, 18 Sep 2019 13:09:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=H2TiSbCkuglf2I9jOUFe26893CVHAZYtLkhZApl8OdA=; b=pTEQ57emX3/HDj8yosPbbcfJy
+        DvKwdE/lJDmvM8seGg04Ejj5N3atlZjzti9xhkXAQgtO2h4lRmfF6mVsFa8jIjrPnmmoyHuV/H/ub
+        Nq2BpXqQxgCiT48mNofGVkHgBLExjRLSoI4+eKtYN/+sWYD8Zw64+DWjjKfPw9qCEg1xQ=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iAdSj-0006P6-Jy; Wed, 18 Sep 2019 17:09:53 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id E41692742927; Wed, 18 Sep 2019 18:09:52 +0100 (BST)
+Date:   Wed, 18 Sep 2019 18:09:52 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Greg KH <greg@kroah.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-i2c@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: build failure after merge of the driver-core tree
+Message-ID: <20190918170952.GT2596@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=998 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180158
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="++alDQ2ROsODg1x+"
+Content-Disposition: inline
+X-Cookie: The devil finds work for idle glands.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
-> The accounting problem in tools such as lparstat with
-> "cede_offline=on" is affecting customers who are using these tools for
-> capacity-planning. That problem needs a fix in the short-term, for
-> which Patch 1 changes the default behaviour of cede_offline from "on"
-> to "off". Since this patch would break the existing userspace tools
-> that use the CPU-Offline infrastructure to fold CPUs for saving power,
-> the sysfs interface allowing a runtime change of cede_offline_enabled
-> was provided to enable these userspace tools to cope with minimal
-> change.
 
-So we would be putting users in the position of choosing between folding
-and correct accounting. :-(
+--++alDQ2ROsODg1x+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Actually how does changing the offline mechanism to stop-self break the
-folding utility?
+Hi all,
+
+After merging the driver-core tree, today's linux-next build
+for arm64 allmodconfig failed like this:
+
+/home/broonie/next/next/drivers/i2c/i2c-core-acpi.c: In function 'i2c_acpi_find_adapter_by_handle':
+/home/broonie/next/next/drivers/i2c/i2c-core-acpi.c:352:10: error: 'i2c_acpi_find_match_adapter' undeclared (first use in this function); did you mean 'i2c_acpi_find_bus_speed'?
+          i2c_acpi_find_match_adapter);
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+          i2c_acpi_find_bus_speed
+/home/broonie/next/next/drivers/i2c/i2c-core-acpi.c:352:10: note: each undeclared identifier is reported only once for each function it appears in
+
+Caused by commit
+
+  644bf600889554210 ("i2c: Revert incorrect conversion to use generic helper")
+
+In yesterday's -next that function existed but it appears to have been
+removed in Linus' tree as part of the merge:
+
+  4feaab05dc1eda3 ("Merge tag 'leds-for-5.4-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds")
+
+by the commit
+
+  00500147cbd3fc5 ("drivers: Introduce device lookup variants by ACPI_COMPANION device")
+
+(ie, the commit that the failing commit was trying to revert.)  I
+suspect this is confusion caused by things going into Linus' tree in
+different orders.  I've fixed this up by re-adding the function.
+
+--++alDQ2ROsODg1x+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl2CZN8ACgkQJNaLcl1U
+h9CK5wf+LSPVgpYCM6eyOPVq2Ck7uZKNd6iI6NX4ELVYJ0TUIsXqhASEQAhKxBqx
+aLnwiJOciQQT3G+N81Gv5BbAP3ip4coXMHIp+rL4HN89L6nRzh8s2sUSfxfoG62Y
+VAO/TxeyqCujNstzf/TcmkL6ahDoh6nByPoD9hfXlja5feNGUhkPoARpINCRk6bC
+tTtFRExjCemrIzMucLbaawpnb0RWUPUSVJaLN0YKhbHflzzrBYLTVorbfkG9hjOF
+KYg35WZIJmOEqThrybghmAJ8/e2WkuFFxNpPH4XfQMXS08WJ5Nt0SWrRDdkDBrCQ
+/KAGhmjhotCLL/TUTPfJ5erbmYLf3A==
+=V/kw
+-----END PGP SIGNATURE-----
+
+--++alDQ2ROsODg1x+--
