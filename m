@@ -2,170 +2,247 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1F9C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFB1C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC4C820640
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7894A20640
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:56:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfIRGxC convert rfc822-to-8bit (ORCPT
+        id S1727897AbfIRG4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:53:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725842AbfIRGxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:53:01 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8I6mcsc135389
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:53:00 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3cekds8j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:52:59 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 18 Sep 2019 07:52:58 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Sep 2019 07:52:56 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8I6qsBs42533330
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 06:52:54 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B0FAA4054;
-        Wed, 18 Sep 2019 06:52:54 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C648CA4064;
-        Wed, 18 Sep 2019 06:52:53 +0000 (GMT)
-Received: from localhost (unknown [9.199.38.30])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 06:52:53 +0000 (GMT)
-Date:   Wed, 18 Sep 2019 12:22:48 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
- cede_offline
-To:     "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
-        <87r24ew5i0.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87r24ew5i0.fsf@mpe.ellerman.id.au>
+        Wed, 18 Sep 2019 02:56:42 -0400
+Received: from mga09.intel.com ([134.134.136.24]:24802 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727074AbfIRG4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:56:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Sep 2019 23:56:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,519,1559545200"; 
+   d="scan'208";a="189175320"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga003.jf.intel.com with ESMTP; 17 Sep 2019 23:56:40 -0700
+Received: from [10.226.39.42] (unknown [10.226.39.42])
+        by linux.intel.com (Postfix) with ESMTP id 5E79258012D;
+        Tue, 17 Sep 2019 23:56:37 -0700 (PDT)
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: intel: Add YAML schemas for the
+ PCIe RC controller
+To:     Rob Herring <robh@kernel.org>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, martin.blumenstingl@googlemail.com,
+        linux-pci@vger.kernel.org, hch@infradead.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com
+References: <cover.1567585181.git.eswara.kota@linux.intel.com>
+ <fe9549470bc06ea0d0dfc80f46a579baa49b911a.1567585181.git.eswara.kota@linux.intel.com>
+ <20190917184013.GB24684@bogus>
+From:   Dilip Kota <eswara.kota@linux.intel.com>
+Message-ID: <bf5c8a24-e969-87d4-c62b-4032273e0824@linux.intel.com>
+Date:   Wed, 18 Sep 2019 14:56:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.0
 MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+In-Reply-To: <20190917184013.GB24684@bogus>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19091806-0012-0000-0000-0000034D719A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091806-0013-0000-0000-00002187EE3A
-Message-Id: <1568788924.kxcnnog4r7.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180071
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman wrote:
-> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
->> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+
+On 9/18/2019 2:40 AM, Rob Herring wrote:
+> On Wed, Sep 04, 2019 at 06:10:30PM +0800, Dilip Kota wrote:
+>> The Intel PCIe RC controller is Synopsys Designware
+>> based PCIe core. Add YAML schemas for PCIe in RC mode
+>> present in Intel Universal Gateway soc.
 >>
->> Currently on Pseries Linux Guests, the offlined CPU can be put to one
->> of the following two states:
->>    - Long term processor cede (also called extended cede)
->>    - Returned to the Hypervisor via RTAS "stop-self" call.
+>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
+>> ---
+>> changes on v3:
+>> 	Add the appropriate License-Identifier
+>> 	Rename intel,rst-interval to 'reset-assert-us'
+>> 	Add additionalProperties: false
+>> 	Rename phy-names to 'pciephy'
+>> 	Remove the dtsi node split of SoC and board in the example
+>> 	Add #interrupt-cells = <1>; or else interrupt parsing will fail
+>> 	Name yaml file with compatible name
 >>
->> This is controlled by the kernel boot parameter "cede_offline=on/off".
+>>   .../devicetree/bindings/pci/intel,lgm-pcie.yaml    | 137 +++++++++++++++++++++
+>>   1 file changed, 137 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
 >>
->> By default the offlined CPUs enter extended cede.
-> 
-> Since commit 3aa565f53c39 ("powerpc/pseries: Add hooks to put the CPU into an appropriate offline state") (Nov 2009)
-> 
-> Which you wrote :)
-> 
-> Why was that wrong?
-> 
->> The PHYP hypervisor considers CPUs in extended cede to be "active"
->> since the CPUs are still under the control fo the Linux Guests. Hence, when we change the
->> SMT modes by offlining the secondary CPUs, the PURR and the RWMR SPRs
->> will continue to count the values for offlined CPUs in extended cede
->> as if they are online.
+>> diff --git a/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..5e5cc7fd66cd
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/intel,lgm-pcie.yaml
+>> @@ -0,0 +1,137 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/intel-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Intel AXI bus based PCI express root complex
+>> +
+>> +maintainers:
+>> +  - Dilip Kota <eswara.kota@linux.intel.com>
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: intel,lgm-pcie
+>> +
+>> +  device_type:
+>> +    const: pci
+>> +
+>> +  "#address-cells":
+>> +    const: 3
+>> +
+>> +  "#size-cells":
+>> +    const: 2
+> These all belong in a common schema.
+>
+>> +
+>> +  reg:
+>> +    items:
+>> +      - description: Controller control and status registers.
+>> +      - description: PCIe configuration registers.
+>> +      - description: Controller application registers.
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: dbi
+>> +      - const: config
+>> +      - const: app
+>> +
+>> +  ranges:
+>> +    description: Ranges for the PCI memory and I/O regions.
+> And this.
+>
+>> +
+>> +  resets:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    description: PCIe registers interface clock.
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  phy-names:
+>> +    const: pciephy
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +
+>> +  num-lanes:
+>> +    description: Number of lanes to use for this port.
+>> +
+>> +  linux,pci-domain:
+>> +    $ref: /schemas/types.yaml#/definitions/uint32
+>> +    description: PCI domain ID.
+> These 2 also should be common.
+>
+>> +
+>> +  interrupts:
+>> +    description: PCIe core integrated miscellaneous interrupt.
+> How many? No need for description if there's only 1.
+>
+>> +
+>> +  '#interrupt-cells':
+>> +    const: 1
+>> +
+>> +  interrupt-map-mask:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  interrupt-map:
+>> +    description: Standard PCI IRQ mapping properties.
+>> +
+>> +  max-link-speed:
+>> +    description: Specify PCI Gen for link capability.
+>> +
+>> +  bus-range:
+>> +    description: Range of bus numbers associated with this controller.
+> All common.
+You mean to remove all the common schema entries description!.
+In most of the Documention/devicetree/binding/pci documents all the 
+common entries are described so I followed the same.
+>
+>> +
+>> +  reset-assert-ms:
+>> +    description: |
+>> +      Device reset interval in ms.
+>> +      Some devices need an interval upto 500ms. By default it is 100ms.
+> This is a property of a device, so it belongs in a device node. How
+> would you deal with this without DT?
+This property is for the PCIe RC to keep a delay before notifying the 
+reset to the device.
+If this entry is not present, PCIe driver will set a default value of 100ms.
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - device_type
+>> +  - reg
+>> +  - reg-names
+>> +  - ranges
+>> +  - resets
+>> +  - clocks
+>> +  - phys
+>> +  - phy-names
+>> +  - reset-gpios
+>> +  - num-lanes
+>> +  - linux,pci-domain
+>> +  - interrupts
+>> +  - interrupt-map
+>> +  - interrupt-map-mask
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    pcie10:pcie@d0e00000 {
+>> +      compatible = "intel,lgm-pcie";
+>> +      device_type = "pci";
+>> +      #address-cells = <3>;
+>> +      #size-cells = <2>;
+>> +      reg = <
+>> +            0xd0e00000 0x1000
+>> +            0xd2000000 0x800000
+>> +            0xd0a41000 0x1000
+>> +            >;
+>> +      reg-names = "dbi", "config", "app";
+>> +      linux,pci-domain = <0>;
+>> +      max-link-speed = <4>;
+>> +      bus-range = <0x00 0x08>;
+>> +      interrupt-parent = <&ioapic1>;
+>> +      interrupts = <67 1>;
+>> +      #interrupt-cells = <1>;
+>> +      interrupt-map-mask = <0 0 0 0x7>;
+>> +      interrupt-map = <0 0 0 1 &ioapic1 27 1>,
+>> +                      <0 0 0 2 &ioapic1 28 1>,
+>> +                      <0 0 0 3 &ioapic1 29 1>,
+>> +                      <0 0 0 4 &ioapic1 30 1>;
+>> +      ranges = <0x02000000 0 0xd4000000 0xd4000000 0 0x04000000>;
+>> +      resets = <&rcu0 0x50 0>;
+>> +      clocks = <&cgu0 LGM_GCLK_PCIE10>;
+>> +      phys = <&cb0phy0>;
+>> +      phy-names = "pciephy";
+>> +      status = "okay";
+>> +      reset-assert-ms = <500>;
+>> +      reset-gpios = <&gpio0 3 GPIO_ACTIVE_LOW>;
+>> +      num-lanes = <2>;
+>> +    };
+>> -- 
+>> 2.11.0
 >>
->> One of the expectations with PURR is that the for an interval of time,
->> the sum of the PURR increments across the online CPUs of a core should
->> equal the number of timebase ticks for that interval.
->>
->> This is currently not the case.
-> 
-> But why does that matter? It's just some accounting stuff, does it
-> actually break something meaningful?
-
-Yes, this broke lparstat at the very least (though its quite unfortunate 
-we took so long to notice).
-
-With SMT disabled, and under load:
-  $ sudo lparstat 1 10
-
-  System Configuration
-  type=Shared mode=Uncapped smt=Off lcpu=2 mem=7759616 kB cpus=6 ent=1.00 
-
-  %user  %sys %wait    %idle    physc %entc lbusy  vcsw phint
-  ----- ----- -----    -----    ----- ----- ----- ----- -----
-  100.00  0.00  0.00     0.00     1.10 110.00 100.00 128784460     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128784860     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128785260     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128785662     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786062     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786462     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128786862     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128787262     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128787664     0
-  100.00  0.00  0.00     0.00     1.07 107.00 100.00 128788064     0
-
-
-With cede_offline=off:
-  $ sudo lparstat 1 10
-
-  System Configuration
-  type=Shared mode=Uncapped smt=Off lcpu=2 mem=7759616 kB cpus=6 ent=1.00 
-
-  %user  %sys %wait    %idle    physc %entc lbusy  vcsw phint
-  ----- ----- -----    -----    ----- ----- ----- ----- -----
-  100.00  0.00  0.00     0.00     1.94 194.00 100.00 128961588     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128961988     0
-  100.00  0.00  0.00     0.00      inf   inf 100.00 128962392     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128962792     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963192     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963592     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128963992     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128964392     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128964792     0
-  100.00  0.00  0.00     0.00     1.91 191.00 100.00 128965194     0
-
-[The 'inf' values there show a different bug]
-
-Also, since we expose [S]PURR through sysfs, any tools that make use of 
-that directly are also affected due to this.
-
-
-- Naveen
-
