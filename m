@@ -2,119 +2,206 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3762CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6B7C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1141521920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CToDozDY"
+	by mail.kernel.org (Postfix) with ESMTP id A881F21925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:32:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568827965;
+	bh=E9DwEf7R8b/H/w/pY582iNh72DFD9zpZbpy6YjCJtCA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QfXuw7piL1zUbMnZrnJ6EWlD2vALxloBKdCuQzWyweNYbtXM527HQfGBlo8aZI2iD
+	 zVsXKvsmfFcp22hha39QulNlt4tdOEIdykcFAgJJahn5WX/M+cOSMhXEfYo1PgbVkw
+	 zxRF1mIcV6AJOIcDQyEKIP3lZDbpBhupM3bQv4gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbfIRRcm (ORCPT
+        id S2387877AbfIRRcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:32:42 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36392 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387871AbfIRRck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:32:40 -0400
-Received: by mail-io1-f67.google.com with SMTP id b136so1159657iof.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 10:32:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=gQupU8qDMpWTvbsNNXhBq+S54ArsioiWDu9t9lJjviM=;
-        b=CToDozDYgHwAtzZXC18Vjxrqvj4jq9AzsicJuP6QeX1POgsDqyC5VvF1p1I6sUX88h
-         vuejj3ffZDJ5j2zWnKto7245TwhLkessME3JRjH74JBokmEvZmZ+0nx5f3j0xRsGz4G9
-         XHn0dsqvSdIE8rbBR7nhnP1M3VSbmQZwdVL5Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=gQupU8qDMpWTvbsNNXhBq+S54ArsioiWDu9t9lJjviM=;
-        b=HVWKAJcccPdH18XacPIOZzEiOIYJQrVldSjBtDMEOjfYpUC0S3PQqEX6eDUw4SNt+L
-         3f9SW5AhIC+iy/AiZP9hCkA45kLI1hMpFHAkS/rxn0s6sqoZfwaxZZ4gzXx/qNAiCUD4
-         HkCGQ4epJvfNKKgqVkJUMdkeHTDj3bWk5+4hpkxXM98fxHVMdLLHcjqIg4fYrgYaXCDg
-         YcJt6j0wzZdA9WhIWkABxPJ+KwWjOM4MX3P6eThzcIRZTdjqqvzH7JWA9uRDPhHuhHfH
-         MtPeG3sL7aSR3an5i5selKBnUCVxnhG54AMpoxH2qgyuRh2xz4GJXlnfntGxd78313Zk
-         UdcQ==
-X-Gm-Message-State: APjAAAWDg3sBXJWF2UQaitIIw3uV82MHvyOnXL2joo4lspK/OOqGWt9Z
-        RfuWFbn3B26IjUOeuqg7Z260B3d1BOQ=
-X-Google-Smtp-Source: APXvYqxm7H0vlfK9UJQQlAd0mzPNmGzLYJu8h3TwA5Bj5QAuHum8D403w8vj5S4G7j9YpMmRiL4VPg==
-X-Received: by 2002:a6b:7615:: with SMTP id g21mr6140478iom.67.1568827959398;
-        Wed, 18 Sep 2019 10:32:39 -0700 (PDT)
-Received: from chromium.org ([2620:15c:183:200:798c:e494:921c:d544])
-        by smtp.gmail.com with ESMTPSA id u124sm9385513ioe.63.2019.09.18.10.32.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 10:32:38 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 11:32:36 -0600
-From:   Daniel Campello <campello@chromium.org>
-To:     Nick Crews <ncrews@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Benson Leung <bleung@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Trent Begin <tbegin@google.com>
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Add debugfs test_event file
-Message-ID: <20190918173236.GB24119@chromium.org>
-References: <20190906204205.50799-1-campello@chromium.org>
- <CAHX4x84w1xf9RL_rK4PiMrW2uhVkNFeU5GrW_BYfs8B5NKG9jg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHX4x84w1xf9RL_rK4PiMrW2uhVkNFeU5GrW_BYfs8B5NKG9jg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Sep 2019 13:32:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387818AbfIRRci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:32:38 -0400
+Received: from localhost.localdomain (unknown [194.230.155.145])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D79D821928;
+        Wed, 18 Sep 2019 17:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568827958;
+        bh=E9DwEf7R8b/H/w/pY582iNh72DFD9zpZbpy6YjCJtCA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xHEiwH/r63UQYy4j6Uf8KGGtFbl4pyX4olLMK84c3ybxPXAShOU6AW7FSUIC76wh0
+         9foNamqzWle3Cgmi0S2/zX1D7GQgiwPMUPGJzBJkTKl0OzQP4UHOYYHcX9YiMaCUCb
+         5WhDtUwJ68hJrzzVaxE139BLp3UdDCgJMgSlHHEU=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-leds@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-tegra@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-crypto@vger.kernel.org, linux-watchdog@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2 5/8] dt-bindings: watchdog: Convert Samsung SoC watchdog bindings to json-schema
+Date:   Wed, 18 Sep 2019 19:31:38 +0200
+Message-Id: <20190918173141.4314-5-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190918173141.4314-1-krzk@kernel.org>
+References: <20190918173141.4314-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Sep 06, 2019 at 06:20:51PM -0400, Nick Crews wrote:
-> Thanks for the patch Daniel! A few thoughts that I didn't
-> have on the review on Gerrit, sorry :) After those changes,
->
-No problem, I will take care of them.
+Convert Samsung S3C/S5P/Exynos watchdog bindings to DT schema format
+using json-schema.
 
-> Reviewed-by: Nick Crews <ncrews@chromium.org>
->
-> >         u8 sub_cmd;     /* Always SUB_CMD_H1_GPIO */
->
-> This comment should be removed.
->
-I overlooked this. Done.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> This comment should be moved to h1_gpio_get().
->
-Agree
+---
 
-> > -static int h1_gpio_get(void *arg, u64 *val)
-> > +static int write_to_mailbox(struct wilco_ec_device *ec, u8 sub_cmd, u64 *val)
->
-> What about send_ec_cmd() or similar? Something that communicates that
-> we are sometimes telling the EC to do something, and sometimes reading something
-> back. Also, since we are adding in another layer in here, we can fix
-> the signature from
-> the one required by a debugfs attribute. Use "ret" instead of "val"
-> and make it a u8*.
->
-send_ec_cmd() sounds good to me but ret is already used. Will change
-to out_val as discussed offline.
+Changes since v1:
+1. Indent example with four spaces (more readable),
+2. Remove unneeded timeout-sec description.
+---
+ .../bindings/watchdog/samsung-wdt.txt         | 35 ----------
+ .../bindings/watchdog/samsung-wdt.yaml        | 67 +++++++++++++++++++
+ 2 files changed, 67 insertions(+), 35 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
 
-> A one line comment as to what test_event does?
->
-> > +static int test_event_set(void *arg, u64 val)
-> > +{
-> > +       u64 ret;
-> > +
-> > +       return write_to_mailbox(arg, SUB_CMD_TEST_EVENT, &ret);
-> > +}
-> > +
+diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
+deleted file mode 100644
+index 46dcb48e75b4..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
++++ /dev/null
+@@ -1,35 +0,0 @@
+-* Samsung's Watchdog Timer Controller
+-
+-The Samsung's Watchdog controller is used for resuming system operation
+-after a preset amount of time during which the WDT reset event has not
+-occurred.
+-
+-Required properties:
+-- compatible : should be one among the following
+-	- "samsung,s3c2410-wdt" for S3C2410
+-	- "samsung,s3c6410-wdt" for S3C6410, S5PV210 and Exynos4
+-	- "samsung,exynos5250-wdt" for Exynos5250
+-	- "samsung,exynos5420-wdt" for Exynos5420
+-	- "samsung,exynos7-wdt" for Exynos7
+-
+-- reg : base physical address of the controller and length of memory mapped
+-	region.
+-- interrupts : interrupt number to the cpu.
+-- samsung,syscon-phandle : reference to syscon node (This property required only
+-	in case of compatible being "samsung,exynos5250-wdt" or "samsung,exynos5420-wdt".
+-	In case of Exynos5250 and 5420 this property points to syscon node holding the PMU
+-	base address)
+-
+-Optional properties:
+-- timeout-sec : contains the watchdog timeout in seconds.
+-
+-Example:
+-
+-watchdog@101d0000 {
+-	compatible = "samsung,exynos5250-wdt";
+-	reg = <0x101D0000 0x100>;
+-	interrupts = <0 42 0>;
+-	clocks = <&clock 336>;
+-	clock-names = "watchdog";
+-	samsung,syscon-phandle = <&pmu_syscon>;
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+new file mode 100644
+index 000000000000..3ea3c9fe8390
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.yaml
+@@ -0,0 +1,67 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/watchdog/samsung-wdt.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung SoC Watchdog Timer Controller
++
++maintainers:
++  - Krzysztof Kozlowski <krzk@kernel.org>
++
++description: |+
++  The Samsung's Watchdog controller is used for resuming system operation
++  after a preset amount of time during which the WDT reset event has not
++  occurred.
++
++properties:
++  compatible:
++    enum:
++      - samsung,s3c2410-wdt                   # for S3C2410
++      - samsung,s3c6410-wdt                   # for S3C6410, S5PV210 and Exynos4
++      - samsung,exynos5250-wdt                # for Exynos5250
++      - samsung,exynos5420-wdt                # for Exynos5420
++      - samsung,exynos7-wdt                   # for Exynos7
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  samsung,syscon-phandle:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Phandle to the PMU system controller node (in case of Exynos5250
++      and Exynos5420).
++
++  timeout-sec:
++    $ref: /schemas/types.yaml#/definitions/uint32
++
++required:
++  - compatible
++  - interrupts
++  - reg
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - samsung,exynos5250-wdt
++              - samsung,exynos5420-wdt
++    then:
++      required:
++        - samsung,syscon-phandle
++
++examples:
++  - |
++    watchdog@101d0000 {
++        compatible = "samsung,exynos5250-wdt";
++        reg = <0x101D0000 0x100>;
++        interrupts = <0 42 0>;
++        clocks = <&clock 336>;
++        clock-names = "watchdog";
++        samsung,syscon-phandle = <&pmu_syscon>;
++    };
+-- 
+2.17.1
 
-Will do. Thanks again.
