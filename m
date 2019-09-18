@@ -2,37 +2,37 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2B2C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4EDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9320218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73AD218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 05:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbfIRFvT (ORCPT
+        id S1728552AbfIRFv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 01:51:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:18579 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726676AbfIRFvS (ORCPT
+        Wed, 18 Sep 2019 01:51:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:3539 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728394AbfIRFvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:51:18 -0400
-X-UUID: 824bc8d3d4d544e5a0306e3b8456b8b3-20190918
-X-UUID: 824bc8d3d4d544e5a0306e3b8456b8b3-20190918
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
+        Wed, 18 Sep 2019 01:51:25 -0400
+X-UUID: 832e12c5200549db9849920f8fd16a81-20190918
+X-UUID: 832e12c5200549db9849920f8fd16a81-20190918
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw01.mediatek.com
         (envelope-from <sam.shih@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 522187; Wed, 18 Sep 2019 13:51:15 +0800
+        with ESMTP id 1858826012; Wed, 18 Sep 2019 13:51:18 +0800
 Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 18 Sep 2019 13:51:11 +0800
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 18 Sep 2019 13:51:14 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 18 Sep 2019 13:51:11 +0800
+ Transport; Wed, 18 Sep 2019 13:51:14 +0800
 From:   Sam Shih <sam.shih@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -43,16 +43,14 @@ CC:     Ryder Lee <ryder.lee@mediatek.com>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-mediatek@lists.infradead.org>,
         Sam Shih <sam.shih@mediatek.com>
-Subject: [RESEND, PATCH v7 07/11] dt-bindings: pwm: pwm-mediatek: add a property "num-pwms"
-Date:   Wed, 18 Sep 2019 13:50:07 +0800
-Message-ID: <1568785811-9577-8-git-send-email-sam.shih@mediatek.com>
+Subject: [RESEND, PATCH v7 10/11] dt-bindings: pwm: update bindings for MT7629 SoC
+Date:   Wed, 18 Sep 2019 13:50:10 +0800
+Message-ID: <1568785811-9577-11-git-send-email-sam.shih@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
 References: <1568785811-9577-1-git-send-email-sam.shih@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-TM-SNTS-SMTP: 6C682525EDF0C75DE16D32A41A4065D87FB6982C24E11A1BEE1DED76BDDE98922000:8
+Content-Type: text/plain
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,53 +59,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ryder Lee <ryder.lee@mediatek.com>
 
-This adds a property "num-pwms" in example so that we could
-specify the number of PWM channels via device tree.
+This updates bindings for MT7629 pwm controller.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 Signed-off-by: Sam Shih <sam.shih@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 ---
-Changes since v6:
-Follow reviewers's comments:
-- The subject should indicate this is for Mediatek
-
-Changes since v5:
-- Add an Acked-by tag
-- This file is original v4 patch 5/10
-(https://patchwork.kernel.org/patch/11102577/)
+Changes since v7:
+- add a missed Reviewed-by tag back from v1:
+https://patchwork.kernel.org/patch/10769381/
+Changes since v1:
+- add a Reviewed-by tag
 
 ---
- Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-index 991728cb46cb..ea95b490a913 100644
+index ea95b490a913..c7bd5633d1eb 100644
 --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
 +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -14,12 +14,12 @@ Required properties:
-                 has no clocks
-    - "top": the top clock generator
-    - "main": clock used by the PWM core
--   - "pwm1-8": the eight per PWM clocks for mt2712
--   - "pwm1-6": the six per PWM clocks for mt7622
--   - "pwm1-5": the five per PWM clocks for mt7623
-+   - "pwm1-N": the PWM clocks for each channel
-+   where N starting from 1 to the maximum number of PWM channels
-  - pinctrl-names: Must contain a "default" entry.
-  - pinctrl-0: One property must exist for each entry in pinctrl-names.
-    See pinctrl/pinctrl-bindings.txt for details of the property values.
-+ - num-pwms: the number of PWM channels.
- 
- Example:
- 	pwm0: pwm@11006000 {
-@@ -37,4 +37,5 @@ Example:
- 			      "pwm3", "pwm4", "pwm5";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&pwm0_pins>;
-+		num-pwms = <5>;
- 	};
+@@ -6,6 +6,7 @@ Required properties:
+    - "mediatek,mt7622-pwm": found on mt7622 SoC.
+    - "mediatek,mt7623-pwm": found on mt7623 SoC.
+    - "mediatek,mt7628-pwm": found on mt7628 SoC.
++   - "mediatek,mt7629-pwm", "mediatek,mt7622-pwm": found on mt7629 SoC.
+  - reg: physical base address and length of the controller's registers.
+  - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
+    the cell format.
 -- 
 2.17.1
 
