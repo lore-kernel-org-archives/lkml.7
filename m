@@ -2,215 +2,115 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9938C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 23:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BD6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 23:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B2E218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 23:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C47F218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 23:40:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="nShk7NWJ"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="g8sIiTEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387601AbfIRXXs (ORCPT
+        id S1730390AbfIRXkb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 19:23:48 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:45044 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbfIRXXs (ORCPT
+        Wed, 18 Sep 2019 19:40:31 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37914 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728274AbfIRXkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 19:23:48 -0400
-Received: from pendragon.ideasonboard.com (unknown [62.28.174.186])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 04BFA325;
-        Thu, 19 Sep 2019 01:23:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568849026;
-        bh=CsWkpj58En/6J7/qAS77FlSWExqy9AKH1VdP6g61ZUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nShk7NWJOFYk49xtahOzsVjqt2Bh6+vJMFmregXx2A6waxNcOQ1h1LDIoWNkRJnqL
-         wnB8rB4Kx7DOFqTt5Qc6BAGo+2Ik8tkL2ewO5KEbqD440/pUYc39WWKKU9tOvYfTnf
-         +t+AmOew/rq3xgHRFYkwMaDO+/WxINYsc7XQz6qo=
-Date:   Thu, 19 Sep 2019 02:23:36 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo@jmondi.org>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>, geert@linux-m68k.org,
-        horms@verge.net.au, uli+renesas@fpond.eu,
-        VenkataRajesh.Kalakodima@in.bosch.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 6/9] drm: rcar-du: crtc: Enable and disable CMMs
-Message-ID: <20190918232336.GB11474@pendragon.ideasonboard.com>
-References: <20190906135436.10622-1-jacopo+renesas@jmondi.org>
- <20190906135436.10622-7-jacopo+renesas@jmondi.org>
- <bc443263-5f20-f022-34c8-1e521243dec1@ideasonboard.com>
- <20190912080720.bn7bmu2o3gacrpf4@uno.localdomain>
- <a0f0554d-1bb0-fefa-a5d5-a252f7426c36@ideasonboard.com>
+        Wed, 18 Sep 2019 19:40:31 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e11so1460127otl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 16:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PDQmKC/gOMi6sqZQA7S/aMJ9nwprCWZMCL6cDdDtiwo=;
+        b=g8sIiTEUBjwC+jypUemhJSEmv702F9Wm/OQ2yvgmSceH+YZ9TxygCePbNrYI9DjIMI
+         QSVrOoN8zmC6+1UX8tJ6WVHh4sA9vGCkaI7q7ebzxUnvEk/XNQxfZ9O9fiZ1mAAArD/F
+         SNacoKkcB2wWT6XFmeZ6gPp7SkarL28rhJGFA8pVIZbbHN1xwRW1q/Y0WFEYWtTXLdD8
+         xhUMR4yM79Gaiq79K8LkdUGo465NZ6oTNyiAQUBcqjo1C7zHU/fSvIV7MSqKuAHd4p1u
+         Mzm5LHoHcYXkOiVGlntTvZzvSL9EKYpe3ec7uy1T493+iO8CiJlMJTa4zC/87w+4VKaf
+         YQvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PDQmKC/gOMi6sqZQA7S/aMJ9nwprCWZMCL6cDdDtiwo=;
+        b=iuH8yTM25vXP90tp1uKbzQTk44gYofQI7QpJTZOelVtmcifFkxo60XMUdSiL3r/Wl4
+         Jyz4IgNMnHwuKB6Jc/BLXXC9ZjMZKy4TSlw5SJ+MjuXTe4Q2aOiANbyCad/6nj1issFL
+         YxwEzsVT5uhykDXi5aHewWpsM4bpBuUlx5dtwiXnTyD96FhoOI6OJ+mRvwdxTqUBoTTZ
+         VRPgOPtDf8SCkG8ngtq1l8nRtfAcm2SXm5sUXwYqwotgurl6/v+V2eodbdAJ59ml0kCo
+         aYkiXvr5pPRY6ZgbOHZMlVu8ir4GZXb2t0UMSc/i06HLTS7X29AWkeA+9ugD2zCt+aQQ
+         ZfTw==
+X-Gm-Message-State: APjAAAXG7IVCjMjX2ZaknAk2yHC5PGz/RvAJYrSztut2W33piy+uGd5A
+        Uhj8BrT9vAHmh3ogyv22uaRHSNkMfo49GrGMjFqaDA==
+X-Google-Smtp-Source: APXvYqy/eeyRCXrtqIXQiK+EIL6EIZYEXp405qr/gxBJydI6Go09Ucme6OvwkC4jXQNVr3w/eolqtR0naKQMNido3N8=
+X-Received: by 2002:a9d:5ccc:: with SMTP id r12mr4419959oti.71.1568850030063;
+ Wed, 18 Sep 2019 16:40:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a0f0554d-1bb0-fefa-a5d5-a252f7426c36@ideasonboard.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190918042148.77553-1-natechancellor@gmail.com>
+In-Reply-To: <20190918042148.77553-1-natechancellor@gmail.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 18 Sep 2019 16:40:18 -0700
+Message-ID: <CAPcyv4g-aCrn7pq967rFJ+K_ENifNkZ_azLg6S03V8TGuFdOhg@mail.gmail.com>
+Subject: Re: [PATCH] libnvdimm/nfit_test: Fix acpi_handle redefinition
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Sep 17, 2019 at 9:23 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> After commit 62974fc389b3 ("libnvdimm: Enable unit test infrastructure
+> compile checks"), clang warns:
+>
+> In file included from
+> ../drivers/nvdimm/../../tools/testing/nvdimm/test/iomap.c:15:
+> ../drivers/nvdimm/../../tools/testing/nvdimm/test/nfit_test.h:206:15:
+> warning: redefinition of typedef 'acpi_handle' is a C11 feature
+> [-Wtypedef-redefinition]
+> typedef void *acpi_handle;
+>               ^
+> ../include/acpi/actypes.h:424:15: note: previous definition is here
+> typedef void *acpi_handle;      /* Actually a ptr to a NS Node */
+>               ^
+> 1 warning generated.
+>
+> The include chain:
+>
+> iomap.c ->
+>     linux/acpi.h ->
+>         acpi/acpi.h ->
+>             acpi/actypes.h
+>     nfit_test.h
+>
+> Avoid this by including linux/acpi.h in nfit_test.h, which allows us to
+> remove both the typedef and the forward declaration of acpi_object.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/660
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>
+> I know that every maintainer has their own thing with the number of
+> includes in each header file; this issue can be solved in a various
+> number of ways, I went with the smallest diff stat. Please solve it in a
+> different way if you see fit :)
+>
 
-On Thu, Sep 12, 2019 at 10:19:30AM +0100, Kieran Bingham wrote:
-> On 12/09/2019 09:07, Jacopo Mondi wrote:
-> > On Wed, Sep 11, 2019 at 07:40:27PM +0100, Kieran Bingham wrote:
-> >> On 06/09/2019 14:54, Jacopo Mondi wrote:
-> >>> Enable/disable the CMM associated with a CRTC at CRTC start and stop
-> >>> time and enable the CMM unit through the Display Extensional Functions
-> >>> register at group setup time.
-> >>>
-> >>> Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
-> >>> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >>> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> >>> ---
-> >>>  drivers/gpu/drm/rcar-du/rcar_du_crtc.c  | 7 +++++++
-> >>>  drivers/gpu/drm/rcar-du/rcar_du_group.c | 8 ++++++++
-> >>>  drivers/gpu/drm/rcar-du/rcar_du_regs.h  | 5 +++++
-> >>>  3 files changed, 20 insertions(+)
-> >>>
-> >>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>> index 23f1d6cc1719..3dac605c3a67 100644
-> >>> --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> >>> @@ -21,6 +21,7 @@
-> >>>  #include <drm/drm_plane_helper.h>
-> >>>  #include <drm/drm_vblank.h>
-> >>>
-> >>> +#include "rcar_cmm.h"
-> >>>  #include "rcar_du_crtc.h"
-> >>>  #include "rcar_du_drv.h"
-> >>>  #include "rcar_du_encoder.h"
-> >>> @@ -619,6 +620,9 @@ static void rcar_du_crtc_stop(struct rcar_du_crtc *rcrtc)
-> >>>  	if (rcar_du_has(rcrtc->dev, RCAR_DU_FEATURE_VSP1_SOURCE))
-> >>>  		rcar_du_vsp_disable(rcrtc);
-> >>>
-> >>> +	if (rcrtc->cmm)
-> >>> +		rcar_cmm_disable(rcrtc->cmm);
-> >>> +
-> >>>  	/*
-> >>>  	 * Select switch sync mode. This stops display operation and configures
-> >>>  	 * the HSYNC and VSYNC signals as inputs.
-> >>> @@ -686,6 +690,9 @@ static void rcar_du_crtc_atomic_enable(struct drm_crtc *crtc,
-> >>>  	}
-> >>>
-> >>>  	rcar_du_crtc_start(rcrtc);
-> >>> +
-> >>> +	if (rcrtc->cmm)
-> >>> +		rcar_cmm_enable(rcrtc->cmm);
-> >>>  }
-> >>>
-> >>>  static void rcar_du_crtc_atomic_disable(struct drm_crtc *crtc,
-> >>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_group.c b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>> index 9eee47969e77..25d0fc125d7a 100644
-> >>> --- a/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_group.c
-> >>> @@ -147,6 +147,14 @@ static void rcar_du_group_setup(struct rcar_du_group *rgrp)
-> >>>
-> >>>  	rcar_du_group_setup_pins(rgrp);
-> >>>
-> >>> +	if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM)) {
-> >>> +		u32 defr7 = DEFR7_CODE
-> >>> +			  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
-> >>> +			  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> >>> +
-> >>> +		rcar_du_group_write(rgrp, DEFR7, defr7);
-> >>> +	}
-> >>> +
-> >>
-> >> What's the effect here on platforms with a CMM, but with
-> >> CONFIG_DRM_RCAR_CMM unset?
-> >>
-> >> Will this incorrectly configure the DU ?
-> >>
-> >> Will it stall the display if the DU tries to interact with another
-> >> module which is not enabled?
-> > 
-> > I recall I tested that (that's why I had to add stubs for CMM
-> > functions, as I had linkage errors otherwise) and thing seems to be
-> > fine as the CMM configuration/enblement resolve to an empty function.
-> 
-> Yes, I see the stubs to allow for linkage, but it's the hardware I'm
-> concerned about. If it passes the tests and doesn't break then that's
-> probably ok ... but I'm really weary that we're enabling a hardware
-> pipeline with a disabled component in the middle.
-> 
-> > Would you prefer to have this guarded by an #if IS_ENABLED() ?
-> 
-> I don't think we need a compile time conditional, but I'd say it
-> probably needs to be more about whether the CMM has actually probed or not
-> 
-> Aha, and I see that in rcar_du_cmm_init() we already do a
-> call to rcar_cmm_init(), which if fails will leave rcdu->cmms[i] as
-> NULL. So that's catered for, which results in the rgrp->cmms_mask being
-> correctly representative of whether there is a CMM connected or not.
-
-Doesn't this result in probe failure ?
-
->  ... so I think that means the ...
->  "if (rcar_du_has(rcdu, RCAR_DU_FEATURE_CMM))" is somewhat redundant:
-> 
-> 
-> This could be:
-> 
->   if (rgrp->cmms_mask) {
-> 	u32 defr7 = DEFR7_CODE
-> 		  | (rgrp->cmms_mask & BIT(1) ? DEFR7_CMME1 : 0)
-> 		  | (rgrp->cmms_mask & BIT(0) ? DEFR7_CMME0 : 0);
-> 
->   rcar_du_group_write(rgrp, DEFR7, defr7);
-> 
-> Or in fact, if we don't mind writing 0 to DEFR7 when there is no CMM
-> (which is safe by the looks of things as DEFR7 is available on all
-> platforms), then we can even remove the outer conditional, and leave
-> this all up to the ternary operators to write the correct value to the
-> defr7.
-> 
-> Phew ... net result - your current code *is* safe with the
-> CONFIG_DRM_RCAR_CMM option disabled. I'll leave it up to you if you want
-> to simplify the code here and remove the RCAR_DU_FEATURE_CMM.
-> 
-> As this RCAR_DU_FEATURE_CMM flag is only checked here, removing it would
-> however simplify all of the rcar_du_device_info structures.
-> 
-> So - with or without the _FEATURE_CMM" simplification, this patch looks
-> functional and safe so:
-> 
-> 
-> Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> 
-> >>>  	if (rcdu->info->gen >= 2) {
-> >>>  		rcar_du_group_setup_defr8(rgrp);
-> >>>  		rcar_du_group_setup_didsr(rgrp);
-> >>> diff --git a/drivers/gpu/drm/rcar-du/rcar_du_regs.h b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>> index bc87f080b170..fb9964949368 100644
-> >>> --- a/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>> +++ b/drivers/gpu/drm/rcar-du/rcar_du_regs.h
-> >>> @@ -197,6 +197,11 @@
-> >>>  #define DEFR6_MLOS1		(1 << 2)
-> >>>  #define DEFR6_DEFAULT		(DEFR6_CODE | DEFR6_TCNE1)
-> >>>
-> >>> +#define DEFR7			0x000ec
-> >>> +#define DEFR7_CODE		(0x7779 << 16)
-> >>> +#define DEFR7_CMME1		BIT(6)
-> >>> +#define DEFR7_CMME0		BIT(4)
-> >>> +
-> >>>  /* -----------------------------------------------------------------------------
-> >>>   * R8A7790-only Control Registers
-> >>>   */
-
--- 
-Regards,
-
-Laurent Pinchart
+Looks good to me. I'll pick this up for a post v5.4-rc1 push.
