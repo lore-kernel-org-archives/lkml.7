@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56899C4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2644FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2331321925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4F421927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:27:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788030;
-	bh=nyESctKceLsbDVg6I6pgiTVoXe/TTiMVf7zjOgfy6Ps=;
+	s=default; t=1568788035;
+	bh=FUAoHiJRL3qgdI+/miMRFMIFYjyObvtwgXnvXln8pNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0t+CAF/lqxQ8hR9CI9aoDcsz/vjO1xIdhZmHJPY4sJydRHEYR7uYO5GUZviApeJjk
-	 XXVqL9g+c8Hg5OmMpdLamY9DQeFI6rQubEk4UR19hJK3w2JEQ9HQsfHc881lweemDq
-	 DrEpdw29mqeFMg3hgH1ju30E6BBhz8Yj2Fd8PxjE=
+	b=E+7MH23NHfnPlxUgBeGCeMA1eXBoL2NFWykY1ELT/SSrnGQFGXgggKOjGXCy5gZUl
+	 CUCmCb+1AOUa839e7PIbFAiAG8sVlfFYZwcqGxA8qbBlyP17IksohMXDvayeXJigMx
+	 /m0aJ/eZKOrBsbhracTMmVARGpRUQikFjtVhn5MI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730475AbfIRG1J (ORCPT
+        id S1730478AbfIRG1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:27:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:27:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730440AbfIRG1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:27:02 -0400
+        id S1730476AbfIRG1L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:27:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBABB21906;
-        Wed, 18 Sep 2019 06:27:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB1B0218AF;
+        Wed, 18 Sep 2019 06:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568788022;
-        bh=nyESctKceLsbDVg6I6pgiTVoXe/TTiMVf7zjOgfy6Ps=;
+        s=default; t=1568788030;
+        bh=FUAoHiJRL3qgdI+/miMRFMIFYjyObvtwgXnvXln8pNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGorqigC/JPYJjEFMmbK2Qm4BD7upCmvQPs4kiwplJifhbvTShpSVNrnQv22b7XeN
-         ffh4z9Ak+wTKkx4ORxhmhobRm3lHt87EmAn+76aAj8U5PTx6Z73tRxI9wSso806+UK
-         vb/vzWwQB3mxNFm9qk7TvY2gGXDRY4z9/HgWIfo0=
+        b=GQ/KBds4psBfHEahDvjS/4UXw2rpo9yjhw0h6UPrdvUmjZ1p8cqu//3NcUyMJ1ti2
+         bC9KXgOV/OEX4Y7bMDQALcLMDFEqueje9X9m8gkO+b2PeA3mA51Gs8ooq85LVg5wTQ
+         IzdN2V+Nj1T5RNzMuiEJPiM+CFTk+zmJ33lukdNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.2 70/85] drm: panel-orientation-quirks: Add extra quirk table entry for GPD MicroPC
-Date:   Wed, 18 Sep 2019 08:19:28 +0200
-Message-Id: <20190918061237.623948876@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Henry Burns <henrywolfeburns@gmail.com>,
+        Vitaly Wool <vitalywool@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.2 73/85] mm/z3fold.c: fix lock/unlock imbalance in z3fold_page_isolate
+Date:   Wed, 18 Sep 2019 08:19:31 +0200
+Message-Id: <20190918061237.710903376@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -59,51 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit dae1ccee012ea7514af8e4a88429844157aca7dc upstream.
+commit 14108b9131a47ff18a3c640f583eb2d625c75c0d upstream.
 
-Newer GPD MicroPC BIOS versions have proper DMI strings, add an extra quirk
-table entry for these new strings. This is good news, as this means that we
-no longer have to update the BIOS dates list with every BIOS update.
+Fix lock/unlock imbalance by unlocking *zhdr* before return.
 
-Fixes: 652b8b086538("drm: panel-orientation-quirks: Add quirk for GPD MicroPC")
-Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190624154014.8557-2-hdegoede@redhat.com
+Addresses Coverity ID 1452811 ("Missing unlock")
+
+Link: http://lkml.kernel.org/r/20190826030634.GA4379@embeddedor
+Fixes: d776aaa9895e ("mm/z3fold.c: fix race between migration and destruction")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Henry Burns <henrywolfeburns@gmail.com>
+Cc: Vitaly Wool <vitalywool@gmail.com>
+Cc: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_panel_orientation_quirks.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ mm/z3fold.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
-+++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
-@@ -90,6 +90,12 @@ static const struct drm_dmi_panel_orient
- 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
- };
- 
-+static const struct drm_dmi_panel_orientation_data lcd720x1280_rightside_up = {
-+	.width = 720,
-+	.height = 1280,
-+	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
-+};
-+
- static const struct drm_dmi_panel_orientation_data lcd800x1280_rightside_up = {
- 	.width = 800,
- 	.height = 1280,
-@@ -123,6 +129,12 @@ static const struct dmi_system_id orient
- 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
- 		},
- 		.driver_data = (void *)&gpd_micropc,
-+	}, {	/* GPD MicroPC (later BIOS versions with proper DMI strings) */
-+		.matches = {
-+		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "GPD"),
-+		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MicroPC"),
-+		},
-+		.driver_data = (void *)&lcd720x1280_rightside_up,
- 	}, {	/*
- 		 * GPD Pocket, note that the the DMI data is less generic then
- 		 * it seems, devices with a board-vendor of "AMI Corporation"
+--- a/mm/z3fold.c
++++ b/mm/z3fold.c
+@@ -1408,6 +1408,7 @@ static bool z3fold_page_isolate(struct p
+ 				 * should freak out.
+ 				 */
+ 				WARN(1, "Z3fold is experiencing kref problems\n");
++				z3fold_page_unlock(zhdr);
+ 				return false;
+ 			}
+ 			z3fold_page_unlock(zhdr);
 
 
