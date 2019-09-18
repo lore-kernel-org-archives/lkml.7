@@ -2,109 +2,93 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF96C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD040C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E12207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:03:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="UQBGw2zF"
+	by mail.kernel.org (Postfix) with ESMTP id 8CF0B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:06:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbfIRNDo (ORCPT
+        id S1729855AbfIRNGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:03:44 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:36036 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726257AbfIRNDn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:03:43 -0400
-Received: from pendragon.ideasonboard.com (126.92.103.87.rev.vodafone.pt [87.103.92.126])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 35E4B325;
-        Wed, 18 Sep 2019 15:03:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1568811821;
-        bh=Bd/SwyG0H1MmBai0JFG0Y2O/9j+qimtkExgKIEyutN4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UQBGw2zF2DMetIvPGfASDFUK+z2+czuQ8xOWA2Tntr2PP1ZLHdwNIHGfiykKn+zE2
-         ZJju+HHXrE+Xd7vU71iLimj0WXIyYxp51fsEyz3XwN/IVTF7MsWBYU5wH0gzbOTFbg
-         bxqO/nc4GY6asCAmu2o7EybYuyH1p18Ct30KTuDM=
-Date:   Wed, 18 Sep 2019 16:03:31 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Gareth Williams <gareth.williams.jx@renesas.com>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: DRM Driver implementation question
-Message-ID: <20190918130331.GD6306@pendragon.ideasonboard.com>
-References: <TY2PR01MB29242CA3B8CBE834A5B0CC48DF8C0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
- <TYAPR01MB4544D0B345C809CD3555A9EFD88F0@TYAPR01MB4544.jpnprd01.prod.outlook.com>
- <TY2PR01MB292423C617848A66F61B1027DF8F0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
+        Wed, 18 Sep 2019 09:06:31 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:2295 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727001AbfIRNGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:06:30 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 28F47FAD28D6745F03BD;
+        Wed, 18 Sep 2019 21:06:27 +0800 (CST)
+Received: from localhost (10.177.220.209) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Wed, 18 Sep 2019
+ 21:06:20 +0800
+From:   <zhangsha.zhang@huawei.com>
+To:     <jay.vosburgh@canonical.com>, <vfalico@gmail.com>,
+        <andy@greyhouse.net>, <davem@davemloft.net>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yuehaibing@huawei.com>, <hunongda@huawei.com>,
+        <alex.chen@huawei.com>, <zhangsha.zhang@huawei.com>
+Subject: [PATCH v3] bonding: force enable lacp port after link state recovery for 802.3ad
+Date:   Wed, 18 Sep 2019 21:06:20 +0800
+Message-ID: <20190918130620.8556-1-zhangsha.zhang@huawei.com>
+X-Mailer: git-send-email 2.17.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <TY2PR01MB292423C617848A66F61B1027DF8F0@TY2PR01MB2924.jpnprd01.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.177.220.209]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gareth,
+From: Sha Zhang <zhangsha.zhang@huawei.com>
 
-Sorry for the delayed response, I was travelling for the Linux Plumbers
-Conference followed by a code camp.
+After the commit 334031219a84 ("bonding/802.3ad: fix slave link
+initialization transition states") merged,
+the slave's link status will be changed to BOND_LINK_FAIL
+from BOND_LINK_DOWN in the following scenario:
+- Driver reports loss of carrier and
+  bonding driver receives NETDEV_DOWN notifier
+- slave's duplex and speed is zerod and
+  its port->is_enabled is cleard to 'false';
+- Driver reports link recovery and
+  bonding driver receives NETDEV_UP notifier;
+- If speed/duplex getting failed here, the link status
+  will be changed to BOND_LINK_FAIL;
+- The MII monotor later recover the slave's speed/duplex
+  and set link status to BOND_LINK_UP, but remains
+  the 'port->is_enabled' to 'false'.
 
-On Tue, Sep 17, 2019 at 03:27:34PM +0000, Gareth Williams wrote:
-> Hi Yoshihiro,
-> 
-> This looks like an elegant solution that I can implement.
-> Many thanks for pointing me in a good direction.
-> 
-> > From: Yoshihiro Shimoda, Sent: Tuesday, September 17, 2019 05:39 PM
-> > 
-> > Hi Gareth,
-> > 
-> > > From: Gareth Williams, Sent: Monday, September 16, 2019 10:56 PM
-> > >
-> > > Hi Laurent/Kieran,
-> > >
-> > > I need to upstream a driver for a display controller that within its
-> > > registers memory region contains registers related to a PWM
-> > > device. The PWM device is for controlling the backlight of the
-> > > display.
-> > >
-> > > Ideally, I would like to create a separated driver for the PWM, so
-> > > that I can re-use "pwm-backlight", but since the registers for the PWM
-> > > are right in the middle of the registers for the display
-> > > controller I would need to ioremap the memory region for the PWM
-> > > registers region twice, once from the display controller driver,
-> > > and once from the PWM driver.
-> > >
-> > > Do you think that the double ioremap would be acceptable upstream?
-> > 
-> > I think that an MFD driver can support such hardware. I checked
-> > Documentation/devicetree/bindings/mfd roughly, and then atmel-hlcdc.txt
-> > seems to have a display controller and a PWM device.
+In this scenario, the lacp port will not be enabled even its speed
+and duplex are valid. The bond will not send LACPDU's, and its
+state is 'AD_STATE_DEFAULTED' forever. The simplest fix I think
+is to call bond_3ad_handle_link_change() in bond_miimon_commit,
+this function can enable lacp after port slave speed check.
+As enabled, the lacp port can run its state machine normally
+after link recovery.
 
-While MFD should technically work, I think it's quite overkill. You
-could instead bundle both the display controller and the PWM controller
-in the same driver. The driver would create both a DRM/KMS device and a
-PWM device. The DT node for your device would contain a #pwm-cells
-property and could thus be referenced as a PWM controller by the
-backlight using the pwms property.
+Signed-off-by: Sha Zhang <zhangsha.zhang@huawei.com>
+---
+ drivers/net/bonding/bond_main.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 931d9d9..76324a5 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -2206,7 +2206,8 @@ static void bond_miimon_commit(struct bonding *bond)
+ 			 */
+ 			if (BOND_MODE(bond) == BOND_MODE_8023AD &&
+ 			    slave->link == BOND_LINK_UP)
+-				bond_3ad_adapter_speed_duplex_changed(slave);
++				bond_3ad_handle_link_change(slave,
++							    BOND_LINK_UP);
+ 			continue;
+ 
+ 		case BOND_LINK_UP:
 -- 
-Regards,
+1.8.3.1
 
-Laurent Pinchart
