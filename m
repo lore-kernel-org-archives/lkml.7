@@ -2,88 +2,157 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B101C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26530C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8CC2067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C882067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTcABZbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfIROXQ (ORCPT
+        id S1730555AbfIROX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:23:16 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:53206 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729911AbfIROXP (ORCPT
+        Wed, 18 Sep 2019 10:23:27 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45175 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726484AbfIROX0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:23:15 -0400
-Received: (qmail 2743 invoked by uid 2102); 18 Sep 2019 10:23:14 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Sep 2019 10:23:14 -0400
-Date:   Wed, 18 Sep 2019 10:23:14 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-cc:     linux-bluetooth@vger.kernel.org, <linux-usb@vger.kernel.org>,
-        <dianders@chromium.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hui Peng <benquike@gmail.com>, <linux-pm@vger.kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        <linux-kernel@vger.kernel.org>,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Len Brown <len.brown@intel.com>,
-        Mathias Payer <mathias.payer@nebelwelt.net>,
-        Dmitry Torokhov <dtor@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mans Rullgard <mans@mansr.com>, Pavel Machek <pavel@ucw.cz>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: [PATCH 0/2] Reset realtek bluetooth devices during user suspend
-In-Reply-To: <20190917212702.35747-1-abhishekpandit@chromium.org>
-Message-ID: <Pine.LNX.4.44L0.1909181017300.1507-100000@iolanthe.rowland.org>
+        Wed, 18 Sep 2019 10:23:26 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 4so4192500pgm.12;
+        Wed, 18 Sep 2019 07:23:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hBF1etsivhmKdLkajwW8GHvPk5tP312Rqd082oyW/40=;
+        b=KTcABZbJz2NA0gOeD1Qk+C6NCkIU0co5QvjKv9sapaIiZ/aOcOklr2aph/qPdpteM1
+         f9Crx3hv6rnSCrkcG89lN6CQljYO6GXIcen+1NBAOp3UVFv/GHksaNifgj73/zPtDhj0
+         kS1Ckv3keBIrbasafOfh/gVuWTSMTPlkqgxBlGaZ2PkjjSFRe4/mG9SzFI9tKljz8IoJ
+         n9Z8mOb3e4/09p35VMsBbMRTTU4uZdgxp9ikYxgaHqxsArontVYO2lPSFMHmOR1zzbr4
+         BZBkP/WhVtTospi0W8CPHgAw/PcbuIvbu8x3H4S7lafBwG2FjZ2l3cDjQX0Ow0TRIBQi
+         LR7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hBF1etsivhmKdLkajwW8GHvPk5tP312Rqd082oyW/40=;
+        b=iGjfr+VWFHLJJBhG9WCiMlB19qWYzxjBA4MH17Io2HbC/qbI2d11BgFQFQ7L3GIYkC
+         bei8SLxWRSFlXJ31XTuWaqMF9IlnSHyezeBYkrk/xKd4Ebsc1TInEZp6V571s2ayhJAZ
+         mHF3YDrVxABuXmS4Mqtigl9Cr9DZ4Gw0aauADk8w1ecneJ30cVevox3lrv0BRQ6F/1so
+         IWkoB6Chqk8yGlMSIBzwT4zEVjScj8l1XnGkN2tYoICfYrr7xX3Hcw5kgtPeK4B1G8xg
+         vn4m58hJ3Ozx9G6j/r0NfMcgIJfWa6NBoEPk05EGePn3qaZFs1AqGrSj6FJeoEzBgERs
+         QD0g==
+X-Gm-Message-State: APjAAAWIEiB2HWMb8QECZjrphMYmocB0e/l6ZYUURdpp3gsjiBaHfzR8
+        T6NZmwwzgJ1n2lEDHufqeuNNi6Dz
+X-Google-Smtp-Source: APXvYqwDluvBGw1cnbd/MWHtPlAIMe4bMLEDRhdzKzQgVavoWQaUPt4wXe+kCj2DcEFZ303Bu4/vAg==
+X-Received: by 2002:a63:d46:: with SMTP id 6mr4329157pgn.364.1568816605894;
+        Wed, 18 Sep 2019 07:23:25 -0700 (PDT)
+Received: from localhost.localdomain ([2001:268:c145:8e3a:1c91:3b66:30:c335])
+        by smtp.gmail.com with ESMTPSA id d5sm10996675pfa.180.2019.09.18.07.23.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 07:23:25 -0700 (PDT)
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     jic23@jic23.retrosnub.co.uk
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        patrick.havelange@essensium.com, fabrice.gasnier@st.com,
+        mcoquelin.stm32@gmail.com, alexandre.torgue@st.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Subject: [PATCH v3 0/2] Simplify count_read/count_write/signal_read
+Date:   Wed, 18 Sep 2019 23:22:44 +0900
+Message-Id: <cover.1568816248.git.vilhelm.gray@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 17 Sep 2019, Abhishek Pandit-Subedi wrote:
+Changes in v3:
+ - Squash code changes to single patch to avoid compilation error
 
-> On a Realtek USB bluetooth device, I wanted a simple and consistent way
-> to put the device in reset during suspend (2 reasons: to save power and
-> disable BT as a wakeup source). Resetting it in the suspend callback
-> causes a detach and the resume callback is not called. Hence the changes
-> in this series to do the reset in suspend_noirq.
+The changes in this patchset will not affect the userspace interface.
+Rather, these changes are intended to simplify the kernelspace Counter
+callbacks for counter device driver authors.
 
-What about people who _want_ BT to be a wakeup source?
+The following main changes are proposed:
 
-Why does putting the device in reset save power?  That is, a suspended
-device is very strictly limited in the amount of current it's allowed
-to draw from the USB bus; why should it draw significantly less when it
-is reset?
+* Retire the opaque counter_count_read_value/counter_count_write_value
+  structures and simply represent count data as an unsigned integer.
 
-> I looked into using PERSIST and reset on resume but those seem mainly
-> for misbehaving devices that reset themselves.
+* Retire the opaque counter_signal_read_value structure and represent
+  Signal data as a counter_signal_value enum.
 
-They are, but that doesn't mean you can't use them for other things 
-too.
+These changes should reduce some complexity and code in the use and
+implementation of the count_read, count_write, and signal_read
+callbacks.
 
-> This patch series has been tested with Realtek BT hardware as well as
-> Intel BT (test procedure = disable as wake source, user suspend and
-> observe a detach + reattach on resume).
+The opaque structures for Count data and Signal data were introduced
+originally in anticipation of supporting various representations of
+counter data (e.g. arbitrary-precision tallies, floating-point spherical
+coordinate positions, etc). However, with the counter device drivers
+that have appeared, it's become apparent that utilizing opaque
+structures in kernelspace is not the best approach to take.
 
-This series really seems like overkill for a single kind of device.
+I believe it is best to let userspace applications decide how to
+interpret the count data they receive. There are a couple of reasons why
+it would be good to do so:
 
-Is there any way to turn off the device's BT radio during suspend (if
-wakeup is disabled) and then turn it back on during resume?  Wouldn't 
-that accomplish what you want just as well?
+* Users use their devices in unexpected ways.
 
-Alan Stern
+  For example, a quadrature encoder counter device is typically used to
+  keep track of the position of a motor, but a user could set the device
+  in a pulse-direction mode and instead use it to count sporadic rising
+  edges from an arbitrary signal line unrelated to positioning. Users
+  should have the freedom to decide what their data represents.
+
+* Most counter devices represent data as unsigned integers anyway.
+
+  For example, whether the device is a tally counter or position
+  counter, the count data is represented to the user as an unsigned
+  integer value. So specifying that one device is representing tallies
+  while the other specifies positions does not provide much utility from
+  an interface perspective.
+
+For these reasons, the count_read and count_write callbacks have been
+redefined to pass count data directly as unsigned long instead of passed
+via opaque structures:
+
+        count_read(struct counter_device *counter,
+                   struct counter_count *count, unsigned long *val);
+        count_write(struct counter_device *counter,
+                    struct counter_count *count, unsigned long val);
+
+Similarly, the signal_read is redefined to pass Signal data directly as
+a counter_signal_value enum instead of via an opaque structure:
+
+        signal_read(struct counter_device *counter,
+                    struct counter_signal *signal,
+                    enum counter_signal_value *val);
+
+The counter_signal_value enum is simply the counter_signal_level enum
+redefined to remove the references to the Signal data "level" data type.
+
+William Breathitt Gray (2):
+  counter: Simplify the count_read and count_write callbacks
+  docs: driver-api: generic-counter: Update Count and Signal data types
+
+ Documentation/driver-api/generic-counter.rst |  22 ++--
+ drivers/counter/104-quad-8.c                 |  33 ++----
+ drivers/counter/counter.c                    | 101 +++----------------
+ drivers/counter/ftm-quaddec.c                |  14 +--
+ drivers/counter/stm32-lptimer-cnt.c          |   5 +-
+ drivers/counter/stm32-timer-cnt.c            |  17 +---
+ include/linux/counter.h                      |  74 ++------------
+ 7 files changed, 53 insertions(+), 213 deletions(-)
+
+-- 
+2.23.0
 
