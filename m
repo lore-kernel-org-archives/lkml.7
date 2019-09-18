@@ -6,85 +6,86 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F090C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33A8C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:58:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2DB222CD
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94CC1222D1
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 19:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389039AbfIRT5y (ORCPT
+        id S2389114AbfIRT6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 15:57:54 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:38151 "EHLO
+        Wed, 18 Sep 2019 15:58:32 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:51523 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732201AbfIRT5x (ORCPT
+        with ESMTP id S2389099AbfIRT6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 15:57:53 -0400
+        Wed, 18 Sep 2019 15:58:31 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MBUZr-1iMWhv1hy3-00CwcX; Wed, 18 Sep 2019 21:57:48 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MhDN4-1hfDDh3bTG-00eJBE; Wed, 18 Sep 2019 21:58:24 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Shannon Nelson <snelson@pensando.io>,
-        Pensando Drivers <drivers@pensando.io>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: [PATCH] ionic: remove useless return code
-Date:   Wed, 18 Sep 2019 21:57:35 +0200
-Message-Id: <20190918195745.2158829-1-arnd@arndb.de>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Kirill Smelkov <kirr@nexedi.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] fuse: unexport fuse_put_request
+Date:   Wed, 18 Sep 2019 21:58:16 +0200
+Message-Id: <20190918195822.2172687-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:tGFs0j53Jb1jMYkS2hCvPmKoxnLZMVIP3N3je8VWvQ5S2zgKuOG
- eRLzmZZRrnOViO/Nb+KEwoZQfjnNaRv4CBfx6fajZLUXaHleqA/VqQfmdYphluD3TZYl9z5
- Yfm3r1ze9i5irbHYscYwYmHHInCXbyzQgM92NJz4YuwaYdvF/K+aKiOG2LMYsKheRJCPHa2
- qNGClUNe8K3p3SkrFcxzg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:luKqPByHVkE=:opdo+VkX6Q+A/eJ1A6bg2i
- HKHF/nTEQZgnlDKLcYSraBMPoydxMYmpSm9xXpCxAecESwcR68I1YakaJbZI/mTqg+97ixphp
- PDsicnKNxxMDqFFRHrJDOf89sDZ+LqKSswowLtLLX72FIY/rDNUe8QbwHKqc65IPgVCh+BAhW
- DhP4FYOSQeuQgLg71++ec6edSlFuLpO5Tle6oDOVwhh9B1jwdf7eB2B3r6mCTZ2daguflSY0B
- 17yyXEZgwENwt/tE9zRsYZK1ivcmOd6gOa/o9eIhSOZI12VOpQ1mqdYFi6BB3VIrWm2TRo9Xy
- PfrXkBcCvi0u0jeV6xcf4RWsI6zdW9s/D663ohUgBEM1I745TCg8g4pBnlNZRfIcdg3FYcs3g
- e/bvTpQOtYnOGcBI34gVeb/GBhkYukpkx6l/OkduA2Tg3BmzCj/+Ma7wdPMRCqzZ/8RCXi04K
- f0bPh4E1DS/Ez5FXjMst0BAHjs0Hm6FLbsDDrR9NlkjglTFpuN2s28PbD/z+0IFBDVd9R/leD
- 4NO5K3AdbGqBUYPz18992nkrGUIRWzhFGeBiwXpxEwomjPqjwzy/V4o9IX0MfnttMtP+LzrmO
- yr4lGtB/atE68UviXuZb7MMX5CC0RkL3bKDFXOjjCM3g59MSAjvH5M5tDDukuY6mUm/BEUAll
- t4pxdss4cRaPApB7zdTp/21CGS+8uyhxeF8uhbDr7Q/LfmHMsjzdQyNJZDJNqZkBmoZTt2kRk
- YDTx9YcZxeo/AC+pBOu3dl+JSiyi2OFtTcGTv1AaFgiSg0ztB+67SRpBGB70TWAMFq3t3KCWT
- 3iBUWKgxmDrWQGqjrKuqdGJzeSV15u7i7K2cq4bCw7urLEItHvqrtNmp4yEyRMVhdLJ8YmKxn
- Hq1f+6loHFbXxxloKZsg==
+X-Provags-ID: V03:K1:aZxKUK3JTH0fyFK7KFMxUFxerV6cXmaaVj60LXyUF7W4ep0GFSP
+ i0cIPYK+C0J3asHoHzYYJNXzp8uN4MjZ6jSdpaBjh6NQxwhppJRR9y/QotpsjVXoXUjoHCZ
+ OGsiWOue3oRHdc32GJ/105e+IOXqA1d/ehm0TPDAgNctUPDUcqRfbNfm9QNIbYLN73JbINN
+ X4DqxBYlhm+wnO/a1Fzhg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Nvmg6C1/Dmw=:UaquQwaWhHljTnDxMH2bQQ
+ ddus6SBgYP+7dEgDcDrqK/z7n0mklCmoG1CrHi3AU0lBSdLwbfdXiJ8tbPG6NJ3Y2JvOkxFNr
+ FEm+IdPDbTKCmZRuKHFBu/qg8HOn09nVO3DS0SYxBk7BJj2uaresnbXCSYe2FhL+p8banqWxP
+ +PFNo2PKcMjDfQAHEEzQBOaQSU6RvghXSKVmxjPqXqr09Ut3fVgKZSVTsm75Gs3eROYYDH47r
+ SDVxycHQXJ3v08JPrDJg21iPXVBkabQiRzvhl3g6mRRLiZ2VEnA/LiE6uoWMZscZZ67DUPmMJ
+ 5/1Zhx4GUsWUnw9yxkJgcLlj0/1WNSXQ+ZlkBf+968EIk3ucOIRcak6DnIX5iGd0K4nNveu4e
+ ZIwGzH4z+t3v5cqBk3O+XW6qt5dxqUNgA67NUuZqEb2j/xhOAkXaVUQgGQS63SIC0s5CWV6gF
+ Q+oaNSDPIGj8qA6a/fbrAACW3Lv7HebRF/f4O2gutaPMPPJrywnOgj9ExdTxVEOn0vjnCRD/O
+ DREmOdntCF5Zt9hulgHtpCLvarTcg8koeYR8Qpn3ACd12ss3+xDAekLTRqY9/i4H7inZjodkG
+ T4jvfFERJJryL7g2ocCdAM9iYXxZJFFv8J2kjsEuaKimax0b6hjzvV65koWgLTZaVWkeuPahV
+ nPJtSJ8BzKq+tAtXqkHyZB5NxI3AhfilDiH8BI34UcchhtFy0bRYRBoPKZke+KXmDqd9BpLQl
+ XMStkwyivCMjcy3pK/vkYK2VO1aJw86Z1sBfh3drz6VpHuYp59pBvDDJ/3BTqyjdIA9Fbjxlt
+ dDVSG8mHpY1lJWGP2dJZcmYiqb2DZNDGbX9hmbZapcJiHC1FwAikf92FMFBTSbnvTqpQUGUcX
+ DciNlhDXVwfmUD3fk0HA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The debugfs function was apparently changed from returning an error code
-to a void return, but the return code left in place, causing a warning
-from clang:
+This function has been made static, which now causes
+a compile-time warning:
 
-drivers/net/ethernet/pensando/ionic/ionic_debugfs.c:60:37: error: expression result unused [-Werror,-Wunused-value]
-                            ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
-                                                         ^~~~~~~~~~~
+WARNING: "fuse_put_request" [vmlinux] is a static EXPORT_SYMBOL_GPL
 
-Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
+Remove the unneeded export.
+
+Fixes: 66abc3599c3c ("fuse: unexport request ops")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fuse/dev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-index 7afc4a365b75..bc03cecf80cc 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_debugfs.c
-@@ -57,7 +57,7 @@ DEFINE_SHOW_ATTRIBUTE(identity);
- void ionic_debugfs_add_ident(struct ionic *ionic)
- {
- 	debugfs_create_file("identity", 0400, ionic->dentry,
--			    ionic, &identity_fops) ? 0 : -EOPNOTSUPP;
-+			    ionic, &identity_fops);
+diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+index 46d68d439c41..e367c639bb2b 100644
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -175,7 +175,6 @@ static void fuse_put_request(struct fuse_conn *fc, struct fuse_req *req)
+ 		fuse_request_free(req);
+ 	}
  }
+-EXPORT_SYMBOL_GPL(fuse_put_request);
  
- void ionic_debugfs_add_sizes(struct ionic *ionic)
+ unsigned int fuse_len_args(unsigned int numargs, struct fuse_arg *args)
+ {
 -- 
 2.20.0
 
