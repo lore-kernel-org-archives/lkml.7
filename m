@@ -2,169 +2,81 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA315C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B474DC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742DA21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E1F321925
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfvASRer"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7ucb399"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730523AbfIRUWP (ORCPT
+        id S1730677AbfIRUWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:22:15 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:42168 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728555AbfIRUWP (ORCPT
+        Wed, 18 Sep 2019 16:22:33 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34749 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726257AbfIRUWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:22:15 -0400
-Received: by mail-ua1-f68.google.com with SMTP id r19so306257uap.9;
-        Wed, 18 Sep 2019 13:22:14 -0700 (PDT)
+        Wed, 18 Sep 2019 16:22:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h2so1288292ljk.1;
+        Wed, 18 Sep 2019 13:22:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=lmhPAPvtiDqgJteyBaaRaA2HGyODpvnBTqjiHuYvfW8=;
-        b=sfvASRerbcXbub55XOZDQa1Q6Pr15lLFNTI9N+KlluVI9AP7tro68HSKNCMWhGx5Js
-         TvO7LdhJ5wIshdJ5o78Y2Pu/t7lIJlZLkBSLykowc/XPvCKnIO9gNLOvRJ+VMk1XoTaq
-         gKE1JKCcDgwx3+i6oQva81SPRosIY1TJ/HS3mH59GFYcixNcq7jzcUdh0WbgY/wjRTvr
-         4ovllQQb9hO+6l0bS7tjwYhMIZM6vtnkFEmKxjO4eKS6CL3x1HmSbuKRHd+I1xfPE092
-         Q6pXD4tVJsf9j/Ifvia/iR253v0+OBvdM1/4Xndlrif7ZzmiQb894g4HLFM6A0y6+Ovk
-         yF+A==
+        bh=meIVwwcdmP/nxLwROeZNJKv2MKcCbPHX7tUkS9zAbzM=;
+        b=Z7ucb399RGF9U9tQvgEYnaf/GVv/5O8JGgljOfEFbS59akeP8ua3MG96LGv6gp1/Bl
+         FRSBFhV8554T6+PhvCNurUGqIj+l/5zx463jRffXiOBWGdWnibHtbhPZbIWJJYIFVLR8
+         R7+Km/dNqvXLb24XWRPhA558QSW5AN4Q8vSFrSOQiNb7le2PSpSVDNHDQX+faujSuxDc
+         galQGlc3OMS7mOrIOzPA+T9hOCj+UuiuYbICOnw1hnawKxFIpi8pmgiuDg65GPGc0HcY
+         18rouYHLHbwxRZT4rY/1Zm6raqoxWfvkET9CUioERjOMJcE0WeLu/6fI89cdL29DmaZB
+         M3bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=lmhPAPvtiDqgJteyBaaRaA2HGyODpvnBTqjiHuYvfW8=;
-        b=ePGuSq1dBHvsYelOF7GSxaby5+udgf9pOskRiytvJyCtDS6LvbwDW9N/1AhQl1PM21
-         qDUDe2ARuSOkuT3PvYPiyoKUXGeNWBGwKVfWFPK3wEY+3n0var/T+PrSdciPHpFEq2AS
-         2Sj3h+VjoGHNdOduGr64zbzlTR9MffxsqUW2EZOMYptajeU5svlPnWIVCjI1ronLwCC7
-         FbLvP7iZ6vHuk5+AhyJIuBWqjOfkJkat8bTolWSNOXYda2pkcyAp3IklGaIoa0+HQ+0R
-         8GmBW1u1oNpPnrHXlOau/5VpbfWjI1rKJhT+YwnT9ddIwzuBSWc1RfTmzRuLAoBT1n4z
-         78NQ==
-X-Gm-Message-State: APjAAAVNtTM7Bb9ptM+xL8znoUPvJvgvbgstvSnhbXAQPu0urAuGBcsK
-        Rwc5y3N4sjgKiTea/7yRyqapKBcm1OitSbkvJfQ=
-X-Google-Smtp-Source: APXvYqy3pJnGFFiPZpSaVj6NyQ+uACbzioEkEoMSk5DLMmTqob6g6Zbdj69w8/4DOKa3t7RcjcDL3Y04gLE7+XWUqwg=
-X-Received: by 2002:ab0:7816:: with SMTP id x22mr3609892uaq.97.1568838133906;
- Wed, 18 Sep 2019 13:22:13 -0700 (PDT)
+        bh=meIVwwcdmP/nxLwROeZNJKv2MKcCbPHX7tUkS9zAbzM=;
+        b=Jd/XCGOieUU2vYzsiFhRa79qeBtDcdBZuvg0+E+Z2aw+y8JZ6X8kn8ezpjKfB+0KZ+
+         4ldC7BX0WtR6HdaGSkoHCnKn7s+3zybkMesFVyUzxPZJInK6RbYKlLKCc+GUd5paZyd1
+         cVXtJaKUfGGsTSiMwzZ9tVkrcIev8HpMgY6OMMVS2+V3bKtEma5INZoP75IRfeBnOy5U
+         +REOi7CudX/ZbQ7ga9Aq2s7vEBKbCV6PKPIWgUzShqZ8i/vn1T4XfhP/elj8Q1R1bokI
+         +3bBuXQqvPUMrNsctt+fNqWMzXuWBgShpl83xCpuZ/GTLpWnB+1mBhHf58V0Df0aPR2E
+         SjyA==
+X-Gm-Message-State: APjAAAUqnn9jmQBfhbCuc6BpABEJ/7Vcbe9CfH+Iv4zf+v7xZNIJ4XHU
+        QbHnGvRIp/EkgoU/yMogFOnc5WrDs83SuIATT+A=
+X-Google-Smtp-Source: APXvYqx/sOK9cpvYG89Tl6YDcE/lNs3l9ylwlvv9ugwHiO3AAV8UBwZYkdXxapXBp8WaXs7eqKDhElFzdrGjXl6++tg=
+X-Received: by 2002:a2e:6a13:: with SMTP id f19mr3209725ljc.17.1568838150069;
+ Wed, 18 Sep 2019 13:22:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190828160817.6250-1-gregkh@linuxfoundation.org>
- <20190918195920.25210-1-qkrwngud825@gmail.com> <20190918201318.GB2025570@kroah.com>
-In-Reply-To: <20190918201318.GB2025570@kroah.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Thu, 19 Sep 2019 05:22:03 +0900
-Message-ID: <CAD14+f0YeAPxmLbxB5gpJbNyjE1YiDyicBXeodwKN4Wvm_qJwA@mail.gmail.com>
-Subject: Re: [PATCH] staging: exfat: rebase to sdFAT v2.2.0
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Namjae Jeon <namjae.jeon@samsung.com>, sj1557.seo@samsung.com
-Cc:     alexander.levin@microsoft.com,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        sergey.senozhatsky@gmail.com,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        devel@driverdev.osuosl.org, linkinjeon@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190918052406.21385-1-jinshan.xiong@gmail.com>
+ <5302836c-a6a1-c160-2de2-6a5b3d2c4828@fb.com> <20190918143235.kpclo45eo7qye7fs@ast-mbp.dhcp.thefacebook.com>
+ <CA+-8EHRk6aAuDQ=S9O7h6T2fhyz2z+zQduN2yiDNWMOWt2-t_A@mail.gmail.com>
+In-Reply-To: <CA+-8EHRk6aAuDQ=S9O7h6T2fhyz2z+zQduN2yiDNWMOWt2-t_A@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 18 Sep 2019 13:22:18 -0700
+Message-ID: <CAADnVQLsnFaFS+ZhRoL0QfDVcGiR2OSrqSqRsd5dci=rQ+Pb9A@mail.gmail.com>
+Subject: Re: [PATCH] staging: tracing/kprobe: filter kprobe based perf event
+To:     Jinshan Xiong <jinshan.xiong@uber.com>
+Cc:     Yonghong Song <yhs@fb.com>,
+        "jinshan.xiong@gmail.com" <jinshan.xiong@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-On Thu, Sep 19, 2019 at 5:12 AM Greg KH <gregkh@linuxfoundation.org> wrote:
-> That's a lot of rewriting :(
+On Wed, Sep 18, 2019 at 8:13 AM Jinshan Xiong <jinshan.xiong@uber.com> wrote:
 >
-> How about at least keeping the file names the same to make it easier to
-> see what happened here?
->
-> Then send a follow-on patch that just does the rename?
+> The problem with the current approach is that it would be difficult to filter cgroup, especially the cgroup in question has descendents, and also it would spawn new descendents after BPF program is installed. it's hard to filter it inside a BPF program.
 
-That's still not quite useful tbh, lemme bring the diff stat I wrote
-in previous email just in case you missed it:
-<Full diff stat>
- Kconfig      |   79 +-
- Makefile     |   46 +-
- api.c        |  423 ----
- api.h        |  310 ---
- blkdev.c     |  409 +---
- cache.c      | 1142 ++++-----
- config.h     |   49 -
- core.c       | 5583 ++++++++++++++++++++++++--------------------
- core.h       |  196 --
- core_exfat.c | 1553 ------------
- exfat.h      | 1309 +++++++----
- exfat_fs.h   |  417 ----
- extent.c     |  351 ---
- fatent.c     |  182 --
- misc.c       |  401 ----
- nls.c        |  490 ++--
- super.c      | 5103 +++++++++++++++++++++-------------------
- upcase.c     |  740 ++++++
- upcase.h     |  407 ----
- version.h    |   29 -
- xattr.c      |  136 --
- 21 files changed, 8186 insertions(+), 11169 deletions(-)
-
-<diff-filter=M>
- Kconfig  |   79 +-
- Makefile |   46 +-
- blkdev.c |  409 +---
- cache.c  | 1142 +++++-----
- core.c   | 5583 ++++++++++++++++++++++++++----------------------
- exfat.h  | 1309 ++++++++----
- nls.c    |  490 ++---
- super.c  | 5103 ++++++++++++++++++++++---------------------
- 8 files changed, 7446 insertions(+), 6715 deletions(-)
-
-These diff stats were taken by removing "exfat_" prefix from the
-current staging drivers.
-
-But if that's still what you want, I'll do it.
-btw, removing "exfat_" prefix from the current one makes more sense imo.
-
-If we add "exfat_" prefix to the new one, we get weird file names like
-"exfat_core_exfat.c".
-
-> And by taking something like this, are you agreeing that Samsung will
-> help out with the development of this code to clean it up and get it
-> into "real" mergable shape?
-
-Well, I think you got me confused with Namjae.
-(Yeah Korean names are confusing I know :) )
-
-Namjae (or anyone else from Samsung) should answer that, not me.
-
-I just prepared a patch as we were getting nowhere like you mentioned :)
-
-> Also, I can't take this patch for this simple reason alone:
-> Don't delete SPDX lines :)
-
-Sorry.
-I'll add that back for v2.
-
-On Thu, Sep 19, 2019 at 5:13 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Thu, Sep 19, 2019 at 04:59:20AM +0900, Park Ju Hyung wrote:
-> > --- a/drivers/staging/exfat/exfat.h
-> > +++ b/drivers/staging/exfat/exfat.h
-> > @@ -1,4 +1,4 @@
-> > -/* SPDX-License-Identifier: GPL-2.0 */
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
->
-> You just changed the license of this file.  Are you SURE about that?
-
-The sdFAT code release explicitly states "either version 2 of the
-License, or (at your option) any later version", so I thought that
-makes sense:
-https://github.com/arter97/exfat-linux/commit/d5393c4cbe0e5b50231aacd33d9b5b0ddf46a005
-
-Please correct me if I'm wrong.
-
-Thanks.
+Why is that?
+bpf_current_task_under_cgroup() fits exactly that purpose.
