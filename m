@@ -2,28 +2,29 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34A3BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A8DC4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C003205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B38C207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:27:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfIRM1g (ORCPT
+        id S1728990AbfIRM1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:27:36 -0400
+        Wed, 18 Sep 2019 08:27:38 -0400
 Received: from mail-sz.amlogic.com ([211.162.65.117]:56694 "EHLO
         mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbfIRM1e (ORCPT
+        with ESMTP id S1726359AbfIRM1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:27:34 -0400
+        Wed, 18 Sep 2019 08:27:36 -0400
 X-Greylist: delayed 903 seconds by postgrey-1.27 at vger.kernel.org; Wed, 18 Sep 2019 08:27:32 EDT
 Received: from droid12-sz.software.amlogic (10.28.8.22) by mail-sz.amlogic.com
  (10.28.11.5) with Microsoft SMTP Server id 15.1.1591.10; Wed, 18 Sep 2019
- 20:13:25 +0800
+ 20:13:26 +0800
 From:   Xingyu Chen <xingyu.chen@amlogic.com>
 To:     Philipp Zabel <p.zabel@pengutronix.de>,
         Kevin Hilman <khilman@baylibre.com>
@@ -36,9 +37,9 @@ CC:     Rob Herring <robh+dt@kernel.org>,
         <linux-amlogic@lists.infradead.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH 1/3] arm64: dts: meson: add reset controller for Meson-A1 SoC
-Date:   Wed, 18 Sep 2019 20:12:25 +0800
-Message-ID: <1568808746-1153-2-git-send-email-xingyu.chen@amlogic.com>
+Subject: [PATCH 2/3] dt-bindings: reset: add bindings for the Meson-A1 SoC Reset Controller
+Date:   Wed, 18 Sep 2019 20:12:26 +0800
+Message-ID: <1568808746-1153-3-git-send-email-xingyu.chen@amlogic.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
 References: <1568808746-1153-1-git-send-email-xingyu.chen@amlogic.com>
@@ -50,31 +51,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the reset controller device of Meson-A1 SoC family
+Add DT bindings for the Meson-A1 SoC Reset Controller include file,
+and also slightly update documentation.
 
 Signed-off-by: Xingyu Chen <xingyu.chen@amlogic.com>
 Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-a1.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../bindings/reset/amlogic,meson-reset.txt         |  4 +-
+ include/dt-bindings/reset/amlogic,meson-a1-reset.h | 59 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-reset.h
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-index 7210ad0..1c588ab 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1.dtsi
-@@ -74,6 +74,12 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x1000000>;
+diff --git a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+index 28ef6c2..011151a 100644
+--- a/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
++++ b/Documentation/devicetree/bindings/reset/amlogic,meson-reset.txt
+@@ -5,8 +5,8 @@ Please also refer to reset.txt in this directory for common reset
+ controller binding usage.
  
-+			reset: reset-controller@0 {
-+				compatible = "amlogic,meson-a1-reset";
-+				reg = <0x0 0x0 0x0 0x8c>;
-+				#reset-cells = <1>;
-+			};
+ Required properties:
+-- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset" or
+-	"amlogic,meson-axg-reset".
++- compatible: Should be "amlogic,meson8b-reset", "amlogic,meson-gxbb-reset",
++	"amlogic,meson-axg-reset" or "amlogic,meson-a1-reset".
+ - reg: should contain the register address base
+ - #reset-cells: 1, see below
+ 
+diff --git a/include/dt-bindings/reset/amlogic,meson-a1-reset.h b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+new file mode 100644
+index 00000000..8d76a47
+--- /dev/null
++++ b/include/dt-bindings/reset/amlogic,meson-a1-reset.h
+@@ -0,0 +1,59 @@
++/* SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ *
++ * Copyright (c) 2019 Amlogic, Inc. All rights reserved.
++ * Author: Xingyu Chen <xingyu.chen@amlogic.com>
++ *
++ */
 +
- 			uart_AO: serial@1c00 {
- 				compatible = "amlogic,meson-gx-uart",
- 					     "amlogic,meson-ao-uart";
++#ifndef _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
++#define _DT_BINDINGS_AMLOGIC_MESON_A1_RESET_H
++
++/* RESET0 */
++#define RESET_AM2AXI_VAD		1
++#define RESET_PSRAM			4
++#define RESET_PAD_CTRL			5
++#define RESET_TEMP_SENSOR		7
++#define RESET_AM2AXI_DEV		8
++#define RESET_SPICC_A			10
++#define RESET_MSR_CLK			11
++#define RESET_AUDIO			12
++#define RESET_ANALOG_CTRL		13
++#define RESET_SAR_ADC			14
++#define RESET_AUDIO_VAD			15
++#define RESET_CEC			16
++#define RESET_PWM_EF			17
++#define RESET_PWM_CD			18
++#define RESET_PWM_AB			19
++#define RESET_IR_CTRL			21
++#define RESET_I2C_S_A			22
++#define RESET_I2C_M_D			24
++#define RESET_I2C_M_C			25
++#define RESET_I2C_M_B			26
++#define RESET_I2C_M_A			27
++#define RESET_I2C_PROD_AHB		28
++#define RESET_I2C_PROD			29
++
++/* RESET1 */
++#define RESET_ACODEC			32
++#define RESET_DMA			33
++#define RESET_SD_EMMC_A			34
++#define RESET_USBCTRL			36
++#define RESET_USBPHY			38
++#define RESET_RSA			42
++#define RESET_DMC			43
++#define RESET_IRQ_CTRL			45
++#define RESET_NIC_VAD			47
++#define RESET_NIC_AXI			48
++#define RESET_RAMA			49
++#define RESET_RAMB			50
++#define RESET_ROM			53
++#define RESET_SPIFC			54
++#define RESET_GIC			55
++#define RESET_UART_C			56
++#define RESET_UART_B			57
++#define RESET_UART_A			58
++#define RESET_OSC_RING			59
++
++/* RESET2 Reserved */
++
++#endif
 -- 
 2.7.4
 
