@@ -2,233 +2,163 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E454C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A77D4C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48F3A218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:27:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EEE5218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Iu7nhtAa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YGgeI6B0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbfIRP1t (ORCPT
+        id S1728793AbfIRPcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:27:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34646 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727057AbfIRP1t (ORCPT
+        Wed, 18 Sep 2019 11:32:11 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33649 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726983AbfIRPcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:27:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gdFHiFVbMqVJw3CBF4SoBjQ/uM5M5qm+KSwdRCShL1k=; b=Iu7nhtAaql/og2GAvnceGjKAbq
-        Cbk8RrS9C1NwKD+UZKy/Y6zws/CMAR/gkDf4wy5Ad3gAAsROwXmfJBW3O3v+X3dOpptf4lMrcN2Ti
-        nhGfQbKKerTGgc00UBSp72uBLs8wbgfuHhUjQj/fugE8nLWb6jbQP7ynshgbYgvChydIsmKhSvE5c
-        BJV3aRwJG6gFty8IsVQ7rMzVkHZ4SjuKLCG9OuaOynHJMVpqHPbcC9GlCR6cU3GO+IfP0zXKnXNPP
-        we1cBUhF6TcK3anK7/mjHxi+KrV/YpV7TTBUSBKUoRxrdihfJ5/mmOO09Uwa2UVW8LEIRa9Aa8o0L
-        NlH5q1jQ==;
-Received: from [12.1.75.136] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iAbrw-0002Ft-Bj; Wed, 18 Sep 2019 15:27:48 +0000
-Date:   Wed, 18 Sep 2019 08:27:48 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mmc@vger.kernel.org, iommu@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] dma-mapping updates for 5.4
-Message-ID: <20190918152748.GA21241@infradead.org>
+        Wed, 18 Sep 2019 11:32:11 -0400
+Received: by mail-io1-f65.google.com with SMTP id m11so284822ioo.0;
+        Wed, 18 Sep 2019 08:32:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5hHyYF5L2cgk61bB7AKoE7ghGd7YLktDIb71RXFYwSY=;
+        b=YGgeI6B01Qbog0Pa8A7w51DPvf6RmdRxnRonGsnP62fuwGd88IDN4UG+lpD6Ddc7xq
+         M+ty3J2sAtJwaP6/ch1pJsoyndUWaw/Ub+pS5MixJO1WTrlL/g85/PgB0AqOHxZWJ5ku
+         UB6/nJVXTJ4SNxqv1vkhVLB4nAr7no1B5Ux7DR973UTvJ6+Xm5eOQCi3hQryWMqWP4dL
+         ggJZqKslPKINu2g/xR4e0Ot7fATqFIXXCz0oQO2mKQudImW1IKjISqfz99SjP9wc8r0j
+         cy2m4J16+7lqIDur6yQhPftxjN8F7DpVh6DLNoGvCHae2IbITtYI5w12iOuM9KILqSX0
+         yPsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5hHyYF5L2cgk61bB7AKoE7ghGd7YLktDIb71RXFYwSY=;
+        b=qe2eXOVczynb5tFNJNHPDxL0i2o5xiNcVFcQuW2FGmMFQ6wb53bRnPr/yJEzb5+kN1
+         kgLLWvM5Gh+wFt7vc9jefHQiKJft3h53litQcQ76TcrKuzwU58DdN01OSHVeQ0Uisty5
+         8bx63o9WlGcD8nalCQWv937dyu6yc4ytrHeVrdz+iNJBlfwCwYpCIIJWyI3AmEUpCkSi
+         /9GZ+rZfN7Ot92yDO7gPiGSbbqt2DAmRJIvGPdXcGkziLA/PonLYpV1d+kdRwhzfUFrA
+         szdO4TApgt5Z+fjNnI3dlcAVPZGM+SbGdEin1a8phHMClcZzMaU50CMu3Ie9lUrO0R+I
+         M/Lg==
+X-Gm-Message-State: APjAAAX0KKmgAsIOtltv78EpVCOR3I8YwGxWbzI5FPWWP3AOM62OtCA6
+        FUB4u/C79vNJCFPHXR9Axv55p0vATU/hzlzgXclSJOoK
+X-Google-Smtp-Source: APXvYqwk4f9W7fDif2wT0qTh3jeOw9SsTKj3pGjsr5Z9tYewP5UlYXoB5pDU86HPHtHxIvu0cXMLbgMMc0CrPu6wwAI=
+X-Received: by 2002:a5e:c749:: with SMTP id g9mr5644589iop.7.1568820728787;
+ Wed, 18 Sep 2019 08:32:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <1568626884-5189-1-git-send-email-peng.fan@nxp.com>
+ <1568626884-5189-2-git-send-email-peng.fan@nxp.com> <20190917183115.3e40180f@donnerap.cambridge.arm.com>
+ <CABb+yY2CP1i9fZMoPua=-mLCUpYrcO28xF5UXDeRD2XTYe7mEg@mail.gmail.com>
+ <20190918104347.285bd7ad@donnerap.cambridge.arm.com> <CABb+yY3drgYHk2_SZMgGhgSisB7wMVKFSx8VVabCcXkGByvgwg@mail.gmail.com>
+ <20190918154654.6fb7e7f5@donnerap.cambridge.arm.com>
+In-Reply-To: <20190918154654.6fb7e7f5@donnerap.cambridge.arm.com>
+From:   Jassi Brar <jassisinghbrar@gmail.com>
+Date:   Wed, 18 Sep 2019 10:31:57 -0500
+Message-ID: <CABb+yY3gJpK5ghS1u-e=f-msO+=oVvX=zDNj3Jg2i0-uJHrLiA@mail.gmail.com>
+Subject: Re: [PATCH V6 1/2] dt-bindings: mailbox: add binding doc for the ARM
+ SMC/HVC mailbox
+To:     Andre Przywara <andre.przywara@arm.com>
+Cc:     Peng Fan <peng.fan@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On Wed, Sep 18, 2019 at 9:46 AM Andre Przywara <andre.przywara@arm.com> wro=
+te:
+>
+> On Wed, 18 Sep 2019 09:19:46 -0500
+> Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>
+> Hi,
+>
+> > On Wed, Sep 18, 2019 at 4:44 AM Andre Przywara <andre.przywara@arm.com>=
+ wrote:
+> >
+> > >
+> > > > which needs 9 arguments to work. The fact that the fist argument is
+> > > > always going to be same on a platform is just the way we use this
+> > > > instruction.
+> > > >
+> > > > > We should be as strict as possible to avoid any security issues.
+> > > > >
+> > > > Any example of such a security issue?
+> > >
+> > > Someone finds a way to trick some mailbox client to send a crafted me=
+ssage to the mailbox.
+> > >
+> > What if someone finds a way to trick the block layer to erase 'sda' ?
+>
+> Yes, the Linux block driver control the whole block device, it can do wha=
+tever it wants.
+>
+Sorry, it doesn't make any sense.
 
-please pull the dma-mapping updates for 5.4.
+> >  That is called "bug in the code".
+> > It does happen in every subsystem but we don't stop implementing new
+> > features .... we write flexible code and then fix any bug.
+> >
+> >
+> > > Do you have any example of a use case where the mailbox client needs =
+to provide the function ID?
+> > >
+> > FSL_SIP_SCMI_1/2 ?
+>
+> Huh? Where does the SCPI or SCMI driver provide this? Those clients don't=
+ even provide any arguments. Adding some would defeat the whole point of ha=
+ving this mailbox in the first place, which was to provide a drop-in replac=
+ement for a hardware mailbox device used on other platforms.
+>
+SCPI/SCMI implementation is broken. I did NAK it.
+With the 'smc' mailbox you may get away without have to program the
+channel before transmit, but not every controller is natively so.
 
-In addition to the usual Kconfig conflics where you just want to keep
-both edits there are a few more interesting merge issues this time:
- 
- - most importanly powerpc and microblaze add new callers of
-   dma_atomic_pool_init, while this tree marks the function static
-   and calls it from a common postcore_initcall().  The trivial
-   functions added in powerpc and microblaze adding the calls
-   need to be removed for the code to compile.  This will not show up
-   as a merge conflict and needs to be dealt with manually!
- - the csky tree has edits close to edits from this tree in
-   arch/csky/mm/dma-mapping.c, keep both edits as there are no
-   functional conflicts.
- - for ia64 keep the removal of arch/ia64/sn/pci/pci_dma.c from the
-   ia64 tree.  The ia64 tree moves sba_dma_ops around a bit.  Keep
-   the move and the wiring up of ->mmap and ->get_sgtable from this
-   tree.
- - the -mm tree adds a new compound_nr helper that some of the Xen
-   code removed in this pull request removes.  Keep the removal from
-   this tree.
- - the block tree adds a new helper next to the new block helpers from
-   this tree, keep both
- - the arm64 tree removes a __KERNEL__ ifdef from
-   arch/arm64/include/asm/dma-mapping.h, which is removed in this tree.
-   Keep the removal.
+> > But that is not the main point, which is to be consistent (not
+> > ignoring first argument because someone may find a bug to exploit) and
+> > flexible.
+>
+> Please read the SMCCC[1]: The first argument is in r1/w1/x1. r0/w0 is the=
+ function ID, and this is a specific value (fixed by the firmware implement=
+ation, see Peng's ATF patch) and not up to be guessed by a client.
+>
+The first argument of smc call is the function-id
+  arm_smccc_hvc(function_id, arg0, arg1, arg2, arg3, arg4, arg5, 0, &res);
 
-The following changes since commit a55aa89aab90fae7c815b0551b07be37db359d76:
 
-  Linux 5.3-rc6 (2019-08-25 12:01:23 -0700)
+>
+> That's why I think the function ID (which is part of the SMCCC protocol, =
+not of the mailbox service!) should just be set in the controller DT node a=
+nd nowhere else.
+>
+Actually that is the very reason func-id should be a client thing and
+passed via client's DT node :)
+It is general understanding that protocol specific bits should not be
+a part of controller driver, but the client(protocol) driver.
 
-are available in the Git repository at:
+Page-7 Function-ID specifies :-
+1) The service to be invoked.
+2) The function to be invoked.
+3) The calling convention (32-bit or 64-bit) that is in use.
+4) The call type (fast or yielding) that is in use.
 
-  git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.4
+Even if we turn blind to 2,3 & 4, but (1) shouts like a runtime property.
 
-for you to fetch changes up to c7d9eccb3c1e802c5cbb2a764eb0eb9807d9f12e:
-
-  mmc: renesas_sdhi_internal_dmac: Add MMC_CAP2_MERGE_CAPABLE (2019-09-12 13:14:09 +0100)
-
-----------------------------------------------------------------
-dma-mapping updates for 5.4:
-
- - add dma-mapping and block layer helpers to take care of IOMMU
-   merging for mmc plus subsequent fixups (Yoshihiro Shimoda)
- - rework handling of the pgprot bits for remapping (me)
- - take care of the dma direct infrastructure for swiotlb-xen (me)
- - improve the dma noncoherent remapping infrastructure (me)
- - better defaults for ->mmap, ->get_sgtable and ->get_required_mask (me)
- - cleanup mmaping of coherent DMA allocations (me)
- - various misc cleanups (Andy Shevchenko, me)
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      dma-mapping: fix filename references
-
-Christoph Hellwig (34):
-      unicore32: remove the unused pgprot_dmacoherent define
-      arm-nommu: remove the unused pgprot_dmacoherent define
-      dma-mapping: remove arch_dma_mmap_pgprot
-      dma-mapping: make dma_atomic_pool_init self-contained
-      arm64: document the choice of page attributes for pgprot_dmacoherent
-      MIPS: document mixing "slightly different CCAs"
-      dma-mapping: move the dma_get_sgtable API comments from arm to common code
-      dma-mapping: explicitly wire up ->mmap and ->get_sgtable
-      dma-mapping: add a dma_can_mmap helper
-      ALSA: pcm: use dma_can_mmap() to check if a device supports dma_mmap_*
-      arm-nommu: call dma_mmap_from_dev_coherent directly
-      parisc: don't set ARCH_NO_COHERENT_DMA_MMAP
-      dma-mapping: remove CONFIG_ARCH_NO_COHERENT_DMA_MMAP
-      dma-mapping: remove dma_{alloc,free,mmap}_writecombine
-      dma-mapping: remove dma_release_declared_memory
-      dma-mapping: remove the dma_mmap_from_dev_coherent export
-      remoteproc: don't allow modular build
-      dma-mapping: remove the dma_declare_coherent_memory export
-      dma-mapping: provide a better default ->get_required_mask
-      vmalloc: lift the arm flag for coherent mappings to common code
-      dma-mapping: always use VM_DMA_COHERENT for generic DMA remap
-      dma-mapping: introduce a dma_common_find_pages helper
-      arm: remove wrappers for the generic dma remap helpers
-      xen/arm: use dma-noncoherent.h calls for xen-swiotlb cache maintainance
-      xen/arm: consolidate page-coherent.h
-      xen/arm: use dev_is_dma_coherent
-      xen/arm: simplify dma_cache_maint
-      xen/arm: remove xen_dma_ops
-      xen: remove the exports for xen_{create,destroy}_contiguous_region
-      swiotlb-xen: remove xen_swiotlb_dma_mmap and xen_swiotlb_dma_get_sgtable
-      swiotlb-xen: use the same foreign page check everywhere
-      swiotlb-xen: simplify cache maintainance
-      swiotlb-xen: merge xen_unmap_single into xen_swiotlb_unmap_page
-      arm64: use asm-generic/dma-mapping.h
-
-Yoshihiro Shimoda (6):
-      block: add a helper function to merge the segments
-      mmc: queue: use bigger segments if DMA MAP layer can merge the segments
-      dma-mapping: introduce dma_get_merge_boundary()
-      iommu/dma: add a new dma_map_ops of get_merge_boundary()
-      mmc: queue: Fix bigger segments usage
-      mmc: renesas_sdhi_internal_dmac: Add MMC_CAP2_MERGE_CAPABLE
-
- Documentation/DMA-API.txt                     |  19 ++--
- Documentation/x86/x86_64/boot-options.rst     |   2 +-
- arch/Kconfig                                  |   3 -
- arch/alpha/kernel/pci_iommu.c                 |   2 +
- arch/arc/mm/dma.c                             |   6 --
- arch/arm/Kconfig                              |   2 +-
- arch/arm/include/asm/device.h                 |   3 -
- arch/arm/include/asm/dma-mapping.h            |   6 --
- arch/arm/include/asm/pgtable-nommu.h          |   1 -
- arch/arm/include/asm/xen/page-coherent.h      |  93 -------------------
- arch/arm/mm/dma-mapping-nommu.c               |   5 +-
- arch/arm/mm/dma-mapping.c                     |  84 +++--------------
- arch/arm/mm/mm.h                              |   3 -
- arch/arm/xen/mm.c                             | 129 ++++++++------------------
- arch/arm64/Kconfig                            |   1 -
- arch/arm64/include/asm/Kbuild                 |   1 +
- arch/arm64/include/asm/dma-mapping.h          |  31 -------
- arch/arm64/include/asm/pgtable.h              |  12 +++
- arch/arm64/include/asm/xen/page-coherent.h    |  75 ---------------
- arch/arm64/mm/dma-mapping.c                   |  16 +---
- arch/c6x/Kconfig                              |   1 -
- arch/csky/mm/dma-mapping.c                    |   6 --
- arch/ia64/hp/common/sba_iommu.c               |   2 +
- arch/ia64/kernel/setup.c                      |   2 +-
- arch/ia64/sn/pci/pci_dma.c                    |   2 +
- arch/m68k/Kconfig                             |   2 -
- arch/m68k/include/asm/pgtable_mm.h            |   3 +
- arch/m68k/kernel/dma.c                        |   3 +-
- arch/microblaze/Kconfig                       |   1 -
- arch/mips/Kconfig                             |   9 +-
- arch/mips/jazz/jazzdma.c                      |   2 +
- arch/mips/mm/dma-noncoherent.c                |   8 --
- arch/nds32/kernel/dma.c                       |   6 --
- arch/parisc/Kconfig                           |   1 -
- arch/powerpc/kernel/dma-iommu.c               |   2 +
- arch/powerpc/platforms/ps3/system-bus.c       |  11 +--
- arch/powerpc/platforms/pseries/vio.c          |   2 +
- arch/s390/pci/pci_dma.c                       |   2 +
- arch/sh/Kconfig                               |   1 -
- arch/unicore32/include/asm/pgtable.h          |   2 -
- arch/x86/include/asm/xen/page-coherent.h      |  14 ---
- arch/x86/kernel/amd_gart_64.c                 |   3 +
- arch/x86/kernel/pci-calgary_64.c              |   2 +
- arch/x86/kernel/pci-swiotlb.c                 |   1 -
- arch/x86/kernel/setup.c                       |   2 +-
- arch/x86/pci/sta2x11-fixup.c                  |   4 +-
- arch/x86/xen/mmu_pv.c                         |   2 -
- arch/xtensa/Kconfig                           |   1 -
- arch/xtensa/kernel/pci-dma.c                  |   4 +-
- block/blk-settings.c                          |  23 +++++
- drivers/gpu/drm/omapdrm/dss/dispc.c           |  11 +--
- drivers/iommu/amd_iommu.c                     |   2 +
- drivers/iommu/dma-iommu.c                     |  29 +++---
- drivers/iommu/intel-iommu.c                   |   2 +
- drivers/mmc/core/queue.c                      |  41 +++++++-
- drivers/mmc/host/renesas_sdhi_internal_dmac.c |   2 +-
- drivers/parisc/ccio-dma.c                     |   1 +
- drivers/parisc/sba_iommu.c                    |   1 +
- drivers/remoteproc/Kconfig                    |   2 +-
- drivers/xen/swiotlb-xen.c                     |  84 ++++-------------
- include/linux/blkdev.h                        |   2 +
- include/linux/dma-mapping.h                   |  34 +++----
- include/linux/dma-noncoherent.h               |  13 ++-
- include/linux/mmc/host.h                      |   2 +
- include/linux/vmalloc.h                       |   2 +
- include/xen/arm/hypervisor.h                  |   2 -
- include/xen/arm/page-coherent.h               |  24 +++--
- include/xen/swiotlb-xen.h                     |   5 +
- kernel/dma/Kconfig                            |  12 ++-
- kernel/dma/coherent.c                         |  13 ---
- kernel/dma/mapping.c                          | 105 ++++++++++++++-------
- kernel/dma/remap.c                            |  51 ++++++----
- mm/vmalloc.c                                  |   5 +-
- sound/core/pcm_native.c                       |  13 ++-
- 74 files changed, 399 insertions(+), 677 deletions(-)
- delete mode 100644 arch/arm64/include/asm/dma-mapping.h
+Thanks.
