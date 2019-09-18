@@ -2,121 +2,96 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAB2C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3172E218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:23:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDVRfN5z"
+	by mail.kernel.org (Postfix) with ESMTP id D11F9218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:25:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568791547;
+	bh=2f4GNVVT6zJOWZ2KcAsb/7F/dUlxL/Ds/Oi1ZvE+0gk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GMN7ijm1gX1CDtV9C/TQ99FduPw4DXDuW1RxeiTSU1QTXNeMNmZVZO55NUW36eWmJ
+	 G0LE6apn2nW6RkvXWe1jdNdmlG2+GLawDhVZpjTAEk7OVjeUZn3Tu2t4H67fpH5tZA
+	 JiG7RA+kVFkv3qpoUzt8FeqpCyc4o/z1ETaHxnEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728823AbfIRHXn (ORCPT
+        id S1728915AbfIRHZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:23:43 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:40270 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728728AbfIRHXm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:23:42 -0400
-Received: by mail-pg1-f193.google.com with SMTP id w10so3471285pgj.7;
-        Wed, 18 Sep 2019 00:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=2UrT7kWXq7Zv08Ux1ZFLXJe97a76AVYSBPn7eC+0dXc=;
-        b=QDVRfN5zmScR1Bqy85j7Aa/Cwhhp+1jdOzVCqNtz6M/p+LuItCJZIxaYIuuyigZuqs
-         PJcTyWD/Mp+skwAxUC205hMV0XMWhnU/HxVtjqZOdDA946uj0EGS3pYRchE1L5MEkOmd
-         q9QVplok9A7tUfVeMjUb1cY7uWttGIMxL8JRFZvkRVBjUFHbK5sesP/iCKFB4pqdpNp9
-         fyLmAPX93FeA1jO3mb2EZ5ympIz/IYBuizLx51p7iXyStOBecZHotROXrPK+C4xxpB13
-         X48pfb28LfbLUiIaVGJ+SyfLgM6AhYALzXrZGdOqokjvHUf4X4RicUjkZAlEIpI6SarT
-         swoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2UrT7kWXq7Zv08Ux1ZFLXJe97a76AVYSBPn7eC+0dXc=;
-        b=JWUTYO+v09CwNQB6qGS+V0Q58RW86pPlVL/HBBeL4U4DS30UJRXMafCB6Egqze9qpU
-         J+uth4LKA/HWBBNxAZRMSYJBR25EchCfJtwq7Xyc3uBIHvNTKJcjIJ7WaKMgmbTtjaus
-         pArbIysUNAuq3+ni8d+DniVJgpYLK7jaR6qVI0bodRor/8a9qnAX4NddKcwe96Q/E7MP
-         23/fZCq6BqtAO9OeSgAQyiy3B3mD7/f7JeumIS/9ZnXj8fRjrmfhgBPpwEQTwBo1T4x3
-         ze/RPBHaP5VpQoUPu/gZ5N7hzzZ2cGObDPUwM5JSSHyMeAhBX0v0IGzu9Y+TEKr3gNco
-         SX1g==
-X-Gm-Message-State: APjAAAWMFKfR3YgrahuM1tr5M2R+etHB6EE+kNJ1OOcWyVVx63yuwXnF
-        hzz4qNKLzc/yV8ue39gX8ELfTOJSQ06lK624/EU=
-X-Google-Smtp-Source: APXvYqx4GGiFYwR2caQijMB5QqJkgEa5lLfYzz9p0wIQOCj8rKC7aTmkjVrj7uSonkgit/GoTghxfejYgajtCBnUyVo=
-X-Received: by 2002:a63:1020:: with SMTP id f32mr2722800pgl.203.1568791421343;
- Wed, 18 Sep 2019 00:23:41 -0700 (PDT)
+        Wed, 18 Sep 2019 03:25:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36264 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728599AbfIRHZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 03:25:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2E9AAAD26;
+        Wed, 18 Sep 2019 07:25:43 +0000 (UTC)
+Date:   Wed, 18 Sep 2019 09:25:42 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     xiubli@redhat.com
+Cc:     mingo@redhat.com, peterz@infradead.org, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] memalloc_noio: update the comment to make it cleaner
+Message-ID: <20190918072542.GC12770@dhcp22.suse.cz>
+References: <20190917232820.23504-1-xiubli@redhat.com>
 MIME-Version: 1.0
-References: <20190916222133.9119-1-jacek.anaszewski@gmail.com>
- <CAHk-=wgxNj_RBpE0xRYnMQ9W6PtyLx+LS+pZ_BqG31vute1iAg@mail.gmail.com> <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-In-Reply-To: <CAHk-=wjAVTCZ9-X6ETA7SASNhrOyJuCgn792E_Wmn+JaEQ8N0Q@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Sep 2019 10:23:28 +0300
-Message-ID: <CAHp75VeRiNLhmWaSHnw=DhrgyFrshO5hzpnhAwsM+ZiMyaCSTw@mail.gmail.com>
-Subject: Re: [GIT PULL] LED updates for 5.4-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        ada@thorsis.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Dan Murphy <dmurphy@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Joe Perches <joe@perches.com>, kw@linux.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        nishkadg.linux@gmail.com, nstoughton@logitech.com, oleg@kaa.org.ua,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Tony Lindgren <tony@atomide.com>, wenwen@cs.uga.edu,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190917232820.23504-1-xiubli@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:16 AM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, Sep 17, 2019 at 6:13 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > So this is fine and I've pulled it,
->
-> Famous last words. I now get a new warning:
->
-> drivers/i2c/i2c-core-acpi.c:347:12: warning:
-> =E2=80=98i2c_acpi_find_match_adapter=E2=80=99 defined but not used [-Wunu=
-sed-function]
->   347 | static int i2c_acpi_find_match_adapter(struct device *dev,
-> const void *data)
->       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->
-> with this pull request.  I'll have to look at it after dinner.
->
->               Linus
+On Wed 18-09-19 04:58:20, xiubli@redhat.com wrote:
+> From: Xiubo Li <xiubli@redhat.com>
+> 
+> The GFP_NOIO means all further allocations will implicitly drop
+> both __GFP_IO and __GFP_FS flags and so they are safe for both the
+> IO critical section and the the critical section from the allocation
+> recursion point of view. Not only the __GFP_IO, which a bit confusing
+> when reading the code or using the save/restore pair.
 
-One of those *device core* patch broke i2c ACPI, which has been fixed by
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-drivers/i2c/i2c-core-acpi.c?id=3D644bf60088955421051e716ab9c8fe7fb7997fd7
+Historically GFP_NOIO has always implied GFP_NOFS as well. I can imagine
+that this might come as an surprise for somebody not familiar with the
+code though. I am wondering whether your update of the documentation
+would be better off at __GFP_FS, __GFP_IO resp. GFP_NOFS, GFP_NOIO level.
+This interface is simply a way to set a scoped NO{IO,FS} context.
 
-As I read above the merge commit didn't take this patch.
+> Signed-off-by: Xiubo Li <xiubli@redhat.com>
+> ---
+>  include/linux/sched/mm.h | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index 4a7944078cc3..9bdc97e52de1 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -211,10 +211,11 @@ static inline void fs_reclaim_release(gfp_t gfp_mask) { }
+>   * memalloc_noio_save - Marks implicit GFP_NOIO allocation scope.
+>   *
+>   * This functions marks the beginning of the GFP_NOIO allocation scope.
+> - * All further allocations will implicitly drop __GFP_IO flag and so
+> - * they are safe for the IO critical section from the allocation recursion
+> - * point of view. Use memalloc_noio_restore to end the scope with flags
+> - * returned by this function.
+> + * All further allocations will implicitly drop __GFP_IO and __GFP_FS
+> + * flags and so they are safe for both the IO critical section and the
+> + * the critical section from the allocation recursion point of view. Use
+> + * memalloc_noio_restore to end the scope with flags returned by this
+> + * function.
+>   *
+>   * This function is safe to be used from any context.
+>   */
+> -- 
+> 2.21.0
 
-Solution might be to merge this PR after corresponding bundle of
-device core stuff.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Michal Hocko
+SUSE Labs
