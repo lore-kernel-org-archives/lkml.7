@@ -2,209 +2,85 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F354AC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71CAC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC7D21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:48:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568825338;
-	bh=lbLXhnuVQDnHE5XuhsVnH++e7eK7axGnuD1DUmBSr8s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JlDkJRS5pmYs2McOpGYwkP7xTlo+1aMZljarWSRViWn7FmyTQMBzhjSKD8MdHKZa9
-	 Hdt8a0fJvejOLHNSa0HiiLNnMzkhdrbR7O8Jb/oWHnLYoHwmh0LG4R5X+0Wgf4DJxC
-	 jevItW1BsiLR2O2Hg4DQox1a3sYwMbycjqMkh0U8=
+	by mail.kernel.org (Postfix) with ESMTP id B9BE6218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 16:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387774AbfIRQs6 (ORCPT
+        id S1732028AbfIRQtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 12:48:58 -0400
-Received: from mail-lj1-f182.google.com ([209.85.208.182]:36791 "EHLO
-        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387733AbfIRQs5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 12:48:57 -0400
-Received: by mail-lj1-f182.google.com with SMTP id v24so647014ljj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=86ZUn97/3KZwNNgVgFqkj5nnsJKKhe/XOuAYAPGVnyg=;
-        b=CyLWlrJoS3bO7FoH77HyM4XEqzmX9zqgMXKEBMrGTDXCSDubDkAV6dEVe9f+9NU6ps
-         TjIQho7CvgDPZyQ2qs0MfWbp+zWKGSXvdZ4IBJgiegj5BiaixElPEV/qUQVMRqfs505T
-         j+1vHPZbB2Dvu8j2pvIkSc4y42bGPAM9/jxKQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=86ZUn97/3KZwNNgVgFqkj5nnsJKKhe/XOuAYAPGVnyg=;
-        b=Plxylyw7mUqorXBXZ+W3oHEWRixaTPNOM8B4Y5ZDpKwH5XJa5NlB6xQdHh20AeVqSt
-         nJ4xKrlvaZHVF5Jiw8/8NGH2FONjAkpBZdxWM+w1RgKztwmsN+CfUvR+XFPJUmLaCPGI
-         1vqmPwYwWF0Zx79cHYqIBV89H/2Wl+AtJnzUtt3awhN00tNgp+Ctlm5ISjO3+jwuLLAR
-         41fzdL50xmUeiClte/HLxM3RYHn9qLNnK/nQU8xPX8vnI7ISe7o7Zq16XxMuKesQNCHV
-         g3p0sIhP8WqsHEBZX6/Mp4O+QiB9MaC0C+t6MDeHKdxVEqRlqLr9TQKMU1h+2Mp0K30c
-         5UOA==
-X-Gm-Message-State: APjAAAXC/rWqcM+uy4YuaHI9wZGu0RAVkKWIt0cfV8FKJSwvo7fgCeFY
-        N/UD4YGudKuwwRI5eyfBdM24AIZjeg0=
-X-Google-Smtp-Source: APXvYqzEycWx/Evz2efQGcBqo0D2PAz0oMiVwndrbrp6cYj7LJXX0+DfIM9bD0u5oKIgRWHYZMFVdQ==
-X-Received: by 2002:a2e:9ad6:: with SMTP id p22mr2826056ljj.168.1568825335235;
-        Wed, 18 Sep 2019 09:48:55 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id l5sm1077356lfk.17.2019.09.18.09.48.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Sep 2019 09:48:54 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id l21so640831lje.4
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 09:48:53 -0700 (PDT)
-X-Received: by 2002:a2e:8789:: with SMTP id n9mr2848073lji.52.1568825333672;
- Wed, 18 Sep 2019 09:48:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck>
- <25289.1568379639@warthog.procyon.org.uk> <28447.1568728295@warthog.procyon.org.uk>
- <20190917170716.ud457wladfhhjd6h@willie-the-truck> <15228.1568821380@warthog.procyon.org.uk>
-In-Reply-To: <15228.1568821380@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 18 Sep 2019 09:48:37 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com>
-Message-ID: <CAHk-=wj85tOp8WjcUp6gwstp4Cg2WT=p209S=fOzpWAgqqQPKg@mail.gmail.com>
-Subject: Re: Do we need to correct barriering in circular-buffers.rst?
-To:     David Howells <dhowells@redhat.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Wed, 18 Sep 2019 12:49:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:45132 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726559AbfIRQtb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 12:49:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A0961337;
+        Wed, 18 Sep 2019 09:49:30 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0AAA3F59C;
+        Wed, 18 Sep 2019 09:49:27 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 17:49:25 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jia He <justin.he@arm.com>, Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        James Morse <james.morse@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jun Yao <yaojun8558363@gmail.com>,
+        Alex Van Brunt <avanbrunt@nvidia.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ralph Campbell <rcampbell@nvidia.com>, hejianet@gmail.com,
+        Kaly Xin <Kaly.Xin@arm.com>
+Subject: Re: [PATCH v4 1/3] arm64: cpufeature: introduce helper
+ cpu_has_hw_af()
+Message-ID: <20190918164925.GB41588@arrakis.emea.arm.com>
+References: <20190918131914.38081-1-justin.he@arm.com>
+ <20190918131914.38081-2-justin.he@arm.com>
+ <20190918142017.GC9880@bombadil.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190918142017.GC9880@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 8:43 AM David Howells <dhowells@redhat.com> wrote:
->
-> It mandates using smp_store_release() to update buffer->head in the producer
-> and buffer->tail in the consumer - but these need pairing with memory barriers
-> used when reading buffer->head and buffer->tail on the other side.
+On Wed, Sep 18, 2019 at 07:20:17AM -0700, Matthew Wilcox wrote:
+> On Wed, Sep 18, 2019 at 09:19:12PM +0800, Jia He wrote:
+> > +/* Decouple AF from AFDBM. */
+> > +bool cpu_has_hw_af(void)
+> > +{
+> > +	return (read_cpuid(ID_AA64MMFR1_EL1) & 0xf);
+> > +}
+> > +
+> 
+> Do you really want to call read_cpuid() every time?  I would have thought
+> you'd want to use the static branch mechanism to do the right thing at
+> boot time.  See Documentation/static-keys.txt.
 
-No, the rule with smp_store_release() should be that it's paired with
-"smp_load_acquire()". No other barriers needed.
+We do have a static branch mechanism for other CPU features but mostly
+because on some big.LITTLE systems, the CPUs may differ slightly so we
+only advertise the common features.
 
-If you do that
+I guess here the additional instructions for reading and checking the
+CPUID here would be lost in the noise compared to the actual page
+copying.
 
-   thread #1            thread #2
-
-   ... add data to queue ..
-   smp_store_release(x)
-
-                        smp_load_acquire(x)
-                        ... read data from queue ..
-
-then you should need no other barriers.
-
-But yes, store_release(x) should always pair with the load_acquire(x),
-and the guarantee is that if the load_acquire reads the value that the
-store_release stored, then all subsequent reads in thread #2 will see
-all preceding writes in thread #1.
-
-That's the optimal locking for a simple queue with a reader and a
-writer and no other locking needed between the two.
-
-HOWEVER.
-
-I think this is all entirely pointless wrt the pipe buffer use. You
-don't have a simple queue. You have multiple writers, and you have
-multiple readers. As a result, you need real locking.
-
-So don't do the barriers. If you do the barriers, you're almost
-certainly doing something buggy. You don't have the simple "consumer
--> producer" thing. Or rather, you don't _only_ have that thing.
-
-A reader "produces" a new tail as far as the writer is concerned (so
-the reader that has consumed an entry does a smp_store_release(tail)
--> smp_load_acquire(tail) on the writer side when the writer looks for
-a new entry it can fill).
-
-BUT! A writer also needs to make sure it's the *only* writer for that
-new entry, and similarly a reader that is about to consume an entry
-needs to make sure it's the only reader of that entry. So it is *not*
-that kind of simple hand-off situation at all.
-
-End result: use a lock. Seriously. Anything else is going to be buggy,
-or going to be incredibly subtle.
-
-Don't do those barriers. They are wrong. Barriers simply do not
-protect against two concurrent readers, or two concurrent writers.
-Barriers are useless.
-
-Now, it's possible that barriers together with very clever atomics
-could do a lockless model, but then all the cleverness is going to be
-in the lockless part of the code, not the barriers. So even if we
-eventually do a lockless model, it's completely wrong to do the
-barriers first.
-
-And no, lockless isn't as simple as "readers can do a
-atomic_add_return_relaxed() to consume an entry, and writers can do a
-atomic_cmpxchg() to produce one".
-
-I think the only possible lockless model is that readers have some
-exclusion against other readers (so now you have only one reader at a
-time), and then you fundamentally know that a reader can update the
-tail pointer without worrying about any races (because a reader will
-never race against another reader, and a writer will only ever _read_
-the tail pointer). So then - once you have reader-reader exclusion,
-the _tail_ update is simple:
-
-    smp_store_release(old_tail+1, &tail);
-
-because while there are multiple writers, the reader doesn't care (the
-above, btw, assumes that head/tail themselves aren't doing the "&
-bufsize" thing, and that that is done at use time - that also makes it
-easy to see the difference between empty and full).
-
-But this still requires that lock around all readers. And we have
-that: the pipe mutex.
-
-But writers have the same issue, and we don't want to use the pipe
-mutex for writer exclusion, since we want to allow atomic writers.
-
-So writers do have to have a lock, or they need to do something clever
-with a reservation system that uses cmpxchg. Honestly, just do the
-lock.
-
-The way this should be done:
-
- 1) do the head/tail conversion using the EXISTING locking. We have
-the pipe_mutex, and it serializes everybody right now, and it makes
-any barriers or atomics pointless. Just covert to a sane and simple
-head/tail model.
-
-    NO BARRIERS!
-
-*after* you've done this, do the next phase:
-
- 2) convert the writers to use an irq-safe spinlock, and either make
-the readers look at it too, or do the above smp_store_release() for
-the final tail update (and the writers need to use a
-smp_load_acquire() to look at the tail, despite their lock).
-
-    NO BARRIERS (well, outside the tail thing above).
-
-and *after* you've done #2, you can now do writes from atomic context.
-
-At that point you are done. Consider youself happy, but also allow for
-the possibility that some day you'll see lock contention with lots of
-writers, and that *maybe* some day (unlikely) you'd want to look at
-doing
-
- 3) see if you can make the writers do some clever lockless reservation model.
-
-But that #3 really should be considered a "we are pretty sure it's
-possible in theory, but it's questinably useful, and hopefully we'll
-never even need to consider it".
-
-                Linus
+-- 
+Catalin
