@@ -2,117 +2,79 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C91FC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D4C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEBE22067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:15:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568812552;
-	bh=wdv0YRFrnwocEp/J8v75uH7+80bZiAugwxHW/XSKkOQ=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=uVpb8MflG5PoOKGBuPRKvTlWec4QUEiluTGBcvuQ2lHb7drBhJwDKk+YJfVfsuC3n
-	 CDgD89dQen8Fxs34TfneY/eYauuqmlYcBwv9Vw7WyyjzU10tRV07iE2hLKtyuw9EBK
-	 GUJEFjJ+6ZovdyLnZ/L717z0r7aU4RkMRMkn3CLg=
+	by mail.kernel.org (Postfix) with ESMTP id 2EA812067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfIRNPw (ORCPT
+        id S1729986AbfIRNRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:15:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37134 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 09:17:09 -0400
+Received: from mga05.intel.com ([192.55.52.43]:58261 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfIRNPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:15:51 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF972067B;
-        Wed, 18 Sep 2019 13:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568812551;
-        bh=wdv0YRFrnwocEp/J8v75uH7+80bZiAugwxHW/XSKkOQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WG8IjvxASneWPVKCuK2j4lojJ8lyWBz8byWFLNq4gLQ7fbZmRtmpSudO7gBlXgeCl
-         +FG7r+4UAC6/V1tGIvd4fodNE4EpwKRiKUdjUyo+UxcZnR86f34igN5JchBAfAA2ZN
-         Y8C20v+JzeegvOFcLwOEjuHHQLzTQ2ehwDhqXHOo=
-From:   Will Deacon <will@kernel.org>
-To:     kvm@vger.kernel.org
-Cc:     kernellwp@gmail.com, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "# 5 . 2 . y" <stable@kernel.org>
-Subject: [PATCH] kvm: Ensure writes to the coalesced MMIO ring are within bounds
-Date:   Wed, 18 Sep 2019 14:15:45 +0100
-Message-Id: <20190918131545.6405-1-will@kernel.org>
-X-Mailer: git-send-email 2.11.0
+        id S1726268AbfIRNRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:17:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:17:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
+   d="scan'208";a="202054130"
+Received: from lngladki-mobl2.ccr.corp.intel.com ([10.252.31.176])
+  by fmsmga001.fm.intel.com with ESMTP; 18 Sep 2019 06:17:02 -0700
+Message-ID: <d135b9ba7900c28b3d11560666a4790e015490a2.camel@intel.com>
+Subject: Re: [PATCH net] iwlwifi: add dependency of THERMAL with IWLMVM
+From:   Luciano Coelho <luciano.coelho@intel.com>
+To:     Kalle Valo <kvalo@codeaurora.org>, Mao Wenan <maowenan@huawei.com>
+Cc:     johannes.berg@intel.com, emmanuel.grumbach@intel.com,
+        linuxwifi@intel.com, davem@davemloft.net,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Wed, 18 Sep 2019 16:17:02 +0300
+In-Reply-To: <875zlpbvks.fsf@kamboji.qca.qualcomm.com>
+References: <20190918122815.155657-1-maowenan@huawei.com>
+         <875zlpbvks.fsf@kamboji.qca.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When records are written to the coalesced MMIO ring in response to a
-vCPU MMIO exit, the 'ring->last' field is used to index the ring buffer
-page. Although we hold the 'kvm->ring_lock' at this point, the ring
-structure is mapped directly into the host userspace and can therefore
-be modified to point at arbitrary pages within the kernel.
+On Wed, 2019-09-18 at 16:08 +0300, Kalle Valo wrote:
+> Mao Wenan <maowenan@huawei.com> writes:
+> 
+> > If CONFIG_IWLMVM=y, CONFIG_THERMAL=n, below error can be found:
+> > drivers/net/wireless/intel/iwlwifi/mvm/fw.o: In function `iwl_mvm_up':
+> > fw.c:(.text+0x2c26): undefined reference to `iwl_mvm_send_temp_report_ths_cmd'
+> > make: *** [vmlinux] Error 1
+> > 
+> > After commit 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal
+> > monitoring regardless of CONFIG_THERMAL"), iwl_mvm_up()
+> > calls iwl_mvm_send_temp_report_ths_cmd(), but this function
+> > is under CONFIG_THERMAL, which is depended on CONFIG_THERMAL.
+> > 
+> > Fixes: 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal monitoring regardless of CONFIG_THERMAL")
+> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> 
+> Luca, should I apply this directly to wireless-drivers?
 
-Since this shouldn't happen in normal operation, simply bound the index
-by KVM_COALESCED_MMIO_MAX to contain the accesses within the ring buffer
-page.
+No, this patch defeats the point of the patch it fixes.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: <stable@kernel.org> # 5.2.y
-Fixes: 5f94c1741bdc ("KVM: Add coalesced MMIO support (common part)")
-Reported-by: Bill Creasey <bcreasey@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
----
+We have a proper fix already internally, which I haven't sent out yet,
+that moves a couple of #ifdef's around to solve the issue.  I'll send
+the patch in a sec.
 
-I think there are some other fixes kicking around for this, but they
-still rely on 'ring->last' being stable, which isn't necessarily the
-case. I'll send the -stable backport for kernels prior to 5.2 once this
-hits mainline.
-
- virt/kvm/coalesced_mmio.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/virt/kvm/coalesced_mmio.c b/virt/kvm/coalesced_mmio.c
-index 5294abb3f178..09b3e4421550 100644
---- a/virt/kvm/coalesced_mmio.c
-+++ b/virt/kvm/coalesced_mmio.c
-@@ -67,6 +67,7 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
- {
- 	struct kvm_coalesced_mmio_dev *dev = to_mmio(this);
- 	struct kvm_coalesced_mmio_ring *ring = dev->kvm->coalesced_mmio_ring;
-+	u32 last;
- 
- 	if (!coalesced_mmio_in_range(dev, addr, len))
- 		return -EOPNOTSUPP;
-@@ -79,13 +80,13 @@ static int coalesced_mmio_write(struct kvm_vcpu *vcpu,
- 	}
- 
- 	/* copy data in first free entry of the ring */
--
--	ring->coalesced_mmio[ring->last].phys_addr = addr;
--	ring->coalesced_mmio[ring->last].len = len;
--	memcpy(ring->coalesced_mmio[ring->last].data, val, len);
--	ring->coalesced_mmio[ring->last].pio = dev->zone.pio;
-+	last = ring->last % KVM_COALESCED_MMIO_MAX;
-+	ring->coalesced_mmio[last].phys_addr = addr;
-+	ring->coalesced_mmio[last].len = len;
-+	memcpy(ring->coalesced_mmio[last].data, val, len);
-+	ring->coalesced_mmio[last].pio = dev->zone.pio;
- 	smp_wmb();
--	ring->last = (ring->last + 1) % KVM_COALESCED_MMIO_MAX;
-+	ring->last = (last + 1) % KVM_COALESCED_MMIO_MAX;
- 	spin_unlock(&dev->kvm->ring_lock);
- 	return 0;
- }
--- 
-2.23.0.351.gc4317032e6-goog
+--
+Cheers,
+Luca.
 
