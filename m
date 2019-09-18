@@ -2,109 +2,107 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA253C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C38FEC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772942067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939402067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="DAMnkgK9";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cPaFNWjv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WfWRRRQJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731135AbfIRODX (ORCPT
+        id S1731195AbfIROET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:03:23 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:42744 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbfIRODS (ORCPT
+        Wed, 18 Sep 2019 10:04:19 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51715 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727004AbfIROES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:03:18 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3F60560850; Wed, 18 Sep 2019 14:03:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568815397;
-        bh=GI8g7BdcEpF2wvGvgxsUXnHFIMMx79kllp6rnPF+YEE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=DAMnkgK9yktfhC6LpBzpzRf3ErTSGwtdXaHtu9iwR99fuYwhVzPu4vbGmRe3H2j2Y
-         jV8TnVxzGPlTs1UwYl1KY4iNX5rov8FdENNkC/hj829cVAP4LVPGzp88nRSoLcGY4P
-         9mZzoR0E2zT1WDIj7kDevJD5aQQTmMiPmQbBXPaE=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8EDF0613A8;
-        Wed, 18 Sep 2019 14:03:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1568815396;
-        bh=GI8g7BdcEpF2wvGvgxsUXnHFIMMx79kllp6rnPF+YEE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=cPaFNWjv4igEjoXIw8leq53V6QydcyLRBRrA+UdRXV4uehhDiki/4NgnJLb6nW+57
-         4/gFaz9oNUtiXFXn3XbHjM6pxcIZBm40fSnTqCBa4mkVn4iB1HLbYBkI8ZzxkJixYR
-         3fs5g85v1J+uU3VCw3RBcPtfLLWXFfl7DSEYU01o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8EDF0613A8
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Brian Norris <briannorris@chromium.org>
-Cc:     Wen Gong <wgong@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        ath10k@lists.infradead.org
-Subject: Re: [PATCH v3] ath10k: support NET_DETECT WoWLAN feature
-References: <1534402113-14337-1-git-send-email-wgong@codeaurora.org>
-        <20181114225910.GA220599@google.com>
-        <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
-Date:   Wed, 18 Sep 2019 17:03:12 +0300
-In-Reply-To: <CA+ASDXMh7vdfkA5jtJqWEU-g-4Ta5Xvy046zujyASZcESCGhAQ@mail.gmail.com>
-        (Brian Norris's message of "Tue, 17 Sep 2019 09:32:52 -0700")
-Message-ID: <87woe5aehr.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 18 Sep 2019 10:04:18 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 7so248234wme.1;
+        Wed, 18 Sep 2019 07:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cB7wK5jh53B0dhxFCR/qrhHtfE6JVJ/GUCjzuGEyTXc=;
+        b=WfWRRRQJVFwRQPzH8aFSxOIHzq/Sk55lYneF69JJ+fF9bQaXq2PK7F79y2tg29gNAl
+         qk9O9EBTqLVgXUoyLIQsCvoJQV0X+WLdfXUNHsl5ZueNsONcIV8sHNbxZ6pN5Y6xVPdU
+         KgVZZXg1VMY8T00YujYyvhsejrYg0pMbvasPfqtgxTkewS0isJ+ATmYYeq/VKF/nruBa
+         SybxcOlnKwT3GF601lim/ZCzAOjt+ms0ywc7pR1h04fi1w0MWUQVyJ26JDA4Mj2BLdl2
+         yHkzALwgxeIsBC8uGwjrEcawD6raiE/4uAEeVFCuyRg5Pr4XweuhqsJ+BGhIImCRcGI/
+         g3Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cB7wK5jh53B0dhxFCR/qrhHtfE6JVJ/GUCjzuGEyTXc=;
+        b=fxGUzieVcpAXODXB/I8VQGFxDIZkoM2YX7KJEpFMPRs42kjRRJNu7gBaziELW8SjwN
+         aTJ9g8+XCetJL01Ek7mI6UKh+oir1Euhcc1QY0p7qOtxyyloQ+V62HT2W1WNg9zNFU/M
+         pOrOn0T4fUOGkhTwmEhoStD0r/39A9W6TNSyr03wnhqMVIC5C7mcbYkXifEViRNK3nL7
+         YV4mVqLRNBrU57KCpZAz8xz2mqTaTxAEn8RNR63oupFMK9utYCYmrhokjlXA1WaN+H4h
+         B1KnFKrL4Z6ExLNdNhIJ/pTM902IIJXBwkc6qe765BVoCvjNkG2mVv9USD57cdjZuTK6
+         BcwQ==
+X-Gm-Message-State: APjAAAUwk2XNzx3H8yi6ODJ585B2L3jLMZCD2C3syASHO2AjKmA9OJUu
+        h743BKjOtnS8wBlKg1iX5Gw7pKyzLYo=
+X-Google-Smtp-Source: APXvYqzLsTqjT8/wlcD9sqvhOIA8h00p1kZc5mPwnx5tNvtpVAJYor1ocWzY6xTw5xaqNcHJ2WKQAQ==
+X-Received: by 2002:a1c:7d8e:: with SMTP id y136mr2984723wmc.83.1568815456240;
+        Wed, 18 Sep 2019 07:04:16 -0700 (PDT)
+Received: from bfk-3-vm8-e4.cs.niisi.ras.ru (t109.niisi.ras.ru. [193.232.173.109])
+        by smtp.gmail.com with ESMTPSA id a13sm13725450wrf.73.2019.09.18.07.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 07:04:15 -0700 (PDT)
+From:   Peter Mamonov <pmamonov@gmail.com>
+To:     andrew@lunn.ch
+Cc:     Peter Mamonov <pmamonov@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net/phy: fix DP83865 10 Mbps HDX loopback disable function
+Date:   Wed, 18 Sep 2019 17:03:40 +0300
+Message-Id: <20190918140340.21032-1-pmamonov@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Brian Norris <briannorris@chromium.org> writes:
+According to the DP83865 datasheet "The 10 Mbps HDX loopback can be
+disabled in the expanded memory register 0x1C0.1." The driver erroneously
+used bit 0 instead of bit 1.
 
-> Since Wen has once again suggested I use this patch in other forums,
-> I'll ping here to note:
->
-> On Wed, Nov 14, 2018 at 2:59 PM Brian Norris <briannorris@chromium.org> wrote:
->> You've introduced a regression in 4.20-rc1:
->
-> This regression still survives in the latest tree. Is it fair to just
-> submit a revert?
+Signed-off-by: Peter Mamonov <pmamonov@gmail.com>
+---
+ drivers/net/phy/national.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Your description about the problem from an earlier email:
-
-  "It seems like youre enabling SCHED_SCAN support? But you're not
-   adding the NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR feature flag.
-   So it puts us in a tough place on using randomization -- we either
-   can't trust the FEATURE flags, or else we can't use both SCHED_SCAN
-   and scan randomization."
-
-So essentially the problem is that with firmwares supporting both
-WMI_SERVICE_NLO and WMI_SERVICE_SPOOF_MAC_SUPPORT ath10k enables
-NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR, but
-NL80211_FEATURE_SCHED_SCAN_RANDOM_MAC_ADDR is not enabled which is
-inconsistent from user space point of view. Is my understanding correct?
-
-Wen, can you enable NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR? Does firmware
-support that?
-
-If that's not possible, one workaround might to be to not enable
-NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR if firmware supports
-WMI_SERVICE_NLO, but of course that would suck big time.
-
-Here's the full context in case someone is interested:
-
-https://patchwork.kernel.org/patch/10567005/
-
+diff --git a/drivers/net/phy/national.c b/drivers/net/phy/national.c
+index 2addf1d3f619..4892e785dbf3 100644
+--- a/drivers/net/phy/national.c
++++ b/drivers/net/phy/national.c
+@@ -110,11 +110,14 @@ static void ns_giga_speed_fallback(struct phy_device *phydev, int mode)
+ 
+ static void ns_10_base_t_hdx_loopack(struct phy_device *phydev, int disable)
+ {
++	u16 lb_dis = 1 << 1;
++
+ 	if (disable)
+-		ns_exp_write(phydev, 0x1c0, ns_exp_read(phydev, 0x1c0) | 1);
++		ns_exp_write(phydev, 0x1c0,
++			     ns_exp_read(phydev, 0x1c0) | lb_dis);
+ 	else
+ 		ns_exp_write(phydev, 0x1c0,
+-			     ns_exp_read(phydev, 0x1c0) & 0xfffe);
++			     ns_exp_read(phydev, 0x1c0) & ~lb_dis);
+ 
+ 	pr_debug("10BASE-T HDX loopback %s\n",
+ 		 (ns_exp_read(phydev, 0x1c0) & 0x0001) ? "off" : "on");
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.23.0
+
