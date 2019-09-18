@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4ECC4CED2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC01C4CECE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D400F21920
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76BAF20678
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:22:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787754;
-	bh=aiMyOflR4wck0a8qIWZ76wu+xp3WB5tcLw1SZCJty5Y=;
+	s=default; t=1568787758;
+	bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lc8U/Bb/9K3998JsM35ycqN5x78FF3ezQRA/szXpPL55sBhofD+3NKmO11ajneJbh
-	 zAhC9LqwELgrN16OB0pKWfXjwdqHYYC+MggDe7DMhZwJVJdP6BbB7syz8hV4u/uVqX
-	 FBqx0CQPy9RlvKVyWhczN0jTOaer0g/CD77ID4ss=
+	b=VwbqH2Q2MsPg/7A+SQ4v0Lcmk5A3g1q1ERXCPV/Xy7knYEZ5QWHlJkeZIPhB9Dwqx
+	 uPyyXj7Iphlb3YnpqyR6dJEtgHp6ffNk/3RotyvNjUuHHOTHLDnAp/++Oqnxes3e+P
+	 1OTy3AuCuzItenA9PrtBgXlTtUnHBuGwb5wum9Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfIRGWd (ORCPT
+        id S1727934AbfIRGWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:22:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726335AbfIRGWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:22:30 -0400
+        id S1729422AbfIRGWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:22:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26B762196F;
-        Wed, 18 Sep 2019 06:22:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6712218AE;
+        Wed, 18 Sep 2019 06:22:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787749;
-        bh=aiMyOflR4wck0a8qIWZ76wu+xp3WB5tcLw1SZCJty5Y=;
+        s=default; t=1568787752;
+        bh=SleRud0PGUTD2fZfmYkNDJ7w5SHW52VvA1/PzL+j33k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0j6ufk6DqoDw/HyaEMbLiVB34S94fq/QwbX6Xt80P9p7zMj5Tdug1mz8+t1XMNzmL
-         DpQOPNsebP7OcIaykp0GEDh9SS3Q776mP+NXl5nzGECaUpZ0zEXOn8LlsVU9+NLjzD
-         Qmhj7XjEgKj4TbCIC9BWyHKc5UIFT3xnNsLwfTwM=
+        b=Hayv3+kMdPGpveIKttQrw0NgHK2I2VLkvb5uY3Ef/0uQVtJlptDZoM/gZC72X8zuy
+         Y9ONNJP05k9DZJBL/LWCj0e5qCONRQD9jrQIKBQmYKlO97AWgPhBkwfec5/k+P0g7o
+         XJy34JwvCBzW3qXGmop+zw5RJplf6eoUtH8HEozo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 02/50] cdc_ether: fix rndis support for Mediatek based smartphones
-Date:   Wed, 18 Sep 2019 08:18:45 +0200
-Message-Id: <20190918061223.380826741@linuxfoundation.org>
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH 4.19 20/50] genirq: Prevent NULL pointer dereference in resend_irqs()
+Date:   Wed, 18 Sep 2019 08:19:03 +0200
+Message-Id: <20190918061225.268093210@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -60,105 +60,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Bjørn Mork" <bjorn@mork.no>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit 4d7ffcf3bf1be98d876c570cab8fc31d9fa92725 ]
+commit eddf3e9c7c7e4d0707c68d1bb22cc6ec8aef7d4a upstream.
 
-A Mediatek based smartphone owner reports problems with USB
-tethering in Linux.  The verbose USB listing shows a rndis_host
-interface pair (e0/01/03 + 10/00/00), but the driver fails to
-bind with
+The following crash was observed:
 
-[  355.960428] usb 1-4: bad CDC descriptors
+  Unable to handle kernel NULL pointer dereference at 0000000000000158
+  Internal error: Oops: 96000004 [#1] SMP
+  pc : resend_irqs+0x68/0xb0
+  lr : resend_irqs+0x64/0xb0
+  ...
+  Call trace:
+   resend_irqs+0x68/0xb0
+   tasklet_action_common.isra.6+0x84/0x138
+   tasklet_action+0x2c/0x38
+   __do_softirq+0x120/0x324
+   run_ksoftirqd+0x44/0x60
+   smpboot_thread_fn+0x1ac/0x1e8
+   kthread+0x134/0x138
+   ret_from_fork+0x10/0x18
 
-The problem is a failsafe test intended to filter out ACM serial
-functions using the same 02/02/ff class/subclass/protocol as RNDIS.
-The serial functions are recognized by their non-zero bmCapabilities.
+The reason for this is that the interrupt resend mechanism happens in soft
+interrupt context, which is a asynchronous mechanism versus other
+operations on interrupts. free_irq() does not take resend handling into
+account. Thus, the irq descriptor might be already freed before the resend
+tasklet is executed. resend_irqs() does not check the return value of the
+interrupt descriptor lookup and derefences the return value
+unconditionally.
 
-No RNDIS function with non-zero bmCapabilities were known at the time
-this failsafe was added. But it turns out that some Wireless class
-RNDIS functions are using the bmCapabilities field. These functions
-are uniquely identified as RNDIS by their class/subclass/protocol, so
-the failing test can safely be disabled.  The same applies to the two
-types of Misc class RNDIS functions.
+  1):
+  __setup_irq
+    irq_startup
+      check_irq_resend  // activate softirq to handle resend irq
+  2):
+  irq_domain_free_irqs
+    irq_free_descs
+      free_desc
+        call_rcu(&desc->rcu, delayed_free_desc)
+  3):
+  __do_softirq
+    tasklet_action
+      resend_irqs
+        desc = irq_to_desc(irq)
+        desc->handle_irq(desc)  // desc is NULL --> Ooops
 
-Applying the failsafe to Communication class functions only retains
-the original functionality, and fixes the problem for the Mediatek based
-smartphone.
+Fix this by adding a NULL pointer check in resend_irqs() before derefencing
+the irq descriptor.
 
-Tow examples of CDC functional descriptors with non-zero bmCapabilities
-from Wireless class RNDIS functions are:
-
-0e8d:000a  Mediatek Crosscall Spider X5 3G Phone
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x0f
-          connection notifications
-          sends break
-          line coding and serial state
-          get/set/clear comm features
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-
-and
-
-19d2:1023  ZTE K4201-z
-
-      CDC Header:
-        bcdCDC               1.10
-      CDC ACM:
-        bmCapabilities       0x02
-          line coding and serial state
-      CDC Call Management:
-        bmCapabilities       0x03
-          call management
-          use DataInterface
-        bDataInterface          1
-      CDC Union:
-        bMasterInterface        0
-        bSlaveInterface         1
-
-The Mediatek example is believed to apply to most smartphones with
-Mediatek firmware.  The ZTE example is most likely also part of a larger
-family of devices/firmwares.
-
-Suggested-by: Lars Melin <larsm17@gmail.com>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: a4633adcdbc1 ("[PATCH] genirq: add genirq sw IRQ-retrigger")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/1630ae13-5c8e-901e-de09-e740b6a426a7@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/cdc_ether.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/drivers/net/usb/cdc_ether.c
-+++ b/drivers/net/usb/cdc_ether.c
-@@ -221,9 +221,16 @@ int usbnet_generic_cdc_bind(struct usbne
- 		goto bad_desc;
- 	}
- skip:
--	if (	rndis &&
--		header.usb_cdc_acm_descriptor &&
--		header.usb_cdc_acm_descriptor->bmCapabilities) {
-+	/* Communcation class functions with bmCapabilities are not
-+	 * RNDIS.  But some Wireless class RNDIS functions use
-+	 * bmCapabilities for their own purpose. The failsafe is
-+	 * therefore applied only to Communication class RNDIS
-+	 * functions.  The rndis test is redundant, but a cheap
-+	 * optimization.
-+	 */
-+	if (rndis && is_rndis(&intf->cur_altsetting->desc) &&
-+	    header.usb_cdc_acm_descriptor &&
-+	    header.usb_cdc_acm_descriptor->bmCapabilities) {
- 			dev_dbg(&intf->dev,
- 				"ACM capabilities %02x, not really RNDIS?\n",
- 				header.usb_cdc_acm_descriptor->bmCapabilities);
+---
+ kernel/irq/resend.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/kernel/irq/resend.c
++++ b/kernel/irq/resend.c
+@@ -36,6 +36,8 @@ static void resend_irqs(unsigned long ar
+ 		irq = find_first_bit(irqs_resend, nr_irqs);
+ 		clear_bit(irq, irqs_resend);
+ 		desc = irq_to_desc(irq);
++		if (!desc)
++			continue;
+ 		local_irq_disable();
+ 		desc->handle_irq(desc);
+ 		local_irq_enable();
 
 
