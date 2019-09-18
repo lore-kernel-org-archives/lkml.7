@@ -2,148 +2,82 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7EEC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85695C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBA120665
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B97120665
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 14:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbfIROlE (ORCPT
+        id S1731398AbfIROle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 10:41:04 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:54139 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725902AbfIROlE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 10:41:04 -0400
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A9E06200011;
-        Wed, 18 Sep 2019 14:41:00 +0000 (UTC)
-Date:   Wed, 18 Sep 2019 16:40:58 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Kamel Bouhara <kamel.bouhara@bootlin.com>
-Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Gregory Clement <gregory.clement@bootlin.com>
-Subject: Re: [PATCH] pwm: atmel: Remove platform_device_id and use only dt
- bindings
-Message-ID: <20190918144058.GN21254@piout.net>
-References: <20190918140534.23365-1-kamel.bouhara@bootlin.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918140534.23365-1-kamel.bouhara@bootlin.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 18 Sep 2019 10:41:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46290 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730029AbfIROle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 10:41:34 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 98543B76A;
+        Wed, 18 Sep 2019 14:41:30 +0000 (UTC)
+Message-ID: <1568817684.23075.10.camel@suse.com>
+Subject: Re: [PATCH 0/2] Reset realtek bluetooth devices during user suspend
+From:   Oliver Neukum <oneukum@suse.com>
+To:     Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        linux-bluetooth@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     dianders@chromium.org, Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Hui Peng <benquike@gmail.com>, linux-pm@vger.kernel.org,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Len Brown <len.brown@intel.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mans Rullgard <mans@mansr.com>, Pavel Machek <pavel@ucw.cz>,
+        YueHaibing <yuehaibing@huawei.com>
+Date:   Wed, 18 Sep 2019 16:41:24 +0200
+In-Reply-To: <20190917212702.35747-1-abhishekpandit@chromium.org>
+References: <20190917212702.35747-1-abhishekpandit@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Am Dienstag, den 17.09.2019, 14:27 -0700 schrieb Abhishek Pandit-
+Subedi:
+> On a Realtek USB bluetooth device, I wanted a simple and consistent way
+> to put the device in reset during suspend (2 reasons: to save power and
 
-On 18/09/2019 16:05:34+0200, Kamel Bouhara wrote:
-> Since commit 26202873bb51 ("avr32: remove support for AVR32
-> architecture") there is no more user of platform_device_id and we
-> should only use dt bindings
+The device really uses less power if you reset it before suspendening
+it?
+
+> disable BT as a wakeup source). Resetting it in the suspend callback
+
+Then do not enable it. Something is strange.
+
+> causes a detach and the resume callback is not called. Hence the changes
+> in this series to do the reset in suspend_noirq.
 > 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> ---
->  drivers/pwm/Kconfig     |  2 +-
->  drivers/pwm/pwm-atmel.c | 29 +++--------------------------
->  2 files changed, 4 insertions(+), 27 deletions(-)
-> 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index a7e57516959e..b51fb1a33aa2 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -44,7 +44,7 @@ config PWM_AB8500
->  
->  config PWM_ATMEL
->  	tristate "Atmel PWM support"
-> -	depends on ARCH_AT91
-> +	depends on ARCH_AT91 && OF
->  	help
->  	  Generic PWM framework driver for Atmel SoC.
->  
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index e5e1eaf372fa..a3d93d634462 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -318,19 +318,6 @@ static const struct atmel_pwm_data mchp_sam9x60_pwm_data = {
->  	},
->  };
->  
-> -static const struct platform_device_id atmel_pwm_devtypes[] = {
-> -	{
-> -		.name = "at91sam9rl-pwm",
-> -		.driver_data = (kernel_ulong_t)&atmel_sam9rl_pwm_data,
-> -	}, {
-> -		.name = "sama5d3-pwm",
-> -		.driver_data = (kernel_ulong_t)&atmel_sama5_pwm_data,
-> -	}, {
-> -		/* sentinel */
-> -	},
-> -};
-> -MODULE_DEVICE_TABLE(platform, atmel_pwm_devtypes);
-> -
->  static const struct of_device_id atmel_pwm_dt_ids[] = {
->  	{
->  		.compatible = "atmel,at91sam9rl-pwm",
-> @@ -353,14 +340,7 @@ MODULE_DEVICE_TABLE(of, atmel_pwm_dt_ids);
->  static inline const struct atmel_pwm_data *
->  atmel_pwm_get_driver_data(struct platform_device *pdev)
->  {
-> -	const struct platform_device_id *id;
-> -
-> -	if (pdev->dev.of_node)
-> -		return of_device_get_match_data(&pdev->dev);
-> -
-> -	id = platform_get_device_id(pdev);
-> -
-> -	return (struct atmel_pwm_data *)id->driver_data;
-> +	return of_device_get_match_data(&pdev->dev);
+> I looked into using PERSIST and reset on resume but those seem mainly
+> for misbehaving devices that reset themselves.
 
-The whole function is gone so you could simply call
-of_device_get_match_data from atmel_pwm_probe.
+No, not really. It is also for device that need to be reset if you use
+the RESET_RESUME quirk. But that is on resume().
+You could introduce a new flag. But the _noirq method is kind of
+a hack, as USB really cannot operate without interrupts.
 
->  }
->  
->  static int atmel_pwm_probe(struct platform_device *pdev)
-> @@ -396,10 +376,8 @@ static int atmel_pwm_probe(struct platform_device *pdev)
->  	atmel_pwm->chip.dev = &pdev->dev;
->  	atmel_pwm->chip.ops = &atmel_pwm_ops;
->  
-> -	if (pdev->dev.of_node) {
-> -		atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-> -		atmel_pwm->chip.of_pwm_n_cells = 3;
-> -	}
-> +	atmel_pwm->chip.of_xlate = of_pwm_xlate_with_flags;
-> +	atmel_pwm->chip.of_pwm_n_cells = 3;
->  
->  	atmel_pwm->chip.base = -1;
->  	atmel_pwm->chip.npwm = 4;
-> @@ -437,7 +415,6 @@ static struct platform_driver atmel_pwm_driver = {
->  		.name = "atmel-pwm",
->  		.of_match_table = of_match_ptr(atmel_pwm_dt_ids),
->  	},
-> -	.id_table = atmel_pwm_devtypes,
->  	.probe = atmel_pwm_probe,
->  	.remove = atmel_pwm_remove,
->  };
-> -- 
-> 2.23.0
-> 
+	Regards
+		Oliver
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
