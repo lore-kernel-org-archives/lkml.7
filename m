@@ -2,160 +2,226 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6B8C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A78C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6250C21924
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5977821920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 11:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tCVX5aZD"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nDUBvcRN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbfIRLJR (ORCPT
+        id S1729931AbfIRLKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 07:09:17 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46508 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726185AbfIRLJP (ORCPT
+        Wed, 18 Sep 2019 07:10:01 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41983 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbfIRLKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 07:09:15 -0400
-Received: by mail-lj1-f196.google.com with SMTP id e17so6717509ljf.13
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:09:12 -0700 (PDT)
+        Wed, 18 Sep 2019 07:10:01 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q7so4199029pfh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 04:10:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v6VDBivAx2Q88SjA44gfOPe9NoEO8jXXz9c7wXdVcf8=;
-        b=tCVX5aZD3vnvAHSrP6KOImKf10EnxZ5PUxXqH8CtrK+nKWLM/4ASeJiwnRor2JUp9M
-         ordOe7ZTyDQo7RCvgs+2/YXL+8J8UxBvCuIFEzKmaMu45QayOHaqjSBF937/7ctpskSL
-         SMgexpzILYXSH6sJwZ0wsBRDIDClNqbEZVpQFrWC05tHycojsHMNgegYYvPoUp4/2/ET
-         4kVne/wulUTxfVG8J+qaeGy0YYGDlnnDZiPhq0yWJfydeD4EamDvP6SGTvPM6JxyS0qo
-         PeqxnWX2STWki4P7QYkPFYFd7wL2TtxhQVB621Ux3JL+vYqrOBlWnxkJztBZBXZPwgvq
-         R4GQ==
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=TIBonrAou/kqYBGJ3D/jipopO+euPWjTtxCKgGWeHV4=;
+        b=nDUBvcRNoOHsnq/ANJ7DlJa95TZhwrU9I/02wwIaxgLKbyXRG4SlfJFWJ/mjhv1zZE
+         F0fnFmn4Yh/fhCYdDKT9XsHtPqttwIZDKfXRUZFcCtQKOie+yCKHdPHPblvL8AgUYOjb
+         TBmG6nLD1nyykmFcficCKja40OqTpsxenET3AJS2x2S1+6SR3M9v/TpKDNiKF6nfYhAQ
+         7lNzvt4Jj6jXzDndcArdYASBwXVQl7ATPvE+3eH7NyB765cP+0tUkT4/BzC0jSmD72va
+         TxL8rVFWScalSq3PX8BIcxAFBkBV640HuYdY7+sdff5WmSLk7odwR0X9lWNoNHaXOKXF
+         q47g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=v6VDBivAx2Q88SjA44gfOPe9NoEO8jXXz9c7wXdVcf8=;
-        b=UyBUyVd72iHVxgGmWz58+QjtVTFUfTpKy9v4TDqoUwCbL5ySMgCDAPZL6XhaB9Touk
-         LC9UU8t4Bs0ryvKKd81YGBp2uhauLcmWm0w32ry/zbD73sRU7u5zI+SWIgTqF5q5hYEh
-         cdWWmaqvjNDKDWvmVyr56DhHd9ExFozgGitsKS/aOgG//r39axQqqApWnQ3irXmFObQf
-         78PTbSvcvV3hsx+g5Srh+QWUttCg5x5ens4h9OhZac1bYF8l4kB6032O5dpe3/FxewBL
-         JJEGdJL1663czUkz7qCS6ruApxQjZsHJL35wPylD+ENoKD0aixkZwTxgZeUjXm8RUg7n
-         T85Q==
-X-Gm-Message-State: APjAAAXs6JvuHuhi97RWxMrWHaSWXd3btvVeUbVGfwR/SzMAa7Q0WLUB
-        YoFq4PnCpuKH6QjFyFN/mTylrg==
-X-Google-Smtp-Source: APXvYqz8KtQm/GaMsAS/WjsyC6R0FVH1xHo/PGvVugL2x09OJNwgmyUbA4yOBZA5j8PWCfL+yF6QCQ==
-X-Received: by 2002:a2e:9241:: with SMTP id v1mr1903624ljg.148.1568804951532;
-        Wed, 18 Sep 2019 04:09:11 -0700 (PDT)
-Received: from khorivan (168-200-94-178.pool.ukrtel.net. [178.94.200.168])
-        by smtp.gmail.com with ESMTPSA id y13sm970049ljd.51.2019.09.18.04.09.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 18 Sep 2019 04:09:10 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 14:09:08 +0300
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-Subject: Re: [PATCH v3 bpf-next 13/14] samples: bpf: makefile: add sysroot
- support
-Message-ID: <20190918110907.GE2908@khorivan>
-Mail-Followup-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        john fastabend <john.fastabend@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        clang-built-linux@googlegroups.com,
-        sergei.shtylyov@cogentembedded.com
-References: <20190916105433.11404-1-ivan.khoronzhuk@linaro.org>
- <20190916105433.11404-14-ivan.khoronzhuk@linaro.org>
- <CAEf4BzYa7mwFLZWdS0EMf4m=s88a94z6p30mxN8Q9=erpE5=Xg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzYa7mwFLZWdS0EMf4m=s88a94z6p30mxN8Q9=erpE5=Xg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=TIBonrAou/kqYBGJ3D/jipopO+euPWjTtxCKgGWeHV4=;
+        b=DQiQb6OjEIdC0tNNor5UrSW4NqpeWi5T9M1VwF/WLyxWVOHjrQwdoZI1wveEUFSoQP
+         ziqL1x+kuxNB/mDH0cWijG5JSHR3I0WXrHMRJNW47GrKUPsT8yLCLVg+efydHI5xukF8
+         okZuEDXwdqorDIHH9LIDYTopRqVK3yFFnQsxz1UyvE5kBEyobPzhe1zwla4lgS6uDMQ0
+         i6diJ/cxFOlfBB+/kzdvUHicgloERBP9N8OY4sXsIafOQ+aKawnaNkM+mKY/U0L6wrhJ
+         gF2l0w8Mo3OSg3sFf0xBfi390GbYZtlFJxKOkBB8VSPL+h/tsoJTH+qKebR0SCqRtG1S
+         GprA==
+X-Gm-Message-State: APjAAAX02dwESZWOlqA5cBsL4AAyZxilzdCA1way/4qpedTS7qZgQee0
+        gH4EJxP9yxeWbrQuk3nLwHZRFA==
+X-Google-Smtp-Source: APXvYqyqxL5VeS9eLWRFaS7Glza3we5w7+0Qxt6B/uLgCy5YxfhDZUXsl4qiWi8BATH8D6ztv33biQ==
+X-Received: by 2002:a65:648b:: with SMTP id e11mr3257766pgv.2.1568804999960;
+        Wed, 18 Sep 2019 04:09:59 -0700 (PDT)
+Received: from pragneshp.open-silicon.com ([114.143.65.226])
+        by smtp.gmail.com with ESMTPSA id x125sm7256738pfb.93.2019.09.18.04.09.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 18 Sep 2019 04:09:59 -0700 (PDT)
+From:   Pragnesh Patel <pragnesh.patel@sifive.com>
+To:     palmer@sifive.com, paul.walmsley@sifive.com
+Cc:     Pragnesh Patel <pragnesh.patel@sifive.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] spi: dt-bindings: Convert spi-sifive binding to json-schema
+Date:   Wed, 18 Sep 2019 16:38:39 +0530
+Message-Id: <1568804927-13565-1-git-send-email-pragnesh.patel@sifive.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 17, 2019 at 10:23:57PM -0700, Andrii Nakryiko wrote:
->On Mon, Sep 16, 2019 at 4:00 AM Ivan Khoronzhuk
-><ivan.khoronzhuk@linaro.org> wrote:
->>
->> Basically it only enables that was added by previous couple fixes.
->> Sysroot contains correct libs installed and its headers ofc. Useful
->
->Please, let's not use unnecessary abbreviations/slang. "Of course" is
->not too long and is a proper English, let's stick to it.
->
->> when working with NFC or virtual machine.
->>
->> Usage:
->>
->> clean (on demand)
->>     make ARCH=arm -C samples/bpf clean
->>     make ARCH=arm -C tools clean
->>     make ARCH=arm clean
->>
->> configure and install headers:
->>
->>     make ARCH=arm defconfig
->>     make ARCH=arm headers_install
->>
->> build samples/bpf:
->>     make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- samples/bpf/ \
->>     SYSROOT="path/to/sysroot"
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
->> ---
->>  samples/bpf/Makefile | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/samples/bpf/Makefile b/samples/bpf/Makefile
->> index 133123d4c7d7..57ddf055d6c3 100644
->> --- a/samples/bpf/Makefile
->> +++ b/samples/bpf/Makefile
->> @@ -194,6 +194,11 @@ TPROGS_CFLAGS += -I$(srctree)/tools/lib/
->>  TPROGS_CFLAGS += -I$(srctree)/tools/include
->>  TPROGS_CFLAGS += -I$(srctree)/tools/perf
->>
->> +ifdef SYSROOT
->> +TPROGS_CFLAGS += --sysroot=${SYSROOT}
->> +TPROGS_LDFLAGS := -L${SYSROOT}/usr/lib
->
->Please stay consistent: $() instead of ${}?
-Yes, thanks.
+Convert the spi-sifive binding to DT schema format.
 
->
->> +endif
->> +
->>  EXTRA_CXXFLAGS := $(TPROGS_CFLAGS)
->>
->>  # options not valid for C++
->> --
->> 2.17.1
->>
+Signed-off-by: Pragnesh Patel <pragnesh.patel@sifive.com>
+---
 
+Changes in v2:
+- Remove address-cells and size-cells property
+- Added valid values for sifive,fifo-depth and sifive,max-bits-per-word
+  property
+
+ .../devicetree/bindings/spi/spi-sifive.txt         | 37 ----------
+ .../devicetree/bindings/spi/spi-sifive.yaml        | 86 ++++++++++++++++++++++
+ 2 files changed, 86 insertions(+), 37 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.txt
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-sifive.yaml
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.txt b/Documentation/devicetree/bindings/spi/spi-sifive.txt
+deleted file mode 100644
+index 3f5c6e4..0000000
+--- a/Documentation/devicetree/bindings/spi/spi-sifive.txt
++++ /dev/null
+@@ -1,37 +0,0 @@
+-SiFive SPI controller Device Tree Bindings
+-------------------------------------------
+-
+-Required properties:
+-- compatible		: Should be "sifive,<chip>-spi" and "sifive,spi<version>".
+-			  Supported compatible strings are:
+-			  "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
+-			  onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
+-			  SPI v0 IP block with no chip integration tweaks.
+-			  Please refer to sifive-blocks-ip-versioning.txt for details
+-- reg			: Physical base address and size of SPI registers map
+-			  A second (optional) range can indicate memory mapped flash
+-- interrupts		: Must contain one entry
+-- interrupt-parent	: Must be core interrupt controller
+-- clocks		: Must reference the frequency given to the controller
+-- #address-cells	: Must be '1', indicating which CS to use
+-- #size-cells		: Must be '0'
+-
+-Optional properties:
+-- sifive,fifo-depth		: Depth of hardware queues; defaults to 8
+-- sifive,max-bits-per-word	: Maximum bits per word; defaults to 8
+-
+-SPI RTL that corresponds to the IP block version numbers can be found here:
+-https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
+-
+-Example:
+-	spi: spi@10040000 {
+-		compatible = "sifive,fu540-c000-spi", "sifive,spi0";
+-		reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
+-		interrupt-parent = <&plic>;
+-		interrupts = <51>;
+-		clocks = <&tlclk>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		sifive,fifo-depth = <8>;
+-		sifive,max-bits-per-word = <8>;
+-	};
+diff --git a/Documentation/devicetree/bindings/spi/spi-sifive.yaml b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+new file mode 100644
+index 0000000..140e435
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-sifive.yaml
+@@ -0,0 +1,86 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/spi/spi-sifive.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: SiFive SPI controller
++
++maintainers:
++  - Pragnesh Patel <pragnesh.patel@sifive.com>
++  - Paul Walmsley  <paul.walmsley@sifive.com>
++  - Palmer Dabbelt <palmer@sifive.com>
++
++allOf:
++  - $ref: "spi-controller.yaml#"
++
++properties:
++  compatible:
++    items:
++      - const: sifive,fu540-c000-spi
++      - const: sifive,spi0
++
++    description:
++      Should be "sifive,<chip>-spi" and "sifive,spi<version>".
++      Supported compatible strings are -
++      "sifive,fu540-c000-spi" for the SiFive SPI v0 as integrated
++      onto the SiFive FU540 chip, and "sifive,spi0" for the SiFive
++      SPI v0 IP block with no chip integration tweaks.
++      Please refer to sifive-blocks-ip-versioning.txt for details
++
++      SPI RTL that corresponds to the IP block version numbers can be found here -
++      https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/spi
++
++  reg:
++    maxItems: 1
++
++    description:
++      Physical base address and size of SPI registers map
++      A second (optional) range can indicate memory mapped flash
++
++  interrupts:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++    description:
++      Must reference the frequency given to the controller
++
++  sifive,fifo-depth:
++    description:
++      Depth of hardware queues; defaults to 8
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [ 8 ]
++      - default: 8
++
++  sifive,max-bits-per-word:
++    description:
++      Maximum bits per word; defaults to 8
++    allOf:
++      - $ref: "/schemas/types.yaml#/definitions/uint32"
++      - enum: [ 0, 1, 2, 3, 4, 5, 6, 7, 8 ]
++      - default: 8
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++
++examples:
++  - |
++    spi: spi@10040000 {
++      compatible = "sifive,fu540-c000-spi", "sifive,spi0";
++      reg = <0x0 0x10040000 0x0 0x1000 0x0 0x20000000 0x0 0x10000000>;
++      interrupt-parent = <&plic>;
++      interrupts = <51>;
++      clocks = <&tlclk>;
++      #address-cells = <1>;
++      #size-cells = <0>;
++      sifive,fifo-depth = <8>;
++      sifive,max-bits-per-word = <8>;
++    };
++
++...
 -- 
-Regards,
-Ivan Khoronzhuk
+2.7.4
+
