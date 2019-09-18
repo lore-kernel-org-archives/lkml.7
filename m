@@ -2,183 +2,103 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82716C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:28:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F31C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B79C208C0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:28:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXFUoMVf"
+	by mail.kernel.org (Postfix) with ESMTP id 3883821924
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 17:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568827743;
+	bh=M7SNZBXcCiFOmpNM1RhyX6kmDyGHg4qu/nFa+CO6J5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YZMT4M9TApxauIdmNDMB3ssofT6lQdRzJBRkcz2N5rhGYiy3dRJLpH8CRDzpEjXdt
+	 CyrHPq83qvhhzxxWHZjDJ6djcqpl07HyATI9uD8sDkQYDdI/Wi6SsFokGwajfcNleX
+	 U+LXX5EnjDUmwpSlSHxRFBinGFyR7X8qkT+hcwTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387428AbfIRR2j (ORCPT
+        id S2387536AbfIRR3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 13:28:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44061 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729319AbfIRR2i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 13:28:38 -0400
-Received: by mail-pl1-f195.google.com with SMTP id q15so257108pll.11;
-        Wed, 18 Sep 2019 10:28:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3Yblg+LB3V/R3GdNlbQif00/TPj0swNUNYsErjlgIhk=;
-        b=HXFUoMVf9oYz5skz3MXc8uOX2c+LVWUkc+AnYLuxa+VPe4GMYiTSJZRTduFYB90vYA
-         wsF/clRsQJpZgHxDCYENhzvfpsJuWYpdZswM/OE2TpT7C74RKshiWkUGMlwWq5ERjR8U
-         dbozY19G4vKTB+A+M9xrLHMkmqzurVlBzXt5gglIlxmkFp4pjw5TIo3rdSakni6zodzg
-         RnaKIm4r9H2WCyRfgZ6B52RR09/dnQ6S+Ri4h91KhOl/oDT/037dTsuM1m+157PenJor
-         U//lr+7bYy+A5b9MWMO4lUqBqNvjZghw0wfCegy+lZNzsPsHtTUQlZPEC8SNspurvWfJ
-         keZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3Yblg+LB3V/R3GdNlbQif00/TPj0swNUNYsErjlgIhk=;
-        b=Qlnaxp7Gr9ixmXCkl4meMd5/u7bIr2gPI2r7P6E7c6Eo4LxYeRulah7+Nygp3Yxlf3
-         ceto7gRDGR5mKLT8OuGlQdArD3L4/WDNQSYZPzv7pD04S66DHwrkdlQCNRzgfCbBKnzv
-         ZnbzsuhJe12b1tC6mV2il/iHbGuxYQXTePaH2ijr6w899rPBe6zzL7yu8ajT00S0yrx2
-         tXpzI3Vw3jDP3GK0rsS+DN8HFhMjQiuwJ6nAyUFCzRXlFVxP5WbMiY1Ds4W6g74f/F6Z
-         RDbd5QqGxyQwopxTiUTBdFnlLIx6JkktYh2DFnkz0T8NWVnQL/Yw7OoZ+RGlfUJUSHbt
-         3EOQ==
-X-Gm-Message-State: APjAAAUBWJWqdT1HfQbJEkno6zwVoJAP28tarNJOrp8J0x+O9cqnMGRd
-        hPkI/kXaFT34M88RrvqgQgd2htq6
-X-Google-Smtp-Source: APXvYqxgZ752VxRN/due03VPsQCrS1XF3ptF4c7Qi7o+2sjsIsCmJ3TdigcZ8OdrVxhX8iv+SHQpPQ==
-X-Received: by 2002:a17:902:bd41:: with SMTP id b1mr5374116plx.174.1568827717447;
-        Wed, 18 Sep 2019 10:28:37 -0700 (PDT)
-Received: from SD ([2405:204:828a:aaec:f0de:d7f9:abdf:1568])
-        by smtp.gmail.com with ESMTPSA id q42sm3385855pja.16.2019.09.18.10.28.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 10:28:36 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 22:58:23 +0530
-From:   Saiyam Doshi <saiyamdoshi.in@gmail.com>
-To:     ludovic.desroches@microchip.com, ulf.hansson@linaro.org,
-        nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mmc: host: atmel-mci: assign false/true to bool variable
-Message-ID: <20190918172823.GA28786@SD>
+        Wed, 18 Sep 2019 13:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729319AbfIRR3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 13:29:02 -0400
+Received: from C02WT3WMHTD6 (unknown [8.36.226.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D55BB208C0;
+        Wed, 18 Sep 2019 17:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1568827741;
+        bh=M7SNZBXcCiFOmpNM1RhyX6kmDyGHg4qu/nFa+CO6J5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1t5g0jOYSizU0QAnxEcRb0YGK1Fa0yF/Sa4zBR6ZOzFbOJW1G32upZ9VbqXRgm/Ka
+         1lD6GlVA7SNvHCgqk3OKQmROEglF1emr5Fhs+z+T+69nfpPoMf6hw5RDNxKjQlSZfT
+         4RscS47PEHrlFiExw8REs7biCMuAUU/vO5SQBZLo=
+Date:   Wed, 18 Sep 2019 11:28:59 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Mario Limonciello <mario.limonciello@dell.com>
+Cc:     Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ryan Hong <Ryan.Hong@Dell.com>, Crag Wang <Crag.Wang@dell.com>,
+        sjg@google.com, Jared Dominguez <jared.dominguez@dell.com>
+Subject: Re: [PATCH] nvme-pci: Save PCI state before putting drive into
+ deepest state
+Message-ID: <20190918172859.GA51420@C02WT3WMHTD6>
+References: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1568245353-13787-1-git-send-email-mario.limonciello@dell.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use false/true instead of 0/1 in bool variable assignment.
+On Wed, Sep 11, 2019 at 06:42:33PM -0500, Mario Limonciello wrote:
+> ---
+>  drivers/nvme/host/pci.c | 13 +++++++------
+>  1 file changed, 7 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+> index 732d5b6..9b3fed4 100644
+> --- a/drivers/nvme/host/pci.c
+> +++ b/drivers/nvme/host/pci.c
+> @@ -2894,6 +2894,13 @@ static int nvme_suspend(struct device *dev)
+>  	if (ret < 0)
+>  		goto unfreeze;
+>  
+> +	/*
+> +	 * A saved state prevents pci pm from generically controlling the
+> +	 * device's power. If we're using protocol specific settings, we don't
+> +	 * want pci interfering.
+> +	 */
+> +	pci_save_state(pdev);
+> +
+>  	ret = nvme_set_power_state(ctrl, ctrl->npss);
+>  	if (ret < 0)
+>  		goto unfreeze;
+> @@ -2908,12 +2915,6 @@ static int nvme_suspend(struct device *dev)
+>  		ret = 0;
+>  		goto unfreeze;
 
-This fixes below coccicheck warning.
-"WARNING: Assignment of 0/1 to bool variable"
+We would need to clear the saved state here, though. You can also
+infact remove the unfreeze label and goto.
 
-Generated by: scripts/coccinelle/misc/boolinit.cocci
-
-More information about semantic patching is available at
-http://coccinelle.lip6.fr/
-
-Signed-off-by: Saiyam Doshi <saiyamdoshi.in@gmail.com>
----
- drivers/mmc/host/atmel-mci.c | 50 ++++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-index c26fbe5f2222..91088b1712ae 100644
---- a/drivers/mmc/host/atmel-mci.c
-+++ b/drivers/mmc/host/atmel-mci.c
-@@ -706,7 +706,7 @@ static void atmci_timeout_timer(struct timer_list *t)
- 		host->mrq->cmd->error = -ETIMEDOUT;
- 		host->cmd = NULL;
- 	}
--	host->need_reset = 1;
-+	host->need_reset = true;
- 	host->state = STATE_END_REQUEST;
- 	smp_wmb();
- 	tasklet_schedule(&host->tasklet);
-@@ -1610,7 +1610,7 @@ static void atmci_command_complete(struct atmel_mci *host,
- 	else if (host->mrq->data && (host->mrq->data->blksz & 3)) {
- 		if (host->caps.need_blksz_mul_4) {
- 			cmd->error = -EINVAL;
--			host->need_reset = 1;
-+			host->need_reset = true;
- 		}
- 	} else
- 		cmd->error = 0;
-@@ -2396,45 +2396,45 @@ static void atmci_get_cap(struct atmel_mci *host)
- 	dev_info(&host->pdev->dev,
- 			"version: 0x%x\n", version);
- 
--	host->caps.has_dma_conf_reg = 0;
--	host->caps.has_pdc = 1;
--	host->caps.has_cfg_reg = 0;
--	host->caps.has_cstor_reg = 0;
--	host->caps.has_highspeed = 0;
--	host->caps.has_rwproof = 0;
--	host->caps.has_odd_clk_div = 0;
--	host->caps.has_bad_data_ordering = 1;
--	host->caps.need_reset_after_xfer = 1;
--	host->caps.need_blksz_mul_4 = 1;
--	host->caps.need_notbusy_for_read_ops = 0;
-+	host->caps.has_dma_conf_reg = false;
-+	host->caps.has_pdc = true;
-+	host->caps.has_cfg_reg = false;
-+	host->caps.has_cstor_reg = false;
-+	host->caps.has_highspeed = false;
-+	host->caps.has_rwproof = false;
-+	host->caps.has_odd_clk_div = false;
-+	host->caps.has_bad_data_ordering = true;
-+	host->caps.need_reset_after_xfer = true;
-+	host->caps.need_blksz_mul_4 = true;
-+	host->caps.need_notbusy_for_read_ops = false;
- 
- 	/* keep only major version number */
- 	switch (version & 0xf00) {
- 	case 0x600:
- 	case 0x500:
--		host->caps.has_odd_clk_div = 1;
-+		host->caps.has_odd_clk_div = true;
- 		/* Fall through */
- 	case 0x400:
- 	case 0x300:
--		host->caps.has_dma_conf_reg = 1;
--		host->caps.has_pdc = 0;
--		host->caps.has_cfg_reg = 1;
--		host->caps.has_cstor_reg = 1;
--		host->caps.has_highspeed = 1;
-+		host->caps.has_dma_conf_reg = true;
-+		host->caps.has_pdc = false;
-+		host->caps.has_cfg_reg = true;
-+		host->caps.has_cstor_reg = true;
-+		host->caps.has_highspeed = true;
- 		/* Fall through */
- 	case 0x200:
--		host->caps.has_rwproof = 1;
--		host->caps.need_blksz_mul_4 = 0;
--		host->caps.need_notbusy_for_read_ops = 1;
-+		host->caps.has_rwproof = true;
-+		host->caps.need_blksz_mul_4 = false;
-+		host->caps.need_notbusy_for_read_ops = true;
- 		/* Fall through */
- 	case 0x100:
--		host->caps.has_bad_data_ordering = 0;
--		host->caps.need_reset_after_xfer = 0;
-+		host->caps.has_bad_data_ordering = false;
-+		host->caps.need_reset_after_xfer = false;
- 		/* Fall through */
- 	case 0x0:
- 		break;
- 	default:
--		host->caps.has_pdc = 0;
-+		host->caps.has_pdc = false;
- 		dev_warn(&host->pdev->dev,
- 				"Unmanaged mci version, set minimum capabilities\n");
- 		break;
--- 
-2.20.1
-
+>  	}
+> -	/*
+> -	 * A saved state prevents pci pm from generically controlling the
+> -	 * device's power. If we're using protocol specific settings, we don't
+> -	 * want pci interfering.
+> -	 */
+> -	pci_save_state(pdev);
+>  unfreeze:
+>  	nvme_unfreeze(ctrl);
+>  	return ret;
+> -- 
