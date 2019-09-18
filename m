@@ -4,52 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD46BC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AC8C4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A138021925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD5C21920
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787932;
-	bh=ZTUphmE03XaBp9fDIUsiN3a9wnL7X2zb0W0aAFjFfLA=;
+	s=default; t=1568787937;
+	bh=wauRTjmGo+4c67cB3j2p7Ym9wqqe6uvtDzztz9dU+UE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=exZfc6z2/YQuxI5aFFBozNiyZlOltUxa0aQogXw3vVwGmBba3/HJpeNrCJAsoeB79
-	 8a+5JgNdFUvYT9MM7S0rGGg6I3nqF/I592zuDIVdcoL9FMDtCBsh106ralBXXV2oyF
-	 uYAOGCGjhYvvlSKK400lUuiwR/5FB05HyRDCJR24=
+	b=cflvhW+YpHW13RIFqxvRmZVuGFHFnyTz15vY1Np3xMy2j1Cs8q0j9/qIt/zmV5BCe
+	 WarHPBsbrXSnN3s7TP0rRJoD/v1rfEz19p9isJWKQ9BU9lwe07XiNKfjwiMliZeC4E
+	 i2VfAcbTA966R/ZxAaUOQ9Kcn8ZQ9eHTTkqGjUpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfIRGZb (ORCPT
+        id S1730151AbfIRGZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:25:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46418 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730119AbfIRGZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:25:28 -0400
+        id S1727374AbfIRGZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:25:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D97021920;
-        Wed, 18 Sep 2019 06:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9836E21924;
+        Wed, 18 Sep 2019 06:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787927;
-        bh=ZTUphmE03XaBp9fDIUsiN3a9wnL7X2zb0W0aAFjFfLA=;
+        s=default; t=1568787930;
+        bh=wauRTjmGo+4c67cB3j2p7Ym9wqqe6uvtDzztz9dU+UE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mNQeiOhmWNv5dILYSRAe3CqtPIHPRK99kznBJ0yQ2Cb2SbNdvqEciO62HL0RjCxiM
-         JA6w85qCrTLN7U7VWAZLKGXWUO3vkIXVf7M/C7mG3C5ptNgaPr5AX81GenMzaDzxEu
-         wVp9hvvIe/EuKR5gOyBOmjieU7B80exNLdhjLwz8=
+        b=ifcxeVZnhR7JWelXAyZzUTqgjHH+zPH2Fhbum2O7Gqc9vTQ+G/SaGZRmy9uNH8cKe
+         FHPfwhNk+qq+VH7JSQ8L162+6IijnwanJl4s1f9lk2v1AAtfAzfplQwZ6g8rEsxoxC
+         I2u1ApMt/pRBoQ1adsHNnpyU4nYqGT9+X61oGSBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Ekstrand <jason@jlekstrand.net>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        denys.kostin@globallogic.com,
-        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.2 34/85] drm/i915: Restore relaxed padding (OCL_OOB_SUPPRES_ENABLE) for skl+
-Date:   Wed, 18 Sep 2019 08:18:52 +0200
-Message-Id: <20190918061235.226630357@linuxfoundation.org>
+        stable@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Stafford Horne <shorne@gmail.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Ley Foon Tan <lftan@altera.com>,
+        Richard Kuo <rkuo@codeaurora.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Guo Ren <guoren@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH 5.2 35/85] ipc: fix semtimedop for generic 32-bit architectures
+Date:   Wed, 18 Sep 2019 08:18:53 +0200
+Message-Id: <20190918061235.256229463@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
 References: <20190918061234.107708857@linuxfoundation.org>
@@ -62,51 +69,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 2eb0964eec5f1d99f9eaf4963eee267acc72b615 upstream.
+commit 78e05972c5e6c8e9ca4c00ccc6985409da69f904 upstream.
 
-This bit was fliped on for "syncing dependencies between camera and
-graphics". BSpec has no recollection why, and it is causing
-unrecoverable GPU hangs with Vulkan compute workloads.
+As Vincent noticed, the y2038 conversion of semtimedop in linux-5.1
+broke when commit 00bf25d693e7 ("y2038: use time32 syscall names on
+32-bit") changed all system calls on all architectures that take
+a 32-bit time_t to point to the _time32 implementation, but left out
+semtimedop in the asm-generic header.
 
->From BSpec, setting bit5 to 0 enables relaxed padding requirements for
-buffers, 1D and 2D non-array, non-MSAA, non-mip-mapped linear surfaces;
-and *must* be set to 0h on skl+ to ensure "Out of Bounds" case is
-suppressed.
+This affects all 32-bit architectures using asm-generic/unistd.h:
+h8300, unicore32, openrisc, nios2, hexagon, c6x, arc, nds32 and csky.
 
-Reported-by: Jason Ekstrand <jason@jlekstrand.net>
-Suggested-by: Jason Ekstrand <jason@jlekstrand.net>
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=110998
-Fixes: 8424171e135c ("drm/i915/gen9: h/w w/a: syncing dependencies between camera and graphics")
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Tested-by: denys.kostin@globallogic.com
-Cc: Jason Ekstrand <jason@jlekstrand.net>
-Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Cc: <stable@vger.kernel.org> # v4.1+
-Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190904100707.7377-1-chris@chris-wilson.co.uk
-(cherry picked from commit 9d7b01e93526efe79dbf75b69cc5972b5a4f7b37)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+The notable exception is riscv32, which has dropped support for the
+time32 system calls entirely.
+
+Reported-by: Vincent Chen <deanbo422@gmail.com>
+Cc: stable@vger.kernel.org
+Cc: Vincent Chen <deanbo422@gmail.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Guan Xuetao <gxt@pku.edu.cn>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: Richard Kuo <rkuo@codeaurora.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Guo Ren <guoren@kernel.org>
+Fixes: 00bf25d693e7 ("y2038: use time32 syscall names on 32-bit")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_workarounds.c |    5 -----
- 1 file changed, 5 deletions(-)
+ include/uapi/asm-generic/unistd.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i915/intel_workarounds.c
-+++ b/drivers/gpu/drm/i915/intel_workarounds.c
-@@ -294,11 +294,6 @@ static void gen9_ctx_workarounds_init(st
- 			  FLOW_CONTROL_ENABLE |
- 			  PARTIAL_INSTRUCTION_SHOOTDOWN_DISABLE);
- 
--	/* Syncing dependencies between camera and graphics:skl,bxt,kbl */
--	if (!IS_COFFEELAKE(i915))
--		WA_SET_BIT_MASKED(HALF_SLICE_CHICKEN3,
--				  GEN9_DISABLE_OCL_OOB_SUPPRESS_LOGIC);
--
- 	/* WaEnableYV12BugFixInHalfSliceChicken7:skl,bxt,kbl,glk,cfl */
- 	/* WaEnableSamplerGPGPUPreemptionSupport:skl,bxt,kbl,cfl */
- 	WA_SET_BIT_MASKED(GEN9_HALF_SLICE_CHICKEN7,
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -569,7 +569,7 @@ __SYSCALL(__NR_semget, sys_semget)
+ __SC_COMP(__NR_semctl, sys_semctl, compat_sys_semctl)
+ #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
+ #define __NR_semtimedop 192
+-__SC_COMP(__NR_semtimedop, sys_semtimedop, sys_semtimedop_time32)
++__SC_3264(__NR_semtimedop, sys_semtimedop_time32, sys_semtimedop)
+ #endif
+ #define __NR_semop 193
+ __SYSCALL(__NR_semop, sys_semop)
 
 
