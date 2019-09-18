@@ -2,87 +2,112 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA6DC4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D40FC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69EF920856
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:07:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568786857;
-	bh=Ts05YE0IjGolvN6Z7Hv/3J3qFt2qBGevkokf4x6n7e0=;
-	h=In-Reply-To:References:Cc:To:From:Subject:Date:List-ID:From;
-	b=fDQFsNjGFRM6S/LqLbPrfHDfDmWGJxYiy23s94MSOpobkK3KRyB+AiWmNJ9TnUW8q
-	 fK7ndcFQahBrw+u6BmAlP5oSwKW5TfHB551DQE0lN6WcpPH0gD6mHl6CduJsylHhwb
-	 QdMfqhwxB3/LTAhdtZPFAWZQ8VFVDcky+CUBrBI0=
+	by mail.kernel.org (Postfix) with ESMTP id D6A74218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:10:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T+rtTKk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbfIRGHg (ORCPT
+        id S1726705AbfIRGKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbfIRGHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:07:35 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B90EA20856;
-        Wed, 18 Sep 2019 06:07:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568786854;
-        bh=Ts05YE0IjGolvN6Z7Hv/3J3qFt2qBGevkokf4x6n7e0=;
-        h=In-Reply-To:References:Cc:To:From:Subject:Date:From;
-        b=VdmBBFmXgopq7WcGmLHBMOdq5W0g7H88njURoDcrLWaKfJehCItaEm+WjAX/cGPj0
-         aHSQG2CE+Csjnw3ZTuB0GlFyoXYDY42es+HDJhbIQ7LvhScgwRUvAMXNf/UCej6nTF
-         ImrBB8oBgAcQcaYSzx7PFhDUTBYCi+PaevSVcNc8=
-Content-Type: text/plain; charset="utf-8"
+        Wed, 18 Sep 2019 02:10:21 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36356 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbfIRGKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:10:20 -0400
+Received: by mail-ua1-f68.google.com with SMTP id r25so1960013uam.3
+        for <linux-kernel@vger.kernel.org>; Tue, 17 Sep 2019 23:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xTBwbLii9b70VDIiu2pkAKMCAWF61Wo+h6WzPYHryB4=;
+        b=T+rtTKk5TFAHOQsUgV/It9GsfiXKaB+bhfa5dN/sLkCoY4OmhkyktixzO9f+8YwHkk
+         cEwMurZ/Mg+6d/IyWE/VoTFh6ibwd0Mwl6dha6HSGU+9F+3oa3E4SG8ssP4tJD2gAj2Z
+         CgfhsGf+P+xpNd67ACMjlLHF9Vo5pLWNL+0rS9zkvOMFSZdZhpHuEdLXnjGXRBDdZa05
+         gMHUHQCZdMtNI95/7aMMVk9PajYLgBwdgoxrI69ssFUOuabdzO4bzrjNDV04fRzwiUtG
+         OU6mo3S5DUmnJ0GDQ58haSoMZ17PjkKDKF6Z+zaNrgrM1JI3wMct87apJQWCU/YgECc4
+         x8Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xTBwbLii9b70VDIiu2pkAKMCAWF61Wo+h6WzPYHryB4=;
+        b=lM+TN958O1gQUGGDLTFV8FRmWiKdMpZVS1z7BdjLMtQRWemRRqCNZr31WqUBaj73MI
+         nbmPf05raR4kIZMztrxLJ6UBWRSeoKma9kIqUxvgHxulKpUpyXxsisFFWtgyY2/4/qeD
+         O9H1iw3OqsqtEiqMytUMa6bzJED3rMPMEgbCVEFFPI8o0QpGxCjceoej8UDVavC7YEmp
+         oNyY1rwU2zppm+SjzeruQDpM0lstNm+ycU9QqnekehG+MbYmPYZG4dNnDbOpEfvFeWSK
+         jCvOuJ4+EmRT18028AcS22SafE/jcgJrUbGuL4l9KSIvgk5Lw7JoU0rq7BL0IZL+nJhE
+         7/2g==
+X-Gm-Message-State: APjAAAVfdlLRrbIGcwKXMAcGzOz/8Cm6SK0wykU57w025YF0wSmRSriX
+        WyDPFy/2fDa0wwC9w/gIIuDa6xfHfKJwNLD83om3rA==
+X-Google-Smtp-Source: APXvYqw3WNN2Dndv9EUbQn4aZiKazwu1E6YluB67ZhBYYekBU3g4MWLJvI2vAwQzbc1TVbrUGcur2tykCtit3Ev9e/k=
+X-Received: by 2002:ab0:1856:: with SMTP id j22mr1425618uag.19.1568787019751;
+ Tue, 17 Sep 2019 23:10:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1568043491-20680-5-git-send-email-peng.fan@nxp.com>
-References: <1568043491-20680-1-git-send-email-peng.fan@nxp.com> <1568043491-20680-5-git-send-email-peng.fan@nxp.com>
-Cc:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>
-To:     "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V3 4/4] clk: imx: imx8mn: fix pll mux bit
-User-Agent: alot/0.8.1
-Date:   Tue, 17 Sep 2019 23:07:33 -0700
-Message-Id: <20190918060734.B90EA20856@mail.kernel.org>
+References: <20190917165148.19146-1-paolo.valente@linaro.org>
+ <20190917165148.19146-3-paolo.valente@linaro.org> <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190917213209.GK3084169@devbig004.ftw2.facebook.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 18 Sep 2019 08:09:42 +0200
+Message-ID: <CAPDyKFrHeEb77F-U3W1HdSj3_rrMyi66XCt73By3OoLOVa65bQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] block, bfq: delete "bfq" prefix from cgroup filenames
+To:     Tejun Heo <tj@kernel.org>, Paolo Valente <paolo.valente@linaro.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "'Paolo Valente' via bfq-iosched" <bfq-iosched@googlegroups.com>,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        cgroups@vger.kernel.org, Angelo Ruocco <angeloruocco90@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Peng Fan (2019-09-08 20:39:50)
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> pll BYPASS bit should be kept inside pll driver for glitchless freq
-> setting following spec. If exposing the bit, that means pll driver and
-> clk driver has two paths to touch this bit, which is wrong.
->=20
-> So use EXT_BYPASS bit here.
->=20
-> And drop uneeded set parent, because EXT_BYPASS default is 0.
->=20
-> Suggested-by: Jacky Bai <ping.bai@nxp.com>
-> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
+Tejun, Paolo,
 
-Applied to clk-next
+On Tue, 17 Sep 2019 at 23:32, Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
+>
+> On Tue, Sep 17, 2019 at 06:51:48PM +0200, Paolo Valente wrote:
+> > When bfq was merged into mainline, there were two I/O schedulers that
+> > implemented the proportional-share policy: bfq for blk-mq and cfq for
+> > legacy blk. bfq's interface files in the blkio/io controller have the
+> > same names as cfq. But the cgroups interface doesn't allow two
+> > entities to use the same name for their files, so for bfq we had to
+> > prepend the "bfq" prefix to each of its files. However no legacy code
+> > uses these modified file names. This naming also causes confusion, as,
+> > e.g., in [1].
+> >
+> > Now cfq has gone with legacy blk, so there is no need any longer for
+> > these prefixes in (the never used) bfq names. In view of this fact, this
+> > commit removes these prefixes, thereby enabling legacy code to truly
+> > use the proportional share policy in blk-mq.
+>
+> So, I wrote the iocost switching patch and don't have a strong
+> interest in whether bfq prefix should get dropped or not.  However, I
+> gotta point out that flipping interface this way is way out of the
+> norm.
+>
+> In the previous release cycle, the right thing to do was dropping the
+> bfq prefix but that wasn't possible because bfq's interface wasn't
+> compatible at that point and didn't made to be compatible in time.
 
+Sounds like we really should send those relevant patches for stable,
+to set the correct ground. Then using a symlink, to make sure we don't
+brake current ABI, right?
+
+[...]
+
+Kind regards
+Uffe
