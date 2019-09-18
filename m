@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEAFC4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B69C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0E521906
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F48B218AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788284;
-	bh=5Vtueu3XOmcdJMAZnPT9Mk4QioY6y6yKN0jhiCOdqF4=;
+	s=default; t=1568788288;
+	bh=MPecN1z7vc91+2Cgwuyp6cqCPNut/TxFlHXhIbxhVzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvepwfweT+KK0UIrKNbN6sx376fLBzk2ZDmd/KHArUPgVorKsOPxcBpKG7Sl1Uztz
-	 /E4R8Ap2NX6ERKBriSFRnduucGRCnvObgIMx1VVyZ3TW/btL/84FeRigwc/BgNzbm/
-	 I0CtveTjAF/ppXCJZ+aPyCJW55Wx/7Ip1AEpLmKc=
+	b=QRut9OCF4bADyOQ9cBhE4aM7YqrOuWiRYbiCFn/+HEC6+ZMKT9F0eP3HpkWJAL73O
+	 dsLcCJDOGigsCJQl+2Fdm9ore78mNFEgiZTQX+bf6XfGO0710+EiiaqgX+KORTSDTg
+	 mnJCK9O6ZIx8FJym/D+4uj7bVxErpOvmZS5Dq9lI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbfIRGX1 (ORCPT
+        id S1730201AbfIRGb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43432 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:31:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbfIRGXQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:16 -0400
+        id S1729601AbfIRGX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DE6321927;
-        Wed, 18 Sep 2019 06:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 023EF21927;
+        Wed, 18 Sep 2019 06:23:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787794;
-        bh=5Vtueu3XOmcdJMAZnPT9Mk4QioY6y6yKN0jhiCOdqF4=;
+        s=default; t=1568787805;
+        bh=MPecN1z7vc91+2Cgwuyp6cqCPNut/TxFlHXhIbxhVzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RHWAv9MbjyGxtQLKWpaY1rrGsHRYW3J9+wDUnEZqGUfwljOwa+H+AezvFmtgy3beJ
-         RqMqDWtnNdU5CWa3q/OfGuEh0NXEUQjVsW3W8BPxJUetaJ+xxv4UcGQeAUYxUmJ9oV
-         5xbU/BP+TnkM1SOXJsTWab0eC1R/7lFW8pq64IFo=
+        b=etN2fxQhSRnJZ3rxMy/vPRaXLPwfsQuTeMOA48k3OZ+1Be5FsQEjgeukdILloUoYg
+         qkR42TX2WexFXeqEYyWtS6nwyXX6bvDdj8QdUheiDdR2QKTZ/SPhr+H9u3huSTTrBO
+         4XufUJKnsCc1UVqF6k4WkvXUmIg0DoPiPwrDnDpA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 4.19 37/50] crypto: talitos - fix ECB algs ivsize
-Date:   Wed, 18 Sep 2019 08:19:20 +0200
-Message-Id: <20190918061227.439481127@linuxfoundation.org>
+        stable@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 4.19 41/50] drm: panel-orientation-quirks: Add extra quirk table entry for GPD MicroPC
+Date:   Wed, 18 Sep 2019 08:19:24 +0200
+Message-Id: <20190918061227.841458313@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,30 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit d84cc9c9524ec5973a337533e6d8ccd3e5f05f2b upstream.
+commit dae1ccee012ea7514af8e4a88429844157aca7dc upstream.
 
-ECB's ivsize must be 0.
+Newer GPD MicroPC BIOS versions have proper DMI strings, add an extra quirk
+table entry for these new strings. This is good news, as this means that we
+no longer have to update the BIOS dates list with every BIOS update.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 5e75ae1b3cef ("crypto: talitos - add new crypto modes")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 652b8b086538("drm: panel-orientation-quirks: Add quirk for GPD MicroPC")
+Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190624154014.8557-2-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/talitos.c |    1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/drm_panel_orientation_quirks.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/crypto/talitos.c
-+++ b/drivers/crypto/talitos.c
-@@ -2750,7 +2750,6 @@ static struct talitos_alg_template drive
- 			.cra_ablkcipher = {
- 				.min_keysize = AES_MIN_KEY_SIZE,
- 				.max_keysize = AES_MAX_KEY_SIZE,
--				.ivsize = AES_BLOCK_SIZE,
- 				.setkey = ablkcipher_aes_setkey,
- 			}
+--- a/drivers/gpu/drm/drm_panel_orientation_quirks.c
++++ b/drivers/gpu/drm/drm_panel_orientation_quirks.c
+@@ -82,6 +82,12 @@ static const struct drm_dmi_panel_orient
+ 	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
+ };
+ 
++static const struct drm_dmi_panel_orientation_data lcd720x1280_rightside_up = {
++	.width = 720,
++	.height = 1280,
++	.orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,
++};
++
+ static const struct drm_dmi_panel_orientation_data lcd800x1280_rightside_up = {
+ 	.width = 800,
+ 	.height = 1280,
+@@ -109,6 +115,12 @@ static const struct dmi_system_id orient
+ 		  DMI_EXACT_MATCH(DMI_BOARD_NAME, "Default string"),
  		},
+ 		.driver_data = (void *)&gpd_micropc,
++	}, {	/* GPD MicroPC (later BIOS versions with proper DMI strings) */
++		.matches = {
++		  DMI_EXACT_MATCH(DMI_SYS_VENDOR, "GPD"),
++		  DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "MicroPC"),
++		},
++		.driver_data = (void *)&lcd720x1280_rightside_up,
+ 	}, {	/*
+ 		 * GPD Pocket, note that the the DMI data is less generic then
+ 		 * it seems, devices with a board-vendor of "AMI Corporation"
 
 
