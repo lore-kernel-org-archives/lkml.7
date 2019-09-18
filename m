@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACE4C4CED0
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942EC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C6C21925
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27AF8218AE
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788266;
-	bh=NCc38KdKeBnKyP2Odg4PeFPlwltuIx2bv95xeUk0ld0=;
+	s=default; t=1568788271;
+	bh=H9w7/0BvPXj3hhUYfRuW3ve7SbHYUQvWQsY+jCmbvoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5rmaMKWCB784FcFuYzfVn5eybmtyRMUG54UGmiMfnHGL7LqMPM7pkzmW6Zszfkn9
-	 9fpynkL75U0oD4aMg/CR4rMtLDlk4gieQIjfBwG0UaG4Fn5+B0FOpGbbgiOf+1n8bb
-	 IhVMGl+ynTNPTUgm8LtqHG1MXmZtb3NyGx0TlOw4=
+	b=bn2gyMJOz1JJCsEkpGz735W5MAQGcOeY+q/1mmyQmLpwLm24rQ/SPbRDfDNW6uTIk
+	 dIOAcq4ToYqWrZ5Ty60a8gI+J7Pid1uyAO3W3wJKQFAnO8lftRs++9tubM/nYoRPJN
+	 XDCBPDf/V7hM81SGRHxE86LVw0x0wHvoGLV3GKRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfIRGXs (ORCPT
+        id S1730198AbfIRGbK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:31:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbfIRGXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:23:42 -0400
+        id S1726987AbfIRGXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:23:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25DDB218AF;
-        Wed, 18 Sep 2019 06:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7BB221925;
+        Wed, 18 Sep 2019 06:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787821;
-        bh=NCc38KdKeBnKyP2Odg4PeFPlwltuIx2bv95xeUk0ld0=;
+        s=default; t=1568787824;
+        bh=H9w7/0BvPXj3hhUYfRuW3ve7SbHYUQvWQsY+jCmbvoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OkPXsJrJ3/HT0wBImwN3gVgo0XalafnPAKfF/bMGBLNsqbVsSugdnZjq7VN7RjUvm
-         nJ4/ThAanieNbMOPVacSUKUb5vvwZkK3gla99ZQE85jfHUeKz2WSNCRwpN5QgHiFna
-         zsHHLHwpQ4uSyW/lbL3oCc3mURWPgfZ51mQW2mSY=
+        b=Hu58DGnBNE0oDteT2MSG2VV/936YC3h4GcTRTY45Qn0IhNneTCktJl06uDnMjrf4b
+         +rPJwigr1gcIfUMBLuu2Z6msQT9xWLyJodgHZiVBlPc30YiUaRsqL1ZUgTJcBDG40f
+         PrMyOXABYiUT0/MVM6kFlQkdcGcb7VqPfTrDDFPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Yingliang <yangyingliang@huawei.com>,
-        Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH 4.19 46/50] modules: fix compile error if dont have strict module rwx
-Date:   Wed, 18 Sep 2019 08:19:29 +0200
-Message-Id: <20190918061228.274028936@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 4.19 47/50] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
+Date:   Wed, 18 Sep 2019 08:19:30 +0200
+Message-Id: <20190918061228.374318923@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
 References: <20190918061223.116178343@linuxfoundation.org>
@@ -59,71 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
 
-commit 93651f80dcb616b8c9115cdafc8e57a781af22d0 upstream.
+commit 9452fbf5c6cf5f470e0748fe7a14a683e7765f7a upstream.
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is not defined,
-we need stub for module_enable_nx() and module_enable_x().
+The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
+adds it to the critclk_systems DMI table so the clocks are marked as
+CLK_CRITICAL and not turned off.
 
-If CONFIG_ARCH_HAS_STRICT_MODULE_RWX is defined, but
-CONFIG_STRICT_MODULE_RWX is disabled, we need stub for
-module_enable_nx.
-
-Move frob_text() outside of the CONFIG_STRICT_MODULE_RWX,
-because it is needed anyway.
-
-Fixes: 2eef1399a866 ("modules: fix BUG when load module with rodata=n")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
+Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/module.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/platform/x86/pmc_atom.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -1884,7 +1884,7 @@ static void mod_sysfs_teardown(struct mo
- 	mod_sysfs_fini(mod);
- }
- 
--#ifdef CONFIG_STRICT_MODULE_RWX
-+#ifdef CONFIG_ARCH_HAS_STRICT_MODULE_RWX
- /*
-  * LKM RO/NX protection: protect module's text/ro-data
-  * from modification and any data from execution.
-@@ -1907,6 +1907,7 @@ static void frob_text(const struct modul
- 		   layout->text_size >> PAGE_SHIFT);
- }
- 
-+#ifdef CONFIG_STRICT_MODULE_RWX
- static void frob_rodata(const struct module_layout *layout,
- 			int (*set_memory)(unsigned long start, int num_pages))
- {
-@@ -2039,17 +2040,21 @@ static void disable_ro_nx(const struct m
- 	frob_writable_data(layout, set_memory_x);
- }
- 
--#else
-+#else /* !CONFIG_STRICT_MODULE_RWX */
- static void disable_ro_nx(const struct module_layout *layout) { }
- static void module_enable_nx(const struct module *mod) { }
- static void module_disable_nx(const struct module *mod) { }
--#endif
-+#endif /*  CONFIG_STRICT_MODULE_RWX */
- 
- static void module_enable_x(const struct module *mod)
- {
- 	frob_text(&mod->core_layout, set_memory_x);
- 	frob_text(&mod->init_layout, set_memory_x);
- }
-+#else /* !CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
-+static void module_enable_nx(const struct module *mod) { }
-+static void module_enable_x(const struct module *mod) { }
-+#endif /* CONFIG_ARCH_HAS_STRICT_MODULE_RWX */
- 
- #ifdef CONFIG_LIVEPATCH
- /*
+--- a/drivers/platform/x86/pmc_atom.c
++++ b/drivers/platform/x86/pmc_atom.c
+@@ -423,6 +423,14 @@ static const struct dmi_system_id critcl
+ 	},
+ 	{
+ 		/* pmc_plt_clk* - are used for ethernet controllers */
++		.ident = "Beckhoff CB4063",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
++			DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
++		},
++	},
++	{
++		/* pmc_plt_clk* - are used for ethernet controllers */
+ 		.ident = "Beckhoff CB6263",
+ 		.matches = {
+ 			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
 
 
