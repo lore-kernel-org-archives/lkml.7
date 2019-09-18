@@ -2,195 +2,211 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8825C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:31:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BCBEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E5A205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:31:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C18205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 12:31:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="UdJ+3DUL";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="lL4MjAMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbfIRMbB (ORCPT
+        id S1730509AbfIRMbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 08:31:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1956 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725902AbfIRMbB (ORCPT
+        Wed, 18 Sep 2019 08:31:52 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:48150 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725902AbfIRMbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 08:31:01 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8ICSEhx053540;
-        Wed, 18 Sep 2019 08:30:48 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3m2e9gu6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 08:30:48 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8ICSNTJ054267;
-        Wed, 18 Sep 2019 08:30:47 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v3m2e9gtq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 08:30:47 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8ICUduw026397;
-        Wed, 18 Sep 2019 12:30:47 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04wdc.us.ibm.com with ESMTP id 2v37jw55bf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 12:30:47 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8ICUj5w54657394
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 12:30:46 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D1D6278064;
-        Wed, 18 Sep 2019 12:30:45 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AFD87805F;
-        Wed, 18 Sep 2019 12:30:43 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.124.35.237])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Sep 2019 12:30:43 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id DD1A22E2FC9; Wed, 18 Sep 2019 18:00:39 +0530 (IST)
-Date:   Wed, 18 Sep 2019 18:00:39 +0530
-From:   Gautham R Shenoy <ego@linux.vnet.ibm.com>
-To:     Nathan Lynch <nathanl@linux.ibm.com>
-Cc:     Gautham R Shenoy <ego@linux.vnet.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>,
-        Kamalesh Babulal <kamaleshb@in.ibm.com>,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: Re: [PATCH 0/2] pseries/hotplug: Change the default behaviour of
- cede_offline
-Message-ID: <20190918123039.GA12534@in.ibm.com>
-Reply-To: ego@linux.vnet.ibm.com
-References: <1568284541-15169-1-git-send-email-ego@linux.vnet.ibm.com>
- <87impxr0am.fsf@linux.ibm.com>
- <20190915074217.GA943@in.ibm.com>
- <87a7b2rfj0.fsf@linux.ibm.com>
+        Wed, 18 Sep 2019 08:31:52 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8ICT3ft025489;
+        Wed, 18 Sep 2019 05:30:44 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
+ b=UdJ+3DUL+KCYYYiOruBUxFC7fK1qNfZhTIfTwRt+UqEHHcsVu7LwvxEa8fupBb3b9jrZ
+ AL3LG7Ps6f/Nmkl8hP0bFRyi5I+7yGsfvUm953YEq1N+sEO2B7svZmTD7siC6KqkadNb
+ N2HxGpl2CaanikAzH28Ygriz3ryV/LcdTf/tZQt/usNIOXo+C2SQju0p40ipFzdWDHas
+ TGohQJi9CYOTSLOw4g5tQFvQFBVn3Gw5R+2cEUrzjPS4cUi+5qLQvSoisHB1f3ixOXAx
+ Eni3mgJ1U7HaKzb7GQPb9jxcHhPWygW4Ccj8DqhX/w8e9wmm6tALHA5KyL9jJzGa0OD4 aw== 
+Received: from nam05-co1-obe.outbound.protection.outlook.com (mail-co1nam05lp2059.outbound.protection.outlook.com [104.47.48.59])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2v37ktassj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 18 Sep 2019 05:30:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CbZzc6in/dRlsUzJIE55SgkkD64lDoPWVcdHjNZGqtx31i9ufjz0UJhPguEiMjbLE+r1cUfCzDJSKSc7yOOTuRsvRJ2aY7WjhMWQqzquBb1Mwv5G86cyuuOArua7K8dzZG7XNY63F4g/HCs/Qbz23GulCZTAFEs77qREKKcWW+n/2EZOoRltBMMohuZDM8K8Cm71iWm8A4QwdejD1qQ0hgAdowztTMDmwI3Ay8oY2WI98pQKSEhkEMhZjPkWanTEpqOVTdCG0Ko8ejKonkBgSdiXFUsvXPN0Y/2aD5QHPJ4nhm1spTRUE1fbAr52xtIvgMcPWGzNRz3GDf2nH93YCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
+ b=GB9hANXhUaCy5bynmuC2ZBofAhWXVlgu7XFKB+Q928KKoseW7yzerfb4pM6tW6IB6lsfJUv3GCbz8ce4jYbNJnUeSs/kMU/a5tUyhqK2eZrDNTqa2NL3feFLFBFqRUKNrKc97FQ/OVWihzELEE9bbaW3o0puJwoEJFzwjksxwY6fZ7HoqVLSJ5zGiIAF6LaNgTNg3O/QIfhzo2oztTvHgq8vSaj0+5uneMwLtG1rJ4W/IagoVBI21aHDYn4u2xzICNlnl2K7trDC7nOxKD9gnIwH/1Wtd717cGfsEgKFJ03CU7xgP0bq/HIFZvhxW+PI3iLR9tMLT6kwGUEDLYZhug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 64.207.220.243) smtp.rcpttodomain=kernel.org smtp.mailfrom=cadence.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=cadence.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UBsn1y3sfjEhQwbDdih3F8ZpJ1dHNPu/2WffjRky0T0=;
+ b=lL4MjAMrrz5T38mPRv2xvmvbcbN3LAnyrtYyEe6OQQeUZ2lrCAKZD78mT1qlQ63GbBbKK2PZF2NMvZ747ujQ9wSuWsaI5Dsy90QlccOJkMvyUX2RgyNP4nShPkh2owcVgObPZU1IEBrWbNJ8H6oiRVi0Aq8/hCAjser2pjR7Yw0=
+Received: from BYAPR07CA0028.namprd07.prod.outlook.com (2603:10b6:a02:bc::41)
+ by MN2PR07MB6575.namprd07.prod.outlook.com (2603:10b6:208:165::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2263.17; Wed, 18 Sep
+ 2019 12:30:41 +0000
+Received: from CO1NAM05FT044.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e50::204) by BYAPR07CA0028.outlook.office365.com
+ (2603:10b6:a02:bc::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2136.17 via Frontend
+ Transport; Wed, 18 Sep 2019 12:30:40 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 64.207.220.243 as permitted sender)
+Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
+ CO1NAM05FT044.mail.protection.outlook.com (10.152.96.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2284.10 via Frontend Transport; Wed, 18 Sep 2019 12:30:40 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id x8ICUP5o074135
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 05:30:26 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 18 Sep 2019 14:30:24 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 18 Sep 2019 14:30:24 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x8ICUOCF030430;
+        Wed, 18 Sep 2019 13:30:24 +0100
+Received: (from piotrs@localhost)
+        by lvlogina.cadence.com (8.14.4/8.14.4/Submit) id x8ICUI0k030366;
+        Wed, 18 Sep 2019 13:30:18 +0100
+From:   Piotr Sroka <piotrs@cadence.com>
+CC:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
+        Piotr Sroka <piotrs@cadence.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Liang Yang <liang.yang@amlogic.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mtd@lists.infradead.org>
+Subject: [v7 0/2] mtd: rawnand: Add Cadence NAND controller driver
+Date:   Wed, 18 Sep 2019 13:28:37 +0100
+Message-ID: <20190918122923.28737-1-piotrs@cadence.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a7b2rfj0.fsf@linux.ibm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=899 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180127
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(199004)(36092001)(189003)(2906002)(4326008)(36756003)(486006)(87636003)(50466002)(476003)(305945005)(36906005)(70206006)(70586007)(42186006)(498600001)(16586007)(86362001)(5660300002)(2616005)(336012)(26005)(54906003)(81156014)(81166006)(8676002)(1076003)(8936002)(426003)(126002)(356004)(109986005)(50226002)(51416003)(47776003)(48376002)(7416002)(1671002)(186003)(6666004)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6575;H:wcmailrelayl01.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:unused.mynethost.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 2fbab1d4-bdce-49fb-9d4d-08d73c340448
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:MN2PR07MB6575;
+X-MS-TrafficTypeDiagnostic: MN2PR07MB6575:
+X-Microsoft-Antispam-PRVS: <MN2PR07MB6575AA93BF8CDCFA75587C57DD8E0@MN2PR07MB6575.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 01644DCF4A
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: ThYCTcDhpTvnOzoxrCnw0jS/SX1N3bWJioe4nUv1gSl8ToNiMaW5GfDXCEZv/hL/S1pTlz0YJE/VXn6XPKTtry5WzSPybIn2jgP72cmcLMPGPiBs+W2FpouFehzxHPHMj2ZB2TBjJh+Qi6A4f6ltM+5YMvXQWl5fVtOjtQKa0py1n4YrKrYEc0Zop0DF3FM5ZAqmGnAAKjWQZPSdLvwe+absoV02yZmJ8ci/FmvHGezopK/EiQg3yYuQMDV7cxscXhsZCuvVKKE65BNPr9GadJ5RZa4T5TBf3SUefvFsqsdHQlCZSbA69kBujZ5deH+Mw4ijvbTfm2myQy0K/YGa2LJ+38EI44RkrHwvXzfhGP6///5+bpsdolwLrwFh94f1UTSZ8mOXNaiEF4/YwJ7xmEXoiz1nJVtc/4DycsWh0fI=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Sep 2019 12:30:40.2477
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fbab1d4-bdce-49fb-9d4d-08d73c340448
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6575
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
+ definitions=2019-09-18_07:2019-09-17,2019-09-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 malwarescore=0
+ suspectscore=0 adultscore=0 phishscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 impostorscore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1909180127
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Nathan, Michael,
+Driver for Cadence HPNFC NAND flash controller.
 
-On Tue, Sep 17, 2019 at 12:36:35PM -0500, Nathan Lynch wrote:
-> Gautham R Shenoy <ego@linux.vnet.ibm.com> writes:
-> > On Thu, Sep 12, 2019 at 10:39:45AM -0500, Nathan Lynch wrote:
-> >> "Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
-> >> > The patchset also defines a new sysfs attribute
-> >> > "/sys/device/system/cpu/cede_offline_enabled" on PSeries Linux guests
-> >> > to allow userspace programs to change the state into which the
-> >> > offlined CPU need to be put to at runtime.
-> >> 
-> >> A boolean sysfs interface will become awkward if we need to add another
-> >> mode in the future.
-> >> 
-> >> What do you think about naming the attribute something like
-> >> 'offline_mode', with the possible values 'extended-cede' and
-> >> 'rtas-stopped'?
-> >
-> > We can do that. However, IMHO in the longer term, on PSeries guests,
-> > we should have only one offline state - rtas-stopped.  The reason for
-> > this being, that on Linux, SMT switch is brought into effect through
-> > the CPU Hotplug interface. The only state in which the SMT switch will
-> > recognized by the hypervisors such as PHYP is rtas-stopped.
-> 
-> OK. Why "longer term" though, instead of doing it now?
+HW DMA interface
+Page write and page read operations are executed in Command DMA mode.
+Commands are defined by DMA descriptors.
+In CDMA mode controller own DMA engine is used (Master DMA mode).
+Other operations defined by nand_op_instr are executed in "Generic" mode.
+In that mode data can be transferred only in by Slave DMA interface.
+Slave DMA interface can be connected directly to AXI or to an external
+DMA engine.
 
-Because adding extended-cede into a cpuidle state is non-trivial since
-a CPU in that state is non responsive to external interrupts. We will
-additional changes in the IPI, Timer and the Interrupt code to ensure
-that these get translated to a H_PROD in order to wake-up the target
-CPU in extended CEDE.
+HW ECC support
+Cadence NAND controller supports HW BCH correction.
+ ECC is transparent from SW point of view. It means that ECC codes
+are calculated and written to flash. In read operation ECC codes 
+are removed from user data and correction is made if necessary.
 
-Timer: is relatively easy since the cpuidle infrastructure has the
-       timer-offload framework (used for fastsleep in POWER8) where we
-       can offload the timers of an idling CPU to another CPU which
-       can wakeup the CPU when the timer expires via an IPI.
+Controller data layout with ECC enabled:
+ -------------------------------------------------------------------------
+|Sec 1 | ECC | Sec 2 | ECC ...... | Sec n | OOB (32B) | ECC | unused data |
+ -------------------------------------------------------------------------
 
-IPIs: We need to ensure that icp_hv_set_qirr() correctly sends H_IPI
-      or H_PROD depending on whether or not the target CPU is in
-      extended CEDE.
+Last sector is extended by a out-bound data. Tha maximum size of
+"extra data" is 32 bytes. The oob data are protected by ECC. If we need to 
+read only oob data the whole last sector must be read. It is because 
+oob data are part of last sector. Reading oob function always reads 
+whole sector and writing oob function always writes whole last sector.
+Written data are interleaved with the ECC therefore part of the 
+last sector is located on oob area and the BBM is overwritten.
 
-Interrupts: Either we migrate away the interrupts from the CPU that is
-            entering extended CEDE or we prevent a CPU that is the
-            sole target for an interrupt from entering extended CEDE.
+SKIP BYTES feature
+To protect BBM the "skip byte" HW feature is used. 
+Write page function copies BBM value from first byte of oob data to 
+BBM offset defined by manufacturer. Read page functions always takes 
+BBM from flash manufacturer offset. It causes that for not written 
+pages the proper value of BBM marker is used.
 
-The accounting problem in tools such as lparstat with
-"cede_offline=on" is affecting customers who are using these tools for
-capacity-planning. That problem needs a fix in the short-term, for
-which Patch 1 changes the default behaviour of cede_offline from "on"
-to "off". Since this patch would break the existing userspace tools
-that use the CPU-Offline infrastructure to fold CPUs for saving power,
-the sysfs interface allowing a runtime change of cede_offline_enabled
-was provided to enable these userspace tools to cope with minimal
-change.
+ECC size calculation
+Information about supported ECC steps and ECC strengths are read 
+from controller registers. ECC sector size and ECC strength can be
+configurable. Size of ECC depends on maximum supported sector size 
+it not depends on selected sector size. Therefore there is a separate
+function for calculating ECC size for each of possible 
+sector size/step size.
 
-> 
-> 
-> > All other states (such as extended-cede) should in the long-term be
-> > exposed via the cpuidle interface.
-> >
-> > With this in mind, I made the sysfs interface boolean to mirror the
-> > current "cede_offline" commandline parameter. Eventually when we have
-> > only one offline-state, we can deprecate the commandline parameter as
-> > well as the sysfs interface.
-> 
-> I don't care for adding a sysfs interface that is intended from the
-> beginning to become vestigial...
+Piotr Sroka (2):
+  Add new Cadence NAND driver to MTD subsystem
+  Add Cadence NAND controller driver
 
-Fair point. Come to think of it, in case the cpuidle menu governor
-behaviour doesn't match the expectations provided by the current
-userspace solutions for folding idle CPUs for power-savings, it would
-be useful to have this option around so that existing users who prefer
-the userspace solution can still have that option.
+ .../bindings/mtd/cadence-nand-controller.txt       |   53 +
+ MAINTAINERS                                        |    7 +
+ drivers/mtd/nand/raw/Kconfig                       |    7 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/cadence-nand-controller.c     | 3036 ++++++++++++++++++++
+ 5 files changed, 3104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cadence-nand-controller.txt
+ create mode 100644 drivers/mtd/nand/raw/cadence-nand-controller.c
 
-> 
-> This strikes me as unnecessarily incremental if you're changing the
-> default offline state. Any user space programs depending on the current
-> behavior will have to change anyway (and why is it OK to break them?)
->
+-- 
+2.15.0
 
-Yes, the current userspace program will need to be modified to check
-for the sysfs interface and change the value to
-cede_offline_enabled=1.
-
-> Why isn't the plan:
-> 
->   1. Add extended cede support to the pseries cpuidle driver
->   2. Make stop-self the only cpu offline state for pseries (no sysfs
->      interface necessary)
-
-This is the plan, except that 1. requires some additional work and
-this patchset is proposed as a short-term mitigation until we get
-1. right.
-
-> 
-> ?
-
---
-Thanks and Regards
-gautham.
