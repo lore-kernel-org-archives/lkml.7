@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB826C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4712C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F0C2053B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ADCA21927
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568787663;
-	bh=P92K7UGrqkcY/2Blsi5spREbdi6x27ourdQ4qkux7Is=;
+	s=default; t=1568787666;
+	bh=xfNEeKWUVz0j76T2lBmW58y31L2TymoH3dlALm4sJTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R1h9Lm0fBN/tCHhiRP4pCoZ2u89KWWSTNn16ZXNJI+nn/diw+QHQ872eXB/ms7JOV
-	 jZ7WX9CLP4g+n5DRJiJ8Sl7fXpE1jlIDX7YteePpEmitAeybZ2ttHD/0BXi879Sl6B
-	 6kw99eOP7yaxHjc5xrPS2E8fBmy9aPvEW5byEoGE=
+	b=fUSJH2YpJHTZPdI3rLpSHhPsUG2bHHAhEPsYTjuLRudqmWsK5IpwX0BGUWIoO7gTu
+	 afjZN/+EOvYwZL4bKW6i75jR0woFIRRIhmgmapk8Kj3450y7gzGasKva9yp6jubw+T
+	 d5jPIIq3fnMn3KWojCOsK0rJ6hwkEx234Uop9D9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfIRGVC (ORCPT
+        id S1728935AbfIRGVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40152 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:21:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbfIRGVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:21:00 -0400
+        id S1728913AbfIRGVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:21:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 231002053B;
-        Wed, 18 Sep 2019 06:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8B0F21927;
+        Wed, 18 Sep 2019 06:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787659;
-        bh=P92K7UGrqkcY/2Blsi5spREbdi6x27ourdQ4qkux7Is=;
+        s=default; t=1568787662;
+        bh=xfNEeKWUVz0j76T2lBmW58y31L2TymoH3dlALm4sJTs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SlCZ5dS1f99yT2xnFx12gh2DTo+cqWqcPNMOb4GGoZMaAijW5txmvXh2FJJwyKSQK
-         k2sUVgdCtiXPLz3l1Hg6rLKdsG58AzG5bYYArVoxlOv0sRTJbvv3LxUPEKZWt4NdE5
-         7Zusg5Hhny9pZCv1ssPeYRJ3/EuJYC84PEzDdry0=
+        b=n3EiTVqd2Zrx5dmHAUNUQYFWsLNaZ2uKej3BaWVrPSlLu6JZHWMexmky97iUr0Jux
+         olncnjr/Ua4Ey7DiNpwtkpxgbe3275txBWWV2q4jTyPFaGHiMPKfeFDOyp4v1Rw4ZL
+         nZZXYRHnZXnGDMZJKcvsC0+Ztu2IyY6pbPFDXm+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaolei Li <xiaolei.li@mediatek.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH 4.14 30/45] mtd: rawnand: mtk: Fix wrongly assigned OOB buffer pointer issue
-Date:   Wed, 18 Sep 2019 08:19:08 +0200
-Message-Id: <20190918061226.514138610@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 4.14 31/45] PCI: Always allow probing with driver_override
+Date:   Wed, 18 Sep 2019 08:19:09 +0200
+Message-Id: <20190918061226.640618792@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190918061222.854132812@linuxfoundation.org>
 References: <20190918061222.854132812@linuxfoundation.org>
@@ -59,84 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaolei Li <xiaolei.li@mediatek.com>
+From: Alex Williamson <alex.williamson@redhat.com>
 
-commit 336d4b138be2dad372b67a2388e42805c48aaa38 upstream.
+commit 2d2f4273cbe9058d1f5a518e5e880d27d7b3b30f upstream.
 
-One main goal of the function mtk_nfc_update_ecc_stats is to check
-whether sectors are all empty. If they are empty, set these sectors's
-data buffer and OOB buffer as 0xff.
+Commit 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control
+VF driver binding") introduced the sriov_drivers_autoprobe attribute
+which allows users to prevent the kernel from automatically probing a
+driver for new VFs as they are created.  This allows VFs to be spawned
+without automatically binding the new device to a host driver, such as
+in cases where the user intends to use the device only with a meta
+driver like vfio-pci.  However, the current implementation prevents any
+use of drivers_probe with the VF while sriov_drivers_autoprobe=0.  This
+blocks the now current general practice of setting driver_override
+followed by using drivers_probe to bind a device to a specified driver.
 
-But now, the sector OOB buffer pointer is wrongly assigned. We always
-do memset from sector 0.
+The kernel never automatically sets a driver_override therefore it seems
+we can assume a driver_override reflects the intent of the user.  Also,
+probing a device using a driver_override match seems outside the scope
+of the 'auto' part of sriov_drivers_autoprobe.  Therefore, let's allow
+driver_override matches regardless of sriov_drivers_autoprobe, which we
+can do by simply testing if a driver_override is set for a device as a
+'can probe' condition.
 
-To fix this issue, pass start sector number to make OOB buffer pointer
-be properly assigned.
-
-Fixes: 1d6b1e464950 ("mtd: mediatek: driver for MTK Smart Device")
-Signed-off-by: Xiaolei Li <xiaolei.li@mediatek.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Fixes: 0e7df22401a3 ("PCI: Add sysfs sriov_drivers_autoprobe to control VF driver binding")
+Link: https://lore.kernel.org/lkml/155742996741.21878.569845487290798703.stgit@gimli.home
+Link: https://lore.kernel.org/linux-pci/155672991496.20698.4279330795743262888.stgit@gimli.home/T/#u
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/nand/mtk_nand.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ drivers/pci/pci-driver.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/mtd/nand/mtk_nand.c
-+++ b/drivers/mtd/nand/mtk_nand.c
-@@ -846,19 +846,21 @@ static int mtk_nfc_write_oob_std(struct
- 	return ret & NAND_STATUS_FAIL ? -EIO : 0;
- }
- 
--static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 sectors)
-+static int mtk_nfc_update_ecc_stats(struct mtd_info *mtd, u8 *buf, u32 start,
-+				    u32 sectors)
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -400,7 +400,8 @@ void __weak pcibios_free_irq(struct pci_
+ #ifdef CONFIG_PCI_IOV
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
  {
- 	struct nand_chip *chip = mtd_to_nand(mtd);
- 	struct mtk_nfc *nfc = nand_get_controller_data(chip);
- 	struct mtk_nfc_nand_chip *mtk_nand = to_mtk_nand(chip);
- 	struct mtk_ecc_stats stats;
-+	u32 reg_size = mtk_nand->fdm.reg_size;
- 	int rc, i;
- 
- 	rc = nfi_readl(nfc, NFI_STA) & STA_EMP_PAGE;
- 	if (rc) {
- 		memset(buf, 0xff, sectors * chip->ecc.size);
- 		for (i = 0; i < sectors; i++)
--			memset(oob_ptr(chip, i), 0xff, mtk_nand->fdm.reg_size);
-+			memset(oob_ptr(chip, start + i), 0xff, reg_size);
- 		return 0;
- 	}
- 
-@@ -878,7 +880,7 @@ static int mtk_nfc_read_subpage(struct m
- 	u32 spare = mtk_nand->spare_per_sector;
- 	u32 column, sectors, start, end, reg;
- 	dma_addr_t addr;
--	int bitflips;
-+	int bitflips = 0;
- 	size_t len;
- 	u8 *buf;
- 	int rc;
-@@ -946,14 +948,11 @@ static int mtk_nfc_read_subpage(struct m
- 	if (rc < 0) {
- 		dev_err(nfc->dev, "subpage done timeout\n");
- 		bitflips = -EIO;
--	} else {
--		bitflips = 0;
--		if (!raw) {
--			rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
--			bitflips = rc < 0 ? -ETIMEDOUT :
--				mtk_nfc_update_ecc_stats(mtd, buf, sectors);
--			mtk_nfc_read_fdm(chip, start, sectors);
--		}
-+	} else if (!raw) {
-+		rc = mtk_ecc_wait_done(nfc->ecc, ECC_DECODE);
-+		bitflips = rc < 0 ? -ETIMEDOUT :
-+			mtk_nfc_update_ecc_stats(mtd, buf, start, sectors);
-+		mtk_nfc_read_fdm(chip, start, sectors);
- 	}
- 
- 	dma_unmap_single(nfc->dev, addr, len, DMA_FROM_DEVICE);
+-	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe);
++	return (!pdev->is_virtfn || pdev->physfn->sriov->drivers_autoprobe ||
++		pdev->driver_override);
+ }
+ #else
+ static inline bool pci_device_can_probe(struct pci_dev *pdev)
 
 
