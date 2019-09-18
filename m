@@ -2,151 +2,140 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCC4C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05273C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29819218AE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:35:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="dNLB2bp3"
+	by mail.kernel.org (Postfix) with ESMTP id D503C207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbfIRPfS (ORCPT
+        id S1731642AbfIRPfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:35:18 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:33032 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730523AbfIRPfS (ORCPT
+        Wed, 18 Sep 2019 11:35:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32284 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387507AbfIRPfT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:35:18 -0400
-Received: by mail-yw1-f68.google.com with SMTP id j128so112220ywf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 08:35:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WXRR5zyqVQASQ4N9vA9Ov0ItwFdEJLRSuq1ARX/xesM=;
-        b=dNLB2bp3hfKDZc3abQIP7Oj8s66zGdtSp4haltezOEd6bKHKjGfSMozAqh6lGbdzjr
-         Ij1QeFFZcQRSypfUAksMR/Lw23q0Q055c2yADGVxFSBn7g3+840ox0TbRwukGFMqe8GU
-         jLSX6NFkEzBstjyRVOvShg73Ts1xvP9nGSrwSzgp81g8YRJ5+gdnWqTRS5AEZukRyB2a
-         Tr342gQGPH2Gb6+Mz0CxM7drrTwr3haV5dqeSkF0U30vLD2nPCGVlhBbJdxNCBx+6R4d
-         h0bEKIsWN0WErgB+hX61fDRGmDPfOfNAzKbBgKsSX6CQE3a4pc/R22V54rnEIApO3bAS
-         dCwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WXRR5zyqVQASQ4N9vA9Ov0ItwFdEJLRSuq1ARX/xesM=;
-        b=bAHZhT+uN8Pgqf7T5XDOpa3lm2k6tkxN8HN+tpR18DfUhV8IyuaoFQmUxiOGLRt3Oy
-         GqlmMgC3zmE4f4jIZ/kf6GG0o9xWxdKwROWnOQggbCL0+cfSHtg/nqcUVRxnT3yCItZj
-         JUdpLpGlZ0Ylr2JaggaDTCtN7mmsRfS7o5FAF3VrQLtCqGgDURuI0IyQk4WfL7kbUTqv
-         klU04isJyHDjKuqsunx2oMHq8U3gabAvKowhK4JCUIJdvIDaGyulTcYv6+xEEUXr/IwG
-         QJ0t/KATSBENB3MX1+brDoUntnVPOA+5mEQQapepA3yDOTMMt3qWjwJ6lgfLna3MLxiI
-         Gq8w==
-X-Gm-Message-State: APjAAAWdAnqU6FPYxtOL/1FVtIimkwCEoTDkJJuImSFcRuKPSJWQUiXa
-        qGHnGnYysPT8aJJukRQnCrLAZg==
-X-Google-Smtp-Source: APXvYqz1D2kt/w72OnVw3WwBQ3uRSgZrxojXH1V2r/86e2KhMJ6L8LT/IJavDbljbLIdEBUfDjqCbQ==
-X-Received: by 2002:a81:a347:: with SMTP id a68mr3744553ywh.427.1568820917136;
-        Wed, 18 Sep 2019 08:35:17 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id i62sm1299104ywi.102.2019.09.18.08.35.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Sep 2019 08:35:16 -0700 (PDT)
-Date:   Wed, 18 Sep 2019 11:35:15 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        srv_heupstream@mediatek.com, stonea168@163.com,
-        cawa.cheng@mediatek.com, linux-mediatek@lists.infradead.org,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com
-Subject: Re: [PATCH v6 2/8] drm/panel: support for BOE tv101wum-nl6 wuxga dsi
- video mode panel
-Message-ID: <20190918153515.GS218215@art_vandelay>
-References: <20190918122422.17339-1-jitao.shi@mediatek.com>
- <20190918122422.17339-3-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190918122422.17339-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 18 Sep 2019 11:35:19 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IFW8YJ174867
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 11:35:18 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v39peyhby-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 11:35:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maier@linux.ibm.com>;
+        Wed, 18 Sep 2019 16:35:14 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Sep 2019 16:35:08 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IFZ7e259703518
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Sep 2019 15:35:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAD8E5205A;
+        Wed, 18 Sep 2019 15:35:06 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 458B352063;
+        Wed, 18 Sep 2019 15:35:06 +0000 (GMT)
+From:   Steffen Maier <maier@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Doug Gilbert <dgilbert@interlog.com>
+Cc:     linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org,
+        linux-next@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        dm-devel@redhat.com
+Subject: [PATCH] compat_ioctl: fix reimplemented SG_IO handling causing -EINVAL from sg_io()
+Date:   Wed, 18 Sep 2019 17:34:45 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19091815-0020-0000-0000-0000036E9CA7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091815-0021-0000-0000-000021C4468C
+Message-Id: <20190918153445.1241-1-maier@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909180152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 08:24:16PM +0800, Jitao Shi wrote:
-> Add driver for BOE tv101wum-nl6 panel is a 10.1" 1200x1920 panel.
-> 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> ---
->  drivers/gpu/drm/panel/Kconfig                 |   9 +
->  drivers/gpu/drm/panel/Makefile                |   1 +
->  .../gpu/drm/panel/panel-boe-tv101wum-nl6.c    | 709 ++++++++++++++++++
->  3 files changed, 719 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> 
-/snip
+scsi_cmd_ioctl() had hdr as on stack auto variable and called
+copy_{from,to}_user with the address operator &hdr and sizeof(hdr).
 
-> diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
-> new file mode 100644
-> index 000000000000..e27529b80d78
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+After the refactoring, {get,put}_sg_io_hdr() takes a pointer &hdr.
+So the copy_{from,to}_user within the new helper functions should
+just take the given pointer argument hdr and sizeof(*hdr).
 
-/snip
+I saw -EINVAL from sg_io() done by /usr/lib/udev/scsi_id which could
+in turn no longer whitelist SCSI disks for devicemapper multipath.
 
-> +static int boe_panel_init(struct boe_panel *boe)
-> +{
-> +	struct mipi_dsi_device *dsi = boe->dsi;
-> +	struct drm_panel *panel = &boe->base;
-> +	int err, i;
-> +
-> +	if (boe->desc->init_cmds) {
-> +		const struct panel_init_cmd *init_cmds = boe->desc->init_cmds;
-> +
-> +		for (i = 0; init_cmds[i].len != 0; i++) {
-> +			const struct panel_init_cmd *cmd = &init_cmds[i];
-> +
-> +			switch (cmd->type) {
-> +			case DELAY_CMD:
-> +				msleep(cmd->data[0]);
-> +				err = 0;
-> +				break;
-> +
-> +			case INIT_DCS_CMD:
-> +				err = mipi_dsi_dcs_write(dsi, cmd->data[0],
-> +							 cmd->len <= 1 ? NULL :
-> +							 &cmd->data[1],
-> +							 cmd->len - 1);
-> +				break;
-> +			}
-> +
-> +			if (err < 0) {
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Fixes: 4f45155c29fd ("compat_ioctl: reimplement SG_IO handling")
+---
 
-err possibly used uninitialized here.
+Arnd, I'm not sure about the sizeof(hdr32) change in the compat part in
+put_sg_io_hdr().
 
-> +				dev_err(panel->dev,
-> +					"failed to write command %u\n", i);
-> +				return err;
-> +			}
-> +		}
-> +	}
-> +	return 0;
-> +}
-/snip
+This is for next, probably via Arnd's y2038/y2038,
+and it fixes next-20190917 for me regarding SCSI generic.
 
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+ block/scsi_ioctl.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
+index cbeb629ee917..650bade5ea5a 100644
+--- a/block/scsi_ioctl.c
++++ b/block/scsi_ioctl.c
+@@ -607,14 +607,14 @@ int put_sg_io_hdr(const struct sg_io_hdr *hdr, void __user *argp)
+ 			.info		 = hdr->info,
+ 		};
+ 
+-		if (copy_to_user(argp, &hdr32, sizeof(hdr)))
++		if (copy_to_user(argp, &hdr32, sizeof(hdr32)))
+ 			return -EFAULT;
+ 
+ 		return 0;
+ 	}
+ #endif
+ 
+-	if (copy_to_user(argp, &hdr, sizeof(hdr)))
++	if (copy_to_user(argp, hdr, sizeof(*hdr)))
+ 		return -EFAULT;
+ 
+ 	return 0;
+@@ -659,7 +659,7 @@ int get_sg_io_hdr(struct sg_io_hdr *hdr, const void __user *argp)
+ 	}
+ #endif
+ 
+-	if (copy_from_user(&hdr, argp, sizeof(hdr)))
++	if (copy_from_user(hdr, argp, sizeof(*hdr)))
+ 		return -EFAULT;
+ 
+ 	return 0;
 -- 
-Sean Paul, Software Engineer, Google / Chromium OS
+2.17.1
+
