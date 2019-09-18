@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F8CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17912C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F03921907
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD5021D79
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 07:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbfIRHb5 (ORCPT
+        id S1729081AbfIRHcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 03:31:57 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:18802 "EHLO
+        Wed, 18 Sep 2019 03:32:01 -0400
+Received: from twhmllg3.macronix.com ([122.147.135.201]:18807 "EHLO
         TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728478AbfIRHb5 (ORCPT
+        with ESMTP id S1729042AbfIRHcA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 03:31:57 -0400
+        Wed, 18 Sep 2019 03:32:00 -0400
 Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id x8I7VoOd060926;
-        Wed, 18 Sep 2019 15:31:50 +0800 (GMT-8)
+        by TWHMLLG3.macronix.com with ESMTP id x8I7VoOe060926;
+        Wed, 18 Sep 2019 15:31:51 +0800 (GMT-8)
         (envelope-from masonccyang@mxic.com.tw)
 From:   Mason Yang <masonccyang@mxic.com.tw>
 To:     miquel.raynal@bootlin.com, richard@nod.at, marek.vasut@gmail.com,
@@ -32,85 +32,141 @@ Cc:     marcel.ziswiler@toradex.com, juliensu@mxic.com.tw,
         linux-kernel@vger.kernel.org, frieder.schrempf@kontron.de,
         gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org,
         masonccyang@mxic.com.tw, tglx@linutronix.de
-Subject: [PATCH RFC 1/3] mtd: rawnand: Add support manufacturer postponed initialization
-Date:   Wed, 18 Sep 2019 15:56:24 +0800
-Message-Id: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
+Subject: [PATCH RFC 2/3] mtd: rawnand: Add support Macronix Block Protection function
+Date:   Wed, 18 Sep 2019 15:56:25 +0800
+Message-Id: <1568793387-25199-2-git-send-email-masonccyang@mxic.com.tw>
 X-Mailer: git-send-email 1.9.1
-X-MAIL: TWHMLLG3.macronix.com x8I7VoOd060926
+In-Reply-To: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
+References: <1568793387-25199-1-git-send-email-masonccyang@mxic.com.tw>
+X-MAIL: TWHMLLG3.macronix.com x8I7VoOe060926
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Manufacturer postponed initialization is for MTD default call-back
-function replacement for vendor soecific operation, i.e.,
-_lock/_unlock, _suspend/_resume and so on.
+Macronix AC series support using SET/GET_FEATURES to change
+Block Protection and Unprotection.
+
+MTD default _lock/_unlock function replacement by manufacturer
+postponed initialization.
 
 Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
 ---
- drivers/mtd/nand/raw/internals.h |  4 ++++
- drivers/mtd/nand/raw/nand_base.c | 19 +++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ drivers/mtd/nand/raw/nand_macronix.c | 80 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 75 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/internals.h b/drivers/mtd/nand/raw/internals.h
-index cba6fe7..505dd46 100644
---- a/drivers/mtd/nand/raw/internals.h
-+++ b/drivers/mtd/nand/raw/internals.h
-@@ -42,6 +42,9 @@
-  *	     is here to let vendor specific code release those resources.
-  * @fixup_onfi_param_page: apply vendor specific fixups to the ONFI parameter
-  *			   page. This is called after the checksum is verified.
-+ * @post_init: postponed initialization is for MTD default call-back function
-+ *	       replacement for vendor specific operation i.e., _lock/_unlock,
-+ *	       _suspend/_resume and so on.
-  */
- struct nand_manufacturer_ops {
- 	void (*detect)(struct nand_chip *chip);
-@@ -49,6 +52,7 @@ struct nand_manufacturer_ops {
- 	void (*cleanup)(struct nand_chip *chip);
- 	void (*fixup_onfi_param_page)(struct nand_chip *chip,
- 				      struct nand_onfi_params *p);
-+	void (*post_init)(struct nand_chip *chip);
- };
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index 58511ae..991c636 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -11,6 +11,10 @@
+ #define MACRONIX_READ_RETRY_BIT BIT(0)
+ #define MACRONIX_NUM_READ_RETRY_MODES 6
  
- /**
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index 91f046d..7835b81 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -4619,6 +4619,21 @@ static int nand_manufacturer_init(struct nand_chip *chip)
++#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
++#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
++#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
++
+ struct nand_onfi_vendor_macronix {
+ 	u8 reserved;
+ 	u8 reliability_func;
+@@ -57,10 +61,7 @@ static void macronix_nand_onfi_init(struct nand_chip *chip)
+  * the timings unlike what is declared in the parameter page. Unflag
+  * this feature to avoid unnecessary downturns.
+  */
+-static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+-{
+-	unsigned int i;
+-	static const char * const broken_get_timings[] = {
++static const char * const broken_get_timings[] = {
+ 		"MX30LF1G18AC",
+ 		"MX30LF1G28AC",
+ 		"MX30LF2G18AC",
+@@ -75,7 +76,11 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+ 		"MX30UF4G18AC",
+ 		"MX30UF4G16AC",
+ 		"MX30UF4G28AC",
+-	};
++};
++
++static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
++{
++	unsigned int i;
+ 
+ 	if (!chip->parameters.supports_set_get_features)
+ 		return;
+@@ -105,6 +110,71 @@ static int macronix_nand_init(struct nand_chip *chip)
+ 	return 0;
  }
  
- /*
-+ * Manufacturer postponed initialization. This function is called for all NANDs
-+ * whose MTD default call-back function replacement is needed.
-+ * Manufacturer drivers should put all their specific postponed initialization
-+ * code in their ->post_init() hook.
-+ */
-+static void nand_manufacturer_post_init(struct nand_chip *chip)
++static int mxic_nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
 +{
-+	if (!chip->manufacturer.desc || !chip->manufacturer.desc->ops ||
-+	    !chip->manufacturer.desc->ops->post_init)
-+		return;
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++	int ret;
 +
-+	return chip->manufacturer.desc->ops->post_init(chip);
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("%s all blocks failed\n", __func__);
++
++	return ret;
++}
++
++static int mxic_nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++	int ret;
++
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("%s all blocks failed\n", __func__);
++
++	return ret;
 +}
 +
 +/*
-  * Manufacturer cleanup. This function is called for all NANDs including
-  * ONFI and JEDEC compliant ones.
-  * Manufacturer drivers should put all their specific cleanup code in their
-@@ -5812,6 +5827,10 @@ static int nand_scan_tail(struct nand_chip *chip)
- 			goto err_nanddev_cleanup;
- 	}
- 
-+	nand_select_target(chip, 0);
-+	nand_manufacturer_post_init(chip);
-+	nand_deselect_target(chip);
++ * Macronix AC series support using SET/GET_FEATURES to change
++ * Block Protection and Unprotection.
++ *
++ * MTD call-back function replacement by manufacturer postponed
++ * initialization.
++ */
++static void macronix_nand_post_init(struct nand_chip *chip)
++{
++	unsigned int i, blockprotected = 0;
++	struct mtd_info *mtd = nand_to_mtd(chip);
 +
- 	/* Check, if we should skip the bad block table scan */
- 	if (chip->options & NAND_SKIP_BBTSCAN)
- 		return 0;
++	for (i = 0; i < ARRAY_SIZE(broken_get_timings); i++) {
++		if (!strcmp(broken_get_timings[i], chip->parameters.model)) {
++			blockprotected = 1;
++			break;
++		}
++	}
++
++	if (blockprotected && chip->parameters.supports_set_get_features) {
++		bitmap_set(chip->parameters.set_feature_list,
++			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
++		bitmap_set(chip->parameters.get_feature_list,
++			   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
++
++		mtd->_lock = mxic_nand_lock;
++		mtd->_unlock = mxic_nand_unlock;
++	}
++}
++
+ const struct nand_manufacturer_ops macronix_nand_manuf_ops = {
+ 	.init = macronix_nand_init,
++	.post_init = macronix_nand_post_init,
+ };
 -- 
 1.9.1
 
