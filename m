@@ -2,70 +2,77 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F75C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6725CC4CEC9
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8483207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:03:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OEJKl4nB"
+	by mail.kernel.org (Postfix) with ESMTP id 2A61421BE5
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 20:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568837083;
+	bh=58Vbl32jZ4eSQW/1RRLOdlT0n13czx5Srl1EcQRyO/0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gB70FYePIiSpdp2Rm6kiAKyHu1AtWZgVsgFdpOzX1InTxBXEaF03AvLkilfo4Kdex
+	 jbSrJZCMAXcidd6GW0IGxnPGQ4j9RYwmiFxLsVQ7QQ8aSVG6JGqMwhzOYZx4X2URw0
+	 8EPMPkQkH8BwB2In2qNA9I5X5ygk24gLIKmElw9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389826AbfIRUDw (ORCPT
+        id S2389956AbfIRUEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 16:03:52 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:46994 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389813AbfIRUDv (ORCPT
+        Wed, 18 Sep 2019 16:04:42 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38076 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389938AbfIRUEl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 16:03:51 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q5so666677pfg.13;
-        Wed, 18 Sep 2019 13:03:51 -0700 (PDT)
+        Wed, 18 Sep 2019 16:04:41 -0400
+Received: by mail-lf1-f66.google.com with SMTP id u28so590228lfc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:04:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DA1nVWCwGZiuG0z+FpUS64gSHzee6LAQ0oy8pdAlQsU=;
-        b=OEJKl4nBl6ex6sKTzBbxuqQ6odXD819Xqz/R5bIJGCFf7RqnPEVasuNoxDdnNsIxYu
-         EVKwl/IqdW5B5k7xsYwAflsc72QNwewgRp0qDkeDHx1A3enfMnxPYKVDMAeUlxM5OmCL
-         xpqlBiKfA4NH0WZdey2ME+495ZpKoXF8n13z4JQxvi+oQDoo6u+lhXTUfAbl2MkqMveO
-         8ezK8DAr43WhmLWciPBtj8exOzXrYVb49GfW07c25hDYk6IyBz4FG5hjm0j+O2zraYQR
-         Qbr+LTFTk4aVdEoLNiTkhjJ/QfyDZUtc/QTCv6AAYiJ89vpLHBYhiVnJOjuruYRVt9Tj
-         tM6w==
+        bh=01Y6x1zvemzBJQWLxE4DBoZbhxORfd/lyc86dODNTds=;
+        b=TgS0uVH24w0R1Fkx0c26UZGHv0NIDmFwVNEVRMK1sKN+11sFoguy/eWP2GRt5ktatK
+         UA1N2CCdZVRk0AzXAIkyAiGcU+CQMl7qwnLRwXX/dvh+2CuQv3QJ6XM8shRLCQNTFIMt
+         V4BgdJc75+s4V8iriJV0BM7ZT7q18LRacAIfg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DA1nVWCwGZiuG0z+FpUS64gSHzee6LAQ0oy8pdAlQsU=;
-        b=bFI7RNZs+U8j9eiO8wNbmPGcGsDimC2LJGjvDqctms3JOqSpb5H780XVVI4S50McqT
-         i4UWAORSZC/inA4E0c0r/vOGuJGyOC+tAgyd8GcfkxYh5r08E3avPp8sca3/BwHy27gv
-         TVleiIvh9E6es2XfEDHTDwEorumxUWaKepFl60TWyP2YDE8t2ES+SUWchQg85IhPhkG8
-         jVgGt9wXBqZthAbSoEG/cilM1ABIVNpIwF9wG4w3pBV8WGkZ8tlnmgyi1ri86YCHApS5
-         1hcbHeu4wcpihH482AccuxEFbCpp67j21HDZKh3ydjNvx7Sa1isX2UIiE3mrAGZkHWNb
-         IHFw==
-X-Gm-Message-State: APjAAAVtQjyueROiSRmnkpnL8AaQId+MtsC4KumVKcQeoUL8dqcGs1lC
-        hMDCDpEe45fvh608wUVGn3RZEoSeBi6muM0XW6Q=
-X-Google-Smtp-Source: APXvYqzgiSdaXROJHtHBgU43ShcZ2JFNuOzYcPhZ1/QT6UJGlgn8F68AHVw2AwAVKauwfKxMphD16qlMkzmCUNtHjTk=
-X-Received: by 2002:a63:1cd:: with SMTP id 196mr5543402pgb.74.1568837030705;
- Wed, 18 Sep 2019 13:03:50 -0700 (PDT)
+        bh=01Y6x1zvemzBJQWLxE4DBoZbhxORfd/lyc86dODNTds=;
+        b=TrO2kb2t4KHGlnrGFtuQcdm3tsCuo2gEjTJeLFrtJJurDT4lT0muL4BmkFhDepJuiR
+         FD26WfWVeI7jbWvvnAkDQeJAnrX233XXsPRwhN7VCG8OB0dG8RskudTEQZHmQy08OLSY
+         2pz/kuB/pKyKPFbPSz7ScfBBnG3MrpXx+kUDeRme1IezDicob7iQwc8c+be/VyXuorPM
+         dXQZOitcodTP7UmduUy/ecZhov3F4+DF6hjASC6pJmw6zNerrtvcNLwQF4EQZONvkJfR
+         7mnCRSwwp/hGnIsfeQBm/ql7E49n3vWfqpSKLmAwFmme7dL85UhCWMmLW97/mXgvsIq7
+         /2Fw==
+X-Gm-Message-State: APjAAAVkUz03EIrVGj+lx2mAojoJJZV0oBQw/hAAxbvCP5h2kqKqk+1R
+        m/mftct3jI2VFVmEdN9AkJYuCzuWU50=
+X-Google-Smtp-Source: APXvYqzVnPE1CNTIL7ElI4wzvrlV7kCFzomqH38kLXJiLArMwMLaXj46Fi23+8qb9+HXHlE6yOjb/g==
+X-Received: by 2002:ac2:558e:: with SMTP id v14mr2934741lfg.161.1568837078907;
+        Wed, 18 Sep 2019 13:04:38 -0700 (PDT)
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com. [209.85.208.180])
+        by smtp.gmail.com with ESMTPSA id i17sm1194745ljd.2.2019.09.18.13.04.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 13:04:37 -0700 (PDT)
+Received: by mail-lj1-f180.google.com with SMTP id 7so1186674ljw.7
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 13:04:37 -0700 (PDT)
+X-Received: by 2002:a2e:8943:: with SMTP id b3mr3228332ljk.165.1568837077303;
+ Wed, 18 Sep 2019 13:04:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190918195652.2137765-1-arnd@arndb.de>
-In-Reply-To: <20190918195652.2137765-1-arnd@arndb.de>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 18 Sep 2019 23:03:39 +0300
-Message-ID: <CAHp75VdLLkFSYhvvXtzyEVeay3reBaYfJuzfd6qQ4Rw+k7QLKQ@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: add ACPI_BATTERY dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
+References: <20190917013548.GD1131@ZenIV.linux.org.uk>
+In-Reply-To: <20190917013548.GD1131@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Sep 2019 13:04:21 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgKEdDnCBE40D-S=ZdekJjhU_WJAjnXq3LCGZLgE5SU_w@mail.gmail.com>
+Message-ID: <CAHk-=wgKEdDnCBE40D-S=ZdekJjhU_WJAjnXq3LCGZLgE5SU_w@mail.gmail.com>
+Subject: Re: [git pull] vfs.git #work.namei
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -73,41 +80,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 10:57 PM Arnd Bergmann <arnd@arndb.de> wrote:
+On Mon, Sep 16, 2019 at 6:35 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
 >
-> Without this dependency, we can run into a link failure:
->
-> drivers/platform/x86/asus-wmi.o: In function `asus_wmi_remove':
-> asus-wmi.c:(.text+0x430): undefined reference to `battery_hook_unregister'
-> drivers/platform/x86/asus-wmi.o: In function `asus_wmi_probe':
-> asus-wmi.c:(.text+0x2c6f): undefined reference to `battery_hook_register'
->
+>         pathwalk-related stuff
 
-Thanks, the similar is in my tree. I will send it later.
+That could have done with a few more words of explanation.
 
-> Fixes: 7973353e92ee ("platform/x86: asus-wmi: Refactor charge threshold to use the battery hooking API")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/platform/x86/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-> index 1b67bb578f9f..d81de3f4f72e 100644
-> --- a/drivers/platform/x86/Kconfig
-> +++ b/drivers/platform/x86/Kconfig
-> @@ -680,6 +680,7 @@ config ASUS_WMI
->         depends on RFKILL || RFKILL = n
->         depends on HOTPLUG_PCI
->         depends on ACPI_VIDEO || ACPI_VIDEO = n
-> +       depends on ACPI_BATTERY
->         select INPUT_SPARSEKMAP
->         select LEDS_CLASS
->         select NEW_LEDS
-> --
-> 2.20.0
->
+I added "Audit-related cleanups, misc simplifications, and easier to
+follow nd->root refcounts"
 
-
--- 
-With Best Regards,
-Andy Shevchenko
+            Linus
