@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B4CC4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17107C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E97321928
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD79A214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 06:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568788249;
-	bh=QX/ODPROnjlsW3TmwXUDdR+0VJvtH9gWlChsXjJEceg=;
+	s=default; t=1568788256;
+	bh=QOxXkJkf0lgWhFXbB6frbCnUEx5vNP5l5Woxfs2KXIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMHDhX6ls3DJzNCnxPHJTCZCcf3GvAv7hpYqhZnIjkk0+7/9YBAw9PIxUtNP2mlWh
-	 LnCzK3uJ7lAc84/D/bc9UklDNkp2HGoylrfS53VuFJWYWOPe877vBddMmk0fRBefov
-	 7WEjiwNOxHjEAgu0rDTdqGPlSwvehQ5Mxw9oHNcM=
+	b=wK8YEJa5rI8Xp8oRkmdjkb9VTro6+1RxUB7RWtHwMpd//llTtpR2o2CotOhRjj6hB
+	 FEpE6iydXNrthn2rgMLR6amjvzWFKwj3H1l/lg4xcqWnU5jmFbCnNvyCbUsd9GVnlv
+	 qMtEnlIYt01H8p3w7wALx1s1GBHLbO1KvxG34tDc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfIRGas (ORCPT
+        id S1730284AbfIRGa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 02:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44760 "EHLO mail.kernel.org"
+        Wed, 18 Sep 2019 02:30:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44488 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728510AbfIRGYT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 02:24:19 -0400
+        id S1727585AbfIRGYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 02:24:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 413BD21920;
-        Wed, 18 Sep 2019 06:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1072921928;
+        Wed, 18 Sep 2019 06:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568787858;
-        bh=QX/ODPROnjlsW3TmwXUDdR+0VJvtH9gWlChsXjJEceg=;
+        s=default; t=1568787845;
+        bh=QOxXkJkf0lgWhFXbB6frbCnUEx5vNP5l5Woxfs2KXIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asga7kpF6+EzMTm/etNTLuRky8/wegQbz1qb2UnSGTeikJIGTDdXlBa5govZnvcy6
-         EIi/57elGMOdvPyY1JX+6TJmWxVujfyFmCcJBqJcD6uBwtYt21EwHo2pVHe3l9et1x
-         HfrDWfMxqDz1oPk8Wy/ibrWyaPHeRgMM+Frle7gI=
+        b=WDLu5qIde0a7NLaJJAunFJ60CU6fEgt697KqQ0twb8cruz73NPfKGnVKm2kPVdI21
+         DVNcTvfZhwbzWzXV2pyRqQ7us+Y79hI3d7zYVtNaiW28tKPr+k8OAieplBfQQXO1zK
+         SSvoNdACls7p4SB7/0juiGqZlz5Z3ZWPOYwU/mbU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 10/85] net: sched: fix reordering issues
-Date:   Wed, 18 Sep 2019 08:18:28 +0200
-Message-Id: <20190918061234.460383725@linuxfoundation.org>
+        stable@vger.kernel.org, Hyunchul Lee <hyc.lee@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.19 32/50] ubifs: Correctly use tnc_next() in search_dh_cookie()
+Date:   Wed, 18 Sep 2019 08:19:15 +0200
+Message-Id: <20190918061226.817080996@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190918061234.107708857@linuxfoundation.org>
-References: <20190918061234.107708857@linuxfoundation.org>
+In-Reply-To: <20190918061223.116178343@linuxfoundation.org>
+References: <20190918061223.116178343@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,86 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Richard Weinberger <richard@nod.at>
 
-[ Upstream commit b88dd52c62bb5c5d58f0963287f41fd084352c57 ]
+commit bacfa94b08027b9f66ede7044972e3b066766b3e upstream.
 
-Whenever MQ is not used on a multiqueue device, we experience
-serious reordering problems. Bisection found the cited
-commit.
+Commit c877154d307f fixed an uninitialized variable and optimized
+the function to not call tnc_next() in the first iteration of the
+loop. While this seemed perfectly legit and wise, it turned out to
+be illegal.
+If the lookup function does not find an exact match it will rewind
+the cursor by 1.
+The rewinded cursor will not match the name hash we are looking for
+and this results in a spurious -ENOENT.
+So we need to move to the next entry in case of an non-exact match,
+but not if the match was exact.
 
-The issue can be described this way :
+While we are here, update the documentation to avoid further confusion.
 
-- A single qdisc hierarchy is shared by all transmit queues.
-  (eg : tc qdisc replace dev eth0 root fq_codel)
-
-- When/if try_bulk_dequeue_skb_slow() dequeues a packet targetting
-  a different transmit queue than the one used to build a packet train,
-  we stop building the current list and save the 'bad' skb (P1) in a
-  special queue. (bad_txq)
-
-- When dequeue_skb() calls qdisc_dequeue_skb_bad_txq() and finds this
-  skb (P1), it checks if the associated transmit queues is still in frozen
-  state. If the queue is still blocked (by BQL or NIC tx ring full),
-  we leave the skb in bad_txq and return NULL.
-
-- dequeue_skb() calls q->dequeue() to get another packet (P2)
-
-  The other packet can target the problematic queue (that we found
-  in frozen state for the bad_txq packet), but another cpu just ran
-  TX completion and made room in the txq that is now ready to accept
-  new packets.
-
-- Packet P2 is sent while P1 is still held in bad_txq, P1 might be sent
-  at next round. In practice P2 is the lead of a big packet train
-  (P2,P3,P4 ...) filling the BQL budget and delaying P1 by many packets :/
-
-To solve this problem, we have to block the dequeue process as long
-as the first packet in bad_txq can not be sent. Reordering issues
-disappear and no side effects have been seen.
-
-Fixes: a53851e2c321 ("net: sched: explicit locking in gso_cpu fallback")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Hyunchul Lee <hyc.lee@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: c877154d307f ("ubifs: Fix uninitialized variable in search_dh_cookie()")
+Fixes: 781f675e2d7e ("ubifs: Fix unlink code wrt. double hash lookups")
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_generic.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -46,6 +46,8 @@ EXPORT_SYMBOL(default_qdisc_ops);
-  * - updates to tree and tree walking are only done under the rtnl mutex.
-  */
+---
+ fs/ubifs/tnc.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+--- a/fs/ubifs/tnc.c
++++ b/fs/ubifs/tnc.c
+@@ -1165,8 +1165,8 @@ static struct ubifs_znode *dirty_cow_bot
+  *   o exact match, i.e. the found zero-level znode contains key @key, then %1
+  *     is returned and slot number of the matched branch is stored in @n;
+  *   o not exact match, which means that zero-level znode does not contain
+- *     @key, then %0 is returned and slot number of the closest branch is stored
+- *     in @n;
++ *     @key, then %0 is returned and slot number of the closest branch or %-1
++ *     is stored in @n; In this case calling tnc_next() is mandatory.
+  *   o @key is so small that it is even less than the lowest key of the
+  *     leftmost zero-level node, then %0 is returned and %0 is stored in @n.
+  *
+@@ -1883,13 +1883,19 @@ int ubifs_tnc_lookup_nm(struct ubifs_inf
  
-+#define SKB_XOFF_MAGIC ((struct sk_buff *)1UL)
-+
- static inline struct sk_buff *__skb_dequeue_bad_txq(struct Qdisc *q)
+ static int search_dh_cookie(struct ubifs_info *c, const union ubifs_key *key,
+ 			    struct ubifs_dent_node *dent, uint32_t cookie,
+-			    struct ubifs_znode **zn, int *n)
++			    struct ubifs_znode **zn, int *n, int exact)
  {
- 	const struct netdev_queue *txq = q->dev_queue;
-@@ -71,7 +73,7 @@ static inline struct sk_buff *__skb_dequ
- 				q->q.qlen--;
- 			}
- 		} else {
--			skb = NULL;
-+			skb = SKB_XOFF_MAGIC;
- 		}
- 	}
+ 	int err;
+ 	struct ubifs_znode *znode = *zn;
+ 	struct ubifs_zbranch *zbr;
+ 	union ubifs_key *dkey;
  
-@@ -253,8 +255,11 @@ validate:
- 		return skb;
- 
- 	skb = qdisc_dequeue_skb_bad_txq(q);
--	if (unlikely(skb))
-+	if (unlikely(skb)) {
-+		if (skb == SKB_XOFF_MAGIC)
-+			return NULL;
- 		goto bulk;
++	if (!exact) {
++		err = tnc_next(c, &znode, n);
++		if (err)
++			return err;
 +	}
- 	skb = q->dequeue(q);
- 	if (skb) {
- bulk:
++
+ 	for (;;) {
+ 		zbr = &znode->zbranch[*n];
+ 		dkey = &zbr->key;
+@@ -1931,7 +1937,7 @@ static int do_lookup_dh(struct ubifs_inf
+ 	if (unlikely(err < 0))
+ 		goto out_unlock;
+ 
+-	err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
++	err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
+ 
+ out_unlock:
+ 	mutex_unlock(&c->tnc_mutex);
+@@ -2718,7 +2724,7 @@ int ubifs_tnc_remove_dh(struct ubifs_inf
+ 		if (unlikely(err < 0))
+ 			goto out_free;
+ 
+-		err = search_dh_cookie(c, key, dent, cookie, &znode, &n);
++		err = search_dh_cookie(c, key, dent, cookie, &znode, &n, err);
+ 		if (err)
+ 			goto out_free;
+ 	}
 
 
