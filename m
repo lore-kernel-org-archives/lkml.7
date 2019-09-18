@@ -2,79 +2,244 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D4C4CECE
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0BCC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EA812067B
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33AB02067B
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 13:17:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1568812670;
+	bh=uQfrdHHdsXozo1S1kyD80ljEIP+JpLM1abceUoVVsCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Km9rv8daTp4+UQI7Tm04m4Naz+sf/Jiw5mkEx7S7vbvtS7VxrCpquithDyB5t+YVg
+	 NWkXzmVV2i2De6iyMULmIbgUQQCUEDBJsX31G6fRCNa7vhQJy4rEo/Wj8xhJqBnTcI
+	 6eVrEJ5Z+5Mmqu2mwMKuLXr+4zYLL4xHfEfP5qUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbfIRNRJ (ORCPT
+        id S1730060AbfIRNRt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 09:17:09 -0400
-Received: from mga05.intel.com ([192.55.52.43]:58261 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfIRNRG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:17:06 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 06:17:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.64,520,1559545200"; 
-   d="scan'208";a="202054130"
-Received: from lngladki-mobl2.ccr.corp.intel.com ([10.252.31.176])
-  by fmsmga001.fm.intel.com with ESMTP; 18 Sep 2019 06:17:02 -0700
-Message-ID: <d135b9ba7900c28b3d11560666a4790e015490a2.camel@intel.com>
-Subject: Re: [PATCH net] iwlwifi: add dependency of THERMAL with IWLMVM
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Kalle Valo <kvalo@codeaurora.org>, Mao Wenan <maowenan@huawei.com>
-Cc:     johannes.berg@intel.com, emmanuel.grumbach@intel.com,
-        linuxwifi@intel.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Wed, 18 Sep 2019 16:17:02 +0300
-In-Reply-To: <875zlpbvks.fsf@kamboji.qca.qualcomm.com>
-References: <20190918122815.155657-1-maowenan@huawei.com>
-         <875zlpbvks.fsf@kamboji.qca.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 18 Sep 2019 09:17:49 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34118 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfIRNRt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 09:17:49 -0400
+Received: by mail-wr1-f68.google.com with SMTP id a11so6928673wrx.1;
+        Wed, 18 Sep 2019 06:17:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=e6a38RN6FN8dThc0RVo5hV5uWnsoTfPqGl5eeZaZimE=;
+        b=pWD5SV5m2YY+DlcWFFBxBnlVgpTdi535GmGMT+3c29ByJPJU1H+uPaXxPtFssiu578
+         iVLYJnAj8HEalXRfcUTYFRtL/HcENGdZwNAITZ85nAeDI1/Jzlss9XmGiZLihNs7YaX5
+         OF+8+4ayb1SzagUfoY5FQMtSGOZSdYxEimmurLj+Qjv6zA8v6Md+7bHKdXwo1mQLhc/H
+         MUpXpGx+6WtxbgID2+BtqGQpKSzeLNPa8AOXV1nXbhGbDjBhjUiLat9bWM8qSQpkDGP6
+         DfK8I+UE+DrclI22hj1Ipzum4w7FRfK/ZdKg7frdEoDAk8emYu1Zj/qX1C11d+1DUnn5
+         wOiw==
+X-Gm-Message-State: APjAAAU0hwIUhIf3OxpCEfRVKskUOSiV+c8w65S8WTkjsmmF1omhhgGz
+        Mu8UqML3yJn+8GMGeiBD6vE=
+X-Google-Smtp-Source: APXvYqxWVPjcF1VpJfpk6Lp6k4HOBxolAT7MHjlWITs7v+8tF1+4yScFg1b7sFVdBQuKIhoXHhpLuA==
+X-Received: by 2002:adf:e3c4:: with SMTP id k4mr3158989wrm.157.1568812665355;
+        Wed, 18 Sep 2019 06:17:45 -0700 (PDT)
+Received: from pi3 ([194.230.155.145])
+        by smtp.googlemail.com with ESMTPSA id 207sm4243477wme.17.2019.09.18.06.17.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Sep 2019 06:17:43 -0700 (PDT)
+Date:   Wed, 18 Sep 2019 15:17:40 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Sebastian Reichel <sre@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 07/11] dt-bindings: arm: samsung: Convert Exynos PMU
+ bindings to json-schema
+Message-ID: <20190918131740.GA668@pi3>
+References: <20190907092007.9946-1-krzk@kernel.org>
+ <20190907092007.9946-7-krzk@kernel.org>
+ <20190918124306.GB318@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190918124306.GB318@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-09-18 at 16:08 +0300, Kalle Valo wrote:
-> Mao Wenan <maowenan@huawei.com> writes:
-> 
-> > If CONFIG_IWLMVM=y, CONFIG_THERMAL=n, below error can be found:
-> > drivers/net/wireless/intel/iwlwifi/mvm/fw.o: In function `iwl_mvm_up':
-> > fw.c:(.text+0x2c26): undefined reference to `iwl_mvm_send_temp_report_ths_cmd'
-> > make: *** [vmlinux] Error 1
+On Wed, Sep 18, 2019 at 07:43:06AM -0500, Rob Herring wrote:
+> On Sat, Sep 07, 2019 at 11:20:03AM +0200, Krzysztof Kozlowski wrote:
+> > Convert Samsung Exynos Power Management Unit (PMU) bindings to DT schema
+> > format using json-schema.
 > > 
-> > After commit 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal
-> > monitoring regardless of CONFIG_THERMAL"), iwl_mvm_up()
-> > calls iwl_mvm_send_temp_report_ths_cmd(), but this function
-> > is under CONFIG_THERMAL, which is depended on CONFIG_THERMAL.
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > > 
-> > Fixes: 242d9c8b9a93 ("iwlwifi: mvm: use FW thermal monitoring regardless of CONFIG_THERMAL")
-> > Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> > ---
+> > 
+> > Changes since v1:
+> > 1. Fix clock-names to match all elements against schema (any number of
+> >    any clkoutN values).
+> >    This currently fails:
+> >        properties:clock-names:items: {'enum': ['clkout0', 'clkout1', 'clkout2',
+> >        'clkout3', 'clkout4', 'clkout5', 'clkout6', 'clkout7', 'clkout8',
+> >        'clkout9', 'clkout10', 'clkout11', 'clkout12', 'clkout13', 'clkout14',
+> >        'clkout15', 'clkout16']} is not of type 'array
+> > 
+> > 2. Add syscon reboot and poweroff nodes.
+> > ---
+> >  .../devicetree/bindings/arm/samsung/pmu.txt   |  72 -----------
+> >  .../devicetree/bindings/arm/samsung/pmu.yaml  | 117 ++++++++++++++++++
+> >  2 files changed, 117 insertions(+), 72 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > deleted file mode 100644
+> > index 433bfd7593ac..000000000000
+> > --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > +++ /dev/null
+> > @@ -1,72 +0,0 @@
+> > -SAMSUNG Exynos SoC series PMU Registers
+> > -
+> > -Properties:
+> > - - compatible : should contain two values. First value must be one from following list:
+> > -		   - "samsung,exynos3250-pmu" - for Exynos3250 SoC,
+> > -		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+> > -		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+> > -		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+> > -		   - "samsung,exynos5260-pmu" - for Exynos5260 SoC.
+> > -		   - "samsung,exynos5410-pmu" - for Exynos5410 SoC,
+> > -		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+> > -		   - "samsung,exynos5433-pmu" - for Exynos5433 SoC.
+> > -		   - "samsung,exynos7-pmu" - for Exynos7 SoC.
+> > -		second value must be always "syscon".
+> > -
+> > - - reg : offset and length of the register set.
+> > -
+> > - - #clock-cells : must be <1>, since PMU requires once cell as clock specifier.
+> > -		The single specifier cell is used as index to list of clocks
+> > -		provided by PMU, which is currently:
+> > -			0 : SoC clock output (CLKOUT pin)
+> > -
+> > - - clock-names : list of clock names for particular CLKOUT mux inputs in
+> > -		following format:
+> > -			"clkoutN", where N is a decimal number corresponding to
+> > -			CLKOUT mux control bits value for given input, e.g.
+> > -				"clkout0", "clkout7", "clkout15".
+> > -
+> > - - clocks : list of phandles and specifiers to all input clocks listed in
+> > -		clock-names property.
+> > -
+> > -Optional properties:
+> > -
+> > -Some PMUs are capable of behaving as an interrupt controller (mostly
+> > -to wake up a suspended PMU). In which case, they can have the
+> > -following properties:
+> > -
+> > -- interrupt-controller: indicate that said PMU is an interrupt controller
+> > -
+> > -- #interrupt-cells: must be identical to the that of the parent interrupt
+> > -  controller.
+> > -
+> > -
+> > -Optional nodes:
+> > -
+> > -- nodes defining the restart and poweroff syscon children
+> > -
+> > -
+> > -Example :
+> > -pmu_system_controller: system-controller@10040000 {
+> > -	compatible = "samsung,exynos5250-pmu", "syscon";
+> > -	reg = <0x10040000 0x5000>;
+> > -	interrupt-controller;
+> > -	#interrupt-cells = <3>;
+> > -	interrupt-parent = <&gic>;
+> > -	#clock-cells = <1>;
+> > -	clock-names = "clkout0", "clkout1", "clkout2", "clkout3",
+> > -			"clkout4", "clkout8", "clkout9";
+> > -	clocks = <&clock CLK_OUT_DMC>, <&clock CLK_OUT_TOP>,
+> > -		<&clock CLK_OUT_LEFTBUS>, <&clock CLK_OUT_RIGHTBUS>,
+> > -		<&clock CLK_OUT_CPU>, <&clock CLK_XXTI>,
+> > -		<&clock CLK_XUSBXTI>;
+> > -};
+> > -
+> > -Example of clock consumer :
+> > -
+> > -usb3503: usb3503@8 {
+> > -	/* ... */
+> > -	clock-names = "refclk";
+> > -	clocks = <&pmu_system_controller 0>;
+> > -	/* ... */
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.yaml b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > new file mode 100644
+> > index 000000000000..a5a02f8237fb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.yaml
+> > @@ -0,0 +1,117 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/arm/samsung/pmu.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Samsung Exynos SoC series Power Management Unit (PMU)
+> > +
+> > +maintainers:
+> > +  - Krzysztof Kozlowski <krzk@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - enum:
+> > +          - samsung,exynos3250-pmu
+> > +          - samsung,exynos4210-pmu
+> > +          - samsung,exynos4412-pmu
+> > +          - samsung,exynos5250-pmu
+> > +          - samsung,exynos5260-pmu
+> > +          - samsung,exynos5410-pmu
+> > +          - samsung,exynos5420-pmu
+> > +          - samsung,exynos5433-pmu
+> > +          - samsung,exynos7-pmu
+> > +      - const: syscon
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  '#clock-cells':
+> > +    const: 1
+> > +
+> > +  clock-names:
+> > +    description:
+> > +      List of clock names for particular CLKOUT mux inputs
+> > +    minItems: 1
+> > +    maxItems: 32
+> > +    items:
+> > +      enum:
+> > +        - clkout0
+> > +        - clkout1
 > 
-> Luca, should I apply this directly to wireless-drivers?
+> Looking at this again, instead of enum, we can just do:
+> 
+> pattern: '^clkout([0-9]|[12][0-9]|3[0-1])$'
 
-No, this patch defeats the point of the patch it fixes.
+Indeed looks better.
 
-We have a proper fix already internally, which I haven't sent out yet,
-that moves a couple of #ifdef's around to solve the issue.  I'll send
-the patch in a sec.
-
---
-Cheers,
-Luca.
+Best regards,
+Krzysztof
 
