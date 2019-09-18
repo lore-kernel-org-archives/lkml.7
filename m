@@ -2,171 +2,171 @@ Return-Path: <SRS0=HfRD=XN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EE48C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0EAC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF10206C2
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79B8206C2
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 15:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbfIRPm1 (ORCPT
+        id S1731736AbfIRPnF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 11:42:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:44086 "EHLO foss.arm.com"
+        Wed, 18 Sep 2019 11:43:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41462 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728896AbfIRPm1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:42:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AF17337;
-        Wed, 18 Sep 2019 08:42:26 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39EAD3F59C;
-        Wed, 18 Sep 2019 08:42:24 -0700 (PDT)
-Subject: Re: Usecases for the per-task latency-nice attribute
-To:     Patrick Bellasi <patrick.bellasi@arm.com>,
-        Parth Shah <parth@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        subhra mazumdar <subhra.mazumdar@oracle.com>,
-        tim.c.chen@linux.intel.com, mingo@redhat.com,
-        morten.rasmussen@arm.com, dietmar.eggemann@arm.com, pjt@google.com,
-        vincent.guittot@linaro.org, quentin.perret@arm.com,
-        dhaval.giani@oracle.com, daniel.lezcano@linaro.org, tj@kernel.org,
-        rafael.j.wysocki@intel.com, qais.yousef@arm.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>
-References: <3e5c3f36-b806-5bcc-e666-14dc759a2d7b@linux.ibm.com>
- <87woe51ydd.fsf@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <77457d5b-185e-1548-4a5c-9b911b036cec@arm.com>
-Date:   Wed, 18 Sep 2019 16:42:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726558AbfIRPnE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:43:04 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1F509300DA78;
+        Wed, 18 Sep 2019 15:43:04 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-125-72.rdu2.redhat.com [10.10.125.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 579C160C5D;
+        Wed, 18 Sep 2019 15:43:01 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20190917170716.ud457wladfhhjd6h@willie-the-truck>
+References: <20190917170716.ud457wladfhhjd6h@willie-the-truck> <20190915145905.hd5xkc7uzulqhtzr@willie-the-truck> <25289.1568379639@warthog.procyon.org.uk> <28447.1568728295@warthog.procyon.org.uk>
+To:     Will Deacon <will@kernel.org>
+Cc:     dhowells@redhat.com, paulmck@linux.ibm.com, mark.rutland@arm.com,
+        torvalds@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, peterz@infradead.org
+Subject: Do we need to correct barriering in circular-buffers.rst?
 MIME-Version: 1.0
-In-Reply-To: <87woe51ydd.fsf@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <15227.1568821380.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8BIT
+Date:   Wed, 18 Sep 2019 16:43:00 +0100
+Message-ID: <15228.1568821380@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 18 Sep 2019 15:43:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/09/2019 15:18, Patrick Bellasi wrote:
->> 1. Name: What should be the name for such attr for all the possible usecases?
->> =============
->> Latency nice is the proposed name as of now where the lower value indicates
->> that the task doesn't care much for the latency
+Will Deacon <will@kernel.org> wrote:
+
+> If I'm understanding your code correctly (big 'if'), then you have things
+> like this in pipe_read():
 > 
-> If by "lower value" you mean -19 (in the proposed [-20,19] range), then
-> I think the meaning should be the opposite.
 > 
-> A -19 latency-nice task is a task which is not willing to give up
-> latency. For those tasks for example we want to reduce the wake-up
-> latency at maximum.
+> 	unsigned int head = READ_ONCE(pipe->head);
+> 	unsigned int tail = pipe->tail;
+> 	unsigned int mask = pipe->buffers - 1;
 > 
-> This will keep its semantic aligned to that of process niceness values
-> which range from -20 (most favourable to the process) to 19 (least
-> favourable to the process).
+> 	if (tail != head) {
+> 		struct pipe_buffer *buf = &pipe->bufs[tail & mask];
 > 
-
-I don't want to start a bikeshedding session here, but I agree with Parth
-on the interpretation of the values.
-
-I've always read niceness values as
--20 (least nice to the system / other processes)
-+19 (most nice to the system / other processes)
-
-So following this trend I'd see for latency-nice:
--20 (least nice to latency, i.e. sacrifice latency for throughput)
-+19 (most nice to latency, i.e. sacrifice throughput for latency)
-
-However...
-
->> But there seems to be a bit of confusion on whether we want biasing as well
->> (latency-biased) or something similar, in which case "latency-nice" may
->> confuse the end-user.
+> 		[...]
 > 
-> AFAIU PeterZ point was "just" that if we call it "-nice" it has to
-> behave as "nice values" to avoid confusions to users. But, if we come up
-> with a different naming maybe we will have more freedom.
+> 		written = copy_page_to_iter(buf->page, buf->offset, chars, to);
 > 
-
-...just getting rid of the "-nice" would leave us free not to have to
-interpret the values as "nice to / not nice to" :)
-
-> Personally, I like both "latency-nice" or "latency-tolerant", where:
 > 
->  - latency-nice:
->    should have a better understanding based on pre-existing concepts
+> where you want to make sure you don't read from 'buf->page' until after
+> you've read the updated head index. Is that right? If so, then READ_ONCE()
+> will not give you that guarantee on architectures such as Power and Arm,
+> because the 'if (tail != head)' branch can be speculated and the buffer
+> can be read before we've got around to looking at the head index.
 > 
->  - latency-tolerant:
->    decouples a bit its meaning from the niceness thus giving maybe a bit
->    more freedom in its complete definition and perhaps avoid any
->    possible interpretation confusion like the one I commented above.
-> 
-> Fun fact: there was also the latency-nasty proposal from PaulMK :)
-> 
+> So I reckon you need smp_load_acquire() in this case. pipe_write() might be
+> ok with the control dependency because CPUs don't tend to make speculative
+> writes visible, but I didn't check it carefully and the compiler can do
+> crazy stuff in this area, so I'd be inclined to use smp_load_acquire() here
+> too unless you really need the last ounce of performance.
 
-[...]
+Yeah, I probably do.
 
-> 
-> $> Wakeup path tunings
-> ==========================
-> 
-> Some additional possible use-cases was already discussed in [3]:
-> 
->  - dynamically tune the policy of a task among SCHED_{OTHER,BATCH,IDLE}
->    depending on crossing certain pre-configured threshold of latency
->    niceness.
->   
->  - dynamically bias the vruntime updates we do in place_entity()
->    depending on the actual latency niceness of a task.
->   
->    PeterZ thinks this is dangerous but that we can "(carefully) fumble a
->    bit there."
->   
->  - bias the decisions we take in check_preempt_tick() still depending
->    on a relative comparison of the current and wakeup task latency
->    niceness values.
+Documentation/core-api/circular-buffers.rst might be wrong, then, I think.
 
-Aren't we missing the point about tweaking the sched domain scans (which
-AFAIR was the original point for latency-nice)?
+It mandates using smp_store_release() to update buffer->head in the producer
+and buffer->tail in the consumer - but these need pairing with memory barriers
+used when reading buffer->head and buffer->tail on the other side.  Currently,
+for the producer we have:
 
-Something like default value is current behaviour and
-- Being less latency-sensitive means increasing the scans (e.g. trending
-  towards only going through the slow wakeup-path at the extreme setting)
-- Being more latency-sensitive means reducing the scans (e.g. trending
-  towards a fraction of the domain scanned in the fast-path at the extreme
-  setting).
+	spin_lock(&producer_lock);
 
-> 
+	unsigned long head = buffer->head;
+	/* The spin_unlock() and next spin_lock() provide needed ordering. */
+	unsigned long tail = READ_ONCE(buffer->tail);
 
-$> Load balance tuning
-======================
+	if (CIRC_SPACE(head, tail, buffer->size) >= 1) {
+		/* insert one item into the buffer */
+		struct item *item = buffer[head];
 
-Already mentioned these in [4]:
+		produce_item(item);
 
-- Increase (reduce) nr_balance_failed threshold when trying to active
-  balance a latency-sensitive (non-latency-sensitive) task.
+		smp_store_release(buffer->head,
+				  (head + 1) & (buffer->size - 1));
 
-- Increase (decrease) sched_migration_cost factor in task_hot() for
-  latency-sensitive (non-latency-sensitive) tasks.
+		/* wake_up() will make sure that the head is committed before
+		 * waking anyone up */
+		wake_up(consumer);
+	}
 
->> References:
->> ===========
->> [1]. https://lkml.org/lkml/2019/8/30/829
->> [2]. https://lkml.org/lkml/2019/7/25/296
-> 
->   [3]. Message-ID: <20190905114709.GM2349@hirez.programming.kicks-ass.net>
->        https://lore.kernel.org/lkml/20190905114709.GM2349@hirez.programming.kicks-ass.net/
-> 
+	spin_unlock(&producer_lock);
 
-[4]: https://lkml.kernel.org/r/3d3306e4-3a78-5322-df69-7665cf01cc43@arm.com
+I think the ordering comment about spin_unlock and spin_lock is wrong.  There's
+no requirement to have a spinlock on either side - and in any case, both sides
+could be inside their respective locked sections when accessing the buffer.
+The READ_ONCE() would theoretically provide the smp_read_barrier_depends() to
+pair with the smp_store_release() in the consumer.  Maybe I should change this
+to:
 
-> 
-> Best,
-> Patrick
-> 
+	spin_lock(&producer_lock);
+
+	/* Barrier paired with consumer-side store-release on tail */
+	unsigned long tail = smp_load_acquire(buffer->tail);
+	unsigned long head = buffer->head;
+
+	if (CIRC_SPACE(head, tail, buffer->size) >= 1) {
+		/* insert one item into the buffer */
+		struct item *item = buffer[head];
+
+		produce_item(item);
+
+		smp_store_release(buffer->head,
+				  (head + 1) & (buffer->size - 1));
+
+		/* wake_up() will make sure that the head is committed before
+		 * waking anyone up */
+		wake_up(consumer);
+	}
+
+	spin_unlock(&producer_lock);
+
+The consumer is currently:
+
+	spin_lock(&consumer_lock);
+
+	/* Read index before reading contents at that index. */
+	unsigned long head = smp_load_acquire(buffer->head);
+	unsigned long tail = buffer->tail;
+
+	if (CIRC_CNT(head, tail, buffer->size) >= 1) {
+
+		/* extract one item from the buffer */
+		struct item *item = buffer[tail];
+
+		consume_item(item);
+
+		/* Finish reading descriptor before incrementing tail. */
+		smp_store_release(buffer->tail,
+				  (tail + 1) & (buffer->size - 1));
+	}
+
+	spin_unlock(&consumer_lock);
+
+which I think is okay.
+
+And yes, I note that this does use smp_load_acquire(buffer->head) in the
+consumer - which I should also be doing.
+
+David
