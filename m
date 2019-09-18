@@ -4,134 +4,114 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD4C4CEC9
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BDC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A3F6218AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043DC21897
+	for <linux-kernel@archiver.kernel.org>; Wed, 18 Sep 2019 09:33:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="I1Zy9RDp"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="B8nbCdz6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfIRJdc (ORCPT
+        id S1729300AbfIRJdo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 05:33:32 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50884 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726818AbfIRJdc (ORCPT
+        Wed, 18 Sep 2019 05:33:44 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45400 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727337AbfIRJdo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 05:33:32 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8I9LiLC012659;
-        Wed, 18 Sep 2019 11:33:17 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=w2DW76qUSewnb1/9cIUq9BbK5Drmqq+tMdxCCn/J9V8=;
- b=I1Zy9RDpW/qOpImzeliSW2ZhFKIYE8lxtzo/CF1AWxe4+MUxtIhUp3wyGNcWHCcEuJIv
- 9aJCw9kB3R88uCEbYslFaKO/y7xUYyFSggCKFamcvKDhSiTijdJ249Pbb+pBRxumeHgc
- 3htuC9vMVKdNB9dMsXDwjm7qFub3LaFR2E8c4hlb4ng4ojoTKCCXb2CK2Buva2JntihK
- yaO6OEPgYskuDPWU8YSTw4G81dYeer/pCoJNwFSqWjJ4XU2GFRa/jG/3y9jhYDtq/cA2
- 3dMHqy6mART+qbblqv5hqPxboPsTrna8U0+k49PX5fBvBfX8JOdeD3701d8x79NWS2xn Cg== 
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2v37kh39fw-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 18 Sep 2019 11:33:17 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 2783951;
-        Wed, 18 Sep 2019 09:33:10 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id D249C2B06B4;
-        Wed, 18 Sep 2019 11:33:09 +0200 (CEST)
-Received: from lmecxl0923.lme.st.com (10.75.127.51) by SFHDAG6NODE1.st.com
- (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 18 Sep
- 2019 11:33:09 +0200
-Subject: Re: [PATCH V6 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-mmc@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20190905122112.29672-1-ludovic.Barre@st.com>
-From:   Ludovic BARRE <ludovic.barre@st.com>
-Message-ID: <940e3ce8-1a4f-7e03-dfec-25330051ea5f@st.com>
-Date:   Wed, 18 Sep 2019 11:33:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Wed, 18 Sep 2019 05:33:44 -0400
+Received: by mail-lj1-f193.google.com with SMTP id q64so6460065ljb.12
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 02:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oVhNis/dF5C/JXuxrb6BPz9PriRAlEp0NTIbkhZyp5o=;
+        b=B8nbCdz6S1ldEQ7bMIDaDYAD9/FFZKl5H5tbiDBQgmM5mtEzL5Cb++ud3waqdB5AvI
+         S3Bt8fKcaZu1KgPR9x/Vr093cICdeFVV8pNrgQVbFj3uO36dphq6M9k5EED/V7cBmhZY
+         mxM5PZXwLLiQmyK0n1Q9SyO0M587jTWg3fBvs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oVhNis/dF5C/JXuxrb6BPz9PriRAlEp0NTIbkhZyp5o=;
+        b=NpatgJQgOOYK4p5VFA7nvMKqfVaygO+4Pi+9kbB8YqqPh+WbF4+V7sw/u+nXUxk4Wg
+         yeSu5KyUYlZSUNTZTjGEKkgWyJR2cOtGRvsCgiTEYfpOVrXN6I9f5Fdf2HHKKe4JOjQj
+         y/03xrqLSbb/MlnYVEWPu4ahDAwTxoq9cY2/NH1NPpPzAFxRsJ6Mbdvk9qxIvSJGUbUb
+         0u1MvzD0slAAsa5COXc17NjpqnvYDFyIjZ8cfCz8eQfW1MXS6olmYXvVzdWq5mi43VYR
+         IKkf/Dz5Y+qm1PuzRPL81AmSqGw+LJ2wMz6NOG12BI7X/cBKXQ3416LnjrsxI13bmksF
+         Z2/w==
+X-Gm-Message-State: APjAAAUYUkeZ+zDyQxVNlXI8Hf/EY8B7sZacUOJ1QdBlBdHiNbrFmiuh
+        2fiYBJ8ah4JjFuO4lqnkUZfhjVFQnKefzQza
+X-Google-Smtp-Source: APXvYqwCRUNGp9YjvKH9IT59/6e8Y9GI5BZxn5DL8YUvWDvFixN1V1BGI/eSwpRdUjWLkC64Q+YKOA==
+X-Received: by 2002:a2e:5dc3:: with SMTP id v64mr1722222lje.118.1568799221748;
+        Wed, 18 Sep 2019 02:33:41 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id f21sm1083158lfm.90.2019.09.18.02.33.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 18 Sep 2019 02:33:41 -0700 (PDT)
+Subject: Re: Linux 5.3-rc8
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Lennart Poettering <mzxreary@0pointer.de>
+Cc:     "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        zhangjs <zachary@baishancloud.com>, linux-ext4@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAHk-=wgs65hez6ctK7J2k46BdQzvKU5avExPOTTJsZu6iqA-ow@mail.gmail.com>
+ <C4F7DC65-50B9-4D70-8E9B-0A6FF5C1070A@srcf.ucam.org>
+ <20190917052438.GA26923@1wt.eu> <2508489.jOnZlRuxVn@merkaba>
+ <20190917121156.GC6762@mit.edu>
+ <20190917123015.sirlkvy335crozmj@debian-stretch-darwi.lab.linutronix.de>
+ <20190917160844.GC31567@gardel-login>
+ <CAHk-=wgsWTCZ=LPHi7BXzFCoWbyp3Ey-zZbaKzWixO91Ryr9=A@mail.gmail.com>
+ <20190917174219.GD31798@gardel-login>
+ <CAHk-=wjABG3+daJFr4w3a+OWuraVcZpi=SMUg=pnZ+7+O0E2FA@mail.gmail.com>
+ <CAHk-=wgOCv2eOT2M8Vw9GD_yOpsTwF364-hkeADyEu9erHgMGw@mail.gmail.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <89aeae9d-0bca-2a59-5ce2-1e18f6479936@rasmusvillemoes.dk>
+Date:   Wed, 18 Sep 2019 11:33:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190905122112.29672-1-ludovic.Barre@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.51]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
- (10.75.127.16)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-18_06:2019-09-17,2019-09-18 signatures=0
+In-Reply-To: <CAHk-=wgOCv2eOT2M8Vw9GD_yOpsTwF364-hkeADyEu9erHgMGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Ulf
+On 17/09/2019 22.58, Linus Torvalds wrote:
+> Side note, and entirely unrelated to this particular problem, but
+> _because_ I was looking at the entropy init and sources of randomness
+> we have, I notice that we still don't use the ToD clock as a source.
 
-Just a "gentleman ping" about this series and
-https://lkml.org/lkml/2019/9/4/747
+And unrelated to the non-use of the RTC (which I agree seems weird), but
+because there's no better place in this thread: How "random" is the
+contents of RAM after boot? Sure, for virtualized environments one
+probably always gets zeroed pages from the host (otherwise the host has
+a problem...), and on PCs maybe the BIOS interferes.
 
-Regards
-Ludo
+But for cheap embedded devices with non-ECC RAM and not a lot of
+value-add firmware between power-on and start_kernel(), would it make
+sense to read a few MB of memory outside of where the kernel was loaded
+and feed those to add_device_randomness() (of course, doing it as early
+as possible, maybe first thing in start_kernel())? Or do the reading in
+the bootloader and pass on the sha256() in the DT/rng-seed property?
 
-Le 9/5/19 à 2:21 PM, Ludovic Barre a écrit :
-> From: Ludovic Barre <ludovic.barre@st.com>
-> 
-> This patch series adds busy detect for stm32 sdmmc variant.
-> Some adaptations are required:
-> -On sdmmc the data timer is started on data transfert
-> and busy state, so we must add hardware busy timeout support.
-> -Add busy_complete callback at mmci_host_ops to allow to define
-> a specific busy completion by variant.
-> -Add sdmmc busy_complete callback.
-> 
-> V6:
-> -mmci_start_command: set datatimer only on rsp_busy flag
-> (remove host->mrq->data).
-> -move max_busy_timeout in set_ios callback.
-> -typo fix: err_msk, clks on one lines.
-> 
-> V5:
-> -Replaces !cmd->data to !host->mrq->data to avoid overwrite
->   of datatimer register by the first command (cmd23, without data) of
->   SBC request.
-> 
-> V4:
-> -Re-work with busy_complete callback
-> -In series, move "mmc: mmci: add hardware busy timeout feature" in
-> first to simplify busy_complete prototype with err_msk parameter.
-> 
-> V3:
-> -rebase on latest mmc next
-> -replace re-read by status parameter.
-> 
-> V2:
-> -mmci_cmd_irq cleanup in separate patch.
-> -simplify the busy_detect_flag exclude
-> -replace sdmmc specific comment in
-> "mmc: mmci: avoid fake busy polling in mmci_irq"
-> to focus on common behavior
-> 
-> Ludovic Barre (3):
->    mmc: mmci: add hardware busy timeout feature
->    mmc: mmci: add busy_complete callback
->    mmc: mmci: sdmmc: add busy_complete callback
-> 
->   drivers/mmc/host/mmci.c             | 183 +++++++++++++++++-----------
->   drivers/mmc/host/mmci.h             |   7 +-
->   drivers/mmc/host/mmci_stm32_sdmmc.c |  38 ++++++
->   3 files changed, 156 insertions(+), 72 deletions(-)
-> 
+A quick "kitchen-table" experiment with the board I have on my desk
+shows that there are at least some randomness to be had after a cold boot.
+
+Maybe this has already been suggested and rejected?
+
+Rasmus
