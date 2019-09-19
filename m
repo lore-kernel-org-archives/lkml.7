@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EFEC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7622C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6562A208C0
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FD821907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568928648;
-	bh=xwTJV+Y4QUUFIQZHtZTx+jn5DYCuQ/XItTrEl7d2g7E=;
+	s=default; t=1568928651;
+	bh=PxIMPCzSmLksihdPHjm4QGV5FFdSb/+jzcpKL6SE0QU=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=YsLoSE1zl8heGPA5BsZ0J2x2eV/wao2u8cTl9xp33Q38LpUl1a1IK4UpqvFQE+0Az
-	 h7ImdQ+2n7UYbtvk6cjWFJLXy8k+7uUf84l9lUIDhvrZUXOLpuPYYJjBAp6gnYIdmT
-	 8bs2rF7WbMDG5a5480zx/mT3HcK31mkzeB+I6Icw=
+	b=Y8x3UehaGqgR4tJBG8+NjCOQBQz2queLhtkclY7S3lTUIb8FCVgDvKdEj7+txDnn/
+	 Y96yWpLA/H568XEBP27YsOpQTW6n6BoZzeoq9lD4VfwdwcufKmgW6/Qrr2T0Ei7rOQ
+	 MWxbOxmoJhBfGp4RB7r9ZlZVTBNWYHglYquOgnmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393032AbfISVar (ORCPT
+        id S2404839AbfISVab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:30:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60478 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 17:30:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404830AbfISVad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:30:33 -0400
-Subject: Re: [GIT PULL] IPMI bug fixes for 5.4
+        id S2404824AbfISVaa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 17:30:30 -0400
+Subject: Re: [GIT PULL] dma-mapping updates for 5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568928632;
-        bh=xwTJV+Y4QUUFIQZHtZTx+jn5DYCuQ/XItTrEl7d2g7E=;
+        s=default; t=1568928629;
+        bh=PxIMPCzSmLksihdPHjm4QGV5FFdSb/+jzcpKL6SE0QU=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GUZheCmpm3FTJ9R7olxeR+XZtT924872y8gK8KTN9dFnw5a2n4Kh7p8+sVzPY3Nwm
-         0hIoA6ci7cT55YXia83kOQpyhzN/YeQjn4M7a7Ol+NwXhjPhhD0lUBUNYVL831yrWk
-         PmO/3+XlpQxhk1S/02bicYGTTfBn9Gfaf778Tceg=
+        b=N/k9/zG0H5690gQsIVAD/7SuzY3PEW6cTpTLrwp3rkS316pDfWlnEBUlBH19Yagaz
+         qVYe9lAsrjiiMow0EZO6pPIXPPEf0nD7V3qA7HLSgdvmGPxiTG0pwfEcUaTMtYJ8fW
+         wNUFKGT3tipMpm+5G7gsgo+8sYF/B5zmohe/mduw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190919160807.GL13407@t560>
-References: <20190919160807.GL13407@t560>
+In-Reply-To: <20190918152748.GA21241@infradead.org>
+References: <20190918152748.GA21241@infradead.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190919160807.GL13407@t560>
-X-PR-Tracked-Remote: https://github.com/cminyard/linux-ipmi.git
- tags/for-linus-5.4-1
-X-PR-Tracked-Commit-Id: c9acc3c4f8e42ae538aea7f418fddc16f257ba75
+X-PR-Tracked-Message-Id: <20190918152748.GA21241@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git
+ tags/dma-mapping-5.4
+X-PR-Tracked-Commit-Id: c7d9eccb3c1e802c5cbb2a764eb0eb9807d9f12e
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a9f8b38a071b468276a243ea3ea5a0636e848cf2
-Message-Id: <156892863274.30913.4363982565614390979.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Sep 2019 21:30:32 +0000
-To:     Corey Minyard <minyard@acm.org>
+X-PR-Merge-Commit-Id: 671df189537883f36cf9c7d4f9495bfac0f86627
+Message-Id: <156892862992.30913.10484528229946005623.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Sep 2019 21:30:29 +0000
+To:     Christoph Hellwig <hch@infradead.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net
+        linux-mmc@vger.kernel.org, iommu@lists.linux-foundation.org,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Sep 2019 11:08:07 -0500:
+The pull request you sent on Wed, 18 Sep 2019 08:27:48 -0700:
 
-> https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.4-1
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-5.4
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a9f8b38a071b468276a243ea3ea5a0636e848cf2
+https://git.kernel.org/torvalds/c/671df189537883f36cf9c7d4f9495bfac0f86627
 
 Thank you!
 
