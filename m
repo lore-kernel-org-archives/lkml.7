@@ -2,138 +2,213 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B17DC4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6AAC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FEEE21848
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:53:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="NkuDuICe"
+	by mail.kernel.org (Postfix) with ESMTP id 5344921848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:53:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbfISGxJ (ORCPT
+        id S1731470AbfISGx0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:53:09 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:32908 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725320AbfISGxJ (ORCPT
+        Thu, 19 Sep 2019 02:53:26 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49713 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfISGx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:53:09 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8J6mJUN026345;
-        Thu, 19 Sep 2019 02:52:38 -0400
-Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2056.outbound.protection.outlook.com [104.47.37.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2v3vbdhc96-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 19 Sep 2019 02:52:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OcxSE8ChiFw0qZwPqhi4cLWndmYNS1RorrYVr/c7IoY8U4HyW7AnDKtLsilqlmEVpW0TMC63yndRGhMLcs2Wbvmdw1CqvqIml9qS/jnmLf8fRcYAZA4gXoEG+isbR4SucOGxJu2HhEZTHCB/uArXlt6UOoXzJ6ym6bomnI5Yimkohos2J8VjjYkkp4PrHD2lJK63DJFM28awm0TKNfqSQsy+hw1Okx3vE1MBmYVOjxtPRGEmowMMg/UWkhK9Buf0S+pVle2AQeAqbZQTrcgOVwWDvBaZ8N92832CvifAit8JJLDwYiS+h05DgvyNMLDJCSt17+hBQnUtH3Xeumcn9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sjcTaZqWSphY2UyF1zfNVACp3lpptr5f8jhk5WDX1S4=;
- b=Hz2fL/Y0uR3Sbus7iv4NYlOXJ83xLLMGQvJRVqG/53xbhO+/2fIjaa6/SIDl/mZNL8+ip53vAgX0WgVPBo3Y7P3UkupGXn/sXoy2BO89R5fkPP+ZKmpZZcHZ3uLdLWSQxQmKkCXP7Avpm4RaKjM9Hn2p2Ewz+qT/KFTYtyYoeAxrFag6EHTR2GpKW/IpTPdrGvkhmAy3tvOYg+1jDoSlKDMJI6Zq7J70bb+S2CkDgTiTxhzOtcA116Oar9r0RPUHK+OoxxIKkwN231JxWcKH7ceXedRzp5m7oBGbm4cJh1mh1mf+lFz8zzGmR8rrvjqdf0Scv0uh7F4W0q+w0x/69Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sjcTaZqWSphY2UyF1zfNVACp3lpptr5f8jhk5WDX1S4=;
- b=NkuDuICewadg4KGlQW4+Ks1cw4zGtz/bkDrl3HCGEpTO/CHQBDURlAw/q2Z7UsJpm5WV26175n+Io90rc/4/a7+IIImem9EqFzcYcfTQWB7IlsKzo9egnylMaIs9jye9WZyq9uz/AvUMVybn7zvb9bnbOIMHU68nN9b9k5pFcuw=
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com (20.180.12.152) by
- CH2PR03MB5349.namprd03.prod.outlook.com (20.180.14.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.20; Thu, 19 Sep 2019 06:52:36 +0000
-Received: from CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b]) by CH2PR03MB5192.namprd03.prod.outlook.com
- ([fe80::344d:7f50:49a3:db1b%3]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
- 06:52:36 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "navid.emamdoost@gmail.com" <navid.emamdoost@gmail.com>
-CC:     "Popa, Stefan Serban" <StefanSerban.Popa@analog.com>,
-        "emamd001@umn.edu" <emamd001@umn.edu>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jic23@kernel.org" <jic23@kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "smccaman@umn.edu" <smccaman@umn.edu>,
-        "kjlu@umn.edu" <kjlu@umn.edu>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
-Subject: Re: [PATCH] iio: imu: adis16400: fix memory leak
-Thread-Topic: [PATCH] iio: imu: adis16400: fix memory leak
-Thread-Index: AQHVbkMAbT5q7RcMUEenCtthND7agKcyw2SA
-Date:   Thu, 19 Sep 2019 06:52:36 +0000
-Message-ID: <76a7c8d43f8c03a0549d157bbf278b515cfbc047.camel@analog.com>
-References: <20190918170306.4779-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190918170306.4779-1-navid.emamdoost@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [137.71.226.54]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65e5f6d6-3b46-4720-5ead-08d73ccdf4c8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR03MB5349;
-x-ms-traffictypediagnostic: CH2PR03MB5349:
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR03MB5349133072B2AA9366F4EB31F9890@CH2PR03MB5349.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(376002)(366004)(346002)(199004)(189003)(54906003)(66066001)(86362001)(6246003)(478600001)(7736002)(2616005)(71190400001)(8676002)(36756003)(71200400001)(14454004)(305945005)(7416002)(118296001)(316002)(1361003)(229853002)(6486002)(14444005)(81156014)(256004)(6916009)(6436002)(5640700003)(6512007)(486006)(26005)(186003)(11346002)(99286004)(76176011)(102836004)(446003)(66476007)(66946007)(476003)(66556008)(64756008)(6506007)(5660300002)(66446008)(4326008)(6116002)(2351001)(76116006)(2501003)(3846002)(25786009)(2906002)(4744005)(81166006)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5349;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7ldS5Q169LSI8wnCjhEENOW3eWKSgRoXGzb49FVpRIyiThJ/mWjGZcpgr1K/l//CgrlWjadMX9BJK2oJgKaPvb0Fe+eVdcq+ZDwKSrTRjBP5DXHXqaHL5+pD1u43Lm4alcbwIm3tIN6m6kpnsJ0hVI68cHWbywY94ZQFjpXyJyo0lkzXvZEpVF4RZjCAc+A880NLiEbDbnVkzJw0B4SXYd68vwwE96Krs3Rn4bpN3DOklLMaYb2ey9Y6P5NIOs9Qc2zdALOrIjzlio3aYXv7LuXknOtVXawQkT+vVyhtDnCKmvr0cx4XAXj0bPobpDh3+9y1AgN5b9lfLfOH7X0UPR04i2ujXA1kIC/CT26OuWYYOpwKNrTiibDTDV2yYbpQtDeojZ26c2Z4fuG3T1V6iJYViDzycd4KyBYqW/WCiYU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <38128D78B20F614385FF0F2BB212B26F@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 19 Sep 2019 02:53:26 -0400
+Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iAqJX-0004tC-5A; Thu, 19 Sep 2019 06:53:15 +0000
+Date:   Thu, 19 Sep 2019 08:53:14 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     luto@amacapital.net, jannh@google.com, wad@chromium.org,
+        shuah@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.ws>,
+        Tyler Hicks <tyhicks@canonical.com>
+Subject: Re: [PATCH 1/4] seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
+Message-ID: <20190919065313.6etjz4o4yzmclcmx@wittgenstein>
+References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
+ <20190918084833.9369-2-christian.brauner@ubuntu.com>
+ <201909181018.E3CEC9A81@keescook>
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65e5f6d6-3b46-4720-5ead-08d73ccdf4c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 06:52:36.7447
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: b+Lor/ZuHRqVD7UocPxTwRqlCL4PafM4R8RdHR6RaJlkZiSmbIxcgy8Sx3G7h9sTgR6hGxE0KWdr6FLQ7zrxpja782/8kpWS4LgX0LyK/TI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5349
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-19_02:2019-09-18,2019-09-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 adultscore=0 spamscore=0 phishscore=0 clxscore=1015
- priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=970 impostorscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1909190063
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <201909181018.E3CEC9A81@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDE5LTA5LTE4IGF0IDEyOjAzIC0wNTAwLCBOYXZpZCBFbWFtZG9vc3Qgd3JvdGU6
-DQo+IFtFeHRlcm5hbF0NCj4gDQoNCkhleSwNCg0KVGhhbmtzIGZvciB0aGlzIHBhdGNoIGFzIHdl
-bGwuDQpDb21tZW50cyBpbmxpbmUgaGVyZSBhcyB3ZWxsLg0KDQo+IEluIGFkaXNfdXBkYXRlX3Nj
-YW5fbW9kZV9idXJzdCwgaWYgYWRpcy0+YnVmZmVyIGFsbG9jYXRpb24gZmFpbHMgcmVsZWFzZQ0K
-PiB0aGUgYWRpcy0+eGZlci4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IE5hdmlkIEVtYW1kb29zdCA8
-bmF2aWQuZW1hbWRvb3N0QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICBkcml2ZXJzL2lpby9pbXUvYWRp
-c19idWZmZXIuYyB8IDQgKysrLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlvL2ltdS9hZGlzX2J1
-ZmZlci5jDQo+IGIvZHJpdmVycy9paW8vaW11L2FkaXNfYnVmZmVyLmMNCj4gaW5kZXggOWFjODM1
-NmQ5YTk1Li4xZGJlMjU1NzJhMzkgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2ltdS9hZGlz
-X2J1ZmZlci5jDQo+ICsrKyBiL2RyaXZlcnMvaWlvL2ltdS9hZGlzX2J1ZmZlci5jDQo+IEBAIC0z
-NSw4ICszNSwxMCBAQCBzdGF0aWMgaW50IGFkaXNfdXBkYXRlX3NjYW5fbW9kZV9idXJzdChzdHJ1
-Y3QgaWlvX2Rldg0KPiAqaW5kaW9fZGV2LA0KPiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gIA0KPiAg
-CWFkaXMtPmJ1ZmZlciA9IGt6YWxsb2MoYnVyc3RfbGVuZ3RoICsgc2l6ZW9mKHUxNiksIEdGUF9L
-RVJORUwpOw0KPiAtCWlmICghYWRpcy0+YnVmZmVyKQ0KPiArCWlmICghYWRpcy0+YnVmZmVyKSB7
-DQo+ICsJCWtmcmVlKGFkaXMtPnhmZXIpOw0KDQpTYW1lIGFzIHRoZSBvdGhlciBwYXRjaDogaXQg
-d291bGQgYmUgYSBnb29kIGlkZWEgdG8gZG8gImFkaXMtPnhmZXIgPSBOVUxMIg0KaGVyZS4NCg0K
-PiAgCQlyZXR1cm4gLUVOT01FTTsNCj4gKwl9DQo+ICANCj4gIAl0eCA9IGFkaXMtPmJ1ZmZlciAr
-IGJ1cnN0X2xlbmd0aDsNCj4gIAl0eFswXSA9IEFESVNfUkVBRF9SRUcoYWRpcy0+YnVyc3QtPnJl
-Z19jbWQpOw0K
+On Wed, Sep 18, 2019 at 10:30:00AM -0700, Kees Cook wrote:
+> On Wed, Sep 18, 2019 at 10:48:30AM +0200, Christian Brauner wrote:
+> > This allows the seccomp notifier to continue a syscall. A positive
+> > discussion about this feature was triggered by a post to the
+> > ksummit-discuss mailing list (cf. [3]) and took place during KSummit
+> > (cf. [1]) and again at the containers/checkpoint-restore
+> > micro-conference at Linux Plumbers.
+> > 
+> > Recently we landed seccomp support for SECCOMP_RET_USER_NOTIF (cf. [4])
+> > which enables a process (watchee) to retrieve an fd for its seccomp
+> > filter. This fd can then be handed to another (usually more privileged)
+> > process (watcher). The watcher will then be able to receive seccomp
+> > messages about the syscalls having been performed by the watchee.
+> > 
+> > This feature is heavily used in some userspace workloads. For example,
+> > it is currently used to intercept mknod() syscalls in user namespaces
+> > aka in containers.
+> > The mknod() syscall can be easily filtered based on dev_t. This allows
+> > us to only intercept a very specific subset of mknod() syscalls.
+> > Furthermore, mknod() is not possible in user namespaces toto coelo and
+> > so intercepting and denying syscalls that are not in the whitelist on
+> > accident is not a big deal. The watchee won't notice a difference.
+> > 
+> > In contrast to mknod(), a lot of other syscall we intercept (e.g.
+> > setxattr()) cannot be easily filtered like mknod() because they have
+> > pointer arguments. Additionally, some of them might actually succeed in
+> > user namespaces (e.g. setxattr() for all "user.*" xattrs). Since we
+> > currently cannot tell seccomp to continue from a user notifier we are
+> > stuck with performing all of the syscalls in lieu of the container. This
+> > is a huge security liability since it is extremely difficult to
+> > correctly assume all of the necessary privileges of the calling task
+> > such that the syscall can be successfully emulated without escaping
+> > other additional security restrictions (think missing CAP_MKNOD for
+> > mknod(), or MS_NODEV on a filesystem etc.). This can be solved by
+> > telling seccomp to resume the syscall.
+> > 
+> > One thing that came up in the discussion was the problem that another
+> > thread could change the memory after userspace has decided to let the
+> > syscall continue which is a well known TOCTOU with seccomp which is
+> > present in other ways already.
+> > The discussion showed that this feature is already very useful for any
+> > syscall without pointer arguments. For any accidentally intercepted
+> > non-pointer syscall it is safe to continue.
+> > For syscalls with pointer arguments there is a race but for any cautious
+> > userspace and the main usec cases the race doesn't matter. The notifier
+> > is intended to be used in a scenario where a more privileged watcher
+> > supervises the syscalls of lesser privileged watchee to allow it to get
+> > around kernel-enforced limitations by performing the syscall for it
+> > whenever deemed save by the watcher. Hence, if a user tricks the watcher
+> > into allowing a syscall they will either get a deny based on
+> > kernel-enforced restrictions later or they will have changed the
+> > arguments in such a way that they manage to perform a syscall with
+> > arguments that they would've been allowed to do anyway.
+> > In general, it is good to point out again, that the notifier fd was not
+> > intended to allow userspace to implement a security policy but rather to
+> > work around kernel security mechanisms in cases where the watcher knows
+> > that a given action is safe to perform.
+> > 
+> > /* References */
+> > [1]: https://linuxplumbersconf.org/event/4/contributions/560
+> > [2]: https://linuxplumbersconf.org/event/4/contributions/477
+> > [3]: https://lore.kernel.org/r/20190719093538.dhyopljyr5ns33qx@brauner.io
+> > [4]: commit 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
+> > 
+> > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > Cc: Andy Lutomirski <luto@amacapital.net>
+> > Cc: Will Drewry <wad@chromium.org>
+> > Cc: Tycho Andersen <tycho@tycho.ws>
+> > CC: Tyler Hicks <tyhicks@canonical.com>
+> > Cc: Jann Horn <jannh@google.com>
+> > ---
+> >  include/uapi/linux/seccomp.h |  2 ++
+> >  kernel/seccomp.c             | 24 ++++++++++++++++++++----
+> >  2 files changed, 22 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> > index 90734aa5aa36..2c23b9aa6383 100644
+> > --- a/include/uapi/linux/seccomp.h
+> > +++ b/include/uapi/linux/seccomp.h
+> > @@ -76,6 +76,8 @@ struct seccomp_notif {
+> >  	struct seccomp_data data;
+> >  };
+> >  
+> > +#define SECCOMP_RET_USER_NOTIF_ALLOW 0x00000001
+> 
+> nit: I'd like to avoid confusion here about what "family" these flags
+> belong to. "SECCOMP_RET_..." is used for the cBPF filter return action
+> value, so let's instead call this:
+> 
+> #define SECCOMP_USER_NOTIF_CONTINUE	BIT(0)
+
+Ack.
+
+> 
+> I'm thinking of "continue" as slightly different from "allow", in the
+> sense that I'd like to hint that this doesn't mean arguments could have
+> been reliably "filtered" via user notification.
+
+Good point.
+
+> 
+> And at the same time, please add a giant comment about this in the
+> header that details the purpose ("check if I should do something on
+> behalf of the process") and not "is this safe to allow?", due to the
+> argument parsing ToCToU.
+
+Yeah, I'll copy parts of what I described in the commit message down
+into the code.
+
+> 
+> > -static void seccomp_do_user_notification(int this_syscall,
+> > +static bool seccomp_do_user_notification(int this_syscall,
+> 
+> I'd prefer this stay an "int", just to keep it similar to the other
+> functions that are checked in __seccomp_filter().
+
+Ack.
+
+> 
+> > +	/* perform syscall */
+> 
+> nit: expand this commit to something like "Userspace requests we
+> continue and perform syscall".
+
+Ack.
+
+> 
+> > +	if (flags & SECCOMP_RET_USER_NOTIF_ALLOW)
+> > +		return false;
+> 
+> return 0;
+> 
+> > +
+> >  	syscall_set_return_value(current, task_pt_regs(current),
+> >  				 err, ret);
+> > +	return true;
+> 
+> return -1;
+> 
+> (This makes it look more like a "skip on failure")
+
+Ack.
+
+> 
+> > +	if (resp.flags & ~SECCOMP_RET_USER_NOTIF_ALLOW)
+> > +		return -EINVAL;
+> > +
+> > +	if ((resp.flags & SECCOMP_RET_USER_NOTIF_ALLOW) &&
+> > +	    (resp.error || resp.val))
+> >  		return -EINVAL;
+> 
+> Ah yeah, good idea.
+> 
+> Beyond these nits, yes, looks good and should help the usability of this
+> feature. Thanks for getting it written and tested!
+
+Will rework and resend!
+
+Thanks for the review! :)
+Christian
