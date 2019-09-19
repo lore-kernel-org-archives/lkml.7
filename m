@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41350C4CEC4
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B8C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1408321927
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68C4721927
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931058;
-	bh=CJmj8ChZiWKMSqdu2DgTc6/pCt/Wdcyt/lnwzZtrHgc=;
+	s=default; t=1568931059;
+	bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z27WLyYJxUtwBz9xhd7duAe64NszOawngh9vHPutDLGZtOCaKGNtQM5YtI3+G8Gli
-	 TkGRC2Z+3WOo8W71OF7EaY2Himkrq2CpBWiuNRaVOlfk5TWvuCAC8t57LE/eulZS58
-	 ty747vS/RgMr5/cEtprnP6mRk/5A0go1MeNx9Jdw=
+	b=sB7rWzk5HeCLjoWnNvWLrGHqFIyCBq3LNJmtlQfwtL6/+XLgW0nYI2QDVXbJpIx+v
+	 gO5TNJ4z5llKMFky4uM2EQ8X67k6faICbBXuK0axyGF61DMDrCedZpYIS643x/4Pix
+	 7eo08G3xTBYKOP2t9jONXLW5Gcy80qA9zcidHB7E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405801AbfISWK5 (ORCPT
+        id S2405811AbfISWK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49432 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405786AbfISWKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:54 -0400
+        id S2389407AbfISWK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A9F821929;
-        Thu, 19 Sep 2019 22:10:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E8EA218AF;
+        Thu, 19 Sep 2019 22:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931052;
-        bh=CJmj8ChZiWKMSqdu2DgTc6/pCt/Wdcyt/lnwzZtrHgc=;
+        s=default; t=1568931055;
+        bh=kq4pdFmtcMw82+SxqAXPhY8B6WPqlfQZGcEo6PI8wQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kyuLV4g6OJQr0rRRty7UFbfMKskeykIYx83MzffDp/Bhzsb1pd+YI9rKOt/rOuWmq
-         chcBAtyeLdVFpJTtXs6pJeNF7Natz+uRP1L4NXmze0kPxDEQc1hJ2chSl2FcCVhHIy
-         TEERimIKTPPjmeh3dMgTX7PEKoLPx1shNXyvDcpw=
+        b=X7lcwSKLU+I/H//CGICbmYGDKt8Q3rQE6nrwL/4YDGdmhwxW39cOCY+JWK3NV8Wsh
+         98ryX52vO2ZDsIfOzJRDqkpyi8/dNE69PTT4nOd1344kSqOyMSNu5vAp4GcO3Az4xs
+         jbUmcMwY5tNuLM4JFbcaSZtyUyWBN/dTQwCmlwSA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
+        Michael Symolkin <Michael.Symolkin@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 068/124] NFS: Fix spurious EIO read errors
-Date:   Fri, 20 Sep 2019 00:02:36 +0200
-Message-Id: <20190919214821.472044590@linuxfoundation.org>
+Subject: [PATCH 5.2 104/124] net: aquantia: linkstate irq should be oneshot
+Date:   Fri, 20 Sep 2019 00:03:12 +0200
+Message-Id: <20190919214822.988354358@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,170 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Igor Russkikh <Igor.Russkikh@aquantia.com>
 
-[ Upstream commit 8f54c7a4babf58bbaf849e126f7ae9664bdc9e04 ]
+[ Upstream commit 5c47e3ba6fe52465603cf9d816b3371e6881d649 ]
 
-If the client attempts to read a page, but the read fails due to some
-spurious error (e.g. an ACCESS error or a timeout, ...) then we need
-to allow other processes to retry.
-Also try to report errors correctly when doing a synchronous readpage.
+Declaring threaded irq handler should also indicate the irq is
+oneshot. It is oneshot indeed, because HW implements irq automasking
+on trigger.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Not declaring this causes some kernel configurations to fail
+on interface up, because request_threaded_irq returned an err code.
+
+The issue was originally hidden on normal x86_64 configuration with
+latest kernel, because depending on interrupt controller, irq driver
+added ONESHOT flag on its own.
+
+Issue was observed on older kernels (4.14) where no such logic exists.
+
+Fixes: 4c83f170b3ac ("net: aquantia: link status irq handling")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Reported-by: Michael Symolkin <Michael.Symolkin@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/internal.h | 10 ++++++++++
- fs/nfs/read.c     | 35 ++++++++++++++++++++++++++---------
- fs/nfs/write.c    | 12 ------------
- 3 files changed, 36 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 81e2fdff227ed..9ab9427405f3f 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -773,3 +773,13 @@ static inline bool nfs_error_is_fatal(int err)
- 	}
- }
- 
-+static inline bool nfs_error_is_fatal_on_server(int err)
-+{
-+	switch (err) {
-+	case 0:
-+	case -ERESTARTSYS:
-+	case -EINTR:
-+		return false;
-+	}
-+	return nfs_error_is_fatal(err);
-+}
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index c19841c82b6a3..cfe0b586eadd4 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -91,19 +91,25 @@ void nfs_pageio_reset_read_mds(struct nfs_pageio_descriptor *pgio)
- }
- EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
- 
--static void nfs_readpage_release(struct nfs_page *req)
-+static void nfs_readpage_release(struct nfs_page *req, int error)
- {
- 	struct inode *inode = d_inode(nfs_req_openctx(req)->dentry);
-+	struct page *page = req->wb_page;
- 
- 	dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb->s_id,
- 		(unsigned long long)NFS_FILEID(inode), req->wb_bytes,
- 		(long long)req_offset(req));
- 
-+	if (nfs_error_is_fatal_on_server(error) && error != -ETIMEDOUT)
-+		SetPageError(page);
- 	if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
--		if (PageUptodate(req->wb_page))
--			nfs_readpage_to_fscache(inode, req->wb_page, 0);
-+		struct address_space *mapping = page_file_mapping(page);
- 
--		unlock_page(req->wb_page);
-+		if (PageUptodate(page))
-+			nfs_readpage_to_fscache(inode, page, 0);
-+		else if (!PageError(page) && !PagePrivate(page))
-+			generic_error_remove_page(mapping, page);
-+		unlock_page(page);
- 	}
- 	nfs_release_request(req);
- }
-@@ -131,7 +137,7 @@ int nfs_readpage_async(struct nfs_open_context *ctx, struct inode *inode,
- 			     &nfs_async_read_completion_ops);
- 	if (!nfs_pageio_add_request(&pgio, new)) {
- 		nfs_list_remove_request(new);
--		nfs_readpage_release(new);
-+		nfs_readpage_release(new, pgio.pg_error);
- 	}
- 	nfs_pageio_complete(&pgio);
- 
-@@ -153,6 +159,7 @@ static void nfs_page_group_set_uptodate(struct nfs_page *req)
- static void nfs_read_completion(struct nfs_pgio_header *hdr)
- {
- 	unsigned long bytes = 0;
-+	int error;
- 
- 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags))
- 		goto out;
-@@ -179,14 +186,19 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
- 				zero_user_segment(page, start, end);
- 			}
- 		}
-+		error = 0;
- 		bytes += req->wb_bytes;
- 		if (test_bit(NFS_IOHDR_ERROR, &hdr->flags)) {
- 			if (bytes <= hdr->good_bytes)
- 				nfs_page_group_set_uptodate(req);
-+			else {
-+				error = hdr->error;
-+				xchg(&nfs_req_openctx(req)->error, error);
-+			}
- 		} else
- 			nfs_page_group_set_uptodate(req);
- 		nfs_list_remove_request(req);
--		nfs_readpage_release(req);
-+		nfs_readpage_release(req, error);
- 	}
- out:
- 	hdr->release(hdr);
-@@ -213,7 +225,7 @@ nfs_async_read_error(struct list_head *head, int error)
- 	while (!list_empty(head)) {
- 		req = nfs_list_entry(head->next);
- 		nfs_list_remove_request(req);
--		nfs_readpage_release(req);
-+		nfs_readpage_release(req, error);
- 	}
- }
- 
-@@ -337,8 +349,13 @@ int nfs_readpage(struct file *file, struct page *page)
- 			goto out;
- 	}
- 
-+	xchg(&ctx->error, 0);
- 	error = nfs_readpage_async(ctx, inode, page);
--
-+	if (!error) {
-+		error = wait_on_page_locked_killable(page);
-+		if (!PageUptodate(page) && !error)
-+			error = xchg(&ctx->error, 0);
-+	}
- out:
- 	put_nfs_open_context(ctx);
- 	return error;
-@@ -372,8 +389,8 @@ readpage_async_filler(void *data, struct page *page)
- 		zero_user_segment(page, len, PAGE_SIZE);
- 	if (!nfs_pageio_add_request(desc->pgio, new)) {
- 		nfs_list_remove_request(new);
--		nfs_readpage_release(new);
- 		error = desc->pgio->pg_error;
-+		nfs_readpage_release(new, error);
- 		goto out;
- 	}
- 	return 0;
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index bf3a3f5e1884e..f15dda5efb741 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -599,18 +599,6 @@ static void nfs_write_error(struct nfs_page *req, int error)
- 	nfs_release_request(req);
- }
- 
--static bool
--nfs_error_is_fatal_on_server(int err)
--{
--	switch (err) {
--	case 0:
--	case -ERESTARTSYS:
--	case -EINTR:
--		return false;
--	}
--	return nfs_error_is_fatal(err);
--}
--
- /*
-  * Find an associated nfs write request, and prepare to flush it out
-  * May return an error if the user signalled nfs_wait_on_request().
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index 41172fbebddd3..1a2b090652930 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -390,7 +390,7 @@ int aq_nic_start(struct aq_nic_s *self)
+ 						   self->aq_nic_cfg.link_irq_vec);
+ 			err = request_threaded_irq(irqvec, NULL,
+ 						   aq_linkstate_threaded_isr,
+-						   IRQF_SHARED,
++						   IRQF_SHARED | IRQF_ONESHOT,
+ 						   self->ndev->name, self);
+ 			if (err < 0)
+ 				goto err_exit;
 -- 
 2.20.1
 
