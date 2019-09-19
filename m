@@ -2,156 +2,193 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED717C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6F6C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6A621924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01CDF21848
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 06:55:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Analogixsemi.onmicrosoft.com header.i=@Analogixsemi.onmicrosoft.com header.b="ldGhZ5dA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbfISGx7 (ORCPT
+        id S1731821AbfISGzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 02:53:59 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49724 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfISGx6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 02:53:58 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iAqK7-0004uy-7E; Thu, 19 Sep 2019 06:53:51 +0000
-Date:   Thu, 19 Sep 2019 08:53:50 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     Kees Cook <keescook@chromium.org>, luto@amacapital.net,
-        jannh@google.com, wad@chromium.org, shuah@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kafai@fb.com,
-        songliubraving@fb.com, yhs@fb.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Tyler Hicks <tyhicks@canonical.com>
-Subject: Re: [PATCH 1/4] seccomp: add SECCOMP_RET_USER_NOTIF_ALLOW
-Message-ID: <20190919065349.niedwegw6lczu2zr@wittgenstein>
-References: <20190918084833.9369-1-christian.brauner@ubuntu.com>
- <20190918084833.9369-2-christian.brauner@ubuntu.com>
- <201909181018.E3CEC9A81@keescook>
- <20190918180712.GG3835@cisco>
+        Thu, 19 Sep 2019 02:55:08 -0400
+Received: from mail-eopbgr720138.outbound.protection.outlook.com ([40.107.72.138]:1104
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727843AbfISGzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 02:55:07 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cJAMUz0D/jZO4gtiwsZtTQUGm2yXmx2aB0myGDsmKyJDwqR80mnuEi+OIs3MztlivQDqmyJ3FX5bbctJrcKYkx+OSSRFAx1IS0yo1miPQm9lz+SoXGTgA0eRKC5aaj7qLQpkAcK5qCFfo6pfC8YYpP055vo4rzGATqJy2Emjh1o8Te83zGIi3VCYQb2/gEvdiOMxwPxNK+Z3lvRh0M8NbcgVHIP6T+M3NuMk9r1Cukh1aDnpIAHayfZNrPCSGIoqN7/lANZScAKz5PcUWDA88A/1XA186OYkWoKrL6NhAFr4SE8YAAop6huZTsmFksSSbWnoMbXb0eYFYj05NDvR0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XG4RKisKZlFbQHhiEHyq7gc/XHkBGX+BFeFpX4TQup4=;
+ b=Vb9MX7jfYOFvgO0NZL6/QzkpcDGBXVetCKbAXLhTvKpvkER+rpo7ck4j8nxEdeln/pTQW5k8S4YLYLGqmocClpvumy8KjFO580eFOlwCIDEH1mPMLrI0g6aJZ3gJS6Re8isikGg6Vf/A0fKF6s/GCT6MbcQ2Bv7OiBe6W1WkX6ocUh3N4eutpX9W+ryT8RQ3GQNYiNflJ60rIU3iW72h8VUFZJ01xf1XIWSARqfqTMiJi2I8/uLfGt2CVkcUIlzEIHy8KcNPIIh1fD1ZGqP/i7TV2tXUtxUnsuP4gcxtQBDDgaEJnaHQO9SkLWw5H94/TX5qHFD3uAUB1mQSFx7SYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analogixsemi.com; dmarc=pass action=none
+ header.from=analogixsemi.com; dkim=pass header.d=analogixsemi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=Analogixsemi.onmicrosoft.com; s=selector2-Analogixsemi-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XG4RKisKZlFbQHhiEHyq7gc/XHkBGX+BFeFpX4TQup4=;
+ b=ldGhZ5dAcT7PxTebdyu0t3L4W76IFz+U/p6kczYjuDR7aWbt1Dy/L1WZwppEfgh8khgCN7Y0MelaBqugeCasa/307FqBgAjxGM7YTE8uKraOFNLfXKq0zyjGp6SKTVVzeXVNQK4DS8TnUbLZjXA98I5IKiykP3UyDpsPYbMcMDc=
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com (20.179.22.213) by
+ MN2PR04MB6207.namprd04.prod.outlook.com (20.178.247.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2263.17; Thu, 19 Sep 2019 06:55:01 +0000
+Received: from MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd]) by MN2PR04MB5886.namprd04.prod.outlook.com
+ ([fe80::8520:f80f:ae9:63cd%6]) with mapi id 15.20.2284.009; Thu, 19 Sep 2019
+ 06:55:01 +0000
+From:   Xin Ji <xji@analogixsemi.com>
+To:     "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sheng Pan <span@analogixsemi.com>
+Subject: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Topic: [PATCH v1 1/2] dt-bindings: drm/bridge: anx7625: MIPI to DP
+ transmitter binding
+Thread-Index: AQHVbrcoV2OyOAmcWUS3ygObr3iBRA==
+Date:   Thu, 19 Sep 2019 06:55:01 +0000
+Message-ID: <e41d10504b7d1e977a1f53663c287e4e7d53011a.1568858880.git.xji@analogixsemi.com>
+References: <cover.1568858880.git.xji@analogixsemi.com>
+In-Reply-To: <cover.1568858880.git.xji@analogixsemi.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HK0PR03CA0101.apcprd03.prod.outlook.com
+ (2603:1096:203:b0::17) To MN2PR04MB5886.namprd04.prod.outlook.com
+ (2603:10b6:208:a3::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xji@analogixsemi.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [114.247.245.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ca9fe5b7-6009-4a57-3364-08d73cce4aae
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600167)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MN2PR04MB6207;
+x-ms-traffictypediagnostic: MN2PR04MB6207:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MN2PR04MB62073F814121BFC711FE12EBC7890@MN2PR04MB6207.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 016572D96D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(366004)(376002)(346002)(396003)(39850400004)(136003)(199004)(189003)(8936002)(6436002)(71200400001)(3846002)(54906003)(107886003)(26005)(81156014)(102836004)(6506007)(8676002)(6512007)(7736002)(386003)(81166006)(2501003)(52116002)(99286004)(118296001)(71190400001)(6116002)(76176011)(186003)(486006)(11346002)(66446008)(6486002)(36756003)(4326008)(2616005)(316002)(64756008)(66476007)(305945005)(2906002)(476003)(86362001)(66946007)(478600001)(66556008)(256004)(25786009)(446003)(66066001)(14454004)(5660300002)(110136005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6207;H:MN2PR04MB5886.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analogixsemi.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: t8Wjqweobap34pCEn+ULIeDPvAZwu03O2cqOtctMcPkGO9f0uCDGqYCWP2lrv6yutzB9t8TWE6O+Zdg0aoFs4LKt1k7IwsIMdogS8nDMb3R+oXNrb0i74Gs7NurG6E3TPjt/WAqYbCt+hcp7JM4xB5KoRNO2lAH8R1aIZvFlsXxQ4SxoR5dkjcWdUJY2dwny23IhDueyR3ns9rgs+0ecObLvBqSSMFQ6VzAfXCD3dfhTpTQWUtCakH3DnRZqGmbmKccFjufnyXJhEes3iaOapkH/qGjKXfbYk6w2hFfJ+WyDKgsL3+MdtBb/WNTwX9gufz4raKAo489/UN/pPsRz38sAekYt7EYaCmk74xkKAVYhumnXZtkb5CIlzjn+LS42FeNKe57Hp4BffDmuLdn6oLGU/H09Vfi3IyKYr9UWIuc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4BBE5A8C1A59B143BA5A871048E9E0E1@namprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190918180712.GG3835@cisco>
-User-Agent: NeoMutt/20180716
+X-OriginatorOrg: analogixsemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca9fe5b7-6009-4a57-3364-08d73cce4aae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 06:55:01.5311
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b099b0b4-f26c-4cf5-9a0f-d5be9acab205
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e2MmK9wcJeNOVNjPyTdy2msJo2OUvtWPRlObkpI9BhU2mvD1GmbQPlTqCpegvj3lDCub+eR5tQrZ/zJBV2Dh4A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6207
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 12:07:12PM -0600, Tycho Andersen wrote:
-> On Wed, Sep 18, 2019 at 10:30:00AM -0700, Kees Cook wrote:
-> > On Wed, Sep 18, 2019 at 10:48:30AM +0200, Christian Brauner wrote:
-> > > This allows the seccomp notifier to continue a syscall. A positive
-> > > discussion about this feature was triggered by a post to the
-> > > ksummit-discuss mailing list (cf. [3]) and took place during KSummit
-> > > (cf. [1]) and again at the containers/checkpoint-restore
-> > > micro-conference at Linux Plumbers.
-> > > 
-> > > Recently we landed seccomp support for SECCOMP_RET_USER_NOTIF (cf. [4])
-> > > which enables a process (watchee) to retrieve an fd for its seccomp
-> > > filter. This fd can then be handed to another (usually more privileged)
-> > > process (watcher). The watcher will then be able to receive seccomp
-> > > messages about the syscalls having been performed by the watchee.
-> > > 
-> > > This feature is heavily used in some userspace workloads. For example,
-> > > it is currently used to intercept mknod() syscalls in user namespaces
-> > > aka in containers.
-> > > The mknod() syscall can be easily filtered based on dev_t. This allows
-> > > us to only intercept a very specific subset of mknod() syscalls.
-> > > Furthermore, mknod() is not possible in user namespaces toto coelo and
-> > > so intercepting and denying syscalls that are not in the whitelist on
-> > > accident is not a big deal. The watchee won't notice a difference.
-> > > 
-> > > In contrast to mknod(), a lot of other syscall we intercept (e.g.
-> > > setxattr()) cannot be easily filtered like mknod() because they have
-> > > pointer arguments. Additionally, some of them might actually succeed in
-> > > user namespaces (e.g. setxattr() for all "user.*" xattrs). Since we
-> > > currently cannot tell seccomp to continue from a user notifier we are
-> > > stuck with performing all of the syscalls in lieu of the container. This
-> > > is a huge security liability since it is extremely difficult to
-> > > correctly assume all of the necessary privileges of the calling task
-> > > such that the syscall can be successfully emulated without escaping
-> > > other additional security restrictions (think missing CAP_MKNOD for
-> > > mknod(), or MS_NODEV on a filesystem etc.). This can be solved by
-> > > telling seccomp to resume the syscall.
-> > > 
-> > > One thing that came up in the discussion was the problem that another
-> > > thread could change the memory after userspace has decided to let the
-> > > syscall continue which is a well known TOCTOU with seccomp which is
-> > > present in other ways already.
-> > > The discussion showed that this feature is already very useful for any
-> > > syscall without pointer arguments. For any accidentally intercepted
-> > > non-pointer syscall it is safe to continue.
-> > > For syscalls with pointer arguments there is a race but for any cautious
-> > > userspace and the main usec cases the race doesn't matter. The notifier
-> > > is intended to be used in a scenario where a more privileged watcher
-> > > supervises the syscalls of lesser privileged watchee to allow it to get
-> > > around kernel-enforced limitations by performing the syscall for it
-> > > whenever deemed save by the watcher. Hence, if a user tricks the watcher
-> > > into allowing a syscall they will either get a deny based on
-> > > kernel-enforced restrictions later or they will have changed the
-> > > arguments in such a way that they manage to perform a syscall with
-> > > arguments that they would've been allowed to do anyway.
-> > > In general, it is good to point out again, that the notifier fd was not
-> > > intended to allow userspace to implement a security policy but rather to
-> > > work around kernel security mechanisms in cases where the watcher knows
-> > > that a given action is safe to perform.
-> > > 
-> > > /* References */
-> > > [1]: https://linuxplumbersconf.org/event/4/contributions/560
-> > > [2]: https://linuxplumbersconf.org/event/4/contributions/477
-> > > [3]: https://lore.kernel.org/r/20190719093538.dhyopljyr5ns33qx@brauner.io
-> > > [4]: commit 6a21cc50f0c7 ("seccomp: add a return code to trap to userspace")
-> > > 
-> > > Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-> > > Cc: Kees Cook <keescook@chromium.org>
-> > > Cc: Andy Lutomirski <luto@amacapital.net>
-> > > Cc: Will Drewry <wad@chromium.org>
-> > > Cc: Tycho Andersen <tycho@tycho.ws>
-> > > CC: Tyler Hicks <tyhicks@canonical.com>
-> > > Cc: Jann Horn <jannh@google.com>
-> > > ---
-> > >  include/uapi/linux/seccomp.h |  2 ++
-> > >  kernel/seccomp.c             | 24 ++++++++++++++++++++----
-> > >  2 files changed, 22 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> > > index 90734aa5aa36..2c23b9aa6383 100644
-> > > --- a/include/uapi/linux/seccomp.h
-> > > +++ b/include/uapi/linux/seccomp.h
-> > > @@ -76,6 +76,8 @@ struct seccomp_notif {
-> > >  	struct seccomp_data data;
-> > >  };
-> > >  
-> > > +#define SECCOMP_RET_USER_NOTIF_ALLOW 0x00000001
-> > 
-> > nit: I'd like to avoid confusion here about what "family" these flags
-> > belong to. "SECCOMP_RET_..." is used for the cBPF filter return action
-> > value, so let's instead call this:
-> > 
-> > #define SECCOMP_USER_NOTIF_CONTINUE	BIT(0)
-> 
-> +1, I was thinking maybe even SECCOMP_USER_NOTIF_FLAG_CONTINUE.
+The ANX7625 is an ultra-low power 4K Mobile HD Transmitter designed
+for portable device. It converts MIPI to DisplayPort 1.3 4K.
 
-I'll flip a coin between yours and Kees suggestion. :)
+You can add support to your board with binding.
 
-> 
-> But the whole series (minus the patch that already exists) looks good
-> to me if we make this change:
-> 
-> Reviewed-by: Tycho Andersen <tycho@tycho.ws>
+Example:
+	anx_bridge: anx7625@58 {
+		compatible =3D "analogix,anx7625";
+		reg =3D <0x58>;
+		anx,low_power_mode =3D <1>;
+		anx,dsi_supported =3D <1>;
+		anx,dsi_channel =3D <1>;
+		anx,dsi_lanes =3D <4>;
+		anx,internal_pannel =3D <1>;
+		anx,p-on-gpio =3D <&gpio0 45 GPIO_ACTIVE_LOW>;
+		anx,reset-gpio =3D <&gpio0 73 GPIO_ACTIVE_LOW>;
+		status =3D "okay";
+		port {
+			anx7625_1_in: endpoint {
+				remote-endpoint =3D <&mipi_dsi_bridge_1>;
+			};
+		};
+	};
 
-Thanks for the review! :)
-Christian
+Signed-off-by: Xin Ji <xji@analogixsemi.com>
+---
+ .../devicetree/bindings/display/bridge/anx7625.txt | 42 ++++++++++++++++++=
+++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/anx762=
+5.txt
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/anx7625.txt b=
+/Documentation/devicetree/bindings/display/bridge/anx7625.txt
+new file mode 100644
+index 0000000..f2a1c2a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/anx7625.txt
+@@ -0,0 +1,42 @@
++Analogix ANX7625 SlimPort (4K Mobile HD Transmitter)
++-----------------------------------------------
++
++The ANX7625 is an ultra-low power 4K Mobile HD Transmitter
++designed for portable devices.
++
++Required properties:
++
++ - compatible		: "analogix,anx7625"
++ - reg			: I2C address of the device
++ - anx,low_power_mode	: Low power mode support feature
++ - anx,dsi_supported	: DSI or DPI
++ - anx,dsi_channel	: DSI channel index
++ - anx,dsi_lanes	: DSI lane count
++ - anx,intr-hpd-gpio	: Which GPIO to use for interrupt
++
++Optional properties:
++
++ - anx,extcon_supported
++	external connector interface support flag
++ - anx,internal_pannel
++	Which indicate internal pannel
++ - anx,p-on-gpio
++	Which GPIO to use for Power On chip
++ - anx,reset-gpio
++	Which GPIO to use for RESET
++ - port
++	SoC specific port nodes with endpoint definitions as defined in
++	Documentation/devicetree/bindings/media/video-interfaces.txt,
++
++Example:
++
++	anx_bridge: anx7625@58 {
++		compatible =3D "analogix,anx7625";
++		reg =3D <0x58>;
++		anx,low_power_mode =3D <0>;
++		anx,dsi_supported =3D <1>;
++		anx,dsi_channel =3D <1>;
++		anx,dsi_lanes =3D <4>;
++		anx,intr-hpd-gpio =3D <&gpio1 19 IRQ_TYPE_LEVEL_LOW>;
++		status =3D "okay";
++	};
+--=20
+2.7.4
+
