@@ -2,158 +2,381 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF96C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F81BC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C647217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:40:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mFgRj5Nl"
+	by mail.kernel.org (Postfix) with ESMTP id 368EB217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 08:41:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388361AbfISIkJ (ORCPT
+        id S2388419AbfISIl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 04:40:09 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38661 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387617AbfISIkJ (ORCPT
+        Thu, 19 Sep 2019 04:41:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60596 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387617AbfISIl1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:40:09 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a23so2428443edv.5;
-        Thu, 19 Sep 2019 01:40:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G6gxprrxxWhNaep2gy6TkOgQmUEnXSE534x9gzQ10xM=;
-        b=mFgRj5Nlqr4bPXljsKYcy6ZCY1XvPCnSsO1GMuxYyC3GfAMTblXf/a3EhcAElHiHYq
-         x8O+jB0pNrZgvE6Shik4JDsS+4QRwFRqSz3zhiRZk/QfXwDUeRZVKrzdCHrV+YGqEh26
-         EUf5WHpnuxb4ibWqE+rp4SBlL1rVeGUNTzDYzmRfRsvAXeP+39sFD+XlKJVKMKbDMGwO
-         3RHZuFtsIzopkTDCyCmTvvsfj18EAKqb1MbDDQz8e2ak2aSEVrkTUnfZp7AJSoXK0Bmq
-         EsM1iq9xWoXVpNfsRE2kc3X+sOmAVzycY/DNyQ/SYt15fsSn3VKC9THtQ8TZMSIvJXkn
-         Dw0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G6gxprrxxWhNaep2gy6TkOgQmUEnXSE534x9gzQ10xM=;
-        b=et9gS0IOFxLj8j4KuyppJ1TpA4JgXwbSvQzU2BF3njK/p6fbcSCQmBmdMwamS9splX
-         F/xf5cKIuWdP3QzTYNB9VpyU3AjsueSU5YKChZDEbE6GMXg+POGjonjbv/S9xhPw0dje
-         8Qe8LXDvl8UHJI2+MB91cH2FX2+/801ulnngMdojNRblGnN9Rr18ZBYrqHyhmQ5N0jSS
-         GhrfGsoFFfLUiCDu0Qr/Aia5n/tCbLR25NvTXQK3moWbAjFnHKJ8V2jsz1W0w03Rfra2
-         X/CfAEHeqbM2JJ0Kd1fuJ9W2s5IcR8RosQnhhfPjIXHsG3j15pLHdE1KywHDOKB1Md6L
-         1pww==
-X-Gm-Message-State: APjAAAUhq2AJNKQdbUlqirhOSB1P7bf2qZNFjVbeFoQXG+zJQHb6/L0q
-        Vkzvfen1eDNK38xy2LtBlNVGD6x3
-X-Google-Smtp-Source: APXvYqxoR5lUv9djP6jltC8gTYY7JsELTOjRd1IWs5TPBa8JWr/cg8E3TBCq9CiBiqs74XErNO6m8g==
-X-Received: by 2002:a17:906:2ccc:: with SMTP id r12mr909850ejr.219.1568882406611;
-        Thu, 19 Sep 2019 01:40:06 -0700 (PDT)
-Received: from localhost (p2E5BE2CE.dip0.t-ipconnect.de. [46.91.226.206])
-        by smtp.gmail.com with ESMTPSA id a20sm1492487edt.95.2019.09.19.01.40.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 01:40:05 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 10:40:03 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nagarjuna Kristam <nkristam@nvidia.com>
-Cc:     jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch V2] soc/tegra: fuse: Add fuse clock check in
- tegra_fuse_readl
-Message-ID: <20190919084003.GA5041@ulmo>
-References: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
+        Thu, 19 Sep 2019 04:41:27 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J8cAjW071773
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:41:26 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v45h11xth-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 04:41:25 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Thu, 19 Sep 2019 09:41:23 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Sep 2019 09:41:18 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J8fFnm31785172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 08:41:15 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2538A4069;
+        Thu, 19 Sep 2019 08:41:15 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B95EA4051;
+        Thu, 19 Sep 2019 08:41:15 +0000 (GMT)
+Received: from bali.tls.ibm.com (unknown [9.101.4.17])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 08:41:14 +0000 (GMT)
+Subject: Re: [PATCH 3/5] ocxl: Tally up the LPC memory on a link & allow it to
+ be mapped
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190917014307.30485-1-alastair@au1.ibm.com>
+ <20190917014307.30485-4-alastair@au1.ibm.com>
+ <268bcb76-fd37-6996-e5ff-43625b60a95a@linux.ibm.com>
+ <16a0270590e50a45854ae2e57a3b0ef969fd0c78.camel@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Thu, 19 Sep 2019 10:41:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Content-Disposition: inline
-In-Reply-To: <1567508212-1194-1-git-send-email-nkristam@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <16a0270590e50a45854ae2e57a3b0ef969fd0c78.camel@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091908-4275-0000-0000-0000036873C8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091908-4276-0000-0000-0000387ADF11
+Message-Id: <94d987d8-5f02-ad4b-b439-adfb74e116fd@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 03, 2019 at 04:26:52PM +0530, Nagarjuna Kristam wrote:
-> tegra_fuse_readl() can be called from drivers at any time. If this API is
-> called before tegra_fuse_probe(), we end up enabling clock before it is
-> registered. Add check for fuse clock in tegra_fuse_readl() and return
-> corresponding error if any.
->=20
-> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
-> ---
-> V2:
-> 	- Added Null and other error checks for fuse->clk.
-> ---
->  drivers/soc/tegra/fuse/fuse-tegra.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+Le 19/09/2019 à 06:55, Alastair D'Silva a écrit :
+> On Wed, 2019-09-18 at 16:02 +0200, Frederic Barrat wrote:
+>>
+>> Le 17/09/2019 à 03:42, Alastair D'Silva a écrit :
+>>> From: Alastair D'Silva <alastair@d-silva.org>
+>>>
+>>> Tally up the LPC memory on an OpenCAPI link & allow it to be mapped
+>>>
+>>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+>>> ---
+>>>    drivers/misc/ocxl/core.c          |  9 +++++
+>>>    drivers/misc/ocxl/link.c          | 61
+>>> +++++++++++++++++++++++++++++++
+>>>    drivers/misc/ocxl/ocxl_internal.h | 42 +++++++++++++++++++++
+>>>    3 files changed, 112 insertions(+)
+>>>
+>>> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+>>> index b7a09b21ab36..fdfe4e0a34e1 100644
+>>> --- a/drivers/misc/ocxl/core.c
+>>> +++ b/drivers/misc/ocxl/core.c
+>>> @@ -230,8 +230,17 @@ static int configure_afu(struct ocxl_afu *afu,
+>>> u8 afu_idx, struct pci_dev *dev)
+>>>    	if (rc)
+>>>    		goto err_free_pasid;
+>>>    
+>>> +	if (afu->config.lpc_mem_size || afu-
+>>>> config.special_purpose_mem_size) {
+>>> +		rc = ocxl_link_add_lpc_mem(afu->fn->link,
+>>> +			afu->config.lpc_mem_size + afu-
+>>>> config.special_purpose_mem_size);
+>>
+>> I don't think we should count the special purpose memory, as it's
+>> not
+>> meant to be accessed through the GPU mem BAR, but I'll check.
+> 
+> At least for OpenCAPI 3.0, there is no other in-spec way to access the
+> memory if it is not mapped by the NPU.
 
-Hi ARM-SoC maintainers,
 
-can you pick this up as a bugfix for v5.4-rc1? Would you prefer to pick
-it up directly or do you want a pull request for this?
+Yes, that's clarified now and we should take the special purpose memory 
+into account when defining the full range.
 
-The patchwork link is:
+   Fred
 
-	http://patchwork.ozlabs.org/patch/1156928/
 
-And in that case:
+>>
+>> What happens when unconfiguring the AFU? We should reduce the range
+>> (see
+>> also below). Partial reconfig doesn't seem so far off, so we should
+>> take
+>> it into account.
+>>
+> 
+> The mapping is left until the last AFU on the link offlines it's
+> memory, at which point we clear the mapping from the NPU.
+> 
+>>
+>>> +		if (rc)
+>>> +			goto err_free_mmio;
+>>> +	}
+>>> +
+>>>    	return 0;
+>>>    
+>>> +err_free_mmio:
+>>> +	unmap_mmio_areas(afu);
+>>>    err_free_pasid:
+>>>    	reclaim_afu_pasid(afu);
+>>>    err_free_actag:
+>>> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+>>> index 58d111afd9f6..2874811a4398 100644
+>>> --- a/drivers/misc/ocxl/link.c
+>>> +++ b/drivers/misc/ocxl/link.c
+>>> @@ -84,6 +84,11 @@ struct ocxl_link {
+>>>    	int dev;
+>>>    	atomic_t irq_available;
+>>>    	struct spa *spa;
+>>> +	struct mutex lpc_mem_lock;
+>>> +	u64 lpc_mem_sz; /* Total amount of LPC memory presented on the
+>>> link */
+>>> +	u64 lpc_mem;
+>>> +	int lpc_consumers;
+>>> +
+>>>    	void *platform_data;
+>>>    };
+>>>    static struct list_head links_list = LIST_HEAD_INIT(links_list);
+>>> @@ -396,6 +401,8 @@ static int alloc_link(struct pci_dev *dev, int
+>>> PE_mask, struct ocxl_link **out_l
+>>>    	if (rc)
+>>>    		goto err_spa;
+>>>    
+>>> +	mutex_init(&link->lpc_mem_lock);
+>>> +
+>>>    	/* platform specific hook */
+>>>    	rc = pnv_ocxl_spa_setup(dev, link->spa->spa_mem, PE_mask,
+>>>    				&link->platform_data);
+>>> @@ -711,3 +718,57 @@ void ocxl_link_free_irq(void *link_handle, int
+>>> hw_irq)
+>>>    	atomic_inc(&link->irq_available);
+>>>    }
+>>>    EXPORT_SYMBOL_GPL(ocxl_link_free_irq);
+>>> +
+>>> +int ocxl_link_add_lpc_mem(void *link_handle, u64 size)
+>>> +{
+>>> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>>> +
+>>> +	u64 orig_size;
+>>> +	bool good = false;
+>>> +
+>>> +	mutex_lock(&link->lpc_mem_lock);
+>>> +	orig_size = link->lpc_mem_sz;
+>>> +	link->lpc_mem_sz += size;
+>>
+>>
+>> We have a choice to make here:
+>> 1. either we only support one LPC memory-carrying AFU (and the above
+>> is
+>> overkill)
+>> 2. or we support multiple AFUs with LPC memory (on the same
+>> function),
+>> but then I think the above is too simple.
+>>
+>>   From the opencapi spec, each AFU can define a chunk of memory with
+>> a
+>> starting address and a size. There's no rule which says they have to
+>> be
+>> contiguous. There's no rule which says it must start at 0. So to
+>> support
+>> multiple AFUs with LPC memory, we should record the current maximum
+>> range instead of just the global size. Ultimately, we need to tell
+>> the
+>> NPU the range of permissible addresses. It starts at 0, so we need
+>> to
+>> take into account any intial offset and holes.
+>>
+>> I would go for option 2, to at least be consistent within ocxl and
+>> support multiple AFUs. Even though I don't think we'll see FPGA
+>> images
+>> with multiple AFUs with LPC memory any time soon.
+>>
+> 
+> Ill rework this to take an offset & size, the NPU will map from the
+> base address up to the largest offset + size provided across all AFUs
+> on the link.
+> 
+>>
+>>> +	good = orig_size < link->lpc_mem_sz;
+>>> +	mutex_unlock(&link->lpc_mem_lock);
+>>> +
+>>> +	// Check for overflow
+>>> +	return (good) ? 0 : -EINVAL;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(ocxl_link_add_lpc_mem);
+>>
+>> Do the symbol really need to be exported? IIUC, the next patch
+>> defines a
+>> higher level ocxl_afu_map_lpc_mem() which is meant to be called by a
+>> calling driver.
+>>
+> 
+> No, I'll remove it.
+> 
+>>
+>>> +
+>>> +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev)
+>>> +{
+>>> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>>> +
+>>> +	mutex_lock(&link->lpc_mem_lock);
+>>> +	if (link->lpc_mem) {
+>>> +		u64 lpc_mem = link->lpc_mem;
+>>> +
+>>> +		link->lpc_consumers++;
+>>> +		mutex_unlock(&link->lpc_mem_lock);
+>>> +		return lpc_mem;
+>>> +	}
+>>> +
+>>> +	link->lpc_mem = pnv_ocxl_platform_lpc_setup(pdev, link-
+>>>> lpc_mem_sz);
+>>> +	if (link->lpc_mem)
+>>> +		link->lpc_consumers++;
+>>> +	mutex_unlock(&link->lpc_mem_lock);
+>>> +
+>>> +	return link->lpc_mem;
+>>
+>> Should be cached in a temp variable, like on the fast path,
+>> otherwise
+>> it's accessed with no lock.
+> 
+> Good spotting, thanks.
+> 
+>>
+>>> +}
+>>> +
+>>> +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+>>> *pdev)
+>>> +{
+>>> +	struct ocxl_link *link = (struct ocxl_link *) link_handle;
+>>> +
+>>> +	mutex_lock(&link->lpc_mem_lock);
+>>> +	link->lpc_consumers--;
+>>> +	if (link->lpc_consumers == 0) {
+>>> +		pnv_ocxl_platform_lpc_release(pdev);
+>>> +		link->lpc_mem = 0;
+>>> +	}
+>>> +
+>>> +	mutex_unlock(&link->lpc_mem_lock);
+>>> +}
+>>> diff --git a/drivers/misc/ocxl/ocxl_internal.h
+>>> b/drivers/misc/ocxl/ocxl_internal.h
+>>> index 97415afd79f3..db2647a90fc8 100644
+>>> --- a/drivers/misc/ocxl/ocxl_internal.h
+>>> +++ b/drivers/misc/ocxl/ocxl_internal.h
+>>> @@ -141,4 +141,46 @@ int ocxl_irq_offset_to_id(struct ocxl_context
+>>> *ctx, u64 offset);
+>>>    u64 ocxl_irq_id_to_offset(struct ocxl_context *ctx, int irq_id);
+>>>    void ocxl_afu_irq_free_all(struct ocxl_context *ctx);
+>>>    
+>>> +/**
+>>> + * Increment the amount of memory required by an OpenCAPI link
+>>> + *
+>>> + * link_handle: The OpenCAPI link handle
+>>> + * size: The amount of memory to increment by
+>>> + *
+>>> + * Return 0 on success, negative on overflow
+>>> + */
+>>> +extern int ocxl_link_add_lpc_mem(void *link_handle, u64 size);
+>>
+>> We've removed all the 'extern' in a previous patch.
+> 
+> Thanks, I spotted this too (after I posted it).
+> 
+>>> +
+>>> +/**
+>>> + * Get the amount of memory required by an OpenCAPI link
+>>> + *
+>>> + * link_handle: The OpenCAPI link handle
+>>> + *
+>>> + * Return the amount of memory required by the link, this value is
+>>> undefined if
+>>> + * ocxl_link_add_lpc_mem failed.
+>>> + */
+>>> +extern u64 ocxl_link_get_lpc_mem_sz(void *link_handle);
+>>
+>> I don't see that one defined anywhere.
+>>
+> 
+> Whoops, I'll remove it.
+> 
+>>     Fred
+>>
+>>
+>>> +
+>>> +/**
+>>> + * Map the LPC memory for an OpenCAPI device
+>>> + *
+>>> + * Since LPC memory belongs to a link, the whole LPC memory
+>>> available
+>>> + * on the link bust be mapped in order to make it accessible to a
+>>> device.
+>>> + *
+>>> + * @link_handle: The OpenCAPI link handle
+>>> + * @pdev: A device that is on the link
+>>> + */
+>>> +u64 ocxl_link_lpc_map(void *link_handle, struct pci_dev *pdev);
+>>> +
+>>> +/**
+>>> + * Release the LPC memory device for an OpenCAPI device
+>>> + *
+>>> + * Releases LPC memory on an OpenCAPI link for a device. If this
+>>> is the
+>>> + * last device on the link to release the memory, unmap it from
+>>> the link.
+>>> + *
+>>> + * @link_handle: The OpenCAPI link handle
+>>> + * @pdev: A device that is on the link
+>>> + */
+>>> +void ocxl_link_lpc_release(void *link_handle, struct pci_dev
+>>> *pdev);
+>>> +
+>>>    #endif /* _OCXL_INTERNAL_H_ */
+>>>
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
-Thanks,
-Thierry
-
-> diff --git a/drivers/soc/tegra/fuse/fuse-tegra.c b/drivers/soc/tegra/fuse=
-/fuse-tegra.c
-> index 3eb44e6..58996c6 100644
-> --- a/drivers/soc/tegra/fuse/fuse-tegra.c
-> +++ b/drivers/soc/tegra/fuse/fuse-tegra.c
-> @@ -186,9 +186,12 @@ u32 __init tegra_fuse_read_early(unsigned int offset)
-> =20
->  int tegra_fuse_readl(unsigned long offset, u32 *value)
->  {
-> -	if (!fuse->read)
-> +	if (!fuse->read || !fuse->clk)
->  		return -EPROBE_DEFER;
-> =20
-> +	if (IS_ERR(fuse->clk))
-> +		return PTR_ERR(fuse->clk);
-> +
->  	*value =3D fuse->read(fuse, offset);
-> =20
->  	return 0;
-> --=20
-> 2.7.4
->=20
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl2DPuAACgkQ3SOs138+
-s6GmAg/+Jhj7yV6aaQ9kxLakkr2/Th9Tz8TCfLK/J6wyD1YDS+AV8shbj0xqaJ+9
-dyfl226iOR8PVxbjjSFe0w7oiUNooDVS8HpQrrvGgMqCoZLX5eewx9krafWilYzc
-sq0ayCUteJjJ4FjygmoBkaKDyqXqosYnXMr3NMC7f6uXBBUTbQKAcO6Mg0igk1Ss
-OkV2Pa1W771tKqlWyPAQy/DLXDeKsvp/mW2DId9GZhJw8pgToZUcCNiJoL2yFPmq
-KsZBE4mxacIelukWGjYaGwufIP4r8qKSzp/99aYOM+dmhToKPGZG1XDQMNDseatM
-7yNBKguVXZatZbHy8wXseC6LZy8KhDY5xOeNhZK5Im5sff30Egs1RKMj+NAZgrNo
-Js4quAlLe0SqWf4sOC3iiPrqa1VctDKttd1mQg3rx2svu7Rg6AFD55zcNyy9R6Mm
-tMXO5wi/G8Wd776caNI9jL2vZth/29P/hs+3Wo6HZ3p+KtiaVdUIMAgG2wcK6mkQ
-r/kmk6d+nlrKL6WLNJLASmgeV6Hw3QCiOj5HWxCfhUvjA+0edcANinlxUNl20Wbe
-AVd30Pkh8ISJxO7Kls+zGfDiTqsPmNZn/+i/rlHE6BUw2Rhjze9Wl3w3qMfrV485
-EgpG8wYwsomtCX4DBdNsZaAo5UdfxyDPwXDZZIecEAstyJ67ymw=
-=W88y
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
