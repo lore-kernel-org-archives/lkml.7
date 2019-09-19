@@ -4,64 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FAAC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7B6C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89266218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84C31218AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568928638;
-	bh=4MnoG/BKHITPvEBxROAt2KBSPTK1LsMVqyRz44QC8II=;
+	s=default; t=1568928640;
+	bh=rAudkxjrnojRjWhOlu8DRJL856WKEG2t48JP9yKb3yI=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=QNnpYmulAdOZcQ+GTpFv9T2claWdpAYCdHzJJYq4KnJjNkQCy9ikUMRtpT4BqpWbS
-	 1vL5VlAYz6Y1KAYkSVgwPHIJ7l+14lpc0ttcO3zsdWNuONI0gPZx6AGNHNxBBw0nn/
-	 4exk4ELPr0RUM7jYBiWan4qkdu0HYRA67rgvb20M=
+	b=YctsrSJKJyfarSh3jD7oNqDqHNu7PFQPHxjlts5CXR1mhLzKg6RiLMjZtAUMFsJ9C
+	 Ff5q/Xc0GNMHG3mNc/9ElthwsrXgeh8u8EBJdxWKmVTUUBEL/l+0ac/o7eyfe1V/q1
+	 wSnfOl01x0hW07U5KMJBAK4IkeA+Ji0gbgw+hJzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404878AbfISVah (ORCPT
+        id S2404890AbfISVak (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:30:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60560 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 17:30:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404843AbfISVaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:30:35 -0400
-Subject: Re: [GIT PULL] chrome-platform changes for v5.4
+        id S2404864AbfISVag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 17:30:36 -0400
+Subject: Re: [GIT PULL] pin control bulk changes for v5.4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568928634;
-        bh=4MnoG/BKHITPvEBxROAt2KBSPTK1LsMVqyRz44QC8II=;
+        s=default; t=1568928635;
+        bh=rAudkxjrnojRjWhOlu8DRJL856WKEG2t48JP9yKb3yI=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=WNiG6SUSjA3fDpx7xzRgHMSQh6HKnY6gwqojalRnXclQFLPtJpDaRUQ2ECXs+E/Ry
-         E2RpkYMuNspjzlGW3afr4YzzAx4BdfnKYOMV0f7Ipg1CnJ7p5+hD+S+AomgaDl30pv
-         AlAeTTvfJhCflsH7HJm76TvMW9Kzh/AFqWHN03og=
+        b=jxHW4Se9LcGxu6mpWsLYUnWu3qlaeVKRC9oL4FZyz+zSypP7cqu8SaAm1fK7tcEOV
+         7UMu+t6nW3xTLcBP5J32TgvauSOKyoHoHNUaXT66UlGS6A+BEatxrQp/br51i5g7qI
+         EBN7+0gHKjtA83HdWMtyzPjpT5/pWWUR9IOYy1K8=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190919174641.GA172744@google.com>
-References: <20190919174641.GA172744@google.com>
+In-Reply-To: <CACRpkdaHfhNjR-3GJOO-47rqopmO1SE9dLAU+AiCaWTuLje=8w@mail.gmail.com>
+References: <CACRpkdaHfhNjR-3GJOO-47rqopmO1SE9dLAU+AiCaWTuLje=8w@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190919174641.GA172744@google.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
- tags/tag-chrome-platform-for-v5.4
-X-PR-Tracked-Commit-Id: 4c1fde5077dcad1a2a10a6a0883c8f94326c4971
+X-PR-Tracked-Message-Id: <CACRpkdaHfhNjR-3GJOO-47rqopmO1SE9dLAU+AiCaWTuLje=8w@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+ tags/pinctrl-v5.4-1
+X-PR-Tracked-Commit-Id: cb0438e4436085d89706b5ccfce4d5da531253de
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 32b90daf5cafdda62b1ce62d0b7445fa9107babf
-Message-Id: <156892863488.30913.17670198651332075462.pr-tracker-bot@kernel.org>
-Date:   Thu, 19 Sep 2019 21:30:34 +0000
-To:     Benson Leung <bleung@google.com>
-Cc:     torvalds@linux-foundation.org, bleung@kernel.org,
-        gwendal@chromium.org, bleung@chromium.org, bleung@google.com,
-        enric.balletbo@collabora.com, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 3c2edc36a77420d8be05d656019dbc8c31535992
+Message-Id: <156892863593.30913.11813652033877690149.pr-tracker-bot@kernel.org>
+Date:   Thu, 19 Sep 2019 21:30:35 +0000
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Thu, 19 Sep 2019 10:46:41 -0700:
+The pull request you sent on Thu, 19 Sep 2019 23:07:51 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-for-v5.4
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v5.4-1
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/32b90daf5cafdda62b1ce62d0b7445fa9107babf
+https://git.kernel.org/torvalds/c/3c2edc36a77420d8be05d656019dbc8c31535992
 
 Thank you!
 
