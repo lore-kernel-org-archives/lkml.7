@@ -2,224 +2,305 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D61C6C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5EFC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB20621928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:18:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568913481;
-	bh=yFCy4+MpB1fuov38bUgmcauo0/reXN7yqVfN2hTHm3A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JzM7fy5EbqrCwa/D/yFrs0YlXMuGZ2yVY66IkR9qkac+kpACU+49LWqwVMjddDEaf
-	 yuStISTm3uQOcA/lefeXxSaU7oRgG0JeYKwVXrQN986TIJl6HOeAPvoEfYyzCa9M87
-	 eJjRzKQnnfHIHnGeG2V12X8t2CVSQXg9i9nzk/oM=
+	by mail.kernel.org (Postfix) with ESMTP id 41E29217D6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 17:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391960AbfISRSA (ORCPT
+        id S2391966AbfISRTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 13:18:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390073AbfISRR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 13:17:58 -0400
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B41C021928;
-        Thu, 19 Sep 2019 17:17:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568913477;
-        bh=yFCy4+MpB1fuov38bUgmcauo0/reXN7yqVfN2hTHm3A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1BHIg98sQU3RSKO5g6gKuadHx+gZTwc4PvbsYJlU5PDLAsU+nnEkskfkxWwJSEIl4
-         3QsZ4iQa7QmLNILjU1Cn3HaCTFre3NJhVL2wkSK7uKGnbw4YnqXhtTath1ebCQgKyY
-         DT5WC5o4gYOsrt/++Dq71vwkm+ofxCbsCdnOEeg4=
-Date:   Thu, 19 Sep 2019 19:17:54 +0200
-From:   Maxime Ripard <mripard@kernel.org>
-To:     roman.stratiienko@globallogic.com,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm/sun4i: Use vi plane as primary
-Message-ID: <20190919171754.x6lq73cctnqsjr4v@gilmour>
-References: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
+        Thu, 19 Sep 2019 13:19:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:40666 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731341AbfISRTI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 13:19:08 -0400
+Received: by mail-io1-f71.google.com with SMTP id r20so6165100ioh.7
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 10:19:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=HwRTRU2Wjj8KRJJIeSysNSucj+CZRmWal4KKTF7zgrU=;
+        b=Wd+srtDLswZspdKPER5kwFnqNo6wiO5o0DnAdTSpCwWj+IZKapwu0dz6cRW9or4nzm
+         eG0mPychxslaYCghkqP9ZICuRVyJEa8ZHR+1+bi8k8tgVs9Z7kyRRcrzfxWoiXxjRoTy
+         Td05Ew1DeXqgFtvkBosl2iE/jt4uMDWFWPpFwHM3eHvDb8m/B2MncWKOjR/MHPMSusWR
+         ugnRDWPHEOxxfI0rvhz8uhDnU/RGn5Yz12/GCfPYYxcBhsLdKJLxnXWzrZSjg5pU2B29
+         cLyVeL1tnG4DszUYH9rR7jq2AXd6WOlHu/EJaFG83LalYxP+OLFZaeDtJTuOC4MiWXxd
+         7Iog==
+X-Gm-Message-State: APjAAAWJ8VpHpTsvdloiH9jJ4ma0qGeFOQCWzVy5zi5R7Kh261gaSEbk
+        SDCZ6kmwz7ZJDl36mjgFR1vRKg0RztcfYu4kYX1kylIUXcYY
+X-Google-Smtp-Source: APXvYqyis5rSh2SvgEiwig9CNxWCRm6jNI4dEZ0AMuY2gZ4gi+MuAFeAHrdcDi6hZhSEh3uyTGcKjsAogrUF3r8gEzDfmZVgiBDd
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2rnnscmg2kp6rchv"
-Content-Disposition: inline
-In-Reply-To: <20190919123703.8545-1-roman.stratiienko@globallogic.com>
-User-Agent: NeoMutt/20180716
+X-Received: by 2002:a6b:f40f:: with SMTP id i15mr6054783iog.244.1568913547354;
+ Thu, 19 Sep 2019 10:19:07 -0700 (PDT)
+Date:   Thu, 19 Sep 2019 10:19:07 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ac6a360592eb26c1@google.com>
+Subject: INFO: task hung in pipe_write (2)
+From:   syzbot <syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com>
+To:     agruenba@redhat.com, darrick.wong@oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
---2rnnscmg2kp6rchv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+syzbot found the following crash on:
 
-Hi,
+HEAD commit:    288b9117 Add linux-next specific files for 20190918
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17e86645600000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f6126e51304ef1c3
+dashboard link: https://syzkaller.appspot.com/bug?extid=3c01db6025f26530cf8d
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11855769600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=143580a1600000
 
-On Thu, Sep 19, 2019 at 03:37:03PM +0300, roman.stratiienko@globallogic.com wrote:
-> From: Roman Stratiienko <roman.stratiienko@globallogic.com>
->
-> DE2.0 blender does not take into the account alpha channel of vi layer.
-> Thus makes overlaying of this layer totally opaque.
-> Using vi layer as bottom solves this issue.
->
-> Tested on Android.
->
-> Signed-off-by: Roman Stratiienko <roman.stratiienko@globallogic.com>
+The bug was bisected to:
 
-It sounds like a workaround more than an actual fix.
+commit cfb864757d8690631aadf1c4b80022c18ae865b3
+Author: Darrick J. Wong <darrick.wong@oracle.com>
+Date:   Tue Sep 17 16:05:22 2019 +0000
 
-If the VI planes can't use the alpha, then we should just stop
-reporting that format.
+     splice: only read in as much information as there is pipe buffer space
 
-Jernej, what do you think?
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=150a7455600000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=170a7455600000
+console output: https://syzkaller.appspot.com/x/log.txt?x=130a7455600000
 
-Maxime
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+3c01db6025f26530cf8d@syzkaller.appspotmail.com
+Fixes: cfb864757d86 ("splice: only read in as much information as there is  
+pipe buffer space")
 
-> ---
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 -----------------------
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36 +++++++++++++++++++++++++-
->  2 files changed, 35 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> index dd2a1c851939..25183badc85f 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -99,36 +99,6 @@ static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int channel,
->  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
->  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
->
-> -	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> -		bool interlaced = false;
-> -		u32 val;
-> -
-> -		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H: %u\n",
-> -				 dst_w, dst_h);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_GLOBAL_SIZE,
-> -			     outsize);
-> -		regmap_write(mixer->engine.regs,
-> -			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), outsize);
-> -
-> -		if (state->crtc)
-> -			interlaced = state->crtc->state->adjusted_mode.flags
-> -				& DRM_MODE_FLAG_INTERLACE;
-> -
-> -		if (interlaced)
-> -			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> -		else
-> -			val = 0;
-> -
-> -		regmap_update_bits(mixer->engine.regs,
-> -				   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> -				   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> -				   val);
-> -
-> -		DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
-> -				 interlaced ? "on" : "off");
-> -	}
-> -
->  	/* Set height and width */
->  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
->  			 state->src.x1 >> 16, state->src.y1 >> 16);
-> @@ -349,9 +319,6 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct drm_device *drm,
->  	if (!layer)
->  		return ERR_PTR(-ENOMEM);
->
-> -	if (index == 0)
-> -		type = DRM_PLANE_TYPE_PRIMARY;
-> -
->  	/* possible crtcs are set later */
->  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
->  				       &sun8i_ui_layer_funcs,
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> index 07c27e6a4b77..49c4074e164f 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> @@ -116,6 +116,36 @@ static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int channel,
->  	insize = SUN8I_MIXER_SIZE(src_w, src_h);
->  	outsize = SUN8I_MIXER_SIZE(dst_w, dst_h);
->
-> +	if (plane->type == DRM_PLANE_TYPE_PRIMARY) {
-> +		bool interlaced = false;
-> +		u32 val;
-> +
-> +		DRM_DEBUG_DRIVER("Primary layer, updating global size W: %u H: %u\n",
-> +				 dst_w, dst_h);
-> +		regmap_write(mixer->engine.regs,
-> +			     SUN8I_MIXER_GLOBAL_SIZE,
-> +			     outsize);
-> +		regmap_write(mixer->engine.regs,
-> +			     SUN8I_MIXER_BLEND_OUTSIZE(bld_base), outsize);
-> +
-> +		if (state->crtc)
-> +			interlaced = state->crtc->state->adjusted_mode.flags
-> +				& DRM_MODE_FLAG_INTERLACE;
-> +
-> +		if (interlaced)
-> +			val = SUN8I_MIXER_BLEND_OUTCTL_INTERLACED;
-> +		else
-> +			val = 0;
-> +
-> +		regmap_update_bits(mixer->engine.regs,
-> +				   SUN8I_MIXER_BLEND_OUTCTL(bld_base),
-> +				   SUN8I_MIXER_BLEND_OUTCTL_INTERLACED,
-> +				   val);
-> +
-> +		DRM_DEBUG_DRIVER("Switching display mixer interlaced mode %s\n",
-> +				 interlaced ? "on" : "off");
-> +	}
-> +
->  	/* Set height and width */
->  	DRM_DEBUG_DRIVER("Layer source offset X: %d Y: %d\n",
->  			 (state->src.x1 >> 16) & ~(format->hsub - 1),
-> @@ -445,6 +475,7 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct drm_device *drm,
->  					       struct sun8i_mixer *mixer,
->  					       int index)
->  {
-> +	enum drm_plane_type type = DRM_PLANE_TYPE_OVERLAY;
->  	struct sun8i_vi_layer *layer;
->  	unsigned int plane_cnt;
->  	int ret;
-> @@ -453,12 +484,15 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct drm_device *drm,
->  	if (!layer)
->  		return ERR_PTR(-ENOMEM);
->
-> +	if (index == 0)
-> +		type = DRM_PLANE_TYPE_PRIMARY;
-> +
->  	/* possible crtcs are set later */
->  	ret = drm_universal_plane_init(drm, &layer->plane, 0,
->  				       &sun8i_vi_layer_funcs,
->  				       sun8i_vi_layer_formats,
->  				       ARRAY_SIZE(sun8i_vi_layer_formats),
-> -				       NULL, DRM_PLANE_TYPE_OVERLAY, NULL);
-> +				       NULL, type, NULL);
->  	if (ret) {
->  		dev_err(drm->dev, "Couldn't initialize layer\n");
->  		return ERR_PTR(ret);
-> --
-> 2.17.1
->
+INFO: task syz-executor623:8754 can't die for more than 143 seconds.
+syz-executor623 D26888  8754   8751 0x00004004
+Call Trace:
+  context_switch kernel/sched/core.c:3384 [inline]
+  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+  schedule+0xd9/0x260 kernel/sched/core.c:4132
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4191
+  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+  pipe_lock_nested fs/pipe.c:63 [inline]
+  pipe_lock fs/pipe.c:71 [inline]
+  pipe_wait+0x1ce/0x1f0 fs/pipe.c:119
+  pipe_write+0x5fa/0xf40 fs/pipe.c:497
+  call_write_iter include/linux/fs.h:1902 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445909
+Code: ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a  
+fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 <7a> fd ff 11 7a  
+fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd
+RSP: 002b:00007f9271abddb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dac68 RCX: 0000000000445909
+RDX: 00000000fffffc8f RSI: 0000000020000140 RDI: 0000000000000007
+RBP: 00000000006dac60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac6c
+R13: 00007ffc2974a61f R14: 00007f9271abe9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor623:8754 blocked for more than 143 seconds.
+       Not tainted 5.3.0-next-20190918 #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor623 D26888  8754   8751 0x00004004
+Call Trace:
+  context_switch kernel/sched/core.c:3384 [inline]
+  __schedule+0x828/0x1c20 kernel/sched/core.c:4065
+  schedule+0xd9/0x260 kernel/sched/core.c:4132
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:4191
+  __mutex_lock_common kernel/locking/mutex.c:1033 [inline]
+  __mutex_lock+0x7b0/0x13c0 kernel/locking/mutex.c:1103
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
+  pipe_lock_nested fs/pipe.c:63 [inline]
+  pipe_lock fs/pipe.c:71 [inline]
+  pipe_wait+0x1ce/0x1f0 fs/pipe.c:119
+  pipe_write+0x5fa/0xf40 fs/pipe.c:497
+  call_write_iter include/linux/fs.h:1902 [inline]
+  new_sync_write+0x4d3/0x770 fs/read_write.c:483
+  __vfs_write+0xe1/0x110 fs/read_write.c:496
+  vfs_write+0x268/0x5d0 fs/read_write.c:558
+  ksys_write+0x14f/0x290 fs/read_write.c:611
+  __do_sys_write fs/read_write.c:623 [inline]
+  __se_sys_write fs/read_write.c:620 [inline]
+  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445909
+Code: ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a  
+fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 <7a> fd ff 11 7a  
+fd ff 11 7a fd ff 11 7a fd ff 11 7a fd ff 11 7a fd
+RSP: 002b:00007f9271abddb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00000000006dac68 RCX: 0000000000445909
+RDX: 00000000fffffc8f RSI: 0000000020000140 RDI: 0000000000000007
+RBP: 00000000006dac60 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac6c
+R13: 00007ffc2974a61f R14: 00007f9271abe9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor623:8755 can't die for more than 143 seconds.
+syz-executor623 R  running task    24984  8755   8751 0x00004006
+Call Trace:
 
---2rnnscmg2kp6rchv
-Content-Type: application/pgp-signature; name="signature.asc"
+Showing all locks held in the system:
+1 lock held by khungtaskd/1053:
+  #0: ffffffff88fa9e80 (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5337
+3 locks held by rs:main Q:Reg/8635:
+  #0: ffff8880ae8348d8 (&rq->lock){-.-.}, at: rq_lock  
+kernel/sched/sched.h:1211 [inline]
+  #0: ffff8880ae8348d8 (&rq->lock){-.-.}, at: __schedule+0x269/0x1c20  
+kernel/sched/core.c:4017
+  #1: ffff888215ea0420 (sb_writers#3){.+.+}, at: file_start_write  
+include/linux/fs.h:2886 [inline]
+  #1: ffff888215ea0420 (sb_writers#3){.+.+}, at: vfs_write+0x485/0x5d0  
+fs/read_write.c:557
+  #2: ffff8880a29e44c8 (&sb->s_type->i_mutex_key#11){+.+.}, at:  
+inode_trylock include/linux/fs.h:811 [inline]
+  #2: ffff8880a29e44c8 (&sb->s_type->i_mutex_key#11){+.+.}, at:  
+ext4_file_write_iter+0x220/0x13c0 fs/ext4/file.c:234
+1 lock held by rsyslogd/8637:
+  #0: ffff888095eac360 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+2 locks held by getty/8727:
+  #0: ffff8880a16fa090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f1d2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8728:
+  #0: ffff8880a2fbc090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f2d2e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8729:
+  #0: ffff888099709090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f252e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8730:
+  #0: ffff888097c40090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f292e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8731:
+  #0: ffff888092f46090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f212e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8732:
+  #0: ffff8880a1ee2090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005f312e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+2 locks held by getty/8733:
+  #0: ffff88809259e090 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:340
+  #1: ffffc90005ef92e0 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1c10 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor623/8754:
+  #0: ffff8880a9010c60 (&pipe->mutex/1){+.+.}, at: pipe_lock_nested  
+fs/pipe.c:63 [inline]
+  #0: ffff8880a9010c60 (&pipe->mutex/1){+.+.}, at: pipe_lock fs/pipe.c:71  
+[inline]
+  #0: ffff8880a9010c60 (&pipe->mutex/1){+.+.}, at: pipe_wait+0x1ce/0x1f0  
+fs/pipe.c:119
+3 locks held by syz-executor623/8755:
 
------BEGIN PGP SIGNATURE-----
+=============================================
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXYO4QgAKCRDj7w1vZxhR
-xTy3AQCFKpFFunsqQpH5S3NlmWIGIAVm1V7QMGnmSYwKpmq2AAD9HuR+fErdd4gi
-hWcnK9n6BG95SzVHYdPnJwAevIKEQgQ=
-=2o4M
------END PGP SIGNATURE-----
+NMI backtrace for cpu 1
+CPU: 1 PID: 1053 Comm: khungtaskd Not tainted 5.3.0-next-20190918 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:269 [inline]
+  watchdog+0xc99/0x1360 kernel/hung_task.c:353
+  kthread+0x361/0x430 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 PID: 8755 Comm: syz-executor623 Not tainted 5.3.0-next-20190918 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:write_comp_data+0x1e/0x70 kernel/kcov.c:123
+Code: 48 89 34 d1 48 89 11 5d c3 0f 1f 00 65 4c 8b 04 25 40 fe 01 00 65 8b  
+05 38 28 8f 7e a9 00 01 1f 00 75 51 41 8b 80 00 13 00 00 <83> f8 03 75 45  
+49 8b 80 08 13 00 00 45 8b 80 04 13 00 00 4c 8b 08
+RSP: 0018:ffff88809497f350 EFLAGS: 00000246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff83402d29
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: ffff88809497f358 R08: ffff88808d88e4c0 R09: ffffffff81f9dca0
+R10: ffff88809497f730 R11: ffff888095581297 R12: 0000000000000000
+R13: 000000000000f000 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f9271a9d700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffffffffff600400 CR3: 000000008db14000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  bvec_iter_advance include/linux/bvec.h:96 [inline]
+  bvec_iter_advance include/linux/bvec.h:87 [inline]
+  iov_iter_alignment+0x5d9/0x830 lib/iov_iter.c:1200
+  do_blockdev_direct_IO+0x1dd/0x8420 fs/direct-io.c:1181
+  __blockdev_direct_IO+0xa1/0xca fs/direct-io.c:1413
+  ext4_direct_IO_write fs/ext4/inode.c:3742 [inline]
+  ext4_direct_IO+0xd60/0x1c30 fs/ext4/inode.c:3871
+  generic_file_direct_write+0x20a/0x4a0 mm/filemap.c:3207
+  __generic_file_write_iter+0x2ee/0x630 mm/filemap.c:3390
+  ext4_file_write_iter+0x317/0x13c0 fs/ext4/file.c:268
+  call_write_iter include/linux/fs.h:1902 [inline]
+  do_iter_readv_writev+0x5f8/0x8f0 fs/read_write.c:693
+  do_iter_write fs/read_write.c:970 [inline]
+  do_iter_write+0x184/0x610 fs/read_write.c:951
+  vfs_iter_write+0x77/0xb0 fs/read_write.c:983
+  iter_file_splice_write+0x66d/0xbe0 fs/splice.c:746
+  do_splice_from fs/splice.c:848 [inline]
+  do_splice+0x785/0x1540 fs/splice.c:1161
+  __do_sys_splice fs/splice.c:1436 [inline]
+  __se_sys_splice fs/splice.c:1416 [inline]
+  __x64_sys_splice+0x2c6/0x330 fs/splice.c:1416
+  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445909
+Code: e8 bc b7 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f9271a9cda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 00000000006dac78 RCX: 0000000000445909
+RDX: 0000000000000008 RSI: 0000000000000000 RDI: 0000000000000006
+RBP: 00000000006dac70 R08: 000100000000ffe0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac7c
+R13: 00007ffc2974a61f R14: 00007f9271a9d9c0 R15: 20c49ba5e353f7cf
 
---2rnnscmg2kp6rchv--
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
