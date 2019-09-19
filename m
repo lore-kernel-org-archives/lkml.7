@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D80BC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD25C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06251217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AA2208C0
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932304;
-	bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
+	s=default; t=1568932314;
+	bh=DfOg6QLdAfp3DMZeD0O4pe0XXbH4LfNoN5nUvnEji4c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2GOHyy/tJJdJtau11jf+wnDTRR34XqTeSuLwugCtq7ZoEAiTC/hI4V68KK7fq6Ov8
-	 Do1Htr+Z/BniQItgZpoFsoQEh+uRzYJdO77LX4sbepcXaYQ8JPxi6MP1mgMZxjRjOV
-	 erMpcka01uiB4b/Z4grvdUKYReY2VLBFuobnt78Y=
+	b=hQl2fB7iGjqAviLk5XJbch3xn5SKHwBPZCZ4aDcTBapQUMmeXx1OmE6Hp+3CQMoEg
+	 K2Y7DdjCCIhCoHOZa5Oy5tAuJOYP5iUugsChUqzLMi8pZ0+xwyn5+zwBbfWzbmFb8g
+	 MPRGfHBoaHhNbV/20oJUwkaNIr9u6M9c7ZzH73v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392270AbfISWOY (ORCPT
+        id S2392109AbfISWOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:14:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:14:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392238AbfISWOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:14:21 -0400
+        id S1732690AbfISWOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:14:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A298721924;
-        Thu, 19 Sep 2019 22:14:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A90AC21907;
+        Thu, 19 Sep 2019 22:14:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931260;
-        bh=fyQekP0mArh+zpjTNqJQ4onGKRm1HDxeaza/MX5kIQc=;
+        s=default; t=1568931244;
+        bh=DfOg6QLdAfp3DMZeD0O4pe0XXbH4LfNoN5nUvnEji4c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bknqK1fig21sK9/Z1GhjKLONQz1wZ/NfwIogqDJ50tplLq3gZIfOzomprQ6ftaHTg
-         FgiycOpikj9OMB1UDgYoDCErXbgpl/8LxhP+fgilk63x1tvv9WPolQnlUlS6j8+3sO
-         aYXpcTGbunzAFvQEw7Shts/mBLcvnH4sgdw4ombI=
+        b=B/BWyih7ftImghd5o9P7kQzZ8WW0x2ZdhJATNnSjcBq2PwB3jam0Y9O66IFmHFlNl
+         xfC6sjXDn2GDVGuxJd884L72XzwVqc3+DF8bPHBoAZEPC3UvQo2Vp7pr8YDqhoHqg3
+         8JWdjwcZXBQJ7aEgdfUzsUi3yEF/bAh1N//otCug=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
+        stable@vger.kernel.org, Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Thomas Falcon <tlfalcon@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 61/79] amd-xgbe: Fix error path in xgbe_mod_init()
-Date:   Fri, 20 Sep 2019 00:03:46 +0200
-Message-Id: <20190919214812.996287097@linuxfoundation.org>
+Subject: [PATCH 4.19 56/79] ibmvnic: Do not process reset during or after device removal
+Date:   Fri, 20 Sep 2019 00:03:41 +0200
+Message-Id: <20190919214812.341879223@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214807.612593061@linuxfoundation.org>
 References: <20190919214807.612593061@linuxfoundation.org>
@@ -61,48 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit b6b4dc4c1fa7f1c99398e7dc85758049645e9588 ]
+[ Upstream commit 36f1031c51a2538e5558fb44c6d6b88f98d3c0f2 ]
 
-In xgbe_mod_init(), we should do cleanup if some error occurs
+Currently, the ibmvnic driver will not schedule device resets
+if the device is being removed, but does not check the device
+state before the reset is actually processed. This leads to a race
+where a reset is scheduled with a valid device state but is
+processed after the driver has been removed, resulting in an oops.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: efbaa828330a ("amd-xgbe: Add support to handle device renaming")
-Fixes: 47f164deab22 ("amd-xgbe: Add PCI device support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fix this by checking the device state before processing a queued
+reset event.
+
+Reported-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Tested-by: Abdul Haleem <abdhalee@linux.vnet.ibm.com>
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amd/xgbe/xgbe-main.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmvnic.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amd/xgbe/xgbe-main.c b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-index b41f23679a087..7ce9c69e9c44f 100644
---- a/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-+++ b/drivers/net/ethernet/amd/xgbe/xgbe-main.c
-@@ -469,13 +469,19 @@ static int __init xgbe_mod_init(void)
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 255de7d68cd33..5a57be66a4872 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -1998,6 +1998,10 @@ static void __ibmvnic_reset(struct work_struct *work)
  
- 	ret = xgbe_platform_init();
- 	if (ret)
--		return ret;
-+		goto err_platform_init;
- 
- 	ret = xgbe_pci_init();
- 	if (ret)
--		return ret;
-+		goto err_pci_init;
- 
- 	return 0;
+ 	rwi = get_next_rwi(adapter);
+ 	while (rwi) {
++		if (adapter->state == VNIC_REMOVING ||
++		    adapter->state == VNIC_REMOVED)
++			goto out;
 +
-+err_pci_init:
-+	xgbe_platform_exit();
-+err_platform_init:
-+	unregister_netdevice_notifier(&xgbe_netdev_notifier);
-+	return ret;
- }
- 
- static void __exit xgbe_mod_exit(void)
+ 		if (adapter->force_reset_recovery) {
+ 			adapter->force_reset_recovery = false;
+ 			rc = do_hard_reset(adapter, rwi, reset_state);
+@@ -2022,7 +2026,7 @@ static void __ibmvnic_reset(struct work_struct *work)
+ 		netdev_dbg(adapter->netdev, "Reset failed\n");
+ 		free_all_rwi(adapter);
+ 	}
+-
++out:
+ 	adapter->resetting = false;
+ 	if (we_lock_rtnl)
+ 		rtnl_unlock();
 -- 
 2.20.1
 
