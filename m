@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04546C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB62BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBA012196F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD91C21A49
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931842;
-	bh=IL7gNa0WwSU3j+XDHGSg+0vrbhkPCEZH8oIstZlTZk4=;
+	s=default; t=1568931844;
+	bh=MJwYI1KVbjryZ/U0QHBipNr+8bajKoJ+EZOTakjitT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aZfzw4jj/pA9lqCgtk9S3f34GmWY0QQONPY2i9EaUg2eAgjIsJEJ1m+o8lZCA4K8n
-	 oMPHuew/ARWQIffUms7EuZW+KZY2q1nMRzDvKkjZ0wh1NzkdfePkq7+o07frLldQb7
-	 RI9jEkpc/vvIaRYontbjZWLFUM2eO1rV+uONjDRI=
+	b=Eg/eIgx6edCvie88TpXNBpEMrhtXRV5S91u1GUkWN3hoPZEJbb6CWCdLJZT9r9UTj
+	 4Bd1sphWXIvpZpeBKswdCmRPUxl+Vs8kgWaOnMOO12oZsjmd2HOqyEWRqnGxgPKnKh
+	 +CpQOwG3HHy5gGbL3ezncet1fhJ+Rthz+3roffSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407095AbfISWYC (ORCPT
+        id S2407085AbfISWYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:24:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39994 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407077AbfISWX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:23:59 -0400
+        id S2407066AbfISWX4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:23:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FD0521929;
-        Thu, 19 Sep 2019 22:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 586B921920;
+        Thu, 19 Sep 2019 22:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931838;
-        bh=IL7gNa0WwSU3j+XDHGSg+0vrbhkPCEZH8oIstZlTZk4=;
+        s=default; t=1568931835;
+        bh=MJwYI1KVbjryZ/U0QHBipNr+8bajKoJ+EZOTakjitT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WIoiPZ5z0wpKA89Hw8jtO9jnIUAGKUtff0/di/4pmawjVQ7zGGvUgnOgIUBumKlmf
-         s/L8I9GEmGGov1Qx4MDl1NCSYfoIIfrtwbzI4NBmlNnd+bxnfja+zyDLiFB7qWmMhx
-         8u+drf4hYGBfVutDsb5x6Sr9gSsfHVQiskjRX8Oc=
+        b=lO/LDtnXQDBZRWJypg83vOMztwHCyJLdBF8SkQtEM+pgGafQM1i0jUjCpwhPao63F
+         pl85KM7qxD/KG6N3g8adYXBVF7Ez4ELEJjhWW/QzsuVEH4/HIZWatWOx/og0yzPgX7
+         tEz6hzgtVn+PVr/NZTa0XdP288Xb8+eE2wYjdY0w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Huang <huangwenabc@gmail.com>,
-        Ganapathi Bhat <gbhat@marvell.comg>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.4 34/56] mwifiex: Fix three heap overflow at parsing element in cfg80211_ap_settings
-Date:   Fri, 20 Sep 2019 00:04:15 +0200
-Message-Id: <20190919214757.729438296@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>
+Subject: [PATCH 4.4 56/56] ARC: export "abort" for modules
+Date:   Fri, 20 Sep 2019 00:04:37 +0200
+Message-Id: <20190919214805.317139034@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214742.483643642@linuxfoundation.org>
 References: <20190919214742.483643642@linuxfoundation.org>
@@ -60,73 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Huang <huangwenabc@gmail.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
 
-commit 7caac62ed598a196d6ddf8d9c121e12e082cac3a upstream.
+This is a custom patch (no mainline equivalent) for stable backport only
+to address 0-Day kernel test infra ARC 4.x.y builds errors.
 
-mwifiex_update_vs_ie(),mwifiex_set_uap_rates() and
-mwifiex_set_wmm_params() call memcpy() without checking
-the destination size.Since the source is given from
-user-space, this may trigger a heap buffer overflow.
+The reason for this custom patch as that it is a single patch, touches
+only ARC, vs. atleast two 7c2c11b208be09c1, dc8635b78cd8669 which touch
+atleast 3 other arches (one long removed) and could potentially have a
+fallout.
 
-Fix them by putting the length check before performing memcpy().
-
-This fix addresses CVE-2019-14814,CVE-2019-14815,CVE-2019-14816.
-
-Signed-off-by: Wen Huang <huangwenabc@gmail.com>
-Acked-by: Ganapathi Bhat <gbhat@marvell.comg>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+CC: stable@vger.kernel.org	# 4.4, 4.9
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/mwifiex/ie.c      |    3 +++
- drivers/net/wireless/mwifiex/uap_cmd.c |    9 ++++++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
+ arch/arc/kernel/traps.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/wireless/mwifiex/ie.c
-+++ b/drivers/net/wireless/mwifiex/ie.c
-@@ -240,6 +240,9 @@ static int mwifiex_update_vs_ie(const u8
- 		}
- 
- 		vs_ie = (struct ieee_types_header *)vendor_ie;
-+		if (le16_to_cpu(ie->ie_length) + vs_ie->len + 2 >
-+			IEEE_MAX_IE_SIZE)
-+			return -EINVAL;
- 		memcpy(ie->ie_buffer + le16_to_cpu(ie->ie_length),
- 		       vs_ie, vs_ie->len + 2);
- 		le16_add_cpu(&ie->ie_length, vs_ie->len + 2);
---- a/drivers/net/wireless/mwifiex/uap_cmd.c
-+++ b/drivers/net/wireless/mwifiex/uap_cmd.c
-@@ -286,6 +286,8 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_SUPP_RATES, var_pos, len);
- 	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES)
-+			return;
- 		memcpy(bss_cfg->rates, rate_ie + 1, rate_ie->len);
- 		rate_len = rate_ie->len;
- 	}
-@@ -293,8 +295,11 @@ mwifiex_set_uap_rates(struct mwifiex_uap
- 	rate_ie = (void *)cfg80211_find_ie(WLAN_EID_EXT_SUPP_RATES,
- 					   params->beacon.tail,
- 					   params->beacon.tail_len);
--	if (rate_ie)
-+	if (rate_ie) {
-+		if (rate_ie->len > MWIFIEX_SUPPORTED_RATES - rate_len)
-+			return;
- 		memcpy(bss_cfg->rates + rate_len, rate_ie + 1, rate_ie->len);
-+	}
- 
- 	return;
+--- a/arch/arc/kernel/traps.c
++++ b/arch/arc/kernel/traps.c
+@@ -163,3 +163,4 @@ void abort(void)
+ {
+ 	__asm__ __volatile__("trap_s  5\n");
  }
-@@ -412,6 +417,8 @@ mwifiex_set_wmm_params(struct mwifiex_pr
- 					    params->beacon.tail_len);
- 	if (vendor_ie) {
- 		wmm_ie = (struct ieee_types_header *)vendor_ie;
-+		if (*(vendor_ie + 1) > sizeof(struct mwifiex_types_wmm_info))
-+			return;
- 		memcpy(&bss_cfg->wmm_info, wmm_ie + 1,
- 		       sizeof(bss_cfg->wmm_info));
- 		priv->wmm_enabled = 1;
++EXPORT_SYMBOL(abort);
 
 
