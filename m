@@ -2,108 +2,105 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD56C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:00:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043CC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CC0A21907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DE221929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 19:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Q3ls9dDa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UQnxMIdq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392158AbfISTAf (ORCPT
+        id S2392177AbfISTCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 15:00:35 -0400
-Received: from mout.gmx.net ([212.227.17.21]:33897 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389123AbfISTAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 15:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1568919580;
-        bh=hj0v1Dk284VBCCqtbevoonaHYwBxNHrfdQxj3+1olfo=;
-        h=X-UI-Sender-Class:Date:In-Reply-To:References:Subject:Reply-to:To:
-         CC:From;
-        b=Q3ls9dDaa3lO23ToTcVtAxpChrkrT67aZVQKDBGAWOCCrvsABcWRYXnWiuyIoimY0
-         5z/z7hnxea5Qoy+C30DO7BORwklbHAWP4H/Kw0K8Vwx0cuD+UMdUDUHnkQfNdMSaMW
-         QU0gINfMFb8OWKPNbB7O7wUPJUuoG2sB9og87XgA=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.10.26] ([80.208.215.153]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MbAgq-1hdtp60qym-00ba2G; Thu, 19
- Sep 2019 20:59:40 +0200
-Date:   Thu, 19 Sep 2019 20:59:35 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <1567059876.15320.3.camel@mtksdaap41>
-References: <1566531931-9772-1-git-send-email-hsin-hsiung.wang@mediatek.com> <1566531931-9772-3-git-send-email-hsin-hsiung.wang@mediatek.com> <trinity-1f82bff1-535e-47cd-9a2f-8faccb56e356-1566562433314@3c-app-gmx-bs11> <e8a918ab-3e7a-b487-db77-df28d56518ce@gmail.com> <0A87F427-2D81-412A-9549-09A51A021799@public-files.de> <b5a21908-faee-17d1-ce26-99b941c0fa70@gmail.com> <trinity-a57f08bb-e30e-4e74-911c-c40e335d00da-1566580580817@3c-app-gmx-bs75> <1567059876.15320.3.camel@mtksdaap41>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: Aw: Re: [BUG] [PATCH v5 02/10] mfd: mt6397: extract irq related code from core driver
-Reply-to: frank-w@public-files.de
-To:     linux-mediatek@lists.infradead.org,
-        Hsin-hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        srv_heupstream@mediatek.com, devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        =?ISO-8859-1?Q?=22Ren=E9_van_Dorst=22?= <opensource@vdorst.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org
-From:   Frank Wunderlich <frank-w@public-files.de>
-Message-ID: <904EC97A-486D-4C22-9D36-838D25EB7A6F@public-files.de>
-X-Provags-ID: V03:K1:row03C78r7NZowZd8aVAl1Eeyaqqfenw5BZOEshUX8lFBJvuhz4
- T+PL7oTN1F06ozQi0+zBKKCvCjoji4fkxqRZYCs4Niyy/E2/wOLW0QO2w/ZBpvxECmQWl/i
- A6QlqHL6V32iBPMdpj4GYf0evMqUF1ziUcKsrai89pMK9PRtGVWj6HXo3RI2nn0FwZR5Jz+
- lrl7R4R95drFfoDuQz9Wg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:e7BeDAeyJjA=:q/h5IzV1+NgCc3T9CmosSg
- 5EqJDfGKXmoIHjQZkXq8oJq+sjZkfSZvZPdGHFckLlVfGVh5bL98PsKt6DGldZNBHN1p8Yh22
- gSANqdGmtfpzBVbqmWzawdC++Qo/URhEqfAYw5t/5jtZQaPbcETwtqJhaTocnUeRNq7O2m10k
- +giTC5JeqqoydXT5s7p06GpravF0F08jWcA1B5/BtR05ITCeHOhJlIF+gHZD50PqFOALYnfUn
- oOaARwN2zGdGdZRmVB579kngNnoqBcIyI7A0dnwrs1o4TvpFvkvUVHvJ6xIxglodmj0yYnHDz
- JJIWTw93tIZ/s66GZQ2dKEkq2Ds7+KW6e3GysK20VR1rX3r/Ll0iL4tJDV19WRY+oPTqiuipD
- c0Qh1fvK+ew0WTzxbaASsidqATQNvDEOrhKcGvhawSEAYIXo3jI769l7TEelE0RtDp5pon/xq
- wWSbWtnDb4smBSrqADxXE1aXBh0gLJTgwO0s6Qy/sJSvmXyaCP8yfExTQypOoDE51gkDR/l7V
- UoINLG06vd6EaqaYgJgy+92YLhugFzupIcVSP2ZDdHOo/c3bbPSvPWFwyyrPTXR3aDDR4bzWF
- N9xPJZWCLNeqql2BqXyX/BNWPLRwJM49HBfIUJs7OHpYn0pMV5XYI5KM/Zf78qiVNQZ5YHYvV
- 3uiAjYU849vUmDCkwmCFJjZoLqKbEwgaTmKmS9A9i1gE89hEsHOiIa2Qf5Bng9H1Utnysq3lC
- KdssfnlXSmZa4CPktrrC9DqVjtUr+2hVZjujLB5vpumb884hT0Ruz886H/4GQg4ZsL5/K51Kj
- ugJHHH0LTsFdQVGGoFFr1jMdoy/cMDU/jBAnoa9lunXk+b5hPlMLrmEHOjGu0CJU0WRq/yggs
- QpXzZpFp6ulWwdKNnN2ZZL0OnX3r45zjcx4Vf3qOT6nGLoDlXaBfaHwwPyp0+1Krq7N8uJMl5
- sO+lQ9qXsLMNxRaU0Trv/0E0bjZPFylaGGXPnau15KgXPiuInFIgwlcU3Q8XsNvo7xXtO4873
- 6sw++dLvqQu+fBI0pzrJnYwVph+StTcKRW0+qHJ0LrQQZPM/pgplDHHPdV5vBUrMBG1hH3IeL
- wXBRjnkwpGFFAeyz10TtMtqXJHcIpt9wvcc4camaPl5slaFI3rCrt8Xq3qhpBimk5htF+VdVU
- MYhdw0Cjsxc6opGMtremMxOcVHEMcGiCD7lqvu66REZg68HyRdcLnZzDXqYv9H75zooPiMPzE
- bdHoJ3bB+sx8eukAEEgyWXBXIGQge/cIOeL7NxJyMbLQgww1Yphgbj/o7mgk=
+        Thu, 19 Sep 2019 15:02:14 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33420 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389629AbfISTCO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 15:02:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id m11so10451528ioo.0;
+        Thu, 19 Sep 2019 12:02:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=4X6G5fyDOE+8qDzwdcGrWs6Ga+WuHS2SnviPyZtHUSo=;
+        b=UQnxMIdqhSQFf91e+sM59Ud05JHhPy1Y8x8zf8DHNpthxD4L3VNTOT1PAxUOKb5NJw
+         Qrk6R4Zix8EvhguGv8GUkZG1MTR+KGGzm5auozkogFEgNRJZsMQu4X5ALpt5N9U41GTR
+         p9faY6p4FpozIMwFlB/VXT4+zgptSr+C9USZMyyE2Up4dDkrwejqzDABE6u7IQ2lYJIo
+         3Ni4KbZ9m3gCTBL/XvAP5Ey/+C5Tx6jsQv4X6xbMLTdl8OoCYO20CXMCDsbZcNPZH5/z
+         epUENUSBYwQ0QmkBG2i2+QFWW6gX2cPc0fCa1dxdUbH5//iUyy68BLHN8tofcDskx3a5
+         YOew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=4X6G5fyDOE+8qDzwdcGrWs6Ga+WuHS2SnviPyZtHUSo=;
+        b=cewtcT3ymdRPW6XyJwHEcXPA9la+hTX6IQqLTLbL9mk1peHJJWWAITUJ0cPeAbNdc6
+         h56VrGz96JRXR5O4WpXUce6w9K5Z96FqoTr+uJL4rJ23Xivv/ihnsY6l2+RNpyCL+gMW
+         vnfhMjaLkD6ORHGfg6w34pP4c5IEEqHi0ydNeF7FFByvwZFoHumdRoqS0TowT2x2xepr
+         os3iBMjIgrYn9WLYi+Rwf+U6Bx0fYhsZ0a4G9VoKzjnHBJZMRzV6kVl/RdG9Sa6A22N7
+         KSU0T59Dy1SoYNSYStcmXIJ9jk3C75/1sB7ZrQB5lpmzQfR7xy/ipmO+FV7OmuARuYY8
+         RajA==
+X-Gm-Message-State: APjAAAW4MACAMihXeTg3LYbHi4fYZtu+Cjk6c3L0G17AQIZvnRgBWkVx
+        GcPEhQsYQ3y7FNZtUSVNVzzHUlAY
+X-Google-Smtp-Source: APXvYqwxuhM2iQg+2+pWNOMaj8I4qbFEjgrjcTphhnZk1Wcc+KxOLuQmdjDzx9HbY+koj0p1gxZctQ==
+X-Received: by 2002:a02:8644:: with SMTP id e62mr14360370jai.115.1568919732897;
+        Thu, 19 Sep 2019 12:02:12 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id e139sm9182234iof.60.2019.09.19.12.02.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Sep 2019 12:02:12 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable <stable@vger.kernel.org>
+Subject: [PATCH 4.4 v1] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Thu, 19 Sep 2019 15:02:08 -0400
+Message-Id: <20190919190208.13648-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190919151137.9960-1-TheSven73@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-When is new version ready? First 2 patches are still in next for 5=2E4 and=
- i see no fix so i guess it is still broken=2E
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-Regards Frank
+This issue was detected with the help of Coccinelle.
 
-Am 29=2E August 2019 08:24:36 MESZ schrieb Hsin-hsiung Wang <hsin-hsiung=
-=2Ewang@mediatek=2Ecom>:
->Hi Frank/Matthias,
->
->Thanks for your comments=2E
->The root cause seems I didn't split the code well=2E
->I will fix it in the next version=2E
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/power/ltc2941-battery-gauge.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/power/ltc2941-battery-gauge.c b/drivers/power/ltc2941-battery-gauge.c
+index da49436176cd..30a9014b2f95 100644
+--- a/drivers/power/ltc2941-battery-gauge.c
++++ b/drivers/power/ltc2941-battery-gauge.c
+@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c_client *client)
+ {
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
+ 
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
+ 	return 0;
+ }
+-- 
+2.17.1
+
