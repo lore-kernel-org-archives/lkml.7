@@ -2,154 +2,92 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5498C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A429BC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC17321907
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:44:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="FtPM45xR"
+	by mail.kernel.org (Postfix) with ESMTP id 74D7E21929
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 05:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730861AbfISFoo (ORCPT
+        id S1731004AbfISFpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 01:44:44 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:35572 "EHLO pegase1.c-s.fr"
+        Thu, 19 Sep 2019 01:45:06 -0400
+Received: from mga02.intel.com ([134.134.136.20]:17613 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725887AbfISFon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 01:44:43 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Ym523Fvpz9vBnB;
-        Thu, 19 Sep 2019 07:44:38 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=FtPM45xR; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id E1DzxbKi3YAE; Thu, 19 Sep 2019 07:44:38 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Ym521sh9z9vBn5;
-        Thu, 19 Sep 2019 07:44:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568871878; bh=u3IPZEW+32C7DaDMfn0DvIJKyx2qRHLH39Ao90Ba2vI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=FtPM45xRRq+ZMAt65+IvhdTxuzxace0VwgaQdf3cKJJT4y/Eahg1dC/4UOdaGCdh8
-         2keyDA6ggFlB3Ny+FMd2SlwiqZK/16OHJduDKueIBvHCwUrv+TaOH/TmV6EmcQ6aZD
-         62XuqZlFMWXmXNg2d+icfo4iXGpGWnUP9d4AjRIg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1BE5C8B80C;
-        Thu, 19 Sep 2019 07:44:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kqE2oHvK7TMH; Thu, 19 Sep 2019 07:44:39 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1DA68B783;
-        Thu, 19 Sep 2019 07:44:36 +0200 (CEST)
-Subject: Re: [PATCH] mm/pgtable/debug: Fix test validating architecture page
- table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        linux-arm-kernel@lists.infradead.org,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <1892b37d1fd9a4ed39e76c4b999b6556077201c0.1568355752.git.christophe.leroy@c-s.fr>
- <cb338e2e-23b1-b8af-811c-57feb6f4e7b4@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <cc28ebaf-4167-6bc7-54a7-630cd5ab827c@c-s.fr>
-Date:   Thu, 19 Sep 2019 07:44:36 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        id S1725887AbfISFpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 01:45:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Sep 2019 22:45:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,522,1559545200"; 
+   d="scan'208";a="177944875"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 18 Sep 2019 22:45:05 -0700
+Received: from [10.226.38.20] (unknown [10.226.38.20])
+        by linux.intel.com (Postfix) with ESMTP id A56445802C8;
+        Wed, 18 Sep 2019 22:45:03 -0700 (PDT)
+Subject: Re: [PATCH v1 2/2] spi: cadence-qspi: Add QSPI support for Intel LGM
+ SoC
+To:     Mark Brown <broonie@kernel.org>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com
+References: <20190916073843.39618-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916073843.39618-3-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20190916113255.GA4352@sirena.co.uk>
+ <466b41c1-3d65-0bf4-6db7-d3b3e06b107b@linux.intel.com>
+ <20190917153650.GF3524@sirena.co.uk>
+ <eeefa79b-0a3b-5d62-3a1b-c1e9dcb03aa7@linux.intel.com>
+ <20190918120846.GH2596@sirena.co.uk>
+From:   "Ramuthevar, Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Message-ID: <f31b82ff-478e-bf28-0898-96f5bdfacc61@linux.intel.com>
+Date:   Thu, 19 Sep 2019 13:45:02 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <cb338e2e-23b1-b8af-811c-57feb6f4e7b4@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <20190918120846.GH2596@sirena.co.uk>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Mark,
 
+    Thank you for the comments and queries.
 
-Le 18/09/2019 Ã  09:32, Anshuman Khandual a Ã©critÂ :
-> 
-> 
-> On 09/13/2019 11:53 AM, Christophe Leroy wrote:
->> Fix build failure on powerpc.
->>
->> Fix preemption imbalance.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->> ---
->>   mm/arch_pgtable_test.c | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/mm/arch_pgtable_test.c b/mm/arch_pgtable_test.c
->> index 8b4a92756ad8..f2b3c9ec35fa 100644
->> --- a/mm/arch_pgtable_test.c
->> +++ b/mm/arch_pgtable_test.c
->> @@ -24,6 +24,7 @@
->>   #include <linux/swap.h>
->>   #include <linux/swapops.h>
->>   #include <linux/sched/mm.h>
->> +#include <linux/highmem.h>
->>   #include <asm/pgalloc.h>
->>   #include <asm/pgtable.h>
->>   
->> @@ -400,6 +401,8 @@ static int __init arch_pgtable_tests_init(void)
->>   	p4d_clear_tests(p4dp);
->>   	pgd_clear_tests(mm, pgdp);
->>   
->> +	pte_unmap(ptep);
->> +
->>   	pmd_populate_tests(mm, pmdp, saved_ptep);
->>   	pud_populate_tests(mm, pudp, saved_pmdp);
->>   	p4d_populate_tests(mm, p4dp, saved_pudp);
->>
-> 
-> Hello Christophe,
-> 
-> I am planning to fold this fix into the current patch and retain your
-> Signed-off-by. Are you okay with it ?
-> 
+On 18/9/2019 8:08 PM, Mark Brown wrote:
+> On Wed, Sep 18, 2019 at 01:59:06PM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>> On 17/9/2019 11:36 PM, Mark Brown wrote:
+>>> On Tue, Sep 17, 2019 at 10:11:28AM +0800, Ramuthevar, Vadivel MuruganX wrote:
+>>>> *    spi-cadence.c* in *drivers/spi/*, which supports very old legacy
+>>>> cadence-spi based devices(normal)
+>>>> *    cadence-quadspi.c(drivers/mtd/spi-nor/)* : specific support to SPI-NOR
+>>>> flash with new spi-nor layer.
+>>>>       all the API's in this driver purely on spi-nor specific, so couldn't
+>>>> proceed to adapt.
+>>> Are these completely separate IPs or are they just different versions of
+>>> the same IP?
+>> These are same IPs , but different features Enabled/Disabled depends upon
+>> the SoC vendors.
+>> for e.g: Intel LGM SoC uses the same IP, but without DMA and Direct access
+>> controller.
+>> also dedicated support to flash devices.
+> If it's different versions of the same IP then everything should be in
+> one driver with the optional features enabled depending on what's in a
+> given system.
+Agreed!, I am trying to adapt the driver/mtd/spi-nor/cadence-quadspi.c 
+and newly sent patches
+in a single driver file, also trying to use spi_mem_ops framework.
 
-No problem, do whatever is convenient for you. You can keep the 
-signed-off-by, or use tested-by: as I tested it on PPC32.
-
-Christophe
+With Best Regards
+Vadivel
