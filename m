@@ -2,58 +2,63 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347CFC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759A4C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03743217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4933720678
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932138;
-	bh=fDYcZPPzfvjGgFnr+/KHdBDZQ9dq4E+3voYFJ0gq6vM=;
+	s=default; t=1568932144;
+	bh=7lJqaK5sP32QNVz9dKxIQ1V9PU1uSFT/pKqmryKuYAw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ilYKagrVeapVjtMtluXSEO0tU4zkZ5yFHnno/Tz7xP8EFU8Dy5FFTBYX+pvZ+dHSC
-	 SzZT1d7UFCSrh2BwKu5d7iVwpgOgv8lkSMC+Ghr41utzlIgRY2Kf4nSueQhy/yyZ4g
-	 xyiyhKq6CPK07NxlFLZ417txtLkUauST7or9rlkw=
+	b=vLeZiCvHncd0G+396tVGK1zFhq3CLGKxpWaJcVhE0eTi9zD4PJG/OWEr3PLPGo9fe
+	 wI9WcpWE+VyanGKMjsaM8GAWTIvBnouh7sJ+rJptZHjrNOW4yH5wg2uVf6YvGBUCpR
+	 bghB9Z9qsvCvEWhxWJnxfhl7ksA0Ml5+d+KdskSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393724AbfISW25 (ORCPT
+        id S2392617AbfISWST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:28:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60036 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:18:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393932AbfISWSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:18:30 -0400
+        id S2391977AbfISWSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:18:14 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F184D21A49;
-        Thu, 19 Sep 2019 22:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B87721924;
+        Thu, 19 Sep 2019 22:18:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931509;
-        bh=fDYcZPPzfvjGgFnr+/KHdBDZQ9dq4E+3voYFJ0gq6vM=;
+        s=default; t=1568931493;
+        bh=7lJqaK5sP32QNVz9dKxIQ1V9PU1uSFT/pKqmryKuYAw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UNAfAMsxnciPTTGupJOOplve/gPM6dTGh3J1kHL9nnGgNXzM0TlYcDT+gd9B5lGj9
-         GU5VSsjNMCbqBgfWnPZJ1LtqU6vHh6mSAR/UAQxJd3rycJoqMFleutWnzgi2eCIFbr
-         Gfq+ytQxNwPoZDWEm2Tm2RKkT1oCn1V1rS7+qAp0=
+        b=WCa970AP06HblvoYpgFMklleAVEO2sjXf4CxiCRIk8tjryG/Ba41i0Q2rolJsRXQg
+         rzOKGcVe2OHf/3fHcFFBz6bKsy+yw/R/1n9rr2WbCWvZQbeiorgbiDSsT9/vMAtZfV
+         EDEdt1wQy8/T8r7JY8HmAcH/PlgyEWtAUg+TD0JQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 13/74] Revert "MIPS: SiByte: Enable swiotlb for SWARM, LittleSur and BigSur"
-Date:   Fri, 20 Sep 2019 00:03:26 +0200
-Message-Id: <20190919214805.607513669@linuxfoundation.org>
+        stable@vger.kernel.org, Kim Phillips <kim.phillips@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Borislav Petkov" <bp@alien8.de>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 41/59] perf/x86/amd/ibs: Fix sample bias for dispatched micro-ops
+Date:   Fri, 20 Sep 2019 00:03:56 +0200
+Message-Id: <20190919214806.987687439@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190919214800.519074117@linuxfoundation.org>
-References: <20190919214800.519074117@linuxfoundation.org>
+In-Reply-To: <20190919214755.852282682@linuxfoundation.org>
+References: <20190919214755.852282682@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,92 +68,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Kim Phillips <kim.phillips@amd.com>
 
-This reverts commit 8ac4ad063e1a32e321a7a0e6ea9fd305a6ecd033 which is
-commit e4849aff1e169b86c561738daf8ff020e9de1011 upstream
+[ Upstream commit 0f4cd769c410e2285a4e9873a684d90423f03090 ]
 
-Guenter writes:
-	Upstream commit e4849aff1e16 ("MIPS: SiByte: Enable swiotlb for SWARM,
-	LittleSur and BigSur") results in build failures in v4.4.y and v4.14.y.
+When counting dispatched micro-ops with cnt_ctl=1, in order to prevent
+sample bias, IBS hardware preloads the least significant 7 bits of
+current count (IbsOpCurCnt) with random values, such that, after the
+interrupt is handled and counting resumes, the next sample taken
+will be slightly perturbed.
 
-	make bigsur_defconfig:
+The current count bitfield is in the IBS execution control h/w register,
+alongside the maximum count field.
 
-	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
-	warning: (SIBYTE_SWARM && SIBYTE_SENTOSA && SIBYTE_BIGSUR && SWIOTLB_XEN && AMD_IOMMU) selects SWIOTLB which has unmet direct dependencies (CAVIUM_OCTEON_SOC || MACH_LOONGSON64 && CPU_LOONGSON3 || NLM_XLP_BOARD || NLM_XLR_BOARD)
+Currently, the IBS driver writes that register with the maximum count,
+leaving zeroes to fill the current count field, thereby overwriting
+the random bits the hardware preloaded for itself.
 
-	and the actual build:
+Fix the driver to actually retain and carry those random bits from the
+read of the IBS control register, through to its write, instead of
+overwriting the lower current count bits with zeroes.
 
-	lib/swiotlb.o: In function `swiotlb_tbl_map_single':
-	(.text+0x1c0): undefined reference to `iommu_is_span_boundary'
-	Makefile:1021: recipe for target 'vmlinux' failed
+Tested with:
 
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Cc: Maciej W. Rozycki <macro@linux-mips.org>
-Cc: Paul Burton <paul.burton@mips.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+perf record -c 100001 -e ibs_op/cnt_ctl=1/pp -a -C 0 taskset -c 0 <workload>
+
+'perf annotate' output before:
+
+ 15.70  65:   addsd     %xmm0,%xmm1
+ 17.30        add       $0x1,%rax
+ 15.88        cmp       %rdx,%rax
+              je        82
+ 17.32  72:   test      $0x1,%al
+              jne       7c
+  7.52        movapd    %xmm1,%xmm0
+  5.90        jmp       65
+  8.23  7c:   sqrtsd    %xmm1,%xmm0
+ 12.15        jmp       65
+
+'perf annotate' output after:
+
+ 16.63  65:   addsd     %xmm0,%xmm1
+ 16.82        add       $0x1,%rax
+ 16.81        cmp       %rdx,%rax
+              je        82
+ 16.69  72:   test      $0x1,%al
+              jne       7c
+  8.30        movapd    %xmm1,%xmm0
+  8.13        jmp       65
+  8.24  7c:   sqrtsd    %xmm1,%xmm0
+  8.39        jmp       65
+
+Tested on Family 15h and 17h machines.
+
+Machines prior to family 10h Rev. C don't have the RDWROPCNT capability,
+and have the IbsOpCurCnt bitfield reserved, so this patch shouldn't
+affect their operation.
+
+It is unknown why commit db98c5faf8cb ("perf/x86: Implement 64-bit
+counter support for IBS") ignored the lower 4 bits of the IbsOpCurCnt
+field; the number of preloaded random bits has always been 7, AFAICT.
+
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: <x86@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: "Borislav Petkov" <bp@alien8.de>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: "Namhyung Kim" <namhyung@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lkml.kernel.org/r/20190826195730.30614-1-kim.phillips@amd.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/Kconfig                |    3 ---
- arch/mips/sibyte/common/Makefile |    1 -
- arch/mips/sibyte/common/dma.c    |   14 --------------
- 3 files changed, 18 deletions(-)
- delete mode 100644 arch/mips/sibyte/common/dma.c
+ arch/x86/events/amd/ibs.c         | 13 ++++++++++---
+ arch/x86/include/asm/perf_event.h | 12 ++++++++----
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -792,7 +792,6 @@ config SIBYTE_SWARM
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select ZONE_DMA32 if 64BIT
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+index 8c51844694e2f..7a86fbc07ddc1 100644
+--- a/arch/x86/events/amd/ibs.c
++++ b/arch/x86/events/amd/ibs.c
+@@ -672,10 +672,17 @@ fail:
  
- config SIBYTE_LITTLESUR
- 	bool "Sibyte BCM91250C2-LittleSur"
-@@ -815,7 +814,6 @@ config SIBYTE_SENTOSA
- 	select SYS_HAS_CPU_SB1
- 	select SYS_SUPPORTS_BIG_ENDIAN
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+ 	throttle = perf_event_overflow(event, &data, &regs);
+ out:
+-	if (throttle)
++	if (throttle) {
+ 		perf_ibs_stop(event, 0);
+-	else
+-		perf_ibs_enable_event(perf_ibs, hwc, period >> 4);
++	} else {
++		period >>= 4;
++
++		if ((ibs_caps & IBS_CAPS_RDWROPCNT) &&
++		    (*config & IBS_OP_CNT_CTL))
++			period |= *config & IBS_OP_CUR_CNT_RAND;
++
++		perf_ibs_enable_event(perf_ibs, hwc, period);
++	}
  
- config SIBYTE_BIGSUR
- 	bool "Sibyte BCM91480B-BigSur"
-@@ -829,7 +827,6 @@ config SIBYTE_BIGSUR
- 	select SYS_SUPPORTS_HIGHMEM
- 	select SYS_SUPPORTS_LITTLE_ENDIAN
- 	select ZONE_DMA32 if 64BIT
--	select SWIOTLB if ARCH_DMA_ADDR_T_64BIT && PCI
+ 	perf_event_update_userpage(event);
  
- config SNI_RM
- 	bool "SNI RM200/300/400"
---- a/arch/mips/sibyte/common/Makefile
-+++ b/arch/mips/sibyte/common/Makefile
-@@ -1,5 +1,4 @@
- obj-y := cfe.o
--obj-$(CONFIG_SWIOTLB)			+= dma.o
- obj-$(CONFIG_SIBYTE_BUS_WATCHER)	+= bus_watcher.o
- obj-$(CONFIG_SIBYTE_CFE_CONSOLE)	+= cfe_console.o
- obj-$(CONFIG_SIBYTE_TBPROF)		+= sb_tbprof.o
---- a/arch/mips/sibyte/common/dma.c
-+++ /dev/null
-@@ -1,14 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0+
--/*
-- *	DMA support for Broadcom SiByte platforms.
-- *
-- *	Copyright (c) 2018  Maciej W. Rozycki
-- */
--
--#include <linux/swiotlb.h>
--#include <asm/bootinfo.h>
--
--void __init plat_swiotlb_setup(void)
--{
--	swiotlb_init(1);
--}
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 78241b736f2a0..f6c4915a863e0 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -209,16 +209,20 @@ struct x86_pmu_capability {
+ #define IBSCTL_LVT_OFFSET_VALID		(1ULL<<8)
+ #define IBSCTL_LVT_OFFSET_MASK		0x0F
+ 
+-/* ibs fetch bits/masks */
++/* IBS fetch bits/masks */
+ #define IBS_FETCH_RAND_EN	(1ULL<<57)
+ #define IBS_FETCH_VAL		(1ULL<<49)
+ #define IBS_FETCH_ENABLE	(1ULL<<48)
+ #define IBS_FETCH_CNT		0xFFFF0000ULL
+ #define IBS_FETCH_MAX_CNT	0x0000FFFFULL
+ 
+-/* ibs op bits/masks */
+-/* lower 4 bits of the current count are ignored: */
+-#define IBS_OP_CUR_CNT		(0xFFFF0ULL<<32)
++/*
++ * IBS op bits/masks
++ * The lower 7 bits of the current count are random bits
++ * preloaded by hardware and ignored in software
++ */
++#define IBS_OP_CUR_CNT		(0xFFF80ULL<<32)
++#define IBS_OP_CUR_CNT_RAND	(0x0007FULL<<32)
+ #define IBS_OP_CNT_CTL		(1ULL<<19)
+ #define IBS_OP_VAL		(1ULL<<18)
+ #define IBS_OP_ENABLE		(1ULL<<17)
+-- 
+2.20.1
+
 
 
