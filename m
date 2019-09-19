@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E81C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9A4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C22E6218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E62021907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931016;
-	bh=0HIquPwMCTW8gtw7EavUTVW8D815yiPZOCdg/GqAhlo=;
+	s=default; t=1568931021;
+	bh=nsDc/mzUG1VGkHJYD5ixRppFhQryzabmU85QmhsoTzk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oaZdNAMEFnfL78kpdBnNGvoQ7dOT07zRWdyyHOTu99A3/vSMm8GT2y5ZGLD327tyA
-	 Gxys+dPaTFKrJnLev3me5CjFSpfV+dhXIH4APxWEOlVkRo0dlwHXN1rrvaL58K4b10
-	 Ld7xyluhhJBML29Evq+CkQTcxVGxhGLQrjAyaYFE=
+	b=ajcUMAl2SttK4DmiNTkFFMxl0jg/lRsKWHirq43/WjyTJbT9vlgpAt2RsjRzeCc/B
+	 rVt6NTc3CHhff2cDpDSEHjPKIPBcvosOQdPmiZCBlCB7zoGvOS0r7xubVeXA6UDLhL
+	 zVsUdEX+QGqJ1YC9CNZSb44xFq21iGHHHX3mipP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405636AbfISWKP (ORCPT
+        id S2405659AbfISWKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:10:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48574 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:10:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405617AbfISWKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:10:12 -0400
+        id S2405642AbfISWKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:10:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD175218AF;
-        Thu, 19 Sep 2019 22:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D27221924;
+        Thu, 19 Sep 2019 22:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931011;
-        bh=0HIquPwMCTW8gtw7EavUTVW8D815yiPZOCdg/GqAhlo=;
+        s=default; t=1568931016;
+        bh=nsDc/mzUG1VGkHJYD5ixRppFhQryzabmU85QmhsoTzk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x2JQ54QWdqE9HJskQ0njHEEDHarKiH7XI27mRAS3LFQsR0d/SnyldMyZ4YFusxZWQ
-         f+LU5MRSbrleBZrDvR5vl8qZdtnoUx9goYh+chCUpi+nxnqrsr6rjhaWzNFV+h315R
-         eV4Cy72vbWOnn0Kh0EC+W4JAIGGYbSyx7uVKCKy0=
+        b=akPifbC6Vl5t8nv/vBNC6QNtTtFfCwrzfLlJBnwQJoLm2jt5y4OvvJ8K+lKlKpsYG
+         b86fYwCe6N/ZCPiWUVnCuRuREaAtb2t60y5FjroxniQPv4xFOyapI0RWCaacqM0Clr
+         480biRcYhyy/2aKnwGHIFvehhEkHaVVg+bha1Wx8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Zephaniah E. Loss-Cutler-Hull" <zephaniah@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Prarit Bhargava <prarit@redhat.com>,
         Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 095/124] tools/power x86_energy_perf_policy: Fix argument parsing
-Date:   Fri, 20 Sep 2019 00:03:03 +0200
-Message-Id: <20190919214822.511771154@linuxfoundation.org>
+Subject: [PATCH 5.2 097/124] tools/power turbostat: fix file descriptor leaks
+Date:   Fri, 20 Sep 2019 00:03:05 +0200
+Message-Id: <20190919214822.586215309@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -61,46 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-[ Upstream commit 03531482402a2bc4ab93cf6dde46833775e035e9 ]
+[ Upstream commit 605736c6929d541c78a85dffae4d33a23b6b2149 ]
 
-The -w argument in x86_energy_perf_policy currently triggers an
-unconditional segfault.
+Fix file descriptor leaks by closing fp before return.
 
-This is because the argument string reads: "+a:c:dD:E:e:f:m:M:rt:u:vw" and
-yet the argument handler expects an argument.
-
-When parse_optarg_string is called with a null argument, we then proceed to
-crash in strncmp, not horribly friendly.
-
-The man page describes -w as taking an argument, the long form
-(--hwp-window) is correctly marked as taking a required argument, and the
-code expects it.
-
-As such, this patch simply marks the short form (-w) as requiring an
-argument.
-
-Signed-off-by: Zephaniah E. Loss-Cutler-Hull <zephaniah@gmail.com>
+Addresses-Coverity-ID: 1444591 ("Resource leak")
+Addresses-Coverity-ID: 1444592 ("Resource leak")
+Fixes: 5ea7647b333f ("tools/power turbostat: Warn on bad ACPI LPIT data")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Prarit Bhargava <prarit@redhat.com>
 Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/power/x86/turbostat/turbostat.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-index 7663abef51e96..3fe1eed900d41 100644
---- a/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-+++ b/tools/power/x86/x86_energy_perf_policy/x86_energy_perf_policy.c
-@@ -545,7 +545,7 @@ void cmdline(int argc, char **argv)
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index efc8d07364c61..0ffbbcac4d19d 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -2912,6 +2912,7 @@ int snapshot_cpu_lpi_us(void)
+ 	if (retval != 1) {
+ 		fprintf(stderr, "Disabling Low Power Idle CPU output\n");
+ 		BIC_NOT_PRESENT(BIC_CPU_LPI);
++		fclose(fp);
+ 		return -1;
+ 	}
  
- 	progname = argv[0];
- 
--	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw",
-+	while ((opt = getopt_long_only(argc, argv, "+a:c:dD:E:e:f:m:M:rt:u:vw:",
- 				long_options, &option_index)) != -1) {
- 		switch (opt) {
- 		case 'a':
 -- 
 2.20.1
 
