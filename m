@@ -2,130 +2,169 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE04FC49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B743FC49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85593218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:20:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5ZuP2Qi"
+	by mail.kernel.org (Postfix) with ESMTP id 8EE6221907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 04:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbfISEUv (ORCPT
+        id S1731348AbfISEsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 00:20:51 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:45345 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728850AbfISEUv (ORCPT
+        Thu, 19 Sep 2019 00:48:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725320AbfISEsH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 00:20:51 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 41so1845283oti.12;
-        Wed, 18 Sep 2019 21:20:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=j6ktaKerA6qNCNUVOJpqP9XS7SoRgjTBYtdJRVNyhcw=;
-        b=B5ZuP2QirBOxP8R4Vuk7t6QPgJAudPXy3O8bZJY+rcApaDVAU+jgjaU9a1iluML0DJ
-         3qAi/Gww7GqOOou2O1sYCeFnsWz5mKYSrbCsdVhWdJ5cpO29uBNTWp7wIOZIlHVLEtvy
-         klTgBbplg4XmhPpFOIM0us0oSVRyUOaHlum3QlZ1iM2mHWzGZvHVMWiJUMXv8Qjdsxfc
-         v+N8xVfUHouGPsbNQePXKRLwRmCRFVSdLKkvntP2TZsa3CSHyRbEBhfeB6gVSH52yi8V
-         PrgXhQlB2flQV6fz+YY3NY+e2glt88lyUd2qwncGUCTiySGRTEoNwVn4Qvf7h4MG5cIy
-         sC7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=j6ktaKerA6qNCNUVOJpqP9XS7SoRgjTBYtdJRVNyhcw=;
-        b=J6zRe0hOHSigbGeNivZ6TnaSCRaJLEmecM8eNanojdhv2aLbOE+A1bPx5T7rD/QW2J
-         OEL5ITj3639VCvUqbb9IQhzobccEs4cuu5bsqZq4o2QDPwT5JeB4G9vGvZtHEsydrar8
-         88w3euk090+LIhXQvDX4O+Bud990jZ4SEsEU85BtOAJ2a7aXmSCqGgUkKUxnrzswBz00
-         XqPiYwTmylFkSh69tf12norUISysv9Nt6wJ/bIWTdipW1O6R2Lxqsk3ECn/eJEnPKcRf
-         iDDm0Ex3Tse8ubp1T9axz6JkMIdFOOsW9d0tyy/eh9PsL2LVq9InBDE4mg+D+iZ5XrhG
-         cTLQ==
-X-Gm-Message-State: APjAAAU3PxfTdZjPjE1ku9rXqHnepNL/OEwk/ZFHabRrOlwGFhRaeQ6D
-        TyWcrrxlVP6snUZg/MKTbkK1ZfgLaWHgWSa/kjWXCSHR
-X-Google-Smtp-Source: APXvYqxjyCXBVLXbbc37aFrdNvvbQpskLVO+apNEFZ3ayPK48X288HghyPp33qNmLTr3e8fC29soNN0avIt7kWpkVFQ=
-X-Received: by 2002:a05:6830:1f0f:: with SMTP id u15mr5581667otg.34.1568866850204;
- Wed, 18 Sep 2019 21:20:50 -0700 (PDT)
+        Thu, 19 Sep 2019 00:48:07 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8J4kj4j131734
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:48:06 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3vdf1fdh-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 00:48:05 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 19 Sep 2019 05:48:02 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Sep 2019 05:47:58 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8J4lvRa38600716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 04:47:57 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4DCFA4053;
+        Thu, 19 Sep 2019 04:47:57 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DDE6A404D;
+        Thu, 19 Sep 2019 04:47:56 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.205.7])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 19 Sep 2019 04:47:56 +0000 (GMT)
+Date:   Thu, 19 Sep 2019 07:47:54 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Yunfeng Ye <yeyunfeng@huawei.com>
+Cc:     akpm@linux-foundation.org, osalvador@suse.de, mhocko@suse.co,
+        dan.j.williams@intel.com, david@redhat.com,
+        richardw.yang@linux.intel.com, cai@lca.pw, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: Support memblock alloc on the exact node for
+ sparse_buffer_init()
+References: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
 MIME-Version: 1.0
-References: <1c16a43c-3a01-8a86-02b0-1941ab7321dd@web.de>
-In-Reply-To: <1c16a43c-3a01-8a86-02b0-1941ab7321dd@web.de>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Thu, 19 Sep 2019 06:20:39 +0200
-Message-ID: <CAMhs-H9q16kGOse9pMbj3O9hoOO5de_wa9VRi_HcPo0_GbTw1g@mail.gmail.com>
-Subject: Re: [PATCH] staging: mt7621-pci-phy: Use devm_platform_ioremap_resource()
- in mt7621_pci_phy_probe()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     devel@driverdev.osuosl.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org,
-        =?UTF-8?Q?Antti_Ker=C3=A4nen?= <detegr@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Neil Brown <neil@brown.name>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Himanshu Jha <himanshujha199640@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af88d8ab-4088-e857-575f-9be57542e130@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19091904-4275-0000-0000-000003685A1E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091904-4276-0000-0000-0000387AC4AE
+Message-Id: <20190919044753.GA20548@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Markus,
+Hi,
 
-Thanks for the patch. It looks good to me.
+On Wed, Sep 18, 2019 at 12:22:29PM +0800, Yunfeng Ye wrote:
+> Currently, when memblock_find_in_range_node() fail on the exact node, it
+> will use %NUMA_NO_NODE to find memblock from other nodes. At present,
+> the work is good, but when the large memory is insufficient and the
+> small memory is enough, we want to allocate the small memory of this
+> node first, and do not need to allocate large memory from other nodes.
+> 
+> In sparse_buffer_init(), it will prepare large chunks of memory for page
+> structure. The page management structure requires a lot of memory, but
+> if the node does not have enough memory, it can be converted to a small
+> memory allocation without having to allocate it from other nodes.
+> 
+> Add %MEMBLOCK_ALLOC_EXACT_NODE flag for this situation. Normally, the
+> behavior is the same with %MEMBLOCK_ALLOC_ACCESSIBLE, only that it will
+> not allocate from other nodes when a single node fails to allocate.
+> 
+> If large contiguous block memory allocated fail in sparse_buffer_init(),
+> it will allocates small block memmory section by section later.
 
-On Wed, Sep 18, 2019 at 9:12 PM Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 18 Sep 2019 21:01:32 +0200
->
-> Simplify this function implementation by using a known wrapper function.
->
-> This issue was detected by using the Coccinelle software.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Did you see the sparse_buffer_init() actually falling back to allocate from a
+different node? If a node does not have enough memory to hold it's own
+memory map, filling only it with parts of the memory map will not make such
+node usable.
+ 
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 > ---
->  drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c b/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
-> index d2a07f145143..6ca4a33d13c3 100644
-> --- a/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
-> +++ b/drivers/staging/mt7621-pci-phy/pci-mt7621-phy.c
-> @@ -324,7 +324,6 @@ static int mt7621_pci_phy_probe(struct platform_device *pdev)
->         const struct soc_device_attribute *attr;
->         struct phy_provider *provider;
->         struct mt7621_pci_phy *phy;
-> -       struct resource *res;
->         int port;
->         void __iomem *port_base;
->
-> @@ -344,14 +343,7 @@ static int mt7621_pci_phy_probe(struct platform_device *pdev)
->
->         phy->dev = dev;
->         platform_set_drvdata(pdev, phy);
-> -
-> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       if (!res) {
-> -               dev_err(dev, "failed to get address resource\n");
-> -               return -ENXIO;
-> -       }
-> -
-> -       port_base = devm_ioremap_resource(dev, res);
-> +       port_base = devm_platform_ioremap_resource(pdev, 0);
->         if (IS_ERR(port_base)) {
->                 dev_err(dev, "failed to remap phy regs\n");
->                 return PTR_ERR(port_base);
-> --
-> 2.23.0
->
+>  include/linux/memblock.h | 1 +
+>  mm/memblock.c            | 3 ++-
+>  mm/sparse.c              | 2 +-
+>  3 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index f491690..9a81d9c 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -339,6 +339,7 @@ static inline int memblock_get_region_node(const struct memblock_region *r)
+>  #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
+>  #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+>  #define MEMBLOCK_ALLOC_KASAN		1
+> +#define MEMBLOCK_ALLOC_EXACT_NODE	2
+> 
+>  /* We are using top down, so it is safe to use 0 here */
+>  #define MEMBLOCK_LOW_LIMIT 0
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 7d4f61a..dbd52c3c 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -277,6 +277,7 @@ static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+> 
+>  	/* pump up @end */
+>  	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
+> +	    end == MEMBLOCK_ALLOC_EXACT_NODE ||
+>  	    end == MEMBLOCK_ALLOC_KASAN)
+>  		end = memblock.current_limit;
+> 
+> @@ -1365,7 +1366,7 @@ static phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size,
+>  	if (found && !memblock_reserve(found, size))
+>  		goto done;
+> 
+> -	if (nid != NUMA_NO_NODE) {
+> +	if (end != MEMBLOCK_ALLOC_EXACT_NODE && nid != NUMA_NO_NODE) {
+>  		found = memblock_find_in_range_node(size, align, start,
+>  						    end, NUMA_NO_NODE,
+>  						    flags);
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index 72f010d..828db46 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -477,7 +477,7 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+>  	sparsemap_buf =
+>  		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+>  						addr,
+> -						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+> +						MEMBLOCK_ALLOC_EXACT_NODE, nid);
+>  	sparsemap_buf_end = sparsemap_buf + size;
+>  }
+> 
+> -- 
+> 2.7.4.huawei.3
+> 
+> 
 
-Reviewed-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+-- 
+Sincerely yours,
+Mike.
+
