@@ -5,117 +5,93 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802A3C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:06:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A3AC3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F8D21924
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:06:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B1121924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 10:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YJ3anWqk"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fAvZVP+G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389168AbfISKF7 (ORCPT
+        id S2389088AbfISKKC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 06:05:59 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36190 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389073AbfISKF7 (ORCPT
+        Thu, 19 Sep 2019 06:10:02 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:36818 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388939AbfISKKB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 06:05:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id m18so796602wmc.1
-        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 03:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0qCMMPkPMs7VBfcvx3JaPL0V56C94XiExPoi5TYfUdo=;
-        b=YJ3anWqkz3yfMdDXZlWvfwd2aRSX1GEWmuiEvzP4HnRI/QUu14biCE0o0kKjREXsCf
-         KuW4986tQaHaCZuqMpurrkj8rK6Txizw1DhqQIJ4AWTDSZ9yeaLNKdWapvPAu+a1e0Wy
-         0NKhkRAFN1BL+Fro8CrV82lsXppSNdtTsQJBE1IVuxoJfBHtHV0Ve6IKj8vqag92lSBl
-         6fHu8EODi8AyrZZvYOiJJa6KyqEiyjkvyJH8Hg6zgKhSxat7GGzDkPtc1y9q0pGjD6ZO
-         JZI34ycmL8mzIKssv01a5fULUS5KbRJnJUBPhdgzDG+SPSdDnQJYtuJplCrc7J5SExLd
-         xijQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0qCMMPkPMs7VBfcvx3JaPL0V56C94XiExPoi5TYfUdo=;
-        b=uUI7NEsCD7f2JntRKn6nyVcVGdWFy7ikLKCG/mT89v10z7nhbGcygEFw5WZHmSTeHx
-         oLcULkJq+4ULYnPz/tzQK/fzfqQBDAttqZ6dWvBVgL0tgKJEmcjN9WU+YeCXA9J+/+fv
-         SFJ4jql00pueihNC0EtTzaYeCn0dQwgMtlqdxDMrSkcWg3K3oLU9y4pcgkEquLx7CLzp
-         vTE+g4SsJRrzwtrWmZrEOBSDL0dEM53pxNkl8nqrMm0L3wGDz2RPxTTPQcMSQ7iabrW+
-         cWYxSwg5UyiKTA5FpjYPrkmUNF6erC5n6F5dC7WKardvdiuBTlUis4Wm/RJ5lVk8tdi/
-         aARg==
-X-Gm-Message-State: APjAAAVHmVfM2VSj9JNcbpPaj0hJWsHuQK+uIUpRUrDe4WgkTaSsh4m1
-        07qtyj7PieeWwudkDFSJjX6nrw==
-X-Google-Smtp-Source: APXvYqxgniKjpSqUKCq3LuuJ49giEyIk2zZbAqW994p+uQN2HoctohFog3xIGNP6T7hvGty7R9NUXQ==
-X-Received: by 2002:a7b:c4d6:: with SMTP id g22mr2081077wmk.21.1568887556601;
-        Thu, 19 Sep 2019 03:05:56 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id s10sm8590175wmf.48.2019.09.19.03.05.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Sep 2019 03:05:56 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     ohad@wizery.com, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] rpmsg: glink: Fix channel memory leak
-Date:   Thu, 19 Sep 2019 11:05:40 +0100
-Message-Id: <20190919100540.28159-1-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 19 Sep 2019 06:10:01 -0400
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 123DDC03AD;
+        Thu, 19 Sep 2019 10:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1568887800; bh=n7F8/d0PuPnpo/lcKpsjJCLtm00c/AoLt+k4nMNl6wM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fAvZVP+G/vn3I53BBX+eN5FpcVTyArg/2NvhAtz9h+s7hqaiviQeZFv1XbEoiHZRe
+         Z9DD+7GmlTqWeKZ3gDw0I4UXhfcODZR6sDarXw7Txut4pLUI1GZyIu0t6DBRDl+bz7
+         ZXGrrRAd74xQCI03BicosFe+B2ZaaNcLigkMu9jjZyECvFJYGozP068i62ax/MyWIh
+         mJDrcW3xbpgftL0ncnWZlR+rHmIgrMtNyWhcwBaJqLtEiHTdI/74Zx3PWOe3ciFgGw
+         fALdoxX0xgFONP5ItVQFDf/FTLScUXwyNIG4pn+7yNQgz6tgWqKniboeYAXWJPkgTC
+         TW0QlPzPfuE6w==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 4CE25A0080;
+        Thu, 19 Sep 2019 10:09:55 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net] net: stmmac: selftests: Flow Control test can also run with ASYM Pause
+Date:   Thu, 19 Sep 2019 12:09:49 +0200
+Message-Id: <f35fa5a51f52fc1ef17a0a9ecd470e2a6792b3f8.1568887745.git.joabreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If we stop and start the dsp while channel is open then there is a leak
-in the driver as the refcount is not accounted for the open.
+The Flow Control selftest is also available with ASYM Pause. Lets add
+this check to the test and fix eventual false positive failures.
 
-This patch checks if the channel is open while running cleanup code
-and does an extra kref_put to account for open which would ensure
-that channel does not leak.
+Fixes: 091810dbded9 ("net: stmmac: Introduce selftests support")
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 
-Originally detected by kmemleak:
-  backtrace:
-    [<ffffff80088b74d8>] kmemleak_alloc+0x50/0x84
-    [<ffffff80081ddbc8>] kmem_cache_alloc_trace+0xd4/0x178
-    [<ffffff80086b8bd0>] qcom_glink_alloc_channel+0x34/0x148
-    [<ffffff80086b8038>] qcom_glink_work+0x3b0/0x664
-    [<ffffff80080c3da8>] process_one_work+0x160/0x2f8
-    [<ffffff80080c4198>] worker_thread+0x1e8/0x2d4
-    [<ffffff80080c8b24>] kthread+0x128/0x138
-    [<ffffff80080845b4>] ret_from_fork+0x10/0x18
-    [<ffffffffffffffff>] 0xffffffffffffffff
-unreferenced object 0xffffffc02cf5ed80 (size 128):
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- drivers/rpmsg/qcom_glink_native.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/rpmsg/qcom_glink_native.c b/drivers/rpmsg/qcom_glink_native.c
-index dc7d3d098fd3..38a10dcc2029 100644
---- a/drivers/rpmsg/qcom_glink_native.c
-+++ b/drivers/rpmsg/qcom_glink_native.c
-@@ -1660,8 +1660,13 @@ void qcom_glink_native_remove(struct qcom_glink *glink)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index c56e89e1ae56..4b4b03245f6e 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -670,7 +670,7 @@ static int stmmac_test_flowctrl(struct stmmac_priv *priv)
+ 	unsigned int pkt_count;
+ 	int i, ret = 0;
  
- 	spin_lock_irqsave(&glink->idr_lock, flags);
- 	/* Release any defunct local channels, waiting for close-ack */
--	idr_for_each_entry(&glink->lcids, channel, cid)
-+	idr_for_each_entry(&glink->lcids, channel, cid) {
-+		if (channel->rcid)
-+			kref_put(&channel->refcount,
-+				 qcom_glink_channel_release);
-+
- 		kref_put(&channel->refcount, qcom_glink_channel_release);
-+	}
+-	if (!phydev || !phydev->pause)
++	if (!phydev || (!phydev->pause && !phydev->asym_pause))
+ 		return -EOPNOTSUPP;
  
- 	/* Release any defunct local channels, waiting for close-req */
- 	idr_for_each_entry(&glink->rcids, channel, cid)
+ 	tpriv = kzalloc(sizeof(*tpriv), GFP_KERNEL);
 -- 
-2.21.0
+2.7.4
 
