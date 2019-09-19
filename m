@@ -2,128 +2,119 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C7E0C49ED7
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FA4C49ED7
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1E5217D6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44F0321924
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 21:10:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NBVpQfu/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bm+fX8E+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732978AbfISVJm (ORCPT
+        id S1732998AbfISVK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 17:09:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:49186 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732968AbfISVJl (ORCPT
+        Thu, 19 Sep 2019 17:10:26 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:33617 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732968AbfISVK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 17:09:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LRFKtLfl3rGg6hIBWZRy1shlE7PvB7ThwahdssU1WZQ=; b=NBVpQfu/8MPESbwFRTyM97kN9
-        pgz3tLZKw02m/O9UCtWMQKLoNapTBhfPARRCdjUmHSSUI5G3EahebhTKH9vxMZGOAMs7kRHZrmMYs
-        QvotGklKRPE/PS8vbnyMEMOg7/5yvwVQ1lKTM1rpQO3t8H4Qstmudi81bYjfFxjMcKCZNMta65sBa
-        fmPfg2obMIMw+vgKuM/Vt7hndMT//YHm/PW6T22Px2FOls1N4vvWZw6LnWoQyywZMLRDOWhm/6XfP
-        GkVzRVE+Z67T3wfHbFHDhpzBPXAEb6DwJT987swiWwFLNgV/aPg9jnbBVNCMYPvArzGNBqdPjnTNU
-        3vp2sO+5Q==;
-Received: from [2601:1c0:6280:3f0::9a1f]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iB3gL-0001dK-Ew; Thu, 19 Sep 2019 21:09:41 +0000
-Subject: Re: linux-next: Tree for Sep 18 (objtool)
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20190918221053.GV2596@sirena.co.uk>
- <be0fb087-5fb4-a790-90dd-cc2af62419e7@infradead.org>
- <20190919165118.lffzvrl5efbpnvux@treble>
- <8dc0ef20-c776-bfdc-de31-1759125c77e9@infradead.org>
- <20190919194036.smeaapv6armqswub@treble>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <2ab5a918-529e-405d-57c0-68d5406269fc@infradead.org>
-Date:   Thu, 19 Sep 2019 14:09:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 19 Sep 2019 17:10:26 -0400
+Received: by mail-yw1-f66.google.com with SMTP id i188so1346022ywf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 19 Sep 2019 14:10:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8fLuZdNyw0Snk0exp1fU4mQvEVp2x5alNsR3Ohooz1k=;
+        b=Bm+fX8E+MsWWqY81xavfe3H5GLkrjQESG9r887oiAmSLvXqf8181s7bc/zmPHXEpVg
+         Mg7AYO2OdJhxb5WVWdZOCkA+uaibGlu0EebIQdODcz4t79dvcx1cLSx+UeM8cgg4RFHQ
+         WvjirispzY+V1lDwPTN2kPpCtZx+XD7A5D2E6Ij8Pwam5uSLI5qqHpx6M7U/ijJgEdaj
+         4BeiXMuJXWkmYvnAA1s1spqt7slmOHQ1bNin0UefIkOryrSUpzo7Oz3HPulkdBW3ritX
+         7454Ul7Dn43yZCg0DYGxDFHhWzDvcvw8FnHjrloKn/ybGR+Zz0oIDQyih7J7NhOxtMis
+         iy/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8fLuZdNyw0Snk0exp1fU4mQvEVp2x5alNsR3Ohooz1k=;
+        b=Bm6nQAB6y91W4SJQ2nSJ0ZodVi/4Qki3J6R3T5c5SQoDaxoePjv3oogNBwbvH50k+C
+         ZP9n7e+9n8kWDTVaYj6+gxKFH2epEzw0PjnTtk7ZLh1gsTn35Fcj4u2KZYIG7e3Le1FA
+         MiUxD1zogIF4xwRFbMKAjfYcdTkt4i3SoQnxRnHbZxdVMfA3bDTbakJ7eqtGh4yGgxMh
+         L/LAwfMGrVQ7y1+IaqzwdqMxjjRLv3LBsEZGgfddSd1/Z8PrA9SAzmRgxvBiGwU8RBwQ
+         e72s53hQbsgOwSt8LM5rnJYGlBmj5f9qmSwwX8LRGp2ibKKMrj+M91WjAVIs101NFU+N
+         G34Q==
+X-Gm-Message-State: APjAAAXycG8B1vmU0BQnH637Nqaep/CTWHliwolV+SuPU4w+dwE1I3Gk
+        T9EH8sxvR1RxLpEcB/SlDnxZfdiRsl04zI9z/BQAlg==
+X-Google-Smtp-Source: APXvYqy05dUD5LdL2CsLc4dACa1bZKX2dz1Dlblo6H2A3XbIouWdeOe0BHBVElBSyh6Yw1pva4kChkZEAlJKgGu/w/I=
+X-Received: by 2002:a81:3c81:: with SMTP id j123mr9453956ywa.393.1568927423190;
+ Thu, 19 Sep 2019 14:10:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190919194036.smeaapv6armqswub@treble>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190905214553.1643060-1-guro@fb.com> <CABCjUKByipk2e1Hh1_PwC+p2Fig=6RMfd0zBeVQtyn5Y48gYXQ@mail.gmail.com>
+ <20190919162204.GA20035@castle.dhcp.thefacebook.com>
+In-Reply-To: <20190919162204.GA20035@castle.dhcp.thefacebook.com>
+From:   Suleiman Souhlal <suleiman@google.com>
+Date:   Fri, 20 Sep 2019 06:10:11 +0900
+Message-ID: <CABCjUKB2BFF9s0RsYj4reUDbPrSkwxDo96Rmqk3tOc0_vo3Xag@mail.gmail.com>
+Subject: Re: [PATCH RFC 00/14] The new slab memory controller
+To:     Roman Gushchin <guro@fb.com>
+Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 12:40 PM, Josh Poimboeuf wrote:
-> On Thu, Sep 19, 2019 at 12:21:46PM -0700, Randy Dunlap wrote:
->> On 9/19/19 9:51 AM, Josh Poimboeuf wrote:
->>> On Wed, Sep 18, 2019 at 09:04:21PM -0700, Randy Dunlap wrote:
->>>> On 9/18/19 3:10 PM, Mark Brown wrote:
->>>>> Hi all,
->>>>>
->>>>> Changes since 20190917:
->>>>>
->>>>
->>>> on x86_64:
->>>>
->>>> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to gen8_canonical_addr() with UACCESS enabled
->>>>
->>>> using
->>>>> gcc --version
->>>> gcc (SUSE Linux) 7.4.1 20190424 [gcc-7-branch revision 270538]
->>>>
->>>> .o and .config files are attached.
->>>
->>> Does this fix it?
->>
->> This patch produces this message:
->>
->> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x2fb: call to sign_extend64.constprop.20() with UACCESS enabled
-> 
-> Ha, ok.  I guess we have to __always_inline that one too...
+On Fri, Sep 20, 2019 at 1:22 AM Roman Gushchin <guro@fb.com> wrote:
+>
+> On Thu, Sep 19, 2019 at 10:39:18PM +0900, Suleiman Souhlal wrote:
+> > On Fri, Sep 6, 2019 at 6:57 AM Roman Gushchin <guro@fb.com> wrote:
+> > > The patchset has been tested on a number of different workloads in our
+> > > production. In all cases, it saved hefty amounts of memory:
+> > > 1) web frontend, 650-700 Mb, ~42% of slab memory
+> > > 2) database cache, 750-800 Mb, ~35% of slab memory
+> > > 3) dns server, 700 Mb, ~36% of slab memory
+> >
+> > Do these workloads cycle through a lot of different memcgs?
+>
+> Not really, those are just plain services managed by systemd.
+> They aren't restarted too often, maybe several times per day at most.
+>
+> Also, there is nothing fb-specific. You can take any new modern
+> distributive (I've tried Fedora 30), boot it up and look at the
+> amount of slab memory. Numbers are roughly the same.
 
-Yes, that takes care of the objtool warning.  Thanks.
+Ah, ok.
+These numbers are kind of surprising to me.
+Do you know if the savings are similar if you use CONFIG_SLAB instead
+of CONFIG_SLUB?
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> > For workloads that don't, wouldn't this approach potentially use more
+> > memory? For example, a workload where everything is in one or two
+> > memcgs, and those memcgs last forever.
+> >
+>
+> Yes, it's true, if you have a very small and fixed number of memory cgroups,
+> in theory the new approach can take ~10% more memory.
+>
+> I don't think it's such a big problem though: it seems that the majority
+> of cgroup users have a lot of them, and they are dynamically created and
+> destroyed by systemd/kubernetes/whatever else.
+>
+> And if somebody has a very special setup with only 1-2 cgroups, arguably
+> kernel memory accounting isn't such a big thing for them, so it can be simple
+> disabled. Am I wrong and do you have a real-life example?
 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> index b5f6937369ea..7e111cb5b14b 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_execbuffer.c
-> @@ -284,7 +284,7 @@ struct i915_execbuffer {
->   * canonical form [63:48] == [47]."
->   */
->  #define GEN8_HIGH_ADDRESS_BIT 47
-> -static inline u64 gen8_canonical_addr(u64 address)
-> +static __always_inline u64 gen8_canonical_addr(u64 address)
->  {
->  	return sign_extend64(address, GEN8_HIGH_ADDRESS_BIT);
->  }
-> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-> index cf074bce3eb3..fae10792b198 100644
-> --- a/include/linux/bitops.h
-> +++ b/include/linux/bitops.h
-> @@ -151,7 +151,7 @@ static inline __s32 sign_extend32(__u32 value, int index)
->   * @value: value to sign extend
->   * @index: 0 based bit index (0<=index<64) to sign bit
->   */
-> -static inline __s64 sign_extend64(__u64 value, int index)
-> +static __always_inline __s64 sign_extend64(__u64 value, int index)
->  {
->  	__u8 shift = 63 - index;
->  	return (__s64)(value << shift) >> shift;
-> 
+No, I don't have any specific examples.
 
-
--- 
-~Randy
+-- Suleiman
