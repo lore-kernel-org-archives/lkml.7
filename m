@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DD5C3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215DEC4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC0F21E6F
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECADC21907
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568932542;
-	bh=Uuj6fa+HvSLw5t6MTO2P08i/ljV4VbXYamOjuOMQEKM=;
+	s=default; t=1568932547;
+	bh=8+INYItTilmh3es4jWep5jCA9gWHpE6Zhh3TUkxqR0M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZUbsWIF3bgo7l3PSSSPzesrxTF9GNat9PCI7BirR3XRMmHJ9bXHcVqJ23ooSuxN9j
-	 YSunXOjbDdl7lDJI7MsoBH63ln/1oK1IJaQy/7pCqQX+EgDNJ6UWIEsGuKKrsTj/QK
-	 e0H1Dp224fLnQ1+HUpOAr/iWjGaqSzSoWmmauIHk=
+	b=J+7Hasnw8f+uvhCuTF/Y/x3aLG6EUt+Z1PQ4dMsE6HsV5nF2VYDlpVrCyryLonBxb
+	 gAQf1LOdjM4UN0X50+ufVrXRpENG+sPeTu/00rPKes42c/z9HJg9jeeBzZc1QAdOCF
+	 nO78kbMwMJU2D6Pq2HKtDbRWdBoyMPNhSV61TIP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393288AbfISWHo (ORCPT
+        id S2393239AbfISWHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393269AbfISWHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:07:40 -0400
+        id S2391364AbfISWH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:07:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688AB218AF;
-        Thu, 19 Sep 2019 22:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB89218AF;
+        Thu, 19 Sep 2019 22:07:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568930859;
-        bh=Uuj6fa+HvSLw5t6MTO2P08i/ljV4VbXYamOjuOMQEKM=;
+        s=default; t=1568930849;
+        bh=8+INYItTilmh3es4jWep5jCA9gWHpE6Zhh3TUkxqR0M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t7H05iGwXNmbvMunC+v0rHXuujuH3BHukx7lp/bqFNDyKweOhTeNsqvYjD5LNsXXF
-         q6tA+ZUI1equuPmAXbc/WncG9fN9L5OIuqjuuirGVb8MaYeYH38PbA/wstltl1NHUb
-         WSdGXSEz9WhF1jvzOmEVSSgLkbMeODUMeXlRQkvA=
+        b=jmLGskLf7HlhzLzlLK8q+2kR7iQHQAC+6uhW5f3O7n+8lP6+CsmtVQbZuG3gMrjQF
+         H1iVNmW7nwYUjPOb8Bxae5pdoIKym08MG4oSk8kLuEEsJQAUh/YdY6F6y7pY7qbC9B
+         wnuyPk8ENoXo6cw+enygAS9xvGF+JjTLq8GgGxeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonglong Liu <liuyonglong@huawei.com>,
-        linyunsheng <linyunsheng@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.2 013/124] net: hns: fix LED configuration for marvell phy
-Date:   Fri, 20 Sep 2019 00:01:41 +0200
-Message-Id: <20190919214819.627489279@linuxfoundation.org>
+        stable@vger.kernel.org, Fabien Dessenne <fabien.dessenne@st.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.2 009/124] media: stm32-dcmi: fix irq = 0 case
+Date:   Fri, 20 Sep 2019 00:01:37 +0200
+Message-Id: <20190919214819.509846815@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,79 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: Fabien Dessenne <fabien.dessenne@st.com>
 
-commit f4e5f775db5a4631300dccd0de5eafb50a77c131 upstream.
+commit dbb9fcc8c2d8d4ea1104f51d4947a8a8199a2cb5 upstream.
 
-Since commit(net: phy: marvell: change default m88e1510 LED configuration),
-the active LED of Hip07 devices is always off, because Hip07 just
-use 2 LEDs.
-This patch adds a phy_register_fixup_for_uid() for m88e1510 to
-correct the LED configuration.
+Manage the irq = 0 case, where we shall return an error.
 
-Fixes: 077772468ec1 ("net: phy: marvell: change default m88e1510 LED configuration")
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Reviewed-by: linyunsheng <linyunsheng@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: b5b5a27bee58 ("media: stm32-dcmi: return appropriate error codes during probe")
+
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+Reported-by: Pavel Machek <pavel@ucw.cz>
+Acked-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/hisilicon/hns/hns_enet.c |   23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/media/platform/stm32/stm32-dcmi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -11,6 +11,7 @@
- #include <linux/io.h>
- #include <linux/ip.h>
- #include <linux/ipv6.h>
-+#include <linux/marvell_phy.h>
- #include <linux/module.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
-@@ -1149,6 +1150,13 @@ static void hns_nic_adjust_link(struct n
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -1702,7 +1702,7 @@ static int dcmi_probe(struct platform_de
+ 	if (irq <= 0) {
+ 		if (irq != -EPROBE_DEFER)
+ 			dev_err(&pdev->dev, "Could not get irq\n");
+-		return irq;
++		return irq ? irq : -ENXIO;
  	}
- }
  
-+static int hns_phy_marvell_fixup(struct phy_device *phydev)
-+{
-+	phydev->dev_flags |= MARVELL_PHY_LED0_LINK_LED1_ACTIVE;
-+
-+	return 0;
-+}
-+
- /**
-  *hns_nic_init_phy - init phy
-  *@ndev: net device
-@@ -1174,6 +1182,16 @@ int hns_nic_init_phy(struct net_device *
- 	if (h->phy_if != PHY_INTERFACE_MODE_XGMII) {
- 		phy_dev->dev_flags = 0;
- 
-+		/* register the PHY fixup (for Marvell 88E1510) */
-+		ret = phy_register_fixup_for_uid(MARVELL_PHY_ID_88E1510,
-+						 MARVELL_PHY_ID_MASK,
-+						 hns_phy_marvell_fixup);
-+		/* we can live without it, so just issue a warning */
-+		if (ret)
-+			netdev_warn(ndev,
-+				    "Cannot register PHY fixup, ret=%d\n",
-+				    ret);
-+
- 		ret = phy_connect_direct(ndev, phy_dev, hns_nic_adjust_link,
- 					 h->phy_if);
- 	} else {
-@@ -2429,8 +2447,11 @@ static int hns_nic_dev_remove(struct pla
- 		hns_nic_uninit_ring_data(priv);
- 	priv->ring_data = NULL;
- 
--	if (ndev->phydev)
-+	if (ndev->phydev) {
-+		phy_unregister_fixup_for_uid(MARVELL_PHY_ID_88E1510,
-+					     MARVELL_PHY_ID_MASK);
- 		phy_disconnect(ndev->phydev);
-+	}
- 
- 	if (!IS_ERR_OR_NULL(priv->ae_handle))
- 		hnae_put_handle(priv->ae_handle);
+ 	dcmi->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
 
