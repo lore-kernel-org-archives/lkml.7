@@ -2,179 +2,173 @@ Return-Path: <SRS0=X8En=XO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50703C4CECE
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C87C4CEC4
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A89218AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A3D214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 02:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="VlaCkSpu";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="vi9CL84l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NwXO/26j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbfISCnp (ORCPT
+        id S2388436AbfISCtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 18 Sep 2019 22:43:45 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:36482 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388339AbfISCno (ORCPT
+        Wed, 18 Sep 2019 22:49:17 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43298 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727324AbfISCtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 18 Sep 2019 22:43:44 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id x8J2eFiU015874;
-        Wed, 18 Sep 2019 19:43:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=69XqeKh3yHrvvFDF+vzyc0roWNBqwWWDYkDZ/m9EyNA=;
- b=VlaCkSpu0w0AW4ltcETJN/Crw0pv+er5mfDg7Z31s0Eys/fqm+Lz/Jn/KozHRJAap3Sa
- Z+l9hX4k3papqaE4Lhn2iZZFUTa7bSxM+iaeDVIp60exv9yeAFoYjdNsZjyOw1XWY3Be
- RTq4QQ3OIbfTD93bcFipvEIaTGRhD98MJ2rRcu7k3XESQpCtOKPDXnvTZgP7ieN2d8wu
- uAnWBZM1NVQWMcCVpAamse+50wWlSh+4xNlOFnAE4HJ2ecAlz3O2WGzMmH+DwD3Bv2hJ
- XdYzJf8Vjbmt6nEXbqMn3C3n/YP6eVFrmR/6W+O0uUMVSsawgXQQOc0/pNHuYj1q93Q2 HQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2v3vcdry66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 18 Sep 2019 19:43:36 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 18 Sep
- 2019 19:43:35 -0700
-Received: from NAM03-BY2-obe.outbound.protection.outlook.com (104.47.42.58) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 18 Sep 2019 19:43:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FN9oW6XEt6iUSycX6sb8q1YSegC24bp+l+V9XwIGccyDgfPPGy3MRKOZ9wLBhi5bUz3V6mMyUn9GY0A3nZ+OQ++HMRiGe8aveTzEsAIkEAu4Jl96ht66Cid4aINZZ2MwF0bqd/1rbKks53Y1ag0g8wOYvK66s8DDbrujsK317I1A8T97xQDvrE2HgZN/2lw2rmi98hynoqpMgvRrz1jZMw+mw882RDC0wO0U4UrNQ9oSLL9E3XuG47NXqQMu73SOcN88xxmfYKk12qslPZKRg6R0nBpq4hcz4BxS8bKli+8lPNcTyKQrdHChH7yvjU9WuYgdFgzqwscSKtvLszZKHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=69XqeKh3yHrvvFDF+vzyc0roWNBqwWWDYkDZ/m9EyNA=;
- b=ASNr9B9qxFMh+JlVKHph4I3p+zXsXfhTz9dkgy3TYwQmDpj7mKgU3CkS3rF0QDe+DRvAmK71qOAs8OCA+u0FuS2N4NAuABOxRGyz6X7ZBDuvea10fgLi4Tp36DmJI8UMzo0q/VPEggZwu6p1wr7TawLoorWl43bGsmPK8RM/wxfLl8VSYGCmUmmFdNvqNFWzANrW6OBFiRbhpb2MgQpf2KXEpV6x4iRb+eWkrAQBIFy9HjkS+f0byqfOaIR8fhD0aKoVui+hF0yHmM5MIKq7eIZmLOxxQZ1m1N0XBkXDbYkLhe+LAt9/coop4OSa0YlJDmcLyNx7cbMjTpCJ/huDfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Wed, 18 Sep 2019 22:49:16 -0400
+Received: by mail-io1-f68.google.com with SMTP id v2so4084963iob.10
+        for <linux-kernel@vger.kernel.org>; Wed, 18 Sep 2019 19:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=69XqeKh3yHrvvFDF+vzyc0roWNBqwWWDYkDZ/m9EyNA=;
- b=vi9CL84lEOvQokjAtlnVr7uC1jYA80Th4Kl37XllF7X1Ua77UzryslxpmGrXOdidax7AE6Fi2eZimMksyTsXt5dgmQFhmMNU1KSXEgu+k434gckUJeia7RppTfEGEy/NX1UByYErIgG+egAHY40YuvY200ugUrTWYeJh8bqpOFo=
-Received: from DM6PR18MB2940.namprd18.prod.outlook.com (20.179.52.160) by
- DM6PR18MB2890.namprd18.prod.outlook.com (20.179.52.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2284.19; Thu, 19 Sep 2019 02:43:35 +0000
-Received: from DM6PR18MB2940.namprd18.prod.outlook.com
- ([fe80::9856:8914:1ec4:713d]) by DM6PR18MB2940.namprd18.prod.outlook.com
- ([fe80::9856:8914:1ec4:713d%5]) with mapi id 15.20.2263.023; Thu, 19 Sep 2019
- 02:43:35 +0000
-From:   George Cherian <george.cherian@marvell.com>
-To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        George Cherian <gcherian@marvell.com>
-Subject: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Thread-Topic: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
-Thread-Index: AQHVbpQIV9ptp6oiNE2QU/yR1h+fzw==
-Date:   Thu, 19 Sep 2019 02:43:34 +0000
-Message-ID: <20190919024319.GA8792@dc5-eodlnx05.marvell.com>
-Accept-Language: en-IN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR08CA0020.namprd08.prod.outlook.com
- (2603:10b6:a03:100::33) To DM6PR18MB2940.namprd18.prod.outlook.com
- (2603:10b6:5:172::32)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [199.233.59.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c57e55e1-72ca-46c8-9781-08d73cab2a87
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600167)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR18MB2890;
-x-ms-traffictypediagnostic: DM6PR18MB2890:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR18MB28901D32A9E4343499394615C5890@DM6PR18MB2890.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 016572D96D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(136003)(39860400002)(189003)(199004)(26005)(6506007)(1076003)(99286004)(8936002)(52116002)(8676002)(81166006)(102836004)(2906002)(386003)(81156014)(54906003)(110136005)(71200400001)(5660300002)(71190400001)(6116002)(316002)(3846002)(186003)(66446008)(64756008)(66556008)(486006)(2501003)(7736002)(66476007)(256004)(33656002)(66946007)(476003)(478600001)(6512007)(44832011)(25786009)(6436002)(14454004)(66066001)(6486002)(4326008)(305945005)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR18MB2890;H:DM6PR18MB2940.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: xy/AChKoKtrFxkAVDYYabuLZCz0xM47RPw6Gc1M1N62Y5snG1kDp5zDJ8BZ/uO9l3IIrNRzUVASmkkC0vxhNTm9QuLMl88gsVHID00z1/qG6AhC+Aq5bF4WP/jqECHWsApxG0tOQS1Zfu589SI6w7eyc49Y20IfxqD2dpC12rRZTtv54dU3IJySybrX3wwTfWbKkvl3YE3aqUuyOd3IgsDbLJH8fUYUKNRcRczOH/5ofkGJ5Zl40wNMnqrPBchdHsPBpKHh/2Kj0bxrIIOaXO8kq1f5cxpiiKb64z5t1E7j7l3jIKwA9HZGpma4WG8qJp6XRiv7GHw8LYmtGJ3uOO6qW3PK5Q3iGoArRS6VpnjzgLpjCpmd3GcN/6pxLDspvC2ZnCk8ZHEtuXlrPVcz40gT/iHLbsos6ba3GlxsTObY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4D7A9B424EE1ED4E95B13A7EB9897182@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vlzhPoLh7b1S6T7cDcD4eBPph7wATcAJsn+h7CRgZVQ=;
+        b=NwXO/26j5PnHmjd2RLNhyU1zrVLojB3fLLqcM4aIvtIwA6mfoG6elPrXZXxg5WsxXq
+         6r2fUdi05qwcnMDzcqkL4GIXvX4HOrziRDJFEj3DnBxHnWomZNooeBuH0AbeS0hB4sjd
+         o2ShVAW0r91FILzP7Fy+0BkeNrGQLH1UbPmwpwEwe1fwhral2bXYorOSUGnItNCIzSri
+         T5MtirtU8pMvNqHiT4+H4zZuJ/rxghego9KBMytTi1p3Nt9FCHLceQbCihz9THqoUv1i
+         R3MzFl5G1Aa6dRlfa93YjCT/5klhbDGzCGnuT56bB2axVntkclx7oUlUmX1OznfiPgWY
+         jkWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vlzhPoLh7b1S6T7cDcD4eBPph7wATcAJsn+h7CRgZVQ=;
+        b=JLdmzbcLt6lhMHPEWRswwxGF3XBU8sdubpEMsPnnS5k69EbnIvYFJwH4Hy7/9xtDQH
+         bk94ViahJphnSfXAxkuXLYRrIPD0l/Kyn7xWSOQG7XlsD+GBHZ0zXE4JtIFAP/Zfx7KZ
+         LwUnAqdqV7iHTSCTFG4OZeIyA/qvkD4WMoFgzOlU5o9Cjr44XW+JNE6Uvx4NPGDPjEIs
+         D0lQXLbk7xYXxz7dght9vkjfiIvqZJKUjwN6CwQ/IZa07vD35NfeUtoq2Skv2eAKChfd
+         hoURa8GJ97w5PSU5v0K7E+847Y4VF7nLaF8wtOSbiGewNoreUTfGx00/PbKmilWUsPRR
+         KBUA==
+X-Gm-Message-State: APjAAAWJj3T91ECtM0FjvimJaYxJW4LvMTahOXbqDZhpsFceYE9BoTmj
+        GAitEYuG1VW594SZKHrvq8/lQihjyVmgmgx0Ytw=
+X-Google-Smtp-Source: APXvYqyWTUvYaon8dzjGZxZo1Qxty4TvkqAcY67SytyH5Iz5WyX5HBzxj4/mwpGflTSdLB39JCubNu9BonaLNUR+CAs=
+X-Received: by 2002:a02:cabb:: with SMTP id e27mr8943286jap.107.1568861355823;
+ Wed, 18 Sep 2019 19:49:15 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: c57e55e1-72ca-46c8-9781-08d73cab2a87
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2019 02:43:34.8466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZCTmRc5hDgeJzCiRp5Y/+M7rnyJcRoddtg8wHluzTDTnDzEl6m6IenmwXZUucE5jYBdJ4wWDgYDGsO7SjwhlXQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB2890
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.70,1.0.8
- definitions=2019-09-19_01:2019-09-18,2019-09-19 signatures=0
+References: <20190919014340.GM3084169@devbig004.ftw2.facebook.com>
+In-Reply-To: <20190919014340.GM3084169@devbig004.ftw2.facebook.com>
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+Date:   Thu, 19 Sep 2019 10:49:04 +0800
+Message-ID: <CAJhGHyBd53ogp35FkmwDhzCv7=MipXwyoHGPVXjsaxSH540O8A@mail.gmail.com>
+Subject: Re: [PATCH] workqueue: Fix spurious sanity check failures in destroy_workqueue()
+To:     Tejun Heo <tj@kernel.org>
+Cc:     ~@devbig004.ftw2.facebook.com, LKML <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@fb.com>,
+        Marcin Pawlowski <mpawlowski@fb.com>,
+        "Williams, Gerald S" <gerald.s.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enhance the ACS quirk for Cavium Processors. Add the root port
-vendor ID's in an array and use the same in match function.
-For newer devices add the vendor ID's in the array so that the
-match function is simpler.
+Looks good to me.
 
-Signed-off-by: George Cherian <george.cherian@marvell.com>
----
- drivers/pci/quirks.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+There is one test in show_pwq()
+"""
+ worker == pwq->wq->rescuer ? "(RESCUER)" : "",
+"""
+I'm wondering if it needs to be updated to
+"""
+worker->rescue_wq ? "(RESCUER)" : "",
+"""
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44c4ae1abd00..64deeaddd51c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4241,17 +4241,27 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev=
-, u16 acs_flags)
- #endif
- }
-=20
-+static const u16 pci_quirk_cavium_acs_ids[] =3D {
-+	/* CN88xx family of devices */
-+	0xa180, 0xa170,
-+	/* CN99xx family of devices */
-+	0xaf84,
-+	/* CN11xxx family of devices */
-+	0xb884,
-+};
-+
- static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
- {
--	/*
--	 * Effectively selects all downstream ports for whole ThunderX 1
--	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
--	 * bits of device ID are used to indicate which subdevice is used
--	 * within the SoC.
--	 */
--	return (pci_is_pcie(dev) &&
--		(pci_pcie_type(dev) =3D=3D PCI_EXP_TYPE_ROOT_PORT) &&
--		((dev->device & 0xf800) =3D=3D 0xa000));
-+	int i;
-+
-+	if (!pci_is_pcie(dev) || pci_pcie_type(dev) !=3D PCI_EXP_TYPE_ROOT_PORT)
-+		return false;
-+
-+	for (i =3D 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
-+		if (pci_quirk_cavium_acs_ids[i] =3D=3D dev->device)
-+			return true;
-+
-+	return false;
- }
-=20
- static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
---=20
-2.17.1
+And document "/* MD: rescue worker */" might be better
+than current "/* I: rescue worker */", although ->rescuer can
+be accessed without wq_mayday_lock lock in some code.
 
+Reviewed-by: Lai Jiangshan <jiangshanlai@gmail.com>
+
+
+
+On Thu, Sep 19, 2019 at 9:43 AM Tejun Heo <tj@kernel.org> wrote:
+>
+> Before actually destrying a workqueue, destroy_workqueue() checks
+> whether it's actually idle.  If it isn't, it prints out a bunch of
+> warning messages and leaves the workqueue dangling.  It unfortunately
+> has a couple issues.
+>
+> * Mayday list queueing increments pwq's refcnts which gets detected as
+>   busy and fails the sanity checks.  However, because mayday list
+>   queueing is asynchronous, this condition can happen without any
+>   actual work items left in the workqueue.
+>
+> * Sanity check failure leaves the sysfs interface behind too which can
+>   lead to init failure of newer instances of the workqueue.
+>
+> This patch fixes the above two by
+>
+> * If a workqueue has a rescuer, disable and kill the rescuer before
+>   sanity checks.  Disabling and killing is guaranteed to flush the
+>   existing mayday list.
+>
+> * Remove sysfs interface before sanity checks.
+>
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reported-by: Marcin Pawlowski <mpawlowski@fb.com>
+> Reported-by: "Williams, Gerald S" <gerald.s.williams@intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+> Applying to wq/for-5.4.
+>
+> Thanks.
+>
+>  kernel/workqueue.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+> index 95aea04ff722..73e3ea9e31d3 100644
+> --- a/kernel/workqueue.c
+> +++ b/kernel/workqueue.c
+> @@ -4318,9 +4318,28 @@ void destroy_workqueue(struct workqueue_struct *wq)
+>         struct pool_workqueue *pwq;
+>         int node;
+>
+> +       /*
+> +        * Remove it from sysfs first so that sanity check failure doesn't
+> +        * lead to sysfs name conflicts.
+> +        */
+> +       workqueue_sysfs_unregister(wq);
+> +
+>         /* drain it before proceeding with destruction */
+>         drain_workqueue(wq);
+>
+> +       /* kill rescuer, if sanity checks fail, leave it w/o rescuer */
+> +       if (wq->rescuer) {
+> +               struct worker *rescuer = wq->rescuer;
+> +
+> +               /* this prevents new queueing */
+> +               spin_lock_irq(&wq_mayday_lock);
+> +               wq->rescuer = NULL;
+> +               spin_unlock_irq(&wq_mayday_lock);
+> +
+> +               /* rescuer will empty maydays list before exiting */
+> +               kthread_stop(rescuer->task);
+> +       }
+> +
+>         /* sanity checks */
+>         mutex_lock(&wq->mutex);
+>         for_each_pwq(pwq, wq) {
+> @@ -4352,11 +4371,6 @@ void destroy_workqueue(struct workqueue_struct *wq)
+>         list_del_rcu(&wq->list);
+>         mutex_unlock(&wq_pool_mutex);
+>
+> -       workqueue_sysfs_unregister(wq);
+> -
+> -       if (wq->rescuer)
+> -               kthread_stop(wq->rescuer->task);
+> -
+>         if (!(wq->flags & WQ_UNBOUND)) {
+>                 wq_unregister_lockdep(wq);
+>                 /*
+> --
+> 2.17.1
+>
