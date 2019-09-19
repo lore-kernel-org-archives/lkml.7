@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8220EC3A5A6
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D27C3A5A6
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5644121928
-	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935A921928
+	for <linux-kernel@archiver.kernel.org>; Thu, 19 Sep 2019 22:11:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1568931113;
-	bh=av/HOu5spNOELdXEp7JvfiosYFmX82BZmEDL9SfYScU=;
+	s=default; t=1568931116;
+	bh=tPzGboQ2VnK6/pYSRZGVL6p0puK6dTpZVMtYRRdtCtU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y06QTY5WbdzPFAcUw011wGYLt5+C63ycATXJKsbuzwlbhobHl80fLXH2Ksq51HzJV
-	 7Wh8BJkTz7Z1CgtGEkGi0ZbOl8Nt9zQVIaTwrlyKN2sbbkbY/wBRdKHPxW35DxUHuJ
-	 gHFkuudaTtdHS7eCKao4tiys/gMzueywCylF+A04=
+	b=0Ijn+gafxR5iBxSce1tOOLgYueljdBVn0ayPIUWrW86AopFYQKImtJDIR3fueCm0i
+	 d8lfpxyBx7U11cWGcbtRbvw8zkLDchxppGUEGi6vT56I+c/cvQDnFfi8BMXTKH6rzq
+	 W3S8sfDkUp6FJjjHH2kkTjBkzvSCQhN/pVdX2IAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405881AbfISWLv (ORCPT
+        id S2389381AbfISWLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 19 Sep 2019 18:11:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50520 "EHLO mail.kernel.org"
+        Thu, 19 Sep 2019 18:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404370AbfISWLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:11:47 -0400
+        id S2389875AbfISWLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 19 Sep 2019 18:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E16621907;
-        Thu, 19 Sep 2019 22:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6224B21927;
+        Thu, 19 Sep 2019 22:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1568931106;
-        bh=av/HOu5spNOELdXEp7JvfiosYFmX82BZmEDL9SfYScU=;
+        s=default; t=1568931109;
+        bh=tPzGboQ2VnK6/pYSRZGVL6p0puK6dTpZVMtYRRdtCtU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YR6Ta3ZRlu/SZkteceQrgY8jLmATQuBU71P8GCZhoKg1+wkJkfufKSmIPE8OHvvX8
-         BXZy4mtDaqmEqUM0d7kPTp+FOsA+j6eM4AZEt/RdKje/jClWZKkBwLUiHksYwwpvOc
-         k28+0lBURqRfjm3rcAJZoBuS7i1QH23otgPs0xdE=
+        b=V/JxtGOuhZJJdFqoA/P0etpZtSo0KpxJ3//MwppC1KPywdKNT7N4BGIqK3ZOMHgAD
+         WPe8wMmlCXE2QHKT9vgHBE+kJZVfxkkc7IEtL6OD1mpp3huA3+NCIRPuR48yt+YKeM
+         4sfJDDMZxaeFjZN1WPA9/eILFPRVlcru6dTjb5Lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wenwen@cs.uga.edu>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 111/124] dmaengine: ti: omap-dma: Add cleanup in omap_dma_probe()
-Date:   Fri, 20 Sep 2019 00:03:19 +0200
-Message-Id: <20190919214823.222362856@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>, broonie@kernel.org,
+        sfr@canb.auug.org.au, akpm@linux-foundation.org, mhocko@suse.cz,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.2 112/124] x86/uaccess: Dont leak the AC flags into __get_user() argument evaluation
+Date:   Fri, 20 Sep 2019 00:03:20 +0200
+Message-Id: <20190919214823.256617645@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20190919214819.198419517@linuxfoundation.org>
 References: <20190919214819.198419517@linuxfoundation.org>
@@ -60,39 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenwen Wang <wenwen@cs.uga.edu>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 962411b05a6d3342aa649e39cda1704c1fc042c6 ]
+[ Upstream commit 9b8bd476e78e89c9ea26c3b435ad0201c3d7dbf5 ]
 
-If devm_request_irq() fails to disable all interrupts, no cleanup is
-performed before retuning the error. To fix this issue, invoke
-omap_dma_free() to do the cleanup.
+Identical to __put_user(); the __get_user() argument evalution will too
+leak UBSAN crud into the __uaccess_begin() / __uaccess_end() region.
+While uncommon this was observed to happen for:
 
-Signed-off-by: Wenwen Wang <wenwen@cs.uga.edu>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Link: https://lore.kernel.org/r/1565938570-7528-1-git-send-email-wenwen@cs.uga.edu
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+  drivers/xen/gntdev.c: if (__get_user(old_status, batch->status[i]))
+
+where UBSAN added array bound checking.
+
+This complements commit:
+
+  6ae865615fc4 ("x86/uaccess: Dont leak the AC flag into __put_user() argument evaluation")
+
+Tested-by Sedat Dilek <sedat.dilek@gmail.com>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: broonie@kernel.org
+Cc: sfr@canb.auug.org.au
+Cc: akpm@linux-foundation.org
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: mhocko@suse.cz
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lkml.kernel.org/r/20190829082445.GM2369@hirez.programming.kicks-ass.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ti/omap-dma.c | 4 +++-
+ arch/x86/include/asm/uaccess.h | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/ti/omap-dma.c b/drivers/dma/ti/omap-dma.c
-index ba27802efcd0a..d07c0d5de7a25 100644
---- a/drivers/dma/ti/omap-dma.c
-+++ b/drivers/dma/ti/omap-dma.c
-@@ -1540,8 +1540,10 @@ static int omap_dma_probe(struct platform_device *pdev)
- 
- 		rc = devm_request_irq(&pdev->dev, irq, omap_dma_irq,
- 				      IRQF_SHARED, "omap-dma-engine", od);
--		if (rc)
-+		if (rc) {
-+			omap_dma_free(od);
- 			return rc;
-+		}
- 	}
- 
- 	if (omap_dma_glbl_read(od, CAPS_0) & CAPS_0_SUPPORT_LL123)
+diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
+index c82abd6e4ca39..869794bd0fd98 100644
+--- a/arch/x86/include/asm/uaccess.h
++++ b/arch/x86/include/asm/uaccess.h
+@@ -442,8 +442,10 @@ __pu_label:							\
+ ({									\
+ 	int __gu_err;							\
+ 	__inttype(*(ptr)) __gu_val;					\
++	__typeof__(ptr) __gu_ptr = (ptr);				\
++	__typeof__(size) __gu_size = (size);				\
+ 	__uaccess_begin_nospec();					\
+-	__get_user_size(__gu_val, (ptr), (size), __gu_err, -EFAULT);	\
++	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err, -EFAULT);	\
+ 	__uaccess_end();						\
+ 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
+ 	__builtin_expect(__gu_err, 0);					\
 -- 
 2.20.1
 
